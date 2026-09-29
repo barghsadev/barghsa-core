@@ -24,6 +24,10 @@ const assignment = z.discriminatedUnion('assignTo', [
 ]);
 const reason = z.object({ reason: z.string().trim().min(1).max(2000) }).strict();
 const optionalReason = z.object({ reason: z.string().trim().min(1).max(2000).optional() }).strict();
+const reviewHash = z.string().regex(/^[a-f0-9]{64}$/);
+const offerReview = z.object({ decision: z.enum(['accept', 'decline']) }).strict();
+const acceptOffer = z.object({ expectedReviewHash: reviewHash }).strict();
+const declineOffer = optionalReason.extend({ expectedReviewHash: reviewHash });
 const feeOffer = z
   .object({
     idempotencyKey: z.string().uuid(),
@@ -305,6 +309,18 @@ export class StaffConsultationWorkflowController {
 export class CustomerConsultationWorkflowController {
   constructor(private readonly workflow: ConsultationWorkflowService) {}
 
+  @Post('requests/:id/offer-review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Review the current consultation offer and decision outcome' })
+  @ApiZodBody(offerReview)
+  offerReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.workflow.customerDecisionReview(req.session, id, parse(offerReview, body).decision);
+  }
+
   @Post('requests/:id/provide-info')
   @HttpCode(200)
   @ApiOperation({
@@ -327,38 +343,40 @@ export class CustomerConsultationWorkflowController {
   @Post('requests/:id/accept')
   @HttpCode(200)
   @ApiOperation({ summary: 'Accept a consultation offer and proceed to its invoice payment' })
-  @ApiZodBody(empty)
+  @ApiZodBody(acceptOffer)
   accept(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    parse(empty, body);
+    const parsed = parse(acceptOffer, body);
     return this.workflow.customerDecision(
       req.session,
       id,
       'accept',
       undefined,
-      req.ip ?? '127.0.0.1'
+      req.ip ?? '127.0.0.1',
+      parsed.expectedReviewHash
     );
   }
 
   @Post('requests/:id/decline')
   @HttpCode(200)
   @ApiOperation({ summary: 'Decline a consultation offer and cancel its unpaid invoice' })
-  @ApiZodBody(optionalReason)
+  @ApiZodBody(declineOffer)
   decline(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const parsed = parse(optionalReason, body);
+    const parsed = parse(declineOffer, body);
     return this.workflow.customerDecision(
       req.session,
       id,
       'decline',
       parsed.reason,
-      req.ip ?? '127.0.0.1'
+      req.ip ?? '127.0.0.1',
+      parsed.expectedReviewHash
     );
   }
 }

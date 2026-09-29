@@ -22,6 +22,11 @@ import { settlePaidConsultation } from './consultation-payment.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { canTransitionConsultation, type ConsultationStatus } from './consultation-state.js';
+import {
+  parseConsultationOfferReview,
+  type ConsultationOfferReview,
+} from '@barghsa/shared/finance';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 type StaffAction = 'review' | 'request-info' | 'reject' | 'cancel' | 'complete';
@@ -35,9 +40,22 @@ interface RequestRow {
   profile_user_id: string;
   invoice_id: string | null;
   fee: string | null;
+  scope: string | null;
+  deliverables: string | null;
+  product_snapshot: { title?: { fa?: string; en?: string } };
   accepted_at: Date | null;
   accepted_by: string | null;
   offer_valid_until: Date | null;
+}
+
+interface OfferInvoiceRow {
+  id: string;
+  state: InvoiceState;
+  paid_amount: string;
+  total_amount: string;
+  adjustment_kind: 'charge' | 'credit' | null;
+  profile_id: string;
+  consultation_id: string | null;
 }
 
 @Injectable()
@@ -893,65 +911,146 @@ export class ConsultationWorkflowService {
     }
   }
 
+  private async lockedCustomerOffer(
+    client: PoolClient,
+    actor: Actor,
+    id: string,
+    decision: 'accept' | 'decline'
+  ): Promise<{ request: RequestRow; invoice: OfferInvoiceRow; review: ConsultationOfferReview }> {
+    await requireCurrentSession(client, actor);
+    const preview = (
+      await client.query<{ profile_id: string; invoice_id: string | null }>(
+        'SELECT profile_id,invoice_id FROM consultation_requests WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (
+      !preview ||
+      !(await this.orders.mayManageOrders(client, actor.userId, preview.profile_id, true))
+    )
+      throw new NotFoundException('Consultation request not found');
+    if (!preview.invoice_id) throw new ConflictException('Consultation offer has no invoice');
+    const invoice = (
+      await client.query<OfferInvoiceRow>(
+        `SELECT id,state,paid_amount,total_amount,adjustment_kind,profile_id,consultation_id
+         FROM invoices WHERE id=$1 FOR UPDATE`,
+        [preview.invoice_id]
+      )
+    ).rows[0];
+    const request = await this.lockRequest(client, id);
+    if (
+      request.invoice_id !== preview.invoice_id ||
+      request.profile_id !== preview.profile_id ||
+      invoice?.consultation_id !== id ||
+      invoice.profile_id !== request.profile_id
+    )
+      throw new ConflictException('Consultation offer changed; refresh before acting');
+    if (request.status !== 'offer_pending')
+      throw new ConflictException('Consultation offer is no longer pending');
+    if (decision === 'decline') {
+      const paidHistory = (
+        await client.query<{ paid: boolean }>(
+          'SELECT EXISTS(SELECT 1 FROM invoices WHERE consultation_id=$1 AND paid_amount>0) AS paid',
+          [id]
+        )
+      ).rows[0]?.paid;
+      if (paidHistory)
+        throw new ConflictException('Paid consultation requires a staff refund review');
+      if (
+        BigInt(invoice.paid_amount) > 0n ||
+        !['Draft', 'Unpaid', 'Overdue'].includes(invoice.state)
+      )
+        throw new ConflictException('Paid or pending payment requires a refund review');
+    } else if (
+      !request.accepted_at &&
+      request.offer_valid_until &&
+      request.offer_valid_until <= new Date() &&
+      invoice.state !== 'Paid'
+    ) {
+      throw new ConflictException('Consultation offer has expired');
+    }
+    const title = request.product_snapshot?.title;
+    if (
+      !title?.fa ||
+      !title.en ||
+      !request.scope ||
+      !request.deliverables ||
+      !request.fee ||
+      !request.offer_valid_until ||
+      BigInt(request.fee) < BigInt(invoice.total_amount) ||
+      (invoice.adjustment_kind !== null && invoice.adjustment_kind !== 'charge')
+    )
+      throw new ConflictException('Consultation offer requires reconciliation');
+    const snapshot = new ReviewSnapshotService().create(
+      {
+        action: `consultation.offer-${decision}`,
+        profileId: request.profile_id,
+        resourceId: id,
+      },
+      {
+        decision,
+        serviceTitle: { fa: title.fa, en: title.en },
+        scope: request.scope,
+        deliverables: request.deliverables,
+        fee: request.fee,
+        previousFee: (BigInt(request.fee) - BigInt(invoice.total_amount)).toString(),
+        validUntil: request.offer_valid_until.toISOString(),
+        acceptedAt: request.accepted_at?.toISOString() ?? null,
+        invoice: {
+          id: invoice.id,
+          state: invoice.state,
+          totalAmount: invoice.total_amount,
+          paidAmount: invoice.paid_amount,
+          adjustmentKind: invoice.adjustment_kind,
+        },
+        outcome:
+          decision === 'decline'
+            ? 'cancel_unpaid_invoice'
+            : invoice.state === 'Paid'
+              ? 'accepted_paid'
+              : 'payment_required',
+      }
+    );
+    const review = parseConsultationOfferReview(snapshot);
+    if (!review) throw new ConflictException('Consultation offer requires reconciliation');
+    return { request, invoice, review };
+  }
+
+  async customerDecisionReview(actor: Actor, id: string, decision: 'accept' | 'decline') {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const { review } = await this.lockedCustomerOffer(client, actor, id, decision);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async customerDecision(
     actor: Actor,
     id: string,
     decision: 'accept' | 'decline',
     reason: string | undefined,
-    ip: string
+    ip: string,
+    expectedReviewHash: string
   ) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      await requireCurrentSession(client, actor);
-      const preview = (
-        await client.query<{ profile_id: string; invoice_id: string | null }>(
-          'SELECT profile_id,invoice_id FROM consultation_requests WHERE id=$1',
-          [id]
-        )
-      ).rows[0];
-      if (
-        !preview ||
-        !(await this.orders.mayManageOrders(client, actor.userId, preview.profile_id, true))
-      )
-        throw new NotFoundException('Consultation request not found');
-      if (!preview.invoice_id) throw new ConflictException('Consultation offer has no invoice');
-      const invoice = (
-        await client.query<{
-          id: string;
-          state: InvoiceState;
-          paid_amount: string;
-          profile_id: string;
-          consultation_id: string | null;
-        }>(
-          'SELECT id,state,paid_amount,profile_id,consultation_id FROM invoices WHERE id=$1 FOR UPDATE',
-          [preview.invoice_id]
-        )
-      ).rows[0];
-      const request = await this.lockRequest(client, id);
-      if (
-        request.invoice_id !== preview.invoice_id ||
-        request.profile_id !== preview.profile_id ||
-        invoice?.consultation_id !== id ||
-        invoice.profile_id !== request.profile_id
-      )
-        throw new ConflictException('Consultation offer changed; refresh before acting');
-      if (request.status !== 'offer_pending')
-        throw new ConflictException('Consultation offer is no longer pending');
+      const { request, invoice, review } = await this.lockedCustomerOffer(
+        client,
+        actor,
+        id,
+        decision
+      );
+      new ReviewSnapshotService().assertConfirmed(review, expectedReviewHash);
       if (decision === 'decline') {
-        const paidHistory = (
-          await client.query<{ paid: boolean }>(
-            'SELECT EXISTS(SELECT 1 FROM invoices WHERE consultation_id=$1 AND paid_amount>0) AS paid',
-            [id]
-          )
-        ).rows[0]?.paid;
-        if (paidHistory)
-          throw new ConflictException('Paid consultation requires a staff refund review');
-        if (
-          BigInt(invoice.paid_amount) > 0n ||
-          !['Draft', 'Unpaid', 'Overdue'].includes(invoice.state)
-        )
-          throw new ConflictException('Paid or pending payment requires a refund review');
         await this.invoiceStates.transition(invoice.id, invoice.state, 'Cancelled', {
           actorUserId: actor.userId,
           reason: reason?.trim() || 'Customer declined consultation offer',
@@ -968,20 +1067,13 @@ export class ConsultationWorkflowService {
           client,
           actor.userId,
           id,
-          { action: 'offer_declined', invoiceId: invoice.id },
+          { action: 'offer_declined', invoiceId: invoice.id, financialReview: review },
           ip
         );
         await requireCurrentSession(client, actor);
         await client.query('COMMIT');
-        return { requestId: id, status: 'offer_declined' as const };
+        return { requestId: id, status: 'offer_declined' as const, financialReview: review };
       }
-      if (
-        !request.accepted_at &&
-        request.offer_valid_until &&
-        request.offer_valid_until <= new Date() &&
-        invoice.state !== 'Paid'
-      )
-        throw new ConflictException('Consultation offer has expired');
       if (!request.accepted_at) {
         await client.query(
           'UPDATE consultation_requests SET accepted_at=NOW(),accepted_by=$2,updated_at=NOW() WHERE id=$1',
@@ -994,16 +1086,21 @@ export class ConsultationWorkflowService {
           actor.userId,
           'Offer accepted; payment pending'
         );
+      }
+      const paid = invoice.state === 'Paid';
+      if (paid) await settlePaidConsultation(client, id, invoice.id, actor.userId);
+      if (!request.accepted_at || paid)
         await this.audit(
           client,
           actor.userId,
           id,
-          { action: 'offer_accepted_pending_payment', invoiceId: invoice.id },
+          {
+            action: paid ? 'offer_accepted_paid' : 'offer_accepted_pending_payment',
+            invoiceId: invoice.id,
+            financialReview: review,
+          },
           ip
         );
-      }
-      const paid = invoice.state === 'Paid';
-      if (paid) await settlePaidConsultation(client, id, invoice.id, actor.userId);
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return {
@@ -1011,6 +1108,7 @@ export class ConsultationWorkflowService {
         invoiceId: invoice.id,
         status: paid ? ('offer_accepted' as const) : ('offer_pending' as const),
         paymentRequired: !paid,
+        financialReview: review,
       };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -1099,7 +1197,8 @@ export class ConsultationWorkflowService {
     const request = (
       await client.query<RequestRow>(
         `SELECT r.id,r.profile_id,r.status,r.staff_owner_id,r.staff_team,r.submitted_by,
-         r.invoice_id,r.fee,r.accepted_at,r.accepted_by,r.offer_valid_until,p.user_id AS profile_user_id
+         r.invoice_id,r.fee,r.scope,r.deliverables,r.product_snapshot,
+         r.accepted_at,r.accepted_by,r.offer_valid_until,p.user_id AS profile_user_id
        FROM consultation_requests r JOIN profiles p ON p.id=r.profile_id
        WHERE r.id=$1 FOR UPDATE OF r`,
         [id]

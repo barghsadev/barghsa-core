@@ -16119,7 +16119,15 @@
             "application/json": {
               "schema": {
                 "additionalProperties": false,
-                "properties": {},
+                "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedReviewHash"
+                ],
                 "type": "object"
               }
             }
@@ -16161,12 +16169,19 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "reason": {
                     "maxLength": 2000,
                     "minLength": 1,
                     "type": "string"
                   }
                 },
+                "required": [
+                  "expectedReviewHash"
+                ],
                 "type": "object"
               }
             }
@@ -16184,6 +16199,58 @@
           }
         ],
         "summary": "Decline a consultation offer and cancel its unpaid invoice",
+        "tags": [
+          "Consultation requests"
+        ]
+      }
+    },
+    "/api/consultations/requests/{id}/offer-review": {
+      "post": {
+        "operationId": "CustomerConsultationWorkflowController_offerReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "decision": {
+                    "enum": [
+                      "accept",
+                      "decline"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "decision"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review the current consultation offer and decision outcome",
         "tags": [
           "Consultation requests"
         ]

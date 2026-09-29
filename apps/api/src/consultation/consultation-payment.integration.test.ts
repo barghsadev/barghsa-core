@@ -67,6 +67,16 @@ function post(path: string, user: string, body: unknown) {
   });
 }
 
+async function decide(path: string, user: string, body: Record<string, unknown> = {}) {
+  const decision = path.endsWith('/decline') ? 'decline' : 'accept';
+  const preview = await post(path.replace(/\/(accept|decline)$/, '/offer-review'), user, {
+    decision,
+  });
+  if (!preview.ok) return preview;
+  const review = (await preview.json()) as { hash: string };
+  return post(path, user, { ...body, expectedReviewHash: review.hash });
+}
+
 async function offer() {
   const created = await post('/api/consultations/requests', 'consultation-payer', {
     profileId,
@@ -106,18 +116,52 @@ async function pay(invoiceId: string) {
   expect(paid.status, await paid.clone().text()).toBe(200);
 }
 
-it('settles an accepted offer with a real wallet payment, then allows staff completion', async () => {
+it('settles a reviewed offer with a real wallet payment, then allows staff completion', async () => {
   const { requestId, invoiceId, root } = await offer();
-  const accepted = await post(
-    `/api/consultations/requests/${requestId}/accept`,
+  const path = `/api/consultations/requests/${requestId}/accept`;
+  expect((await post(path, 'consultation-payer', {})).status).toBe(400);
+  const preview = await post(
+    `/api/consultations/requests/${requestId}/offer-review`,
     'consultation-payer',
-    {}
+    { decision: 'accept' }
   );
+  expect(preview.status, http.logs()).toBe(200);
+  const offerReview = (await preview.json()) as {
+    hash: string;
+    data: { fee: string; invoice: { id: string; totalAmount: string }; outcome: string };
+  };
+  expect(offerReview.data).toMatchObject({
+    fee: '500000',
+    invoice: { id: invoiceId, totalAmount: '500000' },
+    outcome: 'payment_required',
+  });
+  await http.pool.query("UPDATE consultation_requests SET scope='Updated scope' WHERE id=$1", [
+    requestId,
+  ]);
+  expect(
+    (await post(path, 'consultation-payer', { expectedReviewHash: offerReview.hash })).status
+  ).toBe(409);
+  expect(
+    (
+      await http.pool.query('SELECT accepted_at FROM consultation_requests WHERE id=$1', [
+        requestId,
+      ])
+    ).rows[0].accepted_at
+  ).toBeNull();
+  const current = await post(
+    `/api/consultations/requests/${requestId}/offer-review`,
+    'consultation-payer',
+    { decision: 'accept' }
+  );
+  const currentHash = ((await current.json()) as { hash: string }).hash;
+  expect(currentHash).not.toBe(offerReview.hash);
+  const accepted = await post(path, 'consultation-payer', { expectedReviewHash: currentHash });
   expect(accepted.status, http.logs()).toBe(200);
   expect(await accepted.json()).toMatchObject({
     status: 'offer_pending',
     paymentRequired: true,
     invoiceId,
+    financialReview: { hash: currentHash },
   });
   expect(
     (await post(`${root}/complete`, 'consultation-finance', { reason: 'Too early' })).status
@@ -172,7 +216,7 @@ it('settles an accepted offer with a real wallet payment, then allows staff comp
 it('charges or credits a paid consultation without changing the paid invoice', async () => {
   const { requestId, invoiceId, root } = await offer();
   expect(
-    (await post(`/api/consultations/requests/${requestId}/accept`, 'consultation-payer', {})).status
+    (await decide(`/api/consultations/requests/${requestId}/accept`, 'consultation-payer')).status
   ).toBe(200);
   await pay(invoiceId);
   const validUntil = new Date(Date.now() + 7 * 86_400_000).toISOString();
@@ -215,11 +259,10 @@ it('charges or credits a paid consultation without changing the paid invoice', a
     ).status
   ).toBe(409);
   expect(
-    (await post(`/api/consultations/requests/${requestId}/decline`, 'consultation-payer', {}))
-      .status
+    (await decide(`/api/consultations/requests/${requestId}/decline`, 'consultation-payer')).status
   ).toBe(409);
   expect(
-    (await post(`/api/consultations/requests/${requestId}/accept`, 'consultation-payer', {})).status
+    (await decide(`/api/consultations/requests/${requestId}/accept`, 'consultation-payer')).status
   ).toBe(200);
   await pay(chargeBody.invoiceId);
   const creditInput = {
@@ -340,7 +383,7 @@ it('charges or credits a paid consultation without changing the paid invoice', a
 it('cancels an unpaid revised charge and requests a refund for the prior paid consultation', async () => {
   const { requestId, invoiceId, root } = await offer();
   expect(
-    (await post(`/api/consultations/requests/${requestId}/accept`, 'consultation-payer', {})).status
+    (await decide(`/api/consultations/requests/${requestId}/accept`, 'consultation-payer')).status
   ).toBe(200);
   await pay(invoiceId);
   const validUntil = new Date(Date.now() + 7 * 86_400_000).toISOString();
@@ -402,20 +445,41 @@ it('cancels an unpaid revised charge and requests a refund for the prior paid co
 
 it('declines an offer and cancels its unpaid invoice', async () => {
   const { requestId, invoiceId } = await offer();
+  const preview = await post(
+    `/api/consultations/requests/${requestId}/offer-review`,
+    'consultation-payer',
+    { decision: 'decline' }
+  );
+  expect(preview.status, http.logs()).toBe(200);
+  const review = (await preview.json()) as {
+    hash: string;
+    data: { outcome: string; invoice: { id: string; totalAmount: string } };
+  };
+  expect(review.data).toMatchObject({
+    outcome: 'cancel_unpaid_invoice',
+    invoice: { id: invoiceId, totalAmount: '500000' },
+  });
   const declined = await post(
     `/api/consultations/requests/${requestId}/decline`,
     'consultation-payer',
-    {
-      reason: 'The proposed scope is not needed',
-    }
+    { reason: 'The proposed scope is not needed', expectedReviewHash: review.hash }
   );
   expect(declined.status, http.logs()).toBe(200);
-  expect(await declined.json()).toMatchObject({ status: 'offer_declined' });
+  expect(await declined.json()).toMatchObject({
+    status: 'offer_declined',
+    financialReview: { hash: review.hash },
+  });
+  const audit = await http.pool.query(
+    `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='consultation.request.changed'
+     AND metadata::jsonb->>'requestId'=$1 AND metadata::jsonb->>'action'='offer_declined'`,
+    [requestId]
+  );
+  expect(audit.rows[0].metadata.financialReview.hash).toBe(review.hash);
   expect(
     (await http.pool.query('SELECT state FROM invoices WHERE id=$1', [invoiceId])).rows[0]
   ).toMatchObject({ state: 'Cancelled' });
   expect(
-    (await post(`/api/consultations/requests/${requestId}/accept`, 'consultation-payer', {})).status
+    (await decide(`/api/consultations/requests/${requestId}/accept`, 'consultation-payer')).status
   ).toBe(409);
 });
 
@@ -438,7 +502,7 @@ it('accepts a previously paid invoice without losing the consultation status', a
     (await http.pool.query('SELECT status FROM consultation_requests WHERE id=$1', [requestId]))
       .rows[0]
   ).toMatchObject({ status: 'offer_pending' });
-  const accepted = await post(
+  const accepted = await decide(
     `/api/consultations/requests/${requestId}/accept`,
     'consultation-payer',
     {}

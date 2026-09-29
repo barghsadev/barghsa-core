@@ -63,6 +63,16 @@ function post(path: string, user: string, body: unknown) {
   });
 }
 
+async function decide(path: string, user: string, body: Record<string, unknown> = {}) {
+  const decision = path.endsWith('/decline') ? 'decline' : 'accept';
+  const preview = await post(path.replace(/\/(accept|decline)$/, '/offer-review'), user, {
+    decision,
+  });
+  if (!preview.ok) return preview;
+  const review = (await preview.json()) as { hash: string };
+  return post(path, user, { ...body, expectedReviewHash: review.hash });
+}
+
 it('moves a consultation through staff assignment, customer information, and a reasoned decision', async () => {
   const submitted = await post('/api/consultations/requests', 'customer', {
     profileId,
@@ -233,7 +243,7 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
   const replayed = await post(`${root}/fee`, 'reviewer', firstOffer);
   expect(replayed.status, http.logs()).toBe(200);
   expect(await replayed.json()).toMatchObject({ invoiceId: firstId });
-  const acceptance = await post(`/api/consultations/requests/${requestId}/accept`, 'customer', {});
+  const acceptance = await decide(`/api/consultations/requests/${requestId}/accept`, 'customer');
   expect(acceptance.status, http.logs()).toBe(200);
   const firstInvoice = (
     await http.pool.query(

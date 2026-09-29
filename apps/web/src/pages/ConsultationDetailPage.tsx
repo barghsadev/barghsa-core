@@ -1,9 +1,24 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from '@tanstack/react-router';
-import { Button, Label } from '@barghsa/ui';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  FinancialReviewSummary,
+  Label,
+} from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
+import {
+  parseConsultationOfferReview,
+  type ConsultationOfferReview,
+} from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 import { consultationNextAction } from '../lib/consultation-next-action.js';
@@ -46,6 +61,7 @@ export function ConsultationDetailPage() {
   const navigate = useNavigate();
   const locale = useLocale();
   const time = useAccountTime(locale);
+  const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tConsultation(key, locale);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -55,6 +71,7 @@ export function ConsultationDetailPage() {
   const [actionError, setActionError] = useState(false);
   const [infoSent, setInfoSent] = useState(false);
   const [revision, setRevision] = useState(0);
+  const [decisionReview, setDecisionReview] = useState<ConsultationOfferReview | null>(null);
   useEffect(() => {
     const controller = new AbortController();
     void fetch(`/api/consultations/requests/${encodeURIComponent(requestId)}`, {
@@ -103,9 +120,49 @@ export function ConsultationDetailPage() {
     }
   }
 
-  async function decide(decision: 'accept' | 'decline') {
-    if (sending) return;
-    if (decision === 'decline' && !window.confirm(copy('confirmDecline'))) return;
+  async function beginDecision(decision: 'accept' | 'decline') {
+    if (sending || !detail?.request) return;
+    setSending(true);
+    setActionError(false);
+    try {
+      const response = await fetch(
+        `/api/consultations/requests/${encodeURIComponent(requestId)}/offer-review`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ decision }),
+        }
+      );
+      if (!response.ok) throw new Error('offer-review');
+      const review = parseConsultationOfferReview(await response.json());
+      const current = detail.request;
+      if (
+        !review ||
+        review.scope.action !== `consultation.offer-${decision}` ||
+        review.scope.resourceId !== requestId ||
+        review.data.invoice.id !== current.invoice_id ||
+        review.data.fee !== current.fee ||
+        review.data.scope !== current.scope ||
+        review.data.deliverables !== current.deliverables ||
+        review.data.serviceTitle[locale] !== current.product_snapshot.title[locale]
+      )
+        throw new Error('Offer review differs from displayed offer');
+      setDecisionReview(review);
+    } catch {
+      setActionError(true);
+      setRevision((value) => value + 1);
+    } finally {
+      setSending(false);
+    }
+  }
+
+  async function decide() {
+    if (sending || !decisionReview) return;
+    const { decision, hash } = {
+      decision: decisionReview.data.decision,
+      hash: decisionReview.hash,
+    };
     setSending(true);
     setActionError(false);
     try {
@@ -115,18 +172,26 @@ export function ConsultationDetailPage() {
           method: 'POST',
           credentials: 'include',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({}),
+          body: JSON.stringify({ expectedReviewHash: hash }),
         }
       );
       if (!response.ok) throw new Error(decision);
-      const result = (await response.json()) as { paymentRequired?: boolean; invoiceId?: string };
+      const result = (await response.json()) as {
+        paymentRequired?: boolean;
+        invoiceId?: string;
+        financialReview?: { hash?: string };
+      };
+      if (result.financialReview?.hash !== hash) throw new Error('Unverified offer decision');
+      setDecisionReview(null);
       if (decision === 'accept' && result.paymentRequired && result.invoiceId) {
         await navigate({ to: '/invoices/$invoiceId', params: { invoiceId: result.invoiceId } });
         return;
       }
       setRevision((value) => value + 1);
     } catch {
+      setDecisionReview(null);
       setActionError(true);
+      setRevision((value) => value + 1);
     } finally {
       setSending(false);
     }
@@ -266,7 +331,7 @@ export function ConsultationDetailPage() {
                   <Button
                     type="button"
                     disabled={sending || offerExpired}
-                    onClick={() => void decide('accept')}
+                    onClick={() => void beginDecision('accept')}
                   >
                     {copy(request.invoice_state === 'Paid' ? 'confirmAcceptance' : 'acceptOffer')}
                   </Button>
@@ -275,7 +340,7 @@ export function ConsultationDetailPage() {
                   type="button"
                   variant="outline"
                   disabled={sending || request.invoice_state === 'Paid' || request.has_paid_invoice}
-                  onClick={() => void decide('decline')}
+                  onClick={() => void beginDecision('decline')}
                 >
                   {copy('declineOffer')}
                 </Button>
@@ -340,6 +405,96 @@ export function ConsultationDetailPage() {
           </section>
         </>
       )}
+      <Dialog
+        open={Boolean(decisionReview)}
+        onOpenChange={(open) => {
+          if (!open && !sending) setDecisionReview(null);
+        }}
+      >
+        <DialogContent
+          dir={locale === 'fa' ? 'rtl' : 'ltr'}
+          className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-lg"
+        >
+          <DialogHeader>
+            <DialogTitle>{copy('decisionReviewTitle')}</DialogTitle>
+            <DialogDescription>
+              {copy(
+                decisionReview?.data.decision === 'decline'
+                  ? 'decisionReviewDecline'
+                  : 'decisionReviewAccept'
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          {decisionReview && (
+            <FinancialReviewSummary
+              title={copy('decisionReviewTitle')}
+              rows={[
+                {
+                  id: 'service',
+                  label: copy('details'),
+                  value: decisionReview.data.serviceTitle[locale],
+                },
+                { id: 'scope', label: copy('scope'), value: decisionReview.data.scope },
+                {
+                  id: 'deliverables',
+                  label: copy('deliverables'),
+                  value: decisionReview.data.deliverables,
+                },
+                {
+                  id: 'validity',
+                  label: copy('offerValidUntil'),
+                  value: time.format(decisionReview.data.validUntil),
+                },
+                {
+                  id: 'invoice',
+                  label: copy('decisionReviewInvoice'),
+                  value: decisionReview.data.invoice.id,
+                },
+                ...(decisionReview.data.invoice.adjustmentKind === 'charge'
+                  ? [
+                      {
+                        id: 'previous-fee',
+                        label: copy('decisionReviewPreviousFee'),
+                        value: numbers.money(decisionReview.data.previousFee),
+                      },
+                    ]
+                  : []),
+                {
+                  id: 'invoice-amount',
+                  label: copy('decisionReviewInvoiceAmount'),
+                  value: numbers.money(decisionReview.data.invoice.totalAmount),
+                },
+                {
+                  id: 'paid',
+                  label: copy('decisionReviewAlreadyPaid'),
+                  value: numbers.money(decisionReview.data.invoice.paidAmount),
+                },
+              ]}
+              total={{ label: copy('fee'), value: numbers.money(decisionReview.data.fee) }}
+              notice={copy(
+                decisionReview.data.outcome === 'cancel_unpaid_invoice'
+                  ? 'decisionReviewCancelOutcome'
+                  : decisionReview.data.outcome === 'accepted_paid'
+                    ? 'decisionReviewPaidOutcome'
+                    : 'decisionReviewPaymentOutcome'
+              )}
+            />
+          )}
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={sending}
+              onClick={() => setDecisionReview(null)}
+            >
+              {copy('decisionReviewClose')}
+            </Button>
+            <Button type="button" disabled={sending} onClick={() => void decide()}>
+              {copy(decisionReview?.data.decision === 'decline' ? 'declineOffer' : 'acceptOffer')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
