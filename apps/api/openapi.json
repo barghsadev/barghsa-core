@@ -6337,6 +6337,43 @@
       }
     },
     "/api/admin/external-refunds": {
+      "get": {
+        "operationId": "ExternalRefundController_forInvoice",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read refundable invoice balance and its external bank refund requests",
+        "tags": [
+          "Admin · External bank refunds"
+        ]
+      },
       "post": {
         "operationId": "ExternalRefundController_request",
         "parameters": [],

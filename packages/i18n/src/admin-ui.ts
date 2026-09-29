@@ -1241,7 +1241,7 @@ export const fa: I18nDictionary = {
   'admin.invoices.ledger.refunded': 'بازپرداخت‌شده',
   'admin.invoices.ledger.issued': 'تاریخ صدور',
   'admin.invoices.ledger.useDueAt': 'استفاده در تغییر سررسید',
-  'admin.invoices.ledger.useRefund': 'مدیریت بازپرداخت',
+  'admin.invoices.ledger.useRefund': 'مدیریت بازپرداخت‌ها',
   'admin.invoices.walletRefunds.title': 'بازپرداخت به کیف پول',
   'admin.invoices.walletRefunds.description':
     'مانده قابل بازپرداخت را بررسی کنید، درخواست ثبت کنید و وضعیت آن را پیگیری کنید.',
@@ -1287,6 +1287,20 @@ export const fa: I18nDictionary = {
   'admin.invoices.walletRefunds.state.Failed': 'ناموفق',
   'admin.invoices.walletRefunds.state.Rejected': 'ردشده',
   'admin.invoices.walletRefunds.state.Cancelled': 'لغوشده',
+  'admin.invoices.externalRefunds.title': 'بازپرداخت بانکی',
+  'admin.invoices.externalRefunds.description':
+    'پس از تأیید درخواست، حواله بانکی را با شناسه آن ثبت کنید. کارشناس مالی دیگری باید همان حواله را تطبیق دهد.',
+  'admin.invoices.externalRefunds.request': 'درخواست بازپرداخت بانکی',
+  'admin.invoices.externalRefunds.confirmRequest':
+    'مبلغ و دلیل را پیش از درخواست حواله بانکی بررسی کنید. مانده هنگام ثبت دوباره بررسی می‌شود.',
+  'admin.invoices.externalRefunds.requests': 'درخواست‌های بازپرداخت بانکی',
+  'admin.invoices.externalRefunds.empty': 'بازپرداخت بانکی برای این فاکتور ثبت نشده است.',
+  'admin.invoices.externalRefunds.bankReference': 'شناسه حواله بانکی',
+  'admin.invoices.externalRefunds.recordedReference': 'شناسه حواله ثبت‌شده',
+  'admin.invoices.externalRefunds.record-transfer': 'ثبت حواله بانکی',
+  'admin.invoices.externalRefunds.reconcile': 'تطبیق و تکمیل بازپرداخت',
+  'admin.invoices.externalRefunds.secondReviewer':
+    'تطبیق باید به دست کارشناس مالی دیگری انجام شود. شناسه حواله را از مدرک بانکی وارد کنید.',
   'admin.invoices.ledger.lines': 'اقلام فاکتور',
   'admin.invoices.ledger.descriptionColumn': 'شرح',
   'admin.invoices.ledger.quantity': 'تعداد',
@@ -2650,7 +2664,7 @@ export const en: I18nDictionary = {
   'admin.invoices.ledger.refunded': 'Refunded',
   'admin.invoices.ledger.issued': 'Issued',
   'admin.invoices.ledger.useDueAt': 'Use in due-date tool',
-  'admin.invoices.ledger.useRefund': 'Manage refund',
+  'admin.invoices.ledger.useRefund': 'Manage refunds',
   'admin.invoices.walletRefunds.title': 'Wallet refunds',
   'admin.invoices.walletRefunds.description':
     'Review the refundable balance, request a wallet return, and follow its outcome.',
@@ -2697,6 +2711,20 @@ export const en: I18nDictionary = {
   'admin.invoices.walletRefunds.state.Failed': 'Failed',
   'admin.invoices.walletRefunds.state.Rejected': 'Rejected',
   'admin.invoices.walletRefunds.state.Cancelled': 'Cancelled',
+  'admin.invoices.externalRefunds.title': 'External bank refunds',
+  'admin.invoices.externalRefunds.description':
+    'After approval, record the bank transfer reference. A different finance staff member must reconcile that transfer.',
+  'admin.invoices.externalRefunds.request': 'Request bank refund',
+  'admin.invoices.externalRefunds.confirmRequest':
+    'Review the amount and reason before requesting a bank transfer. The balance is checked again on submission.',
+  'admin.invoices.externalRefunds.requests': 'Bank refund requests',
+  'admin.invoices.externalRefunds.empty': 'No bank refunds for this invoice.',
+  'admin.invoices.externalRefunds.bankReference': 'Bank transfer reference',
+  'admin.invoices.externalRefunds.recordedReference': 'Recorded transfer reference',
+  'admin.invoices.externalRefunds.record-transfer': 'Record bank transfer',
+  'admin.invoices.externalRefunds.reconcile': 'Reconcile and complete refund',
+  'admin.invoices.externalRefunds.secondReviewer':
+    'A different finance staff member must reconcile this transfer. Enter its reference from the bank record.',
   'admin.invoices.ledger.lines': 'Line items',
   'admin.invoices.ledger.descriptionColumn': 'Description',
   'admin.invoices.ledger.quantity': 'Quantity',

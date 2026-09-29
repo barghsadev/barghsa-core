@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpException,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -13,6 +15,7 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -38,6 +41,24 @@ export class ExternalRefundController {
   private authorize(req: AuthenticatedRequest) {
     if (!hasStaffPermission(req, 'admin:financial:edit'))
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+  }
+  @Get()
+  @ApiOperation({
+    summary: 'Read refundable invoice balance and its external bank refund requests',
+  })
+  @ApiQuery({ name: 'invoiceId', format: 'uuid' })
+  @ApiQuery({ name: 'before', required: false, format: 'uuid' })
+  async forInvoice(
+    @Req() req: AuthenticatedRequest,
+    @Query('invoiceId') invoiceId: string,
+    @Query('before') before?: string
+  ) {
+    this.authorize(req);
+    const id = refundUuid.safeParse(invoiceId),
+      cursor = refundUuid.optional().safeParse(before);
+    if (!id.success || !cursor.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    return this.refunds.refundsForInvoice(id.data, req.session, 'external_bank', cursor.data);
   }
   @Post()
   @RequiresStepUp()

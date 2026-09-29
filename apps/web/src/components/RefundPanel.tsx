@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
+import { t as appText } from '@barghsa/i18n/app';
 import {
   Button,
   Card,
@@ -30,6 +31,9 @@ interface WalletRefund {
   invoiceId: string;
   amount: string;
   state: string;
+  destination: 'wallet' | 'external_bank';
+  bankReference: string | null;
+  reconciliationStatus: string | null;
   approvalRequestId: string | null;
   retry: { nextAttemptAt: string | null; exhausted: boolean } | null;
 }
@@ -45,7 +49,11 @@ function validAmount(value: string, available: string): boolean {
   return amount > 0n && amount <= BigInt(available) && amount <= 9223372036854775807n;
 }
 
-function validPage(value: unknown, invoiceId: string): value is RefundPage {
+function validPage(
+  value: unknown,
+  invoiceId: string,
+  destination: 'wallet' | 'external_bank'
+): value is RefundPage {
   if (!value || typeof value !== 'object') return false;
   const page = value as RefundPage;
   const invoice = page.invoice;
@@ -62,18 +70,47 @@ function validPage(value: unknown, invoiceId: string): value is RefundPage {
       (refund) =>
         typeof refund.id === 'string' &&
         refund.invoiceId === invoiceId &&
+        refund.destination === destination &&
         /^\d{1,19}$/.test(refund.amount) &&
         typeof refund.state === 'string' &&
+        (refund.bankReference === null || typeof refund.bankReference === 'string') &&
+        (refund.reconciliationStatus === null || typeof refund.reconciliationStatus === 'string') &&
         (refund.approvalRequestId === null || typeof refund.approvalRequestId === 'string')
     ) &&
     (page.nextBefore === null || typeof page.nextBefore === 'string')
   );
 }
 
-export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceId?: string }) {
+const externalKeys = new Set([
+  'title',
+  'description',
+  'request',
+  'confirmRequest',
+  'requests',
+  'empty',
+  'bankReference',
+  'recordedReference',
+  'record-transfer',
+  'reconcile',
+  'secondReviewer',
+]);
+
+export function RefundPanel({
+  destination,
+  selectedInvoiceId = '',
+}: {
+  destination: 'wallet' | 'external_bank';
+  selectedInvoiceId?: string;
+}) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
-  const word = (key: string) => t(`admin.invoices.walletRefunds.${key}`, locale);
+  const word = (key: string) =>
+    t(
+      `admin.invoices.${destination === 'external_bank' && externalKeys.has(key) ? 'externalRefunds' : 'walletRefunds'}.${key}`,
+      locale
+    );
+  const path = destination === 'wallet' ? 'wallet-refunds' : 'external-refunds';
+  const fieldPrefix = destination === 'wallet' ? 'wallet-refund' : 'external-refund';
   const [input, setInput] = useState(selectedInvoiceId);
   const [invoiceId, setInvoiceId] = useState(
     isInvoiceUuid(selectedInvoiceId) ? selectedInvoiceId : ''
@@ -88,6 +125,7 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
   const [amount, setAmount] = useState('');
   const [reason, setReason] = useState('');
   const [reasons, setReasons] = useState<Record<string, string>>({});
+  const [references, setReferences] = useState<Record<string, string>>({});
   const [action, setAction] = useState<TeamAction | null>(null);
   const [actionSummary, setActionSummary] = useState<React.ReactNode>(null);
 
@@ -105,7 +143,7 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
     if (!invoiceId) return;
     const controller = new AbortController();
     setStatus('loading');
-    const url = `/api/admin/wallet-refunds?invoiceId=${encodeURIComponent(invoiceId)}${before ? `&before=${encodeURIComponent(before)}` : ''}`;
+    const url = `/api/admin/${path}?invoiceId=${encodeURIComponent(invoiceId)}${before ? `&before=${encodeURIComponent(before)}` : ''}`;
     void fetch(url, { credentials: 'include', signal: controller.signal })
       .then(async (response) => {
         if (controller.signal.aborted) return null;
@@ -115,7 +153,7 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
         }
         if (!response.ok) throw new Error('Refunds unavailable');
         const data: unknown = await response.json();
-        if (!validPage(data, invoiceId)) throw new Error('Invalid refund page');
+        if (!validPage(data, invoiceId, destination)) throw new Error('Invalid refund page');
         return data;
       })
       .then((page) => {
@@ -133,7 +171,7 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
         if (!controller.signal.aborted) setStatus('error');
       });
     return () => controller.abort();
-  }, [invoiceId, before, revision]);
+  }, [invoiceId, before, revision, destination, path]);
 
   function load(event: FormEvent) {
     event.preventDefault();
@@ -168,7 +206,7 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
     setAction({
       title: word('request'),
       description: word('confirmRequest'),
-      path: '/api/admin/wallet-refunds',
+      path: `/api/admin/${path}`,
       method: 'POST',
       body: {
         invoiceId: invoice.invoiceId,
@@ -194,18 +232,27 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
     );
   }
 
-  function decide(refund: WalletRefund, operation: 'approve' | 'reject' | 'cancel' | 'process') {
+  function decide(
+    refund: WalletRefund,
+    operation: 'approve' | 'reject' | 'cancel' | 'process' | 'record-transfer' | 'reconcile'
+  ) {
     const decisionReason = reasons[refund.id]?.trim();
+    const bankReference = references[refund.id]?.trim();
+    const submittedReason =
+      operation === 'reject' || operation === 'cancel' ? decisionReason : undefined;
     if ((operation === 'reject' || operation === 'cancel') && !decisionReason) return;
+    if ((operation === 'record-transfer' || operation === 'reconcile') && !bankReference) return;
     setAction({
       title: word(operation),
       description: word('confirmDecision'),
-      path: `/api/admin/wallet-refunds/${encodeURIComponent(refund.id)}/${operation}`,
+      path: `/api/admin/${path}/${encodeURIComponent(refund.id)}/${operation}`,
       method: 'POST',
       body:
-        decisionReason && operation !== 'approve' && operation !== 'process'
-          ? { reason: decisionReason }
-          : {},
+        operation === 'record-transfer' || operation === 'reconcile'
+          ? { bankReference }
+          : submittedReason
+            ? { reason: submittedReason }
+            : {},
       conflictMessage: word('conflict'),
       forbiddenMessage: word('forbidden'),
     });
@@ -215,8 +262,11 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
         rows={[
           { id: 'invoice', label: word('invoiceId'), value: refund.invoiceId },
           { id: 'state', label: word('state'), value: word(`state.${refund.state}`) },
-          ...(decisionReason
-            ? [{ id: 'reason', label: word('reason'), value: decisionReason }]
+          ...(submittedReason
+            ? [{ id: 'reason', label: word('reason'), value: submittedReason }]
+            : []),
+          ...(bankReference && (operation === 'record-transfer' || operation === 'reconcile')
+            ? [{ id: 'bank', label: word('bankReference'), value: bankReference }]
             : []),
         ]}
         total={{ label: word('requestAmount'), value: numbers.money(refund.amount) }}
@@ -226,7 +276,7 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
 
   return (
     <section
-      id="wallet-refunds-panel"
+      id={destination === 'wallet' ? 'wallet-refunds-panel' : 'external-refunds-panel'}
       className="space-y-4 rounded-xl border bg-card p-5"
       aria-label={word('title')}
     >
@@ -234,9 +284,9 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
       <p className="text-sm text-muted-foreground">{word('description')}</p>
       <form onSubmit={load} className="flex flex-wrap items-end gap-3">
         <div className="min-w-64 flex-1 space-y-2">
-          <Label htmlFor="wallet-refund-invoice">{word('invoiceId')}</Label>
+          <Label htmlFor={`${fieldPrefix}-invoice`}>{word('invoiceId')}</Label>
           <Input
-            id="wallet-refund-invoice"
+            id={`${fieldPrefix}-invoice`}
             dir="ltr"
             value={input}
             aria-invalid={invalidId}
@@ -257,7 +307,7 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
           <Card>
             <CardContent className="space-y-2 pt-6 text-sm">
               <p>
-                {word('state')}: {invoice.state}
+                {word('state')}: {appText(`invoices.state.${invoice.state}`, locale)}
               </p>
               <p>
                 {word('paid')}: {numbers.money(invoice.paidAmount)}
@@ -276,9 +326,9 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
           {invoice.requestable && (
             <div className="space-y-3">
               <div className="space-y-2">
-                <Label htmlFor="wallet-refund-amount">{word('requestAmount')}</Label>
+                <Label htmlFor={`${fieldPrefix}-amount`}>{word('requestAmount')}</Label>
                 <Input
-                  id="wallet-refund-amount"
+                  id={`${fieldPrefix}-amount`}
                   dir="ltr"
                   inputMode="numeric"
                   value={amount}
@@ -286,9 +336,9 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="wallet-refund-reason">{word('reason')}</Label>
+                <Label htmlFor={`${fieldPrefix}-reason`}>{word('reason')}</Label>
                 <Input
-                  id="wallet-refund-reason"
+                  id={`${fieldPrefix}-reason`}
                   maxLength={1000}
                   value={reason}
                   onChange={(event) => setReason(event.target.value)}
@@ -318,6 +368,11 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
                   <StatusBadge label={word(`state.${refund.state}`)} />
                 </div>
                 <p className="break-all text-xs text-muted-foreground">{refund.id}</p>
+                {destination === 'external_bank' && refund.bankReference && (
+                  <p className="break-all text-sm">
+                    {word('recordedReference')}: {refund.bankReference}
+                  </p>
+                )}
                 {refund.approvalRequestId && (
                   <a
                     className="text-primary underline"
@@ -328,11 +383,11 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
                 )}
                 {(refund.state === 'Requested' || refund.state === 'Approved') && (
                   <div className="space-y-2">
-                    <Label htmlFor={`wallet-refund-reason-${refund.id}`}>
+                    <Label htmlFor={`${fieldPrefix}-reason-${refund.id}`}>
                       {word('decisionReason')}
                     </Label>
                     <Input
-                      id={`wallet-refund-reason-${refund.id}`}
+                      id={`${fieldPrefix}-reason-${refund.id}`}
                       maxLength={1000}
                       value={reasons[refund.id] ?? ''}
                       onChange={(event) =>
@@ -341,6 +396,29 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
                     />
                   </div>
                 )}
+                {destination === 'external_bank' &&
+                  (refund.state === 'Approved' || refund.state === 'Processing') && (
+                    <div className="space-y-2">
+                      <Label htmlFor={`refund-bank-reference-${refund.id}`}>
+                        {word('bankReference')}
+                      </Label>
+                      <Input
+                        id={`refund-bank-reference-${refund.id}`}
+                        dir="ltr"
+                        maxLength={200}
+                        value={references[refund.id] ?? ''}
+                        onChange={(event) =>
+                          setReferences((current) => ({
+                            ...current,
+                            [refund.id]: event.target.value,
+                          }))
+                        }
+                      />
+                      {refund.state === 'Processing' && (
+                        <p className="text-sm text-muted-foreground">{word('secondReviewer')}</p>
+                      )}
+                    </div>
+                  )}
                 <div className="flex flex-wrap gap-2">
                   {refund.state === 'Requested' && (
                     <Button variant="outline" onClick={() => decide(refund, 'approve')}>
@@ -365,13 +443,31 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
                       {word('cancel')}
                     </Button>
                   )}
-                  {['Approved', 'Failed'].includes(refund.state) && (
+                  {destination === 'wallet' && ['Approved', 'Failed'].includes(refund.state) && (
                     <Button variant="outline" onClick={() => decide(refund, 'process')}>
                       {word('process')}
                     </Button>
                   )}
+                  {destination === 'external_bank' && refund.state === 'Approved' && (
+                    <Button
+                      variant="outline"
+                      disabled={!references[refund.id]?.trim()}
+                      onClick={() => decide(refund, 'record-transfer')}
+                    >
+                      {word('record-transfer')}
+                    </Button>
+                  )}
+                  {destination === 'external_bank' && refund.state === 'Processing' && (
+                    <Button
+                      variant="outline"
+                      disabled={references[refund.id]?.trim() !== refund.bankReference}
+                      onClick={() => decide(refund, 'reconcile')}
+                    >
+                      {word('reconcile')}
+                    </Button>
+                  )}
                 </div>
-                {refund.state === 'Failed' && (
+                {destination === 'wallet' && refund.state === 'Failed' && (
                   <p role="status">
                     {refund.retry?.exhausted ? word('retryExhausted') : word('retryScheduled')}
                   </p>
@@ -397,6 +493,7 @@ export function WalletRefundPanel({ selectedInvoiceId = '' }: { selectedInvoiceI
           onSuccess={async () => {
             setAmount('');
             setReason('');
+            setReferences({});
             refresh();
           }}
         />

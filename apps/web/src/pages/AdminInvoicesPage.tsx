@@ -25,7 +25,7 @@ import ManualInvoicePanel from '../components/ManualInvoicePanel.js';
 import ServiceDuePeriodPanel from '../components/ServiceDuePeriodPanel.js';
 import { InvoiceBankReceiptQueue } from '../components/InvoiceBankReceiptQueue.js';
 import { InvoiceLedger } from '../components/InvoiceLedger.js';
-import { WalletRefundPanel } from '../components/WalletRefundPanel.js';
+import { RefundPanel } from '../components/RefundPanel.js';
 
 /**
  * Staff dueAt override page (T-04.1.03.03).
@@ -273,7 +273,8 @@ export default function AdminInvoicesPage() {
       />
       <ManualInvoicePanel />
       <InvoiceCorrectionsPanel />
-      <WalletRefundPanel selectedInvoiceId={refundInvoiceId} />
+      <RefundPanel destination="wallet" selectedInvoiceId={refundInvoiceId} />
+      <RefundPanel destination="external_bank" selectedInvoiceId={refundInvoiceId} />
       {pendingAction && (
         <TeamActionDialog
           action={pendingAction}

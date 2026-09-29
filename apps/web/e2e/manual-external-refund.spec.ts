@@ -1,22 +1,17 @@
+import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { en, fa } from '../../../packages/i18n/src/admin-ui';
 import { t as appText } from '../../../packages/i18n/src/app';
 
 const invoiceId = '11111111-1111-4111-8111-111111111111';
 const refundId = '22222222-2222-4222-8222-222222222222';
+const bankReference = 'BANK-RETURN-40';
 
 for (const locale of ['en', 'fa'] as const)
-  test(`${locale}: finance requests, processes and reopens a manual wallet refund`, async ({
-    page,
-  }) => {
+  test(`${locale}: finance records and reconciles an external refund`, async ({ page }) => {
     const copy = locale === 'fa' ? fa : en;
-    const word = (key: string) => copy[`admin.invoices.walletRefunds.${key}`]!;
-    await page.addInitScript((language) => {
-      if (document.documentElement) document.documentElement.lang = language;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = language;
-      }).observe(document, { childList: true });
-    }, locale);
+    const word = (key: string) => copy[`admin.invoices.externalRefunds.${key}`]!;
+    const shared = (key: string) => copy[`admin.invoices.walletRefunds.${key}`]!;
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({ json: { isStaff: true, operatingContext: 'staff', canSwitchContext: true } })
@@ -41,9 +36,9 @@ for (const locale of ['en', 'fa'] as const)
     await page.route('**/api/admin/config/invoice-reminder-offsets', (route) =>
       route.fulfill({ json: [] })
     );
-    let state: 'none' | 'Requested' | 'Approved' | 'Completed' = 'none';
+    let state: 'none' | 'Requested' | 'Approved' | 'Processing' | 'Completed' = 'none';
     const actions: string[] = [];
-    await page.route(/\/api\/admin\/wallet-refunds\?/, (route) =>
+    await page.route(/\/api\/admin\/external-refunds\?/, (route) =>
       route.fulfill({
         json: {
           invoice: {
@@ -52,7 +47,7 @@ for (const locale of ['en', 'fa'] as const)
             state: state === 'Completed' ? 'PartiallyRefunded' : 'Paid',
             paidAmount: '100',
             refundedAmount: state === 'Completed' ? '40' : '0',
-            reservedAmount: state === 'Requested' || state === 'Approved' ? '40' : '0',
+            reservedAmount: state !== 'none' && state !== 'Completed' ? '40' : '0',
             availableAmount: state === 'none' ? '100' : '60',
             requestable: true,
           },
@@ -65,9 +60,15 @@ for (const locale of ['en', 'fa'] as const)
                     invoiceId,
                     amount: '40',
                     state,
-                    destination: 'wallet',
-                    bankReference: null,
-                    reconciliationStatus: null,
+                    destination: 'external_bank',
+                    bankReference:
+                      state === 'Processing' || state === 'Completed' ? bankReference : null,
+                    reconciliationStatus:
+                      state === 'Processing'
+                        ? 'Pending'
+                        : state === 'Completed'
+                          ? 'Confirmed'
+                          : null,
                     approvalRequestId: null,
                     retry: null,
                   },
@@ -76,7 +77,7 @@ for (const locale of ['en', 'fa'] as const)
         },
       })
     );
-    await page.route('**/api/admin/wallet-refunds', (route) => {
+    await page.route('**/api/admin/external-refunds', (route) => {
       expect(route.request().postDataJSON()).toMatchObject({
         invoiceId,
         amount: '40',
@@ -87,16 +88,18 @@ for (const locale of ['en', 'fa'] as const)
       actions.push('request');
       return route.fulfill({ status: 201, json: { id: refundId, state } });
     });
-    await page.route(`**/api/admin/wallet-refunds/${refundId}/approve`, (route) => {
-      state = 'Approved';
-      actions.push('approve');
-      return route.fulfill({ json: { id: refundId, state } });
-    });
-    await page.route(`**/api/admin/wallet-refunds/${refundId}/process`, (route) => {
-      state = 'Completed';
-      actions.push('process');
-      return route.fulfill({ json: { id: refundId, state } });
-    });
+    for (const [operation, next] of [
+      ['approve', 'Approved'],
+      ['record-transfer', 'Processing'],
+      ['reconcile', 'Completed'],
+    ] as const)
+      await page.route(`**/api/admin/external-refunds/${refundId}/${operation}`, (route) => {
+        if (operation !== 'approve')
+          expect(route.request().postDataJSON()).toEqual({ bankReference });
+        state = next;
+        actions.push(operation);
+        return route.fulfill({ json: { id: refundId, state } });
+      });
 
     await page.goto(`/admin/invoices?invoiceId=${invoiceId}`);
     await page.locator('html').evaluate((element, language) => {
@@ -104,34 +107,37 @@ for (const locale of ['en', 'fa'] as const)
       element.dir = language === 'fa' ? 'rtl' : 'ltr';
     }, locale);
     const panel = page.getByRole('region', { name: word('title'), exact: true });
-    await expect(panel.getByText(`${word('available')}:`)).toBeVisible();
-    await panel.getByLabel(word('requestAmount')).fill('40');
-    await panel.getByLabel(word('reason'), { exact: true }).fill('Customer return');
+    await expect(panel.getByText(`${shared('available')}:`)).toBeVisible();
+    expect(
+      (await new AxeBuilder({ page }).include('#external-refunds-panel').analyze()).violations
+    ).toEqual([]);
+    await panel.getByLabel(shared('requestAmount')).fill('40');
+    await panel.getByLabel(shared('reason'), { exact: true }).fill('Customer return');
     await panel.getByRole('button', { name: word('request'), exact: true }).click();
-    await expect(page.getByRole('dialog')).toContainText(word('review'));
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: appText('team.confirm', locale) })
-      .click();
+    const confirm = async () =>
+      page
+        .getByRole('dialog')
+        .getByRole('button', { name: appText('team.confirm', locale) })
+        .click();
+    await confirm();
     await expect(panel.getByText(refundId)).toBeVisible();
-    await panel.getByRole('button', { name: word('approve') }).click();
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: appText('team.confirm', locale) })
-      .click();
-    await panel.getByRole('button', { name: word('process') }).click();
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: appText('team.confirm', locale) })
-      .click();
-    await expect(panel.getByText(word('state.Completed'))).toBeVisible();
-    expect(actions).toEqual(['request', 'approve', 'process']);
+    await panel.getByRole('button', { name: shared('approve') }).click();
+    await confirm();
+    await panel.getByLabel(word('bankReference')).fill(bankReference);
+    await panel.getByRole('button', { name: word('record-transfer') }).click();
+    await confirm();
+    await expect(panel.getByText(word('secondReviewer'))).toBeVisible();
+    await panel.getByLabel(word('bankReference')).fill(bankReference);
+    await panel.getByRole('button', { name: word('reconcile') }).click();
+    await confirm();
+    await expect(panel.getByText(shared('state.Completed'))).toBeVisible();
+    expect(actions).toEqual(['request', 'approve', 'record-transfer', 'reconcile']);
     await page.reload();
     await page.locator('html').evaluate((element, language) => {
       element.lang = language;
       element.dir = language === 'fa' ? 'rtl' : 'ltr';
     }, locale);
     await expect(
-      page.getByRole('region', { name: word('title') }).getByText(refundId)
+      page.getByRole('region', { name: word('title') }).getByText(bankReference)
     ).toBeVisible();
   });

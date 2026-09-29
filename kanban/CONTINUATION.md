@@ -2,7 +2,9 @@
 
 ## Current manual batch — September 29, 2026
 
-[Manual wallet refund workspace](batches/2026-09-29-manual-wallet-refund-workspace.md) gives finance staff a resumable invoice refund view with available balance, prior requests and confirmable wallet refund actions. The existing server enforces payment, authorization and dual-approval rules. External-bank refunds and the broader financial-review coverage remain open.
+[External bank refund workspace](batches/2026-09-29-external-bank-refund-workspace.md) adds the finance handoff from request through recorded bank reference and second-staff reconciliation. Wallet and bank refunds share an invoice balance and financial confirmation layout, while the backend keeps bank refunds unsettled until reconciliation. The broader cross-command financial review task remains partial.
+
+[Manual wallet refund workspace](batches/2026-09-29-manual-wallet-refund-workspace.md) gives finance staff a resumable invoice refund view with available balance, prior requests and confirmable wallet refund actions. The existing server enforces payment, authorization and dual-approval rules.
 
 [Saving order financial review summary](batches/2026-09-29-saving-financial-review-summary.md) adds the shared accessible confirmation layout to the server-quoted saving order while preserving quote-digest submission. The wider cross-command financial review task remains partial.
 

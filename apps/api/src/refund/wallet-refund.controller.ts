@@ -59,7 +59,7 @@ export class WalletRefundController {
       cursor = refundUuid.optional().safeParse(before);
     if (!id.success || !cursor.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
-    return this.refunds.walletRefundsForInvoice(id.data, req.session, cursor.data);
+    return this.refunds.refundsForInvoice(id.data, req.session, 'wallet', cursor.data);
   }
   @Post()
   @RequiresStepUp()

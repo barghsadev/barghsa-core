@@ -101,6 +101,68 @@ async function balances(f: Awaited<ReturnType<typeof invoice>>) {
   ).rows[0];
 }
 
+it('shows external requests and the shared refundable balance to finance staff', async () => {
+  const f = await invoice('100');
+  const url = `${http.base}/api/admin/external-refunds?invoiceId=${f.id}`;
+  const read = (user = 'refund-finance') => fetch(url, { headers: headers[user]! });
+  expect((await read('refund-support')).status).toBe(403);
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/external-refunds?invoiceId=invalid`, {
+        headers: headers['refund-finance']!,
+      })
+    ).status
+  ).toBe(400);
+  const initial = await read();
+  expect(initial.status).toBe(200);
+  expect(await initial.json()).toMatchObject({
+    invoice: {
+      invoiceId: f.id,
+      paidAmount: '100',
+      refundedAmount: '0',
+      reservedAmount: '0',
+      availableAmount: '100',
+      requestable: true,
+    },
+    refunds: [],
+    nextBefore: null,
+  });
+  const refund = await request(requestBody(f.id, '40'));
+  const pending = await read();
+  expect(await pending.json()).toMatchObject({
+    invoice: { reservedAmount: '40', availableAmount: '60' },
+    refunds: [
+      expect.objectContaining({
+        id: refund.id,
+        state: 'Requested',
+        destination: 'external_bank',
+      }),
+    ],
+  });
+  expect((await decide(refund.id, 'approve')).status).toBe(200);
+  const bankReference = randomUUID();
+  expect((await decide(refund.id, 'record-transfer', { bankReference })).status).toBe(200);
+  const recorded = await read();
+  expect(await recorded.json()).toMatchObject({
+    refunds: [expect.objectContaining({ state: 'Processing', bankReference })],
+  });
+  expect((await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status).toBe(
+    200
+  );
+  const completed = await read();
+  expect(await completed.json()).toMatchObject({
+    invoice: { refundedAmount: '40', reservedAmount: '0', availableAmount: '60' },
+    refunds: [expect.objectContaining({ id: refund.id, state: 'Completed', bankReference })],
+  });
+  const walletResponse = await post('wallet-refunds', requestBody(f.id, '10'));
+  expect(walletResponse.status).toBe(201);
+  const withWalletReservation = await read();
+  expect(await withWalletReservation.json()).toMatchObject({
+    invoice: { refundedAmount: '40', reservedAmount: '10', availableAmount: '50' },
+    refunds: [expect.objectContaining({ id: refund.id, destination: 'external_bank' })],
+  });
+});
+
 it('records a transfer without settling until a second staff member reconciles it', async () => {
   const f = await invoice(),
     refund = await request(requestBody(f.id, '40')),
