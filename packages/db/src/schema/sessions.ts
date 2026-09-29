@@ -30,6 +30,9 @@ export const sessions = pgTable('sessions', {
   /** CSRF token bound to this session, rotated on auth events (T-02.02.03). */
   csrfToken: text('csrf_token').notNull(),
 
+  /** Explicit staff/customer authority selected for this session. */
+  operatingContext: text('operating_context').notNull(),
+
   /** SHA-256 hash of the current refresh token (rotated on use). */
   refreshTokenHash: text('refresh_token_hash'),
 

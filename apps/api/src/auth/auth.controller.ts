@@ -882,8 +882,15 @@ export class AuthController {
     emailVerified: boolean;
     mobileVerified: boolean;
     isStaff: boolean;
+    operatingContext: 'staff' | 'customer';
+    canSwitchContext: boolean;
   }> {
-    return this.authService.getUser(req.session.userId);
+    return {
+      ...(await this.authService.getUser(req.session.userId)),
+      isStaff: req.session.staffAvailable,
+      operatingContext: req.session.operatingContext,
+      canSwitchContext: req.session.staffAvailable,
+    };
   }
 
   /**

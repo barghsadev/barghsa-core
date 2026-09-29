@@ -18,6 +18,9 @@ export const asyncJobs = pgTable(
     createdBy: text('created_by')
       .notNull()
       .references(() => users.userId, { onDelete: 'cascade' }),
+    operatingContext: text('operating_context', { enum: ['customer', 'staff'] })
+      .notNull()
+      .default('customer'),
     attempts: integer('attempts').notNull().default(0),
     leaseToken: uuid('lease_token'),
     leaseUntil: timestamp('lease_until', { withTimezone: true }),
@@ -30,6 +33,7 @@ export const asyncJobs = pgTable(
     index('async_jobs_owner_created_idx').on(t.createdBy, t.createdAt),
     check('async_jobs_status', sql`${t.status} IN ('queued','processing','completed','failed')`),
     check('async_jobs_type', sql`${t.type} ~ '^[a-z][a-z0-9-]{0,63}$'`),
+    check('async_jobs_operating_context', sql`${t.operatingContext} IN ('customer','staff')`),
     check('async_jobs_progress', sql`${t.progressPct} BETWEEN 0 AND 100`),
     check('async_jobs_attempts', sql`${t.attempts} BETWEEN 0 AND 3`),
     check(

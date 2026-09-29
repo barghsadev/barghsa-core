@@ -171,6 +171,20 @@ afterAll(async () => {
   }
 });
 
+it('refuses to publish a customer export from a staff-context job', async () => {
+  await pool.query(`UPDATE async_jobs SET operating_context='staff' WHERE id=$1`, [jobId]);
+  await expect(
+    generateProfileExport(
+      { ticketId, profileId, userId },
+      { jobId, leaseToken, setProgress: async () => undefined },
+      pool,
+      provider
+    )
+  ).rejects.toThrow('Profile export no longer authorized');
+  expect(objects.size).toBe(0);
+  await pool.query(`UPDATE async_jobs SET operating_context='customer' WHERE id=$1`, [jobId]);
+});
+
 it('creates a private archive with customer fields and eligible document bytes, then expires it', async () => {
   const progress: number[] = [];
   const result = await generateProfileExport(

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { v7 as uuidv7 } from 'uuid';
+import type { OperatingContext } from '../session/session.service.js';
 
 export interface JobStatus {
   id: string;
@@ -21,37 +22,44 @@ const validId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 /** Submit work from an authorized product service; payload is never returned to the browser. */
 @Injectable()
 export class JobService {
-  async submit(type: string, payload: unknown, createdBy: string): Promise<string> {
+  async submit(
+    type: string,
+    payload: unknown,
+    createdBy: string,
+    operatingContext: OperatingContext = 'customer'
+  ): Promise<string> {
     if (!/^[a-z][a-z0-9-]{0,63}$/.test(type)) throw new Error('Invalid job type');
     const serialized = JSON.stringify(payload);
     if (!serialized || Buffer.byteLength(serialized) > 64 * 1024)
       throw new Error('Invalid job payload');
     const id = uuidv7();
     await getDbPool().query(
-      `INSERT INTO async_jobs(id,type,payload,created_by) VALUES ($1,$2,$3::jsonb,$4)`,
-      [id, type, serialized, createdBy]
+      `INSERT INTO async_jobs(id,type,payload,created_by,operating_context)
+       VALUES ($1,$2,$3::jsonb,$4,$5)`,
+      [id, type, serialized, createdBy, operatingContext]
     );
     return id;
   }
 
-  async get(id: string, userId: string): Promise<JobStatus> {
+  async get(id: string, userId: string, operatingContext: OperatingContext): Promise<JobStatus> {
     if (!validId.test(id)) throw new NotFoundException();
     const result = await getDbPool().query<JobStatus>(
-      `SELECT ${publicFields} FROM async_jobs WHERE id=$1 AND created_by=$2`,
-      [id, userId]
+      `SELECT ${publicFields} FROM async_jobs
+       WHERE id=$1 AND created_by=$2 AND operating_context=$3`,
+      [id, userId, operatingContext]
     );
     if (!result.rows[0]) throw new NotFoundException();
     return result.rows[0];
   }
 
-  async retry(id: string, userId: string): Promise<JobStatus> {
+  async retry(id: string, userId: string, operatingContext: OperatingContext): Promise<JobStatus> {
     if (!validId.test(id)) throw new NotFoundException();
     const result = await getDbPool().query<JobStatus>(
       `UPDATE async_jobs SET status='queued',progress_pct=0,result_url=NULL,
           error_message=NULL,attempts=0,started_at=NULL,completed_at=NULL
-       WHERE id=$1 AND created_by=$2 AND status='failed'
+       WHERE id=$1 AND created_by=$2 AND operating_context=$3 AND status='failed'
        RETURNING ${publicFields}`,
-      [id, userId]
+      [id, userId, operatingContext]
     );
     if (!result.rows[0]) throw new NotFoundException();
     return result.rows[0];

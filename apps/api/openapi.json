@@ -15070,6 +15070,24 @@
         ]
       }
     },
+    "/api/auth/sessions/context": {
+      "post": {
+        "operationId": "SessionController_switchContext",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Session credentials rotated for the new context."
+          },
+          "403": {
+            "description": "Staff context is not available."
+          }
+        },
+        "summary": "Switch between staff and customer operating contexts",
+        "tags": [
+          "Sessions"
+        ]
+      }
+    },
     "/api/auth/sessions/revoke-all": {
       "post": {
         "operationId": "SessionController_revokeAllSessions",

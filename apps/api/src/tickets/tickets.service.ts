@@ -822,8 +822,8 @@ export class TicketsService {
       const jobId = request.privacy_export_job_id ?? randomUUID();
       if (!request.privacy_export_job_id) {
         await client.query(
-          `INSERT INTO async_jobs(id,type,payload,created_by)
-           VALUES($1,'profile-export',$2::jsonb,$3)`,
+          `INSERT INTO async_jobs(id,type,payload,created_by,operating_context)
+           VALUES($1,'profile-export',$2::jsonb,$3,'customer')`,
           [jobId, JSON.stringify({ ticketId, profileId, userId: actor.userId }), actor.userId]
         );
         await client.query(`UPDATE tickets SET privacy_export_job_id=$2 WHERE id=$1`, [
@@ -833,7 +833,11 @@ export class TicketsService {
         await client.query(
           `INSERT INTO audit_log(id,user_id,event,metadata)
            VALUES($1,$2,'profile_export_queued',$3::jsonb)`,
-          [randomUUID(), actor.userId, JSON.stringify({ ticketId, profileId, jobId })]
+          [
+            randomUUID(),
+            actor.userId,
+            JSON.stringify({ ticketId, profileId, jobId, operatingContext: 'customer' }),
+          ]
         );
       }
       await requireCurrentSession(client, actor);

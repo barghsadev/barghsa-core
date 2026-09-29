@@ -2,6 +2,11 @@ import { lookup } from './lookup.js';
 const fa = {
   workspace: 'فضای کاری',
   administration: 'مدیریت',
+  staffContext: 'حالت کارکنان',
+  customerContext: 'حالت مشتری',
+  switchToStaff: 'رفتن به حالت کارکنان',
+  switchToCustomer: 'رفتن به حالت مشتری',
+  contextSwitchError: 'تغییر حالت ناموفق بود. دوباره تلاش کنید.',
   navigation: 'ناوبری اصلی',
   menu: 'فهرست',
   close: 'بستن فهرست',
@@ -46,6 +51,11 @@ const fa = {
 const en: Record<keyof typeof fa, string> = {
   workspace: 'Workspace',
   administration: 'Administration',
+  staffContext: 'Staff mode',
+  customerContext: 'Customer mode',
+  switchToStaff: 'Switch to staff',
+  switchToCustomer: 'Switch to customer',
+  contextSwitchError: 'Could not switch mode. Please try again.',
   navigation: 'Main navigation',
   menu: 'Menu',
   close: 'Close menu',

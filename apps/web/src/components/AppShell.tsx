@@ -6,6 +6,7 @@ import { shellText } from '@barghsa/i18n/shell';
 import { BrandMark } from './BrandMark.js';
 import { LanguageSwitcher } from './LanguageSwitcher.js';
 import { ThemeSwitcher } from './ThemeSwitcher.js';
+import { OperatingContextSwitch } from './OperatingContextSwitch.js';
 import {
   AnalyticsConsentBanner,
   AnalyticsConsentProvider,
@@ -85,6 +86,7 @@ export function AppShell({
           ) : null}
         </div>
         <div className="ms-auto flex shrink-0 items-center gap-1 sm:gap-2">
+          <OperatingContextSwitch area={area} locale={locale} />
           <ThemeSwitcher />
           <LanguageSwitcher />
           {actions}

@@ -19,6 +19,8 @@ const CSRF_TOKEN_BYTES = 32;
 /** Max sessions per user to prevent resource abuse */
 const MAX_SESSIONS_PER_USER = 50;
 
+export type OperatingContext = 'staff' | 'customer';
+
 /** Internal signal: reject changed request proof without extending the session. */
 class SessionCsrfMismatch extends HttpException {
   constructor() {
@@ -39,6 +41,8 @@ export interface ValidatedSession {
   userId: string;
   csrfToken: string;
   isAdmin: boolean;
+  operatingContext: OperatingContext;
+  staffAvailable: boolean;
   permissions?: string[];
   expiresAt: Date;
   idleDeadline: Date;
@@ -126,7 +130,9 @@ export class SessionService {
       // Locking existing sessions alone cannot serialize an empty set or
       // prevent another transaction from inserting after the count snapshot.
       const account = await client.query(
-        'SELECT auth_version,disabled_at,is_admin,is_staff FROM users WHERE user_id=$1 FOR UPDATE',
+        `SELECT auth_version,disabled_at,is_admin,is_staff,
+                EXISTS(SELECT 1 FROM user_roles r WHERE r.user_id=users.user_id) AS has_roles
+         FROM users WHERE user_id=$1 FOR UPDATE`,
         [userId]
       );
       if (
@@ -141,6 +147,12 @@ export class SessionService {
           401
         );
       }
+      const operatingContext: OperatingContext =
+        account.rows[0].is_admin === true ||
+        account.rows[0].is_staff === true ||
+        account.rows[0].has_roles === true
+          ? 'staff'
+          : 'customer';
 
       // 1. Enforce the cap on currently usable sessions for this account.
       const lockResult = await client.query(
@@ -197,8 +209,8 @@ export class SessionService {
       await client.query(
         `INSERT INTO sessions
          (session_id, user_id, csrf_token, refresh_token_hash, family_id,
-          device_info, expires_at, idle_deadline, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, $9, $9)`,
+          device_info, expires_at, idle_deadline, operating_context, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, $9, $10, $10)`,
         [
           sessionId,
           userId,
@@ -208,6 +220,7 @@ export class SessionService {
           deviceInfo ? JSON.stringify(deviceInfo) : null,
           expiresAt,
           idleDeadline,
+          operatingContext,
           now,
         ]
       );
@@ -279,7 +292,7 @@ export class SessionService {
       const database = client ?? pool;
       const result = await database.query(
         `SELECT s.session_id, s.user_id, s.csrf_token,
-                u.is_admin, u.disabled_at,
+                  s.operating_context, u.is_admin, u.is_staff, u.disabled_at,
                 ARRAY(SELECT r.permissions FROM user_roles ur
                       JOIN staff_roles r ON r.role_id=ur.role_id
                       WHERE ur.user_id=u.user_id) AS role_permissions,
@@ -326,12 +339,21 @@ export class SessionService {
         }
         await client.query('COMMIT');
       }
+      const operatingContext: OperatingContext =
+        row.operating_context === 'customer' || row.operating_context === 'staff'
+          ? row.operating_context
+          : row.is_admin || row.is_staff || row.role_permissions?.length
+            ? 'staff'
+            : 'customer';
       return {
         sessionId: row.session_id,
         userId: row.user_id,
         csrfToken: row.csrf_token,
-        isAdmin: row.is_admin ?? false,
-        permissions: resolveStaffPermissions(row.role_permissions),
+        isAdmin: operatingContext === 'staff' && (row.is_admin ?? false),
+        operatingContext,
+        staffAvailable: Boolean(row.is_admin || row.is_staff || row.role_permissions?.length),
+        permissions:
+          operatingContext === 'customer' ? [] : resolveStaffPermissions(row.role_permissions),
         expiresAt: row.expires_at,
         idleDeadline,
         stepUpVerifiedAt: row.step_up_verified_at ?? null,
@@ -391,7 +413,7 @@ export class SessionService {
       // 1. Fetch and lock the old session
       const oldResult = await client.query(
         `SELECT session_id, user_id, csrf_token, family_id,
-                device_info, expires_at, idle_deadline
+                device_info, expires_at, idle_deadline, operating_context
          FROM sessions
          WHERE session_id = $1 AND revoked_at IS NULL AND expires_at > clock_timestamp() AND idle_deadline > clock_timestamp()
          FOR UPDATE`,
@@ -435,8 +457,8 @@ export class SessionService {
       await client.query(
         `INSERT INTO sessions
          (session_id, user_id, csrf_token, refresh_token_hash, family_id,
-          device_info, expires_at, idle_deadline, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, $9, $9)`,
+          device_info, expires_at, idle_deadline, operating_context, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, $9, $10, $10)`,
         [
           newSessionId,
           oldRow.user_id,
@@ -446,6 +468,7 @@ export class SessionService {
           oldRow.device_info,
           expiresAt,
           idleDeadline,
+          oldRow.operating_context ?? 'customer',
           now,
         ]
       );
@@ -500,6 +523,71 @@ export class SessionService {
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       if (!transactionClient) client.release();
+    }
+  }
+
+  /** Switch authority by rotating every session credential and recording the transition. */
+  async switchOperatingContext(
+    sessionId: string,
+    userId: string,
+    currentContext: OperatingContext,
+    targetContext: OperatingContext,
+    ip: string
+  ): Promise<CreatedSession> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const rotated = await this.rotateSession(sessionId, 'operating-context-switch', client);
+      if (!rotated) throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+
+      const account = await client.query(
+        `SELECT u.is_admin,u.is_staff,
+                EXISTS(SELECT 1 FROM user_roles r WHERE r.user_id=u.user_id) AS has_roles,
+                s.user_id,s.operating_context
+         FROM sessions s JOIN users u ON u.user_id=s.user_id
+         WHERE s.session_id=$1`,
+        [sessionId]
+      );
+      const previous = account.rows[0];
+      if (!previous || previous.user_id !== userId || previous.operating_context !== currentContext)
+        throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+      if (targetContext === currentContext)
+        throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+      if (
+        targetContext === 'staff' &&
+        !previous.is_admin &&
+        !previous.is_staff &&
+        !previous.has_roles
+      )
+        throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+
+      await client.query(
+        `UPDATE sessions SET operating_context=$1,step_up_verified_at=NULL,updated_at=clock_timestamp()
+         WHERE session_id=$2`,
+        [targetContext, rotated.sessionId]
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+         VALUES($1,$2,'auth.operating_context_switched',$3,$4,$5,clock_timestamp())`,
+        [
+          uuidv7(),
+          userId,
+          JSON.stringify({ from: currentContext, to: targetContext }),
+          correlationIdStorage.getStore() ?? null,
+          ip,
+        ]
+      );
+      await client.query('COMMIT');
+      return rotated;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
+      this.logger.error(
+        `Failed to switch operating context: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
+      throw new HttpException({ error: ErrorCodes.INTERNAL_SERVER.code }, 500);
+    } finally {
+      client.release();
     }
   }
 

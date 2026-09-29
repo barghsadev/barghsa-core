@@ -22,6 +22,8 @@ export class SessionContextMiddleware implements NestMiddleware {
           userId: session.userId,
           csrfToken: session.csrfToken,
           isAdmin: session.isAdmin,
+          operatingContext: session.operatingContext,
+          staffAvailable: session.staffAvailable,
           permissions: session.permissions ?? [],
           stepUpVerifiedAt: session.stepUpVerifiedAt,
         };

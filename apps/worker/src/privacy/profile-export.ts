@@ -170,11 +170,13 @@ export async function generateProfileExport(
   const owned = await pool.query<{ privacy_export_storage_key: string | null }>(
     `SELECT t.privacy_export_storage_key FROM tickets t JOIN profiles p ON p.id=t.profile_id
      JOIN users u ON u.user_id=t.user_id AND u.disabled_at IS NULL
+     JOIN async_jobs j ON j.id=t.privacy_export_job_id
      LEFT JOIN user_profile_contexts c ON c.user_id=u.user_id
      WHERE t.id=$1 AND t.user_id=$2 AND t.profile_id=$3 AND t.privacy_request_type='export'
-       AND t.privacy_export_job_id=$4 AND p.user_id=$2 AND NOT p.archived
+       AND t.privacy_export_job_id=$4 AND j.status='processing' AND j.lease_token=$5
+       AND j.operating_context='customer' AND p.user_id=$2 AND NOT p.archived
        AND ((c.user_id IS NULL AND p.is_default) OR c.profile_id=p.id)`,
-    [ticketId, userId, profileId, context.jobId]
+    [ticketId, userId, profileId, context.jobId, context.leaseToken]
   );
   if (owned.rowCount !== 1) throw new Error('Profile export no longer authorized');
   const priorKey = owned.rows[0]?.privacy_export_storage_key;
@@ -243,6 +245,7 @@ export async function generateProfileExport(
        WHERE t.id=$1 AND t.user_id=$2 AND t.profile_id=$3
          AND t.privacy_request_type='export' AND t.privacy_export_job_id=$4
          AND j.id=$4 AND j.status='processing' AND j.lease_token=$6
+         AND j.operating_context='customer'
          AND p.id=t.profile_id AND p.user_id=$2 AND NOT p.archived
          AND u.user_id=$2 AND u.disabled_at IS NULL
          AND ((c.user_id IS NULL AND p.is_default) OR c.profile_id=p.id)
@@ -256,7 +259,12 @@ export async function generateProfileExport(
         [
           randomUUID(),
           userId,
-          JSON.stringify({ ticketId, profileId, documentCount: documents.length }),
+          JSON.stringify({
+            ticketId,
+            profileId,
+            documentCount: documents.length,
+            operatingContext: 'customer',
+          }),
         ]
       );
       await client.query('COMMIT');

@@ -1,4 +1,10 @@
-export async function readSessionRole(signal?: AbortSignal): Promise<boolean | null> {
+export interface SessionContext {
+  isStaff: boolean;
+  operatingContext: 'staff' | 'customer';
+  canSwitchContext: boolean;
+}
+
+export async function readSessionContext(signal?: AbortSignal): Promise<SessionContext | null> {
   const response = await fetch('/api/auth/user', {
     credentials: 'include',
     signal: signal ?? null,
@@ -13,5 +19,24 @@ export async function readSessionRole(signal?: AbortSignal): Promise<boolean | n
     typeof (user as { isStaff?: unknown }).isStaff !== 'boolean'
   )
     throw new Error('Invalid session response');
-  return (user as { isStaff: boolean }).isStaff;
+  const value = user as {
+    isStaff: boolean;
+    operatingContext?: unknown;
+    canSwitchContext?: unknown;
+  };
+  return {
+    isStaff: value.isStaff,
+    operatingContext:
+      value.operatingContext === 'staff' || value.operatingContext === 'customer'
+        ? value.operatingContext
+        : value.isStaff
+          ? 'staff'
+          : 'customer',
+    canSwitchContext:
+      typeof value.canSwitchContext === 'boolean' ? value.canSwitchContext : value.isStaff,
+  };
+}
+
+export async function readSessionRole(signal?: AbortSignal): Promise<boolean | null> {
+  return (await readSessionContext(signal))?.isStaff ?? null;
 }

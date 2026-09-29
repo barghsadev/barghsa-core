@@ -9,8 +9,10 @@ import {
   Body,
   Param,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -20,6 +22,7 @@ import type { AuthenticatedRequest } from './session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { RequiresStepUp, StepUpGuard } from './step-up.guard.js';
 import { sessionLocation } from './session-location.js';
+import { setCsrfCookie, setRefreshCookie, setSessionCookie } from './cookie.helper.js';
 
 // ─── Zod schemas ──────────────────────────────────────────────────────
 
@@ -29,6 +32,7 @@ const RevokeAllSchema = z
     password: z.string().min(1, ErrorCodes.VALIDATION_INPUT_MISSING.code),
   })
   .strict();
+const SwitchContextSchema = z.object({ context: z.enum(['staff', 'customer']) }).strict();
 
 // ─── Controller ───────────────────────────────────────────────────────
 
@@ -39,6 +43,33 @@ export class SessionController {
   private readonly logger = new Logger(SessionController.name);
 
   constructor(private readonly sessionService: SessionService) {}
+
+  @Post('context')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'sessions:context:user', limit: 10, windowMs: 60_000, security: true })
+  @ApiOperation({ summary: 'Switch between staff and customer operating contexts' })
+  @ApiResponse({ status: 200, description: 'Session credentials rotated for the new context.' })
+  @ApiResponse({ status: 403, description: 'Staff context is not available.' })
+  async switchContext(
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<{ operatingContext: 'staff' | 'customer' }> {
+    const parsed = SwitchContextSchema.safeParse(body);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    const next = await this.sessionService.switchOperatingContext(
+      req.session.sessionId,
+      req.session.userId,
+      req.session.operatingContext,
+      parsed.data.context,
+      req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    );
+    setSessionCookie(res, next.sessionId, next.expiresAt);
+    setRefreshCookie(res, next.refreshToken, next.expiresAt);
+    setCsrfCookie(res, next.csrfToken);
+    return { operatingContext: parsed.data.context };
+  }
 
   /**
    * GET /api/auth/sessions

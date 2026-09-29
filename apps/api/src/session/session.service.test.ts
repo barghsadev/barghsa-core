@@ -188,6 +188,29 @@ describe('SessionService', () => {
   // ────────────────────────────────────────────────────────────
 
   describe('createSession', () => {
+    it('starts role-only staff accounts in staff context', async () => {
+      mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.includes('FROM users'))
+          return {
+            rows: [
+              {
+                auth_version: 0,
+                disabled_at: null,
+                is_admin: false,
+                is_staff: false,
+                has_roles: true,
+              },
+            ],
+          };
+        return { rows: [] };
+      });
+      await service.createSession('user-001', false);
+      const insert = mockClient.query.mock.calls.find(
+        (call) => typeof call[0] === 'string' && call[0].startsWith('INSERT INTO sessions')
+      );
+      expect(insert?.[1]?.[8]).toBe('staff');
+    });
+
     it('creates a session and returns credentials', async () => {
       mockClient.query.mockImplementation(async (sql: string) => {
         if (sql.includes('FROM users')) return { rows: [{ auth_version: 0, disabled_at: null }] };

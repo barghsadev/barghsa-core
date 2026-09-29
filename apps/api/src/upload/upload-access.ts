@@ -12,6 +12,17 @@ export async function requireUploadContext(
   context: UploadContext
 ) {
   const { purpose, profileId } = context;
+  const staffPurpose = [
+    'staff_business_document',
+    'branding_logo',
+    'knowledge_base',
+    'verification_evidence',
+  ].includes(purpose ?? '');
+  if (
+    (request.session.operatingContext === 'customer' && staffPurpose) ||
+    (request.session.operatingContext === 'staff' && !staffPurpose && (purpose || profileId))
+  )
+    throw new ForbiddenException('Upload is not permitted in this operating context');
   if (purpose === 'staff_business_document') {
     if (
       !profileId ||

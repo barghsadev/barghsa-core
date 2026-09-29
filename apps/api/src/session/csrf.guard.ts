@@ -13,6 +13,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import type { AuthenticatedRequest } from './session.guard.js';
 import { SESSION_COOKIE_NAME } from './cookie.helper.js';
+import { requireRouteOperatingContext } from './operating-context.js';
 
 /**
  * CSRF protection guard (T-02.02.03).
@@ -61,6 +62,9 @@ export class CsrfGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean | Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
     const method = request.method.toUpperCase();
+    const activeSession = (request as AuthenticatedRequest).session;
+    if (activeSession)
+      requireRouteOperatingContext(request.path ?? '', activeSession.operatingContext);
 
     // ── Safe methods are always allowed ─────────────────────────
     if (this.SAFE_METHODS.has(method)) {

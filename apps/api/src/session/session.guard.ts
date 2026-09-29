@@ -9,6 +9,8 @@ import type { Request } from 'express';
 import { SessionService } from './session.service.js';
 import { SESSION_COOKIE_NAME } from './cookie.helper.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { requireRouteOperatingContext } from './operating-context.js';
+import type { OperatingContext } from './session.service.js';
 
 function requestCsrfProof(context: ExecutionContext) {
   const request: Request = context.switchToHttp().getRequest();
@@ -32,6 +34,8 @@ export interface AuthenticatedRequest extends Request {
     userId: string;
     csrfToken: string;
     isAdmin: boolean;
+    operatingContext: OperatingContext;
+    staffAvailable: boolean;
     permissions?: string[];
     stepUpVerifiedAt: Date | null;
   };
@@ -96,9 +100,13 @@ export class SessionAuthGuard implements CanActivate {
       userId: validated.userId,
       csrfToken: validated.csrfToken,
       isAdmin: validated.isAdmin,
+      operatingContext: validated.operatingContext,
+      staffAvailable: validated.staffAvailable,
       permissions: validated.permissions ?? [],
       stepUpVerifiedAt: validated.stepUpVerifiedAt,
     };
+
+    requireRouteOperatingContext(request.path ?? '', validated.operatingContext);
 
     return true;
   }
@@ -151,9 +159,12 @@ export class SessionOptionalGuard implements CanActivate {
         userId: validated.userId,
         csrfToken: validated.csrfToken,
         isAdmin: validated.isAdmin,
+        operatingContext: validated.operatingContext,
+        staffAvailable: validated.staffAvailable,
         permissions: validated.permissions ?? [],
         stepUpVerifiedAt: validated.stepUpVerifiedAt,
       };
+      requireRouteOperatingContext(request.path ?? '', validated.operatingContext);
     }
 
     return true;
