@@ -14,6 +14,16 @@ const en = {
   adjustmentTitle: 'Adjust paid invoice',
   replacementIssue: 'Cancel original and issue replacement',
   adjustmentIssue: 'Issue adjustment',
+  reviewTitle: 'Review invoice adjustment',
+  reviewDescription:
+    'Confirm the current invoice and adjustment amount before submitting. The financial state is checked again when you continue.',
+  reviewDirection: 'Adjustment type',
+  reviewCharge: 'Additional charge',
+  reviewCredit: 'Credit note; no wallet transfer',
+  reviewApproval: 'Second approval',
+  reviewApprovalRequired: 'A second finance reviewer is required',
+  reviewApprovalNotRequired: 'No second reviewer required',
+  reviewConfirm: 'Confirm adjustment',
   reason: 'Explanation shown to customer',
   amount: 'Adjustment amount (IRR)',
   amountHint:
@@ -50,6 +60,16 @@ const fa: Record<keyof typeof en, string> = {
   adjustmentTitle: 'اصلاح فاکتور پرداخت‌شده',
   replacementIssue: 'لغو اصل و صدور فاکتور جایگزین',
   adjustmentIssue: 'صدور فاکتور اصلاحی',
+  reviewTitle: 'مرور اصلاح مالی فاکتور',
+  reviewDescription:
+    'فاکتور و مبلغ اصلاح را پیش از ثبت تأیید کنید. وضعیت مالی هنگام ادامه دوباره بررسی می‌شود.',
+  reviewDirection: 'نوع اصلاح',
+  reviewCharge: 'بدهی اضافی',
+  reviewCredit: 'سند بستانکار؛ بدون انتقال به کیف پول',
+  reviewApproval: 'تأیید دوم',
+  reviewApprovalRequired: 'بررسی کارشناس مالی دوم لازم است',
+  reviewApprovalNotRequired: 'بررسی دوم لازم نیست',
+  reviewConfirm: 'تأیید اصلاح',
   reason: 'شرح تغییرات برای مشتری',
   amount: 'مبلغ اصلاح (ریال)',
   amountHint:

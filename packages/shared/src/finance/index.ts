@@ -37,5 +37,10 @@ export type { RefundRequestReview, RefundRequestReviewData } from './refund-requ
 export { parseRefundRequestReview } from './refund-request-review.js';
 export type { RefundDecisionReview, RefundDecisionReviewData } from './refund-decision-review.js';
 export { parseRefundDecisionReview } from './refund-decision-review.js';
+export type {
+  InvoiceAdjustmentReview,
+  InvoiceAdjustmentReviewData,
+} from './invoice-adjustment-review.js';
+export { parseInvoiceAdjustmentReview } from './invoice-adjustment-review.js';
 export * from './bank-receipt-review.js';
 export * from './contract-financial-review.js';

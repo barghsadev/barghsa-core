@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   HttpException,
   Param,
   Post,
@@ -62,9 +63,20 @@ const input = z.discriminatedUnion('kind', [
         .pipe(
           z.string().refine((v) => BigInt(v) !== 0n && BigInt(v) >= -maxIrr && BigInt(v) <= maxIrr)
         ),
+      expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
     })
     .strict(),
 ]);
+const adjustmentReviewInput = z
+  .object({
+    kind: z.literal('adjustment'),
+    reason: base.reason,
+    amount: z
+      .string()
+      .regex(/^-?\d{1,19}$/)
+      .refine((v) => BigInt(v) !== 0n && BigInt(v) >= -maxIrr && BigInt(v) <= maxIrr),
+  })
+  .strict();
 
 @ApiTags('Admin · Invoice corrections')
 @ApiBearerAuth()
@@ -95,6 +107,39 @@ export class InvoiceCorrectionsController {
   })
   async context(@Req() req: AuthenticatedRequest, @Param('invoiceId') value: string) {
     return invoiceCorrectionContext(this.invoiceId(req, value), req.session);
+  }
+
+  @Post('review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Preview the authoritative paid-invoice adjustment' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['kind', 'reason', 'amount'],
+      properties: {
+        kind: { type: 'string', enum: ['adjustment'] },
+        reason: { type: 'string', minLength: 1, maxLength: 1000 },
+        amount: { type: 'string', pattern: '^-?\\d{1,19}$' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Current financial review and confirmation hash' })
+  async review(
+    @Req() req: AuthenticatedRequest,
+    @Param('invoiceId') value: string,
+    @Body() body: unknown
+  ) {
+    const invoiceId = this.invoiceId(req, value);
+    const parsed = adjustmentReviewInput.safeParse(body);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    return this.adjustments.review({
+      originalInvoiceId: invoiceId,
+      amount: BigInt(parsed.data.amount),
+      reason: parsed.data.reason,
+      actor: req.session,
+    });
   }
 
   @Post()
@@ -139,7 +184,7 @@ export class InvoiceCorrectionsController {
         {
           type: 'object',
           additionalProperties: false,
-          required: ['kind', 'idempotencyKey', 'reason', 'amount'],
+          required: ['kind', 'idempotencyKey', 'reason', 'amount', 'expectedReviewHash'],
           properties: {
             kind: { type: 'string', enum: ['adjustment'] },
             idempotencyKey: { type: 'string', format: 'uuid' },
@@ -150,6 +195,7 @@ export class InvoiceCorrectionsController {
               description:
                 'Nonzero signed IRR; absolute value must fit int8. Positive charge, negative credit note. Does not transfer wallet funds.',
             },
+            expectedReviewHash: { type: 'string', pattern: '^[a-f0-9]{64}$' },
           },
         },
       ],
@@ -205,6 +251,7 @@ export class InvoiceCorrectionsController {
             ...common,
             originalInvoiceId: invoiceId,
             amount: BigInt(data.amount),
+            expectedReviewHash: data.expectedReviewHash,
           });
     if ('status' in result) {
       response.status(202);

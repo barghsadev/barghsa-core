@@ -15,17 +15,23 @@ import {
   FieldLabel,
   FieldLegend,
   FieldSet,
+  FinancialReviewSummary,
   Input,
   NativeSelect,
   NativeSelectOption,
 } from '@barghsa/ui';
 import { tManualInvoice as t } from '@barghsa/i18n/manual-invoice';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import {
+  parseInvoiceAdjustmentReview,
+  type InvoiceAdjustmentReview,
+} from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { authErrorCode } from '../lib/auth-errors.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
+import { invoiceFinancialReviewRows } from './InvoiceFinancialReviewRows.js';
 
 interface DraftLine {
   id: string;
@@ -53,6 +59,7 @@ interface InvoiceRequest {
     invoiceId: string;
     reason: string;
     amount: string;
+    expectedReviewHash?: string;
   };
   profileId: string;
   idempotencyKey: string;
@@ -195,6 +202,7 @@ export function ManualInvoiceForm({
     [stepError, setStepError] = useState<string | null>(null);
   const [result, setResult] = useState<{ invoiceId: string; totalAmount: string } | null>(null);
   const [approval, setApproval] = useState<{ id: string; amount: string } | null>(null);
+  const [adjustmentReview, setAdjustmentReview] = useState<InvoiceAdjustmentReview | null>(null);
   const submitButton = useRef<HTMLButtonElement>(null);
   const signed = /^-?\d{1,19}$/.test(digits(amount)) ? BigInt(digits(amount)) : 0n;
   const validAdjustment =
@@ -272,6 +280,7 @@ export function ManualInvoiceForm({
     request.current = null;
     uncertain.current = false;
     setLocked(false);
+    setAdjustmentReview(null);
   }
   async function send(): Promise<'done' | 'step-up' | 'error'> {
     const submitted = request.current;
@@ -287,7 +296,10 @@ export function ManualInvoiceForm({
             idempotencyKey: submitted.idempotencyKey,
             ...(submitted.correction.kind === 'replacement'
               ? { lines: submitted.lines }
-              : { amount: submitted.correction.amount }),
+              : {
+                  amount: submitted.correction.amount,
+                  expectedReviewHash: submitted.correction.expectedReviewHash,
+                }),
           }
         : submitted;
       const response = await fetch(path, {
@@ -408,6 +420,65 @@ export function ManualInvoiceForm({
     busy.current = true;
     setActing(true);
     setError(null);
+    try {
+      const submitted = request.current;
+      if (
+        submitted?.correction?.kind === 'adjustment' &&
+        !submitted.correction.expectedReviewHash
+      ) {
+        try {
+          const response = await fetch(
+            `/api/admin/invoices/${encodeURIComponent(submitted.correction.invoiceId)}/corrections/review`,
+            {
+              method: 'POST',
+              headers: withCsrf({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify({
+                kind: 'adjustment',
+                reason: submitted.correction.reason,
+                amount: submitted.correction.amount,
+              }),
+            }
+          );
+          if (!response.ok) {
+            setError(
+              response.status === 409 ? 'conflict' : response.status === 403 ? 'denied' : 'invalid'
+            );
+            unlock();
+            return;
+          }
+          const review = parseInvoiceAdjustmentReview(await response.json());
+          if (
+            !review ||
+            review.scope.resourceId !== submitted.correction.invoiceId ||
+            review.scope.profileId !== submitted.profileId ||
+            review.data.adjustment.amount !== submitted.correction.amount ||
+            review.data.adjustment.reason !== submitted.correction.reason
+          )
+            throw new Error('Invalid adjustment review');
+          submitted.correction.expectedReviewHash = review.hash;
+          setAdjustmentReview(review);
+          return;
+        } catch {
+          setError('invalid');
+          unlock();
+          return;
+        }
+      }
+      if ((await send()) === 'step-up') {
+        setPassword('');
+        setStepError(null);
+        setStepUp(true);
+      }
+    } finally {
+      busy.current = false;
+      setActing(false);
+    }
+  }
+  async function confirmAdjustmentReview() {
+    if (busy.current || !adjustmentReview) return;
+    setAdjustmentReview(null);
+    busy.current = true;
+    setActing(true);
     try {
       if ((await send()) === 'step-up') {
         setPassword('');
@@ -730,6 +801,70 @@ export function ManualInvoiceForm({
           {acting ? text('issuing') : locked ? text('retry') : text('issue')}
         </Button>
       </form>
+      <Dialog
+        open={Boolean(adjustmentReview)}
+        onOpenChange={(open) => {
+          if (!open && !acting) unlock();
+        }}
+      >
+        <DialogContent
+          dir={locale === 'fa' ? 'rtl' : 'ltr'}
+          className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-lg"
+        >
+          <DialogHeader>
+            <DialogTitle>{text('reviewTitle')}</DialogTitle>
+            <DialogDescription>{text('reviewDescription')}</DialogDescription>
+          </DialogHeader>
+          {adjustmentReview && (
+            <FinancialReviewSummary
+              title={text('reviewTitle')}
+              rows={[
+                ...invoiceFinancialReviewRows(adjustmentReview.data, locale, numbers, (value) =>
+                  new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  }).format(new Date(value))
+                ),
+                {
+                  id: 'direction',
+                  label: text('reviewDirection'),
+                  value: text(
+                    adjustmentReview.data.adjustment.direction === 'charge'
+                      ? 'reviewCharge'
+                      : 'reviewCredit'
+                  ),
+                },
+                {
+                  id: 'reason',
+                  label: text('reason'),
+                  value: adjustmentReview.data.adjustment.reason,
+                },
+                {
+                  id: 'approval',
+                  label: text('reviewApproval'),
+                  value: text(
+                    adjustmentReview.data.adjustment.approvalRequired
+                      ? 'reviewApprovalRequired'
+                      : 'reviewApprovalNotRequired'
+                  ),
+                },
+              ]}
+              total={{
+                label: text('amount'),
+                value: numbers.money(adjustmentReview.data.adjustment.absoluteAmount),
+              }}
+            />
+          )}
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={unlock} disabled={acting}>
+              {text('cancel')}
+            </Button>
+            <Button type="button" onClick={() => void confirmAdjustmentReview()} disabled={acting}>
+              {text('reviewConfirm')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <Dialog
         open={stepUp}
         onOpenChange={(open) => {

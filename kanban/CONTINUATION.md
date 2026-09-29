@@ -1,5 +1,9 @@
 # Development continuation status
 
+## Current manual batch — September 30, 2026
+
+[Paid-invoice adjustment financial review](batches/2026-09-30-invoice-adjustment-review-snapshot.md) binds staff adjustment submission to a server-derived invoice and policy snapshot, confirms it in the bilingual UI, and records the confirmed hash across immediate issuance and second approval. The wider cross-command review work remains partial.
+
 ## Current manual batch — September 29, 2026
 
 [Refund decision financial snapshot](batches/2026-09-29-refund-decision-review-snapshot.md) adds server-derived review and stale-state confirmation to staff decisions for both manual refund destinations. The audit retains each confirmed decision review; the wider cross-command review work remains partial.

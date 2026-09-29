@@ -8368,6 +8368,10 @@
                         "pattern": "^-?\\d{1,19}$",
                         "type": "string"
                       },
+                      "expectedReviewHash": {
+                        "pattern": "^[a-f0-9]{64}$",
+                        "type": "string"
+                      },
                       "idempotencyKey": {
                         "format": "uuid",
                         "type": "string"
@@ -8388,7 +8392,8 @@
                       "kind",
                       "idempotencyKey",
                       "reason",
-                      "amount"
+                      "amount",
+                      "expectedReviewHash"
                     ],
                     "type": "object"
                   }
@@ -8421,6 +8426,69 @@
           }
         ],
         "summary": "Cancel and replace before payment, or create a signed adjustment after payment",
+        "tags": [
+          "Admin · Invoice corrections"
+        ]
+      }
+    },
+    "/api/admin/invoices/{invoiceId}/corrections/review": {
+      "post": {
+        "operationId": "InvoiceCorrectionsController_review",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "amount": {
+                    "pattern": "^-?\\d{1,19}$",
+                    "type": "string"
+                  },
+                  "kind": {
+                    "enum": [
+                      "adjustment"
+                    ],
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "reason",
+                  "amount"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Current financial review and confirmation hash"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the authoritative paid-invoice adjustment",
         "tags": [
           "Admin · Invoice corrections"
         ]
