@@ -123,7 +123,7 @@ test('simple electricity order moves from reviewed quote through payment and con
 
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { userId: 'buyer', requiresTosAcceptance: false } })
+    route.fulfill({ json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false } })
   );
   await page.route('**/api/profiles', (route) =>
     route.fulfill({

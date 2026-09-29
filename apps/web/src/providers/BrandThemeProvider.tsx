@@ -7,6 +7,10 @@ import { createContext, useContext, useEffect, useState, useMemo, type ReactNode
 
 export interface BrandConfig {
   appTitle: string;
+  appTitleFa: string;
+  supportEmail: string;
+  supportPhone: string;
+  supportMobile: string;
   slogan: string;
   primaryColor: string;
   secondaryColor: string;
@@ -23,7 +27,11 @@ export interface BrandConfig {
 }
 
 const DEFAULT_BRAND_CONFIG: BrandConfig = {
-  appTitle: 'Barghsa',
+  appTitle: '',
+  appTitleFa: '',
+  supportEmail: '',
+  supportPhone: '',
+  supportMobile: '',
   slogan: '',
   primaryColor: '#176b5b',
   secondaryColor: '#547467',
@@ -63,6 +71,10 @@ const BrandThemeContext = createContext<BrandThemeContextValue>({
  */
 export function useBrandConfig(): BrandThemeContextValue {
   return useContext(BrandThemeContext);
+}
+
+export function brandName(config: BrandConfig, locale: 'fa' | 'en'): string {
+  return locale === 'fa' ? config.appTitleFa : config.appTitle;
 }
 
 /** Pick the higher WCAG contrast ratio against the configured sRGB background. */
@@ -106,6 +118,16 @@ export function parseBrandConfig(value: unknown): BrandConfig | null {
     typeof data.appTitle !== 'string' ||
     !data.appTitle.length ||
     data.appTitle.length > 100 ||
+    typeof data.appTitleFa !== 'string' ||
+    !data.appTitleFa.trim() ||
+    data.appTitleFa.length > 100 ||
+    typeof data.supportEmail !== 'string' ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.supportEmail) ||
+    data.supportEmail.length > 254 ||
+    typeof data.supportPhone !== 'string' ||
+    !/^\+?[0-9 ()-]{7,25}$/.test(data.supportPhone) ||
+    typeof data.supportMobile !== 'string' ||
+    !/^\+?[0-9 ()-]{7,25}$/.test(data.supportMobile) ||
     typeof data.slogan !== 'string' ||
     data.slogan.length > 200 ||
     typeof data.darkMode !== 'boolean'
@@ -184,6 +206,11 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       dark = root.classList.contains('dark');
     const originalIcon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
     const originalHref = originalIcon?.getAttribute('href') ?? null;
+    let activeConfig: BrandConfig | null = null;
+    const localeObserver = new MutationObserver(() => {
+      if (activeConfig) document.title = brandName(activeConfig, root.lang === 'en' ? 'en' : 'fa');
+    });
+    localeObserver.observe(root, { attributes: true, attributeFilter: ['lang'] });
     let icon = originalIcon,
       request: AbortController | null = null;
     const resetIcon = () => {
@@ -196,6 +223,7 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       }
     };
     const apply = (config: BrandConfig) => {
+      activeConfig = config;
       for (const color of colors) {
         const background = config[`${color}Color`],
           foreground = getContrastForeground(background);
@@ -212,7 +240,7 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       );
       root.style.setProperty('--radius', `${config.borderRadiusRem}rem`);
       root.style.setProperty('--spacing', `${0.25 * config.spacingScale}rem`);
-      document.title = config.appTitle;
+      document.title = brandName(config, root.lang === 'en' ? 'en' : 'fa');
       if (config.faviconUrl) {
         if (!icon) {
           icon = document.createElement('link');
@@ -247,6 +275,7 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
     window.addEventListener('barghsa:branding-activated', refresh);
     return () => {
       request?.abort();
+      localeObserver.disconnect();
       window.removeEventListener('barghsa:branding-activated', refresh);
       for (const { name, value, priority } of previous) {
         if (value) root.style.setProperty(name, value, priority);

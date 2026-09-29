@@ -112,8 +112,8 @@ export class SmtpConnectionTesterService {
           : config.from_email,
         to: recipient,
         ...(config.reply_to ? { replyTo: config.reply_to } : {}),
-        subject: 'Barghsa connection test',
-        text: 'This is a test email from Barghsa to confirm the SMTP email provider configuration.',
+        subject: 'Email connection test',
+        text: 'This test email confirms the SMTP email provider configuration.',
       });
       const accepted = result.accepted?.some((value) => {
         const address =

@@ -27,6 +27,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({
         json: {
+          isStaff: false,
           userId: 'user',
           username,
           email: username,
@@ -124,6 +125,7 @@ for (const locale of ['en', 'fa'] as const) {
       await page.route('**/api/auth/user', (route) =>
         route.fulfill({
           json: {
+            isStaff: false,
             userId: 'user',
             username: contactType === 'email' ? mobile : email,
             email,

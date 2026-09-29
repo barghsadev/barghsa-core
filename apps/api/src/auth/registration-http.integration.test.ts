@@ -267,7 +267,7 @@ it('keeps consent bound to the displayed publication and supports later re-accep
     'X-CSRF-Token': user.csrfToken,
   };
   const me = await fetch(`${fixture.base}/api/auth/user`, { headers });
-  expect(await me.json()).toMatchObject({ requiresTosAcceptance: true });
+  expect(await me.json()).toMatchObject({ requiresTosAcceptance: true, isStaff: false });
   expect((await post('tos/accept', { versionId: 'consent-v2' }, headers)).status).toBe(400);
   const acceptance = await post('tos/accept', { versionId: newTerms }, headers);
   expect(acceptance.status, await acceptance.text()).toBe(200);

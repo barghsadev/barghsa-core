@@ -6,12 +6,16 @@ for (const locale of ['en', 'fa'])
     test(`shell navigation works on mobile and desktop (${area}, ${locale})`, async ({ page }) => {
       const fa = locale === 'fa';
       await page.addInitScript((value) => {
+        localStorage.setItem('barghsa.locale', value);
         if (document.documentElement) document.documentElement.lang = value;
         new MutationObserver(() => {
           if (document.documentElement) document.documentElement.lang = value;
         }).observe(document, { childList: true });
       }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/user', (route) =>
+        route.fulfill({ json: { isStaff: area === 'admin', requiresTosAcceptance: false } })
+      );
       await page.route('**/api/admin/failed-notifications/access', (route) =>
         route.fulfill({ json: { canView: true, canRetry: false } })
       );
@@ -70,6 +74,7 @@ for (const locale of ['en', 'fa'])
 for (const locale of ['en', 'fa'])
   test(`admin terms dialog uses the active language (${locale})`, async ({ page }) => {
     await page.addInitScript((value) => {
+      localStorage.setItem('barghsa.locale', value);
       if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
@@ -79,7 +84,7 @@ for (const locale of ['en', 'fa'])
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({
-        json: { requiresTosAcceptance: true, userId: 'test-user', username: 'Test' },
+        json: { isStaff: true, requiresTosAcceptance: true, userId: 'test-user', username: 'Test' },
       })
     );
     await page.route('**/api/tos/current?*', (route) => {
@@ -109,6 +114,7 @@ for (const locale of ['en', 'fa'])
 
 test('terms acceptance waits for the document renderer to load', async ({ page }) => {
   await page.addInitScript(() => {
+    localStorage.setItem('barghsa.locale', 'en');
     if (document.documentElement) document.documentElement.lang = 'en';
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = 'en';
@@ -116,7 +122,9 @@ test('terms acceptance waits for the document renderer to load', async ({ page }
   });
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { requiresTosAcceptance: true, userId: 'test-user', username: 'Test' } })
+    route.fulfill({
+      json: { isStaff: true, requiresTosAcceptance: true, userId: 'test-user', username: 'Test' },
+    })
   );
   await page.route('**/api/tos/current?*', (route) =>
     route.fulfill({
@@ -141,6 +149,10 @@ test('terms acceptance waits for the document renderer to load', async ({ page }
     await pending;
     await route.continue();
   });
+  await page.route('**/src/components/TosContent.tsx*', async (route) => {
+    await pending;
+    await route.continue();
+  });
   try {
     await page.goto('/admin/failed-notifications', { waitUntil: 'domcontentloaded' });
     const dialog = page.getByRole('dialog');
@@ -160,6 +172,7 @@ for (const path of ['/tickets', '/invoices', '/invoices/record-one', '/admin/tic
     page,
   }) => {
     await page.addInitScript(() => {
+      localStorage.setItem('barghsa.locale', 'en');
       if (document.documentElement) document.documentElement.lang = 'en';
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = 'en';
@@ -168,7 +181,12 @@ for (const path of ['/tickets', '/invoices', '/invoices/record-one', '/admin/tic
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({
-        json: { requiresTosAcceptance: true, userId: 'test-user', username: 'Test' },
+        json: {
+          isStaff: path.startsWith('/admin/'),
+          requiresTosAcceptance: true,
+          userId: 'test-user',
+          username: 'Test',
+        },
       })
     );
     let termsReads = 0;
@@ -199,6 +217,7 @@ for (const path of ['/tickets', '/invoices', '/invoices/record-one', '/admin/tic
 
 test('malformed terms never enable consent', async ({ page }) => {
   await page.addInitScript(() => {
+    localStorage.setItem('barghsa.locale', 'en');
     if (document.documentElement) document.documentElement.lang = 'en';
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = 'en';
@@ -206,7 +225,9 @@ test('malformed terms never enable consent', async ({ page }) => {
   });
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { requiresTosAcceptance: true, userId: 'test-user', username: 'Test' } })
+    route.fulfill({
+      json: { isStaff: true, requiresTosAcceptance: true, userId: 'test-user', username: 'Test' },
+    })
   );
   await page.route('**/api/tos/current?*', (route) =>
     route.fulfill({ json: { versionId: 'v1', content: 'No immutable identity' } })
@@ -223,6 +244,7 @@ for (const locale of ['en', 'fa']) {
       page,
     }) => {
       await page.addInitScript((value) => {
+        localStorage.setItem('barghsa.locale', value);
         if (document.documentElement) document.documentElement.lang = value;
         new MutationObserver(() => {
           if (document.documentElement) document.documentElement.lang = value;
@@ -230,12 +252,15 @@ for (const locale of ['en', 'fa']) {
       }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
       let recovered = false;
+      let sessionReads = 0;
       await page.route('**/api/auth/user', (route) =>
-        recovered
-          ? route.fulfill({ json: { userId: 'retry-user', requiresTosAcceptance: true } })
+        ++sessionReads === 1 || recovered
+          ? route.fulfill({
+              json: { isStaff: false, userId: 'retry-user', requiresTosAcceptance: true },
+            })
           : failure === 'unavailable'
-            ? route.fulfill({ status: 503, json: {} })
-            : route.fulfill({ json: { userId: 'retry-user' } })
+            ? route.fulfill({ status: 503, json: { isStaff: false } })
+            : route.fulfill({ json: { isStaff: false, userId: 'retry-user' } })
       );
       await page.route('**/api/tos/current?*', (route) =>
         route.fulfill({

@@ -1,5 +1,12 @@
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { createRootRoute, Outlet, useLocation, useRouter, redirect } from '@tanstack/react-router';
+import {
+  createRootRoute,
+  Outlet,
+  useLocation,
+  useMatches,
+  useRouter,
+  redirect,
+} from '@tanstack/react-router';
 import { isAuthEntryPath } from '../../entry-routes.js';
 import { rememberEntryLocale } from '../lib/entry-locale.js';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
@@ -36,9 +43,10 @@ const AUTH_ROUTE_PREFIXES = ['/login', '/register', '/forgot-password', '/activa
 /**
  * Routes explicitly excluded from the profile check.
  */
-const EXCLUDED_ROUTES = new Set(['/', '/onboarding', '/tickets']);
-function needsProfile(pathname: string): boolean {
+const EXCLUDED_ROUTES = new Set(['/', '/onboarding', '/tickets', '/support', '/terms']);
+function needsProfile(pathname: string, isStaff: boolean): boolean {
   return (
+    !isStaff &&
     !AUTH_ROUTE_PREFIXES.some((prefix) => pathname.startsWith(prefix)) &&
     !EXCLUDED_ROUTES.has(pathname) &&
     pathname !== '/admin' &&
@@ -61,11 +69,12 @@ function needsProfile(pathname: string): boolean {
  */
 async function runProfileCheck(
   pathname: string,
+  isStaff: boolean,
   router: ReturnType<typeof useRouter>,
   signal: AbortSignal
 ): Promise<void> {
   // Skip auth routes and onboarding
-  if (!needsProfile(pathname)) return;
+  if (!needsProfile(pathname, isStaff)) return;
 
   try {
     const response = await fetch('/api/profiles', {
@@ -107,22 +116,33 @@ function RootComponent() {
   const profileRevision = useProfileContextRevision();
   const router = useRouter();
   const { pathname } = useLocation();
+  const matches = useMatches();
+  const isStaff = matches.some(
+    (match) => (match.context as { isStaff?: unknown }).isStaff === true
+  );
+  const showCustomerBanner =
+    !isStaff &&
+    !AUTH_ROUTE_PREFIXES.some((prefix) => pathname.startsWith(prefix)) &&
+    pathname !== '/support' &&
+    pathname !== '/terms' &&
+    pathname !== '/admin' &&
+    !pathname.startsWith('/admin/');
 
   useEffect(() => {
     const controller = new AbortController();
-    void runProfileCheck(pathname, router, controller.signal);
+    void runProfileCheck(pathname, isStaff, router, controller.signal);
     return () => controller.abort();
-  }, [pathname, router, profileRevision]);
+  }, [pathname, isStaff, router, profileRevision]);
 
   return (
     <UiDirectionProvider>
       <BrandThemeProvider key={profileRevision}>
-        {!AUTH_ROUTE_PREFIXES.some((prefix) => pathname.startsWith(prefix)) && (
+        {showCustomerBanner && (
           <Suspense fallback={null}>
             <VerificationBanner />
           </Suspense>
         )}
-        {needsProfile(pathname) && (
+        {needsProfile(pathname, isStaff) && (
           <Suspense fallback={null}>
             <DefaultProfileModal />
           </Suspense>

@@ -61,7 +61,7 @@ export async function createApplication() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   const config = new DocumentBuilder()
-    .setTitle('Barghsa API')
+    .setTitle('API')
     .setDescription('Iranian electricity market intelligence platform')
     .setVersion('0.1.0')
     .build();

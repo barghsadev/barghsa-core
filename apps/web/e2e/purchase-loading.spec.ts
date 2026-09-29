@@ -46,7 +46,9 @@ for (const locale of ['en', 'fa'] as const) {
     }, locale);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
-      route.fulfill({ json: { userId: 'loading-user', requiresTosAcceptance: false } })
+      route.fulfill({
+        json: { isStaff: false, userId: 'loading-user', requiresTosAcceptance: false },
+      })
     );
     await page.route('**/api/profiles/verification-status', (route) =>
       route.fulfill({

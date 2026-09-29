@@ -32,7 +32,7 @@ export function MaintenanceNotice({ setting }: { setting: PublicMaintenanceSetti
         <Link to="/tickets" className="underline underline-offset-4">
           {copy('support')}
         </Link>
-        <Link to="/dashboard" className="underline underline-offset-4">
+        <Link to="/app" className="underline underline-offset-4">
           {copy('back')}
         </Link>
       </div>

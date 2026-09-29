@@ -30,7 +30,9 @@ for (const locale of ['en', 'fa'] as const)
         }, locale);
         await page.route('**/api/**', (route) => route.fulfill({ status: 503, json: {} }));
         await page.route('**/api/auth/user', (route) =>
-          route.fulfill({ json: { userId: 'theme-owner', requiresTosAcceptance: false } })
+          route.fulfill({
+            json: { isStaff: false, userId: 'theme-owner', requiresTosAcceptance: false },
+          })
         );
         await page.route('**/api/user/settings/timezone', (route) =>
           route.fulfill({ json: { timezone: 'America/New_York' } })
@@ -110,7 +112,9 @@ for (const locale of ['en', 'fa'] as const)
       const issuedAt = '2026-03-08T07:30:00.000Z';
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
       await page.route('**/api/auth/user', (route) =>
-        route.fulfill({ json: { userId: 'theme-owner', requiresTosAcceptance: false } })
+        route.fulfill({
+          json: { isStaff: false, userId: 'theme-owner', requiresTosAcceptance: false },
+        })
       );
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({

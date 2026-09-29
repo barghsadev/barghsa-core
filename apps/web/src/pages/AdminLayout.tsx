@@ -53,7 +53,7 @@ export default function AdminLayout() {
   const groups: NavigationGroup[] = [
     {
       label: shellText('overview', locale),
-      items: [{ to: '/admin', label: t('admin.nav.dashboard', locale), icon: LayoutDashboard }],
+      items: [{ to: '/app', label: t('admin.nav.dashboard', locale), icon: LayoutDashboard }],
     },
     {
       label: shellText('operations', locale),

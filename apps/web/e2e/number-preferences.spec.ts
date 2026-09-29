@@ -16,6 +16,7 @@ for (const locale of ['en', 'fa']) {
     }, locale);
     let numberStyle = locale === 'fa' ? 'western' : 'persian';
     let walletAmount: string | number = amount;
+    let isStaff = false;
     const digits = locale === 'fa' ? western : persian;
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/public/branding/config', (route) =>
@@ -34,7 +35,7 @@ for (const locale of ['en', 'fa']) {
       })
     );
     await page.route('**/api/auth/user', (route) =>
-      route.fulfill({ json: { userId: id, requiresTosAcceptance: false } })
+      route.fulfill({ json: { isStaff, userId: id, requiresTosAcceptance: false } })
     );
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'Asia/Tehran' } })
@@ -153,11 +154,13 @@ for (const locale of ['en', 'fa']) {
       '/electricity/order',
       '/admin',
     ]) {
+      isStaff = path.startsWith('/admin');
       await page.goto(path);
       await expect(page.locator('main')).toContainText(digits);
       await expect(page.locator('main')).toContainText(locale === 'fa' ? 'ریال' : 'IRR');
       expect(await page.evaluate(() => document.documentElement.lang)).toBe(locale);
     }
+    isStaff = true;
     await page.goto('/admin/wallet-receipts');
     const input = page.getByTestId('wallet-top-up-limit-input');
     await expect(input).toHaveValue(locale === 'fa' ? '2,000,000,000' : '۲٬۰۰۰٬۰۰۰٬۰۰۰');
@@ -174,6 +177,7 @@ for (const locale of ['en', 'fa']) {
     await expect(input).toHaveValue(locale === 'fa' ? '۵۰۰٬۰۰۰٬۰۰۰' : '500,000,000');
     expect(writes).toHaveLength(1);
     walletAmount = Number.MAX_SAFE_INTEGER + 1;
+    isStaff = false;
     await page.goto('/wallet');
     await expect(page.locator('main .text-3xl')).toHaveText('—');
   });

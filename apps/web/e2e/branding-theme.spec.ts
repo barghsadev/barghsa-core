@@ -35,7 +35,7 @@ for (const locale of ['fa', 'en'] as const)
         await route.fulfill({ json: { mode: preference } });
       });
       await page.route('**/api/auth/user', (route) =>
-        route.fulfill({ json: { userId: 'owner', requiresTosAcceptance: false } })
+        route.fulfill({ json: { isStaff: true, userId: 'owner', requiresTosAcceptance: false } })
       );
       await page.route('**/api/user/settings/timezone', (route) =>
         route.fulfill({ json: { timezone: 'Asia/Tehran' } })

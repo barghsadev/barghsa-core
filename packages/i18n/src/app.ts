@@ -1743,7 +1743,7 @@ export const en: I18nDictionary = {
   'settings.security.device.androidTablet': 'Android Tablet',
   'settings.security.device.windows': 'Windows PC',
   'settings.security.device.linux': 'Linux',
-  'onboarding.welcome.title': 'Welcome to Barghsa',
+  'onboarding.welcome.title': 'Welcome',
   'onboarding.welcome.subtitle': 'Please create your profile to get started.',
   'onboarding.profile.individual': 'Individual',
   'onboarding.profile.individualDesc': 'Register as an individual person',

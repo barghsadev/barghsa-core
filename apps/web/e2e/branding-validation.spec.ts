@@ -32,7 +32,7 @@ for (const locale of ['en', 'fa'])
     }, locale);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
-      route.fulfill({ json: { userId: valid.id, requiresTosAcceptance: false } })
+      route.fulfill({ json: { isStaff: true, userId: valid.id, requiresTosAcceptance: false } })
     );
     let response: unknown = { ...valid, config: { ...config, numberStyle: ['western'] } };
     let saveResponse = 'invalid';

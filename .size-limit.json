@@ -40,7 +40,7 @@
     "name": "Dashboard",
     "entries": [
       "index.html",
-      "src/routes/_app/dashboard.tsx?tsr-split=component",
+      "src/routes/_app/app.tsx?tsr-split=component",
       "src/components/VerificationBanner.tsx",
       "src/components/DefaultProfileModal.tsx"
     ],

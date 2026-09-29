@@ -1421,12 +1421,13 @@ export class AuthService {
     mobile: string | null;
     emailVerified: boolean;
     mobileVerified: boolean;
+    isStaff: boolean;
     requiresTosAcceptance: boolean;
   }> {
     const pool = getDbPool();
 
     const result = await pool.query(
-      `SELECT user_id,username,email,mobile,
+      `SELECT user_id,username,email,mobile,is_staff,is_admin,
        EXISTS(SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id AND i.destination=lower(u.email)) AS email_verified,
        EXISTS(SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id AND i.destination=u.mobile) AS mobile_verified
        FROM users u WHERE user_id=$1`,
@@ -1447,6 +1448,7 @@ export class AuthService {
       username: row.username,
       email: row.email ?? null,
       mobile: row.mobile ?? null,
+      isStaff: row.is_staff === true || row.is_admin === true,
       requiresTosAcceptance,
       emailVerified: row.email_verified === true,
       mobileVerified: row.mobile_verified === true,

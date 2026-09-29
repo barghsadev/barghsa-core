@@ -39,8 +39,8 @@ for (const locale of ['fa', 'en'] as const) {
       await page.route('**/api/auth/user', (route) =>
         route.fulfill(
           statusReady
-            ? { json: { userId: 'owner', requiresTosAcceptance: true } }
-            : { status: 503, json: {} }
+            ? { json: { isStaff: true, userId: 'owner', requiresTosAcceptance: true } }
+            : { status: 503, json: { isStaff: false } }
         )
       );
       await page.route('**/api/tos/current?*', (route) =>

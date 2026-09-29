@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/auth';
 import { shellText } from '@barghsa/i18n/shell';
 import { ArrowUpRight } from 'lucide-react';
-import { useBrandConfig } from '../providers/BrandThemeProvider.js';
+import { brandName, useBrandConfig } from '../providers/BrandThemeProvider.js';
 import { BrandMark } from './BrandMark.js';
 import { LanguageSwitcher } from './LanguageSwitcher.js';
 
@@ -24,7 +24,7 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
         <Link
           to="/"
           className="relative z-10 w-fit no-underline"
-          aria-label={t('auth.brand.logo.alt', locale)}
+          aria-label={brandName(brandConfig, locale)}
         >
           <BrandMark inverse />
         </Link>
@@ -61,7 +61,7 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
           <path d="M0 200h400M200 0v400" stroke="currentColor" />
         </svg>
         <p className="relative hidden text-xs text-brand-panel-muted md:block">
-          &copy; {new Date().getFullYear()} {brandConfig.appTitle}
+          &copy; {new Date().getFullYear()} {brandName(brandConfig, locale)}
         </p>
       </aside>
       <div className="flex min-w-0 flex-col">
