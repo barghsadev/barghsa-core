@@ -2,7 +2,9 @@
 
 ## Current manual batch — September 29, 2026
 
-[Profile lifecycle requests](batches/2026-09-29-profile-lifecycle-requests.md) add separate export and closure support actions for the active owned profile, a live closure blocker preview, idempotent audited privacy tickets, and bilingual status links. The export job and closure execution remain next.
+[Portable profile data export](batches/2026-09-29-profile-data-export.md) connects privacy requests to an owner-scoped async ZIP export, visible progress and retries, eligible document bytes, audited short-lived downloads, and 24-hour expiry. Closure execution remains the next T-11.01 task.
+
+[Profile lifecycle requests](batches/2026-09-29-profile-lifecycle-requests.md) add separate export and closure support actions for the active owned profile, a live closure blocker preview, idempotent audited privacy tickets, and bilingual status links.
 
 [Admin failure summary](batches/2026-09-29-admin-failure-widget.md) adds permission-scoped failed-job and undelivered-notification counts alongside failed refunds, with links to existing staff triage pages.
 

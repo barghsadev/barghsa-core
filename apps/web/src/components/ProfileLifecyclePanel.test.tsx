@@ -5,6 +5,7 @@ import { ProfileLifecyclePanel } from './ProfileLifecyclePanel.js';
 
 const profileId = '11111111-1111-7111-8111-111111111111';
 const ticketId = '22222222-2222-7222-8222-222222222222';
+const jobId = '33333333-3333-7333-8333-333333333333';
 const preview = {
   profileId,
   blockers: [
@@ -60,17 +61,17 @@ it('shows distinct export and closure actions with blockers and the responsible 
 it('reuses the same key when confirmation fails after submission and links the support thread', async () => {
   const submitted: Array<{ type: string; idempotencyKey: string }> = [];
   let posts = 0;
-  let reads = 0;
   vi.stubGlobal(
     'fetch',
-    vi.fn(async (_url: string, options?: RequestInit) => {
+    vi.fn(async (url: string, options?: RequestInit) => {
       if (options?.method === 'POST') {
+        if (url.endsWith('/export')) {
+          return { ok: posts >= 2, status: posts >= 2 ? 202 : 503 };
+        }
         submitted.push(JSON.parse(options.body as string));
         posts += 1;
         return { ok: true, status: 201, json: async () => ({ ticketId }) };
       }
-      reads += 1;
-      if (reads === 2) return { ok: false, status: 503 };
       return {
         ok: true,
         status: 200,
@@ -78,7 +79,16 @@ it('reuses the same key when confirmation fails after submission and links the s
           ...preview,
           requests:
             posts >= 2
-              ? [{ ticketId, type: 'export', status: 'open', createdAt: new Date().toISOString() }]
+              ? [
+                  {
+                    ticketId,
+                    type: 'export',
+                    status: 'open',
+                    createdAt: new Date().toISOString(),
+                    exportJobId: null,
+                    exportExpiresAt: null,
+                  },
+                ]
               : [],
         }),
       };
@@ -98,5 +108,47 @@ it('reuses the same key when confirmation fails after submission and links the s
   expect(submitted).toHaveLength(2);
   expect(submitted[0]?.type).toBe('export');
   expect(submitted[1]?.idempotencyKey).toBe(submitted[0]?.idempotencyKey);
+  expect(container.querySelector(`a[href="/tickets?ticketId=${ticketId}"]`)).toBeTruthy();
+});
+
+it('shows live export progress beside its support request', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string) => ({
+      ok: true,
+      status: 200,
+      json: async () =>
+        url.startsWith('/api/jobs/')
+          ? {
+              id: jobId,
+              type: 'profile-export',
+              status: 'queued',
+              progress_pct: 0,
+              result_url: null,
+              error_message: null,
+              created_at: new Date().toISOString(),
+              started_at: null,
+              completed_at: null,
+            }
+          : {
+              ...preview,
+              requests: [
+                {
+                  ticketId,
+                  type: 'export',
+                  status: 'open',
+                  createdAt: new Date().toISOString(),
+                  exportJobId: jobId,
+                  exportExpiresAt: null,
+                },
+              ],
+            },
+    }))
+  );
+  await render();
+  await act(async () => {
+    await Promise.resolve();
+  });
+  expect(container.textContent).toContain('Queued');
   expect(container.querySelector(`a[href="/tickets?ticketId=${ticketId}"]`)).toBeTruthy();
 });

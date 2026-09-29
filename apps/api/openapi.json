@@ -24728,6 +24728,52 @@
         ]
       }
     },
+    "/api/tickets/lifecycle-requests/{id}/export": {
+      "get": {
+        "operationId": "TicketsController_downloadProfileExport",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Short-lived private download URL"
+          }
+        },
+        "summary": "Download a completed, unexpired profile export",
+        "tags": [
+          "Tickets"
+        ]
+      },
+      "post": {
+        "operationId": "TicketsController_startProfileExport",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Owner-scoped export job created or reused"
+          }
+        },
+        "summary": "Queue an export for an owned privacy request",
+        "tags": [
+          "Tickets"
+        ]
+      }
+    },
     "/api/tickets/options": {
       "get": {
         "operationId": "TicketsController_creationOptions",

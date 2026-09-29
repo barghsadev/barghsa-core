@@ -56,6 +56,11 @@ const create = (body: unknown, headers = ownerHeaders) =>
     headers,
     body: JSON.stringify(body),
   });
+const startExport = (ticketId: string, headers = ownerHeaders) =>
+  fetch(`${http.base}/api/tickets/lifecycle-requests/${ticketId}/export`, {
+    method: 'POST',
+    headers,
+  });
 const responseBody = async (response: Response): Promise<Record<string, unknown>> =>
   (await response.json()) as Record<string, unknown>;
 
@@ -104,6 +109,57 @@ it('shows active-profile closure blockers and routes each type to one audited su
     type: 'export',
     created: false,
   });
+  const queued = await startExport(exportRequest.ticketId as string);
+  expect(queued.status, http.logs()).toBe(202);
+  const queuedBody = await responseBody(queued);
+  expect(queuedBody).toMatchObject({ ticketId: exportRequest.ticketId, created: true });
+  const replayedJob = await startExport(exportRequest.ticketId as string);
+  expect(await responseBody(replayedJob)).toMatchObject({
+    jobId: queuedBody.jobId,
+    created: false,
+  });
+  expect(
+    (
+      await http.pool.query(
+        `SELECT count(*)::int AS count FROM async_jobs WHERE id=$1 AND created_by='lifecycle-owner'`,
+        [queuedBody.jobId]
+      )
+    ).rows[0].count
+  ).toBe(1);
+  expect(
+    (
+      await http.pool.query(
+        `SELECT count(*)::int AS count FROM audit_log
+         WHERE event='profile_export_queued' AND user_id='lifecycle-owner'`
+      )
+    ).rows[0].count
+  ).toBe(1);
+  expect(
+    (
+      await fetch(`${http.base}/api/tickets/lifecycle-requests/${exportRequest.ticketId}/export`, {
+        headers: ownerHeaders,
+        redirect: 'manual',
+      })
+    ).status
+  ).toBe(404);
+  await http.pool.query(
+    `UPDATE async_jobs SET status='completed',progress_pct=100,
+       result_url=$2,completed_at=now() WHERE id=$1`,
+    [queuedBody.jobId, `/api/tickets/lifecycle-requests/${exportRequest.ticketId}/export`]
+  );
+  await http.pool.query(
+    `UPDATE tickets SET privacy_export_storage_key='profile-exports/test/expired.zip',
+       privacy_export_expires_at=now()-interval '1 second' WHERE id=$1`,
+    [exportRequest.ticketId]
+  );
+  expect(
+    (
+      await fetch(`${http.base}/api/tickets/lifecycle-requests/${exportRequest.ticketId}/export`, {
+        headers: ownerHeaders,
+        redirect: 'manual',
+      })
+    ).status
+  ).toBe(404);
   expect((await create({ type: 'closure', idempotencyKey: exportKey, locale: 'en' })).status).toBe(
     409
   );
@@ -142,6 +198,19 @@ it('shows active-profile closure blockers and routes each type to one audited su
   const switched = await responseBody(await preview());
   expect(switched.profileId).toBe(secondProfileId);
   expect(switched.requests).toEqual([]);
+  expect((await startExport(exportRequest.ticketId as string)).status).toBe(404);
+  await http.pool.query(
+    `UPDATE tickets SET privacy_export_expires_at=now()+interval '1 hour' WHERE id=$1`,
+    [exportRequest.ticketId]
+  );
+  expect(
+    (
+      await fetch(`${http.base}/api/tickets/lifecycle-requests/${exportRequest.ticketId}/export`, {
+        headers: ownerHeaders,
+        redirect: 'manual',
+      })
+    ).status
+  ).toBe(404);
   expect((await create({ type: 'export', idempotencyKey: exportKey, locale: 'en' })).status).toBe(
     409
   );

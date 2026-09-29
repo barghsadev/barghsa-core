@@ -4,6 +4,7 @@ import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
+import { JobProgress } from './jobs/JobProgress.js';
 
 type RequestType = 'export' | 'closure';
 type BlockerCode =
@@ -22,7 +23,14 @@ interface Blocker {
 interface Preview {
   profileId: string;
   blockers: Blocker[];
-  requests: { ticketId: string; type: RequestType; status: string; createdAt: string }[];
+  requests: {
+    ticketId: string;
+    type: RequestType;
+    status: string;
+    createdAt: string;
+    exportJobId: string | null;
+    exportExpiresAt: string | null;
+  }[];
 }
 const blockerCodes: BlockerCode[] = [
   'legalHold',
@@ -68,7 +76,10 @@ function parsePreview(value: unknown): Preview {
         uuid.test(request.ticketId) &&
         (request.type === 'export' || request.type === 'closure') &&
         typeof request.status === 'string' &&
-        typeof request.createdAt === 'string'
+        typeof request.createdAt === 'string' &&
+        (request.exportJobId === null ||
+          (typeof request.exportJobId === 'string' && uuid.test(request.exportJobId))) &&
+        (request.exportExpiresAt === null || typeof request.exportExpiresAt === 'string')
       );
     })
   )
@@ -85,6 +96,16 @@ export function ProfileLifecyclePanel() {
   const [submitError, setSubmitError] = useState(false);
   const key = useRef<{ type: RequestType; value: string } | null>(null);
   const busy = useRef(false);
+
+  async function startExport(ticketId: string) {
+    const response = await fetch(`/api/tickets/lifecycle-requests/${ticketId}/export`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: withCsrf(),
+    });
+    if (!response.ok) throw new Error('Export could not be queued');
+    await refresh();
+  }
 
   async function refresh(signal?: AbortSignal) {
     const response = await fetch('/api/tickets/lifecycle-preview', {
@@ -122,7 +143,14 @@ export function ProfileLifecyclePanel() {
         body: JSON.stringify({ type, idempotencyKey: key.current.value, locale }),
       });
       if (!response.ok) throw new Error('Request failed');
-      await refresh();
+      if (type === 'export') {
+        const body = (await response.json()) as { ticketId?: unknown };
+        if (typeof body.ticketId !== 'string' || !uuid.test(body.ticketId))
+          throw new Error('Invalid request response');
+        await startExport(body.ticketId);
+      } else {
+        await refresh();
+      }
       key.current = null;
     } catch {
       setSubmitError(true);
@@ -213,7 +241,7 @@ export function ProfileLifecyclePanel() {
               <h2 className="text-lg font-semibold">{t('settings.privacy.requests', locale)}</h2>
               <ul className="space-y-2">
                 {preview.requests.map((item) => (
-                  <li key={item.ticketId}>
+                  <li key={item.ticketId} className="space-y-2 rounded-lg border p-3">
                     <a
                       className="text-primary underline underline-offset-2"
                       href={`/tickets?ticketId=${item.ticketId}`}
@@ -221,6 +249,27 @@ export function ProfileLifecyclePanel() {
                       {t(`settings.privacy.${item.type}.title`, locale)} ·{' '}
                       {t(`tickets.${item.status}`, locale)}
                     </a>
+                    {item.type === 'export' &&
+                      item.exportJobId &&
+                      (item.exportExpiresAt &&
+                      new Date(item.exportExpiresAt).getTime() <= Date.now() ? (
+                        <p className="text-sm text-muted-foreground">
+                          {t('settings.privacy.export.expired', locale)}
+                        </p>
+                      ) : (
+                        <JobProgress jobId={item.exportJobId} />
+                      ))}
+                    {item.type === 'export' && !item.exportJobId && (
+                      <Button
+                        type="button"
+                        disabled={submitting !== null}
+                        onClick={() => {
+                          void startExport(item.ticketId).catch(() => setSubmitError(true));
+                        }}
+                      >
+                        {t('settings.privacy.export.prepare', locale)}
+                      </Button>
+                    )}
                   </li>
                 ))}
               </ul>

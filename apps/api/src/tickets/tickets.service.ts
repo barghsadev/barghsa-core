@@ -18,8 +18,10 @@ import { z } from 'zod';
 import { TicketAttachmentsService } from './ticket-attachments.service.js';
 import { randomUUID } from 'node:crypto';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
-import { Injectable, Logger, HttpException } from '@nestjs/common';
-import { getDbPool } from '@barghsa/db';
+import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
+import { getDbPool, loadStoredStorageConfiguration } from '@barghsa/db';
+import { runtimeStorageProvider, type StorageProvider } from '@barghsa/shared/storage';
+import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
 export interface TicketRow {
@@ -143,7 +145,11 @@ export class TicketsService {
   constructor(
     private readonly attachmentService: TicketAttachmentsService = new TicketAttachmentsService(),
     private readonly notifications: NotificationsService = new NotificationsService(),
-    private readonly assignmentService: StaffAssignmentService = new StaffAssignmentService()
+    private readonly assignmentService: StaffAssignmentService = new StaffAssignmentService(),
+    @Inject(STORAGE_PROVIDER)
+    private readonly exportStorage: StorageProvider = runtimeStorageProvider(
+      loadStoredStorageConfiguration
+    )
   ) {}
 
   private readonly logger = new Logger(TicketsService.name);
@@ -390,8 +396,10 @@ export class TicketsService {
           privacy_request_type: PrivacyRequestType;
           status: TicketRow['status'];
           created_at: Date;
+          privacy_export_job_id: string | null;
+          privacy_export_expires_at: Date | null;
         }>(
-          `SELECT id,privacy_request_type,status,created_at FROM tickets
+          `SELECT id,privacy_request_type,status,created_at,privacy_export_job_id,privacy_export_expires_at FROM tickets
            WHERE profile_id=$1 AND user_id=$2 AND privacy_request_type IS NOT NULL
            ORDER BY created_at DESC,id DESC LIMIT 10`,
           [profileId, actor.userId]
@@ -401,6 +409,8 @@ export class TicketsService {
         type: row.privacy_request_type,
         status: row.status,
         createdAt: row.created_at,
+        exportJobId: row.privacy_export_job_id,
+        exportExpiresAt: row.privacy_export_expires_at,
       }));
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
@@ -493,6 +503,92 @@ export class TicketsService {
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return { ticketId, profileId, type, created: true };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async startProfileExport(actor: TicketActor, ticketId: string) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const profileId = await this.activeOwnedProfile(client, actor.userId);
+      const request = (
+        await client.query<{ privacy_export_job_id: string | null }>(
+          `SELECT privacy_export_job_id FROM tickets
+           WHERE id=$1 AND user_id=$2 AND profile_id=$3 AND privacy_request_type='export'
+           FOR UPDATE`,
+          [ticketId, actor.userId, profileId]
+        )
+      ).rows[0];
+      if (!request) throw new HttpException('Export request not found', 404);
+      const jobId = request.privacy_export_job_id ?? randomUUID();
+      if (!request.privacy_export_job_id) {
+        await client.query(
+          `INSERT INTO async_jobs(id,type,payload,created_by)
+           VALUES($1,'profile-export',$2::jsonb,$3)`,
+          [jobId, JSON.stringify({ ticketId, profileId, userId: actor.userId }), actor.userId]
+        );
+        await client.query(`UPDATE tickets SET privacy_export_job_id=$2 WHERE id=$1`, [
+          ticketId,
+          jobId,
+        ]);
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata)
+           VALUES($1,$2,'profile_export_queued',$3::jsonb)`,
+          [randomUUID(), actor.userId, JSON.stringify({ ticketId, profileId, jobId })]
+        );
+      }
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return { ticketId, jobId, created: !request.privacy_export_job_id };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async downloadProfileExport(actor: TicketActor, ticketId: string): Promise<string> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const profileId = await this.activeOwnedProfile(client, actor.userId);
+      const request = (
+        await client.query<{ privacy_export_storage_key: string; privacy_export_expires_at: Date }>(
+          `SELECT t.privacy_export_storage_key,t.privacy_export_expires_at FROM tickets t
+           JOIN async_jobs j ON j.id=t.privacy_export_job_id AND j.status='completed'
+           WHERE t.id=$1 AND t.user_id=$2 AND t.profile_id=$3
+             AND t.privacy_request_type='export' AND t.privacy_export_storage_key IS NOT NULL
+             AND t.privacy_export_expires_at>now() FOR UPDATE OF t`,
+          [ticketId, actor.userId, profileId]
+        )
+      ).rows[0];
+      if (!request) throw new HttpException('Export unavailable or expired', 404);
+      const seconds = Math.min(
+        300,
+        Math.floor((request.privacy_export_expires_at.getTime() - Date.now()) / 1000)
+      );
+      if (seconds < 1) throw new HttpException('Export expired', 404);
+      const url = await this.exportStorage.presignedGetUrl(
+        request.privacy_export_storage_key,
+        seconds
+      );
+      await client.query(`UPDATE tickets SET privacy_export_downloaded_at=now() WHERE id=$1`, [
+        ticketId,
+      ]);
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata)
+         VALUES($1,$2,'profile_export_downloaded',$3::jsonb)`,
+        [randomUUID(), actor.userId, JSON.stringify({ ticketId, profileId })]
+      );
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return url;
     } catch (error) {
       await client.query('ROLLBACK');
       throw error;

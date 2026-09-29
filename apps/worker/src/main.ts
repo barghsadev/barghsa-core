@@ -39,6 +39,11 @@ import { EmailNotificationTransport } from './notifications/email-transport.js';
 import { runAuthDelivery } from './auth-delivery/runner.js';
 import { PollerGroup } from './jobs/poller-group.js';
 import { JobHandlerRegistry, runOneAsyncJob } from './jobs/async-runner.js';
+import {
+  PROFILE_EXPORT_JOB_TYPE,
+  cleanupExpiredProfileExports,
+  generateProfileExport,
+} from './privacy/profile-export.js';
 import { getDbPool, createDbPool } from '@barghsa/db';
 import { createServer } from 'node:http';
 import { runOutboxPoll } from './notifications/outbox-runner.js';
@@ -168,7 +173,9 @@ async function main(): Promise<void> {
 
   const pollers = new PollerGroup(() => logger.error('Worker job or failure recording failed'));
   const asyncJobHandlers = new JobHandlerRegistry();
+  asyncJobHandlers.register(PROFILE_EXPORT_JOB_TYPE, generateProfileExport);
   pollers.every(() => runOneAsyncJob(getDbPool(), asyncJobHandlers).then(() => undefined), 1000);
+  pollers.every(() => cleanupExpiredProfileExports().then(() => undefined), 60 * 60 * 1000);
   pollers.every(
     async () => {
       await getDbPool().query('DELETE FROM ai_test_chat_turns WHERE expires_at < now()');

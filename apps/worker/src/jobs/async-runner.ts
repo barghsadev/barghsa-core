@@ -9,6 +9,8 @@ interface LeasedJob {
 }
 
 export interface JobContext {
+  jobId: string;
+  leaseToken: string;
   setProgress(percentage: number): Promise<void>;
 }
 export type JobHandler = (
@@ -86,6 +88,8 @@ export async function runOneAsyncJob(
     const handler = registry.get(job.type);
     if (!handler) throw new Error('Missing async job handler');
     const output = await handler(job.payload, {
+      jobId: job.id,
+      leaseToken: token,
       async setProgress(percentage) {
         if (!Number.isInteger(percentage) || percentage < 0 || percentage > 99)
           throw new Error('Invalid job progress');

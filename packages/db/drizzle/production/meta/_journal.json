@@ -1002,6 +1002,13 @@
       "when": 1791331200235,
       "tag": "0222_profile_lifecycle_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 223,
+      "version": "7",
+      "when": 1791331200236,
+      "tag": "0223_profile_data_exports",
+      "breakpoints": true
     }
   ]
 }

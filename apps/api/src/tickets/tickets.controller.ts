@@ -12,8 +12,10 @@ import {
   HttpException,
   Logger,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { ApiBody, ApiOperation, ApiResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { TicketsService } from './tickets.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
@@ -241,6 +243,32 @@ export class TicketsController {
       parsed.data.idempotencyKey,
       parsed.data.locale
     );
+  }
+
+  @Post('lifecycle-requests/:id/export')
+  @HttpCode(202)
+  @RateLimit({ namespace: 'tickets:lifecycle:export', limit: 10, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Queue an export for an owned privacy request' })
+  @ApiResponse({ status: 202, description: 'Owner-scoped export job created or reused' })
+  startProfileExport(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.ticketsService.startProfileExport(req.session, id);
+  }
+
+  @Get('lifecycle-requests/:id/export')
+  @RateLimit({ namespace: 'tickets:lifecycle:download', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Download a completed, unexpired profile export' })
+  @ApiResponse({ status: 302, description: 'Short-lived private download URL' })
+  async downloadProfileExport(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest,
+    @Res() res: Response
+  ): Promise<void> {
+    const url = await this.ticketsService.downloadProfileExport(req.session, id);
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.redirect(302, url);
   }
 
   @Get(':id')

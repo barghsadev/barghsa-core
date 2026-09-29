@@ -350,6 +350,8 @@ export const fa: I18nDictionary = {
   'settings.privacy.export.description':
     'پشتیبانی درخواست شما را بررسی می‌کند. مسیر دریافت داده پس از آماده‌سازی اعلام می‌شود.',
   'settings.privacy.export.action': 'درخواست دریافت داده',
+  'settings.privacy.export.prepare': 'آماده‌سازی فایل خروجی',
+  'settings.privacy.export.expired': 'لینک دریافت منقضی شده است. درخواست تازه‌ای ثبت کنید.',
   'settings.privacy.closure.title': 'بستن پروفایل',
   'settings.privacy.closure.description':
     'موانع زیر پیش از بستن پروفایل باید بررسی یا رفع شوند. می‌توانید درخواست را اکنون ثبت کنید.',
@@ -1715,6 +1717,8 @@ export const en: I18nDictionary = {
   'settings.privacy.export.description':
     'Support will review your request and provide a download path when the data is ready.',
   'settings.privacy.export.action': 'Request data export',
+  'settings.privacy.export.prepare': 'Prepare export file',
+  'settings.privacy.export.expired': 'The download has expired. Create a new request.',
   'settings.privacy.closure.title': 'Close profile',
   'settings.privacy.closure.description':
     'These items must be reviewed or resolved before closure. You can submit the request now.',
