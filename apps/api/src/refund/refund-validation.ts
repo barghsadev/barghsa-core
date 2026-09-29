@@ -24,3 +24,6 @@ export const refundRequestSchema = refundReviewSchema
 export const refundDecisionSchema = z
   .object({ reason: z.string().trim().min(1).max(1000).optional() })
   .strict();
+export const refundDecisionConfirmSchema = refundDecisionSchema
+  .extend({ expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/) })
+  .strict();

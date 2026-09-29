@@ -1259,11 +1259,13 @@ export const fa: I18nDictionary = {
   'admin.invoices.walletRefunds.availableAfter': 'مانده پس از درخواست',
   'admin.invoices.walletRefunds.approvalRequired': 'تأیید دوم لازم است',
   'admin.invoices.walletRefunds.approvalNotRequired': 'تأیید دوم لازم نیست',
+  'admin.invoices.walletRefunds.approvalNotApplicable': 'برای این اقدام کاربرد ندارد',
   'admin.invoices.walletRefunds.approvalRule': 'قانون تأیید دوم',
   'admin.invoices.walletRefunds.requestAmount': 'مبلغ درخواست',
   'admin.invoices.walletRefunds.reason': 'دلیل',
   'admin.invoices.walletRefunds.request': 'درخواست بازپرداخت',
   'admin.invoices.walletRefunds.review': 'مرور مالی بازپرداخت',
+  'admin.invoices.walletRefunds.targetState': 'وضعیت مورد انتظار',
   'admin.invoices.walletRefunds.confirmRequest':
     'مبلغ و دلیل را پیش از ثبت درخواست تأیید کنید. مانده هنگام ثبت دوباره بررسی می‌شود.',
   'admin.invoices.walletRefunds.notRequestable':
@@ -2690,11 +2692,13 @@ export const en: I18nDictionary = {
   'admin.invoices.walletRefunds.availableAfter': 'Available after request',
   'admin.invoices.walletRefunds.approvalRequired': 'Second approval required',
   'admin.invoices.walletRefunds.approvalNotRequired': 'No second approval required',
+  'admin.invoices.walletRefunds.approvalNotApplicable': 'Not applicable to this action',
   'admin.invoices.walletRefunds.approvalRule': 'Second approval',
   'admin.invoices.walletRefunds.requestAmount': 'Requested amount',
   'admin.invoices.walletRefunds.reason': 'Reason',
   'admin.invoices.walletRefunds.request': 'Request refund',
   'admin.invoices.walletRefunds.review': 'Refund financial review',
+  'admin.invoices.walletRefunds.targetState': 'Intended status',
   'admin.invoices.walletRefunds.confirmRequest':
     'Confirm the amount and reason before requesting. The balance is checked again when you submit.',
   'admin.invoices.walletRefunds.notRequestable':

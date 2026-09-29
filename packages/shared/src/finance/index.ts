@@ -35,5 +35,7 @@ export type { WalletPaymentReview, WalletPaymentReviewData } from './wallet-paym
 export { parseWalletPaymentReview } from './wallet-payment-review.js';
 export type { RefundRequestReview, RefundRequestReviewData } from './refund-request-review.js';
 export { parseRefundRequestReview } from './refund-request-review.js';
+export type { RefundDecisionReview, RefundDecisionReviewData } from './refund-decision-review.js';
+export { parseRefundDecisionReview } from './refund-decision-review.js';
 export * from './bank-receipt-review.js';
 export * from './contract-financial-review.js';

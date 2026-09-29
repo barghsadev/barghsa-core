@@ -25,6 +25,7 @@ import {
   refundRequestSchema,
   refundReviewSchema,
   refundDecisionSchema,
+  refundDecisionConfirmSchema,
 } from './refund-validation.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -124,6 +125,39 @@ export class WalletRefundController {
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
     return this.refunds.request(parsed.data, req.session, req.ip ?? '127.0.0.1');
   }
+  @Post(':id/:action/review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Preview the authoritative wallet refund decision' })
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiParam({ name: 'action', enum: ['approve', 'reject', 'cancel', 'process'] })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: { reason: { type: 'string', minLength: 1, maxLength: 1000 } },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Authoritative decision review and confirmation hash' })
+  async reviewDecision(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Param('action') action: string,
+    @Body() body: unknown
+  ) {
+    this.authorize(req);
+    const parsedId = refundUuid.safeParse(id),
+      parsedAction = z.enum(['approve', 'reject', 'cancel', 'process']).safeParse(action),
+      parsedBody = refundDecisionSchema.safeParse(body ?? {});
+    if (!parsedId.success || !parsedAction.success || !parsedBody.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    return this.refunds.reviewDecision(
+      parsedId.data,
+      parsedAction.data,
+      parsedBody.data.reason,
+      req.session,
+      'wallet'
+    );
+  }
   @Post(':id/:action')
   @HttpCode(200)
   @RequiresStepUp()
@@ -134,7 +168,9 @@ export class WalletRefundController {
     schema: {
       type: 'object',
       additionalProperties: false,
+      required: ['expectedReviewHash'],
       properties: {
+        expectedReviewHash: { type: 'string', pattern: '^[a-f0-9]{64}$' },
         reason: {
           type: 'string',
           minLength: 1,
@@ -158,7 +194,7 @@ export class WalletRefundController {
     this.authorize(req);
     const parsedId = refundUuid.safeParse(id),
       parsedAction = z.enum(['approve', 'reject', 'cancel', 'process']).safeParse(action),
-      parsedBody = refundDecisionSchema.safeParse(body ?? {});
+      parsedBody = refundDecisionConfirmSchema.safeParse(body ?? {});
     if (!parsedId.success || !parsedAction.success || !parsedBody.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
     return this.refunds.decide(
@@ -166,7 +202,10 @@ export class WalletRefundController {
       parsedAction.data,
       parsedBody.data.reason,
       req.session,
-      req.ip ?? '127.0.0.1'
+      req.ip ?? '127.0.0.1',
+      'wallet',
+      undefined,
+      parsedBody.data.expectedReviewHash
     );
   }
 }

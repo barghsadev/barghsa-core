@@ -1,7 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { en, fa } from '../../../packages/i18n/src/admin-ui';
 import { t as appText } from '../../../packages/i18n/src/app';
-import { refundReviewFixture } from './refund-review-fixture';
+import { refundDecisionReviewFixture, refundReviewFixture } from './refund-review-fixture';
 
 const invoiceId = '11111111-1111-4111-8111-111111111111';
 const refundId = '22222222-2222-4222-8222-222222222222';
@@ -95,15 +95,24 @@ for (const locale of ['en', 'fa'] as const)
       return route.fulfill({ status: 201, json: { id: refundId, state } });
     });
     await page.route(`**/api/admin/wallet-refunds/${refundId}/approve`, (route) => {
+      expect(route.request().postDataJSON()).toEqual({ expectedReviewHash: 'b'.repeat(64) });
       state = 'Approved';
       actions.push('approve');
       return route.fulfill({ json: { id: refundId, state } });
     });
     await page.route(`**/api/admin/wallet-refunds/${refundId}/process`, (route) => {
+      expect(route.request().postDataJSON()).toEqual({ expectedReviewHash: 'b'.repeat(64) });
       state = 'Completed';
       actions.push('process');
       return route.fulfill({ json: { id: refundId, state } });
     });
+    for (const operation of ['approve', 'process'] as const)
+      await page.route(`**/api/admin/wallet-refunds/${refundId}/${operation}/review`, (route) => {
+        expect(route.request().postDataJSON()).toEqual({});
+        return route.fulfill({
+          json: refundDecisionReviewFixture(invoiceId, refundId, 'wallet', state, operation),
+        });
+      });
 
     await page.goto(`/admin/invoices?invoiceId=${invoiceId}`);
     await page.locator('html').evaluate((element, language) => {
@@ -122,6 +131,7 @@ for (const locale of ['en', 'fa'] as const)
       .click();
     await expect(panel.getByText(refundId)).toBeVisible();
     await panel.getByRole('button', { name: word('approve') }).click();
+    await expect(page.getByRole('dialog')).toContainText(word('targetState'));
     await page
       .getByRole('dialog')
       .getByRole('button', { name: appText('team.confirm', locale) })

@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { en, fa } from '../../../packages/i18n/src/admin-ui';
 import { t as appText } from '../../../packages/i18n/src/app';
-import { refundReviewFixture } from './refund-review-fixture';
+import { refundDecisionReviewFixture, refundReviewFixture } from './refund-review-fixture';
 
 const invoiceId = '11111111-1111-4111-8111-111111111111';
 const refundId = '22222222-2222-4222-8222-222222222222';
@@ -103,11 +103,30 @@ for (const locale of ['en', 'fa'] as const)
       ['reconcile', 'Completed'],
     ] as const)
       await page.route(`**/api/admin/external-refunds/${refundId}/${operation}`, (route) => {
-        if (operation !== 'approve')
-          expect(route.request().postDataJSON()).toEqual({ bankReference });
+        expect(route.request().postDataJSON()).toEqual(
+          operation === 'approve'
+            ? { expectedReviewHash: 'b'.repeat(64) }
+            : { bankReference, expectedReviewHash: 'b'.repeat(64) }
+        );
         state = next;
         actions.push(operation);
         return route.fulfill({ json: { id: refundId, state } });
+      });
+    for (const operation of ['approve', 'record-transfer', 'reconcile'] as const)
+      await page.route(`**/api/admin/external-refunds/${refundId}/${operation}/review`, (route) => {
+        expect(route.request().postDataJSON()).toEqual(
+          operation === 'approve' ? {} : { bankReference }
+        );
+        return route.fulfill({
+          json: refundDecisionReviewFixture(
+            invoiceId,
+            refundId,
+            'external_bank',
+            state,
+            operation,
+            operation === 'approve' ? null : bankReference
+          ),
+        });
       });
 
     await page.goto(`/admin/invoices?invoiceId=${invoiceId}`);

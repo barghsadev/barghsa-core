@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
-import { parseRefundRequestReview } from '@barghsa/shared/finance';
+import { parseRefundDecisionReview, parseRefundRequestReview } from '@barghsa/shared/finance';
 import {
   Button,
   Card,
@@ -133,6 +133,9 @@ export function RefundPanel({
   const [actionSummary, setActionSummary] = useState<React.ReactNode>(null);
   const [reviewBusy, setReviewBusy] = useState(false);
   const [reviewError, setReviewError] = useState<'conflict' | 'forbidden' | 'error' | null>(null);
+  const [decisionReviewError, setDecisionReviewError] = useState<
+    'conflict' | 'forbidden' | 'error' | null
+  >(null);
 
   useEffect(() => {
     if (!isInvoiceUuid(selectedInvoiceId)) return;
@@ -304,46 +307,136 @@ export function RefundPanel({
     }
   }
 
-  function decide(
+  async function decide(
     refund: WalletRefund,
     operation: 'approve' | 'reject' | 'cancel' | 'process' | 'record-transfer' | 'reconcile'
   ) {
+    if (reviewBusy) return;
     const decisionReason = reasons[refund.id]?.trim();
     const bankReference = references[refund.id]?.trim();
     const submittedReason =
       operation === 'reject' || operation === 'cancel' ? decisionReason : undefined;
     if ((operation === 'reject' || operation === 'cancel') && !decisionReason) return;
     if ((operation === 'record-transfer' || operation === 'reconcile') && !bankReference) return;
-    setAction({
-      title: word(operation),
-      description: word('confirmDecision'),
-      path: `/api/admin/${path}/${encodeURIComponent(refund.id)}/${operation}`,
-      method: 'POST',
-      body:
-        operation === 'record-transfer' || operation === 'reconcile'
-          ? { bankReference }
-          : submittedReason
-            ? { reason: submittedReason }
-            : {},
-      conflictMessage: word('conflict'),
-      forbiddenMessage: word('forbidden'),
-    });
-    setActionSummary(
-      <FinancialReviewSummary
-        title={word('review')}
-        rows={[
-          { id: 'invoice', label: word('invoiceId'), value: refund.invoiceId },
-          { id: 'state', label: word('state'), value: word(`state.${refund.state}`) },
-          ...(submittedReason
-            ? [{ id: 'reason', label: word('reason'), value: submittedReason }]
-            : []),
-          ...(bankReference && (operation === 'record-transfer' || operation === 'reconcile')
-            ? [{ id: 'bank', label: word('bankReference'), value: bankReference }]
-            : []),
-        ]}
-        total={{ label: word('requestAmount'), value: numbers.money(refund.amount) }}
-      />
-    );
+    const body =
+      operation === 'record-transfer' || operation === 'reconcile'
+        ? { bankReference }
+        : submittedReason
+          ? { reason: submittedReason }
+          : {};
+    setReviewBusy(true);
+    setDecisionReviewError(null);
+    try {
+      const actionPath = `/api/admin/${path}/${encodeURIComponent(refund.id)}/${operation}`;
+      const response = await fetch(`${actionPath}/review`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify(body),
+      });
+      if (response.status === 403) {
+        setDecisionReviewError('forbidden');
+        return;
+      }
+      if (response.status === 409) {
+        setDecisionReviewError('conflict');
+        refresh();
+        return;
+      }
+      if (!response.ok) throw new Error('Refund decision review unavailable');
+      const review = parseRefundDecisionReview(await response.json());
+      if (
+        !review ||
+        review.scope.resourceId !== refund.id ||
+        review.data.invoice.id !== refund.invoiceId ||
+        review.data.refund.destination !== destination ||
+        review.data.decision.action !== operation ||
+        review.data.decision.reason !== (submittedReason ?? null) ||
+        review.data.decision.bankReference !==
+          (operation === 'record-transfer' || operation === 'reconcile' ? bankReference : null)
+      )
+        throw new Error('Invalid refund decision review');
+      setAction({
+        title: word(operation),
+        description: word('confirmDecision'),
+        path: actionPath,
+        method: 'POST',
+        body: { ...body, expectedReviewHash: review.hash },
+        conflictMessage: word('conflict'),
+        forbiddenMessage: word('forbidden'),
+      });
+      setActionSummary(
+        <FinancialReviewSummary
+          title={word('review')}
+          rows={[
+            ...invoiceFinancialReviewRows(review.data, locale, numbers, (value) =>
+              new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              }).format(new Date(value))
+            ),
+            {
+              id: 'state',
+              label: word('state'),
+              value: word(`state.${review.data.refund.state}`),
+            },
+            {
+              id: 'target',
+              label: word('targetState'),
+              value: word(`state.${review.data.decision.targetState}`),
+            },
+            {
+              id: 'refunded',
+              label: word('refunded'),
+              value: numbers.money(review.data.refund.refundedBefore),
+            },
+            {
+              id: 'reserved',
+              label: word('reserved'),
+              value: numbers.money(review.data.refund.reservedBefore),
+            },
+            {
+              id: 'available',
+              label: word('available'),
+              value: numbers.money(review.data.refund.availableBefore),
+            },
+            {
+              id: 'availableAfter',
+              label: word('availableAfter'),
+              value: numbers.money(review.data.refund.availableAfter),
+            },
+            {
+              id: 'approval',
+              label: word('approvalRule'),
+              value: word(
+                review.data.refund.approvalRequired === null
+                  ? 'approvalNotApplicable'
+                  : review.data.refund.approvalRequired
+                    ? 'approvalRequired'
+                    : 'approvalNotRequired'
+              ),
+            },
+            ...(review.data.decision.reason
+              ? [{ id: 'reason', label: word('reason'), value: review.data.decision.reason }]
+              : []),
+            ...(review.data.decision.bankReference
+              ? [
+                  {
+                    id: 'bank',
+                    label: word('bankReference'),
+                    value: review.data.decision.bankReference,
+                  },
+                ]
+              : []),
+          ]}
+          total={{ label: word('requestAmount'), value: numbers.money(review.data.refund.amount) }}
+        />
+      );
+    } catch {
+      setDecisionReviewError('error');
+    } finally {
+      setReviewBusy(false);
+    }
   }
 
   return (
@@ -435,6 +528,7 @@ export function RefundPanel({
               {word('refresh')}
             </Button>
           </div>
+          {decisionReviewError && <p role="alert">{word(decisionReviewError)}</p>}
           {refunds.length === 0 && status === 'ready' && <p>{word('empty')}</p>}
           <ul className="space-y-3">
             {refunds.map((refund) => (
@@ -497,15 +591,19 @@ export function RefundPanel({
                   )}
                 <div className="flex flex-wrap gap-2">
                   {refund.state === 'Requested' && (
-                    <Button variant="outline" onClick={() => decide(refund, 'approve')}>
+                    <Button
+                      variant="outline"
+                      disabled={reviewBusy}
+                      onClick={() => void decide(refund, 'approve')}
+                    >
                       {word('approve')}
                     </Button>
                   )}
                   {refund.state === 'Requested' && (
                     <Button
                       variant="outline"
-                      disabled={!reasons[refund.id]?.trim()}
-                      onClick={() => decide(refund, 'reject')}
+                      disabled={reviewBusy || !reasons[refund.id]?.trim()}
+                      onClick={() => void decide(refund, 'reject')}
                     >
                       {word('reject')}
                     </Button>
@@ -513,22 +611,26 @@ export function RefundPanel({
                   {(refund.state === 'Requested' || refund.state === 'Approved') && (
                     <Button
                       variant="outline"
-                      disabled={!reasons[refund.id]?.trim()}
-                      onClick={() => decide(refund, 'cancel')}
+                      disabled={reviewBusy || !reasons[refund.id]?.trim()}
+                      onClick={() => void decide(refund, 'cancel')}
                     >
                       {word('cancel')}
                     </Button>
                   )}
                   {destination === 'wallet' && ['Approved', 'Failed'].includes(refund.state) && (
-                    <Button variant="outline" onClick={() => decide(refund, 'process')}>
+                    <Button
+                      variant="outline"
+                      disabled={reviewBusy}
+                      onClick={() => void decide(refund, 'process')}
+                    >
                       {word('process')}
                     </Button>
                   )}
                   {destination === 'external_bank' && refund.state === 'Approved' && (
                     <Button
                       variant="outline"
-                      disabled={!references[refund.id]?.trim()}
-                      onClick={() => decide(refund, 'record-transfer')}
+                      disabled={reviewBusy || !references[refund.id]?.trim()}
+                      onClick={() => void decide(refund, 'record-transfer')}
                     >
                       {word('record-transfer')}
                     </Button>
@@ -536,8 +638,10 @@ export function RefundPanel({
                   {destination === 'external_bank' && refund.state === 'Processing' && (
                     <Button
                       variant="outline"
-                      disabled={references[refund.id]?.trim() !== refund.bankReference}
-                      onClick={() => decide(refund, 'reconcile')}
+                      disabled={
+                        reviewBusy || references[refund.id]?.trim() !== refund.bankReference
+                      }
+                      onClick={() => void decide(refund, 'reconcile')}
                     >
                       {word('reconcile')}
                     </Button>

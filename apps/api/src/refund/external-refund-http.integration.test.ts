@@ -72,6 +72,28 @@ async function invoice(amount = '100') {
 }
 const reviewHashes = new Map<string, string>();
 async function post(path: string, body: unknown = {}, user = 'refund-finance') {
+  if (
+    /^(external-refunds|wallet-refunds)\/[^/]+\/(approve|reject|cancel|process|record-transfer|reconcile)$/.test(
+      path
+    ) &&
+    body &&
+    typeof body === 'object'
+  ) {
+    const input = body as Record<string, unknown>;
+    if (!input.expectedReviewHash) {
+      const preview = await fetch(`${http.base}/api/admin/${path}/review`, {
+        method: 'POST',
+        headers: headers[user]!,
+        body: JSON.stringify(input),
+      });
+      body = {
+        ...input,
+        expectedReviewHash: preview.ok
+          ? ((await preview.json()) as { hash: string }).hash
+          : '0'.repeat(64),
+      };
+    }
+  }
   if (['wallet-refunds', 'external-refunds'].includes(path) && body && typeof body === 'object') {
     const input = body as ReturnType<typeof requestBody> & { expectedReviewHash?: string };
     if (!input.expectedReviewHash && input.idempotencyKey) {
@@ -183,6 +205,48 @@ it('shows external requests and the shared refundable balance to finance staff',
   expect(await withWalletReservation.json()).toMatchObject({
     invoice: { refundedAmount: '40', reservedAmount: '10', availableAmount: '50' },
     refunds: [expect.objectContaining({ id: refund.id, destination: 'external_bank' })],
+  });
+});
+
+it('binds bank transfer decisions to current finances and records the review', async () => {
+  const f = await invoice('100');
+  const refund = await request(requestBody(f.id, '40'));
+  expect((await decide(refund.id, 'approve')).status).toBe(200);
+  const bankReference = randomUUID();
+  const path = `external-refunds/${refund.id}/record-transfer`;
+  const preview = await post(`${path}/review`, { bankReference });
+  expect(preview.status).toBe(200);
+  const review = (await preview.json()) as { hash: string };
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/${path}`, {
+        method: 'POST',
+        headers: headers['refund-finance']!,
+        body: JSON.stringify({ bankReference }),
+      })
+    ).status
+  ).toBe(400);
+  await request(requestBody(f.id, '10'));
+  expect((await post(path, { bankReference, expectedReviewHash: review.hash })).status).toBe(409);
+  const current = await post(`${path}/review`, { bankReference });
+  expect(current.status).toBe(200);
+  const currentReview = (await current.json()) as { hash: string };
+  expect((await post(path, { bankReference, expectedReviewHash: currentReview.hash })).status).toBe(
+    200
+  );
+  const audit = (
+    await http.pool.query(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='refund.processing' AND metadata::jsonb->>'refundId'=$1",
+      [refund.id]
+    )
+  ).rows;
+  expect(audit).toHaveLength(1);
+  expect(audit[0].metadata.financialReview).toMatchObject({
+    hash: currentReview.hash,
+    data: {
+      refund: { reservedBefore: '50' },
+      decision: { action: 'record-transfer', bankReference },
+    },
   });
 });
 

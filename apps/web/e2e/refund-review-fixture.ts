@@ -41,3 +41,47 @@ export function refundReviewFixture(
     },
   };
 }
+
+export function refundDecisionReviewFixture(
+  invoiceId: string,
+  refundId: string,
+  destination: 'wallet' | 'external_bank',
+  state: string,
+  action: 'approve' | 'reject' | 'cancel' | 'process' | 'record-transfer' | 'reconcile',
+  bankReference: string | null = null
+) {
+  const base = refundReviewFixture(invoiceId, destination, '40', 'Customer return');
+  const targetState =
+    action === 'approve'
+      ? 'Approved'
+      : action === 'reject'
+        ? 'Rejected'
+        : action === 'cancel'
+          ? 'Cancelled'
+          : action === 'reconcile'
+            ? 'Completed'
+            : 'Processing';
+  return {
+    ...base,
+    scope: { ...base.scope, action: `refund.${destination}.${action}`, resourceId: refundId },
+    hash: 'b'.repeat(64),
+    data: {
+      ...base.data,
+      refund: {
+        id: refundId,
+        destination,
+        state,
+        amount: '40',
+        refundedBefore: '0',
+        reservedBefore: '40',
+        availableBefore: '60',
+        availableAfter: action === 'reject' || action === 'cancel' ? '100' : '60',
+        bankReference: state === 'Processing' ? bankReference : null,
+        reconciliationStatus: state === 'Processing' ? 'Pending' : null,
+        approvalRequired: ['approve', 'process', 'record-transfer'].includes(action) ? false : null,
+        approvalRequestId: null,
+      },
+      decision: { action, targetState, reason: null, bankReference },
+    },
+  };
+}

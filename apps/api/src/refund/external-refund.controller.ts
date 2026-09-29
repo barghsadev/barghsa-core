@@ -32,6 +32,9 @@ const decisionSchema = z
     bankReference: z.string().trim().min(1).max(200).optional(),
   })
   .strict();
+const decisionConfirmSchema = decisionSchema
+  .extend({ expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/) })
+  .strict();
 @ApiTags('Admin · External bank refunds')
 @ApiBearerAuth()
 @UseGuards(SessionAuthGuard, StepUpGuard)
@@ -115,6 +118,48 @@ export class ExternalRefundController {
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
     return this.refunds.request(parsed.data, req.session, req.ip ?? '127.0.0.1', 'external_bank');
   }
+  @Post(':id/:action/review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Preview the authoritative external refund decision' })
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiParam({
+    name: 'action',
+    enum: ['approve', 'reject', 'cancel', 'record-transfer', 'reconcile'],
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        reason: { type: 'string', minLength: 1, maxLength: 1000 },
+        bankReference: { type: 'string', minLength: 1, maxLength: 200 },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Authoritative decision review and confirmation hash' })
+  async reviewDecision(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Param('action') action: string,
+    @Body() body: unknown
+  ) {
+    this.authorize(req);
+    const parsedId = refundUuid.safeParse(id),
+      parsedAction = z
+        .enum(['approve', 'reject', 'cancel', 'record-transfer', 'reconcile'])
+        .safeParse(action),
+      parsedBody = decisionSchema.safeParse(body ?? {});
+    if (!parsedId.success || !parsedAction.success || !parsedBody.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    return this.refunds.reviewDecision(
+      parsedId.data,
+      parsedAction.data,
+      parsedBody.data.reason,
+      req.session,
+      'external_bank',
+      parsedBody.data.bankReference
+    );
+  }
   @Post(':id/:action')
   @HttpCode(200)
   @RequiresStepUp()
@@ -130,7 +175,9 @@ export class ExternalRefundController {
     schema: {
       type: 'object',
       additionalProperties: false,
+      required: ['expectedReviewHash'],
       properties: {
+        expectedReviewHash: { type: 'string', pattern: '^[a-f0-9]{64}$' },
         reason: {
           type: 'string',
           minLength: 1,
@@ -163,7 +210,7 @@ export class ExternalRefundController {
       parsedAction = z
         .enum(['approve', 'reject', 'cancel', 'record-transfer', 'reconcile'])
         .safeParse(action),
-      parsedBody = decisionSchema.safeParse(body ?? {});
+      parsedBody = decisionConfirmSchema.safeParse(body ?? {});
     if (!parsedId.success || !parsedAction.success || !parsedBody.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
     return this.refunds.decide(
@@ -173,7 +220,8 @@ export class ExternalRefundController {
       req.session,
       req.ip ?? '127.0.0.1',
       'external_bank',
-      parsedBody.data.bankReference
+      parsedBody.data.bankReference,
+      parsedBody.data.expectedReviewHash
     );
   }
 }

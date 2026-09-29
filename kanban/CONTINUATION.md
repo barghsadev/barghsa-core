@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 29, 2026
 
+[Refund decision financial snapshot](batches/2026-09-29-refund-decision-review-snapshot.md) adds server-derived review and stale-state confirmation to staff decisions for both manual refund destinations. The audit retains each confirmed decision review; the wider cross-command review work remains partial.
+
 [Refund request financial snapshot](batches/2026-09-29-refund-request-review-snapshot.md) binds both manual refund destinations to an authoritative server preview, exact confirmation hash and persisted audit record. Changed balances or second-approval rules reject stale confirmation; the wider cross-command review work remains partial.
 
 [Approval route boundary follow-up](batches/2026-09-29-approval-route-boundary.md) normalizes exact-request links and restores the standalone admin failure tests after the router-aware approval handoff.
