@@ -8,4 +8,6 @@ Both measurements must pass. The existing default-gzip check remains because Siz
 
 Size Limit and its file plugin are pinned to 12.1.0, which supports the project's Node 20 baseline as well as the current Node 22/24 tooling. The 13.x release requires a newer Node baseline and was not retained.
 
+The auth build aliases the generated route tree to `apps/web/src/routeTree.auth.ts`, which contains only paths served by the auth entry. Keep it aligned with `apps/web/entry-routes.js` when adding a public auth path. The main build still uses the generated full route tree.
+
 The regression fixture runs the actual CLI. It verifies shared dependency deduplication, admission of a small route, rejection of an oversized shared chunk and rejection of a missing asset.

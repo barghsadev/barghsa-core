@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 29, 2026
 
+[Auth route payload budget](batches/2026-09-29-auth-route-budget.md) gives the production auth entry a small route tree, bringing login, registration, verification and password recovery under 150 KB while preserving the browser flows. Dashboard, electricity ordering and admin terms remain above their separate budgets.
+
 [Staff inbox in the admin workspace](batches/2026-09-29-staff-inbox-ui.md) adds a staff bell and full inbox, keeps navigation in the selected operating context, and verifies the bilingual staff/customer journey in five browser projects.
 
 [Notification inbox context isolation](batches/2026-09-29-notification-context-isolation.md) separates staff and customer notices on both APIs, preserves account-security alerts in either mode, and backfills existing notices with a database fallback for older writers. Dual-role HTTP, migration, worker and refund tests pass.
