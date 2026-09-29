@@ -37,3 +37,28 @@ test('dual-role user deliberately switches between staff and customer workspaces
   await expect(page.getByLabel('Staff mode')).toBeVisible();
   expect(transitions).toEqual(['customer', 'staff']);
 });
+
+test('dual-role user can onboard only in customer context', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
+  let operatingContext: 'staff' | 'customer' = 'staff';
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        userId: 'dual-role-user',
+        isStaff: true,
+        operatingContext,
+        canSwitchContext: true,
+        requiresTosAcceptance: false,
+      },
+    })
+  );
+
+  await page.goto('/onboarding');
+  await expect(page).toHaveURL(/\/app$/);
+
+  operatingContext = 'customer';
+  await page.goto('/onboarding');
+  await expect(page).toHaveURL(/\/onboarding\/?$/);
+  await expect(page.locator('h1')).toBeVisible();
+});

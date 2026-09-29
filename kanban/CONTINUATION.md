@@ -2,7 +2,7 @@
 
 ## Current manual batch — September 29, 2026
 
-[Staff/customer operating contexts](batches/2026-09-29-staff-customer-context.md) add explicit session authority, credential-rotating switches, route/job/upload/export isolation, and a bilingual switch. The first main CI run exposed a legacy migration test that assumed session rows could never gain a column; the follow-up checks preserved credentials and staff/customer backfill directly.
+[Staff/customer operating contexts](batches/2026-09-29-staff-customer-context.md) add explicit session authority, credential-rotating switches, route/job/upload/export isolation, a bilingual switch, and customer-mode access to onboarding for dual-role users. The first main CI run exposed a legacy migration test that assumed session rows could never gain a column; the follow-up checks preserved credentials and staff/customer backfill directly.
 
 Reviewed profile closure execution is implemented on main. [Portable profile data export](batches/2026-09-29-profile-data-export.md) connects privacy requests to an owner-scoped async ZIP export, visible progress and retries, eligible document bytes, audited short-lived downloads, and 24-hour expiry.
 

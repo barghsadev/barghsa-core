@@ -9,3 +9,5 @@ Async jobs are tagged with their issuing context. Status and retry reads cannot 
 Validation: real-PostgreSQL API integration and unit tests for context changes, stale credentials, route denial, job isolation, upload URLs and purpose checks; worker export integration tests; bilingual web component tests; Chromium browser test for the visible switch and workspace route; full build, typecheck, lint, formatting, OpenAPI contract, database snapshot and backlog checks.
 
 CI follow-up: the legacy pre-auth migration test now compares preserved session credentials and deadlines instead of an obsolete whole-row shape, and verifies that existing customer and staff sessions receive the matching context. The focused migrated-PostgreSQL test passes; the follow-up main CI run must confirm the full suite.
+
+Onboarding follow-up: dual-role users can enter customer onboarding while their session is in customer context, but a staff-context session still redirects to the workspace. The operating-context browser test covers both routes.
