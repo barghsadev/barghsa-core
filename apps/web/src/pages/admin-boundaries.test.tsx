@@ -13,7 +13,7 @@ import AdminRolesPage from './AdminRolesPage.js';
 import AdminGiftCodesPage from './AdminGiftCodesPage.js';
 import AdminSmsProvidersPage from './AdminSmsProvidersPage.js';
 import AdminFailedJobsPage from './AdminFailedJobsPage.js';
-import AdminApprovalRequestsPage from './AdminApprovalRequestsPage.js';
+import { AdminApprovalRequestsView } from './AdminApprovalRequestsPage.js';
 import AdminKnowledgeBasesPage from './AdminKnowledgeBasesPage.js';
 import AdminVerificationConfig from './AdminVerificationConfig.js';
 import AdminAiModelsPage from './AdminAiModelsPage.js';
@@ -51,7 +51,7 @@ const pages: Array<[string, ComponentType]> = [
   ['AdminGiftCodesPage', AdminGiftCodesPage],
   ['AdminSmsProvidersPage', AdminSmsProvidersPage],
   ['AdminFailedJobsPage', AdminFailedJobsPage],
-  ['AdminApprovalRequestsPage', AdminApprovalRequestsPage],
+  ['AdminApprovalRequestsPage', AdminApprovalRequestsView],
   ['AdminKnowledgeBasesPage', AdminKnowledgeBasesPage],
   ['AdminVerificationConfig', AdminVerificationConfig],
   ['AdminAiModelsPage', AdminAiModelsPage],

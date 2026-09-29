@@ -202,6 +202,16 @@ test('wallet refund approval confirms its destination in Persian', async ({ page
   await expect(summary).toContainText('مقصد بازپرداخت');
   await expect(summary).toContainText('بازپرداخت به کیف پول');
 });
+test('an approval link normalizes a valid request ID before loading it', async ({ page }) => {
+  await shell(page);
+  const linkedId = 'abcdefab-cdef-4abc-8abc-abcdefabcdef';
+  await page.route(`**/api/admin/approval-requests/${linkedId}`, (route) =>
+    route.fulfill({ json: { ...request, id: linkedId } })
+  );
+  await page.goto(`/admin/approval-requests?requestId=%20${linkedId.toUpperCase()}%20`);
+  await expect(page.getByText('Selected request')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Approve', exact: true })).toBeVisible();
+});
 test('an obsolete pending response cannot replace selected history', async ({ page }) => {
   await shell(page);
   let release!: () => void;

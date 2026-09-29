@@ -40,6 +40,10 @@ const PAGE_SIZE = 25;
 
 export default function AdminApprovalRequestsPage() {
   const { requestId } = useSearch({ from: '/admin/approval-requests' });
+  return <AdminApprovalRequestsView requestId={requestId} />;
+}
+
+export function AdminApprovalRequestsView({ requestId }: { requestId?: string }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const [status, setStatus] = useState<Status>('pending');

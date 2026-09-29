@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 29, 2026
 
+[Approval route boundary follow-up](batches/2026-09-29-approval-route-boundary.md) normalizes exact-request links and restores the standalone admin failure tests after the router-aware approval handoff.
+
 [Refund approval return](batches/2026-09-29-refund-approval-return.md) connects a second-review decision back to the wallet or external-bank refund panel for the same invoice.
 
 [Financial approval decision review](batches/2026-09-29-approval-decision-review.md) places the persisted amount, invoice, initiator, reason and refund destination in the shared confirmation layout before a second finance staff member decides. Invoice adjustments retain their distinct issue-on-approval notice.
