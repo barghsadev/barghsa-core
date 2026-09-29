@@ -21,6 +21,11 @@ import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.ser
 import { DueAtCalculationService } from '../invoice/due-at.service.js';
 import { calculateManualInvoice } from '../invoice/manual-invoice.calculation.js';
 import { buildManualInvoiceCalculationSnapshot } from '../invoice/invoice-calculation-snapshot.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
+import {
+  parseElectricityIncreaseSigningReview,
+  type ElectricityIncreaseSigningReview,
+} from '@barghsa/shared/finance';
 
 export const requestIncreaseSchema = z
   .object({
@@ -48,6 +53,7 @@ export const signIncreaseSchema = z
   .object({
     expectedAmendmentSha256: z.string().regex(/^[0-9a-f]{64}$/),
     expectedAdjustmentIrR: z.string().regex(/^[1-9]\d*$/),
+    expectedReviewHash: z.string().regex(/^[0-9a-f]{64}$/),
     idempotencyKey: z.string().uuid(),
   })
   .strict();
@@ -154,6 +160,59 @@ export function nextIncreasePricingInstant(now: Date) {
   const value = now.getTime();
   if (!Number.isSafeInteger(value)) throw new RangeError('Invalid pricing instant');
   return new Date(Math.ceil(value / 300_000) * 300_000);
+}
+
+function signingReview(input: {
+  contract: IncreaseContract;
+  profileId: string;
+  requestId: string;
+  amendmentSha256: string;
+  originalInvoiceId: string;
+  originalInvoiceIrR: string;
+  originalKwh: string;
+  requestedKwh: string;
+  effectiveFrom: Date;
+  quote: ReturnType<typeof quoteIncreaseAdjustment>;
+}): ElectricityIncreaseSigningReview {
+  const { contract, quote } = input;
+  const adjustmentShares = quote.priceAdjustments.reduce(
+    (sum, component) => sum + BigInt(component.increaseShareIrR),
+    0n
+  );
+  const review = new ReviewSnapshotService().create(
+    {
+      action: 'electricity.quantity-increase-sign',
+      profileId: input.profileId,
+      resourceId: contract.id,
+    },
+    {
+      currency: 'IRR' as const,
+      profileId: input.profileId,
+      contractId: contract.id,
+      orderId: contract.order_id,
+      versionId: contract.version_id,
+      requestId: input.requestId,
+      amendmentSha256: input.amendmentSha256,
+      originalInvoiceId: input.originalInvoiceId,
+      originalInvoiceIrR: input.originalInvoiceIrR,
+      originalKwh: input.originalKwh,
+      requestedKwh: input.requestedKwh,
+      incrementalKwh: (BigInt(input.requestedKwh) - BigInt(input.originalKwh)).toString(),
+      effectiveFrom: input.effectiveFrom.toISOString(),
+      eligibleFrom: quote.eligibleStart.toISOString(),
+      periodStart: contract.period_start.toISOString(),
+      periodEnd: contract.period_end.toISOString(),
+      remainingMs: quote.remainingMs.toString(),
+      periodMs: quote.periodMs.toString(),
+      baseShareIrR: (quote.amount - adjustmentShares).toString(),
+      priceAdjustments: quote.priceAdjustments,
+      adjustmentIrR: quote.amount.toString(),
+      activationRule: 'after-signature-full-payment-and-effective-date' as const,
+    }
+  );
+  const parsed = parseElectricityIncreaseSigningReview(review);
+  if (!parsed) throw new ConflictException('Increase signing review requires reconciliation');
+  return parsed;
 }
 
 function translateConcurrentChange(error: unknown): never {
@@ -271,6 +330,7 @@ export class ElectricityIncreaseService {
           )
         ).rows[0]?.open ?? false;
       let quote: { adjustmentIrR: string; eligibleFrom: Date } | null = null;
+      let review: ElectricityIncreaseSigningReview | null = null;
       if (request?.status === 'awaiting_signature' && contract.period_end > new Date()) {
         const pricingInstant = nextIncreasePricingInstant(new Date());
         if (pricingInstant < contract.period_end) {
@@ -286,6 +346,18 @@ export class ElectricityIncreaseService {
             priceComponents: await this.finalizedPriceComponents(client, id),
           });
           quote = { adjustmentIrR: result.amount.toString(), eligibleFrom: result.eligibleStart };
+          review = signingReview({
+            contract,
+            profileId,
+            requestId: request.requestId,
+            amendmentSha256: request.amendmentSha256,
+            originalInvoiceId: invoice.id,
+            originalInvoiceIrR: invoice.total_amount,
+            originalKwh: request.originalKwh,
+            requestedKwh: request.requestedKwh,
+            effectiveFrom: request.effectiveFrom,
+            quote: result,
+          });
         }
       }
       const mayRequest =
@@ -294,6 +366,7 @@ export class ElectricityIncreaseService {
       return {
         request,
         quote,
+        review,
         maxPercentage,
         originalKwh: contract.original_kwh,
         canRequest:
@@ -598,6 +671,19 @@ export class ElectricityIncreaseService {
               });
               if (quote.amount.toString() !== input.expectedAdjustmentIrR)
                 throw new ConflictException('Adjustment changed; review the current amount');
+              const review = signingReview({
+                contract,
+                profileId,
+                requestId: request.id,
+                amendmentSha256: request.amendment_sha256,
+                originalInvoiceId: originalInvoice.id,
+                originalInvoiceIrR: originalInvoice.total_amount,
+                originalKwh: request.original_kwh,
+                requestedKwh: request.requested_kwh,
+                effectiveFrom: request.effective_from,
+                quote,
+              });
+              new ReviewSnapshotService().assertConfirmed(review, input.expectedReviewHash);
               const pricingSnapshot = {
                 schemaVersion: 1,
                 amendmentSha256: request.amendment_sha256,
@@ -613,6 +699,7 @@ export class ElectricityIncreaseService {
                 priceAdjustments: quote.priceAdjustments,
                 rounding: 'half-up-to-nearest-IRR',
                 adjustmentIrR: quote.amount.toString(),
+                financialReview: review,
               };
               const due = await this.dueDates.resolve(client, {
                 serviceType: 'electricity',
@@ -709,7 +796,12 @@ export class ElectricityIncreaseService {
                 'electricity.increase_signed',
                 actor,
                 ip,
-                { requestId: request.id, invoiceId, adjustmentIrR: quote.amount.toString() }
+                {
+                  requestId: request.id,
+                  invoiceId,
+                  adjustmentIrR: quote.amount.toString(),
+                  reviewHash: review.hash,
+                }
               );
               await notifyContractReview(client, id, 'electricity_increase_signed');
               return request.id;

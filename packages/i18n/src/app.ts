@@ -109,6 +109,15 @@ export const fa: I18nDictionary = {
   'electricity.increase.activationRule':
     'افزایش مقدار فقط پس از امضای شما و پرداخت کامل فاکتور تعدیل و زودتر نبودن از تاریخ شروع اعمال می‌شود.',
   'electricity.increase.adjustment': 'مبلغ فاکتور تعدیل در زمان امضا',
+  'electricity.increase.reviewTitle': 'بررسی مالی پیش از امضای الحاقیه',
+  'electricity.increase.contractId': 'شناسه قرارداد',
+  'electricity.increase.originalInvoice': 'فاکتور اولیه پرداخت‌شده',
+  'electricity.increase.paidBasis': 'مبلغ مبنای پرداخت‌شده',
+  'electricity.increase.period': 'دوره تحویل',
+  'electricity.increase.baseShare': 'سهم قیمت اولیه',
+  'electricity.increase.priceChange': 'سهم تغییر قیمت',
+  'electricity.increase.reviewUnavailable':
+    'بررسی مالی معتبر در دسترس نیست. صفحه را دوباره بارگذاری کنید.',
   'electricity.increase.priceBegins': 'شروع دوره قیمت‌گذاری و اعمال افزایش',
   'electricity.increase.agree': 'الحاقیه، مبلغ تعدیل و شرایط اعمال افزایش را بررسی و قبول می‌کنم.',
   'electricity.increase.sign': 'امضای الحاقیه و صدور فاکتور',
@@ -1518,6 +1527,15 @@ export const en: I18nDictionary = {
   'electricity.increase.activationRule':
     'The increase takes effect only after your signature and full adjustment payment, no earlier than its start date.',
   'electricity.increase.adjustment': 'Adjustment invoice amount at signature',
+  'electricity.increase.reviewTitle': 'Financial review before signing',
+  'electricity.increase.contractId': 'Contract ID',
+  'electricity.increase.originalInvoice': 'Paid original invoice',
+  'electricity.increase.paidBasis': 'Paid price basis',
+  'electricity.increase.period': 'Delivery period',
+  'electricity.increase.baseShare': 'Original price share',
+  'electricity.increase.priceChange': 'Price change share',
+  'electricity.increase.reviewUnavailable':
+    'The financial review is unavailable. Reload the page to review current values.',
   'electricity.increase.priceBegins': 'Pricing and activation start',
   'electricity.increase.agree':
     'I have reviewed and accept the amendment, adjustment amount, and activation terms.',

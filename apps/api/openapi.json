@@ -18317,6 +18317,10 @@
                     "pattern": "^[0-9a-f]{64}$",
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -18326,6 +18330,7 @@
                 "required": [
                   "expectedAmendmentSha256",
                   "expectedAdjustmentIrR",
+                  "expectedReviewHash",
                   "idempotencyKey"
                 ],
                 "type": "object"

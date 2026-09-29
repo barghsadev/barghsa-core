@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Electricity quantity-increase signing review](batches/2026-09-30-electricity-increase-signing-review.md) binds customer signing and adjustment invoice issuance to a full server-priced snapshot. The cross-command review tasks remain partial.
+
 [Electricity price adjustment financial review](batches/2026-09-30-electricity-price-financial-review.md) binds staff proposals to an authoritative priced preview and shows the same calculation before publishing or finalizing a charge or credit. The cross-command review tasks remain partial.
 
 [Contract cancellation financial review](batches/2026-09-30-contract-cancellation-financial-review.md) shows the captured contract, invoice balances and refund decision in the shared bilingual confirmation layout before staff save or execute cancellation. Existing server fingerprints still reject changed finances. The cross-command review tasks remain partial.

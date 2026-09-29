@@ -1897,12 +1897,31 @@ it.each([
       }
       const review = (await (await fetch(path, { headers })).json()) as {
         quote: { adjustmentIrR: string; eligibleFrom: string };
+        review: {
+          hash: string;
+          data: {
+            contractId: string;
+            originalInvoiceId: string;
+            adjustmentIrR: string;
+            requestedKwh: string;
+          };
+        };
       };
       if (decision === 'approve_future') expect(review.quote.adjustmentIrR).toBe('200000');
       else expect(BigInt(review.quote.adjustmentIrR)).toBeGreaterThan(0n);
+      expect(review.review).toMatchObject({
+        hash: expect.stringMatching(/^[a-f0-9]{64}$/),
+        data: {
+          contractId: order.contractId,
+          originalInvoiceId: order.invoiceId,
+          adjustmentIrR: review.quote.adjustmentIrR,
+          requestedKwh: '12',
+        },
+      });
       const signature = {
         expectedAmendmentSha256: amendment.amendmentSha256,
         expectedAdjustmentIrR: review.quote.adjustmentIrR,
+        expectedReviewHash: review.review.hash,
         idempotencyKey: randomUUID(),
       };
       const signPath = `${path}/sign`;
@@ -1924,6 +1943,15 @@ it.each([
             method: 'POST',
             headers,
             body: JSON.stringify({ ...signature, expectedAdjustmentIrR: '1' }),
+          })
+        ).status
+      ).toBe(409);
+      expect(
+        (
+          await fetch(signPath, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ ...signature, expectedReviewHash: '0'.repeat(64) }),
           })
         ).status
       ).toBe(409);
@@ -1958,6 +1986,7 @@ it.each([
         pricing_snapshot: {
           originalInvoiceId: order.invoiceId,
           adjustmentIrR: review.quote.adjustmentIrR,
+          financialReview: review.review,
         },
         signed_at: expect.any(Date),
       });
