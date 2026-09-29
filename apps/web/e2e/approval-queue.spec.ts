@@ -155,6 +155,9 @@ test('a refund approval link loads its exact request beyond the queue page', asy
   await expect(page.getByText(id)).toHaveCount(2);
   await expect(page.getByRole('button', { name: 'Approve', exact: true })).toBeVisible();
   await expect(page.getByText('External bank refunds')).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Continue refund in invoice workspace' })
+  ).toHaveAttribute('href', `/admin/invoices?invoiceId=${invoiceId}#external-refunds-panel`);
   await expect(page.getByLabel('Status', { exact: true })).toHaveCount(0);
   expect(requests).not.toContain('queue');
   await page.getByRole('button', { name: 'Approve', exact: true }).click();
@@ -172,6 +175,12 @@ test('a refund approval link loads its exact request beyond the queue page', asy
     }).format(BigInt(request.amountIrR))
   );
   await dialog.getByRole('button', { name: 'Cancel' }).click();
+  await page.getByRole('link', { name: 'Continue refund in invoice workspace' }).click();
+  await expect(page).toHaveURL(
+    new RegExp(`/admin/invoices\\?invoiceId=${invoiceId}#external-refunds-panel$`)
+  );
+  await expect(page.getByRole('region', { name: 'External bank refunds' })).toBeVisible();
+  await page.goBack();
   await page.getByRole('link', { name: 'Back to approval queue' }).click();
   await expect(page.getByText('No requests in this queue.')).toBeVisible();
   expect(requests).toContain('queue');

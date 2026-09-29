@@ -8,6 +8,7 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { useLocale } from '../hooks/useLocale.js';
 import DualApprovalThresholdPanel from '../components/DualApprovalThresholdPanel.js';
 import { Link, useSearch } from '@tanstack/react-router';
+import { isInvoiceUuid } from '../lib/due-at-override.js';
 
 type Status = 'pending' | 'approved' | 'rejected';
 interface Request {
@@ -237,6 +238,18 @@ export default function AdminApprovalRequestsPage() {
                   {t('admin.approvals.walletReceipts', locale)}
                 </a>
               )}
+              {request.actionType === 'refund' &&
+                typeof request.details?.invoiceId === 'string' &&
+                isInvoiceUuid(request.details.invoiceId) &&
+                (request.details.destination === 'wallet' ||
+                  request.details.destination === 'external_bank') && (
+                  <a
+                    className="inline-block text-primary underline"
+                    href={`/admin/invoices?invoiceId=${encodeURIComponent(request.details.invoiceId)}#${request.details.destination === 'wallet' ? 'wallet-refunds-panel' : 'external-refunds-panel'}`}
+                  >
+                    {t('admin.approvals.returnToRefund', locale)}
+                  </a>
+                )}
               {request.status === 'pending' && (
                 <div className="space-y-2">
                   <Label htmlFor={`reason-${request.id}`}>
