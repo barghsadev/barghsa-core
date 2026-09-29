@@ -5,6 +5,19 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'jobs.progress': 'پیشرفت کار',
+  'jobs.queued': 'در صف',
+  'jobs.processing': 'در حال انجام',
+  'jobs.completed': 'انجام شد',
+  'jobs.failed': 'ناموفق',
+  'jobs.loading': 'در حال دریافت وضعیت…',
+  'jobs.loadError': 'دریافت وضعیت ممکن نشد.',
+  'jobs.failedDescription': 'این کار انجام نشد. می‌توانید دوباره تلاش کنید.',
+  'jobs.retryLoad': 'دریافت دوباره وضعیت',
+  'jobs.retryJob': 'تلاش دوباره',
+  'jobs.openResult': 'مشاهده نتیجه',
+  'jobs.estimateUnavailable': 'زمان پایان هنوز مشخص نیست.',
+  'jobs.estimate': 'زمان تقریبی باقی‌مانده: {remaining}',
   'assistant.open': 'پرسش از راهنمای برقسا',
   'assistant.title': 'راهنمای دانش برقسا',
   'assistant.scope':
@@ -1295,6 +1308,19 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'jobs.progress': 'Job progress',
+  'jobs.queued': 'Queued',
+  'jobs.processing': 'In progress',
+  'jobs.completed': 'Completed',
+  'jobs.failed': 'Failed',
+  'jobs.loading': 'Loading job status…',
+  'jobs.loadError': 'Could not load job status.',
+  'jobs.failedDescription': 'This job did not finish. You can try again.',
+  'jobs.retryLoad': 'Reload status',
+  'jobs.retryJob': 'Try again',
+  'jobs.openResult': 'Open result',
+  'jobs.estimateUnavailable': 'Completion time is not available yet.',
+  'jobs.estimate': 'Estimated time remaining: {remaining}',
   'assistant.open': 'Ask Barghsa guide',
   'assistant.title': 'Barghsa knowledge guide',
   'assistant.scope':

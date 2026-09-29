@@ -2,7 +2,9 @@
 
 ## Current manual batch — September 29, 2026
 
-[Async jobs backend](batches/2026-09-29-async-jobs-backend.md) adds a durable one-shot job lifecycle, leased worker handler registry, owner-scoped status/result/retry API and focused PostgreSQL/HTTP coverage. Product-specific handlers and the shared progress UI remain next.
+[Async job progress UI](batches/2026-09-29-async-job-progress-ui.md) adds a reusable bilingual status display and two-second owner-scoped poller with retry and result handoff, previewed only in the development catalogue. A product-specific job and real ETA source are still needed for a live page.
+
+[Async jobs backend](batches/2026-09-29-async-jobs-backend.md) adds a durable one-shot job lifecycle, leased worker handler registry, owner-scoped status/result/retry API and focused PostgreSQL/HTTP coverage. Product-specific handlers remain next.
 
 [Dedicated AI inference process](batches/2026-09-29-ai-inference-worker.md) moves provider I/O to an authenticated internal worker, re-reads and decrypts the selected model there, and reports worker health separately from core API readiness.
 
