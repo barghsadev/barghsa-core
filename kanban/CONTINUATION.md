@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Manual invoice financial review](batches/2026-09-30-manual-invoice-financial-review.md) binds staff-issued invoices to an authoritative customer, line, VAT, total, and due-rule preview before step-up. The cross-command review tasks remain partial.
+
 [Electricity quantity-increase signing review](batches/2026-09-30-electricity-increase-signing-review.md) binds customer signing and adjustment invoice issuance to a full server-priced snapshot. The cross-command review tasks remain partial.
 
 [Electricity price adjustment financial review](batches/2026-09-30-electricity-price-financial-review.md) binds staff proposals to an authoritative priced preview and shows the same calculation before publishing or finalizing a charge or credit. The cross-command review tasks remain partial.

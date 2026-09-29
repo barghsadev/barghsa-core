@@ -27,6 +27,8 @@ import {
   type InvoiceAdjustmentReview,
   parseInvoiceReplacementReview,
   type InvoiceReplacementReview,
+  parseManualInvoiceReview,
+  type ManualInvoiceReview,
 } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -65,6 +67,7 @@ interface InvoiceRequest {
   };
   profileId: string;
   idempotencyKey: string;
+  expectedReviewHash?: string;
   lines: Array<{
     description: string;
     quantity: number;
@@ -206,6 +209,7 @@ export function ManualInvoiceForm({
   const [approval, setApproval] = useState<{ id: string; amount: string } | null>(null);
   const [adjustmentReview, setAdjustmentReview] = useState<InvoiceAdjustmentReview | null>(null);
   const [replacementReview, setReplacementReview] = useState<InvoiceReplacementReview | null>(null);
+  const [manualReview, setManualReview] = useState<ManualInvoiceReview | null>(null);
   const submitButton = useRef<HTMLButtonElement>(null);
   const signed = /^-?\d{1,19}$/.test(digits(amount)) ? BigInt(digits(amount)) : 0n;
   const validAdjustment =
@@ -285,6 +289,7 @@ export function ManualInvoiceForm({
     setLocked(false);
     setAdjustmentReview(null);
     setReplacementReview(null);
+    setManualReview(null);
   }
   async function send(): Promise<'done' | 'step-up' | 'error'> {
     const submitted = request.current;
@@ -429,6 +434,49 @@ export function ManualInvoiceForm({
     setError(null);
     try {
       const submitted = request.current;
+      if (submitted && !submitted.correction && !submitted.expectedReviewHash) {
+        try {
+          const response = await fetch('/api/admin/invoices/manual/review', {
+            method: 'POST',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify(submitted),
+          });
+          if (!response.ok) {
+            setError(
+              response.status === 409 ? 'conflict' : response.status === 403 ? 'denied' : 'invalid'
+            );
+            unlock();
+            return;
+          }
+          const review = parseManualInvoiceReview(await response.json());
+          if (
+            !review ||
+            review.scope.profileId !== submitted.profileId ||
+            review.scope.resourceId !== submitted.idempotencyKey ||
+            review.data.contractId !== null ||
+            review.data.totals.total !== calculation?.total.toString() ||
+            review.data.lines.length !== submitted.lines.length ||
+            review.data.lines.some((line, index) => {
+              const original = submitted.lines[index]!;
+              return (
+                line.description !== original.description ||
+                line.quantity !== original.quantity ||
+                line.unitPrice !== original.unitPrice ||
+                line.vatRate !== original.vatRate ||
+                line.isTaxable !== original.isTaxable
+              );
+            })
+          )
+            throw new Error('Invalid manual invoice review');
+          submitted.expectedReviewHash = review.hash;
+          setManualReview(review);
+          return;
+        } catch {
+          setError('invalid');
+          unlock();
+          return;
+        }
+      }
       if (submitted?.correction && !submitted.correction.expectedReviewHash) {
         try {
           const response = await fetch(
@@ -510,6 +558,22 @@ export function ManualInvoiceForm({
     if (busy.current || (!adjustmentReview && !replacementReview)) return;
     setAdjustmentReview(null);
     setReplacementReview(null);
+    busy.current = true;
+    setActing(true);
+    try {
+      if ((await send()) === 'step-up') {
+        setPassword('');
+        setStepError(null);
+        setStepUp(true);
+      }
+    } finally {
+      busy.current = false;
+      setActing(false);
+    }
+  }
+  async function confirmManualReview() {
+    if (busy.current || !manualReview) return;
+    setManualReview(null);
     busy.current = true;
     setActing(true);
     try {
@@ -834,6 +898,76 @@ export function ManualInvoiceForm({
           {acting ? text('issuing') : locked ? text('retry') : text('issue')}
         </Button>
       </form>
+      <Dialog
+        open={Boolean(manualReview)}
+        onOpenChange={(open) => {
+          if (!open && !acting) unlock();
+        }}
+      >
+        <DialogContent
+          dir={locale === 'fa' ? 'rtl' : 'ltr'}
+          className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-lg"
+        >
+          <DialogHeader>
+            <DialogTitle>{text('manualReviewTitle')}</DialogTitle>
+            <DialogDescription>{text('manualReviewDescription')}</DialogDescription>
+          </DialogHeader>
+          {manualReview && (
+            <FinancialReviewSummary
+              title={text('manualReviewTitle')}
+              rows={[
+                {
+                  id: 'profile',
+                  label: text('profile'),
+                  value: `${manualReview.data.profile.title} · ${manualReview.data.profile.id}`,
+                },
+                ...manualReview.data.lines.map((line, index) => ({
+                  id: `line-${index}`,
+                  label: `${text('line')} ${numbers.number(index + 1)} · ${line.description}`,
+                  value: (
+                    <span className="flex flex-col gap-1">
+                      <span>
+                        {numbers.number(line.quantity)} × {numbers.money(line.unitPrice)}
+                      </span>
+                      <span>
+                        {text('manualReviewSubtotal')}: {numbers.money(line.lineTotal)}
+                      </span>
+                      <span>
+                        {text('manualReviewVat')}: {numbers.money(line.vatAmount)}
+                      </span>
+                    </span>
+                  ),
+                })),
+                {
+                  id: 'subtotal',
+                  label: text('manualReviewSubtotal'),
+                  value: numbers.money(manualReview.data.totals.subtotal),
+                },
+                {
+                  id: 'vat',
+                  label: text('manualReviewVat'),
+                  value: numbers.money(manualReview.data.totals.vat),
+                },
+                {
+                  id: 'due',
+                  label: text('manualReviewDueRule'),
+                  value: `${numbers.number(manualReview.data.dueRule.configDays)} ${text('manualReviewDueDays')}`,
+                },
+              ]}
+              total={{ label: text('total'), value: numbers.money(manualReview.data.totals.total) }}
+              notice={text('manualReviewOutcome')}
+            />
+          )}
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={unlock} disabled={acting}>
+              {text('cancel')}
+            </Button>
+            <Button type="button" onClick={() => void confirmManualReview()} disabled={acting}>
+              {text('manualReviewConfirm')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <Dialog
         open={Boolean(adjustmentReview)}
         onOpenChange={(open) => {

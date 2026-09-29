@@ -48,7 +48,11 @@ import {
 import { createHash } from 'node:crypto';
 import { getDbPool } from '@barghsa/db';
 import type { PoolClient } from 'pg';
-import { duePeriodTypeForManual } from '@barghsa/shared/finance';
+import {
+  duePeriodTypeForManual,
+  parseManualInvoiceReview,
+  type ManualInvoiceReview,
+} from '@barghsa/shared/finance';
 import { v7 as uuidv7 } from 'uuid';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
 import type { TransitionResult } from './invoice-state-machine.service.js';
@@ -61,6 +65,8 @@ import {
 } from './manual-invoice.calculation.js';
 import { buildManualInvoiceCalculationSnapshot } from './invoice-calculation-snapshot.js';
 import { DueAtCalculationService } from './due-at.service.js';
+import type { ResolvedInvoiceDueAt } from './due-at.service.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 
 /** Command to create and issue one manual invoice. */
 export interface CreateManualInvoiceCommand {
@@ -88,6 +94,8 @@ export interface CreateManualInvoiceCommand {
    * reused with a different payload is rejected with ConflictException.
    */
   idempotencyKey?: string;
+  /** Exact reviewed financial snapshot for staff-issued invoices. */
+  expectedReviewHash?: string;
   /** Explicit due date (>= now); defaults to issuedAt + configured days. */
   dueAt?: Date;
   /** Override "now" for tests. */
@@ -143,6 +151,18 @@ export function fingerprintManualInvoice(cmd: {
   return createHash('sha256').update(JSON.stringify(normal)).digest('hex');
 }
 
+function checkedCalculation(lines: ManualInvoiceLineInput[]) {
+  try {
+    const calculation = calculateManualInvoice(lines);
+    if (calculation.totalAmount > 9_223_372_036_854_775_807n)
+      throw new RangeError('Invoice total exceeds the supported int8 IRR amount');
+    return calculation;
+  } catch (error) {
+    if (error instanceof RangeError) throw new BadRequestException(error.message);
+    throw error;
+  }
+}
+
 @Injectable()
 export class ManualInvoiceService {
   private readonly logger = new Logger(ManualInvoiceService.name);
@@ -151,6 +171,103 @@ export class ManualInvoiceService {
     private readonly stateMachine: InvoiceStateMachineService,
     private readonly dueAtCalculation: DueAtCalculationService
   ) {}
+
+  private async financialReview(
+    client: PoolClient,
+    input: {
+      profileId: string;
+      contractId?: string;
+      idempotencyKey: string;
+      lines: ManualInvoiceLineInput[];
+    },
+    calculation: ReturnType<typeof calculateManualInvoice>,
+    due: ResolvedInvoiceDueAt
+  ): Promise<ManualInvoiceReview> {
+    if (due.source === 'staff_override' || due.configDays === null || due.serviceType !== 'manual')
+      throw new ConflictException('Manual invoice due rule cannot be reviewed');
+    const profile = (
+      await client.query<{ id: string; title: string; profileType: 'INDIVIDUAL' | 'LEGAL' }>(
+        `SELECT p.id,
+          COALESCE(NULLIF(lp.legal_name,''),NULLIF(trim(concat_ws(' ',p.first_name,p.last_name)),''),NULLIF(p.title,''),u.username) AS title,
+          p.profile_type AS "profileType"
+         FROM profiles p JOIN users u ON u.user_id=p.user_id
+         LEFT JOIN legal_profiles lp ON lp.id=p.id WHERE p.id=$1`,
+        [input.profileId]
+      )
+    ).rows[0];
+    if (!profile) throw new NotFoundException('Invoice target not found');
+    const subtotal = calculation.lines.reduce((sum, line) => sum + line.lineTotal, 0n);
+    const vat = calculation.lines.reduce((sum, line) => sum + line.vatAmount, 0n);
+    const review = new ReviewSnapshotService().create(
+      {
+        action: 'invoice.manual-issue',
+        profileId: input.profileId,
+        resourceId: input.idempotencyKey,
+      },
+      {
+        currency: 'IRR' as const,
+        profile,
+        contractId: input.contractId ?? null,
+        lines: calculation.lines.map((line) => ({
+          description: line.description.trim(),
+          quantity: line.quantity,
+          unitPrice: line.unitPrice.toString(),
+          vatRate: line.vatRate,
+          isTaxable: line.isTaxable !== false,
+          lineTotal: line.lineTotal.toString(),
+          vatAmount: line.vatAmount.toString(),
+        })),
+        totals: {
+          subtotal: subtotal.toString(),
+          vat: vat.toString(),
+          discount: '0' as const,
+          total: calculation.totalAmount.toString(),
+        },
+        dueRule: {
+          source: due.source,
+          configDays: due.configDays,
+          periodId: due.periodId,
+          serviceType: 'manual' as const,
+        },
+        outcome: 'issue_unpaid_invoice' as const,
+      }
+    );
+    const parsed = parseManualInvoiceReview(review);
+    if (!parsed) throw new ConflictException('Manual invoice review requires reconciliation');
+    return parsed;
+  }
+
+  async reviewManualInvoice(
+    input: {
+      profileId: string;
+      contractId?: string;
+      idempotencyKey: string;
+      lines: ManualInvoiceLineInput[];
+    },
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
+  ): Promise<ManualInvoiceReview> {
+    const calculation = checkedCalculation(input.lines);
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await lockInvoiceProfile(client, 'profile', input.profileId);
+      await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+      await requireCurrentSession(client, actor);
+      const due = await this.dueAtCalculation.resolve(client, {
+        serviceType: duePeriodTypeForManual(),
+        issuedAt: new Date(),
+      });
+      const review = await this.financialReview(client, input, calculation, due);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 
   async profileOptions(
     actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
@@ -215,17 +332,7 @@ export class ManualInvoiceService {
    */
   async createManualInvoice(cmd: CreateManualInvoiceCommand): Promise<ManualInvoiceResult> {
     // --- 1. Pure validation + calculation (throws RangeError) ---
-    let calculation;
-    try {
-      calculation = calculateManualInvoice(cmd.lines);
-      if (calculation.totalAmount > 9_223_372_036_854_775_807n)
-        throw new RangeError('Invoice total exceeds the supported int8 IRR amount');
-    } catch (err: unknown) {
-      if (err instanceof RangeError) {
-        throw new BadRequestException(err.message);
-      }
-      throw err;
-    }
+    const calculation = checkedCalculation(cmd.lines);
 
     const now = cmd.now ?? new Date();
     if (cmd.dueAt !== undefined && cmd.dueAt.getTime() < now.getTime()) {
@@ -278,6 +385,16 @@ export class ManualInvoiceService {
               `Idempotency key ${cmd.idempotencyKey} was already used with a different payload`
             );
           }
+          if (cmd.expectedReviewHash)
+            new ReviewSnapshotService().assertStored(
+              existing.rows[0]!.metadata,
+              cmd.expectedReviewHash,
+              {
+                action: 'invoice.manual-issue',
+                profileId: cmd.profileId,
+                resourceId: cmd.idempotencyKey,
+              }
+            );
 
           const replayed = await this.loadInvoiceExcerpt(client, existingId);
           const auditId = await this.findIssueAuditId(client, existingId);
@@ -305,12 +422,30 @@ export class ManualInvoiceService {
         ...(cmd.dueAt !== undefined ? { staffOverride: cmd.dueAt } : {}),
       });
       const dueAt = due.dueAt;
+      let financialReview: ManualInvoiceReview | null = null;
+      if (cmd.expectedReviewHash) {
+        if (!cmd.idempotencyKey)
+          throw new BadRequestException('Reviewed manual invoice requires an idempotency key');
+        financialReview = await this.financialReview(
+          client,
+          {
+            profileId: cmd.profileId,
+            ...(cmd.contractId === undefined ? {} : { contractId: cmd.contractId }),
+            idempotencyKey: cmd.idempotencyKey,
+            lines: cmd.lines,
+          },
+          calculation,
+          due
+        );
+        new ReviewSnapshotService().assertConfirmed(financialReview, cmd.expectedReviewHash);
+      }
 
       // --- 5. Insert the invoice (Draft, issue timestamps NULL) + snapshot ---
       const invoiceId = uuidv7();
       const calculationSnapshot = buildManualInvoiceCalculationSnapshot(cmd.lines, calculation);
       const metadata = JSON.stringify({
         source: 'manual',
+        ...(financialReview ? { financialReview } : {}),
         generatedBy: cmd.actorUserId,
         due: {
           dueAt: dueAt.toISOString(),

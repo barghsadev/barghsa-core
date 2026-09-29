@@ -8174,6 +8174,10 @@
                     "minLength": 1,
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "type": "string"
@@ -8228,6 +8232,7 @@
                 "required": [
                   "profileId",
                   "idempotencyKey",
+                  "expectedReviewHash",
                   "lines"
                 ],
                 "type": "object"
@@ -8295,6 +8300,99 @@
           }
         ],
         "summary": "Find customer profiles eligible for a manual invoice",
+        "tags": [
+          "Admin · Manual invoices"
+        ]
+      }
+    },
+    "/api/admin/invoices/manual/review": {
+      "post": {
+        "operationId": "ManualInvoiceController_review",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "contractId": {
+                    "maxLength": 200,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "lines": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "description": {
+                          "maxLength": 1000,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "isTaxable": {
+                          "type": "boolean"
+                        },
+                        "quantity": {
+                          "maximum": 2147483647,
+                          "minimum": 1,
+                          "type": "integer"
+                        },
+                        "unitPrice": {
+                          "pattern": "^\\d{1,19}$",
+                          "type": "string"
+                        },
+                        "vatRate": {
+                          "maximum": 10000,
+                          "minimum": 0,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "description",
+                        "quantity",
+                        "unitPrice",
+                        "vatRate",
+                        "isTaxable"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 100,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "profileId",
+                  "idempotencyKey",
+                  "lines"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review the exact customer, lines, VAT, total and due rule before issuing",
         "tags": [
           "Admin · Manual invoices"
         ]

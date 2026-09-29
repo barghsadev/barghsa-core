@@ -76,6 +76,22 @@ function create(body: unknown, requestHeaders = headers) {
     body: JSON.stringify(body),
   });
 }
+function review(body: unknown, requestHeaders = headers) {
+  return fetch(`${http.base}/api/admin/invoices/manual/review`, {
+    method: 'POST',
+    headers: requestHeaders,
+    body: JSON.stringify(body),
+  });
+}
+async function reviewedBody(body: ReturnType<typeof payload>, requestHeaders = headers) {
+  const response = await review(body, requestHeaders);
+  expect(response.status, http.logs()).toBe(201);
+  const snapshot = (await response.json()) as {
+    hash: string;
+    data: { profile: { title: string }; totals: { total: string }; lines: unknown[] };
+  };
+  return { ...body, expectedReviewHash: snapshot.hash, snapshot };
+}
 async function invoiceCount(key: string) {
   return Number(
     (
@@ -141,7 +157,13 @@ it('pages matching profiles with a stable cursor and rejects invalid boundaries'
 
 it('Finance issues exact amounts and one audit; concurrent identical retries return one invoice', async () => {
   const body = payload();
-  const responses = await Promise.all([create(body), create(body)]);
+  const { snapshot, ...confirmed } = await reviewedBody(body);
+  expect(snapshot).toMatchObject({
+    hash: expect.stringMatching(/^[a-f0-9]{64}$/),
+    data: { profile: { title: 'Invoice customer' }, totals: { total: '60761' } },
+  });
+  expect(snapshot.data.lines).toHaveLength(2);
+  const responses = await Promise.all([create(confirmed), create(confirmed)]);
   expect(responses.map((r) => r.status)).toEqual([201, 201]);
   const [first, replay] = await Promise.all([
     responses[0]!.json() as Promise<IssuedInvoice>,
@@ -166,9 +188,29 @@ it('Finance issues exact amounts and one audit; concurrent identical retries ret
   expect(audit.rows[0].user_id).toBe('manual-finance');
   expect(first.dueAt).not.toBeNull();
   expect(new Date(first.dueAt!).getTime()).toBeGreaterThan(new Date(first.issuedAt).getTime());
+  const stored = await http.pool.query('SELECT metadata FROM invoices WHERE id=$1', [
+    first.invoiceId,
+  ]);
+  expect(stored.rows[0].metadata.financialReview).toEqual(snapshot);
   const changed = { ...body, lines: [{ ...body.lines[0]!, unitPrice: '999' }] };
-  expect((await create(changed)).status).toBe(409);
+  expect((await create({ ...changed, expectedReviewHash: snapshot.hash })).status).toBe(409);
+  expect((await create({ ...body, expectedReviewHash: '0'.repeat(64) })).status).toBe(409);
   expect(await invoiceCount(body.idempotencyKey)).toBe(1);
+});
+
+it('rejects a stale preview when the customer identity changes before issue', async () => {
+  const body = payload();
+  const { snapshot, ...confirmed } = await reviewedBody(body);
+  try {
+    await http.pool.query("UPDATE profiles SET title='Changed customer' WHERE id=$1", [profileId]);
+    expect((await create(confirmed)).status).toBe(409);
+    expect(await invoiceCount(body.idempotencyKey)).toBe(0);
+    const fresh = await review(body);
+    expect(fresh.status).toBe(201);
+    expect(((await fresh.json()) as { hash: string }).hash).not.toBe(snapshot.hash);
+  } finally {
+    await http.pool.query("UPDATE profiles SET title='Invoice customer' WHERE id=$1", [profileId]);
+  }
 });
 
 it.each(['abc', '-1', '1.5', '9223372036854775808', 123])(
@@ -184,17 +226,26 @@ it.each(['abc', '-1', '1.5', '9223372036854775808', 123])(
 
 it('rejects total overflow while preserving valid int8 money above JavaScript safe integer', async () => {
   const body = payload();
-  const line = { ...body.lines[0], unitPrice: '9223372036854775807', vatRate: 0, isTaxable: false };
-  expect((await create({ ...body, lines: [{ ...line, quantity: 2 }] })).status).toBe(400);
+  const line = {
+    ...body.lines[0]!,
+    unitPrice: '9223372036854775807',
+    vatRate: 0,
+    isTaxable: false,
+  };
+  expect((await review({ ...body, lines: [{ ...line, quantity: 2 }] })).status).toBe(400);
   expect(await invoiceCount(body.idempotencyKey)).toBe(0);
-  const valid = await create({ ...body, lines: [{ ...line, quantity: 1 }] });
+  const validBody = { ...body, lines: [{ ...line, quantity: 1 }] };
+  const { snapshot: _snapshot, ...confirmed } = await reviewedBody(validBody);
+  const valid = await create(confirmed);
   expect(valid.status).toBe(201);
   expect(((await valid.json()) as IssuedInvoice).totalAmount).toBe('9223372036854775807');
 });
 
 it('rejects archived targets and client-supplied totals or actors', async () => {
   const body = payload();
-  expect((await create({ ...body, profileId: archivedId })).status).toBe(409);
+  expect(
+    (await create({ ...body, profileId: archivedId, expectedReviewHash: '0'.repeat(64) })).status
+  ).toBe(409);
   expect((await create({ ...body, totalAmount: '1' })).status).toBe(400);
   expect((await create({ ...body, actorUserId: 'manual-customer' })).status).toBe(400);
   expect(await invoiceCount(body.idempotencyKey)).toBe(0);
@@ -237,6 +288,7 @@ it('requires session, CSRF, current Finance permission and recent step-up', asyn
 
 it('rechecks session expiry after waiting to write and rolls the invoice back', async () => {
   const body = payload();
+  const { snapshot: _snapshot, ...confirmed } = await reviewedBody(body);
   const blocker = await http.pool.connect();
   let pending: Promise<Response> | undefined;
   try {
@@ -246,7 +298,7 @@ it('rechecks session expiry after waiting to write and rolls the invoice back', 
       "UPDATE sessions SET expires_at=NOW()+INTERVAL '2 seconds' WHERE session_id=$1",
       [sessionId]
     );
-    pending = create(body);
+    pending = create(confirmed);
     await expect
       .poll(async () =>
         Number(
@@ -293,12 +345,14 @@ it('rejects staff permission removed while the target profile lock is pending', 
      VALUES ($1,'manual-finance',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,
     [freshSession, csrf, randomUUID()]
   );
+  const freshHeaders = { ...headers, Cookie: `barghsa_session=${freshSession}` };
+  const { snapshot: _snapshot, ...confirmed } = await reviewedBody(body, freshHeaders);
   const blocker = await http.pool.connect();
   let pending: Promise<Response> | undefined;
   try {
     await blocker.query('BEGIN');
     await blocker.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE', [profileId]);
-    pending = create(body, { ...headers, Cookie: `barghsa_session=${freshSession}` });
+    pending = create(confirmed, freshHeaders);
     await expect
       .poll(async () =>
         Number(

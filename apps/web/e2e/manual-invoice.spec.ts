@@ -12,6 +12,7 @@ for (const locale of ['fa', 'en'] as const)
     }) => {
       const fa = locale === 'fa';
       await page.addInitScript((locale) => {
+        localStorage.setItem('barghsa.locale', locale);
         const apply = () => {
           document.documentElement.lang = locale;
           document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
@@ -20,6 +21,17 @@ for (const locale of ['fa', 'en'] as const)
         new MutationObserver(apply).observe(document, { childList: true });
       }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/user', (route) =>
+        route.fulfill({
+          json: {
+            userId: 'manual-invoice-staff',
+            isStaff: true,
+            operatingContext: 'staff',
+            canSwitchContext: true,
+            requiresTosAcceptance: false,
+          },
+        })
+      );
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
           json: {
@@ -44,6 +56,57 @@ for (const locale of ['fa', 'en'] as const)
           },
         })
       );
+      const reviewHash = 'a'.repeat(64);
+      const previews: Array<Record<string, unknown>> = [];
+      await page.route('**/api/admin/invoices/manual/review', (route) => {
+        expect(route.request().headers()['x-csrf-token']).toBe('manual-csrf');
+        const draft = route.request().postDataJSON() as {
+          profileId: string;
+          idempotencyKey: string;
+          lines: Array<{
+            description: string;
+            quantity: number;
+            unitPrice: string;
+            vatRate: number;
+            isTaxable: boolean;
+          }>;
+        };
+        previews.push(draft);
+        return route.fulfill({
+          status: 201,
+          json: {
+            schemaVersion: 1,
+            hash: reviewHash,
+            scope: {
+              action: 'invoice.manual-issue',
+              profileId,
+              resourceId: draft.idempotencyKey,
+            },
+            data: {
+              currency: 'IRR',
+              profile: {
+                id: profileId,
+                title: fa ? 'شرکت نمونه' : 'Example company',
+                profileType: 'LEGAL',
+              },
+              contractId: null,
+              lines: draft.lines.map((line, index) => ({
+                ...line,
+                lineTotal: index === 0 ? '55055' : '200',
+                vatAmount: index === 0 ? '5506' : '0',
+              })),
+              totals: { subtotal: '55255', vat: '5506', discount: '0', total: '60761' },
+              dueRule: {
+                source: 'config',
+                configDays: 7,
+                periodId: invoiceId,
+                serviceType: 'manual',
+              },
+              outcome: 'issue_unpaid_invoice',
+            },
+          },
+        });
+      });
       const requests: Array<Record<string, unknown>> = [];
       await page.route('**/api/admin/invoices/manual', (route) => {
         expect(route.request().headers()['x-csrf-token']).toBe('manual-csrf');
@@ -124,6 +187,18 @@ for (const locale of ['fa', 'en'] as const)
       expect(scan.violations).toEqual([]);
       expect(scan.incomplete.filter((item) => item.id === 'color-contrast')).toEqual([]);
       await issue.click();
+      const reviewDialog = page.getByRole('dialog', {
+        name: fa ? 'بررسی مالی پیش از صدور فاکتور' : 'Financial review before issuing',
+      });
+      await expect(reviewDialog).toBeVisible();
+      await expect(reviewDialog).toContainText(fa ? 'شرکت نمونه' : 'Example company');
+      await expect(reviewDialog).toContainText(total);
+      await reviewDialog
+        .getByRole('button', {
+          name: fa ? 'تأیید و صدور فاکتور' : 'Confirm and issue invoice',
+          exact: true,
+        })
+        .click();
       const dialog = page.getByRole('dialog', {
         name: fa ? 'تأیید هویت برای صدور فاکتور' : 'Verify before issuing',
       });
@@ -149,11 +224,13 @@ for (const locale of ['fa', 'en'] as const)
       await expect(panel.getByRole('status')).toContainText(invoiceId);
       await expect(panel.getByRole('status')).toContainText(total);
       expect(verificationRequests).toBe(1);
+      expect(previews).toHaveLength(1);
       expect(requests).toHaveLength(3);
       expect(requests[1]).toEqual(requests[0]);
       expect(requests[2]).toEqual(requests[0]);
       expect(requests[0]).toMatchObject({
         profileId,
+        expectedReviewHash: reviewHash,
         lines: [
           { quantity: 1, unitPrice: '55055', vatRate: 1000, isTaxable: true },
           { quantity: 2, unitPrice: '100', vatRate: 0, isTaxable: false },
