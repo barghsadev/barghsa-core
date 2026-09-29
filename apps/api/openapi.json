@@ -8295,6 +8295,10 @@
                   {
                     "additionalProperties": false,
                     "properties": {
+                      "expectedReviewHash": {
+                        "pattern": "^[a-f0-9]{64}$",
+                        "type": "string"
+                      },
                       "idempotencyKey": {
                         "format": "uuid",
                         "type": "string"
@@ -8356,7 +8360,8 @@
                       "kind",
                       "idempotencyKey",
                       "reason",
-                      "lines"
+                      "lines",
+                      "expectedReviewHash"
                     ],
                     "type": "object"
                   },
@@ -8450,27 +8455,95 @@
             "application/json": {
               "schema": {
                 "additionalProperties": false,
-                "properties": {
-                  "amount": {
-                    "pattern": "^-?\\d{1,19}$",
-                    "type": "string"
-                  },
-                  "kind": {
-                    "enum": [
-                      "adjustment"
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "amount": {
+                        "pattern": "^-?\\d{1,19}$",
+                        "type": "string"
+                      },
+                      "kind": {
+                        "enum": [
+                          "adjustment"
+                        ],
+                        "type": "string"
+                      },
+                      "reason": {
+                        "maxLength": 1000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason",
+                      "amount"
                     ],
-                    "type": "string"
+                    "type": "object"
                   },
-                  "reason": {
-                    "maxLength": 1000,
-                    "minLength": 1,
-                    "type": "string"
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "kind": {
+                        "enum": [
+                          "replacement"
+                        ],
+                        "type": "string"
+                      },
+                      "lines": {
+                        "items": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "description": {
+                              "maxLength": 1000,
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "isTaxable": {
+                              "type": "boolean"
+                            },
+                            "quantity": {
+                              "maximum": 2147483647,
+                              "minimum": 1,
+                              "type": "integer"
+                            },
+                            "unitPrice": {
+                              "pattern": "^\\d{1,19}$",
+                              "type": "string"
+                            },
+                            "vatRate": {
+                              "maximum": 10000,
+                              "minimum": 0,
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "description",
+                            "quantity",
+                            "unitPrice",
+                            "vatRate",
+                            "isTaxable"
+                          ],
+                          "type": "object"
+                        },
+                        "maxItems": 100,
+                        "minItems": 1,
+                        "type": "array"
+                      },
+                      "reason": {
+                        "maxLength": 1000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason",
+                      "lines"
+                    ],
+                    "type": "object"
                   }
-                },
-                "required": [
-                  "kind",
-                  "reason",
-                  "amount"
                 ],
                 "type": "object"
               }
@@ -8488,7 +8561,7 @@
             "bearer": []
           }
         ],
-        "summary": "Preview the authoritative paid-invoice adjustment",
+        "summary": "Preview an unpaid-invoice replacement or paid adjustment",
         "tags": [
           "Admin · Invoice corrections"
         ]

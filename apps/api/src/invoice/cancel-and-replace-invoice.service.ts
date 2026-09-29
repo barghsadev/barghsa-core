@@ -1,4 +1,4 @@
-import { requireSessionStepUp } from '../session/session-step-up.js';
+import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import {
   correctionFingerprint,
@@ -57,7 +57,11 @@ import {
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import type { PoolClient } from 'pg';
-import { duePeriodTypeForManual } from '@barghsa/shared/finance';
+import {
+  duePeriodTypeForManual,
+  type InvoiceReplacementReview,
+  type InvoiceReplacementReviewData,
+} from '@barghsa/shared/finance';
 import { v7 as uuidv7 } from 'uuid';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
 import type { TransitionResult } from './invoice-state-machine.service.js';
@@ -65,11 +69,14 @@ import type { TransactionClient } from './invoice-audit.repository.js';
 import type { InvoiceState } from './invoice-state.model.js';
 import {
   calculateManualInvoice,
+  type ManualInvoiceCalculation,
   type ManualInvoiceLineInput,
 } from './manual-invoice.calculation.js';
 import { buildManualInvoiceCalculationSnapshot } from './invoice-calculation-snapshot.js';
-import { DueAtCalculationService } from './due-at.service.js';
+import { DueAtCalculationService, type ResolvedInvoiceDueAt } from './due-at.service.js';
 import type { ManualInvoiceLineResult } from './manual-invoice.service.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
+import { readInvoiceFinancialDetails } from '../finance/invoice-review.js';
 
 /**
  * Unpaid states from which a pre-payment cancel+replace is allowed.
@@ -108,6 +115,7 @@ export interface CancelAndReplaceInvoiceCommand {
   actorUserId: string;
   actorSession?: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
   idempotencyKey?: string;
+  expectedReviewHash?: string;
   /** Opaque correlation ID for audit linkage. */
   correlationId?: string;
   /** Source IP of the staff member (audited). */
@@ -194,6 +202,201 @@ export class CancelAndReplaceInvoiceService {
     private readonly dueAtCalculation: DueAtCalculationService
   ) {}
 
+  private scope(original: LockedOriginalRow) {
+    return {
+      action: 'invoice.replacement.submit',
+      profileId: original.profile_id,
+      resourceId: original.id,
+    };
+  }
+
+  private async snapshot(
+    client: PoolClient,
+    original: LockedOriginalRow,
+    calculation: ManualInvoiceCalculation,
+    reason: string,
+    initiatorId: string,
+    due: ResolvedInvoiceDueAt
+  ): Promise<InvoiceReplacementReview> {
+    const invoice = await readInvoiceFinancialDetails(
+      client,
+      original.id,
+      original.profile_id,
+      BigInt(original.total_amount)
+    );
+    const lines = calculation.lines.map((line) => ({
+      description: line.description,
+      quantity: line.quantity,
+      unitPrice: line.unitPrice.toString(),
+      vatRate: line.vatRate,
+      taxable: line.isTaxable !== false,
+      subtotal: line.lineTotal.toString(),
+      vatAmount: line.vatAmount.toString(),
+    }));
+    const subtotal = calculation.lines.reduce((sum, line) => sum + line.lineTotal, 0n);
+    const vat = calculation.lines.reduce((sum, line) => sum + line.vatAmount, 0n);
+    const data: InvoiceReplacementReviewData = {
+      ...invoice,
+      replacement: {
+        reason,
+        initiatorId,
+        lines,
+        totals: {
+          subtotal: subtotal.toString(),
+          vat: vat.toString(),
+          total: calculation.totalAmount.toString(),
+        },
+        dueRule: {
+          source: due.source,
+          configDays: due.configDays,
+          periodId: due.periodId,
+          serviceType: due.serviceType,
+        },
+        outcome: 'cancel_original_issue_replacement',
+      },
+    };
+    return new ReviewSnapshotService().create(this.scope(original), data);
+  }
+
+  async review(input: {
+    invoiceId: string;
+    reason: string;
+    newLines: ManualInvoiceLineInput[];
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
+  }): Promise<InvoiceReplacementReview> {
+    const reason = requireReason(input.reason);
+    let calculation: ManualInvoiceCalculation;
+    try {
+      calculation = calculateManualInvoice(input.newLines);
+      if (calculation.totalAmount > 9_223_372_036_854_775_807n)
+        throw new RangeError('Invoice total exceeds int8 IRR');
+    } catch (error) {
+      if (error instanceof RangeError) throw new BadRequestException(error.message);
+      throw error;
+    }
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const profileId = await lockInvoiceProfile(client, 'invoice', input.invoiceId);
+      await requireStaffMutationPermission(client, input.actor.userId, 'invoices:write');
+      await requireCurrentSession(client, input.actor);
+      const original = (
+        await client.query<LockedOriginalRow>(
+          `SELECT id,profile_id,order_id,contract_id,consultation_id,type,state,
+                  total_amount,paid_amount,refunded_amount,metadata,adjustment_for_invoice_id
+           FROM invoices WHERE id=$1 FOR UPDATE`,
+          [input.invoiceId]
+        )
+      ).rows[0];
+      if (!original || original.profile_id !== profileId)
+        throw new ConflictException('Invoice profile changed; retry');
+      this.assertReplaceable(original);
+      await this.validateElectricityReplacement(client, original, calculation);
+      const due = await this.dueAtCalculation.resolve(client, {
+        serviceType: duePeriodTypeForManual(),
+        issuedAt: new Date(),
+      });
+      const review = await this.snapshot(
+        client,
+        original,
+        calculation,
+        reason,
+        input.actor.userId,
+        due
+      );
+      await requireCurrentSession(client, input.actor);
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  private assertReplaceable(
+    original: LockedOriginalRow
+  ): asserts original is LockedOriginalRow & { state: ReplaceableInvoiceState } {
+    const paidAmount = BigInt(original.paid_amount);
+    if (paidAmount > 0n)
+      throw new ConflictException(CANCEL_AND_REPLACE_ERRORS.HAS_PAYMENT(original.id, paidAmount));
+    if (!isReplaceableInvoiceState(original.state))
+      throw new ConflictException(
+        CANCEL_AND_REPLACE_ERRORS.STATE_NOT_REPLACEABLE(original.id, original.state)
+      );
+  }
+
+  private async validateElectricityReplacement(
+    client: PoolClient,
+    original: LockedOriginalRow,
+    calculation: ManualInvoiceCalculation
+  ): Promise<{ versionId: string; contractId: string } | null> {
+    if (!original.order_id) return null;
+    const electricityOrder = await client.query('SELECT 1 FROM electricity_orders WHERE id=$1', [
+      original.order_id,
+    ]);
+    if (!electricityOrder.rowCount) return null;
+    if (original.adjustment_for_invoice_id)
+      throw new ConflictException('Electricity adjustment invoices require a contract change');
+    if (calculation.totalAmount !== BigInt(original.total_amount))
+      throw new ConflictException(
+        'Electricity invoice total must match the submitted order; use a contract change'
+      );
+    const originalLines = (
+      await client.query<{
+        quantity: number;
+        unit_price: string;
+        vat_rate: number;
+        is_taxable: boolean;
+      }>(
+        `SELECT quantity,unit_price::text,vat_rate,is_taxable FROM invoice_lines
+         WHERE invoice_id=$1 ORDER BY position,id`,
+        [original.id]
+      )
+    ).rows;
+    if (
+      originalLines.length !== calculation.lines.length ||
+      originalLines.some((line, index) => {
+        const corrected = calculation.lines[index]!;
+        return (
+          line.quantity !== corrected.quantity ||
+          BigInt(line.unit_price) !== corrected.unitPrice ||
+          line.vat_rate !== corrected.vatRate ||
+          line.is_taxable !== (corrected.isTaxable ?? true)
+        );
+      })
+    )
+      throw new ConflictException(
+        'Electricity invoice financial lines must match the submitted order'
+      );
+    const contract = (
+      await client.query<{
+        contract_id: string;
+        version_id: string;
+        state: string;
+        initial_invoice_id: string | null;
+      }>(
+        `SELECT c.id AS contract_id,c.current_version_id AS version_id,
+          c.state,r.initial_invoice_id
+         FROM electricity_contracts ec JOIN contracts c ON c.id=ec.contract_id
+         JOIN contract_activation_requirements r ON r.version_id=c.current_version_id
+         WHERE ec.order_id=$1 AND c.profile_id=$2
+         FOR UPDATE OF c,r NOWAIT`,
+        [original.order_id, original.profile_id]
+      )
+    ).rows[0];
+    if (
+      !contract ||
+      !['AwaitingStaffReview', 'ChangesRequested'].includes(contract.state) ||
+      contract.initial_invoice_id !== original.id
+    )
+      throw new ConflictException(
+        'Electricity invoice correction requires the current unpublished order review'
+      );
+    return { versionId: contract.version_id, contractId: contract.contract_id };
+  }
+
   /**
    * Cancel an unpaid invoice and create a linked replacement with `newLines`.
    *
@@ -266,6 +469,22 @@ export class CancelAndReplaceInvoiceService {
         fingerprint
       );
       if (replay) {
+        if (cmd.expectedReviewHash) {
+          const stored = (
+            await client.query<{ metadata: { financialReview?: InvoiceReplacementReview } }>(
+              "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='invoice.replacement_review_confirmed' AND metadata::jsonb->>'replacementInvoiceId'=$1 ORDER BY created_at DESC,id DESC LIMIT 1",
+              [replay.id]
+            )
+          ).rows[0];
+          // Historical replacements have no review audit. A fingerprint-matched
+          // replay returns the existing invoice without another cancellation.
+          if (stored)
+            new ReviewSnapshotService().assertStored(
+              stored.metadata,
+              cmd.expectedReviewHash,
+              this.scope(original)
+            );
+        }
         const excerpt = await this.loadReplacementExcerpt(client, replay.id);
         const issueTransition = await correctionTransition(client, replay.id, 'Issue');
         const cancelTransition = await correctionTransition(client, cmd.invoiceId, 'Cancel');
@@ -284,90 +503,22 @@ export class CancelAndReplaceInvoiceService {
         };
       }
 
-      const paidAmount = BigInt(original.paid_amount);
-      if (paidAmount > 0n) {
-        throw new ConflictException(
-          CANCEL_AND_REPLACE_ERRORS.HAS_PAYMENT(cmd.invoiceId, paidAmount)
-        );
-      }
+      this.assertReplaceable(original);
 
-      if (!isReplaceableInvoiceState(original.state)) {
-        throw new ConflictException(
-          CANCEL_AND_REPLACE_ERRORS.STATE_NOT_REPLACEABLE(cmd.invoiceId, original.state)
-        );
-      }
+      const electricity = await this.validateElectricityReplacement(client, original, calculation);
+      const electricityVersionId = electricity?.versionId ?? null;
+      const electricityContractId = electricity?.contractId ?? null;
 
-      let electricityVersionId: string | null = null;
-      let electricityContractId: string | null = null;
-      if (original.order_id) {
-        const electricityOrder = await client.query(
-          'SELECT 1 FROM electricity_orders WHERE id=$1',
-          [original.order_id]
-        );
-        if (electricityOrder.rowCount) {
-          if (original.adjustment_for_invoice_id)
-            throw new ConflictException(
-              'Electricity adjustment invoices require a contract change'
-            );
-          if (calculation.totalAmount !== BigInt(original.total_amount))
-            throw new ConflictException(
-              'Electricity invoice total must match the submitted order; use a contract change'
-            );
-          const originalLines = (
-            await client.query<{
-              quantity: number;
-              unit_price: string;
-              vat_rate: number;
-              is_taxable: boolean;
-            }>(
-              `SELECT quantity,unit_price::text,vat_rate,is_taxable FROM invoice_lines
-               WHERE invoice_id=$1 ORDER BY position,id`,
-              [cmd.invoiceId]
-            )
-          ).rows;
-          if (
-            originalLines.length !== calculation.lines.length ||
-            originalLines.some((line, index) => {
-              const corrected = calculation.lines[index]!;
-              return (
-                line.quantity !== corrected.quantity ||
-                BigInt(line.unit_price) !== corrected.unitPrice ||
-                line.vat_rate !== corrected.vatRate ||
-                line.is_taxable !== (corrected.isTaxable ?? true)
-              );
-            })
-          )
-            throw new ConflictException(
-              'Electricity invoice financial lines must match the submitted order'
-            );
-          const contract = (
-            await client.query<{
-              contract_id: string;
-              version_id: string;
-              state: string;
-              initial_invoice_id: string | null;
-            }>(
-              `SELECT c.id AS contract_id,c.current_version_id AS version_id,
-                c.state,r.initial_invoice_id
-               FROM electricity_contracts ec JOIN contracts c ON c.id=ec.contract_id
-               JOIN contract_activation_requirements r ON r.version_id=c.current_version_id
-               WHERE ec.order_id=$1 AND c.profile_id=$2
-               FOR UPDATE OF c,r NOWAIT`,
-              [original.order_id, original.profile_id]
-            )
-          ).rows[0];
-          if (
-            !contract ||
-            !['AwaitingStaffReview', 'ChangesRequested'].includes(contract.state) ||
-            contract.initial_invoice_id !== cmd.invoiceId
-          )
-            throw new ConflictException(
-              'Electricity invoice correction requires the current unpublished order review'
-            );
-          electricityVersionId = contract.version_id;
-          electricityContractId = contract.contract_id;
-        }
-      }
+      const due = await this.dueAtCalculation.resolve(client, {
+        serviceType: duePeriodTypeForManual(),
+        issuedAt: now,
+        ...(cmd.dueAt !== undefined ? { staffOverride: cmd.dueAt } : {}),
+      });
+      const financialReview = cmd.expectedReviewHash
+        ? await this.snapshot(client, original, calculation, reason, cmd.actorUserId, due)
+        : null;
+      if (financialReview)
+        new ReviewSnapshotService().assertConfirmed(financialReview, cmd.expectedReviewHash!);
 
       const cancelTransition = await this.stateMachine.transition(
         cmd.invoiceId,
@@ -383,11 +534,6 @@ export class CancelAndReplaceInvoiceService {
         }
       );
 
-      const due = await this.dueAtCalculation.resolve(client, {
-        serviceType: duePeriodTypeForManual(),
-        issuedAt: now,
-        ...(cmd.dueAt !== undefined ? { staffOverride: cmd.dueAt } : {}),
-      });
       const dueAt = due.dueAt;
 
       const replacementId = uuidv7();
@@ -520,6 +666,23 @@ export class CancelAndReplaceInvoiceService {
       );
 
       const excerpt = await this.loadReplacementExcerpt(client, replacementId);
+
+      if (financialReview)
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+           VALUES ($1,$2,'invoice.replacement_review_confirmed',$3::jsonb,$4,$5)`,
+          [
+            uuidv7(),
+            cmd.actorUserId,
+            JSON.stringify({
+              originalInvoiceId: cmd.invoiceId,
+              replacementInvoiceId: replacementId,
+              financialReview,
+            }),
+            cmd.correlationId ?? uuidv7(),
+            cmd.ip ?? 'unknown',
+          ]
+        );
 
       if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
       if (ownedTransaction) await client.query('COMMIT');

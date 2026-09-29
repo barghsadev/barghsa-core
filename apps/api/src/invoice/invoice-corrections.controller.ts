@@ -51,7 +51,12 @@ const line = z
   .strict();
 const input = z.discriminatedUnion('kind', [
   z
-    .object({ ...base, kind: z.literal('replacement'), lines: z.array(line).min(1).max(100) })
+    .object({
+      ...base,
+      kind: z.literal('replacement'),
+      lines: z.array(line).min(1).max(100),
+      expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
+    })
     .strict(),
   z
     .object({
@@ -77,6 +82,14 @@ const adjustmentReviewInput = z
       .refine((v) => BigInt(v) !== 0n && BigInt(v) >= -maxIrr && BigInt(v) <= maxIrr),
   })
   .strict();
+const replacementReviewInput = z
+  .object({
+    kind: z.literal('replacement'),
+    reason: base.reason,
+    lines: z.array(line).min(1).max(100),
+  })
+  .strict();
+const reviewInput = z.discriminatedUnion('kind', [adjustmentReviewInput, replacementReviewInput]);
 
 @ApiTags('Admin · Invoice corrections')
 @ApiBearerAuth()
@@ -111,17 +124,49 @@ export class InvoiceCorrectionsController {
 
   @Post('review')
   @HttpCode(200)
-  @ApiOperation({ summary: 'Preview the authoritative paid-invoice adjustment' })
+  @ApiOperation({ summary: 'Preview an unpaid-invoice replacement or paid adjustment' })
   @ApiBody({
     schema: {
       type: 'object',
       additionalProperties: false,
-      required: ['kind', 'reason', 'amount'],
-      properties: {
-        kind: { type: 'string', enum: ['adjustment'] },
-        reason: { type: 'string', minLength: 1, maxLength: 1000 },
-        amount: { type: 'string', pattern: '^-?\\d{1,19}$' },
-      },
+      oneOf: [
+        {
+          type: 'object',
+          additionalProperties: false,
+          required: ['kind', 'reason', 'amount'],
+          properties: {
+            kind: { type: 'string', enum: ['adjustment'] },
+            reason: { type: 'string', minLength: 1, maxLength: 1000 },
+            amount: { type: 'string', pattern: '^-?\\d{1,19}$' },
+          },
+        },
+        {
+          type: 'object',
+          additionalProperties: false,
+          required: ['kind', 'reason', 'lines'],
+          properties: {
+            kind: { type: 'string', enum: ['replacement'] },
+            reason: { type: 'string', minLength: 1, maxLength: 1000 },
+            lines: {
+              type: 'array',
+              minItems: 1,
+              maxItems: 100,
+              items: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['description', 'quantity', 'unitPrice', 'vatRate', 'isTaxable'],
+                properties: {
+                  description: { type: 'string', minLength: 1, maxLength: 1000 },
+                  quantity: { type: 'integer', minimum: 1, maximum: 2147483647 },
+                  unitPrice: { type: 'string', pattern: '^\\d{1,19}$' },
+                  vatRate: { type: 'integer', minimum: 0, maximum: 10000 },
+                  isTaxable: { type: 'boolean' },
+                },
+              },
+            },
+          },
+        },
+      ],
     },
   })
   @ApiResponse({ status: 200, description: 'Current financial review and confirmation hash' })
@@ -131,15 +176,25 @@ export class InvoiceCorrectionsController {
     @Body() body: unknown
   ) {
     const invoiceId = this.invoiceId(req, value);
-    const parsed = adjustmentReviewInput.safeParse(body);
+    const parsed = reviewInput.safeParse(body);
     if (!parsed.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
-    return this.adjustments.review({
-      originalInvoiceId: invoiceId,
-      amount: BigInt(parsed.data.amount),
-      reason: parsed.data.reason,
-      actor: req.session,
-    });
+    return parsed.data.kind === 'replacement'
+      ? this.replacements.review({
+          invoiceId,
+          reason: parsed.data.reason,
+          newLines: parsed.data.lines.map((entry) => ({
+            ...entry,
+            unitPrice: BigInt(entry.unitPrice),
+          })),
+          actor: req.session,
+        })
+      : this.adjustments.review({
+          originalInvoiceId: invoiceId,
+          amount: BigInt(parsed.data.amount),
+          reason: parsed.data.reason,
+          actor: req.session,
+        });
   }
 
   @Post()
@@ -153,7 +208,7 @@ export class InvoiceCorrectionsController {
         {
           type: 'object',
           additionalProperties: false,
-          required: ['kind', 'idempotencyKey', 'reason', 'lines'],
+          required: ['kind', 'idempotencyKey', 'reason', 'lines', 'expectedReviewHash'],
           properties: {
             kind: { type: 'string', enum: ['replacement'] },
             idempotencyKey: { type: 'string', format: 'uuid' },
@@ -179,6 +234,7 @@ export class InvoiceCorrectionsController {
                 },
               },
             },
+            expectedReviewHash: { type: 'string', pattern: '^[a-f0-9]{64}$' },
           },
         },
         {
@@ -246,6 +302,7 @@ export class InvoiceCorrectionsController {
             ...common,
             invoiceId,
             newLines: data.lines.map((l) => ({ ...l, unitPrice: BigInt(l.unitPrice) })),
+            expectedReviewHash: data.expectedReviewHash,
           })
         : await this.adjustments.submit({
             ...common,

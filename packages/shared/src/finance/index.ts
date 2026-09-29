@@ -42,5 +42,10 @@ export type {
   InvoiceAdjustmentReviewData,
 } from './invoice-adjustment-review.js';
 export { parseInvoiceAdjustmentReview } from './invoice-adjustment-review.js';
+export type {
+  InvoiceReplacementReview,
+  InvoiceReplacementReviewData,
+} from './invoice-replacement-review.js';
+export { parseInvoiceReplacementReview } from './invoice-replacement-review.js';
 export * from './bank-receipt-review.js';
 export * from './contract-financial-review.js';

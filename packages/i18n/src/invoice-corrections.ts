@@ -24,6 +24,16 @@ const en = {
   reviewApprovalRequired: 'A second finance reviewer is required',
   reviewApprovalNotRequired: 'No second reviewer required',
   reviewConfirm: 'Confirm adjustment',
+  replacementReviewTitle: 'Review replacement invoice',
+  replacementReviewDescription:
+    'The unpaid original will be cancelled and this corrected invoice issued. The due date is set at issuance under the current rule.',
+  replacementReviewLine: 'Replacement line',
+  replacementReviewSubtotal: 'New subtotal',
+  replacementReviewVat: 'New VAT',
+  replacementReviewDueRule: 'New due-date rule',
+  replacementReviewDueDays: 'days after issue',
+  replacementReviewDueAtIssue: 'Set when issued',
+  replacementReviewConfirm: 'Cancel and issue replacement',
   reason: 'Explanation shown to customer',
   amount: 'Adjustment amount (IRR)',
   amountHint:
@@ -70,6 +80,16 @@ const fa: Record<keyof typeof en, string> = {
   reviewApprovalRequired: 'بررسی کارشناس مالی دوم لازم است',
   reviewApprovalNotRequired: 'بررسی دوم لازم نیست',
   reviewConfirm: 'تأیید اصلاح',
+  replacementReviewTitle: 'مرور فاکتور جایگزین',
+  replacementReviewDescription:
+    'فاکتور اصلیِ پرداخت‌نشده لغو و این فاکتور اصلاح‌شده صادر می‌شود. سررسید هنگام صدور و بر اساس قانون جاری تعیین می‌شود.',
+  replacementReviewLine: 'ردیف جایگزین',
+  replacementReviewSubtotal: 'جمع مبلغ جدید',
+  replacementReviewVat: 'مالیات جدید',
+  replacementReviewDueRule: 'قانون سررسید جدید',
+  replacementReviewDueDays: 'روز پس از صدور',
+  replacementReviewDueAtIssue: 'هنگام صدور تعیین می‌شود',
+  replacementReviewConfirm: 'لغو و صدور فاکتور جایگزین',
   reason: 'شرح تغییرات برای مشتری',
   amount: 'مبلغ اصلاح (ریال)',
   amountHint:

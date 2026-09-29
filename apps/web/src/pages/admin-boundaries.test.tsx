@@ -817,7 +817,7 @@ it.each(
 });
 const correction = {
   invoiceId: '11111111-1111-7111-8111-111111111111',
-  profileId: 'profile-one',
+  profileId: '33333333-3333-7333-8333-333333333333',
   state: 'Unpaid',
   paidAmount: '0',
   totalAmount: '100',
@@ -872,7 +872,74 @@ it.each([
 ])('replacement invoice retains retry safety for $name', async (scenario) => {
   vi.stubGlobal(
     'fetch',
-    vi.fn(async (_url, init) => {
+    vi.fn(async (url, init) => {
+      if (String(url).endsWith('/corrections/review'))
+        return new Response(
+          JSON.stringify({
+            schemaVersion: 1,
+            scope: {
+              action: 'invoice.replacement.submit',
+              profileId: correction.profileId,
+              resourceId: correction.invoiceId,
+            },
+            hash: 'b'.repeat(64),
+            data: {
+              currency: 'IRR',
+              profile: { id: correction.profileId, title: 'Customer', type: 'individual' },
+              invoice: {
+                id: correction.invoiceId,
+                state: 'Unpaid',
+                orderId: null,
+                serviceType: null,
+                issuedAt: null,
+                payableFrom: null,
+                dueAt: null,
+                totalAmount: '100',
+                paidAmount: '0',
+                remainingAmount: '100',
+              },
+              lines: [
+                {
+                  id: '44444444-4444-7444-8444-444444444444',
+                  description: 'Service',
+                  quantity: 1,
+                  unitPrice: '100',
+                  discount: '0',
+                  subtotal: '100',
+                  vatRate: 0,
+                  vatAmount: '0',
+                  taxable: false,
+                },
+              ],
+              totals: { subtotal: '100', discount: '0', vat: '0' },
+              contracts: [],
+              cancellation: 'separate_review_required',
+              replacement: {
+                reason: 'Correct invoice',
+                initiatorId: 'staff-one',
+                lines: [
+                  {
+                    description: 'Service',
+                    quantity: 1,
+                    unitPrice: '100',
+                    vatRate: 0,
+                    taxable: false,
+                    subtotal: '100',
+                    vatAmount: '0',
+                  },
+                ],
+                totals: { subtotal: '100', vat: '0', total: '100' },
+                dueRule: {
+                  source: 'fallback',
+                  configDays: 7,
+                  periodId: null,
+                  serviceType: 'manual',
+                },
+                outcome: 'cancel_original_issue_replacement',
+              },
+            },
+          })
+        );
       const body = JSON.parse(String(init?.body));
       return new Response(
         JSON.stringify({
@@ -891,7 +958,12 @@ it.each([
   await act(async () => root.render(<ManualInvoiceForm correction={correction} />));
   await setInput(host.querySelector<HTMLInputElement>('#correction-reason')!, 'Correct invoice');
   await act(async () => host.querySelector<HTMLButtonElement>('button[type=submit]')!.click());
-  expect(fetch).toHaveBeenCalledTimes(1);
+  const confirm = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('[role=dialog] button')
+  ).find((button) => button.textContent?.trim() === 'Cancel and issue replacement');
+  expect(confirm).toBeTruthy();
+  await act(async () => confirm!.click());
+  expect(fetch).toHaveBeenCalledTimes(2);
   if (scenario.success) {
     expect(host.querySelector('[role=alert]')).toBeNull();
     expect(host.querySelector('form')).toBeNull();
@@ -899,9 +971,9 @@ it.each([
     expect(host.querySelector('[role=alert]')).not.toBeNull();
     if (!scenario.status || scenario.status >= 500) {
       expect(host.querySelector<HTMLInputElement>('#correction-reason')?.disabled).toBe(true);
-      const first = vi.mocked(fetch).mock.calls[0]![1]?.body;
+      const first = vi.mocked(fetch).mock.calls[1]![1]?.body;
       await act(async () => host.querySelector<HTMLButtonElement>('button[type=submit]')!.click());
-      expect(vi.mocked(fetch).mock.calls[1]![1]?.body).toBe(first);
+      expect(vi.mocked(fetch).mock.calls[2]![1]?.body).toBe(first);
     } else expect(host.querySelector<HTMLInputElement>('#correction-reason')?.disabled).toBe(false);
   }
 });
@@ -1157,7 +1229,60 @@ it.each([
 ])('adjustment approval acknowledgement remains tied to the exact request %#', async (scenario) => {
   vi.stubGlobal(
     'fetch',
-    vi.fn(async (_url, init) => {
+    vi.fn(async (url, init) => {
+      if (String(url).endsWith('/corrections/review'))
+        return new Response(
+          JSON.stringify({
+            schemaVersion: 1,
+            scope: {
+              action: 'invoice.adjustment.submit',
+              profileId: correction.profileId,
+              resourceId: correction.invoiceId,
+            },
+            hash: 'a'.repeat(64),
+            data: {
+              currency: 'IRR',
+              profile: { id: correction.profileId, title: 'Customer', type: 'individual' },
+              invoice: {
+                id: correction.invoiceId,
+                state: 'Paid',
+                orderId: null,
+                serviceType: null,
+                issuedAt: null,
+                payableFrom: null,
+                dueAt: null,
+                totalAmount: '100',
+                paidAmount: '100',
+                remainingAmount: '0',
+              },
+              lines: [
+                {
+                  id: '44444444-4444-7444-8444-444444444444',
+                  description: 'Service',
+                  quantity: 1,
+                  unitPrice: '100',
+                  discount: '0',
+                  subtotal: '100',
+                  vatRate: 0,
+                  vatAmount: '0',
+                  taxable: false,
+                },
+              ],
+              totals: { subtotal: '100', discount: '0', vat: '0' },
+              contracts: [],
+              cancellation: 'separate_review_required',
+              adjustment: {
+                direction: 'credit',
+                amount: '-100',
+                absoluteAmount: '100',
+                reason: 'Correct amount',
+                initiatorId: 'staff-one',
+                approvalRequired: true,
+                approvalThreshold: '100',
+              },
+            },
+          })
+        );
       const body = JSON.parse(String(init?.body));
       return new Response(
         JSON.stringify({
@@ -1177,7 +1302,12 @@ it.each([
   await setInput(host.querySelector<HTMLInputElement>('#correction-reason')!, 'Correct amount');
   await setInput(host.querySelector<HTMLInputElement>('#correction-amount')!, '-100');
   await act(async () => host.querySelector<HTMLButtonElement>('button[type=submit]')!.click());
-  expect(fetch).toHaveBeenCalledTimes(1);
+  const confirm = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('[role=dialog] button')
+  ).find((button) => button.textContent?.trim() === 'Confirm adjustment');
+  expect(confirm).toBeTruthy();
+  await act(async () => confirm!.click());
+  expect(fetch).toHaveBeenCalledTimes(2);
   if (scenario.success) {
     expect(host.querySelector('form')).toBeNull();
     expect(host.querySelector('[role=alert]')).toBeNull();

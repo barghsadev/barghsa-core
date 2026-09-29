@@ -1554,10 +1554,20 @@ it('keeps a paid cancellation open through failed retries until finance restores
       expect.objectContaining({ id: refundId, orderId: order.orderId, exhausted: true }),
     ])
   );
+  const reviewResponse = await fetch(
+    `${http.base}/api/admin/wallet-refunds/${refundId}/process/review`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: '{}',
+    }
+  );
+  expect(reviewResponse.status, http.logs()).toBe(200);
+  const review = (await reviewResponse.json()) as { hash: string };
   const retried = await fetch(`${http.base}/api/admin/wallet-refunds/${refundId}/process`, {
     method: 'POST',
     headers: staffHeaders,
-    body: '{}',
+    body: JSON.stringify({ expectedReviewHash: review.hash }),
   });
   expect(retried.status, http.logs()).toBe(200);
   expect(await retried.json()).toMatchObject({ state: 'Completed' });
