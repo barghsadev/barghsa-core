@@ -45,8 +45,8 @@ only port 8080.
 ## Startup and operations
 
 Startup initializes PostgreSQL, Redis, SeaweedFS, and ClamAV on `/data`, then
-runs database migrations before starting the API, worker, web, and Nginx.
-The Docker health check checks the web, API readiness, and worker readiness.
+runs database migrations before starting the API, background worker, dedicated AI inference process, web, and Nginx.
+The Docker health check checks the web, API readiness, background worker, and AI inference readiness.
 If a required process exits, the whole container exits for Liara to restart.
 
 This is a staging arrangement. A single app restart interrupts every service.

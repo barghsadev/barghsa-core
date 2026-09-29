@@ -2,7 +2,9 @@
 
 ## Current manual batch — September 29, 2026
 
-[AI inference queue and health](batches/2026-09-29-ai-inference-queue-health.md) bound concurrent agent completions and queue waits, expose staff-only circuit and queue health plus metrics, and repair the model-budget timestamp trigger. A separate AI worker remains the next isolation task.
+[Dedicated AI inference process](batches/2026-09-29-ai-inference-worker.md) moves provider I/O to an authenticated internal worker, re-reads and decrypts the selected model there, and reports worker health separately from core API readiness.
+
+[AI inference queue and health](batches/2026-09-29-ai-inference-queue-health.md) bound concurrent agent completions and queue waits, expose staff-only circuit and queue health plus metrics, and repair the model-budget timestamp trigger.
 
 [Monthly AI model budgets](batches/2026-09-29-ai-model-budgets.md) give operators configurable token and USD cost limits, actual usage, UTC-month rollover, an 80% notice and fail-closed preflight checks for customer and admin agent completions.
 

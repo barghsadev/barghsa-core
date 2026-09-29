@@ -47,6 +47,7 @@ services:
       API_PUBLIC_URL: ${API_PUBLIC_URL:?Set the public API URL for payment callbacks}
       PAYMENT_GATEWAY_MERCHANT_ID: ${PAYMENT_GATEWAY_MERCHANT_ID:?Set the payment merchant ID}
       AUTH_DELIVERY_ENCRYPTION_KEY: ${AUTH_DELIVERY_ENCRYPTION_KEY:?Set the auth delivery encryption key}
+      AI_INFERENCE_URL: http://ai-inference:9091
       DOCUMENT_CLAMAV_HOST: clamav
       DOCUMENT_CLAMAV_PORT: 3310
     depends_on:
@@ -130,6 +131,39 @@ services:
     stop_grace_period: 40s
     tmpfs:
       - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+
+  ai-inference:
+    env_file:
+      - ${BARGHSA_RUNTIME_ENV_FILE:?Set the external runtime configuration file}
+    build:
+      context: .
+      dockerfile: Dockerfile.base
+      target: production
+    command: ['node', 'worker/dist/ai-inference/main.js']
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?Set the application database URL}
+      AI_INFERENCE_HOST: 0.0.0.0
+      AI_INFERENCE_PORT: 9091
+      WORKER_PORT: 9091
+    depends_on:
+      postgres:
+        condition: service_healthy
+      pgbouncer:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'node', 'worker/healthcheck.js']
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
+    restart: unless-stopped
+    stop_grace_period: 40s
     cap_drop:
       - ALL
     read_only: true

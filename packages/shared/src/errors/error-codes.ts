@@ -107,6 +107,14 @@ export const ErrorCodes = {
     messageKey: 'error.ai.inference_busy',
     severity: 'warning' as ErrorSeverity,
   },
+  AI_INFERENCE_UNAVAILABLE: {
+    code: 'AI_INFERENCE_UNAVAILABLE',
+    httpStatus: 503,
+    title: 'AI assistant is temporarily unavailable',
+    retryable: true,
+    messageKey: 'error.ai.inference_unavailable',
+    severity: 'warning' as ErrorSeverity,
+  },
   MAINTENANCE_ACTIVE: {
     code: 'MAINTENANCE:ACTIVE',
     httpStatus: 503,

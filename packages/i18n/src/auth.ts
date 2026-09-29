@@ -10,6 +10,8 @@ export const fa: I18nDictionary = {
   'error.ai.model_circuit_open': 'اتصال به مدل هوش مصنوعی موقتاً متوقف شده است',
   'error.ai.model_budget_exhausted': 'بودجه ماهانه مدل هوش مصنوعی به پایان رسیده است.',
   'error.ai.inference_busy': 'دستیار هوش مصنوعی در حال حاضر شلوغ است. کمی بعد دوباره تلاش کنید.',
+  'error.ai.inference_unavailable':
+    'دستیار هوش مصنوعی موقتاً در دسترس نیست. کمی بعد دوباره تلاش کنید.',
   'error.ai.knowledge_busy': 'دستیار دانش در حال پاسخ‌گویی است. کمی بعد دوباره تلاش کنید.',
   'error.ai.knowledge_unavailable': 'برای پروفایل فعال شما دستیار دانش تنظیم نشده است.',
   'error.ai.knowledge_no_source': 'منبع منتشرشده‌ای برای این پرسش پیدا نشد.',
@@ -199,6 +201,8 @@ export const en: I18nDictionary = {
   'error.ai.model_circuit_open': 'AI model connection temporarily paused',
   'error.ai.model_budget_exhausted': 'The AI model monthly budget is exhausted.',
   'error.ai.inference_busy': 'The AI assistant is busy. Please try again shortly.',
+  'error.ai.inference_unavailable':
+    'The AI assistant is temporarily unavailable. Please try again shortly.',
   'error.ai.knowledge_busy': 'The knowledge assistant is busy. Please try again shortly.',
   'error.ai.knowledge_unavailable': 'No knowledge assistant is assigned to your active profile.',
   'error.ai.knowledge_no_source': 'No published source matched this question.',

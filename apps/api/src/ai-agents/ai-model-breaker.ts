@@ -1,9 +1,10 @@
 import { HttpException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
-import { AiModelTester, completeChat, type ChatCompletionInput } from '@barghsa/shared/ai-models';
+import type { ChatCompletionInput } from '@barghsa/shared/ai-models';
 import { AiModelCircuitBreaker } from '@barghsa/shared/notification-delivery';
 import { completeWithinModelBudget } from './ai-model-budget.js';
 import { aiInferenceQueue } from './ai-inference-queue.js';
+import { completeViaAiWorker, isAiInfrastructureError } from './ai-inference-client.js';
 
 /** Gate provider calls across API replicas and the separate model-test worker. */
 export async function completeChatWithBreaker(modelId: string, input: ChatCompletionInput) {
@@ -23,25 +24,11 @@ export async function completeChatWithBreaker(modelId: string, input: ChatComple
       if (!decision.allow)
         throw new HttpException({ statusCode: 503, error: 'AI_MODEL_CIRCUIT_OPEN' }, 503);
       probeToken = decision.kind === 'half_open' ? decision.probeToken : undefined;
-      if (decision.kind === 'half_open') {
-        const probe = await new AiModelTester().test(
-          {
-            providerType: input.providerType,
-            baseUrl: input.baseUrl,
-            modelName: input.modelName,
-            apiToken: input.apiToken,
-          },
-          15_000
-        );
-        if (!probe.ok) {
-          await record(false);
-          throw new HttpException({ statusCode: 503, error: 'AI_MODEL_CIRCUIT_OPEN' }, 503);
-        }
-      }
+      // The actual completion is the single half-open probe; provider I/O stays in the worker.
       try {
-        return await completeChat(input);
+        return await completeViaAiWorker(modelId, input);
       } catch (error) {
-        await record(false);
+        if (!isAiInfrastructureError(error)) await record(false);
         throw error;
       }
     });

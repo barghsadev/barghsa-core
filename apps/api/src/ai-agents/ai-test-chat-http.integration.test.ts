@@ -469,7 +469,7 @@ it('opens a per-model circuit after provider failures and recovers with one prob
     message: failCompletionMessage,
   });
   expect(failedRecovery.status).toBe(503);
-  expect(completions).toBe(beforeFailedRecovery + 2);
+  expect(completions).toBe(beforeFailedRecovery + 1);
   expect(
     (await http.pool.query('SELECT degraded FROM ai_model_circuit_states WHERE id=$1', [modelId]))
       .rows[0]
@@ -482,7 +482,7 @@ it('opens a per-model circuit after provider failures and recovers with one prob
   const attempts = completions;
   const recovered = await send({ agentId, requestId: randomUUID(), message: 'Recovered?' });
   expect(recovered.status).toBe(200);
-  expect(completions).toBe(attempts + 2);
+  expect(completions).toBe(attempts + 1);
   expect(
     (await http.pool.query('SELECT degraded FROM ai_model_circuit_states WHERE id=$1', [modelId]))
       .rows[0]
@@ -513,7 +513,7 @@ it('requires a retrieved source when a response policy demands one', async () =>
     policyId,
   ]);
   const before = completions;
-  const requestId = randomUUID();
+  const requestId = 'ba799c7b-42cd-4dc7-9e6a-cba3400ec175';
   const response = await send({ agentId, requestId, message: 'Electricity?' });
   expect(response.status).toBe(422);
   expect(await response.json()).toMatchObject({

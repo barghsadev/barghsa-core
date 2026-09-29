@@ -1,0 +1,9 @@
+# AI inference process
+
+Production Compose runs `ai-inference` separately from the API and background worker. The process listens on port 9091 inside the Compose network; do not publish that port. The API calls `http://ai-inference:9091/complete` with a shared internal secret. The request contains prompts and model identity, but no provider API token. The AI process reads and decrypts the current model credential from PostgreSQL before calling the provider.
+
+Set `AI_INFERENCE_SHARED_SECRET` to the same random value of at least 32 characters for the API and AI process (`openssl rand -hex 32` is suitable). Set `AI_MODEL_ENCRYPTION_KEY` in the AI process to the same value used by the API, and provide `AI_MODEL_BASE_URL_ALLOWLIST` when private provider hosts are intentionally permitted. Compose sets `AI_INFERENCE_URL` for the API and starts the AI process automatically. The single-container deployment generates an internal secret when none is supplied and starts both processes on localhost. Local `pnpm dev` also starts both worker processes; set the shared secret and localhost URL in `.env`.
+
+The API's FIFO gate admits 10 AI requests per process and waits up to 30 seconds by default. `AI_INFERENCE_MAX_CONCURRENCY`, `AI_INFERENCE_QUEUE_TIMEOUT_MS`, and `AI_INFERENCE_MAX_PENDING` tune it. The AI process separately rejects work above its active-call limit, using `AI_INFERENCE_MAX_CONCURRENCY`. The process-local API queue does not coordinate FIFO order across API replicas.
+
+Check `GET /health/ready` on the private AI port for its database connectivity and active-call saturation. Staff with `admin:ai:models` can use `GET /api/ai/health` for queue and circuit state. Core `/api/health/ready` stays independent of the AI process. If the AI process is unavailable, agent chat returns `AI_INFERENCE_UNAVAILABLE` (503); budget and circuit state are not charged as a provider failure.

@@ -4,6 +4,7 @@ import { getDbPool } from '@barghsa/db';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { aiInferenceQueue, type AiInferenceQueueSnapshot } from './ai-inference-queue.js';
+import { readAiWorkerHealth } from './ai-inference-client.js';
 
 interface CircuitRow {
   id: string;
@@ -13,8 +14,9 @@ interface CircuitRow {
 }
 
 interface AiHealth {
-  status: 'ok' | 'saturated';
+  status: 'ok' | 'saturated' | 'unavailable';
   queue: AiInferenceQueueSnapshot;
+  worker: Awaited<ReturnType<typeof readAiWorkerHealth>>;
   models: Array<{ id: string; status: 'disabled' | 'closed' | 'open' | 'probe_ready' }>;
 }
 
@@ -30,14 +32,23 @@ export class AiHealthController {
     if (!hasStaffPermission(req, 'admin:ai:models'))
       throw new HttpException({ statusCode: 403, error: 'AUTHZ:FORBIDDEN' }, 403);
     const queue = aiInferenceQueue.snapshot();
-    const circuits = await getDbPool().query<CircuitRow>(
-      `SELECT m.id,m.is_enabled,COALESCE(s.degraded,false) AS degraded,s.cooldown_until
+    const [circuits, worker] = await Promise.all([
+      getDbPool().query<CircuitRow>(
+        `SELECT m.id,m.is_enabled,COALESCE(s.degraded,false) AS degraded,s.cooldown_until
        FROM ai_models m LEFT JOIN ai_model_circuit_states s ON s.id=m.id ORDER BY m.id`
-    );
+      ),
+      readAiWorkerHealth(),
+    ]);
     const now = Date.now();
     return {
-      status: queue.saturated ? 'saturated' : 'ok',
+      status:
+        worker.status === 'unavailable'
+          ? 'unavailable'
+          : queue.saturated || worker.saturated
+            ? 'saturated'
+            : 'ok',
       queue,
+      worker,
       models: circuits.rows.map((row) => ({
         id: row.id,
         status: !row.is_enabled

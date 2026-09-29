@@ -132,8 +132,9 @@ it('reports AI queue and model circuits only to authorized staff', async () => {
   const response = await fetch(`${http.base}/api/ai/health`, { headers: headers.viewer! });
   expect(response.status).toBe(200);
   expect(await response.json()).toMatchObject({
-    status: 'ok',
+    status: 'unavailable',
     queue: { active: 0, pending: 0, maxConcurrency: 10 },
+    worker: { status: 'unavailable' },
     models: [{ id, status: 'open' }],
   });
   expect((await fetch(`${http.base}/api/ai/health`, { headers: headers.other! })).status).toBe(403);
