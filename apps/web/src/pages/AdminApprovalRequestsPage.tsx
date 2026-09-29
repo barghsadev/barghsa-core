@@ -7,6 +7,7 @@ import { Button, Label } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import DualApprovalThresholdPanel from '../components/DualApprovalThresholdPanel.js';
+import { Link, useSearch } from '@tanstack/react-router';
 
 type Status = 'pending' | 'approved' | 'rejected';
 interface Request {
@@ -37,6 +38,7 @@ function approvalAmount(request: Request) {
 const PAGE_SIZE = 25;
 
 export default function AdminApprovalRequestsPage() {
+  const { requestId } = useSearch({ from: '/admin/approval-requests' });
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const [status, setStatus] = useState<Status>('pending');
@@ -57,19 +59,32 @@ export default function AdminApprovalRequestsPage() {
     setReasons({});
     try {
       const response = await fetch(
-        `/api/admin/approval-requests?status=${status}&limit=${PAGE_SIZE + 1}&offset=${offset}`,
+        requestId
+          ? `/api/admin/approval-requests/${encodeURIComponent(requestId)}`
+          : `/api/admin/approval-requests?status=${status}&limit=${PAGE_SIZE + 1}&offset=${offset}`,
         { credentials: 'include' }
       );
       if (!response.ok) throw new Error('Queue unavailable');
       const data: unknown = await response.json();
-      if (!Array.isArray(data)) throw new Error('Invalid queue');
-      if (current === generation.current) setItems(data);
+      if (requestId) {
+        if (
+          !data ||
+          typeof data !== 'object' ||
+          (data as Request).id !== requestId ||
+          !['pending', 'approved', 'rejected'].includes((data as Request).status)
+        )
+          throw new Error('Invalid approval request');
+        if (current === generation.current) setItems([data as Request]);
+      } else {
+        if (!Array.isArray(data)) throw new Error('Invalid queue');
+        if (current === generation.current) setItems(data);
+      }
     } catch {
       if (current === generation.current) setError(true);
     } finally {
       if (current === generation.current) setLoading(false);
     }
-  }, [status, offset]);
+  }, [status, offset, requestId]);
   useEffect(() => {
     void load();
     return () => {
@@ -102,29 +117,45 @@ export default function AdminApprovalRequestsPage() {
         <p className="text-sm text-muted-foreground">{t('admin.approvals.description', locale)}</p>
       </header>
       <DualApprovalThresholdPanel />
-      <div className="flex flex-wrap items-center gap-3">
-        <Label htmlFor="approval-status">{t('admin.approvals.status', locale)}</Label>
-        <select
-          id="approval-status"
-          className="rounded border bg-card text-card-foreground p-2"
-          value={status}
-          disabled={!!action}
-          onChange={(event) => {
-            setStatus(event.target.value as Status);
-            setOffset(0);
-            setSaved(false);
-          }}
-        >
-          {(['pending', 'approved', 'rejected'] as const).map((value) => (
-            <option key={value} value={value}>
-              {t(`admin.approvals.${value}`, locale)}
-            </option>
-          ))}
-        </select>
-        <Button variant="outline" disabled={loading || !!action} onClick={() => void load()}>
-          {t('admin.approvals.refresh', locale)}
-        </Button>
-      </div>
+      {requestId && (
+        <div className="space-y-2 rounded-lg border border-primary bg-card p-4 text-sm">
+          <p>
+            {t('admin.approvals.linkedRequest', locale)}: <bdi>{requestId}</bdi>
+          </p>
+          <Link
+            to="/admin/approval-requests"
+            search={{ requestId: undefined }}
+            className="inline-block text-primary underline"
+          >
+            {t('admin.approvals.backToQueue', locale)}
+          </Link>
+        </div>
+      )}
+      {!requestId && (
+        <div className="flex flex-wrap items-center gap-3">
+          <Label htmlFor="approval-status">{t('admin.approvals.status', locale)}</Label>
+          <select
+            id="approval-status"
+            className="rounded border bg-card text-card-foreground p-2"
+            value={status}
+            disabled={!!action}
+            onChange={(event) => {
+              setStatus(event.target.value as Status);
+              setOffset(0);
+              setSaved(false);
+            }}
+          >
+            {(['pending', 'approved', 'rejected'] as const).map((value) => (
+              <option key={value} value={value}>
+                {t(`admin.approvals.${value}`, locale)}
+              </option>
+            ))}
+          </select>
+          <Button variant="outline" disabled={loading || !!action} onClick={() => void load()}>
+            {t('admin.approvals.refresh', locale)}
+          </Button>
+        </div>
+      )}
       {saved && (
         <p role="status">
           {adjustmentDecision
@@ -222,22 +253,24 @@ export default function AdminApprovalRequestsPage() {
           ))}
         </ul>
       )}
-      <nav aria-label={t('admin.approvals.title', locale)} className="flex gap-3">
-        <Button
-          variant="outline"
-          disabled={loading || !!action || offset === 0}
-          onClick={() => setOffset((value) => Math.max(0, value - PAGE_SIZE))}
-        >
-          {t('admin.approvals.previous', locale)}
-        </Button>
-        <Button
-          variant="outline"
-          disabled={loading || error || !!action || items.length <= PAGE_SIZE}
-          onClick={() => setOffset((value) => value + PAGE_SIZE)}
-        >
-          {t('admin.approvals.next', locale)}
-        </Button>
-      </nav>
+      {!requestId && (
+        <nav aria-label={t('admin.approvals.title', locale)} className="flex gap-3">
+          <Button
+            variant="outline"
+            disabled={loading || !!action || offset === 0}
+            onClick={() => setOffset((value) => Math.max(0, value - PAGE_SIZE))}
+          >
+            {t('admin.approvals.previous', locale)}
+          </Button>
+          <Button
+            variant="outline"
+            disabled={loading || error || !!action || items.length <= PAGE_SIZE}
+            onClick={() => setOffset((value) => value + PAGE_SIZE)}
+          >
+            {t('admin.approvals.next', locale)}
+          </Button>
+        </nav>
+      )}
       {action && (
         <TeamActionDialog
           action={action}

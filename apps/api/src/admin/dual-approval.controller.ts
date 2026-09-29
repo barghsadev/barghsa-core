@@ -151,6 +151,22 @@ export class DualApprovalController {
     return this.dualApprovalService.listApprovalRequests(options);
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Read one approval request for a direct staff handoff' })
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiResponse({ status: 200, description: 'Approval request', type: Object })
+  @ApiResponse({ status: 403, description: 'Financial permission required' })
+  @ApiResponse({ status: 404, description: 'Request not found' })
+  async getApprovalRequest(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest
+  ): Promise<ApprovalRequestDto> {
+    this.assertFinancialEditPermission(req);
+    if (!z.string().uuid().safeParse(id).success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    return this.dualApprovalService.getRequestDto(id);
+  }
+
   /**
    * POST /api/admin/approval-requests/:id/approve
    *

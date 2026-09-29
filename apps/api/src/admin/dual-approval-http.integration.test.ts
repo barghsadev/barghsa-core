@@ -49,6 +49,26 @@ async function decide(user: string, id: string, action = 'approve') {
   });
 }
 
+it('reads a linked approval request without depending on its queue page', async () => {
+  const id = await seed();
+  const url = `${http.base}/api/admin/approval-requests/${id}`;
+  const permitted = await fetch(url, { headers: headers.reviewer! });
+  expect(permitted.status).toBe(200);
+  expect(await permitted.json()).toMatchObject({
+    id,
+    actionType: 'bank_payment_confirmation',
+    status: 'pending',
+  });
+  expect((await fetch(url, { headers: headers.support! })).status).toBe(403);
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/approval-requests/invalid`, {
+        headers: headers.reviewer!,
+      })
+    ).status
+  ).toBe(400);
+});
+
 for (const action of ['create', 'approve', 'reject'] as const) {
   for (const change of ['revoke', 'csrf', 'step-up', 'role'] as const) {
     it(`approval ${action} holds ${change} authority while its write waits`, async () => {

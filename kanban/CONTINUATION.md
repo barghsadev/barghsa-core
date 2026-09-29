@@ -2,6 +2,10 @@
 
 ## Current manual batch — September 29, 2026
 
+[Exact approval-request handoff](batches/2026-09-29-approval-request-handoff.md) lets finance staff open a refund's specific approval request directly, even when it is outside the current queue filter or page.
+
+[Operating-context integration fixtures](batches/2026-09-29-operating-context-fixtures.md) update the older HTTP suites to use explicit staff and customer sessions after context isolation. They preserve the production authorization boundary exposed by the previous CI run.
+
 [External bank refund workspace](batches/2026-09-29-external-bank-refund-workspace.md) adds the finance handoff from request through recorded bank reference and second-staff reconciliation. Wallet and bank refunds share an invoice balance and financial confirmation layout, while the backend keeps bank refunds unsettled until reconciliation. The broader cross-command financial review task remains partial.
 
 [Manual wallet refund workspace](batches/2026-09-29-manual-wallet-refund-workspace.md) gives finance staff a resumable invoice refund view with available balance, prior requests and confirmable wallet refund actions. The existing server enforces payment, authorization and dual-approval rules.

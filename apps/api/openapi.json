@@ -722,6 +722,44 @@
         ]
       }
     },
+    "/api/admin/approval-requests/{id}": {
+      "get": {
+        "operationId": "DualApprovalController_getApprovalRequest",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Approval request"
+          },
+          "403": {
+            "description": "Financial permission required"
+          },
+          "404": {
+            "description": "Request not found"
+          }
+        },
+        "summary": "Read one approval request for a direct staff handoff",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/approval-requests/{id}/approve": {
       "post": {
         "operationId": "DualApprovalController_approveApprovalRequest",

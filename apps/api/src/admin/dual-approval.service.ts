@@ -436,7 +436,7 @@ export class DualApprovalService {
   }
 
   /** Fetch a single request by id (post-commit read for the DTO). */
-  private async getRequestDto(id: string): Promise<ApprovalRequestDto> {
+  async getRequestDto(id: string): Promise<ApprovalRequestDto> {
     const pool = getDbPool();
     const result = await pool.query(
       `SELECT ar.*, initiator.username AS initiator_username, reviewer.username AS reviewer_username

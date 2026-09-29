@@ -15,12 +15,26 @@ const request = {
 };
 async function shell(page: Page, locale = 'en') {
   await page.addInitScript((value) => {
-    if (document.documentElement) document.documentElement.lang = value;
-    new MutationObserver(() => {
-      if (document.documentElement) document.documentElement.lang = value;
-    }).observe(document, { childList: true });
+    localStorage.setItem('barghsa.locale', value);
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({ json: { isStaff: true, operatingContext: 'staff', canSwitchContext: true } })
+  );
+  await page.route('**/api/public/branding/config', (route) =>
+    route.fulfill({
+      json: {
+        appTitle: 'Finance',
+        slogan: '',
+        primaryColor: '#2563eb',
+        secondaryColor: '#64748b',
+        accentColor: '#f59e0b',
+        logoUrl: null,
+        faviconUrl: null,
+        darkMode: false,
+      },
+    })
+  );
   await page.route('**/api/admin/config/dual-approval-threshold', (route) =>
     route.fulfill({ json: { thresholdIrR: 100000 } })
   );
@@ -31,7 +45,7 @@ for (const locale of ['fa', 'en']) {
     let verified = false,
       resolved = false;
     const actions: string[] = [];
-    await page.route('**/api/admin/approval-requests?*', (route) =>
+    await page.route(/\/api\/admin\/approval-requests\?/, (route) =>
       route.fulfill({ json: resolved ? [] : [request] })
     );
     await page.route(`**/api/admin/approval-requests/${id}/approve`, (route) => {
@@ -76,7 +90,7 @@ for (const locale of ['fa', 'en']) {
 }
 test('rejection requires a reason and conflict never reports success', async ({ page }) => {
   await shell(page);
-  await page.route('**/api/admin/approval-requests?*', (route) =>
+  await page.route(/\/api\/admin\/approval-requests\?/, (route) =>
     route.fulfill({ json: [request] })
   );
   await page.route(`**/api/admin/approval-requests/${id}/reject`, (route) => {
@@ -93,7 +107,7 @@ test('rejection requires a reason and conflict never reports success', async ({ 
 });
 test('pagination and history expose no decision controls', async ({ page }) => {
   await shell(page);
-  await page.route('**/api/admin/approval-requests?*', (route) => {
+  await page.route(/\/api\/admin\/approval-requests\?/, (route) => {
     const url = new URL(route.request().url());
     const status = url.searchParams.get('status');
     if (status === 'approved')
@@ -118,6 +132,27 @@ test('pagination and history expose no decision controls', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Approve', exact: true })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Previous', exact: true })).toBeDisabled();
 });
+test('a refund approval link loads its exact request beyond the queue page', async ({ page }) => {
+  await shell(page);
+  const requests: string[] = [];
+  await page.route(/\/api\/admin\/approval-requests\?/, (route) => {
+    requests.push('queue');
+    return route.fulfill({ json: [] });
+  });
+  await page.route(`**/api/admin/approval-requests/${id}`, (route) => {
+    requests.push('detail');
+    return route.fulfill({ json: { ...request, actionType: 'refund' } });
+  });
+  await page.goto(`/admin/approval-requests?requestId=${id}`);
+  await expect(page.getByText('Selected request')).toBeVisible();
+  await expect(page.getByText(id)).toHaveCount(2);
+  await expect(page.getByRole('button', { name: 'Approve', exact: true })).toBeVisible();
+  await expect(page.getByLabel('Status', { exact: true })).toHaveCount(0);
+  expect(requests).not.toContain('queue');
+  await page.getByRole('link', { name: 'Back to approval queue' }).click();
+  await expect(page.getByText('No requests in this queue.')).toBeVisible();
+  expect(requests).toContain('queue');
+});
 test('an obsolete pending response cannot replace selected history', async ({ page }) => {
   await shell(page);
   let release!: () => void;
@@ -128,7 +163,7 @@ test('an obsolete pending response cannot replace selected history', async ({ pa
   const arrived = new Promise<void>((resolve) => {
     started = resolve;
   });
-  await page.route('**/api/admin/approval-requests?*', async (route) => {
+  await page.route(/\/api\/admin\/approval-requests\?/, async (route) => {
     if (new URL(route.request().url()).searchParams.get('status') === 'pending') {
       started();
       await pending;
@@ -158,7 +193,7 @@ for (const locale of ['fa', 'en'])
         invoiceAdjustment: { originalInvoiceId: invoiceId },
       },
     };
-    await page.route('**/api/admin/approval-requests?*', (route) =>
+    await page.route(/\/api\/admin\/approval-requests\?/, (route) =>
       route.fulfill({ json: [adjustment] })
     );
     await page.route(`**/api/admin/approval-requests/${id}/approve`, (route) =>
