@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
-import { bankReceiptReview } from './bank-receipt-review-fixture';
+import { bankReceiptReview } from '../src/test/bank-receipt-review-fixture';
 
 const first = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const second = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';

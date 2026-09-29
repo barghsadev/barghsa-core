@@ -7909,13 +7909,20 @@
                     "maxLength": 2000,
                     "minLength": 1,
                     "type": "string"
+                  },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
                   }
                 },
+                "required": [
+                  "expectedReviewHash"
+                ],
                 "type": "object"
               }
             }
           },
-          "required": false
+          "required": true
         },
         "responses": {
           "200": {
@@ -7937,6 +7944,54 @@
           }
         ],
         "summary": "Confirm an invoice bank receipt",
+        "tags": [
+          "Admin · Invoice bank receipts"
+        ]
+      }
+    },
+    "/api/admin/invoices/bank-receipts/{receiptId}/confirm/review": {
+      "post": {
+        "operationId": "InvoiceBankReceiptConfirmationController_review",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "receiptId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "emergencyOverrideReason": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the authoritative invoice bank-receipt confirmation",
         "tags": [
           "Admin · Invoice bank receipts"
         ]

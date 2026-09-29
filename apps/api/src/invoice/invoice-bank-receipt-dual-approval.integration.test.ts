@@ -301,10 +301,17 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     });
     const beforeWallet = await walletPosted();
 
+    const firstReview = await service.review({
+      receiptId,
+      actorUserId: FIRST_STAFF,
+      ...receiptDecisionSession(FIRST_STAFF),
+    });
+    expect(firstReview.data.approval.required).toBe(true);
     const first = await service.confirm({
       receiptId,
       actorUserId: FIRST_STAFF,
       ...receiptDecisionSession(FIRST_STAFF),
+      expectedReviewHash: firstReview.hash,
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -324,12 +331,16 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     expect(requests[0]!.initiator_id).toBe(FIRST_STAFF);
     expect(BigInt(requests[0]!.amount_irr)).toBe(THRESHOLD);
 
-    const requestedAudit = await ctx.pool.query<{ event: string }>(
-      `SELECT event FROM audit_log
+    const requestedAudit = await ctx.pool.query<{
+      event: string;
+      metadata: { financialReview: { hash: string } };
+    }>(
+      `SELECT event, metadata::jsonb AS metadata FROM audit_log
         WHERE event = $1 AND metadata::jsonb ->> 'receiptId' = $2`,
       [INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REQUESTED_EVENT, receiptId]
     );
     expect(requestedAudit.rows).toHaveLength(1);
+    expect(requestedAudit.rows[0]?.metadata.financialReview.hash).toBe(firstReview.hash);
 
     const retry = await service.confirm({
       receiptId,
@@ -343,10 +354,18 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     expect((await invoicePaid(invoiceId)).paid).toBe(0n);
     expect(await pendingApprovals(receiptId)).toHaveLength(1);
 
+    const secondReview = await service.review({
+      receiptId,
+      actorUserId: SECOND_STAFF,
+      ...receiptDecisionSession(SECOND_STAFF),
+    });
+    expect(secondReview.hash).not.toBe(firstReview.hash);
+    expect(secondReview.data.approval.requestStatus).toBe('pending');
     const second = await service.confirm({
       receiptId,
       actorUserId: SECOND_STAFF,
       ...receiptDecisionSession(SECOND_STAFF),
+      expectedReviewHash: secondReview.hash,
       ip: '10.0.0.9',
       now: NOW,
     });

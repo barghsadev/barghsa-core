@@ -18,19 +18,11 @@ function client(
   options: { profileId?: string; state?: string; threshold?: unknown; missingWallet?: boolean } = {}
 ) {
   const query = vi.fn(async (sql: string) => {
-    if (sql.includes('JOIN wallets w'))
+    if (sql.includes('FROM profiles p WHERE p.id=$1'))
+      return { rows: [{ id: profileId, profile_type: 'LEGAL', title: 'Customer' }] };
+    if (sql.includes('FROM wallets WHERE profile_id=$1 FOR UPDATE'))
       return {
-        rows: options.missingWallet
-          ? []
-          : [
-              {
-                id: profileId,
-                profile_type: 'LEGAL',
-                title: 'Customer',
-                posted_balance: '1000',
-                reserved_balance: '100',
-              },
-            ],
+        rows: options.missingWallet ? [] : [{ posted_balance: '1000', reserved_balance: '100' }],
       };
     if (sql.includes('FROM app_config'))
       return { rows: [{ value: options.threshold ?? { threshold_irr: 1000 } }] };
@@ -101,7 +93,7 @@ it('reviews the actual invoice allocation and excess without changing balances',
   expect(review.data.wallet.availableAfter).toBe('1400');
   expect(review.data.invoice?.totals).toEqual({ subtotal: '1000', discount: '0', vat: '0' });
   expect(db.query.mock.calls.every(([sql]) => sql.startsWith('SELECT'))).toBe(true);
-  expect(db.query.mock.calls[0]?.[0]).toContain('FOR UPDATE OF w');
+  expect(db.query.mock.calls[0]?.[0]).toContain('FROM profiles p');
   expect(db.query.mock.calls[1]?.[0]).toContain('FOR UPDATE');
 });
 
@@ -109,11 +101,15 @@ it.each([
   { profileId: receiptId },
   { state: 'Draft' },
   { threshold: { threshold_irr: 'corrupt' } },
-  { missingWallet: true },
 ])('fails closed on invalid receipt context: %j', async (options) => {
   await expect(
     readBankReceiptConfirmationReview(client(options), { ...input, invoiceId })
   ).rejects.toThrow();
+});
+
+it('reviews a receipt before the profile has a wallet', async () => {
+  const review = await readBankReceiptConfirmationReview(client({ missingWallet: true }), input);
+  expect(review.data.wallet).toEqual({ availableBefore: '0', availableAfter: '1500' });
 });
 
 it('changes the review hash when the approval rule changes', async () => {

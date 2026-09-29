@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
-import { bankReceiptReview } from './bank-receipt-review-fixture';
+import { bankReceiptReview } from '../src/test/bank-receipt-review-fixture';
 
 const receiptId = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const profileId = '11111111-1111-7111-8111-111111111111';

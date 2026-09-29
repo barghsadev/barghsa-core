@@ -1,8 +1,9 @@
-import { act } from 'react';
+import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { InvoiceBankReceiptQueue } from './InvoiceBankReceiptQueue.js';
 import type { TeamAction } from './TeamActionDialog.js';
+import { bankReceiptReview } from '../test/bank-receipt-review-fixture.js';
 
 const RECEIPT = '11111111-1111-4111-8111-111111111111';
 const INVOICE = '22222222-2222-4222-8222-222222222222';
@@ -49,13 +50,20 @@ vi.mock('../hooks/useNumberFormatting.js', () => ({
 vi.mock('./TeamActionDialog.js', () => ({
   TeamActionDialog: ({
     action,
+    summary,
     onSuccess,
   }: {
     action: TeamAction;
+    summary: ReactNode;
     onSuccess: () => Promise<void>;
   }) => {
     harness.action = action;
-    return <button onClick={() => void onSuccess()}>{'Finish action'}</button>;
+    return (
+      <div>
+        {summary}
+        <button onClick={() => void onSuccess()}>{'Finish action'}</button>
+      </div>
+    );
   },
 }));
 
@@ -104,6 +112,12 @@ async function click(text: string) {
 function api(options: { preview?: boolean; pending?: boolean } = {}) {
   return vi.fn(async (raw: string) => {
     const url = new URL(raw, 'https://app.example.test');
+    if (url.pathname.endsWith('/confirm/review')) {
+      const review = bankReceiptReview(RECEIPT, INVOICE, receipt.profileId);
+      review.scope.action = 'invoice.bank-receipt-confirmation';
+      review.data.receipt.bankName = receipt.bankName;
+      return new Response(JSON.stringify(review));
+    }
     if (url.pathname.endsWith('/allocation')) {
       return new Response(JSON.stringify(allocation), {
         status: options.preview === false ? 409 : 200,
@@ -140,7 +154,10 @@ it.each(['en', 'fa'] as const)('reviews the allocation and receipt file in %s', 
   expect(harness.action).toMatchObject({
     path: `/api/admin/invoices/bank-receipts/${RECEIPT}/confirm`,
     method: 'POST',
+    body: { expectedReviewHash: 'a'.repeat(64) },
   });
+  expect(container.textContent).toContain('Customer profile');
+  expect(container.textContent).toContain('TRK');
   await click('Finish action');
   expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith('/bank-receipts')).length).toBe(
     2

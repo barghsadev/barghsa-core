@@ -7,6 +7,7 @@ import { INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION } from '@barghsa/shared/finance
 
 const RECEIPT_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc';
 const INVOICE_ID = '11111111-1111-7111-8111-111111111111';
+const REVIEW_HASH = 'a'.repeat(64);
 
 const DTO = {
   receiptId: RECEIPT_ID,
@@ -52,6 +53,7 @@ function makeController() {
   const listPending = vi.fn().mockResolvedValue([DTO]);
   const listHistory = vi.fn().mockResolvedValue({ items: [], nextCursor: null });
   const get = vi.fn().mockResolvedValue(DTO);
+  const review = vi.fn().mockResolvedValue({ hash: REVIEW_HASH });
   const confirm = vi.fn().mockResolvedValue({
     ...DTO,
     state: 'Confirmed',
@@ -78,7 +80,7 @@ function makeController() {
     walletCreditAmount: '150000',
     isOverpayment: true,
   });
-  const service = { listPending, listHistory, get, confirm, reject, previewAllocation };
+  const service = { listPending, listHistory, get, review, confirm, reject, previewAllocation };
   const correlationId = { getCorrelationId: vi.fn().mockReturnValue('corr-1') };
   const controller = new InvoiceBankReceiptConfirmationController(
     service as never,
@@ -171,14 +173,33 @@ describe('invoice bank-receipt confirmation and rejection permission gate (T-04.
 
   it('forwards actor, ip, and correlation id on confirm', async () => {
     const { controller, service } = makeController();
-    await controller.confirm(adminReq, RECEIPT_ID);
+    await controller.confirm(adminReq, RECEIPT_ID, { expectedReviewHash: REVIEW_HASH });
     expect(service.confirm).toHaveBeenCalledWith({
       receiptId: RECEIPT_ID,
+      expectedReviewHash: REVIEW_HASH,
       actorUserId: 'admin-1',
       sessionId: 'staff-session',
       csrfToken: 'staff-csrf',
       ip: '127.0.0.1',
       correlationId: 'corr-1',
+    });
+  });
+
+  it('requires a review hash and exposes the authorized financial review', async () => {
+    const { controller, service } = makeController();
+    await expect(controller.confirm(adminReq, RECEIPT_ID, {})).rejects.toMatchObject({
+      status: 400,
+    });
+    expect(service.confirm).not.toHaveBeenCalled();
+    expect(await controller.review(adminReq, RECEIPT_ID, {})).toEqual({ hash: REVIEW_HASH });
+    expect(service.review).toHaveBeenCalledWith({
+      receiptId: RECEIPT_ID,
+      actorUserId: 'admin-1',
+      sessionId: 'staff-session',
+      csrfToken: 'staff-csrf',
+    });
+    await expect(controller.review(nonAdminReq, RECEIPT_ID, {})).rejects.toMatchObject({
+      status: 403,
     });
   });
 

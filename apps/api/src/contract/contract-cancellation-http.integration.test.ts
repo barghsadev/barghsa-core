@@ -62,6 +62,16 @@ function send(path: string, body?: unknown, user = 'cancel-legal') {
     ...(body ? { body: JSON.stringify(body) } : {}),
   });
 }
+async function reviewedRefundDecision(
+  path: string,
+  body: Record<string, unknown>,
+  user = 'cancel-finance'
+) {
+  const review = await send(`${path}/review`, body, user);
+  if (!review.ok) return review;
+  const expectedReviewHash = ((await review.json()) as { hash: string }).hash;
+  return send(path, { ...body, expectedReviewHash }, user);
+}
 async function fixture(serviceType = 'electricity', paid = '100', state = 'Paid') {
   const user = randomUUID(),
     profile = randomUUID(),
@@ -471,7 +481,7 @@ it('keeps failed cancellation debt visible after bounded retries without posting
   ).toContain('contact support');
   expect(
     (
-      await send(
+      await reviewedRefundDecision(
         `wallet-refunds/${refund.id}/cancel`,
         { reason: 'Cannot dismiss this debt' },
         'cancel-finance'
@@ -504,7 +514,11 @@ it('keeps failed cancellation debt visible after bounded retries without posting
       authorizationId: randomUUID(),
     })
   ).toBe('deferred');
-  const retry = await send(`wallet-refunds/${refund.id}/process`, {}, 'cancel-finance');
+  const retry = await reviewedRefundDecision(
+    `wallet-refunds/${refund.id}/process`,
+    {},
+    'cancel-finance'
+  );
   expect(retry.status, await retry.clone().text()).toBe(200);
   expect(await retry.json()).toMatchObject({
     state: 'Completed',
@@ -609,7 +623,7 @@ it.each([
     const bankReference = randomUUID();
     expect(
       (
-        await send(
+        await reviewedRefundDecision(
           `external-refunds/${refund.id}/record-transfer`,
           { bankReference },
           'cancel-finance'
@@ -621,10 +635,15 @@ it.each([
         .rows[0].refunded_amount
     ).toBe('0');
     expect(
-      (await send(`external-refunds/${refund.id}/reconcile`, { bankReference }, 'cancel-finance'))
-        .status
+      (
+        await reviewedRefundDecision(
+          `external-refunds/${refund.id}/reconcile`,
+          { bankReference },
+          'cancel-finance'
+        )
+      ).status
     ).toBe(403);
-    const reconciled = await send(
+    const reconciled = await reviewedRefundDecision(
       `external-refunds/${refund.id}/reconcile`,
       { bankReference },
       'cancel-reviewer'

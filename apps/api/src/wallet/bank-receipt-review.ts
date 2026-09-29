@@ -14,8 +14,14 @@ import { readInvoiceFinancialDetails } from '../finance/invoice-review.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import type { WalletQueryClient } from './wallet.service.js';
 
-export const bankReceiptReviewScope = (transactionId: string, profileId: string) => ({
-  action: 'wallet.bank-receipt-confirmation',
+export const bankReceiptReviewScope = (
+  transactionId: string,
+  profileId: string,
+  action:
+    | 'wallet.bank-receipt-confirmation'
+    | 'invoice.bank-receipt-confirmation' = 'wallet.bank-receipt-confirmation'
+) => ({
+  action,
   profileId,
   resourceId: transactionId,
 });
@@ -33,14 +39,18 @@ export async function readBankReceiptConfirmationReview(
     attachmentKey: string | null;
     invoiceId: string | null;
     approvalRequired?: boolean;
+    action?: 'wallet.bank-receipt-confirmation' | 'invoice.bank-receipt-confirmation';
+    bankName?: string | null;
+    receiptState?: string;
+    approvalRequest?: { id: string; status: 'pending' | 'approved' | 'rejected' } | null;
+    overrideReason?: string | null;
   }
 ) {
   const profile = (
     await client.query(
       `SELECT p.id,p.profile_type,
-      COALESCE(NULLIF(p.title,''),NULLIF(concat_ws(' ',p.first_name,p.last_name),''),'') AS title,
-      w.posted_balance,w.reserved_balance
-     FROM profiles p JOIN wallets w ON w.profile_id=p.id WHERE p.id=$1 FOR UPDATE OF w`,
+      COALESCE(NULLIF(p.title,''),NULLIF(concat_ws(' ',p.first_name,p.last_name),''),'') AS title
+     FROM profiles p WHERE p.id=$1`,
       [input.profileId]
     )
   ).rows[0] as
@@ -48,12 +58,16 @@ export async function readBankReceiptConfirmationReview(
         id: string;
         profile_type: string;
         title: string;
-        posted_balance: string;
-        reserved_balance: string;
       }
     | undefined;
   if (!profile) throw new NotFoundException();
-  const available = BigInt(profile.posted_balance) - BigInt(profile.reserved_balance);
+  const wallet = (
+    await client.query(
+      'SELECT posted_balance,reserved_balance FROM wallets WHERE profile_id=$1 FOR UPDATE',
+      [input.profileId]
+    )
+  ).rows[0] as { posted_balance: string; reserved_balance: string } | undefined;
+  const available = BigInt(wallet?.posted_balance ?? '0') - BigInt(wallet?.reserved_balance ?? '0');
   let invoice: BankReceiptConfirmationReviewData['invoice'] = null;
   let invoiceAmount = 0n,
     walletCredit = input.amount;
@@ -99,8 +113,10 @@ export async function readBankReceiptConfirmationReview(
       id: input.id,
       amount: input.amount.toString(),
       submittedAt: input.submittedAt.toISOString(),
+      ...(input.receiptState !== undefined ? { state: input.receiptState } : {}),
       paymentDate: input.receipt?.paymentDate ?? null,
       payerReference: input.receipt?.payerReference ?? null,
+      ...(input.bankName !== undefined ? { bankName: input.bankName } : {}),
       attachmentKey: input.attachmentKey,
       customerNote: input.receipt?.customerNote ?? null,
     },
@@ -115,11 +131,18 @@ export async function readBankReceiptConfirmationReview(
         input.approvalRequired === true ||
         invoiceBankReceiptRequiresDualApproval(threshold, input.amount),
       thresholdAmount: threshold.status === 'enabled' ? threshold.thresholdIrR.toString() : null,
+      ...(input.approvalRequest !== undefined
+        ? {
+            requestId: input.approvalRequest?.id ?? null,
+            requestStatus: input.approvalRequest?.status ?? null,
+          }
+        : {}),
+      ...(input.overrideReason !== undefined ? { overrideReason: input.overrideReason } : {}),
     },
     source: 'bank_receipt',
   };
   const review = new ReviewSnapshotService().create(
-    bankReceiptReviewScope(input.id, input.profileId),
+    bankReceiptReviewScope(input.id, input.profileId, input.action),
     data
   );
   if (!parseBankReceiptConfirmationReview(review))

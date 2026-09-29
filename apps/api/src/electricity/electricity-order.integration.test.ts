@@ -274,50 +274,40 @@ it('keeps review, payment and activation on a corrected unpaid invoice', async (
     vatRate: line.vat_rate,
     isTaxable: line.is_taxable,
   }));
-  const changedAmount = await fetch(
-    `${http.base}/api/admin/invoices/${order.invoiceId}/corrections`,
-    {
+  const correctionPath = `${http.base}/api/admin/invoices/${order.invoiceId}/corrections`;
+  const reviewReplacement = (reason: string, replacementLines: typeof lines) =>
+    fetch(`${correctionPath}/review`, {
       method: 'POST',
       headers: staffHeaders,
-      body: JSON.stringify({
-        kind: 'replacement',
-        reason: 'Change the amount without a contract amendment',
-        idempotencyKey: randomUUID(),
-        lines: [{ ...lines[0]!, unitPrice: (BigInt(lines[0]!.unitPrice) + 1n).toString() }],
-      }),
-    }
-  );
+      body: JSON.stringify({ kind: 'replacement', reason, lines: replacementLines }),
+    });
+  const changedAmount = await reviewReplacement('Change the amount without a contract amendment', [
+    { ...lines[0]!, unitPrice: (BigInt(lines[0]!.unitPrice) + 1n).toString() },
+  ]);
   expect(changedAmount.status, http.logs()).toBe(409);
   expect(lines).toHaveLength(1);
   expect(BigInt(lines[0]!.unitPrice) % 2n).toBe(0n);
-  const changedEconomics = await fetch(
-    `${http.base}/api/admin/invoices/${order.invoiceId}/corrections`,
+  const changedEconomics = await reviewReplacement('Change quantity while keeping the same total', [
     {
-      method: 'POST',
-      headers: staffHeaders,
-      body: JSON.stringify({
-        kind: 'replacement',
-        reason: 'Change quantity while keeping the same total',
-        idempotencyKey: randomUUID(),
-        lines: [
-          {
-            ...lines[0]!,
-            quantity: lines[0]!.quantity * 2,
-            unitPrice: (BigInt(lines[0]!.unitPrice) / 2n).toString(),
-          },
-        ],
-      }),
-    }
-  );
+      ...lines[0]!,
+      quantity: lines[0]!.quantity * 2,
+      unitPrice: (BigInt(lines[0]!.unitPrice) / 2n).toString(),
+    },
+  ]);
   expect(changedEconomics.status, http.logs()).toBe(409);
-  const correction = await fetch(`${http.base}/api/admin/invoices/${order.invoiceId}/corrections`, {
+  const reason = 'Correct invoice description before approval';
+  const replacementReview = await reviewReplacement(reason, lines);
+  expect(replacementReview.status, http.logs()).toBe(200);
+  const expectedReviewHash = ((await replacementReview.json()) as { hash: string }).hash;
+  const correction = await fetch(correctionPath, {
     method: 'POST',
     headers: staffHeaders,
     body: JSON.stringify({
       kind: 'replacement',
-      reason: 'Correct invoice description before approval',
+      reason,
       idempotencyKey: randomUUID(),
       lines,
+      expectedReviewHash,
     }),
   });
   expect(correction.status, http.logs()).toBe(201);
@@ -387,14 +377,13 @@ it('keeps review, payment and activation on a corrected unpaid invoice', async (
     electricityOrderId: order.orderId,
   });
   const publishedCorrection = await fetch(
-    `${http.base}/api/admin/invoices/${replacement.invoiceId}/corrections`,
+    `${http.base}/api/admin/invoices/${replacement.invoiceId}/corrections/review`,
     {
       method: 'POST',
       headers: staffHeaders,
       body: JSON.stringify({
         kind: 'replacement',
         reason: 'Published contract cannot be rewritten',
-        idempotencyKey: randomUUID(),
         lines,
       }),
     }

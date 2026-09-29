@@ -6,7 +6,7 @@ import {
   assertWalletProfileWritable,
   assertWalletProfileMatches,
 } from '../wallet/profile-lock.js';
-import { requireSessionStepUp } from '../session/session-step-up.js';
+import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { notifyApprovalRequested } from '../admin/approval-notifications.js';
 import { requireCurrentFinancePermission } from '../admin/approval-permissions.js';
@@ -50,7 +50,10 @@ import {
   remainingForBankReceiptSettlement,
   type BankReceiptOverpaymentSnapshot,
   type InvoiceBankReceiptDualApprovalThresholdRead,
+  type BankReceiptConfirmationReview,
 } from '@barghsa/shared/finance';
+import { readBankReceiptConfirmationReview } from '../wallet/bank-receipt-review.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
 import { applyApprovalRequestResolutionOnClient } from '../admin/dual-approval-resolution.js';
@@ -166,6 +169,7 @@ export interface InvoiceBankReceiptAllocationPreviewDto {
 
 export interface ConfirmInvoiceBankReceiptInput {
   emergencyOverrideReason?: string;
+  expectedReviewHash?: string;
   receiptId: string;
   actorUserId: string;
   sessionId: string;
@@ -357,6 +361,108 @@ export class InvoiceBankReceiptConfirmationService {
     };
   }
 
+  private async financialReview(
+    client: WalletQueryClient,
+    receipt: BankReceiptRow & { invoiceId: string; profileId: string; amount: bigint },
+    latestRequest: DualApprovalRequestSummary | null,
+    emergencyOverrideReason?: string
+  ): Promise<BankReceiptConfirmationReview> {
+    const status = latestRequest?.status;
+    if (status && status !== 'pending' && status !== 'approved' && status !== 'rejected')
+      httpError(
+        ErrorCodes.CONFLICT_STATE.code,
+        'Receipt approval state requires reconciliation',
+        409
+      );
+    const review = await readBankReceiptConfirmationReview(client, {
+      id: receipt.id,
+      profileId: receipt.profileId,
+      amount: receipt.amount,
+      submittedAt: new Date(receipt.created_at),
+      receipt: {
+        paymentDate: receipt.payment_date,
+        payerReference: receipt.payer_reference,
+        attachmentKey: receipt.attachment_key,
+        customerNote: receipt.customer_note,
+      },
+      attachmentKey: receipt.attachment_key,
+      invoiceId: receipt.invoiceId,
+      action: 'invoice.bank-receipt-confirmation',
+      bankName: receipt.bank_name,
+      receiptState: receipt.state,
+      approvalRequired: status === 'pending',
+      approvalRequest: latestRequest
+        ? { id: latestRequest.id, status: status as 'pending' | 'approved' | 'rejected' }
+        : null,
+      overrideReason: emergencyOverrideReason ?? null,
+    });
+    const invoice = await this.lockInvoice(client, receipt.invoiceId);
+    if (invoice.profile_id !== receipt.profileId)
+      httpError(
+        ErrorCodes.CONFLICT_STATE.code,
+        BANK_RECEIPT_OVERPAYMENT_ERRORS.PROFILE_MISMATCH(),
+        409
+      );
+    this.assertInvoiceAcceptsBankReceiptAllocation(invoice);
+    return review;
+  }
+
+  async review(
+    input: Pick<
+      ConfirmInvoiceBankReceiptInput,
+      'receiptId' | 'actorUserId' | 'sessionId' | 'csrfToken' | 'emergencyOverrideReason'
+    >
+  ): Promise<BankReceiptConfirmationReview> {
+    const actor = {
+      userId: input.actorUserId,
+      sessionId: input.sessionId,
+      csrfToken: input.csrfToken,
+    };
+    const client = await getDbPool({ session: true }).connect();
+    try {
+      await client.query('BEGIN');
+      const profile = await lockWalletProfile(client, 'receipt', input.receiptId);
+      await lockDualApprovalThreshold(client, 'read');
+      await requireStaffMutationPermission(
+        client,
+        input.actorUserId,
+        'admin:finance:invoices:bank-receipt-confirm'
+      );
+      await requireCurrentSession(client, actor);
+      const receipt = await this.lockReceipt(client, input.receiptId);
+      assertWalletProfileMatches(profile, receipt.profileId);
+      assertWalletProfileWritable(profile);
+      if (!isInvoiceBankReceiptConfirmableState(receipt.state))
+        httpError(
+          ErrorCodes.CONFLICT_STATE.code,
+          INVOICE_BANK_RECEIPT_CONFIRM_ERRORS.NOT_CONFIRMABLE(receipt.state),
+          409
+        );
+      const latestRequest = await this.lockLatestDualApprovalRequest(client, receipt.id);
+      if (latestRequest) await this.assertApprovalBinding(client, receipt, latestRequest);
+      if (input.emergencyOverrideReason !== undefined && latestRequest?.status !== 'pending')
+        httpError(
+          ErrorCodes.CONFLICT_STATE.code,
+          'Emergency override requires a pending receipt approval',
+          409
+        );
+      const review = await this.financialReview(
+        client,
+        receipt,
+        latestRequest,
+        input.emergencyOverrideReason
+      );
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => undefined);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async previewAllocation(receiptId: string): Promise<InvoiceBankReceiptAllocationPreviewDto> {
     const pool = getDbPool();
     const receiptResult = await pool.query(
@@ -496,6 +602,28 @@ export class InvoiceBankReceiptConfirmationService {
           }
         }
         const requiresDual = invoiceBankReceiptRequiresDualApproval(thresholdRead, receipt.amount);
+        if (
+          latestRequest?.status === 'pending' &&
+          input.emergencyOverrideReason === undefined &&
+          latestRequest.initiatorId === input.actorUserId
+        ) {
+          const parked = await this.ensureUnderReview(client, receipt.id);
+          await requireSessionStepUp(client, actor);
+          await client.query('COMMIT');
+          return this.toDto(parked, {
+            ...dualApprovalExtrasFromRead(thresholdRead, receipt.amount, latestRequest),
+          });
+        }
+        const financialReview = input.expectedReviewHash
+          ? await this.financialReview(
+              client,
+              receipt,
+              latestRequest,
+              input.emergencyOverrideReason
+            )
+          : null;
+        if (financialReview)
+          new ReviewSnapshotService().assertConfirmed(financialReview, input.expectedReviewHash!);
 
         if (latestRequest?.status === 'pending') {
           if (input.emergencyOverrideReason !== undefined) {
@@ -509,14 +637,6 @@ export class InvoiceBankReceiptConfirmationService {
               ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
             });
           } else {
-            if (latestRequest.initiatorId === input.actorUserId) {
-              const parked = await this.ensureUnderReview(client, receipt.id);
-              await requireSessionStepUp(client, actor);
-              await client.query('COMMIT');
-              return this.toDto(parked, {
-                ...dualApprovalExtrasFromRead(thresholdRead, receipt.amount, latestRequest),
-              });
-            }
             await requireCurrentFinancePermission(client, input.actorUserId);
             await applyApprovalRequestResolutionOnClient(client, {
               requestId: latestRequest.id,
@@ -563,6 +683,7 @@ export class InvoiceBankReceiptConfirmationService {
             ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
             now,
             thresholdRead,
+            ...(financialReview ? { financialReview } : {}),
           });
           await requireSessionStepUp(client, actor);
           await client.query('COMMIT');
@@ -667,6 +788,7 @@ export class InvoiceBankReceiptConfirmationService {
             remainingBefore: overpayment.remainingBefore,
             overpaymentCreditTransactionId: overpayment.overpaymentCreditTransactionId,
             dualApprovalRequestId: dualSettled.dualApprovalRequestId,
+            ...(financialReview ? { financialReview } : {}),
             dualApprovalInitiatedBy: dualSettled.dualApprovalInitiatedBy,
             secondConfirmedBy:
               dualSettled.dualApprovalInitiatedBy && input.emergencyOverrideReason === undefined
@@ -847,6 +969,7 @@ export class InvoiceBankReceiptConfirmationService {
       correlationId?: string;
       now: Date;
       thresholdRead: InvoiceBankReceiptDualApprovalThresholdRead;
+      financialReview?: BankReceiptConfirmationReview;
     }
   ): Promise<InvoiceBankReceiptConfirmDto> {
     const requestId = uuidv7();
@@ -886,6 +1009,7 @@ export class InvoiceBankReceiptConfirmationService {
         newState: 'UnderReview',
         fingerprint,
         dualApprovalRequestId: requestId,
+        ...(input.financialReview ? { financialReview: input.financialReview } : {}),
         dualApprovalInitiatedBy: input.actorUserId,
         dualApprovalThresholdIrR: thresholdIrRLabel(input.thresholdRead),
       },

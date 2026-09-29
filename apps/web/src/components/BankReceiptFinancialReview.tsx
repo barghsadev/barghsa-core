@@ -1,6 +1,8 @@
 import { FinancialReviewSummary } from '@barghsa/ui';
 import type { BankReceiptConfirmationReview } from '@barghsa/shared/finance';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
+import { t as adminText } from '@barghsa/i18n/admin-ui';
+import { t as appText } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { invoiceFinancialReviewRows } from './InvoiceFinancialReviewRows.js';
@@ -42,11 +44,29 @@ export function BankReceiptFinancialReview({
           label: text('payerReference'),
           value: data.receipt.payerReference ?? text('none'),
         },
+        ...(data.receipt.bankName
+          ? [
+              {
+                id: 'bank-name',
+                label: adminText('admin.invoiceReceipts.bankName', locale),
+                value: data.receipt.bankName,
+              },
+            ]
+          : []),
         {
           id: 'submitted',
           label: text('submittedAt'),
           value: formatDate(data.receipt.submittedAt),
         },
+        ...(data.receipt.state
+          ? [
+              {
+                id: 'receipt-state',
+                label: adminText('admin.invoiceReceipts.state', locale),
+                value: appText(`invoices.activity.state.${data.receipt.state}`, locale),
+              },
+            ]
+          : []),
         {
           id: 'invoiceAllocation',
           label: text('invoiceAllocation'),
@@ -72,6 +92,15 @@ export function BankReceiptFinancialReview({
           label: text('review.approval'),
           value: text(data.approval.required ? 'review.twoPeople' : 'review.onePerson'),
         },
+        ...(data.approval.overrideReason
+          ? [
+              {
+                id: 'override-reason',
+                label: adminText('admin.invoiceReceipts.overrideReason', locale),
+                value: data.approval.overrideReason,
+              },
+            ]
+          : []),
         ...(data.approval.thresholdAmount === null
           ? []
           : [

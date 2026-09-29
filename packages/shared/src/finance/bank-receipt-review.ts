@@ -19,15 +19,25 @@ const dataSchema = z
           .regex(/^\d{4}-\d{2}-\d{2}$/)
           .nullable(),
         payerReference: z.string().nullable(),
+        bankName: z.string().nullable().optional(),
         attachmentKey: z.string().nullable(),
         customerNote: z.string().nullable(),
         submittedAt: z.string().datetime(),
+        state: z.string().min(1).optional(),
       })
       .strict(),
     invoice: invoiceFinancialDetailsSchema.nullable(),
     allocation: z.object({ invoiceAmount: money, walletCredit: money }).strict(),
     wallet: z.object({ availableBefore: balance, availableAfter: balance }).strict(),
-    approval: z.object({ required: z.boolean(), thresholdAmount: money.nullable() }).strict(),
+    approval: z
+      .object({
+        required: z.boolean(),
+        thresholdAmount: money.nullable(),
+        requestId: z.string().uuid().nullable().optional(),
+        requestStatus: z.enum(['pending', 'approved', 'rejected']).nullable().optional(),
+        overrideReason: z.string().min(1).nullable().optional(),
+      })
+      .strict(),
     source: z.literal('bank_receipt'),
   })
   .strict()
@@ -59,7 +69,7 @@ const schema = z
     schemaVersion: z.literal(1),
     scope: z
       .object({
-        action: z.literal('wallet.bank-receipt-confirmation'),
+        action: z.enum(['wallet.bank-receipt-confirmation', 'invoice.bank-receipt-confirmation']),
         profileId: z.string().uuid(),
         resourceId: z.string().uuid(),
       })
@@ -71,7 +81,8 @@ const schema = z
   .refine(
     (review) =>
       review.scope.profileId === review.data.profile.id &&
-      review.scope.resourceId === review.data.receipt.id
+      review.scope.resourceId === review.data.receipt.id &&
+      (review.scope.action !== 'invoice.bank-receipt-confirmation' || review.data.invoice !== null)
   );
 
 export function parseBankReceiptConfirmationReview(

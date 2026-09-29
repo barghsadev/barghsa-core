@@ -449,6 +449,8 @@ for (const kind of ['wallet', 'invoice'] as const) {
           'INSERT INTO wallets(profile_id) VALUES ($1) ON CONFLICT DO NOTHING',
           [receipt.profile]
         );
+        const settlingUser = other === 'initiator' ? 'reviewer' : 'initiator';
+        if (kind === 'invoice') await invoiceReviewHash(settlingUser, receipt.id);
         const client = await http.pool.connect();
         let pending: Promise<Response> | undefined, mutation: Promise<unknown> | undefined;
         try {
@@ -456,7 +458,10 @@ for (const kind of ['wallet', 'invoice'] as const) {
           await client.query('SELECT profile_id FROM wallets WHERE profile_id=$1 FOR UPDATE', [
             receipt.profile,
           ]);
-          pending = confirm(other === 'initiator' ? 'reviewer' : 'initiator', receipt.id);
+          pending =
+            kind === 'wallet'
+              ? confirmWallet(settlingUser, receipt.id)
+              : confirmInvoice(settlingUser, receipt.id, false);
           await expect
             .poll(async () =>
               Number(
@@ -563,14 +568,21 @@ for (const kind of ['wallet', 'invoice'] as const) {
         const previous = (await http.pool.query('SELECT id FROM audit_log')).rows.map(
           (row) => row.id
         );
+        const invoiceHash =
+          kind === 'invoice' && (index === 0 || decision === 'confirm')
+            ? (await invoiceReviewHash(user!, receipt.id)).hash
+            : undefined;
         const response = await fetch(
           `${http.base}/api/admin/${kind === 'wallet' ? 'wallet/bank-receipt-top-ups' : 'invoices/bank-receipts'}/${receipt.id}/${index === 0 ? 'confirm' : decision}`,
           {
             method: 'POST',
             headers: { ...headers[user]!, 'X-Correlation-ID': correlations[index]! },
             body: JSON.stringify(
-              kind === 'wallet' && (index === 0 || decision === 'confirm')
-                ? { expectedReviewHash: walletReviewHashes.get(receipt.id) }
+              index === 0 || decision === 'confirm'
+                ? {
+                    expectedReviewHash:
+                      kind === 'wallet' ? walletReviewHashes.get(receipt.id) : invoiceHash,
+                  }
                 : { reason: 'Receipt does not match' }
             ),
           }
@@ -607,19 +619,23 @@ async function pendingEmergencyReceipt(kind: 'wallet' | 'invoice') {
   expect(first.status, await first.clone().text()).toBe(200);
   return receipt;
 }
-function emergencyReceipt(
+async function emergencyReceipt(
   kind: 'wallet' | 'invoice',
   id: string,
   reason: unknown = 'Second reviewer unavailable; settlement deadline',
   correlation = randomUUID()
 ) {
+  const invoiceHash =
+    kind === 'invoice'
+      ? (await invoiceReviewHash('initiator', id, { emergencyOverrideReason: reason })).hash
+      : undefined;
   return fetch(
     `${http.base}/api/admin/${kind === 'wallet' ? 'wallet/bank-receipt-top-ups' : 'invoices/bank-receipts'}/${id}/confirm`,
     {
       method: 'POST',
       headers: { ...headers.initiator!, 'X-Correlation-ID': correlation },
       body: JSON.stringify({
-        ...(kind === 'wallet' ? { expectedReviewHash: walletReviewHashes.get(id) } : {}),
+        expectedReviewHash: kind === 'wallet' ? walletReviewHashes.get(id) : invoiceHash,
         emergencyOverrideReason: reason,
       }),
     }
@@ -907,11 +923,33 @@ async function invoiceReceipt() {
   ).rows[0].id as string;
   return { id, invoice, profile };
 }
-async function confirmInvoice(user: string, id: string) {
+const invoiceReviewHashes = new Map<string, string>();
+async function invoiceReviewHash(user: string, id: string, body: Record<string, unknown> = {}) {
+  const response = await fetch(
+    `${http.base}/api/admin/invoices/bank-receipts/${id}/confirm/review`,
+    {
+      method: 'POST',
+      headers: headers[user]!,
+      body: JSON.stringify(body),
+    }
+  );
+  if (response.ok) {
+    const hash = ((await response.json()) as { hash: string }).hash;
+    invoiceReviewHashes.set(id, hash);
+    return { hash, response };
+  }
+  return { hash: invoiceReviewHashes.get(id), response };
+}
+async function confirmInvoice(user: string, id: string, refreshReview = true) {
+  const reviewed =
+    refreshReview || !invoiceReviewHashes.has(id)
+      ? await invoiceReviewHash(user, id)
+      : { hash: invoiceReviewHashes.get(id), response: null };
+  if (!reviewed.hash) return reviewed.response!;
   return fetch(`${http.base}/api/admin/invoices/bank-receipts/${id}/confirm`, {
     method: 'POST',
     headers: headers[user]!,
-    body: '{}',
+    body: JSON.stringify({ expectedReviewHash: reviewed.hash }),
   });
 }
 it('requires invoice-owned approval evidence and rejects changed receipt evidence', async () => {
@@ -1073,7 +1111,7 @@ it('notifies eligible reviewers exactly once for receipt-created approvals and r
     const confirm = () =>
       kind === 'wallet'
         ? confirmWallet('initiator', receipt.id)
-        : confirmInvoice('initiator', receipt.id);
+        : confirmInvoice('initiator', receipt.id, false);
     const noticesBefore = (
       await http.pool.query('SELECT count(*)::int AS count FROM in_app_notifications')
     ).rows[0].count;
@@ -1256,6 +1294,8 @@ it('rechecks invoice receipt authority after waiting for the actor lock', async 
   await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='reviewer'");
   for (const action of ['confirm', 'reject']) {
     const receipt = await invoiceReceipt();
+    const invoiceHash =
+      action === 'confirm' ? (await invoiceReviewHash('reviewer', receipt.id)).hash : undefined;
     const client = await http.pool.connect();
     let pending: Promise<Response> | undefined;
     try {
@@ -1264,7 +1304,11 @@ it('rechecks invoice receipt authority after waiting for the actor lock', async 
       pending = fetch(`${http.base}/api/admin/invoices/bank-receipts/${receipt.id}/${action}`, {
         method: 'POST',
         headers: headers.reviewer!,
-        body: JSON.stringify({ reason: 'Receipt does not match' }),
+        body: JSON.stringify(
+          action === 'confirm'
+            ? { expectedReviewHash: invoiceHash }
+            : { reason: 'Receipt does not match' }
+        ),
       });
       await expect
         .poll(async () =>
@@ -1435,15 +1479,26 @@ async function resetReceiptReviewer() {
     `INSERT INTO app_config(key,value) VALUES ('finance.dual_approval_threshold','{"threshold_irr":0}') ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`
   );
 }
-function receiptDecision(kind: 'wallet' | 'invoice', action: string, id: string) {
+async function receiptDecision(
+  kind: 'wallet' | 'invoice',
+  action: string,
+  id: string,
+  refreshReview = true
+) {
+  const invoiceHash =
+    kind === 'invoice' && action === 'confirm'
+      ? refreshReview
+        ? (await invoiceReviewHash('reviewer', id)).hash
+        : invoiceReviewHashes.get(id)
+      : undefined;
   return fetch(
     `${http.base}/api/admin/${kind === 'wallet' ? 'wallet/bank-receipt-top-ups' : 'invoices/bank-receipts'}/${id}/${action}`,
     {
       method: 'POST',
       headers: headers.reviewer!,
       body: JSON.stringify(
-        kind === 'wallet' && action === 'confirm'
-          ? { expectedReviewHash: walletReviewHashes.get(id) }
+        action === 'confirm'
+          ? { expectedReviewHash: kind === 'wallet' ? walletReviewHashes.get(id) : invoiceHash }
           : { reason: 'Payer reference mismatch' }
       ),
     }
@@ -1686,6 +1741,7 @@ for (const kind of ['wallet', 'invoice', 'generic'] as const) {
     await http.pool.query('INSERT INTO wallets(profile_id) VALUES ($1) ON CONFLICT DO NOTHING', [
       receipt.profile,
     ]);
+    if (kind === 'invoice') await invoiceReviewHash('reviewer', receipt.id);
     const blocker = await http.pool.connect();
     let pending: Promise<Response> | undefined, update: Promise<Response> | undefined;
     let changed = false;
@@ -1707,7 +1763,7 @@ for (const kind of ['wallet', 'invoice', 'generic'] as const) {
                 reason: 'Policy snapshot test',
               }),
             })
-          : receiptDecision(kind, 'confirm', receipt.id);
+          : receiptDecision(kind, 'confirm', receipt.id, false);
       await expect
         .poll(async () =>
           Number(

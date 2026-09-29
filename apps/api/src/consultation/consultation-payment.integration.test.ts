@@ -289,10 +289,17 @@ it('charges or credits a paid consultation without changing the paid invoice', a
       rejectedRefundId,
     ])
   ).rows[0]!.amount;
+  const rejectedRefundReview = await post(
+    `/api/admin/wallet-refunds/${rejectedRefundId}/reject/review`,
+    'consultation-finance',
+    { reason: 'Refund details require correction' }
+  );
+  expect(rejectedRefundReview.status, http.logs()).toBe(200);
+  const expectedReviewHash = ((await rejectedRefundReview.json()) as { hash: string }).hash;
   const rejectedRefund = await post(
     `/api/admin/wallet-refunds/${rejectedRefundId}/reject`,
     'consultation-finance',
-    { reason: 'Refund details require correction' }
+    { reason: 'Refund details require correction', expectedReviewHash }
   );
   expect(rejectedRefund.status, http.logs()).toBe(200);
   const staffDetail = await fetch(`${http.base}${root}`, {
