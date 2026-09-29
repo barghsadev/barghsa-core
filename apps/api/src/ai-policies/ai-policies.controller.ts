@@ -34,6 +34,7 @@ import { rulesSchemas } from './ai-policies.rules.js';
 const titleSchema = z.string().trim().min(1, 'Title is required').max(120);
 const descriptionSchema = z.string().max(2000).default('');
 const policyTypeSchema = z.enum(POLICY_TYPES);
+const prioritySchema = z.number().int().min(-1000).max(1000);
 
 export const CreatePolicySchema = z
   .object({
@@ -45,6 +46,7 @@ export const CreatePolicySchema = z
     rules: z.record(z.string(), z.unknown()),
     // Optional initial active/inactive state; defaults to enabled.
     enabled: z.boolean().optional(),
+    priority: prioritySchema.optional(),
   })
   .strict()
   .superRefine((v, ctx) => {
@@ -72,6 +74,7 @@ export const UpdatePolicySchema = z
     // The both-fields-present case is also checked here (defense in depth).
     rules: z.record(z.string(), z.unknown()).optional(),
     enabled: z.boolean().optional(),
+    priority: prioritySchema.optional(),
   })
   .strict()
   .superRefine((v, ctx) => {
@@ -114,6 +117,7 @@ export const UpdatePolicyGroupSchema = z
 export const AddGroupMemberSchema = z
   .object({
     policyId: z.string().uuid(),
+    priorityOverride: prioritySchema.nullable().optional(),
   })
   .strict();
 
@@ -206,6 +210,7 @@ export class PoliciesController {
       policyType: parsed.data.policyType,
       rules: parsed.data.rules,
       ...(parsed.data.enabled !== undefined ? { enabled: parsed.data.enabled } : {}),
+      ...(parsed.data.priority !== undefined ? { priority: parsed.data.priority } : {}),
       actorUserId: req.session.userId,
       session: req.session,
       ip: requestIp(req),
@@ -246,6 +251,7 @@ export class PoliciesController {
       ...(parsed.data.policyType !== undefined ? { policyType: parsed.data.policyType } : {}),
       ...(parsed.data.rules !== undefined ? { rules: parsed.data.rules } : {}),
       ...(parsed.data.enabled !== undefined ? { enabled: parsed.data.enabled } : {}),
+      ...(parsed.data.priority !== undefined ? { priority: parsed.data.priority } : {}),
       actorUserId: req.session.userId,
       session: req.session,
       ip: requestIp(req),
@@ -407,6 +413,9 @@ export class PolicyGroupsController {
     return this.service.addGroupMember({
       groupId: id,
       policyId: parsed.data.policyId,
+      ...(parsed.data.priorityOverride !== undefined
+        ? { priorityOverride: parsed.data.priorityOverride }
+        : {}),
       actorUserId: req.session.userId,
       session: req.session,
       ip: requestIp(req),

@@ -237,6 +237,46 @@ it('audits actual membership changes once and retains both records', async () =>
   expect((await http.pool.query('SELECT id FROM ai_policies')).rows).toHaveLength(1);
   expect((await http.pool.query('SELECT id FROM ai_policy_groups')).rows).toHaveLength(1);
 });
+it('persists policy priority and audited group overrides through the HTTP API', async () => {
+  const updated = await fetch(`${http.base}/api/admin/policies/${ids.policy}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ priority: 25 }),
+  });
+  expect(updated.status).toBe(200);
+  expect(await updated.json()).toMatchObject({ priority: 25 });
+  const override = async (priorityOverride: number | null) =>
+    fetch(`${http.base}/api/admin/policy-groups/${ids.group}/members`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ policyId: ids.policy, priorityOverride }),
+    });
+  expect((await override(-20)).status).toBe(204);
+  const group = await fetch(`${http.base}/api/admin/policy-groups/${ids.group}`, { headers });
+  expect(await group.json()).toMatchObject({
+    members: [{ id: ids.policy, priority: 25, priorityOverride: -20 }],
+  });
+  expect((await override(-20)).status).toBe(204);
+  expect((await override(null)).status).toBe(204);
+  expect(
+    (await http.pool.query('SELECT priority_override FROM ai_policy_group_members')).rows
+  ).toEqual([{ priority_override: null }]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT event FROM audit_log WHERE event LIKE 'ai_policy_%' ORDER BY id"
+      )
+    ).rows.map((row) => row.event)
+  ).toEqual([
+    'ai_policy_updated',
+    'ai_policy_group_member_priority_changed',
+    'ai_policy_group_member_priority_changed',
+  ]);
+  expect((await override(1001)).status).toBe(400);
+  expect((await http.pool.query('SELECT priority FROM ai_policies')).rows).toEqual([
+    { priority: 25 },
+  ]);
+});
 it('validates rules against the policy type after a concurrent edit commits', async () => {
   const client = await http.pool.connect();
   let pending: Promise<Response> | undefined;

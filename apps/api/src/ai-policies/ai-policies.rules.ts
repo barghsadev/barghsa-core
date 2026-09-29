@@ -35,6 +35,14 @@ export const rulesSchemas: Record<PolicyType, z.ZodType> = {
       maxLength: z.number().int().positive().max(100000).optional(),
     })
     .strict(),
+  content_filter: z.object({ blockedTerms: stringList('blocked term') }).strict(),
+  output_format: z.object({ format: z.enum(['plain_text', 'json_object']) }).strict(),
+  rate_limit: z
+    .object({
+      maxRequests: z.number().int().min(1).max(100),
+      windowSeconds: z.number().int().min(1).max(3600),
+    })
+    .strict(),
 };
 
 /** Flattened zod issues for client-facing validation detail. */

@@ -154,6 +154,7 @@ const groups: readonly (readonly [number, boolean, readonly string[]])[] = [
     ],
   ],
   [413, false, ['CONTRACT_TEMPLATE_FILE_TOO_LARGE']],
+  [422, false, ['AI_TEST_CHAT_POLICY_BLOCKED']],
   [
     500,
     false,

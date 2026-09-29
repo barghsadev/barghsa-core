@@ -1,4 +1,4 @@
-import { index, pgTable, primaryKey, text, uuid } from 'drizzle-orm/pg-core';
+import { index, integer, pgTable, primaryKey, text, uuid } from 'drizzle-orm/pg-core';
 import { uuidv7, timestamptz } from '../types.js';
 import { users } from './users.js';
 import { aiPolicies } from './ai-policies.js';
@@ -70,6 +70,9 @@ export const aiPolicyGroupMembers = pgTable(
     policyId: uuid('policy_id')
       .notNull()
       .references(() => aiPolicies.id, { onDelete: 'cascade' }),
+
+    /** Optional per-group order; null inherits the policy's priority. */
+    priorityOverride: integer('priority_override'),
 
     /** When the member was linked into the group. */
     createdAt: timestamptz('created_at').defaultNow().notNull(),

@@ -9,6 +9,7 @@ let provider: ReturnType<typeof createServer>;
 let agentId: string;
 let headers: Record<string, string>;
 let completions = 0;
+let providerReply = 'A test answer';
 const previousEmbeddingBase = process.env.KB_EMBEDDING_BASE_URL;
 
 beforeAll(async () => {
@@ -26,7 +27,7 @@ beforeAll(async () => {
     response.setHeader('content-type', 'application/json');
     response.end(
       JSON.stringify({
-        choices: [{ message: { content: 'A test answer' } }],
+        choices: [{ message: { content: providerReply } }],
         usage: { prompt_tokens: 7, completion_tokens: 3 },
       })
     );
@@ -184,4 +185,74 @@ it('serves the versioned snake-case contract with session replay', async () => {
   const replay = await request();
   expect(replay.status).toBe(200);
   expect(await replay.json()).toEqual(result);
+}, 30000);
+
+it('resolves group priority, filters input/output and applies policy rate limits', async () => {
+  await http.pool.query(
+    "SELECT rate_limit_rolling_reset(true,'ai:test-chat:user:test-chat-admin')"
+  );
+  await http.pool.query("UPDATE ai_agents SET link_mode='any_kb' WHERE id=$1", [agentId]);
+  const groupId = randomUUID();
+  const jsonPolicy = randomUUID();
+  const plainPolicy = randomUUID();
+  const filterPolicy = randomUUID();
+  const limitPolicy = randomUUID();
+  await http.pool.query(
+    "INSERT INTO ai_policy_groups(id,title,created_by) VALUES ($1,'Preview rules','test-chat-admin')",
+    [groupId]
+  );
+  await http.pool.query(
+    `INSERT INTO ai_policies(id,title,policy_type,rules,priority,created_by)
+       VALUES ($1,'JSON','output_format','{"format":"json_object"}',20,'test-chat-admin'),
+              ($2,'Plain','output_format','{"format":"plain_text"}',-10,'test-chat-admin'),
+              ($3,'Filter','content_filter','{"blockedTerms":["secret"]}',0,'test-chat-admin'),
+              ($4,'Limit','rate_limit','{"maxRequests":1,"windowSeconds":60}',0,'test-chat-admin')`,
+    [jsonPolicy, plainPolicy, filterPolicy, limitPolicy]
+  );
+  await http.pool.query(
+    `INSERT INTO ai_policy_group_members(group_id,policy_id,priority_override)
+       VALUES ($1,$2,-20),($1,$3,NULL),($1,$4,NULL),($1,$5,NULL)`,
+    [groupId, jsonPolicy, plainPolicy, filterPolicy, limitPolicy]
+  );
+  await http.pool.query('INSERT INTO ai_agent_policy_groups(agent_id,group_id) VALUES ($1,$2)', [
+    agentId,
+    groupId,
+  ]);
+  const beforeInputBlock = completions;
+  const inputBlocked = await send({ agentId, requestId: randomUUID(), message: 'A secret' });
+  expect(inputBlocked.status).toBe(422);
+  expect(await inputBlocked.json()).toMatchObject({
+    error: {
+      code: 'AI_TEST_CHAT_POLICY_BLOCKED',
+      policyRef: filterPolicy,
+      reason: 'input_filtered',
+    },
+  });
+  expect(completions).toBe(beforeInputBlock);
+  providerReply = '{"secret":true}';
+  const outputBlocked = await send({ agentId, requestId: randomUUID(), message: 'Allowed' });
+  expect(outputBlocked.status).toBe(422);
+  expect(await outputBlocked.json()).toMatchObject({
+    error: {
+      code: 'AI_TEST_CHAT_POLICY_BLOCKED',
+      policyRef: filterPolicy,
+      reason: 'output_filtered',
+    },
+  });
+  providerReply = '{"ok":true}';
+  await http.pool.query('SELECT rate_limit_rolling_reset(true,$1)', [
+    `ai:policy:${limitPolicy}:agent:${agentId}:user:test-chat-admin`,
+  ]);
+  const accepted = await send({ agentId, requestId: randomUUID(), message: 'Allowed again' });
+  expect(accepted.status).toBe(200);
+  const result = (await accepted.json()) as TestChatResponse;
+  expect(result.reply).toBe('{"ok":true}');
+  expect(result.policyResults[0]).toMatchObject({ id: jsonPolicy, priority: -20 });
+  const limited = await send({ agentId, requestId: randomUUID(), message: 'Another allowed' });
+  expect(limited.status).toBe(429);
+  expect(await limited.json()).toMatchObject({
+    error: { code: 'RATE_LIMIT:EXCEEDED', policyRef: limitPolicy },
+  });
+  expect(limited.headers.get('retry-after')).not.toBeNull();
+  providerReply = 'A test answer';
 }, 30000);

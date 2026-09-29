@@ -8,6 +8,9 @@ const types = [
   'disallowed_actions',
   'data_access_scope',
   'response_style',
+  'content_filter',
+  'output_format',
+  'rate_limit',
 ] as const;
 type PolicyType = (typeof types)[number];
 type Kind = 'policies' | 'policy-groups';
@@ -18,6 +21,8 @@ interface Entry {
   policyType?: PolicyType;
   rules?: Record<string, unknown>;
   enabled?: boolean;
+  priority?: number;
+  priorityOverride?: number | null;
   memberCount?: number;
 }
 interface Draft {
@@ -26,26 +31,37 @@ interface Draft {
   description: string;
   policyType: PolicyType;
   enabled: boolean;
+  priority: string;
   items: string;
   tone: string;
   language: string;
   maxLength: string;
+  format: 'plain_text' | 'json_object';
+  maxRequests: string;
+  windowSeconds: string;
 }
+const validPriority = (value: string, optional = false) =>
+  (optional && value === '') ||
+  (/^-?\d+$/.test(value) && Number(value) >= -1000 && Number(value) <= 1000);
 function draftFor(row?: Entry): Draft {
   const rules = row?.rules ?? {},
-    items = rules.topics ?? rules.actions ?? rules.scopes;
+    items = rules.topics ?? rules.actions ?? rules.scopes ?? rules.blockedTerms;
   return {
     ...(row ? { id: row.id } : {}),
     title: row?.title ?? '',
     description: row?.description ?? '',
     policyType: row?.policyType ?? 'allowed_topics',
     enabled: row?.enabled ?? true,
+    priority: String(row?.priority ?? 100),
     items: Array.isArray(items)
       ? items.filter((item): item is string => typeof item === 'string').join('\n')
       : '',
     tone: typeof rules.tone === 'string' ? rules.tone : '',
     language: typeof rules.language === 'string' ? rules.language : '',
     maxLength: typeof rules.maxLength === 'number' ? String(rules.maxLength) : '',
+    format: rules.format === 'json_object' ? 'json_object' : 'plain_text',
+    maxRequests: typeof rules.maxRequests === 'number' ? String(rules.maxRequests) : '10',
+    windowSeconds: typeof rules.windowSeconds === 'number' ? String(rules.windowSeconds) : '60',
   };
 }
 export default function AdminAiPoliciesPage() {
@@ -56,7 +72,9 @@ export default function AdminAiPoliciesPage() {
     [policies, setPolicies] = useState<Entry[]>([]);
   const [selected, setSelected] = useState<string | null>(null),
     [members, setMembers] = useState<Entry[]>([]),
-    [member, setMember] = useState('');
+    [member, setMember] = useState(''),
+    [memberPriority, setMemberPriority] = useState(''),
+    [memberPriorities, setMemberPriorities] = useState<Record<string, string>>({});
   const [draft, setDraft] = useState<Draft | null>(null),
     [revision, setRevision] = useState(0),
     [action, setAction] = useState<TeamAction | null>(null);
@@ -69,6 +87,7 @@ export default function AdminAiPoliciesPage() {
     setDraft(null);
     setMembers([]);
     setMember('');
+    setMemberPriority('');
     void (async () => {
       try {
         const paths =
@@ -91,7 +110,18 @@ export default function AdminAiPoliciesPage() {
         if (abort.signal.aborted) return;
         setRows(data[0] as Entry[]);
         setPolicies((data[1] as Entry[] | undefined) ?? []);
-        setMembers((data[2] as { members: Entry[] } | undefined)?.members ?? []);
+        const loadedMembers = (data[2] as { members: Entry[] } | undefined)?.members ?? [];
+        setMembers(loadedMembers);
+        setMemberPriorities(
+          Object.fromEntries(
+            loadedMembers.map((item) => [
+              item.id,
+              item.priorityOverride === null || item.priorityOverride === undefined
+                ? ''
+                : String(item.priorityOverride),
+            ])
+          )
+        );
         setState('ready');
       } catch {
         if (!abort.signal.aborted) setState('error');
@@ -129,13 +159,25 @@ export default function AdminAiPoliciesPage() {
   const validRules =
     !draft ||
     kind === 'policy-groups' ||
-    (draft.policyType === 'response_style'
-      ? !!draft.tone.trim() &&
-        (!draft.maxLength ||
-          (Number.isInteger(Number(draft.maxLength)) &&
-            Number(draft.maxLength) > 0 &&
-            Number(draft.maxLength) <= 100000))
-      : items.length > 0 && items.length <= 200 && items.every((item) => item.length <= 200));
+    (validPriority(draft.priority) &&
+      (draft.policyType === 'response_style'
+        ? !!draft.tone.trim() &&
+          (!draft.maxLength ||
+            (Number.isInteger(Number(draft.maxLength)) &&
+              Number(draft.maxLength) > 0 &&
+              Number(draft.maxLength) <= 100000))
+        : draft.policyType === 'output_format'
+          ? true
+          : draft.policyType === 'rate_limit'
+            ? /^\d+$/.test(draft.maxRequests) &&
+              Number(draft.maxRequests) >= 1 &&
+              Number(draft.maxRequests) <= 100 &&
+              /^\d+$/.test(draft.windowSeconds) &&
+              Number(draft.windowSeconds) >= 1 &&
+              Number(draft.windowSeconds) <= 3600
+            : items.length > 0 &&
+              items.length <= 200 &&
+              items.every((item) => item.length <= 200)));
   function save(event: FormEvent) {
     event.preventDefault();
     if (!draft || !validRules) return;
@@ -146,14 +188,21 @@ export default function AdminAiPoliciesPage() {
             ...(draft.language.trim() ? { language: draft.language.trim() } : {}),
             ...(draft.maxLength ? { maxLength: Number(draft.maxLength) } : {}),
           }
-        : {
-            [{
-              allowed_topics: 'topics',
-              disallowed_actions: 'actions',
-              data_access_scope: 'scopes',
-              response_style: 'tone',
-            }[draft.policyType]]: items,
-          };
+        : draft.policyType === 'output_format'
+          ? { format: draft.format }
+          : draft.policyType === 'rate_limit'
+            ? { maxRequests: Number(draft.maxRequests), windowSeconds: Number(draft.windowSeconds) }
+            : {
+                [{
+                  allowed_topics: 'topics',
+                  disallowed_actions: 'actions',
+                  data_access_scope: 'scopes',
+                  response_style: 'tone',
+                  content_filter: 'blockedTerms',
+                  output_format: 'format',
+                  rate_limit: 'maxRequests',
+                }[draft.policyType]]: items,
+              };
     propose(
       `/api/admin/${kind}${draft.id ? `/${draft.id}` : ''}`,
       draft.id ? 'PUT' : 'POST',
@@ -163,7 +212,12 @@ export default function AdminAiPoliciesPage() {
         title: draft.title.trim(),
         description: draft.description,
         ...(kind === 'policies'
-          ? { policyType: draft.policyType, rules, enabled: draft.enabled }
+          ? {
+              policyType: draft.policyType,
+              rules,
+              enabled: draft.enabled,
+              priority: Number(draft.priority),
+            }
           : {}),
       }
     );
@@ -263,6 +317,20 @@ export default function AdminAiPoliciesPage() {
                       ))}
                     </select>
                   </div>
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="policy-priority">{label('priority')}</Label>
+                    <Input
+                      id="policy-priority"
+                      type="number"
+                      min={-1000}
+                      max={1000}
+                      step={1}
+                      required
+                      value={draft.priority}
+                      onChange={(event) => setDraft({ ...draft, priority: event.target.value })}
+                    />
+                    <p className="text-sm text-muted-foreground">{label('priorityHelp')}</p>
+                  </div>
                   {draft.policyType === 'response_style' ? (
                     <>
                       <div className="flex flex-col gap-2">
@@ -299,6 +367,54 @@ export default function AdminAiPoliciesPage() {
                         />
                       </div>
                     </>
+                  ) : draft.policyType === 'output_format' ? (
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="policy-format">{label('format')}</Label>
+                      <select
+                        id="policy-format"
+                        className="rounded-md border bg-background p-2"
+                        value={draft.format}
+                        onChange={(event) =>
+                          setDraft({ ...draft, format: event.target.value as Draft['format'] })
+                        }
+                      >
+                        <option value="plain_text">{label('plain_text')}</option>
+                        <option value="json_object">{label('json_object')}</option>
+                      </select>
+                    </div>
+                  ) : draft.policyType === 'rate_limit' ? (
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="policy-max-requests">{label('maxRequests')}</Label>
+                        <Input
+                          id="policy-max-requests"
+                          type="number"
+                          min={1}
+                          max={100}
+                          step={1}
+                          required
+                          value={draft.maxRequests}
+                          onChange={(event) =>
+                            setDraft({ ...draft, maxRequests: event.target.value })
+                          }
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="policy-window-seconds">{label('windowSeconds')}</Label>
+                        <Input
+                          id="policy-window-seconds"
+                          type="number"
+                          min={1}
+                          max={3600}
+                          step={1}
+                          required
+                          value={draft.windowSeconds}
+                          onChange={(event) =>
+                            setDraft({ ...draft, windowSeconds: event.target.value })
+                          }
+                        />
+                      </div>
+                    </div>
                   ) : (
                     <div className="flex flex-col gap-2">
                       <Label htmlFor="policy-items">{label(draft.policyType)}</Label>
@@ -353,6 +469,9 @@ export default function AdminAiPoliciesPage() {
                       <span className="px-2 py-1">
                         {label(row.enabled ? 'enabled' : 'disabled')}
                       </span>
+                      <span className="px-2 py-1">
+                        {label('priority')}: {row.priority ?? 100}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -400,13 +519,16 @@ export default function AdminAiPoliciesPage() {
                 className="flex flex-wrap items-end gap-3"
                 onSubmit={(event) => {
                   event.preventDefault();
-                  if (member)
+                  if (member && validPriority(memberPriority, true))
                     propose(
                       `/api/admin/policy-groups/${selected}/members`,
                       'POST',
                       label('link'),
                       label('confirmLink'),
-                      { policyId: member }
+                      {
+                        policyId: member,
+                        ...(memberPriority ? { priorityOverride: Number(memberPriority) } : {}),
+                      }
                     );
                 }}
               >
@@ -429,14 +551,72 @@ export default function AdminAiPoliciesPage() {
                       ))}
                   </select>
                 </div>
-                <Button type="submit" disabled={!member}>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="policy-member-priority">{label('priorityOverride')}</Label>
+                  <Input
+                    id="policy-member-priority"
+                    type="number"
+                    min={-1000}
+                    max={1000}
+                    step={1}
+                    placeholder={label('inheritPriority')}
+                    value={memberPriority}
+                    onChange={(event) => setMemberPriority(event.target.value)}
+                  />
+                </div>
+                <Button type="submit" disabled={!member || !validPriority(memberPriority, true)}>
                   {label('link')}
                 </Button>
               </form>
               <ul className="divide-y">
                 {members.map((item) => (
-                  <li key={item.id} className="flex items-center justify-between gap-3 py-3">
+                  <li
+                    key={item.id}
+                    className="flex flex-wrap items-center justify-between gap-3 py-3"
+                  >
                     <span className="min-w-0 break-words">{item.title}</span>
+                    <div className="flex flex-wrap items-end gap-2">
+                      <div className="flex flex-col gap-1">
+                        <Label htmlFor={`member-priority-${item.id}`}>
+                          {label('priorityOverride')} · {item.title}
+                        </Label>
+                        <Input
+                          id={`member-priority-${item.id}`}
+                          type="number"
+                          min={-1000}
+                          max={1000}
+                          step={1}
+                          placeholder={`${label('inheritPriority')} (${item.priority ?? 100})`}
+                          value={memberPriorities[item.id] ?? ''}
+                          onChange={(event) =>
+                            setMemberPriorities({
+                              ...memberPriorities,
+                              [item.id]: event.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <Button
+                        variant="outline"
+                        disabled={!validPriority(memberPriorities[item.id] ?? '', true)}
+                        onClick={() =>
+                          propose(
+                            `/api/admin/policy-groups/${selected}/members`,
+                            'POST',
+                            label('updatePriority'),
+                            label('confirmPriority'),
+                            {
+                              policyId: item.id,
+                              priorityOverride: memberPriorities[item.id]
+                                ? Number(memberPriorities[item.id])
+                                : null,
+                            }
+                          )
+                        }
+                      >
+                        {label('updatePriority')}
+                      </Button>
+                    </div>
                     <Button
                       variant="outline"
                       aria-label={`${label('unlink')} ${item.title}`}

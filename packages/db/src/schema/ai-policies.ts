@@ -1,4 +1,4 @@
-import { index, jsonb, pgTable, text, boolean } from 'drizzle-orm/pg-core';
+import { index, jsonb, pgTable, text, boolean, integer } from 'drizzle-orm/pg-core';
 import { uuidv7, timestamptz } from '../types.js';
 import { users } from './users.js';
 
@@ -39,8 +39,19 @@ export const aiPolicies = pgTable(
 
     /** Guardrail kind. */
     policyType: text('policy_type', {
-      enum: ['allowed_topics', 'disallowed_actions', 'data_access_scope', 'response_style'],
+      enum: [
+        'allowed_topics',
+        'disallowed_actions',
+        'data_access_scope',
+        'response_style',
+        'content_filter',
+        'output_format',
+        'rate_limit',
+      ],
     } as const).notNull(),
+
+    /** Lower number runs first; defaults preserve existing policy behavior. */
+    priority: integer('priority').notNull().default(100),
 
     /** Structured guardrail document (validated by type in the API). */
     rules: jsonb('rules').notNull().default({}),

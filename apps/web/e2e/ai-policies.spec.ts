@@ -7,10 +7,7 @@ for (const locale of ['en', 'fa'])
   }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
+      localStorage.setItem('barghsa.locale', value);
     }, locale);
     let failed = true,
       verified = false,
@@ -65,6 +62,7 @@ for (const locale of ['en', 'fa'])
           ? { scopes: ['Meter readings', 'Billing'] }
           : { actions: ['Meter readings', 'Billing'] },
         enabled: true,
+        priority: 100,
       })
     );
     await expect(page.getByRole('alert')).toContainText(
@@ -80,11 +78,7 @@ for (const locale of ['en', 'fa'] as const)
     const label = (key: string) => t(`admin.policies.${key}`, locale);
     await page.setViewportSize({ width: 390, height: 844 });
     await page.addInitScript((value) => {
-      const apply = () => {
-        document.documentElement.lang = value;
-      };
-      if (document.documentElement) apply();
-      new MutationObserver(apply).observe(document, { childList: true });
+      localStorage.setItem('barghsa.locale', value);
     }, locale);
     const policy = {
       id: '01900000-0000-7000-8000-000000000001',
@@ -93,10 +87,13 @@ for (const locale of ['en', 'fa'] as const)
       policyType: 'allowed_topics',
       rules: { topics: ['energy'] },
       enabled: true,
+      priority: 100,
+      priorityOverride: null as number | null,
     };
     const group = { id: '01900000-0000-7000-8000-000000000002', title: 'Support', description: '' };
     const writes: unknown[] = [];
     let linked = false,
+      memberOverride: number | null = null,
       groupExists = false;
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/admin/policies', (route) => {
@@ -116,11 +113,18 @@ for (const locale of ['en', 'fa'] as const)
       return route.fulfill({ status: 201, json: group });
     });
     await page.route(`**/api/admin/policy-groups/${group.id}`, (route) =>
-      route.fulfill({ json: { ...group, members: linked ? [policy] : [] } })
+      route.fulfill({
+        json: {
+          ...group,
+          members: linked ? [{ ...policy, priorityOverride: memberOverride }] : [],
+        },
+      })
     );
     await page.route(`**/api/admin/policy-groups/${group.id}/members**`, (route) => {
       linked = route.request().method() === 'POST';
-      writes.push(linked ? route.request().postDataJSON() : { removed: policy.id });
+      const body = linked ? route.request().postDataJSON() : null;
+      if (linked && 'priorityOverride' in body) memberOverride = body.priorityOverride;
+      writes.push(linked ? body : { removed: policy.id });
       return route.fulfill({ status: 204 });
     });
     const click = async (key: string) =>
@@ -141,9 +145,10 @@ for (const locale of ['en', 'fa'] as const)
     await page.getByRole('button', { name: `${label('edit')} Energy`, exact: true }).click();
     await expect(page.getByLabel(label('allowed_topics'), { exact: true })).toHaveValue('energy');
     await page.getByLabel(label('allowed_topics'), { exact: true }).fill('energy\nsolar');
+    await page.getByLabel(label('priority'), { exact: true }).fill('25');
     await click('save');
     await confirm();
-    expect(writes.at(-1)).toMatchObject({ rules: { topics: ['energy', 'solar'] } });
+    expect(writes.at(-1)).toMatchObject({ rules: { topics: ['energy', 'solar'] }, priority: 25 });
     await click('addPolicy');
     await page.getByLabel(label('name'), { exact: true }).fill('Style');
     await page.getByLabel(label('type'), { exact: true }).selectOption('response_style');
@@ -157,6 +162,37 @@ for (const locale of ['en', 'fa'] as const)
       policyType: 'response_style',
       rules: { tone: 'Concise', language: locale, maxLength: 500 },
     });
+    await click('addPolicy');
+    await page.getByLabel(label('name'), { exact: true }).fill('Filter');
+    await page.getByLabel(label('type'), { exact: true }).selectOption('content_filter');
+    await page.getByLabel(label('content_filter'), { exact: true }).fill('secret');
+    await click('save');
+    await confirm();
+    expect(writes.at(-1)).toMatchObject({
+      policyType: 'content_filter',
+      rules: { blockedTerms: ['secret'] },
+    });
+    await click('addPolicy');
+    await page.getByLabel(label('name'), { exact: true }).fill('Format');
+    await page.getByLabel(label('type'), { exact: true }).selectOption('output_format');
+    await page.getByLabel(label('format'), { exact: true }).selectOption('json_object');
+    await click('save');
+    await confirm();
+    expect(writes.at(-1)).toMatchObject({
+      policyType: 'output_format',
+      rules: { format: 'json_object' },
+    });
+    await click('addPolicy');
+    await page.getByLabel(label('name'), { exact: true }).fill('Limit');
+    await page.getByLabel(label('type'), { exact: true }).selectOption('rate_limit');
+    await page.getByLabel(label('maxRequests'), { exact: true }).fill('3');
+    await page.getByLabel(label('windowSeconds'), { exact: true }).fill('120');
+    await click('save');
+    await confirm();
+    expect(writes.at(-1)).toMatchObject({
+      policyType: 'rate_limit',
+      rules: { maxRequests: 3, windowSeconds: 120 },
+    });
     await click('policy-groups');
     await click('addGroup');
     await page.getByLabel(label('name'), { exact: true }).fill('Support');
@@ -168,6 +204,10 @@ for (const locale of ['en', 'fa'] as const)
     await click('link');
     await confirm();
     expect(writes.at(-1)).toEqual({ policyId: policy.id });
+    await page.getByLabel(`${label('priorityOverride')} · Energy`).fill('-20');
+    await click('updatePriority');
+    await confirm();
+    expect(writes.at(-1)).toEqual({ policyId: policy.id, priorityOverride: -20 });
     await page.getByRole('button', { name: `${label('unlink')} Energy`, exact: true }).click();
     await confirm();
     expect(writes.at(-1)).toEqual({ removed: policy.id });

@@ -1,5 +1,9 @@
 # Development continuation status
 
+## Current manual batch — September 29, 2026
+
+[AI policy priority and inference evaluation](batches/2026-09-29-policy-evaluation.md) adds priority and group overrides, new rule types, and input/output enforcement in admin test chat. Production agent slots and tools remain separate work.
+
 ## Current manual batch — September 24, 2026
 
 [Admin agent test chat](batches/2026-09-24-agent-test-chat.md) adds isolated agent previews with saved model and KB settings, deterministic policy checks, response context, session-scoped replay and a ten-per-minute staff quota.

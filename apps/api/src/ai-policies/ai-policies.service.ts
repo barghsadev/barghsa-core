@@ -43,6 +43,9 @@ export const POLICY_TYPES = [
   'disallowed_actions',
   'data_access_scope',
   'response_style',
+  'content_filter',
+  'output_format',
+  'rate_limit',
 ] as const;
 
 export type PolicyType = (typeof POLICY_TYPES)[number];
@@ -58,6 +61,7 @@ export interface PolicyDto {
   /** Validated structured guardrail document (shape depends on policyType). */
   rules: Record<string, unknown>;
   enabled: boolean;
+  priority: number;
   /** Number of policy groups this policy belongs to. */
   groupCount: number;
   createdAt: string;
@@ -81,6 +85,8 @@ export interface PolicyRefDto {
   title: string;
   policyType: PolicyType;
   enabled: boolean;
+  priority: number;
+  priorityOverride: number | null;
 }
 
 /** A policy group row with its member count. */
@@ -105,6 +111,7 @@ export interface CreatePolicyInput {
   description: string;
   policyType: PolicyType;
   rules: Record<string, unknown>;
+  priority?: number;
   actorUserId: string;
   session: MutationSession;
   ip: string;
@@ -117,6 +124,7 @@ export interface UpdatePolicyInput {
   description?: string;
   policyType?: PolicyType;
   rules?: Record<string, unknown>;
+  priority?: number;
   enabled?: boolean;
   actorUserId: string;
   session: MutationSession;
@@ -142,6 +150,7 @@ export interface UpdatePolicyGroupInput {
 export interface AddGroupMemberInput {
   groupId: string;
   policyId: string;
+  priorityOverride?: number | null;
   actorUserId: string;
   session: MutationSession;
   ip: string;
@@ -156,6 +165,7 @@ interface PolicyRow {
   policy_type: PolicyType;
   rules: Record<string, unknown>;
   enabled: boolean;
+  priority: number;
   group_count: number;
   created_at: string;
   updated_at: string;
@@ -168,6 +178,7 @@ interface PolicyBaseRow {
   policy_type: PolicyType;
   rules: Record<string, unknown>;
   enabled: boolean;
+  priority: number;
   created_at: string;
   updated_at: string;
 }
@@ -200,7 +211,7 @@ export class AiPoliciesService {
   /** List all policies, newest first, with group-membership counts. */
   async listPolicies(): Promise<PolicyDto[]> {
     const result = await getDbPool().query<PolicyRow>(
-      `SELECT p.id, p.title, p.description, p.policy_type, p.rules, p.enabled,
+      `SELECT p.id, p.title, p.description, p.policy_type, p.rules, p.enabled, p.priority,
               p.created_at, p.updated_at,
               COUNT(m.group_id)::int AS group_count
          FROM ai_policies p
@@ -251,9 +262,9 @@ export class AiPoliciesService {
 
       const result = await client.query<PolicyBaseRow>(
         `INSERT INTO ai_policies
-           (id, title, description, policy_type, rules, enabled, created_by, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $8)
-         RETURNING id, title, description, policy_type, rules, enabled, created_at, updated_at`,
+         (id, title, description, policy_type, rules, enabled, priority, created_by, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $9)
+       RETURNING id, title, description, policy_type, rules, enabled, priority, created_at, updated_at`,
         [
           id,
           input.title,
@@ -261,6 +272,7 @@ export class AiPoliciesService {
           input.policyType,
           JSON.stringify(parsedRules.data),
           enabled,
+          input.priority ?? 100,
           input.actorUserId,
           now,
         ]
@@ -366,6 +378,10 @@ export class AiPoliciesService {
         if (input.enabled !== existing.enabled) changedFields.push('enabled');
         push('enabled', input.enabled);
       }
+      if (input.priority !== undefined) {
+        if (input.priority !== existing.priority) changedFields.push('priority');
+        push('priority', input.priority);
+      }
       if (fields.length === 0) return this.getPolicy(id, client);
 
       fields.push(`updated_at = $${param++}`);
@@ -375,7 +391,7 @@ export class AiPoliciesService {
       const result = await client.query<PolicyBaseRow>(
         `UPDATE ai_policies SET ${fields.join(', ')}
           WHERE id = $${param}
-          RETURNING id, title, description, policy_type, rules, enabled, created_at, updated_at`,
+          RETURNING id, title, description, policy_type, rules, enabled, priority, created_at, updated_at`,
         values
       );
       const row = result.rows[0];
@@ -459,7 +475,7 @@ export class AiPoliciesService {
     if (!base) throw this.groupNotFound(id);
 
     const members = await (client ?? getDbPool()).query<PolicyRefRow>(
-      `SELECT p.id, p.title, p.policy_type, p.enabled
+      `SELECT p.id, p.title, p.policy_type, p.enabled, p.priority, m.priority_override
          FROM ai_policies p
          JOIN ai_policy_group_members m ON m.policy_id = p.id
         WHERE m.group_id = $1
@@ -473,6 +489,8 @@ export class AiPoliciesService {
         title: row.title,
         policyType: row.policy_type,
         enabled: row.enabled,
+        priority: row.priority,
+        priorityOverride: row.priority_override,
       })),
     };
   }
@@ -610,15 +628,33 @@ export class AiPoliciesService {
       if (!policy) throw this.policyNotFound(input.policyId);
 
       let inserted = false;
+      let priorityChanged = false;
+      let previousPriority: number | null = null;
       try {
-        const res = await client.query(
-          `INSERT INTO ai_policy_group_members (group_id, policy_id, created_at)
-           VALUES ($1, $2, $3)
-           ON CONFLICT (group_id, policy_id) DO NOTHING
-           RETURNING group_id`,
-          [input.groupId, input.policyId, new Date()]
+        const existing = await client.query<{ priority_override: number | null }>(
+          `SELECT priority_override FROM ai_policy_group_members
+           WHERE group_id=$1 AND policy_id=$2 FOR UPDATE`,
+          [input.groupId, input.policyId]
         );
-        inserted = (res.rowCount ?? 0) > 0;
+        if (!existing.rows.length) {
+          await client.query(
+            `INSERT INTO ai_policy_group_members (group_id, policy_id, priority_override, created_at)
+             VALUES ($1, $2, $3, $4)`,
+            [input.groupId, input.policyId, input.priorityOverride ?? null, new Date()]
+          );
+          inserted = true;
+        } else if (
+          input.priorityOverride !== undefined &&
+          existing.rows[0]!.priority_override !== input.priorityOverride
+        ) {
+          previousPriority = existing.rows[0]!.priority_override;
+          await client.query(
+            `UPDATE ai_policy_group_members SET priority_override=$3
+             WHERE group_id=$1 AND policy_id=$2`,
+            [input.groupId, input.policyId, input.priorityOverride]
+          );
+          priorityChanged = true;
+        }
       } catch (error) {
         if (this.isPgError(error, PG_FOREIGN_KEY_VIOLATION)) {
           // Translate missing-reference failures before rolling back.
@@ -633,22 +669,25 @@ export class AiPoliciesService {
         }
         throw error;
       }
-      // Only audit a real link; a no-op re-link must not emit a duplicate event.
-      if (inserted) {
+      // Only audit a real link or priority change; an identical re-link is silent.
+      if (inserted || priorityChanged) {
         await this.recordAudit(
           verifiedAt,
-          'ai_policy_group_member_added',
+          inserted ? 'ai_policy_group_member_added' : 'ai_policy_group_member_priority_changed',
           input.actorUserId,
           input.ip,
           {
             targetId: input.groupId,
             policyId: input.policyId,
+            ...(inserted
+              ? { priorityOverride: input.priorityOverride ?? null }
+              : { priorityBefore: previousPriority, priorityAfter: input.priorityOverride }),
           },
           client
         );
       }
       this.logger.log(
-        `Policy ${inserted ? 'linked into' : 'already in'} group: group=${input.groupId}, policy=${input.policyId}, actor=${input.actorUserId}`
+        `Policy ${inserted ? 'linked into' : priorityChanged ? 'priority updated in' : 'already in'} group: group=${input.groupId}, policy=${input.policyId}, actor=${input.actorUserId}`
       );
     });
   }
@@ -700,7 +739,7 @@ export class AiPoliciesService {
 
   private async findPolicy(id: string, client?: PoolClient): Promise<PolicyBaseRow | null> {
     const result = await (client ?? getDbPool()).query<PolicyBaseRow>(
-      `SELECT id, title, description, policy_type, rules, enabled, created_at, updated_at
+      `SELECT id, title, description, policy_type, rules, enabled, priority, created_at, updated_at
          FROM ai_policies
         WHERE id = $1${client ? ' FOR UPDATE' : ''}`,
       [id]
@@ -742,6 +781,7 @@ export class AiPoliciesService {
       policyType: row.policy_type,
       rules: row.rules,
       enabled: row.enabled,
+      priority: row.priority,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
     };
@@ -851,4 +891,6 @@ interface PolicyRefRow {
   title: string;
   policy_type: PolicyType;
   enabled: boolean;
+  priority: number;
+  priority_override: number | null;
 }

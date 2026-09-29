@@ -130,6 +130,32 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     }
 
+    if (
+      exception instanceof HttpException &&
+      (errorCode === 'AI_TEST_CHAT_POLICY_BLOCKED' ||
+        (httpStatus === 429 && errorCode === ErrorCodes.RATE_LIMIT_EXCEEDED.code))
+    ) {
+      const details = exception.getResponse();
+      if (typeof details === 'object' && details !== null) {
+        const payload = details as Record<string, unknown>;
+        const error = body.error as Record<string, unknown>;
+        if (typeof payload.policyRef === 'string' && /^[0-9a-f-]{36}$/i.test(payload.policyRef))
+          error.policyRef = payload.policyRef;
+        const reasons = new Set([
+          'policy_invalid',
+          'topic_not_allowed',
+          'action_disallowed',
+          'data_scope_empty',
+          'input_filtered',
+          'output_filtered',
+          'output_too_long',
+          'output_format_invalid',
+        ]);
+        if (typeof payload.reason === 'string' && reasons.has(payload.reason))
+          error.reason = payload.reason;
+      }
+    }
+
     if (httpStatus === 409 && exception instanceof HttpException) {
       const details = exception.getResponse();
       if (

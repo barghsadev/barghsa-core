@@ -23,6 +23,7 @@ function policyBaseRow(over: Record<string, unknown> = {}) {
     policy_type: 'disallowed_actions',
     rules: { actions: ['financial_advice'] },
     enabled: true,
+    priority: 100,
     created_at: '2026-08-28T00:00:00.000Z',
     updated_at: '2026-08-28T00:00:00.000Z',
     ...over,
@@ -136,7 +137,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
       expect(result).toMatchObject({ id: 'pol-1', groupCount: 0, enabled: true });
       const insertSql = String(mockQuery.mock.calls[0]![0]);
       expect(insertSql).toContain('INSERT INTO ai_policies');
-      expect(insertSql).toContain('$1, $2, $3, $4, $5, $6, $7, $8, $8');
+      expect(insertSql).toContain('$1, $2, $3, $4, $5, $6, $7, $8, $9, $9');
       const auditSql = String(mockQuery.mock.calls[1]![0]);
       expect(auditSql).toContain('INSERT INTO audit_log');
       expect(mockQuery.mock.calls[1]![1]).toContain('ai_policy_created');
@@ -382,6 +383,8 @@ describe('AiPoliciesService (T-09.11.03)', () => {
               title: 'No financial advice',
               policy_type: 'disallowed_actions',
               enabled: true,
+              priority: 100,
+              priority_override: null,
             },
           ],
         }); // members
@@ -394,6 +397,8 @@ describe('AiPoliciesService (T-09.11.03)', () => {
           title: 'No financial advice',
           policyType: 'disallowed_actions',
           enabled: true,
+          priority: 100,
+          priorityOverride: null,
         },
       ]);
     });
@@ -435,7 +440,8 @@ describe('AiPoliciesService (T-09.11.03)', () => {
       mockQuery
         .mockResolvedValueOnce({ rows: [groupBaseRow()] }) // findGroup
         .mockResolvedValueOnce({ rows: [policyBaseRow()] }) // findPolicy
-        .mockResolvedValueOnce({ rowCount: 1, rows: [{ group_id: 'grp-1' }] }) // insert member
+        .mockResolvedValueOnce({ rows: [] }) // membership lookup
+        .mockResolvedValueOnce({ rowCount: 1, rows: [] }) // insert member
         .mockResolvedValueOnce({ rows: [] }); // audit
 
       await expect(
@@ -447,9 +453,8 @@ describe('AiPoliciesService (T-09.11.03)', () => {
           ip: '1.2.3.4',
         })
       ).resolves.toBeUndefined();
-      const insertSql = String(mockQuery.mock.calls[2]![0]);
+      const insertSql = String(mockQuery.mock.calls[3]![0]);
       expect(insertSql).toContain('INSERT INTO ai_policy_group_members');
-      expect(insertSql).toContain('ON CONFLICT (group_id, policy_id) DO NOTHING');
       // A real link emits an audit event.
       const auditCalls = mockQuery.mock.calls.filter((call) =>
         String(call[0]).includes('INSERT INTO audit_log')
@@ -464,7 +469,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
       mockQuery
         .mockResolvedValueOnce({ rows: [groupBaseRow()] }) // findGroup
         .mockResolvedValueOnce({ rows: [policyBaseRow()] }) // findPolicy
-        .mockResolvedValueOnce({ rowCount: 0, rows: [] }); // insert → conflict
+        .mockResolvedValueOnce({ rows: [{ priority_override: null }] }); // existing member
 
       await expect(
         service.addGroupMember({

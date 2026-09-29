@@ -2,10 +2,11 @@ import { createHash } from 'node:crypto';
 import { Injectable, HttpException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { completeChat, OpenAiEmbeddingClient, type ChatMessage } from '@barghsa/shared/ai-models';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { v7 as uuidv7 } from 'uuid';
 import { AiModelSecretsService } from '../ai-models/ai-model-secrets.service.js';
 import type { RuntimePolicy, PolicyResult } from './ai-test-chat-policy.js';
-import { evaluatePolicies } from './ai-test-chat-policy.js';
+import { evaluatePolicies, evaluatePolicyOutput } from './ai-test-chat-policy.js';
 
 interface TestChatInput {
   agentId: string;
@@ -111,7 +112,7 @@ export class AiTestChatService {
         admitted = true;
       }
       await client.query('COMMIT');
-      if (!admitted) fail(429, 'RATE_LIMIT_EXCEEDED', Number(quotaRow.reset_ms));
+      if (!admitted) fail(429, ErrorCodes.RATE_LIMIT_EXCEEDED.code, Number(quotaRow.reset_ms));
     } catch (error) {
       await client.query('ROLLBACK').catch(() => undefined);
       throw error;
@@ -124,6 +125,7 @@ export class AiTestChatService {
       const response = await this.generate(
         input,
         session.sessionId,
+        session.userId,
         conversationId,
         remainingQuota,
         started
@@ -149,6 +151,7 @@ export class AiTestChatService {
   private async generate(
     input: TestChatInput,
     sessionId: string,
+    userId: string,
     conversationId: string,
     remainingQuota: number,
     started: number
@@ -164,17 +167,55 @@ export class AiTestChatService {
     if (!agents.rows.length) fail(409, 'AI_TEST_CHAT_AGENT_UNAVAILABLE');
     const agent = agents.rows[0]!;
     const policies = await pool.query<RuntimePolicy>(
-      `SELECT DISTINCT p.id,p.title,p.policy_type,p.rules
-       FROM ai_policies p WHERE p.enabled=true AND (
-         EXISTS (SELECT 1 FROM ai_agent_policies ap WHERE ap.agent_id=$1 AND ap.policy_id=p.id)
-         OR EXISTS (SELECT 1 FROM ai_agent_policy_groups ag
-                    JOIN ai_policy_group_members gm ON gm.group_id=ag.group_id
-                    WHERE ag.agent_id=$1 AND gm.policy_id=p.id))
-       ORDER BY p.id`,
+      `WITH assigned AS (
+         SELECT ap.policy_id,p.priority AS effective_priority
+           FROM ai_agent_policies ap JOIN ai_policies p ON p.id=ap.policy_id
+          WHERE ap.agent_id=$1
+         UNION ALL
+         SELECT gm.policy_id,COALESCE(gm.priority_override,p.priority) AS effective_priority
+           FROM ai_agent_policy_groups ag
+           JOIN ai_policy_group_members gm ON gm.group_id=ag.group_id
+           JOIN ai_policies p ON p.id=gm.policy_id
+          WHERE ag.agent_id=$1
+       )
+       SELECT p.id,p.title,p.policy_type,p.rules,
+              MIN(assigned.effective_priority)::int AS priority
+         FROM assigned JOIN ai_policies p ON p.id=assigned.policy_id
+        WHERE p.enabled=true
+        GROUP BY p.id ORDER BY priority,p.id`,
       [input.agentId]
     );
     const policy = evaluatePolicies(policies.rows, input.message);
-    if (policy.blocked) fail(422, 'AI_TEST_CHAT_POLICY_BLOCKED');
+    if (policy.blocked)
+      throw new HttpException(
+        {
+          statusCode: 422,
+          error: 'AI_TEST_CHAT_POLICY_BLOCKED',
+          reason: policy.reason,
+          policyRef: policy.policyRef,
+        },
+        422
+      );
+    for (const limit of policy.rateLimits) {
+      const quota = await pool.query<{ count: number; reset_ms: string }>(
+        'SELECT count,reset_ms FROM rate_limit_rolling(true,$1,$2,$3,true)',
+        [
+          `ai:policy:${limit.policyId}:agent:${input.agentId}:user:${userId}`,
+          limit.windowSeconds * 1000,
+          limit.maxRequests,
+        ]
+      );
+      if (Number(quota.rows[0]!.count) > limit.maxRequests)
+        throw new HttpException(
+          {
+            statusCode: 429,
+            error: ErrorCodes.RATE_LIMIT_EXCEEDED.code,
+            retryAfterMs: Number(quota.rows[0]!.reset_ms),
+            policyRef: limit.policyId,
+          },
+          429
+        );
+    }
     const kbResult = await pool.query<KbRow>(
       `SELECT DISTINCT k.id,k.title,k.vector_embedding_model,
               (k.is_enabled AND k.content_state='ready' AND k.vector_embedding_model IS NOT NULL) AS ready
@@ -217,7 +258,11 @@ export class AiTestChatService {
       .join('\n\n')
       .slice(0, 16_000);
     messages.push({ role: 'system', content: system });
-    for (const turn of history.rows.reverse()) {
+    // A narrower scope may have been attached after earlier turns; do not replay
+    // replies produced under a broader data-access policy.
+    for (const turn of policy.scopes === null || policy.scopes.has('all')
+      ? history.rows.reverse()
+      : []) {
       messages.push({ role: 'user', content: turn.user_message });
       messages.push({ role: 'assistant', content: turn.reply.slice(0, 8_000) });
     }
@@ -232,8 +277,18 @@ export class AiTestChatService {
       temperature: agent.temperature ?? agent.config.temperature,
       maxTokens: agent.max_tokens ?? agent.config.max_tokens,
     });
-    const reply =
-      policy.maxLength === null ? completion.reply : completion.reply.slice(0, policy.maxLength);
+    const output = evaluatePolicyOutput(policy, completion.reply);
+    if (output.blocked)
+      throw new HttpException(
+        {
+          statusCode: 422,
+          error: 'AI_TEST_CHAT_POLICY_BLOCKED',
+          reason: output.reason,
+          policyRef: output.policyRef,
+        },
+        422
+      );
+    const reply = completion.reply;
     return {
       conversationId,
       reply,
