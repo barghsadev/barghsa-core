@@ -61,6 +61,24 @@
     "limitKB": 35
   },
   {
+    "name": "Wallet top-up review on demand",
+    "phase": "interaction",
+    "entries": ["src/components/OnlineTopUpReviewDialog.tsx"],
+    "limitKB": 15
+  },
+  {
+    "name": "Wallet top-up action on demand",
+    "phase": "interaction",
+    "entries": ["src/lib/online-topup-action.ts"],
+    "limitKB": 40
+  },
+  {
+    "name": "Wallet top-up review validation on demand",
+    "phase": "interaction",
+    "entries": ["../../packages/shared/dist/finance/index.js"],
+    "limitKB": 60
+  },
+  {
     "name": "Dashboard",
     "entries": [
       "index.html",

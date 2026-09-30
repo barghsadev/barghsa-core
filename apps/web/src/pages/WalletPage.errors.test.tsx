@@ -12,9 +12,29 @@ const json = (body: unknown, status = 200) => ({
   status,
   json: async () => body,
 });
+const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
+const review = {
+  schemaVersion: 1,
+  scope: {
+    action: 'wallet.online-topup-initiation',
+    profileId: PROFILE_ID,
+    resourceId: PROFILE_ID,
+  },
+  data: {
+    profileId: PROFILE_ID,
+    amountIrR: '250',
+    onlineTopUpLimitIrR: '1000',
+    configVersion: 0,
+    paymentSource: 'external_gateway',
+    stateAfterInitiation: 'Pending',
+    creditRule: 'after_verified_gateway_payment',
+  },
+  hash: 'a'.repeat(64),
+};
 let host: HTMLDivElement, root: Root;
 type ResponseMock = Mock<() => Promise<ReturnType<typeof json>>>;
 let profiles: ResponseMock, wallet: ResponseMock, post: ResponseMock;
+let reviewPost: ResponseMock | null;
 let assign: ReturnType<typeof vi.fn>;
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
@@ -22,11 +42,12 @@ beforeEach(() => {
   host = document.createElement('div');
   document.body.append(host);
   root = createRoot(host);
-  profiles = vi.fn().mockResolvedValue(json({ activeProfileId: 'profile-a' }));
+  profiles = vi.fn().mockResolvedValue(json({ activeProfileId: PROFILE_ID }));
   wallet = vi
     .fn()
     .mockResolvedValue(json({ balance: '100', currency: 'IRR', onlineTopUpLimit: 1000 }));
   post = vi.fn().mockResolvedValue(json({}));
+  reviewPost = null;
   upload.mockReset().mockResolvedValue('receipts/file.pdf');
   assign = vi.fn();
   vi.stubGlobal('location', { assign, href: 'http://localhost/' });
@@ -34,6 +55,8 @@ beforeEach(() => {
     'fetch',
     vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
+      if (init?.method === 'POST' && url.endsWith('/top-ups/review'))
+        return reviewPost ? reviewPost() : post();
       if (init?.method === 'POST') return post();
       if (url === '/api/profiles') return profiles();
       if (url.includes('/transactions')) return json({ transactions: [], nextCursor: null });
@@ -64,6 +87,15 @@ async function submit(receipt = false) {
   await act(async () =>
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
+  if (!receipt) {
+    for (
+      let attempt = 0;
+      attempt < 30 && !element('wallet-error') && !document.querySelector('[role="dialog"]');
+      attempt++
+    ) {
+      await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
+    }
+  }
 }
 async function receiptFields({
   amount = '250',
@@ -129,10 +161,19 @@ it.each([
 it.each(['not a url', 'https://user:pass@pay.test/', 'http://pay.test/', ''])(
   'refuses unsafe redirect %s',
   async (redirectUrl) => {
+    reviewPost = vi.fn().mockResolvedValue(json(review));
     post.mockResolvedValue(json({ redirectUrl }, 201));
     await render();
     await input('wallet-amount', '250');
     await submit();
+    for (let attempt = 0; attempt < 10 && !document.querySelector('[role="dialog"]'); attempt++) {
+      await act(async () => new Promise((resolve) => setTimeout(resolve, 5)));
+    }
+    const confirm = [
+      ...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
+    ].find((button) => button.textContent?.includes('Confirm'));
+    expect(confirm).toBeDefined();
+    await act(async () => confirm!.click());
     expect(element('wallet-error').textContent).toBeTruthy();
     expect(assign).not.toHaveBeenCalled();
   }

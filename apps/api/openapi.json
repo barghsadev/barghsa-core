@@ -27823,6 +27823,35 @@
         ]
       }
     },
+    "/api/wallet/{profileId}/top-ups/review": {
+      "post": {
+        "operationId": "WalletController_reviewOnlineTopUp",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review an online wallet top-up before starting payment",
+        "tags": [
+          "Wallet"
+        ]
+      }
+    },
     "/api/wallet/{profileId}/transactions": {
       "get": {
         "operationId": "WalletController_getTransactions",

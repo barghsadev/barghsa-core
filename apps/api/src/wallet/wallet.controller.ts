@@ -37,12 +37,16 @@ import { activeProfileSql } from '../profiles/profile-context.js';
 import { withCustomerWalletAccess } from './customer-wallet-access.js';
 import { RequiresCapability } from '../maintenance/maintenance.guard.js';
 
-const InitiateBodySchema = z
+const TopUpReviewBodySchema = z
   .object({
     amount: z.union([z.number(), z.string()]),
-    idempotencyKey: z.string().min(1).optional(),
+    idempotencyKey: z.string().min(1),
   })
   .strict();
+const InitiateBodySchema = TopUpReviewBodySchema.extend({
+  idempotencyKey: z.string().min(1).optional(),
+  expectedReviewHash: z.string().regex(/^[0-9a-f]{64}$/),
+}).strict();
 
 const BankReceiptBodySchema = z
   .object({
@@ -136,17 +140,38 @@ export class WalletController {
     });
   }
 
-  /**
-   * POST /api/wallet/:profileId/top-ups
-   *
-   * Online top-up initiation (T-04.2.02.01): validate the per-transaction
-   * limit, insert a Pending ledger row, and return the payment-gateway
-   * redirect URL. The wallet is not credited here.
-   */
+  /** Review the current limit and payment outcome before gateway initiation. */
+  @Post(':profileId/top-ups/review')
+  @RequiresCapability('wallet_topup')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'wallet:top-up-review:user', scope: 'user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Review an online wallet top-up before starting payment' })
+  async reviewOnlineTopUp(
+    @Param('profileId') profileId: string,
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    assertUuid(profileId, 'profileId');
+    await this.assertProfileAccess(req, profileId, 'wallet:charge');
+    const parsed = TopUpReviewBodySchema.safeParse(rawBody ?? {});
+    if (!parsed.success)
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD, 'Online top-up amount is required');
+    const amountIrR = parseOnlineTopUpAmountIrR(parsed.data.amount);
+    if (amountIrR === null)
+      httpError(ErrorCodes.VALIDATION_INPUT_INVALID, 'Online top-up amount must be positive IRR');
+    return this.onlineTopUpService.review(
+      req.session,
+      profileId,
+      amountIrR,
+      parsed.data.idempotencyKey
+    );
+  }
+
+  /** Initiation creates a Pending intent; verified gateway payment credits the wallet. */
   @Post(':profileId/top-ups')
   @RequiresCapability('wallet_topup')
   @HttpCode(201)
-  @RateLimit({ namespace: 'wallet:top-up:user', limit: 10, windowMs: 60_000 })
+  @RateLimit({ namespace: 'wallet:top-up:user', scope: 'user', limit: 10, windowMs: 60_000 })
   @ApiOperation({ summary: 'Start an online wallet top-up and redirect to the payment gateway' })
   @ApiHeader({ name: 'Idempotency-Key', required: true })
   @ApiResponse({
@@ -198,6 +223,7 @@ export class WalletController {
       profileId,
       amountIrR,
       idempotencyKey,
+      expectedReviewHash: parsed.data.expectedReviewHash,
     });
 
     this.logger.log(

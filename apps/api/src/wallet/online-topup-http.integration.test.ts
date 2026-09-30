@@ -37,29 +37,91 @@ async function seed() {
   );
   const correlationId = randomUUID(),
     key = randomUUID();
+  const headers = {
+    Cookie: `barghsa_session=${sessionId}`,
+    'X-CSRF-Token': csrf,
+    'X-Correlation-ID': correlationId,
+    'Content-Type': 'application/json',
+  };
+  const reviewResponse = await fetch(`${http.base}/api/wallet/${profileId}/top-ups/review`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ amount: 1000, idempotencyKey: key }),
+  });
+  expect(reviewResponse.status, await reviewResponse.clone().text()).toBe(200);
+  const review = (await reviewResponse.json()) as {
+    hash: string;
+    data: { amountIrR: string; onlineTopUpLimitIrR: string; stateAfterInitiation: string };
+  };
+  expect(review.data).toMatchObject({
+    amountIrR: '1000',
+    onlineTopUpLimitIrR: '2000000000',
+    stateAfterInitiation: 'Pending',
+  });
   const submit = () =>
     fetch(`${http.base}/api/wallet/${profileId}/top-ups`, {
       method: 'POST',
       headers: {
-        Cookie: `barghsa_session=${sessionId}`,
-        'X-CSRF-Token': csrf,
-        'X-Correlation-ID': correlationId,
+        ...headers,
         'Idempotency-Key': key,
-        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ amount: 1000 }),
+      body: JSON.stringify({ amount: 1000, expectedReviewHash: review.hash }),
     });
-  return { userId, profileId, sessionId, csrf, correlationId, key, submit };
+  return { userId, profileId, sessionId, csrf, correlationId, key, headers, review, submit };
 }
 
 it('online HTTP initiation binds the authenticated actor and persists one Pending intent on retry', async () => {
   const input = await seed();
+  expect(
+    (
+      await fetch(`${http.base}/api/wallet/${input.profileId}/top-ups`, {
+        method: 'POST',
+        headers: { ...input.headers, 'Idempotency-Key': input.key },
+        body: JSON.stringify({ amount: 1000 }),
+      })
+    ).status
+  ).toBe(400);
+  expect(
+    (
+      await fetch(`${http.base}/api/wallet/${input.profileId}/top-ups`, {
+        method: 'POST',
+        headers: { ...input.headers, 'Idempotency-Key': input.key },
+        body: JSON.stringify({ amount: 1000, expectedReviewHash: '0'.repeat(64) }),
+      })
+    ).status
+  ).toBe(409);
   const response = await input.submit();
   expect(response.status, await response.clone().text()).toBe(201);
   const body = (await response.json()) as { transactionId: string; redirectUrl: string };
   expect(body).toMatchObject({ amount: 1000, state: 'Pending' });
   expect(new URL(body.redirectUrl).origin).toBe('https://pay.example.test');
   expect(await (await input.submit()).json()).toEqual(body);
+  expect(
+    (
+      await fetch(`${http.base}/api/wallet/${input.profileId}/top-ups`, {
+        method: 'POST',
+        headers: { ...input.headers, 'Idempotency-Key': input.key },
+        body: JSON.stringify({ amount: 1000, expectedReviewHash: '0'.repeat(64) }),
+      })
+    ).status
+  ).toBe(409);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT metadata::jsonb AS metadata FROM wallet_transactions WHERE id=$1',
+        [body.transactionId]
+      )
+    ).rows[0].metadata.financialReview.hash
+  ).toBe(input.review.hash);
+  expect(
+    (
+      await http.pool.query(
+        `SELECT metadata::jsonb AS metadata FROM audit_log
+         WHERE event='wallet_online_topup_initiated' AND metadata::jsonb->>'transactionId'=$1`,
+        [body.transactionId]
+      )
+    ).rows[0].metadata.financialReview.hash
+  ).toBe(input.review.hash);
   expect(
     (
       await http.pool.query(
@@ -74,6 +136,51 @@ it('online HTTP initiation binds the authenticated actor and persists one Pendin
       correlation_id: input.correlationId,
     },
   ]);
+});
+
+it('rejects a preview after the online top-up limit changes before initiation', async () => {
+  const input = await seed();
+  await http.pool.query(
+    `INSERT INTO app_config(key,value,version)
+     VALUES ('finance.wallet_top_up_limit','{"limit_irr":1000000}'::jsonb,1)`
+  );
+  try {
+    expect((await input.submit()).status).toBe(409);
+    expect(
+      (
+        await http.pool.query('SELECT id FROM wallet_transactions WHERE idempotency_key=$1', [
+          input.key,
+        ])
+      ).rows
+    ).toEqual([]);
+  } finally {
+    await http.pool.query("DELETE FROM app_config WHERE key='finance.wallet_top_up_limit'");
+  }
+});
+
+it('returns the stored review for an accepted retry after the limit tightens', async () => {
+  const input = await seed();
+  const first = await input.submit();
+  expect(first.status, await first.clone().text()).toBe(201);
+  const initialResult = await first.json();
+  await http.pool.query(
+    `INSERT INTO app_config(key,value,version)
+     VALUES ('finance.wallet_top_up_limit','{"limit_irr":500}'::jsonb,1)`
+  );
+  try {
+    const preview = await fetch(`${http.base}/api/wallet/${input.profileId}/top-ups/review`, {
+      method: 'POST',
+      headers: input.headers,
+      body: JSON.stringify({ amount: 1000, idempotencyKey: input.key }),
+    });
+    expect(preview.status, await preview.clone().text()).toBe(200);
+    expect(((await preview.json()) as { hash: string }).hash).toBe(input.review.hash);
+    const retry = await input.submit();
+    expect(retry.status, await retry.clone().text()).toBe(201);
+    expect(await retry.json()).toEqual(initialResult);
+  } finally {
+    await http.pool.query("DELETE FROM app_config WHERE key='finance.wallet_top_up_limit'");
+  }
 });
 
 it('online HTTP initiation rechecks a session revoked after the guard while waiting on its identity', async () => {

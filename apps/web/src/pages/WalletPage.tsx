@@ -4,13 +4,23 @@ import {
   type WalletPaymentReturn,
 } from '../components/OnlinePaymentReturnPanel.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+} from 'react';
 import { t } from '@barghsa/i18n/app';
+import type { OnlineTopUpReview } from '@barghsa/shared/finance';
 import {
   parseBankReceiptTopUpAmountIrR,
   isValidWalletTopUpLimit,
-  readOnlineTopUpLimitFromErrorBody,
 } from '@barghsa/shared/finance/browser';
+import type { OnlineTopUpActionError } from '../lib/online-topup-action.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useReceiptAttachmentUpload } from '../hooks/useReceiptAttachmentUpload.js';
@@ -23,6 +33,8 @@ import { rememberWalletInvoiceReturn } from '../lib/wallet-invoice-return.js';
 import { useMaintenance } from '../hooks/useMaintenance.js';
 import { MaintenanceNotice } from '../components/MaintenanceNotice.js';
 import { tMaintenance } from '@barghsa/i18n/maintenance';
+
+const OnlineTopUpReviewDialog = lazy(() => import('../components/OnlineTopUpReviewDialog.js'));
 
 interface WalletBalance {
   balance: string;
@@ -39,15 +51,7 @@ function advertisedOnlineTopUpLimit(wallet: WalletBalance | null): number | null
   return wallet.onlineTopUpLimit;
 }
 
-type PageError =
-  | 'no-profile'
-  | 'load'
-  | 'invalid-amount'
-  | 'limit-exceeded'
-  | 'gateway'
-  | 'conflict'
-  | 'maintenance'
-  | 'generic';
+type PageError = 'no-profile' | 'load' | OnlineTopUpActionError;
 
 type ReceiptError =
   | 'invalid-amount'
@@ -63,46 +67,11 @@ function newIdempotencyKey(): string {
   return crypto.randomUUID();
 }
 
-function mapSubmitError(status: number, message: string): PageError {
-  if (status === 503) return 'maintenance';
-  if (status === 409) return 'conflict';
-  if (status === 502 || status === 504) return 'gateway';
-  if (status === 400 && /exceeds/i.test(message)) return 'limit-exceeded';
-  if (status === 400) return 'invalid-amount';
-  return 'generic';
-}
-
-function submitErrorMessage(payload: unknown): string {
-  if (!payload || typeof payload !== 'object') return '';
-  const rec = payload as { message?: unknown; error?: unknown };
-  if (typeof rec.message === 'string' && rec.message) return rec.message;
-  if (rec.error && typeof rec.error === 'object') {
-    const nested = rec.error as { message?: unknown };
-    if (typeof nested.message === 'string' && nested.message) return nested.message;
-  }
-  return '';
-}
-
 function mapReceiptSubmitError(status: number): ReceiptError {
   if (status === 503) return 'maintenance';
   if (status === 409) return 'conflict';
   if (status === 400) return 'generic';
   return 'generic';
-}
-
-/** Browser redirects must be https destinations without embedded credentials. */
-function isSafeGatewayRedirectUrl(raw: string): boolean {
-  try {
-    const url = new URL(raw);
-    return (
-      url.protocol === 'https:' &&
-      url.username === '' &&
-      url.password === '' &&
-      url.hostname.length > 0
-    );
-  } catch {
-    return false;
-  }
 }
 
 /**
@@ -131,6 +100,7 @@ export function WalletPage({
   const [error, setError] = useState<PageError | null>(null);
   const [amountInput, setAmountInput] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [onlineReview, setOnlineReview] = useState<OnlineTopUpReview | null>(null);
   const [idempotencyKey, setIdempotencyKey] = useState(newIdempotencyKey);
 
   const [receiptAmountInput, setReceiptAmountInput] = useState('');
@@ -215,54 +185,56 @@ export function WalletPage({
     setSubmitting(true);
     setError(null);
     try {
-      const res = await fetch(`/api/wallet/${profileId}/top-ups`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'Idempotency-Key': idempotencyKey,
-        }),
-        body: JSON.stringify({ amount: amountValue }),
-      });
-      const payload = (await res.json().catch(() => ({}))) as {
-        transactionId?: unknown;
-        redirectUrl?: string;
-        message?: string;
-        onlineTopUpLimit?: number;
-        configVersion?: number;
-        error?: { message?: string; onlineTopUpLimit?: number; configVersion?: number };
-      };
-      if (!res.ok || typeof payload.redirectUrl !== 'string' || !payload.redirectUrl) {
-        const next = mapSubmitError(res.status, submitErrorMessage(payload));
-        if (next === 'limit-exceeded' || next === 'invalid-amount' || next === 'conflict') {
-          setIdempotencyKey(newIdempotencyKey());
-        }
-        if (next === 'limit-exceeded') {
-          const enforced = readOnlineTopUpLimitFromErrorBody(payload);
-          if (enforced) {
-            setWallet((prev) =>
-              prev
-                ? {
-                    ...prev,
-                    onlineTopUpLimit: enforced.onlineTopUpLimit,
-                    configVersion: enforced.configVersion,
-                  }
-                : prev
-            );
-          }
-        }
-        setError(next);
-        return;
-      }
-      if (!isSafeGatewayRedirectUrl(payload.redirectUrl)) {
-        setError('gateway');
-        return;
-      }
-      if (returnInvoiceId && typeof payload.transactionId === 'string')
-        rememberWalletInvoiceReturn(payload.transactionId, returnInvoiceId);
-      window.location.assign(payload.redirectUrl);
+      const { loadOnlineTopUpReview } = await import('../lib/online-topup-action.js');
+      const result = await loadOnlineTopUpReview(profileId, amountValue, idempotencyKey);
+      if (result.kind === 'error') handleOnlineTopUpError(result);
+      else setOnlineReview(result.review);
     } catch {
+      setError('gateway');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  function handleOnlineTopUpError(result: {
+    error: OnlineTopUpActionError;
+    enforcedLimit: { onlineTopUpLimit: number; configVersion: number } | null;
+  }) {
+    if (['limit-exceeded', 'invalid-amount', 'conflict'].includes(result.error)) {
+      setIdempotencyKey(newIdempotencyKey());
+    }
+    if (result.enforcedLimit) {
+      setWallet((prev) =>
+        prev
+          ? {
+              ...prev,
+              onlineTopUpLimit: result.enforcedLimit!.onlineTopUpLimit,
+              configVersion: result.enforcedLimit!.configVersion,
+            }
+          : prev
+      );
+    }
+    setOnlineReview(null);
+    setError(result.error);
+  }
+
+  async function confirmOnlineTopUp() {
+    if (!onlineReview || submitting) return;
+    setSubmitting(true);
+    setError(null);
+    try {
+      const { startReviewedOnlineTopUp } = await import('../lib/online-topup-action.js');
+      const result = await startReviewedOnlineTopUp(onlineReview, idempotencyKey);
+      if (result.kind === 'error') {
+        handleOnlineTopUpError(result);
+        return;
+      }
+      if (returnInvoiceId && result.transactionId)
+        rememberWalletInvoiceReturn(result.transactionId, returnInvoiceId);
+      setOnlineReview(null);
+      window.location.assign(result.redirectUrl);
+    } catch {
+      setOnlineReview(null);
       setError('gateway');
     } finally {
       setSubmitting(false);
@@ -507,7 +479,9 @@ export function WalletPage({
                 disabled={onlineSubmitDisabled}
                 className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-dark disabled:opacity-60"
               >
-                {submitting ? t('wallet.page.submitting', locale) : t('wallet.page.submit', locale)}
+                {submitting
+                  ? t(onlineReview ? 'wallet.page.submitting' : 'wallet.page.reviewLoading', locale)
+                  : t('wallet.page.submit', locale)}
               </button>
             </form>
           )}
@@ -694,6 +668,18 @@ export function WalletPage({
               locale={locale}
             />
           )}
+
+          {onlineReview ? (
+            <Suspense fallback={<p role="status">{t('wallet.page.reviewLoading', locale)}</p>}>
+              <OnlineTopUpReviewDialog
+                review={onlineReview}
+                locale={locale}
+                loading={submitting}
+                onCancel={() => setOnlineReview(null)}
+                onConfirm={() => void confirmOnlineTopUp()}
+              />
+            </Suspense>
+          ) : null}
 
           {(error === 'load' || error === 'gateway') && (
             <button

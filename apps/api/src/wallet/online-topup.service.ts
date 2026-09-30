@@ -10,6 +10,10 @@ import {
   readOnlineTopUpChannel,
   WALLET_TOP_UP_LIMIT_CONFIG_KEY,
   WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
+  isValidWalletTopUpLimit,
+  parseOnlineTopUpReview,
+  type OnlineTopUpLimitSnapshot,
+  type OnlineTopUpReview,
 } from '@barghsa/shared/finance';
 import { createHash, randomUUID } from 'node:crypto';
 import {
@@ -23,6 +27,8 @@ import {
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
+import { withCustomerWalletAccess } from './customer-wallet-access.js';
 import { WalletService, type TransactionRow } from './wallet.service.js';
 import {
   PAYMENT_GATEWAY,
@@ -42,6 +48,8 @@ export interface InitiateOnlineTopUpInput {
   profileId: string;
   amountIrR: bigint;
   idempotencyKey: string;
+  /** Required by the customer HTTP route; internal callers may initiate accepted intents. */
+  expectedReviewHash?: string;
 }
 
 export interface InitiateOnlineTopUpResult {
@@ -97,11 +105,100 @@ interface QueryClient {
 @Injectable()
 export class OnlineTopUpService {
   private readonly logger = new Logger(OnlineTopUpService.name);
+  private readonly reviews = new ReviewSnapshotService();
 
   constructor(
     private readonly walletService: WalletService,
     @Inject(PAYMENT_GATEWAY) private readonly paymentGateway: PaymentGateway
   ) {}
+
+  private financialReview(
+    profileId: string,
+    amountIrR: bigint,
+    limit: OnlineTopUpLimitSnapshot
+  ): OnlineTopUpReview {
+    return this.reviews.create(
+      { action: 'wallet.online-topup-initiation', profileId, resourceId: profileId },
+      {
+        profileId,
+        amountIrR: amountIrR.toString(),
+        onlineTopUpLimitIrR: String(limit.onlineTopUpLimit),
+        configVersion: limit.configVersion,
+        paymentSource: 'external_gateway' as const,
+        stateAfterInitiation: 'Pending' as const,
+        creditRule: 'after_verified_gateway_payment' as const,
+      }
+    );
+  }
+
+  async review(
+    actor: FinancialSubmissionActor,
+    profileId: string,
+    amountIrR: bigint,
+    idempotencyKey: string
+  ): Promise<OnlineTopUpReview> {
+    const key = idempotencyKey.trim();
+    if (!key) throw new BadRequestException('Idempotency key is required');
+    return withCustomerWalletAccess(actor, profileId, 'wallet:charge', async (client) => {
+      await lockActiveTopUpProfile(client, profileId);
+      const existing = (
+        await client.query<{
+          wallet_id: string;
+          type: string;
+          amount: string;
+          state: string;
+          metadata: unknown;
+        }>(
+          `SELECT wallet_id,type,amount::text,state,metadata
+           FROM wallet_transactions WHERE idempotency_key=$1 FOR SHARE`,
+          [key]
+        )
+      ).rows[0];
+      if (existing) {
+        assertMatchingPendingTopUp(existing, profileId, amountIrR, true);
+        const metadata = existing.metadata as {
+          financialReview?: unknown;
+          onlineTopUpLimit?: unknown;
+          configVersion?: unknown;
+        } | null;
+        if (metadata?.financialReview) {
+          const stored = parseOnlineTopUpReview(metadata.financialReview);
+          if (
+            !stored ||
+            stored.data.profileId !== profileId ||
+            stored.data.amountIrR !== amountIrR.toString()
+          )
+            throw new ConflictException('Stored top-up review requires reconciliation');
+          this.reviews.assertConfirmed(stored, stored.hash);
+          return stored;
+        }
+        if (
+          !isValidWalletTopUpLimit(metadata?.onlineTopUpLimit) ||
+          !Number.isSafeInteger(metadata?.configVersion) ||
+          Number(metadata?.configVersion) < 0 ||
+          amountIrR > BigInt(metadata!.onlineTopUpLimit as number)
+        )
+          throw new ConflictException('Stored top-up limit requires reconciliation');
+        return this.financialReview(profileId, amountIrR, {
+          onlineTopUpLimit: metadata!.onlineTopUpLimit as number,
+          configVersion: metadata!.configVersion as number,
+        });
+      }
+      const limit = await this.walletService.validateOnlineTopUpAmount(amountIrR, client);
+      return this.financialReview(profileId, amountIrR, limit);
+    });
+  }
+
+  private assertStoredReview(row: TransactionRow, input: InitiateOnlineTopUpInput): void {
+    if (!input.expectedReviewHash) return;
+    const metadata = row.metadata as { financialReview?: unknown } | null;
+    if (!metadata?.financialReview) return; // Accepted before review snapshots were introduced.
+    this.reviews.assertStored(metadata, input.expectedReviewHash, {
+      action: 'wallet.online-topup-initiation',
+      profileId: input.profileId,
+      resourceId: input.profileId,
+    });
+  }
 
   async initiate(input: InitiateOnlineTopUpInput): Promise<InitiateOnlineTopUpResult> {
     const idempotencyKey = input.idempotencyKey.trim();
@@ -339,11 +436,16 @@ export class OnlineTopUpService {
             amountIrR,
             true
           );
-          return mapTransaction(row as Parameters<typeof mapTransaction>[0]);
+          const pending = mapTransaction(row as Parameters<typeof mapTransaction>[0]);
+          this.assertStoredReview(pending, input);
+          return pending;
         }
         // Existing accepted intents retain their original limit; new intents use
         // the locked current version. Any failure also rolls back empty-wallet creation.
         const snapshot = await this.walletService.validateOnlineTopUpAmount(amountIrR, client);
+        const review = this.financialReview(profileId, amountIrR, snapshot);
+        if (input.expectedReviewHash)
+          this.reviews.assertConfirmed(review, input.expectedReviewHash);
         const inserted = await client.query(
           `INSERT INTO wallet_transactions
              (wallet_id, type, amount, state, idempotency_key, description, metadata)
@@ -357,6 +459,7 @@ export class OnlineTopUpService {
               channel: 'online',
               onlineTopUpLimit: snapshot.onlineTopUpLimit,
               configVersion: snapshot.configVersion,
+              ...(input.expectedReviewHash ? { financialReview: review } : {}),
             }),
           ]
         );
@@ -370,6 +473,9 @@ export class OnlineTopUpService {
               sessionId: actor.sessionId,
               profileId: canonicalWalletId,
               transactionId: row.id,
+              ...(input.expectedReviewHash
+                ? { reviewHash: review.hash, financialReview: review }
+                : {}),
             }),
             actor.correlationId ?? correlationIdStorage.getStore() ?? null,
           ]
@@ -394,7 +500,9 @@ export class OnlineTopUpService {
             amountIrR,
             true
           );
-          return mapTransaction(row as Parameters<typeof mapTransaction>[0]);
+          const pending = mapTransaction(row as Parameters<typeof mapTransaction>[0]);
+          this.assertStoredReview(pending, input);
+          return pending;
         });
       }
       throw error;
