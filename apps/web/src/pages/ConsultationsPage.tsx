@@ -1,3 +1,4 @@
+import { ListPage } from '@barghsa/ui';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
@@ -391,140 +392,167 @@ export function ConsultationsPage({
             <h2 id="consultation-requests-title" className="text-xl font-semibold">
               {copy('myRequests')}
             </h2>
-            <ListViewToggle
-              value={view}
-              onChange={setView}
-              labels={{
-                group: t('historyView.group', locale),
-                table: t('historyView.table', locale),
-                card: t('historyView.card', locale),
-              }}
-            />
-            <HistoryFilterPanel
-              query={query}
-              statuses={statuses}
-              dateRange={dateRange}
-              onClear={onClearFilters}
-              onOpen={filterDraft.begin}
-              onApply={onApplyFilters ? filterDraft.apply : undefined}
-              onRemoveFilter={onRemoveFilter}
-              statusOptions={statusOptions}
-              formatDate={(value) =>
-                time.format(value, { dateStyle: 'medium', timeStyle: 'short' })
-              }
-            >
-              {onDraftQueryChange && (
-                <HistoryListControls
-                  value={filterQuery}
-                  onChange={onDraftQueryChange}
-                  locale={locale}
-                  domain="consultation"
-                />
-              )}
-              {onDraftDateRangeChange && (
-                <HistoryDateFilter
-                  value={filterDateRange}
-                  onChange={onDraftDateRangeChange}
-                  locale={locale}
-                  time={time}
-                />
-              )}
-              {onDraftStatusesChange && (
-                <StatusFilter
-                  label={copy('filterStatus')}
-                  clearLabel={copy('clearFilters')}
-                  countLabel={numbers.number(filterStatuses.length)}
-                  value={filterStatuses}
-                  onChange={onDraftStatusesChange}
-                  options={statusOptions}
-                />
-              )}
-            </HistoryFilterPanel>
-            {requestsLoading && <p role="status">{copy('loading')}</p>}
-            {requestsError && <p role="alert">{copy('loadError')}</p>}
-            {requestsError && (
-              <Button variant="outline" onClick={() => setRequestRevision((value) => value + 1)}>
-                {copy('retry')}
-              </Button>
-            )}
-            {!requests.length && !requestsLoading && !requestsError && (
-              <p className="text-muted-foreground">
-                {dateRange.from || dateRange.to || query.q
-                  ? t('historyDates.empty', locale)
-                  : copy(statuses.length ? 'filteredEmpty' : 'emptyRequests')}
-              </p>
-            )}
-            {view === 'table' && requests.length ? (
-              <HistoryTable
-                caption={copy('myRequests')}
-                items={requests}
-                columns={columns}
-                rowKey={(request) => request.id}
+            <ListPage>
+              <ListPage.Toolbar
+                filters={
+                  <HistoryFilterPanel
+                    query={query}
+                    statuses={statuses}
+                    dateRange={dateRange}
+                    onClear={onClearFilters}
+                    onOpen={filterDraft.begin}
+                    onApply={onApplyFilters ? filterDraft.apply : undefined}
+                    onRemoveFilter={onRemoveFilter}
+                    statusOptions={statusOptions}
+                    formatDate={(value) =>
+                      time.format(value, { dateStyle: 'medium', timeStyle: 'short' })
+                    }
+                  >
+                    {onDraftQueryChange && (
+                      <HistoryListControls
+                        value={filterQuery}
+                        onChange={onDraftQueryChange}
+                        locale={locale}
+                        domain="consultation"
+                      />
+                    )}
+                    {onDraftDateRangeChange && (
+                      <HistoryDateFilter
+                        value={filterDateRange}
+                        onChange={onDraftDateRangeChange}
+                        locale={locale}
+                        time={time}
+                      />
+                    )}
+                    {onDraftStatusesChange && (
+                      <StatusFilter
+                        label={copy('filterStatus')}
+                        clearLabel={copy('clearFilters')}
+                        countLabel={numbers.number(filterStatuses.length)}
+                        value={filterStatuses}
+                        onChange={onDraftStatusesChange}
+                        options={statusOptions}
+                      />
+                    )}
+                  </HistoryFilterPanel>
+                }
+                actions={
+                  <ListViewToggle
+                    value={view}
+                    onChange={setView}
+                    labels={{
+                      group: t('historyView.group', locale),
+                      table: t('historyView.table', locale),
+                      card: t('historyView.card', locale),
+                    }}
+                  />
+                }
               />
-            ) : (
-              <ul className="space-y-3">
-                {requests.map((request) => {
-                  const action = consultationNextAction(request, request.refund_pending, locale);
-                  return (
-                    <li key={request.id}>
-                      <Link
-                        to="/consultations/$requestId"
-                        params={{ requestId: request.id }}
-                        className="block rounded-xl border bg-card p-4 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
-                      >
-                        <span className="block font-semibold" dir="auto">
-                          {request.product_snapshot.title[locale]}
-                        </span>
-                        <span className="mt-2 block text-sm">
-                          {copy('status')}: {copy(`status_${request.status}`)}
-                        </span>
-                        <span className="block text-sm text-muted-foreground">
-                          {copy('nextStep')}: {action.text}
-                        </span>
-                        <span className="block text-sm text-muted-foreground">
-                          {copy('owner')}:{' '}
-                          <span dir="auto">
-                            {request.staff_owner_username ?? copy('unassigned')}
-                          </span>
-                        </span>
-                        {request.staff_team && (
-                          <span className="block text-sm text-muted-foreground">
-                            {copy('team')}: <span dir="auto">{request.staff_team}</span>
-                          </span>
-                        )}
-                        <span className="block break-all text-xs text-muted-foreground">
-                          {t('historySearch.reference', locale)}: <bdi>{request.id}</bdi>
-                        </span>
-                        <time
-                          className="mt-2 block text-xs text-muted-foreground"
-                          dateTime={request.submitted_at}
-                        >
-                          {time.format(request.submitted_at, {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                          })}
-                        </time>
-                      </Link>
-                      {request.invoice_id && action.href?.startsWith('/invoices/') && (
-                        <Link
-                          to="/invoices/$invoiceId"
-                          params={{ invoiceId: request.invoice_id }}
-                          className="mt-2 inline-block text-sm font-medium text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
-                        >
-                          {copy('viewInvoice')}
-                        </Link>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-            {nextBefore && !requestsError && (
-              <Button variant="outline" disabled={requestsLoading} onClick={loadMore}>
-                {copy('moreRequests')}
-              </Button>
-            )}
+              <ListPage.Content
+                loading={requestsLoading}
+                error={requestsError}
+                empty={requests.length === 0}
+                retainContent={requests.length > 0}
+                loadingView={<p role="status">{copy('loading')}</p>}
+                errorView={
+                  <div className="space-y-2">
+                    <p role="alert">{copy('loadError')}</p>
+                    <Button
+                      variant="outline"
+                      onClick={() => setRequestRevision((value) => value + 1)}
+                    >
+                      {copy('retry')}
+                    </Button>
+                  </div>
+                }
+                emptyView={
+                  <p className="text-muted-foreground">
+                    {dateRange.from || dateRange.to || query.q
+                      ? t('historyDates.empty', locale)
+                      : copy(statuses.length ? 'filteredEmpty' : 'emptyRequests')}
+                  </p>
+                }
+              >
+                {view === 'table' && requests.length ? (
+                  <HistoryTable
+                    caption={copy('myRequests')}
+                    items={requests}
+                    columns={columns}
+                    rowKey={(request) => request.id}
+                  />
+                ) : (
+                  <ul className="space-y-3">
+                    {requests.map((request) => {
+                      const action = consultationNextAction(
+                        request,
+                        request.refund_pending,
+                        locale
+                      );
+                      return (
+                        <li key={request.id}>
+                          <Link
+                            to="/consultations/$requestId"
+                            params={{ requestId: request.id }}
+                            className="block rounded-xl border bg-card p-4 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
+                          >
+                            <span className="block font-semibold" dir="auto">
+                              {request.product_snapshot.title[locale]}
+                            </span>
+                            <span className="mt-2 block text-sm">
+                              {copy('status')}: {copy(`status_${request.status}`)}
+                            </span>
+                            <span className="block text-sm text-muted-foreground">
+                              {copy('nextStep')}: {action.text}
+                            </span>
+                            <span className="block text-sm text-muted-foreground">
+                              {copy('owner')}:{' '}
+                              <span dir="auto">
+                                {request.staff_owner_username ?? copy('unassigned')}
+                              </span>
+                            </span>
+                            {request.staff_team && (
+                              <span className="block text-sm text-muted-foreground">
+                                {copy('team')}: <span dir="auto">{request.staff_team}</span>
+                              </span>
+                            )}
+                            <span className="block break-all text-xs text-muted-foreground">
+                              {t('historySearch.reference', locale)}: <bdi>{request.id}</bdi>
+                            </span>
+                            <time
+                              className="mt-2 block text-xs text-muted-foreground"
+                              dateTime={request.submitted_at}
+                            >
+                              {time.format(request.submitted_at, {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                              })}
+                            </time>
+                          </Link>
+                          {request.invoice_id && action.href?.startsWith('/invoices/') && (
+                            <Link
+                              to="/invoices/$invoiceId"
+                              params={{ invoiceId: request.invoice_id }}
+                              className="mt-2 inline-block text-sm font-medium text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
+                            >
+                              {copy('viewInvoice')}
+                            </Link>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </ListPage.Content>
+              <ListPage.Pagination
+                kind="cursor"
+                hasMore={!!nextBefore && !requestsError}
+                loading={requestsLoading}
+                onNext={loadMore}
+                label={t('historyPagination.label', locale)}
+                nextLabel={copy('moreRequests')}
+              />
+            </ListPage>
           </section>
         </>
       )}

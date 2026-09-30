@@ -1,3 +1,4 @@
+import { ListToolbar } from '@barghsa/ui';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
@@ -77,25 +78,29 @@ export function CustomerContractFilters({ history }: { history: CustomerContract
         contractText(history.query.serviceType ?? 'all', locale)
       }
     >
-      <div className="grid gap-3 sm:grid-cols-2">
-        <TextFilter
-          label={t('historySearch.label', locale)}
-          placeholder={copy('search')}
-          value={controls.query.q}
-          onChange={(q) => controls.onQueryChange({ ...controls.query, q })}
-        />
-        <ListSortDropdown
-          label={t('historySearch.sort', locale)}
-          value={controls.query.sort}
-          onChange={(sort) =>
-            controls.onQueryChange({ ...controls.query, sort: sort as ContractListQuery['sort'] })
-          }
-          options={(['published_at:desc', 'published_at:asc'] as const).map((value) => ({
-            value,
-            label: copy(value.endsWith('desc') ? 'newest' : 'oldest'),
-          }))}
-        />
-      </div>
+      <ListToolbar
+        search={
+          <TextFilter
+            label={t('historySearch.label', locale)}
+            placeholder={copy('search')}
+            value={controls.query.q}
+            onChange={(q) => controls.onQueryChange({ ...controls.query, q })}
+          />
+        }
+        sort={
+          <ListSortDropdown
+            label={t('historySearch.sort', locale)}
+            value={controls.query.sort}
+            onChange={(sort) =>
+              controls.onQueryChange({ ...controls.query, sort: sort as ContractListQuery['sort'] })
+            }
+            options={(['published_at:desc', 'published_at:asc'] as const).map((value) => ({
+              value,
+              label: copy(value.endsWith('desc') ? 'newest' : 'oldest'),
+            }))}
+          />
+        }
+      />
       <SelectFilter
         label={contractText('serviceType', locale)}
         allLabel={contractText('all', locale)}

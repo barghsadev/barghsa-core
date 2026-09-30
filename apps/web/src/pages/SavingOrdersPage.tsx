@@ -1,3 +1,4 @@
+import { ListPage } from '@barghsa/ui';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
@@ -91,6 +92,7 @@ export function SavingOrdersPage({
   } = useCursorHistory<SavingOrderRow>(
     `${pendingOnly}:${statusesKey}:${rangeKey}:${query.q}:${query.sort}`
   );
+  const [revision, setRevision] = useState(0);
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
   useEffect(() => {
     const controller = new AbortController();
@@ -134,6 +136,7 @@ export function SavingOrdersPage({
     return () => controller.abort();
   }, [
     before,
+    revision,
     pendingOnly,
     statusesKey,
     dateRange.from,
@@ -272,143 +275,173 @@ export function SavingOrdersPage({
           {copy('pendingOrders')}
         </Link>
       </nav>
-      <ListViewToggle
-        value={view}
-        onChange={setView}
-        labels={{
-          group: t('historyView.group', locale),
-          table: t('historyView.table', locale),
-          card: t('historyView.card', locale),
-        }}
-      />
-      <HistoryFilterPanel
-        query={query}
-        statuses={statuses}
-        dateRange={dateRange}
-        onClear={onClearFilters}
-        onOpen={filterDraft.begin}
-        onApply={onApplyFilters ? filterDraft.apply : undefined}
-        onRemoveFilter={onRemoveFilter}
-        statusOptions={statusOptions}
-        formatDate={(value) => time.format(value, { dateStyle: 'medium', timeStyle: 'short' })}
-      >
-        {onDraftQueryChange && (
-          <HistoryListControls
-            value={filterQuery}
-            onChange={onDraftQueryChange}
-            locale={locale}
-            domain="saving"
-          />
-        )}
-        {onDraftDateRangeChange && (
-          <HistoryDateFilter
-            value={filterDateRange}
-            onChange={onDraftDateRangeChange}
-            locale={locale}
-            time={time}
-          />
-        )}
-        {onDraftStatusesChange && (
-          <StatusFilter
-            label={copy('filterStatus')}
-            clearLabel={copy('clearFilters')}
-            countLabel={numbers.number(filterStatuses.length)}
-            value={filterStatuses}
-            onChange={onDraftStatusesChange}
-            options={statusOptions}
-          />
-        )}
-      </HistoryFilterPanel>
-      {time.notice}
-      {state === 'loading' && <p role="status">{copy('loading')}</p>}
-      {state === 'error' && <p role="alert">{copy('error')}</p>}
-      {state === 'ready' && orders.length === 0 && (
-        <p>
-          {dateRange.from || dateRange.to || query.q
-            ? t('historyDates.empty', locale)
-            : copy(
-                statuses.length ? 'filteredEmpty' : pendingOnly ? 'noPendingOrders' : 'noOrders'
+      <ListPage>
+        <ListPage.Toolbar
+          filters={
+            <HistoryFilterPanel
+              query={query}
+              statuses={statuses}
+              dateRange={dateRange}
+              onClear={onClearFilters}
+              onOpen={filterDraft.begin}
+              onApply={onApplyFilters ? filterDraft.apply : undefined}
+              onRemoveFilter={onRemoveFilter}
+              statusOptions={statusOptions}
+              formatDate={(value) =>
+                time.format(value, { dateStyle: 'medium', timeStyle: 'short' })
+              }
+            >
+              {onDraftQueryChange && (
+                <HistoryListControls
+                  value={filterQuery}
+                  onChange={onDraftQueryChange}
+                  locale={locale}
+                  domain="saving"
+                />
               )}
-        </p>
-      )}
-      {view === 'table' && orders.length ? (
-        <HistoryTable
-          caption={copy('orders')}
-          items={orders}
-          columns={columns}
-          rowKey={(order) => order.id}
+              {onDraftDateRangeChange && (
+                <HistoryDateFilter
+                  value={filterDateRange}
+                  onChange={onDraftDateRangeChange}
+                  locale={locale}
+                  time={time}
+                />
+              )}
+              {onDraftStatusesChange && (
+                <StatusFilter
+                  label={copy('filterStatus')}
+                  clearLabel={copy('clearFilters')}
+                  countLabel={numbers.number(filterStatuses.length)}
+                  value={filterStatuses}
+                  onChange={onDraftStatusesChange}
+                  options={statusOptions}
+                />
+              )}
+            </HistoryFilterPanel>
+          }
+          actions={
+            <ListViewToggle
+              value={view}
+              onChange={setView}
+              labels={{
+                group: t('historyView.group', locale),
+                table: t('historyView.table', locale),
+                card: t('historyView.card', locale),
+              }}
+            />
+          }
         />
-      ) : (
-        <div className="space-y-3">
-          {orders.map((order) => {
-            const action = savingNextAction(order);
-            return (
-              <Card key={order.id}>
-                <CardContent className="space-y-2 pt-6">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <h2 className="font-semibold">{order.plan_title[locale]}</h2>
-                      <p className="text-sm text-muted-foreground">
-                        {order.hardware_title[locale]}
+        {time.notice}
+        <ListPage.Content
+          loading={state === 'loading'}
+          error={state === 'error'}
+          empty={orders.length === 0}
+          retainContent={orders.length > 0}
+          loadingView={<p role="status">{copy('loading')}</p>}
+          errorView={
+            <div className="space-y-2">
+              <p role="alert">{copy('error')}</p>
+              <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
+                {t('historyPagination.retry', locale)}
+              </Button>
+            </div>
+          }
+          emptyView={
+            <p>
+              {dateRange.from || dateRange.to || query.q
+                ? t('historyDates.empty', locale)
+                : copy(
+                    statuses.length ? 'filteredEmpty' : pendingOnly ? 'noPendingOrders' : 'noOrders'
+                  )}
+            </p>
+          }
+        >
+          {view === 'table' && orders.length ? (
+            <HistoryTable
+              caption={copy('orders')}
+              items={orders}
+              columns={columns}
+              rowKey={(order) => order.id}
+            />
+          ) : (
+            <div className="space-y-3">
+              {orders.map((order) => {
+                const action = savingNextAction(order);
+                return (
+                  <Card key={order.id}>
+                    <CardContent className="space-y-2 pt-6">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <h2 className="font-semibold">{order.plan_title[locale]}</h2>
+                          <p className="text-sm text-muted-foreground">
+                            {order.hardware_title[locale]}
+                          </p>
+                        </div>
+                        <span className="rounded-full bg-muted px-3 py-1 text-xs">
+                          {copy(
+                            order.status === 'awaiting_staff_review'
+                              ? 'staffReview'
+                              : order.status === 'in_progress'
+                                ? 'inProgress'
+                                : order.status
+                          )}
+                        </span>
+                      </div>
+                      <p className="text-sm">
+                        <bdi>{order.bill_identifier}</bdi> ·{' '}
+                        <time dateTime={order.submitted_at}>
+                          {time.format(order.submitted_at, {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                          })}
+                        </time>
                       </p>
-                    </div>
-                    <span className="rounded-full bg-muted px-3 py-1 text-xs">
-                      {copy(
-                        order.status === 'awaiting_staff_review'
-                          ? 'staffReview'
-                          : order.status === 'in_progress'
-                            ? 'inProgress'
-                            : order.status
-                      )}
-                    </span>
-                  </div>
-                  <p className="text-sm">
-                    <bdi>{order.bill_identifier}</bdi> ·{' '}
-                    <time dateTime={order.submitted_at}>
-                      {time.format(order.submitted_at, {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                      })}
-                    </time>
-                  </p>
-                  <p className="break-all text-xs text-muted-foreground">
-                    {t('historySearch.reference', locale)}: <bdi>{order.id}</bdi>
-                  </p>
-                  <p className="font-medium">
-                    <bdi>{numbers.money(order.total_amount)}</bdi>
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {copy('financialStatus')}: {copy('financial.' + order.financial_status)}
-                  </p>
-                  <p className="text-sm">
-                    {copy('nextAction')}:{' '}
-                    {action.href ? (
-                      <Link className="font-medium text-primary hover:underline" to={action.href}>
-                        {copy('action.' + action.kind)}
+                      <p className="break-all text-xs text-muted-foreground">
+                        {t('historySearch.reference', locale)}: <bdi>{order.id}</bdi>
+                      </p>
+                      <p className="font-medium">
+                        <bdi>{numbers.money(order.total_amount)}</bdi>
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {copy('financialStatus')}: {copy('financial.' + order.financial_status)}
+                      </p>
+                      <p className="text-sm">
+                        {copy('nextAction')}:{' '}
+                        {action.href ? (
+                          <Link
+                            className="font-medium text-primary hover:underline"
+                            to={action.href}
+                          >
+                            {copy('action.' + action.kind)}
+                          </Link>
+                        ) : (
+                          <span>{copy('action.' + action.kind)}</span>
+                        )}
+                      </p>
+                      <Link
+                        to="/savings/orders/$orderId"
+                        params={{ orderId: order.id }}
+                        className="inline-block text-sm font-medium text-primary hover:underline"
+                      >
+                        {copy('orderDetail')}
                       </Link>
-                    ) : (
-                      <span>{copy('action.' + action.kind)}</span>
-                    )}
-                  </p>
-                  <Link
-                    to="/savings/orders/$orderId"
-                    params={{ orderId: order.id }}
-                    className="inline-block text-sm font-medium text-primary hover:underline"
-                  >
-                    {copy('orderDetail')}
-                  </Link>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      )}
-      {nextBefore && state !== 'error' ? (
-        <Button variant="outline" disabled={state === 'loading'} onClick={loadMore}>
-          {copy('moreOrders')}
-        </Button>
-      ) : null}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+        </ListPage.Content>
+        <ListPage.Pagination
+          kind="cursor"
+          hasMore={!!nextBefore && state !== 'error'}
+          loading={state === 'loading'}
+          onNext={loadMore}
+          label={t('historyPagination.label', locale)}
+          nextLabel={copy('moreOrders')}
+        />
+      </ListPage>
     </main>
   );
 }

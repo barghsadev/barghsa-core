@@ -6,6 +6,8 @@ export interface I18nDictionary {
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
   'historyFilters.label': 'فیلترها',
+  'historyPagination.label': 'صفحه‌های سوابق',
+  'historyPagination.retry': 'تلاش دوباره',
   'historyFilters.apply': 'اعمال فیلترها',
   'historyFilters.cancel': 'انصراف',
   'historyFilters.close': 'بستن فیلترها',
@@ -1558,6 +1560,8 @@ export const fa: I18nDictionary = {
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
   'historyFilters.label': 'Filters',
+  'historyPagination.label': 'History pages',
+  'historyPagination.retry': 'Retry',
   'historyFilters.apply': 'Apply filters',
   'historyFilters.cancel': 'Cancel',
   'historyFilters.close': 'Close filters',

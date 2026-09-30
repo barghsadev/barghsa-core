@@ -1,3 +1,4 @@
+import { ListPage, ListToolbar } from '@barghsa/ui';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
@@ -249,174 +250,208 @@ export function InvoicesPage({
         </Link>
       </nav>
 
-      <ListViewToggle
-        value={view}
-        onChange={setView}
-        labels={{
-          group: t('historyView.group', locale),
-          table: t('historyView.table', locale),
-          card: t('historyView.card', locale),
-        }}
-      />
-      <HistoryFilterPanel
-        query={query}
-        statuses={statuses}
-        dateRange={dateRange}
-        onClear={onClearFilters}
-        onOpen={filterDraft.begin}
-        onApply={onApplyFilters ? filterDraft.apply : undefined}
-        onRemoveFilter={onRemoveFilter}
-        statusOptions={statusOptions}
-        formatDate={(value) => time.format(value, { dateStyle: 'medium', timeStyle: 'short' })}
-        dateLabel={t('invoices.filter.created', locale)}
-        amountRange={amountRange}
-      >
-        {onDraftQueryChange && (
-          <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
-            <TextFilter
-              value={filterQuery.q}
-              onChange={(q) => onDraftQueryChange({ ...filterQuery, q })}
-              label={t('historySearch.label', locale)}
-              placeholder={t('invoices.filter.search', locale)}
-            />
-            <ListSortDropdown
-              value={filterQuery.sort}
-              onChange={(sort) =>
-                onDraftQueryChange({ ...filterQuery, sort: sort as InvoiceListQuery['sort'] })
+      <ListPage>
+        <ListPage.Toolbar
+          filters={
+            <HistoryFilterPanel
+              query={query}
+              statuses={statuses}
+              dateRange={dateRange}
+              onClear={onClearFilters}
+              onOpen={filterDraft.begin}
+              onApply={onApplyFilters ? filterDraft.apply : undefined}
+              onRemoveFilter={onRemoveFilter}
+              statusOptions={statusOptions}
+              formatDate={(value) =>
+                time.format(value, { dateStyle: 'medium', timeStyle: 'short' })
               }
-              label={t('historySearch.sort', locale)}
-              options={(['created_at:desc', 'created_at:asc'] as const).map((value) => ({
-                value,
-                label: t(
-                  value.endsWith('desc') ? 'invoices.filter.newest' : 'invoices.filter.oldest',
-                  locale
-                ),
-              }))}
+              dateLabel={t('invoices.filter.created', locale)}
+              amountRange={amountRange}
+            >
+              {onDraftQueryChange && (
+                <ListToolbar
+                  search={
+                    <TextFilter
+                      value={filterQuery.q}
+                      onChange={(q) => onDraftQueryChange({ ...filterQuery, q })}
+                      label={t('historySearch.label', locale)}
+                      placeholder={t('invoices.filter.search', locale)}
+                    />
+                  }
+                  sort={
+                    <ListSortDropdown
+                      value={filterQuery.sort}
+                      onChange={(sort) =>
+                        onDraftQueryChange({
+                          ...filterQuery,
+                          sort: sort as InvoiceListQuery['sort'],
+                        })
+                      }
+                      label={t('historySearch.sort', locale)}
+                      options={(['created_at:desc', 'created_at:asc'] as const).map((value) => ({
+                        value,
+                        label: t(
+                          value.endsWith('desc')
+                            ? 'invoices.filter.newest'
+                            : 'invoices.filter.oldest',
+                          locale
+                        ),
+                      }))}
+                    />
+                  }
+                />
+              )}
+              {onDraftDateRangeChange && (
+                <HistoryDateFilter
+                  value={filterDateRange}
+                  onChange={onDraftDateRangeChange}
+                  locale={locale}
+                  time={time}
+                  label={t('invoices.filter.created', locale)}
+                />
+              )}
+              {onDraftAmountRangeChange && (
+                <NumberFilter
+                  value={filterAmountRange}
+                  onChange={onDraftAmountRangeChange}
+                  parseRange={parseNumberRange}
+                  labels={{
+                    label: t('invoices.filter.amount', locale),
+                    min: t('invoices.filter.min', locale),
+                    max: t('invoices.filter.max', locale),
+                    apply: t('invoices.filter.applyAmount', locale),
+                    clear: t('invoices.filter.clearAmount', locale),
+                    invalid: t('invoices.filter.invalidAmount', locale),
+                  }}
+                />
+              )}
+              {onDraftStatusesChange && (
+                <StatusFilter
+                  label={t('invoices.filter.state', locale)}
+                  clearLabel={t('invoices.filter.clearState', locale)}
+                  countLabel={numbers.number(filterStatuses.length)}
+                  value={filterStatuses}
+                  onChange={onDraftStatusesChange}
+                  options={statusOptions}
+                />
+              )}
+            </HistoryFilterPanel>
+          }
+          actions={
+            <ListViewToggle
+              value={view}
+              onChange={setView}
+              labels={{
+                group: t('historyView.group', locale),
+                table: t('historyView.table', locale),
+                card: t('historyView.card', locale),
+              }}
             />
-          </div>
-        )}
-        {onDraftDateRangeChange && (
-          <HistoryDateFilter
-            value={filterDateRange}
-            onChange={onDraftDateRangeChange}
-            locale={locale}
-            time={time}
-            label={t('invoices.filter.created', locale)}
-          />
-        )}
-        {onDraftAmountRangeChange && (
-          <NumberFilter
-            value={filterAmountRange}
-            onChange={onDraftAmountRangeChange}
-            parseRange={parseNumberRange}
-            labels={{
-              label: t('invoices.filter.amount', locale),
-              min: t('invoices.filter.min', locale),
-              max: t('invoices.filter.max', locale),
-              apply: t('invoices.filter.applyAmount', locale),
-              clear: t('invoices.filter.clearAmount', locale),
-              invalid: t('invoices.filter.invalidAmount', locale),
-            }}
-          />
-        )}
-        {onDraftStatusesChange && (
-          <StatusFilter
-            label={t('invoices.filter.state', locale)}
-            clearLabel={t('invoices.filter.clearState', locale)}
-            countLabel={numbers.number(filterStatuses.length)}
-            value={filterStatuses}
-            onChange={onDraftStatusesChange}
-            options={statusOptions}
-          />
-        )}
-      </HistoryFilterPanel>
-
-      {loading ? (
-        <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
-          {t('invoices.loading', locale)}
-        </p>
-      ) : error ? (
-        <div className="space-y-2" role="alert">
-          <p className="text-destructive">{t('invoices.error.load', locale)}</p>
-          <Button onClick={() => setRevision((value) => value + 1)}>
-            {t('invoices.filter.retry', locale)}
-          </Button>
-        </div>
-      ) : items.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-input bg-card text-card-foreground p-8 text-center text-sm text-muted-foreground">
-          {t(
-            filtered
-              ? 'historyDates.empty'
-              : unpaidOnly
-                ? 'invoices.filter.unpaidEmpty'
-                : 'invoices.empty',
-            locale
-          )}
-        </p>
-      ) : view === 'table' ? (
-        <HistoryTable
-          caption={t('invoices.title', locale)}
-          items={items}
-          columns={columns}
-          rowKey={(item) => item.invoiceId}
+          }
         />
-      ) : (
-        <ul className="space-y-3">
-          {items.map((item) => (
-            <li key={item.invoiceId}>
-              <Link
-                to="/invoices/$invoiceId"
-                params={{ invoiceId: item.invoiceId }}
-                className="block rounded-lg border border-border bg-card text-card-foreground p-4 shadow-sm hover:border-primary/40 hover:shadow-md"
-              >
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-medium text-foreground">{t(roleI18nKey(item.role), locale)}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {t(stateI18nKey(item.state), locale)}
-                  </p>
-                </div>
-                <p className="mt-2 text-lg font-semibold text-foreground">
-                  {numbers.money(item.totalAmount)}
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {t('invoices.list.reference', locale)}:{' '}
-                  <bdi dir="ltr" className="break-all font-mono">
-                    {item.invoiceId}
-                  </bdi>
-                </p>
-                {item.paidAmount !== undefined ? (
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {t('invoices.list.paid', locale)}: {numbers.money(item.paidAmount)}
-                  </p>
-                ) : null}
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {t('invoices.list.issued', locale)}: {time.format(item.issuedAt)}
-                </p>
-                {item.dueAt && (
-                  <p className="text-sm text-muted-foreground">
-                    {t('invoices.list.due', locale)}: {time.format(item.dueAt)}
-                  </p>
-                )}
-                {item.periodStart && item.periodEnd ? (
-                  <p className="text-sm text-muted-foreground">
-                    {t('invoices.list.period', locale)}:{' '}
-                    {formatInvoiceServicePeriod(item.periodStart, item.periodEnd, time.format)}
-                  </p>
-                ) : null}
-                {item.explanation ? (
-                  <p className="mt-2 text-sm text-foreground">{item.explanation}</p>
-                ) : null}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-      {nextBefore && !error && (
-        <Button variant="outline" disabled={loading} onClick={loadMore}>
-          {t('invoices.filter.more', locale)}
-        </Button>
-      )}
+
+        <ListPage.Content
+          loading={loading}
+          error={error}
+          empty={items.length === 0}
+          retainContent={items.length > 0}
+          loadingView={
+            <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
+              {t('invoices.loading', locale)}
+            </p>
+          }
+          errorView={
+            <div className="space-y-2" role="alert">
+              <p className="text-destructive">{t('invoices.error.load', locale)}</p>
+              <Button onClick={() => setRevision((value) => value + 1)}>
+                {t('invoices.filter.retry', locale)}
+              </Button>
+            </div>
+          }
+          emptyView={
+            <p className="rounded-lg border border-dashed border-input bg-card text-card-foreground p-8 text-center text-sm text-muted-foreground">
+              {t(
+                filtered
+                  ? 'historyDates.empty'
+                  : unpaidOnly
+                    ? 'invoices.filter.unpaidEmpty'
+                    : 'invoices.empty',
+                locale
+              )}
+            </p>
+          }
+        >
+          {view === 'table' ? (
+            <HistoryTable
+              caption={t('invoices.title', locale)}
+              items={items}
+              columns={columns}
+              rowKey={(item) => item.invoiceId}
+            />
+          ) : (
+            <ul className="space-y-3">
+              {items.map((item) => (
+                <li key={item.invoiceId}>
+                  <Link
+                    to="/invoices/$invoiceId"
+                    params={{ invoiceId: item.invoiceId }}
+                    className="block rounded-lg border border-border bg-card text-card-foreground p-4 shadow-sm hover:border-primary/40 hover:shadow-md"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="font-medium text-foreground">
+                        {t(roleI18nKey(item.role), locale)}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {t(stateI18nKey(item.state), locale)}
+                      </p>
+                    </div>
+                    <p className="mt-2 text-lg font-semibold text-foreground">
+                      {numbers.money(item.totalAmount)}
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {t('invoices.list.reference', locale)}:{' '}
+                      <bdi dir="ltr" className="break-all font-mono">
+                        {item.invoiceId}
+                      </bdi>
+                    </p>
+                    {item.paidAmount !== undefined ? (
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {t('invoices.list.paid', locale)}: {numbers.money(item.paidAmount)}
+                      </p>
+                    ) : null}
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {t('invoices.list.issued', locale)}: {time.format(item.issuedAt)}
+                    </p>
+                    {item.dueAt && (
+                      <p className="text-sm text-muted-foreground">
+                        {t('invoices.list.due', locale)}: {time.format(item.dueAt)}
+                      </p>
+                    )}
+                    {item.periodStart && item.periodEnd ? (
+                      <p className="text-sm text-muted-foreground">
+                        {t('invoices.list.period', locale)}:{' '}
+                        {formatInvoiceServicePeriod(item.periodStart, item.periodEnd, time.format)}
+                      </p>
+                    ) : null}
+                    {item.explanation ? (
+                      <p className="mt-2 text-sm text-foreground">{item.explanation}</p>
+                    ) : null}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </ListPage.Content>
+        <ListPage.Pagination
+          kind="cursor"
+          hasMore={!!nextBefore && !error}
+          loading={loading}
+          onNext={loadMore}
+          label={t('historyPagination.label', locale)}
+          nextLabel={t('invoices.filter.more', locale)}
+        />
+      </ListPage>
     </div>
   );
 }

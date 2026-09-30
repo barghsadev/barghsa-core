@@ -18,6 +18,7 @@ import {
   PageLoading,
   StatusBadge,
   ListViewToggle,
+  ListPage,
 } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
@@ -144,7 +145,6 @@ function Workspace({
           </Link>
         </nav>
       ) : null}
-      {!staff && customerHistory && <CustomerContractFilters history={customerHistory} />}
       {staff ? (
         <form onSubmit={apply} className="flex flex-col gap-4 rounded-xl border bg-card p-5">
           <FieldGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -222,6 +222,7 @@ function Workspace({
         key={generation}
         staff={staff}
         query={staff ? query : customerParams.toString()}
+        customerHistory={customerHistory}
         initialSelected={createdId ?? new URLSearchParams(window.location.search).get('contractId')}
       />
     </div>
@@ -229,11 +230,13 @@ function Workspace({
 }
 function ContractResults({
   staff,
+  customerHistory,
   query,
   initialSelected,
 }: {
   staff: boolean;
   query: string;
+  customerHistory?: CustomerContractHistoryControls | undefined;
   initialSelected: string | null;
 }) {
   const { view, setView } = useListView('contracts');
@@ -242,6 +245,7 @@ function ContractResults({
   const numbers = useNumberFormatting(locale);
   const word = (key: string) => contractText(key, locale);
   const [reload, setReload] = useState(0);
+  const [retryRevision, setRetryRevision] = useState(0);
   const {
     items,
     before: cursor,
@@ -273,7 +277,7 @@ function ContractResults({
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [staff, query, cursor, reload, acceptPage]);
+  }, [staff, query, cursor, reload, retryRevision, acceptPage]);
   function refresh() {
     setReload((value) => value + 1);
   }
@@ -494,22 +498,33 @@ function ContractResults({
     },
   ];
   return (
-    <div className="flex flex-col gap-5">
+    <ListPage>
       {!staff && time.notice}
-      {!staff && (
-        <ListViewToggle
-          value={view}
-          onChange={setView}
-          labels={{
-            group: appText('historyView.group', locale),
-            table: appText('historyView.table', locale),
-            card: appText('historyView.card', locale),
-          }}
-        />
-      )}
-      <Button className="self-start" variant="outline" onClick={refresh} disabled={loading}>
-        {word('refresh')}
-      </Button>
+      <ListPage.Toolbar
+        filters={
+          !staff && customerHistory ? (
+            <CustomerContractFilters history={customerHistory} />
+          ) : undefined
+        }
+        actions={
+          <>
+            {!staff && (
+              <ListViewToggle
+                value={view}
+                onChange={setView}
+                labels={{
+                  group: appText('historyView.group', locale),
+                  table: appText('historyView.table', locale),
+                  card: appText('historyView.card', locale),
+                }}
+              />
+            )}
+            <Button className="self-start" variant="outline" onClick={refresh} disabled={loading}>
+              {word('refresh')}
+            </Button>
+          </>
+        }
+      />
       {selected ? (
         <ContractDetail
           key={`${selected}:${reload}`}
@@ -519,48 +534,61 @@ function ContractResults({
           onChanged={refresh}
         />
       ) : null}
-      {error ? (
-        <Alert variant="destructive">
-          <AlertDescription>{word('error')}</AlertDescription>
-        </Alert>
-      ) : null}
-      {loading && !items.length ? <PageLoading label={word('loading')} /> : null}
-      {!loading && !error && !items.length ? (
-        <EmptyState title={word('empty')} description={word('emptyHint')} />
-      ) : null}
-      {items.length ? (
-        !staff && view === 'table' ? (
-          <HistoryTable
-            caption={word('title')}
-            items={items}
-            columns={columns}
-            rowKey={(item) => item.id}
-          />
-        ) : (
-          <ul className="divide-y rounded-xl border bg-card">
-            {items.map((item) => (
-              <li key={item.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
-                <div>
-                  {renderIdentity(item)}
-                  {renderParty(item)}
-                  {renderLinked(item)}
-                  {renderValue(item)}
-                  {renderHistory(item)}
-                  {renderStarts(item)}
-                  {renderEnds(item)}
-                  {renderActivity(item)}
-                </div>
-                {renderStatus(item)}
-              </li>
-            ))}
-          </ul>
-        )
-      ) : null}
-      {next ? (
-        <Button variant="outline" disabled={loading || error} onClick={loadMore}>
-          {word('next')}
-        </Button>
-      ) : null}
-    </div>
+      <ListPage.Content
+        loading={loading}
+        error={error}
+        empty={items.length === 0}
+        retainContent={items.length > 0}
+        loadingView={<PageLoading label={word('loading')} />}
+        errorView={
+          <div className="space-y-2">
+            <Alert variant="destructive">
+              <AlertDescription>{word('error')}</AlertDescription>
+            </Alert>
+            <Button variant="outline" onClick={() => setRetryRevision((value) => value + 1)}>
+              {appText('historyPagination.retry', locale)}
+            </Button>
+          </div>
+        }
+        emptyView={<EmptyState title={word('empty')} description={word('emptyHint')} />}
+      >
+        {items.length ? (
+          !staff && view === 'table' ? (
+            <HistoryTable
+              caption={word('title')}
+              items={items}
+              columns={columns}
+              rowKey={(item) => item.id}
+            />
+          ) : (
+            <ul className="divide-y rounded-xl border bg-card">
+              {items.map((item) => (
+                <li key={item.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
+                  <div>
+                    {renderIdentity(item)}
+                    {renderParty(item)}
+                    {renderLinked(item)}
+                    {renderValue(item)}
+                    {renderHistory(item)}
+                    {renderStarts(item)}
+                    {renderEnds(item)}
+                    {renderActivity(item)}
+                  </div>
+                  {renderStatus(item)}
+                </li>
+              ))}
+            </ul>
+          )
+        ) : null}
+      </ListPage.Content>
+      <ListPage.Pagination
+        kind="cursor"
+        hasMore={!!next && !error}
+        loading={loading}
+        onNext={loadMore}
+        label={appText('historyPagination.label', locale)}
+        nextLabel={word('next')}
+      />
+    </ListPage>
   );
 }

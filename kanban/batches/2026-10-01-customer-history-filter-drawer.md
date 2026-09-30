@@ -37,4 +37,4 @@ The initial failed test runs are not counted as passes. Modal tests were updated
 
 ## Publication
 
-The preceding mobile topbar/account batch is published as `2077edca313db7fefc77eb581ec69ac499c6ec15`; CI run `36774899041` passes all five gates under the existing temporary fast mode. This reviewed batch is published directly to main after all related local checks. Its exact remote SHA and CI are verified after push; no remote pass is claimed here.
+The preceding mobile topbar/account batch is published as `2077edca313db7fefc77eb581ec69ac499c6ec15`; CI run `36774899041` passes all five gates under the existing temporary fast mode. This reviewed batch is published directly to main as `6caa6d4d4efefe40eb725f665afcf34f2b0d59cc`. CI run `36778092189` passes all five gates under the existing temporary fast mode; the combined-coverage gate remains the configured exemption, not measured coverage.

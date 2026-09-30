@@ -1,3 +1,4 @@
+import { ListPage } from '@barghsa/ui';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
@@ -324,140 +325,161 @@ export function ElectricityOrdersPage({
           {t('electricity.orders.pending', locale)}
         </Link>
       </nav>
-      <ListViewToggle
-        value={view}
-        onChange={setView}
-        labels={{
-          group: t('historyView.group', locale),
-          table: t('historyView.table', locale),
-          card: t('historyView.card', locale),
-        }}
-      />
-      <HistoryFilterPanel
-        query={query}
-        statuses={statuses}
-        dateRange={dateRange}
-        onClear={onClearFilters}
-        onOpen={filterDraft.begin}
-        onApply={onApplyFilters ? filterDraft.apply : undefined}
-        onRemoveFilter={onRemoveFilter}
-        statusOptions={statusOptions}
-        formatDate={(value) => time.format(value, { dateStyle: 'medium', timeStyle: 'short' })}
-      >
-        {onDraftQueryChange && (
-          <HistoryListControls
-            value={filterQuery}
-            onChange={onDraftQueryChange}
-            locale={locale}
-            domain="electricity"
-          />
-        )}
-        {onDraftDateRangeChange && (
-          <HistoryDateFilter
-            value={filterDateRange}
-            onChange={onDraftDateRangeChange}
-            locale={locale}
-            time={time}
-          />
-        )}
-        {onDraftStatusesChange && (
-          <StatusFilter
-            label={t('electricity.orders.filterStatus', locale)}
-            clearLabel={t('electricity.orders.clearFilters', locale)}
-            countLabel={numbers.number(filterStatuses.length)}
-            value={filterStatuses}
-            onChange={onDraftStatusesChange}
-            options={statusOptions}
-          />
-        )}
-      </HistoryFilterPanel>
-      {time.notice}
-      {loading ? (
-        <p role="status">{t('electricity.orders.loading', locale)}</p>
-      ) : error ? (
-        <div role="alert" className="space-y-2">
-          <p>{t('electricity.orders.error', locale)}</p>
-          <Button onClick={() => setRevision((value) => value + 1)}>
-            {t('electricity.order.retry', locale)}
-          </Button>
-        </div>
-      ) : noProfile || orders.length === 0 ? (
-        <p>
-          {t(
-            !noProfile && (statuses.length || dateRange.from || dateRange.to || query.q)
-              ? 'historyDates.empty'
-              : pendingOnly
-                ? 'electricity.orders.pendingEmpty'
-                : 'electricity.orders.empty',
-            locale
-          )}
-        </p>
-      ) : view === 'table' ? (
-        <HistoryTable
-          caption={t('electricity.orders.title', locale)}
-          items={orders}
-          columns={columns}
-          rowKey={(order) => order.orderId}
+      <ListPage>
+        <ListPage.Toolbar
+          filters={
+            <HistoryFilterPanel
+              query={query}
+              statuses={statuses}
+              dateRange={dateRange}
+              onClear={onClearFilters}
+              onOpen={filterDraft.begin}
+              onApply={onApplyFilters ? filterDraft.apply : undefined}
+              onRemoveFilter={onRemoveFilter}
+              statusOptions={statusOptions}
+              formatDate={(value) =>
+                time.format(value, { dateStyle: 'medium', timeStyle: 'short' })
+              }
+            >
+              {onDraftQueryChange && (
+                <HistoryListControls
+                  value={filterQuery}
+                  onChange={onDraftQueryChange}
+                  locale={locale}
+                  domain="electricity"
+                />
+              )}
+              {onDraftDateRangeChange && (
+                <HistoryDateFilter
+                  value={filterDateRange}
+                  onChange={onDraftDateRangeChange}
+                  locale={locale}
+                  time={time}
+                />
+              )}
+              {onDraftStatusesChange && (
+                <StatusFilter
+                  label={t('electricity.orders.filterStatus', locale)}
+                  clearLabel={t('electricity.orders.clearFilters', locale)}
+                  countLabel={numbers.number(filterStatuses.length)}
+                  value={filterStatuses}
+                  onChange={onDraftStatusesChange}
+                  options={statusOptions}
+                />
+              )}
+            </HistoryFilterPanel>
+          }
+          actions={
+            <ListViewToggle
+              value={view}
+              onChange={setView}
+              labels={{
+                group: t('historyView.group', locale),
+                table: t('historyView.table', locale),
+                card: t('historyView.card', locale),
+              }}
+            />
+          }
         />
-      ) : (
-        <div className="space-y-3">
-          {orders.map((order) => {
-            const action = nextActionLink(order);
-            return (
-              <Card key={order.orderId}>
-                <CardContent className="space-y-3 pt-6">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <Link
-                      to="/electricity/orders/$orderId"
-                      params={{ orderId: order.orderId }}
-                      className="break-all font-semibold text-primary underline underline-offset-4"
-                    >
-                      {t('electricity.orders.view', locale)} · <bdi>{order.orderId}</bdi>
-                    </Link>
-                    <span className="text-sm text-muted-foreground">
-                      {time.format(order.submittedAt, {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                      })}
-                    </span>
-                  </div>
-                  <p className="text-sm">
-                    {formatPeriod(order)} · {numbers.irrDigits(order.totalKwh)} kWh ·{' '}
-                    {numbers.money(order.totalIrR)}
-                  </p>
-                  <div className="flex flex-wrap gap-2 text-sm">
-                    <span className="rounded-full border px-3 py-1">
-                      {t(`electricity.order.status.${order.electricityStatus}`, locale)}
-                    </span>
-                    <span className="rounded-full border px-3 py-1">
-                      {t(`electricity.order.financial.${order.financialStatus}`, locale)}
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-muted/50 p-3 text-sm">
-                    <p className="text-muted-foreground">
-                      {t(`electricity.order.nextAction.${order.nextAction}`, locale)}
-                    </p>
-                    {action ? (
-                      <a
-                        className="font-medium text-primary underline underline-offset-4"
-                        href={action.href}
-                      >
-                        {t(action.label, locale)}
-                      </a>
-                    ) : null}
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      )}
-      {nextBefore && !noProfile && !error ? (
-        <Button variant="outline" disabled={loading} onClick={loadMore}>
-          {t('electricity.orders.more', locale)}
-        </Button>
-      ) : null}
+        {time.notice}
+        <ListPage.Content
+          loading={loading}
+          error={error}
+          empty={noProfile || orders.length === 0}
+          retainContent={!noProfile && orders.length > 0}
+          loadingView={<p role="status">{t('electricity.orders.loading', locale)}</p>}
+          errorView={
+            <div role="alert" className="space-y-2">
+              <p>{t('electricity.orders.error', locale)}</p>
+              <Button onClick={() => setRevision((value) => value + 1)}>
+                {t('electricity.order.retry', locale)}
+              </Button>
+            </div>
+          }
+          emptyView={
+            <p>
+              {t(
+                !noProfile && (statuses.length || dateRange.from || dateRange.to || query.q)
+                  ? 'historyDates.empty'
+                  : pendingOnly
+                    ? 'electricity.orders.pendingEmpty'
+                    : 'electricity.orders.empty',
+                locale
+              )}
+            </p>
+          }
+        >
+          {view === 'table' ? (
+            <HistoryTable
+              caption={t('electricity.orders.title', locale)}
+              items={orders}
+              columns={columns}
+              rowKey={(order) => order.orderId}
+            />
+          ) : (
+            <div className="space-y-3">
+              {orders.map((order) => {
+                const action = nextActionLink(order);
+                return (
+                  <Card key={order.orderId}>
+                    <CardContent className="space-y-3 pt-6">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <Link
+                          to="/electricity/orders/$orderId"
+                          params={{ orderId: order.orderId }}
+                          className="break-all font-semibold text-primary underline underline-offset-4"
+                        >
+                          {t('electricity.orders.view', locale)} · <bdi>{order.orderId}</bdi>
+                        </Link>
+                        <span className="text-sm text-muted-foreground">
+                          {time.format(order.submittedAt, {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                          })}
+                        </span>
+                      </div>
+                      <p className="text-sm">
+                        {formatPeriod(order)} · {numbers.irrDigits(order.totalKwh)} kWh ·{' '}
+                        {numbers.money(order.totalIrR)}
+                      </p>
+                      <div className="flex flex-wrap gap-2 text-sm">
+                        <span className="rounded-full border px-3 py-1">
+                          {t(`electricity.order.status.${order.electricityStatus}`, locale)}
+                        </span>
+                        <span className="rounded-full border px-3 py-1">
+                          {t(`electricity.order.financial.${order.financialStatus}`, locale)}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-muted/50 p-3 text-sm">
+                        <p className="text-muted-foreground">
+                          {t(`electricity.order.nextAction.${order.nextAction}`, locale)}
+                        </p>
+                        {action ? (
+                          <a
+                            className="font-medium text-primary underline underline-offset-4"
+                            href={action.href}
+                          >
+                            {t(action.label, locale)}
+                          </a>
+                        ) : null}
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+        </ListPage.Content>
+        <ListPage.Pagination
+          kind="cursor"
+          hasMore={!!nextBefore && !noProfile && !error}
+          loading={loading}
+          onNext={loadMore}
+          label={t('historyPagination.label', locale)}
+          nextLabel={t('electricity.orders.more', locale)}
+        />
+      </ListPage>
     </main>
   );
 }

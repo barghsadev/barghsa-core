@@ -1,3 +1,4 @@
+import { ListPage } from '@barghsa/ui';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Loader2Icon, ReceiptText } from 'lucide-react';
@@ -151,179 +152,197 @@ function ReceiptHistory({
           {label('backToInvoices')}
         </Link>
       </nav>
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="w-full max-w-sm">
-          <HistoryFilterPanel
-            query={{ q: '' }}
-            statuses={statuses}
-            dateRange={{}}
-            onClear={onApplyFilters ? () => onApplyFilters([]) : undefined}
-            onRemoveFilter={
-              onApplyFilters
-                ? (_key, value) => onApplyFilters(statuses.filter((status) => status !== value))
-                : undefined
-            }
-            onOpen={filterDraft.begin}
-            onApply={onApplyFilters ? filterDraft.apply : undefined}
-            statusOptions={BANK_RECEIPT_STATUSES.map((value) => ({
-              value,
-              label: t(`invoices.activity.state.${value}`, locale),
-            }))}
-          >
-            <MultiSelectFilter
-              value={filterStatuses}
-              onChange={(values) =>
+      <ListPage>
+        <ListPage.Toolbar
+          filters={
+            <HistoryFilterPanel
+              query={{ q: '' }}
+              statuses={statuses}
+              dateRange={{}}
+              onClear={onApplyFilters ? () => onApplyFilters([]) : undefined}
+              onRemoveFilter={
                 onApplyFilters
-                  ? filterDraft.setStatuses(values)
-                  : onStatusesChange?.(values as ReceiptState[])
+                  ? (_key, value) => onApplyFilters(statuses.filter((status) => status !== value))
+                  : undefined
               }
-              options={BANK_RECEIPT_STATUSES.map((value) => ({
+              onOpen={filterDraft.begin}
+              onApply={onApplyFilters ? filterDraft.apply : undefined}
+              statusOptions={BANK_RECEIPT_STATUSES.map((value) => ({
                 value,
                 label: t(`invoices.activity.state.${value}`, locale),
               }))}
-              label={label('filter')}
-              emptyLabel={label('empty')}
-              clearLabel={t('historyFilters.clearAll', locale)}
-              removeLabel={(value) => t('historyFilters.remove', locale).replace('{filter}', value)}
+            >
+              <MultiSelectFilter
+                value={filterStatuses}
+                onChange={(values) =>
+                  onApplyFilters
+                    ? filterDraft.setStatuses(values)
+                    : onStatusesChange?.(values as ReceiptState[])
+                }
+                options={BANK_RECEIPT_STATUSES.map((value) => ({
+                  value,
+                  label: t(`invoices.activity.state.${value}`, locale),
+                }))}
+                label={label('filter')}
+                emptyLabel={label('empty')}
+                clearLabel={t('historyFilters.clearAll', locale)}
+                removeLabel={(value) =>
+                  t('historyFilters.remove', locale).replace('{filter}', value)
+                }
+              />
+            </HistoryFilterPanel>
+          }
+          actions={
+            <ListViewToggle
+              value={view}
+              onChange={setView}
+              labels={{
+                group: t('historyView.group', locale),
+                table: t('historyView.table', locale),
+                card: t('historyView.card', locale),
+              }}
             />
-          </HistoryFilterPanel>
-        </div>
-        <ListViewToggle
-          value={view}
-          onChange={setView}
-          labels={{
-            group: t('historyView.group', locale),
-            table: t('historyView.table', locale),
-            card: t('historyView.card', locale),
-          }}
+          }
         />
-      </div>
-      {loadState === 'loading' ? (
-        <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
-          {label('loading')}
-        </p>
-      ) : null}
-      {loadState === 'error' ? (
-        <div className="space-y-2">
-          <p role="alert">{label('error')}</p>
-          <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
-            {label('retry')}
-          </Button>
-        </div>
-      ) : null}
-      {loadState === 'ready' && items.length === 0 ? <p>{label('empty')}</p> : null}
-      {items.length ? (
-        view === 'table' ? (
-          <HistoryTable
-            caption={label('title')}
-            items={items}
-            rowKey={(item) => item.receiptId}
-            columns={[
-              {
-                id: 'receipt',
-                label: label('receipt'),
-                render: (item) => (
-                  <Link
-                    to="/invoices/$invoiceId"
-                    params={{ invoiceId: item.invoiceId }}
-                    hash={`bank-receipt-${item.receiptId}`}
-                    className="text-primary underline underline-offset-4"
-                  >
-                    <bdi dir="ltr">{item.receiptId}</bdi>
-                  </Link>
-                ),
-              },
-              {
-                id: 'invoice',
-                label: label('invoice'),
-                render: (item) => <bdi dir="ltr">{item.invoiceId}</bdi>,
-              },
-              {
-                id: 'amount',
-                label: t('historyView.amount', locale),
-                render: (item) => numbers.money(item.amount),
-              },
-              {
-                id: 'bank',
-                label: label('bank'),
-                render: (item) => item.bankName ?? label('bankUnknown'),
-              },
-              {
-                id: 'deposit',
-                label: label('depositDate'),
-                render: (item) => (
-                  <time dateTime={item.paymentDate}>{paymentDate(item.paymentDate)}</time>
-                ),
-              },
-              {
-                id: 'state',
-                label: label('filter'),
-                render: (item) => t(`invoices.activity.state.${item.state}`, locale),
-              },
-              {
-                id: 'submitted',
-                label: label('submittedAt'),
-                render: (item) => (
-                  <time dateTime={item.submittedAt}>{time.format(item.submittedAt)}</time>
-                ),
-              },
-            ]}
-          />
-        ) : (
-          <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {items.map((item) => (
-              <li key={item.receiptId} className="rounded-lg border border-border p-3">
-                <Link
-                  to="/invoices/$invoiceId"
-                  params={{ invoiceId: item.invoiceId }}
-                  hash={`bank-receipt-${item.receiptId}`}
-                  className="group block space-y-2 rounded-md p-2 hover:bg-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <strong className="text-base">{numbers.money(item.amount)}</strong>
-                    <span className="text-sm font-medium">
-                      {t(`invoices.activity.state.${item.state}`, locale)}
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {label('invoice')}:{' '}
-                    <bdi dir="ltr" className="break-all">
-                      {item.invoiceId}
-                    </bdi>
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {label('receipt')}:{' '}
-                    <bdi dir="ltr" className="break-all">
-                      {item.receiptId}
-                    </bdi>
-                  </p>
-                  <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground">
-                    <span>
-                      {label('bank')}: {item.bankName ?? label('bankUnknown')}
-                    </span>
-                    <span>
-                      {label('depositDate')}: {paymentDate(item.paymentDate)}
-                    </span>
-                    <span>
-                      {label('submittedAt')}: {time.format(item.submittedAt)}
-                    </span>
-                  </div>
-                  <span className="text-sm text-primary underline underline-offset-4 group-hover:no-underline">
-                    {label('openDetail')}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )
-      ) : null}
-      {moreError ? <p role="alert">{label('moreError')}</p> : null}
-      {cursor && loadState === 'ready' ? (
-        <Button variant="outline" onClick={loadMore} disabled={loadingMore}>
-          {loadingMore ? label('loading') : label('older')}
-        </Button>
-      ) : null}
+        <ListPage.Content
+          loading={loadState === 'loading' || loadingMore}
+          error={loadState === 'error' || moreError}
+          empty={items.length === 0}
+          retainContent={items.length > 0}
+          loadingView={
+            <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
+              {label('loading')}
+            </p>
+          }
+          errorView={
+            <div className="space-y-2">
+              <p role="alert">{label(moreError ? 'moreError' : 'error')}</p>
+              <Button
+                variant="outline"
+                onClick={() => (moreError ? loadMore() : setRevision((value) => value + 1))}
+              >
+                {label('retry')}
+              </Button>
+            </div>
+          }
+          emptyView={<p>{label('empty')}</p>}
+        >
+          {items.length ? (
+            view === 'table' ? (
+              <HistoryTable
+                caption={label('title')}
+                items={items}
+                rowKey={(item) => item.receiptId}
+                columns={[
+                  {
+                    id: 'receipt',
+                    label: label('receipt'),
+                    render: (item) => (
+                      <Link
+                        to="/invoices/$invoiceId"
+                        params={{ invoiceId: item.invoiceId }}
+                        hash={`bank-receipt-${item.receiptId}`}
+                        className="text-primary underline underline-offset-4"
+                      >
+                        <bdi dir="ltr">{item.receiptId}</bdi>
+                      </Link>
+                    ),
+                  },
+                  {
+                    id: 'invoice',
+                    label: label('invoice'),
+                    render: (item) => <bdi dir="ltr">{item.invoiceId}</bdi>,
+                  },
+                  {
+                    id: 'amount',
+                    label: t('historyView.amount', locale),
+                    render: (item) => numbers.money(item.amount),
+                  },
+                  {
+                    id: 'bank',
+                    label: label('bank'),
+                    render: (item) => item.bankName ?? label('bankUnknown'),
+                  },
+                  {
+                    id: 'deposit',
+                    label: label('depositDate'),
+                    render: (item) => (
+                      <time dateTime={item.paymentDate}>{paymentDate(item.paymentDate)}</time>
+                    ),
+                  },
+                  {
+                    id: 'state',
+                    label: label('filter'),
+                    render: (item) => t(`invoices.activity.state.${item.state}`, locale),
+                  },
+                  {
+                    id: 'submitted',
+                    label: label('submittedAt'),
+                    render: (item) => (
+                      <time dateTime={item.submittedAt}>{time.format(item.submittedAt)}</time>
+                    ),
+                  },
+                ]}
+              />
+            ) : (
+              <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {items.map((item) => (
+                  <li key={item.receiptId} className="rounded-lg border border-border p-3">
+                    <Link
+                      to="/invoices/$invoiceId"
+                      params={{ invoiceId: item.invoiceId }}
+                      hash={`bank-receipt-${item.receiptId}`}
+                      className="group block space-y-2 rounded-md p-2 hover:bg-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <strong className="text-base">{numbers.money(item.amount)}</strong>
+                        <span className="text-sm font-medium">
+                          {t(`invoices.activity.state.${item.state}`, locale)}
+                        </span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {label('invoice')}:{' '}
+                        <bdi dir="ltr" className="break-all">
+                          {item.invoiceId}
+                        </bdi>
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {label('receipt')}:{' '}
+                        <bdi dir="ltr" className="break-all">
+                          {item.receiptId}
+                        </bdi>
+                      </p>
+                      <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground">
+                        <span>
+                          {label('bank')}: {item.bankName ?? label('bankUnknown')}
+                        </span>
+                        <span>
+                          {label('depositDate')}: {paymentDate(item.paymentDate)}
+                        </span>
+                        <span>
+                          {label('submittedAt')}: {time.format(item.submittedAt)}
+                        </span>
+                      </div>
+                      <span className="text-sm text-primary underline underline-offset-4 group-hover:no-underline">
+                        {label('openDetail')}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )
+          ) : null}
+        </ListPage.Content>
+        <ListPage.Pagination
+          kind="cursor"
+          hasMore={!!cursor && loadState === 'ready' && !moreError}
+          loading={loadingMore}
+          onNext={loadMore}
+          label={t('historyPagination.label', locale)}
+          nextLabel={label('older')}
+        />
+      </ListPage>
     </div>
   );
 }
