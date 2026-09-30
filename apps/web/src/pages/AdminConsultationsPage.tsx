@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearch } from '@tanstack/react-router';
 import { Button, FinancialReviewSummary, Label } from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import {
@@ -59,6 +60,7 @@ const statuses = [
 ] as const;
 
 export function AdminConsultationsPage() {
+  const { assignment: initialAssignment } = useSearch({ from: '/admin/consultations' });
   const locale = useLocale();
   const time = useAccountTime(locale);
   const copy = (key: string) => tConsultation(key, locale);
@@ -69,7 +71,7 @@ export function AdminConsultationsPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [status, setStatus] = useState('');
-  const [assignment, setAssignment] = useState('all');
+  const [assignment, setAssignment] = useState(initialAssignment ?? 'all');
   const [priority, setPriority] = useState('all');
   const [minAgeDays, setMinAgeDays] = useState('0');
   const [team, setTeam] = useState('');

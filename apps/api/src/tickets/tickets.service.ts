@@ -1363,6 +1363,7 @@ export class TicketsService {
 
     if (options.status) {
       const validStatuses = [
+        'active',
         'open',
         'in_progress',
         'waiting_customer',
@@ -1380,9 +1381,13 @@ export class TicketsService {
           400
         );
       }
-      conditions.push(`t.status = $${paramIndex}`);
-      params.push(options.status);
-      paramIndex++;
+      if (options.status === 'active') {
+        conditions.push("t.status IN ('open','in_progress','waiting_customer','waiting_staff')");
+      } else {
+        conditions.push(`t.status = $${paramIndex}`);
+        params.push(options.status);
+        paramIndex++;
+      }
     }
 
     if (options.search?.trim()) {

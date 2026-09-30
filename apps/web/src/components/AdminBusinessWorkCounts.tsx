@@ -4,10 +4,14 @@ import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { FailedJobsWidget } from './FailedJobsWidget.js';
+import { StaffWorkQueueWidget } from './StaffWorkQueueWidget.js';
 
 interface Counts {
   consultations: number | null;
+  unassignedConsultations: number | null;
   electricityOrders: number | null;
+  savingOrders: number | null;
+  pendingTickets: number | null;
   solarRequests: number | null;
   documentReviews: number | null;
   refundObligations: number | null;
@@ -25,7 +29,10 @@ function parseCounts(value: unknown): Counts {
   const counts = value as Record<string, unknown>;
   if (
     !validCount(counts.consultations) ||
+    !validCount(counts.unassignedConsultations) ||
     !validCount(counts.electricityOrders) ||
+    !validCount(counts.savingOrders) ||
+    !validCount(counts.pendingTickets) ||
     !validCount(counts.solarRequests) ||
     !validCount(counts.documentReviews) ||
     !validCount(counts.refundObligations) ||
@@ -34,6 +41,11 @@ function parseCounts(value: unknown): Counts {
     !validCount(counts.deadLetterNotifications) ||
     (counts.failedJobs === null) !== (counts.deadLetterNotifications === null) ||
     (counts.refundObligations === null) !== (counts.failedRefundObligations === null) ||
+    (counts.electricityOrders === null) !== (counts.savingOrders === null) ||
+    (counts.consultations === null) !== (counts.unassignedConsultations === null) ||
+    (counts.consultations !== null &&
+      counts.unassignedConsultations !== null &&
+      counts.unassignedConsultations > counts.consultations) ||
     (counts.refundObligations !== null &&
       counts.failedRefundObligations !== null &&
       counts.failedRefundObligations > counts.refundObligations)
@@ -44,7 +56,6 @@ function parseCounts(value: unknown): Counts {
 
 const cards = [
   { key: 'consultations', route: '/admin/consultations', label: 'consultations' },
-  { key: 'electricityOrders', route: '/admin/electricity-orders', label: 'electricityOrders' },
   { key: 'solarRequests', route: '/admin/solar-requests', label: 'solarRequests' },
   { key: 'documentReviews', route: '/admin/documents', label: 'documentReviews' },
 ] as const;
@@ -101,6 +112,7 @@ export function AdminBusinessWorkCounts() {
           {t('dashboard.admin.work.error', locale)}
         </p>
       )}
+      {state === 'ready' && counts && <StaffWorkQueueWidget counts={counts} />}
       {state === 'ready' && counts && (
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
           {cards.map(({ key, route, label }) =>

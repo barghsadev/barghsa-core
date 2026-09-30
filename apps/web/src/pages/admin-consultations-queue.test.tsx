@@ -3,9 +3,40 @@ import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { AdminConsultationsPage } from './AdminConsultationsPage.js';
 
+const routeSearch = vi.hoisted(() => ({ assignment: undefined as string | undefined }));
+vi.mock('@tanstack/react-router', () => ({ useSearch: () => routeSearch }));
+
 afterEach(() => {
+  routeSearch.assignment = undefined;
   vi.unstubAllGlobals();
   document.documentElement.lang = 'fa';
+});
+
+it('opens the unassigned consultation queue from its dashboard link', async () => {
+  document.documentElement.lang = 'en';
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  routeSearch.assignment = 'unassigned';
+  const calls: string[] = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string) => {
+      calls.push(url);
+      return new Response(
+        JSON.stringify(url.endsWith('/teams') ? { teams: [] } : { requests: [], nextAfter: null }),
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+    })
+  );
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => root.render(<AdminConsultationsPage />));
+    expect(calls.some((url) => url.includes('/requests?assignment=unassigned'))).toBe(true);
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+  }
 });
 
 function fill(element: HTMLInputElement | HTMLTextAreaElement, value: string) {

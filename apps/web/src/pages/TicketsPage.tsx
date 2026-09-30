@@ -610,7 +610,7 @@ function Tickets({ staff }: { staff: boolean }) {
             }}
           >
             <option value="">{text('all')}</option>
-            {!staff && <option value="active">{text('active')}</option>}
+            <option value="active">{text('active')}</option>
             {statuses.map((value) => (
               <option key={value} value={value}>
                 {text(value)}

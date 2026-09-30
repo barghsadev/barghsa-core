@@ -5,8 +5,21 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { AdminBusinessWorkCounts } from './AdminBusinessWorkCounts.js';
 
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ children, to, className }: { children: ReactNode; to: string; className?: string }) => (
-    <a href={to} className={className}>
+  Link: ({
+    children,
+    to,
+    search,
+    className,
+  }: {
+    children: ReactNode;
+    to: string;
+    search?: { assignment?: string; status?: string };
+    className?: string;
+  }) => (
+    <a
+      href={`${to}${search?.assignment ? `?assignment=${search.assignment}` : search?.status ? `?status=${search.status}` : ''}`}
+      className={className}
+    >
       {children}
     </a>
   ),
@@ -43,7 +56,10 @@ async function renderCounts(value: unknown) {
 it('links unresolved refunds and flags failed work for the permitted staff roles', async () => {
   await renderCounts({
     consultations: 2,
+    unassignedConsultations: 1,
     electricityOrders: 1,
+    savingOrders: 2,
+    pendingTickets: 3,
     solarRequests: 0,
     documentReviews: 3,
     refundObligations: 4,
@@ -66,12 +82,24 @@ it('links unresolved refunds and flags failed work for the permitted staff roles
   expect(container.querySelector('a[href="/admin/failed-jobs"]')?.textContent).toContain(
     'Needs attention'
   );
+  expect(container.querySelector('a[href="/admin/tickets?status=active"]')?.textContent).toContain(
+    '3Pending tickets'
+  );
+  expect(container.querySelector('a[href="/admin/saving-orders"]')?.textContent).toContain(
+    '2Saving orders awaiting review'
+  );
+  expect(
+    container.querySelector('a[href="/admin/consultations?assignment=unassigned"]')?.textContent
+  ).toContain('1Unassigned consultations');
 });
 
 it('hides finance widgets when the server withholds their counts', async () => {
   await renderCounts({
     consultations: null,
+    unassignedConsultations: null,
     electricityOrders: 1,
+    savingOrders: 0,
+    pendingTickets: null,
     solarRequests: null,
     documentReviews: 0,
     refundObligations: null,
@@ -88,7 +116,10 @@ it('renders the same failure links and counts in Persian', async () => {
   document.documentElement.lang = 'fa';
   await renderCounts({
     consultations: null,
+    unassignedConsultations: null,
     electricityOrders: null,
+    savingOrders: null,
+    pendingTickets: null,
     solarRequests: null,
     documentReviews: null,
     refundObligations: null,
