@@ -22,6 +22,7 @@ vi.mock('../lib/invoice-bank-receipt-review-action.js', () => ({
 }));
 let container: HTMLDivElement, root: Root;
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   document.documentElement.lang = 'en';
   container = document.createElement('div');
   document.body.appendChild(container);
@@ -68,6 +69,7 @@ beforeEach(() => {
 afterEach(async () => {
   await act(async () => root.unmount());
   container.remove();
+  vi.unstubAllGlobals();
 });
 const field = (name: string) =>
   container.querySelector(`[data-testid="invoice-receipt-${name}"]`) as HTMLInputElement;
@@ -171,20 +173,24 @@ it('does not upload without an active profile', async () => {
   expect(upload).not.toHaveBeenCalled();
 });
 
-it.each(['missing', 'rejected'])('allows retry after an attachment upload is %s', async (mode) => {
-  await render();
-  await valid();
-  if (mode === 'missing') upload.mockResolvedValueOnce(null);
-  else upload.mockRejectedValueOnce(new Error('offline'));
-  await submit();
-  expect(alert()).not.toBeNull();
-  expect(submitInvoiceBankReceipt).not.toHaveBeenCalled();
-  await file();
-  expect(alert()).toBeNull();
-  await submit();
-  await confirm();
-  expect(container.querySelector('[role="status"]')).not.toBeNull();
-});
+it.each(['missing', 'rejected'])(
+  'allows retry after an attachment upload is %s',
+  async (mode) => {
+    await render();
+    await valid();
+    if (mode === 'missing') upload.mockResolvedValueOnce(null);
+    else upload.mockRejectedValueOnce(new Error('offline'));
+    await submit();
+    expect(alert()).not.toBeNull();
+    expect(submitInvoiceBankReceipt).not.toHaveBeenCalled();
+    await file();
+    expect(alert()).toBeNull();
+    await submit();
+    await confirm();
+    expect(container.querySelector('[role="status"]')).not.toBeNull();
+  },
+  15_000
+);
 
 it('preserves a failed submission and sends trimmed notes on retry', async () => {
   const onSubmitted = vi.fn().mockResolvedValue(undefined);
@@ -214,7 +220,7 @@ it('preserves a failed submission and sends trimmed notes on retry', async () =>
   expect(field('amount').value).toBe('');
   expect(field('note').value).toBe('');
   expect(field('bank-name').value).toBe('');
-});
+}, 15_000);
 
 it('ignores another submit while an upload is pending', async () => {
   let finish!: (key: string) => void;
@@ -235,7 +241,7 @@ it('ignores another submit while an upload is pending', async () => {
   await confirm();
   expect(submitInvoiceBankReceipt).toHaveBeenCalledTimes(1);
   expect(field('submit').disabled).toBe(false);
-});
+}, 15_000);
 
 it('ignores a profile lookup that finishes after the form unmounts', async () => {
   let finish!: (id: string) => void;

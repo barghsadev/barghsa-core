@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Solar contract and initial invoice review](batches/2026-09-30-solar-contract-invoice-review.md) binds staff issuance to an authoritative contract, invoice and due-rule snapshot, displays it before confirmation, and verifies the created invoice in the same transaction. It also repairs older solar integration fixtures and a CI web-test timeout. Cross-command financial review remains partial.
+
 [Solar construction request submission review](batches/2026-09-30-solar-request-submission-review.md) adds a server-backed customer review of the exact request, site and terms before submission, with stale-state rejection, durable review and safe retry. It also repairs the previous main CI's stale bank-receipt schema assertion. Cross-command review tasks remain partial.
 
 [Customer invoice receipt submission review](batches/2026-09-30-invoice-receipt-submission-review.md) binds customer upload to the current invoice balance, receipt details and delayed-settlement rule before confirmation, and persists the reviewed snapshot for safe retries. Cross-command review tasks remain partial.

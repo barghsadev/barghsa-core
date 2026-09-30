@@ -28,6 +28,12 @@ function send(user: string, path: string, method = 'GET', body?: unknown) {
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
 }
+async function submitSolar(body: Record<string, unknown>) {
+  const review = await send('solar-buyer', 'solar/requests/review', 'POST', body);
+  expect(review.status, http.logs()).toBe(201);
+  const { hash } = (await review.json()) as { hash: string };
+  return send('solar-buyer', 'solar/requests', 'POST', { ...body, expectedReviewHash: hash });
+}
 async function documentCreate(replaces?: string) {
   const response = await send('solar-buyer', 'documents', 'POST', {
     profileId,
@@ -112,7 +118,7 @@ beforeAll(async () => {
       "INSERT INTO profiles(user_id,profile_type,status,is_default) VALUES('solar-buyer','INDIVIDUAL','ACTIVE',true) RETURNING id"
     )
   ).rows[0]!.id;
-  const created = await send('solar-buyer', 'solar/requests', 'POST', {
+  const created = await submitSolar({
     profileId,
     submissionKey: randomUUID(),
     buildingType: 'building_apartment',

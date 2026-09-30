@@ -16,7 +16,10 @@ import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { SolarFinalService } from './solar-final.service.js';
 import { ContractService } from '../contract/contract.service.js';
-import { solarContractSchema } from './solar-contract.validation.js';
+import {
+  solarContractSchema,
+  solarContractConfirmationSchema,
+} from './solar-contract.validation.js';
 
 const close = z.object({ reason: z.string().trim().min(1).max(1000) }).strict();
 @ApiTags('Admin · Solar final decisions')
@@ -37,16 +40,30 @@ export class StaffSolarFinalController {
     return this.contracts.solarOptions(id, req.session);
   }
 
-  @Post('create-contract')
+  @Post('create-contract/review')
   @HttpCode(200)
-  @ApiOperation({ summary: 'Create a linked solar draft contract and issue its initial invoice' })
+  @ApiOperation({ summary: 'Review the solar contract and initial invoice before issuance' })
   @ApiZodBody(solarContractSchema)
-  createContract(
+  reviewContract(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
     const parsed = solarContractSchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException('Invalid solar contract');
+    return this.contracts.reviewSolar({ ...parsed.data, requestId: id }, req.session);
+  }
+
+  @Post('create-contract')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Create a linked solar draft contract and issue its initial invoice' })
+  @ApiZodBody(solarContractConfirmationSchema)
+  createContract(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const parsed = solarContractConfirmationSchema.safeParse(body);
     if (!parsed.success) throw new BadRequestException('Invalid solar contract');
     return this.contracts.createSolar(
       { ...parsed.data, requestId: id },

@@ -1,7 +1,10 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { FinancialReviewSummary } from '@barghsa/ui';
 import { tSolar } from '@barghsa/i18n/solar';
 import { contractText } from '@barghsa/i18n/contracts';
+import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { useLocale } from '../hooks/useLocale.js';
+import { withCsrf } from '../lib/csrf.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
 interface Options {
@@ -14,6 +17,26 @@ interface Line {
   unitPrice: string;
   vatRate: string;
   isTaxable: boolean;
+}
+interface SolarContractReview {
+  hash: string;
+  data: {
+    title: string;
+    text: string;
+    changeDescription: string;
+    commercialValue:
+      { kind: 'fixed'; amountIrr: string } | { kind: 'variable'; description: string };
+    source: { kind: string; label: string; versionNumber: number | null };
+    invoiceLines: Array<{
+      description: string;
+      quantity: number;
+      unitPrice: string;
+      lineTotal: string;
+      vatAmount: string;
+    }>;
+    totals: { subtotal: string; vat: string; total: string };
+    dueRule: { configDays: number | null };
+  };
 }
 const emptyLine = (): Line => ({
   description: '',
@@ -45,6 +68,8 @@ export function SolarContractForm({
   const [variableDescription, setVariableDescription] = useState('');
   const [lines, setLines] = useState<Line[]>([emptyLine()]);
   const [action, setAction] = useState<TeamAction | null>(null);
+  const [review, setReview] = useState<SolarContractReview | null>(null);
+  const [reviewing, setReviewing] = useState(false);
   const [error, setError] = useState(false);
   useEffect(() => {
     const controller = new AbortController();
@@ -69,8 +94,9 @@ export function SolarContractForm({
       current.map((line, position) => (position === index ? { ...line, ...next } : line))
     );
   }
-  function submit(event: FormEvent) {
+  async function submit(event: FormEvent) {
     event.preventDefault();
+    if (event.target !== event.currentTarget || reviewing) return;
     const [kind, id] = source.split(':');
     const validLines = lines.every(
       (line) =>
@@ -102,34 +128,52 @@ export function SolarContractForm({
       return;
     }
     setError(false);
-    setAction({
-      title: copy('solarCreateContract'),
-      description: title.trim(),
-      path: `/api/admin/solar/requests/${encodeURIComponent(requestId)}/create-contract`,
-      method: 'POST',
-      body: {
-        profileId,
-        idempotencyKey: crypto.randomUUID(),
-        title: title.trim(),
-        text: text.trim(),
-        changeDescription: changeDescription.trim(),
-        commercialValue:
-          valueKind === 'fixed'
-            ? { kind: 'fixed', amountIrr: fixedAmount }
-            : { kind: 'variable', description: variableDescription.trim() },
-        source:
-          kind === 'template'
-            ? { kind: 'template', templateVersionId: id }
-            : { kind: 'document', documentId: id },
-        invoiceLines: lines.map((line) => ({
-          description: line.description.trim(),
-          quantity: Number(line.quantity),
-          unitPrice: line.unitPrice,
-          vatRate: Number(line.vatRate),
-          isTaxable: line.isTaxable,
-        })),
-      },
-    });
+    setReviewing(true);
+    const body = {
+      profileId,
+      idempotencyKey: crypto.randomUUID(),
+      title: title.trim(),
+      text: text.trim(),
+      changeDescription: changeDescription.trim(),
+      commercialValue:
+        valueKind === 'fixed'
+          ? { kind: 'fixed', amountIrr: fixedAmount }
+          : { kind: 'variable', description: variableDescription.trim() },
+      source:
+        kind === 'template'
+          ? { kind: 'template', templateVersionId: id }
+          : { kind: 'document', documentId: id },
+      invoiceLines: lines.map((line) => ({
+        description: line.description.trim(),
+        quantity: Number(line.quantity),
+        unitPrice: line.unitPrice,
+        vatRate: Number(line.vatRate),
+        isTaxable: line.isTaxable,
+      })),
+    };
+    const path = `/api/admin/solar/requests/${encodeURIComponent(requestId)}/create-contract`;
+    try {
+      const response = await fetch(`${path}/review`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify(body),
+      });
+      if (!response.ok) throw new Error('review');
+      const snapshot = (await response.json()) as SolarContractReview;
+      setReview(snapshot);
+      setAction({
+        title: copy('solarCreateContract'),
+        description: title.trim(),
+        path,
+        method: 'POST',
+        body: { ...body, expectedReviewHash: snapshot.hash },
+      });
+    } catch {
+      setError(true);
+    } finally {
+      setReviewing(false);
+    }
   }
   return (
     <form className="space-y-3 rounded-md border p-4" onSubmit={submit}>
@@ -310,14 +354,80 @@ export function SolarContractForm({
       </button>
       {error && <p role="alert">{copy('solarContractError')}</p>}
       <div>
-        <button type="submit" className="rounded-md bg-primary px-4 py-2 text-primary-foreground">
-          {copy('solarCreateContract')}
+        <button
+          type="submit"
+          disabled={reviewing}
+          className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
+        >
+          {copy(reviewing ? 'loading' : 'solarCreateContract')}
         </button>
       </div>
       {action && (
         <TeamActionDialog
           action={action}
-          onClose={() => setAction(null)}
+          summary={
+            review && (
+              <FinancialReviewSummary
+                title={copy('solarContractReviewTitle')}
+                rows={[
+                  {
+                    id: 'source',
+                    label: copy('solarContractSource'),
+                    value: `${review.data.source.label}${review.data.source.versionNumber ? ` · v${review.data.source.versionNumber}` : ''}`,
+                  },
+                  { id: 'title', label: copy('solarContractTitle'), value: review.data.title },
+                  {
+                    id: 'reason',
+                    label: copy('solarContractReason'),
+                    value: review.data.changeDescription,
+                  },
+                  {
+                    id: 'commercial',
+                    label: contractCopy('statedContractValue'),
+                    value:
+                      review.data.commercialValue.kind === 'fixed'
+                        ? formatCurrencyIrr(review.data.commercialValue.amountIrr, locale)
+                        : review.data.commercialValue.description,
+                  },
+                  ...review.data.invoiceLines.map((line, index) => ({
+                    id: `line-${index}`,
+                    label: `${line.description} · ${line.quantity} × ${formatCurrencyIrr(line.unitPrice, locale)}`,
+                    value: formatCurrencyIrr(line.lineTotal, locale),
+                  })),
+                  {
+                    id: 'vat',
+                    label: copy('solarReviewVat'),
+                    value: formatCurrencyIrr(review.data.totals.vat, locale),
+                  },
+                  {
+                    id: 'due',
+                    label: copy('solarReviewDue'),
+                    value:
+                      review.data.dueRule.configDays === null
+                        ? '—'
+                        : `${review.data.dueRule.configDays} ${copy('solarReviewDaysAfterIssue')}`,
+                  },
+                ]}
+                total={{
+                  label: copy('solarReviewInvoiceTotal'),
+                  value: formatCurrencyIrr(review.data.totals.total, locale),
+                }}
+                notice={
+                  <>
+                    <p>{copy('solarReviewOutcome')}</p>
+                    <details className="mt-2">
+                      <summary className="cursor-pointer">{copy('solarContractText')}</summary>
+                      <p className="mt-2 whitespace-pre-wrap break-words">{review.data.text}</p>
+                    </details>
+                  </>
+                }
+              />
+            )
+          }
+          onClose={() => {
+            setAction(null);
+            setReview(null);
+          }}
           onSuccess={async (result) => {
             const created = result as { contractId?: string };
             if (!created.contractId) throw new Error('Missing contract');

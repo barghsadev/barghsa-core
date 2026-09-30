@@ -544,3 +544,121 @@ test('solar intake returns from address setup with its saved site details', asyn
     expectedReviewHash: 'b'.repeat(64),
   });
 });
+
+test('staff confirms the reviewed solar contract and exact initial invoice', async ({ page }) => {
+  let reviewed: Record<string, unknown> | null = null;
+  let issued: Record<string, unknown> | null = null;
+  const contractId = '66666666-6666-4666-8666-666666666666';
+  const invoiceId = '77777777-7777-4777-8777-777777777777';
+  const templateVersionId = '55555555-5555-4555-8555-555555555555';
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        isStaff: true,
+        operatingContext: 'staff',
+        userId: 'reviewer',
+        requiresTosAcceptance: false,
+      },
+    })
+  );
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
+  await page.route('**/api/admin/solar/postal-queue?*', (route) =>
+    route.fulfill({
+      json: {
+        requests: [
+          {
+            id: requestId,
+            profile_id: profileId,
+            profile_name: 'Buyer',
+            request_status: 'approved',
+            postal_status: 'received',
+            courier: null,
+            tracking_number: null,
+            send_date: null,
+            receipt_image_id: null,
+            staff_notes: null,
+            created_at: submittedAt,
+          },
+        ],
+        nextBefore: null,
+      },
+    })
+  );
+  await page.route('**/api/admin/solar/postal-guidance', (route) =>
+    route.fulfill({
+      json: {
+        fa: 'راهنمای پستی',
+        en: 'Postal guidance',
+        destinationAddress: 'Office',
+        contactDetails: '',
+        originals: [],
+      },
+    })
+  );
+  await page.route(`**/api/admin/solar/requests/${requestId}/contract-options`, (route) =>
+    route.fulfill({
+      json: {
+        templates: [{ version_id: templateVersionId, name: 'Solar agreement', version_number: 2 }],
+        documents: [],
+      },
+    })
+  );
+  await page.route(`**/api/admin/solar/requests/${requestId}/create-contract/review`, (route) => {
+    reviewed = route.request().postDataJSON() as Record<string, unknown>;
+    return route.fulfill({
+      json: {
+        hash: 'c'.repeat(64),
+        data: {
+          title: 'Solar agreement',
+          text: 'Build the station.',
+          changeDescription: 'Initial draft',
+          commercialValue: { kind: 'fixed', amountIrr: '900000' },
+          source: { kind: 'template', label: 'Solar agreement', versionNumber: 2 },
+          invoiceLines: [
+            {
+              description: 'Deposit',
+              quantity: 1,
+              unitPrice: '100000',
+              lineTotal: '100000',
+              vatAmount: '0',
+            },
+          ],
+          totals: { subtotal: '100000', vat: '0', total: '100000' },
+          dueRule: { configDays: 7 },
+        },
+      },
+    });
+  });
+  await page.route(`**/api/admin/solar/requests/${requestId}/create-contract`, (route) => {
+    issued = route.request().postDataJSON() as Record<string, unknown>;
+    return route.fulfill({
+      json: { status: 'contract_created', contractId, invoiceIds: [invoiceId] },
+    });
+  });
+
+  await page.goto('/admin/solar-postal');
+  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+  await page.getByRole('button', { name: /Buyer/ }).click();
+  await page.getByLabel('Contract source').selectOption(`template:${templateVersionId}`);
+  await page.getByLabel('Contract title').fill('Solar agreement');
+  await page.getByLabel('Contract terms').fill('Build the station.');
+  await page.getByLabel('Draft description').fill('Initial draft');
+  await page.getByLabel('Stated contract value').selectOption('fixed');
+  await page.getByLabel('Fixed amount (IRR)').fill('900000');
+  await page.getByLabel('Description').last().fill('Deposit');
+  await page.getByLabel('Unit price (IRR)').fill('100000');
+  await page.getByRole('button', { name: 'Create solar contract and invoice' }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(
+    dialog.getByRole('region', { name: 'Review contract and initial invoice' })
+  ).toContainText('IRR');
+  await expect(dialog).toContainText('100,000');
+  await expect(dialog).toContainText('7 days after issue');
+  expect(reviewed).toMatchObject({ profileId, invoiceLines: [{ unitPrice: '100000' }] });
+  await dialog.getByRole('button', { name: 'Confirm' }).click();
+  await expect(page.getByRole('status')).toContainText('Solar contract created');
+  expect(issued).toMatchObject({ ...reviewed, expectedReviewHash: 'c'.repeat(64) });
+});

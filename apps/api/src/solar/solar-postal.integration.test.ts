@@ -31,6 +31,12 @@ function send(user: string, path: string, method = 'GET', body?: unknown) {
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
 }
+async function submitSolar(body: Record<string, unknown>) {
+  const review = await send('postal-buyer', 'solar/requests/review', 'POST', body);
+  expect(review.status, http.logs()).toBe(201);
+  const { hash } = (await review.json()) as { hash: string };
+  return send('postal-buyer', 'solar/requests', 'POST', { ...body, expectedReviewHash: hash });
+}
 async function uploadReceipt() {
   const created = await send('postal-buyer', 'documents', 'POST', {
     profileId,
@@ -116,7 +122,7 @@ beforeAll(async () => {
       "INSERT INTO profiles(user_id,profile_type,status,is_default) VALUES('postal-buyer','INDIVIDUAL','ACTIVE',true) RETURNING id"
     )
   ).rows[0]!.id;
-  const created = await send('postal-buyer', 'solar/requests', 'POST', {
+  const created = await submitSolar({
     profileId,
     submissionKey: randomUUID(),
     buildingType: 'building_apartment',
@@ -144,7 +150,7 @@ beforeAll(async () => {
 }, 90_000);
 
 it('creates a linked solar draft and invoice atomically, then replays the same command', async () => {
-  const created = await send('postal-buyer', 'solar/requests', 'POST', {
+  const created = await submitSolar({
     profileId,
     submissionKey: randomUUID(),
     buildingType: 'building_apartment',
@@ -187,8 +193,14 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     ],
   };
   expect(
-    (await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', input))
-      .status
+    (
+      await send(
+        'postal-reviewer',
+        `admin/solar/requests/${id}/create-contract/review`,
+        'POST',
+        input
+      )
+    ).status
   ).toBe(409);
   expect(
     (
@@ -228,11 +240,16 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
   const options = await send('postal-reviewer', `admin/solar/requests/${id}/contract-options`);
   expect(options.status, http.logs()).toBe(200);
   expect(await options.json()).toMatchObject({ templates: [{ version_id: versionId }] });
-  const bad = await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', {
-    ...input,
-    idempotencyKey: randomUUID(),
-    invoiceLines: [{ ...input.invoiceLines[0], unitPrice: '0' }],
-  });
+  const bad = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${id}/create-contract/review`,
+    'POST',
+    {
+      ...input,
+      idempotencyKey: randomUUID(),
+      invoiceLines: [{ ...input.invoiceLines[0], unitPrice: '0' }],
+    }
+  );
   expect(bad.status, http.logs()).toBe(400);
   for (const commercialValue of [
     undefined,
@@ -241,7 +258,7 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
   ]) {
     const response = await send(
       'postal-reviewer',
-      `admin/solar/requests/${id}/create-contract`,
+      `admin/solar/requests/${id}/create-contract/review`,
       'POST',
       {
         ...input,
@@ -267,11 +284,50 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
       )
     ).rows[0]
   ).toMatchObject({ status: 'approved', contract_id: null });
+  const duePeriodId = (
+    await http.pool.query<{ id: string }>(
+      "INSERT INTO service_due_periods(service_type,default_days,effective_from,created_by) VALUES('manual',7,NOW()-INTERVAL '1 day','postal-reviewer') RETURNING id"
+    )
+  ).rows[0]!.id;
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', input))
+      .status
+  ).toBe(400);
+  const previewResponse = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${id}/create-contract/review`,
+    'POST',
+    input
+  );
+  expect(previewResponse.status, http.logs()).toBe(200);
+  const preview = (await previewResponse.json()) as {
+    hash: string;
+    data: { totals: { total: string }; outcome: string };
+  };
+  expect(preview.data).toMatchObject({
+    totals: { total: '100000' },
+    outcome: 'draft_contract_and_unpaid_invoice',
+  });
+  const command = { ...input, expectedReviewHash: preview.hash };
+  await http.pool.query('UPDATE service_due_periods SET default_days=8 WHERE id=$1', [duePeriodId]);
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', command))
+      .status
+  ).toBe(409);
+  await http.pool.query('UPDATE service_due_periods SET default_days=7 WHERE id=$1', [duePeriodId]);
+  expect(
+    (
+      await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', {
+        ...command,
+        invoiceLines: [{ ...input.invoiceLines[0], unitPrice: '200000' }],
+      })
+    ).status
+  ).toBe(409);
   const contract = await send(
     'postal-reviewer',
     `admin/solar/requests/${id}/create-contract`,
     'POST',
-    input
+    command
   );
   expect(contract.status, http.logs()).toBe(200);
   const result = (await contract.json()) as {
@@ -281,6 +337,16 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
   };
   expect(result.status).toBe('contract_created');
   expect(result.invoiceIds).toHaveLength(1);
+  const recordedReview = (
+    await http.pool.query<{ review: { hash: string; data: { totals: { total: string } } } }>(
+      "SELECT metadata::jsonb->'financialReview' AS review FROM audit_log WHERE event='solar.contract.created' AND metadata::jsonb->>'requestId'=$1",
+      [id]
+    )
+  ).rows[0]!.review;
+  expect(recordedReview).toMatchObject({
+    hash: preview.hash,
+    data: { totals: { total: '100000' } },
+  });
   expect(
     (
       await http.pool.query<{ content: { commercialValue: unknown } }>(
@@ -291,7 +357,7 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
   ).toEqual(input.commercialValue);
   expect(
     await (
-      await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', input)
+      await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', command)
     ).json()
   ).toEqual(result);
   expect(
@@ -299,6 +365,7 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
       await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', {
         ...input,
         idempotencyKey: randomUUID(),
+        expectedReviewHash: preview.hash,
       })
     ).status
   ).toBe(409);
@@ -691,7 +758,7 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
 }, 90_000);
 
 it('rejects a final solar request with a customer-visible reason after postal receipt', async () => {
-  const created = await send('postal-buyer', 'solar/requests', 'POST', {
+  const created = await submitSolar({
     profileId,
     submissionKey: randomUUID(),
     buildingType: 'building_apartment',
