@@ -88,3 +88,4 @@ export * from './request-status-filter.js';
 export * from './date-range-filter.js';
 export * from './history-query.js';
 export * from './invoice-list-query.js';
+export * from './contract-list-query.js';

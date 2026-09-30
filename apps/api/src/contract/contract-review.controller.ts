@@ -21,6 +21,12 @@ import {
 } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import {
+  CUSTOMER_CONTRACT_STATUSES,
+  parseStatusFilter,
+  parseDateRangeFilter,
+  parseContractListQuery,
+} from '@barghsa/shared/validation';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
@@ -134,18 +140,50 @@ export class CustomerContractController {
     name: 'before',
     required: false,
     type: String,
-    description: 'Exclusive contract UUID cursor; at most 100 records.',
+    description:
+      'Exclusive UUID cursor from the previous page; at most 100 records ordered by publication time and UUID.',
   })
   @ApiQuery({ name: 'state', required: false, enum: ['Active'] })
+  @ApiQuery({
+    name: 'statuses',
+    required: false,
+    description: 'Comma-separated customer contract states',
+  })
+  @ApiQuery({ name: 'serviceType', required: false, enum: ['electricity', 'savings', 'solar'] })
+  @ApiQuery({
+    name: 'from',
+    required: false,
+    description: 'Inclusive publication timestamp (UTC ISO)',
+  })
+  @ApiQuery({
+    name: 'to',
+    required: false,
+    description: 'Exclusive publication timestamp (UTC ISO)',
+  })
+  @ApiQuery({
+    name: 'q',
+    required: false,
+    description: 'Literal contract number or reference substring, at most 120 characters',
+  })
+  @ApiQuery({ name: 'sort', required: false, enum: ['published_at:desc', 'published_at:asc'] })
+  @ApiResponse({ status: 400, description: 'Invalid filter or cursor' })
+  @ApiResponse({ status: 404, description: 'No authorized profile or matching published cursor' })
   list(
     @Req() req: AuthenticatedRequest,
     @Query('before') before?: string,
-    @Query('state') state?: string
+    @Query('state') state?: string,
+    @Query() raw: Record<string, unknown> = {}
   ) {
+    const statuses = parseStatusFilter(raw.statuses, CUSTOMER_CONTRACT_STATUSES);
+    const dates = parseDateRangeFilter(raw.from, raw.to);
+    const query = parseContractListQuery(raw.q, raw.sort, raw.serviceType);
+    if (!statuses || !dates || !query)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
     return this.service.list(
       req.session,
       before === undefined ? undefined : parse(contractUuid, before),
-      parse(z.literal('Active').optional(), state)
+      parse(z.literal('Active').optional(), state),
+      { ...query, ...dates, statuses }
     );
   }
   @Get(':id')

@@ -15,6 +15,7 @@ for (const locale of ['en', 'fa'] as const) {
     const words = locale === 'fa' ? fa : en,
       confirm = locale === 'fa' ? 'تأیید' : 'Confirm';
     await page.addInitScript((language) => {
+      localStorage.setItem('barghsa.locale', language);
       const apply = () => {
         if (document.documentElement) {
           document.documentElement.lang = language;
@@ -25,10 +26,25 @@ for (const locale of ['en', 'fa'] as const) {
       new MutationObserver(apply).observe(document, { childList: true });
     }, locale);
     await page.route('**/api/**', (r) => r.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'contract-test-user',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: true,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     await page.route('**/api/public/branding/config', (r) =>
       r.fulfill({
         json: {
           appTitle: 'Draft workspace',
+          appTitleFa: 'قراردادها',
+          supportEmail: 'support@example.com',
+          supportPhone: '02126658042',
+          supportMobile: '09002550292',
           slogan: '',
           primaryColor: '#2563eb',
           secondaryColor: '#64748b',

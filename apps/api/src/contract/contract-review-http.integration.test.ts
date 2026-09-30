@@ -1120,6 +1120,107 @@ it('paginates more than 100 published versions and contracts without duplicates 
   expect(new Set([...page.contracts, ...next.contracts].map((c) => c.id)).size).toBe(101);
 });
 
+it('filters published customer contracts before pagination and orders timestamp ties in both directions', async () => {
+  const f = await fixture();
+  await publish(f);
+  const foreign = await fixture();
+  await publish(foreign);
+  const hidden = await fixture();
+  const client = await http.pool.connect();
+  const ids: string[] = [];
+  try {
+    await client.query('BEGIN');
+    for (let index = 0; index < 103; index++) {
+      const id = randomUUID(),
+        version = randomUUID();
+      ids.push(id);
+      await client.query(
+        'INSERT INTO contracts(id,profile_id,service_type,current_version_id) VALUES($1,$2,$3,$4)',
+        [id, f.profile, index === 102 ? 'solar' : 'savings', version]
+      );
+      await client.query(
+        "INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by) VALUES($1,$2,1,'{\"price\":\"1\"}','History','review-legal')",
+        [version, id]
+      );
+      await client.query("UPDATE contracts SET state='AwaitingStaffReview' WHERE id=$1", [id]);
+      await client.query(
+        "INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,'review-legal')",
+        [id, version]
+      );
+    }
+    await client.query('COMMIT');
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+  const list = (params: Record<string, string> = {}) =>
+    send('contracts?' + new URLSearchParams(params), 'GET', undefined, f.owner);
+  const expected = await http.pool.query<{ id: string }>(
+    `SELECT c.id FROM contracts c JOIN contract_publications p ON p.version_id=c.current_version_id WHERE c.profile_id=$1 ORDER BY p.published_at DESC,c.id DESC`,
+    [f.profile]
+  );
+  for (const sort of ['published_at:desc', 'published_at:asc']) {
+    let before: string | null = null;
+    const seen: string[] = [];
+    do {
+      const response = await list({ sort, ...(before ? { before } : {}) });
+      expect(response.status, http.logs()).toBe(200);
+      const page = (await response.json()) as {
+        contracts: { id: string }[];
+        nextBefore: string | null;
+      };
+      expect(page.contracts.length).toBeLessThanOrEqual(100);
+      seen.push(...page.contracts.map((row) => row.id));
+      before = page.nextBefore;
+    } while (before);
+    const sorted = expected.rows.map((row) => row.id);
+    expect(seen).toEqual(sort.endsWith('desc') ? sorted : sorted.reverse());
+    expect(new Set(seen).size).toBe(104);
+  }
+  const selected = ids[102]!;
+  const response = await list({
+    serviceType: 'solar',
+    statuses: 'AwaitingCustomerAcceptance',
+    from: '2026-01-01T00:00:00.000Z',
+    to: '2027-01-01T00:00:00.000Z',
+  });
+  expect(response.status).toBe(200);
+  expect(await response.json()).toMatchObject({
+    contracts: [{ id: selected, serviceType: 'solar' }],
+    nextBefore: null,
+  });
+  const number = (
+    await http.pool.query('SELECT contract_number::text FROM contracts WHERE id=$1', [selected])
+  ).rows[0].contract_number;
+  expect(await (await list({ q: number })).json()).toMatchObject({
+    contracts: expect.arrayContaining([expect.objectContaining({ id: selected })]),
+  });
+  expect(await (await list({ q: selected })).json()).toMatchObject({
+    contracts: [{ id: selected }],
+    nextBefore: null,
+  });
+  for (const q of ['%', '_', '\\', "' OR true --"])
+    expect(await (await list({ q })).json()).toMatchObject({ contracts: [], nextBefore: null });
+  expect(await (await list({ to: '2026-01-01T00:00:00.000Z' })).json()).toMatchObject({
+    contracts: [],
+    nextBefore: null,
+  });
+  for (const before of [foreign.row.id, hidden.row.id, randomUUID(), f.row.id])
+    expect((await list({ before, serviceType: 'solar' })).status).toBe(404);
+  expect((await list({ before: selected, state: 'Active' })).status).toBe(404);
+  for (const invalid of [
+    { statuses: 'Draft' },
+    { serviceType: 'other' },
+    { sort: 'id:desc' },
+    { q: 'x'.repeat(121) },
+    { before: 'invalid' },
+    { from: 'bad' },
+  ])
+    expect((await list(invalid)).status).toBe(400);
+});
+
 it('revalidates the original contract profile before replaying an acceptance after access is removed', async () => {
   const f = await fixture();
   await publish(f);

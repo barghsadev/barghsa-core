@@ -66,9 +66,10 @@ function ComboBoxInput({ className, ...props }: ComboboxPrimitive.Input.Props) {
 function ComboBoxPopup({
   className,
   children,
+  emptyMessage,
   ...props
 }: Omit<ComboboxPrimitive.Popup.Props, 'children'> &
-  Pick<ComboboxPrimitive.List.Props, 'children'>) {
+  Pick<ComboboxPrimitive.List.Props, 'children'> & { emptyMessage?: string }) {
   return (
     <ComboboxPrimitive.Portal>
       <ComboboxPrimitive.Positioner className="isolate z-50">
@@ -80,6 +81,7 @@ function ComboBoxPopup({
           )}
           {...props}
         >
+          {emptyMessage && <ComboBoxEmpty>{emptyMessage}</ComboBoxEmpty>}
           <ComboboxPrimitive.List>{children}</ComboboxPrimitive.List>
         </ComboboxPrimitive.Popup>
       </ComboboxPrimitive.Positioner>

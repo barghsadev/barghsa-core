@@ -1,4 +1,16 @@
 import { ContractsWorkspace } from '../components/ContractsWorkspace.js';
-export default function ContractsPage({ activeOnly = false }: { activeOnly?: boolean }) {
-  return <ContractsWorkspace initialState={activeOnly ? 'Active' : undefined} />;
+import type { CustomerContractHistoryControls } from '../components/CustomerContractFilters.js';
+export default function ContractsPage({
+  activeOnly = false,
+  history,
+}: {
+  activeOnly?: boolean;
+  history?: CustomerContractHistoryControls | undefined;
+}) {
+  return (
+    <ContractsWorkspace
+      initialState={activeOnly ? 'Active' : undefined}
+      customerHistory={history}
+    />
+  );
 }

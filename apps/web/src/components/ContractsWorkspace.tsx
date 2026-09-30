@@ -29,29 +29,40 @@ import { ContractActivationRules } from './ContractActivationRules.js';
 import { ContractDetail } from './ContractDetail.js';
 import { ContractDraftEditor } from './ContractDraftEditor.js';
 import { ContractCommercialValueText } from './ContractCommercialValueText.js';
+import {
+  CustomerContractFilters,
+  type CustomerContractHistoryControls,
+} from './CustomerContractFilters.js';
+import { DEFAULT_CONTRACT_LIST_SORT } from '@barghsa/shared/validation';
+import { useCursorHistory } from '../hooks/useCursorHistory.js';
 
 export function ContractsWorkspace({
   staff = false,
   initialState,
+  customerHistory,
 }: {
   staff?: boolean;
   initialState?: 'Active' | undefined;
+  customerHistory?: CustomerContractHistoryControls | undefined;
 }) {
   const revision = useProfileContextRevision();
   return (
     <Workspace
-      key={`${staff}:${revision}:${initialState ?? 'all'}`}
+      key={`${staff}:${revision}`}
       staff={staff}
       initialState={initialState}
+      customerHistory={customerHistory}
     />
   );
 }
 function Workspace({
   staff,
   initialState,
+  customerHistory,
 }: {
   staff: boolean;
   initialState?: 'Active' | undefined;
+  customerHistory?: CustomerContractHistoryControls | undefined;
 }) {
   const locale = useLocale();
   const word = (key: string) => contractText(key, locale);
@@ -66,6 +77,19 @@ function Workspace({
   const [invalid, setInvalid] = useState(false);
   const [invalidNumber, setInvalidNumber] = useState(false);
   const [createdId, setCreatedId] = useState<string | null>(null);
+  const customerParams = new URLSearchParams();
+  if (initialState) customerParams.set('state', initialState);
+  if (customerHistory) {
+    if (customerHistory.query.q) customerParams.set('q', customerHistory.query.q);
+    if (customerHistory.query.serviceType)
+      customerParams.set('serviceType', customerHistory.query.serviceType);
+    if (customerHistory.query.sort !== DEFAULT_CONTRACT_LIST_SORT)
+      customerParams.set('sort', customerHistory.query.sort);
+    if (customerHistory.statuses.length)
+      customerParams.set('statuses', customerHistory.statuses.join(','));
+    if (customerHistory.dateRange.from) customerParams.set('from', customerHistory.dateRange.from);
+    if (customerHistory.dateRange.to) customerParams.set('to', customerHistory.dateRange.to);
+  }
   function apply(event: FormEvent) {
     event.preventDefault();
     if (
@@ -117,6 +141,7 @@ function Workspace({
           </Link>
         </nav>
       ) : null}
+      {!staff && customerHistory && <CustomerContractFilters history={customerHistory} />}
       {staff ? (
         <form onSubmit={apply} className="flex flex-col gap-4 rounded-xl border bg-card p-5">
           <FieldGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -193,7 +218,7 @@ function Workspace({
       <ContractResults
         key={generation}
         staff={staff}
-        query={query}
+        query={staff ? query : customerParams.toString()}
         initialSelected={createdId ?? new URLSearchParams(window.location.search).get('contractId')}
       />
     </div>
@@ -212,10 +237,14 @@ function ContractResults({
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const word = (key: string) => contractText(key, locale);
-  const [items, setItems] = useState<ContractSummary[]>([]);
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [next, setNext] = useState<string | null>(null);
   const [reload, setReload] = useState(0);
+  const {
+    items,
+    before: cursor,
+    nextBefore: next,
+    acceptPage,
+    loadMore,
+  } = useCursorHistory<ContractSummary>(`${staff}:${query}:${reload}`);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [selected, setSelected] = useState<string | null>(initialSelected);
@@ -231,15 +260,7 @@ function ContractResults({
     )
       .then((page) => {
         if (controller.signal.aborted) return;
-        setItems((previous) =>
-          cursor
-            ? [
-                ...previous,
-                ...page.contracts.filter((item) => !previous.some((old) => old.id === item.id)),
-              ]
-            : page.contracts
-        );
-        setNext(page.nextBefore);
+        acceptPage(page.contracts, page.nextBefore);
       })
       .catch(() => {
         if (!controller.signal.aborted) setError(true);
@@ -248,11 +269,8 @@ function ContractResults({
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [staff, query, cursor, reload]);
+  }, [staff, query, cursor, reload, acceptPage]);
   function refresh() {
-    setItems([]);
-    setCursor(null);
-    setNext(null);
     setReload((value) => value + 1);
   }
   return (
@@ -430,7 +448,7 @@ function ContractResults({
         </ul>
       ) : null}
       {next ? (
-        <Button variant="outline" disabled={loading} onClick={() => setCursor(next)}>
+        <Button variant="outline" disabled={loading || error} onClick={loadMore}>
           {word('next')}
         </Button>
       ) : null}

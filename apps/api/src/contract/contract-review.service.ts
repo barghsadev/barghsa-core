@@ -14,6 +14,15 @@ import { notifyContractReview } from './contract-review-notifications.js';
 import { readContractFinancialReview } from './contract-financial-review.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import { parseContractCommercialValue } from './contract-validation.js';
+import {
+  DEFAULT_CONTRACT_LIST_SORT,
+  literalSearchPattern,
+  type ContractListQuery,
+  type DateRangeFilterValue,
+} from '@barghsa/shared/validation';
+export interface ContractListFilters extends ContractListQuery, DateRangeFilterValue {
+  statuses?: string[];
+}
 export interface ContractReviewInput {
   expectedVersionId: string;
   idempotencyKey: string;
@@ -204,8 +213,43 @@ export class ContractReviewService {
       )
     );
   }
-  async list(actor: ContractActor, before?: string, state?: 'Active') {
+  async list(
+    actor: ContractActor,
+    before?: string,
+    state?: 'Active',
+    filters: ContractListFilters = { q: '', sort: DEFAULT_CONTRACT_LIST_SORT }
+  ) {
     return customerContractAccess(actor, false, async (client, profileId) => {
+      const predicate = `c.profile_id=$1 AND (NOT $2::boolean OR c.state='Active')
+        AND ($3::text[] IS NULL OR c.state::text=ANY($3::text[]))
+        AND ($4::text IS NULL OR c.service_type::text=$4)
+        AND ($5::timestamptz IS NULL OR p.published_at >= $5::timestamptz)
+        AND ($6::timestamptz IS NULL OR p.published_at < $6::timestamptz)
+        AND ($7::text IS NULL OR c.id::text ILIKE $7 ESCAPE E'\\\\' OR c.contract_number::text ILIKE $7 ESCAPE E'\\\\')`;
+      const params = [
+        profileId,
+        state === 'Active',
+        filters.statuses?.length ? filters.statuses : null,
+        filters.serviceType ?? null,
+        filters.from ?? null,
+        filters.to ?? null,
+        literalSearchPattern(filters.q),
+      ];
+      let beforeAt: string | null = null;
+      if (before) {
+        const cursor = await client.query<{ published_at: string }>(
+          `SELECT p.published_at::text FROM contracts c
+           JOIN contract_versions v ON v.id=c.current_version_id AND v.contract_id=c.id
+           JOIN contract_publications p ON p.version_id=v.id
+           WHERE ${predicate} AND c.id=$8::uuid`,
+          [...params, before]
+        );
+        beforeAt = cursor.rows[0]?.published_at ?? null;
+        if (!beforeAt) throw new NotFoundException();
+      }
+      const ascending = filters.sort === 'published_at:asc';
+      const direction = ascending ? 'ASC' : 'DESC';
+      const comparison = ascending ? '>' : '<';
       const rows = (
         await client.query<{
           id: string;
@@ -232,7 +276,7 @@ export class ContractReviewService {
           initial_invoice_state: string | null;
           pending_amendment_state: 'AwaitingCustomerAcceptance' | 'AwaitingSignature' | null;
         }>(
-          `SELECT DISTINCT ON(c.id) c.id,c.contract_number,profile.profile_type,profile.title AS profile_title,
+          `SELECT * FROM (SELECT DISTINCT ON(c.id) c.id,c.contract_number,profile.profile_type,profile.title AS profile_title,
           profile.first_name AS profile_first_name,profile.last_name AS profile_last_name,
           c.order_id,e.status AS linked_order_status,s.id AS saving_order_id,c.service_type,c.state,v.id AS version_id,v.version_number,
           v.content->'commercialValue' AS commercial_value,p.published_at,a.accepted_at,a.party_snapshot,
@@ -248,10 +292,11 @@ export class ContractReviewService {
           LEFT JOIN invoices i ON i.id=r.initial_invoice_id AND i.profile_id=c.profile_id
           LEFT JOIN saving_orders s ON s.order_id=c.order_id AND s.profile_id=c.profile_id AND c.service_type='savings'
           LEFT JOIN electricity_orders e ON e.id=c.order_id AND e.profile_id=c.profile_id AND c.service_type='electricity'
-      WHERE c.profile_id=$1 AND ($2::uuid IS NULL OR c.id<$2)
-        AND (NOT $3::boolean OR c.state='Active')
-      ORDER BY c.id DESC,v.version_number DESC LIMIT 101`,
-          [profileId, before ?? null, state === 'Active']
+      WHERE ${predicate}
+      ORDER BY c.id DESC,v.version_number DESC) visible
+      WHERE ($8::timestamptz IS NULL OR (published_at,id) ${comparison} ($8::timestamptz,$9::uuid))
+      ORDER BY published_at ${direction},id ${direction} LIMIT 101`,
+          [...params, beforeAt, before ?? null]
         )
       ).rows;
       return {

@@ -6,7 +6,22 @@ for (const locale of ['en', 'fa'] as const) {
     locale + ': staff configures optional prerequisites through password verification',
     async ({ page }) => {
       const words = locale === 'fa' ? fa : en;
+      await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/user', (route) =>
+        route.fulfill({
+          json: {
+            userId: 'contract-test-user',
+            isStaff: true,
+            operatingContext: 'staff',
+            canSwitchContext: true,
+            requiresTosAcceptance: false,
+          },
+        })
+      );
+      await page.route('**/api/user/settings/timezone', (route) =>
+        route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+      );
       await page.route('**/api/admin/contracts?*', (route) =>
         route.fulfill({ json: { contracts: [], nextBefore: null } })
       );
@@ -56,8 +71,6 @@ for (const locale of ['en', 'fa'] as const) {
         return route.fulfill({ json: { verified: true } });
       });
       await page.goto('/admin/contracts');
-      if (locale === 'en')
-        await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
       await page.getByRole('button', { name: words.activationRules, exact: true }).click();
       const group = page.getByRole('group', { name: words.electricity, exact: true });
       await expect(
@@ -97,7 +110,22 @@ for (const locale of ['en', 'fa'] as const) {
     locale + ': customer sees missing payment separately from accepted contract',
     async ({ page }) => {
       const words = locale === 'fa' ? fa : en;
+      await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/user', (route) =>
+        route.fulfill({
+          json: {
+            userId: 'contract-test-user',
+            isStaff: false,
+            operatingContext: 'customer',
+            canSwitchContext: false,
+            requiresTosAcceptance: false,
+          },
+        })
+      );
+      await page.route('**/api/user/settings/timezone', (route) =>
+        route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+      );
       const id = '11111111-1111-4111-8111-111111111111',
         version = '22222222-2222-4222-8222-222222222222',
         orderId = '44444444-4444-4444-8444-444444444444';
@@ -170,8 +198,6 @@ for (const locale of ['en', 'fa'] as const) {
         });
       });
       await page.goto('/contracts');
-      if (locale === 'en')
-        await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
       await page
         .getByRole('button', {
           name: `${words.electricity} \u00b7 ${words.version} ${(1).toLocaleString(locale)}`,

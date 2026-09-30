@@ -17046,7 +17046,7 @@
         "operationId": "CustomerContractController_list",
         "parameters": [
           {
-            "description": "Exclusive contract UUID cursor; at most 100 records.",
+            "description": "Exclusive UUID cursor from the previous page; at most 100 records ordered by publication time and UUID.",
             "in": "query",
             "name": "before",
             "required": false,
@@ -17064,11 +17064,67 @@
               ],
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "enum": [
+                "published_at:desc",
+                "published_at:asc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Literal contract number or reference substring, at most 120 characters",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "description": "Exclusive publication timestamp (UTC ISO)",
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "description": "Inclusive publication timestamp (UTC ISO)",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "serviceType",
+            "required": false,
+            "schema": {
+              "enum": [
+                "electricity",
+                "savings",
+                "solar"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Comma-separated customer contract states",
+            "in": "query",
+            "name": "statuses",
+            "required": false,
+            "schema": {}
           }
         ],
         "responses": {
-          "200": {
-            "description": ""
+          "400": {
+            "description": "Invalid filter or cursor"
+          },
+          "404": {
+            "description": "No authorized profile or matching published cursor"
           }
         },
         "security": [

@@ -12,12 +12,24 @@ for (const locale of ['en', 'fa'] as const)
     }) => {
       const words = locale === 'fa' ? fa : en;
       await page.addInitScript((language) => {
+        localStorage.setItem('barghsa.locale', language);
         if (document.documentElement) document.documentElement.lang = language;
         new MutationObserver(() => {
           if (document.documentElement) document.documentElement.lang = language;
         }).observe(document, { childList: true });
       }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/user', (route) =>
+        route.fulfill({
+          json: {
+            userId: 'contract-test-user',
+            isStaff: staff,
+            operatingContext: staff ? 'staff' : 'customer',
+            canSwitchContext: staff,
+            requiresTosAcceptance: false,
+          },
+        })
+      );
       const base = staff ? '/api/admin/contracts' : '/api/contracts';
       await page.route(`**${base}/${ID}/activation?*`, (route) =>
         route.fulfill({
