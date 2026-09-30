@@ -3,6 +3,11 @@ const en: Record<string, string> = {
   title: 'Product catalogue',
   refresh: 'Refresh',
   loading: 'Loading…',
+  retry: 'Try again',
+  detailError: 'Could not load this product and its settings.',
+  hardwareError: 'Could not load compatible hardware.',
+  timezoneError:
+    'Could not load your timezone. Price history and scheduling will be available after retry.',
   error: 'Could not load the catalogue. Refresh and try again.',
   denied: 'You do not have permission to manage products.',
   saved: 'Changes saved.',
@@ -113,6 +118,11 @@ const fa: Record<string, string> = {
   title: 'فهرست محصولات',
   refresh: 'تازه‌سازی',
   loading: 'در حال بارگذاری…',
+  retry: 'تلاش دوباره',
+  detailError: 'دریافت محصول و تنظیمات آن انجام نشد.',
+  hardwareError: 'دریافت سخت‌افزارهای سازگار انجام نشد.',
+  timezoneError:
+    'دریافت منطقه زمانی انجام نشد. تاریخچه قیمت و زمان‌بندی پس از تلاش دوباره در دسترس خواهد بود.',
   error: 'بارگذاری محصولات انجام نشد. دوباره تلاش کنید.',
   denied: 'اجازه مدیریت محصولات را ندارید.',
   saved: 'تغییرات ذخیره شد.',

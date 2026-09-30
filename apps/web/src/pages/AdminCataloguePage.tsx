@@ -1,6 +1,14 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, DatePicker, datePickerAtTime, Input, Label, Textarea } from '@barghsa/ui';
+import {
+  Button,
+  DatePicker,
+  datePickerAtTime,
+  Input,
+  Label,
+  ListPage,
+  Textarea,
+} from '@barghsa/ui';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -77,6 +85,13 @@ export default function AdminCataloguePage() {
     [draft, setDraft] = useState<Draft | null>(null);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'denied'>('loading'),
     [revision, setRevision] = useState(0);
+  const [listRevision, setListRevision] = useState(0);
+  const [detailRevision, setDetailRevision] = useState(0);
+  const [hardwareRevision, setHardwareRevision] = useState(0);
+  const [detailState, setDetailState] = useState<'loading' | 'ready' | 'error'>('ready');
+  const [hardwareState, setHardwareState] = useState<'loading' | 'ready' | 'error'>('ready');
+  const accessDenied = useRef(false);
+  const hasEditor = editor !== null;
   const [action, setAction] = useState<TeamAction | null>(null),
     [saved, setSaved] = useState(false),
     [references, setReferences] = useState<References | null>(null);
@@ -90,87 +105,151 @@ export default function AdminCataloguePage() {
   function switchType(value: ProductType) {
     if (value === type) return;
     setState('loading');
-    setEditor(null);
+    setRows([]);
+    choose(null);
     setType(value);
   }
   const zone = preference.timezone;
   const title = (row: Product) => row.title[locale] || row.title.en || row.title.fa;
   const money = (value: string | null) => (value === null ? label('unset') : numbers.money(value));
   const dateText = (value: string) => new Date(value).toLocaleString(locale, { timeZone: zone });
-  useEffect(() => {
-    const abort = new AbortController();
-    setState('loading');
+  function denyAccess() {
+    accessDenied.current = true;
+    setState('denied');
     setRows([]);
     setHardwareOptions([]);
+    setEditor(null);
+    setDraft(null);
+    setDetail(null);
+    setReferences(null);
+    setPriceOpen(false);
+    setAction(null);
+  }
+  useEffect(() => {
+    const abort = new AbortController();
+    accessDenied.current = false;
+    setState('loading');
+    void fetch(`${base}?type=${type}`, { signal: abort.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error(String(response.status));
+        return response.json() as Promise<Product[]>;
+      })
+      .then((products) => {
+        if (abort.signal.aborted || accessDenied.current) return;
+        setRows(products);
+        setState('ready');
+      })
+      .catch((cause: unknown) => {
+        if (abort.signal.aborted || accessDenied.current) return;
+        if (cause instanceof Error && cause.message === '403') denyAccess();
+        else setState('error');
+      });
+    return () => abort.abort();
+  }, [type, revision, listRevision]);
+  useEffect(() => {
+    const abort = new AbortController();
+    setHardwareOptions([]);
+    if (type !== 'saving_plan' || !hasEditor || accessDenied.current) {
+      setHardwareState('ready');
+      return;
+    }
+    setHardwareState('loading');
+    void fetch(`${base}?type=hardware`, { signal: abort.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error(String(response.status));
+        return response.json() as Promise<Product[]>;
+      })
+      .then((products) => {
+        if (abort.signal.aborted || accessDenied.current) return;
+        setHardwareOptions(products);
+        setHardwareState('ready');
+      })
+      .catch((cause: unknown) => {
+        if (abort.signal.aborted || accessDenied.current) return;
+        if (cause instanceof Error && cause.message === '403') denyAccess();
+        else setHardwareState('error');
+      });
+    return () => abort.abort();
+  }, [type, hasEditor, revision, hardwareRevision]);
+  useEffect(() => {
+    const abort = new AbortController();
     setDraft(null);
     setDetail(null);
     setReferences(null);
     setPriceOpen(false);
     setInvalidDate(false);
+    if (!editor || accessDenied.current) {
+      setDetailState('ready');
+      return;
+    }
+    function populate(
+      product: Detail | null,
+      config?: {
+        hardwareIds: string[];
+        preventActiveDuplicates: boolean;
+      }
+    ) {
+      setDetail(product);
+      setPreventActiveDuplicates(config?.preventActiveDuplicates ?? true);
+      setDraft({
+        titleFa: product?.title.fa ?? '',
+        titleEn: product?.title.en ?? '',
+        descriptionFa: product?.description?.fa ?? '',
+        descriptionEn: product?.description?.en ?? '',
+        price: '',
+        categories: product?.categories ?? [],
+        hardwareIds: config?.hardwareIds ?? [],
+        configureLimits: !!product?.electricityLimits,
+        minKwh: product?.electricityLimits?.minKwh ?? '0',
+        maxKwh: product?.electricityLimits?.maxKwh ?? '0',
+      });
+      setDetailState('ready');
+    }
+    if (editor === 'new') {
+      populate(null);
+      return;
+    }
+    setDetailState('loading');
     void (async () => {
       try {
         const paths = [
-          `${base}?type=${type}`,
-          ...(editor && editor !== 'new'
-            ? [`${base}/${editor}`, `${base}/${editor}/rule-references`]
+          `${base}/${editor}`,
+          `${base}/${editor}/rule-references`,
+          ...(type === 'saving_plan'
+            ? [`/api/admin/catalogue/saving-plans/${editor}/configuration`]
             : []),
         ];
-        const extraPaths =
-          type === 'saving_plan'
-            ? [
-                `${base}?type=hardware`,
-                ...(editor && editor !== 'new'
-                  ? [`/api/admin/catalogue/saving-plans/${editor}/configuration`]
-                  : []),
-              ]
-            : [];
         const responses = await Promise.all(
-          [...paths, ...extraPaths].map((path) => fetch(path, { signal: abort.signal }))
+          paths.map((path) => fetch(path, { signal: abort.signal }))
         );
         if (responses.some((response) => response.status === 403)) {
-          if (!abort.signal.aborted) setState('denied');
+          if (!abort.signal.aborted) denyAccess();
           return;
         }
         if (responses.some((response) => !response.ok)) throw new Error('Load failed');
         const data = await Promise.all(responses.map((response) => response.json()));
-        if (abort.signal.aborted) return;
-        setRows(data[0] as Product[]);
-        if (type === 'saving_plan') setHardwareOptions(data[paths.length] as Product[]);
-        const savingConfig =
-          type === 'saving_plan' && editor && editor !== 'new'
-            ? (data[paths.length + 1] as {
-                hardwareIds: string[];
-                preventActiveDuplicates: boolean;
-              })
-            : null;
-        setPreventActiveDuplicates(savingConfig?.preventActiveDuplicates ?? true);
-        const product = editor && editor !== 'new' ? (data[1] as Detail) : null;
-        setDetail(product);
-        if (product) setReferences(data[2] as References);
-        if (editor)
-          setDraft({
-            titleFa: product?.title.fa ?? '',
-            titleEn: product?.title.en ?? '',
-            descriptionFa: product?.description?.fa ?? '',
-            descriptionEn: product?.description?.en ?? '',
-            price: '',
-            categories: product?.categories ?? [],
-            hardwareIds: savingConfig?.hardwareIds ?? [],
-            configureLimits: !!product?.electricityLimits,
-            minKwh: product?.electricityLimits?.minKwh ?? '0',
-            maxKwh: product?.electricityLimits?.maxKwh ?? '0',
-          });
-        setState('ready');
+        if (abort.signal.aborted || accessDenied.current) return;
+        setReferences(data[1] as References);
+        populate(data[0] as Detail, data[2]);
       } catch {
-        if (!abort.signal.aborted) setState('error');
+        if (!abort.signal.aborted && !accessDenied.current) setDetailState('error');
       }
     })();
     return () => abort.abort();
-  }, [type, editor, revision]);
+  }, [type, editor, revision, detailRevision]);
   function choose(value: string | null) {
-    if (preference.status === 'error') preference.retry();
-    setState('loading');
+    setAction(null);
+    setDraft(null);
+    setDetail(null);
+    setReferences(null);
+    setPriceOpen(false);
+    setInvalidDate(false);
     setEditor(value);
+    setDetailRevision((value) => value + 1);
+  }
+  function refresh() {
+    if (preference.status === 'error') preference.retry();
+    setAction(null);
     setRevision((value) => value + 1);
   }
   function propose(
@@ -260,11 +339,6 @@ export default function AdminCataloguePage() {
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <h1 className="text-2xl font-semibold">{label('title')}</h1>
-      <div>
-        <Button variant="outline" onClick={() => choose(editor)}>
-          {label('refresh')}
-        </Button>
-      </div>
       {saved && <p role="status">{label('saved')}</p>}
       <div>
         <div className="max-w-full overflow-x-auto pb-2">
@@ -317,432 +391,480 @@ export default function AdminCataloguePage() {
               tabIndex={0}
               className="flex flex-col gap-5"
             >
-              {(state === 'loading' || preference.status === 'loading') && (
-                <p role="status">{label('loading')}</p>
-              )}
-              {(state === 'error' || preference.status === 'error') && (
-                <p role="alert">{label('error')}</p>
-              )}
-              {state === 'denied' && <p role="alert">{label('denied')}</p>}
-              {state === 'ready' && preference.status === 'ready' && (
-                <>
-                  {type !== 'electricity' && (
-                    <div>
-                      <Button onClick={() => choose('new')}>{label('add')}</Button>
-                    </div>
-                  )}
-                  {draft && (
+              <ListPage>
+                <ListPage.Toolbar
+                  actions={
                     <>
-                      <form
-                        aria-label={label('editor')}
-                        onSubmit={save}
-                        className="flex flex-col gap-4 border-y py-5"
-                      >
-                        {detail && (
-                          <h2 className="break-words text-xl font-semibold">{title(detail)}</h2>
-                        )}
-                        {detail?.systemKey && <p role="note">{label('system')}</p>}
-                        {(['titleFa', 'titleEn'] as const).map((field) => (
-                          <div key={field}>
-                            <Label htmlFor={`catalogue-${field}`}>{label(field)}</Label>
-                            <Input
-                              id={`catalogue-${field}`}
-                              dir={field === 'titleFa' ? 'rtl' : 'ltr'}
-                              required
-                              maxLength={300}
-                              value={draft[field]}
-                              onChange={(event) =>
-                                setDraft({ ...draft, [field]: event.target.value })
-                              }
-                            />
+                      <Button variant="outline" onClick={refresh}>
+                        {label('refresh')}
+                      </Button>
+                      {type !== 'electricity' && state !== 'denied' && (
+                        <Button onClick={() => choose('new')}>{label('add')}</Button>
+                      )}
+                    </>
+                  }
+                />
+                {preference.status === 'loading' && <p role="status">{label('loading')}</p>}
+                {preference.status === 'error' && (
+                  <div role="alert" className="space-y-2">
+                    <p>{label('timezoneError')}</p>
+                    <Button variant="outline" onClick={preference.retry}>
+                      {label('retry')}
+                    </Button>
+                  </div>
+                )}
+                {editor && detailState === 'loading' && <p role="status">{label('loading')}</p>}
+                {editor && detailState === 'error' && (
+                  <div role="alert" className="space-y-2">
+                    <p>{label('detailError')}</p>
+                    <Button variant="outline" onClick={() => setDetailRevision((v) => v + 1)}>
+                      {label('retry')}
+                    </Button>
+                  </div>
+                )}
+                {draft && (
+                  <>
+                    <form
+                      aria-label={label('editor')}
+                      onSubmit={save}
+                      className="flex flex-col gap-4 border-y py-5"
+                    >
+                      {detail && (
+                        <h2 className="break-words text-xl font-semibold">{title(detail)}</h2>
+                      )}
+                      {detail?.systemKey && <p role="note">{label('system')}</p>}
+                      {(['titleFa', 'titleEn'] as const).map((field) => (
+                        <div key={field}>
+                          <Label htmlFor={`catalogue-${field}`}>{label(field)}</Label>
+                          <Input
+                            id={`catalogue-${field}`}
+                            dir={field === 'titleFa' ? 'rtl' : 'ltr'}
+                            required
+                            maxLength={300}
+                            value={draft[field]}
+                            onChange={(event) =>
+                              setDraft({ ...draft, [field]: event.target.value })
+                            }
+                          />
+                        </div>
+                      ))}
+                      {(['descriptionFa', 'descriptionEn'] as const).map((field) => (
+                        <div key={field}>
+                          <Label htmlFor={`catalogue-${field}`}>{label(field)}</Label>
+                          <Textarea
+                            id={`catalogue-${field}`}
+                            dir={field === 'descriptionFa' ? 'rtl' : 'ltr'}
+                            maxLength={4000}
+                            value={draft[field]}
+                            onChange={(event) =>
+                              setDraft({ ...draft, [field]: event.target.value })
+                            }
+                          />
+                        </div>
+                      ))}
+                      {editor === 'new' && (
+                        <div>
+                          <Label htmlFor="catalogue-initial-price">{label('initialPrice')}</Label>
+                          <Input
+                            id="catalogue-initial-price"
+                            inputMode="numeric"
+                            pattern="[0-9]{1,18}"
+                            maxLength={18}
+                            value={draft.price}
+                            onChange={(event) => setDraft({ ...draft, price: event.target.value })}
+                          />
+                          <p className="mt-2 text-sm">
+                            {label('status')}: {label('inactive')}
+                          </p>
+                        </div>
+                      )}
+                      {!!categoryOptions[type].length && (
+                        <fieldset className="rounded-md border p-4">
+                          <legend className="px-1 font-semibold">{label('categories')}</legend>
+                          <div className="flex flex-col gap-3">
+                            {categoryOptions[type].map((category) => (
+                              <label key={category} className="flex items-center gap-2">
+                                <input
+                                  type="checkbox"
+                                  checked={draft.categories.includes(category)}
+                                  onChange={(event) =>
+                                    setDraft({
+                                      ...draft,
+                                      categories: event.target.checked
+                                        ? [...draft.categories, category]
+                                        : draft.categories.filter((value) => value !== category),
+                                    })
+                                  }
+                                />
+                                {label(category)}
+                              </label>
+                            ))}
                           </div>
-                        ))}
-                        {(['descriptionFa', 'descriptionEn'] as const).map((field) => (
-                          <div key={field}>
-                            <Label htmlFor={`catalogue-${field}`}>{label(field)}</Label>
-                            <Textarea
-                              id={`catalogue-${field}`}
-                              dir={field === 'descriptionFa' ? 'rtl' : 'ltr'}
-                              maxLength={4000}
-                              value={draft[field]}
-                              onChange={(event) =>
-                                setDraft({ ...draft, [field]: event.target.value })
-                              }
-                            />
-                          </div>
-                        ))}
-                        {editor === 'new' && (
-                          <div>
-                            <Label htmlFor="catalogue-initial-price">{label('initialPrice')}</Label>
-                            <Input
-                              id="catalogue-initial-price"
-                              inputMode="numeric"
-                              pattern="[0-9]{1,18}"
-                              maxLength={18}
-                              value={draft.price}
-                              onChange={(event) =>
-                                setDraft({ ...draft, price: event.target.value })
-                              }
-                            />
-                            <p className="mt-2 text-sm">
-                              {label('status')}: {label('inactive')}
-                            </p>
-                          </div>
-                        )}
-                        {!!categoryOptions[type].length && (
-                          <fieldset className="rounded-md border p-4">
-                            <legend className="px-1 font-semibold">{label('categories')}</legend>
-                            <div className="flex flex-col gap-3">
-                              {categoryOptions[type].map((category) => (
-                                <label key={category} className="flex items-center gap-2">
+                        </fieldset>
+                      )}
+                      {type === 'saving_plan' && (
+                        <fieldset className="rounded-md border p-4">
+                          <legend className="px-1 font-semibold">{label('planHardware')}</legend>
+                          <p className="mb-3 text-sm text-muted-foreground">
+                            {label('planHardwareHelp')}
+                          </p>
+                          {hardwareState === 'loading' && <p role="status">{label('loading')}</p>}
+                          {hardwareState === 'error' && (
+                            <div role="alert" className="space-y-2">
+                              <p>{label('hardwareError')}</p>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setHardwareRevision((v) => v + 1)}
+                              >
+                                {label('retry')}
+                              </Button>
+                            </div>
+                          )}
+                          <div className="flex flex-col gap-3">
+                            {hardwareOptions
+                              .filter((item) => item.status !== 'archived')
+                              .map((item) => (
+                                <label key={item.id} className="flex items-center gap-2">
                                   <input
                                     type="checkbox"
-                                    checked={draft.categories.includes(category)}
+                                    checked={draft.hardwareIds.includes(item.id)}
                                     onChange={(event) =>
                                       setDraft({
                                         ...draft,
-                                        categories: event.target.checked
-                                          ? [...draft.categories, category]
-                                          : draft.categories.filter((value) => value !== category),
+                                        hardwareIds: event.target.checked
+                                          ? [...draft.hardwareIds, item.id]
+                                          : draft.hardwareIds.filter((id) => id !== item.id),
                                       })
                                     }
                                   />
-                                  {label(category)}
+                                  {title(item)} · {money(item.price)}
                                 </label>
                               ))}
-                            </div>
-                          </fieldset>
-                        )}
-                        {type === 'saving_plan' && (
-                          <fieldset className="rounded-md border p-4">
-                            <legend className="px-1 font-semibold">{label('planHardware')}</legend>
-                            <p className="mb-3 text-sm text-muted-foreground">
-                              {label('planHardwareHelp')}
-                            </p>
-                            <div className="flex flex-col gap-3">
-                              {hardwareOptions
-                                .filter((item) => item.status !== 'archived')
-                                .map((item) => (
-                                  <label key={item.id} className="flex items-center gap-2">
-                                    <input
-                                      type="checkbox"
-                                      checked={draft.hardwareIds.includes(item.id)}
+                          </div>
+                        </fieldset>
+                      )}
+                      {type === 'electricity' && (
+                        <fieldset className="rounded-md border p-4">
+                          <legend className="px-1 font-semibold">{label('limits')}</legend>
+                          {!detail?.electricityLimits && (
+                            <label className="mb-3 flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                checked={draft.configureLimits}
+                                onChange={(event) =>
+                                  setDraft({ ...draft, configureLimits: event.target.checked })
+                                }
+                              />
+                              {label('configureLimits')}
+                            </label>
+                          )}
+                          {draft.configureLimits && (
+                            <>
+                              <p className="mb-3 text-sm">{label('limitsHelp')}</p>
+                              <div className="grid gap-3 sm:grid-cols-2">
+                                {(['minKwh', 'maxKwh'] as const).map((field) => (
+                                  <div key={field}>
+                                    <Label htmlFor={`catalogue-${field}`}>{label(field)}</Label>
+                                    <Input
+                                      id={`catalogue-${field}`}
+                                      required
+                                      inputMode="numeric"
+                                      pattern="[0-9]{1,18}"
+                                      maxLength={18}
+                                      value={draft[field]}
                                       onChange={(event) =>
-                                        setDraft({
-                                          ...draft,
-                                          hardwareIds: event.target.checked
-                                            ? [...draft.hardwareIds, item.id]
-                                            : draft.hardwareIds.filter((id) => id !== item.id),
-                                        })
+                                        setDraft({ ...draft, [field]: event.target.value })
                                       }
                                     />
-                                    {title(item)} · {money(item.price)}
-                                  </label>
+                                  </div>
                                 ))}
-                            </div>
-                          </fieldset>
+                              </div>
+                            </>
+                          )}
+                        </fieldset>
+                      )}
+                      <div className="flex gap-2">
+                        <Button
+                          type="submit"
+                          disabled={
+                            !draft.titleFa.trim() ||
+                            !draft.titleEn.trim() ||
+                            (type === 'saving_plan' &&
+                              (hardwareState !== 'ready' || draft.hardwareIds.length === 0))
+                          }
+                        >
+                          {label('save')}
+                        </Button>
+                        <Button type="button" variant="outline" onClick={() => choose(null)}>
+                          {label('cancel')}
+                        </Button>
+                      </div>
+                    </form>
+                    {detail && (
+                      <section className="flex flex-col gap-4" aria-label={label('status')}>
+                        <p>
+                          {label('status')}: {label(detail.status)}
+                        </p>
+                        {warning && (
+                          <p role="note" className="rounded-md border p-3">
+                            {warning}
+                          </p>
                         )}
-                        {type === 'electricity' && (
-                          <fieldset className="rounded-md border p-4">
-                            <legend className="px-1 font-semibold">{label('limits')}</legend>
-                            {!detail?.electricityLimits && (
-                              <label className="mb-3 flex items-center gap-2">
-                                <input
-                                  type="checkbox"
-                                  checked={draft.configureLimits}
-                                  onChange={(event) =>
-                                    setDraft({ ...draft, configureLimits: event.target.checked })
-                                  }
-                                />
-                                {label('configureLimits')}
-                              </label>
-                            )}
-                            {draft.configureLimits && (
-                              <>
-                                <p className="mb-3 text-sm">{label('limitsHelp')}</p>
-                                <div className="grid gap-3 sm:grid-cols-2">
-                                  {(['minKwh', 'maxKwh'] as const).map((field) => (
-                                    <div key={field}>
-                                      <Label htmlFor={`catalogue-${field}`}>{label(field)}</Label>
-                                      <Input
-                                        id={`catalogue-${field}`}
-                                        required
-                                        inputMode="numeric"
-                                        pattern="[0-9]{1,18}"
-                                        maxLength={18}
-                                        value={draft[field]}
-                                        onChange={(event) =>
-                                          setDraft({ ...draft, [field]: event.target.value })
-                                        }
-                                      />
-                                    </div>
-                                  ))}
-                                </div>
-                              </>
-                            )}
-                          </fieldset>
-                        )}
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                           <Button
-                            type="submit"
-                            disabled={
-                              !draft.titleFa.trim() ||
-                              !draft.titleEn.trim() ||
-                              (type === 'saving_plan' && draft.hardwareIds.length === 0)
+                            variant="outline"
+                            onClick={() =>
+                              propose(
+                                `${base}/${detail.id}`,
+                                'PUT',
+                                label(
+                                  detail.status === 'active'
+                                    ? 'deactivate'
+                                    : detail.status === 'archived'
+                                      ? 'restore'
+                                      : 'activate'
+                                ),
+                                `${label('confirmStatus')} ${detail.status === 'active' ? warning : ''}`,
+                                { status: detail.status === 'inactive' ? 'active' : 'inactive' }
+                              )
                             }
                           >
-                            {label('save')}
+                            {label(
+                              detail.status === 'active'
+                                ? 'deactivate'
+                                : detail.status === 'archived'
+                                  ? 'restore'
+                                  : 'activate'
+                            )}
                           </Button>
-                          <Button type="button" variant="outline" onClick={() => choose(null)}>
-                            {label('cancel')}
-                          </Button>
-                        </div>
-                      </form>
-                      {detail && (
-                        <section className="flex flex-col gap-4" aria-label={label('status')}>
-                          <p>
-                            {label('status')}: {label(detail.status)}
-                          </p>
-                          {warning && (
-                            <p role="note" className="rounded-md border p-3">
-                              {warning}
-                            </p>
-                          )}
-                          <div className="flex flex-wrap gap-2">
+                          {!detail.systemKey && detail.status !== 'archived' && (
                             <Button
                               variant="outline"
                               onClick={() =>
                                 propose(
                                   `${base}/${detail.id}`,
-                                  'PUT',
-                                  label(
-                                    detail.status === 'active'
-                                      ? 'deactivate'
-                                      : detail.status === 'archived'
-                                        ? 'restore'
-                                        : 'activate'
-                                  ),
-                                  `${label('confirmStatus')} ${detail.status === 'active' ? warning : ''}`,
-                                  { status: detail.status === 'inactive' ? 'active' : 'inactive' }
+                                  'DELETE',
+                                  label('archive'),
+                                  `${label('confirmArchive')} ${warning}`
                                 )
                               }
                             >
-                              {label(
-                                detail.status === 'active'
-                                  ? 'deactivate'
-                                  : detail.status === 'archived'
-                                    ? 'restore'
-                                    : 'activate'
-                              )}
+                              {label('archive')}
                             </Button>
-                            {!detail.systemKey && detail.status !== 'archived' && (
-                              <Button
-                                variant="outline"
-                                onClick={() =>
-                                  propose(
-                                    `${base}/${detail.id}`,
-                                    'DELETE',
-                                    label('archive'),
-                                    `${label('confirmArchive')} ${warning}`
-                                  )
-                                }
-                              >
-                                {label('archive')}
-                              </Button>
-                            )}
-                          </div>
-                        </section>
-                      )}
-                      {detail && type === 'saving_plan' && (
-                        <section
-                          className="rounded-md border p-4"
-                          aria-label={label('duplicatePolicy')}
-                        >
-                          <h2 className="font-semibold">{label('duplicatePolicy')}</h2>
-                          <p className="my-2 text-sm text-muted-foreground">
-                            {label('duplicatePolicyHelp')}
-                          </p>
-                          <p className="mb-3 text-sm">
-                            {label(
-                              preventActiveDuplicates ? 'duplicatesBlocked' : 'duplicatesAllowed'
-                            )}
-                          </p>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() =>
-                              propose(
-                                `/api/admin/catalogue/saving-plans/${detail.id}/duplicate-policy`,
-                                'PUT',
-                                label('duplicatePolicy'),
-                                label('confirmDuplicatePolicy'),
-                                { preventActiveDuplicates: !preventActiveDuplicates }
-                              )
-                            }
-                          >
-                            {label(preventActiveDuplicates ? 'allowDuplicates' : 'blockDuplicates')}
-                          </Button>
-                        </section>
-                      )}
-                      {detail && type === 'saving_plan' && (
-                        <SavingAgreementEditor
-                          planId={detail.id}
-                          onChanged={() => choose(detail.id)}
-                        />
-                      )}
-                      {detail && type === 'hardware' && (
-                        <SavingInventoryPanel hardwareId={detail.id} />
-                      )}
-                      {detail && (
-                        <section
-                          aria-label={label('history')}
-                          className="flex flex-col gap-3 border-y py-5"
-                        >
-                          <h2 className="text-xl font-semibold">{label('history')}</h2>
-                          <p>
-                            {label('price')}: {money(detail.price)}
-                          </p>
-                          <p className="text-sm">
-                            {label('timezone')}: <bdi>{zone}</bdi>
-                          </p>
-                          {!priceOpen && (
-                            <div>
-                              <Button
-                                variant="outline"
-                                onClick={() => {
-                                  setPriceOpen(true);
-                                  setPrice('');
-                                  setScheduled(false);
-                                  setDate(undefined);
-                                  setTime('00:00');
-                                  setInvalidDate(false);
-                                }}
-                              >
-                                {label('addPrice')}
-                              </Button>
-                            </div>
                           )}
-                          {priceOpen && (
-                            <form
-                              aria-label={label('priceEditor')}
-                              onSubmit={savePrice}
-                              className="flex flex-col gap-4"
+                        </div>
+                      </section>
+                    )}
+                    {detail && type === 'saving_plan' && (
+                      <section
+                        className="rounded-md border p-4"
+                        aria-label={label('duplicatePolicy')}
+                      >
+                        <h2 className="font-semibold">{label('duplicatePolicy')}</h2>
+                        <p className="my-2 text-sm text-muted-foreground">
+                          {label('duplicatePolicyHelp')}
+                        </p>
+                        <p className="mb-3 text-sm">
+                          {label(
+                            preventActiveDuplicates ? 'duplicatesBlocked' : 'duplicatesAllowed'
+                          )}
+                        </p>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() =>
+                            propose(
+                              `/api/admin/catalogue/saving-plans/${detail.id}/duplicate-policy`,
+                              'PUT',
+                              label('duplicatePolicy'),
+                              label('confirmDuplicatePolicy'),
+                              { preventActiveDuplicates: !preventActiveDuplicates }
+                            )
+                          }
+                        >
+                          {label(preventActiveDuplicates ? 'allowDuplicates' : 'blockDuplicates')}
+                        </Button>
+                      </section>
+                    )}
+                    {detail && type === 'saving_plan' && (
+                      <SavingAgreementEditor
+                        planId={detail.id}
+                        onChanged={() => choose(detail.id)}
+                      />
+                    )}
+                    {detail && type === 'hardware' && (
+                      <SavingInventoryPanel hardwareId={detail.id} />
+                    )}
+                    {detail && preference.status === 'ready' && (
+                      <section
+                        aria-label={label('history')}
+                        className="flex flex-col gap-3 border-y py-5"
+                      >
+                        <h2 className="text-xl font-semibold">{label('history')}</h2>
+                        <p>
+                          {label('price')}: {money(detail.price)}
+                        </p>
+                        <p className="text-sm">
+                          {label('timezone')}: <bdi>{zone}</bdi>
+                        </p>
+                        {!priceOpen && (
+                          <div>
+                            <Button
+                              variant="outline"
+                              onClick={() => {
+                                setPriceOpen(true);
+                                setPrice('');
+                                setScheduled(false);
+                                setDate(undefined);
+                                setTime('00:00');
+                                setInvalidDate(false);
+                              }}
                             >
-                              <div>
-                                <Label htmlFor="catalogue-price">{label('price')}</Label>
-                                <Input
-                                  id="catalogue-price"
-                                  required
-                                  inputMode="numeric"
-                                  pattern="[0-9]{1,18}"
-                                  maxLength={18}
-                                  value={price}
-                                  onChange={(event) => setPrice(event.target.value)}
-                                />
-                              </div>
-                              <label className="flex items-center gap-2">
-                                <input
-                                  type="checkbox"
-                                  checked={scheduled}
-                                  onChange={(event) => setScheduled(event.target.checked)}
-                                />
-                                {label('schedule')}
-                              </label>
-                              <p className="text-sm">{label('immediate')}</p>
-                              {scheduled && (
-                                <div className="grid gap-4 sm:grid-cols-2">
-                                  <DatePicker
-                                    label={label('date')}
-                                    placeholder={label('chooseDate')}
-                                    locale={locale}
-                                    timezone={zone}
-                                    {...(date ? { value: date } : {})}
-                                    onChange={setDate}
-                                  />
-                                  <div>
-                                    <Label htmlFor="catalogue-time">{label('time')}</Label>
-                                    <Input
-                                      id="catalogue-time"
-                                      type="time"
-                                      required
-                                      value={time}
-                                      onChange={(event) => setTime(event.target.value)}
-                                    />
-                                  </div>
-                                </div>
-                              )}
-                              {invalidDate && <p role="alert">{label('invalidDate')}</p>}
-                              <div className="flex gap-2">
-                                <Button type="submit" disabled={scheduled && !date}>
-                                  {label('savePrice')}
-                                </Button>
-                                <Button
-                                  type="button"
-                                  variant="outline"
-                                  onClick={() => setPriceOpen(false)}
-                                >
-                                  {label('cancel')}
-                                </Button>
-                              </div>
-                            </form>
-                          )}
-                          {!detail.priceHistory.length && <p>{label('noHistory')}</p>}
-                          <ol className="divide-y">
-                            {detail.priceHistory.map((version) => (
-                              <li key={version.id} className="flex flex-col gap-2 py-3">
-                                <p className="font-semibold">
-                                  {money(version.price)} ·{' '}
-                                  {label(
-                                    Date.parse(version.effectiveFrom) > Date.now()
-                                      ? 'scheduled'
-                                      : version.effectiveUntil &&
-                                          Date.parse(version.effectiveUntil) <= Date.now()
-                                        ? 'ended'
-                                        : 'current'
-                                  )}
-                                </p>
-                                <p>
-                                  {label('from')}: {dateText(version.effectiveFrom)}
-                                </p>
-                                {version.effectiveUntil && (
-                                  <p>
-                                    {label('until')}: {dateText(version.effectiveUntil)}
-                                  </p>
-                                )}
-                              </li>
-                            ))}
-                          </ol>
-                          {detail.type === 'electricity' && (
-                            <div className="space-y-2 border-t pt-4">
-                              <h3 className="font-semibold">{label('limitHistory')}</h3>
-                              {!detail.electricityLimitHistory.length && (
-                                <p>{label('noLimitHistory')}</p>
-                              )}
-                              <ol className="divide-y">
-                                {detail.electricityLimitHistory.map((version) => (
-                                  <li key={version.id} className="space-y-1 py-3">
-                                    <p>
-                                      {label('minKwh')}: {version.minKwh} · {label('maxKwh')}:{' '}
-                                      {version.maxKwh}
-                                    </p>
-                                    <p>
-                                      {label('from')}: {dateText(version.effectiveFrom)}
-                                    </p>
-                                    {version.effectiveUntil && (
-                                      <p>
-                                        {label('until')}: {dateText(version.effectiveUntil)}
-                                      </p>
-                                    )}
-                                  </li>
-                                ))}
-                              </ol>
+                              {label('addPrice')}
+                            </Button>
+                          </div>
+                        )}
+                        {priceOpen && (
+                          <form
+                            aria-label={label('priceEditor')}
+                            onSubmit={savePrice}
+                            className="flex flex-col gap-4"
+                          >
+                            <div>
+                              <Label htmlFor="catalogue-price">{label('price')}</Label>
+                              <Input
+                                id="catalogue-price"
+                                required
+                                inputMode="numeric"
+                                pattern="[0-9]{1,18}"
+                                maxLength={18}
+                                value={price}
+                                onChange={(event) => setPrice(event.target.value)}
+                              />
                             </div>
-                          )}
-                        </section>
-                      )}
-                    </>
-                  )}
-                  {!rows.length && <p>{label('empty')}</p>}
+                            <label className="flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                checked={scheduled}
+                                onChange={(event) => setScheduled(event.target.checked)}
+                              />
+                              {label('schedule')}
+                            </label>
+                            <p className="text-sm">{label('immediate')}</p>
+                            {scheduled && (
+                              <div className="grid gap-4 sm:grid-cols-2">
+                                <DatePicker
+                                  label={label('date')}
+                                  placeholder={label('chooseDate')}
+                                  locale={locale}
+                                  timezone={zone}
+                                  {...(date ? { value: date } : {})}
+                                  onChange={setDate}
+                                />
+                                <div>
+                                  <Label htmlFor="catalogue-time">{label('time')}</Label>
+                                  <Input
+                                    id="catalogue-time"
+                                    type="time"
+                                    required
+                                    value={time}
+                                    onChange={(event) => setTime(event.target.value)}
+                                  />
+                                </div>
+                              </div>
+                            )}
+                            {invalidDate && <p role="alert">{label('invalidDate')}</p>}
+                            <div className="flex gap-2">
+                              <Button type="submit" disabled={scheduled && !date}>
+                                {label('savePrice')}
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setPriceOpen(false)}
+                              >
+                                {label('cancel')}
+                              </Button>
+                            </div>
+                          </form>
+                        )}
+                        {!detail.priceHistory.length && <p>{label('noHistory')}</p>}
+                        <ol className="divide-y">
+                          {detail.priceHistory.map((version) => (
+                            <li key={version.id} className="flex flex-col gap-2 py-3">
+                              <p className="font-semibold">
+                                {money(version.price)} ·{' '}
+                                {label(
+                                  Date.parse(version.effectiveFrom) > Date.now()
+                                    ? 'scheduled'
+                                    : version.effectiveUntil &&
+                                        Date.parse(version.effectiveUntil) <= Date.now()
+                                      ? 'ended'
+                                      : 'current'
+                                )}
+                              </p>
+                              <p>
+                                {label('from')}: {dateText(version.effectiveFrom)}
+                              </p>
+                              {version.effectiveUntil && (
+                                <p>
+                                  {label('until')}: {dateText(version.effectiveUntil)}
+                                </p>
+                              )}
+                            </li>
+                          ))}
+                        </ol>
+                        {detail.type === 'electricity' && (
+                          <div className="space-y-2 border-t pt-4">
+                            <h3 className="font-semibold">{label('limitHistory')}</h3>
+                            {!detail.electricityLimitHistory.length && (
+                              <p>{label('noLimitHistory')}</p>
+                            )}
+                            <ol className="divide-y">
+                              {detail.electricityLimitHistory.map((version) => (
+                                <li key={version.id} className="space-y-1 py-3">
+                                  <p>
+                                    {label('minKwh')}: {version.minKwh} · {label('maxKwh')}:{' '}
+                                    {version.maxKwh}
+                                  </p>
+                                  <p>
+                                    {label('from')}: {dateText(version.effectiveFrom)}
+                                  </p>
+                                  {version.effectiveUntil && (
+                                    <p>
+                                      {label('until')}: {dateText(version.effectiveUntil)}
+                                    </p>
+                                  )}
+                                </li>
+                              ))}
+                            </ol>
+                          </div>
+                        )}
+                      </section>
+                    )}
+                  </>
+                )}
+                <ListPage.Content
+                  loading={state === 'loading'}
+                  error={state === 'error' || state === 'denied'}
+                  empty={!rows.length}
+                  retainContent={!!rows.length && state !== 'denied'}
+                  loadingView={<p role="status">{label('loading')}</p>}
+                  errorView={
+                    state === 'denied' ? (
+                      <p role="alert">{label('denied')}</p>
+                    ) : (
+                      <div className="space-y-2">
+                        <p role="alert">{label('error')}</p>
+                        <Button variant="outline" onClick={() => setListRevision((v) => v + 1)}>
+                          {label('retry')}
+                        </Button>
+                      </div>
+                    )
+                  }
+                  emptyView={<p>{label('empty')}</p>}
+                >
                   <ul className="divide-y">
                     {rows.map((row) => (
                       <li
@@ -765,8 +887,8 @@ export default function AdminCataloguePage() {
                       </li>
                     ))}
                   </ul>
-                </>
-              )}
+                </ListPage.Content>
+              </ListPage>
             </div>
           ))}
       </div>
@@ -777,6 +899,7 @@ export default function AdminCataloguePage() {
           onSuccess={async () => {
             setSaved(true);
             choose(action.path.endsWith('/duplicate-policy') ? editor : null);
+            setRevision((value) => value + 1);
           }}
         />
       )}

@@ -40,4 +40,4 @@ Existing solar browser fixtures now initialize English explicitly instead of cli
 
 The preceding business queue batch is published as `614e6ef4988e148d7ddc84d46f902247be7207a4`; CI run `36783876844` passes all five gates under the existing temporary fast mode. Its combined-coverage success is an exemption, not measured coverage.
 
-This reviewed solar batch is committed and pushed directly to main after related checks. The remote commit and CI are verified after publication.
+This batch is published as `5cfb0bb8148a96d89b9e804b74ad2f1f0791f68a`; CI run `36785087969` passes all five gates under the existing temporary fast mode. The combined-coverage success remains an exemption, not measured coverage.

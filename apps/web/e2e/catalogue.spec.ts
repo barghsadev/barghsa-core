@@ -1,21 +1,29 @@
 import { test, expect } from './coverage-fixture';
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        userId: 'catalogue-staff',
+        isStaff: true,
+        operatingContext: 'staff',
+        canSwitchContext: true,
+        requiresTosAcceptance: false,
+      },
+    })
+  );
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
+});
 for (const locale of ['en', 'fa'])
   test(`catalogue editor retries captured settings (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     let failed = true,
       verified = false,
       denied = false;
     const attempts: unknown[] = [];
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
-    await page.route('**/api/user/settings/timezone', (route) =>
-      route.fulfill({ json: { timezone: 'Asia/Tehran' } })
-    );
     await page.route('**/api/admin/catalogue/products*', (route) => {
       if (route.request().method() === 'GET')
         return route.fulfill(
@@ -77,16 +85,7 @@ for (const locale of ['en', 'fa'])
 for (const locale of ['en', 'fa'])
   test(`catalogue tabs support keyboard navigation (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
-    await page.route('**/api/user/settings/timezone', (route) =>
-      route.fulfill({ json: { timezone: 'Asia/Tehran' } })
-    );
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/admin/catalogue/products*', (route) => route.fulfill({ json: [] }));
     await page.goto('/admin/catalogue');
     const consultation = page.getByRole('tab', {
