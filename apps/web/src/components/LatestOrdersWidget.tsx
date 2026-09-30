@@ -43,19 +43,24 @@ export function LatestOrdersWidget({
   orders,
   locale,
   time,
+  embedded = false,
 }: {
   orders: RecentOrder[];
   locale: Locale;
   time: ReturnType<typeof useAccountTime>;
+  embedded?: boolean;
 }) {
+  const Frame = embedded ? 'div' : 'section';
   return (
-    <section
-      className="space-y-4 rounded-xl border bg-card p-5"
-      aria-labelledby="recent-orders-title"
+    <Frame
+      className={embedded ? 'space-y-4' : 'space-y-4 rounded-xl border bg-card p-5'}
+      aria-labelledby={embedded ? undefined : 'recent-orders-title'}
     >
-      <h2 id="recent-orders-title" className="text-lg font-semibold">
-        {dashboardText('orders.title', locale)}
-      </h2>
+      {!embedded && (
+        <h2 id="recent-orders-title" className="text-lg font-semibold">
+          {dashboardText('orders.title', locale)}
+        </h2>
+      )}
       {orders.length === 0 ? (
         <p className="text-sm text-muted-foreground">{dashboardText('orders.empty', locale)}</p>
       ) : (
@@ -117,6 +122,6 @@ export function LatestOrdersWidget({
           {dashboardText('orders.viewAllSaving', locale)}
         </Link>
       </div>
-    </section>
+    </Frame>
   );
 }

@@ -1,3 +1,4 @@
+import { fulfillDashboard } from './dashboard-fixture';
 import { test, expect } from './coverage-fixture';
 
 for (const locale of ['fa', 'en'] as const) {
@@ -39,8 +40,8 @@ for (const locale of ['fa', 'en'] as const) {
         },
       })
     );
-    await page.route('**/api/dashboard', (route) =>
-      route.fulfill({
+    await page.route('**/api/dashboard{,/**}', (route) =>
+      fulfillDashboard(route, {
         json: {
           profile: { id: 'profile-1', name: 'Ari Buyer' },
           access: { wallet: true, invoices: true },
@@ -169,7 +170,9 @@ test('account status hides denied fields and refuses a switched profile response
       },
     })
   );
-  await page.route('**/api/dashboard', (route) => route.fulfill({ json: dashboard }));
+  await page.route('**/api/dashboard{,/**}', (route) =>
+    fulfillDashboard(route, { json: dashboard })
+  );
 
   await page.goto('/app');
   await page.getByRole('button', { name: 'Ask Barghsa guide' }).click();

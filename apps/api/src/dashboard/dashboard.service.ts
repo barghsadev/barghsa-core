@@ -4,7 +4,12 @@ import {
   type AgentPermission,
 } from '@barghsa/shared/agent-permissions';
 import { activeProfileSql } from '../profiles/profile-context.js';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { WalletService } from '../wallet/wallet.service.js';
 import { getDbPool } from '@barghsa/db';
 import { UNPAID_CUSTOMER_INVOICE_PREDICATE } from '@barghsa/shared/finance';
@@ -41,6 +46,8 @@ interface ActiveContractRow {
   service_ends_at: Date | null;
 }
 
+export type DashboardWidgetKey = 'wallet' | 'status' | 'invoices' | 'orders' | 'contracts';
+
 /**
  * Dashboard service (T-08.01.03).
  *
@@ -52,6 +59,111 @@ interface ActiveContractRow {
 @Injectable()
 export class DashboardService {
   constructor(private readonly walletService: WalletService) {}
+
+  async getContext(userId: string) {
+    const context = await this.getDefaultProfileId(userId);
+    if (!context) throw new NotFoundException('No accessible active profile');
+    const result = await getDbPool().query<{ name: string }>(
+      `SELECT COALESCE(NULLIF(l.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',p.title,p.first_name,p.last_name)),''),'') AS name
+       FROM profiles p LEFT JOIN legal_profiles l ON l.id=p.id WHERE p.id=$1`,
+      [context.id]
+    );
+    if (!result.rows[0]) throw new NotFoundException('Active profile no longer exists');
+    const allowed = (permission: AgentPermission) =>
+      context.is_owner || hasAnyRolePermission(context.roles, permission);
+    return {
+      profile: { id: context.id, name: result.rows[0].name },
+      access: {
+        wallet: allowed('wallet:view'),
+        invoices: allowed('invoices:view'),
+        orders: allowed('orders:view'),
+        contracts: allowed('contracts:view'),
+      },
+    };
+  }
+
+  async getWidget(userId: string, widget: DashboardWidgetKey, expectedProfileId: string) {
+    const context = await this.getDefaultProfileId(userId);
+    if (!context) throw new NotFoundException('No accessible active profile');
+    if (context.id !== expectedProfileId) throw new ConflictException('Active profile changed');
+    const allowed = (permission: AgentPermission) =>
+      context.is_owner || hasAnyRolePermission(context.roles, permission);
+    if (widget !== 'status' && !allowed(`${widget}:view`))
+      throw new ForbiddenException('Widget unavailable');
+
+    let data: unknown;
+    switch (widget) {
+      case 'status':
+        data = await this.getCountsForContext(context, userId);
+        break;
+      case 'wallet': {
+        const [wallet, outstanding] = await Promise.all([
+          this.walletService.getWallet(context.id),
+          allowed('invoices:view')
+            ? getDbPool().query<{ total: string; count: number }>(
+                `SELECT COALESCE(SUM(GREATEST(total_amount-paid_amount,0)),0)::text AS total,
+                        COUNT(*)::int AS count
+                 FROM invoices WHERE profile_id=$1 AND ${UNPAID_CUSTOMER_INVOICE_PREDICATE}`,
+                [context.id]
+              )
+            : Promise.resolve({ rows: [{ total: '0', count: 0 }] }),
+        ]);
+        data = {
+          balance: (wallet?.availableBalance ?? 0n).toString(),
+          postedBalance: (wallet?.postedBalance ?? 0n).toString(),
+          reservedBalance: (wallet?.reservedBalance ?? 0n).toString(),
+          currency: 'IRR',
+          lowBalanceWarning:
+            (wallet?.availableBalance ?? 0n) < BigInt(outstanding.rows[0]?.total ?? '0'),
+          pendingInvoices: outstanding.rows[0]?.count ?? 0,
+        };
+        break;
+      }
+      case 'invoices':
+        data = (await this.getUpcomingInvoices(context.id)).rows.map((invoice) => ({
+          invoiceId: invoice.id,
+          dueAt: invoice.due_at?.toISOString() ?? null,
+          payableFrom: invoice.payable_from?.toISOString() ?? null,
+          remainingAmount: invoice.remaining_amount,
+        }));
+        break;
+      case 'orders':
+        data = (await this.getRecentOrders(context.id)).rows.map((order) => ({
+          kind: order.kind,
+          orderId: order.order_id,
+          status: order.status,
+          submittedAt: order.submitted_at.toISOString(),
+          amountIrR: order.amount,
+        }));
+        break;
+      case 'contracts':
+        data = (await this.getActiveContracts(context.id)).rows.map((contract) => ({
+          contractId: contract.id,
+          contractNumber: contract.contract_number,
+          serviceType: contract.service_type,
+          status: contract.state,
+          serviceStartsAt: contract.service_starts_at?.toISOString() ?? null,
+          serviceEndsAt: contract.service_ends_at?.toISOString() ?? null,
+        }));
+        break;
+    }
+    // A switch or revoked membership during a query must not return the old workspace.
+    const current = await this.getDefaultProfileId(userId);
+    if (!current || current.id !== context.id)
+      throw new ConflictException('Active profile changed');
+    if (
+      widget !== 'status' &&
+      !current.is_owner &&
+      !hasAnyRolePermission(current.roles, `${widget}:view`)
+    )
+      throw new ForbiddenException('Widget unavailable');
+    if (
+      current.is_owner !== context.is_owner ||
+      [...current.roles].sort().join(',') !== [...context.roles].sort().join(',')
+    )
+      throw new ConflictException('Profile permissions changed');
+    return { profileId: context.id, data };
+  }
 
   async getOverview(userId: string) {
     const context = await this.getDefaultProfileId(userId);
@@ -75,54 +187,13 @@ export class DashboardService {
       this.getCountsForContext(context, userId),
       allowed('wallet:view') ? this.walletService.getWallet(context.id) : Promise.resolve(null),
       allowed('invoices:view')
-        ? pool.query<UpcomingInvoiceRow>(
-            `SELECT id,due_at,payable_from,
-                      GREATEST(total_amount-paid_amount,0)::text AS remaining_amount,
-                      (SUM(GREATEST(total_amount-paid_amount,0)) OVER ())::text AS total_unpaid
-               FROM invoices WHERE profile_id=$1 AND ${UNPAID_CUSTOMER_INVOICE_PREDICATE}
-               ORDER BY due_at ASC NULLS LAST,created_at ASC,id ASC LIMIT 3`,
-            [context.id]
-          )
+        ? this.getUpcomingInvoices(context.id)
         : Promise.resolve({ rows: [] as UpcomingInvoiceRow[] }),
       allowed('orders:view')
-        ? pool.query<RecentOrderRow>(
-            `SELECT recent.kind,recent.order_id,recent.status,recent.submitted_at,recent.amount
-             FROM (
-               (SELECT 'electricity'::text AS kind,e.id AS order_id,
-                       e.status,e.submitted_at,i.total_amount::text AS amount
-                FROM electricity_orders e
-                JOIN electricity_contracts ec ON ec.order_id=e.id
-                JOIN contracts c ON c.id=ec.contract_id
-                JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
-                JOIN invoices i ON i.id=ar.initial_invoice_id
-                WHERE e.profile_id=$1 AND e.submitted_at IS NOT NULL
-                ORDER BY e.submitted_at DESC,e.id DESC LIMIT 5)
-               UNION ALL
-               (SELECT 'saving'::text AS kind,s.id AS order_id,
-                       s.status,s.submitted_at,
-                       (SELECT i.total_amount::text FROM invoices i
-                        WHERE i.order_id=s.order_id AND i.type='auto'
-                        ORDER BY i.created_at DESC,i.id DESC LIMIT 1) AS amount
-                FROM saving_orders s
-                WHERE s.profile_id=$1
-                ORDER BY s.submitted_at DESC,s.id DESC LIMIT 5)
-             ) recent
-             ORDER BY recent.submitted_at DESC,recent.order_id DESC LIMIT 5`,
-            [context.id]
-          )
+        ? this.getRecentOrders(context.id)
         : Promise.resolve({ rows: [] as RecentOrderRow[] }),
       allowed('contracts:view')
-        ? pool.query<ActiveContractRow>(
-            `SELECT c.id,c.contract_number::text,c.service_type,c.state,
-                      r.service_starts_at,r.service_ends_at
-               FROM contracts c
-               LEFT JOIN contract_activation_requirements r ON r.version_id=c.current_version_id
-               WHERE c.profile_id=$1 AND c.state='Active'
-                 AND EXISTS (SELECT 1 FROM contract_publications p
-                             WHERE p.contract_id=c.id AND p.version_id=c.current_version_id)
-               ORDER BY c.activated_at DESC NULLS LAST,c.id DESC LIMIT 3`,
-            [context.id]
-          )
+        ? this.getActiveContracts(context.id)
         : Promise.resolve({ rows: [] as ActiveContractRow[] }),
     ]);
     if (!profileResult.rows[0]) throw new NotFoundException('Active profile no longer exists');
@@ -171,6 +242,62 @@ export class DashboardService {
       contracts: { active: quickStatus.activeContracts, total: quickStatus.activeContracts },
       quickStatus,
     };
+  }
+
+  private getUpcomingInvoices(profileId: string) {
+    const pool = getDbPool();
+    return pool.query<UpcomingInvoiceRow>(
+      `SELECT id,due_at,payable_from,
+                      GREATEST(total_amount-paid_amount,0)::text AS remaining_amount,
+                      (SUM(GREATEST(total_amount-paid_amount,0)) OVER ())::text AS total_unpaid
+               FROM invoices WHERE profile_id=$1 AND ${UNPAID_CUSTOMER_INVOICE_PREDICATE}
+               ORDER BY due_at ASC NULLS LAST,created_at ASC,id ASC LIMIT 3`,
+      [profileId]
+    );
+  }
+
+  private getRecentOrders(profileId: string) {
+    const pool = getDbPool();
+    return pool.query<RecentOrderRow>(
+      `SELECT recent.kind,recent.order_id,recent.status,recent.submitted_at,recent.amount
+             FROM (
+               (SELECT 'electricity'::text AS kind,e.id AS order_id,
+                       e.status,e.submitted_at,i.total_amount::text AS amount
+                FROM electricity_orders e
+                JOIN electricity_contracts ec ON ec.order_id=e.id
+                JOIN contracts c ON c.id=ec.contract_id
+                JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
+                JOIN invoices i ON i.id=ar.initial_invoice_id
+                WHERE e.profile_id=$1 AND e.submitted_at IS NOT NULL
+                ORDER BY e.submitted_at DESC,e.id DESC LIMIT 5)
+               UNION ALL
+               (SELECT 'saving'::text AS kind,s.id AS order_id,
+                       s.status,s.submitted_at,
+                       (SELECT i.total_amount::text FROM invoices i
+                        WHERE i.order_id=s.order_id AND i.type='auto'
+                        ORDER BY i.created_at DESC,i.id DESC LIMIT 1) AS amount
+                FROM saving_orders s
+                WHERE s.profile_id=$1
+                ORDER BY s.submitted_at DESC,s.id DESC LIMIT 5)
+             ) recent
+             ORDER BY recent.submitted_at DESC,recent.order_id DESC LIMIT 5`,
+      [profileId]
+    );
+  }
+
+  private getActiveContracts(profileId: string) {
+    const pool = getDbPool();
+    return pool.query<ActiveContractRow>(
+      `SELECT c.id,c.contract_number::text,c.service_type,c.state,
+                      r.service_starts_at,r.service_ends_at
+               FROM contracts c
+               LEFT JOIN contract_activation_requirements r ON r.version_id=c.current_version_id
+               WHERE c.profile_id=$1 AND c.state='Active'
+                 AND EXISTS (SELECT 1 FROM contract_publications p
+                             WHERE p.contract_id=c.id AND p.version_id=c.current_version_id)
+               ORDER BY c.activated_at DESC NULLS LAST,c.id DESC LIMIT 3`,
+      [profileId]
+    );
   }
 
   /**

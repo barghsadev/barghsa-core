@@ -100,6 +100,13 @@ function contrastWith(hex: string, foreground: string): number {
   return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
 }
 
+/** Brand fills keep their chosen color; small text needs contrast on every surface. */
+export function getBrandTextColor(color: string, backgrounds: readonly string[]): string {
+  return backgrounds.every((background) => contrastWith(color, background) >= 4.5)
+    ? color
+    : 'var(--foreground)';
+}
+
 function validAsset(value: unknown): value is string | null {
   if (value === null) return true;
   if (typeof value !== 'string' || value.length > 2048) return false;
@@ -193,6 +200,8 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       ]),
       '--brand-light-background',
       '--brand-dark-background',
+      '--brand-primary-text-light',
+      '--brand-primary-text-dark',
       '--app-font',
       '--radius',
       '--spacing',
@@ -234,6 +243,14 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       }
       root.style.setProperty('--brand-light-background', config.backgroundColor);
       root.style.setProperty('--brand-dark-background', config.darkBackgroundColor);
+      root.style.setProperty(
+        '--brand-primary-text-light',
+        getBrandTextColor(config.primaryColor, [config.backgroundColor, '#fdfefb', '#edf0eb'])
+      );
+      root.style.setProperty(
+        '--brand-primary-text-dark',
+        getBrandTextColor(config.primaryColor, [config.darkBackgroundColor, '#1d2c25', '#293a30'])
+      );
       root.style.setProperty(
         '--app-font',
         config.fontFamily === 'tahoma' ? 'Tahoma' : "'Vazirmatn'"

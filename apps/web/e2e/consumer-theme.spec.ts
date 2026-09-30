@@ -1,3 +1,4 @@
+import { fulfillDashboard } from './dashboard-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 
@@ -22,6 +23,7 @@ for (const locale of ['en', 'fa'] as const)
         );
         await page.emulateMedia({ reducedMotion: 'reduce' });
         await page.addInitScript((value) => {
+          localStorage.setItem('barghsa.locale', value);
           const apply = () => {
             if (document.documentElement) document.documentElement.lang = value;
           };
@@ -29,9 +31,15 @@ for (const locale of ['en', 'fa'] as const)
           new MutationObserver(apply).observe(document, { childList: true });
         }, locale);
         await page.route('**/api/**', (route) => route.fulfill({ status: 503, json: {} }));
+        let staffMode = false;
         await page.route('**/api/auth/user', (route) =>
           route.fulfill({
-            json: { isStaff: false, userId: 'theme-owner', requiresTosAcceptance: false },
+            json: {
+              isStaff: staffMode,
+              operatingContext: staffMode ? 'staff' : 'customer',
+              userId: 'theme-owner',
+              requiresTosAcceptance: false,
+            },
           })
         );
         await page.route('**/api/user/settings/timezone', (route) =>
@@ -41,6 +49,10 @@ for (const locale of ['en', 'fa'] as const)
           route.fulfill({
             json: {
               appTitle: 'Theme checks',
+              appTitleFa: 'آزمون نمایش',
+              supportEmail: 'support@example.test',
+              supportPhone: '+98 21 12345678',
+              supportMobile: '+98 912 1234567',
               slogan: '',
               primaryColor: '#777777',
               secondaryColor: '#64748b',
@@ -52,6 +64,7 @@ for (const locale of ['en', 'fa'] as const)
           })
         );
         for (const path of pages) {
+          staffMode = path.startsWith('/admin');
           await page.goto(path);
           await expect
             .poll(() => page.locator('html').evaluate((e) => e.style.getPropertyValue('--primary')))
@@ -101,6 +114,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.setViewportSize({ width: 390, height: 844 });
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.addInitScript((value) => {
+        localStorage.setItem('barghsa.locale', value);
         const apply = () => {
           if (document.documentElement) document.documentElement.lang = value;
         };
@@ -120,6 +134,10 @@ for (const locale of ['en', 'fa'] as const)
         route.fulfill({
           json: {
             appTitle: 'Theme checks',
+            appTitleFa: 'آزمون نمایش',
+            supportEmail: 'support@example.test',
+            supportPhone: '+98 21 12345678',
+            supportMobile: '+98 912 1234567',
             slogan: '',
             logoUrl: null,
             faviconUrl: null,
@@ -163,8 +181,8 @@ for (const locale of ['en', 'fa'] as const)
           },
         })
       );
-      await page.route('**/api/dashboard', (route) =>
-        route.fulfill({
+      await page.route('**/api/dashboard{,/**}', (route) =>
+        fulfillDashboard(route, {
           json: {
             profile: { id: 'profile-one', name: 'Theme Owner' },
             wallet: { balance: '120000', currency: 'IRR', lowBalanceWarning: true },

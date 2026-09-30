@@ -26,32 +26,37 @@ export function ActiveContractsWidget({
   contracts,
   locale,
   time,
+  embedded = false,
 }: {
   contracts: ActiveContract[];
   locale: Locale;
   time: ReturnType<typeof useAccountTime>;
+  embedded?: boolean;
 }) {
+  const Frame = embedded ? 'div' : 'section';
   return (
-    <section
-      className="space-y-4 rounded-xl border bg-card p-5"
-      aria-labelledby="active-contracts-title"
+    <Frame
+      className={embedded ? 'space-y-4' : 'space-y-4 rounded-xl border bg-card p-5'}
+      aria-labelledby={embedded ? undefined : 'active-contracts-title'}
     >
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="active-contracts-title" className="text-lg font-semibold">
-          {t('dashboard.overview.contractStatus', locale)}
-        </h2>
-        <Link
-          to="/contracts"
-          search={{ state: 'Active' }}
-          className="text-sm font-medium text-primary underline underline-offset-4"
-        >
-          {dashboardText('invoice.viewAll', locale)}
-        </Link>
-      </div>
+      {!embedded && (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="active-contracts-title" className="text-lg font-semibold">
+            {t('dashboard.overview.contractStatus', locale)}
+          </h2>
+          <Link
+            to="/contracts"
+            search={{ state: 'Active' }}
+            className="text-sm font-medium text-primary underline underline-offset-4"
+          >
+            {dashboardText('invoice.viewAll', locale)}
+          </Link>
+        </div>
+      )}
       {contracts.length === 0 ? (
         <p className="text-sm text-muted-foreground">{dashboardText('contracts.empty', locale)}</p>
       ) : (
-        <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <ul className={embedded ? 'grid gap-4' : 'grid gap-4 md:grid-cols-2 xl:grid-cols-3'}>
           {contracts.map((contract) => {
             const percent = elapsedPercent(contract);
             return (
@@ -109,6 +114,6 @@ export function ActiveContractsWidget({
           })}
         </ul>
       )}
-    </section>
+    </Frame>
   );
 }

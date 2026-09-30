@@ -16,6 +16,7 @@ export interface QuickStatusCardsProps {
   unpaidInvoices: number;
   /** UI locale. */
   locale?: Locale;
+  embedded?: boolean;
 }
 
 export function QuickStatusCards({
@@ -24,6 +25,7 @@ export function QuickStatusCards({
   openTickets,
   unpaidInvoices,
   locale = 'fa',
+  embedded = false,
 }: QuickStatusCardsProps) {
   const numbers = useNumberFormatting(locale);
   const cards = [
@@ -60,7 +62,9 @@ export function QuickStatusCards({
   ];
   return (
     <div
-      className="grid h-full grid-cols-1 gap-4 sm:grid-cols-2"
+      className={
+        embedded ? 'grid h-full grid-cols-2 gap-3' : 'grid h-full grid-cols-1 gap-4 sm:grid-cols-2'
+      }
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {cards.map(({ key, icon: Icon, label, href, search, count }) => {
@@ -81,7 +85,9 @@ export function QuickStatusCards({
                 strokeWidth={1.7}
                 aria-hidden="true"
               />
-              {href ? (
+              {embedded ? (
+                <p className="text-2xl font-semibold tabular-nums">{numbers.number(count)}</p>
+              ) : href ? (
                 <ArrowUpRight
                   className="size-4 text-muted-foreground rtl:-rotate-90"
                   aria-hidden="true"
@@ -90,12 +96,16 @@ export function QuickStatusCards({
             </div>
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <p className="text-sm text-muted-foreground">{t(label, locale)}</p>
-              <p className="text-3xl font-semibold tabular-nums">{numbers.number(count)}</p>
+              {!embedded && (
+                <p className="text-3xl font-semibold tabular-nums">{numbers.number(count)}</p>
+              )}
             </div>
           </>
         );
-        const className =
-          'group flex flex-col gap-5 rounded-xl border bg-card p-5 text-card-foreground shadow-sm transition-shadow hover:border-input hover:shadow-md';
+        const className = cn(
+          'group flex min-w-0 flex-col rounded-xl border bg-card text-card-foreground shadow-sm transition-shadow hover:border-input hover:shadow-md',
+          embedded ? 'gap-3 p-3' : 'gap-5 p-5'
+        );
         return href ? (
           <Link key={key} to={href} search={search} className={className}>
             {content}
@@ -107,14 +117,20 @@ export function QuickStatusCards({
               <Link
                 to="/electricity/orders"
                 search={{ status: 'pending' }}
-                className="text-primary underline underline-offset-4"
+                className={cn(
+                  'text-primary underline underline-offset-4',
+                  embedded && 'inline-flex min-h-11 items-center'
+                )}
               >
                 {t('electricity.orders.title', locale)}
               </Link>
               <Link
                 to="/savings/orders"
                 search={{ status: 'pending' }}
-                className="text-primary underline underline-offset-4"
+                className={cn(
+                  'text-primary underline underline-offset-4',
+                  embedded && 'inline-flex min-h-11 items-center'
+                )}
               >
                 {tSaving('orders', locale)}
               </Link>

@@ -19,6 +19,15 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@utility text-primary {
+  &:not(.dark *) {
+    color: var(--brand-primary-text-light, var(--primary));
+  }
+  &:is(.dark *) {
+    color: var(--brand-primary-text-dark, var(--primary));
+  }
+}
+
 @theme inline {
   --font-sans: var(--app-font, 'Vazirmatn'), sans-serif;
   --font-persian: 'Vazirmatn', sans-serif;

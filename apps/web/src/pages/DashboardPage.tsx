@@ -1,211 +1,233 @@
 import {
   PageHeader,
-  LoadingSkeleton,
   Alert,
   AlertDescription,
   Button,
   buttonVariants,
+  LoadingSkeleton,
 } from '@barghsa/ui';
 import { shellText } from '@barghsa/i18n/shell';
 import { feedbackText } from '@barghsa/i18n/feedback';
-import { ArrowUpRight } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { dashboardText } from '@barghsa/i18n/dashboard';
+import { ArrowUpRight, Wallet, Gauge, ReceiptText, Package, FileCheck2 } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/app';
-import { WalletBalanceCard } from '../components/WalletBalanceCard.js';
-import { QuickStatusCards } from '../components/QuickStatusCards.js';
+import { WalletBalanceCard, type WalletBalanceCardProps } from '../components/WalletBalanceCard.js';
+import { QuickStatusCards, type QuickStatusCardsProps } from '../components/QuickStatusCards.js';
 import {
   UpcomingInvoicesWidget,
   type UpcomingInvoice,
 } from '../components/UpcomingInvoicesWidget.js';
-import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { LatestOrdersWidget, type RecentOrder } from '../components/LatestOrdersWidget.js';
 import { ActiveContractsWidget, type ActiveContract } from '../components/ActiveContractsWidget.js';
+import { DashboardLayout } from '../components/dashboard/DashboardLayout.js';
+import { DashboardWidget } from '../components/dashboard/DashboardWidget.js';
+import { useAsyncData, type AsyncData } from '../hooks/useAsyncData.js';
 
-interface DashboardData {
-  profile?: { id: string; name: string };
-  access?: { invoices: boolean; orders: boolean; contracts: boolean };
-  wallet: {
-    balance: string;
-    postedBalance: string;
-    reservedBalance: string;
-    currency: string;
-    lowBalanceWarning: boolean;
-  } | null;
-  activeOrders: number;
-  pendingInvoices: number;
-  upcomingInvoices?: UpcomingInvoice[];
-  recentOrders?: RecentOrder[];
-  activeContracts?: ActiveContract[];
-  openTickets: number;
-  contracts: { active: number; total: number };
-  quickStatus: {
-    activeContracts: number;
-    pendingOrders: number;
-    openTickets: number;
-    unpaidInvoices: number;
-  };
+interface DashboardContext {
+  profile: { id: string; name: string };
+  access: { wallet: boolean; invoices: boolean; orders: boolean; contracts: boolean };
 }
 
-/**
- * Dashboard overview page (T-08.01.01, T-08.01.02, T-08.01.03).
- *
- * Shows:
- *   - A welcome message with profile name.
- *   - Wallet balance card (T-08.01.02).
- *   - Quick status cards (T-08.01.03) with icon+count+label and colour
- *     coding, replacing the previous inline summary cards.
- *   - Quick actions section.
- */
+type WidgetKey = 'wallet' | 'status' | 'invoices' | 'orders' | 'contracts';
+
+function useWidget<T>(widget: WidgetKey, profileId: string): AsyncData<T> {
+  const resource = useAsyncData<{ profileId: string; data: T }>(
+    `/api/dashboard/widgets/${widget}?profileId=${encodeURIComponent(profileId)}`
+  );
+  if (resource.status !== 'ready') return resource;
+  if (!resource.data || resource.data.profileId !== profileId || resource.data.data == null)
+    return { status: 'error', data: null, retry: resource.retry };
+  return { status: 'ready', data: resource.data.data, retry: resource.retry };
+}
+
+function WalletWidget({ profileId, locale }: { profileId: string; locale: Locale }) {
+  const resource = useWidget<Omit<WalletBalanceCardProps, 'locale'>>('wallet', profileId);
+  return (
+    <DashboardWidget
+      title={t('dashboard.overview.walletBalance', locale)}
+      icon={Wallet}
+      resource={resource}
+      locale={locale}
+    >
+      {(wallet) => <WalletBalanceCard {...wallet} embedded locale={locale} />}
+    </DashboardWidget>
+  );
+}
+
+function StatusWidget({ profileId, locale }: { profileId: string; locale: Locale }) {
+  const resource = useWidget<Omit<QuickStatusCardsProps, 'locale'>>('status', profileId);
+  return (
+    <DashboardWidget
+      title={dashboardText('status.title', locale)}
+      icon={Gauge}
+      resource={resource}
+      locale={locale}
+    >
+      {(counts) => <QuickStatusCards {...counts} embedded locale={locale} />}
+    </DashboardWidget>
+  );
+}
+
+function InvoicesWidget({
+  profileId,
+  locale,
+  time,
+}: {
+  profileId: string;
+  locale: Locale;
+  time: ReturnType<typeof useAccountTime>;
+}) {
+  const resource = useWidget<UpcomingInvoice[]>('invoices', profileId);
+  return (
+    <DashboardWidget
+      title={dashboardText('invoice.title', locale)}
+      icon={ReceiptText}
+      resource={resource}
+      locale={locale}
+      empty={(invoices) => invoices.length === 0}
+      emptyMessage={dashboardText('invoice.empty', locale)}
+      viewAll={
+        <Link
+          to="/invoices"
+          search={{ status: 'unpaid' }}
+          className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline underline-offset-4"
+        >
+          {dashboardText('invoice.viewAll', locale)}
+        </Link>
+      }
+    >
+      {(invoices) => (
+        <UpcomingInvoicesWidget invoices={invoices} embedded locale={locale} time={time} />
+      )}
+    </DashboardWidget>
+  );
+}
+
+function OrdersWidget({
+  profileId,
+  locale,
+  time,
+}: {
+  profileId: string;
+  locale: Locale;
+  time: ReturnType<typeof useAccountTime>;
+}) {
+  const resource = useWidget<RecentOrder[]>('orders', profileId);
+  return (
+    <DashboardWidget
+      title={dashboardText('orders.title', locale)}
+      icon={Package}
+      resource={resource}
+      locale={locale}
+    >
+      {(orders) => <LatestOrdersWidget orders={orders} embedded locale={locale} time={time} />}
+    </DashboardWidget>
+  );
+}
+
+function ContractsWidget({
+  profileId,
+  locale,
+  time,
+}: {
+  profileId: string;
+  locale: Locale;
+  time: ReturnType<typeof useAccountTime>;
+}) {
+  const resource = useWidget<ActiveContract[]>('contracts', profileId);
+  return (
+    <DashboardWidget
+      title={t('dashboard.overview.contractStatus', locale)}
+      icon={FileCheck2}
+      resource={resource}
+      locale={locale}
+      empty={(contracts) => contracts.length === 0}
+      emptyMessage={dashboardText('contracts.empty', locale)}
+      viewAll={
+        <Link
+          to="/contracts"
+          search={{ state: 'Active' }}
+          className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline underline-offset-4"
+        >
+          {dashboardText('invoice.viewAll', locale)}
+        </Link>
+      }
+    >
+      {(contracts) => (
+        <ActiveContractsWidget contracts={contracts} embedded locale={locale} time={time} />
+      )}
+    </DashboardWidget>
+  );
+}
+
 export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = {}) {
   const documentLocale = useLocale();
   const locale = localeOverride ?? documentLocale;
-  const profileRevision = useProfileContextRevision();
   const time = useAccountTime(locale);
-  const [revision, setRevision] = useState(0);
-  const [loaded, setLoaded] = useState<{ profileRevision: number; value: DashboardData } | null>(
-    null
-  );
-  const [loading, setLoading] = useState(true);
-  const [failure, setFailure] = useState<{ profileRevision: number; message: string } | null>(null);
-  const data = loaded?.profileRevision === profileRevision ? loaded.value : null;
-  const error = failure?.profileRevision === profileRevision ? failure.message : null;
-  const isRtl = locale === 'fa';
-
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setFailure(null);
-
-    async function fetchDashboard() {
-      try {
-        const res = await fetch('/api/dashboard', {
-          credentials: 'include',
-          signal: controller.signal,
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json: DashboardData = await res.json();
-        if (!controller.signal.aborted) setLoaded({ profileRevision, value: json });
-      } catch (err) {
-        if (!controller.signal.aborted) {
-          setFailure({
-            profileRevision,
-            message: err instanceof Error ? err.message : 'Failed to load dashboard',
-          });
-        }
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
-      }
-    }
-
-    fetchDashboard();
-    return () => {
-      controller.abort();
-    };
-  }, [revision, profileRevision]);
-
-  const profileName = data?.profile?.name || t('dashboard.profile.unnamed', locale);
-
-  if (error)
-    return (
-      <Alert variant="destructive">
-        <AlertDescription>
-          <p>{t('dashboard.overview.loadError', locale)}</p>
-          <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
-            {t('dashboard.overview.retry', locale)}
-          </Button>
-        </AlertDescription>
-      </Alert>
-    );
-  if (loading || !data)
-    return <LoadingSkeleton label={feedbackText('loading', locale)} variant="cards" />;
-
-  const quickActions = [
+  const context = useAsyncData<DashboardContext>('/api/dashboard/context');
+  const ready = context.status === 'ready' && context.data?.profile?.id && context.data.access;
+  const profileName = ready
+    ? context.data.profile.name || t('dashboard.profile.unnamed', locale)
+    : t('dashboard.profile.unnamed', locale);
+  const actions = [
     { label: t('dashboard.overview.newOrder', locale), href: '/electricity' },
     { label: t('dashboard.overview.topUpWallet', locale), href: '/wallet' },
     { label: t('dashboard.overview.supportTicket', locale), href: '/tickets' },
   ];
 
-  const qs = data?.quickStatus ?? {
-    activeContracts: data?.contracts?.active ?? 0,
-    pendingOrders: data?.activeOrders ?? 0,
-    openTickets: data?.openTickets ?? 0,
-    unpaidInvoices: data?.pendingInvoices ?? 0,
-  };
-
   return (
-    <div className="flex flex-col gap-8" dir={isRtl ? 'rtl' : 'ltr'}>
+    <div className="flex flex-col gap-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <PageHeader
         eyebrow={shellText('dashboardEyebrow', locale)}
         title={t('dashboard.overview.welcome', locale).replace('{name}', profileName)}
         description={shellText('dashboardDescription', locale)}
       />
-
-      {/* Wallet balance + Quick status cards side‑by‑side */}
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] gap-5">
-        <div className="min-w-0">
-          {data?.wallet ? (
-            <WalletBalanceCard
-              balance={data.wallet.balance}
-              postedBalance={data.wallet.postedBalance}
-              reservedBalance={data.wallet.reservedBalance}
-              currency={data.wallet.currency}
-              lowBalanceWarning={data.wallet.lowBalanceWarning}
-              pendingInvoices={data.pendingInvoices}
-              locale={locale}
-            />
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              {t('dashboard.overview.walletUnavailable', locale)}
-            </p>
-          )}
-        </div>
-
-        {/* Quick status cards — replaces the previous inline cards */}
-        <div className="min-w-0">
-          <QuickStatusCards
-            activeContracts={qs.activeContracts}
-            pendingOrders={qs.pendingOrders}
-            openTickets={qs.openTickets}
-            unpaidInvoices={qs.unpaidInvoices}
-            locale={locale}
-          />
-        </div>
-      </div>
-
-      {(data.access?.invoices !== false ||
-        data.access?.orders !== false ||
-        data.access?.contracts !== false) &&
-        time.notice}
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-        {data.access?.invoices !== false && (
-          <UpcomingInvoicesWidget
-            invoices={data.upcomingInvoices ?? []}
-            locale={locale}
-            time={time}
-          />
-        )}
-        {data.access?.orders !== false && (
-          <LatestOrdersWidget orders={data.recentOrders ?? []} locale={locale} time={time} />
-        )}
-      </div>
-
-      {data.access?.contracts !== false && (
-        <ActiveContractsWidget contracts={data.activeContracts ?? []} locale={locale} time={time} />
+      {context.status === 'loading' ? (
+        <LoadingSkeleton label={feedbackText('loading', locale)} variant="cards" />
+      ) : !ready ? (
+        <Alert variant="destructive">
+          <AlertDescription>
+            <p>{t('dashboard.overview.loadError', locale)}</p>
+            <Button variant="outline" onClick={context.retry}>
+              {t('dashboard.overview.retry', locale)}
+            </Button>
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <>
+          {(context.data.access.invoices ||
+            context.data.access.orders ||
+            context.data.access.contracts) &&
+            time.notice}
+          <DashboardLayout key={context.data.profile.id}>
+            {context.data.access.wallet && (
+              <WalletWidget profileId={context.data.profile.id} locale={locale} />
+            )}
+            <StatusWidget profileId={context.data.profile.id} locale={locale} />
+            {context.data.access.invoices && (
+              <InvoicesWidget profileId={context.data.profile.id} locale={locale} time={time} />
+            )}
+            {context.data.access.orders && (
+              <OrdersWidget profileId={context.data.profile.id} locale={locale} time={time} />
+            )}
+            {context.data.access.contracts && (
+              <ContractsWidget profileId={context.data.profile.id} locale={locale} time={time} />
+            )}
+          </DashboardLayout>
+        </>
       )}
-
-      {/* Quick actions section */}
       <section className="border-t pt-6">
-        <h2 className="text-lg font-semibold text-foreground mb-1">
+        <h2 className="mb-1 text-lg font-semibold">
           {t('dashboard.overview.quickActions', locale)}
         </h2>
         <p className="mb-4 text-sm text-muted-foreground">
           {shellText('quickActionsDescription', locale)}
         </p>
         <div className="flex flex-wrap gap-3">
-          {quickActions.map((action) => (
+          {actions.map((action) => (
             <Link
               key={action.href}
               to={action.href}

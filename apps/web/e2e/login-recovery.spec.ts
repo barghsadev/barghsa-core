@@ -1,3 +1,4 @@
+import { fulfillDashboard } from './dashboard-fixture';
 import { mockPublicAuthCsrf } from './public-auth-fixture';
 import type { Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
@@ -33,8 +34,8 @@ async function mockApp(page: Page, hasProfile = true) {
       },
     })
   );
-  await page.route('**/api/dashboard', (route) =>
-    route.fulfill({ json: { profile: { name: 'Profile' } } })
+  await page.route('**/api/dashboard{,/**}', (route) =>
+    fulfillDashboard(route, { json: { profile: { name: 'Profile' } } })
   );
 }
 async function openLogin(page: Page, locale: 'fa' | 'en', darkMode = false) {

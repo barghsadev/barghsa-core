@@ -1,7 +1,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { BrandThemeProvider, useBrandConfig } from './BrandThemeProvider.js';
+import { BrandThemeProvider, getBrandTextColor, useBrandConfig } from './BrandThemeProvider.js';
 let root: Root, host: HTMLDivElement;
 const config = {
   appTitle: 'Saved brand',
@@ -22,6 +22,13 @@ const config = {
   faviconUrl: 'https://example.test/brand.ico',
   darkMode: true,
 };
+
+it('preserves readable brand text and falls back for insufficient surface contrast', () => {
+  expect(getBrandTextColor('#176b5b', ['#f6f7f4', '#fdfefb', '#edf0eb'])).toBe('#176b5b');
+  expect(getBrandTextColor('#777777', ['#f6f7f4', '#fdfefb', '#edf0eb'])).toBe('var(--foreground)');
+  expect(getBrandTextColor('#777777', ['#15201c', '#1d2c25', '#293a30'])).toBe('var(--foreground)');
+  expect(getBrandTextColor('#ffffff', ['#15201c', '#1d2c25', '#293a30'])).toBe('#ffffff');
+});
 function Consumer() {
   const { brandConfig, loading } = useBrandConfig();
   return (

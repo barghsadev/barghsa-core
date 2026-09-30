@@ -20,6 +20,7 @@ export interface WalletBalanceCardProps {
   pendingInvoices: number;
   /** UI locale for number formatting and translation. */
   locale?: Locale;
+  embedded?: boolean;
 }
 
 /**
@@ -36,6 +37,7 @@ export function WalletBalanceCard({
   lowBalanceWarning,
   pendingInvoices,
   locale = 'fa',
+  embedded = false,
 }: WalletBalanceCardProps) {
   const isRtl = locale === 'fa';
   const numbers = useNumberFormatting(locale);
@@ -60,15 +62,27 @@ export function WalletBalanceCard({
 
   return (
     <div
-      className="flex h-full flex-col rounded-xl border bg-card p-6 text-card-foreground shadow-sm"
+      className={
+        embedded
+          ? 'flex h-full flex-col'
+          : 'flex h-full flex-col rounded-xl border bg-card p-6 text-card-foreground shadow-sm'
+      }
       dir={isRtl ? 'rtl' : 'ltr'}
     >
-      <Wallet className="mb-6 size-6 text-muted-foreground" strokeWidth={1.6} aria-hidden="true" />
+      {!embedded && (
+        <Wallet
+          className="mb-6 size-6 text-muted-foreground"
+          strokeWidth={1.6}
+          aria-hidden="true"
+        />
+      )}
       {/* Balance section */}
       <div className="mb-4">
-        <p className="text-sm text-muted-foreground mb-1">
-          {t('dashboard.overview.walletBalance', locale)}
-        </p>
+        {!embedded && (
+          <p className="text-sm text-muted-foreground mb-1">
+            {t('dashboard.overview.walletBalance', locale)}
+          </p>
+        )}
         <p className="break-words text-[clamp(1.5rem,2.5vw,2rem)] font-semibold text-foreground leading-relaxed tabular-nums">
           {currency === 'IRR'
             ? numbers.money(balance)

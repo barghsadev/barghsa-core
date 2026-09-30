@@ -90,4 +90,62 @@ it('returns only the active profile’s first three due invoices and totals ever
   expect(dashboard.upcomingInvoices.some((invoice) => invoice.invoiceId === foreignInvoiceId)).toBe(
     false
   );
+
+  const headers = { Cookie: `barghsa_session=${sessionId}` };
+  const context = await fetch(`${http.base}/api/dashboard/context`, { headers });
+  expect(context.status).toBe(200);
+  expect(context.headers.get('cache-control')).toBe('private, no-store');
+  expect(await context.json()).toMatchObject({ profile: { id: profileId } });
+  for (const [widget, expected] of [
+    ['invoices', dashboard.upcomingInvoices],
+    ['orders', []],
+    ['contracts', []],
+  ] as const) {
+    const result = await fetch(
+      `${http.base}/api/dashboard/widgets/${widget}?profileId=${profileId}`,
+      { headers }
+    );
+    expect(result.status, http.logs()).toBe(200);
+    expect(result.headers.get('cache-control')).toBe('private, no-store');
+    expect(await result.json()).toEqual({ profileId, data: expected });
+  }
+  const wallet = await fetch(`${http.base}/api/dashboard/widgets/wallet?profileId=${profileId}`, {
+    headers,
+  });
+  expect(await wallet.json()).toEqual({
+    profileId,
+    data: {
+      balance: '600',
+      postedBalance: '600',
+      reservedBalance: '0',
+      currency: 'IRR',
+      lowBalanceWarning: true,
+      pendingInvoices: 4,
+    },
+  });
+  const counts = await fetch(`${http.base}/api/dashboard/widgets/status?profileId=${profileId}`, {
+    headers,
+  });
+  expect(await counts.json()).toMatchObject({ data: { unpaidInvoices: 4 } });
+  expect(
+    (
+      await fetch(`${http.base}/api/dashboard/widgets/invoices?profileId=${otherProfileId}`, {
+        headers,
+      })
+    ).status
+  ).toBe(409);
+  expect((await fetch(`${http.base}/api/dashboard/widgets/invoices`, { headers })).status).toBe(
+    400
+  );
+  expect(
+    (await fetch(`${http.base}/api/dashboard/widgets/invoices?profileId=invalid`, { headers }))
+      .status
+  ).toBe(400);
+  expect(
+    (await fetch(`${http.base}/api/dashboard/widgets/unknown?profileId=${profileId}`, { headers }))
+      .status
+  ).toBe(400);
+  expect(
+    (await fetch(`${http.base}/api/dashboard/widgets/invoices?profileId=${profileId}`)).status
+  ).toBe(401);
 });

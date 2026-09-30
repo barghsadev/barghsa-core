@@ -31,28 +31,33 @@ export function UpcomingInvoicesWidget({
   invoices,
   locale,
   time,
+  embedded = false,
 }: {
   invoices: UpcomingInvoice[];
   locale: Locale;
   time: ReturnType<typeof useAccountTime>;
+  embedded?: boolean;
 }) {
+  const Frame = embedded ? 'div' : 'section';
   return (
-    <section
-      className="space-y-4 rounded-xl border bg-card p-5"
-      aria-labelledby="upcoming-invoices-title"
+    <Frame
+      className={embedded ? 'space-y-4' : 'space-y-4 rounded-xl border bg-card p-5'}
+      aria-labelledby={embedded ? undefined : 'upcoming-invoices-title'}
     >
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="upcoming-invoices-title" className="text-lg font-semibold">
-          {dashboardText('invoice.title', locale)}
-        </h2>
-        <Link
-          to="/invoices"
-          search={{ status: 'unpaid' }}
-          className="text-sm font-medium text-primary underline underline-offset-4"
-        >
-          {dashboardText('invoice.viewAll', locale)}
-        </Link>
-      </div>
+      {!embedded && (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="upcoming-invoices-title" className="text-lg font-semibold">
+            {dashboardText('invoice.title', locale)}
+          </h2>
+          <Link
+            to="/invoices"
+            search={{ status: 'unpaid' }}
+            className="text-sm font-medium text-primary underline underline-offset-4"
+          >
+            {dashboardText('invoice.viewAll', locale)}
+          </Link>
+        </div>
+      )}
       {invoices.length === 0 ? (
         <p className="text-sm text-muted-foreground">{dashboardText('invoice.empty', locale)}</p>
       ) : (
@@ -125,6 +130,6 @@ export function UpcomingInvoicesWidget({
           })}
         </ul>
       )}
-    </section>
+    </Frame>
   );
 }

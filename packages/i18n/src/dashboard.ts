@@ -1,6 +1,9 @@
 import type { Locale } from './app.js';
 
 const en = {
+  'widget.error': 'This section could not be loaded. Other sections are still available.',
+  'widget.retry': 'Retry this section',
+  'status.title': 'At a glance',
   'invoice.title': 'Upcoming invoices',
   'invoice.viewAll': 'View all',
   'invoice.empty': 'No unpaid invoices for this profile.',
@@ -26,6 +29,9 @@ const en = {
 };
 
 const fa: Record<keyof typeof en, string> = {
+  'widget.error': 'این بخش بارگذاری نشد. بخش‌های دیگر همچنان در دسترس هستند.',
+  'widget.retry': 'تلاش دوباره برای این بخش',
+  'status.title': 'در یک نگاه',
   'invoice.title': 'فاکتورهای پیش‌رو',
   'invoice.viewAll': 'مشاهده همه',
   'invoice.empty': 'فاکتور پرداخت‌نشده‌ای برای این پروفایل ندارید.',

@@ -1,3 +1,4 @@
+import { fulfillDashboard } from './dashboard-fixture';
 import { cookieResponse } from './cookie-response';
 import { test, expect, type Page } from './coverage-fixture';
 
@@ -13,6 +14,16 @@ const profile = (id: string) => ({
 });
 async function shell(page: Page) {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        userId: 'switch-viewer',
+        isStaff: false,
+        operatingContext: 'customer',
+        requiresTosAcceptance: false,
+      },
+    })
+  );
   await page.route('**/api/invitations/pending', (route) =>
     route.fulfill({ json: { invitations: [] } })
   );
@@ -36,6 +47,7 @@ for (const locale of ['fa', 'en'] as const) {
     await page.setViewportSize({ width: 390, height: 844 });
     await shell(page);
     await page.addInitScript((value) => {
+      localStorage.setItem('barghsa.locale', value);
       if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
@@ -112,6 +124,7 @@ for (const locale of ['fa', 'en'] as const) {
   }) => {
     await shell(page);
     await page.addInitScript((value) => {
+      localStorage.setItem('barghsa.locale', value);
       if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
@@ -152,8 +165,8 @@ for (const locale of ['fa', 'en'] as const) {
         },
       })
     );
-    await page.route('**/api/dashboard', (route) =>
-      route.fulfill({
+    await page.route('**/api/dashboard{,/**}', (route) =>
+      fulfillDashboard(route, {
         json: {
           wallet: { balance: 0, currency: 'IRR', lowBalanceWarning: false },
           activeOrders: 0,
@@ -211,7 +224,7 @@ for (const locale of ['fa', 'en'] as const) {
     if (await menu.isVisible()) await expect(menu).toHaveAttribute('aria-expanded', 'false');
     await openProfileMenu(page);
     await expect(selector).toHaveValue('invited');
-    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(page).toHaveURL(/\/app$/);
     expect(attempts).toBe(2);
   });
   test(`selecting the only remaining profile clears old page data (${locale})`, async ({
@@ -219,6 +232,7 @@ for (const locale of ['fa', 'en'] as const) {
   }) => {
     await shell(page);
     await page.addInitScript((value) => {
+      localStorage.setItem('barghsa.locale', value);
       if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
@@ -235,9 +249,9 @@ for (const locale of ['fa', 'en'] as const) {
         },
       })
     );
-    await page.route('**/api/dashboard', (route) => {
+    await page.route('**/api/dashboard{,/**}', (route) => {
       dashboardReads++;
-      return route.fulfill({
+      return fulfillDashboard(route, {
         json: {
           wallet: { balance: active ? 987654 : 123456, currency: 'IRR', lowBalanceWarning: false },
           activeOrders: 0,
@@ -296,9 +310,9 @@ test('a failed switch keeps the existing selection and reports the error', async
   );
   await page.goto('/dashboard');
   await openProfileMenu(page);
-  await page.getByRole('combobox').selectOption('second');
+  await page.locator('#profile-switcher').selectOption('second');
   await openProfileMenu(page);
-  await expect(page.getByRole('combobox')).toHaveValue('first');
+  await expect(page.locator('#profile-switcher')).toHaveValue('first');
   await expect(page.getByRole('complementary').getByRole('alert')).toHaveText(
     'تغییر پروفایل با خطا مواجه شد'
   );
@@ -328,7 +342,7 @@ test('the initial radio selection submits from the required profile dialog', asy
   await switched;
   await expect(dialog).toHaveCount(0);
   await openProfileMenu(page);
-  await expect(page.getByRole('combobox')).toHaveValue('first');
+  await expect(page.locator('#profile-switcher')).toHaveValue('first');
 });
 
 test('switching refreshes another open tab without reloading either document', async ({
@@ -347,8 +361,8 @@ test('switching refreshes another open tab without reloading either document', a
         },
       })
     );
-    await page.route('**/api/dashboard', (route) =>
-      route.fulfill({
+    await page.route('**/api/dashboard{,/**}', (route) =>
+      fulfillDashboard(route, {
         json: {
           wallet: {
             balance: active === 'first' ? 123456 : 987654,
@@ -373,10 +387,10 @@ test('switching refreshes another open tab without reloading either document', a
     return route.fulfill({ json: { activeProfileId: active } });
   });
   await openProfileMenu(pages[0]!);
-  await pages[0]!.getByRole('combobox').selectOption('second');
+  await pages[0]!.locator('#profile-switcher').selectOption('second');
   for (const page of pages) {
     await openProfileMenu(page);
-    await expect(page.getByRole('combobox')).toHaveValue('second');
+    await expect(page.locator('#profile-switcher')).toHaveValue('second');
     await expect(page.locator('main')).toContainText('۹۸۷٬۶۵۴');
     await expect(page.locator('main')).not.toContainText('۱۲۳٬۴۵۶');
     expect(
@@ -397,6 +411,8 @@ test('late old-profile responses cannot overwrite the switched page or notificat
     releaseOld = resolve;
   });
   let oldReads = 0;
+  let oldDashboardReads = 0;
+  let oldDashboardReleased = 0;
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
       json: {
@@ -406,13 +422,15 @@ test('late old-profile responses cannot overwrite the switched page or notificat
       },
     })
   );
-  await page.route('**/api/dashboard', async (route) => {
+  await page.route('**/api/dashboard{,/**}', async (route) => {
     const requestedProfile = active;
     if (requestedProfile === 'first') {
       oldReads++;
+      oldDashboardReads++;
       await oldReleased;
+      oldDashboardReleased++;
     }
-    await route.fulfill({
+    await fulfillDashboard(route, {
       json: {
         wallet: {
           balance: requestedProfile === 'first' ? 123456 : 987654,
@@ -443,13 +461,15 @@ test('late old-profile responses cannot overwrite the switched page or notificat
   try {
     await page.goto('/dashboard');
     await expect.poll(() => oldReads).toBeGreaterThanOrEqual(3);
+    await expect.poll(() => oldDashboardReads).toBeGreaterThan(0);
     await openProfileMenu(page);
-    await page.getByRole('combobox').selectOption('second');
+    await page.locator('#profile-switcher').selectOption('second');
     await expect(page.locator('main')).toContainText('۹۸۷٬۶۵۴');
     await expect(page.getByTestId('notification-bell').getByRole('status')).toHaveText('۳');
-    const settled = page.waitForResponse((response) => response.url().endsWith('/api/dashboard'));
     releaseOld();
-    await settled;
+    // The old dashboard context request is aborted on switch; its delayed
+    // fulfillment must not populate any of the new profile's widget resources.
+    await expect.poll(() => oldDashboardReleased).toBeGreaterThan(0);
     await expect(page.locator('main')).toContainText('۹۸۷٬۶۵۴');
     await expect(page.locator('main')).not.toContainText('۱۲۳٬۴۵۶');
     await expect(page.getByTestId('notification-bell').getByRole('status')).toHaveText('۳');

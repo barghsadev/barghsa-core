@@ -18982,6 +18982,71 @@
         ]
       }
     },
+    "/api/dashboard/context": {
+      "get": {
+        "operationId": "DashboardController_getContext",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get active dashboard profile and widget permissions",
+        "tags": [
+          "Dashboard"
+        ]
+      }
+    },
+    "/api/dashboard/widgets/{widget}": {
+      "get": {
+        "operationId": "DashboardController_getWidget",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "widget",
+            "required": true,
+            "schema": {
+              "enum": [
+                "wallet",
+                "status",
+                "invoices",
+                "orders",
+                "contracts"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get one dashboard widget for the expected active profile",
+        "tags": [
+          "Dashboard"
+        ]
+      }
+    },
     "/api/documents": {
       "get": {
         "operationId": "DocumentController_list",

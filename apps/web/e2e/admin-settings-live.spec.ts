@@ -9,6 +9,8 @@ let http: {
   base: string;
   session: string;
   csrf: string;
+  customerSession: string;
+  customerCsrf: string;
   jobs: Record<string, { first: string; second: string; dead: string }>;
 };
 let restoreNumberPreference: (() => Promise<void>) | null = null;
@@ -2280,6 +2282,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await page.addInitScript((value) => {
+      localStorage.setItem('barghsa.locale', value);
       if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
@@ -2289,7 +2292,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/**', async (route) => {
       const request = route.request();
       const url = new URL(request.url());
-      if (failDashboard && url.pathname === '/api/dashboard') {
+      if (failDashboard && url.pathname === '/api/dashboard/context') {
         await route.fulfill({ status: 503, json: { message: 'test outage' } });
         return;
       }
@@ -2299,8 +2302,8 @@ for (const locale of ['en', 'fa'] as const) {
           ...request.headers(),
           host: new URL(http.base).host,
           origin: 'https://app.example.test',
-          cookie: `barghsa_session=${http.session}`,
-          'x-csrf-token': http.csrf,
+          cookie: `barghsa_session=${http.customerSession}`,
+          'x-csrf-token': http.customerCsrf,
         },
       });
     });

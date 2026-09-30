@@ -66,7 +66,9 @@ async function main() {
   );
   cleanups.push(() => http.close());
   const session = randomUUID(),
-    csrf = randomUUID();
+    csrf = randomUUID(),
+    customerSession = randomUUID(),
+    customerCsrf = randomUUID();
   await http.pool.query(`INSERT INTO users(user_id,username,password_hash,is_admin,is_staff) VALUES
     ('team-ui-admin','admin-ui@example.test','test-only',true,true),
     ('team-ui-member','Member UI','test-only',false,true)`);
@@ -74,6 +76,11 @@ async function main() {
     `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
     VALUES ($1,'team-ui-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())`,
     [session, csrf, randomUUID()]
+  );
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context)
+     VALUES ($1,'team-ui-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour','customer')`,
+    [customerSession, customerCsrf, randomUUID()]
   );
   for (const language of ['en', 'fa']) {
     await http.pool.query(
@@ -166,7 +173,7 @@ async function main() {
   process.once('message', requestClose);
   process.once('disconnect', requestClose);
   process.once('SIGTERM', requestClose);
-  process.send?.({ base: http.base, session, csrf, jobs });
+  process.send?.({ base: http.base, session, csrf, customerSession, customerCsrf, jobs });
 }
 main().catch(async (error) => {
   console.error(error);

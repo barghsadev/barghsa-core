@@ -1,3 +1,4 @@
+import { fulfillDashboard } from './dashboard-fixture';
 import { test, expect } from './coverage-fixture';
 
 test('dashboard shows invoices, orders and contracts, then clears them after switching profiles', async ({
@@ -51,8 +52,8 @@ test('dashboard shows invoices, orders and contracts, then clears them after swi
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
-  await page.route('**/api/dashboard', (route) =>
-    route.fulfill({
+  await page.route('**/api/dashboard{,/**}', (route) =>
+    fulfillDashboard(route, {
       json: {
         profile: {
           id: activeProfileId,
@@ -201,6 +202,9 @@ test('dashboard shows invoices, orders and contracts, then clears them after swi
   await expect(page.getByRole('region', { name: 'قراردادهای فعال' })).toBeVisible();
   await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
 
+  const menu = page.locator('button[aria-controls="dashboard-navigation"]');
+  if ((await menu.isVisible()) && (await menu.getAttribute('aria-expanded')) === 'false')
+    await menu.click();
   await page.getByLabel('Switch active profile').selectOption('profile-2');
   await expect(page.getByRole('heading', { name: 'Welcome, Nova Energy' })).toBeVisible();
   await expect(invoices.getByText('No unpaid invoices for this profile.')).toBeVisible();

@@ -275,3 +275,131 @@ describe('DashboardService quick status', () => {
     ).toBe(true);
   });
 });
+
+describe('independent dashboard resources', () => {
+  const context = { id: 'profile-1', is_owner: true, roles: [] };
+  const getWallet = vi.fn();
+  let service: DashboardService;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    service = new DashboardService({ getWallet } as never);
+    mockQuery.mockImplementation(async (sql: string) => {
+      if (sql.includes('JOIN users u')) return { rows: [context] };
+      if (sql.includes('FROM profiles p')) return { rows: [{ name: 'Customer' }] };
+      if (sql.includes('AS total')) return { rows: [{ total: '900719925474099300', count: 4 }] };
+      if (sql.includes('SELECT recent.kind')) throw new Error('Order storage unavailable');
+      return { rows: [] };
+    });
+    getWallet.mockResolvedValue({
+      availableBalance: 900719925474099299n,
+      postedBalance: 900719925474099300n,
+      reservedBalance: 1n,
+    });
+  });
+
+  it('loads context without reading business tables', async () => {
+    expect(await service.getContext('user')).toEqual({
+      profile: { id: 'profile-1', name: 'Customer' },
+      access: { wallet: true, orders: true, invoices: true, contracts: true },
+    });
+    expect(mockQuery).toHaveBeenCalledTimes(2);
+    expect(getWallet).not.toHaveBeenCalled();
+  });
+
+  it('isolates a failing order query and keeps exact wallet totals', async () => {
+    await expect(service.getWidget('user', 'orders', context.id)).rejects.toThrow(
+      'Order storage unavailable'
+    );
+    const wallet = await service.getWidget('user', 'wallet', context.id);
+    expect(wallet).toEqual({
+      profileId: context.id,
+      data: {
+        balance: '900719925474099299',
+        postedBalance: '900719925474099300',
+        reservedBalance: '1',
+        currency: 'IRR',
+        lowBalanceWarning: true,
+        pendingInvoices: 4,
+      },
+    });
+    const sql = queryFor('AS total')?.[0] as string;
+    expect(sql).toContain("adjustment_kind IS DISTINCT FROM 'credit'");
+    expect(sql).toContain("state IN ('Unpaid', 'Overdue')");
+    expect(sql).not.toContain('LIMIT');
+  });
+
+  it('rejects a stale expected profile before reading business data', async () => {
+    await expect(service.getWidget('user', 'invoices', 'other-profile')).rejects.toThrow(
+      'Active profile changed'
+    );
+    expect(mockQuery).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(['wallet', 'invoices', 'orders'] as const)(
+    'denies %s to a legal-only agent without business reads',
+    async (widget) => {
+      mockQuery.mockResolvedValue({
+        rows: [{ id: context.id, is_owner: false, roles: ['Legal'] }],
+      });
+      await expect(service.getWidget('user', widget, context.id)).rejects.toThrow(
+        'Widget unavailable'
+      );
+      expect(mockQuery).toHaveBeenCalledTimes(1);
+      expect(getWallet).not.toHaveBeenCalled();
+    }
+  );
+
+  it('rejects a user with no accessible active profile before reading the wallet', async () => {
+    mockQuery.mockResolvedValueOnce({ rows: [] });
+    await expect(service.getWidget('user', 'wallet', context.id)).rejects.toThrow(
+      'No accessible active profile'
+    );
+    expect(getWallet).not.toHaveBeenCalled();
+  });
+
+  it('discards results when the active profile changes during the query', async () => {
+    let reads = 0;
+    mockQuery.mockImplementation(async (sql: string) => {
+      if (sql.includes('JOIN users u'))
+        return { rows: [{ ...context, id: ++reads === 1 ? context.id : 'new-profile' }] };
+      return { rows: [] };
+    });
+    await expect(service.getWidget('user', 'contracts', context.id)).rejects.toThrow(
+      'Active profile changed'
+    );
+  });
+
+  it('discards counts when owner authority is revoked during the query', async () => {
+    let reads = 0;
+    mockQuery.mockImplementation(async (sql: string) => {
+      if (sql.includes('JOIN users u'))
+        return { rows: [{ ...context, is_owner: ++reads === 1, roles: [] }] };
+      return { rows: [{ cnt: 1 }] };
+    });
+    await expect(service.getWidget('user', 'status', context.id)).rejects.toThrow(
+      'Profile permissions changed'
+    );
+  });
+
+  it('accepts the same agent roles returned in a different SQL row order', async () => {
+    let reads = 0;
+    mockQuery.mockImplementation(async (sql: string) => {
+      if (sql.includes('JOIN users u'))
+        return {
+          rows: [
+            {
+              ...context,
+              is_owner: false,
+              roles: ++reads === 1 ? ['Legal', 'Finance'] : ['Finance', 'Legal'],
+            },
+          ],
+        };
+      return { rows: [] };
+    });
+    await expect(service.getWidget('user', 'contracts', context.id)).resolves.toEqual({
+      profileId: context.id,
+      data: [],
+    });
+  });
+});
