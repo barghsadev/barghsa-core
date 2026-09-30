@@ -11,6 +11,7 @@ for (const locale of ['fa', 'en'])
         ')',
       async ({ page }, testInfo) => {
         await page.addInitScript((locale) => {
+          localStorage.setItem('barghsa.locale', locale);
           const apply = () => {
             document.documentElement.lang = locale;
             document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
@@ -19,6 +20,9 @@ for (const locale of ['fa', 'en'])
           new MutationObserver(apply).observe(document, { childList: true });
         }, locale);
         await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+        await page.route('**/api/auth/user', (route) =>
+          route.fulfill({ json: { userId: 'staff', isStaff: true, requiresTosAcceptance: false } })
+        );
         await page.route('**/api/public/branding/config', (route) =>
           route.fulfill({
             json: {
@@ -39,8 +43,16 @@ for (const locale of ['fa', 'en'])
             json: { count: 0, unmatchedCount: 0, reversalFailedCount: 0, items: [] },
           })
         );
+        const recentProfiles = Array.from({ length: 5 }, (_, index) => ({
+          id: '11111111-1111-4111-8111-' + String(index).padStart(12, '0'),
+          profileType: index === 0 ? 'LEGAL' : 'INDIVIDUAL',
+          firstName: index === 0 ? null : 'Sara',
+          lastName: index === 0 ? null : `Example ${index}`,
+          legalName: index === 0 ? 'Solar Co' : null,
+          createdAt: '2026-09-01T00:00:00Z',
+        }));
         let status = 200;
-        let body: unknown = { enabled: true, count: 12, profiles: [] };
+        let body: unknown = { enabled: true, count: 12, profiles: recentProfiles };
         let requests = 0;
         let release: (() => void) | null = null;
         let hold = false;
@@ -69,6 +81,11 @@ for (const locale of ['fa', 'en'])
         await expect(widget).toBeVisible();
         await expect(showAll).toHaveAttribute('href', '/admin/crm?verification=PENDING');
         await expect(widget).toContainText(locale === 'fa' ? '۱۲' : '12');
+        await expect(widget.getByRole('listitem')).toHaveCount(5);
+        await expect(widget.getByRole('link', { name: /Solar Co/ })).toHaveAttribute(
+          'href',
+          `/admin/crm/profiles/${recentProfiles[0]!.id}`
+        );
         const scan = await new AxeBuilder({ page })
           .include('#admin-content')
           .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
@@ -104,6 +121,7 @@ for (const locale of ['fa', 'en'])
           { count: 12, profiles: [] },
           { enabled: true, count: '12', profiles: [] },
           { enabled: true, count: -1, profiles: [] },
+          { enabled: true, count: 1, profiles: [{}] },
         ]) {
           body = invalid;
           await page.clock.runFor(30000);
@@ -123,7 +141,7 @@ for (const locale of ['fa', 'en'])
         await expect(widget).toHaveCount(0);
         hold = false;
         status = 200;
-        body = { enabled: true, count: 12, profiles: [] };
+        body = { enabled: true, count: 12, profiles: recentProfiles };
         await page.clock.runFor(30000);
         await expect(showAll).toBeVisible();
         await showAll.focus();

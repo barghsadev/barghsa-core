@@ -8,15 +8,22 @@ vi.mock('@tanstack/react-router', () => ({
   Link: ({
     children,
     to,
+    params,
+    search,
     ...props
   }: {
     children: ReactNode;
     to: string;
-    search?: unknown;
+    params?: { profileId: string };
+    search?: { verification?: string };
     className?: string;
     'aria-label'?: string;
   }) => (
-    <a href={to} className={props.className} aria-label={props['aria-label']}>
+    <a
+      href={`${to.replace('$profileId', params?.profileId ?? '')}${search?.verification ? `?verification=${search.verification}` : ''}`}
+      className={props.className}
+      aria-label={props['aria-label']}
+    >
       {children}
     </a>
   ),
@@ -30,7 +37,7 @@ async function flush() {
   });
 }
 
-describe('AdminDashboard chargeback warning (T-04.2.04.03)', () => {
+describe('AdminDashboard staff widgets', () => {
   let container: HTMLDivElement;
   let root: Root;
 
@@ -48,6 +55,58 @@ describe('AdminDashboard chargeback warning (T-04.2.04.03)', () => {
     container.remove();
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
+  });
+
+  it('shows recent pending profiles with detail links and a localized fallback name', async () => {
+    document.documentElement.lang = 'fa';
+    const legalId = '11111111-1111-4111-8111-111111111111';
+    const individualId = '22222222-2222-4222-8222-222222222222';
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input);
+        if (url.endsWith('/api/crm/dashboard/pending-verification'))
+          return {
+            ok: true,
+            json: async () => ({
+              enabled: true,
+              count: 2,
+              profiles: [
+                {
+                  id: legalId,
+                  profileType: 'LEGAL',
+                  firstName: null,
+                  lastName: null,
+                  legalName: 'Solar Co',
+                  createdAt: '2026-09-01T00:00:00Z',
+                },
+                {
+                  id: individualId,
+                  profileType: 'INDIVIDUAL',
+                  firstName: null,
+                  lastName: null,
+                  legalName: null,
+                  createdAt: '2026-08-31T00:00:00Z',
+                },
+              ],
+            }),
+          };
+        return { ok: false, status: 403 };
+      })
+    );
+
+    await act(async () => root.render(<AdminDashboard />));
+    await flush();
+
+    const widget = container.querySelector('[role="region"]');
+    expect(widget?.querySelectorAll('li')).toHaveLength(2);
+    expect(
+      widget?.querySelector(`a[href="/admin/crm/profiles/${legalId}"]`)?.textContent
+    ).toContain('Solar Co');
+    expect(
+      widget?.querySelector(`a[href="/admin/crm/profiles/${individualId}"]`)?.textContent
+    ).toContain('حقیقی');
+    expect(widget?.querySelector('a[href="/admin/crm?verification=PENDING"]')).toBeTruthy();
   });
 
   it('shows an assertive warning when unresolved chargebacks exist', async () => {

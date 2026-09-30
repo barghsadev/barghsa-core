@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Staff dashboard pending verification](batches/2026-09-30-pending-verification-widget.md) completes the existing verification count with the five newest profile links, bilingual identity fallback, and verified CRM navigation. The API already supplied these entries.
+
 [Staff dashboard work queue](batches/2026-09-30-staff-work-queue.md) groups pending tickets, electricity and saving orders awaiting review, and unassigned consultations into permission-scoped counts with links to filtered queues. The prior dashboard batch's remote CI finished green.
 
 [Customer dashboard active contracts](batches/2026-09-30-dashboard-active-contracts.md) shows three active, published contracts with status, end date, elapsed-term progress and working detail/list links. The latest-orders, upcoming-invoices, and active-contract customer widgets are now built.

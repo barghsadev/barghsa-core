@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { AlertTriangle, ShieldCheck } from 'lucide-react';
 import { t } from '@barghsa/i18n/app';
+import { t as tCrm } from '@barghsa/i18n/crm';
 import { useLocale } from '../hooks/useLocale.js';
 import { AdminBusinessWorkCounts } from '../components/AdminBusinessWorkCounts.js';
 import { AdminMaintenanceSummary } from '../components/AdminMaintenanceSummary.js';
@@ -23,6 +24,40 @@ interface PendingVerificationData {
   enabled: boolean;
   count: number;
   profiles: PendingVerificationProfile[];
+}
+
+function isPendingVerificationData(value: unknown): value is PendingVerificationData {
+  if (!value || typeof value !== 'object') return false;
+  const data = value as Record<string, unknown>;
+  return (
+    typeof data.enabled === 'boolean' &&
+    typeof data.count === 'number' &&
+    Number.isSafeInteger(data.count) &&
+    data.count >= 0 &&
+    Array.isArray(data.profiles) &&
+    data.profiles.length <= (data.enabled ? Math.min(data.count, 5) : 0) &&
+    data.profiles.every((profile: unknown) => {
+      if (!profile || typeof profile !== 'object') return false;
+      const row = profile as Record<string, unknown>;
+      return (
+        typeof row.id === 'string' &&
+        /^[a-f0-9-]{36}$/i.test(row.id) &&
+        (row.profileType === 'INDIVIDUAL' || row.profileType === 'LEGAL') &&
+        ['firstName', 'lastName', 'legalName'].every(
+          (key) => row[key] === null || typeof row[key] === 'string'
+        ) &&
+        typeof row.createdAt === 'string'
+      );
+    })
+  );
+}
+
+function pendingProfileName(profile: PendingVerificationProfile, locale: 'fa' | 'en'): string {
+  const name =
+    profile.profileType === 'LEGAL'
+      ? profile.legalName?.trim()
+      : [profile.firstName, profile.lastName].filter(Boolean).join(' ').trim();
+  return name || `${tCrm(`crm.list.${profile.profileType}`, locale)} · ${profile.id.slice(0, 8)}`;
 }
 
 interface UnresolvedChargebackItem {
@@ -108,15 +143,8 @@ export default function AdminDashboard() {
           return;
         }
         if (!res.ok) throw new Error('Failed to fetch');
-        const json = (await res.json()) as PendingVerificationData;
-        if (
-          !json ||
-          typeof json.enabled !== 'boolean' ||
-          !Number.isSafeInteger(json.count) ||
-          json.count < 0 ||
-          !Array.isArray(json.profiles) ||
-          json.profiles.length > 5
-        )
+        const json: unknown = await res.json();
+        if (!isPendingVerificationData(json))
           throw new Error('Invalid pending verification response');
         if (!cancelled) {
           setData(json.enabled ? json : null);
@@ -246,7 +274,7 @@ export default function AdminDashboard() {
       {/* Pending verification widget */}
       {!verificationHidden && (
         <div
-          className="bg-card text-card-foreground rounded-lg shadow-sm border p-5 max-w-sm"
+          className="bg-card text-card-foreground rounded-lg shadow-sm border p-5 max-w-lg"
           role="region"
           aria-label={t('dashboard.admin.pendingVerification.aria.widget', locale)}
         >
@@ -280,6 +308,29 @@ export default function AdminDashboard() {
               )}
             </div>
           </div>
+          {!isLoading && !isError && data?.enabled && data.profiles.length > 0 && (
+            <ul
+              className="mb-4 space-y-2"
+              aria-label={t('dashboard.admin.pendingVerification.recent', locale)}
+            >
+              {data.profiles.map((profile) => (
+                <li key={profile.id}>
+                  <Link
+                    to="/admin/crm/profiles/$profileId"
+                    params={{ profileId: profile.id }}
+                    className="block rounded-md border px-3 py-2 text-sm transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  >
+                    <span className="block font-medium break-words" dir="auto">
+                      {pendingProfileName(profile, locale)}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {tCrm(`crm.list.${profile.profileType}`, locale)}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
           {!isLoading && !isError && data?.enabled && (
             <Link
               to="/admin/crm"
