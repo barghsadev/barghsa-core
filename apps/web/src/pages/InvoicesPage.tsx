@@ -1,4 +1,6 @@
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
+import { useListView } from '../hooks/useListView.js';
+import { HistoryTable, type HistoryColumn } from '../components/HistoryTable.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -7,7 +9,14 @@ import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { Loader2Icon, ReceiptIcon } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
-import { Button, TextFilter, ListSortDropdown, NumberFilter, StatusFilter } from '@barghsa/ui';
+import {
+  Button,
+  TextFilter,
+  ListSortDropdown,
+  NumberFilter,
+  StatusFilter,
+  ListViewToggle,
+} from '@barghsa/ui';
 import {
   CUSTOMER_INVOICE_STATUSES,
   DEFAULT_INVOICE_LIST_SORT,
@@ -52,6 +61,7 @@ export function InvoicesPage({
   amountRange?: NumberRangeValue;
   onAmountRangeChange?: (value: NumberRangeValue) => void;
 }) {
+  const { view, setView } = useListView('invoices');
   const time = useAccountTime();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -127,6 +137,65 @@ export function InvoicesPage({
     acceptPage,
   ]);
 
+  const columns: HistoryColumn<CustomerInvoiceListItem>[] = [
+    {
+      id: 'reference',
+      label: t('invoices.list.reference', locale),
+      render: (item) => (
+        <div className="min-w-44 space-y-2">
+          <Link
+            to="/invoices/$invoiceId"
+            params={{ invoiceId: item.invoiceId }}
+            className="text-primary underline underline-offset-4"
+          >
+            <bdi dir="ltr" className="break-all font-mono">
+              {item.invoiceId}
+            </bdi>
+          </Link>
+          {item.explanation && <p className="break-words">{item.explanation}</p>}
+        </div>
+      ),
+    },
+    {
+      id: 'type',
+      label: t('historyView.type', locale),
+      render: (item) => t(roleI18nKey(item.role), locale),
+    },
+    {
+      id: 'state',
+      label: t('historyView.status', locale),
+      render: (item) => t(stateI18nKey(item.state), locale),
+    },
+    {
+      id: 'period',
+      label: t('invoices.list.period', locale),
+      render: (item) =>
+        item.periodStart && item.periodEnd
+          ? formatInvoiceServicePeriod(item.periodStart, item.periodEnd, time.format)
+          : '—',
+    },
+    {
+      id: 'amount',
+      label: t('historyView.amount', locale),
+      render: (item) => <bdi className="whitespace-nowrap">{numbers.money(item.totalAmount)}</bdi>,
+    },
+    {
+      id: 'paid',
+      label: t('invoices.list.paid', locale),
+      render: (item) =>
+        item.paidAmount !== undefined ? (
+          <bdi className="whitespace-nowrap">{numbers.money(item.paidAmount)}</bdi>
+        ) : (
+          '—'
+        ),
+    },
+    {
+      id: 'issued',
+      label: t('invoices.list.issued', locale),
+      render: (item) => time.format(item.issuedAt),
+    },
+    { id: 'due', label: t('invoices.list.due', locale), render: (item) => time.format(item.dueAt) },
+  ];
   return (
     <div className="mx-auto max-w-3xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
       {time.notice}
@@ -159,6 +228,15 @@ export function InvoicesPage({
         </Link>
       </nav>
 
+      <ListViewToggle
+        value={view}
+        onChange={setView}
+        labels={{
+          group: t('historyView.group', locale),
+          table: t('historyView.table', locale),
+          card: t('historyView.card', locale),
+        }}
+      />
       <HistoryFilterPanel
         query={query}
         statuses={statuses}
@@ -253,6 +331,13 @@ export function InvoicesPage({
             locale
           )}
         </p>
+      ) : view === 'table' ? (
+        <HistoryTable
+          caption={t('invoices.title', locale)}
+          items={items}
+          columns={columns}
+          rowKey={(item) => item.invoiceId}
+        />
       ) : (
         <ul className="space-y-3">
           {items.map((item) => (

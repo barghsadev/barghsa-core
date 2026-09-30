@@ -1,4 +1,5 @@
 export interface SessionContext {
+  userId?: string;
   isStaff: boolean;
   operatingContext: 'staff' | 'customer';
   canSwitchContext: boolean;
@@ -21,10 +22,12 @@ export async function readSessionContext(signal?: AbortSignal): Promise<SessionC
     throw new Error('Invalid session response');
   const value = user as {
     isStaff: boolean;
+    userId?: unknown;
     operatingContext?: unknown;
     canSwitchContext?: unknown;
   };
   return {
+    ...(typeof value.userId === 'string' && value.userId ? { userId: value.userId } : {}),
     isStaff: value.isStaff,
     operatingContext:
       value.operatingContext === 'staff' || value.operatingContext === 'customer'

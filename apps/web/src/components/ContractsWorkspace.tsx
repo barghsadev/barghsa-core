@@ -1,3 +1,5 @@
+import { HistoryTable, type HistoryColumn } from './HistoryTable.js';
+import { useListView } from '../hooks/useListView.js';
 import { ContractRefundQueue } from './ContractRefundQueue.js';
 import { ContractCancellationRequestQueue } from './ContractCancellationRequestQueue.js';
 import { useEffect, useState, type FormEvent } from 'react';
@@ -15,6 +17,7 @@ import {
   PageHeader,
   PageLoading,
   StatusBadge,
+  ListViewToggle,
 } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
@@ -233,6 +236,7 @@ function ContractResults({
   query: string;
   initialSelected: string | null;
 }) {
+  const { view, setView } = useListView('contracts');
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
@@ -273,9 +277,236 @@ function ContractResults({
   function refresh() {
     setReload((value) => value + 1);
   }
+  const renderIdentity = (item: ContractSummary) => (
+    <>
+      <Button variant="link" onClick={() => setSelected(item.id)}>
+        {word(item.serviceType)} · {word('version')} {item.versionNumber.toLocaleString(locale)}
+      </Button>
+      <p className="text-sm text-muted-foreground">
+        {word(item.contractNumber ? 'contractNumber' : 'contractReference')}:{' '}
+        <bdi dir="ltr" className="break-all">
+          {item.contractNumber ?? item.id}
+        </bdi>
+      </p>
+    </>
+  );
+  const renderParty = (item: ContractSummary) => (
+    <>
+      {item.profileType ? (
+        <p className="text-sm text-muted-foreground">
+          {word(item.acceptedParty ? 'acceptedParty' : 'account')}:{' '}
+          {(item.acceptedParty ? item.acceptedParty.name : item.profileTitle) ||
+            word('draftUnnamedProfile')}{' '}
+          ·{' '}
+          {word(
+            (item.acceptedParty?.profileType ?? item.profileType) === 'LEGAL'
+              ? 'draftLegal'
+              : 'draftIndividual'
+          )}
+        </p>
+      ) : null}
+    </>
+  );
+  const renderLinked = (item: ContractSummary) => (
+    <>
+      {item.serviceType === 'electricity' && item.linkedOrderStatus ? (
+        <p className="text-sm text-muted-foreground">
+          {word('linkedOrderStatus')}:{' '}
+          {appText(`electricity.order.status.${item.linkedOrderStatus}`, locale)}
+        </p>
+      ) : null}
+    </>
+  );
+  const renderValue = (item: ContractSummary) => (
+    <>
+      {item.commercialValue ? (
+        <p className="text-sm text-muted-foreground">
+          {word('statedContractValue')}:{' '}
+          <ContractCommercialValueText value={item.commercialValue} />
+        </p>
+      ) : null}
+    </>
+  );
+  const renderHistory = (item: ContractSummary) => (
+    <>
+      {item.changeDescription ? (
+        <p className="text-sm text-muted-foreground">{item.changeDescription}</p>
+      ) : null}
+      {!staff && item.publishedAt ? (
+        <p className="text-sm text-muted-foreground">
+          {word('publishedAt')}: {time.format(item.publishedAt)}
+        </p>
+      ) : null}
+      {!staff && item.acceptedAt ? (
+        <p className="text-sm text-muted-foreground">
+          {word('acceptedAt')}: {time.format(item.acceptedAt)}
+        </p>
+      ) : null}
+    </>
+  );
+  const renderActivity = (item: ContractSummary) => (
+    <>
+      {item.initialInvoiceId ? (
+        <p className="text-sm text-muted-foreground">
+          {item.initialInvoiceAmount !== null && item.initialInvoiceAmount !== undefined
+            ? `${word('initialInvoiceAmount')}: ${numbers.money(item.initialInvoiceAmount)}`
+            : word('initialInvoiceLinked')}
+          {item.initialInvoiceState
+            ? ` · ${appText(`invoices.state.${item.initialInvoiceState}`, locale)}`
+            : ''}
+          {staff ? (
+            <>
+              {' · '}
+              <a
+                href={`/admin/invoices?invoiceId=${encodeURIComponent(item.initialInvoiceId)}`}
+                className="text-primary underline underline-offset-4"
+              >
+                {word('openInitialInvoice')}
+              </a>
+            </>
+          ) : (
+            <>
+              {' · '}
+              <Link
+                to="/invoices/$invoiceId"
+                params={{ invoiceId: item.initialInvoiceId }}
+                className="text-primary underline underline-offset-4"
+              >
+                {word('openInitialInvoice')}
+              </Link>
+            </>
+          )}
+        </p>
+      ) : null}
+      {!staff && item.serviceType === 'electricity' && item.orderId ? (
+        <Link
+          to="/electricity/orders/$orderId"
+          params={{ orderId: item.orderId }}
+          className="text-sm text-primary underline underline-offset-4"
+        >
+          {word('openLinkedOrder')}
+        </Link>
+      ) : null}
+      {staff && item.serviceType === 'electricity' && item.orderId ? (
+        <a
+          href={`/admin/electricity-orders?orderId=${encodeURIComponent(item.orderId)}`}
+          className="text-sm text-primary underline underline-offset-4"
+        >
+          {word('openLinkedOrder')}
+        </a>
+      ) : null}
+      {!staff && item.serviceType === 'savings' && item.savingOrderId ? (
+        <Link
+          to="/savings/orders/$orderId"
+          params={{ orderId: item.savingOrderId }}
+          className="text-sm text-primary underline underline-offset-4"
+        >
+          {word('openLinkedSavingOrder')}
+        </Link>
+      ) : null}
+      {staff && item.serviceType === 'electricity' ? (
+        <a
+          className="text-sm text-primary underline"
+          href={`/admin/electricity-price-adjustments?contractId=${encodeURIComponent(item.id)}`}
+        >
+          {adminText('admin.electricityPrice.title', locale)}
+        </a>
+      ) : null}
+    </>
+  );
+  const renderStatus = (item: ContractSummary) => (
+    <>
+      <div className="flex flex-wrap gap-2">
+        <StatusBadge label={word(item.state)} />
+        {item.pendingAmendmentState ? (
+          <StatusBadge
+            label={
+              item.pendingAmendmentState === 'Draft'
+                ? `${word('amendmentPending')} · ${word('Draft')}`
+                : item.pendingAmendmentState === 'AwaitingCustomerAcceptance'
+                  ? staff
+                    ? `${word('amendmentPending')} · ${word('AwaitingCustomerAcceptance')}`
+                    : word('amendmentAwaitingAcceptance')
+                  : word('amendmentAwaitingSignature')
+            }
+          />
+        ) : null}
+      </div>
+    </>
+  );
+  const renderStarts = (item: ContractSummary) => (
+    <>
+      {item.serviceStartsAt ? (
+        <p className="text-sm text-muted-foreground">
+          {word('serviceStartsAt')}: {time.format(item.serviceStartsAt)}
+        </p>
+      ) : null}
+    </>
+  );
+  const renderEnds = (item: ContractSummary) => (
+    <>
+      {item.serviceEndsAt ? (
+        <p className="text-sm text-muted-foreground">
+          {word('serviceEndsAt')}: {time.format(item.serviceEndsAt)}
+        </p>
+      ) : null}
+    </>
+  );
+  const columns: HistoryColumn<ContractSummary>[] = [
+    {
+      id: 'reference',
+      label: word('contractNumber'),
+      render: (item) => <div className="min-w-48">{renderIdentity(item)}</div>,
+    },
+    { id: 'type', label: word('serviceType'), render: (item) => word(item.serviceType) },
+    { id: 'state', label: word('state'), render: renderStatus },
+    {
+      id: 'party',
+      label: word('acceptedParty'),
+      render: (item) => (item.profileType ? renderParty(item) : '—'),
+    },
+    {
+      id: 'starts',
+      label: word('serviceStartsAt'),
+      render: (item) => (item.serviceStartsAt ? time.format(item.serviceStartsAt) : '—'),
+    },
+    {
+      id: 'ends',
+      label: word('serviceEndsAt'),
+      render: (item) => (item.serviceEndsAt ? time.format(item.serviceEndsAt) : '—'),
+    },
+    {
+      id: 'value',
+      label: word('statedContractValue'),
+      render: (item) =>
+        item.commercialValue ? <ContractCommercialValueText value={item.commercialValue} /> : '—',
+    },
+    {
+      id: 'activity',
+      label: appText('historyView.activity', locale),
+      render: (item) => (
+        <div className="min-w-52 space-y-2">
+          {renderLinked(item)}
+          {renderHistory(item)}
+          {renderActivity(item)}
+        </div>
+      ),
+    },
+  ];
   return (
     <div className="flex flex-col gap-5">
       {!staff && time.notice}
+      {!staff && (
+        <ListViewToggle
+          value={view}
+          onChange={setView}
+          labels={{
+            group: appText('historyView.group', locale),
+            table: appText('historyView.table', locale),
+            card: appText('historyView.card', locale),
+          }}
+        />
+      )}
       <Button className="self-start" variant="outline" onClick={refresh} disabled={loading}>
         {word('refresh')}
       </Button>
@@ -298,154 +529,32 @@ function ContractResults({
         <EmptyState title={word('empty')} description={word('emptyHint')} />
       ) : null}
       {items.length ? (
-        <ul className="divide-y rounded-xl border bg-card">
-          {items.map((item) => (
-            <li key={item.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
-              <div>
-                <Button variant="link" onClick={() => setSelected(item.id)}>
-                  {word(item.serviceType)} · {word('version')}{' '}
-                  {item.versionNumber.toLocaleString(locale)}
-                </Button>
-                <p className="text-sm text-muted-foreground">
-                  {word(item.contractNumber ? 'contractNumber' : 'contractReference')}:{' '}
-                  <bdi dir="ltr" className="break-all">
-                    {item.contractNumber ?? item.id}
-                  </bdi>
-                </p>
-                {item.profileType ? (
-                  <p className="text-sm text-muted-foreground">
-                    {word(item.acceptedParty ? 'acceptedParty' : 'account')}:{' '}
-                    {(item.acceptedParty ? item.acceptedParty.name : item.profileTitle) ||
-                      word('draftUnnamedProfile')}{' '}
-                    ·{' '}
-                    {word(
-                      (item.acceptedParty?.profileType ?? item.profileType) === 'LEGAL'
-                        ? 'draftLegal'
-                        : 'draftIndividual'
-                    )}
-                  </p>
-                ) : null}
-                {item.serviceType === 'electricity' && item.linkedOrderStatus ? (
-                  <p className="text-sm text-muted-foreground">
-                    {word('linkedOrderStatus')}:{' '}
-                    {appText(`electricity.order.status.${item.linkedOrderStatus}`, locale)}
-                  </p>
-                ) : null}
-                {item.commercialValue ? (
-                  <p className="text-sm text-muted-foreground">
-                    {word('statedContractValue')}:{' '}
-                    <ContractCommercialValueText value={item.commercialValue} />
-                  </p>
-                ) : null}
-                {item.changeDescription ? (
-                  <p className="text-sm text-muted-foreground">{item.changeDescription}</p>
-                ) : null}
-                {!staff && item.publishedAt ? (
-                  <p className="text-sm text-muted-foreground">
-                    {word('publishedAt')}: {time.format(item.publishedAt)}
-                  </p>
-                ) : null}
-                {!staff && item.acceptedAt ? (
-                  <p className="text-sm text-muted-foreground">
-                    {word('acceptedAt')}: {time.format(item.acceptedAt)}
-                  </p>
-                ) : null}
-                {item.serviceStartsAt ? (
-                  <p className="text-sm text-muted-foreground">
-                    {word('serviceStartsAt')}: {time.format(item.serviceStartsAt)}
-                  </p>
-                ) : null}
-                {item.serviceEndsAt ? (
-                  <p className="text-sm text-muted-foreground">
-                    {word('serviceEndsAt')}: {time.format(item.serviceEndsAt)}
-                  </p>
-                ) : null}
-                {item.initialInvoiceId ? (
-                  <p className="text-sm text-muted-foreground">
-                    {item.initialInvoiceAmount !== null && item.initialInvoiceAmount !== undefined
-                      ? `${word('initialInvoiceAmount')}: ${numbers.money(item.initialInvoiceAmount)}`
-                      : word('initialInvoiceLinked')}
-                    {item.initialInvoiceState
-                      ? ` · ${appText(`invoices.state.${item.initialInvoiceState}`, locale)}`
-                      : ''}
-                    {staff ? (
-                      <>
-                        {' · '}
-                        <a
-                          href={`/admin/invoices?invoiceId=${encodeURIComponent(item.initialInvoiceId)}`}
-                          className="text-primary underline underline-offset-4"
-                        >
-                          {word('openInitialInvoice')}
-                        </a>
-                      </>
-                    ) : (
-                      <>
-                        {' · '}
-                        <Link
-                          to="/invoices/$invoiceId"
-                          params={{ invoiceId: item.initialInvoiceId }}
-                          className="text-primary underline underline-offset-4"
-                        >
-                          {word('openInitialInvoice')}
-                        </Link>
-                      </>
-                    )}
-                  </p>
-                ) : null}
-                {!staff && item.serviceType === 'electricity' && item.orderId ? (
-                  <Link
-                    to="/electricity/orders/$orderId"
-                    params={{ orderId: item.orderId }}
-                    className="text-sm text-primary underline underline-offset-4"
-                  >
-                    {word('openLinkedOrder')}
-                  </Link>
-                ) : null}
-                {staff && item.serviceType === 'electricity' && item.orderId ? (
-                  <a
-                    href={`/admin/electricity-orders?orderId=${encodeURIComponent(item.orderId)}`}
-                    className="text-sm text-primary underline underline-offset-4"
-                  >
-                    {word('openLinkedOrder')}
-                  </a>
-                ) : null}
-                {!staff && item.serviceType === 'savings' && item.savingOrderId ? (
-                  <Link
-                    to="/savings/orders/$orderId"
-                    params={{ orderId: item.savingOrderId }}
-                    className="text-sm text-primary underline underline-offset-4"
-                  >
-                    {word('openLinkedSavingOrder')}
-                  </Link>
-                ) : null}
-                {staff && item.serviceType === 'electricity' ? (
-                  <a
-                    className="text-sm text-primary underline"
-                    href={`/admin/electricity-price-adjustments?contractId=${encodeURIComponent(item.id)}`}
-                  >
-                    {adminText('admin.electricityPrice.title', locale)}
-                  </a>
-                ) : null}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <StatusBadge label={word(item.state)} />
-                {item.pendingAmendmentState ? (
-                  <StatusBadge
-                    label={
-                      item.pendingAmendmentState === 'Draft'
-                        ? `${word('amendmentPending')} · ${word('Draft')}`
-                        : item.pendingAmendmentState === 'AwaitingCustomerAcceptance'
-                          ? staff
-                            ? `${word('amendmentPending')} · ${word('AwaitingCustomerAcceptance')}`
-                            : word('amendmentAwaitingAcceptance')
-                          : word('amendmentAwaitingSignature')
-                    }
-                  />
-                ) : null}
-              </div>
-            </li>
-          ))}
-        </ul>
+        !staff && view === 'table' ? (
+          <HistoryTable
+            caption={word('title')}
+            items={items}
+            columns={columns}
+            rowKey={(item) => item.id}
+          />
+        ) : (
+          <ul className="divide-y rounded-xl border bg-card">
+            {items.map((item) => (
+              <li key={item.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
+                <div>
+                  {renderIdentity(item)}
+                  {renderParty(item)}
+                  {renderLinked(item)}
+                  {renderValue(item)}
+                  {renderHistory(item)}
+                  {renderStarts(item)}
+                  {renderEnds(item)}
+                  {renderActivity(item)}
+                </div>
+                {renderStatus(item)}
+              </li>
+            ))}
+          </ul>
+        )
       ) : null}
       {next ? (
         <Button variant="outline" disabled={loading || error} onClick={loadMore}>

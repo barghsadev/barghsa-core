@@ -42,3 +42,17 @@ it('uses the selected context instead of staff eligibility for routing', async (
     canSwitchContext: true,
   });
 });
+
+it('retains the authenticated account ID for scoped preferences without another request', async () => {
+  const request = vi
+    .fn()
+    .mockResolvedValue(Response.json({ userId: 'customer-one', isStaff: false }));
+  vi.stubGlobal('fetch', request);
+  expect(await readSessionContext()).toEqual({
+    userId: 'customer-one',
+    isStaff: false,
+    operatingContext: 'customer',
+    canSwitchContext: false,
+  });
+  expect(request).toHaveBeenCalledTimes(1);
+});

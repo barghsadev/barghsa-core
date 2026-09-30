@@ -11,12 +11,25 @@ for (const locale of ['en', 'fa'] as const) {
       const firstId = '22222222-2222-4222-8222-222222222222';
       const secondId = '44444444-4444-4444-8444-444444444444';
       await page.addInitScript((language) => {
+        localStorage.setItem('barghsa.locale', language);
         if (document.documentElement) document.documentElement.lang = language;
         new MutationObserver(() => {
           if (document.documentElement) document.documentElement.lang = language;
         }).observe(document, { childList: true });
       }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/user', (route) =>
+        route.fulfill({
+          json: {
+            userId: 'contract-context-staff',
+            isStaff: true,
+            operatingContext: 'staff',
+            canSwitchContext: true,
+            requiresTosAcceptance: false,
+          },
+        })
+      );
+
       await page.route('**/api/user/settings/timezone', (route) =>
         route.fulfill({ json: { timezone: 'Asia/Tehran' } })
       );

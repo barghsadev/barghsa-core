@@ -3,17 +3,23 @@ import { lazy, Suspense } from 'react';
 import { DashboardLayout } from '../pages/DashboardLayout.js';
 import { RouteSkeleton } from '../components/RouteSkeleton.js';
 import { RouteErrorBoundary } from '../components/RouteErrorBoundary.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { readSessionContext } from '../lib/session-role.js';
 
 const StaffLayout = lazy(() => import('../pages/AdminLayout.js'));
 
 function AppLayout() {
-  const { isStaff } = Route.useRouteContext();
-  if (!isStaff) return <DashboardLayout />;
+  const { isStaff, userId } = Route.useRouteContext();
   return (
-    <Suspense fallback={<RouteSkeleton layout="admin" />}>
-      <StaffLayout />
-    </Suspense>
+    <AccountUserProvider value={userId}>
+      {isStaff ? (
+        <Suspense fallback={<RouteSkeleton layout="admin" />}>
+          <StaffLayout />
+        </Suspense>
+      ) : (
+        <DashboardLayout />
+      )}
+    </AccountUserProvider>
   );
 }
 
@@ -23,7 +29,7 @@ export const Route = createFileRoute('/_app')({
     if (session === null) throw redirect({ to: '/login', replace: true });
     const isStaff = session.operatingContext === 'staff';
     if (isStaff && location.pathname !== '/app') throw redirect({ to: '/app', replace: true });
-    return { isStaff };
+    return { isStaff, userId: session.userId ?? null };
   },
   component: AppLayout,
   pendingComponent: () => <RouteSkeleton />,
