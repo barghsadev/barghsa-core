@@ -1,3 +1,4 @@
+import { HistoryFilterPanel } from './HistoryFilterPanel.js';
 import { t } from '@barghsa/i18n/app';
 import { contractText } from '@barghsa/i18n/contracts';
 import { ListSortDropdown, SelectFilter, StatusFilter, TextFilter } from '@barghsa/ui';
@@ -17,6 +18,7 @@ export interface CustomerContractHistoryControls {
   statuses: readonly string[];
   dateRange: DateRangeFilterValue;
   onQueryChange: (query: ContractListQuery) => void;
+  onClear?: (() => void) | undefined;
   onStatusesChange: (statuses: string[]) => void;
   onDateRangeChange: (range: DateRangeFilterValue) => void;
 }
@@ -27,7 +29,12 @@ export function CustomerContractFilters({ history }: { history: CustomerContract
     numbers = useNumberFormatting(locale);
   const copy = (key: string) => t(`contractHistory.${key}`, locale);
   return (
-    <div className="space-y-3">
+    <HistoryFilterPanel
+      query={history.query}
+      statuses={history.statuses}
+      dateRange={history.dateRange}
+      onClear={history.onClear}
+    >
       <div className="grid gap-3 sm:grid-cols-2">
         <TextFilter
           label={t('historySearch.label', locale)}
@@ -89,6 +96,6 @@ export function CustomerContractFilters({ history }: { history: CustomerContract
                 : 'warning',
         }))}
       />
-    </div>
+    </HistoryFilterPanel>
   );
 }

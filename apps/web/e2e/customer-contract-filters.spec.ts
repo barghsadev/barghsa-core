@@ -1,3 +1,4 @@
+import { verifyHistoryFilterReset } from './history-filter-reset';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import type { Route } from '@playwright/test';
@@ -171,6 +172,7 @@ for (const locale of ['en', 'fa'] as const) {
       (await new AxeBuilder({ page }).include('[data-slot="combobox"]').analyze()).violations
     ).toEqual([]);
     await expect(sort).toHaveValue('published_at:asc');
+    await verifyHistoryFilterReset(page, locale, queries, 4);
     await page
       .locator('summary')
       .filter({ hasText: copy('state') })

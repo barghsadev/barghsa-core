@@ -1,3 +1,4 @@
+import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState } from 'react';
@@ -33,6 +34,7 @@ export function InvoicesPage({
   onDateRangeChange,
   query = { q: '', sort: DEFAULT_INVOICE_LIST_SORT },
   onQueryChange,
+  onClearFilters,
   amountRange = {},
   onAmountRangeChange,
 }: {
@@ -43,6 +45,7 @@ export function InvoicesPage({
   onDateRangeChange?: (value: DateRangeFilterValue) => void;
   query?: InvoiceListQuery;
   onQueryChange?: (value: InvoiceListQuery) => void;
+  onClearFilters?: () => void;
   amountRange?: NumberRangeValue;
   onAmountRangeChange?: (value: NumberRangeValue) => void;
 }) {
@@ -142,71 +145,81 @@ export function InvoicesPage({
         </Link>
       </nav>
 
-      {onQueryChange && (
-        <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
-          <TextFilter
-            value={query.q}
-            onChange={(q) => onQueryChange({ ...query, q })}
-            label={t('historySearch.label', locale)}
-            placeholder={t('invoices.filter.search', locale)}
+      <HistoryFilterPanel
+        query={query}
+        statuses={statuses}
+        dateRange={dateRange}
+        onClear={onClearFilters}
+        amountRange={amountRange}
+      >
+        {onQueryChange && (
+          <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+            <TextFilter
+              value={query.q}
+              onChange={(q) => onQueryChange({ ...query, q })}
+              label={t('historySearch.label', locale)}
+              placeholder={t('invoices.filter.search', locale)}
+            />
+            <ListSortDropdown
+              value={query.sort}
+              onChange={(sort) =>
+                onQueryChange({ ...query, sort: sort as InvoiceListQuery['sort'] })
+              }
+              label={t('historySearch.sort', locale)}
+              options={(['created_at:desc', 'created_at:asc'] as const).map((value) => ({
+                value,
+                label: t(
+                  value.endsWith('desc') ? 'invoices.filter.newest' : 'invoices.filter.oldest',
+                  locale
+                ),
+              }))}
+            />
+          </div>
+        )}
+        {onDateRangeChange && (
+          <HistoryDateFilter
+            value={dateRange}
+            onChange={onDateRangeChange}
+            locale={locale}
+            time={time}
+            label={t('invoices.filter.created', locale)}
           />
-          <ListSortDropdown
-            value={query.sort}
-            onChange={(sort) => onQueryChange({ ...query, sort: sort as InvoiceListQuery['sort'] })}
-            label={t('historySearch.sort', locale)}
-            options={(['created_at:desc', 'created_at:asc'] as const).map((value) => ({
+        )}
+        {onAmountRangeChange && (
+          <NumberFilter
+            value={amountRange}
+            onChange={onAmountRangeChange}
+            parseRange={parseNumberRange}
+            labels={{
+              label: t('invoices.filter.amount', locale),
+              min: t('invoices.filter.min', locale),
+              max: t('invoices.filter.max', locale),
+              apply: t('invoices.filter.applyAmount', locale),
+              clear: t('invoices.filter.clearAmount', locale),
+              invalid: t('invoices.filter.invalidAmount', locale),
+            }}
+          />
+        )}
+        {onStatusesChange && (
+          <StatusFilter
+            label={t('invoices.filter.state', locale)}
+            clearLabel={t('invoices.filter.clearState', locale)}
+            countLabel={numbers.number(statuses.length)}
+            value={statuses}
+            onChange={onStatusesChange}
+            options={CUSTOMER_INVOICE_STATUSES.map((value) => ({
               value,
-              label: t(
-                value.endsWith('desc') ? 'invoices.filter.newest' : 'invoices.filter.oldest',
-                locale
-              ),
+              label: t(stateI18nKey(value), locale),
+              tone:
+                value === 'Paid' || value === 'Refunded'
+                  ? 'success'
+                  : value === 'Cancelled' || value === 'Overdue'
+                    ? 'destructive'
+                    : 'warning',
             }))}
           />
-        </div>
-      )}
-      {onDateRangeChange && (
-        <HistoryDateFilter
-          value={dateRange}
-          onChange={onDateRangeChange}
-          locale={locale}
-          time={time}
-          label={t('invoices.filter.created', locale)}
-        />
-      )}
-      {onAmountRangeChange && (
-        <NumberFilter
-          value={amountRange}
-          onChange={onAmountRangeChange}
-          parseRange={parseNumberRange}
-          labels={{
-            label: t('invoices.filter.amount', locale),
-            min: t('invoices.filter.min', locale),
-            max: t('invoices.filter.max', locale),
-            apply: t('invoices.filter.applyAmount', locale),
-            clear: t('invoices.filter.clearAmount', locale),
-            invalid: t('invoices.filter.invalidAmount', locale),
-          }}
-        />
-      )}
-      {onStatusesChange && (
-        <StatusFilter
-          label={t('invoices.filter.state', locale)}
-          clearLabel={t('invoices.filter.clearState', locale)}
-          countLabel={numbers.number(statuses.length)}
-          value={statuses}
-          onChange={onStatusesChange}
-          options={CUSTOMER_INVOICE_STATUSES.map((value) => ({
-            value,
-            label: t(stateI18nKey(value), locale),
-            tone:
-              value === 'Paid' || value === 'Refunded'
-                ? 'success'
-                : value === 'Cancelled' || value === 'Overdue'
-                  ? 'destructive'
-                  : 'warning',
-          }))}
-        />
-      )}
+        )}
+      </HistoryFilterPanel>
 
       {loading ? (
         <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground">

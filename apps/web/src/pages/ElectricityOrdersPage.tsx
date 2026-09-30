@@ -1,3 +1,4 @@
+import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
@@ -77,6 +78,7 @@ export function ElectricityOrdersPage({
   onDateRangeChange,
   query = { q: '', sort: DEFAULT_HISTORY_SORT },
   onQueryChange,
+  onClearFilters,
 }: {
   pendingOnly?: boolean;
   statuses?: readonly string[];
@@ -85,6 +87,7 @@ export function ElectricityOrdersPage({
   onDateRangeChange?: (range: DateRangeFilterValue) => void;
   query?: HistoryQuery;
   onQueryChange?: (query: HistoryQuery) => void;
+  onClearFilters?: () => void;
 }) {
   const locale = useLocale();
   const time = useAccountTime(locale);
@@ -223,36 +226,43 @@ export function ElectricityOrdersPage({
           {t('electricity.orders.pending', locale)}
         </Link>
       </nav>
-      {onQueryChange && (
-        <HistoryListControls
-          value={query}
-          onChange={onQueryChange}
-          locale={locale}
-          domain="electricity"
-        />
-      )}
-      {onDateRangeChange && (
-        <HistoryDateFilter
-          value={dateRange}
-          onChange={onDateRangeChange}
-          locale={locale}
-          time={time}
-        />
-      )}
-      {onStatusesChange && (
-        <StatusFilter
-          label={t('electricity.orders.filterStatus', locale)}
-          clearLabel={t('electricity.orders.clearFilters', locale)}
-          countLabel={numbers.number(statuses.length)}
-          value={statuses}
-          onChange={onStatusesChange}
-          options={ELECTRICITY_ORDER_STATUSES.map((value) => ({
-            value,
-            label: t(`electricity.order.status.${value}`, locale),
-            tone: statusFilterTone(value),
-          }))}
-        />
-      )}
+      <HistoryFilterPanel
+        query={query}
+        statuses={statuses}
+        dateRange={dateRange}
+        onClear={onClearFilters}
+      >
+        {onQueryChange && (
+          <HistoryListControls
+            value={query}
+            onChange={onQueryChange}
+            locale={locale}
+            domain="electricity"
+          />
+        )}
+        {onDateRangeChange && (
+          <HistoryDateFilter
+            value={dateRange}
+            onChange={onDateRangeChange}
+            locale={locale}
+            time={time}
+          />
+        )}
+        {onStatusesChange && (
+          <StatusFilter
+            label={t('electricity.orders.filterStatus', locale)}
+            clearLabel={t('electricity.orders.clearFilters', locale)}
+            countLabel={numbers.number(statuses.length)}
+            value={statuses}
+            onChange={onStatusesChange}
+            options={ELECTRICITY_ORDER_STATUSES.map((value) => ({
+              value,
+              label: t(`electricity.order.status.${value}`, locale),
+              tone: statusFilterTone(value),
+            }))}
+          />
+        )}
+      </HistoryFilterPanel>
       {time.notice}
       {loading ? (
         <p role="status">{t('electricity.orders.loading', locale)}</p>

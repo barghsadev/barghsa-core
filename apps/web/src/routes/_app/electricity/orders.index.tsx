@@ -17,6 +17,17 @@ function ElectricityOrdersRoute() {
   const navigate = Route.useNavigate();
   return (
     <ElectricityOrdersPage
+      onClearFilters={() =>
+        void navigate({
+          search: (current) => ({
+            ...current,
+            q: undefined,
+            statuses: undefined,
+            from: undefined,
+            to: undefined,
+          }),
+        })
+      }
       pendingOnly={status === 'pending'}
       statuses={statuses?.split(',') ?? []}
       onStatusesChange={(selected) =>

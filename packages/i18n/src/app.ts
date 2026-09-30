@@ -5,6 +5,9 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'historyFilters.label': 'فیلترها',
+  'historyFilters.clearAll': 'پاک کردن همه فیلترها',
+  'historyFilters.activeCount': '{count} فیلتر فعال',
   'invoices.filter.search': 'شماره پیگیری فاکتور',
   'invoices.filter.newest': 'تاریخ ایجاد، جدیدترین',
   'invoices.filter.oldest': 'تاریخ ایجاد، قدیمی‌ترین',
@@ -1528,6 +1531,9 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'historyFilters.label': 'Filters',
+  'historyFilters.clearAll': 'Clear all filters',
+  'historyFilters.activeCount': '{count} active filters',
   'invoices.filter.search': 'Invoice reference',
   'invoices.filter.newest': 'Creation date, newest first',
   'invoices.filter.oldest': 'Creation date, oldest first',

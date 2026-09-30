@@ -65,4 +65,5 @@ export * from './components/ui/date-range-filter';
 export * from './components/ui/text-filter';
 export * from './components/ui/number-filter';
 export * from './components/ui/select-filter';
+export * from './components/ui/list-filter-panel';
 export * from './components/ui/list-sort-dropdown';

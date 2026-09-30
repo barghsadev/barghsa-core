@@ -20,6 +20,19 @@ function InvoiceListRoute() {
   const navigate = Route.useNavigate();
   return (
     <InvoicesPage
+      onClearFilters={() =>
+        void navigate({
+          search: (current) => ({
+            ...current,
+            q: undefined,
+            statuses: undefined,
+            from: undefined,
+            to: undefined,
+            min: undefined,
+            max: undefined,
+          }),
+        })
+      }
       unpaidOnly={status === 'unpaid'}
       statuses={statuses?.split(',') ?? []}
       onStatusesChange={(selected) =>

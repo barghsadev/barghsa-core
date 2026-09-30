@@ -17,6 +17,17 @@ function SavingOrdersRoute() {
   const navigate = Route.useNavigate();
   return (
     <SavingOrdersPage
+      onClearFilters={() =>
+        void navigate({
+          search: (current) => ({
+            ...current,
+            q: undefined,
+            statuses: undefined,
+            from: undefined,
+            to: undefined,
+          }),
+        })
+      }
       query={{ q: q ?? '', sort: sort ?? DEFAULT_HISTORY_SORT }}
       onQueryChange={(query) =>
         void navigate({

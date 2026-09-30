@@ -1,3 +1,4 @@
+import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { HistoryListControls } from '../components/HistoryListControls.js';
 import { DEFAULT_HISTORY_SORT, type HistoryQuery } from '@barghsa/shared/validation';
 import { t } from '@barghsa/i18n/app';
@@ -31,6 +32,7 @@ export function SavingOrdersPage({
   onDateRangeChange,
   query = { q: '', sort: DEFAULT_HISTORY_SORT },
   onQueryChange,
+  onClearFilters,
 }: {
   pendingOnly?: boolean;
   statuses?: readonly string[];
@@ -39,6 +41,7 @@ export function SavingOrdersPage({
   onDateRangeChange?: (range: DateRangeFilterValue) => void;
   query?: HistoryQuery;
   onQueryChange?: (query: HistoryQuery) => void;
+  onClearFilters?: () => void;
 }) {
   const locale = useLocale();
   const time = useAccountTime(locale);
@@ -153,42 +156,49 @@ export function SavingOrdersPage({
           {copy('pendingOrders')}
         </Link>
       </nav>
-      {onQueryChange && (
-        <HistoryListControls
-          value={query}
-          onChange={onQueryChange}
-          locale={locale}
-          domain="saving"
-        />
-      )}
-      {onDateRangeChange && (
-        <HistoryDateFilter
-          value={dateRange}
-          onChange={onDateRangeChange}
-          locale={locale}
-          time={time}
-        />
-      )}
-      {onStatusesChange && (
-        <StatusFilter
-          label={copy('filterStatus')}
-          clearLabel={copy('clearFilters')}
-          countLabel={numbers.number(statuses.length)}
-          value={statuses}
-          onChange={onStatusesChange}
-          options={SAVING_ORDER_STATUSES.map((value) => ({
-            value,
-            label: copy(
-              value === 'awaiting_staff_review'
-                ? 'staffReview'
-                : value === 'in_progress'
-                  ? 'inProgress'
-                  : value
-            ),
-            tone: statusFilterTone(value),
-          }))}
-        />
-      )}
+      <HistoryFilterPanel
+        query={query}
+        statuses={statuses}
+        dateRange={dateRange}
+        onClear={onClearFilters}
+      >
+        {onQueryChange && (
+          <HistoryListControls
+            value={query}
+            onChange={onQueryChange}
+            locale={locale}
+            domain="saving"
+          />
+        )}
+        {onDateRangeChange && (
+          <HistoryDateFilter
+            value={dateRange}
+            onChange={onDateRangeChange}
+            locale={locale}
+            time={time}
+          />
+        )}
+        {onStatusesChange && (
+          <StatusFilter
+            label={copy('filterStatus')}
+            clearLabel={copy('clearFilters')}
+            countLabel={numbers.number(statuses.length)}
+            value={statuses}
+            onChange={onStatusesChange}
+            options={SAVING_ORDER_STATUSES.map((value) => ({
+              value,
+              label: copy(
+                value === 'awaiting_staff_review'
+                  ? 'staffReview'
+                  : value === 'in_progress'
+                    ? 'inProgress'
+                    : value
+              ),
+              tone: statusFilterTone(value),
+            }))}
+          />
+        )}
+      </HistoryFilterPanel>
       {time.notice}
       {state === 'loading' && <p role="status">{copy('loading')}</p>}
       {state === 'error' && <p role="alert">{copy('error')}</p>}

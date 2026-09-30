@@ -16,6 +16,17 @@ function ContractsRoute() {
     <ContractsPage
       activeOnly={state === 'Active'}
       history={{
+        onClear: () =>
+          void navigate({
+            search: (current) => ({
+              ...current,
+              q: undefined,
+              serviceType: undefined,
+              statuses: undefined,
+              from: undefined,
+              to: undefined,
+            }),
+          }),
         query: { q: q ?? '', sort: sort ?? DEFAULT_CONTRACT_LIST_SORT, serviceType },
         statuses: statuses?.split(',') ?? [],
         dateRange: { from, to },

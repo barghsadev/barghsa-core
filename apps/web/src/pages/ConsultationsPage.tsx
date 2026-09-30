@@ -1,3 +1,4 @@
+import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { HistoryListControls } from '../components/HistoryListControls.js';
 import { DEFAULT_HISTORY_SORT, type HistoryQuery } from '@barghsa/shared/validation';
 import { t } from '@barghsa/i18n/app';
@@ -45,6 +46,7 @@ export function ConsultationsPage({
   onDateRangeChange,
   query = { q: '', sort: DEFAULT_HISTORY_SORT },
   onQueryChange,
+  onClearFilters,
 }: {
   statuses?: readonly string[];
   onStatusesChange?: (statuses: string[]) => void;
@@ -52,6 +54,7 @@ export function ConsultationsPage({
   onDateRangeChange?: (range: DateRangeFilterValue) => void;
   query?: HistoryQuery;
   onQueryChange?: (query: HistoryQuery) => void;
+  onClearFilters?: () => void;
 }) {
   const navigate = useNavigate();
   const locale = useLocale();
@@ -269,36 +272,43 @@ export function ConsultationsPage({
             <h2 id="consultation-requests-title" className="text-xl font-semibold">
               {copy('myRequests')}
             </h2>
-            {onQueryChange && (
-              <HistoryListControls
-                value={query}
-                onChange={onQueryChange}
-                locale={locale}
-                domain="consultation"
-              />
-            )}
-            {onDateRangeChange && (
-              <HistoryDateFilter
-                value={dateRange}
-                onChange={onDateRangeChange}
-                locale={locale}
-                time={time}
-              />
-            )}
-            {onStatusesChange && (
-              <StatusFilter
-                label={copy('filterStatus')}
-                clearLabel={copy('clearFilters')}
-                countLabel={numbers.number(statuses.length)}
-                value={statuses}
-                onChange={onStatusesChange}
-                options={CONSULTATION_REQUEST_STATUSES.map((value) => ({
-                  value,
-                  label: copy(`status_${value}`),
-                  tone: statusFilterTone(value),
-                }))}
-              />
-            )}
+            <HistoryFilterPanel
+              query={query}
+              statuses={statuses}
+              dateRange={dateRange}
+              onClear={onClearFilters}
+            >
+              {onQueryChange && (
+                <HistoryListControls
+                  value={query}
+                  onChange={onQueryChange}
+                  locale={locale}
+                  domain="consultation"
+                />
+              )}
+              {onDateRangeChange && (
+                <HistoryDateFilter
+                  value={dateRange}
+                  onChange={onDateRangeChange}
+                  locale={locale}
+                  time={time}
+                />
+              )}
+              {onStatusesChange && (
+                <StatusFilter
+                  label={copy('filterStatus')}
+                  clearLabel={copy('clearFilters')}
+                  countLabel={numbers.number(statuses.length)}
+                  value={statuses}
+                  onChange={onStatusesChange}
+                  options={CONSULTATION_REQUEST_STATUSES.map((value) => ({
+                    value,
+                    label: copy(`status_${value}`),
+                    tone: statusFilterTone(value),
+                  }))}
+                />
+              )}
+            </HistoryFilterPanel>
             {requestsLoading && <p role="status">{copy('loading')}</p>}
             {requestsError && <p role="alert">{copy('loadError')}</p>}
             {requestsError && (

@@ -1,3 +1,4 @@
+import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { HistoryListControls } from '../components/HistoryListControls.js';
 import { DEFAULT_HISTORY_SORT, type HistoryQuery } from '@barghsa/shared/validation';
 import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
@@ -34,6 +35,7 @@ export function SolarRequestsPage({
   onDateRangeChange,
   query = { q: '', sort: DEFAULT_HISTORY_SORT },
   onQueryChange,
+  onClearFilters,
 }: {
   statuses?: readonly string[];
   onStatusesChange?: (statuses: string[]) => void;
@@ -41,6 +43,7 @@ export function SolarRequestsPage({
   onDateRangeChange?: (range: DateRangeFilterValue) => void;
   query?: HistoryQuery;
   onQueryChange?: (query: HistoryQuery) => void;
+  onClearFilters?: () => void;
 }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -120,36 +123,43 @@ export function SolarRequestsPage({
         {copy('submit')}
       </Link>
       {time.notice}
-      {onQueryChange && (
-        <HistoryListControls
-          value={query}
-          onChange={onQueryChange}
-          locale={locale}
-          domain="solar"
-        />
-      )}
-      {onDateRangeChange && (
-        <HistoryDateFilter
-          value={dateRange}
-          onChange={onDateRangeChange}
-          locale={locale}
-          time={time}
-        />
-      )}
-      {onStatusesChange && (
-        <StatusFilter
-          label={copy('filterStatus')}
-          clearLabel={copy('clearFilters')}
-          countLabel={numbers.number(statuses.length)}
-          value={statuses}
-          onChange={onStatusesChange}
-          options={SOLAR_REQUEST_STATUSES.map((value) => ({
-            value,
-            label: copy(`status_${value}`),
-            tone: statusFilterTone(value),
-          }))}
-        />
-      )}
+      <HistoryFilterPanel
+        query={query}
+        statuses={statuses}
+        dateRange={dateRange}
+        onClear={onClearFilters}
+      >
+        {onQueryChange && (
+          <HistoryListControls
+            value={query}
+            onChange={onQueryChange}
+            locale={locale}
+            domain="solar"
+          />
+        )}
+        {onDateRangeChange && (
+          <HistoryDateFilter
+            value={dateRange}
+            onChange={onDateRangeChange}
+            locale={locale}
+            time={time}
+          />
+        )}
+        {onStatusesChange && (
+          <StatusFilter
+            label={copy('filterStatus')}
+            clearLabel={copy('clearFilters')}
+            countLabel={numbers.number(statuses.length)}
+            value={statuses}
+            onChange={onStatusesChange}
+            options={SOLAR_REQUEST_STATUSES.map((value) => ({
+              value,
+              label: copy(`status_${value}`),
+              tone: statusFilterTone(value),
+            }))}
+          />
+        )}
+      </HistoryFilterPanel>
       {loading && <p role="status">{copy('loading')}</p>}
       {error && <p role="alert">{copy('notFound')}</p>}
       {error && (
