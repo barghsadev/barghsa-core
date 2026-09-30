@@ -29,7 +29,8 @@ function makeController() {
   const getForUser = vi.fn().mockResolvedValue(DETAILS);
   const listForUser = vi.fn().mockResolvedValue(LIST);
   const listBankReceiptsForUser = vi.fn().mockResolvedValue({ items: [], nextCursor: null });
-  const service = { getForUser, listForUser, listBankReceiptsForUser };
+  const receiptPreviewForUser = vi.fn().mockResolvedValue(Buffer.from('png'));
+  const service = { getForUser, listForUser, listBankReceiptsForUser, receiptPreviewForUser };
   const submit = vi.fn().mockResolvedValue({
     receiptId: 'cccccccc-cccc-7ccc-8ccc-cccccccccccc',
     invoiceId: INVOICE_ID,
@@ -218,4 +219,23 @@ describe('bank receipt filters', () => {
     expect(() => controller.listBankReceipts(req, query)).toThrow(HttpException);
     expect(service.listBankReceiptsForUser).not.toHaveBeenCalled();
   });
+});
+
+it('validates receipt preview IDs and forwards the current session without exposing a URL', async () => {
+  const { controller, service } = makeController();
+  await expect(controller.receiptPreview(req, 'invalid', INVOICE_ID)).rejects.toThrow(
+    HttpException
+  );
+  await expect(controller.receiptPreview(req, INVOICE_ID, 'invalid')).rejects.toThrow(
+    HttpException
+  );
+  expect(service.receiptPreviewForUser).not.toHaveBeenCalled();
+  const image = await controller.receiptPreview(req, INVOICE_ID, INVOICE_ID);
+  expect(service.receiptPreviewForUser).toHaveBeenCalledWith(
+    'user-1',
+    INVOICE_ID,
+    INVOICE_ID,
+    req.session
+  );
+  expect(image.getHeaders()).toMatchObject({ type: 'image/png', disposition: 'inline', length: 3 });
 });

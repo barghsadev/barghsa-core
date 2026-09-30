@@ -104,6 +104,7 @@ it.each(['en', 'fa'] as const)(
       true
     );
     expect(host.querySelectorAll('ul > li')).toHaveLength(1);
+    expect(host.querySelector('[aria-label*="{filter}"]')).toBeNull();
     expect(host.textContent).not.toContain(firstReceipt.receiptId);
   }
 );

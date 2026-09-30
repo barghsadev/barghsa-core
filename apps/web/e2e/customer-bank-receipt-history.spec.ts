@@ -122,7 +122,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(cardButton).toHaveAttribute('aria-pressed', 'true');
     await expect(
       page.getByRole('button', {
-        name: `${t('historyFilters.remove', locale)}: ${state('Submitted')}`,
+        name: t('historyFilters.remove', locale).replace('{filter}', state('Submitted')),
         exact: true,
       })
     ).toBeVisible();
@@ -141,7 +141,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect.poll(() => requests.at(-1)?.get('statuses')).toBe('Submitted,Rejected');
     await page
       .getByRole('button', {
-        name: `${t('historyFilters.remove', locale)}: ${state('Submitted')}`,
+        name: t('historyFilters.remove', locale).replace('{filter}', state('Submitted')),
         exact: true,
       })
       .click();

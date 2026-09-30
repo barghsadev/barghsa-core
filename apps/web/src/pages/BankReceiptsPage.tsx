@@ -146,7 +146,7 @@ function ReceiptHistory({
             label={label('filter')}
             emptyLabel={label('empty')}
             clearLabel={t('historyFilters.clearAll', locale)}
-            removeLabel={(value) => `${t('historyFilters.remove', locale)}: ${value}`}
+            removeLabel={(value) => t('historyFilters.remove', locale).replace('{filter}', value)}
           />
         </div>
         <ListViewToggle

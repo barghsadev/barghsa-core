@@ -37,6 +37,7 @@ import {
 import { getDbPool } from '@barghsa/db';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
+import { ensureDocumentPreview, readPreviewObject } from '../documents/document-preview.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { UNPAID_CUSTOMER_INVOICE_PREDICATE } from '@barghsa/shared/finance';
 import {
@@ -639,6 +640,41 @@ export class CustomerInvoiceDetailsService {
         solarRequestId: origin?.solar_request_id ?? null,
         ...(await loadCustomerInvoiceActivity(client, invoiceId, profileId)),
       };
+    });
+  }
+
+  async receiptPreviewForUser(
+    userId: string,
+    invoiceId: string,
+    receiptId: string,
+    actor?: InvoiceReadActor
+  ): Promise<Buffer> {
+    invoiceId = invoiceId.toLowerCase();
+    return this.authorizedRead(userId, actor, async (profileId, client) => {
+      if (!(await this.loadInvoice(invoiceId, profileId, client)))
+        httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Invoice not found', 404);
+      const receipt = (
+        await client.query<{ attachmentKey: string; mime: string | null }>(
+          `SELECT r.attachment_key AS "attachmentKey", s.content_type AS mime
+           FROM bank_receipts r LEFT JOIN storage_records s ON s.storage_key=r.attachment_key AND s.status='immutable'
+          WHERE r.id=$1::uuid AND r.invoice_id=$2::uuid AND r.profile_id=$3::uuid`,
+          [receiptId, invoiceId, profileId]
+        )
+      ).rows[0];
+      if (!receipt) httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Bank receipt not found', 404);
+      if (!this.storage || !receipt.mime)
+        throw new ServiceUnavailableException('Receipt preview is unavailable');
+      try {
+        const key = await ensureDocumentPreview(
+          this.storage,
+          `receipt-${receiptId.toLowerCase()}`,
+          receipt.attachmentKey,
+          receipt.mime
+        );
+        return await readPreviewObject(this.storage, key, 5 * 1024 * 1024);
+      } catch {
+        throw new ServiceUnavailableException('Receipt preview is unavailable');
+      }
     });
   }
 

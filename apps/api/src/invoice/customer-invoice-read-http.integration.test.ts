@@ -631,6 +631,13 @@ it('checks the active invoice and receipt before redirecting to its attachment',
   expect((await attachment(other, f.invoice, receiptId)).status).toBe(404);
   expect((await attachment(f, f.invoice, randomUUID())).status).toBe(404);
   expect((await attachment(f, f.invoice, receiptId)).status).toBe(503);
+  const preview = (user: typeof f, id = receiptId) =>
+    fetch(`${http.base}/api/invoices/${f.invoice}/bank-receipts/${id}/preview`, {
+      headers: user.headers,
+    });
+  expect((await preview(other)).status).toBe(404);
+  expect((await preview(f, randomUUID())).status).toBe(404);
+  expect((await preview(f)).status).toBe(503);
   await http.pool.query("UPDATE invoices SET state='Draft',issued_at=NULL WHERE id=$1", [
     f.invoice,
   ]);

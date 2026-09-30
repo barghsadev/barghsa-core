@@ -6,6 +6,7 @@ import { resolve } from 'node:path';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import PDFDocument from 'pdfkit';
+import sharp from 'sharp';
 import { GenericContainer, Wait, type StartedTestContainer } from 'testcontainers';
 import { startHttpFixture } from '../test/http-fixture.js';
 import type { ContractService } from '../contract/contract.service.js';
@@ -13,12 +14,18 @@ import type { DocumentService } from './document.service.js';
 
 const requireShared = createRequire(resolve(__dirname, '../../../../packages/shared/package.json'));
 const requireWorker = createRequire(resolve(__dirname, '../../../worker/package.json'));
-const { S3Client, CreateBucketCommand } = requireShared('@aws-sdk/client-s3') as {
+const { S3Client, CreateBucketCommand, PutObjectCommand } = requireShared('@aws-sdk/client-s3') as {
   S3Client: new (config: Record<string, unknown>) => {
     send(command: unknown): Promise<unknown>;
     destroy(): void;
   };
   CreateBucketCommand: new (input: { Bucket: string }) => unknown;
+  PutObjectCommand: new (input: {
+    Bucket: string;
+    Key: string;
+    Body: Buffer;
+    ContentType: string;
+  }) => unknown;
 };
 let minio: StartedTestContainer;
 let s3: InstanceType<typeof S3Client>;
@@ -1722,4 +1729,74 @@ it('retains cleanup intent after copy rollback and completes the same confirmati
       )
     ).rows
   ).toEqual([{ status: 'immutable' }, { status: 'removed' }]);
+});
+
+it('serves private bank receipt previews with current profile authorization and cached PNG derivatives', async () => {
+  const f = await owner();
+  const foreign = await owner();
+  const invoiceId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO invoices(id,profile_id,state,total_amount,issued_at,payable_from) VALUES($1,$2,'Unpaid',1000,NOW(),NOW())",
+    [invoiceId, f.profile]
+  );
+  const image = await sharp({
+    create: { width: 1200, height: 800, channels: 3, background: '#123456' },
+  })
+    .png()
+    .toBuffer();
+  const preview = (user: string, id: string) =>
+    send(`invoices/${invoiceId}/bank-receipts/${id}/preview`, user);
+  const receiptIds: string[] = [];
+  for (const [mime, bytes] of [
+    ['image/png', image],
+    ['image/jpeg', await sharp(image).jpeg().toBuffer()],
+    ['image/webp', await sharp(image).webp().toBuffer()],
+    ...(pdfRendererAvailable ? [['application/pdf', pdf]] : []),
+  ] as Array<[string, Buffer]>) {
+    const receiptId = randomUUID();
+    receiptIds.push(receiptId);
+    const key = `sealed-receipts/${randomUUID()}`;
+    await s3.send(
+      new PutObjectCommand({ Bucket: 'test-evidence', Key: key, Body: bytes, ContentType: mime })
+    );
+    await http.pool.query(
+      "INSERT INTO storage_records(storage_key,status,content_type) VALUES($1,'immutable',$2)",
+      [key, mime]
+    );
+    await http.pool.query(
+      "INSERT INTO bank_receipts(id,invoice_id,profile_id,amount,payment_date,payer_reference,attachment_key) VALUES($1,$2,$3,500,'2026-09-01','reference',$4)",
+      [receiptId, invoiceId, f.profile, key]
+    );
+    const forbidden = await preview(foreign.user, receiptId);
+    expect(forbidden.status).toBe(404);
+    const response = await preview(f.user, receiptId);
+    expect(response.status, await response.clone().text()).toBe(200);
+    expect(response.headers.get('content-type')).toContain('image/png');
+    expect(response.headers.get('cache-control')).toContain('private');
+    expect(response.headers.get('cache-control')).toContain('no-store');
+    expect(response.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(response.headers.get('location')).toBeNull();
+    const png = Buffer.from(await response.arrayBuffer());
+    expect(png.subarray(0, 8).toString('hex')).toBe('89504e470d0a1a0a');
+    const metadata = await sharp(png).metadata();
+    expect(Math.max(metadata.width!, metadata.height!)).toBeLessThanOrEqual(640);
+    const cached = await preview(f.user, receiptId);
+    expect(Buffer.from(await cached.arrayBuffer())).toEqual(png);
+    const wrongInvoice = await send(
+      `invoices/${randomUUID()}/bank-receipts/${receiptId}/preview`,
+      f.user
+    );
+    expect(wrongInvoice.status).toBe(404);
+    await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [f.profile]);
+    expect((await preview(f.user, receiptId)).status).toBe(404);
+    await http.pool.query('UPDATE profiles SET archived=false WHERE id=$1', [f.profile]);
+  }
+  expect((await preview(f.user, randomUUID())).status).toBe(404);
+  expect((await preview(f.user, 'invalid')).status).toBe(400);
+  expect(
+    (await fetch(`${http.base}/api/invoices/${invoiceId}/bank-receipts/${randomUUID()}/preview`))
+      .status
+  ).toBe(401);
+  await http.pool.query("UPDATE invoices SET state='Draft' WHERE id=$1", [invoiceId]);
+  expect((await preview(f.user, receiptIds[0]!)).status).toBe(404);
 });

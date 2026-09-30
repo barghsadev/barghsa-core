@@ -21475,6 +21475,65 @@
         ]
       }
     },
+    "/api/invoices/{invoiceId}/bank-receipts/{receiptId}/preview": {
+      "get": {
+        "operationId": "CustomerInvoiceController_receiptPreview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "receiptId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Bounded PNG preview."
+          },
+          "400": {
+            "description": "Invalid invoice or receipt ID."
+          },
+          "401": {
+            "description": "Not authenticated."
+          },
+          "404": {
+            "description": "Invoice or receipt unavailable on this profile."
+          },
+          "503": {
+            "description": "Preview cannot be generated."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview a receipt image or first PDF page on the active profile",
+        "tags": [
+          "Invoices"
+        ]
+      }
+    },
     "/api/invoices/{invoiceId}/wallet-payment": {
       "get": {
         "operationId": "CustomerWalletInvoicePaymentController_context",

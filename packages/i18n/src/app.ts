@@ -1212,6 +1212,14 @@ export const fa: I18nDictionary = {
   'invoices.activity.bankName': 'نام بانک',
   'invoices.activity.paymentDate': 'تاریخ انتقال',
   'invoices.activity.viewReceiptAttachment': 'مشاهده فایل رسید',
+  'invoices.activity.receiptPreview': 'پیش‌نمایش رسید',
+  'invoices.activity.receiptPreviewAlt': 'تصویر رسید بانکی {receipt}',
+  'invoices.activity.previewLoading': 'در حال بارگذاری تصویر رسید…',
+  'invoices.activity.previewUnavailable':
+    'پیش‌نمایش در دسترس نیست. می‌توانید فایل اصلی رسید را باز کنید.',
+  'invoices.activity.previewDescription':
+    'تصویر رسید یا صفحه اول فایل PDF. برای مشاهده همه صفحات، فایل اصلی را باز کنید.',
+
   'invoices.activity.receiptId': 'شناسه رسید',
   'invoices.activity.submittedAt': 'زمان ثبت',
   'invoices.activity.confirmedAt': 'زمان تأیید',
@@ -2755,6 +2763,14 @@ export const en: I18nDictionary = {
   'invoices.activity.bankName': 'Bank name',
   'invoices.activity.paymentDate': 'Transfer date',
   'invoices.activity.viewReceiptAttachment': 'View receipt attachment',
+  'invoices.activity.receiptPreview': 'Receipt preview',
+  'invoices.activity.receiptPreviewAlt': 'Bank receipt image {receipt}',
+  'invoices.activity.previewLoading': 'Loading receipt image…',
+  'invoices.activity.previewUnavailable':
+    'Preview is unavailable. You can open the original receipt file.',
+  'invoices.activity.previewDescription':
+    'Receipt image or first PDF page. Open the original file to view all pages.',
+
   'invoices.activity.receiptId': 'Receipt ID',
   'invoices.activity.submittedAt': 'Submitted at',
   'invoices.activity.confirmedAt': 'Confirmed at',

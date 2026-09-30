@@ -24,6 +24,7 @@ import {
   Post,
   Query,
   Redirect,
+  StreamableFile,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -235,6 +236,42 @@ export class CustomerInvoiceController {
   ): Promise<CustomerInvoiceDetailsDto> {
     assertUuid(invoiceId);
     return this.service.getForUser(req.session.userId, invoiceId, req.session);
+  }
+
+  @Get(':invoiceId/bank-receipts/:receiptId/preview')
+  @Header('Cache-Control', 'private, no-store')
+  @Header('X-Content-Type-Options', 'nosniff')
+  @RateLimit({ namespace: 'invoices:receipt-preview:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview a receipt image or first PDF page on the active profile' })
+  @ApiParam({ name: 'invoiceId', format: 'uuid' })
+  @ApiParam({ name: 'receiptId', format: 'uuid' })
+  @ApiResponse({
+    status: 200,
+    description: 'Bounded PNG preview.',
+    content: { 'image/png': { schema: { type: 'string', format: 'binary' } } },
+  })
+  @ApiResponse({ status: 400, description: 'Invalid invoice or receipt ID.' })
+  @ApiResponse({ status: 401, description: 'Not authenticated.' })
+  @ApiResponse({ status: 404, description: 'Invoice or receipt unavailable on this profile.' })
+  @ApiResponse({ status: 503, description: 'Preview cannot be generated.' })
+  async receiptPreview(
+    @Req() req: AuthenticatedRequest,
+    @Param('invoiceId') invoiceId: string,
+    @Param('receiptId') receiptId: string
+  ) {
+    assertUuid(invoiceId);
+    assertUuid(receiptId, 'receiptId');
+    const bytes = await this.service.receiptPreviewForUser(
+      req.session.userId,
+      invoiceId,
+      receiptId,
+      req.session
+    );
+    return new StreamableFile(bytes, {
+      type: 'image/png',
+      disposition: 'inline',
+      length: bytes.length,
+    });
   }
 
   @Get(':invoiceId/bank-receipts/:receiptId/attachment')

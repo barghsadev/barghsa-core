@@ -1,4 +1,6 @@
 import { t } from '@barghsa/i18n/app';
+import { Link } from '@tanstack/react-router';
+import { ReceiptAttachmentPreview } from '../components/ReceiptAttachmentPreview.js';
 import { useEffect, type ReactNode } from 'react';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -66,6 +68,16 @@ export function InvoiceActivity({
             <p>
               {label('reference')}: <bdi>{row.payerReference}</bdi>
             </p>
+            <p>
+              {t('invoices.receipts.invoice', locale)}:{' '}
+              <Link
+                to="/invoices/$invoiceId"
+                params={{ invoiceId: details.viewedInvoiceId }}
+                className="text-primary underline underline-offset-4"
+              >
+                <bdi dir="ltr">{details.viewedInvoiceId}</bdi>
+              </Link>
+            </p>
             {row.bankName ? (
               <p>
                 {label('bankName')}: {row.bankName}
@@ -80,6 +92,12 @@ export function InvoiceActivity({
                 {label('rejectionReason')}: {row.rejectionReason}
               </p>
             ) : null}
+            <ReceiptAttachmentPreview
+              key={`${details.viewedInvoiceId}:${row.id}`}
+              invoiceId={details.viewedInvoiceId}
+              receiptId={row.id}
+              initiallyOpen={window.location.hash === `#bank-receipt-${row.id}`}
+            />
             <a
               href={`/api/invoices/${encodeURIComponent(details.viewedInvoiceId)}/bank-receipts/${encodeURIComponent(row.id)}/attachment`}
               target="_blank"
@@ -89,7 +107,7 @@ export function InvoiceActivity({
               {label('viewReceiptAttachment')}
             </a>
             {row.statusHistory?.length ? (
-              <section aria-label={label('reviewTimeline')} className="pt-2">
+              <section aria-label={`${label('reviewTimeline')}: ${row.id}`} className="pt-2">
                 <h3 className="mb-2 font-medium">{label('reviewTimeline')}</h3>
                 <ol className="space-y-2 border-s border-border ps-4">
                   {row.statusHistory.map((event, index) => (
