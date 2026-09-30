@@ -217,6 +217,142 @@ it('shows the locked saving decision and submits its exact review hash', async (
   }
 });
 
+it('previews a fulfillment transition and submits its exact review hash', async () => {
+  document.documentElement.lang = 'en';
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  const id = '11111111-1111-7111-8111-111111111111';
+  const profileId = '22222222-2222-7222-8222-222222222222';
+  const contractId = '33333333-3333-7333-8333-333333333333';
+  const versionId = '44444444-4444-7444-8444-444444444444';
+  const invoiceId = '55555555-5555-7555-8555-555555555555';
+  const path = `/api/staff/saving/orders/${id}/stages/product_delivery/complete`;
+  const stages = [
+    { stage: 'request_confirmation', status: 'completed' },
+    { stage: 'product_delivery', status: 'in_progress' },
+    { stage: 'installation_and_document_upload', status: 'pending' },
+    { stage: 'equipment_handover', status: 'pending' },
+    { stage: 'process_completion', status: 'pending' },
+  ];
+  const order = {
+    id,
+    orderId: id,
+    profileId,
+    customerName: 'Buyer Company',
+    status: 'in_progress',
+    financialStatus: 'paid',
+    submittedAt: '2026-09-30T00:00:00.000Z',
+    billIdentifier: '1234567890123',
+    addressSnapshot: { full_address: 'Installation address' },
+    installationAddressId: '66666666-6666-7666-8666-666666666666',
+    hardwareProductId: '77777777-7777-7777-8777-777777777777',
+    hardwareTitle: { fa: 'دستگاه', en: 'Device' },
+    pricingSnapshot: { plan: { title: { fa: 'طرح', en: 'Saving plan' } } },
+    versionId,
+    invoiceState: 'Paid',
+    contractState: 'Active',
+    totalIrR: '300',
+    paidIrR: '300',
+    stages,
+    events: [],
+    revisions: [],
+    addressAmendments: [],
+    hardwareAmendments: [],
+    hardwareUpgrades: [],
+    addressOptions: [],
+    hardwareOptions: [],
+    canAmendAddress: false,
+    canAmendHardware: false,
+  };
+  const financialReview = {
+    schemaVersion: 1,
+    scope: { action: 'saving.staff-fulfillment-stage-transition', profileId, resourceId: id },
+    data: {
+      customerName: order.customerName,
+      profileName: order.customerName,
+      billIdentifier: order.billIdentifier,
+      addressSnapshot: order.addressSnapshot,
+      hardwareTitle: order.hardwareTitle,
+      pricingSnapshot: order.pricingSnapshot,
+      agreementSnapshot: 'Agreement text',
+      contractId,
+      contractState: 'Active',
+      versionId,
+      versionNumber: 1,
+      contractSnapshot: {},
+      invoiceId,
+      invoiceState: 'Paid',
+      invoiceTotalIrR: '300',
+      paidAmountIrR: '300',
+      refundedAmountIrR: '0',
+      pendingRefundAmountIrR: '0',
+      orderStatus: 'in_progress',
+      stages,
+      hasPendingUpgrade: false,
+      stage: 'product_delivery',
+      action: 'complete',
+      currentStatus: 'in_progress',
+      nextStatus: 'completed',
+      nextStage: 'installation_and_document_upload',
+      commercialStatus: 'in_progress',
+      explanation: 'Delivered to customer',
+      handoverDescription: null,
+    },
+    hash: 'b'.repeat(64),
+  };
+  const fetchMock = vi.fn(async (url: string, _init?: RequestInit) => {
+    const data =
+      url === '/api/user/settings/timezone'
+        ? { timezone: 'Asia/Tehran' }
+        : url === `${path}/review`
+          ? financialReview
+          : url === path
+            ? { status: 'in_progress' }
+            : url === `/api/staff/saving/orders/${id}`
+              ? order
+              : { orders: [order], nextAfter: null };
+    return Response.json(data);
+  });
+  vi.stubGlobal('fetch', fetchMock);
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => root.render(<AdminSavingOrdersPage />));
+    const item = [...container.querySelectorAll('button')].find((button) =>
+      button.textContent?.includes('Buyer Company')
+    );
+    await act(async () => item!.click());
+    const note = container.querySelector<HTMLInputElement>('#saving-staff-note')!;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+        note,
+        'Delivered to customer'
+      );
+      note.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    const complete = [...container.querySelectorAll('button')].find(
+      (button) => button.textContent === 'Complete stage'
+    );
+    await act(async () => complete!.click());
+    expect(document.body.textContent).toContain('Installation and document upload');
+    expect(document.body.textContent).toContain('Agreement text');
+    expect(fetchMock.mock.calls.some(([url]) => url === path)).toBe(false);
+    const confirm = [
+      ...document.body.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
+    ].find((button) => button.textContent?.includes('Confirm'));
+    await act(async () => confirm!.click());
+    const mutation = fetchMock.mock.calls.find(([url]) => url === path);
+    expect(mutation).toBeDefined();
+    expect(JSON.parse((mutation![1] as RequestInit).body as string)).toMatchObject({
+      expectedReviewHash: financialReview.hash,
+      explanation: 'Delivered to customer',
+    });
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+  }
+});
+
 it('confirms exact saving amendments and unpaid upgrade cancellation', async () => {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);

@@ -7,10 +7,12 @@ import {
   parseSavingAddressAmendmentReview,
   parseSavingHardwareAmendmentReview,
   parseSavingHardwareUpgradeCancellationReview,
+  parseSavingFulfillmentStageReview,
   parseSavingStaffDecisionReview,
   type SavingAddressAmendmentReview,
   type SavingHardwareAmendmentReview,
   type SavingHardwareUpgradeCancellationReview,
+  type SavingFulfillmentStageReview,
   type SavingStaffDecisionReview,
 } from '@barghsa/shared/finance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -163,6 +165,7 @@ export default function AdminSavingOrdersPage() {
   const [hardwareReview, setHardwareReview] = useState<SavingHardwareAmendmentReview | null>(null);
   const [upgradeCancellationReview, setUpgradeCancellationReview] =
     useState<SavingHardwareUpgradeCancellationReview | null>(null);
+  const [stageReview, setStageReview] = useState<SavingFulfillmentStageReview | null>(null);
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState(false);
   const [addressReviewLoading, setAddressReviewLoading] = useState(false);
@@ -171,6 +174,8 @@ export default function AdminSavingOrdersPage() {
   const [hardwareReviewError, setHardwareReviewError] = useState(false);
   const [upgradeCancellationReviewLoading, setUpgradeCancellationReviewLoading] = useState(false);
   const [upgradeCancellationReviewError, setUpgradeCancellationReviewError] = useState(false);
+  const [stageReviewLoading, setStageReviewLoading] = useState(false);
+  const [stageReviewError, setStageReviewError] = useState(false);
   const reviewRequest = useRef(0);
   const [revision, setRevision] = useState(0);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'forbidden'>('loading');
@@ -236,6 +241,7 @@ export default function AdminSavingOrdersPage() {
     setAddressReview(null);
     setHardwareReview(null);
     setUpgradeCancellationReview(null);
+    setStageReview(null);
     setAction(null);
     setReviewLoading(false);
     setReviewError(false);
@@ -245,6 +251,8 @@ export default function AdminSavingOrdersPage() {
     setHardwareReviewError(false);
     setUpgradeCancellationReviewLoading(false);
     setUpgradeCancellationReviewError(false);
+    setStageReviewLoading(false);
+    setStageReviewError(false);
     if (!selected) {
       setDetail(null);
       return;
@@ -326,28 +334,70 @@ export default function AdminSavingOrdersPage() {
     }
   }
 
-  function advance(stage: StageName, choice: 'complete' | 'skip') {
+  async function advance(stage: StageName, choice: 'complete' | 'skip') {
     if (
       !detail ||
+      stageReviewLoading ||
       !note.trim() ||
       stagePrerequisites(stage, detail).length > 0 ||
       (stage === 'equipment_handover' && choice === 'complete' && !handover.trim())
     )
       return;
-    setAction({
-      title: copy(choice === 'skip' ? 'staffSkip' : 'staffComplete'),
-      description: copy('staffConfirm'),
-      method: 'POST',
-      path: `/api/staff/saving/orders/${detail.id}/stages/${stage}/${choice}`,
-      body: {
-        idempotencyKey: crypto.randomUUID(),
-        expectedStatus: 'in_progress',
-        explanation: note.trim(),
-        ...(handover.trim() ? { handoverDescription: handover.trim() } : {}),
-      },
-      conflictMessage: copy('staffConflict'),
-      forbiddenMessage: copy('staffForbidden'),
-    });
+    const order = detail;
+    const explanation = note.trim();
+    const handoverDescription = handover.trim();
+    const path = `/api/staff/saving/orders/${encodeURIComponent(order.id)}/stages/${stage}/${choice}`;
+    const request = ++reviewRequest.current;
+    setStageReviewLoading(true);
+    setStageReviewError(false);
+    try {
+      const response = await fetch(`${path}/review`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({
+          expectedStatus: 'in_progress',
+          explanation,
+          ...(handoverDescription ? { handoverDescription } : {}),
+        }),
+      });
+      if (!response.ok) throw new Error('Stage review unavailable');
+      const financialReview = parseSavingFulfillmentStageReview(await response.json());
+      if (request !== reviewRequest.current) return;
+      if (
+        !financialReview ||
+        financialReview.scope.profileId !== order.profileId ||
+        financialReview.scope.resourceId !== order.id ||
+        financialReview.data.stage !== stage ||
+        financialReview.data.action !== choice ||
+        financialReview.data.explanation !== explanation ||
+        financialReview.data.handoverDescription !== (handoverDescription || null)
+      )
+        throw new Error('Stage review mismatch');
+      setStageReview(financialReview);
+      setAction({
+        title: copy(choice === 'skip' ? 'staffSkip' : 'staffComplete'),
+        description: copy('staffStageReviewConfirm'),
+        method: 'POST',
+        path,
+        body: {
+          idempotencyKey: crypto.randomUUID(),
+          expectedStatus: 'in_progress',
+          expectedReviewHash: financialReview.hash,
+          explanation,
+          ...(handoverDescription ? { handoverDescription } : {}),
+        },
+        conflictMessage: copy('staffConflict'),
+        forbiddenMessage: copy('staffForbidden'),
+      });
+    } catch {
+      if (request === reviewRequest.current) {
+        setStageReview(null);
+        setStageReviewError(true);
+      }
+    } finally {
+      if (request === reviewRequest.current) setStageReviewLoading(false);
+    }
   }
 
   async function amendAddress() {
@@ -813,7 +863,7 @@ export default function AdminSavingOrdersPage() {
                                 prerequisites.length > 0 ||
                                 (stage.stage === 'equipment_handover' && !handover.trim())
                               }
-                              onClick={() => advance(stage.stage, 'complete')}
+                              onClick={() => void advance(stage.stage, 'complete')}
                             >
                               {copy('staffComplete')}
                             </Button>
@@ -822,7 +872,7 @@ export default function AdminSavingOrdersPage() {
                                 size="sm"
                                 variant="outline"
                                 disabled={!note.trim()}
-                                onClick={() => advance(stage.stage, 'skip')}
+                                onClick={() => void advance(stage.stage, 'skip')}
                               >
                                 {copy('staffSkip')}
                               </Button>
@@ -843,6 +893,8 @@ export default function AdminSavingOrdersPage() {
                   );
                 })}
               </ol>
+              {stageReviewLoading ? <p role="status">{copy('staffStageReviewLoading')}</p> : null}
+              {stageReviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
               <div>
                 <h3 className="font-semibold">{copy('staffHistory')}</h3>
                 {detail.events.length === 0 ? (
@@ -1266,6 +1318,73 @@ export default function AdminSavingOrdersPage() {
                   </div>
                 }
               />
+            ) : stageReview ? (
+              <FinancialReviewSummary
+                title={copy('staffStageReviewTitle')}
+                rows={[
+                  { id: 'customer', label: copy('customer'), value: stageReview.data.customerName },
+                  {
+                    id: 'profile',
+                    label: copy('staffReviewProfile'),
+                    value: stageReview.data.profileName,
+                  },
+                  {
+                    id: 'stage',
+                    label: copy('staffStageReviewStage'),
+                    value: copy(stageReview.data.stage),
+                  },
+                  {
+                    id: 'transition',
+                    label: copy('staffStageReviewTransition'),
+                    value: `${copy(stageReview.data.currentStatus)} → ${copy(stageReview.data.nextStatus)}`,
+                  },
+                  {
+                    id: 'next',
+                    label: copy('staffStageReviewNext'),
+                    value: stageReview.data.nextStage
+                      ? copy(stageReview.data.nextStage)
+                      : copy('completed'),
+                  },
+                  {
+                    id: 'contract',
+                    label: copy('staffContract'),
+                    value: copy(stageReview.data.contractState),
+                  },
+                  {
+                    id: 'invoice',
+                    label: copy('staffInvoice'),
+                    value: t(`invoices.state.${stageReview.data.invoiceState}`, locale),
+                  },
+                  {
+                    id: 'paid',
+                    label: copy('staffPaid'),
+                    value: money.money(stageReview.data.paidAmountIrR),
+                  },
+                  {
+                    id: 'explanation',
+                    label: copy('staffReason'),
+                    value: stageReview.data.explanation,
+                  },
+                  ...(stageReview.data.handoverDescription
+                    ? [
+                        {
+                          id: 'handover',
+                          label: copy('staffHandover'),
+                          value: stageReview.data.handoverDescription,
+                        },
+                      ]
+                    : []),
+                ]}
+                total={{
+                  label: copy('staffTotal'),
+                  value: money.money(stageReview.data.invoiceTotalIrR),
+                }}
+                notice={
+                  <p className="whitespace-pre-wrap break-words" dir="auto">
+                    {stageReview.data.agreementSnapshot}
+                  </p>
+                }
+              />
             ) : undefined
           }
           onClose={() => {
@@ -1274,6 +1393,7 @@ export default function AdminSavingOrdersPage() {
             setAddressReview(null);
             setHardwareReview(null);
             setUpgradeCancellationReview(null);
+            setStageReview(null);
           }}
           onSuccess={async () => {
             setNote('');

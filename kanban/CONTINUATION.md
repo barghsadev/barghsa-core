@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Saving fulfillment stage review](batches/2026-09-30-saving-fulfillment-stage-review.md) binds staff completion and optional handover skip to the exact payment, contract, stage and explanation state before confirmation. Cross-command review tasks remain partial.
+
 [Saving address amendment financial review](batches/2026-09-30-saving-address-amendment-review.md) binds paid installation-address changes to the exact old and new addresses, contract and unchanged invoice before staff confirmation. Cross-command review tasks remain partial.
 
 [Saving upgrade cancellation financial review](batches/2026-09-30-saving-upgrade-cancellation-review.md) binds cancellation of an unpaid equipment charge to the current invoice, contract and stock-release outcome before staff confirmation. Cross-command review tasks remain partial.

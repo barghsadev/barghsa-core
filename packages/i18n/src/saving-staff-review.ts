@@ -45,6 +45,12 @@ const en: Record<string, string> = {
   staffUpgradeCancellationRelease: 'Reservation will be released',
   staffUpgradeCancellationNoReservation: 'No reservation',
   staffUpgradeCancellationOutcome: 'The unpaid invoice will be cancelled.',
+  staffStageReviewTitle: 'Review fulfillment stage',
+  staffStageReviewLoading: 'Checking the stage transition…',
+  staffStageReviewConfirm: 'Confirm this stage transition and recorded explanation?',
+  staffStageReviewStage: 'Current stage',
+  staffStageReviewTransition: 'Status change',
+  staffStageReviewNext: 'Next stage',
 };
 
 const fa: Record<string, string> = {
@@ -94,6 +100,12 @@ const fa: Record<string, string> = {
   staffUpgradeCancellationRelease: 'رزرو آزاد می‌شود',
   staffUpgradeCancellationNoReservation: 'بدون رزرو',
   staffUpgradeCancellationOutcome: 'فاکتور پرداخت‌نشده لغو خواهد شد.',
+  staffStageReviewTitle: 'بررسی مرحله اجرای سفارش',
+  staffStageReviewLoading: 'در حال بررسی تغییر مرحله…',
+  staffStageReviewConfirm: 'این تغییر مرحله و توضیح ثبت‌شده تأیید شود؟',
+  staffStageReviewStage: 'مرحله فعلی',
+  staffStageReviewTransition: 'تغییر وضعیت',
+  staffStageReviewNext: 'مرحله بعدی',
 };
 
 export function tSavingStaffReview(key: string, locale: 'fa' | 'en') {

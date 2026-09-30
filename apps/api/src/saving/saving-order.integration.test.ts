@@ -723,8 +723,25 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   const stageInput = () => ({
     idempotencyKey: randomUUID(),
     expectedStatus: 'in_progress',
+    expectedReviewHash: '0'.repeat(64),
     explanation: 'Staff verified progress',
   });
+  const reviewedStageInput = async (stage: string, action = 'complete') => {
+    const input = stageInput();
+    const response = await request(
+      `${stagePath(stage, action)}/review`,
+      'POST',
+      { expectedStatus: input.expectedStatus, explanation: input.explanation },
+      staffHeaders
+    );
+    expect(response.status, http.logs()).toBe(200);
+    const review = (await response.json()) as {
+      hash: string;
+      data: { stage: string; action: string; nextStatus: string };
+    };
+    expect(review.data).toMatchObject({ stage, action });
+    return { ...input, expectedReviewHash: review.hash };
+  };
   expect(
     (await request(stagePath('product_delivery'), 'POST', stageInput(), staffHeaders)).status
   ).toBe(409);
@@ -1384,13 +1401,46 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       )
     ).rows[0]
   ).toMatchObject({ stock_count: 1, reserved_count: 0 });
+  const deliveryInput = await reviewedStageInput('product_delivery');
+  expect(
+    (
+      await request(
+        stagePath('product_delivery'),
+        'POST',
+        { ...deliveryInput, idempotencyKey: randomUUID(), expectedReviewHash: '0'.repeat(64) },
+        staffHeaders
+      )
+    ).status
+  ).toBe(409);
+  expect(
+    (
+      await request(
+        stagePath('product_delivery'),
+        'POST',
+        { ...deliveryInput, idempotencyKey: randomUUID(), expectedReviewHash: undefined },
+        staffHeaders
+      )
+    ).status
+  ).toBe(400);
   const delivered = await request(
     stagePath('product_delivery'),
     'POST',
-    stageInput(),
+    deliveryInput,
     staffHeaders
   );
   expect(delivered.status, http.logs()).toBe(200);
+  const deliveryAudit = (
+    await http.pool.query<{
+      metadata: { reviewHash: string; financialReview: { hash: string } };
+    }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log
+       WHERE event='saving.fulfillment.complete' AND metadata::jsonb->>'savingOrderId'=$1
+       ORDER BY created_at DESC LIMIT 1`,
+      [result.savingOrderId]
+    )
+  ).rows[0];
+  expect(deliveryAudit?.metadata.reviewHash).toBe(deliveryInput.expectedReviewHash);
+  expect(deliveryAudit?.metadata.financialReview.hash).toBe(deliveryInput.expectedReviewHash);
   expect(
     await (
       await request(
@@ -1437,14 +1487,14 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   const installed = await request(
     stagePath('installation_and_document_upload'),
     'POST',
-    stageInput(),
+    await reviewedStageInput('installation_and_document_upload'),
     staffHeaders
   );
   expect(installed.status, http.logs()).toBe(200);
   const skipped = await request(
     stagePath('equipment_handover', 'skip'),
     'POST',
-    stageInput(),
+    await reviewedStageInput('equipment_handover', 'skip'),
     staffHeaders
   );
   expect(skipped.status, http.logs()).toBe(200);
@@ -1467,7 +1517,7 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   const completed = await request(
     stagePath('process_completion'),
     'POST',
-    stageInput(),
+    await reviewedStageInput('process_completion'),
     staffHeaders
   );
   expect(completed.status, http.logs()).toBe(200);

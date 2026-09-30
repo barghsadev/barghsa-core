@@ -25538,6 +25538,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedStatus": {
                     "enum": [
                       "in_progress"
@@ -25563,6 +25567,7 @@
                 "required": [
                   "idempotencyKey",
                   "expectedStatus",
+                  "expectedReviewHash",
                   "explanation"
                 ],
                 "type": "object"
@@ -25577,6 +25582,79 @@
           }
         },
         "summary": "Complete a saving fulfillment stage or skip optional equipment handover",
+        "tags": [
+          "Staff · Saving orders"
+        ]
+      }
+    },
+    "/api/staff/saving/orders/{id}/stages/{stage}/{action}/review": {
+      "post": {
+        "operationId": "SavingFulfillmentController_advanceReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "stage",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedStatus": {
+                    "enum": [
+                      "in_progress"
+                    ],
+                    "type": "string"
+                  },
+                  "explanation": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "handoverDescription": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedStatus",
+                  "explanation"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Preview the exact saving fulfillment stage transition",
         "tags": [
           "Staff · Saving orders"
         ]

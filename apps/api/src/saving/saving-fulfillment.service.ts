@@ -112,9 +112,16 @@ interface HardwareUpgradeCancellationRow {
   total_amount: string;
   paid_amount: string;
 }
-interface StageRow {
+export interface StageRow {
   stage: SavingStage;
   status: 'pending' | 'in_progress' | 'completed' | 'skipped';
+}
+interface StageAdvanceInput {
+  idempotencyKey: string;
+  expectedStatus: 'in_progress';
+  expectedReviewHash: string;
+  explanation: string;
+  handoverDescription?: string | undefined;
 }
 const reviewQuery = `SELECT s.id,s.order_id,s.profile_id,s.saving_plan_id,s.hardware_product_id,
   h.title AS hardware_title,p.user_id AS customer_id,
@@ -1468,16 +1475,127 @@ export class SavingFulfillmentService {
     );
   }
 
+  private async advanceReviewForRow(
+    client: PoolClient,
+    row: ReviewRow,
+    stage: SavingStage,
+    action: StageAction,
+    input: Pick<StageAdvanceInput, 'expectedStatus' | 'explanation' | 'handoverDescription'>,
+    lock: 'SHARE' | 'UPDATE'
+  ) {
+    if (!['approved', 'in_progress'].includes(row.status))
+      throw new ConflictException('Order is not in fulfillment');
+    if (stage === 'request_confirmation' || (action === 'skip' && stage !== 'equipment_handover'))
+      throw new ConflictException('Invalid fulfillment stage action');
+    const hasPendingUpgrade =
+      (
+        await client.query(
+          `SELECT 1 FROM saving_hardware_upgrade_requests
+             WHERE order_id=$1 AND status='awaiting_payment'`,
+          [row.id]
+        )
+      ).rowCount !== 0;
+    if (stage === 'product_delivery' && row.invoice_state !== 'Paid')
+      throw new ConflictException('Payment is required before delivering equipment');
+    if (stage === 'product_delivery' && hasPendingUpgrade)
+      throw new ConflictException('Resolve the pending hardware charge before delivery');
+    if (
+      stage === 'process_completion' &&
+      (row.invoice_state !== 'Paid' || !['Active', 'Completed'].includes(row.contract_state))
+    )
+      throw new ConflictException('Payment and an active contract are required to complete');
+    const index = SAVING_STAGES.indexOf(stage);
+    const stages = (
+      await client.query<StageRow>(
+        `SELECT stage,status FROM saving_fulfillment_stages WHERE order_id=$1 ORDER BY stage FOR ${lock}`,
+        [row.id]
+      )
+    ).rows;
+    const current = stages.find((item) => item.stage === stage);
+    if (
+      current?.status !== input.expectedStatus ||
+      SAVING_STAGES.slice(0, index).some(
+        (key) =>
+          !['completed', 'skipped'].includes(
+            stages.find((item) => item.stage === key)?.status ?? 'pending'
+          )
+      )
+    )
+      throw new ConflictException('Fulfillment stage changed; reload before advancing');
+    const explanation = input.explanation.trim();
+    const handover = input.handoverDescription?.trim();
+    if (!explanation || (stage === 'equipment_handover' && action === 'complete' && !handover))
+      throw new ConflictException('Explanation and handover details are required');
+    const nextStatus: 'skipped' | 'completed' = action === 'skip' ? 'skipped' : 'completed';
+    const nextStage = SAVING_STAGES[index + 1] ?? null;
+    const commercialStatus = nextStage ? 'in_progress' : 'completed';
+    const review = this.reviews.create(
+      {
+        action: 'saving.staff-fulfillment-stage-transition',
+        profileId: row.profile_id,
+        resourceId: row.id,
+      },
+      {
+        customerName: row.customer_name,
+        profileName: row.profile_name,
+        billIdentifier: row.bill_identifier,
+        addressSnapshot: row.address_snapshot,
+        hardwareTitle: row.hardware_title,
+        pricingSnapshot: row.pricing_snapshot,
+        agreementSnapshot: row.agreement_snapshot,
+        contractId: row.contract_id,
+        contractState: row.contract_state,
+        versionId: row.version_id,
+        versionNumber: row.version_number,
+        contractSnapshot: row.contract_snapshot,
+        invoiceId: row.invoice_id,
+        invoiceState: row.invoice_state,
+        invoiceTotalIrR: row.total_amount,
+        paidAmountIrR: row.paid_amount,
+        refundedAmountIrR: row.refunded_amount,
+        pendingRefundAmountIrR: row.pending_refund_amount,
+        orderStatus: row.status,
+        stages,
+        hasPendingUpgrade,
+        stage,
+        action,
+        currentStatus: 'in_progress',
+        nextStatus,
+        nextStage,
+        commercialStatus,
+        explanation,
+        handoverDescription: handover ?? null,
+      }
+    );
+    return { review, explanation, handover, nextStatus, nextStage, commercialStatus, index };
+  }
+
+  async advanceReview(
+    id: string,
+    stage: SavingStage,
+    action: StageAction,
+    input: Pick<StageAdvanceInput, 'expectedStatus' | 'explanation' | 'handoverDescription'>,
+    actor: Actor
+  ) {
+    const target = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM saving_orders WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!target) throw new NotFoundException('Saving order not found');
+    return staffContractFinancialReview(target.profile_id, actor, async (client, archived) => {
+      if (archived) throw new ConflictException('Profile is archived');
+      const row = await this.lockRow(client, id, 'SHARE');
+      return (await this.advanceReviewForRow(client, row, stage, action, input, 'SHARE')).review;
+    });
+  }
+
   async advance(
     id: string,
     stage: SavingStage,
     action: StageAction,
-    input: {
-      idempotencyKey: string;
-      expectedStatus: 'in_progress';
-      explanation: string;
-      handoverDescription?: string | undefined;
-    },
+    input: StageAdvanceInput,
     actor: Actor,
     ip: string
   ) {
@@ -1488,139 +1606,96 @@ export class SavingFulfillmentService {
       )
     ).rows[0];
     if (!profile) throw new NotFoundException('Saving order not found');
-    return staffContractMutation(profile.profile_id, actor, (client, archived) =>
-      contractIdempotency(
-        client,
-        'saving_stage_advance',
-        { ...input, savingOrderId: id, stage, action },
-        actor,
-        async () => {
-          if (archived) throw new ConflictException('Profile is archived');
-          const row = await this.lockRow(client, id);
-          if (!['approved', 'in_progress'].includes(row.status))
-            throw new ConflictException('Order is not in fulfillment');
-          if (
-            stage === 'request_confirmation' ||
-            (action === 'skip' && stage !== 'equipment_handover')
-          )
-            throw new ConflictException('Invalid fulfillment stage action');
-          if (stage === 'product_delivery' && row.invoice_state !== 'Paid')
-            throw new ConflictException('Payment is required before delivering equipment');
-          if (
-            stage === 'product_delivery' &&
-            (
-              await client.query(
-                `SELECT 1 FROM saving_hardware_upgrade_requests
-                   WHERE order_id=$1 AND status='awaiting_payment'`,
-                [id]
-              )
-            ).rowCount
-          )
-            throw new ConflictException('Resolve the pending hardware charge before delivery');
-          if (
-            stage === 'process_completion' &&
-            (row.invoice_state !== 'Paid' || !['Active', 'Completed'].includes(row.contract_state))
-          )
-            throw new ConflictException('Payment and an active contract are required to complete');
-          const index = SAVING_STAGES.indexOf(stage);
-          const stages = (
-            await client.query<StageRow>(
-              'SELECT stage,status FROM saving_fulfillment_stages WHERE order_id=$1 FOR UPDATE',
-              [id]
-            )
-          ).rows;
-          const current = stages.find((item) => item.stage === stage);
-          if (
-            current?.status !== input.expectedStatus ||
-            SAVING_STAGES.slice(0, index).some(
-              (key) =>
-                !['completed', 'skipped'].includes(
-                  stages.find((item) => item.stage === key)?.status ?? 'pending'
-                )
-            )
-          )
-            throw new ConflictException('Fulfillment stage changed; reload before advancing');
-          const explanation = input.explanation.trim();
-          const handover = input.handoverDescription?.trim();
-          if (
-            !explanation ||
-            (stage === 'equipment_handover' && action === 'complete' && !handover)
-          )
-            throw new ConflictException('Explanation and handover details are required');
-          const nextStatus = action === 'skip' ? 'skipped' : 'completed';
-          await client.query(
-            `UPDATE saving_fulfillment_stages SET status=$3,completed_at=NOW(),completed_by=$4,
+    return staffContractMutation(
+      profile.profile_id,
+      actor,
+      (client, archived) =>
+        contractIdempotency(
+          client,
+          'saving_stage_advance',
+          { ...input, savingOrderId: id, stage, action },
+          actor,
+          async () => {
+            if (archived) throw new ConflictException('Profile is archived');
+            const row = await this.lockRow(client, id);
+            const { review, explanation, handover, nextStatus, nextStage, commercialStatus } =
+              await this.advanceReviewForRow(client, row, stage, action, input, 'UPDATE');
+            this.reviews.assertConfirmed(review, input.expectedReviewHash);
+            await client.query(
+              `UPDATE saving_fulfillment_stages SET status=$3,completed_at=NOW(),completed_by=$4,
               explanation=$5,handover_description=$6,updated_at=NOW()
               WHERE order_id=$1 AND stage=$2`,
-            [id, stage, nextStatus, actor.userId, explanation, handover ?? null]
-          );
-          await this.event(
-            client,
-            row,
-            stage,
-            'in_progress',
-            nextStatus,
-            actor,
-            explanation,
-            handover
-          );
-          const next = SAVING_STAGES[index + 1];
-          if (next) {
-            await client.query(
-              `UPDATE saving_fulfillment_stages SET status='in_progress',started_at=NOW(),updated_at=NOW()
-                WHERE order_id=$1 AND stage=$2 AND status='pending'`,
-              [id, next]
+              [id, stage, nextStatus, actor.userId, explanation, handover ?? null]
             );
             await this.event(
               client,
               row,
-              next,
-              'pending',
-              'in_progress',
-              actor,
-              'Previous stage finished'
-            );
-          }
-          const commercial = next ? 'in_progress' : 'completed';
-          await client.query('UPDATE saving_orders SET status=$2,updated_at=NOW() WHERE id=$1', [
-            id,
-            commercial,
-          ]);
-          await auditContract(
-            client,
-            row.contract_id,
-            row.version_id,
-            `saving.fulfillment.${action}`,
-            actor,
-            ip,
-            {
-              savingOrderId: id,
               stage,
-              from: 'in_progress',
-              to: nextStatus,
+              'in_progress',
+              nextStatus,
+              actor,
               explanation,
-              handoverDescription: handover ?? null,
+              handover
+            );
+            const next = nextStage;
+            if (next) {
+              await client.query(
+                `UPDATE saving_fulfillment_stages SET status='in_progress',started_at=NOW(),updated_at=NOW()
+                WHERE order_id=$1 AND stage=$2 AND status='pending'`,
+                [id, next]
+              );
+              await this.event(
+                client,
+                row,
+                next,
+                'pending',
+                'in_progress',
+                actor,
+                'Previous stage finished'
+              );
             }
-          );
-          await this.notify(
-            client,
-            row,
-            next
-              ? 'مرحله‌ای از سفارش صرفه‌جویی شما تکمیل شد.'
-              : 'اجرای سفارش صرفه‌جویی شما تکمیل شد.',
-            next
-              ? 'A stage of your power-saving order was completed.'
-              : 'Your power-saving order is complete.'
-          );
-          return {
-            savingOrderId: id,
-            status: commercial,
-            stage,
-            stageStatus: nextStatus,
-            nextStage: next ?? null,
-          };
-        }
-      )
+            await client.query('UPDATE saving_orders SET status=$2,updated_at=NOW() WHERE id=$1', [
+              id,
+              commercialStatus,
+            ]);
+            await auditContract(
+              client,
+              row.contract_id,
+              row.version_id,
+              `saving.fulfillment.${action}`,
+              actor,
+              ip,
+              {
+                savingOrderId: id,
+                stage,
+                from: 'in_progress',
+                to: nextStatus,
+                explanation,
+                handoverDescription: handover ?? null,
+                reviewHash: review.hash,
+                financialReview: review,
+              }
+            );
+            await this.notify(
+              client,
+              row,
+              next
+                ? 'مرحله‌ای از سفارش صرفه‌جویی شما تکمیل شد.'
+                : 'اجرای سفارش صرفه‌جویی شما تکمیل شد.',
+              next
+                ? 'A stage of your power-saving order was completed.'
+                : 'Your power-saving order is complete.'
+            );
+            return {
+              savingOrderId: id,
+              status: commercialStatus,
+              stage,
+              stageStatus: nextStatus,
+              nextStage: next ?? null,
+            };
+          }
+        ),
+      { financialReview: true }
     );
   }
 }

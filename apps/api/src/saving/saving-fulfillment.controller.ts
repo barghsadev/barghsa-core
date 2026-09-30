@@ -41,9 +41,13 @@ const stageInput = z
   .object({
     idempotencyKey: z.string().uuid(),
     expectedStatus: z.literal('in_progress'),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
     explanation: z.string().trim().min(1).max(1000),
     handoverDescription: z.string().trim().min(1).max(1000).optional(),
   })
+  .strict();
+const stageReviewInput = stageInput
+  .pick({ expectedStatus: true, explanation: true, handoverDescription: true })
   .strict();
 const addressAmendment = z
   .object({
@@ -308,6 +312,30 @@ export class SavingFulfillmentController {
       parse(hardwareUpgradeCancellation, body),
       req.session,
       req.ip ?? 'unknown'
+    );
+  }
+
+  @Post(':id/stages/:stage/:action/review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'saving:stage-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview the exact saving fulfillment stage transition' })
+  @ApiZodBody(stageReviewInput)
+  advanceReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('stage') stage: string,
+    @Param('action') action: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.permission(req, true);
+    if (!SAVING_STAGES.includes(stage as SavingStage) || !['complete', 'skip'].includes(action))
+      throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.advanceReview(
+      id,
+      stage as SavingStage,
+      action as StageAction,
+      parse(stageReviewInput, body),
+      req.session
     );
   }
 
