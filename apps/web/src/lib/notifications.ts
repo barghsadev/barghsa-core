@@ -1,6 +1,7 @@
 import { notificationLink } from '@barghsa/shared/notifications';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { withCsrf } from './csrf.js';
+import { isAccountSettingsPath } from './session-role.js';
 
 /**
  * Notification center client (E-05, T-05.02.03).
@@ -216,7 +217,13 @@ export function toNavigationTarget(
   if (!link) return null;
   const pathname = new URL(link, 'https://barghsa.invalid').pathname;
   const staffRoute = pathname === '/admin' || pathname.startsWith('/admin/');
-  if (operatingContext === 'staff' && !staffRoute && pathname !== '/app') return null;
+  if (
+    operatingContext === 'staff' &&
+    !staffRoute &&
+    pathname !== '/app' &&
+    !isAccountSettingsPath(pathname)
+  )
+    return null;
   if (operatingContext === 'customer' && staffRoute) return null;
   const target: { to: string; search?: Record<string, unknown> } = {
     to: link,

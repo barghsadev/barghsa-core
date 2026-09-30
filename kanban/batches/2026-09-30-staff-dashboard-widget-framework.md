@@ -43,4 +43,4 @@ Review confirms static SQL selection, existing staff permission predicates and a
 
 ## Publication
 
-The preceding customer-framework CI run `36769075010` passes all five gates. This validated batch is published directly to main after that run finishes. Its own remote CI is checked after push; no remote pass is claimed here.
+The preceding customer-framework CI run `36769075010` passes all five gates. This validated batch is published directly to main after that run finishes. Its own CI run `36772450580` now passes all five gates.

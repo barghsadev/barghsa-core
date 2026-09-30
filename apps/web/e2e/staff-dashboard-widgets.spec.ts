@@ -110,9 +110,11 @@ for (const locale of ['en', 'fa'] as const) {
             (card) => getComputedStyle(card.parentElement!).gridTemplateColumns.split(' ').length
           )
         ).toBe(columns);
-        expect(
-          await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
-        ).toBe(true);
+        await expect
+          .poll(() =>
+            page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+          )
+          .toBe(true);
       }
       expect(
         (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations

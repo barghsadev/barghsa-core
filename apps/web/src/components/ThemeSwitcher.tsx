@@ -1,4 +1,4 @@
-import { Moon, Sun, Monitor } from 'lucide-react';
+import { Moon, Sun, Monitor, ChevronDown } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { shellText } from '@barghsa/i18n/shell';
 import { useLocale } from '../hooks/useLocale.js';
@@ -40,7 +40,6 @@ export function ThemeSwitcher() {
     return () => {
       request.abort();
       saveRequest.current?.abort();
-      setUserMode(null);
     };
   }, [setUserMode]);
 
@@ -71,19 +70,25 @@ export function ThemeSwitcher() {
     <label className="inline-flex items-center gap-1.5 text-sm">
       <Icon className="size-4 shrink-0" aria-hidden="true" />
       <span className="sr-only">{shellText('theme', locale)}</span>
-      <select
-        aria-label={shellText('theme', locale)}
-        value={userMode ?? 'default'}
-        disabled={!ready || saving}
-        onChange={(event) =>
-          void update(event.target.value === 'default' ? null : (event.target.value as ThemeMode))
-        }
-        className="max-w-24 rounded-md border border-input bg-card px-1.5 py-1 text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:max-w-none"
-      >
-        <option value="default">{shellText('themeDefault', locale)}</option>
-        <option value="light">{shellText('themeLight', locale)}</option>
-        <option value="dark">{shellText('themeDark', locale)}</option>
-      </select>
+      <span className="relative inline-flex">
+        <select
+          aria-label={shellText('theme', locale)}
+          value={userMode ?? 'default'}
+          disabled={!ready || saving}
+          onChange={(event) =>
+            void update(event.target.value === 'default' ? null : (event.target.value as ThemeMode))
+          }
+          className="min-h-11 max-w-28 appearance-none rounded-md border border-input bg-card ps-2 pe-7 py-2 text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:max-w-none"
+        >
+          <option value="default">{shellText('themeDefault', locale)}</option>
+          <option value="light">{shellText('themeLight', locale)}</option>
+          <option value="dark">{shellText('themeDark', locale)}</option>
+        </select>
+        <ChevronDown
+          className="pointer-events-none absolute end-2 top-1/2 size-3.5 -translate-y-1/2"
+          aria-hidden="true"
+        />
+      </span>
       {error && (
         <span role="alert" className="text-xs text-destructive">
           {shellText('themeError', locale)}

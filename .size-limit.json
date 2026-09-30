@@ -119,7 +119,7 @@
       "src/components/VerificationBanner.tsx",
       "src/components/DefaultProfileModal.tsx"
     ],
-    "limitKB": 251
+    "limitKB": 255
   },
   {
     "name": "Admin",

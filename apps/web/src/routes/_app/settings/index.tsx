@@ -84,6 +84,7 @@ function readConsent(body: unknown): Record<MarketingChannels, ConsentChannelSta
 // ─── Page Component ────────────────────────────────────────────────────
 
 function SettingsIndexPage() {
+  const { isStaff } = Route.useRouteContext();
   const time = useAccountTime();
   const locale = useLocale();
 
@@ -337,13 +338,15 @@ function SettingsIndexPage() {
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <a
-              href="/settings/profile"
-              className="flex items-center gap-3 rounded-lg border p-3 text-sm hover:bg-muted/50 transition-colors"
-            >
-              <UserIcon className="h-4 w-4 text-muted-foreground" />
-              <span>{t('settings.profile.title', locale)}</span>
-            </a>
+            {!isStaff && (
+              <a
+                href="/settings/profile"
+                className="flex items-center gap-3 rounded-lg border p-3 text-sm hover:bg-muted/50 transition-colors"
+              >
+                <UserIcon className="h-4 w-4 text-muted-foreground" />
+                <span>{t('settings.profile.title', locale)}</span>
+              </a>
+            )}
             <a
               href="/settings/username"
               className="flex items-center gap-3 rounded-lg border p-3 text-sm hover:bg-muted/50 transition-colors"
@@ -365,13 +368,15 @@ function SettingsIndexPage() {
               <GlobeIcon className="h-4 w-4 text-muted-foreground" />
               <span>{t('settings.timezone.title', locale)}</span>
             </a>
-            <a
-              href="/settings/addresses"
-              className="flex items-center gap-3 rounded-lg border p-3 text-sm hover:bg-muted/50 transition-colors"
-            >
-              <MapPinIcon className="h-4 w-4 text-muted-foreground" />
-              <span>{t('settings.addresses.title', locale)}</span>
-            </a>
+            {!isStaff && (
+              <a
+                href="/settings/addresses"
+                className="flex items-center gap-3 rounded-lg border p-3 text-sm hover:bg-muted/50 transition-colors"
+              >
+                <MapPinIcon className="h-4 w-4 text-muted-foreground" />
+                <span>{t('settings.addresses.title', locale)}</span>
+              </a>
+            )}
             <a
               href="/settings/privacy"
               className="flex items-center gap-3 rounded-lg border p-3 text-sm hover:bg-muted/50 transition-colors"

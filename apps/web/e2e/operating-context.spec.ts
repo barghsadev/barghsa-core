@@ -29,11 +29,14 @@ test('dual-role user deliberately switches between staff and customer workspaces
   await page.evaluate(() => {
     document.cookie = 'barghsa_csrf=test-csrf; path=/';
   });
+  await page.getByRole('button', { name: 'Account menu', exact: true }).click();
   await expect(page.getByLabel('Staff mode')).toBeVisible();
   await page.getByRole('button', { name: 'Switch to customer' }).click();
   await expect(page).toHaveURL(/\/app$/);
+  await page.getByRole('button', { name: 'Account menu', exact: true }).click();
   await expect(page.getByLabel('Customer mode')).toBeVisible();
   await page.getByRole('button', { name: 'Switch to staff' }).click();
+  await page.getByRole('button', { name: 'Account menu', exact: true }).click();
   await expect(page.getByLabel('Staff mode')).toBeVisible();
   expect(transitions).toEqual(['customer', 'staff']);
 });

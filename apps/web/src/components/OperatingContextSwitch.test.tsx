@@ -58,3 +58,19 @@ it('keeps the context visible without offering staff authority to a customer', a
   expect(container.textContent).toContain('Customer mode');
   expect(container.querySelector('[aria-label="Switch to staff"]')).toBeNull();
 });
+
+it('uses an already validated account result instead of issuing a duplicate identity read', async () => {
+  const fetchMock = vi.fn();
+  vi.stubGlobal('fetch', fetchMock);
+  await act(async () =>
+    root.render(
+      <OperatingContextSwitch
+        area="admin"
+        locale="en"
+        session={{ isStaff: true, operatingContext: 'staff', canSwitchContext: true }}
+      />
+    )
+  );
+  expect(container.querySelector('[aria-label="Switch to customer"]')).toBeTruthy();
+  expect(fetchMock).not.toHaveBeenCalled();
+});

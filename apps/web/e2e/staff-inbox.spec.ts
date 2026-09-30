@@ -1,4 +1,6 @@
 import { test, expect } from './coverage-fixture';
+import { shellText } from '@barghsa/i18n/shell';
+import { t } from '@barghsa/i18n/app';
 
 for (const locale of ['fa', 'en'] as const) {
   test(`staff inbox stays in the staff workspace (${locale})`, async ({ page }) => {
@@ -108,17 +110,18 @@ for (const locale of ['fa', 'en'] as const) {
     );
 
     await page.getByRole('button', { name: /امنیت حساب|Account security/ }).click();
-    await expect(page).toHaveURL(/\/admin\/inbox$/);
-    await expect(page.locator('main')).toContainText(
-      locale === 'fa'
-        ? 'برای دیدن جزئیات، به حالت مشتری بروید.'
-        : 'Switch to customer mode to view details.'
-    );
+    await expect(page).toHaveURL(/\/settings\/security$/);
+    await expect(
+      page.getByRole('heading', { name: t('settings.security.title', locale), exact: true })
+    ).toBeVisible();
+    await expect(page.locator('#admin-navigation')).toBeAttached();
+    await page.goto('/admin/inbox');
     await page.getByRole('button', { name: /بررسی مالی|Finance review/ }).click();
     await expect(page).toHaveURL(/\/admin\/approval-requests$/);
     await page.evaluate(() => {
       document.cookie = 'barghsa_csrf=test-csrf; path=/';
     });
+    await page.getByRole('button', { name: shellText('accountMenu', locale), exact: true }).click();
     await page.getByRole('button', { name: /Switch to customer|رفتن به حالت مشتری/ }).click();
     await expect(page).toHaveURL(/\/app$/);
     await page.getByTestId('notification-bell').click();

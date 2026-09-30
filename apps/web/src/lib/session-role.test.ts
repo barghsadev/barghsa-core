@@ -56,3 +56,37 @@ it('retains the authenticated account ID for scoped preferences without another 
   });
   expect(request).toHaveBeenCalledTimes(1);
 });
+
+it('preserves only validated account identity without confusing it with the active business profile', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockResolvedValue(
+      Response.json({
+        userId: 'owner',
+        isStaff: true,
+        operatingContext: 'customer',
+        username: 'Owner',
+        email: 'owner@example.test',
+        mobile: '+989121234567',
+      })
+    )
+  );
+  expect(await readSessionContext()).toMatchObject({
+    userId: 'owner',
+    username: 'Owner',
+    email: 'owner@example.test',
+    mobile: '+989121234567',
+    operatingContext: 'customer',
+  });
+  vi.stubGlobal(
+    'fetch',
+    vi
+      .fn()
+      .mockResolvedValue(Response.json({ isStaff: false, username: {}, email: [], mobile: 123 }))
+  );
+  expect(await readSessionContext()).toEqual({
+    isStaff: false,
+    operatingContext: 'customer',
+    canSwitchContext: false,
+  });
+});

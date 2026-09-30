@@ -3,14 +3,16 @@ import { ArrowLeftRight } from 'lucide-react';
 import { Button } from '@barghsa/ui';
 import { shellText } from '@barghsa/i18n/shell';
 import { withCsrf } from '../lib/csrf.js';
-import { readSessionContext } from '../lib/session-role.js';
+import { readSessionContext, type SessionContext } from '../lib/session-role.js';
 
 export function OperatingContextSwitch({
   area,
   locale,
+  session,
 }: {
   area: 'dashboard' | 'admin';
   locale: 'fa' | 'en';
+  session?: SessionContext | null;
 }) {
   const [canSwitch, setCanSwitch] = useState(false);
   const [pending, setPending] = useState(false);
@@ -19,6 +21,10 @@ export function OperatingContextSwitch({
   const target = current === 'staff' ? 'customer' : 'staff';
 
   useEffect(() => {
+    if (session !== undefined) {
+      setCanSwitch(session?.canSwitchContext ?? false);
+      return;
+    }
     const controller = new AbortController();
     void readSessionContext(controller.signal)
       .then((session) => {
@@ -28,7 +34,7 @@ export function OperatingContextSwitch({
         if (!controller.signal.aborted) setCanSwitch(false);
       });
     return () => controller.abort();
-  }, []);
+  }, [session]);
 
   async function switchContext() {
     setPending(true);
@@ -50,7 +56,7 @@ export function OperatingContextSwitch({
 
   return (
     <div
-      className="relative flex items-center gap-1.5"
+      className="relative flex flex-wrap items-center gap-1.5"
       aria-label={shellText(`${current}Context`, locale)}
     >
       <span className="whitespace-nowrap rounded-md border border-current/20 px-2 py-1 text-xs font-semibold">
@@ -60,13 +66,13 @@ export function OperatingContextSwitch({
         <Button
           type="button"
           variant="ghost"
-          size="sm"
+          size="default"
           disabled={pending}
           onClick={() => void switchContext()}
           aria-label={shellText(target === 'staff' ? 'switchToStaff' : 'switchToCustomer', locale)}
         >
           <ArrowLeftRight className="size-4" aria-hidden="true" />
-          <span className="hidden lg:inline">
+          <span className="inline">
             {shellText(target === 'staff' ? 'switchToStaff' : 'switchToCustomer', locale)}
           </span>
         </Button>

@@ -13,6 +13,10 @@ for (const locale of ['fa', 'en'] as const)
       await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
       const config = {
         appTitle: 'Theme preview',
+        appTitleFa: 'آزمون نمایش',
+        supportEmail: 'support@example.test',
+        supportPhone: '+98 21 12345678',
+        supportMobile: '+98 912 1234567',
         slogan: 'Readable slogan',
         primaryColor: '#ffffff',
         secondaryColor: '#777777',
@@ -104,15 +108,22 @@ for (const locale of ['fa', 'en'] as const)
       await expect(toggle).toBeChecked({ checked: !darkMode });
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
       await scan();
+      const accountMenu = page.getByRole('button', {
+        name: shellText('accountMenu', locale),
+        exact: true,
+      });
+      await accountMenu.click();
       const theme = page.getByRole('combobox', { name: shellText('theme', locale) });
       await expect(theme).toBeEnabled();
       await theme.selectOption(darkMode ? 'light' : 'dark');
       await expect(page.locator('html')).toHaveClass(darkMode ? /^(?!.*\bdark\b)/ : /dark/);
       await page.reload();
+      await accountMenu.click();
       await expect(theme).toHaveValue(darkMode ? 'light' : 'dark');
       await expect(page.locator('html')).toHaveClass(darkMode ? /^(?!.*\bdark\b)/ : /dark/);
       await theme.selectOption('default');
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
+      await accountMenu.click();
       await preview.screenshot({ path: `/tmp/r03-branding-preview-${locale}-${darkMode}.png` });
       await page.screenshot({
         path: `/tmp/r03-branding-${locale}-${darkMode}.png`,

@@ -88,14 +88,26 @@ describe('toNavigationTarget', () => {
     expect(toNavigationTarget({ ...base, linkRoute: '/admin/tickets' }, 'staff')).toEqual({
       to: '/admin/tickets',
     });
-    expect(toNavigationTarget({ ...base, linkRoute: '/settings/security' }, 'staff')).toBeNull();
+    for (const path of [
+      '/settings',
+      '/settings/security/',
+      '/settings/privacy',
+      '/settings/username',
+      '/settings/timezone',
+    ]) {
+      expect(toNavigationTarget({ ...base, linkRoute: path }, 'staff')).toEqual({ to: path });
+    }
+    for (const path of [
+      '/wallet',
+      '/settings/profile',
+      '/settings/addresses',
+      '/settings/security/extra',
+    ]) {
+      expect(toNavigationTarget({ ...base, linkRoute: path }, 'staff')).toBeNull();
+    }
     expect(toNavigationTarget({ ...base, linkRoute: '/admin/tickets' }, 'customer')).toBeNull();
-    expect(
-      toNavigationTarget({ ...base, linkRoute: '/admin/../settings/security' }, 'staff')
-    ).toBeNull();
-    expect(
-      toNavigationTarget({ ...base, linkRoute: '/admin/%2e%2e/settings/security' }, 'staff')
-    ).toBeNull();
+    expect(toNavigationTarget({ ...base, linkRoute: '/admin/../wallet' }, 'staff')).toBeNull();
+    expect(toNavigationTarget({ ...base, linkRoute: '/admin/%2e%2e/wallet' }, 'staff')).toBeNull();
   });
 });
 

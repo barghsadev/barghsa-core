@@ -1,12 +1,9 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, useLocation } from '@tanstack/react-router';
-import { Button, cn } from '@barghsa/ui';
-import { Menu, X, ChevronRight, ArrowUpRight, type LucideIcon } from 'lucide-react';
+import { cn } from '@barghsa/ui';
+import { ArrowUpRight, type LucideIcon } from 'lucide-react';
+import { Topbar } from './Topbar.js';
 import { shellText } from '@barghsa/i18n/shell';
-import { BrandMark } from './BrandMark.js';
-import { LanguageSwitcher } from './LanguageSwitcher.js';
-import { ThemeSwitcher } from './ThemeSwitcher.js';
-import { OperatingContextSwitch } from './OperatingContextSwitch.js';
 import {
   AnalyticsConsentBanner,
   AnalyticsConsentProvider,
@@ -55,7 +52,6 @@ export function AppShell({
       (item) => pathname === item.to || (item.to !== '/app' && pathname.startsWith(item.to + '/'))
     )
     .sort((a, b) => b.to.length - a.to.length)[0];
-  const title = shellText(area === 'admin' ? 'administration' : 'workspace', locale);
   const shell = (
     <div
       className="flex h-dvh flex-col bg-background text-foreground"
@@ -66,44 +62,17 @@ export function AppShell({
       </a>
       {banners}
       <AnalyticsConsentBanner />
-      <header className="flex min-h-(--topbar-height) shrink-0 items-center gap-1 border-b bg-card px-2 sm:gap-3 sm:px-4 md:px-6">
-        <Link
-          to="/app"
-          className="flex min-w-0 items-center text-foreground no-underline md:w-[calc(var(--sidebar-width)-3rem)]"
-        >
-          <BrandMark />
-        </Link>
-        <div className="hidden min-w-0 flex-1 items-center gap-2 text-sm md:flex">
-          <span className="shrink-0 text-muted-foreground">{title}</span>
-          {current ? (
-            <>
-              <ChevronRight
-                className="size-3.5 shrink-0 text-muted-foreground rtl:rotate-180"
-                aria-hidden="true"
-              />
-              <span className="truncate font-medium">{current.label}</span>
-            </>
-          ) : null}
-        </div>
-        <div className="ms-auto flex shrink-0 items-center gap-1 sm:gap-2">
-          <OperatingContextSwitch area={area} locale={locale} />
-          <ThemeSwitcher />
-          <LanguageSwitcher />
-          {actions}
-          <Button
-            ref={menuButton}
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            aria-label={shellText('menu', locale)}
-            aria-expanded={menuOpen}
-            aria-controls={`${area}-navigation`}
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-          </Button>
-        </div>
-      </header>
+      <Topbar
+        area={area}
+        locale={locale}
+        currentLabel={current?.label}
+        actions={actions}
+        menuOpen={menuOpen}
+        menuButton={menuButton}
+        onMenuToggle={() => setMenuOpen(!menuOpen)}
+        onAccountOpen={() => setMenuOpen(false)}
+        navigationId={`${area}-navigation`}
+      />
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         <aside
           id={`${area}-navigation`}

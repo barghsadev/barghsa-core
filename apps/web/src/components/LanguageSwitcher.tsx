@@ -10,7 +10,7 @@ export function LanguageSwitcher() {
   return (
     <Button
       variant="ghost"
-      size="sm"
+      size="default"
       aria-label={shellText('language', locale)}
       onClick={() => {
         const next = locale === 'fa' ? 'en' : 'fa';
@@ -18,7 +18,7 @@ export function LanguageSwitcher() {
       }}
     >
       <Languages aria-hidden="true" data-icon="inline-start" />
-      <span className="hidden sm:inline" lang={locale === 'fa' ? 'en' : 'fa'}>
+      <span className="inline" lang={locale === 'fa' ? 'en' : 'fa'}>
         {locale === 'fa' ? 'English' : 'فارسی'}
       </span>
     </Button>
