@@ -16,6 +16,14 @@ export interface QuickStatusCounts {
   unpaidInvoices: number;
 }
 
+interface UpcomingInvoiceRow {
+  id: string;
+  due_at: Date | null;
+  payable_from: Date | null;
+  remaining_amount: string;
+  total_unpaid: string;
+}
+
 /**
  * Dashboard service (T-08.01.03).
  *
@@ -34,7 +42,7 @@ export class DashboardService {
     const pool = getDbPool();
     const allowed = (permission: AgentPermission) =>
       context.is_owner || hasAnyRolePermission(context.roles, permission);
-    const [profileResult, quickStatus, wallet, outstandingResult] = await Promise.all([
+    const [profileResult, quickStatus, wallet, upcomingResult] = await Promise.all([
       pool.query<{ name: string }>(
         `SELECT COALESCE(NULLIF(l.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',p.title,p.first_name,p.last_name)),''),'') AS name
          FROM profiles p LEFT JOIN legal_profiles l ON l.id=p.id WHERE p.id=$1`,
@@ -42,13 +50,16 @@ export class DashboardService {
       ),
       this.getCountsForContext(context, userId),
       allowed('wallet:view') ? this.walletService.getWallet(context.id) : Promise.resolve(null),
-      allowed('wallet:view') && allowed('invoices:view')
-        ? pool.query<{ amount: string }>(
-            `SELECT COALESCE(SUM(total_amount-paid_amount),0)::text AS amount FROM invoices
-             WHERE profile_id=$1 AND ${UNPAID_CUSTOMER_INVOICE_PREDICATE}`,
+      allowed('invoices:view')
+        ? pool.query<UpcomingInvoiceRow>(
+            `SELECT id,due_at,payable_from,
+                      GREATEST(total_amount-paid_amount,0)::text AS remaining_amount,
+                      (SUM(GREATEST(total_amount-paid_amount,0)) OVER ())::text AS total_unpaid
+               FROM invoices WHERE profile_id=$1 AND ${UNPAID_CUSTOMER_INVOICE_PREDICATE}
+               ORDER BY due_at ASC NULLS LAST,created_at ASC,id ASC LIMIT 3`,
             [context.id]
           )
-        : Promise.resolve({ rows: [{ amount: '0' }] }),
+        : Promise.resolve({ rows: [] as UpcomingInvoiceRow[] }),
     ]);
     if (!profileResult.rows[0]) throw new NotFoundException('Active profile no longer exists');
     const balance = wallet?.availableBalance ?? 0n;
@@ -64,11 +75,17 @@ export class DashboardService {
             postedBalance: (wallet?.postedBalance ?? 0n).toString(),
             reservedBalance: (wallet?.reservedBalance ?? 0n).toString(),
             currency: 'IRR',
-            lowBalanceWarning: balance < BigInt(outstandingResult.rows[0]!.amount),
+            lowBalanceWarning: balance < BigInt(upcomingResult.rows[0]?.total_unpaid ?? '0'),
           }
         : null,
       activeOrders: quickStatus.pendingOrders,
       pendingInvoices: quickStatus.unpaidInvoices,
+      upcomingInvoices: upcomingResult.rows.map((invoice) => ({
+        invoiceId: invoice.id,
+        dueAt: invoice.due_at?.toISOString() ?? null,
+        payableFrom: invoice.payable_from?.toISOString() ?? null,
+        remainingAmount: invoice.remaining_amount,
+      })),
       openTickets: quickStatus.openTickets,
       contracts: { active: quickStatus.activeContracts, total: quickStatus.activeContracts },
       quickStatus,

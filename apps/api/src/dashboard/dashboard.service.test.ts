@@ -30,7 +30,18 @@ describe('DashboardService quick status', () => {
       if (query.includes('FROM profiles p') && query.includes('JOIN users u'))
         return { rows: [{ id: 'profile-1', is_owner: true, roles: [] }] };
       if (query.includes('FROM profiles p')) return { rows: [{ name: 'Customer' }] };
-      if (query.includes('SUM(total_amount-paid_amount)')) return { rows: [{ amount: '50' }] };
+      if (query.includes('OVER ()'))
+        return {
+          rows: [
+            {
+              id: 'invoice-1',
+              due_at: new Date('2026-10-03T12:00:00.000Z'),
+              payable_from: new Date('2026-09-30T12:00:00.000Z'),
+              remaining_amount: '50',
+              total_unpaid: '50',
+            },
+          ],
+        };
       return { rows: [{ cnt: 0 }] };
     });
     const overview = await service.getOverview('customer-1');
@@ -42,9 +53,18 @@ describe('DashboardService quick status', () => {
       lowBalanceWarning: true,
     });
     expect(overview.access).toEqual({ wallet: true, invoices: true });
-    const outstandingQuery = queryFor('SUM(total_amount-paid_amount)');
+    expect(overview.upcomingInvoices).toEqual([
+      {
+        invoiceId: 'invoice-1',
+        dueAt: '2026-10-03T12:00:00.000Z',
+        payableFrom: '2026-09-30T12:00:00.000Z',
+        remainingAmount: '50',
+      },
+    ]);
+    const outstandingQuery = queryFor('OVER ()');
     expect(outstandingQuery?.[0]).toContain("state IN ('Unpaid', 'Overdue')");
-    expect(outstandingQuery?.[0]).not.toContain('due_at<=NOW()');
+    expect(outstandingQuery?.[0]).toContain('ORDER BY due_at ASC NULLS LAST');
+    expect(outstandingQuery?.[0]).toContain('LIMIT 3');
     expect(outstandingQuery?.[1]).toEqual(['profile-1']);
   });
 
@@ -74,6 +94,7 @@ describe('DashboardService quick status', () => {
     const overview = await service.getOverview('legal-user');
     expect(overview.access).toEqual({ wallet: false, invoices: false });
     expect(overview.wallet).toBeNull();
+    expect(overview.upcomingInvoices).toEqual([]);
     expect(getWallet).not.toHaveBeenCalled();
     expect(queryFor('FROM invoices')).toBeUndefined();
   });
