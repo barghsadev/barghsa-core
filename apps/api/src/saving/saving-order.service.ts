@@ -1,3 +1,4 @@
+import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { createHash } from 'node:crypto';
 import {
   BadRequestException,
@@ -440,7 +441,8 @@ export class SavingOrderService {
     profileId: string,
     before?: string,
     status?: 'pending',
-    statuses: readonly string[] = []
+    statuses: readonly string[] = [],
+    range: DateRangeFilterValue = {}
   ) {
     const client = await getDbPool().connect();
     const pendingOnly = status === 'pending';
@@ -455,8 +457,10 @@ export class SavingOrderService {
               `SELECT submitted_at::text AS submitted_at,id FROM saving_orders
                WHERE id=$1 AND profile_id=$2
                  AND (NOT $3::boolean OR status IN ('submitted','awaiting_staff_review','approved','in_progress'))
-                 AND (cardinality($4::text[])=0 OR status=ANY($4::text[]))`,
-              [before, profileId, pendingOnly, statuses]
+                 AND (cardinality($4::text[])=0 OR status=ANY($4::text[]))
+                 AND ($5::timestamptz IS NULL OR submitted_at >= $5::timestamptz)
+                 AND ($6::timestamptz IS NULL OR submitted_at < $6::timestamptz)`,
+              [before, profileId, pendingOnly, statuses, range.from ?? null, range.to ?? null]
             )
           ).rows[0]
         : undefined;
@@ -483,8 +487,18 @@ export class SavingOrderService {
               AND ($2::timestamptz IS NULL OR (s.submitted_at,s.id)<($2::timestamptz,$3::uuid))
               AND (NOT $4::boolean OR s.status IN ('submitted','awaiting_staff_review','approved','in_progress'))
               AND (cardinality($5::text[])=0 OR s.status=ANY($5::text[]))
+              AND ($6::timestamptz IS NULL OR s.submitted_at >= $6::timestamptz)
+              AND ($7::timestamptz IS NULL OR s.submitted_at < $7::timestamptz)
             ORDER BY s.submitted_at DESC,s.id DESC LIMIT 101`,
-          [profileId, cursor?.submitted_at ?? null, cursor?.id ?? null, pendingOnly, statuses]
+          [
+            profileId,
+            cursor?.submitted_at ?? null,
+            cursor?.id ?? null,
+            pendingOnly,
+            statuses,
+            range.from ?? null,
+            range.to ?? null,
+          ]
         )
       ).rows;
       await requireCurrentSession(client, actor);

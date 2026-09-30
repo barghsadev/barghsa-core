@@ -1,3 +1,6 @@
+import { t } from '@barghsa/i18n/app';
+import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
+import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { Button, StatusFilter } from '@barghsa/ui';
@@ -36,9 +39,13 @@ interface RequestRow {
 export function ConsultationsPage({
   statuses = [],
   onStatusesChange,
+  dateRange = {},
+  onDateRangeChange,
 }: {
   statuses?: readonly string[];
   onStatusesChange?: (statuses: string[]) => void;
+  dateRange?: DateRangeFilterValue;
+  onDateRangeChange?: (range: DateRangeFilterValue) => void;
 }) {
   const navigate = useNavigate();
   const locale = useLocale();
@@ -48,13 +55,14 @@ export function ConsultationsPage({
   const [profile, setProfile] = useState<SwitcherProfile | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const statusesKey = statuses.join(',');
+  const rangeKey = `${dateRange.from ?? ''}:${dateRange.to ?? ''}`;
   const {
     items: requests,
     before,
     nextBefore,
     acceptPage,
     loadMore,
-  } = useCursorHistory<RequestRow>(`${profile?.id ?? ''}:${statusesKey}`);
+  } = useCursorHistory<RequestRow>(`${profile?.id ?? ''}:${statusesKey}:${rangeKey}`);
   const [requestsLoading, setRequestsLoading] = useState(true);
   const [requestsError, setRequestsError] = useState(false);
   const [requestRevision, setRequestRevision] = useState(0);
@@ -107,6 +115,8 @@ export function ConsultationsPage({
     const query = new URLSearchParams({ profileId: profile.id });
     if (before) query.set('before', before);
     if (statusesKey) query.set('statuses', statusesKey);
+    if (dateRange.from) query.set('from', dateRange.from);
+    if (dateRange.to) query.set('to', dateRange.to);
     void fetch(`/api/consultations/requests?${query}`, {
       credentials: 'include',
       signal: controller.signal,
@@ -127,7 +137,7 @@ export function ConsultationsPage({
         if (!controller.signal.aborted) setRequestsLoading(false);
       });
     return () => controller.abort();
-  }, [profile, before, requestRevision, statusesKey, acceptPage]);
+  }, [profile, before, requestRevision, statusesKey, dateRange.from, dateRange.to, acceptPage]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -239,6 +249,14 @@ export function ConsultationsPage({
             <h2 id="consultation-requests-title" className="text-xl font-semibold">
               {copy('myRequests')}
             </h2>
+            {onDateRangeChange && (
+              <HistoryDateFilter
+                value={dateRange}
+                onChange={onDateRangeChange}
+                locale={locale}
+                time={time}
+              />
+            )}
             {onStatusesChange && (
               <StatusFilter
                 label={copy('filterStatus')}
@@ -262,7 +280,9 @@ export function ConsultationsPage({
             )}
             {!requests.length && !requestsLoading && !requestsError && (
               <p className="text-muted-foreground">
-                {copy(statuses.length ? 'filteredEmpty' : 'emptyRequests')}
+                {dateRange.from || dateRange.to
+                  ? t('historyDates.empty', locale)
+                  : copy(statuses.length ? 'filteredEmpty' : 'emptyRequests')}
               </p>
             )}
             <ul className="space-y-3">

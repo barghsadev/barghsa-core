@@ -5,6 +5,19 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'historyDates.label': 'فیلتر تاریخ ثبت',
+  'historyDates.preset': 'بازه تاریخ',
+  'historyDates.today': 'امروز',
+  'historyDates.last7': '۷ روز گذشته',
+  'historyDates.thisMonth': 'این ماه',
+  'historyDates.lastMonth': 'ماه گذشته',
+  'historyDates.custom': 'بازه دلخواه',
+  'historyDates.start': 'از تاریخ',
+  'historyDates.end': 'تا تاریخ (شامل این روز)',
+  'historyDates.apply': 'اعمال تاریخ\u200cها',
+  'historyDates.clear': 'پاک کردن تاریخ\u200cها',
+  'historyDates.invalid': 'تاریخ پایان باید برابر یا پس از تاریخ شروع باشد.',
+  'historyDates.empty': 'موردی با فیلترهای انتخاب\u200cشده پیدا نشد.',
   'jobs.progress': 'پیشرفت کار',
   'jobs.queued': 'در صف',
   'jobs.processing': 'در حال انجام',
@@ -1482,6 +1495,19 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'historyDates.label': 'Filter by submission date',
+  'historyDates.preset': 'Date range',
+  'historyDates.today': 'Today',
+  'historyDates.last7': 'Last 7 days',
+  'historyDates.thisMonth': 'This month',
+  'historyDates.lastMonth': 'Last month',
+  'historyDates.custom': 'Custom',
+  'historyDates.start': 'Start date',
+  'historyDates.end': 'End date (including this day)',
+  'historyDates.apply': 'Apply dates',
+  'historyDates.clear': 'Clear dates',
+  'historyDates.invalid': 'End date must be on or after start date.',
+  'historyDates.empty': 'No records match the selected filters.',
   'jobs.progress': 'Job progress',
   'jobs.queued': 'Queued',
   'jobs.processing': 'In progress',

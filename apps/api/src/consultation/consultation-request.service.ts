@@ -1,3 +1,4 @@
+import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { v7 as uuidv7 } from 'uuid';
@@ -170,7 +171,13 @@ export class ConsultationRequestService {
     }
   }
 
-  async list(actor: Actor, profileId: string, before?: string, statuses: readonly string[] = []) {
+  async list(
+    actor: Actor,
+    profileId: string,
+    before?: string,
+    statuses: readonly string[] = [],
+    range: DateRangeFilterValue = {}
+  ) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -180,8 +187,8 @@ export class ConsultationRequestService {
       const cursor = before
         ? (
             await client.query<{ id: string; submitted_at: string }>(
-              'SELECT id,submitted_at::text AS submitted_at FROM consultation_requests WHERE id=$1 AND profile_id=$2 AND (cardinality($3::text[])=0 OR status=ANY($3::text[]))',
-              [before, profileId, statuses]
+              'SELECT id,submitted_at::text AS submitted_at FROM consultation_requests WHERE id=$1 AND profile_id=$2 AND (cardinality($3::text[])=0 OR status=ANY($3::text[])) AND ($4::timestamptz IS NULL OR submitted_at >= $4::timestamptz) AND ($5::timestamptz IS NULL OR submitted_at < $5::timestamptz)',
+              [before, profileId, statuses, range.from ?? null, range.to ?? null]
             )
           ).rows[0]
         : null;
@@ -202,8 +209,17 @@ export class ConsultationRequestService {
              WHERE r.profile_id=$1
                AND ($2::timestamptz IS NULL OR (r.submitted_at,r.id) < ($2::timestamptz,$3::uuid))
                AND (cardinality($4::text[])=0 OR r.status=ANY($4::text[]))
+                 AND ($5::timestamptz IS NULL OR r.submitted_at >= $5::timestamptz)
+                 AND ($6::timestamptz IS NULL OR r.submitted_at < $6::timestamptz)
              ORDER BY r.submitted_at DESC,r.id DESC LIMIT 101`,
-          [profileId, cursor?.submitted_at ?? null, before ?? null, statuses]
+          [
+            profileId,
+            cursor?.submitted_at ?? null,
+            before ?? null,
+            statuses,
+            range.from ?? null,
+            range.to ?? null,
+          ]
         )
       ).rows;
       await client.query('COMMIT');

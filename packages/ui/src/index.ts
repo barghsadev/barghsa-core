@@ -61,3 +61,4 @@ export * from './components/ui/confirm-dialog';
 export * from './components/ui/input-group';
 export * from './components/ui/pagination';
 export * from './components/ui/status-filter';
+export * from './components/ui/date-range-filter';

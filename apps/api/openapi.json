@@ -16699,6 +16699,24 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "description": "Included UTC submission timestamp (ISO with milliseconds)",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Excluded UTC submission timestamp (ISO with milliseconds)",
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -23263,6 +23281,24 @@
             }
           },
           {
+            "description": "Included UTC submission timestamp (ISO with milliseconds)",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Excluded UTC submission timestamp (ISO with milliseconds)",
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "in": "query",
             "name": "status",
             "required": false,
@@ -24001,6 +24037,24 @@
             "description": "Comma-separated solar request statuses",
             "in": "query",
             "name": "statuses",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Included UTC submission timestamp (ISO with milliseconds)",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Excluded UTC submission timestamp (ISO with milliseconds)",
+            "in": "query",
+            "name": "to",
             "required": false,
             "schema": {
               "type": "string"

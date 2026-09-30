@@ -13,7 +13,11 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { parseStatusFilter, SOLAR_REQUEST_STATUSES } from '@barghsa/shared/validation';
+import {
+  parseDateRangeFilter,
+  parseStatusFilter,
+  SOLAR_REQUEST_STATUSES,
+} from '@barghsa/shared/validation';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -87,17 +91,33 @@ export class SolarRequestController {
     type: String,
     description: 'Comma-separated solar request statuses',
   })
+  @ApiQuery({
+    name: 'from',
+    required: false,
+    type: String,
+    description: 'Included UTC submission timestamp (ISO with milliseconds)',
+  })
+  @ApiQuery({
+    name: 'to',
+    required: false,
+    type: String,
+    description: 'Excluded UTC submission timestamp (ISO with milliseconds)',
+  })
   list(
     @Query('profileId', new ParseUUIDPipe()) profileId: string,
     @Req() req: AuthenticatedRequest,
     @Query('before') before?: string,
-    @Query('statuses') statuses?: string
+    @Query('statuses') statuses?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string
   ) {
     if (before && !z.string().uuid().safeParse(before).success)
       throw new HttpException({ error: 'VALIDATION:INVALID_CURSOR' }, 400);
     const selectedStatuses = parseStatusFilter(statuses, SOLAR_REQUEST_STATUSES);
     if (!selectedStatuses) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
-    return this.service.list(req.session, profileId, before, selectedStatuses);
+    const range = parseDateRangeFilter(from, to);
+    if (!range) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.list(req.session, profileId, before, selectedStatuses, range);
   }
 
   @Get(':id')

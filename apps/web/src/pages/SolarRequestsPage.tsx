@@ -1,3 +1,5 @@
+import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
+import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { StatusFilter } from '@barghsa/ui';
@@ -26,22 +28,27 @@ interface RequestRow {
 export function SolarRequestsPage({
   statuses = [],
   onStatusesChange,
+  dateRange = {},
+  onDateRangeChange,
 }: {
   statuses?: readonly string[];
   onStatusesChange?: (statuses: string[]) => void;
+  dateRange?: DateRangeFilterValue;
+  onDateRangeChange?: (range: DateRangeFilterValue) => void;
 }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
   const statusesKey = statuses.join(',');
+  const rangeKey = `${dateRange.from ?? ''}:${dateRange.to ?? ''}`;
   const {
     items: rows,
     before,
     nextBefore,
     acceptPage,
     loadMore,
-  } = useCursorHistory<RequestRow>(statusesKey);
+  } = useCursorHistory<RequestRow>(`${statusesKey}:${rangeKey}`);
   const [revision, setRevision] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -64,6 +71,8 @@ export function SolarRequestsPage({
         const params = new URLSearchParams({ profileId: profile.activeProfileId });
         if (before) params.set('before', before);
         if (statusesKey) params.set('statuses', statusesKey);
+        if (dateRange.from) params.set('from', dateRange.from);
+        if (dateRange.to) params.set('to', dateRange.to);
         const response = await fetch(`/api/solar/requests?${params}`, {
           credentials: 'include',
           signal: controller.signal,
@@ -83,7 +92,7 @@ export function SolarRequestsPage({
       }
     })();
     return () => controller.abort();
-  }, [before, revision, statusesKey, acceptPage]);
+  }, [before, revision, statusesKey, dateRange.from, dateRange.to, acceptPage]);
   return (
     <main className="mx-auto max-w-3xl space-y-5 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('myRequests')}</h1>
@@ -94,6 +103,14 @@ export function SolarRequestsPage({
         {copy('submit')}
       </Link>
       {time.notice}
+      {onDateRangeChange && (
+        <HistoryDateFilter
+          value={dateRange}
+          onChange={onDateRangeChange}
+          locale={locale}
+          time={time}
+        />
+      )}
       {onStatusesChange && (
         <StatusFilter
           label={copy('filterStatus')}
@@ -120,7 +137,11 @@ export function SolarRequestsPage({
         </button>
       )}
       {!loading && !error && !rows.length && (
-        <p>{copy(statuses.length ? 'filteredEmpty' : 'none')}</p>
+        <p>
+          {dateRange.from || dateRange.to
+            ? t('historyDates.empty', locale)
+            : copy(statuses.length ? 'filteredEmpty' : 'none')}
+        </p>
       )}
       <ul className="space-y-3">
         {rows.map((row) => {

@@ -395,6 +395,28 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   );
   expect(filtered.status, http.logs()).toBe(200);
   expect(await filtered.json()).toMatchObject({ orders: [{ id: result.savingOrderId }] });
+  const rangeId = result.savingOrderId;
+  const oldTime = (
+    await http.pool.query<{ submitted_at: Date }>(
+      'SELECT submitted_at FROM saving_orders WHERE id=$1',
+      [rangeId]
+    )
+  ).rows[0]!.submitted_at;
+  const start = '2027-01-01T10:00:00.000Z';
+  const end = '2027-01-01T10:00:01.000Z';
+  await http.pool.query('UPDATE saving_orders SET submitted_at=$2 WHERE id=$1', [rangeId, start]);
+  const range = new URLSearchParams({ profileId: input.profileId, from: start, to: end });
+  const ranged = await request(`/api/saving/orders?${range}`, 'GET');
+  expect(ranged.status, http.logs()).toBe(200);
+  expect(await ranged.json()).toMatchObject({ orders: [{ id: rangeId }], nextBefore: null });
+  range.set('to', start);
+  expect((await request(`/api/saving/orders?${range}`, 'GET')).status).toBe(400);
+  range.delete('from');
+  range.set('before', rangeId);
+  expect((await request(`/api/saving/orders?${range}`, 'GET')).status).toBe(404);
+  range.set('from', 'invalid-date');
+  expect((await request(`/api/saving/orders?${range}`, 'GET')).status).toBe(400);
+  await http.pool.query('UPDATE saving_orders SET submitted_at=$2 WHERE id=$1', [rangeId, oldTime]);
   const noMatch = await request(
     `/api/saving/orders?profileId=${input.profileId}&statuses=completed`,
     'GET'

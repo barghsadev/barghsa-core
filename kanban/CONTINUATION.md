@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Customer history date filters](batches/2026-09-30-customer-history-date-filters.md) adds shared localized start/end pickers and calendar-aware presets to saving, solar, and consultation histories. Exact UTC bounds compose with status selections, survive reload and Back, and filter in PostgreSQL before pagination. Custom drafts validate before Apply, and controls wait for the account timezone. Broader all-list coverage remains open.
+
 [Customer history status filters](batches/2026-09-30-customer-history-status-filters.md) adds shared multi-select status controls to saving orders, solar requests, and consultation requests. URL selections survive reload and Back; changing filters clears old pages and cursors while preserving the consultation form. PostgreSQL filters before pagination. Broader all-list filter coverage remains open.
 
 [Notification category badges](batches/2026-09-30-notification-status-badges.md) give the customer and staff bell and inbox the same labeled icon and category color. Document events now identify themselves as documents in both dictionaries instead of falling back to System.

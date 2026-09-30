@@ -271,6 +271,34 @@ it('submits both solar request types, captures agreement, and creates no contrac
   );
   expect(filtered.status, http.logs()).toBe(200);
   expect(((await filtered.json()) as { requests: unknown[] }).requests).toHaveLength(2);
+  const rangeId = listed.requests[0]!.id;
+  const oldTime = (
+    await http.pool.query<{ submitted_at: Date }>(
+      'SELECT submitted_at FROM solar_construction_requests WHERE id=$1',
+      [rangeId]
+    )
+  ).rows[0]!.submitted_at;
+  const start = '2027-01-01T10:00:00.000Z';
+  const end = '2027-01-01T10:00:01.000Z';
+  await http.pool.query('UPDATE solar_construction_requests SET submitted_at=$2 WHERE id=$1', [
+    rangeId,
+    start,
+  ]);
+  const range = new URLSearchParams({ profileId: profileId, from: start, to: end });
+  const ranged = await request(`/api/solar/requests?${range}`, 'GET');
+  expect(ranged.status, http.logs()).toBe(200);
+  expect(await ranged.json()).toMatchObject({ requests: [{ id: rangeId }], nextBefore: null });
+  range.set('to', start);
+  expect((await request(`/api/solar/requests?${range}`, 'GET')).status).toBe(400);
+  range.delete('from');
+  range.set('before', rangeId);
+  expect((await request(`/api/solar/requests?${range}`, 'GET')).status).toBe(404);
+  range.set('from', 'invalid-date');
+  expect((await request(`/api/solar/requests?${range}`, 'GET')).status).toBe(400);
+  await http.pool.query('UPDATE solar_construction_requests SET submitted_at=$2 WHERE id=$1', [
+    rangeId,
+    oldTime,
+  ]);
   const noMatch = await request(
     `/api/solar/requests?profileId=${profileId}&statuses=approved`,
     'GET'

@@ -2,17 +2,20 @@ import { test, expect } from './coverage-fixture';
 import type { Route } from '@playwright/test';
 import { tSaving } from '@barghsa/i18n/saving';
 import { tSolar } from '@barghsa/i18n/solar';
+import { t } from '@barghsa/i18n/app';
+import { dateRangePreset } from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
 
 const profileId = '10000000-0000-4000-8000-000000000001';
 const first = '20000000-0000-4000-8000-000000000001';
 const older = '20000000-0000-4000-8000-000000000002';
 const combined = '20000000-0000-4000-8000-000000000003';
+const dated = '20000000-0000-4000-8000-000000000005';
 const all = '20000000-0000-4000-8000-000000000004';
 
 for (const locale of ['en', 'fa'] as const) {
   for (const kind of ['saving', 'solar', 'consultation'] as const) {
-    test(`${kind} history status filters survive reload and reset pagination (${locale})`, async ({
+    test(`${kind} history status and date filters survive reload and reset pagination (${locale})`, async ({
       page,
     }) => {
       await page.setViewportSize({ width: 390, height: 844 });
@@ -109,6 +112,8 @@ for (const locale of ['en', 'fa'] as const) {
           held = route;
           return;
         }
+        if (query.get('from') || query.get('to'))
+          return route.fulfill({ json: body(dated, 'submitted') });
         if (!query.get('statuses')) return route.fulfill({ json: body(all, 'submitted') });
         if (query.get('statuses') === initialStatus)
           return route.fulfill({
@@ -121,6 +126,7 @@ for (const locale of ['en', 'fa'] as const) {
       const link = (id: string) => page.getByRole('main').locator(`a[href="${detailPath}/${id}"]`);
       await page.goto(`${routePath}?statuses=${initialStatus}`);
       await expect(link(first)).toBeVisible();
+
       if (kind === 'consultation') await page.getByRole('radio').check();
       await page
         .getByRole('button', {
@@ -161,18 +167,128 @@ for (const locale of ['en', 'fa'] as const) {
           exact: true,
         })
       ).toBeChecked();
+      if (kind === 'consultation') await page.getByRole('radio').check();
+      const dateCopy = (key: string) => t(`historyDates.${key}`, locale);
+      await page
+        .locator('summary')
+        .filter({ hasText: dateCopy('label') })
+        .click();
+      const preset = page.getByRole('combobox', { name: dateCopy('preset'), exact: true });
+      const now = new Date(await page.evaluate(() => Date.now()));
+      const ranges = Object.fromEntries(
+        (['today', 'last7', 'thisMonth', 'lastMonth'] as const).map((name) => {
+          const range = dateRangePreset(name, locale, 'Asia/Tehran', now);
+          return [name, [range.from!, range.to!]];
+        })
+      );
+      for (const [name, [from, to]] of Object.entries(ranges)) {
+        await preset.selectOption(name);
+        await expect.poll(() => new URL(page.url()).searchParams.get('from')).toBe(from);
+        await expect.poll(() => queries.at(-1)?.get('from')).toBe(from);
+        expect(queries.at(-1)?.get('to')).toBe(to);
+        expect(queries.at(-1)?.get('statuses')).toBe(`submitted,${initialStatus}`);
+        expect(queries.at(-1)?.has('before')).toBe(false);
+        await expect(link(dated)).toBeVisible();
+      }
+      // Custom edits stay local until Apply; an inclusive end day becomes an excluded next midnight.
+      await preset.selectOption('thisMonth');
+      const monthStart = ranges['thisMonth']![0]!;
+      await expect.poll(() => new URL(page.url()).searchParams.get('from')).toBe(monthStart);
+      await preset.selectOption('custom');
+      const endPicker = page.getByRole('combobox', { name: dateCopy('end'), exact: true });
+      await endPicker.click();
+      const calendar = page.getByRole('dialog', { name: dateCopy('end'), exact: true });
+      await expect(calendar).toBeVisible();
+      const dateParts = new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
+        timeZone: 'Asia/Tehran',
+        month: 'long',
+        year: 'numeric',
+        calendar: locale === 'fa' ? 'persian' : 'gregory',
+      }).formatToParts(new Date(monthStart));
+      const part = (type: string) => dateParts.find((item) => item.type === type)!.value;
+      await calendar
+        .getByRole('button', {
+          name: new RegExp(
+            locale === 'fa'
+              ? ` ۱-ام ${part('month')} ${part('year')}`
+              : `${part('month')} 1st, ${part('year')}`
+          ),
+        })
+        .click();
+      const customEnd = new Date(
+        new Date(monthStart).getTime() + 24 * 60 * 60 * 1000
+      ).toISOString();
+      await expect(calendar).toBeHidden();
+      const startPicker = page.getByRole('combobox', { name: dateCopy('start'), exact: true });
+      await startPicker.click();
+      const startCalendar = page.getByRole('dialog', { name: dateCopy('start'), exact: true });
+      await startCalendar
+        .getByRole('button', {
+          name: new RegExp(
+            locale === 'fa'
+              ? ` ۲-ام ${part('month')} ${part('year')}`
+              : `${part('month')} 2nd, ${part('year')}`
+          ),
+        })
+        .click();
+      await expect(
+        page.getByRole('button', { name: dateCopy('apply'), exact: true })
+      ).toBeDisabled();
+      await expect(page.getByText(dateCopy('invalid'), { exact: true })).toBeVisible();
+      expect(new URL(page.url()).searchParams.get('to')).toBe(ranges['thisMonth']![1]);
+      await startPicker.click();
+      await startCalendar
+        .getByRole('button', {
+          name: new RegExp(
+            locale === 'fa'
+              ? ` ۱-ام ${part('month')} ${part('year')}`
+              : `${part('month')} 1st, ${part('year')}`
+          ),
+        })
+        .click();
+      await page.getByRole('button', { name: dateCopy('apply'), exact: true }).click();
+      await expect.poll(() => new URL(page.url()).searchParams.get('to')).toBe(customEnd);
+      await expect(link(dated)).toBeVisible();
+      if (kind === 'consultation') await expect(page.getByRole('radio')).toBeChecked();
+      await page.reload();
+      await expect(link(dated)).toBeVisible();
+      await page
+        .locator('summary')
+        .filter({ hasText: copy('filterStatus') })
+        .click();
       await page.getByRole('button', { name: copy('clearFilters'), exact: true }).click();
-      await expect(link(all)).toBeVisible();
       await expect(page).not.toHaveURL(/statuses=/);
+      await expect.poll(() => queries.at(-1)?.get('statuses')).toBeNull();
+      expect(queries.at(-1)?.get('to')).toBe(customEnd);
       await expect(
         page.getByRole('button', { name: copy('clearFilters'), exact: true })
       ).toHaveCount(0);
       await page.goBack();
+      await expect.poll(() => queries.at(-1)?.get('statuses')).toBe(`submitted,${initialStatus}`);
+      await expect(link(dated)).toBeVisible();
+      await page
+        .locator('summary')
+        .filter({ hasText: dateCopy('label') })
+        .click();
+      await page.getByRole('button', { name: dateCopy('clear'), exact: true }).click();
       await expect(link(combined)).toBeVisible();
+      await expect(page).not.toHaveURL(/from=|to=/);
       expect(queries.at(-1)?.has('before')).toBe(false);
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
       ).toBe(true);
+      await page.route('**/api/user/settings/timezone', (route) =>
+        route.fulfill({ status: 503, json: {} })
+      );
+      await page.reload();
+      await expect(link(combined)).toBeVisible();
+      await page
+        .locator('summary')
+        .filter({ hasText: dateCopy('label') })
+        .click();
+      await expect(preset).toBeDisabled();
+      await expect(startPicker).toBeDisabled();
+      await expect(endPicker).toBeDisabled();
     });
   }
 }

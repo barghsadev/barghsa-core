@@ -1,3 +1,6 @@
+import { t } from '@barghsa/i18n/app';
+import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
+import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { Button, Card, CardContent, StatusFilter } from '@barghsa/ui';
@@ -22,23 +25,28 @@ export function SavingOrdersPage({
   pendingOnly = false,
   statuses = [],
   onStatusesChange,
+  dateRange = {},
+  onDateRangeChange,
 }: {
   pendingOnly?: boolean;
   statuses?: readonly string[];
   onStatusesChange?: (statuses: string[]) => void;
+  dateRange?: DateRangeFilterValue;
+  onDateRangeChange?: (range: DateRangeFilterValue) => void;
 }) {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
   const statusesKey = statuses.join(',');
+  const rangeKey = `${dateRange.from ?? ''}:${dateRange.to ?? ''}`;
   const {
     items: orders,
     before,
     nextBefore,
     acceptPage,
     loadMore,
-  } = useCursorHistory<SavingOrderRow>(`${pendingOnly}:${statusesKey}`);
+  } = useCursorHistory<SavingOrderRow>(`${pendingOnly}:${statusesKey}:${rangeKey}`);
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
   useEffect(() => {
     const controller = new AbortController();
@@ -59,6 +67,8 @@ export function SavingOrdersPage({
         if (before) params.set('before', before);
         if (pendingOnly) params.set('status', 'pending');
         if (statusesKey) params.set('statuses', statusesKey);
+        if (dateRange.from) params.set('from', dateRange.from);
+        if (dateRange.to) params.set('to', dateRange.to);
         const response = await fetch(`/api/saving/orders?${params}`, {
           signal: controller.signal,
         });
@@ -76,7 +86,7 @@ export function SavingOrdersPage({
       }
     })();
     return () => controller.abort();
-  }, [before, pendingOnly, statusesKey, acceptPage]);
+  }, [before, pendingOnly, statusesKey, dateRange.from, dateRange.to, acceptPage]);
   return (
     <main
       className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8"
@@ -91,21 +101,31 @@ export function SavingOrdersPage({
       <nav className="flex gap-4 text-sm" aria-label={copy('orders')}>
         <Link
           to="/savings/orders"
-          search={{ status: undefined, statuses: undefined }}
+          search={{ status: undefined, statuses: undefined, from: undefined, to: undefined }}
           className="text-primary underline underline-offset-4"
-          aria-current={pendingOnly || statuses.length ? undefined : 'page'}
+          aria-current={
+            pendingOnly || statuses.length || dateRange.from || dateRange.to ? undefined : 'page'
+          }
         >
           {copy('allOrders')}
         </Link>
         <Link
           to="/savings/orders"
-          search={{ status: 'pending', statuses: undefined }}
+          search={{ status: 'pending', statuses: undefined, from: undefined, to: undefined }}
           className="text-primary underline underline-offset-4"
           aria-current={pendingOnly ? 'page' : undefined}
         >
           {copy('pendingOrders')}
         </Link>
       </nav>
+      {onDateRangeChange && (
+        <HistoryDateFilter
+          value={dateRange}
+          onChange={onDateRangeChange}
+          locale={locale}
+          time={time}
+        />
+      )}
       {onStatusesChange && (
         <StatusFilter
           label={copy('filterStatus')}
@@ -131,7 +151,11 @@ export function SavingOrdersPage({
       {state === 'error' && <p role="alert">{copy('error')}</p>}
       {state === 'ready' && orders.length === 0 && (
         <p>
-          {copy(statuses.length ? 'filteredEmpty' : pendingOnly ? 'noPendingOrders' : 'noOrders')}
+          {dateRange.from || dateRange.to
+            ? t('historyDates.empty', locale)
+            : copy(
+                statuses.length ? 'filteredEmpty' : pendingOnly ? 'noPendingOrders' : 'noOrders'
+              )}
         </p>
       )}
       <div className="space-y-3">

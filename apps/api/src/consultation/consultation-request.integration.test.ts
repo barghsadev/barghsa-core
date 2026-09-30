@@ -188,6 +188,54 @@ it('lists seeded products by profile, submits without invoicing, and isolates hi
       )
     ).status
   ).toBe(400);
+  const originalTime = (
+    await http.pool.query<{ submitted_at: Date }>(
+      'SELECT submitted_at FROM consultation_requests WHERE id=$1',
+      [created.requestId]
+    )
+  ).rows[0]!.submitted_at;
+  const start = originalTime.toISOString();
+  const end = new Date(originalTime.getTime() + 1000).toISOString();
+  // PostgreSQL stores sub-millisecond precision; pin one row to the exact tested boundary.
+  await http.pool.query('UPDATE consultation_requests SET submitted_at=$2 WHERE id=$1', [
+    created.requestId,
+    start,
+  ]);
+  const range = new URLSearchParams({
+    profileId: profiles.individual!,
+    from: start,
+    to: end,
+    statuses: 'submitted,completed',
+  });
+  const ranged = await fetch(`${http.base}/api/consultations/requests?${range}`, {
+    headers: headers.individual!,
+  });
+  expect(ranged.status, http.logs()).toBe(200);
+  expect(await ranged.json()).toMatchObject({
+    requests: [{ id: created.requestId }],
+    nextBefore: null,
+  });
+  range.set('to', start);
+  expect(
+    (
+      await fetch(`${http.base}/api/consultations/requests?${range}`, {
+        headers: headers.individual!,
+      })
+    ).status
+  ).toBe(400);
+  range.delete('from');
+  const excluded = await fetch(`${http.base}/api/consultations/requests?${range}`, {
+    headers: headers.individual!,
+  });
+  expect(await excluded.json()).toEqual({ requests: [], nextBefore: null });
+  range.set('before', created.requestId);
+  expect(
+    (
+      await fetch(`${http.base}/api/consultations/requests?${range}`, {
+        headers: headers.individual!,
+      })
+    ).status
+  ).toBe(404);
   const combined = await fetch(
     `${http.base}/api/consultations/requests?profileId=${profiles.individual}&statuses=submitted,completed`,
     { headers: headers.individual! }
