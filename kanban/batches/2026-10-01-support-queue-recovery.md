@@ -49,4 +49,4 @@ The initial browser run passes 32 scenarios and fails four dark-color cases beca
 
 The preceding customer browsing batch is published as `29fa57135b892e8a9c290bb30c440f774d935775`; CI run `36787096726` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.
 
-This support queue batch is committed and pushed directly to main after review and related checks. Its remote commit and CI are verified after publication.
+This support queue batch is published as `279f98f14543ef3461e43cfca69dd0917bea60e0`; CI run `36788682899` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.

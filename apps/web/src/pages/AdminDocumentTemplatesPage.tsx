@@ -1,5 +1,5 @@
-import { useEffect, useState, type FormEvent } from 'react';
-import { Button, Input, Label } from '@barghsa/ui';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { Button, Input, Label, ListPage } from '@barghsa/ui';
 import { documentTemplateText } from '@barghsa/i18n/document-templates';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -47,7 +47,7 @@ export default function AdminDocumentTemplatesPage() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<Category | ''>('');
   const [selected, setSelected] = useState<string | null>(null);
-  const [rows, setRows] = useState<Template[]>([]);
+  const [rows, setRows] = useState<Template[] | null>(null);
   const [detail, setDetail] = useState<Template | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [retained, setRetained] = useState<string[]>([]);
@@ -58,51 +58,127 @@ export default function AdminDocumentTemplatesPage() {
   const [links, setLinks] = useState<Record<string, string>>({});
   const [state, setState] = useState<'loading' | 'ready' | 'denied' | 'error'>('loading');
   const [revision, setRevision] = useState(0);
+  const [detailRevision, setDetailRevision] = useState(0);
+  const [detailState, setDetailState] = useState<'loading' | 'ready' | 'denied' | 'error'>('ready');
+  const [acceptedCriteria, setAcceptedCriteria] = useState('');
+  const [versionChanged, setVersionChanged] = useState(false);
+  const criteria = JSON.stringify([search, category]);
+  const visibleRows = acceptedCriteria === criteria ? rows : null;
+  const accessDenied = useRef(false);
+  const linkGeneration = useRef(0);
+  const acceptedDetail = useRef<Template | null>(null);
   const [saved, setSaved] = useState(false);
   const [action, setAction] = useState<TeamAction | null>(null);
 
+  function choose(id: string | null) {
+    ++linkGeneration.current;
+    acceptedDetail.current = null;
+    setSelected(id);
+    setDetail(null);
+    setDraft(null);
+    setRetained([]);
+    setFiles([]);
+    setChangeSummary('');
+    setFileError(false);
+    setLinks({});
+    setLinkError(false);
+    setVersionChanged(false);
+    setAction(null);
+    setSaved(false);
+    setDetailRevision((value) => value + 1);
+  }
+  useEffect(
+    () => () => {
+      ++linkGeneration.current;
+    },
+    []
+  );
   useEffect(() => {
     const controller = new AbortController();
     setState('loading');
-    setLinks({});
-    setLinkError(false);
-    void (async () => {
-      try {
-        const params = new URLSearchParams();
-        if (search) params.set('search', search);
-        if (category) params.set('category', category);
-        const paths = [
-          `/api/admin/document-templates?${params.toString()}`,
-          ...(selected ? [`/api/admin/document-templates/${selected}`] : []),
-        ];
-        const responses = await Promise.all(
-          paths.map((path) => fetch(path, { signal: controller.signal }))
-        );
-        if (responses.some((response) => response.status === 403)) {
-          if (!controller.signal.aborted) setState('denied');
-          return;
-        }
-        if (responses.some((response) => !response.ok)) throw new Error('Template read failed');
-        const data = await Promise.all(responses.map((response) => response.json()));
+    const params = new URLSearchParams();
+    if (search) params.set('search', search);
+    if (category) params.set('category', category);
+    void fetch(`/api/admin/document-templates?${params}`, { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok)
+          throw new Error([401, 403].includes(response.status) ? 'denied' : 'error');
+        const data = (await response.json()) as Template[];
+        if (!Array.isArray(data)) throw new Error('error');
         if (controller.signal.aborted) return;
-        setRows(data[0] as Template[]);
-        const next = (data[1] as Template | undefined) ?? null;
-        setDetail(next);
-        setRetained(next?.versions?.[0]?.files.map((file) => file.id) ?? []);
-        setFiles([]);
-        setChangeSummary('');
-        setFileError(false);
+        accessDenied.current = false;
+        setRows(data);
+        setAcceptedCriteria(criteria);
         setState('ready');
-      } catch {
-        if (!controller.signal.aborted) setState('error');
-      }
-    })();
+      })
+      .catch((reason: unknown) => {
+        if (controller.signal.aborted) return;
+        const denied = reason instanceof Error && reason.message === 'denied';
+        setState(denied ? 'denied' : 'error');
+        if (denied) {
+          accessDenied.current = true;
+          setRows(null);
+          choose(null);
+        }
+      });
     return () => controller.abort();
-  }, [category, revision, search, selected]);
+  }, [category, revision, search, criteria]);
+  useEffect(() => {
+    if (!selected) {
+      setDetailState('ready');
+      return;
+    }
+    const controller = new AbortController();
+    setDetailState('loading');
+    const current = linkGeneration.current;
+    void fetch(`/api/admin/document-templates/${selected}`, { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok)
+          throw new Error([401, 403].includes(response.status) ? 'denied' : 'error');
+        const next = (await response.json()) as Template;
+        if (next.id !== selected || (next.versions !== undefined && !Array.isArray(next.versions)))
+          throw new Error('error');
+        if (controller.signal.aborted || accessDenied.current || current !== linkGeneration.current)
+          return;
+        const previous = acceptedDetail.current;
+        const latest = next.versions?.[0];
+        if (!previous) setRetained(latest?.files.map((file) => file.id) ?? []);
+        else if (previous.versions?.[0]?.id !== latest?.id) {
+          const ids = new Set(latest?.files.map((file) => file.id) ?? []);
+          setRetained((current) => current.filter((id) => ids.has(id)));
+          setAction(null);
+          setVersionChanged(true);
+        }
+        acceptedDetail.current = next;
+        setDetail(next);
+        setDetailState('ready');
+      })
+      .catch((reason: unknown) => {
+        if (controller.signal.aborted || accessDenied.current || current !== linkGeneration.current)
+          return;
+        const denied = reason instanceof Error && reason.message === 'denied';
+        setDetailState(denied ? 'denied' : 'error');
+        if (denied) {
+          ++linkGeneration.current;
+          acceptedDetail.current = null;
+          setDetail(null);
+          setDraft(null);
+          setRetained([]);
+          setFiles([]);
+          setChangeSummary('');
+          setVersionChanged(false);
+          setSaved(false);
+          setLinks({});
+          setLinkError(false);
+          setAction(null);
+        }
+      });
+    return () => controller.abort();
+  }, [selected, detailRevision]);
 
   function save(event: FormEvent) {
     event.preventDefault();
-    if (!draft) return;
+    if (!draft || accessDenied.current || (selected && detailState !== 'ready')) return;
     setAction({
       title: word('save'),
       description: word('confirmSave'),
@@ -115,7 +191,7 @@ export default function AdminDocumentTemplatesPage() {
 
   function createVersion(event: FormEvent) {
     event.preventDefault();
-    if (!selected || !detail) return;
+    if (!selected || !detail || detailState !== 'ready' || accessDenied.current) return;
     if ((!retained.length && !files.length) || retained.length + files.length > 5) {
       setFileError(true);
       return;
@@ -145,16 +221,19 @@ export default function AdminDocumentTemplatesPage() {
   }
 
   async function getLink(versionId: string, fileId: string) {
-    if (!selected) return;
+    if (!selected || accessDenied.current) return;
+    const current = linkGeneration.current;
     try {
       const response = await fetch(
         `/api/admin/document-templates/${selected}/versions/${versionId}/files/${fileId}/download`
       );
       if (!response.ok) throw new Error('Link unavailable');
       const data = (await response.json()) as { url: string };
-      setLinks((current) => ({ ...current, [fileId]: documentUrl(data.url) }));
+      const url = documentUrl(data.url);
+      if (current === linkGeneration.current && !accessDenied.current)
+        setLinks((links) => ({ ...links, [fileId]: url }));
     } catch {
-      setLinkError(true);
+      if (current === linkGeneration.current && !accessDenied.current) setLinkError(true);
     }
   }
 
@@ -170,97 +249,137 @@ export default function AdminDocumentTemplatesPage() {
           <h1 className="text-2xl font-semibold">{word('title')}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{word('description')}</p>
         </div>
-        <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
+        <Button
+          variant="outline"
+          disabled={state === 'loading' || detailState === 'loading'}
+          onClick={() => {
+            setRevision((value) => value + 1);
+            setDetailRevision((value) => value + 1);
+          }}
+        >
           {word('refresh')}
         </Button>
       </header>
       {saved ? <p role="status">{word('saved')}</p> : null}
       {linkError ? <p role="alert">{word('linkError')}</p> : null}
-      <form
-        className="flex flex-wrap items-end gap-3"
-        onSubmit={(event) => {
-          event.preventDefault();
-          setSearch(searchInput.trim());
-        }}
-      >
-        <div className="min-w-52 flex-1 space-y-1">
-          <Label htmlFor="document-template-search">{word('search')}</Label>
-          <Input
-            id="document-template-search"
-            value={searchInput}
-            maxLength={100}
-            onChange={(event) => setSearchInput(event.target.value)}
-          />
-        </div>
-        <div className="min-w-44 space-y-1">
-          <Label htmlFor="document-template-category">{word('category')}</Label>
-          <select
-            id="document-template-category"
-            className="h-10 w-full rounded-md border bg-background px-3"
-            value={category}
-            onChange={(event) => setCategory(event.target.value as Category | '')}
+      <ListPage>
+        <ListPage.Toolbar>
+          <form
+            className="flex min-w-0 flex-wrap items-end gap-3"
+            onSubmit={(event) => {
+              event.preventDefault();
+              setSearch(searchInput.trim());
+            }}
           >
-            <option value="">{word('allCategories')}</option>
-            {(['general', 'contract', 'invoice'] as const).map((value) => (
-              <option key={value} value={value}>
-                {word(value)}
-              </option>
-            ))}
-          </select>
-        </div>
-        <Button type="submit" variant="outline">
-          {word('search')}
-        </Button>
-      </form>
-      {state === 'loading' ? <p role="status">{word('loading')}</p> : null}
-      {state === 'denied' ? <p role="alert">{word('denied')}</p> : null}
-      {state === 'error' ? (
-        <p role="alert">
-          {word('error')}{' '}
-          <Button onClick={() => setRevision((value) => value + 1)}>{word('retry')}</Button>
-        </p>
-      ) : null}
-      {state === 'ready' ? (
-        <div className="grid gap-8 lg:grid-cols-[minmax(15rem,19rem)_minmax(0,1fr)]">
-          <aside className="space-y-3">
-            <Button
-              onClick={() => {
-                setSelected(null);
-                setDetail(null);
-                setDraft(blank());
-                setSaved(false);
-              }}
-            >
-              {word('add')}
+            <div className="min-w-52 flex-1 space-y-1">
+              <Label htmlFor="document-template-search">{word('search')}</Label>
+              <Input
+                id="document-template-search"
+                value={searchInput}
+                maxLength={100}
+                onChange={(event) => setSearchInput(event.target.value)}
+              />
+            </div>
+            <div className="min-w-44 space-y-1">
+              <Label htmlFor="document-template-category">{word('category')}</Label>
+              <select
+                id="document-template-category"
+                className="h-10 w-full rounded-md border bg-background px-3"
+                value={category}
+                onChange={(event) => setCategory(event.target.value as Category | '')}
+              >
+                <option value="">{word('allCategories')}</option>
+                {(['general', 'contract', 'invoice'] as const).map((value) => (
+                  <option key={value} value={value}>
+                    {word(value)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <Button type="submit" variant="outline">
+              {word('search')}
             </Button>
-            {rows.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{word('empty')}</p>
-            ) : null}
-            <ul className="divide-y border-y">
-              {rows.map((row) => (
-                <li key={row.id}>
-                  <button
-                    type="button"
-                    className="w-full px-2 py-3 text-start hover:bg-muted focus-visible:outline focus-visible:outline-2"
-                    aria-current={selected === row.id ? 'page' : undefined}
-                    onClick={() => {
-                      setSelected(row.id);
-                      setDraft(null);
-                      setSaved(false);
-                    }}
-                  >
-                    <span className="block font-medium" dir="auto">
-                      {row.title}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {word(row.category)} · {word('versionCount')}: {row.versionCount}
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
+          </form>
+        </ListPage.Toolbar>
+        <div className="grid gap-8 lg:grid-cols-[minmax(15rem,19rem)_minmax(0,1fr)]">
+          <aside className="min-w-0 space-y-3">
+            <div role="region" aria-label={word('listTitle')}>
+              <ListPage.Toolbar>
+                <Button
+                  disabled={rows === null || state === 'denied'}
+                  onClick={() => {
+                    choose(null);
+                    setDraft(blank());
+                  }}
+                >
+                  {word('add')}
+                </Button>
+              </ListPage.Toolbar>
+              <ListPage.Content
+                loading={state === 'loading'}
+                error={state === 'error' || state === 'denied'}
+                empty={!visibleRows?.length}
+                retainContent={!!visibleRows?.length && state !== 'denied'}
+                loadingView={<p role="status">{word('loading')}</p>}
+                errorView={
+                  <div role="alert" className="space-y-2">
+                    <p>{word(state === 'denied' ? 'denied' : 'error')}</p>
+                    {state !== 'denied' && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setRevision((value) => value + 1)}
+                      >
+                        {word('retry')}
+                      </Button>
+                    )}
+                  </div>
+                }
+                emptyView={<p className="text-sm text-muted-foreground">{word('empty')}</p>}
+              >
+                <ul className="divide-y border-y">
+                  {visibleRows?.map((row) => (
+                    <li key={row.id}>
+                      <button
+                        type="button"
+                        className="w-full px-2 py-3 text-start hover:bg-muted focus-visible:outline focus-visible:outline-2"
+                        aria-current={selected === row.id ? 'page' : undefined}
+                        onClick={() => {
+                          setSelected(row.id);
+                          setDraft(null);
+                          setSaved(false);
+                        }}
+                      >
+                        <span className="block font-medium" dir="auto">
+                          {row.title}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {word(row.category)} · {word('versionCount')}: {row.versionCount}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </ListPage.Content>
+            </div>
           </aside>
           <div className="min-w-0 space-y-7">
+            {detailState === 'loading' && <p role="status">{word('loadingDetail')}</p>}
+            {(detailState === 'error' || detailState === 'denied') && (
+              <div role="alert" className="space-y-2">
+                <p>{word(detailState === 'denied' ? 'denied' : 'detailError')}</p>
+                {detailState !== 'denied' && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setDetailRevision((value) => value + 1)}
+                  >
+                    {word('retry')}
+                  </Button>
+                )}
+              </div>
+            )}
+            {versionChanged && <p role="status">{word('versionChanged')}</p>}
             {detail && !draft ? (
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -332,7 +451,9 @@ export default function AdminDocumentTemplatesPage() {
                   </select>
                 </div>
                 <div className="flex gap-2">
-                  <Button type="submit">{word('save')}</Button>
+                  <Button type="submit" disabled={!!selected && detailState !== 'ready'}>
+                    {word('save')}
+                  </Button>
                   <Button type="button" variant="outline" onClick={() => setDraft(null)}>
                     {word('cancel')}
                   </Button>
@@ -404,7 +525,12 @@ export default function AdminDocumentTemplatesPage() {
                       {word('fileError')}
                     </p>
                   ) : null}
-                  <Button type="submit" disabled={fileError || (!retained.length && !files.length)}>
+                  <Button
+                    type="submit"
+                    disabled={
+                      detailState !== 'ready' || fileError || (!retained.length && !files.length)
+                    }
+                  >
                     {word('publishVersion')}
                   </Button>
                 </form>
@@ -503,17 +629,16 @@ export default function AdminDocumentTemplatesPage() {
             ) : null}
           </div>
         </div>
-      ) : null}
+      </ListPage>
       {action ? (
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
           onSuccess={async (result) => {
+            if (accessDenied.current) return;
             const next = result as Template | null;
+            choose(next?.id ?? selected);
             setSaved(true);
-            setDraft(null);
-            setFiles([]);
-            if (next?.id) setSelected(next.id);
             setRevision((value) => value + 1);
           }}
         />

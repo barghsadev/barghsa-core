@@ -9,13 +9,22 @@ for (const locale of ['en', 'fa'] as const) {
   test(`${locale}: staff review keeps the same revision through password verification`, async ({
     page,
   }) => {
-    await page.addInitScript((language) => {
-      if (document.documentElement) document.documentElement.lang = language;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = language;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript(
+      (language) => localStorage.setItem('barghsa.locale', language),
+      locale
+    );
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'staff',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: false,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     let current = {
       id: ID,
       profileId: PROFILE,
@@ -92,13 +101,22 @@ for (const locale of ['en', 'fa'] as const) {
     page,
     uploadReceiver,
   }) => {
-    await page.addInitScript((language) => {
-      if (document.documentElement) document.documentElement.lang = language;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = language;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript(
+      (language) => localStorage.setItem('barghsa.locale', language),
+      locale
+    );
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'customer',
+          isStaff: false,
+          operatingContext: 'customer',
+          canSwitchContext: false,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     await page.route('**/api/profiles', (route) =>
       route.fulfill({
         json: {

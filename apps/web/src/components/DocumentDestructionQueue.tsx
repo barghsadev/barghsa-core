@@ -1,17 +1,19 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   Alert,
   AlertDescription,
   Button,
   Field,
   FieldLabel,
+  ListPage,
+  PageLoading,
   StatusBadge,
   Textarea,
 } from '@barghsa/ui';
 import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { documentRequest } from '../lib/documents.js';
+import { documentRequest, DocumentRequestError } from '../lib/documents.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
 type Item = {
@@ -35,6 +37,9 @@ export function DocumentDestructionQueue() {
   const time = useAccountTime();
   const [data, setData] = useState<Response | null>(null);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [denied, setDenied] = useState(false);
+  const accessDenied = useRef(false);
   const [reload, setReload] = useState(0);
   const [selected, setSelected] = useState<Item | null>(null);
   const [note, setNote] = useState('');
@@ -43,24 +48,66 @@ export function DocumentDestructionQueue() {
 
   useEffect(() => {
     const controller = new AbortController();
+    setLoading(true);
+    setError(false);
     void documentRequest<Response>('/api/admin/document-retention/destruction', {
       signal: controller.signal,
     })
       .then((response) => {
         if (!controller.signal.aborted) {
+          if (!Array.isArray(response.items) || !Array.isArray(response.counts))
+            throw new DocumentRequestError(502, null);
+          accessDenied.current = false;
+          setDenied(false);
           setData(response);
           setError(false);
         }
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+      .catch((reason: unknown) => {
+        if (controller.signal.aborted) return;
+        setError(true);
+        if (reason instanceof DocumentRequestError && [401, 403].includes(reason.status)) {
+          accessDenied.current = true;
+          setDenied(true);
+          setData(null);
+          setSelected(null);
+          setNote('');
+          setAction(null);
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
   }, [reload]);
 
+  useEffect(() => {
+    if (!selected) return;
+    if (
+      !data?.canManage ||
+      !data.items.some(
+        (item) =>
+          item.id === selected.id &&
+          item.status === 'pending_approval' &&
+          item.documentId === selected.documentId
+      )
+    ) {
+      setSelected(null);
+      setNote('');
+      setAction(null);
+    }
+  }, [data, selected]);
+
   function approve(event: FormEvent) {
     event.preventDefault();
-    if (!selected || note.trim().length < 3) {
+    if (
+      accessDenied.current ||
+      !data?.canManage ||
+      !selected ||
+      !data.items.some((item) => item.id === selected.id && item.status === 'pending_approval')
+    )
+      return;
+    if (note.trim().length < 3) {
       setInvalid(true);
       return;
     }
@@ -92,56 +139,81 @@ export function DocumentDestructionQueue() {
   return (
     <details className="rounded-xl border bg-card p-5">
       <summary className="cursor-pointer font-semibold">{word('destructionQueue')}</summary>
-      <div className="mt-4 space-y-4">
+      <ListPage className="mt-4" role="region" aria-label={word('destructionQueue')}>
+        <ListPage.Toolbar>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={loading}
+            onClick={() => setReload((value) => value + 1)}
+          >
+            {word('refresh')}
+          </Button>
+        </ListPage.Toolbar>
         <p className="text-sm text-muted-foreground">{word('destructionDescription')}</p>
-        {data?.counts.length ? (
-          <div className="flex flex-wrap gap-2" aria-label={word('destructionQueue')}>
-            {data.counts.map((count) => (
-              <StatusBadge
-                key={count.status}
-                label={`${statusText(count.status)}: ${count.count}`}
-              />
-            ))}
-          </div>
-        ) : null}
-        {error ? (
-          <Alert variant="destructive">
-            <AlertDescription>{word('error')}</AlertDescription>
-            <Button variant="outline" onClick={() => setReload((value) => value + 1)}>
-              {word('refresh')}
-            </Button>
-          </Alert>
-        ) : null}
-        {data?.items.length ? (
-          <ul className="divide-y">
-            {data.items.map((item) => (
-              <li key={item.id} className="space-y-2 py-3 text-sm first:pt-0">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <strong>{word(item.businessRecordType)}</strong>
-                  <StatusBadge label={statusText(item.status)} />
-                </div>
-                <p className="break-all text-muted-foreground">{item.documentId}</p>
-                <p className="text-muted-foreground">
-                  {word('destructionDeadline')}: {time.format(item.retentionDeadline)}
-                </p>
-                {item.lastError ? <p role="status">{word('destructionFailed')}</p> : null}
-                {data.canManage && item.status === 'pending_approval' ? (
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setSelected(item);
-                      setNote('');
-                    }}
-                  >
-                    {word('destructionApprove')}
-                  </Button>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        ) : data ? (
-          <p className="text-sm text-muted-foreground">{word('destructionEmpty')}</p>
-        ) : null}
+        <ListPage.Content
+          loading={loading}
+          error={error}
+          empty={!data?.items.length}
+          retainContent={!!data?.items.length && !denied}
+          loadingView={<PageLoading label={word('loading')} />}
+          errorView={
+            <Alert variant="destructive">
+              <AlertDescription>
+                {word(denied ? 'denied' : 'destructionLoadError')}
+              </AlertDescription>
+              {!denied && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setReload((value) => value + 1)}
+                >
+                  {word('retry')}
+                </Button>
+              )}
+            </Alert>
+          }
+          emptyView={<p className="text-sm text-muted-foreground">{word('destructionEmpty')}</p>}
+        >
+          {data?.counts.length ? (
+            <div className="flex flex-wrap gap-2" aria-label={word('destructionQueue')}>
+              {data.counts.map((count) => (
+                <StatusBadge
+                  key={count.status}
+                  label={`${statusText(count.status)}: ${count.count}`}
+                />
+              ))}
+            </div>
+          ) : null}
+          {data?.items.length ? (
+            <ul className="divide-y">
+              {data.items.map((item) => (
+                <li key={item.id} className="space-y-2 py-3 text-sm first:pt-0">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <strong>{word(item.businessRecordType)}</strong>
+                    <StatusBadge label={statusText(item.status)} />
+                  </div>
+                  <p className="break-all text-muted-foreground">{item.documentId}</p>
+                  <p className="text-muted-foreground">
+                    {word('destructionDeadline')}: {time.format(item.retentionDeadline)}
+                  </p>
+                  {item.lastError ? <p role="status">{word('destructionFailed')}</p> : null}
+                  {data.canManage && item.status === 'pending_approval' ? (
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setSelected(item);
+                        setNote('');
+                      }}
+                    >
+                      {word('destructionApprove')}
+                    </Button>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </ListPage.Content>
         {selected && data?.canManage ? (
           <form onSubmit={approve} className="space-y-3 border-t pt-4">
             <p className="text-sm">{word('destructionWarning')}</p>
@@ -165,12 +237,13 @@ export function DocumentDestructionQueue() {
             </div>
           </form>
         ) : null}
-      </div>
+      </ListPage>
       {action ? (
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
           onSuccess={async () => {
+            if (accessDenied.current) return;
             setSelected(null);
             setReload((value) => value + 1);
           }}

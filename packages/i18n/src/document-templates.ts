@@ -11,6 +11,11 @@ const fa = {
   invoice: 'فاکتور',
   refresh: 'تازه‌سازی',
   loading: 'در حال بارگذاری…',
+  loadingDetail: 'در حال بارگذاری قالب و نسخه‌ها…',
+  listTitle: 'فهرست قالب‌های اسناد',
+  detailError: 'قالب و نسخه‌ها بارگذاری نشدند. متن و فایل‌های شما حفظ شده‌اند.',
+  versionChanged:
+    'نسخه فعلی تغییر کرده است. فایل‌های نگه‌داشته‌شده را پیش از ثبت نسخه جدید بررسی کنید.',
   denied: 'اجازه مدیریت قالب‌های اسناد را ندارید.',
   error: 'بارگذاری قالب‌ها انجام نشد. دوباره تلاش کنید.',
   retry: 'تلاش دوباره',
@@ -65,6 +70,11 @@ const en: Record<keyof typeof fa, string> = {
   invoice: 'Invoice',
   refresh: 'Refresh',
   loading: 'Loading…',
+  loadingDetail: 'Loading template and versions…',
+  listTitle: 'Document template list',
+  detailError: 'The template and versions could not be loaded. Your text and files are kept.',
+  versionChanged:
+    'The current version changed. Review retained files before creating a new version.',
   denied: 'You do not have permission to manage document templates.',
   error: 'Could not load templates. Try again.',
   retry: 'Try again',

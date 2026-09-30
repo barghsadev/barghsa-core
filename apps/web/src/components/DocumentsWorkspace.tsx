@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type ComponentProps, type FormEvent } from 'react';
 import {
   Alert,
   AlertDescription,
@@ -8,6 +8,7 @@ import {
   FieldGroup,
   FieldLabel,
   Input,
+  ListPage,
   NativeSelect,
   PageHeader,
   PageLoading,
@@ -26,6 +27,7 @@ import {
 } from './DocumentUpload.js';
 import {
   documentBase,
+  DocumentRequestError,
   documentKinds,
   documentRequest,
   documentStates,
@@ -220,7 +222,22 @@ function Workspace({ staff }: { staff: boolean }) {
     </div>
   );
 }
-export function DocumentResults({
+export function DocumentResults(props: ComponentProps<typeof Results>) {
+  const { staff, profileId, filters, association } = props;
+  const scope = JSON.stringify([
+    staff,
+    profileId,
+    filters.kind,
+    filters.state,
+    filters.category,
+    filters.query.trim(),
+    filters.businessRecordId,
+    filters.contractVersionId,
+    association,
+  ]);
+  return <Results key={scope} {...props} />;
+}
+function Results({
   staff,
   showRetention = false,
   filters,
@@ -239,28 +256,38 @@ export function DocumentResults({
   const [next, setNext] = useState<string | null>(null);
   const [cursor, setCursor] = useState<string | null>(null);
   const [refresh, setRefresh] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [denied, setDenied] = useState(false);
+  const accessDenied = useRef(false);
   const [selected, setSelected] = useState<string | null>(null);
   const [upload, setUpload] = useState<{ replacement: BusinessDocument | null } | null>(null);
   const [uploaded, setUploaded] = useState(false);
+  const params = new URLSearchParams({ businessRecordType: filters.kind });
+  if (profileId) params.set('profileId', profileId);
+  if (filters.contractVersionId) params.set('contractVersionId', filters.contractVersionId);
+  if (filters.state) params.set('state', filters.state);
+  if (filters.category) params.set('category', filters.category);
+  if (filters.query.trim()) params.set('q', filters.query.trim());
+  if (filters.businessRecordId) params.set('businessRecordId', filters.businessRecordId);
+  if (cursor) params.set('before', cursor);
+  const path = `${documentBase(staff)}?${params}`;
   useEffect(() => {
     const controller = new AbortController();
-    const params = new URLSearchParams({ businessRecordType: filters.kind });
-    if (profileId) params.set('profileId', profileId);
-    if (filters.contractVersionId) params.set('contractVersionId', filters.contractVersionId);
-    if (filters.state) params.set('state', filters.state);
-    if (filters.category) params.set('category', filters.category);
-    if (filters.query.trim()) params.set('q', filters.query.trim());
-    if (filters.businessRecordId) params.set('businessRecordId', filters.businessRecordId);
-    if (cursor) params.set('before', cursor);
     setLoading(true);
     setError(false);
-    void documentRequest<DocumentPage>(`${documentBase(staff)}?${params}`, {
+    void documentRequest<DocumentPage>(path, {
       signal: controller.signal,
     })
       .then((page) => {
         if (!controller.signal.aborted) {
+          if (
+            !Array.isArray(page.documents) ||
+            (page.nextBefore !== null && typeof page.nextBefore !== 'string')
+          )
+            throw new DocumentRequestError(502, null);
+          accessDenied.current = false;
+          setDenied(false);
           setItems((previous) =>
             cursor
               ? [
@@ -272,29 +299,41 @@ export function DocumentResults({
           setNext(page.nextBefore);
         }
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+      .catch((reason: unknown) => {
+        if (controller.signal.aborted) return;
+        const forbidden =
+          reason instanceof DocumentRequestError && [401, 403].includes(reason.status);
+        setError(true);
+        if (forbidden) {
+          accessDenied.current = true;
+          setDenied(true);
+          setItems(null);
+          setNext(null);
+          setSelected(null);
+          setUpload(null);
+          setUploaded(false);
+        }
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [staff, filters, profileId, cursor, refresh]);
+  }, [path, refresh]);
   function reload() {
     setCursor(null);
     setNext(null);
-    setItems(null);
     setRefresh((value) => value + 1);
   }
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex flex-wrap gap-2">
+    <ListPage role="region" aria-label={word('listTitle')}>
+      <ListPage.Toolbar>
         <Button variant="outline" onClick={reload} disabled={loading}>
           {word('refresh')}
         </Button>
-        {(filters.kind === 'standalone' || association) && profileId ? (
+        {!denied && (filters.kind === 'standalone' || association) && profileId ? (
           <Button
             onClick={() => {
+              if (accessDenied.current) return;
               setUpload({ replacement: null });
               setSelected(null);
               setUploaded(false);
@@ -303,7 +342,7 @@ export function DocumentResults({
             {word('upload')}
           </Button>
         ) : null}
-      </div>
+      </ListPage.Toolbar>
       {uploaded ? <p role="status">{word('uploadComplete')}</p> : null}
       {staff && filters.kind === 'standalone' && !profileId ? (
         <p className="text-sm text-muted-foreground">{word('selectProfile')}</p>
@@ -316,6 +355,7 @@ export function DocumentResults({
           {...(association ? { association } : {})}
           onClose={() => setUpload(null)}
           onUploaded={(document) => {
+            if (accessDenied.current) return;
             setUpload(null);
             setSelected(document.id);
             setUploaded(true);
@@ -330,57 +370,77 @@ export function DocumentResults({
           staff={staff}
           showRetention={showRetention}
           onClose={() => setSelected(null)}
-          onPrevious={setSelected}
-          onChanged={reload}
+          onPrevious={(id) => {
+            if (!accessDenied.current) setSelected(id);
+          }}
+          onChanged={() => {
+            if (!accessDenied.current) reload();
+          }}
           savingPreSubmissionOnly={association?.businessRecordType === 'order' && !staff}
           solarCustomer={association?.businessRecordType === 'solar_request' && !staff}
           onReplace={(document) => {
+            if (accessDenied.current) return;
             setSelected(null);
             setUpload({ replacement: document });
           }}
         />
       ) : null}
-      {error ? (
-        <Alert variant="destructive">
-          <AlertDescription>{word('error')}</AlertDescription>
-          <Button variant="outline" onClick={() => setRefresh((value) => value + 1)}>
-            {word('refresh')}
-          </Button>
-        </Alert>
-      ) : null}
-      {items === null && loading ? <PageLoading label={word('loading')} /> : null}
-      {items?.length === 0 ? (
-        <EmptyState title={word('empty')} description={word('emptyHint')} />
-      ) : null}
-      {items?.length ? (
-        <ul className="divide-y rounded-xl border bg-card">
-          {items.map((document) => (
-            <li key={document.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
-              <div className="flex min-w-0 flex-col gap-1">
-                <Button
-                  variant="link"
-                  className="justify-start whitespace-normal text-start"
-                  onClick={() => {
-                    setSelected(document.id);
-                    setUpload(null);
-                  }}
-                >
-                  {document.originalName}
-                </Button>
-                <p className="text-sm text-muted-foreground">
-                  {word(document.category)} · {word(document.uploadedByType)}
-                </p>
-              </div>
-              <StatusBadge label={word(document.state)} />
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      {next ? (
-        <Button variant="outline" disabled={loading} onClick={() => setCursor(next)}>
-          {loading ? word('loading') : word('next')}
-        </Button>
-      ) : null}
-    </div>
+      <ListPage.Content
+        loading={loading}
+        error={error}
+        empty={!items?.length}
+        retainContent={!!items?.length && !denied}
+        loadingView={<PageLoading label={word('loading')} />}
+        errorView={
+          <Alert variant="destructive">
+            <AlertDescription>{word(denied ? 'denied' : 'listError')}</AlertDescription>
+            {!denied && (
+              <Button variant="outline" onClick={() => setRefresh((value) => value + 1)}>
+                {word('retry')}
+              </Button>
+            )}
+          </Alert>
+        }
+        emptyView={<EmptyState title={word('empty')} description={word('emptyHint')} />}
+      >
+        {items?.length ? (
+          <ul className="divide-y rounded-xl border bg-card">
+            {items.map((document) => (
+              <li
+                key={document.id}
+                className="flex flex-wrap items-center justify-between gap-3 p-4"
+              >
+                <div className="flex min-w-0 flex-col gap-1">
+                  <Button
+                    variant="link"
+                    className="justify-start whitespace-normal text-start"
+                    onClick={() => {
+                      setSelected(document.id);
+                      setUpload(null);
+                    }}
+                  >
+                    {document.originalName}
+                  </Button>
+                  <p className="text-sm text-muted-foreground">
+                    {word(document.category)} · {word(document.uploadedByType)}
+                  </p>
+                </div>
+                <StatusBadge label={word(document.state)} />
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </ListPage.Content>
+      <ListPage.Pagination
+        kind="cursor"
+        hasMore={!!next && !error && !denied}
+        loading={loading}
+        label={word('pages')}
+        nextLabel={word('next')}
+        onNext={() => {
+          if (next) setCursor(next);
+        }}
+      />
+    </ListPage>
   );
 }

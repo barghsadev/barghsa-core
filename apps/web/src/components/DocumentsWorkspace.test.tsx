@@ -505,7 +505,11 @@ it('lets staff recover a denied queue and restricts upload context to a valid se
     fetcher.mock.calls.filter(([url]) => String(url).startsWith('/api/admin/documents'))
   ).toHaveLength(1);
   fail = false;
-  await click('Refresh');
+  const list = container.querySelector('[aria-label="Document list"]')!;
+  const refresh = [...list.querySelectorAll('button')].find(
+    (button) => button.textContent === 'Refresh'
+  )!;
+  await act(async () => refresh.click());
   expect(container.textContent).toContain('No documents found');
   await value('#documents-profile', 'not-a-profile');
   await click('Apply filters');
