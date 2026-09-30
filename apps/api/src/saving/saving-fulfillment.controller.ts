@@ -59,8 +59,17 @@ const hardwareAmendment = z
     idempotencyKey: z.string().uuid(),
     expectedVersionId: z.string().uuid(),
     expectedHardwareId: z.string().uuid(),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
     hardwareProductId: z.string().uuid(),
     reason: z.string().trim().min(1).max(1000),
+  })
+  .strict();
+const hardwareAmendmentReviewInput = hardwareAmendment
+  .pick({
+    expectedVersionId: true,
+    expectedHardwareId: true,
+    hardwareProductId: true,
+    reason: true,
   })
   .strict();
 const hardwareUpgradeCancellation = z
@@ -191,6 +200,25 @@ export class SavingFulfillmentController {
       parse(addressAmendment, body),
       req.session,
       req.ip ?? 'unknown'
+    );
+  }
+
+  @Post(':id/amend-hardware-review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'saving:staff-amend-hardware-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview exact charge or credit before changing paid saving hardware' })
+  @ApiZodBody(hardwareAmendmentReviewInput)
+  amendHardwareReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.permission(req, true);
+    return this.service.hardwareAmendmentReview(
+      id,
+      parse(hardwareAmendmentReviewInput, body),
+      req.session,
+      hasStaffPermission(req, 'invoices:write')
     );
   }
 

@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Saving hardware amendment financial review](batches/2026-09-30-saving-hardware-amendment-review.md) binds paid equipment swaps and upgrades to the exact charge, credit, stock, contract and invoice state before staff confirmation. Cross-command review tasks remain partial.
+
 [Saving staff decision financial review](batches/2026-09-30-saving-staff-decision-review.md) binds approval and rejection to the locked saving order, accepted agreement, invoice balances and exact publication or refund outcome. Cross-command review tasks remain partial.
 
 [Electricity customer cancellation financial review](batches/2026-09-30-electricity-cancellation-review.md) binds cancellation to a locked contract, invoice and exact wallet-refund or unpaid-invoice outcome before customer confirmation. The cross-command review tasks remain partial.

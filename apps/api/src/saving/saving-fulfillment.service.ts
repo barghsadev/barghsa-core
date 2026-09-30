@@ -70,6 +70,14 @@ interface ReviewRow {
   activation_invoice_id: string | null;
   cancellation_pending: boolean;
 }
+interface HardwareAmendmentInput {
+  idempotencyKey: string;
+  expectedVersionId: string;
+  expectedHardwareId: string;
+  expectedReviewHash: string;
+  hardwareProductId: string;
+  reason: string;
+}
 interface StageRow {
   stage: SavingStage;
   status: 'pending' | 'in_progress' | 'completed' | 'skipped';
@@ -388,6 +396,8 @@ export class SavingFulfillmentService {
             vatRateBps: option.vat_rate_bps,
             totalIrR: totals.totalIrR.toString(),
             priceDeltaIrR: delta.toString(),
+            stockTracking: option.stock_tracking,
+            availableCount: option.stock_count - option.reserved_count,
           },
         ];
       } catch {
@@ -852,15 +862,140 @@ export class SavingFulfillmentService {
     );
   }
 
+  private async hardwareAmendmentReviewForRow(
+    client: PoolClient,
+    row: ReviewRow,
+    input: Pick<
+      HardwareAmendmentInput,
+      'expectedVersionId' | 'expectedHardwareId' | 'hardwareProductId' | 'reason'
+    >,
+    allowPriceAdjustment: boolean,
+    lock: 'SHARE' | 'UPDATE'
+  ) {
+    if (
+      !['approved', 'in_progress'].includes(row.status) ||
+      row.financial_status !== 'paid' ||
+      row.invoice_state !== 'Paid' ||
+      BigInt(row.paid_amount) !== BigInt(row.total_amount) ||
+      BigInt(row.pending_refund_amount) !== 0n ||
+      !['AwaitingCustomerAcceptance', 'Active'].includes(row.contract_state) ||
+      row.version_id !== input.expectedVersionId ||
+      row.hardware_product_id !== input.expectedHardwareId
+    )
+      throw new ConflictException('Saving order is not eligible for hardware amendment');
+    if (row.hardware_product_id === input.hardwareProductId)
+      throw new ConflictException('Choose a different device');
+    const reason = input.reason.trim();
+    if (!reason) throw new ConflictException('Hardware amendment requires a reason');
+    const blocked = (
+      await client.query<{ blocked: boolean }>(
+        `SELECT EXISTS(
+          SELECT 1 FROM contract_cancellation_requests r
+           WHERE r.contract_id=$1 AND r.status='Pending'
+          UNION ALL
+          SELECT 1 FROM saving_fulfillment_stages f
+           WHERE f.order_id=$2 AND f.stage IN
+             ('installation_and_document_upload','equipment_handover','process_completion')
+             AND f.status<>'pending'
+          UNION ALL
+          SELECT 1 FROM saving_hardware_upgrade_requests u
+           WHERE u.order_id=$2 AND u.status='awaiting_payment'
+        ) OR NOT EXISTS(
+          SELECT 1 FROM saving_fulfillment_stages f WHERE f.order_id=$2
+            AND f.stage='product_delivery' AND f.status='in_progress'
+        ) AS blocked`,
+        [row.contract_id, row.id]
+      )
+    ).rows[0]?.blocked;
+    if (blocked)
+      throw new ConflictException(
+        'Delivery, cancellation or a pending hardware charge prevents a swap'
+      );
+    await client.query(`SELECT id FROM products WHERE id IN ($1,$2) ORDER BY id FOR ${lock}`, [
+      row.hardware_product_id,
+      input.hardwareProductId,
+    ]);
+    const basis = await this.hardwarePricing(client, row);
+    const hardware = (await this.hardwareOptions(client, row, true)).find(
+      (option) => option.id === input.hardwareProductId
+    );
+    if (!basis || !hardware)
+      throw new ConflictException('Choose available active hardware assigned to this saving plan');
+    const priceDeltaIrR = BigInt(hardware.priceDeltaIrR);
+    if (priceDeltaIrR !== 0n && !allowPriceAdjustment)
+      throw new ForbiddenException('Invoice write permission is required for price changes');
+    const review = this.reviews.create(
+      { action: 'saving.staff-hardware-amendment', profileId: row.profile_id, resourceId: row.id },
+      {
+        reason,
+        customerName: row.customer_name,
+        profileName: row.profile_name,
+        billIdentifier: row.bill_identifier,
+        addressSnapshot: row.address_snapshot,
+        agreementSnapshot: row.agreement_snapshot,
+        contractId: row.contract_id,
+        contractState: row.contract_state,
+        versionId: row.version_id,
+        versionNumber: row.version_number,
+        contractSnapshot: row.contract_snapshot,
+        invoiceId: row.invoice_id,
+        invoiceState: row.invoice_state,
+        invoiceTotal: row.total_amount,
+        paidAmount: row.paid_amount,
+        refundedAmount: row.refunded_amount,
+        pendingRefundAmount: row.pending_refund_amount,
+        currentHardwareId: row.hardware_product_id,
+        currentHardwareTitle: row.hardware_title,
+        currentHardwarePriceIrR: basis.current.priceIrR,
+        currentHardwareVatRateBps: basis.current.vatRateBps,
+        currentOrderTotalIrR: basis.currentTotalIrR.toString(),
+        targetHardwareId: hardware.id,
+        targetHardwareTitle: hardware.title,
+        targetHardwarePriceIrR: hardware.priceIrR,
+        targetHardwareVatRateBps: hardware.vatRateBps,
+        targetOrderTotalIrR: hardware.totalIrR,
+        priceDeltaIrR: hardware.priceDeltaIrR,
+        targetStockTracking: hardware.stockTracking,
+        targetAvailableCount: hardware.availableCount,
+        outcome:
+          priceDeltaIrR > 0n
+            ? 'additional_charge'
+            : priceDeltaIrR < 0n
+              ? 'credit_note'
+              : 'swap_without_price_change',
+      }
+    );
+    return { review, basis, hardware };
+  }
+
+  async hardwareAmendmentReview(
+    id: string,
+    input: Pick<
+      HardwareAmendmentInput,
+      'expectedVersionId' | 'expectedHardwareId' | 'hardwareProductId' | 'reason'
+    >,
+    actor: Actor,
+    allowPriceAdjustment = false
+  ) {
+    const target = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM saving_orders WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!target) throw new NotFoundException('Saving order not found');
+    return staffContractFinancialReview(target.profile_id, actor, async (client, archived) => {
+      if (archived) throw new ConflictException('Profile is archived');
+      const row = await this.lockRow(client, id, 'SHARE');
+      return (
+        await this.hardwareAmendmentReviewForRow(client, row, input, allowPriceAdjustment, 'SHARE')
+      ).review;
+    });
+  }
+
   async amendHardware(
     id: string,
-    input: {
-      idempotencyKey: string;
-      expectedVersionId: string;
-      expectedHardwareId: string;
-      hardwareProductId: string;
-      reason: string;
-    },
+    input: HardwareAmendmentInput,
     actor: Actor,
     ip: string,
     allowPriceAdjustment = false
@@ -885,60 +1020,15 @@ export class SavingFulfillmentService {
             async () => {
               if (archived) throw new ConflictException('Profile is archived');
               const row = await this.lockRow(client, id);
-              if (
-                !['approved', 'in_progress'].includes(row.status) ||
-                row.financial_status !== 'paid' ||
-                row.invoice_state !== 'Paid' ||
-                BigInt(row.paid_amount) !== BigInt(row.total_amount) ||
-                BigInt(row.pending_refund_amount) !== 0n ||
-                !['AwaitingCustomerAcceptance', 'Active'].includes(row.contract_state) ||
-                row.version_id !== input.expectedVersionId ||
-                row.hardware_product_id !== input.expectedHardwareId
-              )
-                throw new ConflictException('Saving order is not eligible for hardware amendment');
-              if (row.hardware_product_id === input.hardwareProductId)
-                throw new ConflictException('Choose a different device');
-              const blocked = (
-                await client.query<{ blocked: boolean }>(
-                  `SELECT EXISTS(
-                  SELECT 1 FROM contract_cancellation_requests r
-                   WHERE r.contract_id=$1 AND r.status='Pending'
-                  UNION ALL
-                  SELECT 1 FROM saving_fulfillment_stages f
-                   WHERE f.order_id=$2 AND f.stage IN
-                     ('installation_and_document_upload','equipment_handover','process_completion')
-                     AND f.status<>'pending'
-                  UNION ALL
-                  SELECT 1 FROM saving_hardware_upgrade_requests u
-                   WHERE u.order_id=$2 AND u.status='awaiting_payment'
-                ) OR NOT EXISTS(
-                  SELECT 1 FROM saving_fulfillment_stages f WHERE f.order_id=$2
-                    AND f.stage='product_delivery' AND f.status='in_progress'
-                ) AS blocked`,
-                  [row.contract_id, id]
-                )
-              ).rows[0]?.blocked;
-              if (blocked)
-                throw new ConflictException(
-                  'Delivery, cancellation or a pending hardware charge prevents a swap'
-                );
-              await client.query(
-                'SELECT id FROM products WHERE id IN ($1,$2) ORDER BY id FOR UPDATE',
-                [row.hardware_product_id, input.hardwareProductId]
+              const { review, basis, hardware } = await this.hardwareAmendmentReviewForRow(
+                client,
+                row,
+                input,
+                allowPriceAdjustment,
+                'UPDATE'
               );
-              const basis = await this.hardwarePricing(client, row);
-              const hardware = (await this.hardwareOptions(client, row, true)).find(
-                (option) => option.id === input.hardwareProductId
-              );
-              if (!basis || !hardware)
-                throw new ConflictException(
-                  'Choose available active hardware assigned to this saving plan'
-                );
+              this.reviews.assertConfirmed(review, input.expectedReviewHash);
               const priceDeltaIrR = BigInt(hardware.priceDeltaIrR);
-              if (priceDeltaIrR !== 0n && !allowPriceAdjustment)
-                throw new ForbiddenException(
-                  'Invoice write permission is required for price changes'
-                );
               const previousSnapshot = {
                 title: row.hardware_title,
                 priceIrR: basis.current.priceIrR,
@@ -1016,6 +1106,8 @@ export class SavingFulfillmentService {
                     hardwareProductId: hardware.id,
                     chargeInvoiceId: adjustment.adjustmentInvoiceId,
                     priceDeltaIrR: hardware.priceDeltaIrR,
+                    reviewHash: review.hash,
+                    financialReview: review,
                   }
                 );
                 await this.notify(
@@ -1090,6 +1182,8 @@ export class SavingFulfillmentService {
                   hardwareProductId: hardware.id,
                   priceDeltaIrR: hardware.priceDeltaIrR,
                   adjustmentInvoiceId: adjustment?.adjustmentInvoiceId ?? null,
+                  reviewHash: review.hash,
+                  financialReview: review,
                 }
               );
               await this.notify(

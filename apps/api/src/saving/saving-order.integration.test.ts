@@ -40,6 +40,33 @@ async function decisionReview(orderId: string, action: 'approve' | 'reject', rea
   };
 }
 
+async function hardwareAmendmentReview(
+  orderId: string,
+  input: {
+    expectedVersionId: string;
+    expectedHardwareId: string;
+    hardwareProductId: string;
+    reason: string;
+  }
+) {
+  const response = await request(
+    `/api/staff/saving/orders/${orderId}/amend-hardware-review`,
+    'POST',
+    {
+      expectedVersionId: input.expectedVersionId,
+      expectedHardwareId: input.expectedHardwareId,
+      hardwareProductId: input.hardwareProductId,
+      reason: input.reason,
+    },
+    staffHeaders
+  );
+  expect(response.status, http.logs()).toBe(200);
+  return (await response.json()) as {
+    hash: string;
+    data: { outcome: string; priceDeltaIrR: string; targetAvailableCount: number };
+  };
+}
+
 beforeAll(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   await http.pool.query(
@@ -777,7 +804,14 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     expectedHardwareId: input.hardwareProductId,
     hardwareProductId: equalHardwareId,
     reason: 'Customer requested an equal-price device before delivery',
+    expectedReviewHash: '',
   };
+  const initialHardwareReview = await hardwareAmendmentReview(result.savingOrderId, hardwareInput);
+  expect(initialHardwareReview.data).toMatchObject({
+    outcome: 'swap_without_price_change',
+    priceDeltaIrR: '0',
+  });
+  hardwareInput.expectedReviewHash = initialHardwareReview.hash;
   expect(
     await (
       await request(
@@ -795,6 +829,17 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     ]),
   });
   expect((await request(hardwarePath, 'POST', hardwareInput)).status).toBe(403);
+  const { expectedReviewHash: _unusedHash, ...withoutHardwareHash } = hardwareInput;
+  expect(
+    (
+      await request(
+        hardwarePath,
+        'POST',
+        { ...withoutHardwareHash, idempotencyKey: randomUUID() },
+        staffHeaders
+      )
+    ).status
+  ).toBe(400);
   expect(
     (
       await request(
@@ -805,6 +850,17 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       )
     ).status
   ).toBe(409);
+  expect(
+    (
+      await request(
+        `/api/admin/catalogue/hardware/${equalHardwareId}/inventory`,
+        'PUT',
+        { stockTracking: true, stockCount: 1, reservationMinutes: 30 },
+        staffHeaders
+      )
+    ).status
+  ).toBe(200);
+  expect((await request(hardwarePath, 'POST', hardwareInput, staffHeaders)).status).toBe(409);
   expect(
     (
       await request(
@@ -829,6 +885,14 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   const hardwareAmended = await request(hardwarePath, 'POST', hardwareInput, staffHeaders);
   expect(hardwareAmended.status, http.logs()).toBe(201);
   const hardwareAmendment = (await hardwareAmended.json()) as { amendmentId: string };
+  const hardwareAudit = (
+    await http.pool.query<{ metadata: { reviewHash: string } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='saving.hardware_amended'
+       AND metadata::jsonb->>'savingOrderId'=$1 ORDER BY created_at DESC LIMIT 1`,
+      [result.savingOrderId]
+    )
+  ).rows[0];
+  expect(hardwareAudit?.metadata.reviewHash).toBe(initialHardwareReview.hash);
   expect((await request(hardwarePath, 'POST', hardwareInput, staffHeaders)).status).toBe(201);
   expect(
     (
@@ -877,15 +941,19 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       hardwareAmendment.amendmentId,
     ])
   ).rejects.toMatchObject({ code: '23514' });
+  const reverseInput = {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: staffDetail.versionId,
+    expectedHardwareId: equalHardwareId,
+    hardwareProductId: input.hardwareProductId,
+    reason: 'Customer chose the original device before delivery',
+  };
   const reverseHardware = await request(
     hardwarePath,
     'POST',
     {
-      idempotencyKey: randomUUID(),
-      expectedVersionId: staffDetail.versionId,
-      expectedHardwareId: equalHardwareId,
-      hardwareProductId: input.hardwareProductId,
-      reason: 'Customer chose the original device before delivery',
+      ...reverseInput,
+      expectedReviewHash: (await hardwareAmendmentReview(result.savingOrderId, reverseInput)).hash,
     },
     staffHeaders
   );
@@ -1016,7 +1084,12 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     expectedHardwareId: input.hardwareProductId,
     hardwareProductId: costlyHardwareId,
     reason: 'Customer requested a higher-priced device before delivery',
+    expectedReviewHash: '',
   };
+  const upgradeReview = await hardwareAmendmentReview(result.savingOrderId, upgradeInput);
+  expect(upgradeReview.data.outcome).toBe('additional_charge');
+  expect(BigInt(upgradeReview.data.priceDeltaIrR)).toBeGreaterThan(0n);
+  upgradeInput.expectedReviewHash = upgradeReview.hash;
   const requestedUpgrade = await request(hardwarePath, 'POST', upgradeInput, staffHeaders);
   expect(requestedUpgrade.status, http.logs()).toBe(201);
   const upgrade = (await requestedUpgrade.json()) as {
@@ -2328,7 +2401,14 @@ it('credits a cheaper paid hardware swap and preserves the revised price basis f
     expectedHardwareId: input.hardwareProductId,
     hardwareProductId: cheaperId,
     reason: 'Customer accepted a lower-priced device',
+    expectedReviewHash: '',
   };
+  const creditReview = await hardwareAmendmentReview(order.savingOrderId, creditInput);
+  expect(creditReview.data).toMatchObject({
+    outcome: 'credit_note',
+    priceDeltaIrR: cheaperOption!.priceDeltaIrR,
+  });
+  creditInput.expectedReviewHash = creditReview.hash;
   const credited = await request(amendPath, 'POST', creditInput, staffHeaders);
   expect(credited.status, http.logs()).toBe(201);
   const result = (await credited.json()) as {
@@ -2409,15 +2489,19 @@ it('credits a cheaper paid hardware swap and preserves the revised price basis f
       )
     ).status
   ).toBe(409);
+  const zeroSwapInput = {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: versionId,
+    expectedHardwareId: cheaperId,
+    hardwareProductId: twinId,
+    reason: 'The equivalent device is available sooner',
+  };
   const zeroSwap = await request(
     amendPath,
     'POST',
     {
-      idempotencyKey: randomUUID(),
-      expectedVersionId: versionId,
-      expectedHardwareId: cheaperId,
-      hardwareProductId: twinId,
-      reason: 'The equivalent device is available sooner',
+      ...zeroSwapInput,
+      expectedReviewHash: (await hardwareAmendmentReview(order.savingOrderId, zeroSwapInput)).hash,
     },
     staffHeaders
   );

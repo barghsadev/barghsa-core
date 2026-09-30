@@ -3,7 +3,9 @@ import { Button, Card, CardContent, FinancialReviewSummary, Input, Label } from 
 import { tSaving } from '@barghsa/i18n/saving';
 import { t } from '@barghsa/i18n/app';
 import {
+  parseSavingHardwareAmendmentReview,
   parseSavingStaffDecisionReview,
+  type SavingHardwareAmendmentReview,
   type SavingStaffDecisionReview,
 } from '@barghsa/shared/finance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -152,8 +154,11 @@ export default function AdminSavingOrdersPage() {
   const [amendHardwareReason, setAmendHardwareReason] = useState('');
   const [action, setAction] = useState<TeamAction | null>(null);
   const [decisionReview, setDecisionReview] = useState<SavingStaffDecisionReview | null>(null);
+  const [hardwareReview, setHardwareReview] = useState<SavingHardwareAmendmentReview | null>(null);
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState(false);
+  const [hardwareReviewLoading, setHardwareReviewLoading] = useState(false);
+  const [hardwareReviewError, setHardwareReviewError] = useState(false);
   const reviewRequest = useRef(0);
   const [revision, setRevision] = useState(0);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'forbidden'>('loading');
@@ -216,9 +221,12 @@ export default function AdminSavingOrdersPage() {
   useEffect(() => {
     reviewRequest.current++;
     setDecisionReview(null);
+    setHardwareReview(null);
     setAction(null);
     setReviewLoading(false);
     setReviewError(false);
+    setHardwareReviewLoading(false);
+    setHardwareReviewError(false);
     if (!selected) {
       setDetail(null);
       return;
@@ -343,23 +351,67 @@ export default function AdminSavingOrdersPage() {
     });
   }
 
-  function amendHardware() {
-    if (!detail || !amendHardwareReason.trim() || !amendHardwareId) return;
-    setAction({
-      title: copy('staffAmendHardware'),
-      description: copy('staffConfirm'),
-      method: 'POST',
-      path: `/api/staff/saving/orders/${detail.id}/amend-hardware`,
-      body: {
-        idempotencyKey: crypto.randomUUID(),
-        expectedVersionId: detail.versionId,
-        expectedHardwareId: detail.hardwareProductId,
-        hardwareProductId: amendHardwareId,
-        reason: amendHardwareReason.trim(),
-      },
-      conflictMessage: copy('staffConflict'),
-      forbiddenMessage: copy('staffForbidden'),
-    });
+  async function amendHardware() {
+    if (!detail || hardwareReviewLoading || !amendHardwareReason.trim() || !amendHardwareId) return;
+    const order = detail;
+    const reason = amendHardwareReason.trim();
+    const targetId = amendHardwareId;
+    const request = ++reviewRequest.current;
+    setHardwareReviewLoading(true);
+    setHardwareReviewError(false);
+    try {
+      const response = await fetch(
+        `/api/staff/saving/orders/${encodeURIComponent(order.id)}/amend-hardware-review`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({
+            expectedVersionId: order.versionId,
+            expectedHardwareId: order.hardwareProductId,
+            hardwareProductId: targetId,
+            reason,
+          }),
+        }
+      );
+      if (!response.ok) throw new Error('Hardware review unavailable');
+      const financialReview = parseSavingHardwareAmendmentReview(await response.json());
+      if (request !== reviewRequest.current) return;
+      if (
+        !financialReview ||
+        financialReview.scope.profileId !== order.profileId ||
+        financialReview.scope.resourceId !== order.id ||
+        financialReview.data.versionId !== order.versionId ||
+        financialReview.data.currentHardwareId !== order.hardwareProductId ||
+        financialReview.data.targetHardwareId !== targetId ||
+        financialReview.data.reason !== reason
+      )
+        throw new Error('Hardware review mismatch');
+      setHardwareReview(financialReview);
+      setAction({
+        title: copy('staffAmendHardware'),
+        description: copy('staffHardwareReviewConfirm'),
+        method: 'POST',
+        path: `/api/staff/saving/orders/${order.id}/amend-hardware`,
+        body: {
+          idempotencyKey: crypto.randomUUID(),
+          expectedVersionId: financialReview.data.versionId,
+          expectedHardwareId: financialReview.data.currentHardwareId,
+          expectedReviewHash: financialReview.hash,
+          hardwareProductId: financialReview.data.targetHardwareId,
+          reason,
+        },
+        conflictMessage: copy('staffConflict'),
+        forbiddenMessage: copy('staffForbidden'),
+      });
+    } catch {
+      if (request === reviewRequest.current) {
+        setHardwareReview(null);
+        setHardwareReviewError(true);
+      }
+    } finally {
+      if (request === reviewRequest.current) setHardwareReviewLoading(false);
+    }
   }
 
   function cancelHardwareUpgrade(upgrade: SavingHardwareUpgrade, reason: string) {
@@ -576,11 +628,17 @@ export default function AdminSavingOrdersPage() {
                   />
                   <Button
                     variant="outline"
-                    disabled={!amendHardwareReason.trim() || !amendHardwareId}
-                    onClick={amendHardware}
+                    disabled={
+                      !amendHardwareReason.trim() || !amendHardwareId || hardwareReviewLoading
+                    }
+                    onClick={() => void amendHardware()}
                   >
                     {copy('staffAmendHardware')}
                   </Button>
+                  {hardwareReviewLoading ? (
+                    <p role="status">{copy('staffHardwareReviewLoading')}</p>
+                  ) : null}
+                  {hardwareReviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
                 </div>
               )}
               {detail.status === 'awaiting_staff_review' && (
@@ -823,11 +881,124 @@ export default function AdminSavingOrdersPage() {
                   </div>
                 }
               />
+            ) : hardwareReview ? (
+              <FinancialReviewSummary
+                title={copy('staffHardwareReviewTitle')}
+                rows={[
+                  {
+                    id: 'customer',
+                    label: copy('customer'),
+                    value: hardwareReview.data.customerName,
+                  },
+                  {
+                    id: 'profile',
+                    label: copy('staffReviewProfile'),
+                    value: hardwareReview.data.profileName,
+                  },
+                  {
+                    id: 'bill',
+                    label: copy('staffBill'),
+                    value: hardwareReview.data.billIdentifier,
+                  },
+                  {
+                    id: 'address',
+                    label: copy('staffAddress'),
+                    value: String(hardwareReview.data.addressSnapshot.full_address ?? ''),
+                  },
+                  {
+                    id: 'contract',
+                    label: copy('staffReviewContractVersion'),
+                    value: money.number(hardwareReview.data.versionNumber),
+                  },
+                  {
+                    id: 'invoice',
+                    label: copy('staffInvoice'),
+                    value: t(`invoices.state.${hardwareReview.data.invoiceState}`, locale),
+                  },
+                  {
+                    id: 'paid',
+                    label: copy('staffPaid'),
+                    value: money.money(hardwareReview.data.paidAmount),
+                  },
+                  {
+                    id: 'current-hardware',
+                    label: copy('staffHardwareCurrent'),
+                    value: hardwareReview.data.currentHardwareTitle[locale],
+                  },
+                  {
+                    id: 'current-price',
+                    label: copy('staffHardwareCurrentPrice'),
+                    value: money.money(hardwareReview.data.currentHardwarePriceIrR),
+                  },
+                  {
+                    id: 'current-vat',
+                    label: copy('staffHardwareCurrentVat'),
+                    value: `${money.number(hardwareReview.data.currentHardwareVatRateBps / 100)}%`,
+                  },
+                  {
+                    id: 'current-total',
+                    label: copy('staffHardwareCurrentTotal'),
+                    value: money.money(hardwareReview.data.currentOrderTotalIrR),
+                  },
+                  {
+                    id: 'target-hardware',
+                    label: copy('staffHardwareTarget'),
+                    value: hardwareReview.data.targetHardwareTitle[locale],
+                  },
+                  {
+                    id: 'target-price',
+                    label: copy('staffHardwareTargetPrice'),
+                    value: money.money(hardwareReview.data.targetHardwarePriceIrR),
+                  },
+                  {
+                    id: 'target-vat',
+                    label: copy('staffHardwareTargetVat'),
+                    value: `${money.number(hardwareReview.data.targetHardwareVatRateBps / 100)}%`,
+                  },
+                  {
+                    id: 'outcome',
+                    label: copy('staffReviewOutcome'),
+                    value: copy(`staffHardwareOutcome.${hardwareReview.data.outcome}`),
+                  },
+                  {
+                    id: 'delta',
+                    label: copy('staffHardwareDelta'),
+                    value: money.money(
+                      (hardwareReview.data.priceDeltaIrR.startsWith('-')
+                        ? -BigInt(hardwareReview.data.priceDeltaIrR)
+                        : BigInt(hardwareReview.data.priceDeltaIrR)
+                      ).toString()
+                    ),
+                  },
+                  ...(hardwareReview.data.targetStockTracking
+                    ? [
+                        {
+                          id: 'availability',
+                          label: copy('staffHardwareAvailable'),
+                          value: money.number(hardwareReview.data.targetAvailableCount),
+                        },
+                      ]
+                    : []),
+                ]}
+                total={{
+                  label: copy('staffHardwareTargetTotal'),
+                  value: money.money(hardwareReview.data.targetOrderTotalIrR),
+                }}
+                notice={
+                  <div className="space-y-2">
+                    <p>{hardwareReview.data.reason}</p>
+                    <p className="whitespace-pre-wrap break-words" dir="auto">
+                      {hardwareReview.data.agreementSnapshot}
+                    </p>
+                  </div>
+                }
+              />
             ) : undefined
           }
           onClose={() => {
             setAction(null);
             setDecisionReview(null);
+            setHardwareReview(null);
           }}
           onSuccess={async () => {
             setNote('');
