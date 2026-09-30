@@ -12,7 +12,7 @@ import {
   evaluateInvoiceBankReceiptClientFile,
   invoiceBankReceiptContentTypeFromName,
   parseInvoiceBankReceiptAmountIrR,
-} from '@barghsa/shared/finance';
+} from '@barghsa/shared/finance/browser';
 import { withCsrf } from './csrf.js';
 
 export { INVOICE_BANK_RECEIPT_FILE_ACCEPT };
@@ -199,6 +199,7 @@ export async function submitInvoiceBankReceipt(input: {
   bankName?: string;
   attachmentKey: string;
   customerNote?: string;
+  expectedReviewHash: string;
 }): Promise<{ ok: true; state: 'Submitted'; amount: bigint } | { ok: false; status: number }> {
   const res = await fetch(`/api/invoices/${input.invoiceId}/bank-receipts`, {
     method: 'POST',
@@ -214,6 +215,7 @@ export async function submitInvoiceBankReceipt(input: {
       bankName: input.bankName,
       attachmentKey: input.attachmentKey,
       customerNote: input.customerNote,
+      expectedReviewHash: input.expectedReviewHash,
     }),
   });
   const payload = await readResponseObject(res);

@@ -37,6 +37,7 @@ import { EmailWebhookModule } from './email-webhook/index.js';
 import { WalletModule } from './wallet/index.js';
 import { InvoiceModule } from './invoice/index.js';
 import { PublicModule } from './public/public.module.js';
+import { JobsModule } from './jobs/jobs.module.js';
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { PublicModule } from './public/public.module.js';
     ContractModule,
     DocumentModule,
     PublicModule,
+    JobsModule,
   ],
   controllers: [AppController],
   providers: [CorrelationIdProvider, ShutdownService],

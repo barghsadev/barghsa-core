@@ -12,7 +12,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { formatIrr } from '../lib/customer-invoices.js';
-import { isInvoiceUuid } from '../lib/due-at-override.js';
+import { isInvoiceUuid } from '../lib/invoice-uuid.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 
 const types = ['topup', 'payment', 'refund', 'reservation', 'release', 'reversal', 'compensating'];

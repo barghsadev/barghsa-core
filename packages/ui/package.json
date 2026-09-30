@@ -15,6 +15,16 @@
       }
     },
     "./styles.css": "./src/styles.css",
+    "./sonner": {
+      "import": {
+        "types": "./dist/sonner.d.ts",
+        "default": "./dist/sonner.js"
+      },
+      "require": {
+        "types": "./dist/sonner.d.cts",
+        "default": "./dist/sonner.cjs"
+      }
+    },
     "./direction-provider": {
       "import": {
         "types": "./dist/direction-provider.d.ts",

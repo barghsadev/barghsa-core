@@ -13,11 +13,23 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
+import {
+  parseDateRangeFilter,
+  parseHistoryQuery,
+  HISTORY_SORT_OPTIONS,
+  parseStatusFilter,
+  SOLAR_REQUEST_STATUSES,
+} from '@barghsa/shared/validation';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { SolarRequestService } from './solar-request.service.js';
-import { solarDraftInput, solarSubmission } from './solar-request.validation.js';
+import {
+  solarDraftInput,
+  solarSubmission,
+  solarSubmissionReview,
+  type SolarSubmission,
+} from './solar-request.validation.js';
 import { RequiresCapability } from '../maintenance/maintenance.guard.js';
 
 @ApiTags('Solar construction requests')
@@ -47,6 +59,17 @@ export class SolarRequestController {
     return this.service.saveDraft(req.session, input.data);
   }
 
+  @Post('review')
+  @RequiresCapability('solar_requests')
+  @RateLimit({ namespace: 'solar:review:user', limit: 60, windowMs: 60_000, scope: 'user' })
+  @ApiOperation({ summary: 'Review the authoritative solar request details before submission' })
+  @ApiZodBody(solarSubmissionReview)
+  review(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    const input = solarSubmissionReview.safeParse(body);
+    if (!input.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.review(req.session, input.data);
+  }
+
   @Post()
   @RequiresCapability('solar_requests')
   @RateLimit({ namespace: 'solar:submit:user', limit: 60, windowMs: 60_000, scope: 'user' })
@@ -57,21 +80,57 @@ export class SolarRequestController {
   submit(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
     const input = solarSubmission.safeParse(body);
     if (!input.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
-    return this.service.submit(req.session, input.data, req.ip ?? '127.0.0.1');
+    return this.service.submit(req.session, input.data as SolarSubmission, req.ip ?? '127.0.0.1');
   }
 
   @Get()
   @RateLimit({ namespace: 'solar:list:user', limit: 60, windowMs: 60_000 })
   @ApiOperation({ summary: 'List solar construction requests for a profile' })
   @ApiQuery({ name: 'before', required: false, format: 'uuid' })
+  @ApiQuery({
+    name: 'statuses',
+    required: false,
+    type: String,
+    description: 'Comma-separated solar request statuses',
+  })
+  @ApiQuery({
+    name: 'from',
+    required: false,
+    type: String,
+    description: 'Included UTC submission timestamp (ISO with milliseconds)',
+  })
+  @ApiQuery({
+    name: 'to',
+    required: false,
+    type: String,
+    description: 'Excluded UTC submission timestamp (ISO with milliseconds)',
+  })
+  @ApiQuery({
+    name: 'q',
+    required: false,
+    type: String,
+    description: 'Literal substring search, up to 120 characters',
+  })
+  @ApiQuery({ name: 'sort', required: false, enum: [...HISTORY_SORT_OPTIONS] })
   list(
     @Query('profileId', new ParseUUIDPipe()) profileId: string,
     @Req() req: AuthenticatedRequest,
-    @Query('before') before?: string
+    @Query('before') before?: string,
+    @Query('statuses') statuses?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+    @Query('q') q?: string,
+    @Query('sort') sort?: string
   ) {
     if (before && !z.string().uuid().safeParse(before).success)
       throw new HttpException({ error: 'VALIDATION:INVALID_CURSOR' }, 400);
-    return this.service.list(req.session, profileId, before);
+    const selectedStatuses = parseStatusFilter(statuses, SOLAR_REQUEST_STATUSES);
+    if (!selectedStatuses) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    const range = parseDateRangeFilter(from, to);
+    if (!range) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    const query = parseHistoryQuery(q, sort);
+    if (!query) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.list(req.session, profileId, before, selectedStatuses, range, query);
   }
 
   @Get(':id')

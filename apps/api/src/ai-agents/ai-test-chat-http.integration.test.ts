@@ -249,6 +249,73 @@ it('requires every linked knowledge base in all-KB mode and returns its excerpts
   expect(result.attribution).toBe('retrieved_context');
 }, 30000);
 
+it('previews slot-scoped sources without replaying admin context or stale publication', async () => {
+  await http.pool.query(
+    "SELECT rate_limit_rolling_reset(true,'ai:test-chat:user:test-chat-admin')"
+  );
+  await http.pool.query("UPDATE ai_agents SET link_mode='any_kb' WHERE id=$1", [agentId]);
+  const rows = await http.pool.query<{ id: string; title: string }>(
+    "SELECT id,title FROM knowledge_bases WHERE title IN ('Source 1','Source 2') ORDER BY title"
+  );
+  expect(rows.rows).toHaveLength(2);
+  const privateId = rows.rows[0]!.id;
+  const publicId = rows.rows[1]!.id;
+  await http.pool.query("UPDATE knowledge_bases SET audience='public' WHERE id=$1", [publicId]);
+  const admin = await send({ agentId, requestId: randomUUID(), message: 'private context marker' });
+  expect(admin.status).toBe(200);
+  const adminConversation = (await admin.json()) as TestChatResponse;
+  const requestId = randomUUID();
+  const body = {
+    agentId,
+    requestId,
+    conversationId: adminConversation.conversationId,
+    slotKey: 'website_chatbot',
+    message: 'Which sources?',
+  };
+  const response = await send(body);
+  expect(response.status).toBe(200);
+  const result = (await response.json()) as TestChatResponse;
+  expect(result.sources.map((source) => source.kbId)).toEqual([publicId]);
+  expect(lastChatMessages.some((message) => message.content.includes('Excerpt 1'))).toBe(false);
+  expect(
+    lastChatMessages.some((message) => message.content.includes('private context marker'))
+  ).toBe(false);
+  expect(
+    (
+      await http.pool.query<{ agent_slot: string }>(
+        "SELECT agent_slot FROM ai_audit_log WHERE input->>'requestId'=$1",
+        [requestId]
+      )
+    ).rows
+  ).toEqual([{ agent_slot: 'website_chatbot' }]);
+  expect((await send({ ...body, slotKey: 'individual_chatbot' })).status).toBe(409);
+  await http.pool.query("UPDATE knowledge_bases SET audience='admin' WHERE id=$1", [publicId]);
+  expect((await send(body)).status).toBe(409);
+
+  await http.pool.query("UPDATE knowledge_bases SET audience='customer' WHERE id=$1", [privateId]);
+  const customer = await send({
+    agentId,
+    requestId: randomUUID(),
+    slotKey: 'individual_chatbot',
+    message: 'Customer source?',
+  });
+  expect(customer.status).toBe(200);
+  expect(
+    ((await customer.json()) as TestChatResponse).sources.map((source) => source.kbId)
+  ).toEqual([privateId]);
+  await http.pool.query("UPDATE ai_agents SET link_mode='all_kbs' WHERE id=$1", [agentId]);
+  expect(
+    (
+      await send({
+        agentId,
+        requestId: randomUUID(),
+        slotKey: 'website_chatbot',
+        message: 'All sources?',
+      })
+    ).status
+  ).toBe(409);
+}, 30000);
+
 it('serves the versioned snake-case contract with session replay', async () => {
   await http.pool.query(
     "SELECT rate_limit_rolling_reset(true,'ai:test-chat:user:test-chat-admin')"
@@ -402,7 +469,7 @@ it('opens a per-model circuit after provider failures and recovers with one prob
     message: failCompletionMessage,
   });
   expect(failedRecovery.status).toBe(503);
-  expect(completions).toBe(beforeFailedRecovery + 2);
+  expect(completions).toBe(beforeFailedRecovery + 1);
   expect(
     (await http.pool.query('SELECT degraded FROM ai_model_circuit_states WHERE id=$1', [modelId]))
       .rows[0]
@@ -415,7 +482,7 @@ it('opens a per-model circuit after provider failures and recovers with one prob
   const attempts = completions;
   const recovered = await send({ agentId, requestId: randomUUID(), message: 'Recovered?' });
   expect(recovered.status).toBe(200);
-  expect(completions).toBe(attempts + 2);
+  expect(completions).toBe(attempts + 1);
   expect(
     (await http.pool.query('SELECT degraded FROM ai_model_circuit_states WHERE id=$1', [modelId]))
       .rows[0]
@@ -446,7 +513,7 @@ it('requires a retrieved source when a response policy demands one', async () =>
     policyId,
   ]);
   const before = completions;
-  const requestId = randomUUID();
+  const requestId = 'ba799c7b-42cd-4dc7-9e6a-cba3400ec175';
   const response = await send({ agentId, requestId, message: 'Electricity?' });
   expect(response.status).toBe(422);
   expect(await response.json()).toMatchObject({

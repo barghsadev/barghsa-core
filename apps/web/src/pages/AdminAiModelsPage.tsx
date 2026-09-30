@@ -21,6 +21,25 @@ interface Model {
   lastTestLatencyMs: number | null;
   circuitOpen: boolean;
   circuitCooldownUntil: string | null;
+  budget: {
+    monthlyTokenLimit: number | null;
+    monthlyCostLimitMicros: number | null;
+    inputPricePerMillionMicros: number;
+    outputPricePerMillionMicros: number;
+    usedInputTokens: number;
+    usedOutputTokens: number;
+    usedCostMicros: number;
+    periodStart: string;
+    alertedAt: string | null;
+  } | null;
+}
+interface BudgetDraft {
+  modelId: string;
+  modelTitle: string;
+  monthlyTokenLimit: string;
+  monthlyCostUsd: string;
+  inputPriceUsd: string;
+  outputPriceUsd: string;
 }
 interface Draft {
   id?: string;
@@ -56,6 +75,7 @@ export default function AdminAiModelsPage() {
     [error, setError] = useState(false),
     [revision, setRevision] = useState(0);
   const [draft, setDraft] = useState<Draft | null>(null),
+    [budgetDraft, setBudgetDraft] = useState<BudgetDraft | null>(null),
     [action, setAction] = useState<TeamAction | null>(null),
     [result, setResult] = useState<{ ok: boolean; text: string } | null>(null);
   useEffect(() => {
@@ -65,6 +85,7 @@ export default function AdminAiModelsPage() {
     setError(false);
     setModels([]);
     setDraft(null);
+    setBudgetDraft(null);
     void (async () => {
       try {
         const response = await fetch('/api/admin/ai-models', { signal: controller.signal });
@@ -138,6 +159,43 @@ export default function AdminAiModelsPage() {
       errorMessages: errors,
     });
   }
+  function editBudget(model: Model) {
+    setDraft(null);
+    setBudgetDraft({
+      modelId: model.id,
+      modelTitle: model.title,
+      monthlyTokenLimit: model.budget?.monthlyTokenLimit?.toString() ?? '',
+      monthlyCostUsd:
+        model.budget?.monthlyCostLimitMicros === null || model.budget === null
+          ? ''
+          : (model.budget.monthlyCostLimitMicros / 1_000_000).toString(),
+      inputPriceUsd: ((model.budget?.inputPricePerMillionMicros ?? 0) / 1_000_000).toString(),
+      outputPriceUsd: ((model.budget?.outputPricePerMillionMicros ?? 0) / 1_000_000).toString(),
+    });
+  }
+  function submitBudget(event: FormEvent) {
+    event.preventDefault();
+    if (!budgetDraft) return;
+    setResult(null);
+    setAction({
+      title: `${label('budgetSave')}: ${budgetDraft.modelTitle}`,
+      description: label('budgetConfirm'),
+      path: `/api/admin/ai-models/${budgetDraft.modelId}/budget`,
+      method: 'PUT',
+      body: {
+        monthlyTokenLimit: budgetDraft.monthlyTokenLimit
+          ? Number(budgetDraft.monthlyTokenLimit)
+          : null,
+        monthlyCostLimitMicros: budgetDraft.monthlyCostUsd
+          ? Math.round(Number(budgetDraft.monthlyCostUsd) * 1_000_000)
+          : null,
+        inputPricePerMillionMicros: Math.round(Number(budgetDraft.inputPriceUsd) * 1_000_000),
+        outputPricePerMillionMicros: Math.round(Number(budgetDraft.outputPriceUsd) * 1_000_000),
+      },
+      forbiddenMessage: label('forbidden'),
+      errorMessages: errors,
+    });
+  }
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       {time.notice}
@@ -174,6 +232,7 @@ export default function AdminAiModelsPage() {
           <Button
             onClick={() => {
               setDraft(blank());
+              setBudgetDraft(null);
               setResult(null);
             }}
           >
@@ -300,6 +359,51 @@ export default function AdminAiModelsPage() {
               </div>
             </form>
           )}
+          {budgetDraft && (
+            <form
+              onSubmit={submitBudget}
+              className="max-w-2xl space-y-4 rounded-lg border bg-background p-5"
+              aria-label={label('budgetForm')}
+            >
+              <h2 className="text-lg font-semibold">
+                {label('budgetTitle')}: {budgetDraft.modelTitle}
+              </h2>
+              <p className="text-sm text-muted-foreground">{label('budgetHelp')}</p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {(
+                  [
+                    ['monthlyTokenLimit', 'budgetTokens', '1', '1000000000', '1'],
+                    ['monthlyCostUsd', 'budgetCost', '0.01', '1000000', '0.01'],
+                    ['inputPriceUsd', 'budgetInputPrice', '0', '1000', '0.000001'],
+                    ['outputPriceUsd', 'budgetOutputPrice', '0', '1000', '0.000001'],
+                  ] as const
+                ).map(([key, labelKey, min, max, step]) => (
+                  <div className="space-y-2" key={key}>
+                    <Label htmlFor={`ai-model-${key}`}>{label(labelKey)}</Label>
+                    <Input
+                      id={`ai-model-${key}`}
+                      type="number"
+                      dir="ltr"
+                      min={min}
+                      max={max}
+                      step={step}
+                      required={key === 'inputPriceUsd' || key === 'outputPriceUsd'}
+                      value={budgetDraft[key]}
+                      onChange={(event) =>
+                        setBudgetDraft({ ...budgetDraft, [key]: event.target.value })
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="flex gap-3">
+                <Button type="submit">{label('budgetSave')}</Button>
+                <Button type="button" variant="outline" onClick={() => setBudgetDraft(null)}>
+                  {label('cancel')}
+                </Button>
+              </div>
+            </form>
+          )}
           {models.length === 0 ? (
             <p>{label('empty')}</p>
           ) : (
@@ -374,6 +478,38 @@ export default function AdminAiModelsPage() {
                             {model.lastTestError}
                           </p>
                         )}
+                        <div className="border-t pt-2 text-xs text-muted-foreground">
+                          <p className="font-medium text-foreground">{label('budgetTitle')}</p>
+                          {model.budget ? (
+                            <>
+                              {model.budget.monthlyTokenLimit !== null && (
+                                <p>
+                                  {label('budgetTokens')}:{' '}
+                                  {numbers.number(
+                                    model.budget.usedInputTokens + model.budget.usedOutputTokens
+                                  )}{' '}
+                                  / {numbers.number(model.budget.monthlyTokenLimit)}
+                                </p>
+                              )}
+                              {model.budget.monthlyCostLimitMicros !== null && (
+                                <p>
+                                  {label('budgetCost')}:{' '}
+                                  {new Intl.NumberFormat(locale, {
+                                    style: 'currency',
+                                    currency: 'USD',
+                                  }).format(model.budget.usedCostMicros / 1_000_000)}{' '}
+                                  /{' '}
+                                  {new Intl.NumberFormat(locale, {
+                                    style: 'currency',
+                                    currency: 'USD',
+                                  }).format(model.budget.monthlyCostLimitMicros / 1_000_000)}
+                                </p>
+                              )}
+                            </>
+                          ) : (
+                            <p>{label('budgetNone')}</p>
+                          )}
+                        </div>
                       </td>
                       <td className="p-4">
                         {' '}
@@ -400,6 +536,9 @@ export default function AdminAiModelsPage() {
                           </Button>
                           <Button variant="outline" onClick={() => perform(model, 'test')}>
                             {label('test')}
+                          </Button>
+                          <Button variant="outline" onClick={() => editBudget(model)}>
+                            {label('budgetEdit')}
                           </Button>
                           <Button
                             variant="outline"
@@ -440,6 +579,7 @@ export default function AdminAiModelsPage() {
                 : { ok: true, text: '' }
             );
             setDraft(null);
+            setBudgetDraft(null);
             setRevision((v) => v + 1);
           }}
         />

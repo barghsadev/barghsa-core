@@ -14,7 +14,7 @@ beforeAll(async () => {
   );
   const session = randomUUID();
   await http.pool.query(
-    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES ($1,'sort-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')",
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context) VALUES ($1,'sort-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes','staff')",
     [session, randomUUID(), randomUUID()]
   );
   cookie = 'barghsa_session=' + session;
@@ -190,6 +190,9 @@ it('requires current CRM read permission and never accepts customer session acce
   );
   await http.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ($1,'list-reader')", [
     ids[0],
+  ]);
+  await http.pool.query("UPDATE sessions SET operating_context='staff' WHERE session_id=$1", [
+    session,
   ]);
   expect((await list({}, 'barghsa_session=' + session)).status).toBe(200);
   await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='list-reader'");

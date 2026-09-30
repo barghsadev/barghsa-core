@@ -1,4 +1,5 @@
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import type { FinancialReviewSnapshot } from '@barghsa/shared/finance';
 import {
   lockFinancialSubmissionActor,
   type FinancialSubmissionActor,
@@ -21,7 +22,8 @@ export async function auditReceiptSubmission(
   actor: ReceiptSubmissionActor,
   profileId: string,
   receiptId: string,
-  flow: 'wallet' | 'invoice'
+  flow: 'wallet' | 'invoice',
+  financialReview?: FinancialReviewSnapshot<object>
 ): Promise<void> {
   await client.query(
     `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
@@ -29,7 +31,12 @@ export async function auditReceiptSubmission(
     [
       actor.userId,
       flow === 'wallet' ? 'wallet_bank_receipt_submitted' : 'invoice_bank_receipt_submitted',
-      JSON.stringify({ sessionId: actor.sessionId, profileId, receiptId }),
+      JSON.stringify({
+        sessionId: actor.sessionId,
+        profileId,
+        receiptId,
+        ...(financialReview ? { reviewHash: financialReview.hash, financialReview } : {}),
+      }),
       actor.correlationId ?? correlationIdStorage.getStore() ?? null,
     ]
   );

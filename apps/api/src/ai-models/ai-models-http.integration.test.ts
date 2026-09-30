@@ -83,6 +83,63 @@ async function seed() {
     )
   ).rows[0].id as string;
 }
+it('sets an audited monthly model budget and exposes current usage without changing the model', async () => {
+  const id = await seed();
+  const budget = {
+    monthlyTokenLimit: 20_000,
+    monthlyCostLimitMicros: 2_000_000,
+    inputPricePerMillionMicros: 300_000,
+    outputPricePerMillionMicros: 900_000,
+  };
+  expect((await request(`/${id}/budget`, 'PUT', budget)).status).toBe(200);
+  const model = (await (await request(`/${id}`)).json()) as { budget: unknown };
+  expect(model.budget).toMatchObject({ ...budget, usedInputTokens: 0, usedCostMicros: 0 });
+  expect(
+    (await http.pool.query("SELECT event FROM audit_log WHERE event='ai_model_budget_updated'"))
+      .rows
+  ).toHaveLength(1);
+  expect(
+    (await request(`/${id}/budget`, 'PUT', { ...budget, inputPricePerMillionMicros: 0 })).status
+  ).toBe(400);
+  const unauthorized = await fetch(`${http.base}${path}/${id}/budget`, {
+    method: 'PUT',
+    headers: headers.other!,
+    body: JSON.stringify(budget),
+  });
+  expect(unauthorized.status).toBe(403);
+  expect(
+    (
+      await request(`/${id}/budget`, 'PUT', {
+        monthlyTokenLimit: null,
+        monthlyCostLimitMicros: null,
+        inputPricePerMillionMicros: 0,
+        outputPricePerMillionMicros: 0,
+      })
+    ).status
+  ).toBe(200);
+  expect(((await (await request(`/${id}`)).json()) as { budget: unknown }).budget).toBeNull();
+});
+it('reports AI queue and model circuits only to authorized staff', async () => {
+  const id = await seed();
+  await http.pool.query(
+    "UPDATE ai_models SET last_test_status='passed',last_tested_at=now(),is_enabled=true WHERE id=$1",
+    [id]
+  );
+  await http.pool.query(
+    "UPDATE ai_model_circuit_states SET degraded=true,cooldown_until=NOW()+INTERVAL '1 minute' WHERE id=$1",
+    [id]
+  );
+  const response = await fetch(`${http.base}/api/ai/health`, { headers: headers.viewer! });
+  expect(response.status).toBe(200);
+  expect(await response.json()).toMatchObject({
+    status: 'unavailable',
+    queue: { active: 0, pending: 0, maxConcurrency: 10 },
+    worker: { status: 'unavailable' },
+    models: [{ id, status: 'open' }],
+  });
+  expect((await fetch(`${http.base}/api/ai/health`, { headers: headers.other! })).status).toBe(403);
+  expect((await fetch(`${http.base}/api/health/ready`)).status).toBe(200);
+});
 it.each(['create', 'update', 'delete'])(
   'rolls back %s when its audit write fails',
   async (action) => {

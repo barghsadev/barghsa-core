@@ -5,6 +5,7 @@ export function hasStaffPermission(request: AuthenticatedRequest, permission: st
   const session = request.session;
   return Boolean(
     session &&
+    session.operatingContext !== 'customer' &&
     (session.isAdmin === true ||
       session.permissions?.includes('*') ||
       session.permissions?.includes(permission))

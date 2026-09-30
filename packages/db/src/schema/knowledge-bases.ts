@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 import {
   bigint,
   boolean,
+  check,
   index,
   integer,
   jsonb,
@@ -45,6 +46,11 @@ export const knowledgeBases = pgTable(
     /** Free-text description of the KB's purpose/content. */
     description: text('description').notNull().default(''),
 
+    /** Explicit publication scope. Existing bases remain admin-only. */
+    audience: text('audience', { enum: ['admin', 'staff', 'customer', 'public'] })
+      .notNull()
+      .default('admin'),
+
     sourceType: text('source_type', { enum: ['document', 'url', 'api'] })
       .notNull()
       .default('document'),
@@ -77,6 +83,7 @@ export const knowledgeBases = pgTable(
   (table) => [
     /** List by recency for the admin UI (migration 0043). */
     index('idx_kb_created_at').on(table.createdAt),
+    check('chk_kb_audience', sql`${table.audience} IN ('admin', 'staff', 'customer', 'public')`),
   ]
 );
 

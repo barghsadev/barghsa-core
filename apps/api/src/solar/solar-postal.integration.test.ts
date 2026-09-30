@@ -31,6 +31,73 @@ function send(user: string, path: string, method = 'GET', body?: unknown) {
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
 }
+const staleReviewHash = '0'.repeat(64);
+async function reviewFinal(
+  id: string,
+  decision: 'approve' | 'reject' | 'close-no-contract',
+  reason?: string
+) {
+  const response = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${id}/final-decision/review`,
+    'POST',
+    { decision, ...(reason === undefined ? {} : { reason }) }
+  );
+  expect(response.status, http.logs()).toBe(200);
+  return (await response.json()) as {
+    hash: string;
+    data: {
+      currentStatus: string;
+      postalStatus: string;
+      reason: string | null;
+      outcome: string;
+      createsContract: boolean;
+      createsInvoice: boolean;
+    };
+  };
+}
+async function reviewPostal(
+  id: string,
+  decision: 'received' | 'incomplete' | 'not_received',
+  reason?: string
+) {
+  const response = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${id}/postal/review`,
+    'POST',
+    { decision, ...(reason === undefined ? {} : { reason }) }
+  );
+  expect(response.status, http.logs()).toBe(200);
+  return (await response.json()) as {
+    hash: string;
+    data: {
+      currentPostalStatus: string;
+      trackingNumber: string;
+      reason: string | null;
+      postalOutcome: string;
+      requestOutcome: string;
+    };
+  };
+}
+async function advanceDocuments(id: string) {
+  const reviewed = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${id}/documents/review-set-decision`,
+    'POST',
+    { decision: 'advance' }
+  );
+  expect(reviewed.status, http.logs()).toBe(200);
+  const { hash } = (await reviewed.json()) as { hash: string };
+  return send('postal-reviewer', `admin/solar/requests/${id}/documents/advance`, 'POST', {
+    expectedReviewHash: hash,
+  });
+}
+async function submitSolar(body: Record<string, unknown>) {
+  const review = await send('postal-buyer', 'solar/requests/review', 'POST', body);
+  expect(review.status, http.logs()).toBe(201);
+  const { hash } = (await review.json()) as { hash: string };
+  return send('postal-buyer', 'solar/requests', 'POST', { ...body, expectedReviewHash: hash });
+}
 async function uploadReceipt() {
   const created = await send('postal-buyer', 'documents', 'POST', {
     profileId,
@@ -116,7 +183,7 @@ beforeAll(async () => {
       "INSERT INTO profiles(user_id,profile_type,status,is_default) VALUES('postal-buyer','INDIVIDUAL','ACTIVE',true) RETURNING id"
     )
   ).rows[0]!.id;
-  const created = await send('postal-buyer', 'solar/requests', 'POST', {
+  const created = await submitSolar({
     profileId,
     submissionKey: randomUUID(),
     buildingType: 'building_apartment',
@@ -136,15 +203,11 @@ beforeAll(async () => {
     ).status,
     http.logs()
   ).toBe(200);
-  expect(
-    (await send('postal-reviewer', `admin/solar/requests/${requestId}/documents/advance`, 'POST'))
-      .status,
-    http.logs()
-  ).toBe(200);
+  expect((await advanceDocuments(requestId)).status, http.logs()).toBe(200);
 }, 90_000);
 
 it('creates a linked solar draft and invoice atomically, then replays the same command', async () => {
-  const created = await send('postal-buyer', 'solar/requests', 'POST', {
+  const created = await submitSolar({
     profileId,
     submissionKey: randomUUID(),
     buildingType: 'building_apartment',
@@ -187,8 +250,14 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     ],
   };
   expect(
-    (await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', input))
-      .status
+    (
+      await send(
+        'postal-reviewer',
+        `admin/solar/requests/${id}/create-contract/review`,
+        'POST',
+        input
+      )
+    ).status
   ).toBe(409);
   expect(
     (
@@ -198,10 +267,7 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     ).status,
     http.logs()
   ).toBe(200);
-  expect(
-    (await send('postal-reviewer', `admin/solar/requests/${id}/documents/advance`, 'POST')).status,
-    http.logs()
-  ).toBe(200);
+  expect((await advanceDocuments(id)).status, http.logs()).toBe(200);
   expect(
     (
       await send('postal-buyer', `solar/requests/${id}/postal/shipment`, 'POST', {
@@ -213,8 +279,11 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     http.logs()
   ).toBe(200);
   expect(
-    (await send('postal-reviewer', `admin/solar/requests/${id}/postal/confirm-received`, 'POST'))
-      .status,
+    (
+      await send('postal-reviewer', `admin/solar/requests/${id}/postal/confirm-received`, 'POST', {
+        expectedReviewHash: (await reviewPostal(id, 'received')).hash,
+      })
+    ).status,
     http.logs()
   ).toBe(200);
   expect(
@@ -222,17 +291,26 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     http.logs()
   ).toBe(200);
   expect(
-    (await send('postal-reviewer', `admin/solar/requests/${id}/final-approve`, 'POST')).status,
+    (
+      await send('postal-reviewer', `admin/solar/requests/${id}/final-approve`, 'POST', {
+        expectedReviewHash: (await reviewFinal(id, 'approve')).hash,
+      })
+    ).status,
     http.logs()
   ).toBe(200);
   const options = await send('postal-reviewer', `admin/solar/requests/${id}/contract-options`);
   expect(options.status, http.logs()).toBe(200);
   expect(await options.json()).toMatchObject({ templates: [{ version_id: versionId }] });
-  const bad = await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', {
-    ...input,
-    idempotencyKey: randomUUID(),
-    invoiceLines: [{ ...input.invoiceLines[0], unitPrice: '0' }],
-  });
+  const bad = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${id}/create-contract/review`,
+    'POST',
+    {
+      ...input,
+      idempotencyKey: randomUUID(),
+      invoiceLines: [{ ...input.invoiceLines[0], unitPrice: '0' }],
+    }
+  );
   expect(bad.status, http.logs()).toBe(400);
   for (const commercialValue of [
     undefined,
@@ -241,7 +319,7 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
   ]) {
     const response = await send(
       'postal-reviewer',
-      `admin/solar/requests/${id}/create-contract`,
+      `admin/solar/requests/${id}/create-contract/review`,
       'POST',
       {
         ...input,
@@ -267,11 +345,50 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
       )
     ).rows[0]
   ).toMatchObject({ status: 'approved', contract_id: null });
+  const duePeriodId = (
+    await http.pool.query<{ id: string }>(
+      "INSERT INTO service_due_periods(service_type,default_days,effective_from,created_by) VALUES('manual',7,NOW()-INTERVAL '1 day','postal-reviewer') RETURNING id"
+    )
+  ).rows[0]!.id;
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', input))
+      .status
+  ).toBe(400);
+  const previewResponse = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${id}/create-contract/review`,
+    'POST',
+    input
+  );
+  expect(previewResponse.status, http.logs()).toBe(200);
+  const preview = (await previewResponse.json()) as {
+    hash: string;
+    data: { totals: { total: string }; outcome: string };
+  };
+  expect(preview.data).toMatchObject({
+    totals: { total: '100000' },
+    outcome: 'draft_contract_and_unpaid_invoice',
+  });
+  const command = { ...input, expectedReviewHash: preview.hash };
+  await http.pool.query('UPDATE service_due_periods SET default_days=8 WHERE id=$1', [duePeriodId]);
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', command))
+      .status
+  ).toBe(409);
+  await http.pool.query('UPDATE service_due_periods SET default_days=7 WHERE id=$1', [duePeriodId]);
+  expect(
+    (
+      await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', {
+        ...command,
+        invoiceLines: [{ ...input.invoiceLines[0], unitPrice: '200000' }],
+      })
+    ).status
+  ).toBe(409);
   const contract = await send(
     'postal-reviewer',
     `admin/solar/requests/${id}/create-contract`,
     'POST',
-    input
+    command
   );
   expect(contract.status, http.logs()).toBe(200);
   const result = (await contract.json()) as {
@@ -281,6 +398,16 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
   };
   expect(result.status).toBe('contract_created');
   expect(result.invoiceIds).toHaveLength(1);
+  const recordedReview = (
+    await http.pool.query<{ review: { hash: string; data: { totals: { total: string } } } }>(
+      "SELECT metadata::jsonb->'financialReview' AS review FROM audit_log WHERE event='solar.contract.created' AND metadata::jsonb->>'requestId'=$1",
+      [id]
+    )
+  ).rows[0]!.review;
+  expect(recordedReview).toMatchObject({
+    hash: preview.hash,
+    data: { totals: { total: '100000' } },
+  });
   expect(
     (
       await http.pool.query<{ content: { commercialValue: unknown } }>(
@@ -291,7 +418,7 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
   ).toEqual(input.commercialValue);
   expect(
     await (
-      await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', input)
+      await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', command)
     ).json()
   ).toEqual(result);
   expect(
@@ -299,6 +426,7 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
       await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', {
         ...input,
         idempotencyKey: randomUUID(),
+        expectedReviewHash: preview.hash,
       })
     ).status
   ).toBe(409);
@@ -403,13 +531,17 @@ afterAll(async () => {
 
 it('handles guidance, receipt upload, shipment issues, resubmission and staff receipt', async () => {
   expect(
-    (await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST'))
-      .status
+    (
+      await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST', {
+        expectedReviewHash: staleReviewHash,
+      })
+    ).status
   ).toBe(409);
   expect(
     (
       await send('postal-buyer', `admin/solar/requests/${requestId}/close-no-contract`, 'POST', {
         reason: 'No',
+        expectedReviewHash: staleReviewHash,
       })
     ).status
   ).toBe(403);
@@ -522,11 +654,34 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
   expect(
     (await send('postal-reviewer', `admin/solar/postal-queue?before=${randomUUID()}`)).status
   ).toBe(404);
+  const incompleteReview = await reviewPostal(
+    requestId,
+    'incomplete',
+    'Please send the signed original.'
+  );
+  expect(incompleteReview.data).toMatchObject({
+    trackingNumber: 'TRACK-123',
+    reason: 'Please send the signed original.',
+    requestOutcome: 'waiting_for_postal_submission',
+  });
+  expect(
+    (
+      await send(
+        'postal-reviewer',
+        `admin/solar/requests/${requestId}/postal/mark-incomplete`,
+        'POST',
+        {
+          reason: 'Different reason',
+          expectedReviewHash: incompleteReview.hash,
+        }
+      )
+    ).status
+  ).toBe(409);
   const incomplete = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/postal/mark-incomplete`,
     'POST',
-    { reason: 'Please send the signed original.' }
+    { reason: 'Please send the signed original.', expectedReviewHash: incompleteReview.hash }
   );
   expect(incomplete.status, http.logs()).toBe(200);
   expect(
@@ -550,13 +705,20 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     ).status,
     http.logs()
   ).toBe(200);
+  const receivedBeforeIssue = await reviewPostal(requestId, 'received');
+  const missingReview = await reviewPostal(
+    requestId,
+    'not_received',
+    'Courier could not locate it.'
+  );
+  expect(missingReview.data.trackingNumber).toBe('TRACK-456');
   expect(
     (
       await send(
         'postal-reviewer',
         `admin/solar/requests/${requestId}/postal/mark-not-received`,
         'POST',
-        { reason: 'Courier could not locate it.' }
+        { reason: 'Courier could not locate it.', expectedReviewHash: missingReview.hash }
       )
     ).status,
     http.logs()
@@ -574,27 +736,61 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     (await send('postal-reviewer', `admin/solar/requests/${requestId}/start-final-review`, 'POST'))
       .status
   ).toBe(409);
+  expect(
+    (
+      await send(
+        'postal-reviewer',
+        `admin/solar/requests/${requestId}/postal/confirm-received`,
+        'POST',
+        {
+          expectedReviewHash: receivedBeforeIssue.hash,
+        }
+      )
+    ).status
+  ).toBe(409);
+  const receivedReview = await reviewPostal(requestId, 'received');
+  expect(receivedReview.data).toMatchObject({
+    trackingNumber: 'TRACK-789',
+    requestOutcome: 'postal_documents_received',
+  });
   const received = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/postal/confirm-received`,
-    'POST'
+    'POST',
+    { expectedReviewHash: receivedReview.hash }
   );
   expect(received.status, http.logs()).toBe(200);
   expect(await received.json()).toMatchObject({
     status: 'received',
     requestStatus: 'postal_documents_received',
   });
+  const postalAudit = await http.pool.query<{ event: string; hash: string }>(
+    `SELECT event,metadata::jsonb->'financialReview'->>'hash' AS hash FROM audit_log
+     WHERE metadata::jsonb->>'requestId'=$1 AND event IN
+       ('solar.postal.incomplete','solar.postal.not_received','solar.postal.received')
+     ORDER BY created_at`,
+    [requestId]
+  );
+  expect(postalAudit.rows).toEqual([
+    { event: 'solar.postal.incomplete', hash: incompleteReview.hash },
+    { event: 'solar.postal.not_received', hash: missingReview.hash },
+    { event: 'solar.postal.received', hash: receivedReview.hash },
+  ]);
   expect(
     await (await send('postal-reviewer', 'admin/solar/postal-queue?lane=needs_staff')).json()
   ).toMatchObject({ requests: [{ id: requestId, request_status: 'postal_documents_received' }] });
   expect(
-    (await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST'))
-      .status
+    (
+      await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST', {
+        expectedReviewHash: staleReviewHash,
+      })
+    ).status
   ).toBe(409);
   expect(
     (
       await send('postal-reviewer', `admin/solar/requests/${requestId}/final-reject`, 'POST', {
         reason: 'Review has not begun',
+        expectedReviewHash: staleReviewHash,
       })
     ).status
   ).toBe(409);
@@ -637,10 +833,37 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
       )
     ).rows[0]!.count
   ).toBeGreaterThanOrEqual(3);
+  expect(
+    (
+      await send(
+        'postal-buyer',
+        `admin/solar/requests/${requestId}/final-decision/review`,
+        'POST',
+        { decision: 'approve' }
+      )
+    ).status
+  ).toBe(403);
+  const approvalReview = await reviewFinal(requestId, 'approve');
+  expect(approvalReview.data).toMatchObject({
+    currentStatus: 'final_review',
+    postalStatus: 'received',
+    outcome: 'approved',
+    createsContract: false,
+    createsInvoice: false,
+  });
+  const staleClose = await reviewFinal(requestId, 'close-no-contract', 'Site cannot proceed.');
+  expect(
+    (
+      await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST', {
+        expectedReviewHash: staleReviewHash,
+      })
+    ).status
+  ).toBe(409);
   const approved = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/final-approve`,
-    'POST'
+    'POST',
+    { expectedReviewHash: approvalReview.hash }
   );
   expect(approved.status, http.logs()).toBe(200);
   expect(await approved.json()).toMatchObject({ status: 'approved' });
@@ -655,21 +878,35 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     ).rows[0]!.contract_id
   ).toBeNull();
   expect(
-    (await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST'))
-      .status
+    (
+      await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST', {
+        expectedReviewHash: approvalReview.hash,
+      })
+    ).status
   ).toBe(409);
   expect(
     (
       await send('postal-reviewer', `admin/solar/requests/${requestId}/close-no-contract`, 'POST', {
         reason: '',
+        expectedReviewHash: staleClose.hash,
       })
     ).status
   ).toBe(400);
+  expect(
+    (
+      await send('postal-reviewer', `admin/solar/requests/${requestId}/close-no-contract`, 'POST', {
+        reason: 'Site cannot proceed.',
+        expectedReviewHash: staleClose.hash,
+      })
+    ).status
+  ).toBe(409);
+  const closeReview = await reviewFinal(requestId, 'close-no-contract', 'Site cannot proceed.');
+  expect(closeReview.data).toMatchObject({ currentStatus: 'approved', outcome: 'cancelled' });
   const closed = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/close-no-contract`,
     'POST',
-    { reason: 'Site cannot proceed.' }
+    { reason: 'Site cannot proceed.', expectedReviewHash: closeReview.hash }
   );
   expect(closed.status, http.logs()).toBe(200);
   expect(await closed.json()).toMatchObject({ status: 'cancelled' });
@@ -688,10 +925,20 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
       )
     ).rows[0]!.count
   ).toBe(3);
+  const decisionAudits = await http.pool.query<{ event: string; hash: string }>(
+    `SELECT event,metadata::jsonb->'financialReview'->>'hash' AS hash FROM audit_log
+     WHERE event IN ('solar.final.approve','solar.final.close-no-contract')
+       AND metadata::jsonb->>'requestId'=$1`,
+    [requestId]
+  );
+  expect(Object.fromEntries(decisionAudits.rows.map((row) => [row.event, row.hash]))).toEqual({
+    'solar.final.approve': approvalReview.hash,
+    'solar.final.close-no-contract': closeReview.hash,
+  });
 }, 90_000);
 
 it('rejects a final solar request with a customer-visible reason after postal receipt', async () => {
-  const created = await send('postal-buyer', 'solar/requests', 'POST', {
+  const created = await submitSolar({
     profileId,
     submissionKey: randomUUID(),
     buildingType: 'building_apartment',
@@ -707,6 +954,7 @@ it('rejects a final solar request with a customer-visible reason after postal re
     (
       await send('postal-reviewer', `admin/solar/requests/${id}/final-reject`, 'POST', {
         reason: 'The project cannot proceed.',
+        expectedReviewHash: staleReviewHash,
       })
     ).status
   ).toBe(409);
@@ -718,10 +966,7 @@ it('rejects a final solar request with a customer-visible reason after postal re
     ).status,
     http.logs()
   ).toBe(200);
-  expect(
-    (await send('postal-reviewer', `admin/solar/requests/${id}/documents/advance`, 'POST')).status,
-    http.logs()
-  ).toBe(200);
+  expect((await advanceDocuments(id)).status, http.logs()).toBe(200);
   expect(
     (
       await send('postal-buyer', `solar/requests/${id}/postal/shipment`, 'POST', {
@@ -733,8 +978,11 @@ it('rejects a final solar request with a customer-visible reason after postal re
     http.logs()
   ).toBe(200);
   expect(
-    (await send('postal-reviewer', `admin/solar/requests/${id}/postal/confirm-received`, 'POST'))
-      .status,
+    (
+      await send('postal-reviewer', `admin/solar/requests/${id}/postal/confirm-received`, 'POST', {
+        expectedReviewHash: (await reviewPostal(id, 'received')).hash,
+      })
+    ).status,
     http.logs()
   ).toBe(200);
   expect(
@@ -745,6 +993,7 @@ it('rejects a final solar request with a customer-visible reason after postal re
     (
       await send('postal-reviewer', `admin/solar/requests/${id}/final-reject`, 'POST', {
         reason: '',
+        expectedReviewHash: staleReviewHash,
       })
     ).status
   ).toBe(400);
@@ -752,15 +1001,31 @@ it('rejects a final solar request with a customer-visible reason after postal re
     (
       await send('postal-other', `admin/solar/requests/${id}/final-reject`, 'POST', {
         reason: 'Unauthorized',
+        expectedReviewHash: staleReviewHash,
       })
     ).status
   ).toBe(403);
+  const rejectionReview = await reviewFinal(id, 'reject', 'The project cannot proceed.');
+  expect(rejectionReview.data).toMatchObject({
+    currentStatus: 'final_review',
+    reason: 'The project cannot proceed.',
+    outcome: 'rejected',
+  });
+  expect(
+    (
+      await send('postal-reviewer', `admin/solar/requests/${id}/final-reject`, 'POST', {
+        reason: 'A different reason',
+        expectedReviewHash: rejectionReview.hash,
+      })
+    ).status
+  ).toBe(409);
   const rejected = await send(
     'postal-reviewer',
     `admin/solar/requests/${id}/final-reject`,
     'POST',
     {
       reason: '  The project cannot proceed.  ',
+      expectedReviewHash: rejectionReview.hash,
     }
   );
   expect(rejected.status, http.logs()).toBe(200);
@@ -783,6 +1048,14 @@ it('rejects a final solar request with a customer-visible reason after postal re
   ).toBe(1);
   expect(
     (
+      await http.pool.query<{ hash: string }>(
+        "SELECT metadata::jsonb->'financialReview'->>'hash' AS hash FROM audit_log WHERE event='solar.final.reject' AND metadata::jsonb->>'requestId'=$1",
+        [id]
+      )
+    ).rows[0]!.hash
+  ).toBe(rejectionReview.hash);
+  expect(
+    (
       await http.pool.query(
         "SELECT count(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='postal-buyer' AND localized_content::text LIKE '%The project cannot proceed.%'"
       )
@@ -792,6 +1065,7 @@ it('rejects a final solar request with a customer-visible reason after postal re
     (
       await send('postal-reviewer', `admin/solar/requests/${id}/final-reject`, 'POST', {
         reason: 'The project cannot proceed.',
+        expectedReviewHash: rejectionReview.hash,
       })
     ).status
   ).toBe(409);

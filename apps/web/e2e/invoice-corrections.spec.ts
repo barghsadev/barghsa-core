@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { tInvoiceCorrections as correctionText } from '../../../packages/i18n/src/invoice-corrections';
 
 const profileId = '11111111-1111-7111-8111-111111111111';
 const originalId = '22222222-2222-7222-8222-222222222222';
@@ -15,6 +16,7 @@ for (const locale of ['fa', 'en'] as const)
         }) => {
           const fa = locale === 'fa';
           await page.addInitScript((locale) => {
+            localStorage.setItem('barghsa.locale', locale);
             const apply = () => {
               document.documentElement.lang = locale;
               document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
@@ -23,6 +25,11 @@ for (const locale of ['fa', 'en'] as const)
             new MutationObserver(apply).observe(document, { childList: true });
           }, locale);
           await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+          await page.route('**/api/auth/user', (route) =>
+            route.fulfill({
+              json: { isStaff: true, operatingContext: 'staff', canSwitchContext: true },
+            })
+          );
           await page.route('**/api/public/branding/config', (route) =>
             route.fulfill({
               json: {
@@ -39,6 +46,146 @@ for (const locale of ['fa', 'en'] as const)
             })
           );
           const requests: Array<Record<string, unknown>> = [];
+          if (kind === 'adjustment')
+            await page.route(`**/api/admin/invoices/${originalId}/corrections/review`, (route) => {
+              const body = route.request().postDataJSON() as { reason: string; amount: string };
+              expect(body).toEqual({
+                kind: 'adjustment',
+                reason: fa ? 'اصلاح مصرف' : 'Usage correction',
+                amount: '-25000',
+              });
+              return route.fulfill({
+                json: {
+                  schemaVersion: 1,
+                  scope: {
+                    action: 'invoice.adjustment.submit',
+                    profileId,
+                    resourceId: originalId,
+                  },
+                  hash: 'c'.repeat(64),
+                  data: {
+                    currency: 'IRR',
+                    profile: { id: profileId, title: 'Fixture customer', type: 'individual' },
+                    invoice: {
+                      id: originalId,
+                      state: 'Overdue',
+                      orderId: null,
+                      serviceType: null,
+                      issuedAt: null,
+                      payableFrom: null,
+                      dueAt: null,
+                      totalAmount: '100000',
+                      paidAmount: '50000',
+                      remainingAmount: '50000',
+                    },
+                    lines: [
+                      {
+                        id: correctionId,
+                        description: 'Original usage',
+                        quantity: 1,
+                        unitPrice: '100000',
+                        discount: '0',
+                        subtotal: '100000',
+                        vatRate: 0,
+                        vatAmount: '0',
+                        taxable: false,
+                      },
+                    ],
+                    totals: { subtotal: '100000', discount: '0', vat: '0' },
+                    contracts: [],
+                    cancellation: 'separate_review_required',
+                    adjustment: {
+                      direction: 'credit',
+                      amount: body.amount,
+                      absoluteAmount: '25000',
+                      reason: body.reason,
+                      initiatorId: 'correction-finance',
+                      approvalRequired: outcome === 'pending',
+                      approvalThreshold: outcome === 'pending' ? '20000' : null,
+                    },
+                  },
+                },
+              });
+            });
+          else
+            await page.route(`**/api/admin/invoices/${originalId}/corrections/review`, (route) => {
+              const body = route.request().postDataJSON() as {
+                kind: string;
+                reason: string;
+                lines: Array<{ unitPrice: string; vatRate: number }>;
+              };
+              expect(body).toMatchObject({
+                kind: 'replacement',
+                reason: fa ? 'اصلاح مصرف' : 'Usage correction',
+                lines: [{ unitPrice: '5005', vatRate: 1000 }],
+              });
+              return route.fulfill({
+                json: {
+                  schemaVersion: 1,
+                  scope: {
+                    action: 'invoice.replacement.submit',
+                    profileId,
+                    resourceId: originalId,
+                  },
+                  hash: 'd'.repeat(64),
+                  data: {
+                    currency: 'IRR',
+                    profile: { id: profileId, title: 'Fixture customer', type: 'individual' },
+                    invoice: {
+                      id: originalId,
+                      state: 'Unpaid',
+                      orderId: null,
+                      serviceType: null,
+                      issuedAt: null,
+                      payableFrom: null,
+                      dueAt: null,
+                      totalAmount: '100000',
+                      paidAmount: '0',
+                      remainingAmount: '100000',
+                    },
+                    lines: [
+                      {
+                        id: correctionId,
+                        description: 'Original usage',
+                        quantity: 1,
+                        unitPrice: '100000',
+                        discount: '0',
+                        subtotal: '100000',
+                        vatRate: 0,
+                        vatAmount: '0',
+                        taxable: false,
+                      },
+                    ],
+                    totals: { subtotal: '100000', discount: '0', vat: '0' },
+                    contracts: [],
+                    cancellation: 'separate_review_required',
+                    replacement: {
+                      reason: body.reason,
+                      initiatorId: 'correction-finance',
+                      lines: [
+                        {
+                          description: 'Original usage',
+                          quantity: 1,
+                          unitPrice: '5005',
+                          vatRate: 1000,
+                          taxable: true,
+                          subtotal: '5005',
+                          vatAmount: '501',
+                        },
+                      ],
+                      totals: { subtotal: '5005', vat: '501', total: '5506' },
+                      dueRule: {
+                        source: 'fallback',
+                        configDays: 7,
+                        periodId: null,
+                        serviceType: 'manual',
+                      },
+                      outcome: 'cancel_original_issue_replacement',
+                    },
+                  },
+                },
+              });
+            });
           await page.route(`**/api/admin/invoices/${originalId}/corrections`, async (route) => {
             if (route.request().method() === 'GET')
               return route.fulfill({
@@ -169,6 +316,27 @@ for (const locale of ['fa', 'en'] as const)
           expect(scan.violations).toEqual([]);
           expect(scan.incomplete.filter((item) => item.id === 'color-contrast')).toEqual([]);
           await issue.click();
+          if (kind === 'adjustment') {
+            const review = page.getByRole('dialog', {
+              name: correctionText('reviewTitle', locale),
+            });
+            await expect(review).toContainText(
+              formatCurrencyIrr(25000n, locale, { numberStyle: fa ? 'persian' : 'western' })
+            );
+            await review
+              .getByRole('button', { name: correctionText('reviewConfirm', locale) })
+              .click();
+          } else {
+            const review = page.getByRole('dialog', {
+              name: correctionText('replacementReviewTitle', locale),
+            });
+            await expect(review).toContainText(
+              formatCurrencyIrr(5506n, locale, { numberStyle: fa ? 'persian' : 'western' })
+            );
+            await review
+              .getByRole('button', { name: correctionText('replacementReviewConfirm', locale) })
+              .click();
+          }
           const dialog = page.getByRole('dialog', {
             name: fa ? 'تأیید هویت برای اصلاح فاکتور' : 'Verify invoice correction',
             exact: true,
@@ -224,7 +392,7 @@ for (const locale of ['fa', 'en'] as const)
           });
           expect(requests[0]).not.toHaveProperty('profileId');
           expect(requests[0]).not.toHaveProperty('actorUserId');
-          if (kind === 'replacement')
+          if (kind === 'replacement') {
             expect(requests[0]).toHaveProperty('lines', [
               {
                 description: 'Original usage',
@@ -234,7 +402,11 @@ for (const locale of ['fa', 'en'] as const)
                 isTaxable: true,
               },
             ]);
-          else expect(requests[0]).toHaveProperty('amount', '-25000');
+            expect(requests[0]).toHaveProperty('expectedReviewHash', 'd'.repeat(64));
+          } else {
+            expect(requests[0]).toHaveProperty('amount', '-25000');
+            expect(requests[0]).toHaveProperty('expectedReviewHash', 'c'.repeat(64));
+          }
           await expect(lookup).toBeEnabled();
           await lookup.fill(correctionId);
           await expect(panel.getByRole('status')).not.toBeVisible();

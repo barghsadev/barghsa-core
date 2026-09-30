@@ -13,7 +13,9 @@ import { AiModelTestQueueService } from './ai-model-test-queue.service.js';
 const TEST_KEY = Buffer.from('0123456789abcdef0123456789abcdef');
 
 function mockPool() {
-  const mockQuery = vi.fn<(...args: unknown[]) => Promise<{ rows: unknown[] }>>();
+  const mockQuery = vi
+    .fn<(...args: unknown[]) => Promise<{ rows: unknown[] }>>()
+    .mockResolvedValue({ rows: [] });
   const pool = { query: mockQuery };
   return { mockQuery, pool };
 }
@@ -282,7 +284,9 @@ describe('AiModelsService (T-09.11.01)', () => {
       const { mockQuery } = mockPool();
       await loadService({ query: mockQuery });
       // Persistent answer: the no-op path re-reads via get() → findRow.
-      mockQuery.mockResolvedValue({ rows: [makeRow()] });
+      mockQuery.mockImplementation(async (sql) => ({
+        rows: String(sql).includes('FROM ai_model_budgets') ? [] : [makeRow()],
+      }));
       const dto = await service.update('row-1', {
         actorUserId: ACTOR,
         session: SESSION,

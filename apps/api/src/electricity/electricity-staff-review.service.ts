@@ -11,6 +11,8 @@ import { NotificationsService } from '../notifications/notifications.service.js'
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 import { GiftCodeService } from '../admin/gift-code.service.js';
 import { createElectricityRefundObligation } from './electricity-refund-obligation.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
+import { staffContractFinancialReview } from '../contract/contract-transactions.js';
 import {
   canTransitionElectricityOrder,
   electricityFinancialStatus,
@@ -23,6 +25,7 @@ export type StaffReviewAction = 'approve' | 'request-changes' | 'reject';
 export interface StaffReviewInput {
   idempotencyKey: string;
   expectedVersionId: string;
+  expectedReviewHash: string;
   reason?: string | undefined;
 }
 
@@ -139,8 +142,91 @@ const customerMessages = {
 export class ElectricityStaffReviewService {
   constructor(
     private readonly invoices: InvoiceStateMachineService,
-    private readonly giftCodes: GiftCodeService
+    private readonly giftCodes: GiftCodeService,
+    private readonly reviews: ReviewSnapshotService
   ) {}
+
+  async financialReview(id: string, action: StaffReviewAction, reason: string, actor: Actor) {
+    const profile = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM electricity_orders WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!profile) throw new NotFoundException('Electricity order not found');
+    return staffContractFinancialReview(profile.profile_id, actor, async (client, archived) => {
+      if (archived) throw new ConflictException('Profile is archived');
+      const row = await this.lockReviewRow(client, id, 'SHARE');
+      return this.reviewForRow(row, action, reason);
+    });
+  }
+
+  private reviewForRow(row: ReviewRow, action: StaffReviewAction, reason: string) {
+    if (
+      row.contract_state !== 'AwaitingStaffReview' ||
+      row.activation_invoice_id !== row.invoice_id ||
+      row.commercial_status !== 'awaiting_staff_review' ||
+      !canTransitionElectricityOrder(
+        row.commercial_status,
+        action === 'approve'
+          ? 'approved'
+          : action === 'request-changes'
+            ? 'changes_requested'
+            : 'rejected'
+      )
+    )
+      throw new ConflictException('Order review changed; reload before deciding');
+    const paid = BigInt(row.paid_amount);
+    const refunded = BigInt(row.refunded_amount);
+    const pending = BigInt(row.pending_refund_amount);
+    if (paid < refunded) throw new ConflictException('Invoice refund totals are invalid');
+    if (action !== 'approve' && row.invoice_state === 'PaymentUnderReview')
+      throw new ConflictException('Resolve pending payment review before changing order');
+    if (action === 'request-changes' && paid > 0n)
+      throw new ConflictException('Paid orders require a financial correction before changes');
+    if (action === 'reject' && pending > 0n)
+      throw new ConflictException('Resolve existing refund before rejection');
+    if (action !== 'approve' && !reason) throw new ConflictException('A reason is required');
+    return this.reviews.create(
+      {
+        action: `electricity.staff-review.${action}`,
+        profileId: row.profile_id,
+        resourceId: row.id,
+      },
+      {
+        action,
+        reason,
+        customerName: row.customer_name,
+        contractId: row.contract_id,
+        contractState: row.contract_state,
+        versionId: row.version_id,
+        versionNumber: row.version_number,
+        contractSnapshot: row.contract_snapshot,
+        invoiceId: row.invoice_id,
+        invoiceState: row.invoice_state,
+        invoiceTotal: row.total_amount,
+        paidAmount: row.paid_amount,
+        refundedAmount: row.refunded_amount,
+        pendingRefundAmount: row.pending_refund_amount,
+        periodStart: row.period_start.toISOString(),
+        periodEnd: row.period_end.toISOString(),
+        totalKwh: row.total_kwh,
+        pricingSnapshot: row.pricing_snapshot,
+        outcome:
+          action === 'approve'
+            ? 'publish_contract'
+            : action === 'request-changes'
+              ? 'request_revision'
+              : paid > refunded
+                ? 'refund_obligation'
+                : ['Draft', 'Unpaid', 'Overdue'].includes(row.invoice_state)
+                  ? 'cancel_invoice'
+                  : 'reject_without_refund',
+        refundAmount: action === 'reject' ? (paid - refunded).toString() : '0',
+        releasesGiftCode: action === 'reject' && paid === 0n && !!row.gift_code_id,
+      }
+    );
+  }
 
   async queue(after?: string) {
     const cursor = after
@@ -382,29 +468,11 @@ export class ElectricityStaffReviewService {
         async () => {
           if (archived) throw new ConflictException('Profile is archived');
           const row = await this.lockReviewRow(client, id);
-          if (
-            row.version_id !== input.expectedVersionId ||
-            row.contract_state !== 'AwaitingStaffReview' ||
-            row.activation_invoice_id !== row.invoice_id ||
-            !canTransitionElectricityOrder(
-              row.commercial_status,
-              action === 'approve'
-                ? 'approved'
-                : action === 'request-changes'
-                  ? 'changes_requested'
-                  : 'rejected'
-            ) ||
-            row.commercial_status !== 'awaiting_staff_review'
-          )
+          if (row.version_id !== input.expectedVersionId)
             throw new ConflictException('Order review changed; reload before deciding');
-          if (action !== 'approve' && row.invoice_state === 'PaymentUnderReview')
-            throw new ConflictException('Resolve pending payment review before changing order');
-          if (action === 'request-changes' && BigInt(row.paid_amount) > 0n)
-            throw new ConflictException(
-              'Paid orders require a financial correction before changes'
-            );
           const reason = input.reason?.trim() ?? '';
-          if (action !== 'approve' && !reason) throw new ConflictException('A reason is required');
+          const review = this.reviewForRow(row, action, reason);
+          this.reviews.assertConfirmed(review, input.expectedReviewHash);
           const status =
             action === 'approve'
               ? 'approved'
@@ -491,6 +559,8 @@ export class ElectricityStaffReviewService {
               reason,
               invoiceId: row.invoice_id,
               refundId,
+              reviewHash: review.hash,
+              financialReview: review,
             }
           );
           await this.notifyCustomer(client, row, action, reason);
@@ -506,9 +576,9 @@ export class ElectricityStaffReviewService {
     );
   }
 
-  private async lockReviewRow(client: PoolClient, id: string) {
+  private async lockReviewRow(client: PoolClient, id: string, lock: 'UPDATE' | 'SHARE' = 'UPDATE') {
     const row = (
-      await client.query<ReviewRow>(`${reviewQuery} WHERE o.id=$1 FOR UPDATE OF o,e,c,i`, [id])
+      await client.query<ReviewRow>(`${reviewQuery} WHERE o.id=$1 FOR ${lock} OF o,e,c,i`, [id])
     ).rows[0];
     if (!row) throw new NotFoundException('Electricity order not found');
     return row;
@@ -525,6 +595,7 @@ export class ElectricityStaffReviewService {
       {
         userId: row.customer_id,
         profileId: row.profile_id,
+        operatingContext: 'customer',
         type: 'general',
         title: message.en,
         link: `/electricity/orders/${row.id}`,

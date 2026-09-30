@@ -29,6 +29,11 @@ for (const locale of ['fa', 'en'] as const)
         new MutationObserver(apply).observe(document, { childList: true });
       }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/user', (route) =>
+        route.fulfill({
+          json: { isStaff: true, operatingContext: 'staff', canSwitchContext: true },
+        })
+      );
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
           json: {
@@ -73,6 +78,10 @@ for (const locale of ['fa', 'en'] as const)
         return route.fulfill({ json: { success: true } });
       });
       await page.goto('/admin/invoices');
+      await page.locator('html').evaluate((element, language) => {
+        element.lang = language;
+        element.dir = language === 'fa' ? 'rtl' : 'ltr';
+      }, locale);
       await page
         .context()
         .addCookies([

@@ -1,6 +1,10 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { createHash } from 'node:crypto';
 import { getDbPool } from '@barghsa/db';
+import {
+  parseElectricityPriceAdjustmentReview,
+  type ElectricityPriceAdjustmentCalculation,
+} from '@barghsa/shared/finance';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import { z } from 'zod';
@@ -8,24 +12,31 @@ import { customerContractAccess } from '../contract/contract-customer-access.js'
 import {
   auditContract,
   contractIdempotency,
+  staffContractFinancialReview,
   staffContractMutation,
   type ContractActor,
 } from '../contract/contract-transactions.js';
 import { notifyContractReview } from '../contract/contract-review-notifications.js';
 import { CreateAdjustmentInvoiceService } from '../invoice/create-adjustment-invoice.service.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import {
   calculateElectricityPriceAdjustment,
   type ElectricityPriceComponent,
 } from './electricity-price-adjustment.calculation.js';
 
 const idSchema = z.string().uuid();
-export const proposePriceAdjustmentSchema = z
+export const reviewPriceAdjustmentSchema = z
   .object({
     expectedVersionId: idSchema,
     effectiveFrom: z.string().datetime({ offset: true }),
     percentageBps: z.string().regex(/^-?[0-9]{1,18}$/),
     reason: z.string().trim().min(1).max(1000),
     contractualBasis: z.string().trim().min(1).max(2000),
+  })
+  .strict();
+export const proposePriceAdjustmentSchema = reviewPriceAdjustmentSchema
+  .extend({
+    expectedReviewHash: z.string().regex(/^[0-9a-f]{64}$/),
     idempotencyKey: idSchema,
   })
   .strict();
@@ -90,6 +101,72 @@ function translateConflict(error: unknown): never {
 @Injectable()
 export class ElectricityPriceAdjustmentService {
   constructor(private readonly invoiceAdjustments: CreateAdjustmentInvoiceService) {}
+
+  private async proposalReview(
+    client: PoolClient,
+    contract: ElectricityContract,
+    profileId: string,
+    archived: boolean,
+    input: z.infer<typeof reviewPriceAdjustmentSchema>
+  ) {
+    const effectiveFrom = new Date(input.effectiveFrom);
+    if (
+      archived ||
+      contract.state !== 'Active' ||
+      contract.electricity_status !== 'active' ||
+      contract.version_id !== input.expectedVersionId ||
+      effectiveFrom <= new Date() ||
+      effectiveFrom < contract.period_start ||
+      effectiveFrom >= contract.period_end
+    )
+      throw new ConflictException('Contract has no eligible future price period');
+    const basis = await this.currentBasis(client, contract);
+    const quote = calculateElectricityPriceAdjustment(
+      basis.components,
+      effectiveFrom,
+      BigInt(input.percentageBps)
+    );
+    const calculation: ElectricityPriceAdjustmentCalculation = {
+      schemaVersion: 1,
+      contractId: contract.id,
+      versionId: contract.version_id,
+      originalInvoiceId: basis.originalInvoiceId,
+      reason: input.reason,
+      contractualBasis: input.contractualBasis,
+      quote: {
+        ...quote,
+        amountIrR: quote.amountIrR.toString(),
+        oldFutureIrR: quote.oldFutureIrR.toString(),
+        newFutureIrR: quote.newFutureIrR.toString(),
+      },
+    };
+    const review = new ReviewSnapshotService().create(
+      { action: 'electricity.price-adjustment-proposal', profileId, resourceId: contract.id },
+      {
+        currency: 'IRR' as const,
+        profileId,
+        orderId: contract.order_id,
+        periodStart: contract.period_start.toISOString(),
+        periodEnd: contract.period_end.toISOString(),
+        calculation,
+      }
+    );
+    if (!parseElectricityPriceAdjustmentReview(review))
+      throw new ConflictException('Price adjustment review requires reconciliation');
+    return { review, calculation, quote, basis };
+  }
+
+  async review(
+    contractId: string,
+    input: z.infer<typeof reviewPriceAdjustmentSchema>,
+    actor: ContractActor
+  ) {
+    const profileId = await this.profileId(contractId);
+    return staffContractFinancialReview(profileId, actor, async (client, archived) => {
+      const contract = await this.contract(client, contractId, profileId, true);
+      return (await this.proposalReview(client, contract, profileId, archived, input)).review;
+    });
+  }
 
   private async contract(client: PoolClient, id: string, profileId: string, lock = false) {
     const row = (
@@ -249,6 +326,7 @@ export class ElectricityPriceAdjustmentService {
         ).rows[0]?.open ?? false;
       return {
         contractId,
+        profileId,
         versionId: contract.version_id,
         periodEnd: contract.period_end,
         canPropose:
@@ -284,38 +362,14 @@ export class ElectricityPriceAdjustmentService {
             { ...input, contractId },
             actor,
             async () => {
-              const now = new Date(),
-                effectiveFrom = new Date(input.effectiveFrom);
-              if (
-                archived ||
-                contract.state !== 'Active' ||
-                contract.electricity_status !== 'active' ||
-                contract.version_id !== input.expectedVersionId ||
-                effectiveFrom <= now ||
-                effectiveFrom < contract.period_start ||
-                effectiveFrom >= contract.period_end
-              )
-                throw new ConflictException('Contract has no eligible future price period');
-              const basis = await this.currentBasis(client, contract);
-              const quote = calculateElectricityPriceAdjustment(
-                basis.components,
-                effectiveFrom,
-                BigInt(input.percentageBps)
+              const { review, calculation, quote, basis } = await this.proposalReview(
+                client,
+                contract,
+                profileId,
+                archived,
+                input
               );
-              const calculation = {
-                schemaVersion: 1,
-                contractId,
-                versionId: contract.version_id,
-                originalInvoiceId: basis.originalInvoiceId,
-                reason: input.reason,
-                contractualBasis: input.contractualBasis,
-                quote: {
-                  ...quote,
-                  amountIrR: quote.amountIrR.toString(),
-                  oldFutureIrR: quote.oldFutureIrR.toString(),
-                  newFutureIrR: quote.newFutureIrR.toString(),
-                },
-              };
+              new ReviewSnapshotService().assertConfirmed(review, input.expectedReviewHash);
               const id = uuidv7();
               await client.query(
                 `INSERT INTO electricity_price_adjustments
@@ -334,7 +388,7 @@ export class ElectricityPriceAdjustmentService {
                   input.reason,
                   input.contractualBasis,
                   input.percentageBps,
-                  effectiveFrom,
+                  new Date(input.effectiveFrom),
                   contract.period_end,
                   quote.amountIrR.toString(),
                   JSON.stringify(calculation),
@@ -353,6 +407,7 @@ export class ElectricityPriceAdjustmentService {
                   percentageBps: input.percentageBps,
                   amountIrR: quote.amountIrR.toString(),
                   effectiveFrom: input.effectiveFrom,
+                  financialReview: review,
                 }
               );
               await notifyContractReview(
@@ -481,6 +536,7 @@ export class ElectricityPriceAdjustmentService {
                   invoiceId: invoice.adjustmentInvoiceId,
                   amountIrR: quote.amountIrR.toString(),
                   kind: quote.kind,
+                  calculationSha256: proposal.calculation_sha256,
                 }
               );
               await notifyContractReview(

@@ -2,10 +2,11 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Button, Card, CardContent, DateTimePicker } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
-import { toast } from 'sonner';
+import { toast } from '../lib/toast-api.js';
 import { FormWizard } from '../components/FormWizard.js';
 import { WalletFundingPrompt } from '../components/WalletFundingPrompt.js';
 import { ElectricityQuoteErrorNotice } from '../components/ElectricityQuoteErrorNotice.js';
+import { ElectricityFinancialReviewSummary } from '../components/ElectricityFinancialReviewSummary.js';
 import {
   ElectricityContractTerms,
   type ElectricityContractTermsSnapshot,
@@ -650,33 +651,46 @@ export function AdvancedElectricityOrderPage() {
                     {quote.durationHours} h
                   </p>
                   {quote.greenRuleApplies && <p>{t('electricity.order.mandatoryGreen', locale)}</p>}
-                  {quote.lines.map((line) => (
-                    <div key={line.systemKey} className="border-b py-2 text-sm">
-                      <div className="flex flex-wrap justify-between gap-2">
-                        <span>
-                          {t(`electricity.catalogue.${line.systemKey}`, locale)} ·{' '}
-                          {numbers.irrDigits(line.quantityKwh)} kWh ×{' '}
-                          {numbers.money(line.unitPriceIrR)}
-                        </span>
-                        <strong>
-                          {t('electricity.order.lineTotal', locale)}: {numbers.money(line.totalIrR)}
-                        </strong>
-                      </div>
-                      <p className="text-muted-foreground">
-                        {numbers.money(line.subtotalIrR)} · −{numbers.money(line.discountIrR)} · +
-                        {numbers.money(line.vatIrR)}
+                  {step === 5 ? (
+                    <ElectricityFinancialReviewSummary
+                      quote={quote}
+                      locale={locale}
+                      formatMoney={numbers.money}
+                      formatQuantity={numbers.irrDigits}
+                    />
+                  ) : (
+                    <>
+                      {quote.lines.map((line) => (
+                        <div key={line.systemKey} className="border-b py-2 text-sm">
+                          <div className="flex flex-wrap justify-between gap-2">
+                            <span>
+                              {t(`electricity.catalogue.${line.systemKey}`, locale)} ·{' '}
+                              {numbers.irrDigits(line.quantityKwh)} kWh ×{' '}
+                              {numbers.money(line.unitPriceIrR)}
+                            </span>
+                            <strong>
+                              {t('electricity.order.lineTotal', locale)}:{' '}
+                              {numbers.money(line.totalIrR)}
+                            </strong>
+                          </div>
+                          <p className="text-muted-foreground">
+                            {numbers.money(line.subtotalIrR)} · −{numbers.money(line.discountIrR)} ·
+                            +{numbers.money(line.vatIrR)}
+                          </p>
+                        </div>
+                      ))}
+                      <p>
+                        {t('electricity.order.discount', locale)}:{' '}
+                        {numbers.money(quote.discountIrR)}
                       </p>
-                    </div>
-                  ))}
-                  <p>
-                    {t('electricity.order.discount', locale)}: {numbers.money(quote.discountIrR)}
-                  </p>
-                  <p>
-                    {t('electricity.order.vat', locale)}: {numbers.money(quote.vatIrR)}
-                  </p>
-                  <p className="font-semibold">
-                    {t('electricity.order.total', locale)}: {numbers.money(quote.totalIrR)}
-                  </p>
+                      <p>
+                        {t('electricity.order.vat', locale)}: {numbers.money(quote.vatIrR)}
+                      </p>
+                      <p className="font-semibold">
+                        {t('electricity.order.total', locale)}: {numbers.money(quote.totalIrR)}
+                      </p>
+                    </>
+                  )}
                   <p>
                     {t('electricity.order.walletBalance', locale)}:{' '}
                     {numbers.money(quote.walletBalanceIrR)}

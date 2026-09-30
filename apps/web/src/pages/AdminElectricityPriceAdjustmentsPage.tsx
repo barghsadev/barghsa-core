@@ -1,6 +1,11 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
+import { Button, Card, CardContent, FinancialReviewSummary, Input, Label } from '@barghsa/ui';
+import {
+  parseElectricityPriceAdjustmentReview,
+  type ElectricityPriceAdjustmentCalculation,
+  type ElectricityPriceAdjustmentReview,
+} from '@barghsa/shared/finance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -16,10 +21,11 @@ interface PriceAdjustment {
   adjustmentAmountIrR: string;
   calculationSha256: string;
   adjustmentInvoiceId: string | null;
-  calculation: { quote: { oldFutureIrR: string; newFutureIrR: string } };
+  calculation: ElectricityPriceAdjustmentCalculation;
 }
 interface StaffPriceState {
   contractId: string;
+  profileId: string;
   versionId: string;
   periodEnd: string;
   canPropose: boolean;
@@ -36,6 +42,17 @@ export function percentToBps(value: string): string | null {
   const signed = match[1] === '-' ? -absolute : absolute;
   if (signed === 0n || signed <= -10_000n || signed > 9_223_372_036_854_775_807n) return null;
   return signed.toString();
+}
+
+function bpsToPercent(value: string, locale: 'en' | 'fa') {
+  const signed = BigInt(value);
+  const absolute = signed < 0n ? -signed : signed;
+  const whole = new Intl.NumberFormat(locale).format(absolute / 100n);
+  const fraction = absolute % 100n;
+  const decimals = fraction
+    ? `${locale === 'fa' ? '٫' : '.'}${new Intl.NumberFormat(locale, { minimumIntegerDigits: 2, useGrouping: false }).format(fraction)}`
+    : '';
+  return `${signed < 0n ? '-' : ''}${whole}${decimals}%`;
 }
 
 export default function AdminElectricityPriceAdjustmentsPage() {
@@ -56,8 +73,10 @@ export default function AdminElectricityPriceAdjustmentsPage() {
   const [revision, setRevision] = useState(0);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<'load' | 'save' | 'forbidden' | null>(null);
+  const [error, setError] = useState<'load' | 'save' | 'reviewError' | 'forbidden' | null>(null);
   const [action, setAction] = useState<TeamAction | null>(null);
+  const [review, setReview] = useState<ElectricityPriceAdjustmentReview | null>(null);
+  const [selectedAdjustment, setSelectedAdjustment] = useState<PriceAdjustment | null>(null);
   const [proposalKey, setProposalKey] = useState(() => crypto.randomUUID());
 
   useEffect(() => {
@@ -101,41 +120,64 @@ export default function AdminElectricityPriceAdjustmentsPage() {
     setSaving(true);
     setError(null);
     try {
+      const proposal = {
+        expectedVersionId: data.versionId,
+        effectiveFrom: new Date(effectiveFrom).toISOString(),
+        percentageBps,
+        reason: reason.trim(),
+        contractualBasis: basis.trim(),
+      };
       const response = await fetch(
-        `/api/staff/electricity/contracts/${encodeURIComponent(data.contractId)}/price-adjustments`,
+        `/api/staff/electricity/contracts/${encodeURIComponent(data.contractId)}/price-adjustments/review`,
         {
           method: 'POST',
           credentials: 'include',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({
-            expectedVersionId: data.versionId,
-            effectiveFrom: new Date(effectiveFrom).toISOString(),
-            percentageBps,
-            reason: reason.trim(),
-            contractualBasis: basis.trim(),
-            idempotencyKey: proposalKey,
-          }),
+          body: JSON.stringify(proposal),
         }
       );
       if (response.status === 403) {
         setError('forbidden');
         return;
       }
-      if (!response.ok) throw new Error('Proposal failed');
-      setProposalKey(crypto.randomUUID());
-      setReason('');
-      setBasis('');
-      setPercentage('');
-      setEffectiveFrom('');
-      setRevision((value) => value + 1);
+      if (!response.ok) throw new Error('Review failed');
+      const financialReview = parseElectricityPriceAdjustmentReview(await response.json());
+      if (
+        !financialReview ||
+        financialReview.scope.resourceId !== data.contractId ||
+        financialReview.scope.profileId !== data.profileId ||
+        financialReview.data.calculation.versionId !== proposal.expectedVersionId ||
+        financialReview.data.calculation.quote.effectiveFrom !== proposal.effectiveFrom ||
+        financialReview.data.calculation.quote.percentageBps !== proposal.percentageBps ||
+        financialReview.data.calculation.reason !== proposal.reason ||
+        financialReview.data.calculation.contractualBasis !== proposal.contractualBasis
+      )
+        throw new Error('Review mismatch');
+      setReview(financialReview);
+      setSelectedAdjustment(null);
+      setAction({
+        title: copy('publish'),
+        description: copy('publishConfirm'),
+        path: `/api/staff/electricity/contracts/${encodeURIComponent(data.contractId)}/price-adjustments`,
+        method: 'POST',
+        body: {
+          ...proposal,
+          expectedReviewHash: financialReview.hash,
+          idempotencyKey: proposalKey,
+        },
+        conflictMessage: copy('conflict'),
+        forbiddenMessage: copy('forbidden'),
+      });
     } catch {
-      setError('save');
+      setError('reviewError');
     } finally {
       setSaving(false);
     }
   }
 
   function confirm(adjustment: PriceAdjustment, operation: 'finalize' | 'cancel') {
+    setReview(null);
+    setSelectedAdjustment(adjustment);
     setAction({
       title: copy(operation),
       description: copy(`${operation}Confirm`),
@@ -244,8 +286,9 @@ export default function AdminElectricityPriceAdjustmentsPage() {
                   </div>
                   <div className="sm:col-span-2">
                     <Button type="submit" disabled={saving || !percentToBps(percentage)}>
-                      {copy('publish')}
+                      {copy('reviewProposal')}
                     </Button>
+                    {saving ? <p role="status">{copy('reviewLoading')}</p> : null}
                   </div>
                 </form>
               </CardContent>
@@ -317,13 +360,102 @@ export default function AdminElectricityPriceAdjustmentsPage() {
       {action ? (
         <TeamActionDialog
           action={action}
-          onClose={() => setAction(null)}
-          onSuccess={async () => {
+          summary={
+            review ? (
+              <PriceAdjustmentFinancialReview
+                calculation={review.data.calculation}
+                profileId={review.data.profileId}
+                periodStart={review.data.periodStart}
+                periodEnd={review.data.periodEnd}
+                locale={locale}
+              />
+            ) : selectedAdjustment && data ? (
+              <PriceAdjustmentFinancialReview
+                calculation={selectedAdjustment.calculation}
+                profileId={data.profileId}
+                periodEnd={data.periodEnd}
+                locale={locale}
+              />
+            ) : null
+          }
+          onClose={() => {
             setAction(null);
+            setReview(null);
+            setSelectedAdjustment(null);
+          }}
+          onSuccess={async () => {
+            if (review) {
+              setProposalKey(crypto.randomUUID());
+              setReason('');
+              setBasis('');
+              setPercentage('');
+              setEffectiveFrom('');
+            }
+            setAction(null);
+            setReview(null);
+            setSelectedAdjustment(null);
             setRevision((value) => value + 1);
           }}
         />
       ) : null}
     </section>
+  );
+}
+
+function PriceAdjustmentFinancialReview({
+  calculation,
+  profileId,
+  periodStart,
+  periodEnd,
+  locale,
+}: {
+  calculation: ElectricityPriceAdjustmentCalculation;
+  profileId: string;
+  periodStart?: string;
+  periodEnd: string;
+  locale: 'en' | 'fa';
+}) {
+  const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
+  const money = (value: string) => `${new Intl.NumberFormat(locale).format(BigInt(value))} IRR`;
+  const { quote } = calculation;
+  return (
+    <FinancialReviewSummary
+      title={copy('reviewTitle')}
+      rows={[
+        { id: 'contract', label: copy('contractId'), value: calculation.contractId },
+        { id: 'profile', label: copy('profileId'), value: profileId },
+        { id: 'invoice', label: copy('originalInvoice'), value: calculation.originalInvoiceId },
+        { id: 'version', label: copy('versionId'), value: calculation.versionId },
+        ...(periodStart
+          ? [
+              {
+                id: 'start',
+                label: copy('termStarts'),
+                value: new Date(periodStart).toLocaleString(locale),
+              },
+            ]
+          : []),
+        { id: 'end', label: copy('termEnds'), value: new Date(periodEnd).toLocaleString(locale) },
+        {
+          id: 'effective',
+          label: copy('effective'),
+          value: new Date(quote.effectiveFrom).toLocaleString(locale),
+        },
+        {
+          id: 'percentage',
+          label: copy('percentage'),
+          value: bpsToPercent(quote.percentageBps, locale),
+        },
+        { id: 'old', label: copy('oldFuture'), value: money(quote.oldFutureIrR) },
+        { id: 'new', label: copy('newFuture'), value: money(quote.newFutureIrR) },
+        ...quote.components.map((component, index) => ({
+          id: `component-${index}`,
+          label: `${copy('basisComponent')} ${index + 1} · ${component.invoiceId}`,
+          value: `${money(component.basisIrR)} → ${money(component.changeIrR)}`,
+        })),
+      ]}
+      total={{ label: copy('amount'), value: money(quote.amountIrR) }}
+      notice={`${copy('reason')}: ${calculation.reason} · ${copy('basis')}: ${calculation.contractualBasis}`}
+    />
   );
 }

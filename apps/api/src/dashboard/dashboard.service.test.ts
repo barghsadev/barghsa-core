@@ -30,7 +30,50 @@ describe('DashboardService quick status', () => {
       if (query.includes('FROM profiles p') && query.includes('JOIN users u'))
         return { rows: [{ id: 'profile-1', is_owner: true, roles: [] }] };
       if (query.includes('FROM profiles p')) return { rows: [{ name: 'Customer' }] };
-      if (query.includes('SUM(total_amount-paid_amount)')) return { rows: [{ amount: '50' }] };
+      if (query.includes('OVER ()'))
+        return {
+          rows: [
+            {
+              id: 'invoice-1',
+              due_at: new Date('2026-10-03T12:00:00.000Z'),
+              payable_from: new Date('2026-09-30T12:00:00.000Z'),
+              remaining_amount: '50',
+              total_unpaid: '50',
+            },
+          ],
+        };
+      if (query.includes('SELECT recent.kind'))
+        return {
+          rows: [
+            {
+              kind: 'saving',
+              order_id: 'saving-1',
+              status: 'in_progress',
+              submitted_at: new Date('2026-09-29T12:00:00.000Z'),
+              amount: '250000',
+            },
+            {
+              kind: 'electricity',
+              order_id: 'electricity-1',
+              status: 'submitted',
+              submitted_at: new Date('2026-09-28T12:00:00.000Z'),
+              amount: '100000',
+            },
+          ],
+        };
+      if (query.includes('SELECT c.id,c.contract_number::text'))
+        return {
+          rows: [
+            {
+              id: 'contract-1',
+              contract_number: '42',
+              service_type: 'electricity',
+              state: 'Active',
+              service_starts_at: new Date('2026-01-01T00:00:00.000Z'),
+              service_ends_at: new Date('2027-01-01T00:00:00.000Z'),
+            },
+          ],
+        };
       return { rows: [{ cnt: 0 }] };
     });
     const overview = await service.getOverview('customer-1');
@@ -41,9 +84,64 @@ describe('DashboardService quick status', () => {
       currency: 'IRR',
       lowBalanceWarning: true,
     });
-    const outstandingQuery = queryFor('SUM(total_amount-paid_amount)');
+    expect(overview.access).toEqual({
+      wallet: true,
+      invoices: true,
+      orders: true,
+      contracts: true,
+    });
+    expect(overview.activeContracts).toEqual([
+      {
+        contractId: 'contract-1',
+        contractNumber: '42',
+        serviceType: 'electricity',
+        status: 'Active',
+        serviceStartsAt: '2026-01-01T00:00:00.000Z',
+        serviceEndsAt: '2027-01-01T00:00:00.000Z',
+      },
+    ]);
+    const activeContractQuery = queryFor('SELECT c.id,c.contract_number::text');
+    expect(activeContractQuery?.[0]).toContain("c.state='Active'");
+    expect(activeContractQuery?.[0]).toContain('p.version_id=c.current_version_id');
+    expect(activeContractQuery?.[0]).toContain('LIMIT 3');
+    expect(activeContractQuery?.[1]).toEqual(['profile-1']);
+    expect(overview.recentOrders).toEqual([
+      {
+        kind: 'saving',
+        orderId: 'saving-1',
+        status: 'in_progress',
+        submittedAt: '2026-09-29T12:00:00.000Z',
+        amountIrR: '250000',
+      },
+      {
+        kind: 'electricity',
+        orderId: 'electricity-1',
+        status: 'submitted',
+        submittedAt: '2026-09-28T12:00:00.000Z',
+        amountIrR: '100000',
+      },
+    ]);
+    const recentQuery = queryFor('SELECT recent.kind');
+    expect(recentQuery?.[0]).toContain('FROM electricity_orders e');
+    expect(recentQuery?.[0]).toContain('JOIN contract_activation_requirements ar');
+    expect(recentQuery?.[0]).toContain('JOIN invoices i ON i.id=ar.initial_invoice_id');
+    expect(recentQuery?.[0]).toContain('FROM saving_orders s');
+    expect(recentQuery?.[0]).toContain(
+      'ORDER BY recent.submitted_at DESC,recent.order_id DESC LIMIT 5'
+    );
+    expect(recentQuery?.[1]).toEqual(['profile-1']);
+    expect(overview.upcomingInvoices).toEqual([
+      {
+        invoiceId: 'invoice-1',
+        dueAt: '2026-10-03T12:00:00.000Z',
+        payableFrom: '2026-09-30T12:00:00.000Z',
+        remainingAmount: '50',
+      },
+    ]);
+    const outstandingQuery = queryFor('OVER ()');
     expect(outstandingQuery?.[0]).toContain("state IN ('Unpaid', 'Overdue')");
-    expect(outstandingQuery?.[0]).not.toContain('due_at<=NOW()');
+    expect(outstandingQuery?.[0]).toContain('ORDER BY due_at ASC NULLS LAST');
+    expect(outstandingQuery?.[0]).toContain('LIMIT 3');
     expect(outstandingQuery?.[1]).toEqual(['profile-1']);
   });
 
@@ -56,6 +154,35 @@ describe('DashboardService quick status', () => {
       unpaidInvoices: 0,
     });
     expect(mockQuery).toHaveBeenCalledTimes(1);
+  });
+
+  it('reports unavailable account sections without reading them for a legal-only agent', async () => {
+    const getWallet = vi.fn();
+    service = new DashboardService({ getWallet } as never);
+    mockQuery.mockImplementation(async (query: string) => {
+      if (query.includes('FROM profiles p') && query.includes('JOIN users u'))
+        return { rows: [{ id: 'profile-legal', is_owner: false, roles: ['Legal'] }] };
+      if (query.includes('FROM profiles p')) return { rows: [{ name: 'Legal profile' }] };
+      if (query.includes('SELECT c.id,c.contract_number::text')) return { rows: [] };
+      if (query.includes('FROM contracts') || query.includes('FROM tickets'))
+        return { rows: [{ cnt: 0 }] };
+      throw new Error('Unauthorized query');
+    });
+
+    const overview = await service.getOverview('legal-user');
+    expect(overview.access).toEqual({
+      wallet: false,
+      invoices: false,
+      orders: false,
+      contracts: true,
+    });
+    expect(overview.wallet).toBeNull();
+    expect(overview.upcomingInvoices).toEqual([]);
+    expect(overview.recentOrders).toEqual([]);
+    expect(overview.activeContracts).toEqual([]);
+    expect(getWallet).not.toHaveBeenCalled();
+    expect(queryFor('FROM invoices')).toBeUndefined();
+    expect(queryFor('SELECT recent.kind')).toBeUndefined();
   });
 
   it('counts active contracts and pending workflow orders without duplicate legacy rows', async () => {

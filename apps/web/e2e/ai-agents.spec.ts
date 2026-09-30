@@ -1,4 +1,11 @@
 import { test, expect } from './coverage-fixture';
+async function mockUnknownApi(page: import('@playwright/test').Page) {
+  await page.route('**/api/**', (route) =>
+    new URL(route.request().url()).pathname === '/api/auth/user'
+      ? route.fulfill({ json: { isStaff: true } })
+      : route.fulfill({ status: 404, json: {} })
+  );
+}
 for (const locale of ['en', 'fa'])
   test(`admin can test an agent and inspect response context (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
@@ -8,7 +15,7 @@ for (const locale of ['en', 'fa'])
     const agentId = '01900000-0000-7000-8000-000000000011';
     const sent: unknown[] = [];
     let general = false;
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockUnknownApi(page);
     await page.route('**/api/admin/agents/options', (route) =>
       route.fulfill({
         json: { models: [], kbs: [], policies: [], kbGroups: [], policyGroups: [] },
@@ -56,7 +63,7 @@ for (const locale of ['en', 'fa'])
     });
     await page.goto('/admin/agents');
     const chat = page.getByRole('region', { name: fa ? 'گفت‌وگوی آزمایشی عامل' : 'Test an agent' });
-    await chat.locator('select').selectOption(agentId);
+    await chat.getByLabel(fa ? 'عامل' : 'Agent', { exact: true }).selectOption(agentId);
     await chat.getByLabel(fa ? 'پیام آزمایشی' : 'Test message').fill('Hello');
     await chat.getByRole('button', { name: fa ? 'ارسال' : 'Send', exact: true }).click();
     await expect(chat.getByText('Power is available.')).toBeVisible();
@@ -68,10 +75,18 @@ for (const locale of ['en', 'fa'])
     expect(sent[0]).toMatchObject({ agentId, message: 'Hello' });
     await chat.getByRole('button', { name: fa ? 'گفت‌وگوی جدید' : 'New conversation' }).click();
     await expect(chat.getByText('Power is available.')).toHaveCount(0);
+    await chat
+      .getByLabel(fa ? 'نمایش در جایگاه' : 'Preview as slot')
+      .selectOption('website_chatbot');
     general = true;
     await chat.getByLabel(fa ? 'پیام آزمایشی' : 'Test message').fill('General advice');
     await chat.getByRole('button', { name: fa ? 'ارسال' : 'Send', exact: true }).click();
     await expect(chat.getByText(fa ? /دانش عمومی/ : /general knowledge/)).toBeVisible();
+    expect(sent[1]).toMatchObject({
+      agentId,
+      slotKey: 'website_chatbot',
+      message: 'General advice',
+    });
   });
 for (const locale of ['en', 'fa'])
   test(`agent editor retries captured group selections (${locale})`, async ({ page }) => {
@@ -86,7 +101,7 @@ for (const locale of ['en', 'fa'])
       verified = false,
       denied = false;
     const attempts: unknown[] = [];
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockUnknownApi(page);
     await page.route('**/api/admin/agents/options', (route) =>
       route.fulfill({
         json: {

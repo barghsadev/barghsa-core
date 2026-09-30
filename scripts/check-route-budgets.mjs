@@ -19,6 +19,8 @@ export async function measureRoute(
   const seen = new Set(),
     files = new Set();
   function visit(key) {
+    // Interaction chunks load after the page bootstrap is already present.
+    if (key === 'index.html' && !includeBootstrap) return;
     if (seen.has(key)) return;
     const entry = manifest[key];
     if (!entry) throw new Error(`Missing manifest entry: ${key}`);
@@ -90,7 +92,7 @@ export async function checkBudgets(dist, config) {
     const build = rule.build ?? '';
     const measured = await measureRoute(resolve(dist, build), manifests.get(build), rule.entries, {
       includeBootstrap: rule.phase !== 'interaction',
-      deferredEntries: rule.phase === 'interaction' ? [] : interactionEntries,
+      deferredEntries: interactionEntries,
     });
     if (build) measured.files = measured.files.map((file) => `${build}/${file}`);
     const limit = rule.limitKB * 1000;

@@ -1,4 +1,4 @@
-import { isInvoiceUuid } from './due-at-override.js';
+import { isInvoiceUuid } from './invoice-uuid.js';
 
 const prefix = 'barghsa.wallet.invoice-return.';
 const maxAgeMs = 24 * 60 * 60 * 1000;

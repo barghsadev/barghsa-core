@@ -45,6 +45,10 @@ it('removes unavailable optional samples instead of publishing zero or the previ
   expect(healthy).toMatch(/^pg_query_calls_total 55$/m);
   expect(healthy).toMatch(/^pg_sequential_scans_total 12$/m);
   expect(healthy).toMatch(/^pg_index_scans_total 34$/m);
+  expect(healthy).toMatch(/^ai_inference_active_requests 0$/m);
+  expect(healthy).toMatch(/^ai_inference_queue_depth 0$/m);
+  expect(healthy).toMatch(/^ai_inference_saturated 0$/m);
+  expect(healthy).toMatch(/^ai_inference_rejections_total 0$/m);
   const missing = {
     ...snapshot(),
     wal: null,

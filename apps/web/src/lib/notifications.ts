@@ -47,7 +47,14 @@ export interface NotificationPage {
 export type NotificationFilter = 'all' | 'unread';
 
 /** All keys a notification `type` maps to (with a system fallback). */
-export const NOTIFICATION_TYPES = ['security', 'payment', 'contract', 'order', 'system'] as const;
+export const NOTIFICATION_TYPES = [
+  'security',
+  'payment',
+  'contract',
+  'order',
+  'document',
+  'system',
+] as const;
 
 /**
  * Map a backend `type` string to its i18n label key. Unknown types fall back
@@ -59,6 +66,7 @@ export function notificationDisplayType(type: string): (typeof NOTIFICATION_TYPE
   if (['payment', 'wallet', 'invoice', 'refund', 'chargeback', 'finance'].includes(category ?? ''))
     return 'payment';
   if (category === 'contract' || category === 'order') return category;
+  if (category === 'document') return 'document';
   return 'system';
 }
 
@@ -197,12 +205,19 @@ export function isOlderThan(
  * `linkParams`. Returns null when no route is set so callers can render the
  * item as non-navigable.
  */
-export function toNavigationTarget(item: NotificationItem): {
+export function toNavigationTarget(
+  item: NotificationItem,
+  operatingContext: 'staff' | 'customer' = 'customer'
+): {
   to: string;
   search?: Record<string, unknown>;
 } | null {
   const link = notificationLink(item.linkRoute);
   if (!link) return null;
+  const pathname = new URL(link, 'https://barghsa.invalid').pathname;
+  const staffRoute = pathname === '/admin' || pathname.startsWith('/admin/');
+  if (operatingContext === 'staff' && !staffRoute && pathname !== '/app') return null;
+  if (operatingContext === 'customer' && staffRoute) return null;
   const target: { to: string; search?: Record<string, unknown> } = {
     to: link,
   };

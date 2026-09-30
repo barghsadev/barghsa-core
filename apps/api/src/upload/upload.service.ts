@@ -4,6 +4,7 @@ import {
   ServiceUnavailableException,
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   InternalServerErrorException,
 } from '@nestjs/common';
 import {
@@ -55,6 +56,7 @@ type MultipartRecord = {
   metadata: {
     multipart?: { id: string; providerId: string; status: 'in_progress' | 'completed' | 'aborted' };
     uploadExpiresAt?: string;
+    uploadContext?: { operatingContext?: 'staff' | 'customer' };
   };
 };
 
@@ -174,7 +176,11 @@ export class UploadService {
       fileSize: req.fileSize,
       category,
       expiresIn,
-      context: { purpose: req.purpose, profileId: req.profileId },
+      context: {
+        purpose: req.purpose,
+        profileId: req.profileId,
+        operatingContext: actor.session.operatingContext,
+      },
     });
     return uniqueKey;
   }
@@ -256,7 +262,22 @@ export class UploadService {
     }
   }
 
-  private async ownedMultipart(id: string, userId: string, client?: PoolClient) {
+  private requireReservationContext(
+    metadata: Record<string, unknown>,
+    actor: AuthenticatedRequest
+  ) {
+    const reserved = metadata.uploadContext;
+    if (
+      reserved &&
+      typeof reserved === 'object' &&
+      'operatingContext' in reserved &&
+      reserved.operatingContext !== undefined &&
+      reserved.operatingContext !== actor.session.operatingContext
+    )
+      throw new ForbiddenException('Upload belongs to another operating context');
+  }
+
+  private async ownedMultipart(id: string, actor: AuthenticatedRequest, client?: PoolClient) {
     const row = (
       await (client ?? getDbPool()).query<MultipartRecord>(
         `SELECT storage_key,file_size,content_type,metadata FROM storage_records
@@ -265,17 +286,18 @@ export class UploadService {
            AND metadata->>'provisionalUpload'='true'
            AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()
          ${client ? 'FOR UPDATE' : ''}`,
-        [id, userId]
+        [id, actor.session.userId]
       )
     ).rows[0];
     if (!row || !row.metadata.multipart)
       throw new ConflictException('Multipart upload not found or expired');
+    this.requireReservationContext(row.metadata, actor);
     return { row, multipart: row.metadata.multipart };
   }
 
   async presignMultipartPart(id: string, number: number, actor: AuthenticatedRequest) {
     const storage = this.requireMultipartStorage();
-    const { row, multipart } = await this.ownedMultipart(id, actor.session.userId);
+    const { row, multipart } = await this.ownedMultipart(id, actor);
     const count = Math.ceil(Number(row.file_size) / MULTIPART_PART_SIZE);
     if (multipart.status !== 'in_progress')
       throw new ConflictException('Multipart upload is no longer active');
@@ -299,7 +321,7 @@ export class UploadService {
     parts: MultipartPart[];
   }> {
     const storage = this.requireMultipartStorage();
-    const { row, multipart } = await this.ownedMultipart(id, actor.session.userId);
+    const { row, multipart } = await this.ownedMultipart(id, actor);
     return {
       key: row.storage_key,
       partSize: MULTIPART_PART_SIZE,
@@ -317,7 +339,7 @@ export class UploadService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      const { row, multipart } = await this.ownedMultipart(id, actor.session.userId, client);
+      const { row, multipart } = await this.ownedMultipart(id, actor, client);
       if (multipart.status === 'completed') {
         await client.query('COMMIT');
         return { key: row.storage_key, status: 'completed' };
@@ -370,7 +392,7 @@ export class UploadService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      const { row, multipart } = await this.ownedMultipart(id, actor.session.userId, client);
+      const { row, multipart } = await this.ownedMultipart(id, actor, client);
       if (multipart.status === 'completed')
         throw new ConflictException('Completed upload cannot be aborted');
       if (multipart.status === 'in_progress')
@@ -432,6 +454,7 @@ export class UploadService {
     }
 
     const issued = await requireOwnedUpload(key, actor.session.userId);
+    this.requireReservationContext(issued.metadata, actor);
     try {
       const inspected = await this.inspectUploadedObject(key, category);
 
@@ -510,6 +533,7 @@ export class UploadService {
     }
 
     const issued = await requireOwnedUpload(key, req.session.userId);
+    this.requireReservationContext(issued.metadata, req);
     const reserved = (issued.metadata.uploadContext ?? {}) as Record<string, unknown>;
     const context = UploadContextSchema.safeParse({
       purpose: body.purpose ?? reserved.purpose ?? issued.metadata.purpose,

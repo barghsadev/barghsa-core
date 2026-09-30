@@ -1,15 +1,19 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
+import type { ReactNode } from 'react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { SolarContractForm } from './SolarContractForm.js';
 import type { TeamAction } from './TeamActionDialog.js';
 
-const harness = vi.hoisted(() => ({ action: null as TeamAction | null }));
+const harness = vi.hoisted(() => ({
+  action: null as TeamAction | null,
+  reviewedBody: null as Record<string, unknown> | null,
+}));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
 vi.mock('./TeamActionDialog.js', () => ({
-  TeamActionDialog: ({ action }: { action: TeamAction }) => {
+  TeamActionDialog: ({ action, summary }: { action: TeamAction; summary?: ReactNode }) => {
     harness.action = action;
-    return <div role="dialog">Review contract</div>;
+    return <div role="dialog">Review contract{summary}</div>;
   },
 }));
 const requestId = '11111111-1111-4111-8111-111111111111';
@@ -18,7 +22,9 @@ const versionId = '33333333-3333-4333-8333-333333333333';
 let container: HTMLDivElement;
 let root: Root;
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   harness.action = null;
+  harness.reviewedBody = null;
   container = document.createElement('div');
   document.body.append(container);
   root = createRoot(container);
@@ -47,20 +53,51 @@ async function input(label: string, value: string) {
   });
 }
 
-it('uses a selected immutable source and invoice lines in the create command', async () => {
+function stubRequests() {
   vi.stubGlobal(
     'fetch',
-    vi.fn(
-      async () =>
-        new Response(
+    vi.fn(async (url: string, options?: RequestInit) => {
+      if (url.endsWith('/review')) {
+        const body = JSON.parse(String(options?.body)) as Record<string, unknown>;
+        harness.reviewedBody = body;
+        const lines = body.invoiceLines as Array<{
+          description: string;
+          quantity: number;
+          unitPrice: string;
+        }>;
+        return new Response(
           JSON.stringify({
-            templates: [{ version_id: versionId, name: 'Solar agreement', version_number: 2 }],
-            documents: [],
-          }),
-          { status: 200 }
-        )
-    )
+            hash: 'a'.repeat(64),
+            data: {
+              title: body.title,
+              text: body.text,
+              changeDescription: body.changeDescription,
+              commercialValue: body.commercialValue,
+              source: { kind: 'template', label: 'Solar agreement', versionNumber: 2 },
+              invoiceLines: lines.map((line) => ({
+                ...line,
+                lineTotal: line.unitPrice,
+                vatAmount: '0',
+              })),
+              totals: { subtotal: '100000', vat: '0', total: '100000' },
+              dueRule: { configDays: 7 },
+            },
+          })
+        );
+      }
+      return new Response(
+        JSON.stringify({
+          templates: [{ version_id: versionId, name: 'Solar agreement', version_number: 2 }],
+          documents: [],
+        }),
+        { status: 200 }
+      );
+    })
   );
+}
+
+it('uses a selected immutable source and invoice lines in the create command', async () => {
+  stubRequests();
   await act(async () =>
     root.render(
       <SolarContractForm requestId={requestId} profileId={profileId} onCreated={() => {}} />
@@ -80,28 +117,19 @@ it('uses a selected immutable source and invoice lines in the create command', a
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
   });
   expect(harness.action?.path).toBe(`/api/admin/solar/requests/${requestId}/create-contract`);
+  expect(harness.reviewedBody).toMatchObject({ profileId, title: 'Solar agreement' });
   expect(harness.action?.body).toMatchObject({
     profileId,
     source: { kind: 'template', templateVersionId: versionId },
     commercialValue: { kind: 'fixed', amountIrr: '900000' },
     invoiceLines: [{ description: 'Deposit', quantity: 1, unitPrice: '100000', vatRate: 0 }],
+    expectedReviewHash: 'a'.repeat(64),
   });
+  expect(container.querySelector('[role="dialog"]')?.textContent).toContain('Unpaid invoice total');
 });
 
 it('requires an explicit full value and supports a variable pricing rule', async () => {
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(
-      async () =>
-        new Response(
-          JSON.stringify({
-            templates: [{ version_id: versionId, name: 'Solar agreement', version_number: 2 }],
-            documents: [],
-          }),
-          { status: 200 }
-        )
-    )
-  );
+  stubRequests();
   await act(async () =>
     root.render(
       <SolarContractForm requestId={requestId} profileId={profileId} onCreated={() => {}} />

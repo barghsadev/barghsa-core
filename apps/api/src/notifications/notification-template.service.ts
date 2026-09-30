@@ -572,6 +572,7 @@ export class NotificationTemplateService {
           await this.notificationsService.create(
             {
               userId: actor.userId,
+              operatingContext: 'staff',
               type: 'general',
               title: renderedSubject ?? `Test: ${tpl.eventKey}`,
               body: renderedBody,

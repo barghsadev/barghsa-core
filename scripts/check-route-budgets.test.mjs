@@ -85,18 +85,24 @@ test('interaction code has its own gate and cannot be hidden when imported eager
     const manifest = {
       'index.html': { file: 'entry.js' },
       register: { file: 'register.js', dynamicImports: ['strength'] },
-      strength: { file: 'strength.js', imports: ['dictionary'] },
+      strength: {
+        file: 'strength.js',
+        imports: ['dictionary', 'index.html'],
+        dynamicImports: ['later'],
+      },
       dictionary: { file: 'dictionary.js' },
+      later: { file: 'later.js' },
     };
     for (const name of ['entry', 'register', 'strength'])
       await writeFile(join(dist, `${name}.js`), `export const ${name}=1;`);
     await writeFile(join(dist, 'dictionary.js'), randomBytes(3000));
+    await writeFile(join(dist, 'later.js'), randomBytes(3000));
     const saveManifest = () =>
       writeFile(join(dist, '.vite/manifest.json'), JSON.stringify(manifest));
     await saveManifest();
     const rules = [
       { name: 'registration', entries: ['register'], limitKB: 1 },
-      { name: 'estimator', entries: ['strength'], phase: 'interaction', limitKB: 4 },
+      { name: 'estimator', entries: ['strength'], phase: 'interaction', limitKB: 8 },
     ];
     const pass = await checkBudgets(dist, rules);
     assert.deepEqual(
@@ -104,7 +110,7 @@ test('interaction code has its own gate and cannot be hidden when imported eager
       [true, true]
     );
     assert.deepEqual(pass[0].files, ['entry.js', 'register.js']);
-    assert.deepEqual(pass[1].files, ['dictionary.js', 'strength.js']);
+    assert.deepEqual(pass[1].files, ['dictionary.js', 'later.js', 'strength.js']);
     await verifyWithSizeLimit(dist, pass);
     const tooLarge = await checkBudgets(dist, [rules[0], { ...rules[1], limitKB: 1 }]);
     assert.deepEqual(

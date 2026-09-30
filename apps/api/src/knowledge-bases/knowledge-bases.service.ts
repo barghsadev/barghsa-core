@@ -39,6 +39,7 @@ export interface KbDto {
   id: string;
   title: string;
   description: string;
+  audience: KbAudience;
   sourceType: 'document' | 'url' | 'api';
   sourceConfig: { urls?: string[] | undefined; apiUrl?: string | undefined };
   contentState: 'empty' | 'processing' | 'ready' | 'error';
@@ -53,6 +54,8 @@ export interface KbDto {
   createdAt: string;
   updatedAt: string;
 }
+
+export type KbAudience = 'admin' | 'staff' | 'customer' | 'public';
 
 /** A document link row as returned by the admin API. */
 export interface KbDocumentDto {
@@ -116,6 +119,7 @@ export interface KbQueryResult {
 export interface CreateKbInput {
   title: string;
   description: string;
+  audience?: KbAudience;
   sourceType?: 'document' | 'url' | 'api';
   sourceConfig?: { urls?: string[] | undefined; apiUrl?: string | undefined };
   chunkingStrategy?: { size: number; overlap: number };
@@ -128,6 +132,7 @@ export interface CreateKbInput {
 export interface UpdateKbInput {
   title?: string;
   description?: string;
+  audience?: KbAudience;
   sourceType?: 'document' | 'url' | 'api';
   sourceConfig?: { urls?: string[] | undefined; apiUrl?: string | undefined };
   chunkingStrategy?: { size: number; overlap: number };
@@ -181,6 +186,7 @@ interface KbBaseRow {
   id: string;
   title: string;
   description: string;
+  audience: KbAudience;
   source_type: 'document' | 'url' | 'api';
   source_config: { urls?: string[]; apiUrl?: string };
   content_state: 'empty' | 'processing' | 'ready' | 'error';
@@ -462,14 +468,15 @@ export class KnowledgeBasesService {
 
       const result = await client.query<KbBaseRow>(
         `INSERT INTO knowledge_bases
-           (id, title, description, source_type, source_config, chunking_strategy,
+           (id, title, description, audience, source_type, source_config, chunking_strategy,
             vector_embedding_model, created_by, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5::jsonb, $6::jsonb, $7, $8, $9, $9)
+         VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7::jsonb, $8, $9, $10, $10)
          RETURNING *`,
         [
           id,
           input.title,
           input.description,
+          input.audience ?? 'admin',
           input.sourceType ?? 'document',
           JSON.stringify(input.sourceConfig ?? {}),
           JSON.stringify(input.chunkingStrategy ?? { size: 800, overlap: 100 }),
@@ -497,6 +504,7 @@ export class KnowledgeBasesService {
         {
           targetId: row.id,
           title: row.title,
+          audience: row.audience,
         },
         client
       );
@@ -533,6 +541,8 @@ export class KnowledgeBasesService {
 
       if (input.title !== undefined) push('title', input.title);
       if (input.description !== undefined) push('description', input.description);
+      if (input.audience !== undefined && input.audience !== existing.audience)
+        push('audience', input.audience);
       const sourceChanged =
         (input.sourceType !== undefined && input.sourceType !== existing.source_type) ||
         (input.sourceConfig !== undefined &&
@@ -618,6 +628,8 @@ export class KnowledgeBasesService {
         {
           targetId: row.id,
           title: row.title,
+          audienceBefore: existing.audience,
+          audienceAfter: row.audience,
         },
         client
       );
@@ -1211,6 +1223,7 @@ export class KnowledgeBasesService {
       id: row.id,
       title: row.title,
       description: row.description,
+      audience: row.audience,
       sourceType: row.source_type,
       sourceConfig: row.source_config,
       contentState: row.content_state,

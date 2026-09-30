@@ -88,6 +88,7 @@ describe('bank_receipts schema (T-04.3.01.01)', () => {
       'bank_name',
       'attachment_key',
       'customer_note',
+      'submission_review',
       'state',
       'confirmed_by',
       'confirmed_at',

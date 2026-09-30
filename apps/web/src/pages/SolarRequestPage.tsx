@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
+import { Button, Card, CardContent, ConfirmDialog, Input, Label } from '@barghsa/ui';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -11,6 +11,17 @@ interface Address {
   id: string;
   fullAddress: string;
   postalCode: string;
+}
+interface SolarReview {
+  hash: string;
+  data: {
+    submission: Record<string, string | number | boolean>;
+    siteAddress: string | null;
+    agreementVersion: string;
+    agreementText: string;
+    createsContract: false;
+    createsInvoice: false;
+  };
 }
 type BuildingType = 'building_apartment' | 'non_household';
 type GridType = 'on_grid' | 'off_grid';
@@ -86,6 +97,8 @@ export function SolarRequestPage() {
   const [agreementAccepted, setAgreementAccepted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(false);
+  const [review, setReview] = useState<SolarReview | null>(null);
+  const [reviewInput, setReviewInput] = useState<Record<string, unknown> | null>(null);
   const submissionKey = useRef<string | null>(null);
   const [draftHydrated, setDraftHydrated] = useState(false);
   const [draftSaveError, setDraftSaveError] = useState(false);
@@ -260,11 +273,33 @@ export function SolarRequestPage() {
             ...(siteDescription.trim() ? { siteDescription: siteDescription.trim() } : {}),
           };
     try {
+      const input = { ...base, ...details };
+      const response = await fetch('/api/solar/requests/review', {
+        method: 'POST',
+        credentials: 'include',
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify(input),
+      });
+      if (!response.ok) throw new Error('review');
+      setReview((await response.json()) as SolarReview);
+      setReviewInput(input);
+      setSubmitting(false);
+    } catch {
+      setSubmitError(true);
+      setSubmitting(false);
+    }
+  }
+
+  async function confirmSubmission() {
+    if (!review || !reviewInput || submitting) return;
+    setSubmitting(true);
+    setSubmitError(false);
+    try {
       const response = await fetch('/api/solar/requests', {
         method: 'POST',
         credentials: 'include',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ ...base, ...details }),
+        body: JSON.stringify({ ...reviewInput, expectedReviewHash: review.hash }),
       });
       if (!response.ok) throw new Error('submit');
       const result = (await response.json()) as { requestId: string };
@@ -285,6 +320,118 @@ export function SolarRequestPage() {
 
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <ConfirmDialog
+        open={Boolean(review)}
+        onCancel={() => {
+          setReview(null);
+          setReviewInput(null);
+        }}
+        onConfirm={() => void confirmSubmission()}
+        title={copy('reviewTitle')}
+        description={copy('reviewDescription')}
+        confirmLabel={copy('submit')}
+        cancelLabel={copy('reviewCancel')}
+        loading={submitting}
+      >
+        {review && (
+          <div className="space-y-3 text-sm" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+            <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-2 [&>dd]:min-w-0 [&>dd]:break-words">
+              <dt>{copy('building')}</dt>
+              <dd>
+                {copy(
+                  review.data.submission.buildingType === 'non_household'
+                    ? 'nonHousehold'
+                    : 'building'
+                )}
+              </dd>
+              <dt>{copy('gridType')}</dt>
+              <dd>{copy(review.data.submission.gridType === 'off_grid' ? 'offGrid' : 'onGrid')}</dd>
+              {review.data.submission.billIdentifier && (
+                <>
+                  <dt>{copy('billIdentifier')}</dt>
+                  <dd dir="ltr">{review.data.submission.billIdentifier}</dd>
+                </>
+              )}
+              {review.data.submission.propertyForm && (
+                <>
+                  <dt>{copy('propertyForm')}</dt>
+                  <dd>{copy(String(review.data.submission.propertyForm))}</dd>
+                </>
+              )}
+              {review.data.submission.structuralFrame && (
+                <>
+                  <dt>{copy('structuralFrame')}</dt>
+                  <dd>{copy(String(review.data.submission.structuralFrame))}</dd>
+                </>
+              )}
+              {review.data.submission.buildingCompletionDate && (
+                <>
+                  <dt>{copy('completionDate')}</dt>
+                  <dd>{review.data.submission.buildingCompletionDate}</dd>
+                </>
+              )}
+              {review.data.submission.totalUnits && (
+                <>
+                  <dt>{copy('totalUnits')}</dt>
+                  <dd>{review.data.submission.totalUnits}</dd>
+                </>
+              )}
+              {review.data.submission.siteCategory && (
+                <>
+                  <dt>{copy('siteCategory')}</dt>
+                  <dd>{copy(String(review.data.submission.siteCategory))}</dd>
+                </>
+              )}
+              {review.data.submission.installationSurface && (
+                <>
+                  <dt>{copy('installationSurface')}</dt>
+                  <dd>{copy(String(review.data.submission.installationSurface))}</dd>
+                </>
+              )}
+              {review.data.submission.usableAreaSqm && (
+                <>
+                  <dt>{copy('usableArea')}</dt>
+                  <dd>{review.data.submission.usableAreaSqm}</dd>
+                </>
+              )}
+              {review.data.siteAddress && (
+                <>
+                  <dt>{copy('address')}</dt>
+                  <dd>{review.data.siteAddress}</dd>
+                </>
+              )}
+              {review.data.submission.siteRelationship && (
+                <>
+                  <dt>{copy('relationship')}</dt>
+                  <dd>
+                    {copy(
+                      review.data.submission.siteRelationship === 'authorized_operator'
+                        ? 'authorizedOperator'
+                        : String(review.data.submission.siteRelationship)
+                    )}
+                  </dd>
+                </>
+              )}
+              {review.data.submission.siteDescription && (
+                <>
+                  <dt>{copy('description')}</dt>
+                  <dd>{review.data.submission.siteDescription}</dd>
+                </>
+              )}
+              <dt>{copy('reviewTermsVersion')}</dt>
+              <dd dir="ltr">{review.data.agreementVersion}</dd>
+            </dl>
+            <p>{copy('agreement')}</p>
+            {locale === 'en' && (
+              <p lang="fa" dir="rtl">
+                {review.data.agreementText}
+              </p>
+            )}
+            <p className="rounded-md bg-muted p-3">{copy('reviewNoContractInvoice')}</p>
+            {submitError && <p role="alert">{copy('submitError')}</p>}
+          </div>
+        )}
+      </ConfirmDialog>
       <div className="space-y-2">
         <h1 className="text-3xl font-semibold">{copy('title')}</h1>
         <p className="text-muted-foreground">{copy('instruction')}</p>

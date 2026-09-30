@@ -1199,12 +1199,13 @@ it('migrates legacy inbox text and read history without deleting its source', as
   expect(
     (
       await pool.query(
-        'SELECT recipient_user_id,localized_content,is_read,read_at,created_at,link_route,delivery_key FROM in_app_notifications WHERE id=$1',
+        'SELECT recipient_user_id,operating_context,localized_content,is_read,read_at,created_at,link_route,delivery_key FROM in_app_notifications WHERE id=$1',
         [legacyNotice]
       )
     ).rows[0]
   ).toEqual({
     recipient_user_id: 'delivery-owner',
+    operating_context: 'customer',
     localized_content: { original: { title: 'Legacy verified', body: 'Original body' } },
     is_read: true,
     read_at: new Date('2026-01-02T00:00:00Z'),
@@ -1212,6 +1213,10 @@ it('migrates legacy inbox text and read history without deleting its source', as
     link_route: '/settings/profile',
     delivery_key: `legacy:${legacyNotice}`,
   });
+  expect(
+    (await pool.query('SELECT operating_context FROM in_app_notifications WHERE id=$1', [inbox]))
+      .rows[0].operating_context
+  ).toBe('customer');
   expect(
     (
       await pool.query('SELECT count(*)::int AS count FROM notifications WHERE id=$1', [

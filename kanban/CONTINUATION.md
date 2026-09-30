@@ -1,6 +1,142 @@
 # Development continuation status
 
+## Current manual batch — September 30, 2026
+
+[Customer history search and sorting](batches/2026-09-30-customer-history-search-sort.md) adds debounced search and newest/oldest submission-date sorting to saving, solar, and consultation histories. Queries compose with date/status filters and stay in the URL; the APIs filter before pagination and order tied timestamps by UUID. Code review, related tests, 30 bilingual cross-browser flows, existing journeys and build checks pass. Other filter types and all-list adoption remain open. The preceding date-filter batch's remote CI is green.
+
+[Customer history date filters](batches/2026-09-30-customer-history-date-filters.md) adds shared localized start/end pickers and calendar-aware presets to saving, solar, and consultation histories. Exact UTC bounds compose with status selections, survive reload and Back, and filter in PostgreSQL before pagination. Custom drafts validate before Apply, and controls wait for the account timezone. Broader all-list coverage remains open.
+
+[Customer history status filters](batches/2026-09-30-customer-history-status-filters.md) adds shared multi-select status controls to saving orders, solar requests, and consultation requests. URL selections survive reload and Back; changing filters clears old pages and cursors while preserving the consultation form. PostgreSQL filters before pagination. Broader all-list filter coverage remains open.
+
+[Notification category badges](batches/2026-09-30-notification-status-badges.md) give the customer and staff bell and inbox the same labeled icon and category color. Document events now identify themselves as documents in both dictionaries instead of falling back to System.
+
+[Saving fulfillment progress stepper](batches/2026-09-30-saving-progress-stepper.md) connects completed, current, and pending stages in the shared stepper and uses it on the customer saving-order detail page. Completion dates and handover details remain visible. Solar construction usage remains open until its domain exposes matching stage progress.
+
+[Staff dashboard pending verification](batches/2026-09-30-pending-verification-widget.md) completes the existing verification count with the five newest profile links, bilingual identity fallback, and verified CRM navigation. The API already supplied these entries.
+
+[Staff dashboard work queue](batches/2026-09-30-staff-work-queue.md) groups pending tickets, electricity and saving orders awaiting review, and unassigned consultations into permission-scoped counts with links to filtered queues. The prior dashboard batch's remote CI finished green.
+
+[Customer dashboard active contracts](batches/2026-09-30-dashboard-active-contracts.md) shows three active, published contracts with status, end date, elapsed-term progress and working detail/list links. The latest-orders, upcoming-invoices, and active-contract customer widgets are now built.
+
+[Customer dashboard recent orders](batches/2026-09-30-dashboard-recent-orders.md) combines the latest five accessible electricity and saving orders with status, date, amount, and working detail/list links.
+
+[Customer dashboard upcoming invoices](batches/2026-09-30-dashboard-upcoming-invoices.md) shows the next payable invoices with due-date urgency and direct invoice links, scopes the summary to the active profile, and removes stale dashboard data on profile switch.
+
+[Customer guide conversation context](batches/2026-09-30-assistant-conversation-context.md) adds the active profile name to the guide, grows the input with text, clears prior-profile conversation on switch, and repairs the two navigation unit tests exposed by the previous batch's route hook. Remaining chat criteria stay open.
+
+[Customer assistant full page](batches/2026-09-30-customer-assistant-page.md) replaces the `/ai` placeholder with the existing profile-scoped sourced conversation, adds navigation, and handles unavailable or failed slot checks. The read-only assistant remains separate from streaming and AI write-action tasks.
+
+[Solar document-set decision review](batches/2026-09-30-solar-document-set-review.md) binds additional-file requests and advancement to the postal stage to the current document set and exact outcome. Staff see the server snapshot before confirming; changes invalidate it and audit retains the confirmed version.
+
+[Solar postal-decision review](batches/2026-09-30-solar-postal-decision-review.md) binds staff receipt, incomplete, and not-received decisions to the current shipment and resulting status. The staff dialog shows the authoritative courier, tracking, date, reason, and outcome, and audit retains the confirmed snapshot. Cross-command review work remains partial.
+
+[Solar final-decision review](batches/2026-09-30-solar-final-decision-review.md) binds approval, rejection and closure without a contract to the current request, postal state, reason and resulting status. The staff dialog displays the authoritative outcome before confirmation, and the audit retains the reviewed snapshot. Cross-command review work remains partial.
+
+[Solar contract and initial invoice review](batches/2026-09-30-solar-contract-invoice-review.md) binds staff issuance to an authoritative contract, invoice and due-rule snapshot, displays it before confirmation, and verifies the created invoice in the same transaction. It also repairs older solar integration fixtures and a CI web-test timeout. Cross-command financial review remains partial.
+
+[Solar construction request submission review](batches/2026-09-30-solar-request-submission-review.md) adds a server-backed customer review of the exact request, site and terms before submission, with stale-state rejection, durable review and safe retry. It also repairs the previous main CI's stale bank-receipt schema assertion. Cross-command review tasks remain partial.
+
+[Customer invoice receipt submission review](batches/2026-09-30-invoice-receipt-submission-review.md) binds customer upload to the current invoice balance, receipt details and delayed-settlement rule before confirmation, and persists the reviewed snapshot for safe retries. Cross-command review tasks remain partial.
+
+[Bank-receipt wallet top-up financial review](batches/2026-09-30-bank-receipt-topup-financial-review.md) binds customer submission to a server-confirmed receipt and delayed-credit rule, persists the confirmed snapshot, and rejects stale review hashes. This batch also repairs the previous main CI's high-severity dependency advisories and a mobile header overflow. Cross-command review tasks remain partial.
+
+[Online wallet top-up financial review](batches/2026-09-30-online-topup-financial-review.md) binds gateway initiation to a server-confirmed profile, amount and current limit. The customer confirms the reviewed payment before redirect; pending intents and audit retain the review. Cross-command review tasks remain partial.
+
+[Electricity quantity-increase staff decision review](batches/2026-09-30-electricity-increase-staff-decision-review.md) binds approval and rejection to the current quantity, contract, invoice, policy and exact effective date before staff confirmation. The final charge is calculated at customer signature. Cross-command review tasks remain partial.
+
+[Saving fulfillment stage review](batches/2026-09-30-saving-fulfillment-stage-review.md) binds staff completion and optional handover skip to the exact payment, contract, stage and explanation state before confirmation. Cross-command review tasks remain partial.
+
+[Saving address amendment financial review](batches/2026-09-30-saving-address-amendment-review.md) binds paid installation-address changes to the exact old and new addresses, contract and unchanged invoice before staff confirmation. Cross-command review tasks remain partial.
+
+[Saving upgrade cancellation financial review](batches/2026-09-30-saving-upgrade-cancellation-review.md) binds cancellation of an unpaid equipment charge to the current invoice, contract and stock-release outcome before staff confirmation. Cross-command review tasks remain partial.
+
+[Saving hardware amendment financial review](batches/2026-09-30-saving-hardware-amendment-review.md) binds paid equipment swaps and upgrades to the exact charge, credit, stock, contract and invoice state before staff confirmation. Cross-command review tasks remain partial.
+
+[Saving staff decision financial review](batches/2026-09-30-saving-staff-decision-review.md) binds approval and rejection to the locked saving order, accepted agreement, invoice balances and exact publication or refund outcome. Cross-command review tasks remain partial.
+
+[Electricity customer cancellation financial review](batches/2026-09-30-electricity-cancellation-review.md) binds cancellation to a locked contract, invoice and exact wallet-refund or unpaid-invoice outcome before customer confirmation. The cross-command review tasks remain partial.
+
+[Electricity staff decision financial review](batches/2026-09-30-electricity-staff-decision-review.md) binds staff approval, change requests, and rejection to the current contract, invoice, and exact refund outcome before confirmation. The cross-command review tasks remain partial.
+
+[Paid consultation resolution review](batches/2026-09-30-consultation-paid-resolution-review.md) binds paid cancellation, rejection, and uncovered-refund recovery to a locked, exact credit and wallet-refund allocation before staff confirmation. Other cross-command review tasks remain partial.
+
+[Consultation paid-fee adjustment review](batches/2026-09-30-consultation-paid-fee-review.md) binds staff charge and credit adjustments to an exact paid-invoice and refund-allocation snapshot before confirmation. The broader cross-command review tasks remain partial.
+
+[Consultation staff fee-offer review](batches/2026-09-30-consultation-staff-fee-review.md) binds new and replacement unpaid offers to a locked, authoritative customer, service, fee, deadline, and invoice-outcome snapshot before staff confirmation.
+
+[Consultation offer decision review](batches/2026-09-30-consultation-offer-decision-review.md) binds customer acceptance and decline to the current service, fee, invoice and payment outcome. The cross-command review tasks remain partial.
+
+[Manual invoice financial review](batches/2026-09-30-manual-invoice-financial-review.md) binds staff-issued invoices to an authoritative customer, line, VAT, total, and due-rule preview before step-up. The cross-command review tasks remain partial.
+
+[Electricity quantity-increase signing review](batches/2026-09-30-electricity-increase-signing-review.md) binds customer signing and adjustment invoice issuance to a full server-priced snapshot. The cross-command review tasks remain partial.
+
+[Electricity price adjustment financial review](batches/2026-09-30-electricity-price-financial-review.md) binds staff proposals to an authoritative priced preview and shows the same calculation before publishing or finalizing a charge or credit. The cross-command review tasks remain partial.
+
+[Contract cancellation financial review](batches/2026-09-30-contract-cancellation-financial-review.md) shows the captured contract, invoice balances and refund decision in the shared bilingual confirmation layout before staff save or execute cancellation. Existing server fingerprints still reject changed finances. The cross-command review tasks remain partial.
+
+[Invoice bank-receipt financial review](batches/2026-09-30-invoice-bank-receipt-review-snapshot.md) binds staff confirmation to the current receipt, invoice allocation, wallet excess and approval rule. It also repairs five stale integration fixtures found by the preceding main CI run. Remote CI is pending.
+
+[Unpaid-invoice replacement financial review](batches/2026-09-30-invoice-replacement-review-snapshot.md) binds cancel-and-replace to a server-derived snapshot of the old invoice, proposed lines and due-date rule before cancellation. It also repairs the previous main CI's stale web test fixtures and new transitive `undici` advisories. Remote CI for this combined batch is still pending.
+
+[Paid-invoice adjustment financial review](batches/2026-09-30-invoice-adjustment-review-snapshot.md) binds staff adjustment submission to a server-derived invoice and policy snapshot, confirms it in the bilingual UI, and records the confirmed hash across immediate issuance and second approval. The wider cross-command review work remains partial.
+
 ## Current manual batch — September 29, 2026
+
+[Refund decision financial snapshot](batches/2026-09-29-refund-decision-review-snapshot.md) adds server-derived review and stale-state confirmation to staff decisions for both manual refund destinations. The audit retains each confirmed decision review; the wider cross-command review work remains partial.
+
+[Refund request financial snapshot](batches/2026-09-29-refund-request-review-snapshot.md) binds both manual refund destinations to an authoritative server preview, exact confirmation hash and persisted audit record. Changed balances or second-approval rules reject stale confirmation; the wider cross-command review work remains partial.
+
+[Approval route boundary follow-up](batches/2026-09-29-approval-route-boundary.md) normalizes exact-request links and restores the standalone admin failure tests after the router-aware approval handoff.
+
+[Refund approval return](batches/2026-09-29-refund-approval-return.md) connects a second-review decision back to the wallet or external-bank refund panel for the same invoice.
+
+[Financial approval decision review](batches/2026-09-29-approval-decision-review.md) places the persisted amount, invoice, initiator, reason and refund destination in the shared confirmation layout before a second finance staff member decides. Invoice adjustments retain their distinct issue-on-approval notice.
+
+[Exact approval-request handoff](batches/2026-09-29-approval-request-handoff.md) lets finance staff open a refund's specific approval request directly, even when it is outside the current queue filter or page.
+
+[Operating-context integration fixtures](batches/2026-09-29-operating-context-fixtures.md) update the older HTTP suites to use explicit staff and customer sessions after context isolation. They preserve the production authorization boundary exposed by the previous CI run.
+
+[External bank refund workspace](batches/2026-09-29-external-bank-refund-workspace.md) adds the finance handoff from request through recorded bank reference and second-staff reconciliation. Wallet and bank refunds share an invoice balance and financial confirmation layout, while the backend keeps bank refunds unsettled until reconciliation. The broader cross-command financial review task remains partial.
+
+[Manual wallet refund workspace](batches/2026-09-29-manual-wallet-refund-workspace.md) gives finance staff a resumable invoice refund view with available balance, prior requests and confirmable wallet refund actions. The existing server enforces payment, authorization and dual-approval rules.
+
+[Saving order financial review summary](batches/2026-09-29-saving-financial-review-summary.md) adds the shared accessible confirmation layout to the server-quoted saving order while preserving quote-digest submission. The wider cross-command financial review task remains partial.
+
+[Electricity order financial review summary](batches/2026-09-29-electricity-financial-review-summary.md) uses the shared accessible confirmation layout for simple and advanced server quotes while retaining exact quote-digest submission. This covers the electricity-order UI portion of the cross-command financial review task; the other command families remain open.
+
+[Main route payload budget](batches/2026-09-29-main-route-budget.md) removes staff-only date code and finance schemas from the eager customer path, loads toast rendering on feedback, and keeps navigation text in the shared dictionary. Customer purchase routes remain eager. All configured route and interaction budgets pass, including dashboard and electricity ordering; production Chromium electricity, saving and wallet journeys pass with current session fixtures.
+
+[Admin terms interaction budget](batches/2026-09-29-admin-terms-interaction-budget.md) measures the lazy editor, publish preview and version viewer when used, bringing the initial admin terms route under its existing budget without relaxing the interaction limits.
+
+[Auth route payload budget](batches/2026-09-29-auth-route-budget.md) gives the production auth entry a small route tree, bringing login, registration, verification and password recovery under 150 KB while preserving the browser flows. The admin terms and main-route budgets are handled in the following batches.
+
+[Staff inbox in the admin workspace](batches/2026-09-29-staff-inbox-ui.md) adds a staff bell and full inbox, keeps navigation in the selected operating context, and verifies the bilingual staff/customer journey in five browser projects.
+
+[Notification inbox context isolation](batches/2026-09-29-notification-context-isolation.md) separates staff and customer notices on both APIs, preserves account-security alerts in either mode, and backfills existing notices with a database fallback for older writers. Dual-role HTTP, migration, worker and refund tests pass.
+
+[Assistant account status shortcut](batches/2026-09-29-assistant-account-status.md) reads wallet and unpaid-invoice status through the authorized dashboard without sending private account data to the knowledge model. Permission-limited and switched-profile responses fail closed; full AI tools and writes remain open. The standalone route-budget check remains over limit on multiple routes and needs a separate performance batch.
+
+[Staff/customer operating contexts](batches/2026-09-29-staff-customer-context.md) add explicit session authority, credential-rotating switches, route/job/upload/export isolation, a bilingual switch, and customer-mode access to onboarding for dual-role users. The first main CI run exposed a legacy migration test that assumed session rows could never gain a column; the follow-up checks preserved credentials and staff/customer backfill directly.
+
+Reviewed profile closure execution is implemented on main. [Portable profile data export](batches/2026-09-29-profile-data-export.md) connects privacy requests to an owner-scoped async ZIP export, visible progress and retries, eligible document bytes, audited short-lived downloads, and 24-hour expiry.
+
+[Profile lifecycle requests](batches/2026-09-29-profile-lifecycle-requests.md) add separate export and closure support actions for the active owned profile, a live closure blocker preview, idempotent audited privacy tickets, and bilingual status links.
+
+[Admin failure summary](batches/2026-09-29-admin-failure-widget.md) adds permission-scoped failed-job and undelivered-notification counts alongside failed refunds, with links to existing staff triage pages.
+
+[Async job progress UI](batches/2026-09-29-async-job-progress-ui.md) adds a reusable bilingual status display and two-second owner-scoped poller with retry and result handoff, previewed only in the development catalogue. A product-specific job and real ETA source are still needed for a live page.
+
+[Async jobs backend](batches/2026-09-29-async-jobs-backend.md) adds a durable one-shot job lifecycle, leased worker handler registry, owner-scoped status/result/retry API and focused PostgreSQL/HTTP coverage. Product-specific handlers remain next.
+
+[Dedicated AI inference process](batches/2026-09-29-ai-inference-worker.md) moves provider I/O to an authenticated internal worker, re-reads and decrypts the selected model there, and reports worker health separately from core API readiness.
+
+[AI inference queue and health](batches/2026-09-29-ai-inference-queue-health.md) bound concurrent agent completions and queue waits, expose staff-only circuit and queue health plus metrics, and repair the model-budget timestamp trigger.
+
+[Monthly AI model budgets](batches/2026-09-29-ai-model-budgets.md) give operators configurable token and USD cost limits, actual usage, UTC-month rollover, an 80% notice and fail-closed preflight checks for customer and admin agent completions.
+
+[Customer knowledge assistant](batches/2026-09-29-customer-knowledge-assistant.md) gives signed-in individual and legal profiles a read-only, sourced Q&A panel, with profile-bound slot selection, rate and concurrency limits, replay safety and audit. Profile records, tools, streaming and full worker isolation remain later work.
+
+[AI knowledge-base audiences and slot preview](batches/2026-09-29-ai-kb-audience.md) keeps existing bases admin-only, lets staff explicitly publish shared sources, and tests slot-scoped retrieval without opening production chat. The same batch repairs branding fixtures and the OpenAPI title snapshot after the dashboard merge.
 
 [AI model circuit breaker](batches/2026-09-29-ai-model-circuit.md) shares persisted per-model failure and recovery state across preview inference and the model-test worker, with admin health, metrics and operator alerting. Future production chat/tool calls must use the same gate.
 

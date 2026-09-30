@@ -12,7 +12,7 @@ beforeAll(async () => {
   const session = randomUUID(),
     csrf = randomUUID();
   await http.pool.query(
-    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,'gift-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())",
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,operating_context) VALUES ($1,'gift-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW(),'staff')",
     [session, csrf, randomUUID()]
   );
   headers = {
@@ -58,11 +58,22 @@ it('previews a gift code repeatedly without reserving or consuming it', async ()
   ).rows[0].id as string;
   const body = { code: ' original ', profileId, orderAmount: '1500', category: 'electricity' };
   try {
+    const customerSession = randomUUID(),
+      customerCsrf = randomUUID();
+    await http.pool.query(
+      "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context) VALUES ($1,'gift-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour','customer')",
+      [customerSession, customerCsrf, randomUUID()]
+    );
+    const customerHeaders = {
+      ...headers,
+      cookie: `barghsa_session=${customerSession}`,
+      'x-csrf-token': customerCsrf,
+    };
     await http.pool.query('UPDATE gift_codes SET total_limit=1 WHERE id=$1', [giftId]);
     for (let attempt = 0; attempt < 2; attempt += 1) {
       const response = await fetch(`${http.base}/api/gift-codes/validate`, {
         method: 'POST',
-        headers,
+        headers: customerHeaders,
         body: JSON.stringify(body),
       });
       expect(response.status).toBe(200);
@@ -78,7 +89,7 @@ it('previews a gift code repeatedly without reserving or consuming it', async ()
 
     const unknownProfile = await fetch(`${http.base}/api/gift-codes/validate`, {
       method: 'POST',
-      headers,
+      headers: customerHeaders,
       body: JSON.stringify({ ...body, profileId: randomUUID() }),
     });
     expect(unknownProfile.status).toBe(404);
@@ -89,7 +100,7 @@ it('previews a gift code repeatedly without reserving or consuming it', async ()
     );
     const belowMinimum = await fetch(`${http.base}/api/gift-codes/validate`, {
       method: 'POST',
-      headers,
+      headers: customerHeaders,
       body: JSON.stringify(body),
     });
     expect(belowMinimum.status).toBe(400);
@@ -98,7 +109,7 @@ it('previews a gift code repeatedly without reserving or consuming it', async ()
     });
     const wrongCategory = await fetch(`${http.base}/api/gift-codes/validate`, {
       method: 'POST',
-      headers,
+      headers: customerHeaders,
       body: JSON.stringify({ ...body, orderAmount: '2500' }),
     });
     expect(wrongCategory.status).toBe(400);
@@ -109,7 +120,7 @@ it('previews a gift code repeatedly without reserving or consuming it', async ()
     await http.pool.query("UPDATE gift_codes SET status='inactive' WHERE id=$1", [giftId]);
     const inactive = await fetch(`${http.base}/api/gift-codes/validate`, {
       method: 'POST',
-      headers,
+      headers: customerHeaders,
       body: JSON.stringify(body),
     });
     expect(inactive.status).toBe(400);

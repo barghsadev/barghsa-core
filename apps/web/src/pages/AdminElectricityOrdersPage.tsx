@@ -1,7 +1,20 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Button, Card, CardContent, DualStatusDisplay, Input, Label, Timeline } from '@barghsa/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  DualStatusDisplay,
+  FinancialReviewSummary,
+  Input,
+  Label,
+  Timeline,
+} from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
+import {
+  parseElectricityStaffDecisionReview,
+  type ElectricityStaffDecisionReview,
+} from '@barghsa/shared/finance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -9,9 +22,11 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
 import { commercialStatusTone, financialStatusTone } from '../lib/electricity-status-tone.js';
 import { electricityTimelineKeys } from '../lib/electricity-timeline.js';
+import { withCsrf } from '../lib/csrf.js';
 
 interface ReviewOrder {
   orderId: string;
+  profileId: string;
   contractId: string | null;
   contractState: string | null;
   invoiceId: string;
@@ -125,12 +140,17 @@ export default function AdminElectricityOrdersPage() {
   const [detailError, setDetailError] = useState(false);
   const [reason, setReason] = useState('');
   const [action, setAction] = useState<TeamAction | null>(null);
+  const [decisionReview, setDecisionReview] = useState<ElectricityStaffDecisionReview | null>(null);
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewError, setReviewError] = useState(false);
+  const reviewRequest = useRef(0);
   const [revision, setRevision] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [denied, setDenied] = useState(false);
 
   function refreshQueue() {
+    reviewRequest.current += 1;
     setOrders([]);
     setAfter(null);
     setNextAfter(null);
@@ -138,11 +158,15 @@ export default function AdminElectricityOrdersPage() {
   }
 
   function selectOrder(id: string) {
+    reviewRequest.current += 1;
     setSelectedId(id);
     setLookupId(id);
     setLookupInvalid(false);
     setDetailError(false);
     setReason('');
+    setReviewError(false);
+    setDecisionReview(null);
+    setReviewLoading(false);
     const url = new URL(window.location.href);
     url.searchParams.set('orderId', id);
     window.history.replaceState(window.history.state, '', url.toString());
@@ -228,21 +252,57 @@ export default function AdminElectricityOrdersPage() {
     return () => controller.abort();
   }, [selectedId, revision]);
 
-  function choose(decision: Decision) {
-    if (!detail || (decision !== 'approve' && !reason.trim())) return;
-    setAction({
-      title: copy(decision),
-      description: copy('confirm'),
-      path: `/api/staff/electricity/orders/${encodeURIComponent(detail.orderId)}/${decision}`,
-      method: 'POST',
-      body: {
-        idempotencyKey: crypto.randomUUID(),
-        expectedVersionId: detail.versionId,
-        ...(decision === 'approve' ? {} : { reason: reason.trim() }),
-      },
-      conflictMessage: copy('conflict'),
-      forbiddenMessage: copy('forbidden'),
-    });
+  async function choose(decision: Decision) {
+    if (!detail || reviewLoading || (decision !== 'approve' && !reason.trim())) return;
+    const order = detail;
+    const request = ++reviewRequest.current;
+    const decisionReason = decision === 'approve' ? '' : reason.trim();
+    setReviewLoading(true);
+    setReviewError(false);
+    try {
+      const response = await fetch(
+        `/api/staff/electricity/orders/${encodeURIComponent(order.orderId)}/financial-review`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ action: decision, reason: decisionReason }),
+        }
+      );
+      if (!response.ok) throw new Error('Review unavailable');
+      const review = parseElectricityStaffDecisionReview(await response.json());
+      if (request !== reviewRequest.current) return;
+      if (
+        !review ||
+        review.scope.resourceId !== order.orderId ||
+        review.scope.profileId !== order.profileId ||
+        review.data.versionId !== order.versionId ||
+        review.data.reason !== decisionReason
+      )
+        throw new Error('Review mismatch');
+      setDecisionReview(review);
+      setAction({
+        title: copy(decision),
+        description: copy('confirm'),
+        path: `/api/staff/electricity/orders/${encodeURIComponent(order.orderId)}/${decision}`,
+        method: 'POST',
+        body: {
+          idempotencyKey: crypto.randomUUID(),
+          expectedVersionId: review.data.versionId,
+          expectedReviewHash: review.hash,
+          ...(decision === 'approve' ? {} : { reason: decisionReason }),
+        },
+        conflictMessage: copy('conflict'),
+        forbiddenMessage: copy('forbidden'),
+      });
+    } catch {
+      if (request === reviewRequest.current) {
+        setReviewError(true);
+        setDecisionReview(null);
+      }
+    } finally {
+      if (request === reviewRequest.current) setReviewLoading(false);
+    }
   }
 
   const selectedTemplate = detail ? contractTemplate(detail.contractSnapshot) : null;
@@ -648,32 +708,135 @@ export default function AdminElectricityOrdersPage() {
                     />
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <Button onClick={() => choose('approve')}>{copy('approve')}</Button>
+                    <Button disabled={reviewLoading} onClick={() => void choose('approve')}>
+                      {copy('approve')}
+                    </Button>
                     <Button
                       variant="outline"
-                      disabled={!reason.trim()}
-                      onClick={() => choose('request-changes')}
+                      disabled={!reason.trim() || reviewLoading}
+                      onClick={() => void choose('request-changes')}
                     >
                       {copy('request-changes')}
                     </Button>
                     <Button
                       variant="destructive"
-                      disabled={!reason.trim()}
-                      onClick={() => choose('reject')}
+                      disabled={!reason.trim() || reviewLoading}
+                      onClick={() => void choose('reject')}
                     >
                       {copy('reject')}
                     </Button>
                   </div>
+                  {reviewLoading ? <p role="status">{copy('reviewLoading')}</p> : null}
+                  {reviewError ? <p role="alert">{copy('reviewError')}</p> : null}
                 </div>
               ) : null}
             </CardContent>
           </Card>
         ) : null}
       </div>
-      {action ? (
+      {action && decisionReview ? (
         <TeamActionDialog
           action={action}
-          onClose={() => setAction(null)}
+          summary={
+            <FinancialReviewSummary
+              title={copy('reviewTitle')}
+              rows={[
+                {
+                  id: 'customer',
+                  label: copy('customer'),
+                  value: decisionReview.data.customerName,
+                },
+                {
+                  id: 'period',
+                  label: copy('period'),
+                  value: periodText(decisionReview.data.periodStart, decisionReview.data.periodEnd),
+                },
+                {
+                  id: 'quantity',
+                  label: copy('quantity'),
+                  value: `${decisionReview.data.totalKwh} kWh`,
+                },
+                {
+                  id: 'contract',
+                  label: copy('reviewContractVersion'),
+                  value: numbers.number(decisionReview.data.versionNumber),
+                },
+                {
+                  id: 'invoice',
+                  label: copy('reviewInvoiceState'),
+                  value: appText(`invoices.state.${decisionReview.data.invoiceState}`, locale),
+                },
+                {
+                  id: 'paid',
+                  label: copy('paid'),
+                  value: numbers.money(decisionReview.data.paidAmount),
+                },
+                {
+                  id: 'outcome',
+                  label: copy('reviewOutcome'),
+                  value: copy(`reviewOutcome.${decisionReview.data.outcome}`),
+                },
+                ...pricingLines(decisionReview.data.pricingSnapshot).map((line, index) => ({
+                  id: `product-${index}`,
+                  label: `${copy(`product.${line.systemKey}`)} · ${line.quantityKwh} kWh`,
+                  value: (
+                    <span className="space-y-1 text-sm">
+                      <span className="block">
+                        {copy('unitPrice')}: {numbers.money(line.unitPriceIrR)}
+                      </span>
+                      {line.discountIrR ? (
+                        <span className="block">
+                          {copy('discount')}: {numbers.money(line.discountIrR)}
+                        </span>
+                      ) : null}
+                      <span className="block">
+                        {copy('vat')}: {numbers.money(line.vatIrR)}
+                      </span>
+                      <span className="block">
+                        {copy('lineTotal')}: {numbers.money(line.netIrR)}
+                      </span>
+                    </span>
+                  ),
+                })),
+                ...(decisionReview.data.refundAmount !== '0'
+                  ? [
+                      {
+                        id: 'refund',
+                        label: copy('reviewRefund'),
+                        value: numbers.money(decisionReview.data.refundAmount),
+                      },
+                    ]
+                  : []),
+                ...(decisionReview.data.releasesGiftCode
+                  ? [
+                      {
+                        id: 'gift-code',
+                        label: copy('reviewGiftCode'),
+                        value: copy('reviewGiftCodeRelease'),
+                      },
+                    ]
+                  : []),
+              ]}
+              total={{
+                label: copy('price'),
+                value: numbers.money(decisionReview.data.invoiceTotal),
+              }}
+              notice={
+                <div className="space-y-2">
+                  <p>{decisionReview.data.reason || copy('reviewNotice')}</p>
+                  {contractTemplate(decisionReview.data.contractSnapshot)?.text ? (
+                    <p className="whitespace-pre-wrap break-words" dir="auto">
+                      {contractTemplate(decisionReview.data.contractSnapshot)!.text}
+                    </p>
+                  ) : null}
+                </div>
+              }
+            />
+          }
+          onClose={() => {
+            setAction(null);
+            setDecisionReview(null);
+          }}
           onSuccess={async () => {
             setReason('');
             refreshQueue();

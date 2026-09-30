@@ -168,6 +168,7 @@ export class ElectricityCommentsService {
             {
               userId: order.customer_id,
               profileId: order.profile_id,
+              operatingContext: 'customer',
               type: 'general',
               title: 'Electricity order reply',
               link: `/electricity/orders/${id}`,

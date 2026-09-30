@@ -8,7 +8,7 @@ import { withCsrf } from '../../../lib/csrf.js';
 import { normalizeProfileDigits } from '../../../lib/profile-digits.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
-import { toast } from 'sonner';
+import { toast } from '../../../lib/toast-api.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 import {
   validateLegalNationalIdentifier,

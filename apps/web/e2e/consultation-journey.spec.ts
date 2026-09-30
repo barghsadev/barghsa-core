@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from './coverage-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
@@ -14,6 +15,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
   let submitted = false;
   let acceptedAt: string | null = null;
   let invoiceState = 'Unpaid';
+  let operatingContext: 'customer' | 'staff' = 'customer';
   let offer: { fee: string; scope: string; deliverables: string; validUntil: string } | null = null;
   const history: Array<{
     status: string;
@@ -49,7 +51,15 @@ test('customer consultation moves through staff offer, payment handoff, and comp
 
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false } })
+    route.fulfill({
+      json: {
+        isStaff: true,
+        userId: 'buyer',
+        operatingContext,
+        canSwitchContext: true,
+        requiresTosAcceptance: false,
+      },
+    })
   );
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
@@ -112,10 +122,32 @@ test('customer consultation moves through staff offer, payment handoff, and comp
     history.push({ status, actor_type: 'staff', reason: null, created_at: submittedAt });
     return route.fulfill({ json: { status } });
   });
+  await page.route(`**/api/admin/consultations/requests/${requestId}/fee-review`, (route) => {
+    const input = route.request().postDataJSON() as Record<string, string>;
+    return route.fulfill({
+      json: {
+        schemaVersion: 1,
+        hash: 'a'.repeat(64),
+        scope: { action: 'consultation.fee-offer', profileId, resourceId: requestId },
+        data: {
+          serviceTitle: title,
+          profileName: 'Example Customer',
+          scope: input.scope,
+          deliverables: input.deliverables,
+          fee: input.fee,
+          validUntil: input.validUntil,
+          reason: null,
+          previousInvoice: null,
+          outcome: 'issue_invoice',
+        },
+      },
+    });
+  });
   await page.route(`**/api/admin/consultations/requests/${requestId}/fee`, (route) => {
     expect(status).toBe('under_review');
     const input = route.request().postDataJSON() as Record<string, string>;
     expect(input).toMatchObject({
+      expectedReviewHash: 'a'.repeat(64),
       fee: '500000',
       scope: 'Supply assessment',
       deliverables: 'Written report',
@@ -128,12 +160,51 @@ test('customer consultation moves through staff offer, payment handoff, and comp
     };
     status = 'offer_pending';
     history.push({ status, actor_type: 'staff', reason: null, created_at: submittedAt });
-    return route.fulfill({ json: { status, invoiceId } });
+    return route.fulfill({
+      json: { status, invoiceId, financialReview: { hash: 'a'.repeat(64) } },
+    });
   });
   await page.route(`**/api/consultations/requests/${requestId}/accept`, (route) => {
     expect(status).toBe('offer_pending');
+    expect(route.request().postDataJSON()).toEqual({ expectedReviewHash: 'b'.repeat(64) });
     acceptedAt = submittedAt;
-    return route.fulfill({ json: { paymentRequired: true, invoiceId } });
+    return route.fulfill({
+      json: { paymentRequired: true, invoiceId, financialReview: { hash: 'b'.repeat(64) } },
+    });
+  });
+  await page.route(`**/api/consultations/requests/${requestId}/offer-review`, (route) => {
+    const { decision } = route.request().postDataJSON() as { decision: 'accept' | 'decline' };
+    expect(['accept', 'decline']).toContain(decision);
+    expect(offer).not.toBeNull();
+    return route.fulfill({
+      json: {
+        schemaVersion: 1,
+        hash: (decision === 'accept' ? 'b' : 'c').repeat(64),
+        scope: {
+          action: `consultation.offer-${decision}`,
+          profileId,
+          resourceId: requestId,
+        },
+        data: {
+          decision,
+          serviceTitle: title,
+          scope: offer!.scope,
+          deliverables: offer!.deliverables,
+          fee: offer!.fee,
+          previousFee: '0',
+          validUntil: offer!.validUntil,
+          acceptedAt: null,
+          invoice: {
+            id: invoiceId,
+            state: 'Unpaid',
+            totalAmount: offer!.fee,
+            paidAmount: '0',
+            adjustmentKind: null,
+          },
+          outcome: decision === 'accept' ? 'payment_required' : 'cancel_unpaid_invoice',
+        },
+      },
+    });
   });
   await page.route(`**/api/admin/consultations/requests/${requestId}/complete`, (route) => {
     expect(status).toBe('offer_accepted');
@@ -161,6 +232,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
     page.getByText('Staff have not proposed a fee yet. No invoice has been created.')
   ).toBeVisible();
 
+  operatingContext = 'staff';
   await page.goto('/admin/consultations');
   await expect(page.getByRole('heading', { name: 'Consultation work queue' })).toBeVisible();
   await page.getByRole('button', { name: /Energy consultation.*Buyer Example/ }).click();
@@ -172,7 +244,12 @@ test('customer consultation moves through staff offer, payment handoff, and comp
   await page.getByLabel('Scope').fill('Supply assessment');
   await page.getByLabel('Deliverables').fill('Written report');
   await page.getByRole('button', { name: 'Issue fee offer and invoice' }).click();
-  await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
+  const feeReview = page.getByRole('dialog', { name: 'Issue fee offer and invoice' });
+  await expect(feeReview).toContainText('Review fee offer and invoice');
+  await expect(feeReview).toContainText('Supply assessment');
+  await expect(feeReview).toContainText('Written report');
+  await expect(feeReview).toContainText('500,000 IRR');
+  await feeReview.getByRole('button', { name: 'Confirm' }).click();
   await expect.poll(() => status).toBe('offer_pending');
   const savedOffer = page.getByRole('region', { name: 'Current fee offer' });
   await expect(savedOffer).toContainText('500,000 IRR');
@@ -185,10 +262,28 @@ test('customer consultation moves through staff offer, payment handoff, and comp
     `/admin/invoices?invoiceId=${invoiceId}`
   );
 
+  operatingContext = 'customer';
   await page.goto(`/consultations/${requestId}`);
   await expect(page.getByText('Supply assessment')).toBeVisible();
   await expect(page.getByText('Written report')).toBeVisible();
+  await page.getByRole('button', { name: 'Switch language to Persian' }).click();
+  await page.getByRole('button', { name: 'رد پیشنهاد' }).click();
+  const declineReview = page.getByRole('dialog', { name: 'بررسی پیشنهاد مشاوره' });
+  await expect(declineReview).toContainText('Supply assessment');
+  await expect(declineReview).toContainText('لغو');
+  const scan = await new AxeBuilder({ page })
+    .include('[role="dialog"]')
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+    .analyze();
+  expect(scan.violations).toEqual([]);
+  await declineReview.getByRole('button', { name: 'بازگشت به پیشنهاد' }).click();
+  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await page.getByRole('button', { name: 'Accept offer and pay' }).click();
+  const review = page.getByRole('dialog', { name: 'Review consultation offer' });
+  await expect(review).toContainText('500,000');
+  await expect(review).toContainText('Supply assessment');
+  await expect(review).toContainText('Written report');
+  await review.getByRole('button', { name: 'Accept offer and pay' }).click();
   await expect(page).toHaveURL(new RegExp(`/invoices/${invoiceId}$`));
   await expect(page.getByRole('heading', { name: 'Invoice details' })).toBeVisible();
   expect(acceptedAt).toBe(submittedAt);
@@ -209,6 +304,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
   invoiceState = 'Paid';
   status = 'offer_accepted';
   history.push({ status, actor_type: 'customer', reason: null, created_at: submittedAt });
+  operatingContext = 'staff';
   await page.goto('/admin/consultations');
   await page.getByRole('button', { name: /Energy consultation.*Buyer Example/ }).click();
   await page.getByLabel('Reason or information requested').fill('Consultation delivered');
@@ -216,6 +312,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
   await expect.poll(() => status).toBe('completed');
 
+  operatingContext = 'customer';
   await page.goto(`/consultations/${requestId}`);
   await expect(page.getByRole('heading', { name: 'Status history' })).toBeVisible();
   await expect(page.locator('ol').getByText('Consultation delivered')).toBeVisible();

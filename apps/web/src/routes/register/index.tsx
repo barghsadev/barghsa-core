@@ -1,6 +1,6 @@
 import { publicAuthFetch } from '../../lib/public-auth-fetch.js';
 import { maskDestination } from '../../lib/mask-destination.js';
-import { toast } from 'sonner';
+import { toast } from '../../lib/toast-api.js';
 import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
 import { useLocale } from '../../hooks/useLocale.js';
 import { rateLimitMessage } from '../../lib/auth-errors.js';

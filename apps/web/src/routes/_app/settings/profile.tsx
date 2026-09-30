@@ -2,7 +2,7 @@ import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { LegalProfileDocuments } from '../../../components/LegalProfileDocuments.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import { toast } from 'sonner';
+import { toast } from '../../../lib/toast-api.js';
 import { t, type Locale } from '@barghsa/i18n/crm';
 import {
   UserIcon,

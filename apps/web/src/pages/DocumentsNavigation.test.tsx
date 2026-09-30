@@ -13,6 +13,8 @@ import { routeTree } from '../routeTree.gen.js';
 vi.mock('@tanstack/react-router', async () => ({
   ...(await vi.importActual('@tanstack/react-router')),
   Outlet: () => null,
+  useLocation: ({ select }: { select: (location: { pathname: string }) => unknown }) =>
+    select({ pathname: '/documents' }),
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
 vi.mock('../components/AppShell.js', () => ({

@@ -210,6 +210,7 @@ export class VerificationCaseService {
         await this.notifications.create(
           {
             userId: assignment.userId,
+            operatingContext: 'staff',
             type: 'general',
             title: localizedContent.en.title,
             body: localizedContent.en.body,

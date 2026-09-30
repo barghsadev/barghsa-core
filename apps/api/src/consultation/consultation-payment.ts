@@ -53,6 +53,7 @@ export async function settlePaidConsultation(
       {
         userId,
         profileId: row.profile_id,
+        operatingContext: 'customer',
         type: 'general',
         title: 'Consultation offer accepted',
         localizedContent: {

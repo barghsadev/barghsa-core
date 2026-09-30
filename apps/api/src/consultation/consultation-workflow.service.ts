@@ -22,6 +22,17 @@ import { settlePaidConsultation } from './consultation-payment.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { canTransitionConsultation, type ConsultationStatus } from './consultation-state.js';
+import {
+  parseConsultationFeeReview,
+  type ConsultationFeeReview,
+  parseConsultationPaidFeeReview,
+  type ConsultationPaidFeeReview,
+  parseConsultationPaidResolutionReview,
+  type ConsultationPaidResolutionReview,
+  parseConsultationOfferReview,
+  type ConsultationOfferReview,
+} from '@barghsa/shared/finance';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 type StaffAction = 'review' | 'request-info' | 'reject' | 'cancel' | 'complete';
@@ -35,9 +46,22 @@ interface RequestRow {
   profile_user_id: string;
   invoice_id: string | null;
   fee: string | null;
+  scope: string | null;
+  deliverables: string | null;
+  product_snapshot: { title?: { fa?: string; en?: string } };
   accepted_at: Date | null;
   accepted_by: string | null;
   offer_valid_until: Date | null;
+}
+
+interface OfferInvoiceRow {
+  id: string;
+  state: InvoiceState;
+  paid_amount: string;
+  total_amount: string;
+  adjustment_kind: 'charge' | 'credit' | null;
+  profile_id: string;
+  consultation_id: string | null;
 }
 
 @Injectable()
@@ -328,6 +352,7 @@ export class ConsultationWorkflowService {
       deliverables: string;
       validUntil: string;
       reason?: string | undefined;
+      expectedReviewHash: string;
     },
     ip: string
   ) {
@@ -375,12 +400,38 @@ export class ConsultationWorkflowService {
           current.offer_valid_until?.getTime() !== validUntil.getTime()
         )
           throw new ConflictException('Fee offer request key was already used');
-        return { requestId: id, status: 'offer_pending' as const, invoiceId: previousKey.id };
+        const saved = (
+          await client.query<{ metadata: unknown }>(
+            `SELECT metadata::jsonb AS metadata FROM audit_log
+             WHERE event='consultation.request.changed'
+               AND metadata::jsonb->>'requestId'=$1
+               AND metadata::jsonb->>'action'='fee_offer_review'
+               AND metadata::jsonb->>'idempotencyKey'=$2 LIMIT 1`,
+            [id, input.idempotencyKey]
+          )
+        ).rows[0];
+        const financialReview = new ReviewSnapshotService().assertStored(
+          saved?.metadata,
+          input.expectedReviewHash,
+          { action: 'consultation.fee-offer', profileId: request.profile_id, resourceId: id }
+        );
+        if (
+          (financialReview as ConsultationFeeReview).data.reason !== (input.reason?.trim() ?? null)
+        )
+          throw new ConflictException('Fee offer request key was already used');
+        return {
+          requestId: id,
+          status: 'offer_pending' as const,
+          invoiceId: previousKey.id,
+          financialReview,
+        };
       }
       if (request.status !== 'under_review' && request.status !== 'offer_pending')
         throw new ConflictException('Consultation is not ready for a fee offer');
       if (request.status === 'offer_pending' && !request.invoice_id)
         throw new ConflictException('Existing consultation offer has no invoice');
+      const financialReview = await this.feeReviewForLocked(client, request, input);
+      new ReviewSnapshotService().assertConfirmed(financialReview, input.expectedReviewHash);
       const line = {
         description: 'Consultation fee / هزینه مشاوره',
         quantity: 1,
@@ -439,14 +490,330 @@ export class ConsultationWorkflowService {
       );
       await this.event(client, id, 'offer_pending', actor.userId, input.reason ?? null);
       await this.notify(client, request, 'offer_pending');
-      return { requestId: id, status: 'offer_pending' as const, invoiceId };
+      await this.audit(
+        client,
+        actor.userId,
+        id,
+        { action: 'fee_offer_review', idempotencyKey: input.idempotencyKey, financialReview },
+        ip
+      );
+      return { requestId: id, status: 'offer_pending' as const, invoiceId, financialReview };
     });
+  }
+
+  private async feeReviewForLocked(
+    client: PoolClient,
+    request: RequestRow,
+    input: {
+      fee: string;
+      scope: string;
+      deliverables: string;
+      validUntil: string;
+      reason?: string | undefined;
+    }
+  ): Promise<ConsultationFeeReview> {
+    const fee = BigInt(input.fee);
+    if (fee <= 0n || fee > 9_223_372_036_854_775_807n)
+      throw new BadRequestException('Consultation fee is outside the supported IRR range');
+    const validUntil = new Date(input.validUntil);
+    if (!Number.isFinite(validUntil.getTime()) || validUntil <= new Date())
+      throw new BadRequestException('Offer validity must be in the future');
+    if (request.status !== 'under_review' && request.status !== 'offer_pending')
+      throw new ConflictException('Consultation is not ready for a fee offer');
+    if (request.status === 'offer_pending' && !request.invoice_id)
+      throw new ConflictException('Existing consultation offer has no invoice');
+    const paidHistory = (
+      await client.query<{ paid: boolean }>(
+        'SELECT EXISTS(SELECT 1 FROM invoices WHERE consultation_id=$1 AND paid_amount>0) AS paid',
+        [request.id]
+      )
+    ).rows[0]?.paid;
+    if (paidHistory)
+      throw new ConflictException('Paid consultation fees require the paid adjustment workflow');
+    let previousInvoice: { id: string; state: string; totalAmount: string } | null = null;
+    if (request.invoice_id) {
+      if (!input.reason?.trim())
+        throw new BadRequestException('A reason is required to replace a consultation offer');
+      const previous = (
+        await client.query<{
+          id: string;
+          state: string;
+          total_amount: string;
+          paid_amount: string;
+          consultation_id: string | null;
+          profile_id: string;
+        }>(
+          `SELECT id,state,total_amount,paid_amount,consultation_id,profile_id
+           FROM invoices WHERE id=$1`,
+          [request.invoice_id]
+        )
+      ).rows[0];
+      if (
+        !previous ||
+        previous.consultation_id !== request.id ||
+        previous.profile_id !== request.profile_id ||
+        BigInt(previous.paid_amount) > 0n ||
+        !['Draft', 'Unpaid', 'Overdue'].includes(previous.state)
+      )
+        throw new ConflictException('Consultation invoice cannot be replaced');
+      previousInvoice = {
+        id: previous.id,
+        state: previous.state,
+        totalAmount: previous.total_amount,
+      };
+    }
+    const title = request.product_snapshot?.title;
+    if (!title?.fa || !title.en)
+      throw new ConflictException('Consultation service title is unavailable');
+    const profileName = (
+      await client.query<{ name: string }>(
+        `SELECT COALESCE(NULLIF(lp.legal_name,''),
+          NULLIF(TRIM(CONCAT_WS(' ',p.first_name,p.last_name)),''),p.id::text) AS name
+         FROM profiles p LEFT JOIN legal_profiles lp ON lp.id=p.id WHERE p.id=$1`,
+        [request.profile_id]
+      )
+    ).rows[0]?.name;
+    if (!profileName) throw new ConflictException('Consultation profile is unavailable');
+    const snapshot = new ReviewSnapshotService().create(
+      { action: 'consultation.fee-offer', profileId: request.profile_id, resourceId: request.id },
+      {
+        serviceTitle: { fa: title.fa, en: title.en },
+        profileName,
+        scope: input.scope,
+        deliverables: input.deliverables,
+        fee: input.fee,
+        validUntil: validUntil.toISOString(),
+        reason: previousInvoice ? input.reason!.trim() : null,
+        previousInvoice,
+        outcome: previousInvoice ? 'replace_unpaid_invoice' : 'issue_invoice',
+      }
+    );
+    const review = parseConsultationFeeReview(snapshot);
+    if (!review) throw new ConflictException('Consultation fee review requires reconciliation');
+    return review;
+  }
+
+  async feeReview(
+    actor: Actor,
+    id: string,
+    input: {
+      fee: string;
+      scope: string;
+      deliverables: string;
+      validUntil: string;
+      reason?: string | undefined;
+    }
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const preview = (
+        await client.query<{ profile_id: string; invoice_id: string | null }>(
+          'SELECT profile_id,invoice_id FROM consultation_requests WHERE id=$1',
+          [id]
+        )
+      ).rows[0];
+      if (!preview) throw new NotFoundException('Consultation request not found');
+      await client.query('SELECT id FROM profiles WHERE id=$1 FOR SHARE', [preview.profile_id]);
+      await requireStaffMutationPermission(client, actor.userId, 'orders:write');
+      await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+      await requireCurrentSession(client, actor);
+      if (preview.invoice_id)
+        await client.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [preview.invoice_id]);
+      const request = await this.lockRequest(client, id);
+      if (request.profile_id !== preview.profile_id || request.invoice_id !== preview.invoice_id)
+        throw new ConflictException('Consultation changed; refresh before acting');
+      const review = await this.feeReviewForLocked(client, request, input);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  private async paidFeeReviewForLocked(
+    client: PoolClient,
+    request: RequestRow,
+    input: { fee: string; reason: string; validUntil: string }
+  ): Promise<ConsultationPaidFeeReview> {
+    const nextFee = BigInt(input.fee);
+    if (nextFee <= 0n || nextFee > 9_223_372_036_854_775_807n)
+      throw new BadRequestException('Consultation fee is outside the supported IRR range');
+    const validUntil = new Date(input.validUntil);
+    if (!Number.isFinite(validUntil.getTime()) || validUntil <= new Date())
+      throw new BadRequestException('Offer validity must be in the future');
+    if (request.status !== 'offer_accepted' || !request.invoice_id || !request.fee)
+      throw new ConflictException('Only an accepted paid consultation can be adjusted');
+    await this.assertCreditsCovered(client, request.id);
+    const invoice = (
+      await client.query<{
+        id: string;
+        state: string;
+        total_amount: string;
+        paid_amount: string;
+        consultation_id: string | null;
+        profile_id: string;
+      }>(
+        `SELECT id,state,total_amount,paid_amount,consultation_id,profile_id
+         FROM invoices WHERE id=$1`,
+        [request.invoice_id]
+      )
+    ).rows[0];
+    if (
+      !invoice ||
+      !['Paid', 'PartiallyRefunded'].includes(invoice.state) ||
+      invoice.consultation_id !== request.id ||
+      invoice.profile_id !== request.profile_id ||
+      BigInt(invoice.paid_amount) <= 0n
+    )
+      throw new ConflictException('Consultation invoice is not paid');
+    const difference = nextFee - BigInt(request.fee);
+    if (difference === 0n) throw new BadRequestException('The revised fee must differ');
+    const title = request.product_snapshot?.title;
+    if (!title?.fa || !title.en || !request.scope || !request.deliverables)
+      throw new ConflictException('Consultation terms are unavailable');
+    const profileName = (
+      await client.query<{ name: string }>(
+        `SELECT COALESCE(NULLIF(lp.legal_name,''),
+          NULLIF(TRIM(CONCAT_WS(' ',p.first_name,p.last_name)),''),p.id::text) AS name
+         FROM profiles p LEFT JOIN legal_profiles lp ON lp.id=p.id WHERE p.id=$1`,
+        [request.profile_id]
+      )
+    ).rows[0]?.name;
+    if (!profileName) throw new ConflictException('Consultation profile is unavailable');
+    const refundPlan: Array<{ invoiceId: string; amount: string; availableBefore: string }> = [];
+    if (difference < 0n) {
+      let remaining = -difference;
+      const paidInvoices = (
+        await client.query<{ id: string; available: string }>(
+          `SELECT i.id,(i.paid_amount-i.refunded_amount-
+            COALESCE((SELECT SUM(r.amount) FROM refunds r WHERE r.invoice_id=i.id
+              AND r.state NOT IN ('Completed','Rejected','Cancelled')),0))::text AS available
+           FROM invoices i WHERE i.consultation_id=$1 AND i.paid_amount>0
+             AND i.adjustment_kind IS DISTINCT FROM 'credit'
+             AND i.state IN ('Paid','PartiallyRefunded')
+           ORDER BY i.created_at DESC,i.id DESC`,
+          [request.id]
+        )
+      ).rows;
+      for (const paid of paidInvoices) {
+        if (remaining === 0n) break;
+        const available = BigInt(paid.available);
+        if (available <= 0n) continue;
+        const amount = remaining < available ? remaining : available;
+        refundPlan.push({
+          invoiceId: paid.id,
+          amount: amount.toString(),
+          availableBefore: available.toString(),
+        });
+        remaining -= amount;
+      }
+      if (remaining > 0n)
+        throw new ConflictException('Refund exceeds available consultation payments');
+    }
+    const snapshot = new ReviewSnapshotService().create(
+      {
+        action: 'consultation.paid-fee-adjustment',
+        profileId: request.profile_id,
+        resourceId: request.id,
+      },
+      {
+        serviceTitle: { fa: title.fa, en: title.en },
+        profileName,
+        scope: request.scope,
+        deliverables: request.deliverables,
+        previousFee: request.fee,
+        revisedFee: input.fee,
+        difference: difference.toString(),
+        adjustmentAmount: (difference < 0n ? -difference : difference).toString(),
+        reason: input.reason,
+        validUntil: validUntil.toISOString(),
+        paidInvoice: {
+          id: invoice.id,
+          state: invoice.state,
+          totalAmount: invoice.total_amount,
+          paidAmount: invoice.paid_amount,
+        },
+        refundPlan,
+        outcome: difference > 0n ? 'charge_invoice' : 'credit_and_wallet_refund',
+      }
+    );
+    const review = parseConsultationPaidFeeReview(snapshot);
+    if (!review)
+      throw new ConflictException('Paid consultation fee review requires reconciliation');
+    return review;
+  }
+
+  async paidFeeReview(
+    actor: Actor,
+    id: string,
+    input: { fee: string; reason: string; validUntil: string }
+  ) {
+    return this.staffFinancialPreview(actor, id, (client, request) =>
+      this.paidFeeReviewForLocked(client, request, input)
+    );
+  }
+
+  private async staffFinancialPreview<T>(
+    actor: Actor,
+    id: string,
+    read: (client: PoolClient, request: RequestRow) => Promise<T>,
+    needsInvoiceWrite = true
+  ): Promise<T> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const preview = (
+        await client.query<{ profile_id: string; invoice_id: string | null }>(
+          'SELECT profile_id,invoice_id FROM consultation_requests WHERE id=$1',
+          [id]
+        )
+      ).rows[0];
+      if (!preview) throw new NotFoundException('Consultation request not found');
+      await client.query('SELECT id FROM profiles WHERE id=$1 FOR SHARE', [preview.profile_id]);
+      await lockDualApprovalThreshold(client, 'read');
+      await requireStaffMutationPermission(client, actor.userId, 'orders:write');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
+      if (needsInvoiceWrite)
+        await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+      await requireCurrentSession(client, actor);
+      const invoices = (
+        await client.query<{ id: string }>(
+          'SELECT id FROM invoices WHERE consultation_id=$1 ORDER BY id',
+          [id]
+        )
+      ).rows;
+      for (const invoice of invoices)
+        await client.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [invoice.id]);
+      const request = await this.lockRequest(client, id);
+      if (request.profile_id !== preview.profile_id || request.invoice_id !== preview.invoice_id)
+        throw new ConflictException('Consultation changed; refresh before acting');
+      const review = await read(client, request);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   async adjustPaidFee(
     actor: Actor,
     id: string,
-    input: { idempotencyKey: string; fee: string; reason: string; validUntil: string },
+    input: {
+      idempotencyKey: string;
+      fee: string;
+      reason: string;
+      validUntil: string;
+      expectedReviewHash: string;
+    },
     ip: string
   ) {
     const nextFee = BigInt(input.fee);
@@ -463,7 +830,13 @@ export class ConsultationWorkflowService {
       async (client, request) => {
         const prior = (
           await client.query<{
-            metadata: { fee: string; reason: string; validUntil: string; result: unknown };
+            metadata: {
+              fee: string;
+              reason: string;
+              validUntil: string;
+              result: unknown;
+              financialReview?: ConsultationPaidFeeReview;
+            };
           }>(
             `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='consultation.fee.adjusted'
            AND metadata::jsonb->>'requestId'=$1 AND metadata::jsonb->>'idempotencyKey'=$2 LIMIT 1`,
@@ -477,32 +850,23 @@ export class ConsultationWorkflowService {
             prior.metadata.validUntil !== validUntil.toISOString()
           )
             throw new ConflictException('Paid fee adjustment key was already used');
+          new ReviewSnapshotService().assertStored(
+            { financialReview: prior.metadata.financialReview },
+            input.expectedReviewHash,
+            {
+              action: 'consultation.paid-fee-adjustment',
+              profileId: request.profile_id,
+              resourceId: id,
+            }
+          );
           return prior.metadata.result;
         }
-        if (request.status !== 'offer_accepted' || !request.invoice_id || !request.fee)
-          throw new ConflictException('Only an accepted paid consultation can be adjusted');
-        await this.assertCreditsCovered(client, id);
-        const current = (
-          await client.query<{
-            state: string;
-            paid_amount: string;
-            consultation_id: string | null;
-          }>('SELECT state,paid_amount,consultation_id FROM invoices WHERE id=$1', [
-            request.invoice_id,
-          ])
-        ).rows[0];
-        if (
-          !current ||
-          !['Paid', 'PartiallyRefunded'].includes(current.state) ||
-          current.consultation_id !== id ||
-          BigInt(current.paid_amount) <= 0n
-        )
-          throw new ConflictException('Consultation invoice is not paid');
-        const difference = nextFee - BigInt(request.fee);
-        if (difference === 0n) throw new BadRequestException('The revised fee must differ');
+        const financialReview = await this.paidFeeReviewForLocked(client, request, input);
+        new ReviewSnapshotService().assertConfirmed(financialReview, input.expectedReviewHash);
+        const difference = BigInt(financialReview.data.difference);
         const adjustment = await this.adjustments.createAdjustmentInvoice(
           {
-            originalInvoiceId: request.invoice_id,
+            originalInvoiceId: financialReview.data.paidInvoice.id,
             amount: difference,
             reason: input.reason,
             actorUserId: actor.userId,
@@ -516,32 +880,12 @@ export class ConsultationWorkflowService {
         const refundIds: string[] = [];
         let nextStatus: ConsultationStatus = 'offer_pending';
         if (difference < 0n) {
-          let remaining = -difference;
-          const paidInvoices = (
-            await client.query<{ id: string; available: string }>(
-              `SELECT i.id,(i.paid_amount-i.refunded_amount-
-              COALESCE((SELECT SUM(r.amount) FROM refunds r WHERE r.invoice_id=i.id
-                AND r.state NOT IN ('Completed','Rejected','Cancelled')),0))::text AS available
-             FROM invoices i WHERE i.consultation_id=$1 AND i.paid_amount>0
-               AND i.adjustment_kind IS DISTINCT FROM 'credit'
-               AND i.state IN ('Paid','PartiallyRefunded')
-             ORDER BY i.created_at DESC,i.id DESC`,
-              [id]
-            )
-          ).rows;
-          const total = paidInvoices.reduce((sum, invoice) => sum + BigInt(invoice.available), 0n);
-          if (total < remaining)
-            throw new ConflictException('Refund exceeds available consultation payments');
-          for (const invoice of paidInvoices) {
-            if (remaining === 0n) break;
-            const available = BigInt(invoice.available);
-            if (available <= 0n) continue;
-            const amount = remaining < available ? remaining : available;
+          for (const invoice of financialReview.data.refundPlan) {
             const refund = await this.refunds.request(
               {
-                invoiceId: invoice.id,
-                amount: amount.toString(),
-                idempotencyKey: `${input.idempotencyKey}:${invoice.id}`,
+                invoiceId: invoice.invoiceId,
+                amount: invoice.amount,
+                idempotencyKey: `${input.idempotencyKey}:${invoice.invoiceId}`,
                 reason: input.reason,
               },
               actor,
@@ -550,7 +894,6 @@ export class ConsultationWorkflowService {
               client
             );
             refundIds.push(refund.id);
-            remaining -= amount;
           }
           nextStatus = 'offer_accepted';
           await client.query(
@@ -568,9 +911,11 @@ export class ConsultationWorkflowService {
         const result = {
           requestId: id,
           status: nextStatus,
-          invoiceId: difference > 0n ? adjustment.adjustmentInvoiceId : request.invoice_id,
+          invoiceId:
+            difference > 0n ? adjustment.adjustmentInvoiceId : financialReview.data.paidInvoice.id,
           adjustmentInvoiceId: adjustment.adjustmentInvoiceId,
           refundIds,
+          financialReview,
         };
         await client.query(
           `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
@@ -584,6 +929,7 @@ export class ConsultationWorkflowService {
               fee: input.fee,
               reason: input.reason,
               validUntil: validUntil.toISOString(),
+              financialReview,
               result,
             }),
             uuidv7(),
@@ -598,11 +944,173 @@ export class ConsultationWorkflowService {
     );
   }
 
+  private async paidResolutionReviewForLocked(
+    client: PoolClient,
+    request: RequestRow,
+    action: 'cancel' | 'reject' | 'recover_refund',
+    reason: string
+  ): Promise<ConsultationPaidResolutionReview> {
+    const uncoveredCredit = await this.uncoveredCredit(client, request.id);
+    const recovery = action === 'recover_refund';
+    const resultingStatus: ConsultationStatus = recovery
+      ? request.status
+      : action === 'cancel'
+        ? 'cancelled'
+        : 'rejected';
+    if (recovery) {
+      if (uncoveredCredit <= 0n)
+        throw new ConflictException('No consultation credit needs a refund');
+    } else {
+      if (!canTransitionConsultation(request.status, resultingStatus, 'staff'))
+        throw new ConflictException('Consultation status changed; refresh before acting');
+      if (uncoveredCredit > 0n)
+        throw new ConflictException(
+          'Resolve the uncovered consultation credit before another financial change'
+        );
+    }
+    const paidInvoices = (
+      await client.query<{ id: string; state: string; available: string }>(
+        `SELECT i.id,i.state,(i.paid_amount-i.refunded_amount-
+          COALESCE((SELECT SUM(r.amount) FROM refunds r WHERE r.invoice_id=i.id
+            AND r.state NOT IN ('Completed','Rejected','Cancelled')),0))::text AS available
+         FROM invoices i WHERE i.consultation_id=$1 AND i.paid_amount>0
+           AND i.adjustment_kind IS DISTINCT FROM 'credit'
+         ORDER BY i.created_at DESC,i.id DESC`,
+        [request.id]
+      )
+    ).rows;
+    if (!recovery && paidInvoices.length === 0)
+      throw new ConflictException('Consultation has no paid invoice');
+    if (
+      !recovery &&
+      paidInvoices.some(
+        (invoice) =>
+          BigInt(invoice.available) > 0n && !['Paid', 'PartiallyRefunded'].includes(invoice.state)
+      )
+    )
+      throw new ConflictException('A partially paid consultation needs finance review');
+    let currentInvoice: {
+      id: string;
+      state: string;
+      paidAmount: string;
+      adjustmentKind: string | null;
+    } | null = null;
+    let cancelInvoiceId: string | null = null;
+    if (request.invoice_id) {
+      const current = (
+        await client.query<{
+          id: string;
+          state: string;
+          paid_amount: string;
+          adjustment_kind: string | null;
+          profile_id: string;
+          consultation_id: string | null;
+        }>(
+          `SELECT id,state,paid_amount,adjustment_kind,profile_id,consultation_id
+           FROM invoices WHERE id=$1`,
+          [request.invoice_id]
+        )
+      ).rows[0];
+      if (
+        !current ||
+        current.profile_id !== request.profile_id ||
+        current.consultation_id !== request.id
+      )
+        throw new ConflictException('Consultation invoice linkage is invalid');
+      currentInvoice = {
+        id: current.id,
+        state: current.state,
+        paidAmount: current.paid_amount,
+        adjustmentKind: current.adjustment_kind,
+      };
+      if (!recovery && BigInt(current.paid_amount) === 0n && current.adjustment_kind !== 'credit') {
+        if (!['Draft', 'Unpaid', 'Overdue'].includes(current.state))
+          throw new ConflictException('Unpaid consultation charge cannot be cancelled');
+        cancelInvoiceId = current.id;
+      }
+    }
+    const refundAllocations: Array<{
+      invoiceId: string;
+      state: string;
+      amount: string;
+      availableBefore: string;
+    }> = [];
+    let remaining = recovery ? uncoveredCredit : 0n;
+    for (const invoice of paidInvoices) {
+      if (recovery && remaining === 0n) break;
+      if (!['Paid', 'PartiallyRefunded'].includes(invoice.state)) continue;
+      const available = BigInt(invoice.available);
+      if (available <= 0n) continue;
+      const amount = recovery && remaining < available ? remaining : available;
+      refundAllocations.push({
+        invoiceId: invoice.id,
+        state: invoice.state,
+        amount: amount.toString(),
+        availableBefore: available.toString(),
+      });
+      if (recovery) remaining -= amount;
+    }
+    if (recovery && remaining > 0n)
+      throw new ConflictException('Refund recovery exceeds available paid balance');
+    const totalRefund = refundAllocations.reduce((sum, item) => sum + BigInt(item.amount), 0n);
+    const title = request.product_snapshot?.title;
+    if (!title?.fa || !title.en)
+      throw new ConflictException('Consultation service title is unavailable');
+    const profileName = (
+      await client.query<{ name: string }>(
+        `SELECT COALESCE(NULLIF(lp.legal_name,''),
+          NULLIF(TRIM(CONCAT_WS(' ',p.first_name,p.last_name)),''),p.id::text) AS name
+         FROM profiles p LEFT JOIN legal_profiles lp ON lp.id=p.id WHERE p.id=$1`,
+        [request.profile_id]
+      )
+    ).rows[0]?.name;
+    if (!profileName) throw new ConflictException('Consultation profile is unavailable');
+    const snapshot = new ReviewSnapshotService().create(
+      {
+        action: 'consultation.paid-resolution',
+        profileId: request.profile_id,
+        resourceId: request.id,
+      },
+      {
+        action,
+        serviceTitle: { fa: title.fa, en: title.en },
+        profileName,
+        currentStatus: request.status,
+        resultingStatus,
+        reason,
+        currentInvoice,
+        cancelInvoiceId,
+        uncoveredCreditBefore: uncoveredCredit.toString(),
+        refundAllocations,
+        totalCredit: recovery ? '0' : totalRefund.toString(),
+        totalRefund: totalRefund.toString(),
+      }
+    );
+    const review = parseConsultationPaidResolutionReview(snapshot);
+    if (!review)
+      throw new ConflictException('Paid consultation resolution requires reconciliation');
+    return review;
+  }
+
+  async paidResolutionReview(
+    actor: Actor,
+    id: string,
+    input: { action: 'cancel' | 'reject' | 'recover_refund'; reason: string }
+  ) {
+    return this.staffFinancialPreview(
+      actor,
+      id,
+      (client, request) =>
+        this.paidResolutionReviewForLocked(client, request, input.action, input.reason),
+      input.action !== 'recover_refund'
+    );
+  }
+
   async closePaid(
     actor: Actor,
     id: string,
     action: 'cancel' | 'reject',
-    input: { idempotencyKey: string; reason: string },
+    input: { idempotencyKey: string; reason: string; expectedReviewHash: string },
     ip: string
   ) {
     return this.staffMutation(
@@ -612,7 +1120,14 @@ export class ConsultationWorkflowService {
       `paid_${action}`,
       async (client, request) => {
         const prior = (
-          await client.query<{ metadata: { action: string; reason: string; result: unknown } }>(
+          await client.query<{
+            metadata: {
+              action: string;
+              reason: string;
+              result: unknown;
+              financialReview?: ConsultationPaidResolutionReview;
+            };
+          }>(
             `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='consultation.paid.closed'
              AND metadata::jsonb->>'requestId'=$1 AND metadata::jsonb->>'idempotencyKey'=$2 LIMIT 1`,
             [id, input.idempotencyKey]
@@ -621,86 +1136,54 @@ export class ConsultationWorkflowService {
         if (prior) {
           if (prior.metadata.action !== action || prior.metadata.reason !== input.reason)
             throw new ConflictException('Paid closure key was already used');
+          new ReviewSnapshotService().assertStored(
+            { financialReview: prior.metadata.financialReview },
+            input.expectedReviewHash,
+            {
+              action: 'consultation.paid-resolution',
+              profileId: request.profile_id,
+              resourceId: id,
+            }
+          );
           return prior.metadata.result;
         }
+        const financialReview = await this.paidResolutionReviewForLocked(
+          client,
+          request,
+          action,
+          input.reason
+        );
+        new ReviewSnapshotService().assertConfirmed(financialReview, input.expectedReviewHash);
         const status: ConsultationStatus = action === 'cancel' ? 'cancelled' : 'rejected';
-        if (!canTransitionConsultation(request.status, status, 'staff'))
-          throw new ConflictException('Consultation status changed; refresh before acting');
-        await this.assertCreditsCovered(client, id);
-        const paidInvoices = (
-          await client.query<{
-            id: string;
-            state: string;
-            available: string;
-          }>(
-            `SELECT i.id,i.state,(i.paid_amount-i.refunded_amount-
-              COALESCE((SELECT SUM(r.amount) FROM refunds r WHERE r.invoice_id=i.id
-                AND r.state NOT IN ('Completed','Rejected','Cancelled')),0))::text AS available
-             FROM invoices i WHERE i.consultation_id=$1 AND i.paid_amount>0
-               AND i.adjustment_kind IS DISTINCT FROM 'credit'
-             ORDER BY i.created_at DESC,i.id DESC`,
-            [id]
-          )
-        ).rows;
-        if (paidInvoices.length === 0)
-          throw new ConflictException('Consultation has no paid invoice');
-        if (
-          paidInvoices.some(
-            (invoice) =>
-              BigInt(invoice.available) > 0n &&
-              !['Paid', 'PartiallyRefunded'].includes(invoice.state)
-          )
-        )
-          throw new ConflictException('A partially paid consultation needs finance review');
-        let cancelledInvoiceId: string | null = null;
-        if (request.invoice_id) {
-          const current = (
-            await client.query<{
-              state: InvoiceState;
-              paid_amount: string;
-              adjustment_kind: string | null;
-            }>('SELECT state,paid_amount,adjustment_kind FROM invoices WHERE id=$1', [
-              request.invoice_id,
-            ])
-          ).rows[0];
-          if (
-            current &&
-            BigInt(current.paid_amount) === 0n &&
-            current.adjustment_kind !== 'credit'
-          ) {
-            if (!['Draft', 'Unpaid', 'Overdue'].includes(current.state))
-              throw new ConflictException('Unpaid consultation charge cannot be cancelled');
-            await this.invoiceStates.transition(request.invoice_id, current.state, 'Cancelled', {
-              actorUserId: actor.userId,
-              reason: input.reason,
-              ip,
-              client,
-            });
-            cancelledInvoiceId = request.invoice_id;
-          }
+        const cancelledInvoiceId = financialReview.data.cancelInvoiceId;
+        if (cancelledInvoiceId) {
+          await this.invoiceStates.transition(
+            cancelledInvoiceId,
+            financialReview.data.currentInvoice!.state as InvoiceState,
+            'Cancelled',
+            { actorUserId: actor.userId, reason: input.reason, ip, client }
+          );
         }
         const creditInvoiceIds: string[] = [];
         const refundIds: string[] = [];
-        for (const invoice of paidInvoices) {
-          const amount = BigInt(invoice.available);
-          if (amount <= 0n) continue;
+        for (const invoice of financialReview.data.refundAllocations) {
           const credit = await this.adjustments.createAdjustmentInvoice(
             {
-              originalInvoiceId: invoice.id,
-              amount: -amount,
+              originalInvoiceId: invoice.invoiceId,
+              amount: -BigInt(invoice.amount),
               reason: input.reason,
               actorUserId: actor.userId,
               actorSession: actor,
-              idempotencyKey: `${input.idempotencyKey}:${invoice.id}`,
+              idempotencyKey: `${input.idempotencyKey}:${invoice.invoiceId}`,
               ip,
             },
             client
           );
           const refund = await this.refunds.request(
             {
-              invoiceId: invoice.id,
-              amount: amount.toString(),
-              idempotencyKey: `${input.idempotencyKey}:${invoice.id}`,
+              invoiceId: invoice.invoiceId,
+              amount: invoice.amount,
+              idempotencyKey: `${input.idempotencyKey}:${invoice.invoiceId}`,
               reason: input.reason,
             },
             actor,
@@ -715,7 +1198,14 @@ export class ConsultationWorkflowService {
           'UPDATE consultation_requests SET status=$2,expected_next_step=NULL,updated_at=NOW() WHERE id=$1',
           [id, status]
         );
-        const result = { requestId: id, status, cancelledInvoiceId, creditInvoiceIds, refundIds };
+        const result = {
+          requestId: id,
+          status,
+          cancelledInvoiceId,
+          creditInvoiceIds,
+          refundIds,
+          financialReview,
+        };
         await client.query(
           `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
            VALUES($1,$2,'consultation.paid.closed',$3::jsonb,$4,$5)`,
@@ -727,6 +1217,7 @@ export class ConsultationWorkflowService {
               idempotencyKey: input.idempotencyKey,
               action,
               reason: input.reason,
+              financialReview,
               result,
             }),
             uuidv7(),
@@ -744,7 +1235,7 @@ export class ConsultationWorkflowService {
   async recoverRefund(
     actor: Actor,
     id: string,
-    input: { idempotencyKey: string; reason: string },
+    input: { idempotencyKey: string; reason: string; expectedReviewHash: string },
     ip: string
   ) {
     return this.staffMutation(
@@ -754,7 +1245,13 @@ export class ConsultationWorkflowService {
       'refund_recovered',
       async (client, request) => {
         const prior = (
-          await client.query<{ metadata: { reason: string; result: unknown } }>(
+          await client.query<{
+            metadata: {
+              reason: string;
+              result: unknown;
+              financialReview?: ConsultationPaidResolutionReview;
+            };
+          }>(
             `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='consultation.refund.recovered'
              AND metadata::jsonb->>'requestId'=$1 AND metadata::jsonb->>'idempotencyKey'=$2 LIMIT 1`,
             [id, input.idempotencyKey]
@@ -763,43 +1260,31 @@ export class ConsultationWorkflowService {
         if (prior) {
           if (prior.metadata.reason !== input.reason)
             throw new ConflictException('Refund recovery key was already used');
+          new ReviewSnapshotService().assertStored(
+            { financialReview: prior.metadata.financialReview },
+            input.expectedReviewHash,
+            {
+              action: 'consultation.paid-resolution',
+              profileId: request.profile_id,
+              resourceId: id,
+            }
+          );
           return prior.metadata.result;
         }
-        let remaining = await this.uncoveredCredit(client, id);
-        if (remaining <= 0n) throw new ConflictException('No consultation credit needs a refund');
-        const paidInvoices = (
-          await client.query<{ id: string; state: string; available: string }>(
-            `SELECT i.id,i.state,(i.paid_amount-i.refunded_amount-
-              COALESCE((SELECT SUM(r.amount) FROM refunds r WHERE r.invoice_id=i.id
-                AND r.state NOT IN ('Completed','Rejected','Cancelled')),0))::text AS available
-             FROM invoices i WHERE i.consultation_id=$1 AND i.paid_amount>0
-               AND i.adjustment_kind IS DISTINCT FROM 'credit'
-             ORDER BY i.created_at DESC,i.id DESC`,
-            [id]
-          )
-        ).rows;
-        const available = paidInvoices.reduce(
-          (sum, invoice) =>
-            sum +
-            (['Paid', 'PartiallyRefunded'].includes(invoice.state) && BigInt(invoice.available) > 0n
-              ? BigInt(invoice.available)
-              : 0n),
-          0n
+        const financialReview = await this.paidResolutionReviewForLocked(
+          client,
+          request,
+          'recover_refund',
+          input.reason
         );
-        if (available < remaining)
-          throw new ConflictException('Refund recovery exceeds available paid balance');
+        new ReviewSnapshotService().assertConfirmed(financialReview, input.expectedReviewHash);
         const refundIds: string[] = [];
-        for (const invoice of paidInvoices) {
-          if (remaining === 0n) break;
-          if (!['Paid', 'PartiallyRefunded'].includes(invoice.state)) continue;
-          const balance = BigInt(invoice.available);
-          if (balance <= 0n) continue;
-          const amount = remaining < balance ? remaining : balance;
+        for (const invoice of financialReview.data.refundAllocations) {
           const refund = await this.refunds.request(
             {
-              invoiceId: invoice.id,
-              amount: amount.toString(),
-              idempotencyKey: `${input.idempotencyKey}:${invoice.id}`,
+              invoiceId: invoice.invoiceId,
+              amount: invoice.amount,
+              idempotencyKey: `${input.idempotencyKey}:${invoice.invoiceId}`,
               reason: input.reason,
             },
             actor,
@@ -808,9 +1293,8 @@ export class ConsultationWorkflowService {
             client
           );
           refundIds.push(refund.id);
-          remaining -= amount;
         }
-        const result = { requestId: id, status: request.status, refundIds };
+        const result = { requestId: id, status: request.status, refundIds, financialReview };
         await client.query(
           `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
            VALUES($1,$2,'consultation.refund.recovered',$3::jsonb,$4,$5)`,
@@ -821,6 +1305,7 @@ export class ConsultationWorkflowService {
               requestId: id,
               idempotencyKey: input.idempotencyKey,
               reason: input.reason,
+              financialReview,
               result,
             }),
             uuidv7(),
@@ -856,6 +1341,7 @@ export class ConsultationWorkflowService {
           {
             userId: request.staff_owner_id,
             profileId: request.profile_id,
+            operatingContext: 'staff',
             type: 'general',
             title: 'Consultation information received',
             localizedContent: {
@@ -892,65 +1378,146 @@ export class ConsultationWorkflowService {
     }
   }
 
+  private async lockedCustomerOffer(
+    client: PoolClient,
+    actor: Actor,
+    id: string,
+    decision: 'accept' | 'decline'
+  ): Promise<{ request: RequestRow; invoice: OfferInvoiceRow; review: ConsultationOfferReview }> {
+    await requireCurrentSession(client, actor);
+    const preview = (
+      await client.query<{ profile_id: string; invoice_id: string | null }>(
+        'SELECT profile_id,invoice_id FROM consultation_requests WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (
+      !preview ||
+      !(await this.orders.mayManageOrders(client, actor.userId, preview.profile_id, true))
+    )
+      throw new NotFoundException('Consultation request not found');
+    if (!preview.invoice_id) throw new ConflictException('Consultation offer has no invoice');
+    const invoice = (
+      await client.query<OfferInvoiceRow>(
+        `SELECT id,state,paid_amount,total_amount,adjustment_kind,profile_id,consultation_id
+         FROM invoices WHERE id=$1 FOR UPDATE`,
+        [preview.invoice_id]
+      )
+    ).rows[0];
+    const request = await this.lockRequest(client, id);
+    if (
+      request.invoice_id !== preview.invoice_id ||
+      request.profile_id !== preview.profile_id ||
+      invoice?.consultation_id !== id ||
+      invoice.profile_id !== request.profile_id
+    )
+      throw new ConflictException('Consultation offer changed; refresh before acting');
+    if (request.status !== 'offer_pending')
+      throw new ConflictException('Consultation offer is no longer pending');
+    if (decision === 'decline') {
+      const paidHistory = (
+        await client.query<{ paid: boolean }>(
+          'SELECT EXISTS(SELECT 1 FROM invoices WHERE consultation_id=$1 AND paid_amount>0) AS paid',
+          [id]
+        )
+      ).rows[0]?.paid;
+      if (paidHistory)
+        throw new ConflictException('Paid consultation requires a staff refund review');
+      if (
+        BigInt(invoice.paid_amount) > 0n ||
+        !['Draft', 'Unpaid', 'Overdue'].includes(invoice.state)
+      )
+        throw new ConflictException('Paid or pending payment requires a refund review');
+    } else if (
+      !request.accepted_at &&
+      request.offer_valid_until &&
+      request.offer_valid_until <= new Date() &&
+      invoice.state !== 'Paid'
+    ) {
+      throw new ConflictException('Consultation offer has expired');
+    }
+    const title = request.product_snapshot?.title;
+    if (
+      !title?.fa ||
+      !title.en ||
+      !request.scope ||
+      !request.deliverables ||
+      !request.fee ||
+      !request.offer_valid_until ||
+      BigInt(request.fee) < BigInt(invoice.total_amount) ||
+      (invoice.adjustment_kind !== null && invoice.adjustment_kind !== 'charge')
+    )
+      throw new ConflictException('Consultation offer requires reconciliation');
+    const snapshot = new ReviewSnapshotService().create(
+      {
+        action: `consultation.offer-${decision}`,
+        profileId: request.profile_id,
+        resourceId: id,
+      },
+      {
+        decision,
+        serviceTitle: { fa: title.fa, en: title.en },
+        scope: request.scope,
+        deliverables: request.deliverables,
+        fee: request.fee,
+        previousFee: (BigInt(request.fee) - BigInt(invoice.total_amount)).toString(),
+        validUntil: request.offer_valid_until.toISOString(),
+        acceptedAt: request.accepted_at?.toISOString() ?? null,
+        invoice: {
+          id: invoice.id,
+          state: invoice.state,
+          totalAmount: invoice.total_amount,
+          paidAmount: invoice.paid_amount,
+          adjustmentKind: invoice.adjustment_kind,
+        },
+        outcome:
+          decision === 'decline'
+            ? 'cancel_unpaid_invoice'
+            : invoice.state === 'Paid'
+              ? 'accepted_paid'
+              : 'payment_required',
+      }
+    );
+    const review = parseConsultationOfferReview(snapshot);
+    if (!review) throw new ConflictException('Consultation offer requires reconciliation');
+    return { request, invoice, review };
+  }
+
+  async customerDecisionReview(actor: Actor, id: string, decision: 'accept' | 'decline') {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const { review } = await this.lockedCustomerOffer(client, actor, id, decision);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async customerDecision(
     actor: Actor,
     id: string,
     decision: 'accept' | 'decline',
     reason: string | undefined,
-    ip: string
+    ip: string,
+    expectedReviewHash: string
   ) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      await requireCurrentSession(client, actor);
-      const preview = (
-        await client.query<{ profile_id: string; invoice_id: string | null }>(
-          'SELECT profile_id,invoice_id FROM consultation_requests WHERE id=$1',
-          [id]
-        )
-      ).rows[0];
-      if (
-        !preview ||
-        !(await this.orders.mayManageOrders(client, actor.userId, preview.profile_id, true))
-      )
-        throw new NotFoundException('Consultation request not found');
-      if (!preview.invoice_id) throw new ConflictException('Consultation offer has no invoice');
-      const invoice = (
-        await client.query<{
-          id: string;
-          state: InvoiceState;
-          paid_amount: string;
-          profile_id: string;
-          consultation_id: string | null;
-        }>(
-          'SELECT id,state,paid_amount,profile_id,consultation_id FROM invoices WHERE id=$1 FOR UPDATE',
-          [preview.invoice_id]
-        )
-      ).rows[0];
-      const request = await this.lockRequest(client, id);
-      if (
-        request.invoice_id !== preview.invoice_id ||
-        request.profile_id !== preview.profile_id ||
-        invoice?.consultation_id !== id ||
-        invoice.profile_id !== request.profile_id
-      )
-        throw new ConflictException('Consultation offer changed; refresh before acting');
-      if (request.status !== 'offer_pending')
-        throw new ConflictException('Consultation offer is no longer pending');
+      const { request, invoice, review } = await this.lockedCustomerOffer(
+        client,
+        actor,
+        id,
+        decision
+      );
+      new ReviewSnapshotService().assertConfirmed(review, expectedReviewHash);
       if (decision === 'decline') {
-        const paidHistory = (
-          await client.query<{ paid: boolean }>(
-            'SELECT EXISTS(SELECT 1 FROM invoices WHERE consultation_id=$1 AND paid_amount>0) AS paid',
-            [id]
-          )
-        ).rows[0]?.paid;
-        if (paidHistory)
-          throw new ConflictException('Paid consultation requires a staff refund review');
-        if (
-          BigInt(invoice.paid_amount) > 0n ||
-          !['Draft', 'Unpaid', 'Overdue'].includes(invoice.state)
-        )
-          throw new ConflictException('Paid or pending payment requires a refund review');
         await this.invoiceStates.transition(invoice.id, invoice.state, 'Cancelled', {
           actorUserId: actor.userId,
           reason: reason?.trim() || 'Customer declined consultation offer',
@@ -967,20 +1534,13 @@ export class ConsultationWorkflowService {
           client,
           actor.userId,
           id,
-          { action: 'offer_declined', invoiceId: invoice.id },
+          { action: 'offer_declined', invoiceId: invoice.id, financialReview: review },
           ip
         );
         await requireCurrentSession(client, actor);
         await client.query('COMMIT');
-        return { requestId: id, status: 'offer_declined' as const };
+        return { requestId: id, status: 'offer_declined' as const, financialReview: review };
       }
-      if (
-        !request.accepted_at &&
-        request.offer_valid_until &&
-        request.offer_valid_until <= new Date() &&
-        invoice.state !== 'Paid'
-      )
-        throw new ConflictException('Consultation offer has expired');
       if (!request.accepted_at) {
         await client.query(
           'UPDATE consultation_requests SET accepted_at=NOW(),accepted_by=$2,updated_at=NOW() WHERE id=$1',
@@ -993,16 +1553,21 @@ export class ConsultationWorkflowService {
           actor.userId,
           'Offer accepted; payment pending'
         );
+      }
+      const paid = invoice.state === 'Paid';
+      if (paid) await settlePaidConsultation(client, id, invoice.id, actor.userId);
+      if (!request.accepted_at || paid)
         await this.audit(
           client,
           actor.userId,
           id,
-          { action: 'offer_accepted_pending_payment', invoiceId: invoice.id },
+          {
+            action: paid ? 'offer_accepted_paid' : 'offer_accepted_pending_payment',
+            invoiceId: invoice.id,
+            financialReview: review,
+          },
           ip
         );
-      }
-      const paid = invoice.state === 'Paid';
-      if (paid) await settlePaidConsultation(client, id, invoice.id, actor.userId);
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return {
@@ -1010,6 +1575,7 @@ export class ConsultationWorkflowService {
         invoiceId: invoice.id,
         status: paid ? ('offer_accepted' as const) : ('offer_pending' as const),
         paymentRequired: !paid,
+        financialReview: review,
       };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -1098,7 +1664,8 @@ export class ConsultationWorkflowService {
     const request = (
       await client.query<RequestRow>(
         `SELECT r.id,r.profile_id,r.status,r.staff_owner_id,r.staff_team,r.submitted_by,
-         r.invoice_id,r.fee,r.accepted_at,r.accepted_by,r.offer_valid_until,p.user_id AS profile_user_id
+         r.invoice_id,r.fee,r.scope,r.deliverables,r.product_snapshot,
+         r.accepted_at,r.accepted_by,r.offer_valid_until,p.user_id AS profile_user_id
        FROM consultation_requests r JOIN profiles p ON p.id=r.profile_id
        WHERE r.id=$1 FOR UPDATE OF r`,
         [id]
@@ -1167,6 +1734,7 @@ export class ConsultationWorkflowService {
         {
           userId,
           profileId: request.profile_id,
+          operatingContext: 'customer',
           type: 'general',
           title: 'Consultation status changed',
           localizedContent: {

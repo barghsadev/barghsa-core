@@ -12,6 +12,27 @@ import type {
   NotificationSendResult,
 } from '@barghsa/shared/notifications';
 
+/** Unknown account-only events fail delivery instead of appearing in the wrong workspace. */
+export function inboxOperatingContext(
+  eventKey: string,
+  linkRoute: string | null,
+  profileId: string | null
+): 'staff' | 'customer' | 'account' {
+  if (/^(admin|finance)\./.test(eventKey) || /^\/(admin|staff|crm)(\/|\?|$)/.test(linkRoute ?? ''))
+    return 'staff';
+  if (/^auth\./.test(eventKey) || /^\/settings\/security(\/|\?|$)/.test(linkRoute ?? ''))
+    return 'account';
+  if (
+    profileId ||
+    /^(payment|profile)/.test(eventKey) ||
+    /^\/(app|dashboard|wallet|invoices|orders|electricity|saving|contracts|tickets|settings|support)(\/|\?|$)/.test(
+      linkRoute ?? ''
+    )
+  )
+    return 'customer';
+  throw new Error('in_app transport requires an operating context for account notices');
+}
+
 /**
  * In-app notification transport adapter (E-05, T-05.02.01).
  *
@@ -64,10 +85,15 @@ export class InAppNotificationTransport implements INotificationTransport {
       ? `outbox:${payload.outboxId}`
       : `transport:${payload.idempotencyKey}`;
     const recipient = payload.recipientId === payload.profileId ? null : payload.recipientId;
+    const linkRoute = defaultInboxLink(payload.eventKey, payload.payload);
+    const operatingContext = inboxOperatingContext(payload.eventKey, linkRoute, payload.profileId);
+    if (operatingContext === 'staff' && !recipient)
+      throw new Error('in_app staff notices require an account recipient');
     const existing = await pool.query(
       `SELECT id FROM in_app_notifications WHERE delivery_key=$1
-      AND profile_id IS NOT DISTINCT FROM $2::uuid AND recipient_user_id IS NOT DISTINCT FROM $3::text`,
-      [deliveryKey, payload.profileId, recipient]
+      AND profile_id IS NOT DISTINCT FROM $2::uuid AND recipient_user_id IS NOT DISTINCT FROM $3::text
+      AND operating_context=$4 AND type=$5`,
+      [deliveryKey, payload.profileId, recipient, operatingContext, payload.eventKey]
     );
     if (existing.rows[0]) return { status: 'delivered', providerRef: existing.rows[0].id };
     const content = defaultInboxContent(payload.eventKey, payload.payload);
@@ -107,17 +133,16 @@ export class InAppNotificationTransport implements INotificationTransport {
         throw new Error('Inbox template data incomplete');
       content[template.locale as 'fa' | 'en'] = { title: title.output, body: body.output };
     }
-    const linkRoute = defaultInboxLink(payload.eventKey, payload.payload);
-
     const inserted: { rows: Array<{ id: string }> } = await pool.query(
       `INSERT INTO in_app_notifications
-         (profile_id, type, title_i18n_key, body_i18n_key, params, link_route, delivery_key,recipient_user_id,localized_content)
-       VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9)
+         (profile_id, operating_context, type, title_i18n_key, body_i18n_key, params, link_route, delivery_key,recipient_user_id,localized_content)
+       VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9,$10)
        ON CONFLICT (delivery_key) DO UPDATE SET delivery_key=EXCLUDED.delivery_key
-       WHERE in_app_notifications.profile_id IS NOT DISTINCT FROM EXCLUDED.profile_id AND in_app_notifications.type=EXCLUDED.type AND in_app_notifications.recipient_user_id IS NOT DISTINCT FROM EXCLUDED.recipient_user_id
+       WHERE in_app_notifications.profile_id IS NOT DISTINCT FROM EXCLUDED.profile_id AND in_app_notifications.type=EXCLUDED.type AND in_app_notifications.recipient_user_id IS NOT DISTINCT FROM EXCLUDED.recipient_user_id AND in_app_notifications.operating_context IS NOT DISTINCT FROM EXCLUDED.operating_context
        RETURNING id`,
       [
         payload.profileId,
+        operatingContext,
         payload.eventKey,
         `notifications.${payload.eventKey}.title`,
         `notifications.${payload.eventKey}.body`,

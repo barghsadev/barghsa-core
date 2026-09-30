@@ -5,7 +5,9 @@ import {
   type TicketActor,
   type TicketAccess,
 } from './ticket-actor.js';
-import { requireCurrentSession } from '../session/session-step-up.js';
+import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { SessionService } from '../session/session.service.js';
 import {
   SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
   toServiceResponseTargets,
@@ -16,10 +18,12 @@ import { NotificationsService } from '../notifications/notifications.service.js'
 import type { PoolClient } from 'pg';
 import { z } from 'zod';
 import { TicketAttachmentsService } from './ticket-attachments.service.js';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
-import { Injectable, Logger, HttpException } from '@nestjs/common';
-import { getDbPool } from '@barghsa/db';
+import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
+import { getDbPool, loadStoredStorageConfiguration } from '@barghsa/db';
+import { runtimeStorageProvider, type StorageProvider } from '@barghsa/shared/storage';
+import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
 export interface TicketRow {
@@ -27,7 +31,12 @@ export interface TicketRow {
   userId: string;
   subject: string;
   body: string;
-  category: 'general' | 'billing' | 'orders';
+  category: 'general' | 'billing' | 'orders' | 'privacy';
+  privacyRequestType?: PrivacyRequestType | null;
+  privacyClosureCompletedAt?: Date | null;
+  privacyClosureAnonymized?: boolean | null;
+  privacyClosureRetained?: Record<string, number> | null;
+  privacyClosureExportTicketId?: string | null;
   profileId: string | null;
   relatedEntityType: string | null;
   relatedEntityId: string | null;
@@ -89,6 +98,25 @@ export interface PaginatedResult<T> {
   totalPages: number;
 }
 
+export type PrivacyRequestType = 'export' | 'closure';
+export interface ClosureBlocker {
+  code:
+    | 'legalHold'
+    | 'unpaidInvoice'
+    | 'pendingRefund'
+    | 'walletBalance'
+    | 'activeContract'
+    | 'activeOrder'
+    | 'pendingVerification'
+    | 'pendingWalletTransaction'
+    | 'activeProductWorkflow'
+    | 'pendingProfileAccess'
+    | 'securityReview';
+  count: number;
+  owner: 'legal' | 'finance' | 'customer' | 'contracts' | 'privacy';
+  nextStep: string;
+}
+
 function mapRow(row: Record<string, unknown>): TicketRow {
   return {
     id: row.id as string,
@@ -96,6 +124,11 @@ function mapRow(row: Record<string, unknown>): TicketRow {
     subject: row.subject as string,
     body: row.body as string,
     category: (row.category as TicketRow['category']) ?? 'general',
+    privacyRequestType: (row.privacy_request_type as PrivacyRequestType) ?? null,
+    privacyClosureCompletedAt: (row.privacy_closure_completed_at as Date) ?? null,
+    privacyClosureAnonymized: (row.privacy_closure_anonymized as boolean) ?? null,
+    privacyClosureRetained: (row.privacy_closure_retained as Record<string, number>) ?? null,
+    privacyClosureExportTicketId: (row.privacy_closure_export_ticket_id as string) ?? null,
     profileId: (row.profile_id as string) ?? null,
     relatedEntityType: (row.related_entity_type as string) ?? null,
     relatedEntityId: (row.related_entity_id as string) ?? null,
@@ -129,7 +162,12 @@ export class TicketsService {
   constructor(
     private readonly attachmentService: TicketAttachmentsService = new TicketAttachmentsService(),
     private readonly notifications: NotificationsService = new NotificationsService(),
-    private readonly assignmentService: StaffAssignmentService = new StaffAssignmentService()
+    private readonly assignmentService: StaffAssignmentService = new StaffAssignmentService(),
+    @Inject(STORAGE_PROVIDER)
+    private readonly exportStorage: StorageProvider = runtimeStorageProvider(
+      loadStoredStorageConfiguration
+    ),
+    private readonly sessions: SessionService = new SessionService()
   ) {}
 
   private readonly logger = new Logger(TicketsService.name);
@@ -161,8 +199,9 @@ export class TicketsService {
     actorId: string,
     event: 'created' | 'status' | 'reply' | 'internal' | 'assigned'
   ) {
-    const recipients = new Map<string, boolean>();
-    if (event !== 'internal' && ticket.userId !== actorId) recipients.set(ticket.userId, false);
+    const recipients: Array<{ userId: string; staff: boolean }> = [];
+    if (event !== 'internal' && ticket.userId !== actorId)
+      recipients.push({ userId: ticket.userId, staff: false });
     if (ticket.assignedTo && ticket.assignedTo !== actorId) {
       const user = (
         await client.query(
@@ -179,7 +218,7 @@ export class TicketsService {
             ['*', 'tickets:*', 'tickets:read', 'tickets:assigned'].includes(permission)
           ))
       )
-        recipients.set(ticket.assignedTo, true);
+        recipients.push({ userId: ticket.assignedTo, staff: true });
     }
     if (!ticket.assignedTo && (event === 'created' || actorId === ticket.userId)) {
       const staff = (
@@ -198,10 +237,10 @@ export class TicketsService {
             ['*', 'tickets:*', 'tickets:read'].includes(permission)
           )
         )
-          recipients.set(user.user_id, true);
+          recipients.push({ userId: user.user_id, staff: true });
       }
     }
-    for (const [userId, staff] of recipients) {
+    for (const { userId, staff } of recipients) {
       const localizedContent = Object.fromEntries(
         (['fa', 'en'] as const).map((locale) => [
           locale,
@@ -215,6 +254,7 @@ export class TicketsService {
       await this.notifications.create(
         {
           userId,
+          operatingContext: staff ? 'staff' : 'customer',
           type: 'general',
           title: localizedContent.en.title,
           body: localizedContent.en.body,
@@ -290,6 +330,573 @@ export class TicketsService {
       .map((user) => ({ id: user.id as string, name: user.name as string }));
   }
 
+  private async activeOwnedProfile(client: PoolClient, userId: string): Promise<string> {
+    const result = await client.query<{ id: string }>(
+      `SELECT p.id FROM profiles p
+       JOIN users u ON u.user_id=p.user_id AND u.disabled_at IS NULL
+       LEFT JOIN user_profile_contexts c ON c.user_id=u.user_id
+       WHERE p.user_id=$1 AND NOT p.archived
+         AND ((c.user_id IS NULL AND p.is_default) OR p.id=c.profile_id)
+       FOR UPDATE OF p`,
+      [userId]
+    );
+    if (!result.rows[0]) throw new HttpException('Active owned profile required', 403);
+    return result.rows[0].id;
+  }
+
+  private async closureBlockers(client: PoolClient, profileId: string): Promise<ClosureBlocker[]> {
+    const counts = (
+      await client.query<{
+        legal_holds: number;
+        unpaid_invoices: number;
+        pending_refunds: number;
+        wallet_balances: number;
+        active_contracts: number;
+        active_orders: number;
+        pending_verification: number;
+        pending_wallet_transactions: number;
+        active_product_workflows: number;
+        pending_profile_access: number;
+      }>(
+        `SELECT
+          GREATEST(
+            (SELECT count(*)::int FROM document_legal_holds h
+             WHERE h.released_at IS NULL AND (h.expires_at IS NULL OR h.expires_at>now())
+               AND (h.profile_id=$1 OR EXISTS (
+                 SELECT 1 FROM documents d WHERE d.id=h.document_id AND d.profile_id=$1))),
+            (SELECT CASE WHEN EXISTS (
+              SELECT 1 FROM documents d WHERE d.profile_id=$1 AND document_is_held(d.id)
+            ) THEN 1 ELSE 0 END)
+          ) AS legal_holds,
+          (SELECT count(*)::int FROM invoices WHERE profile_id=$1
+           AND state IN ('Unpaid','Overdue','PaymentUnderReview','PartiallyFunded')) AS unpaid_invoices,
+          (SELECT count(*)::int FROM refunds WHERE profile_id=$1
+           AND state IN ('Requested','Approved','Processing','Failed')) AS pending_refunds,
+          (SELECT count(*)::int FROM wallets WHERE profile_id=$1
+           AND (posted_balance<>0 OR reserved_balance<>0)) AS wallet_balances,
+          (SELECT count(*)::int FROM contracts WHERE profile_id=$1
+           AND state NOT IN ('Completed','Cancelled')) AS active_contracts,
+          (SELECT count(*)::int FROM orders o WHERE o.profile_id=$1
+           AND (o.status IN ('DRAFT','PENDING') OR
+             (o.status='CONFIRMED' AND NOT EXISTS (
+               SELECT 1 FROM contracts c WHERE c.order_id=o.id
+               AND c.state IN ('Completed','Cancelled'))))) AS active_orders,
+          (SELECT count(*)::int FROM verification_cases WHERE profile_id=$1
+           AND status IN ('Open','Under Review')) AS pending_verification,
+          (SELECT count(*)::int FROM wallet_transactions wt
+           JOIN wallets w ON w.profile_id=wt.wallet_id WHERE w.profile_id=$1
+           AND wt.state IN ('Pending','Reserved')) AS pending_wallet_transactions,
+          (SELECT count(*)::int FROM electricity_orders WHERE profile_id=$1
+           AND status NOT IN ('completed','rejected','cancelled'))
+          + (SELECT count(*)::int FROM saving_orders WHERE profile_id=$1
+             AND status NOT IN ('completed','rejected','cancelled'))
+          + (SELECT count(*)::int FROM solar_construction_requests WHERE profile_id=$1
+             AND status NOT IN ('contract_created','rejected','cancelled'))
+          + (SELECT count(*)::int FROM consultation_requests WHERE profile_id=$1
+             AND status NOT IN ('completed','offer_declined','rejected','cancelled'))
+          + (SELECT count(*)::int FROM electricity_quantity_increase_requests WHERE profile_id=$1
+             AND status NOT IN ('effective','rejected','expired'))
+          + (SELECT count(*)::int FROM electricity_price_adjustments WHERE profile_id=$1
+             AND status='proposed') AS active_product_workflows,
+          (SELECT count(*)::int FROM profile_invitations WHERE profile_id=$1 AND status='Pending')
+          + (SELECT count(*)::int FROM profile_ownership_transfers WHERE profile_id=$1 AND status='Pending')
+            AS pending_profile_access`,
+        [profileId]
+      )
+    ).rows[0]!;
+    return [
+      { code: 'legalHold', count: counts.legal_holds, owner: 'legal', nextStep: 'contactSupport' },
+      {
+        code: 'unpaidInvoice',
+        count: counts.unpaid_invoices,
+        owner: 'finance',
+        nextStep: 'payInvoice',
+      },
+      {
+        code: 'pendingRefund',
+        count: counts.pending_refunds,
+        owner: 'finance',
+        nextStep: 'resolveRefund',
+      },
+      {
+        code: 'walletBalance',
+        count: counts.wallet_balances,
+        owner: 'customer',
+        nextStep: 'settleWallet',
+      },
+      {
+        code: 'activeContract',
+        count: counts.active_contracts,
+        owner: 'contracts',
+        nextStep: 'completeContract',
+      },
+      {
+        code: 'activeOrder',
+        count: counts.active_orders,
+        owner: 'contracts',
+        nextStep: 'completeContract',
+      },
+      {
+        code: 'pendingVerification',
+        count: counts.pending_verification,
+        owner: 'privacy',
+        nextStep: 'staffReview',
+      },
+      {
+        code: 'pendingWalletTransaction',
+        count: counts.pending_wallet_transactions,
+        owner: 'finance',
+        nextStep: 'settleWallet',
+      },
+      {
+        code: 'activeProductWorkflow',
+        count: counts.active_product_workflows,
+        owner: 'contracts',
+        nextStep: 'completeContract',
+      },
+      {
+        code: 'pendingProfileAccess',
+        count: counts.pending_profile_access,
+        owner: 'privacy',
+        nextStep: 'staffReview',
+      },
+      { code: 'securityReview', count: 1, owner: 'privacy', nextStep: 'staffReview' },
+    ];
+  }
+
+  async lifecyclePreview(actor: TicketActor) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const profileId = await this.activeOwnedProfile(client, actor.userId);
+      const blockers = await this.closureBlockers(client, profileId);
+      const requests = (
+        await client.query<{
+          id: string;
+          privacy_request_type: PrivacyRequestType;
+          status: TicketRow['status'];
+          created_at: Date;
+          privacy_export_job_id: string | null;
+          privacy_export_expires_at: Date | null;
+        }>(
+          `SELECT id,privacy_request_type,status,created_at,privacy_export_job_id,privacy_export_expires_at FROM tickets
+           WHERE profile_id=$1 AND user_id=$2 AND privacy_request_type IS NOT NULL
+           ORDER BY created_at DESC,id DESC LIMIT 10`,
+          [profileId, actor.userId]
+        )
+      ).rows.map((row) => ({
+        ticketId: row.id,
+        type: row.privacy_request_type,
+        status: row.status,
+        createdAt: row.created_at,
+        exportJobId: row.privacy_export_job_id,
+        exportExpiresAt: row.privacy_export_expires_at,
+      }));
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return { profileId, blockers, requests };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async createLifecycleRequest(
+    actor: TicketActor,
+    type: PrivacyRequestType,
+    idempotencyKey: string,
+    locale: 'fa' | 'en'
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const profileId = await this.activeOwnedProfile(client, actor.userId);
+      const previous = (
+        await client.query<{
+          id: string;
+          profile_id: string;
+          privacy_request_type: PrivacyRequestType;
+        }>(
+          `SELECT id,profile_id,privacy_request_type FROM tickets
+           WHERE user_id=$1 AND privacy_request_key=$2`,
+          [actor.userId, idempotencyKey]
+        )
+      ).rows[0];
+      if (previous && (previous.profile_id !== profileId || previous.privacy_request_type !== type))
+        throw new HttpException('Idempotency key belongs to a different request', 409);
+      if (previous) {
+        await requireCurrentSession(client, actor);
+        await client.query('COMMIT');
+        return { ticketId: previous.id, profileId, type, created: false };
+      }
+      const ticketId = randomUUID();
+      const assignment = await this.assignmentService.choose(
+        client,
+        'ticket',
+        ticketId,
+        actor.userId,
+        ['privacy'],
+        [actor.userId]
+      );
+      const ticket = mapRow(
+        (
+          await client.query(
+            `INSERT INTO tickets(id,user_id,profile_id,subject,body,category,priority,status,
+             assigned_to,assigned_team_id,privacy_request_type,privacy_request_key)
+           VALUES($1,$2,$3,$4,$5,'privacy','normal',
+             CASE WHEN $6::text IS NULL THEN 'open' ELSE 'in_progress' END,$6,$7,$8,$9)
+           RETURNING *`,
+            [
+              ticketId,
+              actor.userId,
+              profileId,
+              t(`tickets.privacy.${type}.subject`, locale),
+              t(`tickets.privacy.${type}.body`, locale),
+              assignment?.userId ?? null,
+              assignment?.teamId ?? null,
+              type,
+              idempotencyKey,
+            ]
+          )
+        ).rows[0]
+      );
+      const blockers = type === 'closure' ? await this.closureBlockers(client, profileId) : [];
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata)
+         VALUES($1,$2,'profile_lifecycle_requested',$3::jsonb)`,
+        [
+          randomUUID(),
+          actor.userId,
+          JSON.stringify({
+            ticketId,
+            profileId,
+            type,
+            blockers: blockers
+              .filter((blocker) => blocker.count > 0)
+              .map(({ code, count }) => ({ code, count })),
+          }),
+        ]
+      );
+      await this.notifyTicket(client, ticket, actor.userId, 'created');
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return { ticketId, profileId, type, created: true };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  private async closureExecutionPreview(client: PoolClient, ticketId: string) {
+    const request = (
+      await client.query<{
+        id: string;
+        user_id: string;
+        profile_id: string;
+        status: TicketRow['status'];
+        privacy_closure_completed_at: Date | null;
+        privacy_closure_anonymized: boolean | null;
+        profile_type: 'INDIVIDUAL' | 'LEGAL';
+        archived: boolean;
+        profile_updated_at: Date;
+      }>(
+        `SELECT t.id,t.user_id,t.profile_id,t.status,t.privacy_closure_completed_at,
+           t.privacy_closure_anonymized,p.profile_type,p.archived,p.updated_at AS profile_updated_at
+         FROM tickets t JOIN profiles p ON p.id=t.profile_id
+         WHERE t.id=$1 AND t.privacy_request_type='closure'`,
+        [ticketId]
+      )
+    ).rows[0];
+    if (!request) throw new HttpException('Closure request not found', 404);
+    const blockers = await this.closureBlockers(client, request.profile_id);
+    const retained = (
+      await client.query<{
+        orders: number;
+        contracts: number;
+        invoices: number;
+        wallets: number;
+        refunds: number;
+        documents: number;
+        verification_cases: number;
+        electricity_orders: number;
+        saving_orders: number;
+        solar_requests: number;
+        consultations: number;
+        electricity_increases: number;
+        price_adjustments: number;
+      }>(
+        `SELECT
+          (SELECT count(*)::int FROM orders WHERE profile_id=$1) AS orders,
+          (SELECT count(*)::int FROM contracts WHERE profile_id=$1) AS contracts,
+          (SELECT count(*)::int FROM invoices WHERE profile_id=$1) AS invoices,
+          (SELECT count(*)::int FROM wallets WHERE profile_id=$1) AS wallets,
+          (SELECT count(*)::int FROM refunds WHERE profile_id=$1) AS refunds,
+          (SELECT count(*)::int FROM documents WHERE profile_id=$1) AS documents,
+          (SELECT count(*)::int FROM verification_cases WHERE profile_id=$1) AS verification_cases,
+          (SELECT count(*)::int FROM electricity_orders WHERE profile_id=$1) AS electricity_orders,
+          (SELECT count(*)::int FROM saving_orders WHERE profile_id=$1) AS saving_orders,
+          (SELECT count(*)::int FROM solar_construction_requests WHERE profile_id=$1) AS solar_requests,
+          (SELECT count(*)::int FROM consultation_requests WHERE profile_id=$1) AS consultations,
+          (SELECT count(*)::int FROM electricity_quantity_increase_requests WHERE profile_id=$1) AS electricity_increases,
+          (SELECT count(*)::int FROM electricity_price_adjustments WHERE profile_id=$1) AS price_adjustments`,
+        [request.profile_id]
+      )
+    ).rows[0]!;
+    const exportRequest = (
+      await client.query<{ id: string; privacy_export_expires_at: Date | null }>(
+        `SELECT id,privacy_export_expires_at FROM tickets
+         WHERE profile_id=$1 AND user_id=$2 AND privacy_request_type='export'
+         ORDER BY created_at DESC,id DESC LIMIT 1`,
+        [request.profile_id, request.user_id]
+      )
+    ).rows[0];
+    const anonymizeProfile =
+      request.profile_type === 'INDIVIDUAL' &&
+      Object.values(retained).every((count) => count === 0);
+    const eligible =
+      !request.archived &&
+      !request.privacy_closure_completed_at &&
+      !['resolved', 'closed'].includes(request.status) &&
+      blockers.every((blocker) => blocker.code === 'securityReview' || blocker.count === 0);
+    const previewVersion = createHash('sha256')
+      .update(
+        JSON.stringify({
+          ticketId,
+          status: request.status,
+          profileUpdatedAt: request.profile_updated_at,
+          archived: request.archived,
+          blockers,
+          retained,
+          exportTicketId: exportRequest?.id ?? null,
+        })
+      )
+      .digest('hex');
+    return {
+      ticketId,
+      profileId: request.profile_id,
+      ownerUserId: request.user_id,
+      completedAt: request.privacy_closure_completed_at,
+      anonymized: request.privacy_closure_anonymized,
+      eligible,
+      blockers,
+      retained,
+      anonymizeProfile,
+      exportTicketId: exportRequest?.id ?? null,
+      exportExpiresAt: exportRequest?.privacy_export_expires_at ?? null,
+      previewVersion,
+    };
+  }
+
+  async staffClosurePreview(actor: TicketActor, ticketId: string) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:users:edit');
+      const access = await authorizeTicketAccess(client, actor, actor.userId, 'write');
+      if (!access.canAssignOthers) throw new HttpException('Full ticket access required', 403);
+      const preview = await this.closureExecutionPreview(client, ticketId);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return preview;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async staffExecuteClosure(actor: TicketActor, ticketId: string, previewVersion: string) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN ISOLATION LEVEL SERIALIZABLE');
+      const request = (
+        await client.query<{ profile_id: string; user_id: string }>(
+          `SELECT profile_id,user_id FROM tickets WHERE id=$1 AND privacy_request_type='closure'`,
+          [ticketId]
+        )
+      ).rows[0];
+      if (!request) throw new HttpException('Closure request not found', 404);
+      if (request.user_id === actor.userId)
+        throw new HttpException('A different staff member must approve this closure', 403);
+      await requireStaffMutationPermission(
+        client,
+        actor.userId,
+        'admin:users:edit',
+        request.user_id
+      );
+      const access = await authorizeTicketAccess(client, actor, actor.userId, 'write');
+      if (!access.canAssignOthers) throw new HttpException('Full ticket access required', 403);
+      await requireSessionStepUp(client, actor);
+      await client.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE', [request.profile_id]);
+      await client.query('SELECT id FROM tickets WHERE id=$1 FOR UPDATE', [ticketId]);
+      const preview = await this.closureExecutionPreview(client, ticketId);
+      if (preview.completedAt) {
+        await requireSessionStepUp(client, actor);
+        await client.query('COMMIT');
+        return { ...preview, created: false };
+      }
+      if (!preview.eligible || preview.previewVersion !== previewVersion)
+        throw new HttpException('Closure preview changed or blockers remain', 409);
+      const now = new Date();
+      if (preview.anonymizeProfile) {
+        await client.query(
+          `UPDATE profiles SET title=NULL,contact_email=NULL,contact_mobile=NULL,
+             first_name=NULL,last_name=NULL,national_id=NULL,updated_at=$2
+           WHERE id=$1`,
+          [preview.profileId, now]
+        );
+        await client.query(
+          `UPDATE addresses SET full_address='[redacted]',postal_code='0000000000',
+             updated_at=$2 WHERE profile_id=$1`,
+          [preview.profileId, now]
+        );
+      }
+      await client.query(
+        `UPDATE profiles SET archived=true,archived_at=$2,archived_reason='privacy_closure',
+           is_default=false,updated_at=$2 WHERE id=$1`,
+        [preview.profileId, now]
+      );
+      await client.query('UPDATE user_profile_contexts SET profile_id=NULL WHERE profile_id=$1', [
+        preview.profileId,
+      ]);
+      await this.sessions.revokeAllUserSessions(preview.ownerUserId, undefined, client);
+      await client.query(
+        `UPDATE tickets SET status='closed',privacy_closure_completed_at=$2,
+           privacy_closure_actor_id=$3,privacy_closure_anonymized=$4,
+           privacy_closure_retained=$5::jsonb,privacy_closure_export_ticket_id=$6,
+           updated_at=$2 WHERE id=$1`,
+        [
+          ticketId,
+          now,
+          actor.userId,
+          preview.anonymizeProfile,
+          JSON.stringify(preview.retained),
+          preview.exportTicketId,
+        ]
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata) VALUES($1,$2,'profile_closure_executed',$3::jsonb)`,
+        [
+          randomUUID(),
+          actor.userId,
+          JSON.stringify({
+            ticketId,
+            profileId: preview.profileId,
+            ownerUserId: preview.ownerUserId,
+            retained: preview.retained,
+            anonymizedProfileFields: preview.anonymizeProfile,
+            exportTicketId: preview.exportTicketId,
+          }),
+        ]
+      );
+      await requireSessionStepUp(client, actor);
+      await client.query('COMMIT');
+      return { ...preview, completedAt: now, anonymized: preview.anonymizeProfile, created: true };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      if (typeof error === 'object' && error !== null && 'code' in error && error.code === '40001')
+        throw new HttpException('Closure changed; refresh the preview', 409);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async startProfileExport(actor: TicketActor, ticketId: string) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const profileId = await this.activeOwnedProfile(client, actor.userId);
+      const request = (
+        await client.query<{ privacy_export_job_id: string | null }>(
+          `SELECT privacy_export_job_id FROM tickets
+           WHERE id=$1 AND user_id=$2 AND profile_id=$3 AND privacy_request_type='export'
+           FOR UPDATE`,
+          [ticketId, actor.userId, profileId]
+        )
+      ).rows[0];
+      if (!request) throw new HttpException('Export request not found', 404);
+      const jobId = request.privacy_export_job_id ?? randomUUID();
+      if (!request.privacy_export_job_id) {
+        await client.query(
+          `INSERT INTO async_jobs(id,type,payload,created_by,operating_context)
+           VALUES($1,'profile-export',$2::jsonb,$3,'customer')`,
+          [jobId, JSON.stringify({ ticketId, profileId, userId: actor.userId }), actor.userId]
+        );
+        await client.query(`UPDATE tickets SET privacy_export_job_id=$2 WHERE id=$1`, [
+          ticketId,
+          jobId,
+        ]);
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata)
+           VALUES($1,$2,'profile_export_queued',$3::jsonb)`,
+          [
+            randomUUID(),
+            actor.userId,
+            JSON.stringify({ ticketId, profileId, jobId, operatingContext: 'customer' }),
+          ]
+        );
+      }
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return { ticketId, jobId, created: !request.privacy_export_job_id };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async downloadProfileExport(actor: TicketActor, ticketId: string): Promise<string> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const profileId = await this.activeOwnedProfile(client, actor.userId);
+      const request = (
+        await client.query<{ privacy_export_storage_key: string; privacy_export_expires_at: Date }>(
+          `SELECT t.privacy_export_storage_key,t.privacy_export_expires_at FROM tickets t
+           JOIN async_jobs j ON j.id=t.privacy_export_job_id AND j.status='completed'
+           WHERE t.id=$1 AND t.user_id=$2 AND t.profile_id=$3
+             AND t.privacy_request_type='export' AND t.privacy_export_storage_key IS NOT NULL
+             AND t.privacy_export_expires_at>now() FOR UPDATE OF t`,
+          [ticketId, actor.userId, profileId]
+        )
+      ).rows[0];
+      if (!request) throw new HttpException('Export unavailable or expired', 404);
+      const seconds = Math.min(
+        300,
+        Math.floor((request.privacy_export_expires_at.getTime() - Date.now()) / 1000)
+      );
+      if (seconds < 1) throw new HttpException('Export expired', 404);
+      const url = await this.exportStorage.presignedGetUrl(
+        request.privacy_export_storage_key,
+        seconds
+      );
+      await client.query(`UPDATE tickets SET privacy_export_downloaded_at=now() WHERE id=$1`, [
+        ticketId,
+      ]);
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata)
+         VALUES($1,$2,'profile_export_downloaded',$3::jsonb)`,
+        [randomUUID(), actor.userId, JSON.stringify({ ticketId, profileId })]
+      );
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return url;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   /**
    * Create a new support ticket.
    *
@@ -306,7 +913,7 @@ export class TicketsService {
       .object({
         subject: z.string().trim().min(1).max(200),
         body: z.string().trim().min(1).max(10000),
-        category: z.enum(['general', 'billing', 'orders']).default('general'),
+        category: z.enum(['general', 'billing', 'orders', 'privacy']).default('general'),
         profileId: z.uuid().nullable().optional(),
         relatedEntityType: z.enum(['order', 'contract', 'invoice']).nullable().optional(),
         relatedEntityId: z.string().trim().min(1).max(512).nullable().optional(),
@@ -579,6 +1186,8 @@ export class TicketsService {
         )
       ).rows[0];
       if (!row) throw new HttpException('Ticket not found', 404);
+      if (row.privacy_closure_completed_at && row.status !== status)
+        throw new HttpException('Completed closure requests cannot be reopened', 409);
       if (row.status === status) {
         if (actor) await requireCurrentSession(client, actor);
         await client.query('COMMIT');
@@ -754,6 +1363,7 @@ export class TicketsService {
 
     if (options.status) {
       const validStatuses = [
+        'active',
         'open',
         'in_progress',
         'waiting_customer',
@@ -771,9 +1381,13 @@ export class TicketsService {
           400
         );
       }
-      conditions.push(`t.status = $${paramIndex}`);
-      params.push(options.status);
-      paramIndex++;
+      if (options.status === 'active') {
+        conditions.push("t.status IN ('open','in_progress','waiting_customer','waiting_staff')");
+      } else {
+        conditions.push(`t.status = $${paramIndex}`);
+        params.push(options.status);
+        paramIndex++;
+      }
     }
 
     if (options.search?.trim()) {

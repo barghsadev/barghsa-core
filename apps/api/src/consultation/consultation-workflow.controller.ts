@@ -24,6 +24,10 @@ const assignment = z.discriminatedUnion('assignTo', [
 ]);
 const reason = z.object({ reason: z.string().trim().min(1).max(2000) }).strict();
 const optionalReason = z.object({ reason: z.string().trim().min(1).max(2000).optional() }).strict();
+const reviewHash = z.string().regex(/^[a-f0-9]{64}$/);
+const offerReview = z.object({ decision: z.enum(['accept', 'decline']) }).strict();
+const acceptOffer = z.object({ expectedReviewHash: reviewHash }).strict();
+const declineOffer = optionalReason.extend({ expectedReviewHash: reviewHash });
 const feeOffer = z
   .object({
     idempotencyKey: z.string().uuid(),
@@ -32,19 +36,33 @@ const feeOffer = z
     deliverables: z.string().trim().min(1).max(4000),
     validUntil: z.iso.datetime({ offset: true }),
     reason: z.string().trim().min(1).max(2000).optional(),
+    expectedReviewHash: reviewHash,
   })
   .strict();
+const feeReviewInput = feeOffer.omit({ idempotencyKey: true, expectedReviewHash: true });
 const paidFeeAdjustment = z
   .object({
     idempotencyKey: z.string().uuid(),
     fee: z.string().regex(/^[1-9][0-9]{0,18}$/),
     reason: z.string().trim().min(1).max(1000),
     validUntil: z.iso.datetime({ offset: true }),
+    expectedReviewHash: reviewHash,
   })
   .strict();
+const paidFeeReviewInput = paidFeeAdjustment.omit({
+  idempotencyKey: true,
+  expectedReviewHash: true,
+});
 const paidClosure = z
   .object({
     idempotencyKey: z.string().uuid(),
+    reason: z.string().trim().min(1).max(1000),
+    expectedReviewHash: reviewHash,
+  })
+  .strict();
+const paidResolutionInput = z
+  .object({
+    action: z.enum(['cancel', 'reject', 'recover_refund']),
     reason: z.string().trim().min(1).max(1000),
   })
   .strict();
@@ -151,6 +169,18 @@ export class StaffConsultationWorkflowController {
     return this.workflow.setFee(req.session, id, parse(feeOffer, body), req.ip ?? '127.0.0.1');
   }
 
+  @Post('requests/:id/fee-review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Preview the authoritative consultation fee offer and invoice outcome' })
+  @ApiZodBody(feeReviewInput)
+  feeReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.workflow.feeReview(req.session, id, parse(feeReviewInput, body));
+  }
+
   @Post('requests/:id/paid-fee')
   @HttpCode(200)
   @ApiOperation({
@@ -170,6 +200,18 @@ export class StaffConsultationWorkflowController {
     );
   }
 
+  @Post('requests/:id/paid-fee-review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Preview the paid consultation charge or credit and refund allocation' })
+  @ApiZodBody(paidFeeReviewInput)
+  paidFeeReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.workflow.paidFeeReview(req.session, id, parse(paidFeeReviewInput, body));
+  }
+
   @Post('requests/:id/paid-cancel')
   @HttpCode(200)
   @ApiOperation({ summary: 'Cancel a paid consultation and request wallet refunds' })
@@ -186,6 +228,18 @@ export class StaffConsultationWorkflowController {
       parse(paidClosure, body),
       req.ip ?? '127.0.0.1'
     );
+  }
+
+  @Post('requests/:id/paid-resolution-review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Preview paid consultation closure or wallet refund recovery' })
+  @ApiZodBody(paidResolutionInput)
+  paidResolutionReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.workflow.paidResolutionReview(req.session, id, parse(paidResolutionInput, body));
   }
 
   @Post('requests/:id/paid-reject')
@@ -305,6 +359,18 @@ export class StaffConsultationWorkflowController {
 export class CustomerConsultationWorkflowController {
   constructor(private readonly workflow: ConsultationWorkflowService) {}
 
+  @Post('requests/:id/offer-review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Review the current consultation offer and decision outcome' })
+  @ApiZodBody(offerReview)
+  offerReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.workflow.customerDecisionReview(req.session, id, parse(offerReview, body).decision);
+  }
+
   @Post('requests/:id/provide-info')
   @HttpCode(200)
   @ApiOperation({
@@ -327,38 +393,40 @@ export class CustomerConsultationWorkflowController {
   @Post('requests/:id/accept')
   @HttpCode(200)
   @ApiOperation({ summary: 'Accept a consultation offer and proceed to its invoice payment' })
-  @ApiZodBody(empty)
+  @ApiZodBody(acceptOffer)
   accept(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    parse(empty, body);
+    const parsed = parse(acceptOffer, body);
     return this.workflow.customerDecision(
       req.session,
       id,
       'accept',
       undefined,
-      req.ip ?? '127.0.0.1'
+      req.ip ?? '127.0.0.1',
+      parsed.expectedReviewHash
     );
   }
 
   @Post('requests/:id/decline')
   @HttpCode(200)
   @ApiOperation({ summary: 'Decline a consultation offer and cancel its unpaid invoice' })
-  @ApiZodBody(optionalReason)
+  @ApiZodBody(declineOffer)
   decline(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const parsed = parse(optionalReason, body);
+    const parsed = parse(declineOffer, body);
     return this.workflow.customerDecision(
       req.session,
       id,
       'decline',
       parsed.reason,
-      req.ip ?? '127.0.0.1'
+      req.ip ?? '127.0.0.1',
+      parsed.expectedReviewHash
     );
   }
 }

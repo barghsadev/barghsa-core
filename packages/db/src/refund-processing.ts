@@ -261,8 +261,8 @@ async function alertExhausted(
       recipient.user_id,
     ]);
     await client.query(
-      `INSERT INTO in_app_notifications(id,recipient_user_id,type,title_i18n_key,body_i18n_key,localized_content,delivery_key)
-      VALUES($1,$2,'general','notifications.legacy.title','notifications.legacy.body',$3::jsonb,$4)`,
+      `INSERT INTO in_app_notifications(id,recipient_user_id,operating_context,type,title_i18n_key,body_i18n_key,localized_content,delivery_key)
+      VALUES($1,$2,'staff','general','notifications.legacy.title','notifications.legacy.body',$3::jsonb,$4)`,
       [
         uuidv7(),
         recipient.user_id,

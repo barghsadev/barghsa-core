@@ -7,6 +7,7 @@ import {
   submitInvoiceBankReceipt,
   utcTodayIso,
 } from '../lib/invoice-bank-receipt-upload.js';
+import { loadInvoiceBankReceiptSubmissionReview } from '../lib/invoice-bank-receipt-review-action.js';
 const upload = vi.hoisted(() => vi.fn());
 vi.mock('../hooks/useReceiptAttachmentUpload.js', () => ({
   useReceiptAttachmentUpload: () => upload,
@@ -16,8 +17,12 @@ vi.mock('../lib/invoice-bank-receipt-upload.js', async (importOriginal) => {
   const actual = (await importOriginal()) as ReceiptUploadModule;
   return { ...actual, fetchActiveProfileId: vi.fn(), submitInvoiceBankReceipt: vi.fn() };
 });
+vi.mock('../lib/invoice-bank-receipt-review-action.js', () => ({
+  loadInvoiceBankReceiptSubmissionReview: vi.fn(),
+}));
 let container: HTMLDivElement, root: Root;
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   document.documentElement.lang = 'en';
   container = document.createElement('div');
   document.body.appendChild(container);
@@ -27,10 +32,44 @@ beforeEach(() => {
     .mockReset()
     .mockResolvedValue({ ok: true, state: 'Submitted', amount: 100n });
   upload.mockReset().mockResolvedValue('attachment-key');
+  vi.mocked(loadInvoiceBankReceiptSubmissionReview)
+    .mockReset()
+    .mockImplementation(async (input) => ({
+      kind: 'success',
+      review: {
+        schemaVersion: 1,
+        scope: {
+          action: 'invoice.bank-receipt-submission',
+          profileId: 'profile-1',
+          resourceId: input.invoiceId,
+        },
+        data: {
+          invoiceId: input.invoiceId,
+          profileId: 'profile-1',
+          invoiceState: 'Issued',
+          invoiceTotalIrR: '1000',
+          invoicePaidIrR: '0',
+          invoiceRemainingIrR: '1000',
+          amountIrR: input.amountIrR,
+          paymentDate: input.paymentDate,
+          payerReference: input.payerReference,
+          bankName: input.bankName,
+          attachmentKey: input.attachmentKey,
+          fileName: 'receipt.pdf',
+          fileSizeBytes: '7',
+          customerNote: input.customerNote,
+          stateAfterSubmission: 'Submitted',
+          settlementRule: 'after_finance_confirmation',
+          excessRule: 'confirmed_excess_to_wallet',
+        },
+        hash: 'a'.repeat(64),
+      },
+    }));
 });
 afterEach(async () => {
   await act(async () => root.unmount());
   container.remove();
+  vi.unstubAllGlobals();
 });
 const field = (name: string) =>
   container.querySelector(`[data-testid="invoice-receipt-${name}"]`) as HTMLInputElement;
@@ -62,6 +101,19 @@ async function submit() {
       .querySelector('form')!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
   });
+}
+async function confirm() {
+  await act(async () => {
+    await import('../components/InvoiceBankReceiptSubmissionReviewDialog.js');
+  });
+  for (let i = 0; i < 20 && !document.querySelector('[role="dialog"]'); i++) {
+    await act(async () => Promise.resolve());
+  }
+  const button = [...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button')].find(
+    (candidate) => candidate.textContent?.includes('Confirm and submit receipt')
+  );
+  expect(button, document.body.textContent ?? '').toBeDefined();
+  await act(async () => button!.click());
 }
 async function render(onSubmitted?: () => Promise<void>) {
   await act(async () =>
@@ -121,19 +173,24 @@ it('does not upload without an active profile', async () => {
   expect(upload).not.toHaveBeenCalled();
 });
 
-it.each(['missing', 'rejected'])('allows retry after an attachment upload is %s', async (mode) => {
-  await render();
-  await valid();
-  if (mode === 'missing') upload.mockResolvedValueOnce(null);
-  else upload.mockRejectedValueOnce(new Error('offline'));
-  await submit();
-  expect(alert()).not.toBeNull();
-  expect(submitInvoiceBankReceipt).not.toHaveBeenCalled();
-  await file();
-  expect(alert()).toBeNull();
-  await submit();
-  expect(container.querySelector('[role="status"]')).not.toBeNull();
-});
+it.each(['missing', 'rejected'])(
+  'allows retry after an attachment upload is %s',
+  async (mode) => {
+    await render();
+    await valid();
+    if (mode === 'missing') upload.mockResolvedValueOnce(null);
+    else upload.mockRejectedValueOnce(new Error('offline'));
+    await submit();
+    expect(alert()).not.toBeNull();
+    expect(submitInvoiceBankReceipt).not.toHaveBeenCalled();
+    await file();
+    expect(alert()).toBeNull();
+    await submit();
+    await confirm();
+    expect(container.querySelector('[role="status"]')).not.toBeNull();
+  },
+  15_000
+);
 
 it('preserves a failed submission and sends trimmed notes on retry', async () => {
   const onSubmitted = vi.fn().mockResolvedValue(undefined);
@@ -143,10 +200,12 @@ it('preserves a failed submission and sends trimmed notes on retry', async () =>
   await change('note', ' customer note ');
   vi.mocked(submitInvoiceBankReceipt).mockResolvedValueOnce({ ok: false, status: 409 });
   await submit();
+  await confirm();
   expect(alert()).not.toBeNull();
   expect(onSubmitted).not.toHaveBeenCalled();
   expect(field('amount').value).toBe('100');
   await submit();
+  await confirm();
   expect(submitInvoiceBankReceipt).toHaveBeenLastCalledWith({
     invoiceId: 'invoice-1',
     amountIrR: 100n,
@@ -155,12 +214,13 @@ it('preserves a failed submission and sends trimmed notes on retry', async () =>
     bankName: 'Bank Mellat',
     attachmentKey: 'attachment-key',
     customerNote: 'customer note',
+    expectedReviewHash: 'a'.repeat(64),
   });
   expect(onSubmitted).toHaveBeenCalledTimes(1);
   expect(field('amount').value).toBe('');
   expect(field('note').value).toBe('');
   expect(field('bank-name').value).toBe('');
-});
+}, 15_000);
 
 it('ignores another submit while an upload is pending', async () => {
   let finish!: (key: string) => void;
@@ -176,9 +236,12 @@ it('ignores another submit while an upload is pending', async () => {
   await submit();
   expect(upload).toHaveBeenCalledTimes(1);
   await act(async () => finish('attachment-key'));
+  expect(loadInvoiceBankReceiptSubmissionReview).toHaveBeenCalledTimes(1);
+  expect(submitInvoiceBankReceipt).not.toHaveBeenCalled();
+  await confirm();
   expect(submitInvoiceBankReceipt).toHaveBeenCalledTimes(1);
   expect(field('submit').disabled).toBe(false);
-});
+}, 15_000);
 
 it('ignores a profile lookup that finishes after the form unmounts', async () => {
   let finish!: (id: string) => void;

@@ -5,7 +5,7 @@
   "info": {
     "contact": {},
     "description": "Iranian electricity market intelligence platform",
-    "title": "Barghsa API",
+    "title": "API",
     "version": "0.1.0"
   },
   "openapi": "3.0.0",
@@ -474,6 +474,75 @@
         ]
       }
     },
+    "/api/admin/ai-models/{id}/budget": {
+      "put": {
+        "operationId": "AiModelsController_setBudget",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "inputPricePerMillionMicros": {
+                    "maximum": 1000000000,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "monthlyCostLimitMicros": {
+                    "maximum": 1000000000000,
+                    "minimum": 1,
+                    "nullable": true,
+                    "type": "integer"
+                  },
+                  "monthlyTokenLimit": {
+                    "maximum": 1000000000,
+                    "minimum": 1,
+                    "nullable": true,
+                    "type": "integer"
+                  },
+                  "outputPricePerMillionMicros": {
+                    "maximum": 1000000000,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "monthlyTokenLimit",
+                  "monthlyCostLimitMicros",
+                  "inputPricePerMillionMicros",
+                  "outputPricePerMillionMicros"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Updated model with current budget and usage."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Configure monthly token and USD cost limits for an AI model",
+        "tags": [
+          "Admin · AI Models"
+        ]
+      }
+    },
     "/api/admin/ai-models/{id}/test": {
       "post": {
         "description": "Queues a minimal worker request against the configured provider (SSRF-guarded), persists the outcome as the model status, and returns a truncated response preview. The API token is never returned. An unavailable worker returns 504 after the configured wait budget.",
@@ -648,6 +717,44 @@
           }
         },
         "summary": "Initiate a dual-approval request (S-09.07)",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/approval-requests/{id}": {
+      "get": {
+        "operationId": "DualApprovalController_getApprovalRequest",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Approval request"
+          },
+          "403": {
+            "description": "Financial permission required"
+          },
+          "404": {
+            "description": "Request not found"
+          }
+        },
+        "summary": "Read one approval request for a direct staff handoff",
         "tags": [
           "Admin"
         ]
@@ -3464,6 +3571,10 @@
                     "minLength": 1,
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "fee": {
                     "pattern": "^[1-9][0-9]{0,18}$",
                     "type": "string"
@@ -3494,7 +3605,8 @@
                   "fee",
                   "scope",
                   "deliverables",
-                  "validUntil"
+                  "validUntil",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -3513,6 +3625,78 @@
           }
         ],
         "summary": "Issue or replace a consultation fee offer and invoice",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/admin/consultations/requests/{id}/fee-review": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_feeReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "deliverables": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "fee": {
+                    "pattern": "^[1-9][0-9]{0,18}$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "scope": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "validUntil": {
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "fee",
+                  "scope",
+                  "deliverables",
+                  "validUntil"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the authoritative consultation fee offer and invoice outcome",
         "tags": [
           "Admin · Consultations"
         ]
@@ -3537,6 +3721,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -3550,7 +3738,8 @@
                 },
                 "required": [
                   "idempotencyKey",
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -3593,6 +3782,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "fee": {
                     "pattern": "^[1-9][0-9]{0,18}$",
                     "type": "string"
@@ -3617,7 +3810,8 @@
                   "idempotencyKey",
                   "fee",
                   "reason",
-                  "validUntil"
+                  "validUntil",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -3636,6 +3830,67 @@
           }
         ],
         "summary": "Adjust an accepted paid consultation fee with a charge or credit and refund request",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/admin/consultations/requests/{id}/paid-fee-review": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_paidFeeReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "fee": {
+                    "pattern": "^[1-9][0-9]{0,18}$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "validUntil": {
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "fee",
+                  "reason",
+                  "validUntil"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the paid consultation charge or credit and refund allocation",
         "tags": [
           "Admin · Consultations"
         ]
@@ -3660,6 +3915,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -3673,7 +3932,8 @@
                 },
                 "required": [
                   "idempotencyKey",
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -3692,6 +3952,65 @@
           }
         ],
         "summary": "Reject a paid consultation and request wallet refunds",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/admin/consultations/requests/{id}/paid-resolution-review": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_paidResolutionReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "cancel",
+                      "reject",
+                      "recover_refund"
+                    ],
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview paid consultation closure or wallet refund recovery",
         "tags": [
           "Admin · Consultations"
         ]
@@ -3716,6 +4035,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -3729,7 +4052,8 @@
                 },
                 "required": [
                   "idempotencyKey",
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -6268,6 +6592,43 @@
       }
     },
     "/api/admin/external-refunds": {
+      "get": {
+        "operationId": "ExternalRefundController_forInvoice",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read refundable invoice balance and its external bank refund requests",
+        "tags": [
+          "Admin · External bank refunds"
+        ]
+      },
       "post": {
         "operationId": "ExternalRefundController_request",
         "parameters": [],
@@ -6280,6 +6641,10 @@
                   "amount": {
                     "description": "Positive exact int8 IRR",
                     "pattern": "^[0-9]{1,19}$",
+                    "type": "string"
+                  },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
                     "type": "string"
                   },
                   "idempotencyKey": {
@@ -6300,7 +6665,8 @@
                   "invoiceId",
                   "amount",
                   "idempotencyKey",
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -6319,6 +6685,57 @@
           }
         ],
         "summary": "Request an invoice refund by external bank transfer",
+        "tags": [
+          "Admin · External bank refunds"
+        ]
+      }
+    },
+    "/api/admin/external-refunds/review": {
+      "post": {
+        "operationId": "ExternalRefundController_review",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "amount": {
+                    "pattern": "^[0-9]{1,19}$",
+                    "type": "string"
+                  },
+                  "invoiceId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "invoiceId",
+                  "amount",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Authoritative refund review with confirmation hash"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the authoritative bank refund request and confirmation hash",
         "tags": [
           "Admin · External bank refunds"
         ]
@@ -6365,6 +6782,10 @@
                     "minLength": 1,
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "reason": {
                     "description": "Required for reject/cancel",
                     "maxLength": 1000,
@@ -6372,6 +6793,9 @@
                     "type": "string"
                   }
                 },
+                "required": [
+                  "expectedReviewHash"
+                ],
                 "type": "object"
               }
             }
@@ -6389,6 +6813,74 @@
           }
         ],
         "summary": "Approve, reject, cancel, record a transfer or reconcile an external refund",
+        "tags": [
+          "Admin · External bank refunds"
+        ]
+      }
+    },
+    "/api/admin/external-refunds/{id}/{action}/review": {
+      "post": {
+        "operationId": "ExternalRefundController_reviewDecision",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "schema": {
+              "enum": [
+                "approve",
+                "reject",
+                "cancel",
+                "record-transfer",
+                "reconcile"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "bankReference": {
+                    "maxLength": 200,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Authoritative decision review and confirmation hash"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the authoritative external refund decision",
         "tags": [
           "Admin · External bank refunds"
         ]
@@ -7634,13 +8126,20 @@
                     "maxLength": 2000,
                     "minLength": 1,
                     "type": "string"
+                  },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
                   }
                 },
+                "required": [
+                  "expectedReviewHash"
+                ],
                 "type": "object"
               }
             }
           },
-          "required": false
+          "required": true
         },
         "responses": {
           "200": {
@@ -7662,6 +8161,54 @@
           }
         ],
         "summary": "Confirm an invoice bank receipt",
+        "tags": [
+          "Admin · Invoice bank receipts"
+        ]
+      }
+    },
+    "/api/admin/invoices/bank-receipts/{receiptId}/confirm/review": {
+      "post": {
+        "operationId": "InvoiceBankReceiptConfirmationController_review",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "receiptId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "emergencyOverrideReason": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the authoritative invoice bank-receipt confirmation",
         "tags": [
           "Admin · Invoice bank receipts"
         ]
@@ -7844,6 +8391,10 @@
                     "minLength": 1,
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "type": "string"
@@ -7898,6 +8449,7 @@
                 "required": [
                   "profileId",
                   "idempotencyKey",
+                  "expectedReviewHash",
                   "lines"
                 ],
                 "type": "object"
@@ -7970,6 +8522,99 @@
         ]
       }
     },
+    "/api/admin/invoices/manual/review": {
+      "post": {
+        "operationId": "ManualInvoiceController_review",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "contractId": {
+                    "maxLength": 200,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "lines": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "description": {
+                          "maxLength": 1000,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "isTaxable": {
+                          "type": "boolean"
+                        },
+                        "quantity": {
+                          "maximum": 2147483647,
+                          "minimum": 1,
+                          "type": "integer"
+                        },
+                        "unitPrice": {
+                          "pattern": "^\\d{1,19}$",
+                          "type": "string"
+                        },
+                        "vatRate": {
+                          "maximum": 10000,
+                          "minimum": 0,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "description",
+                        "quantity",
+                        "unitPrice",
+                        "vatRate",
+                        "isTaxable"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 100,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "profileId",
+                  "idempotencyKey",
+                  "lines"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review the exact customer, lines, VAT, total and due rule before issuing",
+        "tags": [
+          "Admin · Manual invoices"
+        ]
+      }
+    },
     "/api/admin/invoices/{invoiceId}/corrections": {
       "get": {
         "operationId": "InvoiceCorrectionsController_context",
@@ -8020,6 +8665,10 @@
                   {
                     "additionalProperties": false,
                     "properties": {
+                      "expectedReviewHash": {
+                        "pattern": "^[a-f0-9]{64}$",
+                        "type": "string"
+                      },
                       "idempotencyKey": {
                         "format": "uuid",
                         "type": "string"
@@ -8081,7 +8730,8 @@
                       "kind",
                       "idempotencyKey",
                       "reason",
-                      "lines"
+                      "lines",
+                      "expectedReviewHash"
                     ],
                     "type": "object"
                   },
@@ -8091,6 +8741,10 @@
                       "amount": {
                         "description": "Nonzero signed IRR; absolute value must fit int8. Positive charge, negative credit note. Does not transfer wallet funds.",
                         "pattern": "^-?\\d{1,19}$",
+                        "type": "string"
+                      },
+                      "expectedReviewHash": {
+                        "pattern": "^[a-f0-9]{64}$",
                         "type": "string"
                       },
                       "idempotencyKey": {
@@ -8113,7 +8767,8 @@
                       "kind",
                       "idempotencyKey",
                       "reason",
-                      "amount"
+                      "amount",
+                      "expectedReviewHash"
                     ],
                     "type": "object"
                   }
@@ -8146,6 +8801,137 @@
           }
         ],
         "summary": "Cancel and replace before payment, or create a signed adjustment after payment",
+        "tags": [
+          "Admin · Invoice corrections"
+        ]
+      }
+    },
+    "/api/admin/invoices/{invoiceId}/corrections/review": {
+      "post": {
+        "operationId": "InvoiceCorrectionsController_review",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "amount": {
+                        "pattern": "^-?\\d{1,19}$",
+                        "type": "string"
+                      },
+                      "kind": {
+                        "enum": [
+                          "adjustment"
+                        ],
+                        "type": "string"
+                      },
+                      "reason": {
+                        "maxLength": 1000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason",
+                      "amount"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "kind": {
+                        "enum": [
+                          "replacement"
+                        ],
+                        "type": "string"
+                      },
+                      "lines": {
+                        "items": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "description": {
+                              "maxLength": 1000,
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "isTaxable": {
+                              "type": "boolean"
+                            },
+                            "quantity": {
+                              "maximum": 2147483647,
+                              "minimum": 1,
+                              "type": "integer"
+                            },
+                            "unitPrice": {
+                              "pattern": "^\\d{1,19}$",
+                              "type": "string"
+                            },
+                            "vatRate": {
+                              "maximum": 10000,
+                              "minimum": 0,
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "description",
+                            "quantity",
+                            "unitPrice",
+                            "vatRate",
+                            "isTaxable"
+                          ],
+                          "type": "object"
+                        },
+                        "maxItems": 100,
+                        "minItems": 1,
+                        "type": "array"
+                      },
+                      "reason": {
+                        "maxLength": 1000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason",
+                      "lines"
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Current financial review and confirmation hash"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview an unpaid-invoice replacement or paid adjustment",
         "tags": [
           "Admin · Invoice corrections"
         ]
@@ -11062,6 +11848,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "reason": {
                     "maxLength": 1000,
                     "minLength": 1,
@@ -11069,7 +11859,8 @@
                   }
                 },
                 "required": [
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -11125,6 +11916,218 @@
     "/api/admin/solar/requests/{id}/create-contract": {
       "post": {
         "operationId": "StaffSolarFinalController_createContract",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "changeDescription": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "commercialValue": {
+                    "oneOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "amountIrr": {
+                            "type": "string"
+                          },
+                          "kind": {
+                            "enum": [
+                              "fixed"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "amountIrr"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "description": {
+                            "maxLength": 500,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "kind": {
+                            "enum": [
+                              "variable"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "description"
+                        ],
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "invoiceLines": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "description": {
+                          "maxLength": 1000,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "isTaxable": {
+                          "type": "boolean"
+                        },
+                        "quantity": {
+                          "maximum": 2147483647,
+                          "minimum": 1,
+                          "type": "integer"
+                        },
+                        "unitPrice": {
+                          "pattern": "^\\d{1,19}$",
+                          "type": "string"
+                        },
+                        "vatRate": {
+                          "maximum": 10000,
+                          "minimum": 0,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "description",
+                        "quantity",
+                        "unitPrice",
+                        "vatRate",
+                        "isTaxable"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 100,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "source": {
+                    "oneOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "kind": {
+                            "enum": [
+                              "template"
+                            ],
+                            "type": "string"
+                          },
+                          "templateVersionId": {
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "templateVersionId"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "documentId": {
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                            "type": "string"
+                          },
+                          "kind": {
+                            "enum": [
+                              "document"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "documentId"
+                        ],
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "text": {
+                    "maxLength": 60000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "title": {
+                    "maxLength": 200,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "profileId",
+                  "idempotencyKey",
+                  "title",
+                  "text",
+                  "changeDescription",
+                  "commercialValue",
+                  "source",
+                  "invoiceLines",
+                  "expectedReviewHash"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a linked solar draft contract and issue its initial invoice",
+        "tags": [
+          "Admin · Solar final decisions"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/create-contract/review": {
+      "post": {
+        "operationId": "StaffSolarFinalController_reviewContract",
         "parameters": [
           {
             "in": "path",
@@ -11323,7 +12326,7 @@
             "bearer": []
           }
         ],
-        "summary": "Create a linked solar draft contract and issue its initial invoice",
+        "summary": "Review the solar contract and initial invoice before issuance",
         "tags": [
           "Admin · Solar final decisions"
         ]
@@ -11371,6 +12374,26 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedReviewHash"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": ""
@@ -11410,10 +12433,15 @@
                     "maxLength": 2000,
                     "minLength": 1,
                     "type": "string"
+                  },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
                   }
                 },
                 "required": [
-                  "description"
+                  "description",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -11432,6 +12460,63 @@
           }
         ],
         "summary": "Request an additional or replacement solar document",
+        "tags": [
+          "Admin · Solar documents"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/documents/review-set-decision": {
+      "post": {
+        "operationId": "StaffSolarDocumentsController_reviewSetDecision",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "decision": {
+                    "enum": [
+                      "request_additional",
+                      "advance"
+                    ],
+                    "type": "string"
+                  },
+                  "description": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "decision"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review current solar document set before a staff stage decision",
         "tags": [
           "Admin · Solar documents"
         ]
@@ -11578,6 +12663,26 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedReviewHash"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": ""
@@ -11589,6 +12694,64 @@
           }
         ],
         "summary": "Approve a solar request after confirmed postal receipt",
+        "tags": [
+          "Admin · Solar final decisions"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/final-decision/review": {
+      "post": {
+        "operationId": "StaffSolarFinalController_reviewDecision",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "decision": {
+                    "enum": [
+                      "approve",
+                      "reject",
+                      "close-no-contract"
+                    ],
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "decision"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review the current solar request before a final decision",
         "tags": [
           "Admin · Solar final decisions"
         ]
@@ -11613,6 +12776,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "reason": {
                     "maxLength": 1000,
                     "minLength": 1,
@@ -11620,7 +12787,8 @@
                   }
                 },
                 "required": [
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -11657,6 +12825,26 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedReviewHash"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": ""
@@ -11692,6 +12880,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "reason": {
                     "maxLength": 1000,
                     "minLength": 1,
@@ -11699,7 +12891,8 @@
                   }
                 },
                 "required": [
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -11742,6 +12935,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "reason": {
                     "maxLength": 1000,
                     "minLength": 1,
@@ -11749,7 +12946,8 @@
                   }
                 },
                 "required": [
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -11768,6 +12966,64 @@
           }
         ],
         "summary": "Mark postal originals not received with a reason",
+        "tags": [
+          "Admin · Solar postal documents"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/postal/review": {
+      "post": {
+        "operationId": "StaffSolarPostalController_reviewDecision",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "decision": {
+                    "enum": [
+                      "received",
+                      "incomplete",
+                      "not_received"
+                    ],
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "decision"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review the current shipment before a staff postal decision",
         "tags": [
           "Admin · Solar postal documents"
         ]
@@ -13402,6 +14658,43 @@
       }
     },
     "/api/admin/wallet-refunds": {
+      "get": {
+        "operationId": "WalletRefundController_forInvoice",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read refundable invoice balance and its wallet refund requests",
+        "tags": [
+          "Admin · Wallet refunds"
+        ]
+      },
       "post": {
         "operationId": "WalletRefundController_request",
         "parameters": [],
@@ -13414,6 +14707,10 @@
                   "amount": {
                     "description": "Positive exact int8 IRR",
                     "pattern": "^[0-9]{1,19}$",
+                    "type": "string"
+                  },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
                     "type": "string"
                   },
                   "idempotencyKey": {
@@ -13434,7 +14731,8 @@
                   "invoiceId",
                   "amount",
                   "idempotencyKey",
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -13487,6 +14785,57 @@
         ]
       }
     },
+    "/api/admin/wallet-refunds/review": {
+      "post": {
+        "operationId": "WalletRefundController_review",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "amount": {
+                    "pattern": "^[0-9]{1,19}$",
+                    "type": "string"
+                  },
+                  "invoiceId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "invoiceId",
+                  "amount",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Authoritative refund review with confirmation hash"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the authoritative wallet refund request and confirmation hash",
+        "tags": [
+          "Admin · Wallet refunds"
+        ]
+      }
+    },
     "/api/admin/wallet-refunds/{id}/{action}": {
       "post": {
         "operationId": "WalletRefundController_decide",
@@ -13521,6 +14870,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "reason": {
                     "description": "Required for reject and cancel",
                     "maxLength": 1000,
@@ -13528,6 +14881,9 @@
                     "type": "string"
                   }
                 },
+                "required": [
+                  "expectedReviewHash"
+                ],
                 "type": "object"
               }
             }
@@ -13545,6 +14901,68 @@
           }
         ],
         "summary": "Approve, reject, cancel or atomically process a wallet refund",
+        "tags": [
+          "Admin · Wallet refunds"
+        ]
+      }
+    },
+    "/api/admin/wallet-refunds/{id}/{action}/review": {
+      "post": {
+        "operationId": "WalletRefundController_reviewDecision",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "schema": {
+              "enum": [
+                "approve",
+                "reject",
+                "cancel",
+                "process"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Authoritative decision review and confirmation hash"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the authoritative wallet refund decision",
         "tags": [
           "Admin · Wallet refunds"
         ]
@@ -13850,6 +15268,66 @@
         "summary": "Dashboard warning for unresolved provider chargebacks",
         "tags": [
           "Admin · Wallet chargebacks"
+        ]
+      }
+    },
+    "/api/ai/health": {
+      "get": {
+        "operationId": "AiHealthController_health",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Inspect AI queue capacity and model circuit status",
+        "tags": [
+          "Admin · AI Health"
+        ]
+      }
+    },
+    "/api/ai/knowledge/availability": {
+      "get": {
+        "operationId": "AiKnowledgeChatController_availability",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Check whether the active profile has a knowledge assistant",
+        "tags": [
+          "Customer · AI knowledge assistant"
+        ]
+      }
+    },
+    "/api/ai/knowledge/questions": {
+      "post": {
+        "operationId": "AiKnowledgeChatController_ask",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Ask a read-only question using published shared knowledge bases",
+        "tags": [
+          "Customer · AI knowledge assistant"
         ]
       }
     },
@@ -14941,6 +16419,24 @@
         ]
       }
     },
+    "/api/auth/sessions/context": {
+      "post": {
+        "operationId": "SessionController_switchContext",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Session credentials rotated for the new context."
+          },
+          "403": {
+            "description": "Staff context is not available."
+          }
+        },
+        "summary": "Switch between staff and customer operating contexts",
+        "tags": [
+          "Sessions"
+        ]
+      }
+    },
     "/api/auth/sessions/revoke-all": {
       "post": {
         "operationId": "SessionController_revokeAllSessions",
@@ -15194,6 +16690,54 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "description": "Comma-separated consultation request statuses",
+            "in": "query",
+            "name": "statuses",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Included UTC submission timestamp (ISO with milliseconds)",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Excluded UTC submission timestamp (ISO with milliseconds)",
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Literal substring search, up to 120 characters",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "enum": [
+                "submitted_at:desc",
+                "submitted_at:asc"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -15310,7 +16854,15 @@
             "application/json": {
               "schema": {
                 "additionalProperties": false,
-                "properties": {},
+                "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedReviewHash"
+                ],
                 "type": "object"
               }
             }
@@ -15352,12 +16904,19 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "reason": {
                     "maxLength": 2000,
                     "minLength": 1,
                     "type": "string"
                   }
                 },
+                "required": [
+                  "expectedReviewHash"
+                ],
                 "type": "object"
               }
             }
@@ -15375,6 +16934,58 @@
           }
         ],
         "summary": "Decline a consultation offer and cancel its unpaid invoice",
+        "tags": [
+          "Consultation requests"
+        ]
+      }
+    },
+    "/api/consultations/requests/{id}/offer-review": {
+      "post": {
+        "operationId": "CustomerConsultationWorkflowController_offerReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "decision": {
+                    "enum": [
+                      "accept",
+                      "decline"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "decision"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review the current consultation offer and decision outcome",
         "tags": [
           "Consultation requests"
         ]
@@ -17606,6 +19217,10 @@
                     "pattern": "^[0-9a-f]{64}$",
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -17615,6 +19230,7 @@
                 "required": [
                   "expectedAmendmentSha256",
                   "expectedAdjustmentIrR",
+                  "expectedReviewHash",
                   "idempotencyKey"
                 ],
                 "type": "object"
@@ -18250,6 +19866,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -18269,6 +19889,7 @@
                 "required": [
                   "idempotencyKey",
                   "expectedVersionId",
+                  "expectedReviewHash",
                   "reason"
                 ],
                 "type": "object"
@@ -18283,6 +19904,51 @@
           }
         },
         "summary": "Cancel an unpublished electricity order and queue any mandatory refund",
+        "tags": [
+          "Electricity"
+        ]
+      }
+    },
+    "/api/electricity/orders/{orderId}/cancel-review": {
+      "post": {
+        "operationId": "ElectricityOrderController_cancelReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Authoritative cancellation review."
+          }
+        },
+        "summary": "Preview exact invoice and refund outcome of cancelling an electricity order",
         "tags": [
           "Electricity"
         ]
@@ -19454,6 +21120,10 @@
                   "customerNote": {
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
                   "payerReference": {
                     "type": "string"
                   },
@@ -19466,7 +21136,8 @@
                   "amount",
                   "paymentDate",
                   "payerReference",
-                  "attachmentKey"
+                  "attachmentKey",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -19497,6 +21168,81 @@
           }
         ],
         "summary": "Submit a bank receipt against an invoice (Submitted until staff confirm)",
+        "tags": [
+          "Invoices"
+        ]
+      }
+    },
+    "/api/invoices/{invoiceId}/bank-receipts/review": {
+      "post": {
+        "operationId": "CustomerInvoiceController_reviewBankReceipt",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "amount": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  "attachmentKey": {
+                    "type": "string"
+                  },
+                  "bankName": {
+                    "maxLength": 128,
+                    "type": "string"
+                  },
+                  "customerNote": {
+                    "type": "string"
+                  },
+                  "payerReference": {
+                    "type": "string"
+                  },
+                  "paymentDate": {
+                    "format": "date",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "amount",
+                  "paymentDate",
+                  "payerReference",
+                  "attachmentKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Server-confirmed invoice and receipt snapshot."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review an invoice bank receipt before submission",
         "tags": [
           "Invoices"
         ]
@@ -19652,6 +21398,131 @@
         "summary": "Pay the confirmed remaining invoice amount in one atomic wallet debit",
         "tags": [
           "Invoices"
+        ]
+      }
+    },
+    "/api/jobs/{id}": {
+      "get": {
+        "operationId": "JobsController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read your async job status",
+        "tags": [
+          "Jobs"
+        ]
+      }
+    },
+    "/api/jobs/{id}/result": {
+      "get": {
+        "operationId": "JobsController_result",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Job is still queued or processing"
+          },
+          "204": {
+            "description": "Job completed without a result URL"
+          },
+          "302": {
+            "description": "Redirect to the completed result"
+          },
+          "409": {
+            "description": "Job failed"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Open your completed async job result",
+        "tags": [
+          "Jobs"
+        ]
+      }
+    },
+    "/api/jobs/{id}/retry": {
+      "post": {
+        "operationId": "JobsController_retry",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Retry your failed async job",
+        "tags": [
+          "Jobs"
+        ]
+      }
+    },
+    "/api/jobs/{id}/status": {
+      "get": {
+        "operationId": "JobsController_status",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read your async job status",
+        "tags": [
+          "Jobs"
         ]
       }
     },
@@ -21422,6 +23293,54 @@
             }
           },
           {
+            "description": "Comma-separated saving order statuses",
+            "in": "query",
+            "name": "statuses",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Included UTC submission timestamp (ISO with milliseconds)",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Excluded UTC submission timestamp (ISO with milliseconds)",
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Literal substring search, up to 120 characters",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "enum": [
+                "submitted_at:desc",
+                "submitted_at:asc"
+              ],
+              "type": "string"
+            }
+          },
+          {
             "in": "query",
             "name": "status",
             "required": false,
@@ -22155,6 +24074,54 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "description": "Comma-separated solar request statuses",
+            "in": "query",
+            "name": "statuses",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Included UTC submission timestamp (ISO with milliseconds)",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Excluded UTC submission timestamp (ISO with milliseconds)",
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Literal substring search, up to 120 characters",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "enum": [
+                "submitted_at:desc",
+                "submitted_at:asc"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -22204,6 +24171,10 @@
                         ],
                         "type": "string"
                       },
+                      "expectedReviewHash": {
+                        "pattern": "^[a-f0-9]{64}$",
+                        "type": "string"
+                      },
                       "gridType": {
                         "enum": [
                           "on_grid",
@@ -22247,6 +24218,7 @@
                       "submissionKey",
                       "gridType",
                       "agreementAccepted",
+                      "expectedReviewHash",
                       "buildingType",
                       "propertyForm",
                       "structuralFrame",
@@ -22271,6 +24243,10 @@
                         "enum": [
                           "non_household"
                         ],
+                        "type": "string"
+                      },
+                      "expectedReviewHash": {
+                        "pattern": "^[a-f0-9]{64}$",
                         "type": "string"
                       },
                       "gridType": {
@@ -22326,6 +24302,7 @@
                         "exclusiveMinimum": true,
                         "maximum": 1000000,
                         "minimum": 0,
+                        "multipleOf": 0.01,
                         "type": "number"
                       }
                     },
@@ -22334,6 +24311,7 @@
                       "submissionKey",
                       "gridType",
                       "agreementAccepted",
+                      "expectedReviewHash",
                       "buildingType",
                       "siteCategory",
                       "installationSurface",
@@ -22533,6 +24511,201 @@
           }
         ],
         "summary": "Save a profile-owned solar request form draft",
+        "tags": [
+          "Solar construction requests"
+        ]
+      }
+    },
+    "/api/solar/requests/review": {
+      "post": {
+        "operationId": "SolarRequestController_review",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "agreementAccepted": {
+                        "enum": [
+                          true
+                        ],
+                        "type": "boolean"
+                      },
+                      "billIdentifier": {
+                        "pattern": "^[0-9]{6,13}$",
+                        "type": "string"
+                      },
+                      "buildingCompletionDate": {
+                        "format": "date",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                        "type": "string"
+                      },
+                      "buildingType": {
+                        "enum": [
+                          "building_apartment"
+                        ],
+                        "type": "string"
+                      },
+                      "gridType": {
+                        "enum": [
+                          "on_grid",
+                          "off_grid"
+                        ],
+                        "type": "string"
+                      },
+                      "profileId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "propertyForm": {
+                        "enum": [
+                          "apartment",
+                          "villa"
+                        ],
+                        "type": "string"
+                      },
+                      "structuralFrame": {
+                        "enum": [
+                          "concrete",
+                          "steel",
+                          "other"
+                        ],
+                        "type": "string"
+                      },
+                      "submissionKey": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "totalUnits": {
+                        "maximum": 100000,
+                        "minimum": 1,
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "profileId",
+                      "submissionKey",
+                      "gridType",
+                      "agreementAccepted",
+                      "buildingType",
+                      "propertyForm",
+                      "structuralFrame",
+                      "buildingCompletionDate"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "agreementAccepted": {
+                        "enum": [
+                          true
+                        ],
+                        "type": "boolean"
+                      },
+                      "billIdentifier": {
+                        "pattern": "^[0-9]{6,13}$",
+                        "type": "string"
+                      },
+                      "buildingType": {
+                        "enum": [
+                          "non_household"
+                        ],
+                        "type": "string"
+                      },
+                      "gridType": {
+                        "enum": [
+                          "on_grid",
+                          "off_grid"
+                        ],
+                        "type": "string"
+                      },
+                      "installationSurface": {
+                        "enum": [
+                          "land",
+                          "rooftop",
+                          "both"
+                        ],
+                        "type": "string"
+                      },
+                      "profileId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "siteAddressId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "siteCategory": {
+                        "enum": [
+                          "agricultural",
+                          "industrial"
+                        ],
+                        "type": "string"
+                      },
+                      "siteDescription": {
+                        "maxLength": 2000,
+                        "type": "string"
+                      },
+                      "siteRelationship": {
+                        "enum": [
+                          "owner",
+                          "tenant",
+                          "authorized_operator"
+                        ],
+                        "type": "string"
+                      },
+                      "submissionKey": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "usableAreaSqm": {
+                        "exclusiveMinimum": true,
+                        "maximum": 1000000,
+                        "minimum": 0,
+                        "multipleOf": 0.01,
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "profileId",
+                      "submissionKey",
+                      "gridType",
+                      "agreementAccepted",
+                      "buildingType",
+                      "siteCategory",
+                      "installationSurface",
+                      "usableAreaSqm",
+                      "siteAddressId",
+                      "siteRelationship"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review the authoritative solar request details before submission",
         "tags": [
           "Solar construction requests"
         ]
@@ -22801,6 +24974,10 @@
                     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -22827,6 +25004,7 @@
                   "percentageBps",
                   "reason",
                   "contractualBasis",
+                  "expectedReviewHash",
                   "idempotencyKey"
                 ],
                 "type": "object"
@@ -22846,6 +25024,80 @@
           }
         ],
         "summary": "Publish a future electricity price adjustment for customer review",
+        "tags": [
+          "Staff · Electricity contract changes"
+        ]
+      }
+    },
+    "/api/staff/electricity/contracts/{id}/price-adjustments/review": {
+      "post": {
+        "operationId": "StaffElectricityPriceAdjustmentController_review",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "contractualBasis": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "effectiveFrom": {
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "type": "string"
+                  },
+                  "expectedVersionId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "percentageBps": {
+                    "pattern": "^-?[0-9]{1,18}$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedVersionId",
+                  "effectiveFrom",
+                  "percentageBps",
+                  "reason",
+                  "contractualBasis"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review the current priced electricity adjustment proposal",
         "tags": [
           "Staff · Electricity contract changes"
         ]
@@ -22917,6 +25169,10 @@
                     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -22924,7 +25180,8 @@
                   }
                 },
                 "required": [
-                  "idempotencyKey"
+                  "idempotencyKey",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -22943,6 +25200,53 @@
           }
         ],
         "summary": "Approve a pending increase and issue its immutable digital amendment",
+        "tags": [
+          "Staff · Electricity contract changes"
+        ]
+      }
+    },
+    "/api/staff/electricity/increase-requests/{requestId}/approve/review": {
+      "post": {
+        "operationId": "StaffElectricityIncreaseController_approveReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "effectiveFrom": {
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the quantity increase amendment before staff approval",
         "tags": [
           "Staff · Electricity contract changes"
         ]
@@ -22967,6 +25271,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -22980,7 +25288,8 @@
                 },
                 "required": [
                   "reason",
-                  "idempotencyKey"
+                  "idempotencyKey",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -22999,6 +25308,56 @@
           }
         ],
         "summary": "Reject a pending increase request with an explanation",
+        "tags": [
+          "Staff · Electricity contract changes"
+        ]
+      }
+    },
+    "/api/staff/electricity/increase-requests/{requestId}/reject/review": {
+      "post": {
+        "operationId": "StaffElectricityIncreaseController_rejectReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the quantity increase rejection before staff confirmation",
         "tags": [
           "Staff · Electricity contract changes"
         ]
@@ -23097,6 +25456,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -23110,7 +25473,8 @@
                 },
                 "required": [
                   "idempotencyKey",
-                  "expectedVersionId"
+                  "expectedVersionId",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -23124,6 +25488,58 @@
           }
         },
         "summary": "Approve the exact current preliminary electricity contract",
+        "tags": [
+          "Staff · Electricity orders"
+        ]
+      }
+    },
+    "/api/staff/electricity/orders/{id}/financial-review": {
+      "post": {
+        "operationId": "ElectricityStaffReviewController_financialReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "approve",
+                      "request-changes",
+                      "reject"
+                    ],
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Authoritative staff decision review."
+          }
+        },
+        "summary": "Preview the exact staff electricity decision and financial outcome",
         "tags": [
           "Staff · Electricity orders"
         ]
@@ -23148,6 +25564,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -23167,6 +25587,7 @@
                 "required": [
                   "idempotencyKey",
                   "expectedVersionId",
+                  "expectedReviewHash",
                   "reason"
                 ],
                 "type": "object"
@@ -23205,6 +25626,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -23224,6 +25649,7 @@
                 "required": [
                   "idempotencyKey",
                   "expectedVersionId",
+                  "expectedReviewHash",
                   "reason"
                 ],
                 "type": "object"
@@ -23530,6 +25956,10 @@
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -23550,6 +25980,7 @@
                   "idempotencyKey",
                   "expectedVersionId",
                   "expectedAddressId",
+                  "expectedReviewHash",
                   "addressId",
                   "reason"
                 ],
@@ -23570,9 +26001,146 @@
         ]
       }
     },
+    "/api/staff/saving/orders/{id}/amend-address-review": {
+      "post": {
+        "operationId": "SavingFulfillmentController_amendAddressReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "addressId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "expectedAddressId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "expectedVersionId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedVersionId",
+                  "expectedAddressId",
+                  "addressId",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Preview the paid saving order address amendment before confirmation",
+        "tags": [
+          "Staff · Saving orders"
+        ]
+      }
+    },
     "/api/staff/saving/orders/{id}/amend-hardware": {
       "post": {
         "operationId": "SavingFulfillmentController_amendHardware",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedHardwareId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
+                  "expectedVersionId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "hardwareProductId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "expectedVersionId",
+                  "expectedHardwareId",
+                  "expectedReviewHash",
+                  "hardwareProductId",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Swap paid hardware or issue a charge before a higher-priced swap",
+        "tags": [
+          "Staff · Saving orders"
+        ]
+      }
+    },
+    "/api/staff/saving/orders/{id}/amend-hardware-review": {
+      "post": {
+        "operationId": "SavingFulfillmentController_amendHardwareReview",
         "parameters": [
           {
             "in": "path",
@@ -23604,11 +26172,6 @@
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
                     "type": "string"
                   },
-                  "idempotencyKey": {
-                    "format": "uuid",
-                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
-                    "type": "string"
-                  },
                   "reason": {
                     "maxLength": 1000,
                     "minLength": 1,
@@ -23616,7 +26179,6 @@
                   }
                 },
                 "required": [
-                  "idempotencyKey",
                   "expectedVersionId",
                   "expectedHardwareId",
                   "hardwareProductId",
@@ -23629,11 +26191,11 @@
           "required": true
         },
         "responses": {
-          "201": {
+          "200": {
             "description": ""
           }
         },
-        "summary": "Swap paid hardware or issue a charge before a higher-priced swap",
+        "summary": "Preview exact charge or credit before changing paid saving hardware",
         "tags": [
           "Staff · Saving orders"
         ]
@@ -23658,6 +26220,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -23671,7 +26237,8 @@
                 },
                 "required": [
                   "idempotencyKey",
-                  "expectedVersionId"
+                  "expectedVersionId",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -23709,6 +26276,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -23728,6 +26299,7 @@
                 "required": [
                   "idempotencyKey",
                   "upgradeId",
+                  "expectedReviewHash",
                   "reason"
                 ],
                 "type": "object"
@@ -23742,6 +26314,135 @@
           }
         },
         "summary": "Cancel an unpaid hardware upgrade and release its reserved stock",
+        "tags": [
+          "Staff · Saving orders"
+        ]
+      }
+    },
+    "/api/staff/saving/orders/{id}/cancel-hardware-upgrade-review": {
+      "post": {
+        "operationId": "SavingFulfillmentController_cancelHardwareUpgradeReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "upgradeId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "upgradeId",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Preview unpaid charge and stock release before cancelling an upgrade",
+        "tags": [
+          "Staff · Saving orders"
+        ]
+      }
+    },
+    "/api/staff/saving/orders/{id}/financial-review": {
+      "post": {
+        "operationId": "SavingFulfillmentController_financialReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "action": {
+                        "enum": [
+                          "approve"
+                        ],
+                        "type": "string"
+                      },
+                      "reason": {
+                        "default": "",
+                        "enum": [
+                          ""
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "action"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "action": {
+                        "enum": [
+                          "reject"
+                        ],
+                        "type": "string"
+                      },
+                      "reason": {
+                        "maxLength": 1000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "action",
+                      "reason"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Preview exact contract, invoice and refund outcome before saving order decision",
         "tags": [
           "Staff · Saving orders"
         ]
@@ -23766,6 +26467,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -23785,6 +26490,7 @@
                 "required": [
                   "idempotencyKey",
                   "expectedVersionId",
+                  "expectedReviewHash",
                   "reason"
                 ],
                 "type": "object"
@@ -23839,6 +26545,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedStatus": {
                     "enum": [
                       "in_progress"
@@ -23864,6 +26574,7 @@
                 "required": [
                   "idempotencyKey",
                   "expectedStatus",
+                  "expectedReviewHash",
                   "explanation"
                 ],
                 "type": "object"
@@ -23878,6 +26589,79 @@
           }
         },
         "summary": "Complete a saving fulfillment stage or skip optional equipment handover",
+        "tags": [
+          "Staff · Saving orders"
+        ]
+      }
+    },
+    "/api/staff/saving/orders/{id}/stages/{stage}/{action}/review": {
+      "post": {
+        "operationId": "SavingFulfillmentController_advanceReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "stage",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedStatus": {
+                    "enum": [
+                      "in_progress"
+                    ],
+                    "type": "string"
+                  },
+                  "explanation": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "handoverDescription": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedStatus",
+                  "explanation"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Preview the exact saving fulfillment stage transition",
         "tags": [
           "Staff · Saving orders"
         ]
@@ -24126,6 +26910,30 @@
         ]
       }
     },
+    "/api/staff/tickets/{id}/closure-preview": {
+      "get": {
+        "operationId": "StaffTicketsController_closurePreview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Dry-run an owned profile closure request",
+        "tags": [
+          "Staff Tickets"
+        ]
+      }
+    },
     "/api/staff/tickets/{id}/comments": {
       "get": {
         "operationId": "StaffTicketsController_listComments",
@@ -24182,6 +26990,60 @@
           }
         },
         "summary": "Staff add a comment to a ticket",
+        "tags": [
+          "Staff Tickets"
+        ]
+      }
+    },
+    "/api/staff/tickets/{id}/execute-closure": {
+      "post": {
+        "operationId": "StaffTicketsController_executeClosure",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "confirmation": {
+                    "enum": [
+                      "CLOSE_PROFILE"
+                    ],
+                    "type": "string"
+                  },
+                  "previewVersion": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "previewVersion",
+                  "confirmation"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Closure completed or idempotently replayed"
+          },
+          "409": {
+            "description": "Preview changed or blockers remain"
+          }
+        },
+        "summary": "Execute a reviewed profile closure atomically",
         "tags": [
           "Staff Tickets"
         ]
@@ -24330,7 +27192,8 @@
                     "enum": [
                       "general",
                       "billing",
-                      "orders"
+                      "orders",
+                      "privacy"
                     ],
                     "type": "string"
                   },
@@ -24393,6 +27256,127 @@
           }
         },
         "summary": "Create a support ticket",
+        "tags": [
+          "Tickets"
+        ]
+      }
+    },
+    "/api/tickets/lifecycle-preview": {
+      "get": {
+        "operationId": "TicketsController_lifecyclePreview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Live blockers and recent requests for the active owned profile"
+          },
+          "403": {
+            "description": "No active owned profile"
+          }
+        },
+        "summary": "Preview closure blockers for the active owned profile",
+        "tags": [
+          "Tickets"
+        ]
+      }
+    },
+    "/api/tickets/lifecycle-requests": {
+      "post": {
+        "operationId": "TicketsController_createLifecycleRequest",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "locale": {
+                    "default": "fa",
+                    "enum": [
+                      "fa",
+                      "en"
+                    ],
+                    "type": "string"
+                  },
+                  "type": {
+                    "enum": [
+                      "export",
+                      "closure"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Privacy support request created or replayed"
+          },
+          "403": {
+            "description": "No active owned profile"
+          },
+          "409": {
+            "description": "Idempotency key belongs to another request"
+          }
+        },
+        "summary": "Request a profile data export or closure through support",
+        "tags": [
+          "Tickets"
+        ]
+      }
+    },
+    "/api/tickets/lifecycle-requests/{id}/export": {
+      "get": {
+        "operationId": "TicketsController_downloadProfileExport",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Short-lived private download URL"
+          }
+        },
+        "summary": "Download a completed, unexpired profile export",
+        "tags": [
+          "Tickets"
+        ]
+      },
+      "post": {
+        "operationId": "TicketsController_startProfileExport",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Owner-scoped export job created or reused"
+          }
+        },
+        "summary": "Queue an export for an owned privacy request",
         "tags": [
           "Tickets"
         ]
@@ -25661,6 +28645,35 @@
         ]
       }
     },
+    "/api/wallet/{profileId}/bank-receipt-top-ups/review": {
+      "post": {
+        "operationId": "WalletController_reviewBankReceiptTopUp",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review a bank-receipt top-up before creating a Pending entry",
+        "tags": [
+          "Wallet"
+        ]
+      }
+    },
     "/api/wallet/{profileId}/create": {
       "post": {
         "operationId": "WalletController_createWallet",
@@ -25734,6 +28747,35 @@
           }
         ],
         "summary": "Start an online wallet top-up and redirect to the payment gateway",
+        "tags": [
+          "Wallet"
+        ]
+      }
+    },
+    "/api/wallet/{profileId}/top-ups/review": {
+      "post": {
+        "operationId": "WalletController_reviewOnlineTopUp",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review an online wallet top-up before starting payment",
         "tags": [
           "Wallet"
         ]

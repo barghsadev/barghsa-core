@@ -2,7 +2,23 @@ import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { contractText } from '@barghsa/i18n/contracts';
-import { Button, Card, CardContent, DualStatusDisplay } from '@barghsa/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DualStatusDisplay,
+  FinancialReviewSummary,
+} from '@barghsa/ui';
+import {
+  parseElectricityCancellationReview,
+  type ElectricityCancellationReview,
+} from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -112,6 +128,31 @@ function savedLineAmounts(
   };
 }
 
+function cancellationPricingLines(snapshot: Record<string, unknown>) {
+  return Array.isArray(snapshot.lines)
+    ? snapshot.lines.filter(
+        (
+          line
+        ): line is {
+          systemKey: string;
+          quantityKwh: string;
+          unitPriceIrR: string;
+          discountIrR: string;
+          netIrR: string;
+          vatIrR: string;
+        } =>
+          !!line &&
+          typeof line === 'object' &&
+          typeof line.systemKey === 'string' &&
+          typeof line.quantityKwh === 'string' &&
+          typeof line.unitPriceIrR === 'string' &&
+          typeof line.discountIrR === 'string' &&
+          typeof line.netIrR === 'string' &&
+          typeof line.vatIrR === 'string'
+      )
+    : [];
+}
+
 const statusKeys: Record<string, string> = {
   draft: 'electricity.order.status.draft',
   submitted: 'electricity.order.status.submitted',
@@ -185,6 +226,8 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   const [cancelReason, setCancelReason] = useState('');
   const [cancelKey, setCancelKey] = useState(() => crypto.randomUUID());
   const [cancelling, setCancelling] = useState(false);
+  const [cancelReviewLoading, setCancelReviewLoading] = useState(false);
+  const [cancelReview, setCancelReview] = useState<ElectricityCancellationReview | null>(null);
   const [cancelError, setCancelError] = useState<'stepup' | 'generic' | null>(null);
 
   useEffect(() => {
@@ -258,8 +301,39 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
 
   async function cancelOrder(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!detail || cancelling || !cancelReason.trim()) return;
-    if (!window.confirm(t('electricity.order.detail.cancelConfirm', locale))) return;
+    if (!detail || cancelReviewLoading || !cancelReason.trim()) return;
+    setCancelReviewLoading(true);
+    setCancelError(null);
+    try {
+      const response = await fetch(
+        `/api/electricity/orders/${encodeURIComponent(orderId)}/cancel-review`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ reason: cancelReason.trim() }),
+        }
+      );
+      if (!response.ok) throw new Error('Review failed');
+      const review = parseElectricityCancellationReview(await response.json());
+      if (
+        !review ||
+        review.scope.profileId !== detail.profileId ||
+        review.scope.resourceId !== orderId ||
+        review.data.versionId !== detail.versionId ||
+        review.data.reason !== cancelReason.trim()
+      )
+        throw new Error('Review mismatch');
+      setCancelReview(review);
+    } catch {
+      setCancelError('generic');
+    } finally {
+      setCancelReviewLoading(false);
+    }
+  }
+
+  async function confirmCancellation() {
+    if (!cancelReview || cancelling || cancelReview.scope.resourceId !== orderId) return;
     setCancelling(true);
     setCancelError(null);
     try {
@@ -271,20 +345,25 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({
             idempotencyKey: cancelKey,
-            expectedVersionId: detail.versionId,
-            reason: cancelReason.trim(),
+            expectedVersionId: cancelReview.data.versionId,
+            expectedReviewHash: cancelReview.hash,
+            reason: cancelReview.data.reason,
           }),
         }
       );
       if (response.status === 403) {
         setCancelError('stepup');
+        setCancelReview(null);
         return;
       }
       if (!response.ok) throw new Error('Cancellation failed');
+      setCancelReview(null);
       setCancelKey(crypto.randomUUID());
       setRetry((value) => value + 1);
     } catch {
+      setCancelReview(null);
       setCancelError('generic');
+      setRetry((value) => value + 1);
     } finally {
       setCancelling(false);
     }
@@ -635,9 +714,14 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                   <Button
                     type="submit"
                     variant="outline"
-                    disabled={cancelling || !cancelReason.trim()}
+                    disabled={cancelling || cancelReviewLoading || !cancelReason.trim()}
                   >
-                    {t('electricity.order.detail.cancel', locale)}
+                    {t(
+                      cancelReviewLoading
+                        ? 'electricity.order.detail.cancelReviewLoading'
+                        : 'electricity.order.detail.cancel',
+                      locale
+                    )}
                   </Button>
                 </form>
               </CardContent>
@@ -736,6 +820,133 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           ) : null}
         </>
       )}
+      {cancelReview && cancelReview.scope.resourceId === orderId ? (
+        <Dialog open onOpenChange={(open) => !open && !cancelling && setCancelReview(null)}>
+          <DialogContent
+            className="max-h-[90dvh] overflow-y-auto"
+            dir={locale === 'fa' ? 'rtl' : 'ltr'}
+            showCloseButton={!cancelling}
+          >
+            <DialogHeader>
+              <DialogTitle>{t('electricity.order.detail.cancelReviewTitle', locale)}</DialogTitle>
+              <DialogDescription>
+                {t('electricity.order.detail.cancelConfirm', locale)}
+              </DialogDescription>
+            </DialogHeader>
+            <FinancialReviewSummary
+              title={t('electricity.order.detail.cancelReviewTitle', locale)}
+              rows={[
+                {
+                  id: 'profile',
+                  label: t('electricity.order.detail.cancelReviewProfile', locale),
+                  value: cancelReview.data.profileName,
+                },
+                {
+                  id: 'period',
+                  label: t('electricity.order.detail.cancelReviewPeriod', locale),
+                  value: `${time.format(cancelReview.data.periodStart, { year: 'numeric', month: '2-digit', day: '2-digit' })} – ${time.format(new Date(new Date(cancelReview.data.periodEnd).getTime() - 1), { year: 'numeric', month: '2-digit', day: '2-digit' })}`,
+                },
+                {
+                  id: 'quantity',
+                  label: t('electricity.order.quantity', locale),
+                  value: `${cancelReview.data.totalKwh} kWh`,
+                },
+                ...cancellationPricingLines(cancelReview.data.pricingSnapshot).map(
+                  (line, index) => ({
+                    id: `line-${index}`,
+                    label: `${t(`electricity.order.revision.${line.systemKey}`, locale)} · ${line.quantityKwh} kWh`,
+                    value: (
+                      <span className="space-y-1 text-sm">
+                        <span className="block">
+                          {t('electricity.order.detail.unitPrice', locale)}:{' '}
+                          {numbers.money(line.unitPriceIrR)}
+                        </span>
+                        <span className="block">
+                          {t('electricity.order.detail.cancelReviewDiscount', locale)}:{' '}
+                          {numbers.money(line.discountIrR)}
+                        </span>
+                        <span className="block">
+                          {t('electricity.order.detail.cancelReviewNet', locale)}:{' '}
+                          {numbers.money(line.netIrR)}
+                        </span>
+                        <span className="block">
+                          {t('electricity.order.detail.cancelReviewVat', locale)}:{' '}
+                          {numbers.money(line.vatIrR)}
+                        </span>
+                      </span>
+                    ),
+                  })
+                ),
+                {
+                  id: 'invoice',
+                  label: t('electricity.order.detail.cancelReviewInvoice', locale),
+                  value: t(`invoices.state.${cancelReview.data.invoiceState}`, locale),
+                },
+                {
+                  id: 'paid',
+                  label: t('electricity.order.detail.cancelReviewPaid', locale),
+                  value: numbers.money(cancelReview.data.paidAmount),
+                },
+                {
+                  id: 'outcome',
+                  label: t('electricity.order.detail.cancelReviewOutcome', locale),
+                  value: t(
+                    `electricity.order.detail.cancelOutcome.${cancelReview.data.outcome}`,
+                    locale
+                  ),
+                },
+                ...(cancelReview.data.refundAmount !== '0'
+                  ? [
+                      {
+                        id: 'refund',
+                        label: t('electricity.order.detail.refund', locale),
+                        value: numbers.money(cancelReview.data.refundAmount),
+                      },
+                    ]
+                  : []),
+                ...(cancelReview.data.releasesGiftCode
+                  ? [
+                      {
+                        id: 'gift-code',
+                        label: t('electricity.order.detail.cancelReviewGiftCode', locale),
+                        value: t('electricity.order.detail.cancelReviewGiftCodeRelease', locale),
+                      },
+                    ]
+                  : []),
+              ]}
+              total={{
+                label: t('electricity.order.detail.cancelReviewTotal', locale),
+                value: numbers.money(cancelReview.data.invoiceTotal),
+              }}
+              notice={
+                <div className="space-y-2">
+                  <p>{cancelReview.data.reason}</p>
+                  {typeof (
+                    cancelReview.data.contractSnapshot.template as
+                      Record<string, unknown> | undefined
+                  )?.text === 'string' ? (
+                    <p className="whitespace-pre-wrap break-words" dir="auto">
+                      {(cancelReview.data.contractSnapshot.template as { text: string }).text}
+                    </p>
+                  ) : null}
+                </div>
+              }
+            />
+            <DialogFooter>
+              <Button variant="outline" disabled={cancelling} onClick={() => setCancelReview(null)}>
+                {t('electricity.order.detail.cancelReviewBack', locale)}
+              </Button>
+              <Button
+                variant="destructive"
+                disabled={cancelling}
+                onClick={() => void confirmCancellation()}
+              >
+                {t('electricity.order.detail.cancel', locale)}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      ) : null}
     </main>
   );
 }

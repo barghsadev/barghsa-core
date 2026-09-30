@@ -1,9 +1,20 @@
 import { sql } from 'drizzle-orm';
-import { uuid, text, timestamp, pgTable, jsonb, check, index } from 'drizzle-orm/pg-core';
+import {
+  uuid,
+  text,
+  boolean,
+  timestamp,
+  pgTable,
+  jsonb,
+  check,
+  index,
+  uniqueIndex,
+} from 'drizzle-orm/pg-core';
 import { uuidv7 } from '../types';
 import { users } from './users';
 import { staffTeams } from './staff-teams';
 import { profiles } from './profiles';
+import { asyncJobs } from './async-jobs';
 
 /**
  * Tickets table (T-06.01.01).
@@ -41,9 +52,20 @@ export const tickets = pgTable(
     /** Full ticket description body. */
     body: text('body').notNull(),
 
-    category: text('category', { enum: ['general', 'billing', 'orders'] })
+    category: text('category', { enum: ['general', 'billing', 'orders', 'privacy'] })
       .notNull()
       .default('general'),
+    privacyRequestType: text('privacy_request_type', { enum: ['export', 'closure'] }),
+    privacyRequestKey: uuid('privacy_request_key'),
+    privacyExportJobId: uuid('privacy_export_job_id').references(() => asyncJobs.id),
+    privacyExportStorageKey: text('privacy_export_storage_key'),
+    privacyExportExpiresAt: timestamp('privacy_export_expires_at', { withTimezone: true }),
+    privacyExportDownloadedAt: timestamp('privacy_export_downloaded_at', { withTimezone: true }),
+    privacyClosureCompletedAt: timestamp('privacy_closure_completed_at', { withTimezone: true }),
+    privacyClosureActorId: text('privacy_closure_actor_id').references(() => users.userId),
+    privacyClosureAnonymized: boolean('privacy_closure_anonymized'),
+    privacyClosureRetained: jsonb('privacy_closure_retained').$type<Record<string, number>>(),
+    privacyClosureExportTicketId: uuid('privacy_closure_export_ticket_id'),
 
     /** Optional FK to the profile this ticket relates to. */
     profileId: uuid('profile_id').references(() => profiles.id, { onDelete: 'set null' }),
@@ -87,7 +109,33 @@ export const tickets = pgTable(
     updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
   (table) => [
-    check('tickets_category_valid', sql`${table.category} IN ('general','billing','orders')`),
+    check(
+      'tickets_category_valid',
+      sql`${table.category} IN ('general','billing','orders','privacy')`
+    ),
+    check(
+      'tickets_privacy_request_valid',
+      sql`(${table.privacyRequestType} IS NULL AND ${table.privacyRequestKey} IS NULL)
+        OR (${table.category}='privacy' AND ${table.profileId} IS NOT NULL
+          AND ${table.privacyRequestType} IN ('export','closure')
+          AND ${table.privacyRequestKey} IS NOT NULL)`
+    ),
+    check(
+      'tickets_privacy_export_valid',
+      sql`(${table.privacyExportJobId} IS NULL AND ${table.privacyExportStorageKey} IS NULL
+          AND ${table.privacyExportExpiresAt} IS NULL)
+        OR (${table.privacyRequestType}='export' AND ${table.privacyExportJobId} IS NOT NULL
+          AND (${table.privacyExportStorageKey} IS NULL OR ${table.privacyExportExpiresAt} IS NOT NULL))`
+    ),
+    check(
+      'tickets_privacy_closure_valid',
+      sql`(${table.privacyClosureCompletedAt} IS NULL AND ${table.privacyClosureActorId} IS NULL
+        AND ${table.privacyClosureAnonymized} IS NULL AND ${table.privacyClosureRetained} IS NULL
+        AND ${table.privacyClosureExportTicketId} IS NULL)
+        OR (${table.privacyRequestType}='closure' AND ${table.privacyClosureCompletedAt} IS NOT NULL
+          AND ${table.privacyClosureActorId} IS NOT NULL AND ${table.privacyClosureAnonymized} IS NOT NULL
+          AND ${table.privacyClosureRetained} IS NOT NULL)`
+    ),
     check(
       'tickets_attachments_array',
       sql`jsonb_typeof(${table.attachments})='array' AND jsonb_array_length(${table.attachments})<=5`
@@ -98,6 +146,18 @@ export const tickets = pgTable(
     index('tickets_assigned_team_idx')
       .on(table.assignedTeamId)
       .where(sql`${table.assignedTeamId} IS NOT NULL`),
+    uniqueIndex('tickets_privacy_request_idempotency')
+      .on(table.userId, table.privacyRequestKey)
+      .where(sql`${table.privacyRequestKey} IS NOT NULL`),
+    index('tickets_privacy_profile_created')
+      .on(table.profileId, table.createdAt.desc())
+      .where(sql`${table.privacyRequestType} IS NOT NULL`),
+    uniqueIndex('tickets_privacy_export_job_unique')
+      .on(table.privacyExportJobId)
+      .where(sql`${table.privacyExportJobId} IS NOT NULL`),
+    index('tickets_privacy_export_expiry')
+      .on(table.privacyExportExpiresAt)
+      .where(sql`${table.privacyExportStorageKey} IS NOT NULL`),
   ]
 );
 

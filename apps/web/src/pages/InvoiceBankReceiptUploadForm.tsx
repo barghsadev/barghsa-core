@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/app';
+import type { InvoiceBankReceiptSubmissionReview } from '@barghsa/shared/finance';
 import {
   INVOICE_BANK_RECEIPT_FILE_ACCEPT,
   parseInvoiceBankReceiptAmountIrR,
@@ -20,6 +21,10 @@ interface InvoiceBankReceiptUploadFormProps {
   invoiceId: string;
   onSubmitted?: () => Promise<void>;
 }
+
+const InvoiceBankReceiptSubmissionReviewDialog = lazy(
+  () => import('../components/InvoiceBankReceiptSubmissionReviewDialog.js')
+);
 
 const ERROR_I18N: Record<InvoiceReceiptError, string> = {
   'invalid-amount': 'invoices.details.receiptInvalidAmount',
@@ -53,6 +58,10 @@ export function InvoiceBankReceiptUploadForm({
   const [bankName, setBankName] = useState('');
   const [customerNote, setCustomerNote] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const [uploaded, setUploaded] = useState<{ file: File; profileId: string; key: string } | null>(
+    null
+  );
+  const [review, setReview] = useState<InvoiceBankReceiptSubmissionReview | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<InvoiceReceiptError | null>(null);
   const [success, setSuccess] = useState(false);
@@ -103,26 +112,62 @@ export function InvoiceBankReceiptUploadForm({
     setError(null);
     setSuccess(false);
     try {
-      const attachmentKey = await uploadInvoiceReceiptAttachment(file, profileId);
+      const attachmentKey =
+        uploaded?.file === file && uploaded.profileId === profileId
+          ? uploaded.key
+          : await uploadInvoiceReceiptAttachment(file, profileId);
       if (!attachmentKey) {
         setError('upload');
         return;
       }
-      const result = await submitInvoiceBankReceipt({
+      setUploaded({ file, profileId, key: attachmentKey });
+      const { loadInvoiceBankReceiptSubmissionReview } =
+        await import('../lib/invoice-bank-receipt-review-action.js');
+      const result = await loadInvoiceBankReceiptSubmissionReview({
         invoiceId,
-        amountIrR,
+        amountIrR: amountIrR.toString(),
         paymentDate,
         payerReference: payerReference.trim(),
-        ...(bankName.trim() ? { bankName: bankName.trim() } : {}),
+        bankName: bankName.trim() || null,
         attachmentKey,
-        ...(customerNote.trim() === '' ? {} : { customerNote: customerNote.trim() }),
+        customerNote: customerNote.trim() || null,
       });
-      if (!result.ok) {
+      if (result.kind === 'error') {
         setError(mapInvoiceReceiptSubmitError(result.status));
         return;
       }
+      setReview(result.review);
+    } catch {
+      setError('upload');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function confirmSubmission() {
+    if (!review || submitting) return;
+    setSubmitting(true);
+    setError(null);
+    try {
+      const result = await submitInvoiceBankReceipt({
+        invoiceId: review.data.invoiceId,
+        amountIrR: BigInt(review.data.amountIrR),
+        paymentDate: review.data.paymentDate,
+        payerReference: review.data.payerReference,
+        ...(review.data.bankName ? { bankName: review.data.bankName } : {}),
+        attachmentKey: review.data.attachmentKey,
+        ...(review.data.customerNote ? { customerNote: review.data.customerNote } : {}),
+        expectedReviewHash: review.hash,
+      });
+      if (!result.ok) {
+        setReview(null);
+        setError(mapInvoiceReceiptSubmitError(result.status));
+        return;
+      }
+      setReview(null);
       setSuccess(true);
       setFile(null);
+      setUploaded(null);
       if (fileInput.current) fileInput.current.value = '';
       setAmountInput('');
       setPayerReference('');
@@ -130,7 +175,8 @@ export function InvoiceBankReceiptUploadForm({
       setCustomerNote('');
       await onSubmitted?.();
     } catch {
-      setError('upload');
+      setReview(null);
+      setError('generic');
     } finally {
       setSubmitting(false);
     }
@@ -139,186 +185,211 @@ export function InvoiceBankReceiptUploadForm({
   const errorMessage = error === null ? null : t(ERROR_I18N[error], locale);
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 rounded-lg bg-card text-card-foreground p-6 shadow-sm"
-      data-testid="invoice-receipt-form"
-    >
-      <div>
-        <h2 className="text-lg font-semibold text-foreground">
-          {t('invoices.details.receiptTitle', locale)}
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t('invoices.details.receiptSubtitle', locale)}
-        </p>
-      </div>
-
-      {success && (
-        <div
-          role="status"
-          data-testid="invoice-receipt-success"
-          className="rounded-lg border border-success/20 bg-success-soft p-3 text-sm text-success"
-        >
-          {t('invoices.details.receiptSuccess', locale)}
-        </div>
-      )}
-
-      {errorMessage && (
-        <div
-          role="alert"
-          data-testid="invoice-receipt-error"
-          className="rounded-lg border border-destructive/20 bg-danger-soft p-3 text-sm text-destructive"
-        >
-          {errorMessage}
-        </div>
-      )}
-
-      <div>
-        <label
-          htmlFor="invoice-receipt-amount"
-          className="block text-sm font-medium text-foreground"
-        >
-          {t('invoices.details.receiptAmountLabel', locale)}
-        </label>
-        <input
-          id="invoice-receipt-amount"
-          data-testid="invoice-receipt-amount"
-          name="amount"
-          type="text"
-          inputMode="numeric"
-          autoComplete="off"
-          dir="ltr"
-          value={amountInput}
-          disabled={submitting}
-          aria-invalid={error === 'invalid-amount'}
-          onChange={(event) => {
-            setAmountInput(normalizeIrrAmountDigits(event.target.value));
-            if (error === 'invalid-amount') setError(null);
-          }}
-          className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="invoice-receipt-date" className="block text-sm font-medium text-foreground">
-          {t('invoices.details.receiptDateLabel', locale)}
-        </label>
-        <input
-          id="invoice-receipt-date"
-          data-testid="invoice-receipt-date"
-          name="paymentDate"
-          type="date"
-          max={utcTodayIso()}
-          value={paymentDate}
-          disabled={submitting}
-          aria-invalid={error === 'invalid-date'}
-          onChange={(event) => {
-            setPaymentDate(event.target.value);
-            if (error === 'invalid-date') setError(null);
-          }}
-          className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
-        />
-      </div>
-
-      <div>
-        <label
-          htmlFor="invoice-receipt-payer-ref"
-          className="block text-sm font-medium text-foreground"
-        >
-          {t('invoices.details.receiptPayerRefLabel', locale)}
-        </label>
-        <input
-          id="invoice-receipt-payer-ref"
-          data-testid="invoice-receipt-payer-ref"
-          name="payerReference"
-          type="text"
-          autoComplete="off"
-          maxLength={128}
-          value={payerReference}
-          disabled={submitting}
-          aria-invalid={error === 'invalid-payer-ref'}
-          onChange={(event) => {
-            setPayerReference(event.target.value);
-            if (error === 'invalid-payer-ref') setError(null);
-          }}
-          className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
-        />
-      </div>
-
-      <div>
-        <label
-          htmlFor="invoice-receipt-bank-name"
-          className="block text-sm font-medium text-foreground"
-        >
-          {t('invoices.details.receiptBankNameLabel', locale)}
-        </label>
-        <input
-          id="invoice-receipt-bank-name"
-          data-testid="invoice-receipt-bank-name"
-          name="bankName"
-          type="text"
-          autoComplete="off"
-          maxLength={128}
-          value={bankName}
-          disabled={submitting}
-          onChange={(event) => setBankName(event.target.value)}
-          className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="invoice-receipt-file" className="block text-sm font-medium text-foreground">
-          {t('invoices.details.receiptFileLabel', locale)}
-        </label>
-        <input
-          ref={fileInput}
-          id="invoice-receipt-file"
-          data-testid="invoice-receipt-file"
-          name="receiptFile"
-          type="file"
-          accept={INVOICE_BANK_RECEIPT_FILE_ACCEPT}
-          disabled={submitting}
-          aria-invalid={error === 'invalid-file'}
-          aria-describedby="invoice-receipt-file-hint"
-          onChange={(event) => {
-            const next = event.target.files?.[0] ?? null;
-            setFile(next);
-            if (error === 'invalid-file' || error === 'upload') setError(null);
-          }}
-          className="mt-1 block w-full text-sm text-muted-foreground file:me-4 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-foreground"
-        />
-        <p id="invoice-receipt-file-hint" className="mt-2 text-sm text-muted-foreground">
-          {t('invoices.details.receiptFileHint', locale)}
-        </p>
-      </div>
-
-      <div>
-        <label htmlFor="invoice-receipt-note" className="block text-sm font-medium text-foreground">
-          {t('invoices.details.receiptNoteLabel', locale)}
-        </label>
-        <textarea
-          id="invoice-receipt-note"
-          data-testid="invoice-receipt-note"
-          name="customerNote"
-          rows={3}
-          maxLength={2000}
-          value={customerNote}
-          disabled={submitting}
-          onChange={(event) => setCustomerNote(event.target.value)}
-          className="mt-1 w-full rounded-lg border border-input px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
-        />
-      </div>
-
-      <button
-        type="submit"
-        data-testid="invoice-receipt-submit"
-        disabled={submitting}
-        className="w-full rounded-lg border border-primary bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-60"
+    <>
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 rounded-lg bg-card text-card-foreground p-6 shadow-sm"
+        data-testid="invoice-receipt-form"
       >
-        {submitting
-          ? t('invoices.details.receiptSubmitting', locale)
-          : t('invoices.details.receiptSubmit', locale)}
-      </button>
-    </form>
+        <div>
+          <h2 className="text-lg font-semibold text-foreground">
+            {t('invoices.details.receiptTitle', locale)}
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t('invoices.details.receiptSubtitle', locale)}
+          </p>
+        </div>
+
+        {success && (
+          <div
+            role="status"
+            data-testid="invoice-receipt-success"
+            className="rounded-lg border border-success/20 bg-success-soft p-3 text-sm text-success"
+          >
+            {t('invoices.details.receiptSuccess', locale)}
+          </div>
+        )}
+
+        {errorMessage && (
+          <div
+            role="alert"
+            data-testid="invoice-receipt-error"
+            className="rounded-lg border border-destructive/20 bg-danger-soft p-3 text-sm text-destructive"
+          >
+            {errorMessage}
+          </div>
+        )}
+
+        <div>
+          <label
+            htmlFor="invoice-receipt-amount"
+            className="block text-sm font-medium text-foreground"
+          >
+            {t('invoices.details.receiptAmountLabel', locale)}
+          </label>
+          <input
+            id="invoice-receipt-amount"
+            data-testid="invoice-receipt-amount"
+            name="amount"
+            type="text"
+            inputMode="numeric"
+            autoComplete="off"
+            dir="ltr"
+            value={amountInput}
+            disabled={submitting}
+            aria-invalid={error === 'invalid-amount'}
+            onChange={(event) => {
+              setAmountInput(normalizeIrrAmountDigits(event.target.value));
+              if (error === 'invalid-amount') setError(null);
+            }}
+            className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="invoice-receipt-date"
+            className="block text-sm font-medium text-foreground"
+          >
+            {t('invoices.details.receiptDateLabel', locale)}
+          </label>
+          <input
+            id="invoice-receipt-date"
+            data-testid="invoice-receipt-date"
+            name="paymentDate"
+            type="date"
+            max={utcTodayIso()}
+            value={paymentDate}
+            disabled={submitting}
+            aria-invalid={error === 'invalid-date'}
+            onChange={(event) => {
+              setPaymentDate(event.target.value);
+              if (error === 'invalid-date') setError(null);
+            }}
+            className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="invoice-receipt-payer-ref"
+            className="block text-sm font-medium text-foreground"
+          >
+            {t('invoices.details.receiptPayerRefLabel', locale)}
+          </label>
+          <input
+            id="invoice-receipt-payer-ref"
+            data-testid="invoice-receipt-payer-ref"
+            name="payerReference"
+            type="text"
+            autoComplete="off"
+            maxLength={128}
+            value={payerReference}
+            disabled={submitting}
+            aria-invalid={error === 'invalid-payer-ref'}
+            onChange={(event) => {
+              setPayerReference(event.target.value);
+              if (error === 'invalid-payer-ref') setError(null);
+            }}
+            className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="invoice-receipt-bank-name"
+            className="block text-sm font-medium text-foreground"
+          >
+            {t('invoices.details.receiptBankNameLabel', locale)}
+          </label>
+          <input
+            id="invoice-receipt-bank-name"
+            data-testid="invoice-receipt-bank-name"
+            name="bankName"
+            type="text"
+            autoComplete="off"
+            maxLength={128}
+            value={bankName}
+            disabled={submitting}
+            onChange={(event) => setBankName(event.target.value)}
+            className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="invoice-receipt-file"
+            className="block text-sm font-medium text-foreground"
+          >
+            {t('invoices.details.receiptFileLabel', locale)}
+          </label>
+          <input
+            ref={fileInput}
+            id="invoice-receipt-file"
+            data-testid="invoice-receipt-file"
+            name="receiptFile"
+            type="file"
+            accept={INVOICE_BANK_RECEIPT_FILE_ACCEPT}
+            disabled={submitting}
+            aria-invalid={error === 'invalid-file'}
+            aria-describedby="invoice-receipt-file-hint"
+            onChange={(event) => {
+              const next = event.target.files?.[0] ?? null;
+              setFile(next);
+              setUploaded(null);
+              if (error === 'invalid-file' || error === 'upload') setError(null);
+            }}
+            className="mt-1 block w-full text-sm text-muted-foreground file:me-4 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-foreground"
+          />
+          <p id="invoice-receipt-file-hint" className="mt-2 text-sm text-muted-foreground">
+            {t('invoices.details.receiptFileHint', locale)}
+          </p>
+        </div>
+
+        <div>
+          <label
+            htmlFor="invoice-receipt-note"
+            className="block text-sm font-medium text-foreground"
+          >
+            {t('invoices.details.receiptNoteLabel', locale)}
+          </label>
+          <textarea
+            id="invoice-receipt-note"
+            data-testid="invoice-receipt-note"
+            name="customerNote"
+            rows={3}
+            maxLength={2000}
+            value={customerNote}
+            disabled={submitting}
+            onChange={(event) => setCustomerNote(event.target.value)}
+            className="mt-1 w-full rounded-lg border border-input px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          />
+        </div>
+
+        <button
+          type="submit"
+          data-testid="invoice-receipt-submit"
+          disabled={submitting}
+          className="w-full rounded-lg border border-primary bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-60"
+        >
+          {submitting
+            ? t('invoices.details.receiptSubmitting', locale)
+            : t('invoices.details.receiptSubmit', locale)}
+        </button>
+      </form>
+      {review ? (
+        <Suspense
+          fallback={<p role="status">{t('invoices.details.receiptReviewLoading', locale)}</p>}
+        >
+          <InvoiceBankReceiptSubmissionReviewDialog
+            review={review}
+            locale={locale}
+            loading={submitting}
+            onCancel={() => setReview(null)}
+            onConfirm={() => void confirmSubmission()}
+          />
+        </Suspense>
+      ) : null}
+    </>
   );
 }

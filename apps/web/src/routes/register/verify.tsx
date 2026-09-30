@@ -5,7 +5,7 @@ import { useLocale } from '../../hooks/useLocale.js';
 import { rateLimitMessage, retryAfterSeconds } from '../../lib/auth-errors.js';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { createFileRoute, Link, useRouter, useSearch } from '@tanstack/react-router';
-import { toast } from 'sonner';
+import { toast } from '../../lib/toast-api.js';
 import { rememberAuthSuccess } from '../../lib/auth-entry-feedback.js';
 import { t } from '@barghsa/i18n/auth';
 import { Loader2Icon } from 'lucide-react';

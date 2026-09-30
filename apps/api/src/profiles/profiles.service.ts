@@ -405,7 +405,23 @@ export class ProfilesService {
       await client.query('BEGIN');
 
       // Serialize the absence check with other creation/completion transactions.
-      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [userId]);
+      const account = (
+        await client.query<{
+          is_staff: boolean;
+          is_admin: boolean;
+          disabled_at: Date | null;
+          has_roles: boolean;
+        }>(
+          `SELECT u.is_staff,u.is_admin,u.disabled_at,
+             EXISTS(SELECT 1 FROM user_roles ur WHERE ur.user_id=u.user_id) AS has_roles
+           FROM users u WHERE u.user_id=$1 FOR UPDATE`,
+          [userId]
+        )
+      ).rows[0];
+      if (!account || account.disabled_at)
+        throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+      if (account.is_staff || account.is_admin || account.has_roles)
+        throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
 
       // If the user has no default profile yet, set this one as default.
       const existing = await client.query(

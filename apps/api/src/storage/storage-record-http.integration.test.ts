@@ -18,6 +18,7 @@ let cleanupProvider: StorageProvider;
 let onGet: ((key: string) => Promise<void>) | undefined;
 const objects = new Map<string, Buffer>();
 let headers: Record<string, string>;
+let staffHeaders: Record<string, string>;
 beforeAll(async () => {
   storage = createServer(async (req, res) => {
     const url = new URL(req.url!, 'http://localhost');
@@ -86,9 +87,20 @@ beforeAll(async () => {
     "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,'storage-actor',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())",
     [session, csrf, randomUUID()]
   );
-  headers = {
+  staffHeaders = {
     Cookie: `barghsa_session=${session}`,
     'X-CSRF-Token': csrf,
+    'Content-Type': 'application/json',
+  };
+  const customerSession = randomUUID(),
+    customerCsrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,operating_context,expires_at,idle_deadline) VALUES ($1,'storage-actor',$2,$3,'customer',NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')",
+    [customerSession, customerCsrf, randomUUID()]
+  );
+  headers = {
+    Cookie: `barghsa_session=${customerSession}`,
+    'X-CSRF-Token': customerCsrf,
     'Content-Type': 'application/json',
   };
 }, 40000);
@@ -108,7 +120,7 @@ async function seed() {
 function request(key: string, method = 'GET', body?: unknown) {
   return fetch(
     `${http.base}/api/admin/storage/records/${encodeURIComponent(key)}${method === 'POST' ? '/sign' : ''}`,
-    { method, headers, ...(body === undefined ? {} : { body: JSON.stringify(body) }) }
+    { method, headers: staffHeaders, ...(body === undefined ? {} : { body: JSON.stringify(body) }) }
   );
 }
 async function row(key: string) {
@@ -250,10 +262,10 @@ it('authenticates every upload step and requires CSRF before storage access', as
   });
 });
 
-async function issue(context: Record<string, unknown> = {}) {
+async function issue(context: Record<string, unknown> = {}, requestHeaders = headers) {
   const response = await fetch(`${http.base}/api/upload/presigned-url`, {
     method: 'POST',
-    headers,
+    headers: requestHeaders,
     body: JSON.stringify({
       ...context,
       fileName: 'owned.pdf',
@@ -267,6 +279,15 @@ async function issue(context: Record<string, unknown> = {}) {
   objects.set(upload.key, Buffer.from('%PDF-1.7 test'));
   return upload.key;
 }
+
+it('keeps reserved upload URLs in the context that issued them', async () => {
+  const key = await issue();
+  expect((await uploadRequest(key, 'verify', staffHeaders)).status).toBe(403);
+  expect((await uploadRequest(key, 'verify')).status).toBe(200);
+  expect((await uploadRequest(key, 'record', staffHeaders)).status).toBe(403);
+  expect((await uploadRequest(key, 'record')).status).toBe(200);
+});
+
 function uploadRequest(key: string, action: string, requestHeaders = headers, body: unknown = {}) {
   return fetch(`${http.base}/api/upload/${encodeURIComponent(key)}/${action}`, {
     method: 'POST',
@@ -431,7 +452,7 @@ it('validates upload record bodies without changing the reservation', async () =
 });
 
 it('records and attaches an owned KB upload through the actual HTTP endpoints', async () => {
-  const key = await issue(),
+  const key = await issue({ purpose: 'knowledge_base' }, staffHeaders),
     kbId = randomUUID();
   await http.pool.query(
     "INSERT INTO knowledge_bases(id,title,description,created_by) VALUES($1,'Uploaded guide','','storage-actor')",
@@ -440,12 +461,12 @@ it('records and attaches an owned KB upload through the actual HTTP endpoints', 
   const attach = () =>
     fetch(`${http.base}/api/admin/knowledge-bases/${kbId}/documents`, {
       method: 'POST',
-      headers,
+      headers: staffHeaders,
       body: JSON.stringify({ storageKey: key }),
     });
   expect((await attach()).status).toBe(409);
-  expect((await uploadRequest(key, 'verify')).status).toBe(200);
-  const record = await uploadRequest(key, 'record', headers, {
+  expect((await uploadRequest(key, 'verify', staffHeaders)).status).toBe(200);
+  const record = await uploadRequest(key, 'record', staffHeaders, {
     fileName: 'owned.pdf',
     contentType: 'application/pdf',
     fileSize: 13,
@@ -609,6 +630,7 @@ it('validates profile access before issuing an upload and binds the reserved pur
   expect((await row(key)).metadata.uploadContext).toEqual({
     profileId: own,
     purpose: 'ticket_attachment',
+    operatingContext: 'customer',
   });
   expect(
     (

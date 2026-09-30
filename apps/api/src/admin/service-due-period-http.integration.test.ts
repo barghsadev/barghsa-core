@@ -105,28 +105,48 @@ it('applies configured days to newly issued invoices and preserves existing invo
   const current = (await settings(await request(initial))).find(
     (row) => row.serviceType === 'manual'
   )!;
-  const issue = async () => {
+  const issue = async (expectedDays: number) => {
+    const draft = {
+      profileId,
+      idempotencyKey: randomUUID(),
+      lines: [
+        {
+          description: 'Configured invoice',
+          quantity: 1,
+          unitPrice: '1000',
+          vatRate: 0,
+          isTaxable: false,
+        },
+      ],
+    };
+    const preview = await fetch(`${http.base}/api/admin/invoices/manual/review`, {
+      method: 'POST',
+      headers: headers['due-admin-a']!,
+      body: JSON.stringify(draft),
+    });
+    expect(preview.status).toBe(201);
+    const review = (await preview.json()) as {
+      hash: string;
+      data: { dueRule: { configDays: number } };
+    };
+    expect(review.data.dueRule.configDays).toBe(expectedDays);
     const response = await fetch(`${http.base}/api/admin/invoices/manual`, {
       method: 'POST',
       headers: headers['due-admin-a']!,
-      body: JSON.stringify({
-        profileId,
-        idempotencyKey: randomUUID(),
-        lines: [
-          {
-            description: 'Configured invoice',
-            quantity: 1,
-            unitPrice: '1000',
-            vatRate: 0,
-            isTaxable: false,
-          },
-        ],
-      }),
+      body: JSON.stringify({ ...draft, expectedReviewHash: review.hash }),
     });
     expect(response.status).toBe(201);
-    return (await response.json()) as { invoiceId: string };
+    return { ...((await response.json()) as { invoiceId: string }), draft };
   };
-  const first = await issue();
+  const first = await issue(10);
+  const staleDraft = { ...first.draft, idempotencyKey: randomUUID() };
+  const stalePreview = await fetch(`${http.base}/api/admin/invoices/manual/review`, {
+    method: 'POST',
+    headers: headers['due-admin-a']!,
+    body: JSON.stringify(staleDraft),
+  });
+  expect(stalePreview.status).toBe(201);
+  const staleHash = ((await stalePreview.json()) as { hash: string }).hash;
   const firstDates = (
     await http.pool.query('SELECT issued_at,due_at FROM invoices WHERE id=$1', [first.invoiceId])
   ).rows[0];
@@ -134,7 +154,23 @@ it('applies configured days to newly issued invoices and preserves existing invo
   expect(
     (await request({ ...initial, defaultDays: 14, expectedPeriodId: current.periodId })).status
   ).toBe(200);
-  const second = await issue();
+  const staleIssue = await fetch(`${http.base}/api/admin/invoices/manual`, {
+    method: 'POST',
+    headers: headers['due-admin-a']!,
+    body: JSON.stringify({ ...staleDraft, expectedReviewHash: staleHash }),
+  });
+  expect(staleIssue.status).toBe(409);
+  expect(
+    Number(
+      (
+        await http.pool.query(
+          "SELECT COUNT(*) FROM invoices WHERE metadata->>'idempotencyKey'=$1",
+          [staleDraft.idempotencyKey]
+        )
+      ).rows[0].count
+    )
+  ).toBe(0);
+  const second = await issue(14);
   const secondDates = (
     await http.pool.query('SELECT issued_at,due_at FROM invoices WHERE id=$1', [second.invoiceId])
   ).rows[0];

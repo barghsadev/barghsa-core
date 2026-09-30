@@ -1,6 +1,6 @@
 import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { Card, CardContent } from '@barghsa/ui';
+import { Card, CardContent, ProgressStepper } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -260,36 +260,39 @@ export function SavingOrderDetailPage() {
           <Card>
             <CardContent className="space-y-3 pt-6">
               <h2 className="text-xl font-semibold">{copy('fulfillment')}</h2>
-              <ol className="grid gap-2 md:grid-cols-5" aria-label={copy('fulfillment')}>
-                {detail.stages.map((stage, index) => (
-                  <li
-                    key={stage.stage}
-                    aria-current={stage.status === 'in_progress' ? 'step' : undefined}
-                    className={`rounded-md border p-3 text-sm ${stage.status === 'in_progress' ? 'border-primary bg-primary/5' : stage.status === 'completed' ? 'border-green-600/50 bg-green-600/5' : ''}`}
-                  >
-                    <span className="mb-2 block text-xs text-muted-foreground">
-                      {numbers.number(index + 1)} / {numbers.number(detail.stages.length)}
-                    </span>
-                    <strong className="block">{copy(stage.stage)}</strong>
-                    <span>{copy(stage.status)}</span>
-                    {stage.completed_at && (
-                      <time
-                        className="mt-1 block text-xs text-muted-foreground"
-                        dateTime={stage.completed_at}
-                      >
-                        {time.format(stage.completed_at, {
-                          year: 'numeric',
-                          month: '2-digit',
-                          day: '2-digit',
-                        })}
-                      </time>
-                    )}
-                    {stage.handover_description && (
-                      <p className="mt-2 text-xs">{stage.handover_description}</p>
-                    )}
-                  </li>
-                ))}
-              </ol>
+              <ProgressStepper
+                label={copy('fulfillment')}
+                steps={detail.stages.map((stage) => ({
+                  id: stage.stage,
+                  label: copy(stage.stage),
+                  state:
+                    stage.status === 'completed'
+                      ? ('complete' as const)
+                      : stage.status === 'in_progress'
+                        ? ('current' as const)
+                        : ('pending' as const),
+                  stateLabel: copy(stage.status),
+                  description:
+                    stage.completed_at || stage.handover_description ? (
+                      <>
+                        {stage.completed_at && (
+                          <time className="block" dateTime={stage.completed_at}>
+                            {time.format(stage.completed_at, {
+                              year: 'numeric',
+                              month: '2-digit',
+                              day: '2-digit',
+                            })}
+                          </time>
+                        )}
+                        {stage.handover_description && (
+                          <span className="mt-1 block break-words">
+                            {stage.handover_description}
+                          </span>
+                        )}
+                      </>
+                    ) : undefined,
+                }))}
+              />
             </CardContent>
           </Card>
           <Card>

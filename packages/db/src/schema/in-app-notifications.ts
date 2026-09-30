@@ -57,6 +57,8 @@ export const inAppNotifications = pgTable(
       onDelete: 'cascade',
     }),
     localizedContent: jsonb('localized_content'),
+    /** Staff/customer partition or account security notice; unknown legacy rows stay hidden. */
+    operatingContext: text('operating_context'),
 
     /** Notification/event type — drives iconography & routing. */
     type: text('type').notNull(),
@@ -94,6 +96,10 @@ export const inAppNotifications = pgTable(
     check(
       'chk_ian_recipient',
       sql`${table.profileId} IS NOT NULL OR ${table.recipientUserId} IS NOT NULL`
+    ),
+    check(
+      'chk_ian_operating_context',
+      sql`${table.operatingContext} IS NULL OR ${table.operatingContext} IN ('staff','customer','account')`
     ),
     index('idx_ian_user_created').on(table.recipientUserId, desc(table.createdAt)),
     uniqueIndex('uq_ian_delivery_key').on(table.deliveryKey),

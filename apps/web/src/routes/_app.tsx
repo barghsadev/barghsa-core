@@ -3,7 +3,7 @@ import { lazy, Suspense } from 'react';
 import { DashboardLayout } from '../pages/DashboardLayout.js';
 import { RouteSkeleton } from '../components/RouteSkeleton.js';
 import { RouteErrorBoundary } from '../components/RouteErrorBoundary.js';
-import { readSessionRole } from '../lib/session-role.js';
+import { readSessionContext } from '../lib/session-role.js';
 
 const StaffLayout = lazy(() => import('../pages/AdminLayout.js'));
 
@@ -19,8 +19,9 @@ function AppLayout() {
 
 export const Route = createFileRoute('/_app')({
   beforeLoad: async ({ abortController, location }) => {
-    const isStaff = await readSessionRole(abortController.signal);
-    if (isStaff === null) throw redirect({ to: '/login', replace: true });
+    const session = await readSessionContext(abortController.signal);
+    if (session === null) throw redirect({ to: '/login', replace: true });
+    const isStaff = session.operatingContext === 'staff';
     if (isStaff && location.pathname !== '/app') throw redirect({ to: '/app', replace: true });
     return { isStaff };
   },

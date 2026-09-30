@@ -26,41 +26,70 @@ import {
 } from './saving-fulfillment.service.js';
 
 const review = z
-  .object({ idempotencyKey: z.string().uuid(), expectedVersionId: z.string().uuid() })
+  .object({
+    idempotencyKey: z.string().uuid(),
+    expectedVersionId: z.string().uuid(),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
+  })
   .strict();
 const rejection = review.extend({ reason: z.string().trim().min(1).max(1000) }).strict();
+const decisionReviewInput = z.discriminatedUnion('action', [
+  z.object({ action: z.literal('approve'), reason: z.literal('').default('') }).strict(),
+  z.object({ action: z.literal('reject'), reason: z.string().trim().min(1).max(1000) }).strict(),
+]);
 const stageInput = z
   .object({
     idempotencyKey: z.string().uuid(),
     expectedStatus: z.literal('in_progress'),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
     explanation: z.string().trim().min(1).max(1000),
     handoverDescription: z.string().trim().min(1).max(1000).optional(),
   })
+  .strict();
+const stageReviewInput = stageInput
+  .pick({ expectedStatus: true, explanation: true, handoverDescription: true })
   .strict();
 const addressAmendment = z
   .object({
     idempotencyKey: z.string().uuid(),
     expectedVersionId: z.string().uuid(),
     expectedAddressId: z.string().uuid(),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
     addressId: z.string().uuid(),
     reason: z.string().trim().min(1).max(1000),
   })
+  .strict();
+const addressAmendmentReviewInput = addressAmendment
+  .pick({ expectedVersionId: true, expectedAddressId: true, addressId: true, reason: true })
   .strict();
 const hardwareAmendment = z
   .object({
     idempotencyKey: z.string().uuid(),
     expectedVersionId: z.string().uuid(),
     expectedHardwareId: z.string().uuid(),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
     hardwareProductId: z.string().uuid(),
     reason: z.string().trim().min(1).max(1000),
+  })
+  .strict();
+const hardwareAmendmentReviewInput = hardwareAmendment
+  .pick({
+    expectedVersionId: true,
+    expectedHardwareId: true,
+    hardwareProductId: true,
+    reason: true,
   })
   .strict();
 const hardwareUpgradeCancellation = z
   .object({
     idempotencyKey: z.string().uuid(),
     upgradeId: z.string().uuid(),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
     reason: z.string().trim().min(1).max(1000),
   })
+  .strict();
+const hardwareUpgradeCancellationReviewInput = hardwareUpgradeCancellation
+  .pick({ upgradeId: true, reason: true })
   .strict();
 function parse<T>(schema: z.ZodType<T>, value: unknown): T {
   const result = schema.safeParse(value);
@@ -107,6 +136,23 @@ export class SavingFulfillmentController {
     return this.service.detail(id, hasStaffPermission(req, 'invoices:write'));
   }
 
+  @Post(':id/financial-review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'saving:staff-financial-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({
+    summary: 'Preview exact contract, invoice and refund outcome before saving order decision',
+  })
+  @ApiZodBody(decisionReviewInput)
+  financialReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.permission(req, true);
+    const input = parse(decisionReviewInput, body);
+    return this.service.decisionReview(id, input.action, input.reason, req.session);
+  }
+
   @Post(':id/approve')
   @HttpCode(200)
   @RequiresStepUp()
@@ -149,6 +195,24 @@ export class SavingFulfillmentController {
     );
   }
 
+  @Post(':id/amend-address-review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'saving:staff-amend-address-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview the paid saving order address amendment before confirmation' })
+  @ApiZodBody(addressAmendmentReviewInput)
+  amendAddressReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.permission(req, true);
+    return this.service.addressAmendmentReview(
+      id,
+      parse(addressAmendmentReviewInput, body),
+      req.session
+    );
+  }
+
   @Post(':id/amend-address')
   @HttpCode(201)
   @RequiresStepUp()
@@ -166,6 +230,25 @@ export class SavingFulfillmentController {
       parse(addressAmendment, body),
       req.session,
       req.ip ?? 'unknown'
+    );
+  }
+
+  @Post(':id/amend-hardware-review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'saving:staff-amend-hardware-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview exact charge or credit before changing paid saving hardware' })
+  @ApiZodBody(hardwareAmendmentReviewInput)
+  amendHardwareReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.permission(req, true);
+    return this.service.hardwareAmendmentReview(
+      id,
+      parse(hardwareAmendmentReviewInput, body),
+      req.session,
+      hasStaffPermission(req, 'invoices:write')
     );
   }
 
@@ -190,6 +273,26 @@ export class SavingFulfillmentController {
     );
   }
 
+  @Post(':id/cancel-hardware-upgrade-review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'saving:staff-cancel-upgrade-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview unpaid charge and stock release before cancelling an upgrade' })
+  @ApiZodBody(hardwareUpgradeCancellationReviewInput)
+  cancelHardwareUpgradeReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.permission(req, true);
+    if (!hasStaffPermission(req, 'invoices:write'))
+      throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
+    return this.service.hardwareUpgradeCancellationReview(
+      id,
+      parse(hardwareUpgradeCancellationReviewInput, body),
+      req.session
+    );
+  }
+
   @Post(':id/cancel-hardware-upgrade')
   @HttpCode(200)
   @RequiresStepUp()
@@ -209,6 +312,30 @@ export class SavingFulfillmentController {
       parse(hardwareUpgradeCancellation, body),
       req.session,
       req.ip ?? 'unknown'
+    );
+  }
+
+  @Post(':id/stages/:stage/:action/review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'saving:stage-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview the exact saving fulfillment stage transition' })
+  @ApiZodBody(stageReviewInput)
+  advanceReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('stage') stage: string,
+    @Param('action') action: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.permission(req, true);
+    if (!SAVING_STAGES.includes(stage as SavingStage) || !['complete', 'skip'].includes(action))
+      throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.advanceReview(
+      id,
+      stage as SavingStage,
+      action as StageAction,
+      parse(stageReviewInput, body),
+      req.session
     );
   }
 

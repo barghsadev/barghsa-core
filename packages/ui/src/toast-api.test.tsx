@@ -1,7 +1,8 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { Toaster, toast, BaseToaster, createToastManager } from './index';
+import { BaseToaster, createToastManager } from './index';
+import { Toaster, toast } from './sonner';
 
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);

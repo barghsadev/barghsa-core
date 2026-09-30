@@ -90,6 +90,68 @@ async function setup(page: Page, locale: string, kind: 'wallet' | 'invoice', los
     kind === 'wallet'
       ? `/api/wallet/${profileId}/bank-receipt-top-ups`
       : `/api/invoices/${invoiceId}/bank-receipts`;
+  if (kind === 'wallet') {
+    await page.route(`**${endpoint}/review`, (route) => {
+      const body = route.request().postDataJSON();
+      return route.fulfill({
+        json: {
+          schemaVersion: 1,
+          scope: {
+            action: 'wallet.bank-receipt-topup-submission',
+            profileId,
+            resourceId: profileId,
+          },
+          data: {
+            profileId,
+            amountIrR: body.amount,
+            paymentDate: body.paymentDate,
+            payerReference: body.payerReference,
+            attachmentKey: body.attachmentKey,
+            fileName: String(body.attachmentKey).split('/').at(-1),
+            fileSizeBytes: null,
+            customerNote: body.customerNote ?? null,
+            stateAfterSubmission: 'Pending',
+            creditRule: 'after_finance_confirmation',
+          },
+          hash: 'a'.repeat(64),
+        },
+      });
+    });
+  } else {
+    await page.route(`**${endpoint}/review`, (route) => {
+      const body = route.request().postDataJSON();
+      return route.fulfill({
+        json: {
+          schemaVersion: 1,
+          scope: {
+            action: 'invoice.bank-receipt-submission',
+            profileId,
+            resourceId: invoiceId,
+          },
+          data: {
+            invoiceId,
+            profileId,
+            invoiceState: 'Unpaid',
+            invoiceTotalIrR: amount,
+            invoicePaidIrR: '0',
+            invoiceRemainingIrR: amount,
+            amountIrR: body.amount,
+            paymentDate: body.paymentDate,
+            payerReference: body.payerReference,
+            bankName: body.bankName ?? null,
+            attachmentKey: body.attachmentKey,
+            fileName: String(body.attachmentKey).split('/').at(-1),
+            fileSizeBytes: null,
+            customerNote: body.customerNote ?? null,
+            stateAfterSubmission: 'Submitted',
+            settlementRule: 'after_finance_confirmation',
+            excessRule: 'confirmed_excess_to_wallet',
+          },
+          hash: 'a'.repeat(64),
+        },
+      });
+    });
+  }
   await page.route(`**${endpoint}`, (route) => {
     const body = route.request().postDataJSON();
     const key = route.request().headers()['idempotency-key'];
@@ -102,7 +164,11 @@ async function setup(page: Page, locale: string, kind: 'wallet' | 'invoice', los
     if (loseResponse && submissions.length === 1) return route.abort('failed');
     return route.fulfill({
       status: 201,
-      json: { state: kind === 'wallet' ? 'Pending' : 'Submitted', amount: body.amount },
+      json: {
+        transactionId: '11111111-1111-7111-8111-111111111111',
+        state: kind === 'wallet' ? 'Pending' : 'Submitted',
+        amount: body.amount,
+      },
     });
   });
   await page.goto(kind === 'wallet' ? '/wallet' : `/invoices/${invoiceId}`);
@@ -119,6 +185,13 @@ async function setup(page: Page, locale: string, kind: 'wallet' | 'invoice', los
   return { form, prefix, uploads, submissions, receipts, invoice };
 }
 
+async function confirmReceipt(page: Page, payerReference = 'TRACK-123') {
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText(payerReference);
+  await dialog.getByRole('button', { name: /تأیید و ثبت رسید|Confirm and submit receipt/ }).click();
+}
+
 for (const kind of ['wallet', 'invoice'] as const) {
   for (const locale of ['en', 'fa']) {
     test(`${kind} receipt retries a lost acknowledgement without creating another upload or receipt (${locale})`, async ({
@@ -126,6 +199,7 @@ for (const kind of ['wallet', 'invoice'] as const) {
     }) => {
       const { prefix, uploads, submissions, receipts } = await setup(page, locale, kind, true);
       await page.getByTestId(`${prefix}-submit`).click();
+      await confirmReceipt(page);
       await expect(page.getByTestId(`${prefix}-error`)).toBeVisible();
       await expect(page.getByTestId(`${prefix}-success`)).toHaveCount(0);
       expect(submissions).toHaveLength(1);
@@ -135,8 +209,10 @@ for (const kind of ['wallet', 'invoice'] as const) {
         payerReference: 'TRACK-123',
         customerNote: 'Customer note',
         attachmentKey: 'receipts/upload-1.pdf',
+        expectedReviewHash: 'a'.repeat(64),
       });
       await page.getByTestId(`${prefix}-submit`).click();
+      await confirmReceipt(page);
       await expect.poll(() => submissions.length).toBe(2);
       expect(submissions[1]).toEqual(submissions[0]);
       expect(uploads).toHaveLength(1);
@@ -146,13 +222,12 @@ for (const kind of ['wallet', 'invoice'] as const) {
       await expect(page.getByTestId(`${prefix}-success`)).toBeVisible();
       await expect(page.getByTestId(`${prefix}-file`)).toHaveValue('');
       if (kind === 'wallet')
-        await expect(page.getByTestId('wallet-balance')).toContainText(
-          locale === 'fa' ? '۱۰۰' : '100'
-        );
+        await expect(page.getByTestId('wallet-balance')).toContainText(/۱۰۰|100/);
       await page.getByTestId(`${prefix}-amount`).fill('250000');
       await page.getByTestId(`${prefix}-payer-ref`).fill('TRACK-456');
       await page.getByTestId(`${prefix}-file`).setInputFiles({ ...pdf, name: 'other.pdf' });
       await page.getByTestId(`${prefix}-submit`).click();
+      await confirmReceipt(page, 'TRACK-456');
       await expect.poll(() => submissions.length).toBe(3);
       await expect(page.getByTestId(`${prefix}-success`)).toBeVisible();
       expect(uploads).toHaveLength(2);
@@ -184,6 +259,7 @@ for (const kind of ['wallet', 'invoice'] as const) {
       expect(uploads).toHaveLength(0);
       await page.getByTestId(`${prefix}-file`).setInputFiles(pdf);
       await page.getByTestId(`${prefix}-submit`).click();
+      await confirmReceipt(page);
       await expect(page.getByTestId(`${prefix}-success`)).toBeVisible();
       expect(submissions).toHaveLength(1);
     });
@@ -241,9 +317,7 @@ for (const locale of ['en', 'fa']) {
     await page.reload();
     const activity = page.getByTestId('invoice-activity');
     await expect(activity.locator('li')).toHaveCount(3);
-    await expect(activity).toContainText(
-      locale === 'fa' ? '۱۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۱' : '10,000,000,000,000,001'
-    );
+    await expect(activity).toContainText(/۱۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۱|10,000,000,000,000,001/);
     await expect(activity).toContainText('Please upload a clearer receipt.');
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)

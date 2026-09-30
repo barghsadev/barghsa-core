@@ -7,6 +7,10 @@ import { AgentSlotsService } from './ai-agent-slots.service.js';
 import { AiModelsModule } from '../ai-models/ai-models.module.js';
 import { AiTestChatController } from './ai-test-chat.controller.js';
 import { AiTestChatService } from './ai-test-chat.service.js';
+import { ProfilesModule } from '../profiles/profiles.module.js';
+import { AiKnowledgeChatController } from './ai-knowledge-chat.controller.js';
+import { AiKnowledgeChatService } from './ai-knowledge-chat.service.js';
+import { AiHealthController } from './ai-health.controller.js';
 
 /**
  * AI agent administration module (S-09.11, T-09.11.04 + T-09.11.05).
@@ -18,9 +22,15 @@ import { AiTestChatService } from './ai-test-chat.service.js';
  * slots to agents. The isolated test chat previews the saved configuration.
  */
 @Module({
-  imports: [SessionModule, AiModelsModule],
-  controllers: [AgentsController, AgentSlotsController, AiTestChatController],
-  providers: [AiAgentsService, AgentSlotsService, AiTestChatService],
+  imports: [SessionModule, AiModelsModule, ProfilesModule],
+  controllers: [
+    AgentsController,
+    AgentSlotsController,
+    AiTestChatController,
+    AiKnowledgeChatController,
+    AiHealthController,
+  ],
+  providers: [AiAgentsService, AgentSlotsService, AiTestChatService, AiKnowledgeChatService],
   exports: [AiAgentsService, AgentSlotsService],
 })
 export class AiAgentsModule {}

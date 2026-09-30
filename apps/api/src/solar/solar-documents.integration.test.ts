@@ -28,6 +28,34 @@ function send(user: string, path: string, method = 'GET', body?: unknown) {
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
 }
+async function reviewDocumentSet(
+  id: string,
+  decision: 'request_additional' | 'advance',
+  description?: string
+) {
+  const response = await send(
+    'solar-reviewer',
+    `admin/solar/requests/${id}/documents/review-set-decision`,
+    'POST',
+    { decision, ...(description === undefined ? {} : { description }) }
+  );
+  expect(response.status, http.logs()).toBe(200);
+  return (await response.json()) as {
+    hash: string;
+    data: {
+      currentStatus: string;
+      documents: Array<{ documentId: string; state: string; revision: number }>;
+      description: string | null;
+      nextStatus: string;
+    };
+  };
+}
+async function submitSolar(body: Record<string, unknown>) {
+  const review = await send('solar-buyer', 'solar/requests/review', 'POST', body);
+  expect(review.status, http.logs()).toBe(201);
+  const { hash } = (await review.json()) as { hash: string };
+  return send('solar-buyer', 'solar/requests', 'POST', { ...body, expectedReviewHash: hash });
+}
 async function documentCreate(replaces?: string) {
   const response = await send('solar-buyer', 'documents', 'POST', {
     profileId,
@@ -112,7 +140,7 @@ beforeAll(async () => {
       "INSERT INTO profiles(user_id,profile_type,status,is_default) VALUES('solar-buyer','INDIVIDUAL','ACTIVE',true) RETURNING id"
     )
   ).rows[0]!.id;
-  const created = await send('solar-buyer', 'solar/requests', 'POST', {
+  const created = await submitSolar({
     profileId,
     submissionKey: randomUUID(),
     buildingType: 'building_apartment',
@@ -168,15 +196,56 @@ it('supports empty submission, editable guidance, per-file decisions, replacemen
   expect((await send('solar-reviewer', `admin/solar/requests?before=${randomUUID()}`)).status).toBe(
     404
   );
+  expect(
+    (
+      await send(
+        'solar-buyer',
+        `admin/solar/requests/${requestId}/documents/review-set-decision`,
+        'POST',
+        { decision: 'advance' }
+      )
+    ).status
+  ).toBe(403);
+  const askReview = await reviewDocumentSet(
+    requestId,
+    'request_additional',
+    'Please upload a site ownership document.'
+  );
+  expect(askReview.data).toMatchObject({
+    currentStatus: 'documents_under_review',
+    description: 'Please upload a site ownership document.',
+    nextStatus: 'changes_requested',
+  });
+  expect(
+    (
+      await send(
+        'solar-reviewer',
+        `admin/solar/requests/${requestId}/documents/request-additional`,
+        'POST',
+        { description: 'Different request', expectedReviewHash: askReview.hash }
+      )
+    ).status
+  ).toBe(409);
   const ask = await send(
     'solar-reviewer',
     `admin/solar/requests/${requestId}/documents/request-additional`,
     'POST',
     {
       description: 'Please upload a site ownership document.',
+      expectedReviewHash: askReview.hash,
     }
   );
   expect(ask.status, http.logs()).toBe(200);
+  expect(
+    (
+      await http.pool.query<{ hash: string }>(
+        `SELECT metadata::jsonb->'financialReview'->>'hash' AS hash FROM audit_log
+         WHERE event='solar.documents.additional_requested' AND metadata::jsonb->>'requestId'=$1
+         ORDER BY created_at DESC LIMIT 1`,
+        [requestId]
+      )
+    ).rows[0]!.hash
+  ).toBe(askReview.hash);
   const state = await send('solar-buyer', `solar/requests/${requestId}/documents`);
   expect(
     ((await state.json()) as { requestedDocuments: Array<{ description: string }> })
@@ -273,6 +342,7 @@ it('supports empty submission, editable guidance, per-file decisions, replacemen
   expect(removed.status, http.logs()).toBe(200);
   expect(((await removed.json()) as { state: string }).state).toBe('Removed');
   const second = secondRows.find((item) => item.document_id === replacement.id)!;
+  const advanceBeforeApproval = await reviewDocumentSet(requestId, 'advance');
   const approved = await send(
     'solar-reviewer',
     `admin/solar/requests/${requestId}/documents/${replacement.id}/approve`,
@@ -290,13 +360,37 @@ it('supports empty submission, editable guidance, per-file decisions, replacemen
       }
     ).documents.find((item) => item.document_id === replacement.id)!.staff_status
   ).toBe('approved');
+  expect(
+    (
+      await send('solar-reviewer', `admin/solar/requests/${requestId}/documents/advance`, 'POST', {
+        expectedReviewHash: advanceBeforeApproval.hash,
+      })
+    ).status
+  ).toBe(409);
+  const advanceReview = await reviewDocumentSet(requestId, 'advance');
+  expect(advanceReview.data.documents).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ documentId: replacement.id, state: 'Approved' }),
+    ])
+  );
   const advanced = await send(
     'solar-reviewer',
     `admin/solar/requests/${requestId}/documents/advance`,
-    'POST'
+    'POST',
+    { expectedReviewHash: advanceReview.hash }
   );
   expect(advanced.status, http.logs()).toBe(200);
   expect(await advanced.json()).toMatchObject({ status: 'waiting_for_postal_submission' });
+  expect(
+    (
+      await http.pool.query<{ hash: string }>(
+        `SELECT metadata::jsonb->'financialReview'->>'hash' AS hash FROM audit_log
+         WHERE event='solar.documents.approved_for_postal' AND metadata::jsonb->>'requestId'=$1
+         ORDER BY created_at DESC LIMIT 1`,
+        [requestId]
+      )
+    ).rows[0]!.hash
+  ).toBe(advanceReview.hash);
   expect(
     (
       await http.pool.query('SELECT status FROM solar_construction_postal WHERE request_id=$1', [

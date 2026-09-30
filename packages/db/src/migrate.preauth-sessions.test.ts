@@ -19,7 +19,7 @@ for (const entry of prior.entries)
   copyFileSync(join(production, entry.tag + '.sql'), join(previous, entry.tag + '.sql'));
 afterAll(() => rmSync(previous, { recursive: true, force: true }));
 
-it('adds anonymous CSRF storage without changing existing accounts or sessions and repeats safely', async () => {
+it('adds anonymous CSRF storage while preserving existing session credentials and repeats safely', async () => {
   const management = new Pool({ connectionString: process.env.TEST_DATABASE_URL! });
   const name = 'test_preauth_' + randomUUID().replaceAll('-', '');
   let pool: Pool | undefined;
@@ -34,18 +34,34 @@ it('adds anonymous CSRF storage without changing existing accounts or sessions a
       "INSERT INTO users(user_id,username,password_hash) VALUES ('owner','owner@example.test','fixture')"
     );
     await pool.query(
+      "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ('staff-owner','staff@example.test','fixture',true)"
+    );
+    await pool.query(
       "INSERT INTO sessions(session_id,user_id,csrf_token,expires_at,idle_deadline) VALUES ('legacy-session','owner','legacy-csrf',NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')"
     );
-    const users = (await pool.query('SELECT * FROM users')).rows;
-    const sessions = (await pool.query('SELECT * FROM sessions')).rows;
+    await pool.query(
+      "INSERT INTO sessions(session_id,user_id,csrf_token,expires_at,idle_deadline) VALUES ('legacy-staff','staff-owner','staff-csrf',NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')"
+    );
+    const users = (await pool.query('SELECT * FROM users ORDER BY user_id')).rows;
+    const sessionFields = `SELECT session_id,user_id,csrf_token,refresh_token_hash,family_id,
+      device_info,step_up_verified_at,expires_at,idle_deadline,revoked_at,created_at
+      FROM sessions ORDER BY session_id`;
+    const sessions = (await pool.query(sessionFields)).rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
       applied: journal.entries
         .slice(prior.entries.length)
         .map((entry: { tag: string }) => entry.tag),
     });
-    expect((await pool.query('SELECT * FROM users')).rows).toMatchObject(users);
-    expect((await pool.query('SELECT * FROM sessions')).rows).toEqual(sessions);
+    expect((await pool.query('SELECT * FROM users ORDER BY user_id')).rows).toMatchObject(users);
+    expect((await pool.query(sessionFields)).rows).toEqual(sessions);
+    expect(
+      (await pool.query('SELECT session_id,operating_context FROM sessions ORDER BY session_id'))
+        .rows
+    ).toEqual([
+      { session_id: 'legacy-session', operating_context: 'customer' },
+      { session_id: 'legacy-staff', operating_context: 'staff' },
+    ]);
     for (const [id, csrf, expiry] of [
       ['invalid', 'b'.repeat(64), '30 minutes'],
       ['a'.repeat(64), 'invalid', '30 minutes'],

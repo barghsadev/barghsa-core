@@ -6,7 +6,7 @@ import { withCsrf } from '../../../lib/csrf.js';
 import { normalizeProfileDigits } from '../../../lib/profile-digits.js';
 import { useState, useCallback } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
-import { toast } from 'sonner';
+import { toast } from '../../../lib/toast-api.js';
 import { t } from '@barghsa/i18n/app';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
 import { ErrorCodes } from '@barghsa/shared/errors';

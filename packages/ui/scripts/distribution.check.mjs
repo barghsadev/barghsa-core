@@ -9,7 +9,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 const require = createRequire(import.meta.url);
-for (const path of ['@barghsa/ui', '@barghsa/ui/direction-provider']) {
+for (const path of ['@barghsa/ui', '@barghsa/ui/direction-provider', '@barghsa/ui/sonner']) {
   test(`${path} loads matching ESM and CommonJS exports`, async () => {
     assert.deepEqual(Object.keys(await import(path)).sort(), Object.keys(require(path)).sort());
   });

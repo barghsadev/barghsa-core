@@ -2,12 +2,18 @@ import { useEffect, useRef, useState } from 'react';
 import { Alert, AlertDescription, Button, PageLoading, StatusBadge } from '@barghsa/ui';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
-import { BANK_RECEIPT_REJECT_REASON_MAX_LENGTH } from '@barghsa/shared/finance';
+import {
+  BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
+  parseBankReceiptConfirmationReview,
+  type BankReceiptConfirmationReview,
+} from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { InvoiceBankReceiptHistory } from './InvoiceBankReceiptHistory.js';
+import { BankReceiptFinancialReview } from './BankReceiptFinancialReview.js';
+import { withCsrf } from '../lib/csrf.js';
 
 const base = '/api/admin/invoices/bank-receipts';
 
@@ -82,8 +88,14 @@ export function InvoiceBankReceiptQueue({
   const [allocationError, setAllocationError] = useState(false);
   const [reason, setReason] = useState('');
   const [action, setAction] = useState<TeamAction | null>(null);
+  const [financialReview, setFinancialReview] = useState<BankReceiptConfirmationReview | null>(
+    null
+  );
+  const [reviewState, setReviewState] = useState<'idle' | 'loading' | 'error'>('idle');
   const [revision, setRevision] = useState(0);
   const detailRef = useRef<HTMLElement>(null);
+  const selectedIdRef = useRef(selectedId);
+  selectedIdRef.current = selectedId;
 
   useEffect(() => {
     if (selectedId) detailRef.current?.scrollIntoView?.({ block: 'start' });
@@ -110,6 +122,7 @@ export function InvoiceBankReceiptQueue({
     if (!selectedId) {
       setDetail(null);
       setAllocation(null);
+      setReviewState('idle');
       return;
     }
     const controller = new AbortController();
@@ -118,6 +131,7 @@ export function InvoiceBankReceiptQueue({
     setAllocation(null);
     setDetailState('loading');
     setAllocationError(false);
+    setReviewState('idle');
     void Promise.allSettled([
       getJson<Receipt>(path, controller.signal),
       selectedSource === 'pending'
@@ -141,7 +155,7 @@ export function InvoiceBankReceiptQueue({
     setRevision((value) => value + 1);
   }
 
-  function review(kind: 'confirm' | 'reject') {
+  async function review(kind: 'confirm' | 'reject') {
     if (!detail) return;
     if (
       kind === 'confirm' &&
@@ -150,12 +164,47 @@ export function InvoiceBankReceiptQueue({
       return;
     const rejection = reason.trim();
     if (kind === 'reject' && (!detail.canReject || !rejection)) return;
+    let confirmation: BankReceiptConfirmationReview | null = null;
+    if (kind === 'confirm') {
+      setReviewState('loading');
+      try {
+        const response = await fetch(
+          `${base}/${encodeURIComponent(detail.receiptId)}/confirm/review`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: '{}',
+          }
+        );
+        if (!response.ok) throw new Error(String(response.status));
+        confirmation = parseBankReceiptConfirmationReview(await response.json());
+        if (selectedIdRef.current !== detail.receiptId) return;
+        if (
+          !confirmation ||
+          confirmation.scope.action !== 'invoice.bank-receipt-confirmation' ||
+          confirmation.scope.resourceId !== detail.receiptId ||
+          confirmation.scope.profileId !== detail.profileId ||
+          confirmation.data.receipt.amount !== detail.amount ||
+          confirmation.data.invoice?.invoice.id !== detail.invoiceId
+        )
+          throw new Error('Invalid invoice receipt review');
+        setFinancialReview(confirmation);
+        setReviewState('idle');
+      } catch {
+        setFinancialReview(null);
+        setReviewState('error');
+        return;
+      }
+    }
     setAction({
       title: word(kind),
       description: kind === 'confirm' ? word('confirmNotice') : word('rejectNotice'),
       path: `${base}/${encodeURIComponent(detail.receiptId)}/${kind}`,
       method: 'POST',
-      ...(kind === 'reject' ? { body: { reason: rejection } } : {}),
+      ...(kind === 'reject'
+        ? { body: { reason: rejection } }
+        : { body: { expectedReviewHash: confirmation!.hash } }),
       conflictMessage: word('conflict'),
       forbiddenMessage: word('forbidden'),
     });
@@ -396,8 +445,8 @@ export function InvoiceBankReceiptQueue({
               <div className="flex flex-wrap gap-2">
                 {detail.canConfirm && !detail.dualApprovalPending ? (
                   <Button
-                    disabled={!allocation || !detail.attachmentUrl}
-                    onClick={() => review('confirm')}
+                    onClick={() => void review('confirm')}
+                    disabled={!allocation || !detail.attachmentUrl || reviewState === 'loading'}
                   >
                     {word('confirm')}
                   </Button>
@@ -415,13 +464,15 @@ export function InvoiceBankReceiptQueue({
                     <Button
                       variant="outline"
                       disabled={!reason.trim()}
-                      onClick={() => review('reject')}
+                      onClick={() => void review('reject')}
                     >
                       {word('reject')}
                     </Button>
                   </div>
                 ) : null}
               </div>
+              {reviewState === 'loading' ? <p role="status">{word('reviewLoading')}</p> : null}
+              {reviewState === 'error' ? <p role="alert">{word('reviewError')}</p> : null}
             </>
           ) : null}
         </section>
@@ -430,16 +481,21 @@ export function InvoiceBankReceiptQueue({
         <TeamActionDialog
           action={action}
           summary={
-            allocation && action.path.endsWith('/confirm') ? (
-              <p>
-                {word('invoiceAllocation')}: {numbers.money(allocation.invoiceAllocation)} ·{' '}
-                {word('walletCredit')}: {numbers.money(allocation.walletCreditAmount)}
-              </p>
+            financialReview && action.path.endsWith('/confirm') ? (
+              <BankReceiptFinancialReview
+                review={financialReview}
+                formatDate={time.format}
+                formatPaymentDate={(value) => value ?? '—'}
+              />
             ) : null
           }
-          onClose={() => setAction(null)}
+          onClose={() => {
+            setAction(null);
+            setFinancialReview(null);
+          }}
           onSuccess={async () => {
             setAction(null);
+            setFinancialReview(null);
             setReason('');
             refresh();
           }}

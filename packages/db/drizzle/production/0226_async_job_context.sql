@@ -1,0 +1,2 @@
+ALTER TABLE "async_jobs" ADD COLUMN "operating_context" text DEFAULT 'customer' NOT NULL;--> statement-breakpoint
+ALTER TABLE "async_jobs" ADD CONSTRAINT "async_jobs_operating_context" CHECK ("async_jobs"."operating_context" IN ('customer','staff'));

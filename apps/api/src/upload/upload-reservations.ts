@@ -2,6 +2,7 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { createDirectDbPool, getDbPool } from '@barghsa/db';
 import type { CreateRecordOptions } from '@barghsa/shared/storage';
 import type { UploadContext } from './upload.types.js';
+import type { OperatingContext } from '../session/session.service.js';
 
 /** Commit ownership and cleanup intent before handing an upload URL to the browser. */
 export async function reserveUpload(options: {
@@ -12,7 +13,7 @@ export async function reserveUpload(options: {
   fileSize: number;
   category: string;
   expiresIn: number;
-  context?: UploadContext;
+  context?: UploadContext & { operatingContext?: OperatingContext };
   independent?: boolean;
 }) {
   const pool = options.independent

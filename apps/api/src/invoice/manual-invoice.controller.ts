@@ -14,6 +14,8 @@ import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { ManualInvoiceService } from './manual-invoice.service.js';
+import { ApiZodBody } from '../openapi/zod-body.decorator.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 
 const irr = z
   .string()
@@ -27,6 +29,7 @@ const inputSchema = z
       .transform((value) => value.toLowerCase()),
     contractId: z.string().trim().min(1).max(200).optional(),
     idempotencyKey: z.string().uuid(),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
     lines: z
       .array(
         z
@@ -43,6 +46,7 @@ const inputSchema = z
       .max(100),
   })
   .strict();
+const reviewInputSchema = inputSchema.omit({ expectedReviewHash: true });
 
 @ApiTags('Admin · Manual invoices')
 @ApiBearerAuth()
@@ -71,6 +75,29 @@ export class ManualInvoiceController {
     return this.service.profileOptions(req.session, parsed.data, before);
   }
 
+  @Post('review')
+  @RateLimit({ namespace: 'invoice:manual-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({
+    summary: 'Review the exact customer, lines, VAT, total and due rule before issuing',
+  })
+  @ApiZodBody(reviewInputSchema)
+  async review(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    if (!hasStaffPermission(req, 'invoices:write'))
+      throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+    const parsed = reviewInputSchema.safeParse(body);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    return this.service.reviewManualInvoice(
+      {
+        profileId: parsed.data.profileId,
+        idempotencyKey: parsed.data.idempotencyKey,
+        ...(parsed.data.contractId === undefined ? {} : { contractId: parsed.data.contractId }),
+        lines: parsed.data.lines.map((line) => ({ ...line, unitPrice: BigInt(line.unitPrice) })),
+      },
+      req.session
+    );
+  }
+
   @Post()
   @RequiresStepUp()
   @ApiOperation({ summary: 'Create and issue a manual invoice for a customer profile' })
@@ -78,11 +105,12 @@ export class ManualInvoiceController {
     schema: {
       type: 'object',
       additionalProperties: false,
-      required: ['profileId', 'idempotencyKey', 'lines'],
+      required: ['profileId', 'idempotencyKey', 'expectedReviewHash', 'lines'],
       properties: {
         profileId: { type: 'string', format: 'uuid' },
         contractId: { type: 'string', minLength: 1, maxLength: 200 },
         idempotencyKey: { type: 'string', format: 'uuid' },
+        expectedReviewHash: { type: 'string', pattern: '^[a-f0-9]{64}$' },
         lines: {
           type: 'array',
           minItems: 1,
@@ -139,6 +167,7 @@ export class ManualInvoiceController {
     const invoice = await this.service.createManualInvoice({
       profileId: parsed.data.profileId,
       idempotencyKey: parsed.data.idempotencyKey,
+      expectedReviewHash: parsed.data.expectedReviewHash,
       ...(parsed.data.contractId !== undefined ? { contractId: parsed.data.contractId } : {}),
       lines: parsed.data.lines.map((line) => ({ ...line, unitPrice: BigInt(line.unitPrice) })),
       actorUserId: req.session.userId,

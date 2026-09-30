@@ -82,7 +82,30 @@ function payload(kind: Kind) {
     ...(kind === 'replacement' ? { lines } : { amount: '-25000' }),
   };
 }
-function create(id: string, body: unknown, headers: Record<string, string>) {
+const reviewHashes = new Map<string, string>();
+async function create(id: string, body: unknown, headers: Record<string, string>) {
+  if (body && typeof body === 'object') {
+    const input = body as Record<string, unknown>;
+    if (
+      (input.kind === 'adjustment' || input.kind === 'replacement') &&
+      !input.expectedReviewHash
+    ) {
+      const key = `${id}:${String(input.idempotencyKey)}`;
+      if (!reviewHashes.has(key)) {
+        const preview = await fetch(`${http.base}/api/admin/invoices/${id}/corrections/review`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            kind: input.kind,
+            reason: input.reason,
+            ...(input.kind === 'replacement' ? { lines: input.lines } : { amount: input.amount }),
+          }),
+        });
+        if (preview.ok) reviewHashes.set(key, ((await preview.json()) as { hash: string }).hash);
+      }
+      body = { ...input, expectedReviewHash: reviewHashes.get(key) ?? '0'.repeat(64) };
+    }
+  }
   return fetch(`${http.base}/api/admin/invoices/${id}/corrections`, {
     method: 'POST',
     headers,
@@ -157,6 +180,27 @@ it.each(['replacement', 'adjustment'] as const)(
       expect(created.accounting_amount).toBe('-25000');
       expect(created.payable_from).toBeNull();
       expect(created.due_at).toBeNull();
+      const reviews = await http.pool.query(
+        "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='invoice.adjustment_review_confirmed' AND metadata::jsonb->>'adjustmentInvoiceId'=$1",
+        [first!.invoiceId]
+      );
+      expect(reviews.rows).toHaveLength(1);
+      expect(reviews.rows[0].metadata.financialReview).toMatchObject({
+        scope: { action: 'invoice.adjustment.submit', profileId, resourceId: id },
+        data: { adjustment: { amount: '-25000', direction: 'credit' } },
+        hash: reviewHashes.get(`${id}:${body.idempotencyKey}`),
+      });
+    } else {
+      const reviews = await http.pool.query(
+        "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='invoice.replacement_review_confirmed' AND metadata::jsonb->>'replacementInvoiceId'=$1",
+        [first!.invoiceId]
+      );
+      expect(reviews.rows).toHaveLength(1);
+      expect(reviews.rows[0].metadata.financialReview).toMatchObject({
+        scope: { action: 'invoice.replacement.submit', profileId, resourceId: id },
+        data: { replacement: { totals: { total: '60761' } } },
+        hash: reviewHashes.get(`${id}:${body.idempotencyKey}`),
+      });
     }
     const audit = await http.pool.query(
       "SELECT user_id FROM audit_log WHERE event='invoice.issue' AND metadata::jsonb->>'invoiceId'=$1",
@@ -174,6 +218,155 @@ it.each(['replacement', 'adjustment'] as const)(
     expect((await create(id, body, who.headers)).status).toBe(401);
   }
 );
+
+it('rejects a missing or stale adjustment review and accepts a fresh one', async () => {
+  const who = await actor(),
+    id = await original('adjustment'),
+    body = { ...payload('adjustment'), amount: '-25000' };
+  const url = `${http.base}/api/admin/invoices/${id}/corrections`;
+  expect(
+    (await fetch(url, { method: 'POST', headers: who.headers, body: JSON.stringify(body) })).status
+  ).toBe(400);
+  const review = await fetch(`${url}/review`, {
+    method: 'POST',
+    headers: who.headers,
+    body: JSON.stringify({ kind: 'adjustment', reason: body.reason, amount: body.amount }),
+  });
+  expect(review.status).toBe(200);
+  const staleHash = ((await review.json()) as { hash: string }).hash;
+  await http.pool.query(
+    "UPDATE invoice_lines SET description='Revised original usage' WHERE invoice_id=$1",
+    [id]
+  );
+  expect(
+    (
+      await fetch(url, {
+        method: 'POST',
+        headers: who.headers,
+        body: JSON.stringify({ ...body, expectedReviewHash: staleHash }),
+      })
+    ).status
+  ).toBe(409);
+  expect(await linkedCount(id)).toBe(0);
+  const fresh = await fetch(`${url}/review`, {
+    method: 'POST',
+    headers: who.headers,
+    body: JSON.stringify({ kind: 'adjustment', reason: body.reason, amount: body.amount }),
+  });
+  expect(fresh.status).toBe(200);
+  const freshHash = ((await fresh.json()) as { hash: string }).hash;
+  expect(freshHash).not.toBe(staleHash);
+  expect(
+    (
+      await fetch(url, {
+        method: 'POST',
+        headers: who.headers,
+        body: JSON.stringify({ ...body, expectedReviewHash: freshHash }),
+      })
+    ).status
+  ).toBe(201);
+});
+
+it('rejects a missing or stale replacement review before cancelling the original', async () => {
+  const who = await actor(),
+    id = await original('replacement'),
+    body = { ...payload('replacement'), lines };
+  const url = `${http.base}/api/admin/invoices/${id}/corrections`;
+  expect(
+    (await fetch(url, { method: 'POST', headers: who.headers, body: JSON.stringify(body) })).status
+  ).toBe(400);
+  const reviewBody = { kind: 'replacement', reason: body.reason, lines: body.lines };
+  const preview = await fetch(`${url}/review`, {
+    method: 'POST',
+    headers: who.headers,
+    body: JSON.stringify(reviewBody),
+  });
+  expect(preview.status, await preview.clone().text()).toBe(200);
+  const staleHash = ((await preview.json()) as { hash: string }).hash;
+  await http.pool.query(
+    "UPDATE invoice_lines SET description='Updated original usage' WHERE invoice_id=$1",
+    [id]
+  );
+  expect(
+    (
+      await fetch(url, {
+        method: 'POST',
+        headers: who.headers,
+        body: JSON.stringify({ ...body, expectedReviewHash: staleHash }),
+      })
+    ).status
+  ).toBe(409);
+  expect((await snapshot(id)).invoice.state).toBe('Unpaid');
+  expect(await linkedCount(id)).toBe(0);
+  const fresh = await fetch(`${url}/review`, {
+    method: 'POST',
+    headers: who.headers,
+    body: JSON.stringify(reviewBody),
+  });
+  expect(fresh.status).toBe(200);
+  const freshHash = ((await fresh.json()) as { hash: string }).hash;
+  expect(freshHash).not.toBe(staleHash);
+  expect(
+    (
+      await fetch(url, {
+        method: 'POST',
+        headers: who.headers,
+        body: JSON.stringify({ ...body, expectedReviewHash: freshHash }),
+      })
+    ).status
+  ).toBe(201);
+});
+
+it('rejects replacement confirmation when the due-date rule changes', async () => {
+  const who = await actor(),
+    id = await original('replacement'),
+    body = { ...payload('replacement'), lines };
+  const url = `${http.base}/api/admin/invoices/${id}/corrections`;
+  const reviewBody = { kind: 'replacement', reason: body.reason, lines: body.lines };
+  const preview = await fetch(`${url}/review`, {
+    method: 'POST',
+    headers: who.headers,
+    body: JSON.stringify(reviewBody),
+  });
+  expect(preview.status).toBe(200);
+  const oldHash = ((await preview.json()) as { hash: string }).hash;
+  await http.pool.query(
+    `INSERT INTO service_due_periods(service_type,default_days,effective_from,created_by)
+     VALUES ('manual',14,'2026-01-01T00:00:00.000Z','correction-finance')`
+  );
+  try {
+    expect(
+      (
+        await fetch(url, {
+          method: 'POST',
+          headers: who.headers,
+          body: JSON.stringify({ ...body, expectedReviewHash: oldHash }),
+        })
+      ).status
+    ).toBe(409);
+    expect((await snapshot(id)).invoice.state).toBe('Unpaid');
+    expect(await linkedCount(id)).toBe(0);
+    const fresh = await fetch(`${url}/review`, {
+      method: 'POST',
+      headers: who.headers,
+      body: JSON.stringify(reviewBody),
+    });
+    expect(fresh.status).toBe(200);
+    const freshHash = ((await fresh.json()) as { hash: string }).hash;
+    expect(freshHash).not.toBe(oldHash);
+    expect(
+      (
+        await fetch(url, {
+          method: 'POST',
+          headers: who.headers,
+          body: JSON.stringify({ ...body, expectedReviewHash: freshHash }),
+        })
+      ).status
+    ).toBe(201);
+  } finally {
+    await http.pool.query("DELETE FROM service_due_periods WHERE service_type='manual'");
+  }
+});
 
 it('issues an additional charge with exact int8 money above Number precision', async () => {
   const who = await actor(),

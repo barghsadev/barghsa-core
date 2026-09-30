@@ -103,6 +103,9 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': resolve(__dirname, './src'),
+        ...(authEntry
+          ? { './routeTree.gen.js': resolve(__dirname, './src/routeTree.auth.ts') }
+          : {}),
       },
     },
   };

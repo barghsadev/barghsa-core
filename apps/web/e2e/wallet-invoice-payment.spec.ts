@@ -116,11 +116,39 @@ async function shell(
     });
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false },
+    })
+  );
+  await page.route('**/api/profiles', (route) =>
+    route.fulfill({
+      json: {
+        profiles: [{ id: profileId, profileType: 'LEGAL', title: 'Customer profile' }],
+        activeProfileId: profileId,
+        hasDefault: true,
+      },
+    })
+  );
+  await page.route('**/api/profiles/verification-status', (route) =>
+    route.fulfill({
+      json: {
+        activeProfileId: profileId,
+        profileStatus: 'ACTIVE',
+        verificationRequired: true,
+        isVerified: true,
+      },
+    })
+  );
   await page.route('**/api/public/branding/config', (route) =>
     route.fulfill({
       json: {
         appTitle: 'Finance',
+        appTitleFa: 'مالی',
         slogan: '',
+        supportEmail: 'support@example.test',
+        supportPhone: '+982188888888',
+        supportMobile: '+989121234567',
         primaryColor: '#2563eb',
         secondaryColor: '#64748b',
         accentColor: '#f59e0b',

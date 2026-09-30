@@ -141,4 +141,191 @@ it('lists seeded products by profile, submits without invoicing, and isolates hi
   const companyRequest = await post('company', profiles.company!, certificateId, randomUUID());
   expect(companyRequest.status, http.logs()).toBe(201);
   expect(((await companyRequest.json()) as { status: string }).status).toBe('submitted');
+  await http.pool.query(
+    `INSERT INTO consultation_requests
+    (profile_id,product_id,product_snapshot,submitted_by,submission_key,status,submitted_at)
+    SELECT profile_id,product_id,product_snapshot,submitted_by,gen_random_uuid(),'completed',submitted_at + n * interval '1 second'
+    FROM consultation_requests CROSS JOIN generate_series(1,101) n WHERE id=$1`,
+    [created.requestId]
+  );
+  const filtered = await fetch(
+    `${http.base}/api/consultations/requests?profileId=${profiles.individual}&statuses=submitted`,
+    { headers: headers.individual! }
+  );
+  expect(filtered.status, http.logs()).toBe(200);
+  expect(await filtered.json()).toMatchObject({
+    requests: [{ id: created.requestId }],
+    nextBefore: null,
+  });
+  const completedPage = await fetch(
+    `${http.base}/api/consultations/requests?profileId=${profiles.individual}&statuses=completed`,
+    { headers: headers.individual! }
+  );
+  const page = (await completedPage.json()) as {
+    requests: { id: string; status: string }[];
+    nextBefore: string;
+  };
+  expect(page.requests).toHaveLength(100);
+  expect(page.requests.every((row) => row.status === 'completed')).toBe(true);
+  const older = await fetch(
+    `${http.base}/api/consultations/requests?profileId=${profiles.individual}&statuses=completed&before=${page.nextBefore}`,
+    { headers: headers.individual! }
+  );
+  expect(((await older.json()) as { requests: unknown[] }).requests).toHaveLength(1);
+  expect(
+    (
+      await fetch(
+        `${http.base}/api/consultations/requests?profileId=${profiles.individual}&statuses=completed&before=${created.requestId}`,
+        { headers: headers.individual! }
+      )
+    ).status
+  ).toBe(404);
+  expect(
+    (
+      await fetch(
+        `${http.base}/api/consultations/requests?profileId=${profiles.individual}&statuses=unknown`,
+        { headers: headers.individual! }
+      )
+    ).status
+  ).toBe(400);
+  const originalTime = (
+    await http.pool.query<{ submitted_at: Date }>(
+      'SELECT submitted_at FROM consultation_requests WHERE id=$1',
+      [created.requestId]
+    )
+  ).rows[0]!.submitted_at;
+  const start = originalTime.toISOString();
+  const end = new Date(originalTime.getTime() + 1000).toISOString();
+  // PostgreSQL stores sub-millisecond precision; pin one row to the exact tested boundary.
+  await http.pool.query('UPDATE consultation_requests SET submitted_at=$2 WHERE id=$1', [
+    created.requestId,
+    start,
+  ]);
+  const range = new URLSearchParams({
+    profileId: profiles.individual!,
+    from: start,
+    to: end,
+    statuses: 'submitted,completed',
+  });
+  const ranged = await fetch(`${http.base}/api/consultations/requests?${range}`, {
+    headers: headers.individual!,
+  });
+  expect(ranged.status, http.logs()).toBe(200);
+  expect(await ranged.json()).toMatchObject({
+    requests: [{ id: created.requestId }],
+    nextBefore: null,
+  });
+  range.set('to', start);
+  expect(
+    (
+      await fetch(`${http.base}/api/consultations/requests?${range}`, {
+        headers: headers.individual!,
+      })
+    ).status
+  ).toBe(400);
+  range.delete('from');
+  const excluded = await fetch(`${http.base}/api/consultations/requests?${range}`, {
+    headers: headers.individual!,
+  });
+  expect(await excluded.json()).toEqual({ requests: [], nextBefore: null });
+  range.set('before', created.requestId);
+  expect(
+    (
+      await fetch(`${http.base}/api/consultations/requests?${range}`, {
+        headers: headers.individual!,
+      })
+    ).status
+  ).toBe(404);
+  const combined = await fetch(
+    `${http.base}/api/consultations/requests?profileId=${profiles.individual}&statuses=submitted,completed`,
+    { headers: headers.individual! }
+  );
+  expect(((await combined.json()) as { requests: unknown[] }).requests).toHaveLength(100);
+  // Equal submission times must still paginate deterministically by UUID.
+  await http.pool.query(
+    "UPDATE consultation_requests SET submitted_at=$2 WHERE profile_id=$1 AND status='completed'",
+    [profiles.individual, end]
+  );
+  const ascending = new URLSearchParams({
+    profileId: profiles.individual!,
+    sort: 'submitted_at:asc',
+    statuses: 'submitted,completed',
+  });
+  const sorted = await fetch(`${http.base}/api/consultations/requests?${ascending}`, {
+    headers: headers.individual!,
+  });
+  expect(sorted.status, http.logs()).toBe(200);
+  const firstPage = (await sorted.json()) as { requests: { id: string }[]; nextBefore: string };
+  expect(firstPage.requests).toHaveLength(100);
+  expect(firstPage.requests[0]!.id).toBe(created.requestId);
+  ascending.set('before', firstPage.nextBefore);
+  const nextPage = await fetch(`${http.base}/api/consultations/requests?${ascending}`, {
+    headers: headers.individual!,
+  });
+  expect(nextPage.status, http.logs()).toBe(200);
+  const lastPage = (await nextPage.json()) as { requests: { id: string }[]; nextBefore: null };
+  expect(lastPage.requests).toHaveLength(2);
+  expect(lastPage.nextBefore).toBeNull();
+  const expectedIds = (
+    await http.pool.query<{ id: string }>(
+      'SELECT id FROM consultation_requests WHERE profile_id=$1 ORDER BY submitted_at ASC,id ASC',
+      [profiles.individual]
+    )
+  ).rows.map((r) => r.id);
+  expect([...firstPage.requests, ...lastPage.requests].map((r) => r.id)).toEqual(expectedIds);
+  const search = new URLSearchParams({
+    profileId: profiles.individual!,
+    q: created.requestId,
+    from: start,
+    to: end,
+    statuses: 'submitted',
+    sort: 'submitted_at:asc',
+  });
+  const searched = await fetch(`${http.base}/api/consultations/requests?${search}`, {
+    headers: headers.individual!,
+  });
+  expect(searched.status, http.logs()).toBe(200);
+  expect(await searched.json()).toMatchObject({
+    requests: [{ id: created.requestId }],
+    nextBefore: null,
+  });
+  // Literal wildcard characters must not broaden a customer search.
+  search.set('q', '%');
+  const literal = await fetch(`${http.base}/api/consultations/requests?${search}`, {
+    headers: headers.individual!,
+  });
+  expect(await literal.json()).toEqual({ requests: [], nextBefore: null });
+  search.set('before', created.requestId);
+  expect(
+    (
+      await fetch(`${http.base}/api/consultations/requests?${search}`, {
+        headers: headers.individual!,
+      })
+    ).status
+  ).toBe(404);
+  search.delete('before');
+  await http.pool.query(
+    "UPDATE consultation_requests SET product_snapshot=jsonb_set(product_snapshot,'{title}',$2::jsonb) WHERE id=$1",
+    [created.requestId, JSON.stringify({ en: '100%_\\ Service', fa: 'مشاوره' })]
+  );
+  for (const q of ['100%_\\', 'مشاوره']) {
+    search.set('q', q);
+    const titleMatch = await fetch(`${http.base}/api/consultations/requests?${search}`, {
+      headers: headers.individual!,
+    });
+    expect(titleMatch.status, http.logs()).toBe(200);
+    expect(await titleMatch.json()).toMatchObject({
+      requests: [{ id: created.requestId }],
+      nextBefore: null,
+    });
+  }
+  search.delete('q');
+  search.set('sort', 'status:asc');
+  expect(
+    (
+      await fetch(`${http.base}/api/consultations/requests?${search}`, {
+        headers: headers.individual!,
+      })
+    ).status
+  ).toBe(400);
 });

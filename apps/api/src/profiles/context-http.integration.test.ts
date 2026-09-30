@@ -54,7 +54,7 @@ beforeEach(async () => {
   );
   for (const id of [owned, finance, legal])
     await http.pool.query(
-      "INSERT INTO in_app_notifications(profile_id,type,title_i18n_key,body_i18n_key) VALUES ($1,'profile_verified','test.title','test.body')",
+      "INSERT INTO in_app_notifications(profile_id,operating_context,type,title_i18n_key,body_i18n_key) VALUES ($1,'customer','profile_verified','test.title','test.body')",
       [id]
     );
 }, 40000);
@@ -200,6 +200,7 @@ it('checks wallet capability separately from profile selection', async () => {
     paymentDate: '2026-09-01',
     payerReference: '12345678',
     attachmentKey: 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf',
+    expectedReviewHash: 'a'.repeat(64),
   });
   expect(receipt.status, await receipt.text()).toBe(404);
   expect((await request(`wallet/${finance}`)).status).toBe(200);

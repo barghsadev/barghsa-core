@@ -7,7 +7,7 @@ import { rateLimitMessage, retryAfterSeconds } from '../lib/auth-errors.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/auth';
-import { toast } from 'sonner';
+import { toast } from '../lib/toast-api.js';
 import { Button, Input, Label, Alert, AlertDescription } from '@barghsa/ui';
 import { AuthLayout } from '../components/AuthLayout.js';
 import { PasswordField } from '../components/PasswordField.js';

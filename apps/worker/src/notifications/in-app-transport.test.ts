@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { InAppNotificationTransport, relativeLinkRoute } from './in-app-transport.js';
+import {
+  InAppNotificationTransport,
+  inboxOperatingContext,
+  relativeLinkRoute,
+} from './in-app-transport.js';
 import type { NotificationSendPayload } from '@barghsa/shared/notifications';
 
 /**
@@ -45,16 +49,17 @@ describe('InAppNotificationTransport', () => {
     expect(inserts).toHaveLength(1);
     const insert = inserts[0]!;
     expect(insert.sql).toContain('INSERT INTO in_app_notifications');
-    // [ profile_id, type, title_i18n_key, body_i18n_key, params ]
+    // [ profile_id, operating_context, type, title_i18n_key, body_i18n_key, params ]
     const p = insert.params;
     expect(p[0]).toBe('profile-1');
-    expect(p[1]).toBe('profile_verified');
+    expect(p[1]).toBe('customer');
+    expect(p[2]).toBe('profile_verified');
     // Derived i18n keys from the event type.
-    expect(p[2]).toBe('notifications.profile_verified.title');
-    expect(p[3]).toBe('notifications.profile_verified.body');
+    expect(p[3]).toBe('notifications.profile_verified.title');
+    expect(p[4]).toBe('notifications.profile_verified.body');
     // Payload interpolation vars are serialized to JSONB.
-    expect(JSON.parse(p[4] as string)).toEqual({ name: 'Morteza' });
-    expect(p[5]).toBe('/settings/profile');
+    expect(JSON.parse(p[5] as string)).toEqual({ name: 'Morteza' });
+    expect(p[6]).toBe('/settings/profile');
   });
 
   it('persists a same-origin relative link_route from the dispatch payload', async () => {
@@ -67,9 +72,10 @@ describe('InAppNotificationTransport', () => {
       payload: { event_id: 'evt-1', link_route: '/admin' },
     });
 
-    expect(inserts[0]!.params[2]).toBe('notifications.finance.chargeback_unresolved.title');
-    expect(inserts[0]!.params[3]).toBe('notifications.finance.chargeback_unresolved.body');
-    expect(inserts[0]!.params[5]).toBe('/admin');
+    expect(inserts[0]!.params[1]).toBe('staff');
+    expect(inserts[0]!.params[3]).toBe('notifications.finance.chargeback_unresolved.title');
+    expect(inserts[0]!.params[4]).toBe('notifications.finance.chargeback_unresolved.body');
+    expect(inserts[0]!.params[6]).toBe('/admin');
   });
 
   it('ignores absolute, protocol-relative, and backslash-hijacked link_route values', async () => {
@@ -80,19 +86,19 @@ describe('InAppNotificationTransport', () => {
       ...basePayload,
       payload: { link_route: 'https://evil.example/admin' },
     });
-    expect(inserts[0]!.params[5]).toBeNull();
+    expect(inserts[0]!.params[6]).toBeNull();
 
     await transport.send({
       ...basePayload,
       payload: { link_route: '//evil.example/admin' },
     });
-    expect(inserts[1]!.params[5]).toBeNull();
+    expect(inserts[1]!.params[6]).toBeNull();
 
     await transport.send({
       ...basePayload,
       payload: { link_route: '/\\evil.example/admin' },
     });
-    expect(inserts[2]!.params[5]).toBeNull();
+    expect(inserts[2]!.params[6]).toBeNull();
   });
 
   it('serializes an empty payload as an empty object', async () => {
@@ -101,7 +107,7 @@ describe('InAppNotificationTransport', () => {
 
     await transport.send({ ...basePayload, payload: {} });
 
-    expect(JSON.parse(inserts[0]!.params[4] as string)).toEqual({});
+    expect(JSON.parse(inserts[0]!.params[5] as string)).toEqual({});
   });
 
   it('throws when neither account nor profile recipient is present', async () => {
@@ -111,6 +117,20 @@ describe('InAppNotificationTransport', () => {
     const payload: NotificationSendPayload = { ...basePayload, profileId: null, recipientId: '' };
     await expect(transport.send(payload)).rejects.toThrow(/requires a profile or account/);
     // A rejected send must not leave a partial row.
+    expect(inserts).toHaveLength(0);
+  });
+
+  it('rejects staff notices without an account recipient', async () => {
+    const { pool, inserts } = makePool();
+    const transport = new InAppNotificationTransport(pool);
+    await expect(
+      transport.send({
+        ...basePayload,
+        recipientId: basePayload.profileId!,
+        eventKey: 'admin.service_escalated',
+        payload: {},
+      })
+    ).rejects.toThrow(/account recipient/);
     expect(inserts).toHaveLength(0);
   });
 
@@ -124,6 +144,24 @@ describe('InAppNotificationTransport', () => {
   it('exposes the in_app channel', () => {
     const transport = new InAppNotificationTransport();
     expect(transport.channel).toBe('in_app');
+  });
+});
+
+describe('inboxOperatingContext', () => {
+  it('keeps staff events separate even when they reference a customer profile', () => {
+    expect(inboxOperatingContext('finance.chargeback_unresolved', '/admin', 'profile-1')).toBe(
+      'staff'
+    );
+  });
+
+  it('keeps account-security notices available in either workspace', () => {
+    expect(inboxOperatingContext('auth.refresh_replay', '/settings/security', null)).toBe(
+      'account'
+    );
+  });
+
+  it('requires an explicit destination for account-only events', () => {
+    expect(() => inboxOperatingContext('unknown.event', null, null)).toThrow(/operating context/);
   });
 });
 

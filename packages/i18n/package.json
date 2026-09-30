@@ -42,6 +42,11 @@
       "import": "./dist/saving.js",
       "default": "./dist/saving.js"
     },
+    "./saving-staff-review": {
+      "types": "./dist/saving-staff-review.d.ts",
+      "import": "./dist/saving-staff-review.js",
+      "default": "./dist/saving-staff-review.js"
+    },
     "./maintenance": {
       "types": "./dist/maintenance.d.ts",
       "import": "./dist/maintenance.js",
@@ -136,6 +141,11 @@
       "types": "./dist/app.d.ts",
       "import": "./dist/app.js",
       "default": "./dist/app.js"
+    },
+    "./dashboard": {
+      "types": "./dist/dashboard.d.ts",
+      "import": "./dist/dashboard.js",
+      "default": "./dist/dashboard.js"
     },
     "./terms": {
       "types": "./dist/terms.d.ts",

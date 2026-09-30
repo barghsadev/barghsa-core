@@ -6,11 +6,16 @@ settings:
   injectWorkspacePackages: true
 
 overrides:
+  brace-expansion@1: 1.1.21
+  brace-expansion@2: 2.1.7
+  brace-expansion@5: 5.0.12
   drizzle-kit@0.31.10>@esbuild-kit/esm-loader: '-'
   qs@<6.16.0: 6.16.0
   js-yaml@>=4.0.0 <4.3.2: 4.3.2
   multer@<2.3.0: 2.3.0
   geoip-country>ip-address: 10.5.0
+  undici@7: 7.29.1
+  undici@8: 8.10.2
   fast-uri: 3.1.8
   esbuild@>=0.27.3 <0.28.1: 0.28.2
 
@@ -32,6 +37,9 @@ patchedDependencies:
   geoip-country@5.0.202609050122:
     hash: 622db296426a7535d463f559926998e2ceed87b7c9b758fdbcdc9f2e67e7f668
     path: patches/geoip-country@5.0.202609050122.patch
+  nodemailer@10.0.12:
+    hash: 4f3694f1fd49a004da9af805855c1426602fedbba7ec738c7be67ff46c0743f8
+    path: patches/nodemailer@10.0.12.patch
   vite@6.4.3:
     hash: 25dd7c8ef2797db46bbfbe8078f3e7428fa59f2e8ecc9ef57fe9acb664526739
     path: patches/vite@6.4.3.patch
@@ -146,8 +154,8 @@ importers:
         specifier: ^5.11.1
         version: 5.11.1
       nodemailer:
-        specifier: 9.1.1
-        version: 9.1.1
+        specifier: 10.0.12
+        version: 10.0.12(patch_hash=4f3694f1fd49a004da9af805855c1426602fedbba7ec738c7be67ff46c0743f8)
       pdfjs-dist:
         specifier: 6.3.289
         version: 6.3.289
@@ -340,8 +348,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
       nodemailer:
-        specifier: 9.1.1
-        version: 9.1.1
+        specifier: 10.0.12
+        version: 10.0.12(patch_hash=4f3694f1fd49a004da9af805855c1426602fedbba7ec738c7be67ff46c0743f8)
       pdfjs-dist:
         specifier: 6.3.289
         version: 6.3.289
@@ -354,6 +362,9 @@ importers:
       yauzl:
         specifier: 3.2.1
         version: 3.2.1
+      yazl:
+        specifier: 3.3.1
+        version: 3.3.1
     devDependencies:
       '@barghsa/tsconfig':
         specifier: workspace:*
@@ -385,9 +396,6 @@ importers:
       typescript:
         specifier: ^5.7.0
         version: 5.9.3
-      yazl:
-        specifier: 3.3.1
-        version: 3.3.1
 
   packages/db:
     dependencies:
@@ -474,8 +482,8 @@ importers:
         specifier: ^5.11.1
         version: 5.11.1
       nodemailer:
-        specifier: 9.1.1
-        version: 9.1.1
+        specifier: 10.0.12
+        version: 10.0.12(patch_hash=4f3694f1fd49a004da9af805855c1426602fedbba7ec738c7be67ff46c0743f8)
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -3780,14 +3788,14 @@ packages:
   bowser@2.14.1:
     resolution: {integrity: sha512-tzPjzCxygAKWFOJP011oxFHs57HzIhOEracIgAePE4pqB3LikALKnSzUyU4MGs9/iCEUuHlAJTjTc5M+u7YEGg==}
 
-  brace-expansion@1.1.18:
-    resolution: {integrity: sha512-Edep/X9fGqVNmzKBVsDYIOtD+z1tuezV70LBjdCst9Tqu76lsnvRiZ6oTic1n+/BIwX6QDGAO94PN4N2SADvtw==}
+  brace-expansion@1.1.21:
+    resolution: {integrity: sha512-9zeA+KLZNNzglF2TPKRQEDyx6Yby7daAkuy8MiPzpXPsYDWi/DRM8jmwUDxokQjYqBpv5DgPiwD4h4ZZSy1Ujw==}
 
-  brace-expansion@2.1.4:
-    resolution: {integrity: sha512-hGfVzPxthbf3+2yjg/RBs60cB0FhqBS/zvdV/4wn4/BmN0bNMMHPc4V/BbFieqf1TKAGGAHnY4eSjajCl0f2Xg==}
+  brace-expansion@2.1.7:
+    resolution: {integrity: sha512-uZbew1NqdmPDTMJ8ah1y+b+9QEJrfkXFk3RcTQw3X0jW/xRUvFKsg1CfQdSYGdTbXZWExtU3J3ccxtnfw1Fi0g==}
 
-  brace-expansion@5.0.9:
-    resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
+  brace-expansion@5.0.12:
+    resolution: {integrity: sha512-YovQ3rzhaLMIrDjNDMkNS01tea93qhEhG5xy8f6+R0l+dw3Ki+5sCoIoI942iuLZTHWogWktgwVDhU09iNEimQ==}
     engines: {node: 20 || >=22}
 
   braces@3.0.3:
@@ -5746,9 +5754,9 @@ packages:
     resolution: {integrity: sha512-D9UOmYG3UH1V+ENW56t5QXBwJw1YEY18ruVeus89Rw+SyIgjPkCO84bRzO3uNIYosJbNwiabWVn48o3uJLjxFQ==}
     engines: {node: '>=18'}
 
-  nodemailer@9.1.1:
-    resolution: {integrity: sha512-izw9mVKFix6YSnC9eLgV6g1opl9DUlRio9ZNcq+Wu9Ujn2UwF+8Nl0B8nz22kEC+CTZCvinkxwJ0DeFbb6NwcQ==}
-    engines: {node: '>=6.0.0'}
+  nodemailer@10.0.12:
+    resolution: {integrity: sha512-PQ46oNbNMuH/Sno7B5IWIU9etytwrO0xdTFvWXpIQFRXhBAXtzD48243AS+BCbQQTPD8y3fqUrgLn0tSo77gvg==}
+    engines: {node: '>=20.0.0'}
 
   nodemon@3.1.14:
     resolution: {integrity: sha512-jakjZi93UtB3jHMWsXL68FXSAosbLfY0In5gtKq3niLSkrWznrVBzXFNOEMJUfc9+Ke7SHWoAZsiMkNP3vq6Jw==}
@@ -7084,12 +7092,12 @@ packages:
   undici-types@8.3.0:
     resolution: {integrity: sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ==}
 
-  undici@7.29.0:
-    resolution: {integrity: sha512-IDxfleLmmbSskfWSUATiN1nfn2rDuvnMOqb5CWR92iIfojA0Ud+ulOAAEQ57LPr9rWmsreUyf5lwyao+7GNNVw==}
+  undici@7.29.1:
+    resolution: {integrity: sha512-RYONW2MeafgYlkVOKYKkA/Ag7BmXqgIWCa8t1m0JcxrQg9pI9lEqRhAOruOBCbAohOa/gkCF+iPi9hrgvTzu6Q==}
     engines: {node: '>=20.18.1'}
 
-  undici@8.10.0:
-    resolution: {integrity: sha512-HvltHd7avK13QIw/oLe4qoOLyoVSoafqJ2jYOrtMRBkbYT31eiBQ8O0ehRKZiEZCMEyLFQNIADpgCWC5fALvYQ==}
+  undici@8.10.2:
+    resolution: {integrity: sha512-/y4/bH9YNU5hi9NIrpOuvGXFcxrj3CMrV+/AYpowAYTpHn8gX/XPFjNy766FPoYY0miQhdW977JFWKGNhBdwyQ==}
     engines: {node: '>=22.19.0'}
 
   unicode-properties@1.4.1:
@@ -8038,7 +8046,7 @@ snapshots:
       open: 8.4.2
       picomatch: 4.0.5
       systeminformation: 5.33.2
-      undici: 7.29.0
+      undici: 7.29.1
       which: 4.0.0
       yocto-spinner: 1.2.2
 
@@ -10688,16 +10696,16 @@ snapshots:
 
   bowser@2.14.1: {}
 
-  brace-expansion@1.1.18:
+  brace-expansion@1.1.21:
     dependencies:
       balanced-match: 1.0.2
       concat-map: 0.0.1
 
-  brace-expansion@2.1.4:
+  brace-expansion@2.1.7:
     dependencies:
       balanced-match: 1.0.2
 
-  brace-expansion@5.0.9:
+  brace-expansion@5.0.12:
     dependencies:
       balanced-match: 4.0.4
 
@@ -12358,7 +12366,7 @@ snapshots:
       saxes: 6.0.0
       symbol-tree: 3.2.4
       tough-cookie: 6.0.2
-      undici: 7.29.0
+      undici: 7.29.1
       w3c-xmlserializer: 5.0.0
       webidl-conversions: 8.0.1
       whatwg-mimetype: 5.0.0
@@ -12618,19 +12626,19 @@ snapshots:
 
   minimatch@10.2.6:
     dependencies:
-      brace-expansion: 5.0.9
+      brace-expansion: 5.0.12
 
   minimatch@3.1.5:
     dependencies:
-      brace-expansion: 1.1.18
+      brace-expansion: 1.1.21
 
   minimatch@5.1.9:
     dependencies:
-      brace-expansion: 2.1.4
+      brace-expansion: 2.1.7
 
   minimatch@9.0.9:
     dependencies:
-      brace-expansion: 2.1.4
+      brace-expansion: 2.1.7
 
   minimist@1.2.8: {}
 
@@ -12720,7 +12728,7 @@ snapshots:
 
   node-releases@2.0.53: {}
 
-  nodemailer@9.1.1: {}
+  nodemailer@10.0.12(patch_hash=4f3694f1fd49a004da9af805855c1426602fedbba7ec738c7be67ff46c0743f8): {}
 
   nodemon@3.1.14:
     dependencies:
@@ -13596,7 +13604,7 @@ snapshots:
       tailwind-merge: 3.6.0
       ts-morph: 26.0.0
       tsconfig-paths: 4.2.0
-      undici: 7.29.0
+      undici: 7.29.1
       validate-npm-package-name: 7.0.2
       zod: 3.25.76
       zod-to-json-schema: 3.25.2(zod@3.25.76)
@@ -13637,7 +13645,7 @@ snapshots:
       tailwind-merge: 3.6.0
       ts-morph: 26.0.0
       tsconfig-paths: 4.2.0
-      undici: 7.29.0
+      undici: 7.29.1
       validate-npm-package-name: 7.0.2
       zod: 3.25.76
       zod-to-json-schema: 3.25.2(zod@3.25.76)
@@ -14089,7 +14097,7 @@ snapshots:
       ssh-remote-port-forward: 1.0.4
       tar-fs: 3.1.3
       tmp: 0.2.7
-      undici: 8.10.0
+      undici: 8.10.2
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
@@ -14353,9 +14361,9 @@ snapshots:
 
   undici-types@8.3.0: {}
 
-  undici@7.29.0: {}
+  undici@7.29.1: {}
 
-  undici@8.10.0: {}
+  undici@8.10.2: {}
 
   unicode-properties@1.4.1:
     dependencies:

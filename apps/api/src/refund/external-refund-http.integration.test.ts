@@ -70,7 +70,52 @@ async function invoice(amount = '100') {
   );
   return { id, profile, owner };
 }
-function post(path: string, body: unknown = {}, user = 'refund-finance') {
+const reviewHashes = new Map<string, string>();
+async function post(path: string, body: unknown = {}, user = 'refund-finance') {
+  if (
+    /^(external-refunds|wallet-refunds)\/[^/]+\/(approve|reject|cancel|process|record-transfer|reconcile)$/.test(
+      path
+    ) &&
+    body &&
+    typeof body === 'object'
+  ) {
+    const input = body as Record<string, unknown>;
+    if (!input.expectedReviewHash) {
+      const preview = await fetch(`${http.base}/api/admin/${path}/review`, {
+        method: 'POST',
+        headers: headers[user]!,
+        body: JSON.stringify(input),
+      });
+      body = {
+        ...input,
+        expectedReviewHash: preview.ok
+          ? ((await preview.json()) as { hash: string }).hash
+          : '0'.repeat(64),
+      };
+    }
+  }
+  if (['wallet-refunds', 'external-refunds'].includes(path) && body && typeof body === 'object') {
+    const input = body as ReturnType<typeof requestBody> & { expectedReviewHash?: string };
+    if (!input.expectedReviewHash && input.idempotencyKey) {
+      const cacheKey = `${path}:${input.idempotencyKey}`;
+      if (!reviewHashes.has(cacheKey)) {
+        const preview = await fetch(`${http.base}/api/admin/${path}/review`, {
+          method: 'POST',
+          headers: headers[user]!,
+          body: JSON.stringify({
+            invoiceId: input.invoiceId,
+            amount: input.amount,
+            reason: input.reason,
+          }),
+        });
+        reviewHashes.set(
+          cacheKey,
+          preview.ok ? ((await preview.json()) as { hash: string }).hash : '0'.repeat(64)
+        );
+      }
+      body = { ...input, expectedReviewHash: reviewHashes.get(cacheKey) };
+    }
+  }
   return fetch(`${http.base}/api/admin/${path}`, {
     method: 'POST',
     headers: headers[user]!,
@@ -100,6 +145,110 @@ async function balances(f: Awaited<ReturnType<typeof invoice>>) {
     )
   ).rows[0];
 }
+
+it('shows external requests and the shared refundable balance to finance staff', async () => {
+  const f = await invoice('100');
+  const url = `${http.base}/api/admin/external-refunds?invoiceId=${f.id}`;
+  const read = (user = 'refund-finance') => fetch(url, { headers: headers[user]! });
+  expect((await read('refund-support')).status).toBe(403);
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/external-refunds?invoiceId=invalid`, {
+        headers: headers['refund-finance']!,
+      })
+    ).status
+  ).toBe(400);
+  const initial = await read();
+  expect(initial.status).toBe(200);
+  expect(await initial.json()).toMatchObject({
+    invoice: {
+      invoiceId: f.id,
+      paidAmount: '100',
+      refundedAmount: '0',
+      reservedAmount: '0',
+      availableAmount: '100',
+      requestable: true,
+    },
+    refunds: [],
+    nextBefore: null,
+  });
+  const refund = await request(requestBody(f.id, '40'));
+  const pending = await read();
+  expect(await pending.json()).toMatchObject({
+    invoice: { reservedAmount: '40', availableAmount: '60' },
+    refunds: [
+      expect.objectContaining({
+        id: refund.id,
+        state: 'Requested',
+        destination: 'external_bank',
+      }),
+    ],
+  });
+  expect((await decide(refund.id, 'approve')).status).toBe(200);
+  const bankReference = randomUUID();
+  expect((await decide(refund.id, 'record-transfer', { bankReference })).status).toBe(200);
+  const recorded = await read();
+  expect(await recorded.json()).toMatchObject({
+    refunds: [expect.objectContaining({ state: 'Processing', bankReference })],
+  });
+  expect((await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status).toBe(
+    200
+  );
+  const completed = await read();
+  expect(await completed.json()).toMatchObject({
+    invoice: { refundedAmount: '40', reservedAmount: '0', availableAmount: '60' },
+    refunds: [expect.objectContaining({ id: refund.id, state: 'Completed', bankReference })],
+  });
+  const walletResponse = await post('wallet-refunds', requestBody(f.id, '10'));
+  expect(walletResponse.status).toBe(201);
+  const withWalletReservation = await read();
+  expect(await withWalletReservation.json()).toMatchObject({
+    invoice: { refundedAmount: '40', reservedAmount: '10', availableAmount: '50' },
+    refunds: [expect.objectContaining({ id: refund.id, destination: 'external_bank' })],
+  });
+});
+
+it('binds bank transfer decisions to current finances and records the review', async () => {
+  const f = await invoice('100');
+  const refund = await request(requestBody(f.id, '40'));
+  expect((await decide(refund.id, 'approve')).status).toBe(200);
+  const bankReference = randomUUID();
+  const path = `external-refunds/${refund.id}/record-transfer`;
+  const preview = await post(`${path}/review`, { bankReference });
+  expect(preview.status).toBe(200);
+  const review = (await preview.json()) as { hash: string };
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/${path}`, {
+        method: 'POST',
+        headers: headers['refund-finance']!,
+        body: JSON.stringify({ bankReference }),
+      })
+    ).status
+  ).toBe(400);
+  await request(requestBody(f.id, '10'));
+  expect((await post(path, { bankReference, expectedReviewHash: review.hash })).status).toBe(409);
+  const current = await post(`${path}/review`, { bankReference });
+  expect(current.status).toBe(200);
+  const currentReview = (await current.json()) as { hash: string };
+  expect((await post(path, { bankReference, expectedReviewHash: currentReview.hash })).status).toBe(
+    200
+  );
+  const audit = (
+    await http.pool.query(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='refund.processing' AND metadata::jsonb->>'refundId'=$1",
+      [refund.id]
+    )
+  ).rows;
+  expect(audit).toHaveLength(1);
+  expect(audit[0].metadata.financialReview).toMatchObject({
+    hash: currentReview.hash,
+    data: {
+      refund: { reservedBefore: '50' },
+      decision: { action: 'record-transfer', bankReference },
+    },
+  });
+});
 
 it('records a transfer without settling until a second staff member reconciles it', async () => {
   const f = await invoice(),

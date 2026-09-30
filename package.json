@@ -53,11 +53,16 @@
       "@parcel/watcher"
     ],
     "overrides": {
+      "brace-expansion@1": "1.1.21",
+      "brace-expansion@2": "2.1.7",
+      "brace-expansion@5": "5.0.12",
       "drizzle-kit@0.31.10>@esbuild-kit/esm-loader": "-",
       "qs@<6.16.0": "6.16.0",
       "js-yaml@>=4.0.0 <4.3.2": "4.3.2",
       "multer@<2.3.0": "2.3.0",
       "geoip-country>ip-address": "10.5.0",
+      "undici@7": "7.29.1",
+      "undici@8": "8.10.2",
       "fast-uri": "3.1.8",
       "esbuild@>=0.27.3 <0.28.1": "0.28.2"
     },
@@ -80,7 +85,8 @@
       "@tanstack/router-core@1.171.27": "patches/@tanstack__router-core@1.171.27.patch",
       "vite@6.4.3": "patches/vite@6.4.3.patch",
       "gel@2.2.0": "patches/gel@2.2.0.patch",
-      "geoip-country@5.0.202609050122": "patches/geoip-country@5.0.202609050122.patch"
+      "geoip-country@5.0.202609050122": "patches/geoip-country@5.0.202609050122.patch",
+      "nodemailer@10.0.12": "patches/nodemailer@10.0.12.patch"
     }
   }
 }

@@ -10,12 +10,17 @@ for (const locale of ['en', 'fa'] as const)
         id = '11111111-1111-4111-8111-111111111111',
         versionId = '22222222-2222-4222-8222-222222222222';
       await page.addInitScript((language) => {
+        localStorage.setItem('barghsa.locale', language);
         if (document.documentElement) document.documentElement.lang = language;
         new MutationObserver(() => {
           if (document.documentElement) document.documentElement.lang = language;
         }).observe(document, { childList: true });
       }, locale);
+      let operatingContext: 'customer' | 'staff' = 'customer';
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/user', (route) =>
+        route.fulfill({ json: { isStaff: true, operatingContext, canSwitchContext: true } })
+      );
       await page.route('**/api/user/settings/timezone', (route) =>
         route.fulfill({ json: { timezone: 'Asia/Tehran' } })
       );
@@ -158,6 +163,8 @@ for (const locale of ['en', 'fa'] as const)
       await page.route(`**/api/admin/contracts/${id}/cancellation-preview`, (route) =>
         route.fulfill({
           json: {
+            contractId: id,
+            profileId: '33333333-3333-4333-8333-333333333333',
             versionId,
             fingerprint: 'a'.repeat(64),
             serviceType: 'electricity',
@@ -191,6 +198,7 @@ for (const locale of ['en', 'fa'] as const)
         return route.fulfill({ status: 201, json: { state: 'Cancelled' } });
       });
       const customerOpen = async () => {
+        operatingContext = 'customer';
         await page.goto('/contracts');
         await page
           .getByRole('button', {
@@ -240,6 +248,7 @@ for (const locale of ['en', 'fa'] as const)
         requestPanel.getByText(w['cancellationRequest.Pending'], { exact: true })
       ).toBeVisible();
       const staffOpen = async () => {
+        operatingContext = 'staff';
         await page.goto('/admin/contracts');
         await page
           .getByRole('region', { name: w.cancellationRequestQueue, exact: true })

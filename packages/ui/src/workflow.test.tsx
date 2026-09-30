@@ -109,6 +109,35 @@ it('exposes current step and readable status without relying on color', async ()
   expect(host.textContent).toContain('Awaiting review');
   expect(host.querySelector('[aria-current=step]')?.textContent).toContain('Review');
 });
+it('connects completed, current and pending stages while preserving their details', async () => {
+  await act(async () =>
+    root.render(
+      <ProgressStepper
+        label="Fulfillment"
+        steps={[
+          {
+            id: 'review',
+            label: 'Review',
+            state: 'complete',
+            stateLabel: 'Completed',
+            description: <time dateTime="2026-09-30">September 30</time>,
+          },
+          { id: 'delivery', label: 'Delivery', state: 'current', stateLabel: 'In progress' },
+          { id: 'installation', label: 'Installation', state: 'pending', stateLabel: 'Pending' },
+        ]}
+      />
+    )
+  );
+  const list = host.querySelector('ol[aria-label="Fulfillment"]');
+  expect([...list!.querySelectorAll('li')].map((item) => item.dataset.state)).toEqual([
+    'complete',
+    'current',
+    'pending',
+  ]);
+  expect(list?.querySelectorAll('li > span[aria-hidden="true"]')).toHaveLength(5);
+  expect(list?.querySelector('li[aria-current="step"]')?.textContent).toContain('In progress');
+  expect(list?.querySelector('time[datetime="2026-09-30"]')?.textContent).toBe('September 30');
+});
 it('names commercial and financial states independently', async () => {
   await act(async () =>
     root.render(

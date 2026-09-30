@@ -1,4 +1,14 @@
-import { Body, Controller, Get, HttpException, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpException,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
@@ -11,6 +21,7 @@ import {
   cancelPriceAdjustmentSchema,
   finalizePriceAdjustmentSchema,
   proposePriceAdjustmentSchema,
+  reviewPriceAdjustmentSchema,
 } from './electricity-price-adjustment.service.js';
 
 const idSchema = z.string().uuid();
@@ -56,6 +67,22 @@ export class StaffElectricityPriceAdjustmentController {
       canCancel,
       canFinalize: canCancel && hasStaffPermission(req, 'invoices:write'),
     };
+  }
+
+  @Post('contracts/:id/price-adjustments/review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'electricity:price-review:user', limit: 30, windowMs: 60_000 })
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiOperation({ summary: 'Review the current priced electricity adjustment proposal' })
+  @ApiZodBody(reviewPriceAdjustmentSchema)
+  review(@Param('id') id: string, @Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    if (!hasStaffPermission(req, 'contracts:write'))
+      throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
+    return this.service.review(
+      parse(idSchema, id),
+      parse(reviewPriceAdjustmentSchema, body),
+      req.session
+    );
   }
 
   @Post('contracts/:id/price-adjustments')

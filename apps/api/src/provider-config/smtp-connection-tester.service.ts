@@ -1,6 +1,6 @@
 import { isTransientEmailError } from '@barghsa/shared/notification-delivery';
 import { Injectable, Inject, Logger, Optional } from '@nestjs/common';
-import nodemailer from 'nodemailer';
+import nodemailer, { type SendMailOptions } from 'nodemailer';
 import type { SmtpConfig } from './smtp-config.schema';
 import { SmtpDestinationBlockedError, SmtpNetworkGuard } from './smtp-network-guard';
 
@@ -23,9 +23,7 @@ export interface SmtpTestResult {
 /** Shape minimally exposed by a transport so tests can inject a fake. */
 export interface SmtpTransportLike {
   verify: () => Promise<boolean>;
-  sendMail: (
-    message: nodemailer.SendMailOptions
-  ) => Promise<{ accepted?: unknown[]; rejected?: unknown[] }>;
+  sendMail: (message: SendMailOptions) => Promise<{ accepted?: unknown[]; rejected?: unknown[] }>;
   close?: () => void;
 }
 

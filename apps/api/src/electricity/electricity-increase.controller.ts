@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   HttpException,
   Param,
   Post,
@@ -19,7 +20,9 @@ import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import {
   ElectricityIncreaseService,
   approveIncreaseSchema,
+  approveIncreaseReviewSchema,
   rejectIncreaseSchema,
+  rejectIncreaseReviewSchema,
   requestIncreaseSchema,
   signIncreaseSchema,
 } from './electricity-increase.service.js';
@@ -123,6 +126,26 @@ export class StaffElectricityIncreaseController {
     );
   }
 
+  @Post(':requestId/approve/review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'electricity:increase-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview the quantity increase amendment before staff approval' })
+  @ApiZodBody(approveIncreaseReviewSchema)
+  approveReview(
+    @Param('requestId') requestId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    if (!hasStaffPermission(req, 'contracts:write'))
+      throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
+    return this.service.decisionReview(
+      parse(idSchema, requestId),
+      'approve',
+      parse(approveIncreaseReviewSchema, body),
+      req.session
+    );
+  }
+
   @Post(':requestId/reject')
   @RequiresStepUp()
   @RateLimit({ namespace: 'electricity:increase-review:user', limit: 20, windowMs: 60_000 })
@@ -140,6 +163,26 @@ export class StaffElectricityIncreaseController {
       parse(rejectIncreaseSchema, body),
       req.session,
       req.ip ?? '127.0.0.1'
+    );
+  }
+
+  @Post(':requestId/reject/review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'electricity:increase-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview the quantity increase rejection before staff confirmation' })
+  @ApiZodBody(rejectIncreaseReviewSchema)
+  rejectReview(
+    @Param('requestId') requestId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    if (!hasStaffPermission(req, 'contracts:write'))
+      throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
+    return this.service.decisionReview(
+      parse(idSchema, requestId),
+      'reject',
+      parse(rejectIncreaseReviewSchema, body),
+      req.session
     );
   }
 }

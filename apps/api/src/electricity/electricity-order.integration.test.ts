@@ -2,6 +2,7 @@ import { afterEach, beforeEach, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import { activateReadyContracts } from '@barghsa/db/contract-activation';
 import { retryDueWalletRefunds, runWalletRefund } from '@barghsa/db/refund-processing';
+import type { ElectricityPriceAdjustmentReview } from '@barghsa/shared/finance';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -34,7 +35,7 @@ beforeEach(async () => {
   const staffSession = randomUUID(),
     staffCsrf = randomUUID();
   await http.pool.query(
-    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES($1,'reviewer',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())",
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,operating_context) VALUES($1,'reviewer',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW(),'staff')",
     [staffSession, staffCsrf, randomUUID()]
   );
   staffHeaders = {
@@ -88,6 +89,28 @@ const post = (path: string, body: unknown) =>
     body: JSON.stringify(body),
   });
 
+async function cancellationReview(orderId: string, reason: string) {
+  const response = await post(`orders/${orderId}/cancel-review`, { reason });
+  expect(response.status, http.logs()).toBe(200);
+  return (await response.json()) as {
+    hash: string;
+    data: { invoiceId: string; refundAmount: string; outcome: string };
+  };
+}
+
+async function priceProposalReview(contractId: string, body: Record<string, unknown>) {
+  const response = await fetch(
+    `${http.base}/api/staff/electricity/contracts/${contractId}/price-adjustments/review`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify(body),
+    }
+  );
+  expect(response.status, http.logs()).toBe(200);
+  return (await response.json()) as ElectricityPriceAdjustmentReview;
+}
+
 async function refreshQuote() {
   const response = await post('preview/simple', {
     profileId: input.profileId,
@@ -128,7 +151,7 @@ it('keeps electricity order conversations public or staff-only and reachable aft
   });
   expect(retry.status, http.logs()).toBe(200);
   expect(((await retry.json()) as { id: string }).id).toBe(customerComment.id);
-  expect((await fetch(customerPath, { headers: staffHeaders })).status).toBe(404);
+  expect((await fetch(customerPath, { headers: staffHeaders })).status).toBe(403);
   expect(
     (
       await fetch(customerPath, {
@@ -274,50 +297,40 @@ it('keeps review, payment and activation on a corrected unpaid invoice', async (
     vatRate: line.vat_rate,
     isTaxable: line.is_taxable,
   }));
-  const changedAmount = await fetch(
-    `${http.base}/api/admin/invoices/${order.invoiceId}/corrections`,
-    {
+  const correctionPath = `${http.base}/api/admin/invoices/${order.invoiceId}/corrections`;
+  const reviewReplacement = (reason: string, replacementLines: typeof lines) =>
+    fetch(`${correctionPath}/review`, {
       method: 'POST',
       headers: staffHeaders,
-      body: JSON.stringify({
-        kind: 'replacement',
-        reason: 'Change the amount without a contract amendment',
-        idempotencyKey: randomUUID(),
-        lines: [{ ...lines[0]!, unitPrice: (BigInt(lines[0]!.unitPrice) + 1n).toString() }],
-      }),
-    }
-  );
+      body: JSON.stringify({ kind: 'replacement', reason, lines: replacementLines }),
+    });
+  const changedAmount = await reviewReplacement('Change the amount without a contract amendment', [
+    { ...lines[0]!, unitPrice: (BigInt(lines[0]!.unitPrice) + 1n).toString() },
+  ]);
   expect(changedAmount.status, http.logs()).toBe(409);
   expect(lines).toHaveLength(1);
   expect(BigInt(lines[0]!.unitPrice) % 2n).toBe(0n);
-  const changedEconomics = await fetch(
-    `${http.base}/api/admin/invoices/${order.invoiceId}/corrections`,
+  const changedEconomics = await reviewReplacement('Change quantity while keeping the same total', [
     {
-      method: 'POST',
-      headers: staffHeaders,
-      body: JSON.stringify({
-        kind: 'replacement',
-        reason: 'Change quantity while keeping the same total',
-        idempotencyKey: randomUUID(),
-        lines: [
-          {
-            ...lines[0]!,
-            quantity: lines[0]!.quantity * 2,
-            unitPrice: (BigInt(lines[0]!.unitPrice) / 2n).toString(),
-          },
-        ],
-      }),
-    }
-  );
+      ...lines[0]!,
+      quantity: lines[0]!.quantity * 2,
+      unitPrice: (BigInt(lines[0]!.unitPrice) / 2n).toString(),
+    },
+  ]);
   expect(changedEconomics.status, http.logs()).toBe(409);
-  const correction = await fetch(`${http.base}/api/admin/invoices/${order.invoiceId}/corrections`, {
+  const reason = 'Correct invoice description before approval';
+  const replacementReview = await reviewReplacement(reason, lines);
+  expect(replacementReview.status, http.logs()).toBe(200);
+  const expectedReviewHash = ((await replacementReview.json()) as { hash: string }).hash;
+  const correction = await fetch(correctionPath, {
     method: 'POST',
     headers: staffHeaders,
     body: JSON.stringify({
       kind: 'replacement',
-      reason: 'Correct invoice description before approval',
+      reason,
       idempotencyKey: randomUUID(),
       lines,
+      expectedReviewHash,
     }),
   });
   expect(correction.status, http.logs()).toBe(201);
@@ -387,14 +400,13 @@ it('keeps review, payment and activation on a corrected unpaid invoice', async (
     electricityOrderId: order.orderId,
   });
   const publishedCorrection = await fetch(
-    `${http.base}/api/admin/invoices/${replacement.invoiceId}/corrections`,
+    `${http.base}/api/admin/invoices/${replacement.invoiceId}/corrections/review`,
     {
       method: 'POST',
       headers: staffHeaders,
       body: JSON.stringify({
         kind: 'replacement',
         reason: 'Published contract cannot be rewritten',
-        idempotencyKey: randomUUID(),
         lines,
       }),
     }
@@ -406,7 +418,9 @@ it('keeps review, payment and activation on a corrected unpaid invoice', async (
      DO UPDATE SET posted_balance=$2,reserved_balance=0`,
     [input.profileId, original.total_amount]
   );
-  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='buyer'"
+  );
   const paymentPath = `${http.base}/api/invoices/${replacement.invoiceId}/wallet-payment`;
   const paymentReview = await fetch(paymentPath, { headers });
   expect(paymentReview.status, http.logs()).toBe(200);
@@ -712,12 +726,103 @@ it('derives mandatory green only from advanced thermal quantity', async () => {
   ).toEqual(['free_market']);
 });
 
-const staffPost = (id: string, decision: string, body: unknown) =>
-  fetch(`${http.base}/api/staff/electricity/orders/${id}/${decision}`, {
+const staffReviewHashes = new Map<string, string>();
+const staffPost = async (id: string, decision: string, body: unknown) => {
+  let payload = body;
+  if (body && typeof body === 'object' && !Array.isArray(body)) {
+    const input = body as Record<string, unknown>;
+    if (
+      !input.expectedReviewHash &&
+      typeof input.idempotencyKey === 'string' &&
+      (decision === 'approve' || (typeof input.reason === 'string' && !!input.reason.trim()))
+    ) {
+      let hash = staffReviewHashes.get(input.idempotencyKey);
+      if (!hash) {
+        const preview = await fetch(
+          `${http.base}/api/staff/electricity/orders/${id}/financial-review`,
+          {
+            method: 'POST',
+            headers: staffHeaders,
+            body: JSON.stringify({ action: decision, reason: input.reason ?? '' }),
+          }
+        );
+        if (!preview.ok) return preview;
+        hash = ((await preview.json()) as { hash: string }).hash;
+        staffReviewHashes.set(input.idempotencyKey, hash);
+      }
+      payload = { ...input, expectedReviewHash: hash };
+    }
+  }
+  return fetch(`${http.base}/api/staff/electricity/orders/${id}/${decision}`, {
     method: 'POST',
     headers: staffHeaders,
-    body: JSON.stringify(body),
+    body: JSON.stringify(payload),
   });
+};
+
+it('requires the exact locked staff decision review and audits the confirmed snapshot', async () => {
+  const order = await submittedOrder();
+  const detail = (await (
+    await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
+      headers: staffHeaders,
+    })
+  ).json()) as { versionId: string; invoiceId: string };
+  const preview = await fetch(
+    `${http.base}/api/staff/electricity/orders/${order.orderId}/financial-review`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({ action: 'approve' }),
+    }
+  );
+  expect(preview.status, http.logs()).toBe(200);
+  const review = (await preview.json()) as {
+    hash: string;
+    data: { invoiceId: string; invoiceTotal: string; outcome: string };
+  };
+  expect(review.data).toMatchObject({
+    invoiceId: detail.invoiceId,
+    outcome: 'publish_contract',
+  });
+  const body = { idempotencyKey: randomUUID(), expectedVersionId: detail.versionId };
+  const missingHash = await fetch(
+    `${http.base}/api/staff/electricity/orders/${order.orderId}/approve`,
+    { method: 'POST', headers: staffHeaders, body: JSON.stringify(body) }
+  );
+  expect(missingHash.status).toBe(400);
+  await http.pool.query("UPDATE invoices SET state='Overdue' WHERE id=$1", [detail.invoiceId]);
+  const stale = await staffPost(order.orderId, 'approve', {
+    ...body,
+    expectedReviewHash: review.hash,
+  });
+  expect(stale.status, http.logs()).toBe(409);
+  const refreshed = await fetch(
+    `${http.base}/api/staff/electricity/orders/${order.orderId}/financial-review`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({ action: 'approve' }),
+    }
+  );
+  expect(refreshed.status, http.logs()).toBe(200);
+  const current = (await refreshed.json()) as typeof review;
+  expect(current.hash).not.toBe(review.hash);
+  expect(current.data.invoiceTotal).toBe(review.data.invoiceTotal);
+  const accepted = await staffPost(order.orderId, 'approve', {
+    ...body,
+    expectedReviewHash: current.hash,
+  });
+  expect(accepted.status, http.logs()).toBe(200);
+  const audit = (
+    await http.pool.query<{ metadata: { reviewHash: string; financialReview: typeof review } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='electricity.order_review.approve'
+       AND metadata::jsonb->>'orderId'=$1 ORDER BY created_at DESC LIMIT 1`,
+      [order.orderId]
+    )
+  ).rows[0];
+  expect(audit?.metadata.reviewHash).toBe(current.hash);
+  expect(audit?.metadata.financialReview.data.invoiceId).toBe(detail.invoiceId);
+});
 
 it('queues the exact order for staff and approves it once with customer notification', async () => {
   const order = await submittedOrder();
@@ -1171,10 +1276,13 @@ it.each([true, false])(
     const detail = (await (
       await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers })
     ).json()) as { versionId: string };
+    const review = await cancellationReview(order.orderId, 'No longer needed');
+    expect(review.data.outcome).toBe('cancel_invoice');
     const cancel = () =>
       post(`orders/${order.orderId}/cancel`, {
         idempotencyKey: key,
         expectedVersionId: detail.versionId,
+        expectedReviewHash: review.hash,
         reason: 'No longer needed',
       });
     const key = randomUUID();
@@ -1296,9 +1404,24 @@ it('creates a mandatory refund obligation when a paid order is rejected', async 
       order.contractId,
     ])
   ).rows[0].current_version_id;
+  const preview = await fetch(
+    `${http.base}/api/staff/electricity/orders/${order.orderId}/financial-review`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({ action: 'reject', reason: 'Cannot deliver at this address' }),
+    }
+  );
+  expect(preview.status, http.logs()).toBe(200);
+  const review = (await preview.json()) as {
+    hash: string;
+    data: { refundAmount: string; outcome: string };
+  };
+  expect(review.data).toMatchObject({ refundAmount: '500000', outcome: 'refund_obligation' });
   const response = await staffPost(order.orderId, 'reject', {
     idempotencyKey: randomUUID(),
     expectedVersionId: versionId,
+    expectedReviewHash: review.hash,
     reason: 'Cannot deliver at this address',
   });
   expect(response.status, http.logs()).toBe(200);
@@ -1315,6 +1438,14 @@ it('creates a mandatory refund obligation when a paid order is rejected', async 
     await http.pool.query('SELECT * FROM refunds WHERE id=$1', [obligation.refund_id])
   ).rows[0];
   expect(refund).toMatchObject({ amount: '500000', state: 'Processing', destination: 'wallet' });
+  const decisionAudit = (
+    await http.pool.query<{ metadata: { reviewHash: string } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='electricity.order_review.reject'
+       AND metadata::jsonb->>'orderId'=$1 ORDER BY created_at DESC LIMIT 1`,
+      [order.orderId]
+    )
+  ).rows[0];
+  expect(decisionAudit?.metadata.reviewHash).toBe(review.hash);
   await expect(
     http.pool.query(
       "UPDATE refund_obligations SET status='completed',completed_refund_amount=total_paid_amount WHERE id=$1",
@@ -1436,9 +1567,35 @@ it('lists only the customer profile orders and cancels an unpublished order once
   expect(detail.lines).toEqual(
     expect.arrayContaining([expect.objectContaining({ systemKey: 'thermal', quantityKwh: '10' })])
   );
+  const firstReview = await cancellationReview(order.orderId, 'Delivery is no longer needed');
+  expect(firstReview.data).toMatchObject({
+    invoiceId: order.invoiceId,
+    refundAmount: '0',
+    outcome: 'cancel_invoice',
+  });
+  expect(
+    (
+      await post(`orders/${order.orderId}/cancel`, {
+        idempotencyKey: randomUUID(),
+        expectedVersionId: detail.versionId,
+        reason: 'Delivery is no longer needed',
+      })
+    ).status
+  ).toBe(400);
+  await http.pool.query("UPDATE invoices SET state='Overdue' WHERE id=$1", [order.invoiceId]);
+  const stale = await post(`orders/${order.orderId}/cancel`, {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: detail.versionId,
+    expectedReviewHash: firstReview.hash,
+    reason: 'Delivery is no longer needed',
+  });
+  expect(stale.status, http.logs()).toBe(409);
+  const currentReview = await cancellationReview(order.orderId, 'Delivery is no longer needed');
+  expect(currentReview.hash).not.toBe(firstReview.hash);
   const request = {
     idempotencyKey: randomUUID(),
     expectedVersionId: detail.versionId,
+    expectedReviewHash: currentReview.hash,
     reason: 'Delivery is no longer needed',
   };
   const cancel = () => post(`orders/${order.orderId}/cancel`, request);
@@ -1446,6 +1603,14 @@ it('lists only the customer profile orders and cancels an unpublished order once
   expect(first.status, http.logs()).toBe(200);
   expect(await first.json()).toMatchObject({ status: 'cancelled', refundId: null });
   expect((await cancel()).status).toBe(200);
+  const decisionAudit = (
+    await http.pool.query<{ metadata: { reviewHash: string } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='electricity.order_cancelled'
+       AND metadata::jsonb->>'orderId'=$1 ORDER BY created_at DESC LIMIT 1`,
+      [order.orderId]
+    )
+  ).rows[0];
+  expect(decisionAudit?.metadata.reviewHash).toBe(currentReview.hash);
   const after = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers });
   expect(await after.json()).toMatchObject({
     electricityStatus: 'cancelled',
@@ -1507,15 +1672,26 @@ it('keeps a paid cancellation open through failed retries until finance restores
     "UPDATE invoices SET paid_amount=500000,state='PartiallyFunded' WHERE id=$1",
     [order.invoiceId]
   );
-  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='buyer'"
+  );
   const versionId = (
     await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
       order.contractId,
     ])
   ).rows[0].current_version_id;
+  const cancellationSnapshot = await cancellationReview(
+    order.orderId,
+    'Delivery is no longer needed'
+  );
+  expect(cancellationSnapshot.data).toMatchObject({
+    refundAmount: '500000',
+    outcome: 'refund_obligation',
+  });
   const cancelled = await post(`orders/${order.orderId}/cancel`, {
     idempotencyKey: randomUUID(),
     expectedVersionId: versionId,
+    expectedReviewHash: cancellationSnapshot.hash,
     reason: 'Delivery is no longer needed',
   });
   expect(cancelled.status, http.logs()).toBe(200);
@@ -1554,10 +1730,20 @@ it('keeps a paid cancellation open through failed retries until finance restores
       expect.objectContaining({ id: refundId, orderId: order.orderId, exhausted: true }),
     ])
   );
+  const reviewResponse = await fetch(
+    `${http.base}/api/admin/wallet-refunds/${refundId}/process/review`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: '{}',
+    }
+  );
+  expect(reviewResponse.status, http.logs()).toBe(200);
+  const review = (await reviewResponse.json()) as { hash: string };
   const retried = await fetch(`${http.base}/api/admin/wallet-refunds/${refundId}/process`, {
     method: 'POST',
     headers: staffHeaders,
-    body: '{}',
+    body: JSON.stringify({ expectedReviewHash: review.hash }),
   });
   expect(retried.status, http.logs()).toBe(200);
   expect(await retried.json()).toMatchObject({ state: 'Completed' });
@@ -1599,7 +1785,9 @@ it('funds the linked invoice and activates only after customer acceptance', asyn
   expect(invoiceDetails.status, http.logs()).toBe(200);
   expect(await invoiceDetails.json()).toMatchObject({ electricityOrderId: order.orderId });
   expect((await activateReadyContracts(http.pool)).activated).toBe(0);
-  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='buyer'"
+  );
   const paymentPath = `${http.base}/api/invoices/${order.invoiceId}/wallet-payment`;
   const walletReviewResponse = await fetch(paymentPath, { headers });
   expect(walletReviewResponse.status, http.logs()).toBe(200);
@@ -1690,7 +1878,9 @@ it.each([
       ).status,
       http.logs()
     ).toBe(200);
-    await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='buyer'"
+    );
     const walletPath = `${http.base}/api/invoices/${order.invoiceId}/wallet-payment`;
     const walletReview = await fetch(walletPath, { headers });
     expect(walletReview.status, http.logs()).toBe(200);
@@ -1784,7 +1974,7 @@ it.each([
     expect(
       (await fetch(`${http.base}/api/staff/electricity/increase-requests`, { headers })).status
     ).toBe(403);
-    expect((await fetch(path, { headers: staffHeaders })).status).toBe(404);
+    expect((await fetch(path, { headers: staffHeaders })).status).toBe(403);
     expect((await staffQueue.json()) as { requests: Array<{ requestId: string }> }).toMatchObject({
       requests: [expect.objectContaining({ requestId: result.requestId })],
     });
@@ -1807,8 +1997,58 @@ it.each([
       return;
     }
     if (decision !== 'reject') {
-      const approval = { idempotencyKey: randomUUID() };
       const approvePath = `${http.base}/api/staff/electricity/increase-requests/${result.requestId}/approve`;
+      const preview = await fetch(`${approvePath}/review`, {
+        method: 'POST',
+        headers: staffHeaders,
+        body: JSON.stringify({}),
+      });
+      expect(preview.status, http.logs()).toBe(200);
+      const approvalReview = (await preview.json()) as {
+        hash: string;
+        data: { effectiveFrom: string; outcome: string; originalInvoiceState: string };
+      };
+      expect(approvalReview.data).toMatchObject({
+        outcome: 'publish_amendment_for_customer_signature',
+        originalInvoiceState: 'Paid',
+      });
+      const approval = {
+        idempotencyKey: randomUUID(),
+        effectiveFrom: approvalReview.data.effectiveFrom,
+        expectedReviewHash: approvalReview.hash,
+      };
+      expect(
+        (
+          await fetch(approvePath, {
+            method: 'POST',
+            headers: staffHeaders,
+            body: JSON.stringify({
+              ...approval,
+              idempotencyKey: randomUUID(),
+              expectedReviewHash: '0'.repeat(64),
+            }),
+          })
+        ).status
+      ).toBe(409);
+      if (decision === 'approve_future') {
+        await http.pool.query(
+          `UPDATE app_config SET value=jsonb_set(value,'{max_quantity_increase_percent}','25'::jsonb),version=version+1
+           WHERE key='electricity.contract_limits'`
+        );
+        expect(
+          (
+            await fetch(approvePath, {
+              method: 'POST',
+              headers: staffHeaders,
+              body: JSON.stringify({ ...approval, idempotencyKey: randomUUID() }),
+            })
+          ).status
+        ).toBe(409);
+        await http.pool.query(
+          `UPDATE app_config SET value=jsonb_set(value,'{max_quantity_increase_percent}','20'::jsonb),version=version+1
+           WHERE key='electricity.contract_limits'`
+        );
+      }
       const approved = await fetch(approvePath, {
         method: 'POST',
         headers: staffHeaders,
@@ -1830,6 +2070,18 @@ it.each([
           contractId: order.contractId,
         },
       });
+      const approvalAudit = (
+        await http.pool.query<{
+          metadata: { reviewHash: string; financialReview: { hash: string } };
+        }>(
+          `SELECT metadata::jsonb AS metadata FROM audit_log
+           WHERE event='electricity.increase_approved' AND metadata::jsonb->>'requestId'=$1
+           ORDER BY created_at DESC LIMIT 1`,
+          [result.requestId]
+        )
+      ).rows[0];
+      expect(approvalAudit?.metadata.reviewHash).toBe(approvalReview.hash);
+      expect(approvalAudit?.metadata.financialReview.hash).toBe(approvalReview.hash);
       const canonicalDocument = JSON.stringify(
         Object.fromEntries(
           Object.entries(amendment.amendmentDocument).sort(([left], [right]) =>
@@ -1858,7 +2110,7 @@ it.each([
           await fetch(approvePath, {
             method: 'POST',
             headers: staffHeaders,
-            body: JSON.stringify({ idempotencyKey: randomUUID() }),
+            body: JSON.stringify({ ...approval, idempotencyKey: randomUUID() }),
           })
         ).status
       ).toBe(409);
@@ -1884,12 +2136,31 @@ it.each([
       }
       const review = (await (await fetch(path, { headers })).json()) as {
         quote: { adjustmentIrR: string; eligibleFrom: string };
+        review: {
+          hash: string;
+          data: {
+            contractId: string;
+            originalInvoiceId: string;
+            adjustmentIrR: string;
+            requestedKwh: string;
+          };
+        };
       };
       if (decision === 'approve_future') expect(review.quote.adjustmentIrR).toBe('200000');
       else expect(BigInt(review.quote.adjustmentIrR)).toBeGreaterThan(0n);
+      expect(review.review).toMatchObject({
+        hash: expect.stringMatching(/^[a-f0-9]{64}$/),
+        data: {
+          contractId: order.contractId,
+          originalInvoiceId: order.invoiceId,
+          adjustmentIrR: review.quote.adjustmentIrR,
+          requestedKwh: '12',
+        },
+      });
       const signature = {
         expectedAmendmentSha256: amendment.amendmentSha256,
         expectedAdjustmentIrR: review.quote.adjustmentIrR,
+        expectedReviewHash: review.review.hash,
         idempotencyKey: randomUUID(),
       };
       const signPath = `${path}/sign`;
@@ -1911,6 +2182,15 @@ it.each([
             method: 'POST',
             headers,
             body: JSON.stringify({ ...signature, expectedAdjustmentIrR: '1' }),
+          })
+        ).status
+      ).toBe(409);
+      expect(
+        (
+          await fetch(signPath, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ ...signature, expectedReviewHash: '0'.repeat(64) }),
           })
         ).status
       ).toBe(409);
@@ -1945,6 +2225,7 @@ it.each([
         pricing_snapshot: {
           originalInvoiceId: order.invoiceId,
           adjustmentIrR: review.quote.adjustmentIrR,
+          financialReview: review.review,
         },
         signed_at: expect.any(Date),
       });
@@ -2106,17 +2387,23 @@ it.each([
         const priceStart = new Date(
           (period.period_start.getTime() + period.period_end.getTime()) / 2
         );
+        const proposalInput = {
+          expectedVersionId: versionId,
+          effectiveFrom: priceStart.toISOString(),
+          percentageBps: '1000',
+          reason: 'Future tariff change',
+          contractualBasis: 'Clause 7',
+        };
+        const expectedReviewHash = (await priceProposalReview(order.contractId, proposalInput))
+          .hash;
         const proposal = await fetch(
           `${http.base}/api/staff/electricity/contracts/${order.contractId}/price-adjustments`,
           {
             method: 'POST',
             headers: staffHeaders,
             body: JSON.stringify({
-              expectedVersionId: versionId,
-              effectiveFrom: priceStart.toISOString(),
-              percentageBps: '1000',
-              reason: 'Future tariff change',
-              contractualBasis: 'Clause 7',
+              ...proposalInput,
+              expectedReviewHash,
               idempotencyKey: randomUUID(),
             }),
           }
@@ -2136,15 +2423,40 @@ it.each([
       }
       return;
     }
-    const rejected = await fetch(
-      `${http.base}/api/staff/electricity/increase-requests/${result.requestId}/reject`,
-      {
-        method: 'POST',
-        headers: staffHeaders,
-        body: JSON.stringify({ idempotencyKey: randomUUID(), reason: 'Outside approved capacity' }),
-      }
-    );
+    const rejectPath = `${http.base}/api/staff/electricity/increase-requests/${result.requestId}/reject`;
+    const rejectReviewResponse = await fetch(`${rejectPath}/review`, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({ reason: 'Outside approved capacity' }),
+    });
+    expect(rejectReviewResponse.status, http.logs()).toBe(200);
+    const rejectReview = (await rejectReviewResponse.json()) as {
+      hash: string;
+      data: { outcome: string };
+    };
+    expect(rejectReview.data.outcome).toBe('reject_without_adjustment');
+    const rejected = await fetch(rejectPath, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({
+        idempotencyKey: randomUUID(),
+        reason: 'Outside approved capacity',
+        expectedReviewHash: rejectReview.hash,
+      }),
+    });
     expect(rejected.status, http.logs()).toBe(201);
+    const rejectionAudit = (
+      await http.pool.query<{
+        metadata: { reviewHash: string; financialReview: { hash: string } };
+      }>(
+        `SELECT metadata::jsonb AS metadata FROM audit_log
+         WHERE event='electricity.increase_rejected' AND metadata::jsonb->>'requestId'=$1
+         ORDER BY created_at DESC LIMIT 1`,
+        [result.requestId]
+      )
+    ).rows[0];
+    expect(rejectionAudit?.metadata.reviewHash).toBe(rejectReview.hash);
+    expect(rejectionAudit?.metadata.financialReview.hash).toBe(rejectReview.hash);
     expect(await (await fetch(path, { headers })).json()).toMatchObject({
       canRequest: false,
       request: { status: 'rejected', reviewReason: 'Outside approved capacity' },
@@ -2545,7 +2857,9 @@ it.each(['charge', 'credit'] as const)(
       DO UPDATE SET posted_balance=1500000,reserved_balance=0`,
       [input.profileId]
     );
-    await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='buyer'"
+    );
     const originalPaymentPath = `${http.base}/api/invoices/${order.invoiceId}/wallet-payment`;
     const originalPaymentReview = await fetch(originalPaymentPath, { headers });
     expect(originalPaymentReview.status, http.logs()).toBe(200);
@@ -2591,14 +2905,28 @@ it.each(['charge', 'credit'] as const)(
     const staffPath = `${http.base}/api/staff/electricity/contracts/${order.contractId}/price-adjustments`;
     const customerPath = `${http.base}/api/electricity/contracts/${order.contractId}/price-adjustments`;
     const percentageBps = kind === 'charge' ? '1000' : '-1000';
-    const proposalBody = {
+    const proposalInput = {
       expectedVersionId: contract.current_version_id,
       effectiveFrom: effectiveFrom.toISOString(),
       percentageBps,
       reason: 'Published future tariff correction',
       contractualBasis: 'Clause 7 of signed electricity contract',
+    };
+    const proposalReview = await priceProposalReview(order.contractId, proposalInput);
+    const proposalBody = {
+      ...proposalInput,
+      expectedReviewHash: proposalReview.hash,
       idempotencyKey: randomUUID(),
     };
+    const staleProposal = await fetch(staffPath, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({
+        ...proposalBody,
+        percentageBps: kind === 'charge' ? '1200' : '-1200',
+      }),
+    });
+    expect(staleProposal.status, http.logs()).toBe(409);
     const propose = () =>
       fetch(staffPath, {
         method: 'POST',
@@ -2611,7 +2939,15 @@ it.each(['charge', 'credit'] as const)(
       adjustmentId: string;
       calculationSha256: string;
       adjustmentAmountIrR: string;
+      calculation: ElectricityPriceAdjustmentReview['data']['calculation'];
     };
+    expect(proposed.calculation).toEqual(proposalReview.data.calculation);
+    const reviewAudit = await http.pool.query<{ metadata: { financialReview: { hash: string } } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='electricity.price_proposed'
+       AND metadata::jsonb->>'adjustmentId'=$1`,
+      [proposed.adjustmentId]
+    );
+    expect(reviewAudit.rows[0]?.metadata.financialReview.hash).toBe(proposalReview.hash);
     expect(proposed.adjustmentAmountIrR).toBe(kind === 'charge' ? '50000' : '-50000');
     expect(((await (await propose()).json()) as { adjustmentId: string }).adjustmentId).toBe(
       proposed.adjustmentId
@@ -2667,6 +3003,14 @@ it.each(['charge', 'credit'] as const)(
       status: string;
     };
     expect(finalized.status).toBe('finalized');
+    const finalAudit = await http.pool.query<{
+      metadata: { calculationSha256: string };
+    }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='electricity.price_finalized'
+       AND metadata::jsonb->>'adjustmentId'=$1`,
+      [proposed.adjustmentId]
+    );
+    expect(finalAudit.rows[0]?.metadata.calculationSha256).toBe(proposed.calculationSha256);
     expect(
       (
         (await (
@@ -2719,13 +3063,14 @@ it.each(['charge', 'credit'] as const)(
         proposed.adjustmentId,
       ])
     ).rejects.toMatchObject({ code: '23514' });
+    const secondInput = { ...proposalInput, reason: 'Superseded second proposal' };
     const secondProposal = await fetch(staffPath, {
       method: 'POST',
       headers: staffHeaders,
       body: JSON.stringify({
-        ...proposalBody,
+        ...secondInput,
+        expectedReviewHash: (await priceProposalReview(order.contractId, secondInput)).hash,
         idempotencyKey: randomUUID(),
-        reason: 'Superseded second proposal',
       }),
     });
     expect(secondProposal.status, http.logs()).toBe(201);
@@ -2769,14 +3114,26 @@ it.each(['charge', 'credit'] as const)(
     });
     expect(increaseResponse.status, http.logs()).toBe(201);
     const increaseId = ((await increaseResponse.json()) as { requestId: string }).requestId;
-    const increaseApproval = await fetch(
-      `${http.base}/api/staff/electricity/increase-requests/${increaseId}/approve`,
-      {
-        method: 'POST',
-        headers: staffHeaders,
-        body: JSON.stringify({ idempotencyKey: randomUUID() }),
-      }
-    );
+    const increaseApprovePath = `${http.base}/api/staff/electricity/increase-requests/${increaseId}/approve`;
+    const increaseApprovalReviewResponse = await fetch(`${increaseApprovePath}/review`, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({}),
+    });
+    expect(increaseApprovalReviewResponse.status, http.logs()).toBe(200);
+    const increaseApprovalReview = (await increaseApprovalReviewResponse.json()) as {
+      hash: string;
+      data: { effectiveFrom: string };
+    };
+    const increaseApproval = await fetch(increaseApprovePath, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({
+        idempotencyKey: randomUUID(),
+        effectiveFrom: increaseApprovalReview.data.effectiveFrom,
+        expectedReviewHash: increaseApprovalReview.hash,
+      }),
+    });
     expect(increaseApproval.status, http.logs()).toBe(201);
     const increaseQuote = await fetch(increasePath, { headers });
     expect(increaseQuote.status, http.logs()).toBe(200);

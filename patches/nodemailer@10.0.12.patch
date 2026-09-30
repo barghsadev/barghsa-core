@@ -1,0 +1,26 @@
+diff --git a/dist/cjs/errors.d.ts b/dist/cjs/errors.d.ts
+index 93a7425783a740d847b4b1af5c8c05a554c02f22..8fa801c7f4e18a188fc5bb914c0fabfd523287ed 100644
+--- a/dist/cjs/errors.d.ts
++++ b/dist/cjs/errors.d.ts
+@@ -67,7 +67,7 @@ export declare const EFETCH = "EFETCH";
+  * depends on where the error originated. Socket level errors keep the errno
+  * and syscall fields Node.js sets on them.
+  */
+-export interface NodemailerError extends NodeJS.ErrnoException {
++export interface NodemailerError extends Omit<NodeJS.ErrnoException, 'code'> {
+     /** Nodemailer error code, see ERROR_CODES */
+     code?: string | undefined;
+     /** SMTP command that was in flight when the server replied with an error */
+diff --git a/dist/esm/errors.d.ts b/dist/esm/errors.d.ts
+index 93a7425783a740d847b4b1af5c8c05a554c02f22..8fa801c7f4e18a188fc5bb914c0fabfd523287ed 100644
+--- a/dist/esm/errors.d.ts
++++ b/dist/esm/errors.d.ts
+@@ -67,7 +67,7 @@ export declare const EFETCH = "EFETCH";
+  * depends on where the error originated. Socket level errors keep the errno
+  * and syscall fields Node.js sets on them.
+  */
+-export interface NodemailerError extends NodeJS.ErrnoException {
++export interface NodemailerError extends Omit<NodeJS.ErrnoException, 'code'> {
+     /** Nodemailer error code, see ERROR_CODES */
+     code?: string | undefined;
+     /** SMTP command that was in flight when the server replied with an error */

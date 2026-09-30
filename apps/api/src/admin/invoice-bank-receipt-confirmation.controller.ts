@@ -173,6 +173,41 @@ export class InvoiceBankReceiptConfirmationController {
     return this.service.get(receiptId);
   }
 
+  @Post(':receiptId/confirm/review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Preview the authoritative invoice bank-receipt confirmation' })
+  @ApiParam({ name: 'receiptId', format: 'uuid' })
+  @ApiBody({
+    required: false,
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        emergencyOverrideReason: {
+          type: 'string',
+          minLength: 1,
+          maxLength: APPROVAL_REVIEW_REASON_MAX_LENGTH,
+        },
+      },
+    },
+  })
+  async review(
+    @Req() req: AuthenticatedRequest,
+    @Param('receiptId') receiptId: string,
+    @Body() body?: unknown
+  ) {
+    this.assertConfirmPermission(req);
+    assertUuid(receiptId);
+    const emergencyOverrideReason = readReceiptEmergencyOverrideReason(body);
+    return this.service.review({
+      receiptId,
+      actorUserId: req.session.userId,
+      sessionId: req.session.sessionId,
+      csrfToken: req.session.csrfToken,
+      ...(emergencyOverrideReason !== undefined ? { emergencyOverrideReason } : {}),
+    });
+  }
+
   @Post(':receiptId/confirm')
   @HttpCode(200)
   @RequiresStepUp()
@@ -183,10 +218,12 @@ export class InvoiceBankReceiptConfirmationController {
   })
   @ApiParam({ name: 'receiptId', format: 'uuid' })
   @ApiBody({
-    required: false,
+    required: true,
     schema: {
       type: 'object',
+      required: ['expectedReviewHash'],
       properties: {
+        expectedReviewHash: { type: 'string', pattern: '^[a-f0-9]{64}$' },
         emergencyOverrideReason: {
           type: 'string',
           minLength: 1,
@@ -212,10 +249,20 @@ export class InvoiceBankReceiptConfirmationController {
   ): Promise<InvoiceBankReceiptConfirmDto> {
     this.assertConfirmPermission(req);
     assertUuid(receiptId);
+    const parsed = z
+      .object({
+        expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
+        emergencyOverrideReason: z.unknown().optional(),
+      })
+      .strict()
+      .safeParse(body);
+    if (!parsed.success)
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid receipt review confirmation');
     const emergencyOverrideReason = readReceiptEmergencyOverrideReason(body);
     const correlationId = this.correlationId.getCorrelationId();
     return this.service.confirm({
       receiptId,
+      expectedReviewHash: parsed.data.expectedReviewHash,
       actorUserId: req.session.userId,
       ...(emergencyOverrideReason !== undefined ? { emergencyOverrideReason } : {}),
       sessionId: req.session.sessionId,

@@ -18,7 +18,7 @@ beforeAll(async () => {
     );
     const session = randomUUID();
     await http.pool.query(
-      "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')",
+      "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context) VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes','staff')",
       [session, who, randomUUID(), randomUUID()]
     );
     if (who === 'admin') cookie = 'barghsa_session=' + session;

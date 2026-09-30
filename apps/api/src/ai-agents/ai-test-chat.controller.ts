@@ -5,6 +5,7 @@ import { v7 as uuidv7 } from 'uuid';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { AiTestChatService } from './ai-test-chat.service.js';
+import type { AgentSlotKey } from './ai-test-chat.service.js';
 import { appendAiAudit } from './ai-audit.js';
 
 const TestChatSchema = z
@@ -12,6 +13,15 @@ const TestChatSchema = z
     agentId: z.string().uuid(),
     message: z.string().trim().min(1).max(4000),
     conversationId: z.string().uuid().optional(),
+    slotKey: z
+      .enum([
+        'individual_chatbot',
+        'legal_entity_chatbot',
+        'staff_chatbot',
+        'website_chatbot',
+        'telegram_chatbot',
+      ])
+      .optional(),
     requestId: z.string().uuid(),
   })
   .strict();
@@ -20,6 +30,15 @@ const V1TestChatSchema = z
     agent_id: z.string().uuid(),
     message: z.string().trim().min(1).max(4000),
     conversation_id: z.string().uuid().optional(),
+    slot_key: z
+      .enum([
+        'individual_chatbot',
+        'legal_entity_chatbot',
+        'staff_chatbot',
+        'website_chatbot',
+        'telegram_chatbot',
+      ])
+      .optional(),
     request_id: z.string().uuid().optional(),
   })
   .strict();
@@ -35,6 +54,7 @@ function auditInput(body: unknown): Record<string, unknown> {
     agentId: pick('agentId', 'agent_id'),
     requestId: pick('requestId', 'request_id'),
     conversationId: pick('conversationId', 'conversation_id'),
+    slotKey: pick('slotKey', 'slot_key'),
     message: pick('message', 'message'),
   };
 }
@@ -70,6 +90,7 @@ export class AiTestChatController {
   async send(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
     const started = Date.now();
     const input = auditInput(body);
+    let auditedSlot: AgentSlotKey | null = null;
     const record = (
       output: Record<string, unknown>,
       authorizationResult: 'allowed' | 'denied',
@@ -79,7 +100,7 @@ export class AiTestChatController {
         sessionId: req.session.sessionId,
         userId: req.session.userId,
         profileId: null,
-        agentSlot: null,
+        agentSlot: auditedSlot,
         toolName: 'admin_test_chat',
         input,
         output,
@@ -99,6 +120,7 @@ export class AiTestChatController {
       message: string;
       requestId: string;
       conversationId?: string | undefined;
+      slotKey?: AgentSlotKey | undefined;
     };
     if (versioned) {
       const parsed = V1TestChatSchema.safeParse(body);
@@ -111,6 +133,7 @@ export class AiTestChatController {
         message: parsed.data.message,
         requestId: parsed.data.request_id ?? uuidv7(),
         ...(parsed.data.conversation_id ? { conversationId: parsed.data.conversation_id } : {}),
+        ...(parsed.data.slot_key ? { slotKey: parsed.data.slot_key } : {}),
       };
     } else {
       const parsed = TestChatSchema.safeParse(body);
@@ -120,6 +143,7 @@ export class AiTestChatController {
       }
       normalized = parsed.data;
     }
+    auditedSlot = normalized.slotKey ?? null;
     let result: Awaited<ReturnType<AiTestChatService['send']>>;
     try {
       result = await this.service.send(normalized, req.session);

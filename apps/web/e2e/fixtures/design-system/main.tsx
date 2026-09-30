@@ -26,6 +26,8 @@ import {
   InputGroupInput,
   InputGroupText,
   Progress,
+  JobProgressView,
+  type JobProgressStatus,
   EmptyState,
 } from '@barghsa/ui';
 import { DirectionProvider } from '@barghsa/ui/direction-provider';
@@ -36,7 +38,8 @@ function Catalogue() {
   const [fa, setFa] = useState(true),
     [dark, setDark] = useState(false),
     [open, setOpen] = useState(false),
-    [page, setPage] = useState(5);
+    [page, setPage] = useState(5),
+    [sampleJobStatus, setSampleJobStatus] = useState<JobProgressStatus>('processing');
   const text = (persian: string, english: string) => (fa ? persian : english);
   const money = (value: number) => new Intl.NumberFormat(fa ? 'fa' : 'en').format(value) + ' IRR';
   const changeLocale = () => {
@@ -230,6 +233,59 @@ function Catalogue() {
                 dateLabel: text('امروز، ۱۱:۴۵', 'Today, 11:45'),
               },
             ]}
+          />
+        </section>
+        <section className="flex flex-col gap-5">
+          <h2 className="text-xl font-semibold">{text('کارهای زمان‌بر', 'Long-running jobs')}</h2>
+          <p className="text-sm text-muted-foreground">
+            {text('نمونه نمایشی، بدون درخواست به سرور', 'Sample state with no server request.')}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {(
+              [
+                { status: 'queued', fa: 'در صف', en: 'Queued' },
+                { status: 'processing', fa: 'در حال انجام', en: 'In progress' },
+                { status: 'completed', fa: 'انجام شد', en: 'Completed' },
+                { status: 'failed', fa: 'ناموفق', en: 'Failed' },
+              ] as const
+            ).map(({ status, fa: labelFa, en: labelEn }) => (
+              <Button key={status} variant="outline" onClick={() => setSampleJobStatus(status)}>
+                {text(labelFa, labelEn)}
+              </Button>
+            ))}
+          </div>
+          <JobProgressView
+            status={sampleJobStatus}
+            progress={sampleJobStatus === 'completed' ? 100 : sampleJobStatus === 'queued' ? 0 : 42}
+            estimatedRemaining={
+              sampleJobStatus === 'processing' ? text('حدود دو دقیقه', 'About two minutes') : null
+            }
+            resultUrl={
+              sampleJobStatus === 'completed' ? '/e2e/fixtures/design-system/index.html' : null
+            }
+            onRetry={() => setSampleJobStatus('queued')}
+            labels={{
+              progress: text('پیشرفت کار', 'Job progress'),
+              queued: text('در صف', 'Queued'),
+              processing: text('در حال انجام', 'In progress'),
+              completed: text('انجام شد', 'Completed'),
+              failed: text('ناموفق', 'Failed'),
+              loading: text('در حال دریافت وضعیت…', 'Loading job status…'),
+              loadError: text('دریافت وضعیت ممکن نشد.', 'Could not load job status.'),
+              failedDescription: text('می‌توانید دوباره تلاش کنید.', 'You can try again.'),
+              retryLoad: text('دریافت دوباره وضعیت', 'Reload status'),
+              retryJob: text('تلاش دوباره', 'Try again'),
+              openResult: text('مشاهده نتیجه', 'Open result'),
+              estimateUnavailable: text(
+                'زمان پایان هنوز مشخص نیست.',
+                'Completion time is not available yet.'
+              ),
+              estimate: (remaining) =>
+                text(
+                  `زمان تقریبی باقی‌مانده: ${remaining}`,
+                  `Estimated time remaining: ${remaining}`
+                ),
+            }}
           />
         </section>
         <section className="flex flex-col gap-5">

@@ -13,7 +13,7 @@ vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => navigate,
 }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ money: String, number: String }),
+  useNumberFormatting: () => ({ money: String, number: String, irrDigits: String }),
 }));
 
 const Page = Route.options.component as ComponentType;
@@ -53,6 +53,7 @@ const quote = {
       subtotalIrR: '2500000',
       discountIrR: '0',
       vatIrR: '0',
+      totalIrR: '2500000',
     },
   ],
   subtotalIrR: '2500000',
@@ -185,6 +186,7 @@ it('shows manual entry, period dates and the server price before one submission'
   expect(container.textContent).toContain(t('electricity.order.giftCode', 'en'));
   await advance();
   expect(submit().disabled).toBe(false);
+  expect(container.querySelector('[aria-label="Review Order"]')).not.toBeNull();
   expect(container.textContent).toContain('Electricity agreement · Template version 2');
   expect(container.textContent).toContain('Agreement for Buyer: 2500000 IRR.');
   let complete!: (value: Response) => void;

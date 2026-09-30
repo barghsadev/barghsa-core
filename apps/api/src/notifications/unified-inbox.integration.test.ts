@@ -62,6 +62,7 @@ async function request(user: string, path: string, method = 'GET') {
 it('shows account notices without a profile and keeps read actions private on both APIs', async () => {
   const notice = await service.create({
     userId: 'inbox-alone',
+    operatingContext: 'customer',
     type: 'general',
     title: 'Account notice',
     body: 'Original text',
@@ -99,18 +100,20 @@ it('filters private profile notices from agents and other profile selections', a
   const first = await service.create({
     userId: 'inbox-owner',
     profileId: profile,
+    operatingContext: 'customer',
     type: 'profile_verified',
     title: 'Verified profile',
   });
   const other = await service.create({
     userId: 'inbox-owner',
     profileId: second,
+    operatingContext: 'customer',
     type: 'general',
     title: 'Second profile',
   });
   const publicId = (
     await db.pool.query(
-      "INSERT INTO in_app_notifications(profile_id,type,title_i18n_key,body_i18n_key) VALUES ($1,'general','public.title','public.body') RETURNING id",
+      "INSERT INTO in_app_notifications(profile_id,operating_context,type,title_i18n_key,body_i18n_key) VALUES ($1,'customer','general','public.title','public.body') RETURNING id",
       [profile]
     )
   ).rows[0].id;
@@ -144,6 +147,114 @@ it('filters private profile notices from agents and other profile selections', a
   });
 });
 
+it('isolates customer and staff inboxes for one dual-role account on both APIs', async () => {
+  await db.pool.query("UPDATE users SET is_staff=true WHERE user_id='inbox-owner'");
+  await db.pool.query(
+    "UPDATE user_profile_contexts SET profile_id=$1 WHERE user_id='inbox-owner'",
+    [profile]
+  );
+  const customer = await service.create({
+    userId: 'inbox-owner',
+    profileId: profile,
+    operatingContext: 'customer',
+    type: 'general',
+    title: 'Customer notice',
+  });
+  const staff = await service.create({
+    userId: 'inbox-owner',
+    profileId: profile,
+    operatingContext: 'staff',
+    type: 'general',
+    title: 'Staff notice',
+  });
+  const account = await service.create({
+    userId: 'inbox-owner',
+    operatingContext: 'account',
+    type: 'general',
+    title: 'Account security notice',
+  });
+  const setContext = async (context: 'customer' | 'staff') => {
+    await db.pool.query("UPDATE sessions SET operating_context=$1 WHERE user_id='inbox-owner'", [
+      context,
+    ]);
+  };
+  const ids = async (path: string) => {
+    const body = (await (await request('inbox-owner', path)).json()) as {
+      data?: Array<{ id: string }>;
+      notifications?: Array<{ id: string }>;
+    };
+    return (body.data ?? body.notifications ?? []).map((row) => row.id);
+  };
+
+  await setContext('customer');
+  for (const path of ['v1/notifications', 'notifications']) {
+    const visible = await ids(path);
+    expect(visible).toContain(customer.id);
+    expect(visible).toContain(account.id);
+    expect(visible).not.toContain(staff.id);
+  }
+  expect((await request('inbox-owner', `v1/notifications/${staff.id}/read`, 'PATCH')).status).toBe(
+    404
+  );
+  expect((await request('inbox-owner', `notifications/${staff.id}/read`, 'PATCH')).status).toBe(
+    404
+  );
+  expect((await request('inbox-owner', 'v1/notifications/read-all', 'PATCH')).status).toBe(200);
+  expect(
+    (await db.pool.query('SELECT is_read FROM in_app_notifications WHERE id=$1', [staff.id]))
+      .rows[0].is_read
+  ).toBe(false);
+
+  await setContext('staff');
+  for (const path of ['v1/notifications', 'notifications']) {
+    const visible = await ids(path);
+    expect(visible).toContain(staff.id);
+    expect(visible).toContain(account.id);
+    expect(visible).not.toContain(customer.id);
+  }
+  expect(
+    (await request('inbox-owner', `v1/notifications/${customer.id}/read`, 'PATCH')).status
+  ).toBe(404);
+  expect((await request('inbox-owner', `notifications/${customer.id}/read`, 'PATCH')).status).toBe(
+    404
+  );
+  expect(await (await request('inbox-owner', 'v1/notifications/unread-count')).json()).toEqual({
+    unread_count: 1,
+  });
+  expect((await request('inbox-owner', 'notifications/read-all', 'POST')).status).toBe(200);
+  expect(
+    (await db.pool.query('SELECT is_read FROM in_app_notifications WHERE id=$1', [staff.id]))
+      .rows[0].is_read
+  ).toBe(true);
+  await db.pool.query("UPDATE users SET is_staff=false WHERE user_id='inbox-owner'");
+  expect(await ids('v1/notifications')).not.toContain(staff.id);
+  expect(await ids('v1/notifications')).toContain(account.id);
+});
+
+it('classifies SQL-created notices from legacy database functions', async () => {
+  const rows = await db.pool.query<{ operating_context: string | null }>(
+    `INSERT INTO in_app_notifications(recipient_user_id,profile_id,type,title_i18n_key,body_i18n_key,link_route)
+     VALUES ('inbox-owner',$1,'general','title','body','/electricity/orders/1'),
+            ('inbox-owner',NULL,'general','title','body','/admin/electricity-increases'),
+            ('inbox-owner',NULL,'auth.refresh_token_reused','title','body','/settings/security'),
+            ('inbox-owner',NULL,'general','title','body',NULL)
+     RETURNING operating_context`,
+    [profile]
+  );
+  expect(rows.rows.map((row) => row.operating_context)).toEqual([
+    'customer',
+    'staff',
+    'account',
+    null,
+  ]);
+  const refundAlert = await db.pool.query<{ operating_context: string }>(
+    `INSERT INTO in_app_notifications(recipient_user_id,type,title_i18n_key,body_i18n_key,delivery_key)
+     VALUES ('inbox-owner','general','title','body',$1) RETURNING operating_context`,
+    [`refund-exhausted:${randomUUID()}`]
+  );
+  expect(refundAlert.rows[0]?.operating_context).toBe('staff');
+});
+
 it('walks all newer and older pages without skipping notices, including equal timestamps', async () => {
   await db.pool.query("DELETE FROM in_app_notifications WHERE recipient_user_id='inbox-alone'");
   const ids: string[] = [];
@@ -151,8 +262,8 @@ it('walks all newer and older pages without skipping notices, including equal ti
     const id = `00000000-0000-4000-8000-${String(i).padStart(12, '0')}`;
     ids.push(id);
     await db.pool.query(
-      `INSERT INTO in_app_notifications(id,recipient_user_id,type,title_i18n_key,body_i18n_key,created_at)
-      VALUES ($1,'inbox-alone','general','title','body','2026-09-01T00:00:00Z')`,
+      `INSERT INTO in_app_notifications(id,recipient_user_id,operating_context,type,title_i18n_key,body_i18n_key,created_at)
+      VALUES ($1,'inbox-alone','customer','general','title','body','2026-09-01T00:00:00Z')`,
       [id]
     );
   }
@@ -203,8 +314,8 @@ it('preserves sub-millisecond database timestamps in page cursors', async () => 
     const id = randomUUID();
     ids.push(id);
     await db.pool.query(
-      `INSERT INTO in_app_notifications(id,recipient_user_id,type,title_i18n_key,body_i18n_key,created_at)
-      VALUES ($1,'inbox-alone','general','title','body',$2)`,
+      `INSERT INTO in_app_notifications(id,recipient_user_id,operating_context,type,title_i18n_key,body_i18n_key,created_at)
+      VALUES ($1,'inbox-alone','customer','general','title','body',$2)`,
       [id, `2026-09-01T00:00:00.00000${i}Z`]
     );
   }
@@ -237,7 +348,7 @@ for (const action of ['list', 'count', 'read', 'read-all'] as const) {
     );
     const id = (
       await db.pool.query(
-        "INSERT INTO in_app_notifications(profile_id,type,title_i18n_key,body_i18n_key) VALUES ($1,'general','title','body') RETURNING id",
+        "INSERT INTO in_app_notifications(profile_id,operating_context,type,title_i18n_key,body_i18n_key) VALUES ($1,'customer','general','title','body') RETURNING id",
         [profile]
       )
     ).rows[0].id;

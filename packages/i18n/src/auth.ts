@@ -8,6 +8,15 @@ export const fa: I18nDictionary = {
   'error.validation.unsupported_media_type': 'نوع محتوای درخواست پشتیبانی نمی‌شود',
   'error.provider.unavailable': 'یکی از سرویس‌های مورد نیاز در حال حاضر در دسترس نیست',
   'error.ai.model_circuit_open': 'اتصال به مدل هوش مصنوعی موقتاً متوقف شده است',
+  'error.ai.model_budget_exhausted': 'بودجه ماهانه مدل هوش مصنوعی به پایان رسیده است.',
+  'error.ai.inference_busy': 'دستیار هوش مصنوعی در حال حاضر شلوغ است. کمی بعد دوباره تلاش کنید.',
+  'error.ai.inference_unavailable':
+    'دستیار هوش مصنوعی موقتاً در دسترس نیست. کمی بعد دوباره تلاش کنید.',
+  'error.ai.knowledge_busy': 'دستیار دانش در حال پاسخ‌گویی است. کمی بعد دوباره تلاش کنید.',
+  'error.ai.knowledge_unavailable': 'برای پروفایل فعال شما دستیار دانش تنظیم نشده است.',
+  'error.ai.knowledge_no_source': 'منبع منتشرشده‌ای برای این پرسش پیدا نشد.',
+  'error.ai.knowledge_source_unavailable':
+    'یکی از منابع این پاسخ دیگر در دسترس نیست. پرسش را دوباره بفرستید.',
   'error.maintenance.active': 'این خدمت موقتاً در دسترس نیست',
   'auth.otp.error.alreadyConsumed': 'این کد تأیید قبلاً استفاده شده است. کد جدیدی درخواست کنید.',
   'crm.profile.deletion.blocked': 'این پروفایل دارای سوابق وابسته است و نمی‌توان آن را حذف کرد.',
@@ -190,6 +199,15 @@ export const en: I18nDictionary = {
   'error.validation.unsupported_media_type': 'Unsupported request content type',
   'error.provider.unavailable': 'A required service is temporarily unavailable',
   'error.ai.model_circuit_open': 'AI model connection temporarily paused',
+  'error.ai.model_budget_exhausted': 'The AI model monthly budget is exhausted.',
+  'error.ai.inference_busy': 'The AI assistant is busy. Please try again shortly.',
+  'error.ai.inference_unavailable':
+    'The AI assistant is temporarily unavailable. Please try again shortly.',
+  'error.ai.knowledge_busy': 'The knowledge assistant is busy. Please try again shortly.',
+  'error.ai.knowledge_unavailable': 'No knowledge assistant is assigned to your active profile.',
+  'error.ai.knowledge_no_source': 'No published source matched this question.',
+  'error.ai.knowledge_source_unavailable':
+    'A source for this answer is no longer available. Please ask again.',
   'error.maintenance.active': 'This service is temporarily paused',
   'auth.otp.error.alreadyConsumed':
     'This verification code has already been used. Request a new code.',

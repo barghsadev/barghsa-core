@@ -46,4 +46,10 @@ export const solarContractSchema = z
         'utf8'
       ) <= 65_536
   );
-export type SolarContractInput = z.infer<typeof solarContractSchema> & { requestId: string };
+export const solarContractConfirmationSchema = solarContractSchema.safeExtend({
+  expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
+});
+export type SolarContractReviewInput = z.infer<typeof solarContractSchema> & { requestId: string };
+export type SolarContractInput = z.infer<typeof solarContractConfirmationSchema> & {
+  requestId: string;
+};

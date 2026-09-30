@@ -79,8 +79,8 @@ export async function notifyRefundOutcome(
   };
   const id = uuidv7();
   await client.query(
-    `INSERT INTO in_app_notifications(id,recipient_user_id,profile_id,type,title_i18n_key,body_i18n_key,localized_content,link_route,delivery_key)
-     VALUES ($1,$2,$3,'general','notifications.legacy.title','notifications.legacy.body',$4::jsonb,$5,$6)`,
+    `INSERT INTO in_app_notifications(id,recipient_user_id,profile_id,operating_context,type,title_i18n_key,body_i18n_key,localized_content,link_route,delivery_key)
+     VALUES ($1,$2,$3,'customer','general','notifications.legacy.title','notifications.legacy.body',$4::jsonb,$5,$6)`,
     [
       id,
       owner.user_id,

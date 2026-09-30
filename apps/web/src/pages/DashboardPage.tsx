@@ -15,9 +15,18 @@ import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { WalletBalanceCard } from '../components/WalletBalanceCard.js';
 import { QuickStatusCards } from '../components/QuickStatusCards.js';
+import {
+  UpcomingInvoicesWidget,
+  type UpcomingInvoice,
+} from '../components/UpcomingInvoicesWidget.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
+import { LatestOrdersWidget, type RecentOrder } from '../components/LatestOrdersWidget.js';
+import { ActiveContractsWidget, type ActiveContract } from '../components/ActiveContractsWidget.js';
 
 interface DashboardData {
   profile?: { id: string; name: string };
+  access?: { invoices: boolean; orders: boolean; contracts: boolean };
   wallet: {
     balance: string;
     postedBalance: string;
@@ -27,6 +36,9 @@ interface DashboardData {
   } | null;
   activeOrders: number;
   pendingInvoices: number;
+  upcomingInvoices?: UpcomingInvoice[];
+  recentOrders?: RecentOrder[];
+  activeContracts?: ActiveContract[];
   openTickets: number;
   contracts: { active: number; total: number };
   quickStatus: {
@@ -50,37 +62,49 @@ interface DashboardData {
 export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = {}) {
   const documentLocale = useLocale();
   const locale = localeOverride ?? documentLocale;
+  const profileRevision = useProfileContextRevision();
+  const time = useAccountTime(locale);
   const [revision, setRevision] = useState(0);
-  const [data, setData] = useState<DashboardData | null>(null);
+  const [loaded, setLoaded] = useState<{ profileRevision: number; value: DashboardData } | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [failure, setFailure] = useState<{ profileRevision: number; message: string } | null>(null);
+  const data = loaded?.profileRevision === profileRevision ? loaded.value : null;
+  const error = failure?.profileRevision === profileRevision ? failure.message : null;
   const isRtl = locale === 'fa';
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
     setLoading(true);
-    setError(null);
+    setFailure(null);
 
     async function fetchDashboard() {
       try {
-        const res = await fetch('/api/dashboard', { credentials: 'include' });
+        const res = await fetch('/api/dashboard', {
+          credentials: 'include',
+          signal: controller.signal,
+        });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json: DashboardData = await res.json();
-        if (!cancelled) setData(json);
+        if (!controller.signal.aborted) setLoaded({ profileRevision, value: json });
       } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Failed to load dashboard');
+        if (!controller.signal.aborted) {
+          setFailure({
+            profileRevision,
+            message: err instanceof Error ? err.message : 'Failed to load dashboard',
+          });
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     }
 
     fetchDashboard();
     return () => {
-      cancelled = true;
+      controller.abort();
     };
-  }, [revision]);
+  }, [revision, profileRevision]);
 
   const profileName = data?.profile?.name || t('dashboard.profile.unnamed', locale);
 
@@ -95,7 +119,8 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
         </AlertDescription>
       </Alert>
     );
-  if (loading) return <LoadingSkeleton label={feedbackText('loading', locale)} variant="cards" />;
+  if (loading || !data)
+    return <LoadingSkeleton label={feedbackText('loading', locale)} variant="cards" />;
 
   const quickActions = [
     { label: t('dashboard.overview.newOrder', locale), href: '/electricity' },
@@ -149,6 +174,27 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
           />
         </div>
       </div>
+
+      {(data.access?.invoices !== false ||
+        data.access?.orders !== false ||
+        data.access?.contracts !== false) &&
+        time.notice}
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        {data.access?.invoices !== false && (
+          <UpcomingInvoicesWidget
+            invoices={data.upcomingInvoices ?? []}
+            locale={locale}
+            time={time}
+          />
+        )}
+        {data.access?.orders !== false && (
+          <LatestOrdersWidget orders={data.recentOrders ?? []} locale={locale} time={time} />
+        )}
+      </div>
+
+      {data.access?.contracts !== false && (
+        <ActiveContractsWidget contracts={data.activeContracts ?? []} locale={locale} time={time} />
+      )}
 
       {/* Quick actions section */}
       <section className="border-t pt-6">

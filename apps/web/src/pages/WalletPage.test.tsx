@@ -7,6 +7,28 @@ import { walletInvoiceReturnFor } from '../lib/wallet-invoice-return.js';
 const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const TOP_UP_ID = '33333333-3333-7333-8333-333333333333';
 const INVOICE_ID = '11111111-1111-7111-8111-111111111111';
+const REVIEW_HASH = 'a'.repeat(64);
+
+function onlineReview(amount: string) {
+  return {
+    schemaVersion: 1,
+    scope: {
+      action: 'wallet.online-topup-initiation',
+      profileId: PROFILE_ID,
+      resourceId: PROFILE_ID,
+    },
+    data: {
+      profileId: PROFILE_ID,
+      amountIrR: amount,
+      onlineTopUpLimitIrR: '2000000000',
+      configVersion: 0,
+      paymentSource: 'external_gateway',
+      stateAfterInitiation: 'Pending',
+      creditRule: 'after_verified_gateway_payment',
+    },
+    hash: REVIEW_HASH,
+  };
+}
 
 function jsonResponse(body: unknown, status = 200) {
   return {
@@ -48,7 +70,10 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
       if (url.endsWith('/api/profiles') && method === 'GET') {
         return jsonResponse({ activeProfileId: PROFILE_ID });
       }
-      if (url.includes(`/api/wallet/${PROFILE_ID}/top-ups`) && method === 'POST') {
+      if (url.endsWith(`/api/wallet/${PROFILE_ID}/top-ups/review`) && method === 'POST') {
+        return jsonResponse(onlineReview(String(JSON.parse(String(init?.body)).amount)));
+      }
+      if (url.endsWith(`/api/wallet/${PROFILE_ID}/top-ups`) && method === 'POST') {
         return jsonResponse(
           { transactionId: TOP_UP_ID, redirectUrl: 'https://pay.test/start?authority=abc' },
           201
@@ -94,6 +119,18 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
         break;
       }
     }
+  }
+
+  async function confirmOnlineReview() {
+    for (let attempt = 0; attempt < 30 && !document.querySelector('[role="dialog"]'); attempt++) {
+      await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
+    }
+    const button = [...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button')].find(
+      (item) => item.textContent?.includes('Confirm') || item.textContent?.includes('تأیید')
+    );
+    expect(button).toBeDefined();
+    await act(async () => button!.click());
+    await flushFetches();
   }
 
   it('loads the active profile wallet and shows the available balance', async () => {
@@ -148,14 +185,19 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     });
     await flushFetches();
 
+    expect(assign).not.toHaveBeenCalled();
+    await confirmOnlineReview();
     const topUpCall = fetchMock.mock.calls.find(([url, init]) => {
       return (
-        String(url).includes('/top-ups') && (init as RequestInit | undefined)?.method === 'POST'
+        String(url).endsWith('/top-ups') && (init as RequestInit | undefined)?.method === 'POST'
       );
     });
     expect(topUpCall).toBeTruthy();
     const init = topUpCall![1] as RequestInit;
-    expect(JSON.parse(String(init.body))).toEqual({ amount: 250000 });
+    expect(JSON.parse(String(init.body))).toEqual({
+      amount: '250000',
+      expectedReviewHash: REVIEW_HASH,
+    });
     expect(new Headers(init.headers).get('Idempotency-Key')).toBeTruthy();
     expect(walletInvoiceReturnFor(TOP_UP_ID)).toBe(INVOICE_ID);
     expect(assign).toHaveBeenCalledWith('https://pay.test/start?authority=abc');
@@ -176,7 +218,10 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
           configVersion: 0,
         });
       }
-      if (url.includes('/top-ups') && method === 'POST') {
+      if (url.endsWith('/top-ups/review') && method === 'POST') {
+        return jsonResponse(onlineReview('250000'));
+      }
+      if (url.endsWith('/top-ups') && method === 'POST') {
         return jsonResponse({ redirectUrl: 'javascript:alert(1)' }, 201);
       }
       return jsonResponse({}, 404);
@@ -192,6 +237,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
       form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
     await flushFetches();
+    await confirmOnlineReview();
 
     expect(assign).not.toHaveBeenCalled();
     expect(container.querySelector('[data-testid="wallet-error"]')?.textContent).toContain(
@@ -393,13 +439,17 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     });
     await flushFetches();
 
+    await confirmOnlineReview();
     const topUpCall = fetchMock.mock.calls.find(([url, init]) => {
       return (
-        String(url).includes('/top-ups') && (init as RequestInit | undefined)?.method === 'POST'
+        String(url).endsWith('/top-ups') && (init as RequestInit | undefined)?.method === 'POST'
       );
     });
     expect(topUpCall).toBeTruthy();
-    expect(JSON.parse(String((topUpCall![1] as RequestInit).body))).toEqual({ amount: 250000 });
+    expect(JSON.parse(String((topUpCall![1] as RequestInit).body))).toEqual({
+      amount: '250000',
+      expectedReviewHash: REVIEW_HASH,
+    });
     expect(assign).toHaveBeenCalledWith('https://pay.test/start?authority=abc');
   });
 
@@ -419,25 +469,56 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     });
     await flushFetches();
 
+    await confirmOnlineReview();
     const topUpCall = fetchMock.mock.calls.find(([url, init]) => {
       return (
-        String(url).includes('/top-ups') && (init as RequestInit | undefined)?.method === 'POST'
+        String(url).endsWith('/top-ups') && (init as RequestInit | undefined)?.method === 'POST'
       );
     });
     expect(topUpCall).toBeTruthy();
-    expect(JSON.parse(String((topUpCall![1] as RequestInit).body))).toEqual({ amount: 250000 });
+    expect(JSON.parse(String((topUpCall![1] as RequestInit).body))).toEqual({
+      amount: '250000',
+      expectedReviewHash: REVIEW_HASH,
+    });
     expect(assign).toHaveBeenCalledWith('https://pay.test/start?authority=abc');
   });
 
   it('submits a bank receipt top-up after uploading the file and does not redirect', async () => {
     const attachmentKey = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf';
+    const receiptReview = {
+      schemaVersion: 1,
+      scope: {
+        action: 'wallet.bank-receipt-topup-submission',
+        profileId: PROFILE_ID,
+        resourceId: PROFILE_ID,
+      },
+      data: {
+        profileId: PROFILE_ID,
+        amountIrR: '250000',
+        paymentDate: '2026-08-15',
+        payerReference: 'TRK-998877',
+        attachmentKey,
+        fileName: 'receipt.pdf',
+        fileSizeBytes: '16',
+        customerNote: 'Branch transfer',
+        stateAfterSubmission: 'Pending',
+        creditRule: 'after_finance_confirmation',
+      },
+      hash: REVIEW_HASH,
+    };
     fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
       const method = (init?.method ?? 'GET').toUpperCase();
       if (url.endsWith('/api/profiles') && method === 'GET') {
         return jsonResponse({ activeProfileId: PROFILE_ID });
       }
-      if (url.includes(`/api/wallet/${PROFILE_ID}/bank-receipt-top-ups`) && method === 'POST') {
+      if (
+        url.endsWith(`/api/wallet/${PROFILE_ID}/bank-receipt-top-ups/review`) &&
+        method === 'POST'
+      ) {
+        return jsonResponse(receiptReview);
+      }
+      if (url.endsWith(`/api/wallet/${PROFILE_ID}/bank-receipt-top-ups`) && method === 'POST') {
         return jsonResponse(
           {
             ok: true,
@@ -500,6 +581,23 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     await act(async () => {
       form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
+    for (let i = 0; i < 30; i++) {
+      await flushFetches();
+      await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
+      if (document.querySelector('[role="dialog"]')) break;
+    }
+    expect(document.querySelector('[role="dialog"]')?.textContent).toContain('250,000');
+    expect(document.querySelector('[role="dialog"]')?.textContent).toContain('TRK-998877');
+    expect(
+      fetchMock.mock.calls.some(([url]) =>
+        String(url).endsWith(`/api/wallet/${PROFILE_ID}/bank-receipt-top-ups`)
+      )
+    ).toBe(false);
+    const confirm = [
+      ...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
+    ].find((button) => button.textContent?.includes('Confirm and submit receipt'));
+    expect(confirm).toBeDefined();
+    await act(async () => confirm!.click());
     for (let i = 0; i < 20; i++) {
       await flushFetches();
       if (container.querySelector('[data-testid="wallet-receipt-success"]')) break;
@@ -507,7 +605,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
 
     const submitCall = fetchMock.mock.calls.find(([url, init]) => {
       return (
-        String(url).includes('/bank-receipt-top-ups') &&
+        String(url).endsWith(`/api/wallet/${PROFILE_ID}/bank-receipt-top-ups`) &&
         (init as RequestInit | undefined)?.method === 'POST'
       );
     });
@@ -518,6 +616,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
       payerReference: 'TRK-998877',
       attachmentKey,
       customerNote: 'Branch transfer',
+      expectedReviewHash: REVIEW_HASH,
     });
     const recordCall = fetchMock.mock.calls.find(([url, init]) => {
       return (

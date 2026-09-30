@@ -173,16 +173,20 @@ describe('validateTemplate — allow-list enforcement', () => {
 
   it('flags an unclosed placeholder', () => {
     const problems = validateTemplate('Hi {{userName', ['userName']);
-    expect(problems.some((p) => /unclosed/i.test(p.message))).toBe(true);
+    expect(problems.some((p: { message: string }) => /unclosed/i.test(p.message))).toBe(true);
   });
 
   it('rejects a placeholder not in the allow-list', () => {
     const problems = validateTemplate('Hello {{other}}', ['userName']);
-    expect(problems.some((p) => /not in the allow-list/i.test(p.message))).toBe(true);
+    expect(
+      problems.some((p: { message: string }) => /not in the allow-list/i.test(p.message))
+    ).toBe(true);
   });
 
   it('rejects an invalid variable name', () => {
     const problems = validateTemplate('{{bad name!}}', ['bad name!']);
-    expect(problems.some((p) => /invalid variable name/i.test(p.message))).toBe(true);
+    expect(
+      problems.some((p: { message: string }) => /invalid variable name/i.test(p.message))
+    ).toBe(true);
   });
 });

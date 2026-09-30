@@ -2,6 +2,7 @@ import { activeProfileSql } from '../profiles/profile-context.js';
 import { Injectable, Logger, HttpException, Optional, Inject } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import type { OperatingContext } from '../session/session.service.js';
 
 /**
  * Notification-center API service (E-05, T-05.02.02).
@@ -195,7 +196,8 @@ export class NotificationCenterService {
   async list(
     profileId: string | null,
     options: ListNotificationsOptions = {},
-    userId?: string
+    userId?: string,
+    context: OperatingContext = 'customer'
   ): Promise<NotificationCenterPage> {
     const db = this.db;
     const limit = Math.min(Math.max(options.limit ?? DEFAULT_LIMIT, 1), MAX_LIMIT);
@@ -204,8 +206,8 @@ export class NotificationCenterService {
     const order = direction === 'newer' ? 'ASC' : 'DESC';
 
     const conditions: string[] = [notificationScope];
-    const params: unknown[] = [profileId, userId ?? null];
-    let paramIndex = 2;
+    const params: unknown[] = [profileId, userId ?? null, context];
+    let paramIndex = 3;
 
     if (filter === 'unread') {
       conditions.push('is_read = false');
@@ -245,7 +247,7 @@ export class NotificationCenterService {
         ? encodeCursor(boundaryRow.cursorTimestamp ?? boundaryRow.createdAt, boundaryRow.id)
         : null;
 
-    const unread_count = await this.countUnread(profileId, userId);
+    const unread_count = await this.countUnread(profileId, userId, context);
 
     return {
       data: page.map(({ cursorTimestamp: _cursorTimestamp, ...item }) => item),
@@ -255,11 +257,15 @@ export class NotificationCenterService {
   }
 
   /** Total unread count for a profile (used for the badge & response). */
-  async countUnread(profileId: string | null, userId?: string): Promise<number> {
+  async countUnread(
+    profileId: string | null,
+    userId?: string,
+    context: OperatingContext = 'customer'
+  ): Promise<number> {
     const result = await this.db.query(
       `SELECT COUNT(*) AS n FROM in_app_notifications
         WHERE ${notificationScope} AND is_read = false`,
-      [profileId, userId ?? null]
+      [profileId, userId ?? null, context]
     );
     return parseInt((result.rows[0] as { n: string } | undefined)?.n ?? '0', 10);
   }
@@ -268,7 +274,12 @@ export class NotificationCenterService {
    * Mark one notification read. Profile-scoped so a user can only affect their
    * own rows; throws 404 when the row does not exist for the given profile.
    */
-  async markRead(profileId: string | null, notificationId: string, userId?: string): Promise<void> {
+  async markRead(
+    profileId: string | null,
+    notificationId: string,
+    userId?: string,
+    context: OperatingContext = 'customer'
+  ): Promise<void> {
     if (!UUID_PATTERN.test(notificationId)) {
       throw new HttpException(
         {
@@ -282,8 +293,8 @@ export class NotificationCenterService {
     const result = await this.db.query(
       `UPDATE in_app_notifications
           SET is_read = true, read_at = COALESCE(read_at,NOW())
-        WHERE id = $3 AND ${notificationScope}`,
-      [profileId, userId ?? null, notificationId]
+        WHERE id = $4 AND ${notificationScope}`,
+      [profileId, userId ?? null, context, notificationId]
     );
     if (result.rowCount === 0) {
       throw new HttpException(
@@ -298,12 +309,16 @@ export class NotificationCenterService {
   }
 
   /** Mark every unread notification for the profile as read. */
-  async markAllRead(profileId: string | null, userId?: string): Promise<number> {
+  async markAllRead(
+    profileId: string | null,
+    userId?: string,
+    context: OperatingContext = 'customer'
+  ): Promise<number> {
     const result = await this.db.query(
       `UPDATE in_app_notifications
           SET is_read = true, read_at = COALESCE(read_at,NOW())
         WHERE ${notificationScope} AND is_read = false`,
-      [profileId, userId ?? null]
+      [profileId, userId ?? null, context]
     );
     return result.rowCount ?? 0;
   }
@@ -316,6 +331,16 @@ const currentProfileScope = `EXISTS (
 )`;
 
 /** Account notices stay private; a previously resolved profile grants no authority. */
-export const notificationScope = `((profile_id=$1 AND ${currentProfileScope}
-    AND (recipient_user_id IS NULL OR recipient_user_id=$2))
-  OR (profile_id IS NULL AND recipient_user_id=$2))`;
+export const notificationScope = `(
+  (operating_context='staff' AND $3='staff' AND recipient_user_id=$2
+    AND EXISTS (SELECT 1 FROM users u WHERE u.user_id=$2
+      AND u.disabled_at IS NULL AND u.activation_token IS NULL
+      AND (u.is_staff OR u.is_admin OR EXISTS (
+        SELECT 1 FROM user_roles ur WHERE ur.user_id=u.user_id))))
+  OR (operating_context='account' AND recipient_user_id=$2)
+  OR (operating_context='customer' AND $3='customer' AND (
+    (profile_id=$1 AND ${currentProfileScope}
+      AND (recipient_user_id IS NULL OR recipient_user_id=$2))
+    OR (profile_id IS NULL AND recipient_user_id=$2)
+  ))
+)`;

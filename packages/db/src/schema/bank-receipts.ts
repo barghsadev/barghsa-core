@@ -1,5 +1,14 @@
 import { sql } from 'drizzle-orm';
-import { check, date, foreignKey, index, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import {
+  check,
+  date,
+  foreignKey,
+  index,
+  jsonb,
+  pgTable,
+  text,
+  uniqueIndex,
+} from 'drizzle-orm/pg-core';
 import { baseColumns } from '../base-table';
 import { irrAmount, timestamptz, uuidv7 } from '../types';
 import { invoices } from './invoices';
@@ -35,6 +44,7 @@ export type BankReceiptState = (typeof BANK_RECEIPT_STATES)[number];
  *   - `bankName?` — optional bank name from the slip; legacy rows are NULL.
  *   - `attachmentKey` — object-storage key for the uploaded scan.
  *   - `customerNote` — optional customer note.
+ *   - `submissionReview?` — confirmed pre-submission financial snapshot; NULL on legacy rows.
  *   - `state` — Submitted | UnderReview | Confirmed | Rejected.
  *   - `confirmedBy?` / `confirmedAt?` — set together iff Confirmed.
  *   - `rejectionReason?` — set iff Rejected.
@@ -80,6 +90,9 @@ export const bankReceipts = pgTable(
 
     /** Optional customer note. Blank submissions store NULL. */
     customerNote: text('customer_note'),
+
+    /** Immutable customer confirmation at receipt submission; nullable for earlier receipts. */
+    submissionReview: jsonb('submission_review').$type<Record<string, unknown>>(),
 
     /** Receipt lifecycle state. Default Submitted. */
     state: text('state', {

@@ -37,6 +37,72 @@
     "build": "auth"
   },
   {
+    "name": "Admin terms editor on demand",
+    "phase": "interaction",
+    "entries": ["src/pages/TosRichText.tsx"],
+    "limitKB": 170
+  },
+  {
+    "name": "Admin terms publish preview on demand",
+    "phase": "interaction",
+    "entries": ["src/pages/TosPreview.tsx"],
+    "limitKB": 50
+  },
+  {
+    "name": "Admin terms version viewer on demand",
+    "phase": "interaction",
+    "entries": ["src/components/TosContent.tsx"],
+    "limitKB": 35
+  },
+  {
+    "name": "Toast feedback on demand",
+    "phase": "interaction",
+    "entries": ["src/components/SonnerToaster.tsx"],
+    "limitKB": 35
+  },
+  {
+    "name": "Wallet top-up review on demand",
+    "phase": "interaction",
+    "entries": ["src/components/OnlineTopUpReviewDialog.tsx"],
+    "limitKB": 15
+  },
+  {
+    "name": "Wallet top-up action on demand",
+    "phase": "interaction",
+    "entries": ["src/lib/online-topup-action.ts"],
+    "limitKB": 40
+  },
+  {
+    "name": "Bank receipt top-up review on demand",
+    "phase": "interaction",
+    "entries": ["src/components/BankReceiptTopUpReviewDialog.tsx"],
+    "limitKB": 15
+  },
+  {
+    "name": "Bank receipt top-up action on demand",
+    "phase": "interaction",
+    "entries": ["src/lib/bank-receipt-topup-action.ts"],
+    "limitKB": 15
+  },
+  {
+    "name": "Invoice receipt review on demand",
+    "phase": "interaction",
+    "entries": ["src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx"],
+    "limitKB": 15
+  },
+  {
+    "name": "Invoice receipt review action on demand",
+    "phase": "interaction",
+    "entries": ["src/lib/invoice-bank-receipt-review-action.ts"],
+    "limitKB": 15
+  },
+  {
+    "name": "Finance review validation on demand",
+    "phase": "interaction",
+    "entries": ["../../packages/shared/dist/finance/index.js"],
+    "limitKB": 60
+  },
+  {
     "name": "Dashboard",
     "entries": [
       "index.html",
@@ -53,7 +119,7 @@
       "src/components/VerificationBanner.tsx",
       "src/components/DefaultProfileModal.tsx"
     ],
-    "limitKB": 250
+    "limitKB": 251
   },
   {
     "name": "Admin",

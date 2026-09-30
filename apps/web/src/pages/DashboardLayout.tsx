@@ -1,5 +1,4 @@
-import { contractText } from '@barghsa/i18n/contracts';
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useLocation } from '@tanstack/react-router';
 import {
   LayoutDashboard,
   Zap,
@@ -13,11 +12,9 @@ import {
   Users,
   Settings,
   FileText,
+  BookOpenText,
 } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/app';
-import { documentText } from '@barghsa/i18n/documents';
-import { tSolar } from '@barghsa/i18n/solar';
-import { tConsultation } from '@barghsa/i18n/consultation';
 import { shellText } from '@barghsa/i18n/shell';
 import { useLocale } from '../hooks/useLocale.js';
 import { ProfileSwitcher } from '../components/ProfileSwitcher.js';
@@ -26,10 +23,12 @@ import { InvitationBanner } from '../components/InvitationBanner.js';
 import { OwnershipBanner } from '../components/OwnershipBanner.js';
 import { NotificationBell } from '../components/NotificationBell.js';
 import { AppShell, type NavigationGroup } from '../components/AppShell.js';
+import { KnowledgeAssistantLauncher } from '../components/KnowledgeAssistantLauncher.js';
 
 export function DashboardLayout({ locale: localeOverride }: { locale?: Locale }) {
   const currentLocale = useLocale();
   const locale = localeOverride ?? currentLocale;
+  const onAssistantPage = useLocation({ select: (location) => location.pathname === '/ai' });
   const groups: NavigationGroup[] = [
     {
       label: shellText('overview', locale),
@@ -40,13 +39,18 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
       items: [
         { to: '/electricity', label: t('dashboard.nav.electricity', locale), icon: Zap },
         { to: '/savings', label: t('dashboard.nav.savings', locale), icon: Sprout },
-        { to: '/solar/requests', label: tSolar('myRequests', locale), icon: Sun },
-        { to: '/consultations', label: tConsultation('title', locale), icon: MessagesSquare },
+        { to: '/solar/requests', label: t('dashboard.nav.solarRequests', locale), icon: Sun },
+        {
+          to: '/consultations',
+          label: t('dashboard.nav.consultations', locale),
+          icon: MessagesSquare,
+        },
         { to: '/wallet', label: t('dashboard.nav.wallet', locale), icon: Wallet },
         { to: '/invoices', label: t('dashboard.nav.invoices', locale), icon: ReceiptText },
-        { to: '/contracts', label: contractText('title', locale), icon: FileText },
-        { to: '/documents', label: documentText('title', locale), icon: FileText },
+        { to: '/contracts', label: t('dashboard.nav.contracts', locale), icon: FileText },
+        { to: '/documents', label: t('dashboard.nav.documentsList', locale), icon: FileText },
         { to: '/tickets', label: t('tickets.title', locale), icon: LifeBuoy },
+        { to: '/ai', label: t('assistant.open', locale), icon: BookOpenText },
       ],
     },
     {
@@ -74,6 +78,7 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
       }
     >
       <Outlet />
+      {!onAssistantPage && <KnowledgeAssistantLauncher locale={locale} />}
     </AppShell>
   );
 }

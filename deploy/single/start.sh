@@ -15,6 +15,11 @@ DATABASE_URL="$(python3 -c 'import os,urllib.parse; print("postgresql://barghsa:
 export DATABASE_URL
 export PGDIRECT_URL="$DATABASE_URL" REDIS_URL=redis://127.0.0.1:6379/0
 export PORT=8080
+export AI_INFERENCE_URL=http://127.0.0.1:9091
+if [[ -z ${AI_INFERENCE_SHARED_SECRET:-} ]]; then
+  AI_INFERENCE_SHARED_SECRET="$(python3 -c 'import secrets; print(secrets.token_hex(32))')"
+  export AI_INFERENCE_SHARED_SECRET
+fi
 mkdir -p /data/postgres /data/redis /data/weed /data/clamav
 chown -R postgres:postgres /data/postgres
 chown -R clamav:clamav /data/clamav
@@ -57,6 +62,7 @@ echo 'Running database migrations'
 
 (cd /app/api && PORT=4000 node dist/src/main.js) & children+=("$!")
 (cd /app/worker && WORKER_PORT=9090 node dist/main.js) & children+=("$!")
+(cd /app/worker && AI_INFERENCE_HOST=127.0.0.1 AI_INFERENCE_PORT=9091 node dist/ai-inference/main.js) & children+=("$!")
 (cd /app/web && PORT=3000 HOST=127.0.0.1 node server.js) & children+=("$!")
 nginx -g 'daemon off;' & children+=("$!")
 

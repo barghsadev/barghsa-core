@@ -47,16 +47,18 @@ import {
 } from './customer-invoice-details.service.js';
 import { InvoiceBankReceiptUploadService } from './invoice-bank-receipt-upload.service.js';
 
-const InvoiceBankReceiptBodySchema = z
-  .object({
-    amount: z.union([z.number(), z.string()]),
-    paymentDate: z.string().min(1),
-    payerReference: z.string().min(1),
-    bankName: z.string().max(128).optional(),
-    attachmentKey: z.string().min(1),
-    customerNote: z.string().optional(),
-  })
-  .strict();
+const InvoiceBankReceiptFieldsSchema = z.object({
+  amount: z.union([z.number(), z.string()]),
+  paymentDate: z.string().min(1),
+  payerReference: z.string().min(1),
+  bankName: z.string().max(128).optional(),
+  attachmentKey: z.string().min(1),
+  customerNote: z.string().optional(),
+});
+const InvoiceBankReceiptReviewBodySchema = InvoiceBankReceiptFieldsSchema.strict();
+const InvoiceBankReceiptBodySchema = InvoiceBankReceiptFieldsSchema.extend({
+  expectedReviewHash: z.string().regex(/^[0-9a-f]{64}$/),
+}).strict();
 
 const BankReceiptListQuerySchema = z
   .object({
@@ -202,13 +204,50 @@ export class CustomerInvoiceController {
     };
   }
 
-  /**
-   * POST /api/invoices/:invoiceId/bank-receipts
-   *
-   * Customer upload (T-04.3.01.02): validate amount, file type/size,
-   * and create the receipt in Submitted. Invoice settlement waits for
-   * staff confirmation.
-   */
+  @Post(':invoiceId/bank-receipts/review')
+  @HttpCode(200)
+  @RateLimit({
+    namespace: 'invoices:bank-receipt-review:user',
+    scope: 'user',
+    limit: 30,
+    windowMs: 60_000,
+  })
+  @ApiOperation({ summary: 'Review an invoice bank receipt before submission' })
+  @ApiParam({ name: 'invoiceId', format: 'uuid' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['amount', 'paymentDate', 'payerReference', 'attachmentKey'],
+      properties: {
+        amount: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+        paymentDate: { type: 'string', format: 'date' },
+        payerReference: { type: 'string' },
+        bankName: { type: 'string', maxLength: 128 },
+        attachmentKey: { type: 'string' },
+        customerNote: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Server-confirmed invoice and receipt snapshot.' })
+  async reviewBankReceipt(
+    @Req() req: AuthenticatedRequest,
+    @Param('invoiceId') invoiceId: string,
+    @Body() rawBody: unknown
+  ) {
+    assertUuid(invoiceId);
+    const parsed = InvoiceBankReceiptReviewBodySchema.safeParse(rawBody ?? {});
+    if (!parsed.success)
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Bank receipt review fields are required');
+    return this.bankReceiptUpload.review({
+      userId: req.session.userId,
+      sessionId: req.session.sessionId,
+      csrfToken: req.session.csrfToken,
+      invoiceId,
+      ...parsed.data,
+    });
+  }
+
+  /** Submit a reviewed receipt in Submitted; settlement waits for staff confirmation. */
   @Post(':invoiceId/bank-receipts')
   @HttpCode(201)
   @RateLimit({ namespace: 'invoices:bank-receipt:user', limit: 10, windowMs: 60_000 })
@@ -219,7 +258,7 @@ export class CustomerInvoiceController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['amount', 'paymentDate', 'payerReference', 'attachmentKey'],
+      required: ['amount', 'paymentDate', 'payerReference', 'attachmentKey', 'expectedReviewHash'],
       properties: {
         amount: { oneOf: [{ type: 'string' }, { type: 'number' }] },
         paymentDate: { type: 'string', format: 'date' },
@@ -227,6 +266,7 @@ export class CustomerInvoiceController {
         bankName: { type: 'string', maxLength: 128, description: 'Optional bank name on the slip' },
         attachmentKey: { type: 'string' },
         customerNote: { type: 'string' },
+        expectedReviewHash: { type: 'string', pattern: '^[0-9a-f]{64}$' },
       },
     },
   })
@@ -248,7 +288,7 @@ export class CustomerInvoiceController {
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Bank receipt body must include amount, paymentDate, payerReference, and attachmentKey',
+        'Bank receipt body must include receipt details and expectedReviewHash',
         HttpStatus.BAD_REQUEST
       );
     }
@@ -264,6 +304,7 @@ export class CustomerInvoiceController {
       bankName: parsed.data.bankName,
       attachmentKey: parsed.data.attachmentKey,
       customerNote: parsed.data.customerNote,
+      expectedReviewHash: parsed.data.expectedReviewHash,
     });
 
     return {

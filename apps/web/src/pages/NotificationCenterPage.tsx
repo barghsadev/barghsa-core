@@ -25,7 +25,11 @@ const PAGE_SIZE = 20;
  * read on click and navigates to its linked record when one is set. Shows a
  * loading skeleton, an empty state, and a load-more footer. RTL-aware.
  */
-export function NotificationCenterPage() {
+export function NotificationCenterPage({
+  operatingContext = 'customer',
+}: {
+  operatingContext?: 'staff' | 'customer';
+}) {
   const locale = useLocale();
   const navigate = useNavigate();
 
@@ -83,7 +87,7 @@ export function NotificationCenterPage() {
 
   const markRead = async (item?: NotificationItem) => {
     if (writing.current) return;
-    const target = item ? toNavigationTarget(item) : null;
+    const target = item ? toNavigationTarget(item, operatingContext) : null;
     const version = ++requestVersion.current;
     const previousItems = items,
       previousCount = unreadCount;
@@ -250,6 +254,7 @@ export function NotificationCenterPage() {
                     locale={locale}
                     unread={!item.isRead}
                     muted={item.isRead}
+                    operatingContext={operatingContext}
                   />
                 </span>
               </button>

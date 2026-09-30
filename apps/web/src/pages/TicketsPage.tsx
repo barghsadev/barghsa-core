@@ -5,6 +5,7 @@ import { Button, Input, Label } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
+import { ProfileClosureReview } from '../components/ProfileClosureReview.js';
 import {
   isAllowedInvoiceReceiptFile,
   uploadTicketAttachment,
@@ -15,7 +16,12 @@ interface Ticket {
   id: string;
   subject: string;
   body: string;
-  category?: 'general' | 'billing' | 'orders';
+  category?: 'general' | 'billing' | 'orders' | 'privacy';
+  privacyRequestType?: 'export' | 'closure' | null;
+  privacyClosureCompletedAt?: string | null;
+  privacyClosureAnonymized?: boolean | null;
+  privacyClosureRetained?: Record<string, number> | null;
+  privacyClosureExportTicketId?: string | null;
   status: Status;
   priority: string;
   profileId: string | null;
@@ -46,7 +52,12 @@ interface Queue {
   responseTargetHours?: number | null;
   data: Ticket[];
   totalPages: number;
-  viewer?: { userId: string; canWrite: boolean; canAssignOthers: boolean };
+  viewer?: {
+    userId: string;
+    canWrite: boolean;
+    canAssignOthers: boolean;
+    canApproveClosure?: boolean;
+  };
 }
 interface Options {
   profiles: { id: string; title: string | null }[];
@@ -446,7 +457,7 @@ function Tickets({ staff }: { staff: boolean }) {
                 value={category}
                 onChange={(event) => setCategory(event.target.value)}
               >
-                {['general', 'billing', 'orders'].map((value) => (
+                {['general', 'billing', 'orders', 'privacy'].map((value) => (
                   <option key={value} value={value}>
                     {text(`category.${value}`)}
                   </option>
@@ -599,7 +610,7 @@ function Tickets({ staff }: { staff: boolean }) {
             }}
           >
             <option value="">{text('all')}</option>
-            {!staff && <option value="active">{text('active')}</option>}
+            <option value="active">{text('active')}</option>
             {statuses.map((value) => (
               <option key={value} value={value}>
                 {text(value)}
@@ -828,6 +839,59 @@ function Tickets({ staff }: { staff: boolean }) {
           {!!detail.attachments?.length && !detail.attachmentDownloadUrls?.length && (
             <p role="status">{text('filesUnavailable')}</p>
           )}
+          {detail.privacyRequestType === 'closure' && detail.privacyClosureCompletedAt && (
+            <section
+              className="space-y-2 rounded border p-3"
+              aria-label={t('tickets.closure.review', locale)}
+            >
+              <h3 className="font-semibold">{t('tickets.closure.completed', locale)}</h3>
+              <p>{t('tickets.closure.consequences', locale)}</p>
+              <p>
+                {t(
+                  detail.privacyClosureAnonymized
+                    ? 'tickets.closure.redacted'
+                    : 'tickets.closure.retainedIdentity',
+                  locale
+                )}
+              </p>
+              <p>{t('tickets.closure.supportHistory', locale)}</p>
+              <ul className="list-disc ps-5">
+                {Object.entries(detail.privacyClosureRetained ?? {})
+                  .filter(([, count]) => count > 0)
+                  .map(([key, count]) => (
+                    <li key={key}>
+                      {t(`tickets.closure.record.${key}`, locale)}: {count}
+                    </li>
+                  ))}
+              </ul>
+              {detail.privacyClosureExportTicketId && (
+                <a
+                  href={`${staff ? '/admin/tickets' : '/tickets'}?ticketId=${encodeURIComponent(detail.privacyClosureExportTicketId)}`}
+                  className="text-primary underline underline-offset-2"
+                >
+                  {t('tickets.closure.export', locale)} · {detail.privacyClosureExportTicketId}
+                </a>
+              )}
+              {!staff && (
+                <a href="/tickets" className="block text-primary underline underline-offset-2">
+                  {text('create')}
+                </a>
+              )}
+            </section>
+          )}
+          {staff &&
+            detail.privacyRequestType === 'closure' &&
+            queue?.viewer?.canApproveClosure &&
+            !detail.privacyClosureCompletedAt && (
+              <ProfileClosureReview
+                ticketId={detail.id}
+                locale={locale}
+                onCompleted={() => {
+                  void load();
+                  void select(detail.id);
+                }}
+              />
+            )}
           {staff && queue?.viewer?.canAssignOthers && (
             <div className="flex flex-wrap items-end gap-3">
               <div>
@@ -926,7 +990,7 @@ function Tickets({ staff }: { staff: boolean }) {
               </Button>
             </div>
           )}
-          {!staff && detail.status !== 'open' && (
+          {!staff && detail.status !== 'open' && !detail.privacyClosureCompletedAt && (
             <Button
               className="hover:bg-primary"
               disabled={busy}

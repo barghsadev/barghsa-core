@@ -83,6 +83,20 @@ describe('toNavigationTarget', () => {
       search: { state: 'Unpaid' },
     });
   });
+
+  it('keeps staff links inside the staff workspace', () => {
+    expect(toNavigationTarget({ ...base, linkRoute: '/admin/tickets' }, 'staff')).toEqual({
+      to: '/admin/tickets',
+    });
+    expect(toNavigationTarget({ ...base, linkRoute: '/settings/security' }, 'staff')).toBeNull();
+    expect(toNavigationTarget({ ...base, linkRoute: '/admin/tickets' }, 'customer')).toBeNull();
+    expect(
+      toNavigationTarget({ ...base, linkRoute: '/admin/../settings/security' }, 'staff')
+    ).toBeNull();
+    expect(
+      toNavigationTarget({ ...base, linkRoute: '/admin/%2e%2e/settings/security' }, 'staff')
+    ).toBeNull();
+  });
 });
 
 describe('fetchUnreadCount', () => {
@@ -117,6 +131,7 @@ it.each([
   ['finance.chargeback_unresolved', 'payment'],
   ['contract.cancelled', 'contract'],
   ['order.submitted', 'order'],
+  ['document.review_completed', 'document'],
   ['custom.event', 'system'],
 ])('renders business event %s with its notification category', (event, category) => {
   expect(notificationDisplayType(event!)).toBe(category);

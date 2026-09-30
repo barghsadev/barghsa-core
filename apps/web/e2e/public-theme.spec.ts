@@ -20,6 +20,10 @@ for (const locale of ['fa', 'en'] as const) {
         route.fulfill({
           json: {
             appTitle: 'Theme checks',
+            appTitleFa: 'بررسی پوسته',
+            supportEmail: 'support@example.test',
+            supportPhone: '+982188888888',
+            supportMobile: '+989121234567',
             slogan: '',
             primaryColor: '#ffffff',
             secondaryColor: '#64748b',

@@ -74,6 +74,7 @@ export const solarConstructionRequests = pgTable(
     agreementAccepted: boolean('agreement_accepted').notNull().default(false),
     agreementVersion: text('agreement_version').notNull(),
     agreementSnapshot: text('agreement_snapshot').notNull(),
+    submissionReview: jsonb('submission_review').$type<Record<string, unknown>>(),
     agreementAcceptedAt: timestamp('agreement_accepted_at', { withTimezone: true }).notNull(),
     submittedAt: timestamp('submitted_at', { withTimezone: true }).notNull().defaultNow(),
     statusReason: text('status_reason'),

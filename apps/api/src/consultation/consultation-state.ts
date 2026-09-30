@@ -1,14 +1,5 @@
-export const CONSULTATION_STATUSES = [
-  'submitted',
-  'under_review',
-  'awaiting_customer_info',
-  'offer_pending',
-  'offer_accepted',
-  'offer_declined',
-  'completed',
-  'rejected',
-  'cancelled',
-] as const;
+import { CONSULTATION_REQUEST_STATUSES } from '@barghsa/shared/validation';
+export const CONSULTATION_STATUSES = CONSULTATION_REQUEST_STATUSES;
 export type ConsultationStatus = (typeof CONSULTATION_STATUSES)[number];
 
 export type ConsultationActor = 'staff' | 'customer' | 'payment';

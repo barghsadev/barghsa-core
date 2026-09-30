@@ -59,6 +59,7 @@ function makeReceiptRow(overrides: Record<string, unknown> = {}) {
     attachment_key: ATTACHMENT,
     customer_note: RECEIPT.customerNote,
     state: 'Submitted',
+    submission_review: null,
     ...overrides,
   };
 }
@@ -69,6 +70,8 @@ type ScriptOptions = {
     profile_id: string;
     state: string;
     adjustment_kind: string | null;
+    total_amount?: string;
+    paid_amount?: string;
   } | null;
   storageStatus?: string | null;
   storageMetadata?: Record<string, unknown> | null;
@@ -95,11 +98,14 @@ function scriptClient(opts: ScriptOptions = {}) {
       if (opts.invoice === null) return { rows: [] };
       return {
         rows: [
-          opts.invoice ?? {
+          {
             id: INVOICE_ID,
             profile_id: PROFILE_ID,
             state: 'Unpaid',
             adjustment_kind: null,
+            total_amount: '250000',
+            paid_amount: '0',
+            ...opts.invoice,
           },
         ],
       };

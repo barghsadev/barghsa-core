@@ -768,6 +768,7 @@ export class CrmV2Service {
     await this.notificationsService.create(
       {
         userId,
+        operatingContext: 'account',
         type: 'general',
         title: content.fa.title,
         body: content.fa.body,

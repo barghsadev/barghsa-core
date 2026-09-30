@@ -321,6 +321,54 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     expect((await walletBalances()).posted).toBe(after.posted);
   });
 
+  it('confirms the reviewed allocation and rejects a stale invoice balance', async () => {
+    const invoiceId = await insertInvoice({ total: 1_000_000n, paid: 600_000n });
+    const receiptId = await insertReceipt({ invoiceId, amount: 500_000n, suffix: 'reviewed' });
+    const actor = {
+      receiptId,
+      actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
+    };
+    const review = await service.review(actor);
+    expect(review.scope).toMatchObject({
+      action: 'invoice.bank-receipt-confirmation',
+      profileId: PROFILE_A,
+      resourceId: receiptId,
+    });
+    expect(review.data.allocation).toEqual({ invoiceAmount: '400000', walletCredit: '100000' });
+    const confirmed = await service.confirm({
+      ...actor,
+      expectedReviewHash: review.hash,
+      ip: '10.0.0.9',
+      now: NOW,
+    });
+    expect(confirmed.state).toBe('Confirmed');
+    expect(confirmed.overpayment).toMatchObject({
+      invoiceAllocation: '400000',
+      walletCreditAmount: '100000',
+    });
+    const audit = await ctx.pool.query<{ metadata: { financialReview: { hash: string } } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event=$1 AND metadata::jsonb->>'receiptId'=$2 AND metadata::jsonb ? 'financialReview' LIMIT 1`,
+      [INVOICE_BANK_RECEIPT_CONFIRMED_EVENT, receiptId]
+    );
+    expect(audit.rows[0]?.metadata.financialReview.hash).toBe(review.hash);
+
+    const staleInvoiceId = await insertInvoice({ total: 1_000_000n, paid: 100_000n });
+    const staleReceiptId = await insertReceipt({
+      invoiceId: staleInvoiceId,
+      amount: 500_000n,
+      suffix: 'stale-reviewed',
+    });
+    const staleActor = { ...actor, receiptId: staleReceiptId };
+    const staleReview = await service.review(staleActor);
+    await ctx.pool.query('UPDATE invoices SET paid_amount=200000 WHERE id=$1', [staleInvoiceId]);
+    await expect(
+      service.confirm({ ...staleActor, expectedReviewHash: staleReview.hash, ip: '10.0.0.9' })
+    ).rejects.toMatchObject({ status: 409 });
+    expect(await receiptState(staleReceiptId)).toBe('Submitted');
+    expect((await invoiceSettlement(staleInvoiceId)).paid).toBe(200_000n);
+  });
+
   it('does not credit the wallet when the receipt equals remaining', async () => {
     const invoiceId = await insertInvoice({ total: 500_000n, paid: 0n });
     const receiptId = await insertReceipt({

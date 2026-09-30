@@ -1,10 +1,28 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  literalSearchPattern,
+  DEFAULT_HISTORY_SORT,
+  type HistoryQuery,
+} from '@barghsa/shared/validation';
+import type { DateRangeFilterValue } from '@barghsa/shared/validation';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
+import type { FinancialReviewSnapshot } from '@barghsa/shared/finance';
+import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { OrdersService } from '../orders/orders.service.js';
-import type { SolarDraftInput, SolarSubmission } from './solar-request.validation.js';
+import type {
+  SolarDraftInput,
+  SolarSubmission,
+  SolarSubmissionReviewInput,
+} from './solar-request.validation.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 
 export const SOLAR_AGREEMENT_VERSION = 'solar-construction-request-v1';
 export const SOLAR_AGREEMENT_TEXT = 'شرایط ثبت قرارداد را می‌پذیرم.';
@@ -13,6 +31,91 @@ type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 @Injectable()
 export class SolarRequestService {
   constructor(private readonly orders: OrdersService) {}
+  private readonly reviews = new ReviewSnapshotService();
+
+  private reviewScope(input: SolarSubmissionReviewInput) {
+    return {
+      action: 'solar.request.submit',
+      profileId: input.profileId,
+      resourceId: input.submissionKey,
+    };
+  }
+
+  private assertReplay(
+    stored: FinancialReviewSnapshot<Record<string, unknown>> | null,
+    input: SolarSubmissionReviewInput,
+    expectedHash?: string
+  ) {
+    if (!stored)
+      throw new ConflictException(
+        'This submission predates request review; use a new submission key'
+      );
+    this.reviews.assertConfirmed(stored, expectedHash ?? stored.hash);
+    if (
+      stored.scope.action !== 'solar.request.submit' ||
+      stored.scope.profileId !== input.profileId ||
+      stored.scope.resourceId !== input.submissionKey
+    )
+      throw new ConflictException('Submission key belongs to another request');
+    const updated = this.reviews.create(this.reviewScope(input), {
+      ...stored.data,
+      submission: input,
+    });
+    this.reviews.assertConfirmed(updated, stored.hash);
+    return stored;
+  }
+
+  private async siteAddress(client: PoolClient, input: SolarSubmissionReviewInput) {
+    if (input.buildingType !== 'non_household') return null;
+    const address = (
+      await client.query<{ full_address: string }>(
+        'SELECT full_address FROM addresses WHERE id=$1 AND profile_id=$2 AND deleted_at IS NULL FOR SHARE',
+        [input.siteAddressId, input.profileId]
+      )
+    ).rows[0];
+    if (!address) throw new BadRequestException('Select an address for this profile');
+    return address.full_address;
+  }
+
+  async review(actor: Actor, input: SolarSubmissionReviewInput) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      if (!(await this.orders.mayManageOrders(client, actor.userId, input.profileId, true)))
+        throw new NotFoundException('Profile not found');
+      await this.orders.lockProfileSubmissions(client, input.profileId);
+      const existing = (
+        await client.query<{
+          profile_id: string;
+          submission_review: FinancialReviewSnapshot<Record<string, unknown>> | null;
+        }>(
+          'SELECT profile_id,submission_review FROM solar_construction_requests WHERE submitted_by=$1 AND submission_key=$2',
+          [actor.userId, input.submissionKey]
+        )
+      ).rows[0];
+      if (existing && existing.profile_id !== input.profileId)
+        throw new ConflictException('Submission key belongs to another request');
+      const review = existing
+        ? this.assertReplay(existing.submission_review, input)
+        : this.reviews.create(this.reviewScope(input), {
+            submission: input,
+            siteAddress: await this.siteAddress(client, input),
+            agreementVersion: SOLAR_AGREEMENT_VERSION,
+            agreementText: SOLAR_AGREEMENT_TEXT,
+            createsContract: false,
+            createsInvoice: false,
+          });
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 
   async getDraft(actor: Actor, profileId: string) {
     const client = await getDbPool().connect();
@@ -87,43 +190,50 @@ export class SolarRequestService {
 
   async submit(actor: Actor, input: SolarSubmission, ip: string) {
     const client = await getDbPool().connect();
+    const { expectedReviewHash, ...submission } = input;
     try {
       await client.query('BEGIN');
-      await requireCurrentSession(client, actor);
+      await this.orders.lockOrderActor(client, actor);
       if (!(await this.orders.mayManageOrders(client, actor.userId, input.profileId, true)))
         throw new NotFoundException('Profile not found');
       await this.orders.lockProfileSubmissions(client, input.profileId);
       const existing = (
-        await client.query<{ id: string; profile_id: string }>(
-          'SELECT id,profile_id FROM solar_construction_requests WHERE submitted_by=$1 AND submission_key=$2',
+        await client.query<{
+          id: string;
+          profile_id: string;
+          submission_review: FinancialReviewSnapshot<Record<string, unknown>> | null;
+        }>(
+          'SELECT id,profile_id,submission_review FROM solar_construction_requests WHERE submitted_by=$1 AND submission_key=$2',
           [actor.userId, input.submissionKey]
         )
       ).rows[0];
       if (existing) {
         if (existing.profile_id !== input.profileId)
-          throw new BadRequestException('Submission key belongs to another request');
+          throw new ConflictException('Submission key belongs to another request');
+        this.assertReplay(existing.submission_review, submission, expectedReviewHash);
+        await requireCurrentSession(client, actor);
         await client.query('COMMIT');
         return { requestId: existing.id, status: 'submitted' as const };
       }
       await this.orders.enforceProfileSubmissionLimit(client, input.profileId);
-      if (input.buildingType === 'non_household') {
-        const address = (
-          await client.query<{ id: string }>(
-            'SELECT id FROM addresses WHERE id=$1 AND profile_id=$2 AND deleted_at IS NULL FOR SHARE',
-            [input.siteAddressId, input.profileId]
-          )
-        ).rows[0];
-        if (!address) throw new BadRequestException('Select an address for this profile');
-      }
+      const review = this.reviews.create(this.reviewScope(submission), {
+        submission,
+        siteAddress: await this.siteAddress(client, submission),
+        agreementVersion: SOLAR_AGREEMENT_VERSION,
+        agreementText: SOLAR_AGREEMENT_TEXT,
+        createsContract: false,
+        createsInvoice: false,
+      });
+      this.reviews.assertConfirmed(review, expectedReviewHash);
       const id = uuidv7();
       await client.query(
         `INSERT INTO solar_construction_requests
          (id,profile_id,submitted_by,submission_key,status,building_type,grid_type,bill_identifier,
           property_form,structural_frame,building_completion_date,total_units,site_category,
           installation_surface,usable_area_sqm,site_address_id,site_relationship,site_description,
-          agreement_accepted,agreement_version,agreement_snapshot,agreement_accepted_at)
+          agreement_accepted,agreement_version,agreement_snapshot,agreement_accepted_at,submission_review)
          VALUES($1,$2,$3,$4,'submitted',$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,
-                true,$18,$19,NOW())`,
+                true,$18,$19,NOW(),$20::jsonb)`,
         [
           id,
           input.profileId,
@@ -146,6 +256,7 @@ export class SolarRequestService {
           input.buildingType === 'non_household' ? (input.siteDescription ?? null) : null,
           SOLAR_AGREEMENT_VERSION,
           SOLAR_AGREEMENT_TEXT,
+          JSON.stringify(review),
         ]
       );
       await client.query(
@@ -158,6 +269,7 @@ export class SolarRequestService {
             requestId: id,
             profileId: input.profileId,
             agreementVersion: SOLAR_AGREEMENT_VERSION,
+            reviewHash: review.hash,
           }),
           uuidv7(),
           ip,
@@ -167,19 +279,26 @@ export class SolarRequestService {
         actor.userId,
         input.profileId,
       ]);
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return { requestId: id, status: 'submitted' as const };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if ((error as { code?: string }).code === '23505') {
         const existing = (
-          await getDbPool().query<{ id: string; profile_id: string }>(
-            'SELECT id,profile_id FROM solar_construction_requests WHERE submitted_by=$1 AND submission_key=$2',
+          await getDbPool().query<{
+            id: string;
+            profile_id: string;
+            submission_review: FinancialReviewSnapshot<Record<string, unknown>> | null;
+          }>(
+            'SELECT id,profile_id,submission_review FROM solar_construction_requests WHERE submitted_by=$1 AND submission_key=$2',
             [actor.userId, input.submissionKey]
           )
         ).rows[0];
-        if (existing?.profile_id === input.profileId)
+        if (existing?.profile_id === input.profileId) {
+          this.assertReplay(existing.submission_review, submission, expectedReviewHash);
           return { requestId: existing.id, status: 'submitted' as const };
+        }
       }
       throw error;
     } finally {
@@ -187,7 +306,17 @@ export class SolarRequestService {
     }
   }
 
-  async list(actor: Actor, profileId: string, before?: string) {
+  async list(
+    actor: Actor,
+    profileId: string,
+    before?: string,
+    statuses: readonly string[] = [],
+    range: DateRangeFilterValue = {},
+    query: HistoryQuery = { q: '', sort: DEFAULT_HISTORY_SORT }
+  ) {
+    const direction = query.sort === 'submitted_at:asc' ? 'ASC' : 'DESC';
+    const comparison = direction === 'ASC' ? '>' : '<';
+    const pattern = literalSearchPattern(query.q);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -197,8 +326,12 @@ export class SolarRequestService {
       const cursor = before
         ? (
             await client.query<{ id: string; submitted_at: string }>(
-              'SELECT id,submitted_at::text AS submitted_at FROM solar_construction_requests WHERE id=$1 AND profile_id=$2',
-              [before, profileId]
+              `SELECT r.id,r.submitted_at::text AS submitted_at FROM solar_construction_requests r
+               WHERE r.id=$1 AND r.profile_id=$2 AND (cardinality($3::text[])=0 OR r.status=ANY($3::text[]))
+                 AND ($4::timestamptz IS NULL OR r.submitted_at >= $4::timestamptz)
+                 AND ($5::timestamptz IS NULL OR r.submitted_at < $5::timestamptz)
+                 AND ($6::text IS NULL OR r.id::text ILIKE $6::text)`,
+              [before, profileId, statuses, range.from ?? null, range.to ?? null, pattern]
             )
           ).rows[0]
         : null;
@@ -216,9 +349,21 @@ export class SolarRequestService {
                    ORDER BY issued_at,id LIMIT 1
                  ) i ON r.contract_id IS NOT NULL
                  WHERE r.profile_id=$1
-                 AND ($2::timestamptz IS NULL OR (r.submitted_at,r.id) < ($2::timestamptz,$3::uuid))
-               ORDER BY r.submitted_at DESC,r.id DESC LIMIT 101`,
-          [profileId, cursor?.submitted_at ?? null, before ?? null]
+                 AND ($2::timestamptz IS NULL OR (r.submitted_at,r.id) ${comparison} ($2::timestamptz,$3::uuid))
+                 AND (cardinality($4::text[])=0 OR r.status=ANY($4::text[]))
+                 AND ($5::timestamptz IS NULL OR r.submitted_at >= $5::timestamptz)
+                 AND ($6::timestamptz IS NULL OR r.submitted_at < $6::timestamptz)
+               AND ($7::text IS NULL OR r.id::text ILIKE $7::text)
+             ORDER BY r.submitted_at ${direction},r.id ${direction} LIMIT 101`,
+          [
+            profileId,
+            cursor?.submitted_at ?? null,
+            before ?? null,
+            statuses,
+            range.from ?? null,
+            range.to ?? null,
+            pattern,
+          ]
         )
       ).rows;
       await client.query('COMMIT');

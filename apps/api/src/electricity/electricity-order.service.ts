@@ -29,6 +29,7 @@ import {
 } from './electricity-calculation.js';
 import { persistElectricitySubmissionSnapshot } from './electricity-submission-snapshot.js';
 import { createElectricityRefundObligation } from './electricity-refund-obligation.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import { STORAGE_PROVIDER } from '../storage/index.js';
 import {
   electricityContractTemplateSnapshot,
@@ -87,6 +88,33 @@ export interface ElectricityAddressCorrection {
   fullAddress: string;
   postalCode: string;
   responseNote: string;
+}
+export interface ElectricityCancellationInput {
+  idempotencyKey: string;
+  expectedVersionId: string;
+  expectedReviewHash: string;
+  reason: string;
+}
+
+interface CancellationRow {
+  profile_id: string;
+  profile_name: string;
+  status: ElectricityCommercialStatus;
+  period_start: Date;
+  period_end: Date;
+  total_kwh: string;
+  pricing_snapshot: Record<string, unknown>;
+  contract_id: string;
+  contract_state: string;
+  version_id: string;
+  contract_snapshot: Record<string, unknown>;
+  invoice_id: string;
+  invoice_state: string;
+  paid_amount: string;
+  refunded_amount: string;
+  total_amount: string;
+  pending_refund_amount: string;
+  gift_code_id: string | null;
 }
 
 export function selectedPeriod(selection: SimplePeriod, now: Date): ElectricityPeriod {
@@ -147,6 +175,7 @@ export class ElectricityOrderService {
     private readonly dueDates: DueAtCalculationService,
     private readonly invoiceStates: InvoiceStateMachineService,
     private readonly contractPdfs: ContractPdfService,
+    private readonly reviews: ReviewSnapshotService,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider | null
   ) {}
 
@@ -487,12 +516,112 @@ export class ElectricityOrderService {
     }
   }
 
-  async cancel(
-    actor: Actor,
+  private async cancellationRow(client: PoolClient, orderId: string, lock: 'SHARE' | 'UPDATE') {
+    const row = (
+      await client.query<CancellationRow>(
+        `SELECT o.profile_id,
+           COALESCE(NULLIF(lp.legal_name,''),p.id::text) AS profile_name,
+           e.status,e.period_start,e.period_end,e.total_kwh,e.pricing_snapshot,
+           ec.contract_id,c.state AS contract_state,c.current_version_id AS version_id,
+           v.content AS contract_snapshot,i.id AS invoice_id,
+           i.state AS invoice_state,i.paid_amount,i.refunded_amount,i.total_amount,
+           COALESCE((SELECT SUM(r.amount)::text FROM refunds r WHERE r.invoice_id=i.id
+             AND r.state NOT IN ('Completed','Rejected','Cancelled')),'0') AS pending_refund_amount,
+           o.gift_code_id
+         FROM orders o JOIN electricity_orders e ON e.id=o.id
+         JOIN profiles p ON p.id=o.profile_id
+         LEFT JOIN legal_profiles lp ON lp.id=p.id
+         JOIN electricity_contracts ec ON ec.order_id=o.id
+         JOIN contracts c ON c.id=ec.contract_id
+         JOIN contract_versions v ON v.id=c.current_version_id
+         JOIN contract_activation_requirements ar ON ar.version_id=v.id
+         JOIN invoices i ON i.id=ar.initial_invoice_id
+         WHERE o.id=$1 FOR ${lock} OF o,e,c,i`,
+        [orderId]
+      )
+    ).rows[0];
+    if (!row) throw new NotFoundException('Order not found');
+    return row;
+  }
+
+  private async cancellationReviewForRow(
+    client: PoolClient,
     orderId: string,
-    input: { idempotencyKey: string; expectedVersionId: string; reason: string },
-    ip: string
+    row: CancellationRow,
+    reason: string
   ) {
+    if (
+      !['awaiting_staff_review', 'changes_requested'].includes(row.status) ||
+      !['AwaitingStaffReview', 'ChangesRequested'].includes(row.contract_state)
+    )
+      throw new ConflictException('Order changed; reload before cancelling');
+    if (row.invoice_state === 'PaymentUnderReview')
+      throw new ConflictException('Resolve pending payment review before cancellation');
+    const pendingPayment = (
+      await client.query<{ pending: boolean }>(
+        'SELECT contract_has_pending_payments($1) AS pending',
+        [row.contract_id]
+      )
+    ).rows[0]?.pending;
+    if (pendingPayment) throw new ConflictException('Resolve pending payment before cancellation');
+    const paid = BigInt(row.paid_amount);
+    const refunded = BigInt(row.refunded_amount);
+    if (paid < refunded) throw new ConflictException('Invoice refund totals are invalid');
+    if (BigInt(row.pending_refund_amount) > 0n)
+      throw new ConflictException('Resolve existing refund before ending the order');
+    const refundAmount = paid - refunded;
+    return this.reviews.create(
+      { action: 'electricity.customer-cancel', profileId: row.profile_id, resourceId: orderId },
+      {
+        reason,
+        profileName: row.profile_name,
+        commercialStatus: row.status,
+        contractId: row.contract_id,
+        contractState: row.contract_state,
+        versionId: row.version_id,
+        contractSnapshot: row.contract_snapshot,
+        invoiceId: row.invoice_id,
+        invoiceState: row.invoice_state,
+        invoiceTotal: row.total_amount,
+        paidAmount: row.paid_amount,
+        refundedAmount: row.refunded_amount,
+        pendingRefundAmount: row.pending_refund_amount,
+        periodStart: row.period_start.toISOString(),
+        periodEnd: row.period_end.toISOString(),
+        totalKwh: row.total_kwh,
+        pricingSnapshot: row.pricing_snapshot,
+        outcome:
+          refundAmount > 0n
+            ? 'refund_obligation'
+            : ['Draft', 'Unpaid', 'Overdue'].includes(row.invoice_state)
+              ? 'cancel_invoice'
+              : 'close_without_refund',
+        refundAmount: refundAmount.toString(),
+        releasesGiftCode: paid === 0n && !!row.gift_code_id,
+      }
+    );
+  }
+
+  async cancellationReview(actor: Actor, orderId: string, reason: string) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      const row = await this.cancellationRow(client, orderId, 'SHARE');
+      await this.authorize(client, actor, row.profile_id, true);
+      const review = await this.cancellationReviewForRow(client, orderId, row, reason);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async cancel(actor: Actor, orderId: string, input: ElectricityCancellationInput, ip: string) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -503,54 +632,14 @@ export class ElectricityOrderService {
         { ...input, orderId },
         actor,
         async () => {
-          const row = (
-            await client.query<{
-              profile_id: string;
-              status: ElectricityCommercialStatus;
-              contract_id: string;
-              contract_state: string;
-              version_id: string;
-              invoice_id: string;
-              invoice_state: string;
-              paid_amount: string;
-              refunded_amount: string;
-              total_amount: string;
-              gift_code_id: string | null;
-            }>(
-              `SELECT o.profile_id,e.status,ec.contract_id,c.state AS contract_state,
-                c.current_version_id AS version_id,i.id AS invoice_id,
-                i.state AS invoice_state,i.paid_amount,i.refunded_amount,
-                i.total_amount,o.gift_code_id
-               FROM orders o JOIN electricity_orders e ON e.id=o.id
-               JOIN electricity_contracts ec ON ec.order_id=o.id
-               JOIN contracts c ON c.id=ec.contract_id
-               JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
-               JOIN invoices i ON i.id=ar.initial_invoice_id
-               WHERE o.id=$1 FOR UPDATE OF o,e,c,i`,
-              [orderId]
-            )
-          ).rows[0];
-          if (!row) throw new NotFoundException('Order not found');
+          const row = await this.cancellationRow(client, orderId, 'UPDATE');
           await this.authorize(client, actor, row.profile_id, true);
-          if (
-            row.version_id !== input.expectedVersionId ||
-            !['awaiting_staff_review', 'changes_requested'].includes(row.status) ||
-            !['AwaitingStaffReview', 'ChangesRequested'].includes(row.contract_state)
-          )
+          if (row.version_id !== input.expectedVersionId)
             throw new ConflictException('Order changed; reload before cancelling');
-          if (row.invoice_state === 'PaymentUnderReview')
-            throw new ConflictException('Resolve pending payment review before cancellation');
-          const pendingPayment = (
-            await client.query<{ pending: boolean }>(
-              'SELECT contract_has_pending_payments($1) AS pending',
-              [row.contract_id]
-            )
-          ).rows[0]?.pending;
-          if (pendingPayment)
-            throw new ConflictException('Resolve pending payment before cancellation');
           const reason = input.reason.trim();
-          if (BigInt(row.paid_amount) > BigInt(row.refunded_amount))
-            await requireSessionStepUp(client, actor);
+          const review = await this.cancellationReviewForRow(client, orderId, row, reason);
+          this.reviews.assertConfirmed(review, input.expectedReviewHash);
+          if (review.data.refundAmount !== '0') await requireSessionStepUp(client, actor);
           const refundId = await createElectricityRefundObligation(client, {
             orderId,
             contractId: row.contract_id,
@@ -607,6 +696,8 @@ export class ElectricityOrderService {
                 versionId: row.version_id,
                 reason,
                 refundId,
+                reviewHash: review.hash,
+                financialReview: review,
               }),
               ip,
             ]

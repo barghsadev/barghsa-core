@@ -21,6 +21,16 @@ const fa: Record<string, string> = {
   'admin.manualInvoice.removeLine': 'حذف ردیف',
   'admin.manualInvoice.addLine': 'افزودن ردیف',
   'admin.manualInvoice.total': 'مبلغ نهایی با مالیات',
+  'admin.manualInvoice.manualReviewTitle': 'بررسی مالی پیش از صدور فاکتور',
+  'admin.manualInvoice.manualReviewDescription':
+    'مشتری، ردیف‌ها، مالیات و مهلت پرداخت را پیش از صدور تأیید کنید.',
+  'admin.manualInvoice.manualReviewSubtotal': 'مبلغ بدون مالیات',
+  'admin.manualInvoice.manualReviewVat': 'مالیات',
+  'admin.manualInvoice.manualReviewDueRule': 'مهلت پرداخت از زمان صدور',
+  'admin.manualInvoice.manualReviewDueDays': 'روز',
+  'admin.manualInvoice.manualReviewOutcome':
+    'با تأیید، فاکتور پرداخت‌نشده برای این مشتری صادر می‌شود.',
+  'admin.manualInvoice.manualReviewConfirm': 'تأیید و صدور فاکتور',
   'admin.manualInvoice.incomplete': 'شرح، تعداد، مبلغ و نرخ مالیات ردیف‌ها را بررسی کنید.',
   'admin.manualInvoice.invalid':
     'مشتری و ردیف‌ها را بررسی کنید. تعداد و مبالغ باید عدد صحیح باشند و مالیات بین ۰ تا ۱۰۰٪ باشد.',
@@ -66,6 +76,16 @@ const en: Record<string, string> = {
   'admin.manualInvoice.removeLine': 'Remove line',
   'admin.manualInvoice.addLine': 'Add line',
   'admin.manualInvoice.total': 'Total including VAT',
+  'admin.manualInvoice.manualReviewTitle': 'Financial review before issuing',
+  'admin.manualInvoice.manualReviewDescription':
+    'Confirm the customer, lines, tax, and payment deadline before issuing.',
+  'admin.manualInvoice.manualReviewSubtotal': 'Subtotal before VAT',
+  'admin.manualInvoice.manualReviewVat': 'VAT',
+  'admin.manualInvoice.manualReviewDueRule': 'Payment due after issue',
+  'admin.manualInvoice.manualReviewDueDays': 'days',
+  'admin.manualInvoice.manualReviewOutcome':
+    'Confirming issues an unpaid invoice to this customer.',
+  'admin.manualInvoice.manualReviewConfirm': 'Confirm and issue invoice',
   'admin.manualInvoice.incomplete':
     'Check the line descriptions, quantities, amounts and VAT rates.',
   'admin.manualInvoice.invalid':

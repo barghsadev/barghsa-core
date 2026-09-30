@@ -3,14 +3,21 @@ import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { FailedJobsWidget } from './FailedJobsWidget.js';
+import { StaffWorkQueueWidget } from './StaffWorkQueueWidget.js';
 
 interface Counts {
   consultations: number | null;
+  unassignedConsultations: number | null;
   electricityOrders: number | null;
+  savingOrders: number | null;
+  pendingTickets: number | null;
   solarRequests: number | null;
   documentReviews: number | null;
   refundObligations: number | null;
   failedRefundObligations: number | null;
+  failedJobs: number | null;
+  deadLetterNotifications: number | null;
 }
 
 function validCount(value: unknown): value is number | null {
@@ -22,12 +29,23 @@ function parseCounts(value: unknown): Counts {
   const counts = value as Record<string, unknown>;
   if (
     !validCount(counts.consultations) ||
+    !validCount(counts.unassignedConsultations) ||
     !validCount(counts.electricityOrders) ||
+    !validCount(counts.savingOrders) ||
+    !validCount(counts.pendingTickets) ||
     !validCount(counts.solarRequests) ||
     !validCount(counts.documentReviews) ||
     !validCount(counts.refundObligations) ||
     !validCount(counts.failedRefundObligations) ||
+    !validCount(counts.failedJobs) ||
+    !validCount(counts.deadLetterNotifications) ||
+    (counts.failedJobs === null) !== (counts.deadLetterNotifications === null) ||
     (counts.refundObligations === null) !== (counts.failedRefundObligations === null) ||
+    (counts.electricityOrders === null) !== (counts.savingOrders === null) ||
+    (counts.consultations === null) !== (counts.unassignedConsultations === null) ||
+    (counts.consultations !== null &&
+      counts.unassignedConsultations !== null &&
+      counts.unassignedConsultations > counts.consultations) ||
     (counts.refundObligations !== null &&
       counts.failedRefundObligations !== null &&
       counts.failedRefundObligations > counts.refundObligations)
@@ -38,7 +56,6 @@ function parseCounts(value: unknown): Counts {
 
 const cards = [
   { key: 'consultations', route: '/admin/consultations', label: 'consultations' },
-  { key: 'electricityOrders', route: '/admin/electricity-orders', label: 'electricityOrders' },
   { key: 'solarRequests', route: '/admin/solar-requests', label: 'solarRequests' },
   { key: 'documentReviews', route: '/admin/documents', label: 'documentReviews' },
 ] as const;
@@ -95,6 +112,7 @@ export function AdminBusinessWorkCounts() {
           {t('dashboard.admin.work.error', locale)}
         </p>
       )}
+      {state === 'ready' && counts && <StaffWorkQueueWidget counts={counts} />}
       {state === 'ready' && counts && (
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
           {cards.map(({ key, route, label }) =>
@@ -126,22 +144,7 @@ export function AdminBusinessWorkCounts() {
           )}
         </div>
       )}
-      {state === 'ready' && counts?.failedRefundObligations ? (
-        <div
-          role="alert"
-          className="rounded-lg border border-destructive/40 bg-danger-soft p-4 text-destructive"
-        >
-          <a
-            href="/admin/contracts#refund-obligations"
-            className="underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          >
-            {t('dashboard.admin.work.failedRefundObligations', locale).replace(
-              '{count}',
-              numbers.number(counts.failedRefundObligations)
-            )}
-          </a>
-        </div>
-      ) : null}
+      {state === 'ready' && counts && <FailedJobsWidget counts={counts} />}
     </section>
   );
 }

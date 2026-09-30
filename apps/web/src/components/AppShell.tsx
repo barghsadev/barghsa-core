@@ -6,6 +6,7 @@ import { shellText } from '@barghsa/i18n/shell';
 import { BrandMark } from './BrandMark.js';
 import { LanguageSwitcher } from './LanguageSwitcher.js';
 import { ThemeSwitcher } from './ThemeSwitcher.js';
+import { OperatingContextSwitch } from './OperatingContextSwitch.js';
 import {
   AnalyticsConsentBanner,
   AnalyticsConsentProvider,
@@ -65,7 +66,7 @@ export function AppShell({
       </a>
       {banners}
       <AnalyticsConsentBanner />
-      <header className="flex min-h-(--topbar-height) shrink-0 items-center gap-3 border-b bg-card px-4 md:px-6">
+      <header className="flex min-h-(--topbar-height) shrink-0 items-center gap-1 border-b bg-card px-2 sm:gap-3 sm:px-4 md:px-6">
         <Link
           to="/app"
           className="flex min-w-0 items-center text-foreground no-underline md:w-[calc(var(--sidebar-width)-3rem)]"
@@ -85,6 +86,7 @@ export function AppShell({
           ) : null}
         </div>
         <div className="ms-auto flex shrink-0 items-center gap-1 sm:gap-2">
+          <OperatingContextSwitch area={area} locale={locale} />
           <ThemeSwitcher />
           <LanguageSwitcher />
           {actions}

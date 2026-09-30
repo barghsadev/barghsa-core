@@ -43,6 +43,15 @@ const shipment = z
   })
   .strict();
 const issue = z.object({ reason: z.string().trim().min(1).max(1000) }).strict();
+const reviewHash = z.string().regex(/^[a-f0-9]{64}$/);
+const confirmedIssue = issue.safeExtend({ expectedReviewHash: reviewHash });
+const confirmedReceipt = z.object({ expectedReviewHash: reviewHash }).strict();
+const postalDecisionReview = z
+  .object({
+    decision: z.enum(['received', 'incomplete', 'not_received']),
+    reason: z.string().trim().min(1).max(1000).optional(),
+  })
+  .strict();
 function parse<S extends z.ZodType>(schema: S, body: unknown): z.output<S> {
   const result = schema.safeParse(body);
   if (!result.success) throw new BadRequestException('Invalid postal request');
@@ -123,15 +132,8 @@ export class StaffSolarPostalController {
   @Post('requests/:id/postal/confirm-received')
   @HttpCode(200)
   @ApiOperation({ summary: 'Confirm receipt of postal originals' })
-  received(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
-    return this.service.decide(req.session, id, 'received', undefined, req.ip ?? '127.0.0.1');
-  }
-
-  @Post('requests/:id/postal/mark-incomplete')
-  @HttpCode(200)
-  @ApiOperation({ summary: 'Mark postal originals incomplete with a reason' })
-  @ApiZodBody(issue)
-  incomplete(
+  @ApiZodBody(confirmedReceipt)
+  received(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
@@ -139,8 +141,42 @@ export class StaffSolarPostalController {
     return this.service.decide(
       req.session,
       id,
+      'received',
+      undefined,
+      parse(confirmedReceipt, body).expectedReviewHash,
+      req.ip ?? '127.0.0.1'
+    );
+  }
+
+  @Post('requests/:id/postal/review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Review the current shipment before a staff postal decision' })
+  @ApiZodBody(postalDecisionReview)
+  reviewDecision(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const input = parse(postalDecisionReview, body);
+    return this.service.reviewDecision(req.session, id, input.decision, input.reason);
+  }
+
+  @Post('requests/:id/postal/mark-incomplete')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Mark postal originals incomplete with a reason' })
+  @ApiZodBody(confirmedIssue)
+  incomplete(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const input = parse(confirmedIssue, body);
+    return this.service.decide(
+      req.session,
+      id,
       'incomplete',
-      parse(issue, body).reason,
+      input.reason,
+      input.expectedReviewHash,
       req.ip ?? '127.0.0.1'
     );
   }
@@ -148,17 +184,19 @@ export class StaffSolarPostalController {
   @Post('requests/:id/postal/mark-not-received')
   @HttpCode(200)
   @ApiOperation({ summary: 'Mark postal originals not received with a reason' })
-  @ApiZodBody(issue)
+  @ApiZodBody(confirmedIssue)
   notReceived(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
+    const input = parse(confirmedIssue, body);
     return this.service.decide(
       req.session,
       id,
       'not_received',
-      parse(issue, body).reason,
+      input.reason,
+      input.expectedReviewHash,
       req.ip ?? '127.0.0.1'
     );
   }

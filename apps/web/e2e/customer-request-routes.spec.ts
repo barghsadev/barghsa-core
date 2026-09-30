@@ -335,7 +335,40 @@ test('accepting a consultation offer opens its invoice without reloading the app
     })
   );
   await page.route(`**/api/consultations/requests/${consultationId}/accept`, (route) =>
-    route.fulfill({ json: { paymentRequired: true, invoiceId } })
+    route.fulfill({
+      json: { paymentRequired: true, invoiceId, financialReview: { hash: 'b'.repeat(64) } },
+    })
+  );
+  await page.route(`**/api/consultations/requests/${consultationId}/offer-review`, (route) =>
+    route.fulfill({
+      json: {
+        schemaVersion: 1,
+        scope: {
+          action: 'consultation.offer-accept',
+          profileId,
+          resourceId: consultationId,
+        },
+        data: {
+          decision: 'accept',
+          serviceTitle: { en: 'Site advice', fa: 'مشاوره مکان' },
+          scope: 'Site review',
+          deliverables: 'Report',
+          fee: '500000',
+          previousFee: '0',
+          validUntil: '2099-01-01T00:00:00.000Z',
+          acceptedAt: null,
+          invoice: {
+            id: invoiceId,
+            state: 'Unpaid',
+            totalAmount: '500000',
+            paidAmount: '0',
+            adjustmentKind: null,
+          },
+          outcome: 'payment_required',
+        },
+        hash: 'b'.repeat(64),
+      },
+    })
   );
   await page.goto(`/consultations/${consultationId}`);
   await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
@@ -343,6 +376,10 @@ test('accepting a consultation offer opens its invoice without reloading the app
     (window as Window & { __consultationNavigation?: string }).__consultationNavigation = 'kept';
   });
   await page.getByRole('button', { name: 'Accept offer and pay' }).click();
+  await page
+    .getByRole('dialog', { name: 'Review consultation offer' })
+    .getByRole('button', { name: 'Accept offer and pay' })
+    .click();
   await expect(page).toHaveURL(new RegExp(`/invoices/${invoiceId}$`));
   expect(
     await page.evaluate(

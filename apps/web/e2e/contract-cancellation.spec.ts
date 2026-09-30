@@ -11,12 +11,18 @@ for (const locale of ['en', 'fa'] as const)
         versionId = '22222222-2222-4222-8222-222222222222',
         invoiceId = '44444444-4444-4444-8444-444444444444';
       await page.addInitScript((language) => {
+        localStorage.setItem('barghsa.locale', language);
         if (document.documentElement) document.documentElement.lang = language;
         new MutationObserver(() => {
           if (document.documentElement) document.documentElement.lang = language;
         }).observe(document, { childList: true });
       }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/user', (route) =>
+        route.fulfill({
+          json: { isStaff: true, operatingContext: 'staff', canSwitchContext: true },
+        })
+      );
       await page.route('**/api/user/settings/timezone', (route) =>
         route.fulfill({ json: { timezone: 'Asia/Tehran' } })
       );
@@ -136,6 +142,8 @@ for (const locale of ['en', 'fa'] as const)
       await page.route(`**/api/admin/contracts/${id}/cancellation-preview`, (route) =>
         route.fulfill({
           json: {
+            contractId: id,
+            profileId: '33333333-3333-4333-8333-333333333333',
             versionId,
             fingerprint: 'a'.repeat(64),
             serviceType: 'electricity',
@@ -198,6 +206,12 @@ for (const locale of ['en', 'fa'] as const)
         .fill('Service no longer needed');
       await panel.getByRole('button', { name: w.cancellationSave, exact: true }).click();
       const dialog = page.getByRole('dialog');
+      await expect(
+        dialog.getByRole('region', { name: w.cancellationFinancialReview })
+      ).toContainText('33333333-3333-4333-8333-333333333333');
+      await expect(
+        dialog.getByText(`${w.cancellationInvoice} 1 · ${w.cancellationPaid}`, { exact: true })
+      ).toBeVisible();
       await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
       await dialog.locator('input[type=password]').fill('Test-password');
       await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();

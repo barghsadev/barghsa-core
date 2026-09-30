@@ -1,4 +1,4 @@
-import { act } from 'react';
+import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { en, fa } from '@barghsa/i18n/contracts';
@@ -31,16 +31,19 @@ vi.mock('../lib/documents.js', () => ({
 vi.mock('./TeamActionDialog.js', () => ({
   TeamActionDialog: ({
     action,
+    summary,
     onClose,
     onSuccess,
   }: {
     action: TeamAction;
+    summary: ReactNode;
     onClose: () => void;
     onSuccess: (value: unknown) => Promise<void>;
   }) => {
     h.action = action;
     return (
       <div role="dialog">
+        {summary}
         <button onClick={onClose}>Dismiss</button>
         <button onClick={() => void onSuccess(h.result)}>Confirm</button>
       </div>
@@ -81,6 +84,8 @@ beforeEach(() => {
     refunds: [],
   };
   h.preview = {
+    contractId: 'contract',
+    profileId: 'profile',
     versionId: 'version',
     fingerprint: 'fingerprint',
     serviceType: 'electricity',
@@ -157,11 +162,17 @@ for (const locale of ['en', 'fa'] as const)
         refundDecision: { mode: 'full_wallet' },
         idempotencyKey: expect.any(String),
       });
+      expect(
+        container.querySelector('section[aria-label="' + w.cancellationFinancialReview + '"]')
+      ).not.toBeNull();
+      expect(container.textContent).toContain(w.cancellationPaid);
+      expect(container.textContent).toContain(w['cancellation.wallet']);
       await click('Confirm');
       expect(changed).not.toHaveBeenCalled();
       await click(w.cancellationConfirm);
       expect(h.action?.body).toMatchObject({ intentId: 'intent' });
       expect(h.action?.description).toContain(w.cancellationIrreversible);
+      expect(container.textContent).toContain(w.cancellationAlreadyReturned);
       await click('Confirm');
       expect(changed).toHaveBeenCalledOnce();
     }
@@ -225,6 +236,8 @@ it('validates explicit custom refunds before opening the confirmation', async ()
       refunds: [{ invoiceId: 'invoice', amount: '40', destination: 'wallet' }],
     },
   });
+  expect(container.textContent).toContain('40 IRR');
+  expect(container.textContent).toContain(en.cancellationFinancialReview);
 });
 it('shows failed customer returns separately from cancelled service', async () => {
   h.locale = 'fa';

@@ -41,7 +41,7 @@ it('exposes a cursor after 50 pending reviews and returns the following page', a
     .mockResolvedValueOnce({ rows })
     .mockResolvedValueOnce({ rows: [{ id: rows[49]!.id, submitted_at: submittedAt }] })
     .mockResolvedValueOnce({ rows: [rows[50]] });
-  const service = new ElectricityStaffReviewService({} as never, {} as never);
+  const service = new ElectricityStaffReviewService({} as never, {} as never, {} as never);
   const first = await service.queue();
   expect(first.orders).toHaveLength(50);
   expect(first.nextAfter).toBe(rows[49]!.id);

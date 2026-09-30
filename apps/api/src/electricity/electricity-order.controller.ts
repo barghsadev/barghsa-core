@@ -143,9 +143,11 @@ const cancelInput = z
   .object({
     idempotencyKey: z.string().uuid(),
     expectedVersionId: z.string().uuid(),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
     reason: z.string().trim().min(1).max(1000),
   })
   .strict();
+const cancelReviewInput = cancelInput.pick({ reason: true }).strict();
 
 @ApiTags('Electricity')
 @Controller('api/electricity')
@@ -309,6 +311,24 @@ export class ElectricityOrderController {
     const parsed = revisionInput.safeParse(body);
     if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
     return this.service.resubmitRevision(req.session, orderId, parsed.data, req.ip ?? 'unknown');
+  }
+
+  @Post('orders/:orderId/cancel-review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'electricity:order-cancel-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({
+    summary: 'Preview exact invoice and refund outcome of cancelling an electricity order',
+  })
+  @ApiZodBody(cancelReviewInput)
+  @ApiResponse({ status: 200, description: 'Authoritative cancellation review.' })
+  cancelReview(
+    @Param('orderId', new ParseUUIDPipe()) orderId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const parsed = cancelReviewInput.safeParse(body);
+    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.cancellationReview(req.session, orderId, parsed.data.reason);
   }
 
   @Post('orders/:orderId/cancel')

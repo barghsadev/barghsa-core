@@ -19,6 +19,9 @@ const generic = {
 async function mockApp(page: Page, hasProfile = true) {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await mockPublicAuthCsrf(page);
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({ json: { isStaff: false, userId: 'user', requiresTosAcceptance: false } })
+  );
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
       json: {
@@ -41,6 +44,10 @@ async function openLogin(page: Page, locale: 'fa' | 'en', darkMode = false) {
       route.fulfill({
         json: {
           appTitle: 'Preference test',
+          appTitleFa: 'آزمون ترجیحات',
+          supportEmail: 'support@example.test',
+          supportPhone: '+982188888888',
+          supportMobile: '+989121234567',
           slogan: '',
           primaryColor: '#2563eb',
           secondaryColor: '#64748b',

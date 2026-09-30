@@ -283,6 +283,7 @@ it('CRM document reads enforce live staff access, sealed profile binding and sho
   await http.pool.query(
     "INSERT INTO user_roles(user_id,role_id) VALUES ('other','role-crm-verification')"
   );
+  await http.pool.query("UPDATE sessions SET operating_context='staff' WHERE user_id='other'");
   expect((await read('invalid-id')).status).toBe(400);
   expect((await read(randomUUID())).status).toBe(404);
   const response = await read();
