@@ -25201,6 +25201,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -25220,6 +25224,7 @@
                 "required": [
                   "idempotencyKey",
                   "upgradeId",
+                  "expectedReviewHash",
                   "reason"
                 ],
                 "type": "object"
@@ -25234,6 +25239,57 @@
           }
         },
         "summary": "Cancel an unpaid hardware upgrade and release its reserved stock",
+        "tags": [
+          "Staff · Saving orders"
+        ]
+      }
+    },
+    "/api/staff/saving/orders/{id}/cancel-hardware-upgrade-review": {
+      "post": {
+        "operationId": "SavingFulfillmentController_cancelHardwareUpgradeReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "upgradeId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "upgradeId",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Preview unpaid charge and stock release before cancelling an upgrade",
         "tags": [
           "Staff · Saving orders"
         ]

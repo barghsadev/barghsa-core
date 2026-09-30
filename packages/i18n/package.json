@@ -42,6 +42,11 @@
       "import": "./dist/saving.js",
       "default": "./dist/saving.js"
     },
+    "./saving-staff-review": {
+      "types": "./dist/saving-staff-review.d.ts",
+      "import": "./dist/saving-staff-review.js",
+      "default": "./dist/saving-staff-review.js"
+    },
     "./maintenance": {
       "types": "./dist/maintenance.d.ts",
       "import": "./dist/maintenance.js",

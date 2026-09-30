@@ -1147,7 +1147,40 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     idempotencyKey: randomUUID(),
     upgradeId: upgrade.upgradeId,
     reason: 'Customer changed their mind before paying',
+    expectedReviewHash: '',
   };
+  const cancellationReview = await request(
+    `/api/staff/saving/orders/${result.savingOrderId}/cancel-hardware-upgrade-review`,
+    'POST',
+    { upgradeId: cancelUpgradeInput.upgradeId, reason: cancelUpgradeInput.reason },
+    staffHeaders
+  );
+  expect(cancellationReview.status, http.logs()).toBe(200);
+  const cancellationSnapshot = (await cancellationReview.json()) as {
+    hash: string;
+    data: { additionalChargeIrR: string; invoicePaidIrR: string; outcome: string };
+  };
+  expect(cancellationSnapshot.data).toMatchObject({
+    additionalChargeIrR: expect.any(String),
+    invoicePaidIrR: '0',
+    outcome: 'cancel_unpaid_charge_and_release_reservation',
+  });
+  expect(BigInt(cancellationSnapshot.data.additionalChargeIrR)).toBeGreaterThan(0n);
+  cancelUpgradeInput.expectedReviewHash = cancellationSnapshot.hash;
+  const { expectedReviewHash: _unusedCancelHash, ...cancelWithoutHash } = cancelUpgradeInput;
+  expect((await request(cancelUpgradePath, 'POST', cancelWithoutHash, staffHeaders)).status).toBe(
+    400
+  );
+  expect(
+    (
+      await request(
+        cancelUpgradePath,
+        'POST',
+        { ...cancelUpgradeInput, reason: 'A different cancellation reason' },
+        staffHeaders
+      )
+    ).status
+  ).toBe(409);
   const cancelledUpgrade = await request(
     cancelUpgradePath,
     'POST',
@@ -1155,6 +1188,14 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     staffHeaders
   );
   expect(cancelledUpgrade.status, http.logs()).toBe(200);
+  const cancellationAudit = (
+    await http.pool.query<{ metadata: { reviewHash: string } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='saving.hardware_upgrade_cancelled'
+       AND metadata::jsonb->>'savingOrderId'=$1 ORDER BY created_at DESC LIMIT 1`,
+      [result.savingOrderId]
+    )
+  ).rows[0];
+  expect(cancellationAudit?.metadata.reviewHash).toBe(cancellationSnapshot.hash);
   expect((await request(cancelUpgradePath, 'POST', cancelUpgradeInput, staffHeaders)).status).toBe(
     200
   );
@@ -1190,9 +1231,32 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     upgradeId: string;
     adjustmentInvoiceId: string;
   };
+  const expiringPreview = await request(
+    `/api/staff/saving/orders/${result.savingOrderId}/cancel-hardware-upgrade-review`,
+    'POST',
+    { upgradeId: expiringUpgrade.upgradeId, reason: 'Payment window ended' },
+    staffHeaders
+  );
+  expect(expiringPreview.status, http.logs()).toBe(200);
+  const expiringHash = ((await expiringPreview.json()) as { hash: string }).hash;
   await http.pool.query("UPDATE invoices SET state='Overdue' WHERE id=$1", [
     expiringUpgrade.adjustmentInvoiceId,
   ]);
+  expect(
+    (
+      await request(
+        cancelUpgradePath,
+        'POST',
+        {
+          idempotencyKey: randomUUID(),
+          upgradeId: expiringUpgrade.upgradeId,
+          expectedReviewHash: expiringHash,
+          reason: 'Payment window ended',
+        },
+        staffHeaders
+      )
+    ).status
+  ).toBe(409);
   expect(
     (
       await http.pool.query<{ status: string }>(

@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button, Card, CardContent, FinancialReviewSummary, Input, Label } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
+import { tSavingStaffReview } from '@barghsa/i18n/saving-staff-review';
 import { t } from '@barghsa/i18n/app';
 import {
   parseSavingHardwareAmendmentReview,
+  parseSavingHardwareUpgradeCancellationReview,
   parseSavingStaffDecisionReview,
   type SavingHardwareAmendmentReview,
+  type SavingHardwareUpgradeCancellationReview,
   type SavingStaffDecisionReview,
 } from '@barghsa/shared/finance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -139,7 +142,7 @@ export default function AdminSavingOrdersPage() {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const money = useNumberFormatting(locale);
-  const copy = (key: string) => tSaving(key, locale);
+  const copy = (key: string) => tSavingStaffReview(key, locale) ?? tSaving(key, locale);
   const [orders, setOrders] = useState<Order[]>([]);
   const [lane, setLane] = useState<'review' | 'fulfillment'>('review');
   const [after, setAfter] = useState<string | null>(null);
@@ -155,10 +158,14 @@ export default function AdminSavingOrdersPage() {
   const [action, setAction] = useState<TeamAction | null>(null);
   const [decisionReview, setDecisionReview] = useState<SavingStaffDecisionReview | null>(null);
   const [hardwareReview, setHardwareReview] = useState<SavingHardwareAmendmentReview | null>(null);
+  const [upgradeCancellationReview, setUpgradeCancellationReview] =
+    useState<SavingHardwareUpgradeCancellationReview | null>(null);
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState(false);
   const [hardwareReviewLoading, setHardwareReviewLoading] = useState(false);
   const [hardwareReviewError, setHardwareReviewError] = useState(false);
+  const [upgradeCancellationReviewLoading, setUpgradeCancellationReviewLoading] = useState(false);
+  const [upgradeCancellationReviewError, setUpgradeCancellationReviewError] = useState(false);
   const reviewRequest = useRef(0);
   const [revision, setRevision] = useState(0);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'forbidden'>('loading');
@@ -222,11 +229,14 @@ export default function AdminSavingOrdersPage() {
     reviewRequest.current++;
     setDecisionReview(null);
     setHardwareReview(null);
+    setUpgradeCancellationReview(null);
     setAction(null);
     setReviewLoading(false);
     setReviewError(false);
     setHardwareReviewLoading(false);
     setHardwareReviewError(false);
+    setUpgradeCancellationReviewLoading(false);
+    setUpgradeCancellationReviewError(false);
     if (!selected) {
       setDetail(null);
       return;
@@ -414,21 +424,57 @@ export default function AdminSavingOrdersPage() {
     }
   }
 
-  function cancelHardwareUpgrade(upgrade: SavingHardwareUpgrade, reason: string) {
-    if (!detail || !reason) return;
-    setAction({
-      title: copy('hardwareUpgradeCancel'),
-      description: copy('staffConfirm'),
-      method: 'POST',
-      path: `/api/staff/saving/orders/${detail.id}/cancel-hardware-upgrade`,
-      body: {
-        idempotencyKey: crypto.randomUUID(),
-        upgradeId: upgrade.id,
-        reason,
-      },
-      conflictMessage: copy('staffConflict'),
-      forbiddenMessage: copy('staffForbidden'),
-    });
+  async function cancelHardwareUpgrade(upgrade: SavingHardwareUpgrade, reason: string) {
+    if (!detail || !reason || upgradeCancellationReviewLoading) return;
+    const order = detail;
+    const request = ++reviewRequest.current;
+    setUpgradeCancellationReviewLoading(true);
+    setUpgradeCancellationReviewError(false);
+    try {
+      const response = await fetch(
+        `/api/staff/saving/orders/${encodeURIComponent(order.id)}/cancel-hardware-upgrade-review`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ upgradeId: upgrade.id, reason }),
+        }
+      );
+      if (!response.ok) throw new Error('Upgrade cancellation review unavailable');
+      const financialReview = parseSavingHardwareUpgradeCancellationReview(await response.json());
+      if (request !== reviewRequest.current) return;
+      if (
+        !financialReview ||
+        financialReview.scope.profileId !== order.profileId ||
+        financialReview.scope.resourceId !== order.id ||
+        financialReview.data.upgradeId !== upgrade.id ||
+        financialReview.data.adjustmentInvoiceId !== upgrade.adjustmentInvoiceId ||
+        financialReview.data.reason !== reason
+      )
+        throw new Error('Upgrade cancellation review mismatch');
+      setUpgradeCancellationReview(financialReview);
+      setAction({
+        title: copy('hardwareUpgradeCancel'),
+        description: copy('staffUpgradeCancellationConfirm'),
+        method: 'POST',
+        path: `/api/staff/saving/orders/${order.id}/cancel-hardware-upgrade`,
+        body: {
+          idempotencyKey: crypto.randomUUID(),
+          upgradeId: upgrade.id,
+          expectedReviewHash: financialReview.hash,
+          reason,
+        },
+        conflictMessage: copy('staffConflict'),
+        forbiddenMessage: copy('staffForbidden'),
+      });
+    } catch {
+      if (request === reviewRequest.current) {
+        setUpgradeCancellationReview(null);
+        setUpgradeCancellationReviewError(true);
+      }
+    } finally {
+      if (request === reviewRequest.current) setUpgradeCancellationReviewLoading(false);
+    }
   }
 
   return (
@@ -560,8 +606,14 @@ export default function AdminSavingOrdersPage() {
               />
               <SavingHardwareUpgradeHistory
                 upgrades={detail.hardwareUpgrades ?? []}
-                onCancel={cancelHardwareUpgrade}
+                onCancel={(upgrade, reason) => void cancelHardwareUpgrade(upgrade, reason)}
               />
+              {upgradeCancellationReviewLoading ? (
+                <p role="status">{copy('staffUpgradeCancellationLoading')}</p>
+              ) : null}
+              {upgradeCancellationReviewError ? (
+                <p role="alert">{copy('staffReviewError')}</p>
+              ) : null}
               {detail.canAmendAddress && (
                 <div className="space-y-3 rounded-md border p-4">
                   <h3 className="font-semibold">{copy('staffAmendAddress')}</h3>
@@ -993,12 +1045,96 @@ export default function AdminSavingOrdersPage() {
                   </div>
                 }
               />
+            ) : upgradeCancellationReview ? (
+              <FinancialReviewSummary
+                title={copy('staffUpgradeCancellationTitle')}
+                rows={[
+                  {
+                    id: 'customer',
+                    label: copy('customer'),
+                    value: upgradeCancellationReview.data.customerName,
+                  },
+                  {
+                    id: 'profile',
+                    label: copy('staffReviewProfile'),
+                    value: upgradeCancellationReview.data.profileName,
+                  },
+                  {
+                    id: 'bill',
+                    label: copy('staffBill'),
+                    value: upgradeCancellationReview.data.billIdentifier,
+                  },
+                  {
+                    id: 'address',
+                    label: copy('staffAddress'),
+                    value: String(
+                      upgradeCancellationReview.data.addressSnapshot.full_address ?? ''
+                    ),
+                  },
+                  {
+                    id: 'contract',
+                    label: copy('staffReviewContractVersion'),
+                    value: money.number(upgradeCancellationReview.data.versionNumber),
+                  },
+                  {
+                    id: 'previous-hardware',
+                    label: copy('staffHardwareCurrent'),
+                    value: upgradeCancellationReview.data.previousHardware.title[locale],
+                  },
+                  {
+                    id: 'replacement-hardware',
+                    label: copy('staffHardwareTarget'),
+                    value: upgradeCancellationReview.data.replacementHardware.title[locale],
+                  },
+                  {
+                    id: 'invoice',
+                    label: copy('staffInvoice'),
+                    value: t(
+                      `invoices.state.${upgradeCancellationReview.data.adjustmentInvoiceState}`,
+                      locale
+                    ),
+                  },
+                  {
+                    id: 'paid',
+                    label: copy('staffPaid'),
+                    value: money.money(upgradeCancellationReview.data.invoicePaidIrR),
+                  },
+                  {
+                    id: 'charge',
+                    label: copy('hardwareAdditionalCharge'),
+                    value: money.money(upgradeCancellationReview.data.additionalChargeIrR),
+                  },
+                  {
+                    id: 'reservation',
+                    label: copy('staffUpgradeCancellationReservation'),
+                    value: copy(
+                      upgradeCancellationReview.data.stockReserved
+                        ? 'staffUpgradeCancellationRelease'
+                        : 'staffUpgradeCancellationNoReservation'
+                    ),
+                  },
+                ]}
+                total={{
+                  label: copy('staffTotal'),
+                  value: money.money(upgradeCancellationReview.data.invoiceTotalIrR),
+                }}
+                notice={
+                  <div className="space-y-2">
+                    <p>{copy('staffUpgradeCancellationOutcome')}</p>
+                    <p>{upgradeCancellationReview.data.reason}</p>
+                    <p className="whitespace-pre-wrap break-words" dir="auto">
+                      {upgradeCancellationReview.data.agreementSnapshot}
+                    </p>
+                  </div>
+                }
+              />
             ) : undefined
           }
           onClose={() => {
             setAction(null);
             setDecisionReview(null);
             setHardwareReview(null);
+            setUpgradeCancellationReview(null);
           }}
           onSuccess={async () => {
             setNote('');

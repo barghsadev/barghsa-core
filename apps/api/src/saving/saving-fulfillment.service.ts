@@ -78,6 +78,25 @@ interface HardwareAmendmentInput {
   hardwareProductId: string;
   reason: string;
 }
+interface HardwareUpgradeCancellationInput {
+  idempotencyKey: string;
+  upgradeId: string;
+  expectedReviewHash: string;
+  reason: string;
+}
+interface HardwareUpgradeCancellationRow {
+  id: string;
+  contract_id: string;
+  contract_version_id: string;
+  adjustment_invoice_id: string;
+  previous_snapshot: Record<string, unknown>;
+  hardware_snapshot: Record<string, unknown>;
+  stock_reserved: boolean;
+  price_delta_irr: string;
+  state: string;
+  total_amount: string;
+  paid_amount: string;
+}
 interface StageRow {
   stage: SavingStage;
   status: 'pending' | 'in_progress' | 'completed' | 'skipped';
@@ -1217,9 +1236,102 @@ export class SavingFulfillmentService {
     }
   }
 
+  private async hardwareUpgradeCancellationReviewForRow(
+    client: PoolClient,
+    id: string,
+    input: Pick<HardwareUpgradeCancellationInput, 'upgradeId' | 'reason'>,
+    lock: 'SHARE' | 'UPDATE'
+  ) {
+    const invoiceId = (
+      await client.query<{ adjustment_invoice_id: string }>(
+        'SELECT adjustment_invoice_id FROM saving_hardware_upgrade_requests WHERE id=$1 AND order_id=$2',
+        [input.upgradeId, id]
+      )
+    ).rows[0]?.adjustment_invoice_id;
+    if (!invoiceId) throw new ConflictException('Hardware upgrade was not found');
+    // Payment owns the invoice lock before its settlement trigger locks the request.
+    await client.query(`SELECT id FROM invoices WHERE id=$1 FOR ${lock}`, [invoiceId]);
+    const upgrade = (
+      await client.query<HardwareUpgradeCancellationRow>(
+        `SELECT u.id,u.contract_id,u.contract_version_id,u.adjustment_invoice_id,
+                u.previous_snapshot,u.hardware_snapshot,u.stock_reserved,
+                u.price_delta_irr::text,i.state,i.total_amount::text,i.paid_amount::text
+           FROM saving_hardware_upgrade_requests u
+           JOIN invoices i ON i.id=u.adjustment_invoice_id
+          WHERE u.id=$1 AND u.order_id=$2 AND u.status='awaiting_payment'
+          FOR ${lock} OF u`,
+        [input.upgradeId, id]
+      )
+    ).rows[0];
+    if (
+      !upgrade ||
+      !['Unpaid', 'Overdue'].includes(upgrade.state) ||
+      BigInt(upgrade.paid_amount) !== 0n
+    )
+      throw new ConflictException('Resolve the charge payment before cancelling');
+    const row = await this.lockRow(client, id, lock);
+    if (row.contract_id !== upgrade.contract_id)
+      throw new ConflictException('Hardware upgrade contract has changed');
+    const reason = input.reason.trim();
+    if (!reason) throw new ConflictException('Hardware upgrade cancellation requires a reason');
+    const review = this.reviews.create(
+      {
+        action: 'saving.staff-hardware-upgrade-cancellation',
+        profileId: row.profile_id,
+        resourceId: id,
+      },
+      {
+        reason,
+        customerName: row.customer_name,
+        profileName: row.profile_name,
+        billIdentifier: row.bill_identifier,
+        addressSnapshot: row.address_snapshot,
+        agreementSnapshot: row.agreement_snapshot,
+        contractId: upgrade.contract_id,
+        contractState: row.contract_state,
+        versionId: row.version_id,
+        versionNumber: row.version_number,
+        contractSnapshot: row.contract_snapshot,
+        upgradeVersionId: upgrade.contract_version_id,
+        upgradeId: upgrade.id,
+        previousHardware: upgrade.previous_snapshot,
+        replacementHardware: upgrade.hardware_snapshot,
+        stockReserved: upgrade.stock_reserved,
+        adjustmentInvoiceId: upgrade.adjustment_invoice_id,
+        adjustmentInvoiceState: upgrade.state,
+        additionalChargeIrR: upgrade.price_delta_irr,
+        invoiceTotalIrR: upgrade.total_amount,
+        invoicePaidIrR: upgrade.paid_amount,
+        outcome: upgrade.stock_reserved
+          ? 'cancel_unpaid_charge_and_release_reservation'
+          : 'cancel_unpaid_charge',
+      }
+    );
+    return { upgrade, review };
+  }
+
+  async hardwareUpgradeCancellationReview(
+    id: string,
+    input: Pick<HardwareUpgradeCancellationInput, 'upgradeId' | 'reason'>,
+    actor: Actor
+  ) {
+    const target = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM saving_orders WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!target) throw new NotFoundException('Saving order not found');
+    return staffContractFinancialReview(target.profile_id, actor, async (client, archived) => {
+      if (archived) throw new ConflictException('Profile is archived');
+      return (await this.hardwareUpgradeCancellationReviewForRow(client, id, input, 'SHARE'))
+        .review;
+    });
+  }
+
   async cancelHardwareUpgrade(
     id: string,
-    input: { idempotencyKey: string; upgradeId: string; reason: string },
+    input: HardwareUpgradeCancellationInput,
     actor: Actor,
     ip: string
   ) {
@@ -1241,40 +1353,13 @@ export class SavingFulfillmentService {
           actor,
           async () => {
             if (archived) throw new ConflictException('Profile is archived');
-            const invoiceId = (
-              await client.query<{ adjustment_invoice_id: string }>(
-                'SELECT adjustment_invoice_id FROM saving_hardware_upgrade_requests WHERE id=$1 AND order_id=$2',
-                [input.upgradeId, id]
-              )
-            ).rows[0]?.adjustment_invoice_id;
-            if (!invoiceId) throw new ConflictException('Hardware upgrade was not found');
-            // Payment owns the invoice lock before its settlement trigger locks the request.
-            await client.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [invoiceId]);
-            const upgrade = (
-              await client.query<{
-                id: string;
-                contract_id: string;
-                contract_version_id: string;
-                adjustment_invoice_id: string;
-                state: string;
-                total_amount: string;
-                paid_amount: string;
-              }>(
-                `SELECT u.id,u.contract_id,u.contract_version_id,u.adjustment_invoice_id,
-                        i.state,i.total_amount::text,i.paid_amount::text
-                   FROM saving_hardware_upgrade_requests u
-                   JOIN invoices i ON i.id=u.adjustment_invoice_id
-                  WHERE u.id=$1 AND u.order_id=$2 AND u.status='awaiting_payment'
-                  FOR UPDATE OF u`,
-                [input.upgradeId, id]
-              )
-            ).rows[0];
-            if (
-              !upgrade ||
-              !['Unpaid', 'Overdue'].includes(upgrade.state) ||
-              BigInt(upgrade.paid_amount) !== 0n
-            )
-              throw new ConflictException('Resolve the charge payment before cancelling');
+            const { upgrade, review } = await this.hardwareUpgradeCancellationReviewForRow(
+              client,
+              id,
+              input,
+              'UPDATE'
+            );
+            this.reviews.assertConfirmed(review, input.expectedReviewHash);
             await this.invoices.transition(
               upgrade.adjustment_invoice_id,
               upgrade.state as 'Unpaid' | 'Overdue',
@@ -1298,7 +1383,13 @@ export class SavingFulfillmentService {
               'saving.hardware_upgrade_cancelled',
               actor,
               ip,
-              { savingOrderId: id, upgradeId: upgrade.id, reason: input.reason }
+              {
+                savingOrderId: id,
+                upgradeId: upgrade.id,
+                reason: input.reason,
+                reviewHash: review.hash,
+                financialReview: review,
+              }
             );
             return { savingOrderId: id, upgradeId: upgrade.id, status: 'cancelled' };
           }

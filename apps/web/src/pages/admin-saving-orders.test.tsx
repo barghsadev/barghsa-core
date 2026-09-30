@@ -8,6 +8,20 @@ vi.mock('../components/ContractCancellationRequestQueue.js', () => ({
 }));
 vi.mock('../components/SavingOrderDocuments.js', () => ({ SavingOrderDocuments: () => null }));
 vi.mock('../components/SavingOrderComments.js', () => ({ SavingOrderComments: () => null }));
+vi.mock('../components/SavingHardwareUpgradeHistory.js', () => ({
+  SavingHardwareUpgradeHistory: ({
+    upgrades,
+    onCancel,
+  }: {
+    upgrades: Array<{ id: string }>;
+    onCancel?: (upgrade: { id: string }, reason: string) => void;
+  }) =>
+    upgrades.length ? (
+      <button onClick={() => onCancel?.(upgrades[0]!, 'Customer changed their mind')}>
+        Cancel upgrade
+      </button>
+    ) : null,
+}));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: (value: string) => value, number: String }),
 }));
@@ -203,7 +217,7 @@ it('shows the locked saving decision and submits its exact review hash', async (
   }
 });
 
-it('confirms the exact hardware charge before requesting the swap', async () => {
+it('confirms exact hardware charges before swapping or cancelling an unpaid upgrade', async () => {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const id = '11111111-1111-7111-8111-111111111111';
@@ -211,6 +225,20 @@ it('confirms the exact hardware charge before requesting the swap', async () => 
   const currentHardwareId = '33333333-3333-7333-8333-333333333333';
   const targetHardwareId = '44444444-4444-7444-8444-444444444444';
   const versionId = '55555555-5555-7555-8555-555555555555';
+  const upgradeId = '99999999-9999-7999-8999-999999999999';
+  const upgradeInvoiceId = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
+  const upgrade = {
+    id: upgradeId,
+    status: 'awaiting_payment',
+    createdAt: '2026-09-30T00:00:00.000Z',
+    reason: 'Customer requested the upgrade',
+    priceDeltaIrR: '50000',
+    adjustmentInvoiceId: upgradeInvoiceId,
+    invoiceState: 'Unpaid',
+    paidIrR: '0',
+    previousTitle: { fa: 'دستگاه', en: 'Current device' },
+    hardwareTitle: { fa: 'جایگزین', en: 'Replacement device' },
+  };
   const detail = {
     id,
     orderId: id,
@@ -235,7 +263,7 @@ it('confirms the exact hardware charge before requesting the swap', async () => 
     revisions: [],
     addressAmendments: [],
     hardwareAmendments: [],
-    hardwareUpgrades: [],
+    hardwareUpgrades: [upgrade],
     addressOptions: [],
     hardwareOptions: [
       {
@@ -285,17 +313,50 @@ it('confirms the exact hardware charge before requesting the swap', async () => 
     },
     hash: 'b'.repeat(64),
   };
+  const cancellationReview = {
+    schemaVersion: 1,
+    scope: { action: 'saving.staff-hardware-upgrade-cancellation', profileId, resourceId: id },
+    data: {
+      reason: 'Customer changed their mind',
+      customerName: 'Buyer Company',
+      profileName: 'Buyer Company',
+      billIdentifier: detail.billIdentifier,
+      addressSnapshot: detail.addressSnapshot,
+      agreementSnapshot: 'Accepted agreement',
+      contractId: '77777777-7777-7777-8777-777777777777',
+      contractState: 'Active',
+      versionId,
+      versionNumber: 1,
+      contractSnapshot: {},
+      upgradeVersionId: versionId,
+      upgradeId,
+      previousHardware: { title: upgrade.previousTitle },
+      replacementHardware: { title: upgrade.hardwareTitle },
+      stockReserved: true,
+      adjustmentInvoiceId: upgradeInvoiceId,
+      adjustmentInvoiceState: 'Unpaid',
+      additionalChargeIrR: '50000',
+      invoiceTotalIrR: '50000',
+      invoicePaidIrR: '0',
+      outcome: 'cancel_unpaid_charge_and_release_reservation',
+    },
+    hash: 'c'.repeat(64),
+  };
   const fetchMock = vi.fn(async (url: string, _init?: RequestInit) => {
     const data =
       url === '/api/user/settings/timezone'
         ? { timezone: 'Asia/Tehran' }
-        : url.endsWith('/amend-hardware-review')
-          ? review
-          : url.endsWith('/amend-hardware')
-            ? { status: 'awaiting_payment' }
-            : url === `/api/staff/saving/orders/${id}`
-              ? detail
-              : { orders: [detail], nextAfter: null };
+        : url.endsWith('/cancel-hardware-upgrade-review')
+          ? cancellationReview
+          : url.endsWith('/cancel-hardware-upgrade')
+            ? { status: 'cancelled' }
+            : url.endsWith('/amend-hardware-review')
+              ? review
+              : url.endsWith('/amend-hardware')
+                ? { status: 'awaiting_payment' }
+                : url === `/api/staff/saving/orders/${id}`
+                  ? detail
+                  : { orders: [detail], nextAfter: null };
     return Response.json(data);
   });
   vi.stubGlobal('fetch', fetchMock);
@@ -345,6 +406,32 @@ it('confirms the exact hardware charge before requesting the swap', async () => 
       expectedReviewHash: review.hash,
       expectedHardwareId: currentHardwareId,
       hardwareProductId: targetHardwareId,
+    });
+    const cancel = [...container.querySelectorAll('button')].find(
+      (button) => button.textContent === 'Cancel upgrade'
+    );
+    await act(async () => cancel!.click());
+    expect(fetchMock).toHaveBeenCalledWith(
+      `/api/staff/saving/orders/${id}/cancel-hardware-upgrade-review`,
+      expect.objectContaining({
+        body: JSON.stringify({ upgradeId, reason: 'Customer changed their mind' }),
+      })
+    );
+    expect(document.body.textContent).toContain('The unpaid invoice will be cancelled.');
+    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/cancel-hardware-upgrade'))).toBe(
+      false
+    );
+    const confirmCancel = [
+      ...document.body.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
+    ].find((button) => button.textContent?.includes('Confirm'));
+    await act(async () => confirmCancel!.click());
+    const cancellationMutation = fetchMock.mock.calls.find(([url]) =>
+      url.endsWith('/cancel-hardware-upgrade')
+    );
+    expect(JSON.parse((cancellationMutation![1] as RequestInit).body as string)).toMatchObject({
+      upgradeId,
+      expectedReviewHash: cancellationReview.hash,
+      reason: 'Customer changed their mind',
     });
   } finally {
     await act(async () => root.unmount());

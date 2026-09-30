@@ -76,8 +76,12 @@ const hardwareUpgradeCancellation = z
   .object({
     idempotencyKey: z.string().uuid(),
     upgradeId: z.string().uuid(),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
     reason: z.string().trim().min(1).max(1000),
   })
+  .strict();
+const hardwareUpgradeCancellationReviewInput = hardwareUpgradeCancellation
+  .pick({ upgradeId: true, reason: true })
   .strict();
 function parse<T>(schema: z.ZodType<T>, value: unknown): T {
   const result = schema.safeParse(value);
@@ -240,6 +244,26 @@ export class SavingFulfillmentController {
       req.session,
       req.ip ?? 'unknown',
       hasStaffPermission(req, 'invoices:write')
+    );
+  }
+
+  @Post(':id/cancel-hardware-upgrade-review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'saving:staff-cancel-upgrade-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview unpaid charge and stock release before cancelling an upgrade' })
+  @ApiZodBody(hardwareUpgradeCancellationReviewInput)
+  cancelHardwareUpgradeReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.permission(req, true);
+    if (!hasStaffPermission(req, 'invoices:write'))
+      throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
+    return this.service.hardwareUpgradeCancellationReview(
+      id,
+      parse(hardwareUpgradeCancellationReviewInput, body),
+      req.session
     );
   }
 
