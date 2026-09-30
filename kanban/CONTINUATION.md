@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Customer invoice receipt submission review](batches/2026-09-30-invoice-receipt-submission-review.md) binds customer upload to the current invoice balance, receipt details and delayed-settlement rule before confirmation, and persists the reviewed snapshot for safe retries. Cross-command review tasks remain partial.
+
 [Bank-receipt wallet top-up financial review](batches/2026-09-30-bank-receipt-topup-financial-review.md) binds customer submission to a server-confirmed receipt and delayed-credit rule, persists the confirmed snapshot, and rejects stale review hashes. This batch also repairs the previous main CI's high-severity dependency advisories and a mobile header overflow. Cross-command review tasks remain partial.
 
 [Online wallet top-up financial review](batches/2026-09-30-online-topup-financial-review.md) binds gateway initiation to a server-confirmed profile, amount and current limit. The customer confirms the reviewed payment before redirect; pending intents and audit retain the review. Cross-command review tasks remain partial.

@@ -29,6 +29,7 @@ const req = {
 } as unknown as AuthenticatedRequest;
 
 const RECEIPT_KEY = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf';
+const REVIEW_HASH = 'a'.repeat(64);
 
 function makeController() {
   const getAccessibleProfile = vi.fn().mockResolvedValue({ id: PROFILE_ID });
@@ -136,7 +137,12 @@ describe('WalletController online top-up (T-04.2.02.01)', () => {
     });
 
     const invalid = await controller
-      .initiateOnlineTopUp(PROFILE_ID, { amount: 0 }, 'idem-1', req)
+      .initiateOnlineTopUp(
+        PROFILE_ID,
+        { amount: 0, expectedReviewHash: REVIEW_HASH },
+        'idem-1',
+        req
+      )
       .catch((e: unknown) => e);
     expect(rejectionBody(invalid)).toMatchObject({
       error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
@@ -147,7 +153,12 @@ describe('WalletController online top-up (T-04.2.02.01)', () => {
   it('rejects a missing idempotency key', async () => {
     const { controller, initiate } = makeController();
     const rejection = await controller
-      .initiateOnlineTopUp(PROFILE_ID, { amount: 1000 }, undefined, req)
+      .initiateOnlineTopUp(
+        PROFILE_ID,
+        { amount: 1000, expectedReviewHash: REVIEW_HASH },
+        undefined,
+        req
+      )
       .catch((e: unknown) => e);
     expect(rejectionBody(rejection)).toMatchObject({
       error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
@@ -159,7 +170,7 @@ describe('WalletController online top-up (T-04.2.02.01)', () => {
     const { controller, initiate } = makeController();
     await controller.initiateOnlineTopUp(
       PROFILE_ID,
-      { amount: 100_000, idempotencyKey: 'from-body' },
+      { amount: 100_000, idempotencyKey: 'from-body', expectedReviewHash: REVIEW_HASH },
       'from-header',
       req
     );
@@ -168,6 +179,7 @@ describe('WalletController online top-up (T-04.2.02.01)', () => {
       amountIrR: 100_000n,
       idempotencyKey: 'from-header',
       actor: req.session,
+      expectedReviewHash: REVIEW_HASH,
     });
   });
 
@@ -175,7 +187,7 @@ describe('WalletController online top-up (T-04.2.02.01)', () => {
     const { controller, initiate } = makeController();
     const result = await controller.initiateOnlineTopUp(
       PROFILE_ID,
-      { amount: '250000', idempotencyKey: 'from-body' },
+      { amount: '250000', idempotencyKey: 'from-body', expectedReviewHash: REVIEW_HASH },
       undefined,
       req
     );
@@ -184,6 +196,7 @@ describe('WalletController online top-up (T-04.2.02.01)', () => {
       amountIrR: 250_000n,
       idempotencyKey: 'from-body',
       actor: req.session,
+      expectedReviewHash: REVIEW_HASH,
     });
     expect(result).toEqual({
       ok: true,
@@ -203,6 +216,7 @@ describe('WalletController bank-receipt top-up (T-04.2.02.03)', () => {
     payerReference: 'TRK-998877',
     attachmentKey: RECEIPT_KEY,
     customerNote: 'Branch transfer',
+    expectedReviewHash: REVIEW_HASH,
   };
 
   it('rejects a non-UUID profileId before calling the service', async () => {
@@ -261,6 +275,7 @@ describe('WalletController bank-receipt top-up (T-04.2.02.03)', () => {
       customerNote: 'Branch transfer',
       idempotencyKey: 'from-header',
       actorId: 'user-1',
+      expectedReviewHash: REVIEW_HASH,
     });
     expect(result).toEqual({
       ok: true,

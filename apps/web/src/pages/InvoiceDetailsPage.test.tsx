@@ -740,6 +740,44 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
         if (url.includes('/record') && method === 'POST') {
           return { ok: true, status: 200, json: async () => ({ status: 'recorded' }) };
         }
+        if (
+          url.endsWith(`/api/invoices/${REPLACEMENT_ID}/bank-receipts/review`) &&
+          method === 'POST'
+        ) {
+          const body = JSON.parse(String(init?.body));
+          return {
+            ok: true,
+            status: 200,
+            json: async () => ({
+              schemaVersion: 1,
+              scope: {
+                action: 'invoice.bank-receipt-submission',
+                profileId: ORIGINAL_ID,
+                resourceId: REPLACEMENT_ID,
+              },
+              data: {
+                invoiceId: REPLACEMENT_ID,
+                profileId: ORIGINAL_ID,
+                invoiceState: 'Issued',
+                invoiceTotalIrR: '250000',
+                invoicePaidIrR: '0',
+                invoiceRemainingIrR: '250000',
+                amountIrR: body.amount,
+                paymentDate: body.paymentDate,
+                payerReference: body.payerReference,
+                bankName: null,
+                attachmentKey: body.attachmentKey,
+                fileName: 'receipt.pdf',
+                fileSizeBytes: '17',
+                customerNote: null,
+                stateAfterSubmission: 'Submitted',
+                settlementRule: 'after_finance_confirmation',
+                excessRule: 'confirmed_excess_to_wallet',
+              },
+              hash: 'a'.repeat(64),
+            }),
+          };
+        }
         if (url.endsWith(`/api/invoices/${REPLACEMENT_ID}/bank-receipts`) && method === 'POST') {
           return {
             ok: true,
@@ -795,6 +833,14 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       await act(async () => {
         form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
       });
+      for (let i = 0; i < 20 && !document.querySelector('[role="dialog"]'); i++) {
+        await act(async () => Promise.resolve());
+      }
+      const confirm = [
+        ...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
+      ].find((button) => button.textContent?.includes('Confirm and submit receipt'));
+      expect(confirm, document.body.textContent ?? '').toBeDefined();
+      await act(async () => confirm!.click());
       for (let i = 0; i < 20; i++) {
         await act(async () => {
           await Promise.resolve();
@@ -804,7 +850,7 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
 
       const submitCall = fetchMock.mock.calls.find(
         ([url, init]) =>
-          String(url).includes('/bank-receipts') &&
+          String(url).endsWith(`/api/invoices/${REPLACEMENT_ID}/bank-receipts`) &&
           (init as RequestInit | undefined)?.method === 'POST'
       );
       expect(submitCall).toBeTruthy();
@@ -813,6 +859,7 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
         paymentDate: '2026-08-15',
         payerReference: 'TRK-998877',
         attachmentKey,
+        expectedReviewHash: 'a'.repeat(64),
       });
       expect(
         container.querySelector('[data-testid="invoice-receipt-success"]')?.textContent

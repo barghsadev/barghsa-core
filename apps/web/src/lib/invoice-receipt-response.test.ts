@@ -15,6 +15,7 @@ const receipt = {
   paymentDate: '2026-09-01',
   payerReference: 'bank-ref',
   attachmentKey: 'receipt/key.pdf',
+  expectedReviewHash: 'a'.repeat(64),
 };
 
 it('preserves Arabic-Indic IRR digits and maps an unavailable service to a generic localized error', () => {
@@ -99,6 +100,7 @@ it('preserves int8 IRR digits in the request and accepts only the same confirmed
   expect(JSON.parse(init.body)).toMatchObject({
     amount: '9007199254740993',
     attachmentKey: receipt.attachmentKey,
+    expectedReviewHash: receipt.expectedReviewHash,
   });
   await expect(submitInvoiceBankReceipt(receipt)).resolves.toEqual({ ok: false, status: 200 });
 });

@@ -1,0 +1,1 @@
+ALTER TABLE "bank_receipts" ADD COLUMN "submission_review" jsonb;

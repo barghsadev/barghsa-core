@@ -20602,6 +20602,10 @@
                   "customerNote": {
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
                   "payerReference": {
                     "type": "string"
                   },
@@ -20614,7 +20618,8 @@
                   "amount",
                   "paymentDate",
                   "payerReference",
-                  "attachmentKey"
+                  "attachmentKey",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -20645,6 +20650,81 @@
           }
         ],
         "summary": "Submit a bank receipt against an invoice (Submitted until staff confirm)",
+        "tags": [
+          "Invoices"
+        ]
+      }
+    },
+    "/api/invoices/{invoiceId}/bank-receipts/review": {
+      "post": {
+        "operationId": "CustomerInvoiceController_reviewBankReceipt",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "amount": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  "attachmentKey": {
+                    "type": "string"
+                  },
+                  "bankName": {
+                    "maxLength": 128,
+                    "type": "string"
+                  },
+                  "customerNote": {
+                    "type": "string"
+                  },
+                  "payerReference": {
+                    "type": "string"
+                  },
+                  "paymentDate": {
+                    "format": "date",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "amount",
+                  "paymentDate",
+                  "payerReference",
+                  "attachmentKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Server-confirmed invoice and receipt snapshot."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review an invoice bank receipt before submission",
         "tags": [
           "Invoices"
         ]

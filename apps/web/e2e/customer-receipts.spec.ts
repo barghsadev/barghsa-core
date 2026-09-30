@@ -117,6 +117,40 @@ async function setup(page: Page, locale: string, kind: 'wallet' | 'invoice', los
         },
       });
     });
+  } else {
+    await page.route(`**${endpoint}/review`, (route) => {
+      const body = route.request().postDataJSON();
+      return route.fulfill({
+        json: {
+          schemaVersion: 1,
+          scope: {
+            action: 'invoice.bank-receipt-submission',
+            profileId,
+            resourceId: invoiceId,
+          },
+          data: {
+            invoiceId,
+            profileId,
+            invoiceState: 'Unpaid',
+            invoiceTotalIrR: amount,
+            invoicePaidIrR: '0',
+            invoiceRemainingIrR: amount,
+            amountIrR: body.amount,
+            paymentDate: body.paymentDate,
+            payerReference: body.payerReference,
+            bankName: body.bankName ?? null,
+            attachmentKey: body.attachmentKey,
+            fileName: String(body.attachmentKey).split('/').at(-1),
+            fileSizeBytes: null,
+            customerNote: body.customerNote ?? null,
+            stateAfterSubmission: 'Submitted',
+            settlementRule: 'after_finance_confirmation',
+            excessRule: 'confirmed_excess_to_wallet',
+          },
+          hash: 'a'.repeat(64),
+        },
+      });
+    });
   }
   await page.route(`**${endpoint}`, (route) => {
     const body = route.request().postDataJSON();
@@ -151,7 +185,7 @@ async function setup(page: Page, locale: string, kind: 'wallet' | 'invoice', los
   return { form, prefix, uploads, submissions, receipts, invoice };
 }
 
-async function confirmWalletReceipt(page: Page, payerReference = 'TRACK-123') {
+async function confirmReceipt(page: Page, payerReference = 'TRACK-123') {
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
   await expect(dialog).toContainText(payerReference);
@@ -165,7 +199,7 @@ for (const kind of ['wallet', 'invoice'] as const) {
     }) => {
       const { prefix, uploads, submissions, receipts } = await setup(page, locale, kind, true);
       await page.getByTestId(`${prefix}-submit`).click();
-      if (kind === 'wallet') await confirmWalletReceipt(page);
+      await confirmReceipt(page);
       await expect(page.getByTestId(`${prefix}-error`)).toBeVisible();
       await expect(page.getByTestId(`${prefix}-success`)).toHaveCount(0);
       expect(submissions).toHaveLength(1);
@@ -175,10 +209,10 @@ for (const kind of ['wallet', 'invoice'] as const) {
         payerReference: 'TRACK-123',
         customerNote: 'Customer note',
         attachmentKey: 'receipts/upload-1.pdf',
-        ...(kind === 'wallet' ? { expectedReviewHash: 'a'.repeat(64) } : {}),
+        expectedReviewHash: 'a'.repeat(64),
       });
       await page.getByTestId(`${prefix}-submit`).click();
-      if (kind === 'wallet') await confirmWalletReceipt(page);
+      await confirmReceipt(page);
       await expect.poll(() => submissions.length).toBe(2);
       expect(submissions[1]).toEqual(submissions[0]);
       expect(uploads).toHaveLength(1);
@@ -193,7 +227,7 @@ for (const kind of ['wallet', 'invoice'] as const) {
       await page.getByTestId(`${prefix}-payer-ref`).fill('TRACK-456');
       await page.getByTestId(`${prefix}-file`).setInputFiles({ ...pdf, name: 'other.pdf' });
       await page.getByTestId(`${prefix}-submit`).click();
-      if (kind === 'wallet') await confirmWalletReceipt(page, 'TRACK-456');
+      await confirmReceipt(page, 'TRACK-456');
       await expect.poll(() => submissions.length).toBe(3);
       await expect(page.getByTestId(`${prefix}-success`)).toBeVisible();
       expect(uploads).toHaveLength(2);
@@ -225,7 +259,7 @@ for (const kind of ['wallet', 'invoice'] as const) {
       expect(uploads).toHaveLength(0);
       await page.getByTestId(`${prefix}-file`).setInputFiles(pdf);
       await page.getByTestId(`${prefix}-submit`).click();
-      if (kind === 'wallet') await confirmWalletReceipt(page);
+      await confirmReceipt(page);
       await expect(page.getByTestId(`${prefix}-success`)).toBeVisible();
       expect(submissions).toHaveLength(1);
     });

@@ -25,6 +25,8 @@ import {
   invoiceBankReceiptDetailsMatch,
   invoiceBankReceiptLookupKeys,
   parseInvoiceBankReceiptSubmission,
+  parseInvoiceBankReceiptSubmissionReview,
+  type InvoiceBankReceiptSubmissionReview,
   type BankReceiptStorageRejection,
   type BankReceiptTopUpDetails,
 } from '@barghsa/shared/finance';
@@ -35,6 +37,7 @@ import {
 } from '../finance/claim-bank-receipt-attachment.js';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
 import { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 
 const PG_UNIQUE_VIOLATION = '23505';
 const BANK_RECEIPTS_ATTACHMENT_CONSTRAINT = 'uq_bank_receipts_attachment_key';
@@ -54,6 +57,8 @@ export interface SubmitInvoiceBankReceiptInput extends ReceiptSubmissionActor {
   bankName?: unknown;
   attachmentKey: unknown;
   customerNote?: unknown;
+  /** Required by the customer HTTP route; legacy internal callers may omit it. */
+  expectedReviewHash?: string;
 }
 
 type InvoiceReceiptDetails = BankReceiptTopUpDetails & { bankName: string | null };
@@ -89,6 +94,7 @@ interface BankReceiptRow {
   attachment_key: string;
   customer_note: string | null;
   state: string;
+  submission_review: unknown;
 }
 
 interface InvoiceLockRow {
@@ -96,6 +102,8 @@ interface InvoiceLockRow {
   profile_id: string;
   state: string;
   adjustment_kind: string | null;
+  total_amount: string | number | bigint;
+  paid_amount: string | number | bigint;
 }
 
 /**
@@ -123,6 +131,7 @@ interface InvoiceLockRow {
 @Injectable()
 export class InvoiceBankReceiptUploadService {
   private readonly logger = new Logger(InvoiceBankReceiptUploadService.name);
+  private readonly reviews = new ReviewSnapshotService();
 
   constructor(
     private readonly customerInvoices: CustomerInvoiceDetailsService,
@@ -130,6 +139,108 @@ export class InvoiceBankReceiptUploadService {
     @Inject(STORAGE_PROVIDER)
     private readonly storage: StorageProvider | null = null
   ) {}
+
+  private financialReview(
+    invoice: InvoiceLockRow,
+    profileId: string,
+    amountIrR: bigint,
+    receipt: InvoiceReceiptDetails,
+    storageRow: StorageLockRow
+  ): InvoiceBankReceiptSubmissionReview {
+    const total = BigInt(invoice.total_amount);
+    const paid = BigInt(invoice.paid_amount);
+    return this.reviews.create(
+      { action: 'invoice.bank-receipt-submission', profileId, resourceId: invoice.id },
+      {
+        invoiceId: invoice.id,
+        profileId,
+        invoiceState: invoice.state,
+        invoiceTotalIrR: total.toString(),
+        invoicePaidIrR: paid.toString(),
+        invoiceRemainingIrR: (total > paid ? total - paid : 0n).toString(),
+        amountIrR: amountIrR.toString(),
+        paymentDate: receipt.paymentDate,
+        payerReference: receipt.payerReference,
+        bankName: receipt.bankName,
+        attachmentKey: receipt.attachmentKey,
+        fileName: storageRow.file_name || receipt.attachmentKey.split('/').at(-1)!,
+        fileSizeBytes: storageRow.file_size == null ? null : String(storageRow.file_size),
+        customerNote: receipt.customerNote,
+        stateAfterSubmission: 'Submitted' as const,
+        settlementRule: 'after_finance_confirmation' as const,
+        excessRule: 'confirmed_excess_to_wallet' as const,
+      }
+    );
+  }
+
+  private storedReview(
+    row: BankReceiptRow,
+    profileId: string,
+    expectedHash?: string
+  ): InvoiceBankReceiptSubmissionReview | null {
+    if (row.submission_review == null) return null; // Legacy receipt submitted before reviews.
+    const stored = parseInvoiceBankReceiptSubmissionReview(row.submission_review);
+    if (
+      !stored ||
+      stored.scope.profileId !== profileId ||
+      stored.scope.resourceId !== row.invoice_id ||
+      stored.data.amountIrR !== BigInt(row.amount).toString() ||
+      stored.data.paymentDate !== row.payment_date ||
+      stored.data.payerReference !== row.payer_reference ||
+      stored.data.bankName !== row.bank_name ||
+      stored.data.customerNote !== row.customer_note
+    )
+      throw new ConflictException('Stored receipt review requires reconciliation');
+    this.reviews.assertConfirmed(stored, expectedHash ?? stored.hash);
+    return stored;
+  }
+
+  async review(input: SubmitInvoiceBankReceiptInput): Promise<InvoiceBankReceiptSubmissionReview> {
+    const parsed = parseInvoiceBankReceiptSubmission(input);
+    if (!parsed.ok) throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, parsed.message);
+    const profileId = await this.customerInvoices.resolveActiveProfileId(
+      input.userId,
+      'bank-receipts:submit'
+    );
+    if (!profileId) throw httpError(ErrorCodes.NOT_FOUND_RESOURCE, 'No active profile', 404);
+    const pool = getDbPool({ session: true });
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await lockReceiptSubmissionActor(client, input, profileId);
+      const invoice = await this.lockInvoice(client, input.invoiceId, profileId);
+      const storageRow = await this.lockAttachmentProvenance(
+        client,
+        parsed.receipt.attachmentKey,
+        input.userId,
+        profileId
+      );
+      const existing = await this.findReceiptByKeys(
+        client,
+        invoiceBankReceiptLookupKeys(parsed.receipt.attachmentKey)
+      );
+      if (existing)
+        assertReusableSubmitted(
+          existing,
+          input.invoiceId,
+          profileId,
+          parsed.amountIrR,
+          parsed.receipt
+        );
+      else this.assertInvoiceAcceptsReceipt(invoice);
+      const review =
+        (existing && this.storedReview(existing, profileId)) ||
+        this.financialReview(invoice, profileId, parsed.amountIrR, parsed.receipt, storageRow);
+      await requireCurrentSession(client, input);
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 
   async submit(input: SubmitInvoiceBankReceiptInput): Promise<SubmitInvoiceBankReceiptResult> {
     const parsed = parseInvoiceBankReceiptSubmission({
@@ -164,7 +275,8 @@ export class InvoiceBankReceiptUploadService {
           profileId,
           input.invoiceId,
           parsed.amountIrR,
-          parsed.receipt
+          parsed.receipt,
+          input.expectedReviewHash
         );
         this.logger.log(`Invoice bank receipt ${row.id} submitted for invoice ${row.invoice_id}`);
         return mapReceipt(row);
@@ -182,7 +294,8 @@ export class InvoiceBankReceiptUploadService {
     profileId: string,
     invoiceId: string,
     amountIrR: bigint,
-    receipt: InvoiceReceiptDetails
+    receipt: InvoiceReceiptDetails,
+    expectedReviewHash: string | undefined
   ): Promise<BankReceiptRow> {
     const lookupKeys = invoiceBankReceiptLookupKeys(receipt.attachmentKey);
     try {
@@ -200,10 +313,16 @@ export class InvoiceBankReceiptUploadService {
       const existing = await this.findReceiptByKeys(client, lookupKeys);
       if (existing) {
         assertReusableSubmitted(existing, invoiceId, profileId, amountIrR, receipt);
+        if (expectedReviewHash) this.storedReview(existing, profileId, expectedReviewHash);
         await requireCurrentSession(client, actor);
         await client.query('COMMIT');
         return existing;
       }
+
+      this.assertInvoiceAcceptsReceipt(invoice);
+
+      const review = this.financialReview(invoice, profileId, amountIrR, receipt, storageRow);
+      if (expectedReviewHash) this.reviews.assertConfirmed(review, expectedReviewHash);
 
       const sealed = await sealBankReceiptAttachment(
         client,
@@ -223,11 +342,11 @@ export class InvoiceBankReceiptUploadService {
       const inserted = await client.query(
         `INSERT INTO bank_receipts
            (invoice_id, profile_id, amount, payment_date, payer_reference,
-            bank_name, attachment_key, customer_note, state)
-         VALUES ($1, $2, $3::bigint, $4::date, $5, $6, $7, $8, 'Submitted')
+            bank_name, attachment_key, customer_note, submission_review, state)
+         VALUES ($1, $2, $3::bigint, $4::date, $5, $6, $7, $8, $9::jsonb, 'Submitted')
          RETURNING id, invoice_id, profile_id, amount,
                    to_char(payment_date, 'YYYY-MM-DD') AS payment_date, payer_reference, bank_name,
-                   attachment_key, customer_note, state`,
+                   attachment_key, customer_note, submission_review, state`,
         [
           invoice.id,
           invoice.profile_id,
@@ -237,6 +356,7 @@ export class InvoiceBankReceiptUploadService {
           receipt.bankName,
           sealed.sealedKey,
           receipt.customerNote,
+          expectedReviewHash ? JSON.stringify(review) : null,
         ]
       );
 
@@ -245,7 +365,8 @@ export class InvoiceBankReceiptUploadService {
         actor,
         profileId,
         String(inserted.rows[0]!.id),
-        'invoice'
+        'invoice',
+        expectedReviewHash ? review : undefined
       );
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
@@ -261,6 +382,7 @@ export class InvoiceBankReceiptUploadService {
           if (!committed)
             throw new ConflictException('This bank receipt attachment has already been submitted');
           assertReusableSubmitted(committed, invoiceId, profileId, amountIrR, receipt);
+          if (expectedReviewHash) this.storedReview(committed, profileId, expectedReviewHash);
           await requireCurrentSession(client, actor);
           await client.query('COMMIT');
           return committed;
@@ -280,7 +402,7 @@ export class InvoiceBankReceiptUploadService {
   ): Promise<BankReceiptRow | null> {
     const result = await client.query(
       `SELECT id, invoice_id, profile_id, amount, to_char(payment_date, 'YYYY-MM-DD') AS payment_date,
-              payer_reference, bank_name, attachment_key, customer_note, state
+              payer_reference, bank_name, attachment_key, customer_note, submission_review, state
          FROM bank_receipts
         WHERE attachment_key = ANY($1::text[])${forUpdate ? ' FOR UPDATE' : ''}`,
       [lookupKeys]
@@ -294,7 +416,7 @@ export class InvoiceBankReceiptUploadService {
     profileId: string
   ): Promise<InvoiceLockRow> {
     const result = await client.query(
-      `SELECT id, profile_id, state, adjustment_kind
+      `SELECT id, profile_id, state, adjustment_kind, total_amount, paid_amount
          FROM invoices
         WHERE id = $1 AND profile_id = $2 AND state <> 'Draft'
         FOR UPDATE`,
@@ -304,6 +426,10 @@ export class InvoiceBankReceiptUploadService {
       throw httpError(ErrorCodes.NOT_FOUND_RESOURCE, `Invoice not found: ${invoiceId}`, 404);
     }
     const invoice = result.rows[0] as unknown as InvoiceLockRow;
+    return invoice;
+  }
+
+  private assertInvoiceAcceptsReceipt(invoice: InvoiceLockRow): void {
     if (
       !canCustomerSubmitInvoiceBankReceipt({
         state: invoice.state,
@@ -313,12 +439,11 @@ export class InvoiceBankReceiptUploadService {
       throw httpError(
         ErrorCodes.CONFLICT_STATE,
         invoice.adjustment_kind === 'credit'
-          ? `Invoice ${invoiceId} is a credit note and cannot receive a bank receipt`
+          ? `Invoice ${invoice.id} is a credit note and cannot receive a bank receipt`
           : `Invoice in state '${invoice.state}' cannot receive a bank receipt`,
         409
       );
     }
-    return invoice;
   }
 
   private async lockAttachmentProvenance(

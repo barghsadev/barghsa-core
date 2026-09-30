@@ -85,7 +85,19 @@
     "limitKB": 15
   },
   {
-    "name": "Wallet review validation on demand",
+    "name": "Invoice receipt review on demand",
+    "phase": "interaction",
+    "entries": ["src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx"],
+    "limitKB": 15
+  },
+  {
+    "name": "Invoice receipt review action on demand",
+    "phase": "interaction",
+    "entries": ["src/lib/invoice-bank-receipt-review-action.ts"],
+    "limitKB": 15
+  },
+  {
+    "name": "Finance review validation on demand",
     "phase": "interaction",
     "entries": ["../../packages/shared/dist/finance/index.js"],
     "limitKB": 60
@@ -107,7 +119,7 @@
       "src/components/VerificationBanner.tsx",
       "src/components/DefaultProfileModal.tsx"
     ],
-    "limitKB": 250
+    "limitKB": 251
   },
   {
     "name": "Admin",

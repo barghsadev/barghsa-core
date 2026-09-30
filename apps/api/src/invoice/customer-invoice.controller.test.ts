@@ -35,7 +35,8 @@ function makeController() {
     attachmentKey: 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf',
     customerNote: null,
   });
-  const bankReceiptUpload = { submit };
+  const review = vi.fn().mockResolvedValue({ hash: 'a'.repeat(64) });
+  const bankReceiptUpload = { submit, review };
   const controller = new CustomerInvoiceController(service as never, bankReceiptUpload as never);
   return { controller, service, bankReceiptUpload };
 }
@@ -88,6 +89,7 @@ describe('CustomerInvoiceController bank receipt upload (T-04.3.01.02)', () => {
     payerReference: 'TRK-1',
     bankName: 'Bank Mellat',
     attachmentKey: 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf',
+    expectedReviewHash: 'a'.repeat(64),
   };
 
   it('rejects a non-UUID invoiceId before calling the upload service', async () => {
@@ -119,6 +121,18 @@ describe('CustomerInvoiceController bank receipt upload (T-04.3.01.02)', () => {
     expect(bankReceiptUpload.submit).not.toHaveBeenCalled();
   });
 
+  it('requires the exact review hash for submission', async () => {
+    const { controller, bankReceiptUpload } = makeController();
+    const { expectedReviewHash: _hash, ...unreviewed } = body;
+    await expect(controller.submitBankReceipt(req, INVOICE_ID, unreviewed)).rejects.toMatchObject({
+      status: 400,
+    });
+    await expect(
+      controller.submitBankReceipt(req, INVOICE_ID, { ...body, expectedReviewHash: 'invalid' })
+    ).rejects.toMatchObject({ status: 400 });
+    expect(bankReceiptUpload.submit).not.toHaveBeenCalled();
+  });
+
   it('returns a Submitted receipt with amount as a decimal string', async () => {
     const { controller, bankReceiptUpload } = makeController();
     const result = await controller.submitBankReceipt(req, INVOICE_ID, body);
@@ -131,6 +145,7 @@ describe('CustomerInvoiceController bank receipt upload (T-04.3.01.02)', () => {
       bankName: 'Bank Mellat',
       attachmentKey: body.attachmentKey,
       customerNote: undefined,
+      expectedReviewHash: body.expectedReviewHash,
     });
     expect(result).toMatchObject({
       ok: true,
@@ -139,6 +154,18 @@ describe('CustomerInvoiceController bank receipt upload (T-04.3.01.02)', () => {
       currency: 'IRR',
       invoiceId: INVOICE_ID,
       bankName: 'Bank Mellat',
+    });
+  });
+
+  it('previews the receipt without accepting a confirmation hash', async () => {
+    const { controller, bankReceiptUpload } = makeController();
+    const { expectedReviewHash: _hash, ...reviewFields } = body;
+    await controller.reviewBankReceipt(req, INVOICE_ID, reviewFields);
+    expect(bankReceiptUpload.review).toHaveBeenCalledWith(
+      expect.objectContaining({ invoiceId: INVOICE_ID, ...reviewFields })
+    );
+    await expect(controller.reviewBankReceipt(req, INVOICE_ID, body)).rejects.toMatchObject({
+      status: 400,
     });
   });
 });

@@ -200,6 +200,7 @@ it('checks wallet capability separately from profile selection', async () => {
     paymentDate: '2026-09-01',
     payerReference: '12345678',
     attachmentKey: 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf',
+    expectedReviewHash: 'a'.repeat(64),
   });
   expect(receipt.status, await receipt.text()).toBe(404);
   expect((await request(`wallet/${finance}`)).status).toBe(200);

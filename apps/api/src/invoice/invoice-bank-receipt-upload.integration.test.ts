@@ -206,6 +206,56 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
     };
   }
 
+  it('binds invoice and verified file facts to the customer review before storing the receipt', async () => {
+    const attachment = receiptKey('review000001');
+    await insertReceiptFile(attachment, { fileName: 'branch-slip.pdf' });
+    const input = payload({ attachmentKey: attachment });
+    const review = await service.review(input);
+    expect(review.data).toMatchObject({
+      invoiceId: INVOICE_A,
+      profileId: PROFILE_A,
+      invoiceRemainingIrR: '5000000',
+      amountIrR: '250000',
+      fileName: 'branch-slip.pdf',
+      stateAfterSubmission: 'Submitted',
+    });
+    await expect(
+      service.submit({ ...input, expectedReviewHash: '0'.repeat(64) })
+    ).rejects.toMatchObject({
+      status: 409,
+    });
+    await ctx.pool.query('UPDATE invoices SET paid_amount=100000 WHERE id=$1', [INVOICE_A]);
+    await expect(
+      service.submit({ ...input, expectedReviewHash: review.hash })
+    ).rejects.toMatchObject({
+      status: 409,
+    });
+    expect((await ctx.pool.query('SELECT id FROM bank_receipts')).rows).toEqual([]);
+    const fresh = await service.review(input);
+    expect(fresh.hash).not.toBe(review.hash);
+    expect(fresh.data.invoiceRemainingIrR).toBe('4900000');
+    const result = await service.submit({ ...input, expectedReviewHash: fresh.hash });
+    const stored = await ctx.pool.query<{ submission_review: { hash: string } }>(
+      'SELECT submission_review FROM bank_receipts WHERE id=$1',
+      [result.receiptId]
+    );
+    expect(stored.rows[0]!.submission_review.hash).toBe(fresh.hash);
+    expect((await service.review(input)).hash).toBe(fresh.hash);
+    expect((await service.submit({ ...input, expectedReviewHash: fresh.hash })).receiptId).toBe(
+      result.receiptId
+    );
+    await expect(
+      service.submit({ ...input, expectedReviewHash: review.hash })
+    ).rejects.toMatchObject({
+      status: 409,
+    });
+    const audit = await ctx.pool.query<{ metadata: string }>(
+      "SELECT metadata FROM audit_log WHERE event='invoice_bank_receipt_submitted' AND metadata::jsonb->>'receiptId'=$1",
+      [result.receiptId]
+    );
+    expect(JSON.parse(audit.rows[0]!.metadata).reviewHash).toBe(fresh.hash);
+  });
+
   it('creates a Submitted receipt and leaves the invoice Unpaid', async () => {
     const attachment = receiptKey('happy0000001');
     await insertReceiptFile(attachment);
