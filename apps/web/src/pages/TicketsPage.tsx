@@ -1,7 +1,7 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useSearch } from '@tanstack/react-router';
-import { Button, Input, Label } from '@barghsa/ui';
+import { Button, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -132,7 +132,12 @@ function Tickets({ staff }: { staff: boolean }) {
   const uploads = useRef(new Map<File, string>()),
     heading = useRef<HTMLHeadingElement>(null);
   const [queue, setQueue] = useState<Queue | null>(null),
-    [loading, setLoading] = useState(true);
+    [loading, setLoading] = useState(true),
+    [queueError, setQueueError] = useState(''),
+    [acceptedContext, setAcceptedContext] = useState(''),
+    [acceptedPage, setAcceptedPage] = useState(1),
+    [queueAccessDenied, setQueueAccessDenied] = useState(false);
+  const queueDenied = useRef(false);
   const [page, setPage] = useState(1),
     [filter, setFilter] = useState(routeSearch.status === 'active' ? 'active' : ''),
     [search, setSearch] = useState(''),
@@ -143,14 +148,19 @@ function Tickets({ staff }: { staff: boolean }) {
     [busy, setBusy] = useState(false);
   const [detail, setDetail] = useState<Ticket | null>(null),
     [comments, setComments] = useState<Comment[]>([]),
-    [detailLoading, setDetailLoading] = useState(false);
+    [detailLoading, setDetailLoading] = useState(false),
+    [detailError, setDetailError] = useState(''),
+    [selectedId, setSelectedId] = useState('');
   const [reply, setReply] = useState(''),
     [internal, setInternal] = useState(false),
     [nextStatus, setNextStatus] = useState<Status>('open');
   const [teams, setTeams] = useState<{ id: string; name: string; members: string[] }[]>([]),
     [teamId, setTeamId] = useState('');
   const [assignees, setAssignees] = useState<{ id: string; name: string }[]>([]),
-    [assignee, setAssignee] = useState('');
+    [assignee, setAssignee] = useState(''),
+    [assignmentError, setAssignmentError] = useState(''),
+    [assignmentLoading, setAssignmentLoading] = useState(false),
+    [assignmentVersion, setAssignmentVersion] = useState(0);
   const [creating, setCreating] = useState(false),
     [subject, setSubject] = useState(''),
     [body, setBody] = useState(''),
@@ -163,11 +173,26 @@ function Tickets({ staff }: { staff: boolean }) {
     [fileVersion, setFileVersion] = useState(0);
   const [options, setOptions] = useState<Options | null>(null),
     [optionsLoading, setOptionsLoading] = useState(false),
-    [optionsVersion, setOptionsVersion] = useState(0);
+    [optionsVersion, setOptionsVersion] = useState(0),
+    [optionsError, setOptionsError] = useState('');
+  const context = JSON.stringify([prefix, term, sort, filter, activeScoped]);
+  const visibleQueue = acceptedContext === context ? queue : null;
+  function discardDetail() {
+    ++detailGeneration.current;
+    setDetail(null);
+    setComments([]);
+    setDetailLoading(false);
+    setDetailError('');
+    setSelectedId('');
+    setReply('');
+    setInternal(false);
+    setAssignee('');
+    setTeamId('');
+  }
   const load = useCallback(async () => {
     const current = ++generation.current;
     setLoading(true);
-    setQueue(null);
+    setQueueError('');
     try {
       const query = new URLSearchParams({
         page: String(page),
@@ -180,15 +205,53 @@ function Tickets({ staff }: { staff: boolean }) {
       const response = await fetch(`${prefix}?${query}`, { credentials: 'include' });
       if (!response.ok) throw new Error(response.status === 403 ? 'forbidden' : 'error');
       const data = (await response.json()) as Queue;
-      if (!Array.isArray(data.data)) throw new Error('error');
-      if (current === generation.current) setQueue(data);
+      if (
+        !Array.isArray(data.data) ||
+        !Number.isSafeInteger(data.totalPages) ||
+        data.totalPages < 0
+      )
+        throw new Error('error');
+      if (current === generation.current) {
+        queueDenied.current = false;
+        setQueueAccessDenied(false);
+        setQueue(data);
+        setAcceptedContext(context);
+        setAcceptedPage(page);
+        // Removed tickets can make the requested page disappear while it is loading.
+        if (page > Math.max(1, data.totalPages)) setPage(Math.max(1, data.totalPages));
+        // A refreshed authority can revoke closure approval or assignment controls.
+        if (staff && !data.viewer?.canAssignOthers) {
+          setAssignees([]);
+          setTeams([]);
+        }
+      }
     } catch (reason) {
-      if (current === generation.current)
-        setError(reason instanceof Error ? reason.message : 'error');
+      if (current === generation.current) {
+        const failure = reason instanceof Error ? reason.message : 'error';
+        setQueueError(failure);
+        if (failure === 'forbidden') {
+          queueDenied.current = true;
+          setQueueAccessDenied(true);
+          setQueue(null);
+          discardDetail();
+          setAssignees([]);
+          setTeams([]);
+          setCreating(false);
+          setSubject('');
+          setBody('');
+          setOptions(null);
+          setProfileId('');
+          setRecord('');
+          setRecordPage(1);
+          setFiles([]);
+          uploads.current.clear();
+          setSaved(false);
+        }
+      }
     } finally {
       if (current === generation.current) setLoading(false);
     }
-  }, [prefix, page, term, sort, filter, activeScoped]);
+  }, [prefix, page, term, sort, filter, activeScoped, context, staff]);
   useEffect(() => {
     setFilter(routeSearch.status === 'active' ? 'active' : '');
     setPage(1);
@@ -211,18 +274,20 @@ function Tickets({ staff }: { staff: boolean }) {
     if (staff || !creating) return;
     const controller = new AbortController();
     setOptionsLoading(true);
+    setOptionsError('');
     setOptions(null);
     void fetch(
       `/api/tickets/options${profileId ? `?profileId=${encodeURIComponent(profileId)}&recordPage=${recordPage}` : ''}`,
       { credentials: 'include', signal: controller.signal }
     )
       .then(async (response) => {
-        if (!response.ok) throw new Error();
+        if (!response.ok) throw new Error(response.status === 403 ? 'forbidden' : 'error');
         const data = await response.json();
         if (!controller.signal.aborted) setOptions(data);
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError('error');
+      .catch((reason: unknown) => {
+        if (!controller.signal.aborted)
+          setOptionsError(reason instanceof Error ? reason.message : 'error');
       })
       .finally(() => {
         if (!controller.signal.aborted) setOptionsLoading(false);
@@ -232,25 +297,43 @@ function Tickets({ staff }: { staff: boolean }) {
   useEffect(() => {
     if (!staff || !queue?.viewer?.canAssignOthers) return;
     const controller = new AbortController();
+    setAssignmentLoading(true);
+    setAssignmentError('');
     void Promise.all(
       ['assignees', 'teams'].map((path) =>
         fetch(`${prefix}/${path}`, { credentials: 'include', signal: controller.signal })
       )
     )
       .then(async (responses) => {
-        if (responses.some((response) => !response.ok)) throw new Error();
+        if (responses.some((response) => response.status === 403)) throw new Error('forbidden');
+        if (responses.some((response) => !response.ok)) throw new Error('error');
         const [people, groups] = await Promise.all(responses.map((response) => response.json()));
         if (!controller.signal.aborted) {
           setAssignees(people);
           setTeams(groups);
         }
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError('error');
+      .catch((reason: unknown) => {
+        if (!controller.signal.aborted) {
+          const failure = reason instanceof Error ? reason.message : 'error';
+          setAssignmentError(failure);
+          if (failure === 'forbidden') {
+            setAssignees([]);
+            setTeams([]);
+            setAssignee('');
+            setTeamId('');
+          }
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setAssignmentLoading(false);
       });
     return () => controller.abort();
-  }, [staff, prefix, queue?.viewer?.canAssignOthers]);
+  }, [staff, prefix, queue?.viewer?.canAssignOthers, assignmentVersion]);
   async function select(id: string) {
+    if (queueDenied.current) return;
+    setSelectedId(id);
+    setDetailError('');
     const current = ++detailGeneration.current;
     setDetail(null);
     setComments([]);
@@ -262,20 +345,23 @@ function Tickets({ staff }: { staff: boolean }) {
         fetch(`${prefix}/${encodeURIComponent(id)}`, { credentials: 'include' }),
         fetch(`${prefix}/${encodeURIComponent(id)}/comments`, { credentials: 'include' }),
       ]);
-      if (!recordResponse.ok || !commentsResponse.ok) throw new Error();
+      if (recordResponse.status === 403 || commentsResponse.status === 403)
+        throw new Error('forbidden');
+      if (!recordResponse.ok || !commentsResponse.ok) throw new Error('error');
       const [ticket, conversation] = await Promise.all([
         recordResponse.json(),
         commentsResponse.json(),
       ]);
-      if (current === detailGeneration.current) {
+      if (current === detailGeneration.current && !queueDenied.current) {
         setDetail(ticket);
         setComments(conversation);
         setNextStatus(transitions[ticket.status as Status]?.[0] ?? 'open');
         setAssignee(ticket.assignedTo ?? '');
         setTeamId(ticket.assignedTeamId ?? '');
       }
-    } catch {
-      if (current === detailGeneration.current) setError('error');
+    } catch (reason) {
+      if (current === detailGeneration.current)
+        setDetailError(reason instanceof Error ? reason.message : 'error');
     } finally {
       if (current === detailGeneration.current) setDetailLoading(false);
     }
@@ -395,7 +481,7 @@ function Tickets({ staff }: { staff: boolean }) {
         {!staff && (
           <Button
             className="hover:bg-primary"
-            disabled={busy}
+            disabled={busy || queueAccessDenied}
             onClick={() => {
               setCreating((value) => !value);
               setError('');
@@ -548,13 +634,18 @@ function Tickets({ staff }: { staff: boolean }) {
                 )}
               </>
             ) : (
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => setOptionsVersion((value) => value + 1)}
-              >
-                {text('retry')}
-              </Button>
+              <div role="alert" className="space-y-2">
+                <p>{text(optionsError === 'forbidden' ? 'forbidden' : 'optionsError')}</p>
+                {optionsError !== 'forbidden' && (
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={() => setOptionsVersion((value) => value + 1)}
+                  >
+                    {text('retry')}
+                  </Button>
+                )}
+              </div>
             )}
             <div>
               <Label htmlFor="ticket-files">{text('files')}</Label>
@@ -588,160 +679,188 @@ function Tickets({ staff }: { staff: boolean }) {
           </fieldset>
         </form>
       )}
-      <fieldset disabled={busy} className="flex flex-wrap items-end gap-3">
-        <div>
-          <Label htmlFor="ticket-search">{text('search')}</Label>
-          <Input
-            id="ticket-search"
-            maxLength={200}
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
-        </div>
-        <div>
-          <Label htmlFor="ticket-filter">{text('status')}</Label>
-          <select
-            id="ticket-filter"
-            className="block rounded border border-input bg-background text-foreground p-2"
-            value={filter}
-            onChange={(event) => {
-              setFilter(event.target.value);
-              setPage(1);
-            }}
-          >
-            <option value="">{text('all')}</option>
-            <option value="active">{text('active')}</option>
-            {statuses.map((value) => (
-              <option key={value} value={value}>
-                {text(value)}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <Label htmlFor="ticket-sort">{text('sort')}</Label>
-          <select
-            id="ticket-sort"
-            className="block rounded border border-input bg-background text-foreground p-2"
-            value={sort}
-            onChange={(event) => {
-              setSort(event.target.value);
-              setPage(1);
-            }}
-          >
-            <option value="desc">{text('newest')}</option>
-            <option value="asc">{text('oldest')}</option>
-          </select>
-        </div>
-        <Button
-          variant="outline"
-          disabled={loading}
-          onClick={() => {
-            setError('');
-            void load();
-          }}
-        >
-          {text('refresh')}
-        </Button>
-      </fieldset>
-      {loading ? (
-        <p role="status">{text('loading')}</p>
-      ) : queue?.data.length ? (
-        <div className="overflow-x-auto">
-          <table className="w-full text-start">
-            <thead>
-              <tr>
-                {[
-                  'subject',
-                  'category',
-                  'status',
-                  'priority',
-                  'updated',
-                  'related',
-                  ...(staff ? ['customer', 'assignee', 'target'] : []),
-                ].map((key) => (
-                  <th key={key} className="p-2 text-start">
-                    {text(key)}
-                  </th>
+      <ListPage>
+        <ListPage.Toolbar>
+          <fieldset disabled={busy} className="flex min-w-0 flex-wrap items-end gap-3">
+            <div>
+              <Label htmlFor="ticket-search">{text('search')}</Label>
+              <Input
+                id="ticket-search"
+                maxLength={200}
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="ticket-filter">{text('status')}</Label>
+              <select
+                id="ticket-filter"
+                className="block rounded border border-input bg-background text-foreground p-2"
+                value={filter}
+                onChange={(event) => {
+                  setFilter(event.target.value);
+                  setPage(1);
+                }}
+              >
+                <option value="">{text('all')}</option>
+                <option value="active">{text('active')}</option>
+                {statuses.map((value) => (
+                  <option key={value} value={value}>
+                    {text(value)}
+                  </option>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
-              {queue.data.map((item) => (
-                <tr key={item.id} className="border-t">
-                  <td className="p-2">
-                    <button
-                      disabled={busy}
-                      className="text-blue-700 dark:text-blue-300 underline text-start"
-                      onClick={() => {
-                        setError('');
-                        void select(item.id);
-                      }}
-                    >
-                      {item.subject}
-                    </button>
-                  </td>
-                  <td className="p-2">{text(`category.${item.category ?? 'general'}`)}</td>
-                  <td className="p-2">
-                    <span className="rounded-full bg-muted px-2 py-1 text-sm font-medium">
-                      {text(item.status)}
-                    </span>
-                  </td>
-                  <td className="p-2">
-                    <span className="rounded-full border px-2 py-1 text-sm">
-                      {text(item.priority)}
-                    </span>
-                  </td>
-                  <td className="p-2 whitespace-nowrap">{formatDate(item.updatedAt)}</td>
-                  <td className="p-2">
-                    <RelatedTicketRecord ticket={item} staff={staff} locale={locale} />
-                  </td>
-                  {staff && (
-                    <>
-                      <td className="p-2">{item.userId}</td>
+              </select>
+            </div>
+            <div>
+              <Label htmlFor="ticket-sort">{text('sort')}</Label>
+              <select
+                id="ticket-sort"
+                className="block rounded border border-input bg-background text-foreground p-2"
+                value={sort}
+                onChange={(event) => {
+                  setSort(event.target.value);
+                  setPage(1);
+                }}
+              >
+                <option value="desc">{text('newest')}</option>
+                <option value="asc">{text('oldest')}</option>
+              </select>
+            </div>
+            <Button variant="outline" disabled={loading} onClick={() => void load()}>
+              {text('refresh')}
+            </Button>
+          </fieldset>
+        </ListPage.Toolbar>
+        <ListPage.Content
+          loading={loading}
+          error={!!queueError}
+          empty={!visibleQueue?.data.length}
+          retainContent={!!visibleQueue?.data.length && queueError !== 'forbidden'}
+          loadingView={<p role="status">{text('loading')}</p>}
+          errorView={
+            <div role="alert" className="space-y-2">
+              <p>{text(queueError === 'forbidden' ? 'forbidden' : 'queueError')}</p>
+              {queueError !== 'forbidden' && (
+                <Button type="button" variant="outline" onClick={() => void load()}>
+                  {text('retry')}
+                </Button>
+              )}
+            </div>
+          }
+          emptyView={<p>{text('empty')}</p>}
+        >
+          {visibleQueue && (
+            <ScrollArea
+              scrollbarOrientation="horizontal"
+              role="region"
+              aria-label={text(staff ? 'staffTitle' : 'title')}
+            >
+              <table className="w-full text-start">
+                <caption className="sr-only">{text(staff ? 'staffTitle' : 'title')}</caption>
+                <thead>
+                  <tr>
+                    {[
+                      'subject',
+                      'category',
+                      'status',
+                      'priority',
+                      'updated',
+                      'related',
+                      ...(staff ? ['customer', 'assignee', 'target'] : []),
+                    ].map((key) => (
+                      <th scope="col" key={key} className="p-2 text-start">
+                        {text(key)}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {visibleQueue.data.map((item) => (
+                    <tr key={item.id} className="border-t">
                       <td className="p-2">
-                        {assignees.find((person) => person.id === item.assignedTo)?.name ??
-                          item.assignedTo ??
-                          text('unassigned')}
+                        <button
+                          disabled={busy}
+                          className="text-blue-700 dark:text-blue-300 underline text-start"
+                          onClick={() => {
+                            setError('');
+                            void select(item.id);
+                          }}
+                        >
+                          {item.subject}
+                        </button>
                       </td>
-                      <td className="p-2 whitespace-nowrap">
-                        {queue.responseTargetHours &&
-                        ['open', 'in_progress', 'waiting_staff'].includes(item.status)
-                          ? formatDate(
-                              new Date(
-                                new Date(item.updatedAt).getTime() +
-                                  queue.responseTargetHours * 3600000
-                              ).toISOString()
-                            )
-                          : text('none')}
+                      <td className="p-2">{text(`category.${item.category ?? 'general'}`)}</td>
+                      <td className="p-2">
+                        <span className="rounded-full bg-muted px-2 py-1 text-sm font-medium">
+                          {text(item.status)}
+                        </span>
                       </td>
-                    </>
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        queue && <p>{text('empty')}</p>
-      )}
-      <nav aria-label={text('pages')} className="flex gap-3">
-        <Button
-          variant="outline"
-          disabled={loading || busy || page === 1}
-          onClick={() => setPage((value) => value - 1)}
-        >
-          {text('previous')}
-        </Button>
-        <Button
-          variant="outline"
-          disabled={loading || busy || !queue || page >= queue.totalPages}
-          onClick={() => setPage((value) => value + 1)}
-        >
-          {text('next')}
-        </Button>
-      </nav>
+                      <td className="p-2">
+                        <span className="rounded-full border px-2 py-1 text-sm">
+                          {text(item.priority)}
+                        </span>
+                      </td>
+                      <td className="p-2 whitespace-nowrap">{formatDate(item.updatedAt)}</td>
+                      <td className="p-2">
+                        <RelatedTicketRecord ticket={item} staff={staff} locale={locale} />
+                      </td>
+                      {staff && (
+                        <>
+                          <td className="p-2">{item.userId}</td>
+                          <td className="p-2">
+                            {assignees.find((person) => person.id === item.assignedTo)?.name ??
+                              item.assignedTo ??
+                              text('unassigned')}
+                          </td>
+                          <td className="p-2 whitespace-nowrap">
+                            {visibleQueue.responseTargetHours &&
+                            ['open', 'in_progress', 'waiting_staff'].includes(item.status)
+                              ? formatDate(
+                                  new Date(
+                                    new Date(item.updatedAt).getTime() +
+                                      visibleQueue.responseTargetHours * 3600000
+                                  ).toISOString()
+                                )
+                              : text('none')}
+                          </td>
+                        </>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </ScrollArea>
+          )}
+        </ListPage.Content>
+        <ListPage.Pagination
+          kind="page"
+          page={acceptedPage}
+          pageCount={visibleQueue?.totalPages ?? 1}
+          onPageChange={setPage}
+          label={text('pages')}
+          previousLabel={text('previous')}
+          nextLabel={text('next')}
+          pageLabel={(value) => `${text('page')} ${value.toLocaleString(locale)}`}
+          formatPage={(value) => value.toLocaleString(locale)}
+          disabled={loading || busy || !!queueError || !visibleQueue}
+        />
+      </ListPage>
       {detailLoading && <p role="status">{text('loading')}</p>}
+      {detailError && (
+        <div role="alert" className="space-y-2">
+          <p>{text(detailError === 'forbidden' ? 'forbidden' : 'detailError')}</p>
+          {detailError !== 'forbidden' && selectedId && (
+            <Button
+              type="button"
+              variant="outline"
+              disabled={busy}
+              onClick={() => void select(selectedId)}
+            >
+              {text('retry')}
+            </Button>
+          )}
+        </div>
+      )}
       {detail && (
         <article className="rounded border bg-card text-card-foreground p-4 space-y-4 break-words">
           <h2 ref={heading} tabIndex={-1} className="text-xl font-semibold">
@@ -893,64 +1012,85 @@ function Tickets({ staff }: { staff: boolean }) {
               />
             )}
           {staff && queue?.viewer?.canAssignOthers && (
-            <div className="flex flex-wrap items-end gap-3">
-              <div>
-                <Label htmlFor="ticket-team">{text('team')}</Label>
-                <select
-                  id="ticket-team"
-                  disabled={busy}
-                  className="block rounded border border-input bg-background text-foreground p-2"
-                  value={teamId}
-                  onChange={(event) => {
-                    setTeamId(event.target.value);
-                    setAssignee('');
-                  }}
-                >
-                  <option value="">{text('directAssignment')}</option>
-                  {teams.map((team) => (
-                    <option key={team.id} value={team.id}>
-                      {team.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <Label htmlFor="ticket-assignee">{text('assignee')}</Label>
-                <select
-                  id="ticket-assignee"
-                  disabled={busy}
-                  className="block rounded border border-input bg-background text-foreground p-2"
-                  value={assignee}
-                  onChange={(event) => setAssignee(event.target.value)}
-                >
-                  <option value="">{text('choose')}</option>
-                  {assignees
-                    .filter(
-                      (person) =>
-                        !teamId ||
-                        teams.find((team) => team.id === teamId)?.members.includes(person.id)
-                    )
-                    .map((person) => (
-                      <option key={person.id} value={person.id}>
-                        {person.name}
+            <div className="space-y-3">
+              {assignmentLoading && <p role="status">{text('loading')}</p>}
+              {assignmentError && (
+                <div role="alert" className="space-y-2">
+                  <p>{text(assignmentError === 'forbidden' ? 'forbidden' : 'assignmentError')}</p>
+                  {assignmentError !== 'forbidden' && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={busy}
+                      onClick={() => setAssignmentVersion((value) => value + 1)}
+                    >
+                      {text('retry')}
+                    </Button>
+                  )}
+                </div>
+              )}
+              <fieldset
+                disabled={busy || assignmentLoading || !!assignmentError}
+                className="flex min-w-0 flex-wrap items-end gap-3"
+              >
+                <div>
+                  <Label htmlFor="ticket-team">{text('team')}</Label>
+                  <select
+                    id="ticket-team"
+                    disabled={busy}
+                    className="block rounded border border-input bg-background text-foreground p-2"
+                    value={teamId}
+                    onChange={(event) => {
+                      setTeamId(event.target.value);
+                      setAssignee('');
+                    }}
+                  >
+                    <option value="">{text('directAssignment')}</option>
+                    {teams.map((team) => (
+                      <option key={team.id} value={team.id}>
+                        {team.name}
                       </option>
                     ))}
-                </select>
-              </div>
-              <Button
-                className="hover:bg-primary"
-                disabled={busy || !assignee}
-                onClick={() =>
-                  void mutate(
-                    `${prefix}/${detail.id}/assign`,
-                    'PUT',
-                    { assigneeId: assignee, ...(teamId ? { teamId } : {}) },
-                    detail.id
-                  )
-                }
-              >
-                {text('assign')}
-              </Button>
+                  </select>
+                </div>
+                <div>
+                  <Label htmlFor="ticket-assignee">{text('assignee')}</Label>
+                  <select
+                    id="ticket-assignee"
+                    disabled={busy}
+                    className="block rounded border border-input bg-background text-foreground p-2"
+                    value={assignee}
+                    onChange={(event) => setAssignee(event.target.value)}
+                  >
+                    <option value="">{text('choose')}</option>
+                    {assignees
+                      .filter(
+                        (person) =>
+                          !teamId ||
+                          teams.find((team) => team.id === teamId)?.members.includes(person.id)
+                      )
+                      .map((person) => (
+                        <option key={person.id} value={person.id}>
+                          {person.name}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                <Button
+                  className="hover:bg-primary"
+                  disabled={busy || !assignee}
+                  onClick={() =>
+                    void mutate(
+                      `${prefix}/${detail.id}/assign`,
+                      'PUT',
+                      { assigneeId: assignee, ...(teamId ? { teamId } : {}) },
+                      detail.id
+                    )
+                  }
+                >
+                  {text('assign')}
+                </Button>
+              </fieldset>
             </div>
           )}
           {staff && canWrite && (
@@ -1002,17 +1142,19 @@ function Tickets({ staff }: { staff: boolean }) {
             </Button>
           )}
           <h3 className="font-semibold">{text('conversation')}</h3>
-          {comments.map((item) => (
-            <div
-              key={item.id}
-              className={`rounded border p-3 ${item.visibility === 'internal' ? 'border-warning/20 bg-warning-soft dark:border-amber-700 dark:bg-amber-950' : 'bg-muted'}`}
-            >
-              <p className="text-sm">
-                {item.authorId} · {formatDate(item.createdAt)} · {text(item.visibility)}
-              </p>
-              <p className="whitespace-pre-wrap">{item.body}</p>
-            </div>
-          ))}
+          {comments
+            .filter((item) => staff || item.visibility === 'public')
+            .map((item) => (
+              <div
+                key={item.id}
+                className={`rounded border p-3 ${item.visibility === 'internal' ? 'border-warning/20 bg-warning-soft dark:border-amber-700 dark:bg-amber-950' : 'bg-muted'}`}
+              >
+                <p className="text-sm">
+                  {item.authorId} · {formatDate(item.createdAt)} · {text(item.visibility)}
+                </p>
+                <p className="whitespace-pre-wrap">{item.body}</p>
+              </div>
+            ))}
           {canWrite && !['closed', 'resolved'].includes(detail.status) && (
             <form
               className="space-y-3"

@@ -42,4 +42,4 @@ The initial browser run passes 21 cases. Its mobile Safari simple-electricity jo
 
 The preceding catalogue staff batch is published as `75b3d0960efdf9ebe39b6ecd631f0e04633218b0`; CI run `36786063541` passes all five gates under the existing temporary fast mode. The combined-coverage success is an exemption, not measured coverage.
 
-This customer browsing batch is committed and pushed directly to main after review and related checks. The remote commit and CI are verified after publication.
+This customer browsing batch is published as `29fa57135b892e8a9c290bb30c440f774d935775`. CI run `36787096726` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.

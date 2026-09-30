@@ -18,14 +18,20 @@ const item = {
   relatedEntityType: null,
   relatedEntityId: null,
 };
-async function shell(page: Page, locale = 'en') {
-  await page.addInitScript((value) => {
-    if (document.documentElement) document.documentElement.lang = value;
-    new MutationObserver(() => {
-      if (document.documentElement) document.documentElement.lang = value;
-    }).observe(document, { childList: true });
-  }, locale);
+async function shell(page: Page, locale = 'en', staff = false) {
+  await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        userId: staff ? 'staff' : 'customer',
+        isStaff: staff,
+        operatingContext: staff ? 'staff' : 'customer',
+        canSwitchContext: false,
+        requiresTosAcceptance: false,
+      },
+    })
+  );
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
   );
@@ -196,7 +202,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`staff ticket detail shows customer contacts and the current profile (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
+    await shell(page, locale, true);
     if (locale === 'fa') await page.setViewportSize({ width: 390, height: 844 });
     await page.route('**/api/public/branding/config', (route) =>
       route.fulfill({
@@ -282,7 +288,7 @@ for (const locale of ['en', 'fa'] as const) {
 test('staff assigns, writes a distinct internal note, resolves and reopens without claiming a failed reply saved', async ({
   page,
 }) => {
-  await shell(page);
+  await shell(page, 'en', true);
   await page.route('**/api/staff/tickets/teams', (route) =>
     route.fulfill({ json: [{ id: profileId, name: 'Support team', members: ['staff'] }] })
   );
@@ -356,7 +362,7 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
   await expect(page.getByRole('button', { name: 'Save status', exact: true })).toBeEnabled();
 });
 test('staff with broad read access only edit tickets assigned to them', async ({ page }) => {
-  await shell(page);
+  await shell(page, 'en', true);
   let assignedTo = 'another-colleague';
   await page.route('**/api/staff/tickets?*', (route) =>
     route.fulfill({
@@ -409,6 +415,10 @@ for (const { locale, darkMode } of [
       route.fulfill({
         json: {
           appTitle: 'Support',
+          appTitleFa: 'پشتیبانی',
+          supportEmail: 'support@example.test',
+          supportPhone: '02126658042',
+          supportMobile: '09123456789',
           slogan: '',
           primaryColor: '#2563eb',
           secondaryColor: '#64748b',
@@ -474,7 +484,7 @@ for (const { locale, darkMode } of [
 test('assigned-only staff see no reassignment control and stale lists cannot replace newer filters', async ({
   page,
 }) => {
-  await shell(page);
+  await shell(page, 'en', true);
   let release: () => void = () => {};
   const delayed = new Promise<void>((resolve) => {
     release = resolve;
