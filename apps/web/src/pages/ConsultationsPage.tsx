@@ -1,3 +1,5 @@
+import { HistoryListControls } from '../components/HistoryListControls.js';
+import { DEFAULT_HISTORY_SORT, type HistoryQuery } from '@barghsa/shared/validation';
 import { t } from '@barghsa/i18n/app';
 import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
@@ -41,11 +43,15 @@ export function ConsultationsPage({
   onStatusesChange,
   dateRange = {},
   onDateRangeChange,
+  query = { q: '', sort: DEFAULT_HISTORY_SORT },
+  onQueryChange,
 }: {
   statuses?: readonly string[];
   onStatusesChange?: (statuses: string[]) => void;
   dateRange?: DateRangeFilterValue;
   onDateRangeChange?: (range: DateRangeFilterValue) => void;
+  query?: HistoryQuery;
+  onQueryChange?: (query: HistoryQuery) => void;
 }) {
   const navigate = useNavigate();
   const locale = useLocale();
@@ -62,7 +68,9 @@ export function ConsultationsPage({
     nextBefore,
     acceptPage,
     loadMore,
-  } = useCursorHistory<RequestRow>(`${profile?.id ?? ''}:${statusesKey}:${rangeKey}`);
+  } = useCursorHistory<RequestRow>(
+    `${profile?.id ?? ''}:${statusesKey}:${rangeKey}:${query.q}:${query.sort}`
+  );
   const [requestsLoading, setRequestsLoading] = useState(true);
   const [requestsError, setRequestsError] = useState(false);
   const [requestRevision, setRequestRevision] = useState(0);
@@ -112,12 +120,14 @@ export function ConsultationsPage({
     const controller = new AbortController();
     setRequestsLoading(true);
     setRequestsError(false);
-    const query = new URLSearchParams({ profileId: profile.id });
-    if (before) query.set('before', before);
-    if (statusesKey) query.set('statuses', statusesKey);
-    if (dateRange.from) query.set('from', dateRange.from);
-    if (dateRange.to) query.set('to', dateRange.to);
-    void fetch(`/api/consultations/requests?${query}`, {
+    const queryParams = new URLSearchParams({ profileId: profile.id });
+    if (before) queryParams.set('before', before);
+    if (statusesKey) queryParams.set('statuses', statusesKey);
+    if (dateRange.from) queryParams.set('from', dateRange.from);
+    if (dateRange.to) queryParams.set('to', dateRange.to);
+    if (query.q) queryParams.set('q', query.q);
+    if (query.sort !== DEFAULT_HISTORY_SORT) queryParams.set('sort', query.sort);
+    void fetch(`/api/consultations/requests?${queryParams}`, {
       credentials: 'include',
       signal: controller.signal,
     })
@@ -137,7 +147,17 @@ export function ConsultationsPage({
         if (!controller.signal.aborted) setRequestsLoading(false);
       });
     return () => controller.abort();
-  }, [profile, before, requestRevision, statusesKey, dateRange.from, dateRange.to, acceptPage]);
+  }, [
+    profile,
+    before,
+    requestRevision,
+    statusesKey,
+    dateRange.from,
+    dateRange.to,
+    query.q,
+    query.sort,
+    acceptPage,
+  ]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -249,6 +269,14 @@ export function ConsultationsPage({
             <h2 id="consultation-requests-title" className="text-xl font-semibold">
               {copy('myRequests')}
             </h2>
+            {onQueryChange && (
+              <HistoryListControls
+                value={query}
+                onChange={onQueryChange}
+                locale={locale}
+                domain="consultation"
+              />
+            )}
             {onDateRangeChange && (
               <HistoryDateFilter
                 value={dateRange}
@@ -280,7 +308,7 @@ export function ConsultationsPage({
             )}
             {!requests.length && !requestsLoading && !requestsError && (
               <p className="text-muted-foreground">
-                {dateRange.from || dateRange.to
+                {dateRange.from || dateRange.to || query.q
                   ? t('historyDates.empty', locale)
                   : copy(statuses.length ? 'filteredEmpty' : 'emptyRequests')}
               </p>
@@ -313,6 +341,9 @@ export function ConsultationsPage({
                           {copy('team')}: <span dir="auto">{request.staff_team}</span>
                         </span>
                       )}
+                      <span className="block break-all text-xs text-muted-foreground">
+                        {t('historySearch.reference', locale)}: <bdi>{request.id}</bdi>
+                      </span>
                       <time
                         className="mt-2 block text-xs text-muted-foreground"
                         dateTime={request.submitted_at}

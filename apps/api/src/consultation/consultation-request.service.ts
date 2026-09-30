@@ -1,3 +1,8 @@
+import {
+  literalSearchPattern,
+  DEFAULT_HISTORY_SORT,
+  type HistoryQuery,
+} from '@barghsa/shared/validation';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
@@ -176,8 +181,12 @@ export class ConsultationRequestService {
     profileId: string,
     before?: string,
     statuses: readonly string[] = [],
-    range: DateRangeFilterValue = {}
+    range: DateRangeFilterValue = {},
+    query: HistoryQuery = { q: '', sort: DEFAULT_HISTORY_SORT }
   ) {
+    const direction = query.sort === 'submitted_at:asc' ? 'ASC' : 'DESC';
+    const comparison = direction === 'ASC' ? '>' : '<';
+    const pattern = literalSearchPattern(query.q);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -187,8 +196,12 @@ export class ConsultationRequestService {
       const cursor = before
         ? (
             await client.query<{ id: string; submitted_at: string }>(
-              'SELECT id,submitted_at::text AS submitted_at FROM consultation_requests WHERE id=$1 AND profile_id=$2 AND (cardinality($3::text[])=0 OR status=ANY($3::text[])) AND ($4::timestamptz IS NULL OR submitted_at >= $4::timestamptz) AND ($5::timestamptz IS NULL OR submitted_at < $5::timestamptz)',
-              [before, profileId, statuses, range.from ?? null, range.to ?? null]
+              `SELECT r.id,r.submitted_at::text AS submitted_at FROM consultation_requests r
+               WHERE r.id=$1 AND r.profile_id=$2 AND (cardinality($3::text[])=0 OR r.status=ANY($3::text[]))
+                 AND ($4::timestamptz IS NULL OR r.submitted_at >= $4::timestamptz)
+                 AND ($5::timestamptz IS NULL OR r.submitted_at < $5::timestamptz)
+                 AND ($6::text IS NULL OR concat_ws(' ',r.id::text,r.product_snapshot->'title'->>'en',r.product_snapshot->'title'->>'fa') ILIKE $6::text)`,
+              [before, profileId, statuses, range.from ?? null, range.to ?? null, pattern]
             )
           ).rows[0]
         : null;
@@ -207,11 +220,12 @@ export class ConsultationRequestService {
            LEFT JOIN users u ON u.user_id=r.staff_owner_id
              LEFT JOIN invoices i ON i.id=r.invoice_id
              WHERE r.profile_id=$1
-               AND ($2::timestamptz IS NULL OR (r.submitted_at,r.id) < ($2::timestamptz,$3::uuid))
+               AND ($2::timestamptz IS NULL OR (r.submitted_at,r.id) ${comparison} ($2::timestamptz,$3::uuid))
                AND (cardinality($4::text[])=0 OR r.status=ANY($4::text[]))
                  AND ($5::timestamptz IS NULL OR r.submitted_at >= $5::timestamptz)
                  AND ($6::timestamptz IS NULL OR r.submitted_at < $6::timestamptz)
-             ORDER BY r.submitted_at DESC,r.id DESC LIMIT 101`,
+             AND ($7::text IS NULL OR concat_ws(' ',r.id::text,r.product_snapshot->'title'->>'en',r.product_snapshot->'title'->>'fa') ILIKE $7::text)
+             ORDER BY r.submitted_at ${direction},r.id ${direction} LIMIT 101`,
           [
             profileId,
             cursor?.submitted_at ?? null,
@@ -219,6 +233,7 @@ export class ConsultationRequestService {
             statuses,
             range.from ?? null,
             range.to ?? null,
+            pattern,
           ]
         )
       ).rows;

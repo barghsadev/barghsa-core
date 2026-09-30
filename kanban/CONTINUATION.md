@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Customer history search and sorting](batches/2026-09-30-customer-history-search-sort.md) adds debounced search and newest/oldest submission-date sorting to saving, solar, and consultation histories. Queries compose with date/status filters and stay in the URL; the APIs filter before pagination and order tied timestamps by UUID. Code review, related tests, 30 bilingual cross-browser flows, existing journeys and build checks pass. Other filter types and all-list adoption remain open. The preceding date-filter batch's remote CI is green.
+
 [Customer history date filters](batches/2026-09-30-customer-history-date-filters.md) adds shared localized start/end pickers and calendar-aware presets to saving, solar, and consultation histories. Exact UTC bounds compose with status selections, survive reload and Back, and filter in PostgreSQL before pagination. Custom drafts validate before Apply, and controls wait for the account timezone. Broader all-list coverage remains open.
 
 [Customer history status filters](batches/2026-09-30-customer-history-status-filters.md) adds shared multi-select status controls to saving orders, solar requests, and consultation requests. URL selections survive reload and Back; changing filters clears old pages and cursors while preserving the consultation form. PostgreSQL filters before pagination. Broader all-list filter coverage remains open.

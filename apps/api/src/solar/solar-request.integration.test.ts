@@ -265,6 +265,35 @@ it('submits both solar request types, captures agreement, and creates no contrac
   };
   expect(listed.requests).toHaveLength(2);
   expect(listed.nextBefore).toBeNull();
+  const ascending = new URLSearchParams({ profileId, sort: 'submitted_at:asc' });
+  const sorted = await request(`/api/solar/requests?${ascending}`, 'GET');
+  expect(sorted.status, http.logs()).toBe(200);
+  expect(
+    ((await sorted.json()) as { requests: { id: string }[] }).requests.map((r) => r.id)
+  ).toEqual(listed.requests.map((r) => r.id).reverse());
+  ascending.set('before', listed.requests[1]!.id);
+  expect(await (await request(`/api/solar/requests?${ascending}`, 'GET')).json()).toMatchObject({
+    requests: [{ id: listed.requests[0]!.id }],
+    nextBefore: null,
+  });
+  const search = new URLSearchParams({ profileId, q: site.requestId, statuses: 'submitted' });
+  const searched = await request(`/api/solar/requests?${search}`, 'GET');
+  expect(searched.status, http.logs()).toBe(200);
+  expect(await searched.json()).toMatchObject({
+    requests: [{ id: site.requestId }],
+    nextBefore: null,
+  });
+  search.set('q', '%');
+  expect(await (await request(`/api/solar/requests?${search}`, 'GET')).json()).toEqual({
+    requests: [],
+    nextBefore: null,
+  });
+  search.set('before', site.requestId);
+  expect((await request(`/api/solar/requests?${search}`, 'GET')).status).toBe(404);
+  search.delete('before');
+  search.delete('q');
+  search.set('sort', 'status:asc');
+  expect((await request(`/api/solar/requests?${search}`, 'GET')).status).toBe(400);
   const filtered = await request(
     `/api/solar/requests?profileId=${profileId}&statuses=submitted,uploading_documents`,
     'GET'

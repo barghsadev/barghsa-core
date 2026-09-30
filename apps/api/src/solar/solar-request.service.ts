@@ -1,3 +1,8 @@
+import {
+  literalSearchPattern,
+  DEFAULT_HISTORY_SORT,
+  type HistoryQuery,
+} from '@barghsa/shared/validation';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import {
   Injectable,
@@ -306,8 +311,12 @@ export class SolarRequestService {
     profileId: string,
     before?: string,
     statuses: readonly string[] = [],
-    range: DateRangeFilterValue = {}
+    range: DateRangeFilterValue = {},
+    query: HistoryQuery = { q: '', sort: DEFAULT_HISTORY_SORT }
   ) {
+    const direction = query.sort === 'submitted_at:asc' ? 'ASC' : 'DESC';
+    const comparison = direction === 'ASC' ? '>' : '<';
+    const pattern = literalSearchPattern(query.q);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -317,8 +326,12 @@ export class SolarRequestService {
       const cursor = before
         ? (
             await client.query<{ id: string; submitted_at: string }>(
-              'SELECT id,submitted_at::text AS submitted_at FROM solar_construction_requests WHERE id=$1 AND profile_id=$2 AND (cardinality($3::text[])=0 OR status=ANY($3::text[])) AND ($4::timestamptz IS NULL OR submitted_at >= $4::timestamptz) AND ($5::timestamptz IS NULL OR submitted_at < $5::timestamptz)',
-              [before, profileId, statuses, range.from ?? null, range.to ?? null]
+              `SELECT r.id,r.submitted_at::text AS submitted_at FROM solar_construction_requests r
+               WHERE r.id=$1 AND r.profile_id=$2 AND (cardinality($3::text[])=0 OR r.status=ANY($3::text[]))
+                 AND ($4::timestamptz IS NULL OR r.submitted_at >= $4::timestamptz)
+                 AND ($5::timestamptz IS NULL OR r.submitted_at < $5::timestamptz)
+                 AND ($6::text IS NULL OR r.id::text ILIKE $6::text)`,
+              [before, profileId, statuses, range.from ?? null, range.to ?? null, pattern]
             )
           ).rows[0]
         : null;
@@ -336,11 +349,12 @@ export class SolarRequestService {
                    ORDER BY issued_at,id LIMIT 1
                  ) i ON r.contract_id IS NOT NULL
                  WHERE r.profile_id=$1
-                 AND ($2::timestamptz IS NULL OR (r.submitted_at,r.id) < ($2::timestamptz,$3::uuid))
+                 AND ($2::timestamptz IS NULL OR (r.submitted_at,r.id) ${comparison} ($2::timestamptz,$3::uuid))
                  AND (cardinality($4::text[])=0 OR r.status=ANY($4::text[]))
                  AND ($5::timestamptz IS NULL OR r.submitted_at >= $5::timestamptz)
                  AND ($6::timestamptz IS NULL OR r.submitted_at < $6::timestamptz)
-               ORDER BY r.submitted_at DESC,r.id DESC LIMIT 101`,
+               AND ($7::text IS NULL OR r.id::text ILIKE $7::text)
+             ORDER BY r.submitted_at ${direction},r.id ${direction} LIMIT 101`,
           [
             profileId,
             cursor?.submitted_at ?? null,
@@ -348,6 +362,7 @@ export class SolarRequestService {
             statuses,
             range.from ?? null,
             range.to ?? null,
+            pattern,
           ]
         )
       ).rows;

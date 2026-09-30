@@ -241,4 +241,91 @@ it('lists seeded products by profile, submits without invoicing, and isolates hi
     { headers: headers.individual! }
   );
   expect(((await combined.json()) as { requests: unknown[] }).requests).toHaveLength(100);
+  // Equal submission times must still paginate deterministically by UUID.
+  await http.pool.query(
+    "UPDATE consultation_requests SET submitted_at=$2 WHERE profile_id=$1 AND status='completed'",
+    [profiles.individual, end]
+  );
+  const ascending = new URLSearchParams({
+    profileId: profiles.individual!,
+    sort: 'submitted_at:asc',
+    statuses: 'submitted,completed',
+  });
+  const sorted = await fetch(`${http.base}/api/consultations/requests?${ascending}`, {
+    headers: headers.individual!,
+  });
+  expect(sorted.status, http.logs()).toBe(200);
+  const firstPage = (await sorted.json()) as { requests: { id: string }[]; nextBefore: string };
+  expect(firstPage.requests).toHaveLength(100);
+  expect(firstPage.requests[0]!.id).toBe(created.requestId);
+  ascending.set('before', firstPage.nextBefore);
+  const nextPage = await fetch(`${http.base}/api/consultations/requests?${ascending}`, {
+    headers: headers.individual!,
+  });
+  expect(nextPage.status, http.logs()).toBe(200);
+  const lastPage = (await nextPage.json()) as { requests: { id: string }[]; nextBefore: null };
+  expect(lastPage.requests).toHaveLength(2);
+  expect(lastPage.nextBefore).toBeNull();
+  const expectedIds = (
+    await http.pool.query<{ id: string }>(
+      'SELECT id FROM consultation_requests WHERE profile_id=$1 ORDER BY submitted_at ASC,id ASC',
+      [profiles.individual]
+    )
+  ).rows.map((r) => r.id);
+  expect([...firstPage.requests, ...lastPage.requests].map((r) => r.id)).toEqual(expectedIds);
+  const search = new URLSearchParams({
+    profileId: profiles.individual!,
+    q: created.requestId,
+    from: start,
+    to: end,
+    statuses: 'submitted',
+    sort: 'submitted_at:asc',
+  });
+  const searched = await fetch(`${http.base}/api/consultations/requests?${search}`, {
+    headers: headers.individual!,
+  });
+  expect(searched.status, http.logs()).toBe(200);
+  expect(await searched.json()).toMatchObject({
+    requests: [{ id: created.requestId }],
+    nextBefore: null,
+  });
+  // Literal wildcard characters must not broaden a customer search.
+  search.set('q', '%');
+  const literal = await fetch(`${http.base}/api/consultations/requests?${search}`, {
+    headers: headers.individual!,
+  });
+  expect(await literal.json()).toEqual({ requests: [], nextBefore: null });
+  search.set('before', created.requestId);
+  expect(
+    (
+      await fetch(`${http.base}/api/consultations/requests?${search}`, {
+        headers: headers.individual!,
+      })
+    ).status
+  ).toBe(404);
+  search.delete('before');
+  await http.pool.query(
+    "UPDATE consultation_requests SET product_snapshot=jsonb_set(product_snapshot,'{title}',$2::jsonb) WHERE id=$1",
+    [created.requestId, JSON.stringify({ en: '100%_\\ Service', fa: 'مشاوره' })]
+  );
+  for (const q of ['100%_\\', 'مشاوره']) {
+    search.set('q', q);
+    const titleMatch = await fetch(`${http.base}/api/consultations/requests?${search}`, {
+      headers: headers.individual!,
+    });
+    expect(titleMatch.status, http.logs()).toBe(200);
+    expect(await titleMatch.json()).toMatchObject({
+      requests: [{ id: created.requestId }],
+      nextBefore: null,
+    });
+  }
+  search.delete('q');
+  search.set('sort', 'status:asc');
+  expect(
+    (
+      await fetch(`${http.base}/api/consultations/requests?${search}`, {
+        headers: headers.individual!,
+      })
+    ).status
+  ).toBe(400);
 });

@@ -395,6 +395,36 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   );
   expect(filtered.status, http.logs()).toBe(200);
   expect(await filtered.json()).toMatchObject({ orders: [{ id: result.savingOrderId }] });
+  for (const q of [result.savingOrderId, input.billIdentifier, 'plan', 'دستگاه']) {
+    const query = new URLSearchParams({
+      profileId: input.profileId,
+      q,
+      sort: 'submitted_at:asc',
+      statuses: 'submitted,awaiting_staff_review',
+    });
+    const searched = await request(`/api/saving/orders?${query}`, 'GET');
+    expect(searched.status, http.logs()).toBe(200);
+    expect(await searched.json()).toMatchObject({
+      orders: [{ id: result.savingOrderId }],
+      nextBefore: null,
+    });
+    query.set('before', result.savingOrderId);
+    expect(await (await request(`/api/saving/orders?${query}`, 'GET')).json()).toEqual({
+      orders: [],
+      nextBefore: null,
+    });
+  }
+  const literal = new URLSearchParams({ profileId: input.profileId, q: '%' });
+  expect(await (await request(`/api/saving/orders?${literal}`, 'GET')).json()).toEqual({
+    orders: [],
+    nextBefore: null,
+  });
+  literal.set('before', result.savingOrderId);
+  expect((await request(`/api/saving/orders?${literal}`, 'GET')).status).toBe(404);
+  for (const query of [{ sort: 'status:asc' }, { q: 'a'.repeat(121) }]) {
+    const params = new URLSearchParams({ profileId: input.profileId, ...query });
+    expect((await request(`/api/saving/orders?${params}`, 'GET')).status).toBe(400);
+  }
   const rangeId = result.savingOrderId;
   const oldTime = (
     await http.pool.query<{ submitted_at: Date }>(

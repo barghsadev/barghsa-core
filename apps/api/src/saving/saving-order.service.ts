@@ -1,3 +1,8 @@
+import {
+  literalSearchPattern,
+  DEFAULT_HISTORY_SORT,
+  type HistoryQuery,
+} from '@barghsa/shared/validation';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { createHash } from 'node:crypto';
 import {
@@ -442,8 +447,12 @@ export class SavingOrderService {
     before?: string,
     status?: 'pending',
     statuses: readonly string[] = [],
-    range: DateRangeFilterValue = {}
+    range: DateRangeFilterValue = {},
+    query: HistoryQuery = { q: '', sort: DEFAULT_HISTORY_SORT }
   ) {
+    const direction = query.sort === 'submitted_at:asc' ? 'ASC' : 'DESC';
+    const comparison = direction === 'ASC' ? '>' : '<';
+    const pattern = literalSearchPattern(query.q);
     const client = await getDbPool().connect();
     const pendingOnly = status === 'pending';
     try {
@@ -454,13 +463,22 @@ export class SavingOrderService {
       const cursor = before
         ? (
             await client.query<{ submitted_at: string; id: string }>(
-              `SELECT submitted_at::text AS submitted_at,id FROM saving_orders
-               WHERE id=$1 AND profile_id=$2
-                 AND (NOT $3::boolean OR status IN ('submitted','awaiting_staff_review','approved','in_progress'))
-                 AND (cardinality($4::text[])=0 OR status=ANY($4::text[]))
-                 AND ($5::timestamptz IS NULL OR submitted_at >= $5::timestamptz)
-                 AND ($6::timestamptz IS NULL OR submitted_at < $6::timestamptz)`,
-              [before, profileId, pendingOnly, statuses, range.from ?? null, range.to ?? null]
+              `SELECT s.submitted_at::text AS submitted_at,s.id FROM saving_orders s JOIN products p ON p.id=s.saving_plan_id JOIN products h ON h.id=s.hardware_product_id
+               WHERE s.id=$1 AND s.profile_id=$2
+                 AND (NOT $3::boolean OR s.status IN ('submitted','awaiting_staff_review','approved','in_progress'))
+                 AND (cardinality($4::text[])=0 OR s.status=ANY($4::text[]))
+                 AND ($5::timestamptz IS NULL OR s.submitted_at >= $5::timestamptz)
+                 AND ($6::timestamptz IS NULL OR s.submitted_at < $6::timestamptz)
+                 AND ($7::text IS NULL OR concat_ws(' ',s.id::text,s.bill_identifier,p.title->>'en',p.title->>'fa',h.title->>'en',h.title->>'fa') ILIKE $7::text)`,
+              [
+                before,
+                profileId,
+                pendingOnly,
+                statuses,
+                range.from ?? null,
+                range.to ?? null,
+                pattern,
+              ]
             )
           ).rows[0]
         : undefined;
@@ -484,12 +502,13 @@ export class SavingOrderService {
            LEFT JOIN invoices i ON i.order_id=s.order_id AND i.type='auto'
            LEFT JOIN contracts c ON c.order_id=s.order_id AND c.service_type='savings'
             WHERE s.profile_id=$1
-              AND ($2::timestamptz IS NULL OR (s.submitted_at,s.id)<($2::timestamptz,$3::uuid))
+              AND ($2::timestamptz IS NULL OR (s.submitted_at,s.id) ${comparison}($2::timestamptz,$3::uuid))
               AND (NOT $4::boolean OR s.status IN ('submitted','awaiting_staff_review','approved','in_progress'))
               AND (cardinality($5::text[])=0 OR s.status=ANY($5::text[]))
               AND ($6::timestamptz IS NULL OR s.submitted_at >= $6::timestamptz)
               AND ($7::timestamptz IS NULL OR s.submitted_at < $7::timestamptz)
-            ORDER BY s.submitted_at DESC,s.id DESC LIMIT 101`,
+            AND ($8::text IS NULL OR concat_ws(' ',s.id::text,s.bill_identifier,p.title->>'en',p.title->>'fa',h.title->>'en',h.title->>'fa') ILIKE $8::text)
+            ORDER BY s.submitted_at ${direction},s.id ${direction} LIMIT 101`,
           [
             profileId,
             cursor?.submitted_at ?? null,
@@ -498,6 +517,7 @@ export class SavingOrderService {
             statuses,
             range.from ?? null,
             range.to ?? null,
+            pattern,
           ]
         )
       ).rows;

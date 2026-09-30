@@ -15,6 +15,8 @@ import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod';
 import {
   parseDateRangeFilter,
+  parseHistoryQuery,
+  HISTORY_SORT_OPTIONS,
   parseStatusFilter,
   SOLAR_REQUEST_STATUSES,
 } from '@barghsa/shared/validation';
@@ -103,13 +105,22 @@ export class SolarRequestController {
     type: String,
     description: 'Excluded UTC submission timestamp (ISO with milliseconds)',
   })
+  @ApiQuery({
+    name: 'q',
+    required: false,
+    type: String,
+    description: 'Literal substring search, up to 120 characters',
+  })
+  @ApiQuery({ name: 'sort', required: false, enum: [...HISTORY_SORT_OPTIONS] })
   list(
     @Query('profileId', new ParseUUIDPipe()) profileId: string,
     @Req() req: AuthenticatedRequest,
     @Query('before') before?: string,
     @Query('statuses') statuses?: string,
     @Query('from') from?: string,
-    @Query('to') to?: string
+    @Query('to') to?: string,
+    @Query('q') q?: string,
+    @Query('sort') sort?: string
   ) {
     if (before && !z.string().uuid().safeParse(before).success)
       throw new HttpException({ error: 'VALIDATION:INVALID_CURSOR' }, 400);
@@ -117,7 +128,9 @@ export class SolarRequestController {
     if (!selectedStatuses) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
     const range = parseDateRangeFilter(from, to);
     if (!range) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
-    return this.service.list(req.session, profileId, before, selectedStatuses, range);
+    const query = parseHistoryQuery(q, sort);
+    if (!query) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.list(req.session, profileId, before, selectedStatuses, range, query);
   }
 
   @Get(':id')

@@ -12,10 +12,12 @@ const older = '20000000-0000-4000-8000-000000000002';
 const combined = '20000000-0000-4000-8000-000000000003';
 const dated = '20000000-0000-4000-8000-000000000005';
 const all = '20000000-0000-4000-8000-000000000004';
+const searched = '20000000-0000-4000-8000-000000000006';
+const sorted = '20000000-0000-4000-8000-000000000007';
 
 for (const locale of ['en', 'fa'] as const) {
   for (const kind of ['saving', 'solar', 'consultation'] as const) {
-    test(`${kind} history status and date filters survive reload and reset pagination (${locale})`, async ({
+    test(`${kind} history filters and sorting survive reload and reset pagination (${locale})`, async ({
       page,
     }) => {
       await page.setViewportSize({ width: 390, height: 844 });
@@ -112,6 +114,9 @@ for (const locale of ['en', 'fa'] as const) {
           held = route;
           return;
         }
+        if (query.get('q')) return route.fulfill({ json: body(searched, 'submitted') });
+        if (query.get('sort') === 'submitted_at:asc')
+          return route.fulfill({ json: body(sorted, 'submitted', sorted) });
         if (query.get('from') || query.get('to'))
           return route.fulfill({ json: body(dated, 'submitted') });
         if (!query.get('statuses')) return route.fulfill({ json: body(all, 'submitted') });
@@ -250,8 +255,43 @@ for (const locale of ['en', 'fa'] as const) {
       await expect.poll(() => new URL(page.url()).searchParams.get('to')).toBe(customEnd);
       await expect(link(dated)).toBeVisible();
       if (kind === 'consultation') await expect(page.getByRole('radio')).toBeChecked();
+      const search = page.getByRole('searchbox', {
+        name: t('historySearch.label', locale),
+        exact: true,
+      });
+      const sort = page.getByRole('combobox', {
+        name: t('historySearch.sort', locale),
+        exact: true,
+      });
+      await sort.selectOption('submitted_at:asc');
+      await expect(link(sorted)).toBeVisible();
+      await page
+        .getByRole('button', {
+          name: copy(kind === 'saving' ? 'moreOrders' : 'moreRequests'),
+          exact: true,
+        })
+        .click();
+      await expect.poll(() => queries.at(-1)?.get('before')).toBe(sorted);
+      await search.fill('مشاوره');
+      await expect(link(searched)).toBeVisible();
+      await expect(link(sorted)).toHaveCount(0);
+      await expect.poll(() => new URL(page.url()).searchParams.get('q')).toBe('مشاوره');
+      expect(queries.at(-1)?.get('q')).toBe('مشاوره');
+      expect(queries.at(-1)?.get('sort')).toBe('submitted_at:asc');
+      expect(queries.at(-1)?.get('statuses')).toBe(`submitted,${initialStatus}`);
+      expect(queries.at(-1)?.get('to')).toBe(customEnd);
+      expect(queries.at(-1)?.has('before')).toBe(false);
+      if (kind === 'consultation') await expect(page.getByRole('radio')).toBeChecked();
+      await page.goBack();
+      await expect(search).toHaveValue('');
+      await expect(link(sorted)).toBeVisible();
+      await page.goForward();
+      await expect(search).toHaveValue('مشاوره');
+      await expect(link(searched)).toBeVisible();
       await page.reload();
-      await expect(link(dated)).toBeVisible();
+      await expect(link(searched)).toBeVisible();
+      await expect(search).toHaveValue('مشاوره');
+      await expect(sort).toHaveValue('submitted_at:asc');
       await page
         .locator('summary')
         .filter({ hasText: copy('filterStatus') })
@@ -260,20 +300,28 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(page).not.toHaveURL(/statuses=/);
       await expect.poll(() => queries.at(-1)?.get('statuses')).toBeNull();
       expect(queries.at(-1)?.get('to')).toBe(customEnd);
+      expect(queries.at(-1)?.get('q')).toBe('مشاوره');
+      expect(queries.at(-1)?.get('sort')).toBe('submitted_at:asc');
       await expect(
         page.getByRole('button', { name: copy('clearFilters'), exact: true })
       ).toHaveCount(0);
       await page.goBack();
       await expect.poll(() => queries.at(-1)?.get('statuses')).toBe(`submitted,${initialStatus}`);
-      await expect(link(dated)).toBeVisible();
+      await expect(link(searched)).toBeVisible();
       await page
         .locator('summary')
         .filter({ hasText: dateCopy('label') })
         .click();
       await page.getByRole('button', { name: dateCopy('clear'), exact: true }).click();
-      await expect(link(combined)).toBeVisible();
+      await expect(link(searched)).toBeVisible();
       await expect(page).not.toHaveURL(/from=|to=/);
       expect(queries.at(-1)?.has('before')).toBe(false);
+      await search.fill('');
+      await expect(page).not.toHaveURL(/q=/);
+      await expect(link(sorted)).toBeVisible();
+      await sort.selectOption('submitted_at:desc');
+      await expect(page).not.toHaveURL(/sort=/);
+      await expect(link(combined)).toBeVisible();
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
       ).toBe(true);

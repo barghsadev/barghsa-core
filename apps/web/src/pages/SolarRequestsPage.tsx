@@ -1,3 +1,5 @@
+import { HistoryListControls } from '../components/HistoryListControls.js';
+import { DEFAULT_HISTORY_SORT, type HistoryQuery } from '@barghsa/shared/validation';
 import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { useEffect, useState } from 'react';
@@ -30,11 +32,15 @@ export function SolarRequestsPage({
   onStatusesChange,
   dateRange = {},
   onDateRangeChange,
+  query = { q: '', sort: DEFAULT_HISTORY_SORT },
+  onQueryChange,
 }: {
   statuses?: readonly string[];
   onStatusesChange?: (statuses: string[]) => void;
   dateRange?: DateRangeFilterValue;
   onDateRangeChange?: (range: DateRangeFilterValue) => void;
+  query?: HistoryQuery;
+  onQueryChange?: (query: HistoryQuery) => void;
 }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -48,7 +54,7 @@ export function SolarRequestsPage({
     nextBefore,
     acceptPage,
     loadMore,
-  } = useCursorHistory<RequestRow>(`${statusesKey}:${rangeKey}`);
+  } = useCursorHistory<RequestRow>(`${statusesKey}:${rangeKey}:${query.q}:${query.sort}`);
   const [revision, setRevision] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -73,6 +79,8 @@ export function SolarRequestsPage({
         if (statusesKey) params.set('statuses', statusesKey);
         if (dateRange.from) params.set('from', dateRange.from);
         if (dateRange.to) params.set('to', dateRange.to);
+        if (query.q) params.set('q', query.q);
+        if (query.sort !== DEFAULT_HISTORY_SORT) params.set('sort', query.sort);
         const response = await fetch(`/api/solar/requests?${params}`, {
           credentials: 'include',
           signal: controller.signal,
@@ -92,7 +100,16 @@ export function SolarRequestsPage({
       }
     })();
     return () => controller.abort();
-  }, [before, revision, statusesKey, dateRange.from, dateRange.to, acceptPage]);
+  }, [
+    before,
+    revision,
+    statusesKey,
+    dateRange.from,
+    dateRange.to,
+    query.q,
+    query.sort,
+    acceptPage,
+  ]);
   return (
     <main className="mx-auto max-w-3xl space-y-5 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('myRequests')}</h1>
@@ -103,6 +120,14 @@ export function SolarRequestsPage({
         {copy('submit')}
       </Link>
       {time.notice}
+      {onQueryChange && (
+        <HistoryListControls
+          value={query}
+          onChange={onQueryChange}
+          locale={locale}
+          domain="solar"
+        />
+      )}
       {onDateRangeChange && (
         <HistoryDateFilter
           value={dateRange}
@@ -138,7 +163,7 @@ export function SolarRequestsPage({
       )}
       {!loading && !error && !rows.length && (
         <p>
-          {dateRange.from || dateRange.to
+          {dateRange.from || dateRange.to || query.q
             ? t('historyDates.empty', locale)
             : copy(statuses.length ? 'filteredEmpty' : 'none')}
         </p>
@@ -167,6 +192,9 @@ export function SolarRequestsPage({
                 </span>
                 <span className="block text-sm text-muted-foreground">
                   {t('workflow.owner', locale)}: {t(`workflow.owner.${action.owner}`, locale)}
+                </span>
+                <span className="block break-all text-xs text-muted-foreground">
+                  {t('historySearch.reference', locale)}: <bdi>{row.id}</bdi>
                 </span>
                 <time className="text-sm text-muted-foreground" dateTime={row.submitted_at}>
                   {time.format(row.submitted_at, {

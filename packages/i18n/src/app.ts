@@ -5,6 +5,14 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'historySearch.label': 'جستجو',
+  'historySearch.sort': 'ترتیب نمایش',
+  'historySearch.newest': 'تاریخ ثبت، جدیدترین',
+  'historySearch.oldest': 'تاریخ ثبت، قدیمی\u200cترین',
+  'historySearch.saving': 'طرح، تجهیزات، شناسه قبض یا شماره پیگیری',
+  'historySearch.solar': 'شماره پیگیری درخواست',
+  'historySearch.consultation': 'خدمت یا شماره پیگیری',
+  'historySearch.reference': 'شماره پیگیری',
   'historyDates.label': 'فیلتر تاریخ ثبت',
   'historyDates.preset': 'بازه تاریخ',
   'historyDates.today': 'امروز',
@@ -1495,6 +1503,14 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'historySearch.label': 'Search',
+  'historySearch.sort': 'Sort by',
+  'historySearch.newest': 'Submission date, newest first',
+  'historySearch.oldest': 'Submission date, oldest first',
+  'historySearch.saving': 'Plan, equipment, bill or reference',
+  'historySearch.solar': 'Request reference',
+  'historySearch.consultation': 'Service or request reference',
+  'historySearch.reference': 'Reference',
   'historyDates.label': 'Filter by submission date',
   'historyDates.preset': 'Date range',
   'historyDates.today': 'Today',

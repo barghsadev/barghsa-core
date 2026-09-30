@@ -15,6 +15,8 @@ import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod';
 import {
   parseDateRangeFilter,
+  parseHistoryQuery,
+  HISTORY_SORT_OPTIONS,
   parseStatusFilter,
   SAVING_ORDER_STATUSES,
 } from '@barghsa/shared/validation';
@@ -159,6 +161,13 @@ export class SavingOrderController {
     type: String,
     description: 'Excluded UTC submission timestamp (ISO with milliseconds)',
   })
+  @ApiQuery({
+    name: 'q',
+    required: false,
+    type: String,
+    description: 'Literal substring search, up to 120 characters',
+  })
+  @ApiQuery({ name: 'sort', required: false, enum: [...HISTORY_SORT_OPTIONS] })
   list(
     @Query('profileId', new ParseUUIDPipe()) profileId: string,
     @Query('before') before: string | undefined,
@@ -166,20 +175,25 @@ export class SavingOrderController {
     @Req() req: AuthenticatedRequest,
     @Query('statuses') statuses?: string,
     @Query('from') from?: string,
-    @Query('to') to?: string
+    @Query('to') to?: string,
+    @Query('q') q?: string,
+    @Query('sort') sort?: string
   ) {
     const selectedStatus = parse(z.literal('pending').optional(), status);
     const selectedStatuses = parseStatusFilter(statuses, SAVING_ORDER_STATUSES);
     if (!selectedStatuses) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
     const range = parseDateRangeFilter(from, to);
     if (!range) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    const query = parseHistoryQuery(q, sort);
+    if (!query) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
     return this.service.list(
       req.session,
       profileId,
       before === undefined ? undefined : parse(z.string().uuid(), before),
       selectedStatus,
       selectedStatuses,
-      range
+      range,
+      query
     );
   }
 

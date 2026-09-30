@@ -1,3 +1,5 @@
+import { HistoryListControls } from '../components/HistoryListControls.js';
+import { DEFAULT_HISTORY_SORT, type HistoryQuery } from '@barghsa/shared/validation';
 import { t } from '@barghsa/i18n/app';
 import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
@@ -27,12 +29,16 @@ export function SavingOrdersPage({
   onStatusesChange,
   dateRange = {},
   onDateRangeChange,
+  query = { q: '', sort: DEFAULT_HISTORY_SORT },
+  onQueryChange,
 }: {
   pendingOnly?: boolean;
   statuses?: readonly string[];
   onStatusesChange?: (statuses: string[]) => void;
   dateRange?: DateRangeFilterValue;
   onDateRangeChange?: (range: DateRangeFilterValue) => void;
+  query?: HistoryQuery;
+  onQueryChange?: (query: HistoryQuery) => void;
 }) {
   const locale = useLocale();
   const time = useAccountTime(locale);
@@ -46,7 +52,9 @@ export function SavingOrdersPage({
     nextBefore,
     acceptPage,
     loadMore,
-  } = useCursorHistory<SavingOrderRow>(`${pendingOnly}:${statusesKey}:${rangeKey}`);
+  } = useCursorHistory<SavingOrderRow>(
+    `${pendingOnly}:${statusesKey}:${rangeKey}:${query.q}:${query.sort}`
+  );
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
   useEffect(() => {
     const controller = new AbortController();
@@ -69,6 +77,8 @@ export function SavingOrdersPage({
         if (statusesKey) params.set('statuses', statusesKey);
         if (dateRange.from) params.set('from', dateRange.from);
         if (dateRange.to) params.set('to', dateRange.to);
+        if (query.q) params.set('q', query.q);
+        if (query.sort !== DEFAULT_HISTORY_SORT) params.set('sort', query.sort);
         const response = await fetch(`/api/saving/orders?${params}`, {
           signal: controller.signal,
         });
@@ -86,7 +96,16 @@ export function SavingOrdersPage({
       }
     })();
     return () => controller.abort();
-  }, [before, pendingOnly, statusesKey, dateRange.from, dateRange.to, acceptPage]);
+  }, [
+    before,
+    pendingOnly,
+    statusesKey,
+    dateRange.from,
+    dateRange.to,
+    query.q,
+    query.sort,
+    acceptPage,
+  ]);
   return (
     <main
       className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8"
@@ -101,23 +120,47 @@ export function SavingOrdersPage({
       <nav className="flex gap-4 text-sm" aria-label={copy('orders')}>
         <Link
           to="/savings/orders"
-          search={{ status: undefined, statuses: undefined, from: undefined, to: undefined }}
+          search={{
+            status: undefined,
+            statuses: undefined,
+            from: undefined,
+            to: undefined,
+            q: undefined,
+            sort: undefined,
+          }}
           className="text-primary underline underline-offset-4"
           aria-current={
-            pendingOnly || statuses.length || dateRange.from || dateRange.to ? undefined : 'page'
+            pendingOnly || statuses.length || dateRange.from || dateRange.to || query.q
+              ? undefined
+              : 'page'
           }
         >
           {copy('allOrders')}
         </Link>
         <Link
           to="/savings/orders"
-          search={{ status: 'pending', statuses: undefined, from: undefined, to: undefined }}
+          search={{
+            status: 'pending',
+            statuses: undefined,
+            from: undefined,
+            to: undefined,
+            q: undefined,
+            sort: undefined,
+          }}
           className="text-primary underline underline-offset-4"
           aria-current={pendingOnly ? 'page' : undefined}
         >
           {copy('pendingOrders')}
         </Link>
       </nav>
+      {onQueryChange && (
+        <HistoryListControls
+          value={query}
+          onChange={onQueryChange}
+          locale={locale}
+          domain="saving"
+        />
+      )}
       {onDateRangeChange && (
         <HistoryDateFilter
           value={dateRange}
@@ -151,7 +194,7 @@ export function SavingOrdersPage({
       {state === 'error' && <p role="alert">{copy('error')}</p>}
       {state === 'ready' && orders.length === 0 && (
         <p>
-          {dateRange.from || dateRange.to
+          {dateRange.from || dateRange.to || query.q
             ? t('historyDates.empty', locale)
             : copy(
                 statuses.length ? 'filteredEmpty' : pendingOnly ? 'noPendingOrders' : 'noOrders'
@@ -188,6 +231,9 @@ export function SavingOrdersPage({
                       day: '2-digit',
                     })}
                   </time>
+                </p>
+                <p className="break-all text-xs text-muted-foreground">
+                  {t('historySearch.reference', locale)}: <bdi>{order.id}</bdi>
                 </p>
                 <p className="font-medium">
                   <bdi>{numbers.money(order.total_amount)}</bdi>
