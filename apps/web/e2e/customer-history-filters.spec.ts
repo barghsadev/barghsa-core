@@ -16,7 +16,7 @@ const searched = '20000000-0000-4000-8000-000000000006';
 const sorted = '20000000-0000-4000-8000-000000000007';
 
 for (const locale of ['en', 'fa'] as const) {
-  for (const kind of ['saving', 'solar', 'consultation'] as const) {
+  for (const kind of ['saving', 'solar', 'consultation', 'electricity'] as const) {
     test(`${kind} history filters and sorting survive reload and reset pagination (${locale})`, async ({
       page,
     }) => {
@@ -50,6 +50,9 @@ for (const locale of ['en', 'fa'] as const) {
           },
         })
       );
+      await page.route('**/api/profiles/verification-status', (route) =>
+        route.fulfill({ json: { activeProfileId: profileId } })
+      );
       await page.route('**/api/user/settings/timezone', (route) =>
         route.fulfill({ json: { timezone: 'Asia/Tehran' } })
       );
@@ -59,33 +62,45 @@ for (const locale of ['en', 'fa'] as const) {
         })
       );
       const copy = (key: string) =>
-        kind === 'saving'
-          ? tSaving(key, locale)
-          : kind === 'solar'
-            ? tSolar(key, locale)
-            : tConsultation(key, locale);
+        kind === 'electricity'
+          ? t(
+              key === 'status_submitted'
+                ? 'electricity.order.status.submitted'
+                : `electricity.orders.${key === 'moreRequests' ? 'more' : key}`,
+              locale
+            )
+          : kind === 'saving'
+            ? tSaving(key, locale)
+            : kind === 'solar'
+              ? tSolar(key, locale)
+              : tConsultation(key, locale);
       const initialStatus = kind === 'solar' ? 'approved' : 'completed';
-      const routePath =
-        kind === 'saving'
-          ? '/savings/orders'
-          : kind === 'solar'
-            ? '/solar/requests'
-            : '/consultations';
-      const apiPath =
-        kind === 'saving'
-          ? '/api/saving/orders'
-          : kind === 'solar'
-            ? '/api/solar/requests'
-            : '/api/consultations/requests';
-      const detailPath =
-        kind === 'saving'
-          ? '/savings/orders'
-          : kind === 'solar'
-            ? '/solar/requests'
-            : '/consultations';
+      const routePath = {
+        saving: '/savings/orders',
+        solar: '/solar/requests',
+        consultation: '/consultations',
+        electricity: '/electricity/orders',
+      }[kind];
+      const apiPath = {
+        saving: '/api/saving/orders',
+        solar: '/api/solar/requests',
+        consultation: '/api/consultations/requests',
+        electricity: '/api/electricity/orders',
+      }[kind];
+      const detailPath = routePath;
+      const searchText = kind === 'electricity' ? searched : 'مشاوره';
       const row = (id: string, status: string) => ({
         id,
         status,
+        orderId: id,
+        electricityStatus: status,
+        financialStatus: 'paid',
+        nextAction: 'await_review',
+        submittedAt: '2026-09-30T09:00:00Z',
+        periodStart: '2026-09-30T09:00:00Z',
+        periodEnd: '2026-10-30T09:00:00Z',
+        totalKwh: '10',
+        totalIrR: '10000',
         submitted_at: '2026-09-30T09:00:00Z',
         plan_title: { en: 'Saving plan', fa: 'طرح صرفه‌جویی' },
         hardware_title: { en: 'Device', fa: 'تجهیز' },
@@ -101,7 +116,7 @@ for (const locale of ['en', 'fa'] as const) {
         staff_team: null,
       });
       const body = (id: string, status: string, nextBefore: string | null = null) => ({
-        [kind === 'saving' ? 'orders' : 'requests']: [row(id, status)],
+        [kind === 'saving' || kind === 'electricity' ? 'orders' : 'requests']: [row(id, status)],
         nextBefore,
       });
       const queries: URLSearchParams[] = [];
@@ -272,11 +287,11 @@ for (const locale of ['en', 'fa'] as const) {
         })
         .click();
       await expect.poll(() => queries.at(-1)?.get('before')).toBe(sorted);
-      await search.fill('مشاوره');
+      await search.fill(searchText);
       await expect(link(searched)).toBeVisible();
       await expect(link(sorted)).toHaveCount(0);
-      await expect.poll(() => new URL(page.url()).searchParams.get('q')).toBe('مشاوره');
-      expect(queries.at(-1)?.get('q')).toBe('مشاوره');
+      await expect.poll(() => new URL(page.url()).searchParams.get('q')).toBe(searchText);
+      expect(queries.at(-1)?.get('q')).toBe(searchText);
       expect(queries.at(-1)?.get('sort')).toBe('submitted_at:asc');
       expect(queries.at(-1)?.get('statuses')).toBe(`submitted,${initialStatus}`);
       expect(queries.at(-1)?.get('to')).toBe(customEnd);
@@ -286,11 +301,11 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(search).toHaveValue('');
       await expect(link(sorted)).toBeVisible();
       await page.goForward();
-      await expect(search).toHaveValue('مشاوره');
+      await expect(search).toHaveValue(searchText);
       await expect(link(searched)).toBeVisible();
       await page.reload();
       await expect(link(searched)).toBeVisible();
-      await expect(search).toHaveValue('مشاوره');
+      await expect(search).toHaveValue(searchText);
       await expect(sort).toHaveValue('submitted_at:asc');
       await page
         .locator('summary')
@@ -300,7 +315,7 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(page).not.toHaveURL(/statuses=/);
       await expect.poll(() => queries.at(-1)?.get('statuses')).toBeNull();
       expect(queries.at(-1)?.get('to')).toBe(customEnd);
-      expect(queries.at(-1)?.get('q')).toBe('مشاوره');
+      expect(queries.at(-1)?.get('q')).toBe(searchText);
       expect(queries.at(-1)?.get('sort')).toBe('submitted_at:asc');
       await expect(
         page.getByRole('button', { name: copy('clearFilters'), exact: true })

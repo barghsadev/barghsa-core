@@ -49,3 +49,13 @@ export function parseStatusFilter<T extends string>(
     return null;
   return allowed.filter((status) => requested.includes(status));
 }
+export const ELECTRICITY_ORDER_STATUSES = [
+  'submitted',
+  'awaiting_staff_review',
+  'changes_requested',
+  'approved',
+  'active',
+  'completed',
+  'rejected',
+  'cancelled',
+] as const;

@@ -1,14 +1,6 @@
-export const electricityCommercialStatuses = [
-  'draft',
-  'submitted',
-  'awaiting_staff_review',
-  'changes_requested',
-  'approved',
-  'active',
-  'completed',
-  'rejected',
-  'cancelled',
-] as const;
+import { ELECTRICITY_ORDER_STATUSES } from '@barghsa/shared/validation';
+
+export const electricityCommercialStatuses = ['draft', ...ELECTRICITY_ORDER_STATUSES] as const;
 export type ElectricityCommercialStatus = (typeof electricityCommercialStatuses)[number];
 
 const transitions: Record<ElectricityCommercialStatus, readonly ElectricityCommercialStatus[]> = {

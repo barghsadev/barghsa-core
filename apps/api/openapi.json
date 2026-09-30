@@ -19579,6 +19579,54 @@
             }
           },
           {
+            "description": "CSV commercial statuses from the submitted order lifecycle",
+            "in": "query",
+            "name": "statuses",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Included UTC submission timestamp (ISO with milliseconds)",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Excluded UTC submission timestamp (ISO with milliseconds)",
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Literal order, invoice or contract reference substring, up to 120 characters",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "enum": [
+                "submitted_at:desc",
+                "submitted_at:asc"
+              ],
+              "type": "string"
+            }
+          },
+          {
             "in": "query",
             "name": "status",
             "required": false,
@@ -19592,7 +19640,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Newest electricity orders and next-page cursor."
+            "description": "Filtered electricity orders and next-page cursor."
           }
         },
         "summary": "Profile-scoped electricity orders with commercial and financial progress",

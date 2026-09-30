@@ -14,7 +14,14 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { validatePostalCode } from '@barghsa/shared/validation';
+import {
+  validatePostalCode,
+  parseStatusFilter,
+  parseDateRangeFilter,
+  parseHistoryQuery,
+  ELECTRICITY_ORDER_STATUSES,
+  HISTORY_SORT_OPTIONS,
+} from '@barghsa/shared/validation';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -247,19 +254,62 @@ export class ElectricityOrderController {
   @ApiOperation({
     summary: 'Profile-scoped electricity orders with commercial and financial progress',
   })
-  @ApiResponse({ status: 200, description: 'Newest electricity orders and next-page cursor.' })
+  @ApiResponse({ status: 200, description: 'Filtered electricity orders and next-page cursor.' })
   @ApiQuery({ name: 'status', required: false, enum: ['pending'] })
+  @ApiQuery({
+    name: 'statuses',
+    required: false,
+    type: String,
+    description: 'CSV commercial statuses from the submitted order lifecycle',
+  })
+  @ApiQuery({
+    name: 'from',
+    required: false,
+    type: String,
+    description: 'Included UTC submission timestamp (ISO with milliseconds)',
+  })
+  @ApiQuery({
+    name: 'to',
+    required: false,
+    type: String,
+    description: 'Excluded UTC submission timestamp (ISO with milliseconds)',
+  })
+  @ApiQuery({
+    name: 'q',
+    required: false,
+    type: String,
+    description: 'Literal order, invoice or contract reference substring, up to 120 characters',
+  })
+  @ApiQuery({ name: 'sort', required: false, enum: [...HISTORY_SORT_OPTIONS] })
   list(
     @Query('profileId', new ParseUUIDPipe()) profileId: string,
     @Query('before') before: string | undefined,
     @Query('status') status: string | undefined,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Query('statuses') statuses?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+    @Query('q') q?: string,
+    @Query('sort') sort?: string
   ) {
     if (before && !z.string().uuid().safeParse(before).success)
       throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
     if (status !== undefined && status !== 'pending')
       throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
-    return this.service.list(req.session, profileId, before, status);
+    const selectedStatuses = parseStatusFilter(statuses, ELECTRICITY_ORDER_STATUSES);
+    const range = parseDateRangeFilter(from, to);
+    const query = parseHistoryQuery(q, sort);
+    if (!selectedStatuses || !range || !query)
+      throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.list(
+      req.session,
+      profileId,
+      before,
+      status,
+      selectedStatuses,
+      range,
+      query
+    );
   }
 
   @Post('orders/:orderId/resubmit-address')

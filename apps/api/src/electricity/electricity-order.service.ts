@@ -1,5 +1,11 @@
 import { createHash } from 'node:crypto';
 import {
+  literalSearchPattern,
+  DEFAULT_HISTORY_SORT,
+  type HistoryQuery,
+  type DateRangeFilterValue,
+} from '@barghsa/shared/validation';
+import {
   BadRequestException,
   ConflictException,
   Inject,
@@ -202,7 +208,18 @@ export class ElectricityOrderService {
     }
   }
 
-  async list(actor: Actor, profileId: string, before?: string, status?: 'pending') {
+  async list(
+    actor: Actor,
+    profileId: string,
+    before?: string,
+    status?: 'pending',
+    statuses: readonly string[] = [],
+    range: DateRangeFilterValue = {},
+    query: HistoryQuery = { q: '', sort: DEFAULT_HISTORY_SORT }
+  ) {
+    const direction = query.sort === 'submitted_at:asc' ? 'ASC' : 'DESC';
+    const comparison = direction === 'ASC' ? '>' : '<';
+    const pattern = literalSearchPattern(query.q);
     const client = await getDbPool().connect();
     const pendingOnly = status === 'pending';
     try {
@@ -213,10 +230,26 @@ export class ElectricityOrderService {
       const cursor = before
         ? (
             await client.query<{ submitted_at: string; id: string }>(
-              `SELECT submitted_at::text AS submitted_at,id FROM electricity_orders
-               WHERE id=$1 AND profile_id=$2
-                 AND (NOT $3::boolean OR status IN ('submitted','awaiting_staff_review','changes_requested','approved'))`,
-              [before, profileId, pendingOnly]
+              `SELECT e.submitted_at::text AS submitted_at,e.id FROM electricity_orders e
+               JOIN electricity_contracts ec ON ec.order_id=e.id
+               JOIN contracts c ON c.id=ec.contract_id
+               JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
+               JOIN invoices i ON i.id=ar.initial_invoice_id
+               WHERE e.id=$1 AND e.profile_id=$2 AND e.submitted_at IS NOT NULL
+                 AND (NOT $3::boolean OR e.status IN ('submitted','awaiting_staff_review','changes_requested','approved'))
+                 AND (cardinality($4::text[])=0 OR e.status=ANY($4::text[]))
+                 AND ($5::timestamptz IS NULL OR e.submitted_at >= $5::timestamptz)
+                 AND ($6::timestamptz IS NULL OR e.submitted_at < $6::timestamptz)
+                 AND ($7::text IS NULL OR concat_ws(' ',e.id::text,c.id::text,i.id::text) ILIKE $7::text)`,
+              [
+                before,
+                profileId,
+                pendingOnly,
+                statuses,
+                range.from ?? null,
+                range.to ?? null,
+                pattern,
+              ]
             )
           ).rows[0]
         : undefined;
@@ -251,10 +284,23 @@ export class ElectricityOrderService {
            JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
            JOIN invoices i ON i.id=ar.initial_invoice_id
            WHERE e.profile_id=$1 AND e.submitted_at IS NOT NULL
-             AND ($2::timestamptz IS NULL OR (e.submitted_at,e.id)<($2::timestamptz,$3::uuid))
+             AND ($2::timestamptz IS NULL OR (e.submitted_at,e.id) ${comparison} ($2::timestamptz,$3::uuid))
              AND (NOT $4::boolean OR e.status IN ('submitted','awaiting_staff_review','changes_requested','approved'))
-           ORDER BY e.submitted_at DESC,e.id DESC LIMIT 51`,
-          [profileId, cursor?.submitted_at ?? null, cursor?.id ?? null, pendingOnly]
+             AND (cardinality($5::text[])=0 OR e.status=ANY($5::text[]))
+             AND ($6::timestamptz IS NULL OR e.submitted_at >= $6::timestamptz)
+             AND ($7::timestamptz IS NULL OR e.submitted_at < $7::timestamptz)
+             AND ($8::text IS NULL OR concat_ws(' ',e.id::text,c.id::text,i.id::text) ILIKE $8::text)
+           ORDER BY e.submitted_at ${direction},e.id ${direction} LIMIT 51`,
+          [
+            profileId,
+            cursor?.submitted_at ?? null,
+            cursor?.id ?? null,
+            pendingOnly,
+            statuses,
+            range.from ?? null,
+            range.to ?? null,
+            pattern,
+          ]
         )
       ).rows;
       await requireCurrentSession(client, actor);

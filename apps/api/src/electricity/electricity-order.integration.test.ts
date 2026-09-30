@@ -1499,6 +1499,96 @@ it('creates a mandatory refund obligation when a paid order is rejected', async 
   ).rejects.toThrow();
 });
 
+it('filters electricity history by status, submission dates and references in either sort direction', async () => {
+  const first = await submittedOrder();
+  input.idempotencyKey = randomUUID();
+  const second = await submittedOrder();
+  input.idempotencyKey = randomUUID();
+  const third = await submittedOrder();
+  const detail = await fetch(`${http.base}/api/electricity/orders/${second.orderId}`, { headers });
+  const versionId = ((await detail.json()) as { versionId: string }).versionId;
+  const reason = 'No longer needed';
+  const review = await cancellationReview(second.orderId, reason);
+  expect(
+    (
+      await post(`orders/${second.orderId}/cancel`, {
+        idempotencyKey: randomUUID(),
+        expectedVersionId: versionId,
+        expectedReviewHash: review.hash,
+        reason,
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  const list = async (params: Record<string, string> = {}) =>
+    fetch(
+      `${http.base}/api/electricity/orders?${new URLSearchParams({ profileId: String(input.profileId), ...params })}`,
+      { headers }
+    );
+  const readIds = async (params: Record<string, string> = {}) => {
+    const response = await list(params);
+    expect(response.status, http.logs()).toBe(200);
+    return ((await response.json()) as { orders: { orderId: string }[] }).orders.map(
+      (r) => r.orderId
+    );
+  };
+  expect(await readIds()).toEqual([third.orderId, second.orderId, first.orderId]);
+  expect(await readIds({ sort: 'submitted_at:asc' })).toEqual([
+    first.orderId,
+    second.orderId,
+    third.orderId,
+  ]);
+  expect(await readIds({ sort: 'submitted_at:asc', before: first.orderId })).toEqual([
+    second.orderId,
+    third.orderId,
+  ]);
+  expect(await readIds({ before: third.orderId })).toEqual([second.orderId, first.orderId]);
+  expect(await readIds({ statuses: 'cancelled' })).toEqual([second.orderId]);
+  expect(await readIds({ statuses: 'awaiting_staff_review,cancelled' })).toHaveLength(3);
+  expect(await readIds({ status: 'pending', statuses: 'cancelled' })).toEqual([]);
+  for (const q of [first.orderId.toUpperCase(), first.invoiceId, first.contractId]) {
+    expect(await readIds({ q })).toEqual([first.orderId]);
+  }
+  for (const q of ['%', '_', '\\']) expect(await readIds({ q })).toEqual([]);
+  const submittedAt = (
+    await http.pool.query<{ submitted_at: Date }>(
+      'SELECT submitted_at FROM electricity_orders WHERE id=$1',
+      [first.orderId]
+    )
+  ).rows[0]!.submitted_at;
+  const from = submittedAt.toISOString();
+  const to = new Date(submittedAt.getTime() + 1).toISOString();
+  expect(
+    await readIds({
+      from,
+      to,
+      statuses: 'awaiting_staff_review',
+      q: first.invoiceId,
+      sort: 'submitted_at:asc',
+    })
+  ).toEqual([first.orderId]);
+  expect(await readIds({ to: from })).toEqual([]);
+  expect(await readIds({ from: to })).toEqual([third.orderId, second.orderId]);
+  for (const params of [{ statuses: 'cancelled' }, { to: from }, { q: third.orderId }])
+    expect((await list({ ...params, before: first.orderId })).status).toBe(404);
+  for (const params of [
+    { statuses: 'draft' },
+    { statuses: 'unknown' },
+    { from: 'not-a-date' },
+    { from: to, to: from },
+    { q: 'a'.repeat(121) },
+    { sort: 'status:asc' },
+    { before: 'bad' },
+  ])
+    expect((await list(params)).status).toBe(400);
+  const foreignProfile = (
+    await http.pool.query<{ id: string }>(
+      "INSERT INTO profiles(user_id,profile_type,status) VALUES('reviewer','LEGAL','ACTIVE') RETURNING id"
+    )
+  ).rows[0]!.id;
+  expect((await list({ profileId: foreignProfile, q: first.orderId })).status).toBe(404);
+}, 40000);
+
 it('lists only the customer profile orders and cancels an unpublished order once', async () => {
   const order = await submittedOrder();
   const response = await fetch(`${http.base}/api/electricity/orders?profileId=${input.profileId}`, {

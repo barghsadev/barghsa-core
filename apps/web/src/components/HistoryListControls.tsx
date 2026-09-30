@@ -11,7 +11,7 @@ export function HistoryListControls({
   value: HistoryQuery;
   onChange: (value: HistoryQuery) => void;
   locale: 'en' | 'fa';
-  domain: 'saving' | 'solar' | 'consultation';
+  domain: 'saving' | 'solar' | 'consultation' | 'electricity';
 }) {
   return (
     <FieldGroup className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">

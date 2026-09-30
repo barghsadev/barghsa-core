@@ -1,7 +1,7 @@
 import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
-import { ElectricityOrdersPage } from './orders.index.js';
+import { ElectricityOrdersPage } from '../../../pages/ElectricityOrdersPage.js';
 
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (options: unknown) => ({ options }),
