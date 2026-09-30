@@ -3721,6 +3721,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -3734,7 +3738,8 @@
                 },
                 "required": [
                   "idempotencyKey",
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -3910,6 +3915,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -3923,7 +3932,8 @@
                 },
                 "required": [
                   "idempotencyKey",
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -3942,6 +3952,65 @@
           }
         ],
         "summary": "Reject a paid consultation and request wallet refunds",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/admin/consultations/requests/{id}/paid-resolution-review": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_paidResolutionReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "cancel",
+                      "reject",
+                      "recover_refund"
+                    ],
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview paid consultation closure or wallet refund recovery",
         "tags": [
           "Admin · Consultations"
         ]
@@ -3966,6 +4035,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -3979,7 +4052,8 @@
                 },
                 "required": [
                   "idempotencyKey",
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }

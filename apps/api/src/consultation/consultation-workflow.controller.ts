@@ -57,6 +57,13 @@ const paidClosure = z
   .object({
     idempotencyKey: z.string().uuid(),
     reason: z.string().trim().min(1).max(1000),
+    expectedReviewHash: reviewHash,
+  })
+  .strict();
+const paidResolutionInput = z
+  .object({
+    action: z.enum(['cancel', 'reject', 'recover_refund']),
+    reason: z.string().trim().min(1).max(1000),
   })
   .strict();
 const empty = z.object({}).strict();
@@ -221,6 +228,18 @@ export class StaffConsultationWorkflowController {
       parse(paidClosure, body),
       req.ip ?? '127.0.0.1'
     );
+  }
+
+  @Post('requests/:id/paid-resolution-review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Preview paid consultation closure or wallet refund recovery' })
+  @ApiZodBody(paidResolutionInput)
+  paidResolutionReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.workflow.paidResolutionReview(req.session, id, parse(paidResolutionInput, body));
   }
 
   @Post('requests/:id/paid-reject')

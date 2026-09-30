@@ -55,3 +55,4 @@ export * from './manual-invoice-review.js';
 export * from './consultation-offer-review.js';
 export * from './consultation-fee-review.js';
 export * from './consultation-paid-fee-review.js';
+export * from './consultation-paid-resolution-review.js';

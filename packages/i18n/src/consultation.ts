@@ -56,6 +56,13 @@ const en: Record<string, string> = {
     'An additional charge invoice will require customer acceptance and payment. The paid invoice stays unchanged.',
   paidFeeReviewCreditOutcome:
     'A credit will be issued and wallet refund requests will be sent to finance. The paid invoice stays unchanged.',
+  paidResolutionReviewTitle: 'Review paid consultation decision',
+  paidResolutionCancelInvoice: 'Unpaid charge invoice to cancel',
+  paidResolutionRefundTotal: 'Wallet refund requested',
+  paidResolutionCloseOutcome:
+    'This closes the consultation, issues credits for refundable payments, and requests wallet refunds for finance review.',
+  paidResolutionRecoveryOutcome:
+    'This requests the uncovered credit as wallet refunds. Finance must review and process them.',
   adjustmentReason: 'Reason for fee adjustment',
   financialActivity: 'Financial activity',
   chargeAdjustment: 'Additional charge',
@@ -75,6 +82,7 @@ const en: Record<string, string> = {
   invoice_state_PartiallyFunded: 'Partially paid',
   invoice_state_PaymentUnderReview: 'Payment under review',
   invoice_state_Paid: 'Paid',
+  invoice_state_PartiallyRefunded: 'Partially refunded',
   invoice_state_Cancelled: 'Cancelled',
   refund_state_Requested: 'Requested',
   refund_state_Approved: 'Approved',
@@ -212,6 +220,13 @@ const fa: Record<string, string> = {
     'صورتحساب هزینه افزوده برای پذیرش و پرداخت مشتری صادر می‌شود. صورتحساب پرداخت‌شده بدون تغییر می‌ماند.',
   paidFeeReviewCreditOutcome:
     'بستانکاری صادر و درخواست‌های بازپرداخت به کیف پول برای بررسی مالی ثبت می‌شود. صورتحساب پرداخت‌شده بدون تغییر می‌ماند.',
+  paidResolutionReviewTitle: 'بررسی تصمیم مشاوره پرداخت‌شده',
+  paidResolutionCancelInvoice: 'صورتحساب هزینه افزوده پرداخت‌نشده که لغو می‌شود',
+  paidResolutionRefundTotal: 'بازپرداخت درخواستی به کیف پول',
+  paidResolutionCloseOutcome:
+    'مشاوره بسته می‌شود، برای پرداخت‌های قابل بازپرداخت بستانکاری صادر و درخواست بازپرداخت برای بررسی مالی ثبت می‌شود.',
+  paidResolutionRecoveryOutcome:
+    'برای بستانکاری بازپرداخت‌نشده، درخواست بازپرداخت به کیف پول ثبت می‌شود. بخش مالی باید آن را بررسی و پردازش کند.',
   adjustmentReason: 'دلیل اصلاح هزینه',
   financialActivity: 'رویدادهای مالی',
   chargeAdjustment: 'هزینه افزوده',
@@ -230,6 +245,7 @@ const fa: Record<string, string> = {
   invoice_state_PartiallyFunded: 'پرداخت جزئی',
   invoice_state_PaymentUnderReview: 'پرداخت در حال بررسی',
   invoice_state_Paid: 'پرداخت‌شده',
+  invoice_state_PartiallyRefunded: 'بخشی بازپرداخت‌شده',
   invoice_state_Cancelled: 'لغوشده',
   refund_state_Requested: 'درخواست‌شده',
   refund_state_Approved: 'تأییدشده',

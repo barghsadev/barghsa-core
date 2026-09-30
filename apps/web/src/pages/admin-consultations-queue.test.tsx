@@ -229,9 +229,39 @@ it('confirms the reviewed paid-fee charge before sending the staff adjustment', 
           },
           hash: 'b'.repeat(64),
         };
+      } else if (url.endsWith('/paid-resolution-review')) {
+        const input = JSON.parse(String(init?.body)) as Record<string, string>;
+        data = {
+          schemaVersion: 1,
+          scope: { action: 'consultation.paid-resolution', profileId, resourceId: requestId },
+          data: {
+            action: input.action,
+            serviceTitle: request.product_snapshot.title,
+            profileName: request.profile_name,
+            currentStatus: 'offer_accepted',
+            resultingStatus: 'cancelled',
+            reason: input.reason,
+            currentInvoice: {
+              id: invoiceId,
+              state: 'Paid',
+              paidAmount: '500000',
+              adjustmentKind: null,
+            },
+            cancelInvoiceId: null,
+            uncoveredCreditBefore: '0',
+            refundAllocations: [
+              { invoiceId, state: 'Paid', amount: '500000', availableBefore: '500000' },
+            ],
+            totalCredit: '500000',
+            totalRefund: '500000',
+          },
+          hash: 'c'.repeat(64),
+        };
       } else {
         submitted.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
-        data = { financialReview: { hash: 'b'.repeat(64) } };
+        data = {
+          financialReview: { hash: url.endsWith('/paid-cancel') ? 'c'.repeat(64) : 'b'.repeat(64) },
+        };
       }
       return new Response(JSON.stringify(data), {
         headers: { 'Content-Type': 'application/json' },
@@ -268,6 +298,15 @@ it('confirms the reviewed paid-fee charge before sending the staff adjustment', 
     await act(async () => button('Confirm')?.click());
     expect(submitted).toHaveLength(1);
     expect(submitted[0]?.expectedReviewHash).toBe('b'.repeat(64));
+    const closeReason = container.querySelector<HTMLTextAreaElement>('#consultation-reason');
+    expect(closeReason).toBeDefined();
+    await act(async () => fill(closeReason!, 'Customer requested cancellation'));
+    await act(async () => button('Cancel request')?.click());
+    expect(document.body.textContent).toContain('Review paid consultation decision');
+    expect(document.body.textContent).toContain('500,000 IRR');
+    await act(async () => button('Confirm')?.click());
+    expect(submitted).toHaveLength(2);
+    expect(submitted[1]?.expectedReviewHash).toBe('c'.repeat(64));
   } finally {
     await act(async () => root.unmount());
     container.remove();

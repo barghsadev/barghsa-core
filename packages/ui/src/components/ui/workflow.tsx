@@ -196,7 +196,7 @@ export function FinancialReviewSummary({
             key={row.id}
             className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-3 text-sm"
           >
-            <dt className="text-muted-foreground">{row.label}</dt>
+            <dt className="text-foreground">{row.label}</dt>
             <dd className="min-w-0 break-words text-end font-medium tabular-nums">
               <bdi>{row.value}</bdi>
             </dd>
@@ -211,9 +211,7 @@ export function FinancialReviewSummary({
           </dd>
         </div>
       </dl>
-      {notice ? (
-        <div className="border-t px-5 py-3 text-xs text-muted-foreground">{notice}</div>
-      ) : null}
+      {notice ? <div className="border-t px-5 py-3 text-xs text-foreground">{notice}</div> : null}
     </section>
   );
 }

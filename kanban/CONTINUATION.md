@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Paid consultation resolution review](batches/2026-09-30-consultation-paid-resolution-review.md) binds paid cancellation, rejection, and uncovered-refund recovery to a locked, exact credit and wallet-refund allocation before staff confirmation. Other cross-command review tasks remain partial.
+
 [Consultation paid-fee adjustment review](batches/2026-09-30-consultation-paid-fee-review.md) binds staff charge and credit adjustments to an exact paid-invoice and refund-allocation snapshot before confirmation. The broader cross-command review tasks remain partial.
 
 [Consultation staff fee-offer review](batches/2026-09-30-consultation-staff-fee-review.md) binds new and replacement unpaid offers to a locked, authoritative customer, service, fee, deadline, and invoice-outcome snapshot before staff confirmation.

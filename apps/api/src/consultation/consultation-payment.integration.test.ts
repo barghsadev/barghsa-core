@@ -83,6 +83,31 @@ async function adjustFee(path: string, user: string, body: Record<string, unknow
   return post(path, user, { ...body, expectedReviewHash: review.hash });
 }
 
+const resolutionHashes = new Map<string, string>();
+async function resolvePaid(path: string, user: string, body: Record<string, unknown>) {
+  const key = String(body.idempotencyKey);
+  let hash = resolutionHashes.get(key);
+  if (!hash) {
+    const action = path.endsWith('/paid-cancel')
+      ? 'cancel'
+      : path.endsWith('/paid-reject')
+        ? 'reject'
+        : 'recover_refund';
+    const preview = await post(
+      path.replace(/\/(paid-cancel|paid-reject|refund-recovery)$/, '/paid-resolution-review'),
+      user,
+      {
+        action,
+        reason: body.reason,
+      }
+    );
+    if (!preview.ok) return preview;
+    hash = ((await preview.json()) as { hash: string }).hash;
+    resolutionHashes.set(key, hash);
+  }
+  return post(path, user, { ...body, expectedReviewHash: hash });
+}
+
 async function decide(path: string, user: string, body: Record<string, unknown> = {}) {
   const decision = path.endsWith('/decline') ? 'decline' : 'accept';
   const preview = await post(path.replace(/\/(accept|decline)$/, '/offer-review'), user, {
@@ -402,7 +427,7 @@ it('charges or credits a paid consultation without changing the paid invoice', a
   });
   expect(body.refunds.map((refund) => refund.id).sort()).toEqual([...creditBody.refundIds].sort());
   expect(body.refunds.reduce((sum, refund) => sum + BigInt(refund.amount), 0n)).toBe(150000n);
-  const rejected = await post(`${root}/paid-reject`, 'consultation-finance', {
+  const rejected = await resolvePaid(`${root}/paid-reject`, 'consultation-finance', {
     idempotencyKey: randomUUID(),
     reason: 'Service cannot be provided',
   });
@@ -450,12 +475,34 @@ it('charges or credits a paid consultation without changing the paid invoice', a
     )
   ).rows[0]!.count;
   const recoveryInput = { idempotencyKey: randomUUID(), reason: 'Corrected refund request' };
-  const recovery = await post(`${root}/refund-recovery`, 'consultation-finance', recoveryInput);
+  const recoveryPreview = await post(`${root}/paid-resolution-review`, 'consultation-finance', {
+    action: 'recover_refund',
+    reason: recoveryInput.reason,
+  });
+  expect(recoveryPreview.status, http.logs()).toBe(200);
+  const recoveryReview = (await recoveryPreview.json()) as {
+    hash: string;
+    data: { uncoveredCreditBefore: string; totalCredit: string; totalRefund: string };
+  };
+  expect(recoveryReview.data).toMatchObject({
+    uncoveredCreditBefore: rejectedRefundAmount,
+    totalCredit: '0',
+    totalRefund: rejectedRefundAmount,
+  });
+  const recovery = await resolvePaid(
+    `${root}/refund-recovery`,
+    'consultation-finance',
+    recoveryInput
+  );
   expect(recovery.status, http.logs()).toBe(200);
-  const recovered = (await recovery.json()) as { refundIds: string[] };
+  const recovered = (await recovery.json()) as {
+    refundIds: string[];
+    financialReview: { hash: string };
+  };
   expect(recovered.refundIds).toHaveLength(1);
+  expect(recovered.financialReview.hash).toBe(recoveryReview.hash);
   expect(
-    (await post(`${root}/refund-recovery`, 'consultation-finance', recoveryInput)).status
+    (await resolvePaid(`${root}/refund-recovery`, 'consultation-finance', recoveryInput)).status
   ).toBe(200);
   expect(
     (
@@ -487,7 +534,37 @@ it('cancels an unpaid revised charge and requests a refund for the prior paid co
   expect(revised.status, http.logs()).toBe(200);
   const revisedInvoiceId = ((await revised.json()) as { invoiceId: string }).invoiceId;
   const input = { idempotencyKey: randomUUID(), reason: 'Customer cancelled the consultation' };
-  const closed = await post(`${root}/paid-cancel`, 'consultation-finance', input);
+  const closePreview = await post(`${root}/paid-resolution-review`, 'consultation-finance', {
+    action: 'cancel',
+    reason: input.reason,
+  });
+  expect(closePreview.status, http.logs()).toBe(200);
+  expect(
+    (await post(`${root}/paid-resolution-review`, 'consultation-payer', {
+      action: 'cancel',
+      reason: input.reason,
+    })).status
+  ).toBe(403);
+  const closeReview = (await closePreview.json()) as {
+    hash: string;
+    data: { cancelInvoiceId: string; totalCredit: string; totalRefund: string };
+  };
+  expect(closeReview.data).toMatchObject({
+    cancelInvoiceId: revisedInvoiceId,
+    totalCredit: '500000',
+    totalRefund: '500000',
+  });
+  expect((await post(`${root}/paid-cancel`, 'consultation-finance', input)).status).toBe(400);
+  await http.pool.query("UPDATE invoices SET state='Overdue' WHERE id=$1", [revisedInvoiceId]);
+  expect(
+    (
+      await post(`${root}/paid-cancel`, 'consultation-finance', {
+        ...input,
+        expectedReviewHash: closeReview.hash,
+      })
+    ).status
+  ).toBe(409);
+  const closed = await resolvePaid(`${root}/paid-cancel`, 'consultation-finance', input);
   expect(closed.status, http.logs()).toBe(200);
   const result = (await closed.json()) as {
     status: string;
@@ -498,10 +575,12 @@ it('cancels an unpaid revised charge and requests a refund for the prior paid co
   expect(result).toMatchObject({ status: 'cancelled', cancelledInvoiceId: revisedInvoiceId });
   expect(result.creditInvoiceIds).toHaveLength(1);
   expect(result.refundIds).toHaveLength(1);
-  expect((await post(`${root}/paid-cancel`, 'consultation-finance', input)).status).toBe(200);
+  expect((await resolvePaid(`${root}/paid-cancel`, 'consultation-finance', input)).status).toBe(
+    200
+  );
   expect(
     (
-      await post(`${root}/paid-cancel`, 'consultation-finance', {
+      await resolvePaid(`${root}/paid-cancel`, 'consultation-finance', {
         ...input,
         reason: 'Changed reason',
       })

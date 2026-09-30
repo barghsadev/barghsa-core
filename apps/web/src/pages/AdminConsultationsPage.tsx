@@ -4,8 +4,10 @@ import { tConsultation } from '@barghsa/i18n/consultation';
 import {
   parseConsultationFeeReview,
   parseConsultationPaidFeeReview,
+  parseConsultationPaidResolutionReview,
   type ConsultationFeeReview,
   type ConsultationPaidFeeReview,
+  type ConsultationPaidResolutionReview,
 } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -84,6 +86,9 @@ export function AdminConsultationsPage() {
   const [action, setAction] = useState<TeamAction | null>(null);
   const [feeReview, setFeeReview] = useState<ConsultationFeeReview | null>(null);
   const [paidFeeReview, setPaidFeeReview] = useState<ConsultationPaidFeeReview | null>(null);
+  const [resolutionReview, setResolutionReview] = useState<ConsultationPaidResolutionReview | null>(
+    null
+  );
   const [reviewLoading, setReviewLoading] = useState(false);
   function resetQueue(clearSelection = false) {
     setRows([]);
@@ -277,6 +282,50 @@ export function AdminConsultationsPage() {
       prepare('paid-fee', copy('adjustPaidFee'), {
         ...terms,
         idempotencyKey: offerKey,
+        expectedReviewHash: review.hash,
+      });
+    } catch {
+      setError(true);
+      refresh();
+    } finally {
+      setReviewLoading(false);
+    }
+  }
+
+  async function preparePaidResolution(
+    action: 'cancel' | 'reject' | 'recover_refund',
+    title: string,
+    reason: string
+  ) {
+    if (!selectedId || !current || reviewLoading) return;
+    setReviewLoading(true);
+    setError(false);
+    try {
+      const response = await fetch(
+        `/api/admin/consultations/requests/${encodeURIComponent(selectedId)}/paid-resolution-review`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ action, reason }),
+        }
+      );
+      if (!response.ok) throw new Error('paid-resolution-review');
+      const review = parseConsultationPaidResolutionReview(await response.json());
+      if (
+        !review ||
+        review.scope.resourceId !== selectedId ||
+        review.scope.profileId !== current.profile_id ||
+        review.data.action !== action ||
+        review.data.reason !== reason ||
+        review.data.currentStatus !== current.status ||
+        (review.data.currentInvoice?.id ?? null) !== current.invoice_id
+      )
+        throw new Error('paid-resolution-review');
+      setResolutionReview(review);
+      prepare(action === 'recover_refund' ? 'refund-recovery' : `paid-${action}`, title, {
+        idempotencyKey: offerKey,
+        reason,
         expectedReviewHash: review.hash,
       });
     } catch {
@@ -701,32 +750,22 @@ export function AdminConsultationsPage() {
                     <>
                       <Button
                         variant="outline"
-                        disabled={!reason.trim()}
+                        disabled={!reason.trim() || reviewLoading}
                         onClick={() =>
-                          prepare(
-                            current.has_paid_invoice ? 'paid-reject' : 'reject',
-                            copy('reject'),
-                            {
-                              reason: reason.trim(),
-                              ...(current.has_paid_invoice ? { idempotencyKey: offerKey } : {}),
-                            }
-                          )
+                          current.has_paid_invoice
+                            ? void preparePaidResolution('reject', copy('reject'), reason.trim())
+                            : prepare('reject', copy('reject'), { reason: reason.trim() })
                         }
                       >
                         {copy('reject')}
                       </Button>
                       <Button
                         variant="outline"
-                        disabled={!reason.trim()}
+                        disabled={!reason.trim() || reviewLoading}
                         onClick={() =>
-                          prepare(
-                            current.has_paid_invoice ? 'paid-cancel' : 'cancel',
-                            copy('cancel'),
-                            {
-                              reason: reason.trim(),
-                              ...(current.has_paid_invoice ? { idempotencyKey: offerKey } : {}),
-                            }
-                          )
+                          current.has_paid_invoice
+                            ? void preparePaidResolution('cancel', copy('cancel'), reason.trim())
+                            : prepare('cancel', copy('cancel'), { reason: reason.trim() })
                         }
                       >
                         {copy('cancel')}
@@ -736,12 +775,13 @@ export function AdminConsultationsPage() {
                   {BigInt(current.uncovered_credit) > 0n && (
                     <Button
                       variant="outline"
-                      disabled={!reason.trim()}
+                      disabled={!reason.trim() || reviewLoading}
                       onClick={() =>
-                        prepare('refund-recovery', copy('recoverRefund'), {
-                          idempotencyKey: offerKey,
-                          reason: reason.trim(),
-                        })
+                        void preparePaidResolution(
+                          'recover_refund',
+                          copy('recoverRefund'),
+                          reason.trim()
+                        )
                       }
                     >
                       {copy('recoverRefund')}
@@ -775,7 +815,87 @@ export function AdminConsultationsPage() {
         <TeamActionDialog
           action={action}
           summary={
-            paidFeeReview ? (
+            resolutionReview ? (
+              <FinancialReviewSummary
+                title={copy('paidResolutionReviewTitle')}
+                rows={[
+                  {
+                    id: 'profile',
+                    label: copy('customer'),
+                    value: resolutionReview.data.profileName,
+                  },
+                  {
+                    id: 'service',
+                    label: copy('details'),
+                    value: resolutionReview.data.serviceTitle[locale],
+                  },
+                  {
+                    id: 'status',
+                    label: copy('status'),
+                    value: copy(`status_${resolutionReview.data.currentStatus}`),
+                  },
+                  {
+                    id: 'outcome',
+                    label: copy('nextStep'),
+                    value: copy(`status_${resolutionReview.data.resultingStatus}`),
+                  },
+                  ...(resolutionReview.data.currentInvoice
+                    ? [
+                        {
+                          id: 'invoice',
+                          label: copy('paidFeeReviewInvoice'),
+                          value: resolutionReview.data.currentInvoice.id,
+                        },
+                        {
+                          id: 'invoiceState',
+                          label: copy('invoiceStatus'),
+                          value: copy(
+                            `invoice_state_${resolutionReview.data.currentInvoice.state}`
+                          ),
+                        },
+                        {
+                          id: 'invoicePaid',
+                          label: copy('decisionReviewAlreadyPaid'),
+                          value: `${new Intl.NumberFormat(locale).format(BigInt(resolutionReview.data.currentInvoice.paidAmount))} IRR`,
+                        },
+                      ]
+                    : []),
+                  ...(resolutionReview.data.cancelInvoiceId
+                    ? [
+                        {
+                          id: 'cancelInvoice',
+                          label: copy('paidResolutionCancelInvoice'),
+                          value: resolutionReview.data.cancelInvoiceId,
+                        },
+                      ]
+                    : []),
+                  { id: 'reason', label: copy('reason'), value: resolutionReview.data.reason },
+                  ...(resolutionReview.data.totalCredit !== '0'
+                    ? [
+                        {
+                          id: 'credit',
+                          label: copy('creditAdjustment'),
+                          value: `${new Intl.NumberFormat(locale).format(BigInt(resolutionReview.data.totalCredit))} IRR`,
+                        },
+                      ]
+                    : []),
+                  ...resolutionReview.data.refundAllocations.map((allocation) => ({
+                    id: `refund-${allocation.invoiceId}`,
+                    label: copy('paidFeeReviewRefundInvoice'),
+                    value: `${allocation.invoiceId} · ${new Intl.NumberFormat(locale).format(BigInt(allocation.amount))} IRR`,
+                  })),
+                ]}
+                total={{
+                  label: copy('paidResolutionRefundTotal'),
+                  value: `${new Intl.NumberFormat(locale).format(BigInt(resolutionReview.data.totalRefund))} IRR`,
+                }}
+                notice={copy(
+                  resolutionReview.data.action === 'recover_refund'
+                    ? 'paidResolutionRecoveryOutcome'
+                    : 'paidResolutionCloseOutcome'
+                )}
+              />
+            ) : paidFeeReview ? (
               <FinancialReviewSummary
                 title={copy('paidFeeReviewTitle')}
                 rows={[
@@ -887,18 +1007,20 @@ export function AdminConsultationsPage() {
             setAction(null);
             setFeeReview(null);
             setPaidFeeReview(null);
+            setResolutionReview(null);
           }}
           onSuccess={async (result) => {
             if (
-              (feeReview || paidFeeReview) &&
+              (feeReview || paidFeeReview || resolutionReview) &&
               (result as { financialReview?: { hash?: string } } | null)?.financialReview?.hash !==
-                (feeReview ?? paidFeeReview)?.hash
+                (feeReview ?? paidFeeReview ?? resolutionReview)?.hash
             )
               throw new Error('Consultation fee confirmation did not match the review');
             setReason('');
             setOfferKey(crypto.randomUUID());
             setFeeReview(null);
             setPaidFeeReview(null);
+            setResolutionReview(null);
             refresh();
           }}
         />
