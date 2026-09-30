@@ -92,7 +92,7 @@ export function PageHeader({
 export interface ProgressStep {
   id: string;
   label: string;
-  description?: string;
+  description?: ReactNode;
   state: 'complete' | 'current' | 'pending';
   /** Localized state text for assistive technology. */
   stateLabel: string;
@@ -100,21 +100,31 @@ export interface ProgressStep {
 /** Read-only progress. Navigation and validation stay with the owning workflow. */
 export function ProgressStepper({ steps, label }: { steps: ProgressStep[]; label: string }) {
   return (
-    <ol aria-label={label} className="flex flex-col gap-4 sm:flex-row">
-      {steps.map((step) => (
+    <ol aria-label={label} className="flex flex-col sm:flex-row">
+      {steps.map((step, index) => (
         <li
           key={step.id}
           aria-current={step.state === 'current' ? 'step' : undefined}
-          className="flex min-w-0 flex-1 items-start gap-3"
+          data-state={step.state}
+          className="relative flex min-w-0 flex-1 items-start gap-3 pb-5 last:pb-0 sm:flex-col sm:gap-2 sm:pb-0 sm:pe-4 sm:last:pe-0"
         >
+          {index < steps.length - 1 && (
+            <span
+              aria-hidden="true"
+              className={cn(
+                'absolute start-4 top-8 bottom-0 w-px sm:start-8 sm:top-4 sm:-end-4 sm:bottom-auto sm:h-px sm:w-auto',
+                step.state === 'complete' ? 'bg-success' : 'bg-border'
+              )}
+            />
+          )}
           <span
             aria-hidden="true"
             className={cn(
-              'flex size-8 shrink-0 items-center justify-center rounded-full border',
+              'relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full border',
               step.state === 'complete'
                 ? 'border-success/20 bg-success-soft text-success'
                 : step.state === 'current'
-                  ? 'border-primary bg-primary text-primary-foreground'
+                  ? 'border-primary bg-primary text-primary-foreground motion-safe:animate-pulse'
                   : 'border-border bg-muted text-muted-foreground'
             )}
           >
@@ -124,7 +134,7 @@ export function ProgressStepper({ steps, label }: { steps: ProgressStep[]; label
               <Circle className="size-3" />
             )}
           </span>
-          <span className="min-w-0 pt-1 text-sm">
+          <span className="relative z-10 min-w-0 pt-1 text-sm sm:pt-0">
             <span
               className={cn('block', step.state === 'current' ? 'font-semibold' : 'font-medium')}
             >

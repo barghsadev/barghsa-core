@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Saving fulfillment progress stepper](batches/2026-09-30-saving-progress-stepper.md) connects completed, current, and pending stages in the shared stepper and uses it on the customer saving-order detail page. Completion dates and handover details remain visible. Solar construction usage remains open until its domain exposes matching stage progress.
+
 [Staff dashboard pending verification](batches/2026-09-30-pending-verification-widget.md) completes the existing verification count with the five newest profile links, bilingual identity fallback, and verified CRM navigation. The API already supplied these entries.
 
 [Staff dashboard work queue](batches/2026-09-30-staff-work-queue.md) groups pending tickets, electricity and saving orders awaiting review, and unassigned consultations into permission-scoped counts with links to filtered queues. The prior dashboard batch's remote CI finished green.
