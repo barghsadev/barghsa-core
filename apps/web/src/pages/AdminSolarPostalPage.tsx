@@ -1,10 +1,12 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { tSolar } from '@barghsa/i18n/solar';
+import { FinancialReviewSummary } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { SolarContractForm } from '../components/SolarContractForm.js';
+import { withCsrf } from '../lib/csrf.js';
 
 interface Guidance {
   fa: string;
@@ -28,6 +30,18 @@ interface Row {
 }
 
 type PostalLane = 'needs_staff' | 'waiting_customer' | 'all';
+type FinalDecision = 'approve' | 'reject' | 'close-no-contract';
+interface FinalReview {
+  hash: string;
+  data: {
+    requestId: string;
+    currentStatus: string;
+    postalStatus: string | null;
+    trackingNumber: string | null;
+    reason: string | null;
+    outcome: string;
+  };
+}
 
 export function AdminSolarPostalPage() {
   const locale = useLocale();
@@ -41,7 +55,8 @@ export function AdminSolarPostalPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [reason, setReason] = useState('');
-  const [action, setAction] = useState<TeamAction | null>(null);
+  const [action, setAction] = useState<(TeamAction & { review?: FinalReview }) | null>(null);
+  const [preparingDecision, setPreparingDecision] = useState(false);
   const [error, setError] = useState(false);
   const [revision, setRevision] = useState(0);
   const [before, setBefore] = useState<string | null>(null);
@@ -144,6 +159,54 @@ export function AdminSolarPostalPage() {
       method: 'POST',
       ...(decision !== 'confirm-received' ? { body: { reason: reason.trim() } } : {}),
     });
+  }
+  async function prepareFinalDecision(decision: FinalDecision, requestId: string) {
+    if (preparingDecision) return;
+    const decisionReason = reason.trim();
+    if (decision !== 'approve' && !decisionReason) {
+      setError(true);
+      return;
+    }
+    setPreparingDecision(true);
+    setError(false);
+    try {
+      const response = await fetch(
+        `/api/admin/solar/requests/${encodeURIComponent(requestId)}/final-decision/review`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({
+            decision,
+            ...(decision === 'approve' ? {} : { reason: decisionReason }),
+          }),
+        }
+      );
+      if (!response.ok) throw new Error('review');
+      const review = (await response.json()) as FinalReview;
+      setAction({
+        title: copy(
+          decision === 'approve'
+            ? 'solarFinalApprove'
+            : decision === 'reject'
+              ? 'solarFinalReject'
+              : 'solarCloseNoContract'
+        ),
+        description: requestId,
+        path: `/api/admin/solar/requests/${encodeURIComponent(requestId)}/${decision === 'approve' ? 'final-approve' : decision === 'reject' ? 'final-reject' : 'close-no-contract'}`,
+        method: 'POST',
+        body: {
+          ...(decision === 'approve' ? {} : { reason: decisionReason }),
+          expectedReviewHash: review.hash,
+        },
+        conflictMessage: copy('solarFinalReviewChanged'),
+        review,
+      });
+    } catch {
+      setError(true);
+    } finally {
+      setPreparingDecision(false);
+    }
   }
   return (
     <main className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
@@ -344,33 +407,16 @@ export function AdminSolarPostalPage() {
                     <button
                       type="button"
                       className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
-                      onClick={() =>
-                        setAction({
-                          title: copy('solarFinalApprove'),
-                          description: row.id,
-                          path: `/api/admin/solar/requests/${row.id}/final-approve`,
-                          method: 'POST',
-                        })
-                      }
+                      disabled={preparingDecision}
+                      onClick={() => void prepareFinalDecision('approve', row.id)}
                     >
                       {copy('solarFinalApprove')}
                     </button>
                     <button
                       type="button"
                       className="rounded-md border border-destructive px-4 py-2 text-destructive"
-                      onClick={() => {
-                        if (!reason.trim()) {
-                          setError(true);
-                          return;
-                        }
-                        setAction({
-                          title: copy('solarFinalReject'),
-                          description: reason.trim(),
-                          path: `/api/admin/solar/requests/${row.id}/final-reject`,
-                          method: 'POST',
-                          body: { reason: reason.trim() },
-                        });
-                      }}
+                      disabled={preparingDecision}
+                      onClick={() => void prepareFinalDecision('reject', row.id)}
                     >
                       {copy('solarFinalReject')}
                     </button>
@@ -380,19 +426,8 @@ export function AdminSolarPostalPage() {
                   <button
                     type="button"
                     className="rounded-md border px-4 py-2"
-                    onClick={() => {
-                      if (!reason.trim()) {
-                        setError(true);
-                        return;
-                      }
-                      setAction({
-                        title: copy('solarCloseNoContract'),
-                        description: reason.trim(),
-                        path: `/api/admin/solar/requests/${row.id}/close-no-contract`,
-                        method: 'POST',
-                        body: { reason: reason.trim() },
-                      });
-                    }}
+                    disabled={preparingDecision}
+                    onClick={() => void prepareFinalDecision('close-no-contract', row.id)}
                   >
                     {copy('solarCloseNoContract')}
                   </button>
@@ -452,6 +487,55 @@ export function AdminSolarPostalPage() {
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
+          summary={
+            action.review ? (
+              <FinancialReviewSummary
+                title={copy('solarFinalReviewTitle')}
+                rows={[
+                  {
+                    id: 'request',
+                    label: copy('staffRequest'),
+                    value: action.review.data.requestId,
+                  },
+                  {
+                    id: 'status',
+                    label: copy('solarFinalCurrentStatus'),
+                    value: copy(`status_${action.review.data.currentStatus}`),
+                  },
+                  {
+                    id: 'postal',
+                    label: copy('postalStatus'),
+                    value: action.review.data.postalStatus
+                      ? copy(`postal_${action.review.data.postalStatus}`)
+                      : copy('solarFinalNotAvailable'),
+                  },
+                  ...(action.review.data.trackingNumber
+                    ? [
+                        {
+                          id: 'tracking',
+                          label: copy('postalTracking'),
+                          value: action.review.data.trackingNumber,
+                        },
+                      ]
+                    : []),
+                  ...(action.review.data.reason
+                    ? [
+                        {
+                          id: 'reason',
+                          label: copy('reason'),
+                          value: action.review.data.reason,
+                        },
+                      ]
+                    : []),
+                ]}
+                total={{
+                  label: copy('solarFinalOutcome'),
+                  value: copy(`status_${action.review.data.outcome}`),
+                }}
+                notice={copy('solarFinalNoFinancialChange')}
+              />
+            ) : undefined
+          }
           onSuccess={async () => {
             setError(false);
             refresh();

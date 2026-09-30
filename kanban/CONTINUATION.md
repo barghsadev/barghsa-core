@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Solar final-decision review](batches/2026-09-30-solar-final-decision-review.md) binds approval, rejection and closure without a contract to the current request, postal state, reason and resulting status. The staff dialog displays the authoritative outcome before confirmation, and the audit retains the reviewed snapshot. Cross-command review work remains partial.
+
 [Solar contract and initial invoice review](batches/2026-09-30-solar-contract-invoice-review.md) binds staff issuance to an authoritative contract, invoice and due-rule snapshot, displays it before confirmation, and verifies the created invoice in the same transaction. It also repairs older solar integration fixtures and a CI web-test timeout. Cross-command financial review remains partial.
 
 [Solar construction request submission review](batches/2026-09-30-solar-request-submission-review.md) adds a server-backed customer review of the exact request, site and terms before submission, with stale-state rejection, durable review and safe retry. It also repairs the previous main CI's stale bank-receipt schema assertion. Cross-command review tasks remain partial.

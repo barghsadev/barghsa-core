@@ -31,6 +31,31 @@ function send(user: string, path: string, method = 'GET', body?: unknown) {
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
 }
+const staleReviewHash = '0'.repeat(64);
+async function reviewFinal(
+  id: string,
+  decision: 'approve' | 'reject' | 'close-no-contract',
+  reason?: string
+) {
+  const response = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${id}/final-decision/review`,
+    'POST',
+    { decision, ...(reason === undefined ? {} : { reason }) }
+  );
+  expect(response.status, http.logs()).toBe(200);
+  return (await response.json()) as {
+    hash: string;
+    data: {
+      currentStatus: string;
+      postalStatus: string;
+      reason: string | null;
+      outcome: string;
+      createsContract: boolean;
+      createsInvoice: boolean;
+    };
+  };
+}
 async function submitSolar(body: Record<string, unknown>) {
   const review = await send('postal-buyer', 'solar/requests/review', 'POST', body);
   expect(review.status, http.logs()).toBe(201);
@@ -234,7 +259,11 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     http.logs()
   ).toBe(200);
   expect(
-    (await send('postal-reviewer', `admin/solar/requests/${id}/final-approve`, 'POST')).status,
+    (
+      await send('postal-reviewer', `admin/solar/requests/${id}/final-approve`, 'POST', {
+        expectedReviewHash: (await reviewFinal(id, 'approve')).hash,
+      })
+    ).status,
     http.logs()
   ).toBe(200);
   const options = await send('postal-reviewer', `admin/solar/requests/${id}/contract-options`);
@@ -470,13 +499,17 @@ afterAll(async () => {
 
 it('handles guidance, receipt upload, shipment issues, resubmission and staff receipt', async () => {
   expect(
-    (await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST'))
-      .status
+    (
+      await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST', {
+        expectedReviewHash: staleReviewHash,
+      })
+    ).status
   ).toBe(409);
   expect(
     (
       await send('postal-buyer', `admin/solar/requests/${requestId}/close-no-contract`, 'POST', {
         reason: 'No',
+        expectedReviewHash: staleReviewHash,
       })
     ).status
   ).toBe(403);
@@ -655,13 +688,17 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     await (await send('postal-reviewer', 'admin/solar/postal-queue?lane=needs_staff')).json()
   ).toMatchObject({ requests: [{ id: requestId, request_status: 'postal_documents_received' }] });
   expect(
-    (await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST'))
-      .status
+    (
+      await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST', {
+        expectedReviewHash: staleReviewHash,
+      })
+    ).status
   ).toBe(409);
   expect(
     (
       await send('postal-reviewer', `admin/solar/requests/${requestId}/final-reject`, 'POST', {
         reason: 'Review has not begun',
+        expectedReviewHash: staleReviewHash,
       })
     ).status
   ).toBe(409);
@@ -704,10 +741,37 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
       )
     ).rows[0]!.count
   ).toBeGreaterThanOrEqual(3);
+  expect(
+    (
+      await send(
+        'postal-buyer',
+        `admin/solar/requests/${requestId}/final-decision/review`,
+        'POST',
+        { decision: 'approve' }
+      )
+    ).status
+  ).toBe(403);
+  const approvalReview = await reviewFinal(requestId, 'approve');
+  expect(approvalReview.data).toMatchObject({
+    currentStatus: 'final_review',
+    postalStatus: 'received',
+    outcome: 'approved',
+    createsContract: false,
+    createsInvoice: false,
+  });
+  const staleClose = await reviewFinal(requestId, 'close-no-contract', 'Site cannot proceed.');
+  expect(
+    (
+      await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST', {
+        expectedReviewHash: staleReviewHash,
+      })
+    ).status
+  ).toBe(409);
   const approved = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/final-approve`,
-    'POST'
+    'POST',
+    { expectedReviewHash: approvalReview.hash }
   );
   expect(approved.status, http.logs()).toBe(200);
   expect(await approved.json()).toMatchObject({ status: 'approved' });
@@ -722,21 +786,35 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     ).rows[0]!.contract_id
   ).toBeNull();
   expect(
-    (await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST'))
-      .status
+    (
+      await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST', {
+        expectedReviewHash: approvalReview.hash,
+      })
+    ).status
   ).toBe(409);
   expect(
     (
       await send('postal-reviewer', `admin/solar/requests/${requestId}/close-no-contract`, 'POST', {
         reason: '',
+        expectedReviewHash: staleClose.hash,
       })
     ).status
   ).toBe(400);
+  expect(
+    (
+      await send('postal-reviewer', `admin/solar/requests/${requestId}/close-no-contract`, 'POST', {
+        reason: 'Site cannot proceed.',
+        expectedReviewHash: staleClose.hash,
+      })
+    ).status
+  ).toBe(409);
+  const closeReview = await reviewFinal(requestId, 'close-no-contract', 'Site cannot proceed.');
+  expect(closeReview.data).toMatchObject({ currentStatus: 'approved', outcome: 'cancelled' });
   const closed = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/close-no-contract`,
     'POST',
-    { reason: 'Site cannot proceed.' }
+    { reason: 'Site cannot proceed.', expectedReviewHash: closeReview.hash }
   );
   expect(closed.status, http.logs()).toBe(200);
   expect(await closed.json()).toMatchObject({ status: 'cancelled' });
@@ -755,6 +833,16 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
       )
     ).rows[0]!.count
   ).toBe(3);
+  const decisionAudits = await http.pool.query<{ event: string; hash: string }>(
+    `SELECT event,metadata::jsonb->'financialReview'->>'hash' AS hash FROM audit_log
+     WHERE event IN ('solar.final.approve','solar.final.close-no-contract')
+       AND metadata::jsonb->>'requestId'=$1`,
+    [requestId]
+  );
+  expect(Object.fromEntries(decisionAudits.rows.map((row) => [row.event, row.hash]))).toEqual({
+    'solar.final.approve': approvalReview.hash,
+    'solar.final.close-no-contract': closeReview.hash,
+  });
 }, 90_000);
 
 it('rejects a final solar request with a customer-visible reason after postal receipt', async () => {
@@ -774,6 +862,7 @@ it('rejects a final solar request with a customer-visible reason after postal re
     (
       await send('postal-reviewer', `admin/solar/requests/${id}/final-reject`, 'POST', {
         reason: 'The project cannot proceed.',
+        expectedReviewHash: staleReviewHash,
       })
     ).status
   ).toBe(409);
@@ -812,6 +901,7 @@ it('rejects a final solar request with a customer-visible reason after postal re
     (
       await send('postal-reviewer', `admin/solar/requests/${id}/final-reject`, 'POST', {
         reason: '',
+        expectedReviewHash: staleReviewHash,
       })
     ).status
   ).toBe(400);
@@ -819,15 +909,31 @@ it('rejects a final solar request with a customer-visible reason after postal re
     (
       await send('postal-other', `admin/solar/requests/${id}/final-reject`, 'POST', {
         reason: 'Unauthorized',
+        expectedReviewHash: staleReviewHash,
       })
     ).status
   ).toBe(403);
+  const rejectionReview = await reviewFinal(id, 'reject', 'The project cannot proceed.');
+  expect(rejectionReview.data).toMatchObject({
+    currentStatus: 'final_review',
+    reason: 'The project cannot proceed.',
+    outcome: 'rejected',
+  });
+  expect(
+    (
+      await send('postal-reviewer', `admin/solar/requests/${id}/final-reject`, 'POST', {
+        reason: 'A different reason',
+        expectedReviewHash: rejectionReview.hash,
+      })
+    ).status
+  ).toBe(409);
   const rejected = await send(
     'postal-reviewer',
     `admin/solar/requests/${id}/final-reject`,
     'POST',
     {
       reason: '  The project cannot proceed.  ',
+      expectedReviewHash: rejectionReview.hash,
     }
   );
   expect(rejected.status, http.logs()).toBe(200);
@@ -850,6 +956,14 @@ it('rejects a final solar request with a customer-visible reason after postal re
   ).toBe(1);
   expect(
     (
+      await http.pool.query<{ hash: string }>(
+        "SELECT metadata::jsonb->'financialReview'->>'hash' AS hash FROM audit_log WHERE event='solar.final.reject' AND metadata::jsonb->>'requestId'=$1",
+        [id]
+      )
+    ).rows[0]!.hash
+  ).toBe(rejectionReview.hash);
+  expect(
+    (
       await http.pool.query(
         "SELECT count(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='postal-buyer' AND localized_content::text LIKE '%The project cannot proceed.%'"
       )
@@ -859,6 +973,7 @@ it('rejects a final solar request with a customer-visible reason after postal re
     (
       await send('postal-reviewer', `admin/solar/requests/${id}/final-reject`, 'POST', {
         reason: 'The project cannot proceed.',
+        expectedReviewHash: rejectionReview.hash,
       })
     ).status
   ).toBe(409);

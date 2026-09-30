@@ -11848,6 +11848,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "reason": {
                     "maxLength": 1000,
                     "minLength": 1,
@@ -11855,7 +11859,8 @@
                   }
                 },
                 "required": [
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -12576,6 +12581,26 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedReviewHash"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": ""
@@ -12587,6 +12612,64 @@
           }
         ],
         "summary": "Approve a solar request after confirmed postal receipt",
+        "tags": [
+          "Admin · Solar final decisions"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/final-decision/review": {
+      "post": {
+        "operationId": "StaffSolarFinalController_reviewDecision",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "decision": {
+                    "enum": [
+                      "approve",
+                      "reject",
+                      "close-no-contract"
+                    ],
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "decision"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review the current solar request before a final decision",
         "tags": [
           "Admin · Solar final decisions"
         ]
@@ -12611,6 +12694,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "reason": {
                     "maxLength": 1000,
                     "minLength": 1,
@@ -12618,7 +12705,8 @@
                   }
                 },
                 "required": [
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
