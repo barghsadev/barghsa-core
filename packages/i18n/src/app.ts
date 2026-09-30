@@ -5,6 +5,21 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'invoices.filter.search': 'شماره پیگیری فاکتور',
+  'invoices.filter.newest': 'تاریخ ایجاد، جدیدترین',
+  'invoices.filter.oldest': 'تاریخ ایجاد، قدیمی‌ترین',
+  'invoices.filter.created': 'فیلتر تاریخ ایجاد',
+  'invoices.filter.amount': 'مبلغ کل (ریال)',
+  'invoices.filter.min': 'حداقل مبلغ (ریال)',
+  'invoices.filter.max': 'حداکثر مبلغ (ریال)',
+  'invoices.filter.applyAmount': 'اعمال مبلغ',
+  'invoices.filter.clearAmount': 'پاک کردن مبلغ',
+  'invoices.filter.invalidAmount':
+    'مبلغ صحیح و نامنفی وارد کنید؛ حداکثر باید برابر یا بیشتر از حداقل باشد.',
+  'invoices.filter.state': 'وضعیت فاکتور',
+  'invoices.filter.clearState': 'پاک کردن وضعیت‌ها',
+  'invoices.filter.retry': 'تلاش دوباره',
+  'invoices.filter.more': 'نمایش بیشتر',
   'historySearch.label': 'جستجو',
   'historySearch.sort': 'ترتیب نمایش',
   'historySearch.newest': 'تاریخ ثبت، جدیدترین',
@@ -1506,6 +1521,21 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'invoices.filter.search': 'Invoice reference',
+  'invoices.filter.newest': 'Creation date, newest first',
+  'invoices.filter.oldest': 'Creation date, oldest first',
+  'invoices.filter.created': 'Filter by creation date',
+  'invoices.filter.amount': 'Total amount (IRR)',
+  'invoices.filter.min': 'Minimum amount (IRR)',
+  'invoices.filter.max': 'Maximum amount (IRR)',
+  'invoices.filter.applyAmount': 'Apply amounts',
+  'invoices.filter.clearAmount': 'Clear amounts',
+  'invoices.filter.invalidAmount':
+    'Enter whole non-negative amounts; maximum must be at least minimum.',
+  'invoices.filter.state': 'Invoice status',
+  'invoices.filter.clearState': 'Clear statuses',
+  'invoices.filter.retry': 'Retry',
+  'invoices.filter.more': 'Load more',
   'historySearch.label': 'Search',
   'historySearch.sort': 'Sort by',
   'historySearch.newest': 'Submission date, newest first',

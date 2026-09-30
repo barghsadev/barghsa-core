@@ -3,6 +3,12 @@ import { HttpException } from '@nestjs/common';
 import { CustomerInvoiceController } from './customer-invoice.controller.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { CUSTOMER_INVOICE_STATUSES } from '@barghsa/shared/validation';
+import { INVOICE_STATES } from './invoice-state.model.js';
+
+it('offers every customer-visible invoice state and never Draft', () => {
+  expect(CUSTOMER_INVOICE_STATUSES).toEqual(INVOICE_STATES.filter((state) => state !== 'Draft'));
+});
 
 const INVOICE_ID = '11111111-1111-7111-8111-111111111111';
 
@@ -69,14 +75,24 @@ describe('CustomerInvoiceController (T-04.1.05.04)', () => {
   it('lists invoices for the authenticated user', async () => {
     const { controller, service } = makeController();
     const result = await controller.list(req);
-    expect(service.listForUser).toHaveBeenCalledWith('user-1', req.session, false);
+    expect(service.listForUser).toHaveBeenCalledWith(
+      'user-1',
+      req.session,
+      false,
+      expect.objectContaining({ statuses: [], q: '', sort: 'created_at:desc' })
+    );
     expect(result.invoices).toHaveLength(1);
   });
 
   it('validates and forwards the unpaid-only invoice filter', async () => {
     const { controller, service } = makeController();
     await controller.list(req, 'unpaid');
-    expect(service.listForUser).toHaveBeenCalledWith('user-1', req.session, true);
+    expect(service.listForUser).toHaveBeenCalledWith(
+      'user-1',
+      req.session,
+      true,
+      expect.objectContaining({ statuses: [], q: '', sort: 'created_at:desc' })
+    );
     await expect(controller.list(req, 'paid')).rejects.toMatchObject({ status: 400 });
     expect(service.listForUser).toHaveBeenCalledTimes(1);
   });

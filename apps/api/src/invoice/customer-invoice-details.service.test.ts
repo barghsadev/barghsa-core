@@ -685,7 +685,7 @@ describe('CustomerInvoiceDetailsService', () => {
     const [sql, params] = mockPool.query.mock.calls[1]! as [string, unknown[]];
     expect(sql).toContain("state IN ('Unpaid', 'Overdue')");
     expect(sql).toContain("adjustment_kind IS DISTINCT FROM 'credit'");
-    expect(params).toEqual([PROFILE_ID, true]);
+    expect(params).toEqual([PROFILE_ID, true, null, null, null, null, null, null, null, null]);
   });
 });
 

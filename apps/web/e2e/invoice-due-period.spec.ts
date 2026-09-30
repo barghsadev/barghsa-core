@@ -9,6 +9,7 @@ for (const locale of ['fa', 'en'] as const)
     }) => {
       const fa = locale === 'fa';
       await page.addInitScript((locale) => {
+        localStorage.setItem('barghsa.locale', locale);
         const apply = () => {
           document.documentElement.lang = locale;
           document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
@@ -17,6 +18,11 @@ for (const locale of ['fa', 'en'] as const)
         new MutationObserver(apply).observe(document, { childList: true });
       }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/user', (route) =>
+        route.fulfill({
+          json: { isStaff: true, operatingContext: 'staff', canSwitchContext: true },
+        })
+      );
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
           json: {

@@ -46,6 +46,19 @@ import {
 } from '@barghsa/shared/finance';
 import { isInvoiceState, type InvoiceState } from './invoice-state.model.js';
 import { electricityInvoicePeriod } from './invoice-service-period.js';
+import {
+  literalSearchPattern,
+  DEFAULT_INVOICE_LIST_SORT,
+  type InvoiceListQuery,
+  type DateRangeFilterValue,
+  type NumberRangeValue,
+} from '@barghsa/shared/validation';
+
+export interface InvoiceListFilters
+  extends InvoiceListQuery, DateRangeFilterValue, NumberRangeValue {
+  statuses?: string[];
+  before?: string;
+}
 
 /** How this invoice participates in a correction chain. */
 export type InvoiceCorrectionRole =
@@ -118,6 +131,7 @@ export interface CustomerInvoiceListItemDto {
 
 export interface CustomerInvoiceListDto {
   invoices: CustomerInvoiceListItemDto[];
+  nextBefore: string | null;
 }
 
 /**
@@ -444,17 +458,51 @@ export class CustomerInvoiceDetailsService {
   async listForUser(
     userId: string,
     actor?: InvoiceReadActor,
-    unpaidOnly = false
+    unpaidOnly = false,
+    filters: InvoiceListFilters = { q: '', sort: DEFAULT_INVOICE_LIST_SORT }
   ): Promise<CustomerInvoiceListDto> {
     return this.authorizedRead(userId, actor, async (profileId, client) => {
+      const predicate = `profile_id = $1 AND ${CUSTOMER_VISIBLE_STATE_SQL}
+        AND (NOT $2::boolean OR (${UNPAID_CUSTOMER_INVOICE_PREDICATE}))
+        AND ($3::text[] IS NULL OR state::text = ANY($3::text[]))
+        AND ($4::timestamptz IS NULL OR created_at >= $4::timestamptz)
+        AND ($5::timestamptz IS NULL OR created_at < $5::timestamptz)
+        AND ($6::text IS NULL OR id::text ILIKE $6 ESCAPE E'\\\\')
+        AND ($7::bigint IS NULL OR total_amount >= $7::bigint)
+        AND ($8::bigint IS NULL OR total_amount <= $8::bigint)`;
+      const params: unknown[] = [
+        profileId,
+        unpaidOnly,
+        filters.statuses?.length ? filters.statuses : null,
+        filters.from ?? null,
+        filters.to ?? null,
+        literalSearchPattern(filters.q),
+        filters.min ?? null,
+        filters.max ?? null,
+      ];
+      let cursorAt: string | null = null;
+      if (filters.before) {
+        const cursor = await client.query<{ created_at: string }>(
+          `SELECT created_at::text FROM invoices WHERE ${predicate} AND id = $9::uuid`,
+          [...params, filters.before]
+        );
+        cursorAt = cursor.rows[0]?.created_at ?? null;
+        if (!cursorAt) httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Invoice not found', 404);
+      }
+      const ascending = filters.sort === 'created_at:asc';
+      const direction = ascending ? 'ASC' : 'DESC';
+      const comparison = ascending ? '>' : '<';
       const result = await client.query<InvoiceFamilyRow>(
-        `SELECT ${INVOICE_SELECT} FROM invoices WHERE profile_id = $1
-         AND ${CUSTOMER_VISIBLE_STATE_SQL}
-         AND (NOT $2::boolean OR (${UNPAID_CUSTOMER_INVOICE_PREDICATE}))
-         ORDER BY created_at DESC`,
-        [profileId, unpaidOnly]
+        `SELECT ${INVOICE_SELECT} FROM invoices WHERE ${predicate}
+           AND ($9::timestamptz IS NULL OR (created_at, id) ${comparison} ($9::timestamptz, $10::uuid))
+         ORDER BY created_at ${direction}, id ${direction} LIMIT 51`,
+        [...params, cursorAt, filters.before ?? null]
       );
-      return { invoices: result.rows.map(toListItem) };
+      const rows = result.rows.slice(0, 50);
+      return {
+        invoices: rows.map(toListItem),
+        nextBefore: result.rows.length > 50 ? rows[49]!.id : null,
+      };
     });
   }
 

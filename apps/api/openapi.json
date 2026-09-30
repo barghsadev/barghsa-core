@@ -20995,7 +20995,7 @@
     },
     "/api/invoices": {
       "get": {
-        "description": "Returns non-draft invoices on the caller's active profile, newest first.",
+        "description": "Returns up to 50 non-draft invoices on the caller's active profile with a nextBefore cursor. Filters combine before pagination; amounts are inclusive exact IRR integers. Dates filter creation time, from inclusive and to exclusive.",
         "operationId": "CustomerInvoiceController_list",
         "parameters": [
           {
@@ -21008,11 +21008,76 @@
               ],
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid"
+            }
+          },
+          {
+            "description": "Inclusive maximum total amount in IRR",
+            "in": "query",
+            "name": "max",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "description": "Inclusive minimum total amount in IRR",
+            "in": "query",
+            "name": "min",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "enum": [
+                "created_at:desc",
+                "created_at:asc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Literal invoice reference substring, up to 120 characters",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "description": "Exclusive creation timestamp (UTC ISO)",
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "description": "Inclusive creation timestamp (UTC ISO)",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "description": "Comma-separated customer invoice states",
+            "in": "query",
+            "name": "statuses",
+            "required": false,
+            "schema": {}
           }
         ],
         "responses": {
           "200": {
             "description": "Invoice list for the active profile."
+          },
+          "400": {
+            "description": "Invalid filter or cursor"
           },
           "401": {
             "description": "Not authenticated"

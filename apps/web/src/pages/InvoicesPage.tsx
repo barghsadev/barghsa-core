@@ -5,6 +5,17 @@ import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { Loader2Icon, ReceiptIcon } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
+import { Button, TextFilter, ListSortDropdown, NumberFilter, StatusFilter } from '@barghsa/ui';
+import {
+  CUSTOMER_INVOICE_STATUSES,
+  DEFAULT_INVOICE_LIST_SORT,
+  parseNumberRange,
+  type InvoiceListQuery,
+  type DateRangeFilterValue,
+  type NumberRangeValue,
+} from '@barghsa/shared/validation';
+import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
+import { useCursorHistory } from '../hooks/useCursorHistory.js';
 import { formatInvoiceServicePeriod } from '../lib/invoice-service-period.js';
 import {
   fetchInvoiceList,
@@ -13,33 +24,91 @@ import {
   type CustomerInvoiceListItem,
 } from '../lib/customer-invoices.js';
 
-/**
- * Customer invoice list (scaffolding for T-04.1.05.04).
- *
- * Lists the active profile's invoices so the customer can open a details
- * page that shows the original plus linked corrections/replacements.
- */
-export function InvoicesPage({ unpaidOnly = false }: { unpaidOnly?: boolean }) {
+/** Filtered, paginated invoices for the active profile, including corrections. */
+export function InvoicesPage({
+  unpaidOnly = false,
+  statuses = [],
+  onStatusesChange,
+  dateRange = {},
+  onDateRangeChange,
+  query = { q: '', sort: DEFAULT_INVOICE_LIST_SORT },
+  onQueryChange,
+  amountRange = {},
+  onAmountRangeChange,
+}: {
+  unpaidOnly?: boolean;
+  statuses?: readonly string[];
+  onStatusesChange?: (value: string[]) => void;
+  dateRange?: DateRangeFilterValue;
+  onDateRangeChange?: (value: DateRangeFilterValue) => void;
+  query?: InvoiceListQuery;
+  onQueryChange?: (value: InvoiceListQuery) => void;
+  amountRange?: NumberRangeValue;
+  onAmountRangeChange?: (value: NumberRangeValue) => void;
+}) {
   const time = useAccountTime();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
-  const [items, setItems] = useState<CustomerInvoiceListItem[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const statusesKey = statuses.join(',');
+  const { items, before, nextBefore, acceptPage, loadMore } = useCursorHistory<
+    CustomerInvoiceListItem & { id: string }
+  >(
+    `${unpaidOnly}:${statusesKey}:${dateRange.from ?? ''}:${dateRange.to ?? ''}:${query.q}:${query.sort}:${amountRange.min ?? ''}:${amountRange.max ?? ''}`
+  );
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [revision, setRevision] = useState(0);
+  const filtered = !!(
+    statusesKey ||
+    dateRange.from ||
+    dateRange.to ||
+    query.q ||
+    amountRange.min ||
+    amountRange.max
+  );
 
   useEffect(() => {
-    let cancelled = false;
-    fetchInvoiceList(unpaidOnly)
+    const abort = new AbortController();
+    setLoading(true);
+    setError(false);
+    fetchInvoiceList(unpaidOnly, {
+      before,
+      statuses: statusesKey,
+      ...dateRange,
+      ...query,
+      ...amountRange,
+      signal: abort.signal,
+    })
       .then((page) => {
-        if (!cancelled) setItems(page.invoices);
+        if (!abort.signal.aborted)
+          acceptPage(
+            page.invoices.map((item) => ({ ...item, id: item.invoiceId })),
+            page.nextBefore ?? null
+          );
       })
       .catch(() => {
-        if (!cancelled) setError(t('invoices.error.load', locale));
+        if (!abort.signal.aborted) setError(true);
+      })
+      .finally(() => {
+        if (!abort.signal.aborted) setLoading(false);
       });
     return () => {
-      cancelled = true;
+      abort.abort();
     };
-  }, [locale, unpaidOnly]);
+  }, [
+    unpaidOnly,
+    statusesKey,
+    dateRange.from,
+    dateRange.to,
+    query.q,
+    query.sort,
+    amountRange.min,
+    amountRange.max,
+    before,
+    revision,
+    acceptPage,
+  ]);
 
   return (
     <div className="mx-auto max-w-3xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -73,18 +142,94 @@ export function InvoicesPage({ unpaidOnly = false }: { unpaidOnly?: boolean }) {
         </Link>
       </nav>
 
-      {error ? (
-        <p className="text-destructive" role="alert">
-          {error}
-        </p>
-      ) : items === null ? (
-        <p className="flex items-center gap-2 text-sm text-muted-foreground">
+      {onQueryChange && (
+        <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+          <TextFilter
+            value={query.q}
+            onChange={(q) => onQueryChange({ ...query, q })}
+            label={t('historySearch.label', locale)}
+            placeholder={t('invoices.filter.search', locale)}
+          />
+          <ListSortDropdown
+            value={query.sort}
+            onChange={(sort) => onQueryChange({ ...query, sort: sort as InvoiceListQuery['sort'] })}
+            label={t('historySearch.sort', locale)}
+            options={(['created_at:desc', 'created_at:asc'] as const).map((value) => ({
+              value,
+              label: t(
+                value.endsWith('desc') ? 'invoices.filter.newest' : 'invoices.filter.oldest',
+                locale
+              ),
+            }))}
+          />
+        </div>
+      )}
+      {onDateRangeChange && (
+        <HistoryDateFilter
+          value={dateRange}
+          onChange={onDateRangeChange}
+          locale={locale}
+          time={time}
+          label={t('invoices.filter.created', locale)}
+        />
+      )}
+      {onAmountRangeChange && (
+        <NumberFilter
+          value={amountRange}
+          onChange={onAmountRangeChange}
+          parseRange={parseNumberRange}
+          labels={{
+            label: t('invoices.filter.amount', locale),
+            min: t('invoices.filter.min', locale),
+            max: t('invoices.filter.max', locale),
+            apply: t('invoices.filter.applyAmount', locale),
+            clear: t('invoices.filter.clearAmount', locale),
+            invalid: t('invoices.filter.invalidAmount', locale),
+          }}
+        />
+      )}
+      {onStatusesChange && (
+        <StatusFilter
+          label={t('invoices.filter.state', locale)}
+          clearLabel={t('invoices.filter.clearState', locale)}
+          countLabel={numbers.number(statuses.length)}
+          value={statuses}
+          onChange={onStatusesChange}
+          options={CUSTOMER_INVOICE_STATUSES.map((value) => ({
+            value,
+            label: t(stateI18nKey(value), locale),
+            tone:
+              value === 'Paid' || value === 'Refunded'
+                ? 'success'
+                : value === 'Cancelled' || value === 'Overdue'
+                  ? 'destructive'
+                  : 'warning',
+          }))}
+        />
+      )}
+
+      {loading ? (
+        <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
           {t('invoices.loading', locale)}
         </p>
+      ) : error ? (
+        <div className="space-y-2" role="alert">
+          <p className="text-destructive">{t('invoices.error.load', locale)}</p>
+          <Button onClick={() => setRevision((value) => value + 1)}>
+            {t('invoices.filter.retry', locale)}
+          </Button>
+        </div>
       ) : items.length === 0 ? (
         <p className="rounded-lg border border-dashed border-input bg-card text-card-foreground p-8 text-center text-sm text-muted-foreground">
-          {t(unpaidOnly ? 'invoices.filter.unpaidEmpty' : 'invoices.empty', locale)}
+          {t(
+            filtered
+              ? 'historyDates.empty'
+              : unpaidOnly
+                ? 'invoices.filter.unpaidEmpty'
+                : 'invoices.empty',
+            locale
+          )}
         </p>
       ) : (
         <ul className="space-y-3">
@@ -136,6 +281,11 @@ export function InvoicesPage({ unpaidOnly = false }: { unpaidOnly?: boolean }) {
             </li>
           ))}
         </ul>
+      )}
+      {nextBefore && !error && (
+        <Button variant="outline" disabled={loading} onClick={loadMore}>
+          {t('invoices.filter.more', locale)}
+        </Button>
       )}
     </div>
   );

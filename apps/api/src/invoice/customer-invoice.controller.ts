@@ -38,6 +38,13 @@ import {
 } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import {
+  CUSTOMER_INVOICE_STATUSES,
+  parseStatusFilter,
+  parseDateRangeFilter,
+  parseInvoiceListQuery,
+  parseNumberRange,
+} from '@barghsa/shared/validation';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import {
@@ -111,19 +118,57 @@ export class CustomerInvoiceController {
   @RateLimit({ namespace: 'invoices:list:user', limit: 60, windowMs: 60_000 })
   @ApiOperation({
     summary: 'List invoices for the active profile',
-    description: "Returns non-draft invoices on the caller's active profile, newest first.",
+    description:
+      "Returns up to 50 non-draft invoices on the caller's active profile with a nextBefore cursor. Filters combine before pagination; amounts are inclusive exact IRR integers. Dates filter creation time, from inclusive and to exclusive.",
   })
   @ApiResponse({ status: 200, description: 'Invoice list for the active profile.' })
   @ApiQuery({ name: 'status', required: false, enum: ['unpaid'] })
+  @ApiQuery({
+    name: 'statuses',
+    required: false,
+    description: 'Comma-separated customer invoice states',
+  })
+  @ApiQuery({
+    name: 'from',
+    required: false,
+    description: 'Inclusive creation timestamp (UTC ISO)',
+  })
+  @ApiQuery({ name: 'to', required: false, description: 'Exclusive creation timestamp (UTC ISO)' })
+  @ApiQuery({
+    name: 'q',
+    required: false,
+    description: 'Literal invoice reference substring, up to 120 characters',
+  })
+  @ApiQuery({ name: 'sort', required: false, enum: ['created_at:desc', 'created_at:asc'] })
+  @ApiQuery({ name: 'min', required: false, description: 'Inclusive minimum total amount in IRR' })
+  @ApiQuery({ name: 'max', required: false, description: 'Inclusive maximum total amount in IRR' })
+  @ApiQuery({ name: 'before', required: false, format: 'uuid' })
+  @ApiResponse({ status: 400, description: 'Invalid filter or cursor' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'No active profile' })
   async list(
     @Req() req: AuthenticatedRequest,
-    @Query('status') status?: string
+    @Query('status') status?: string,
+    @Query() raw: Record<string, unknown> = {}
   ): Promise<CustomerInvoiceListDto> {
     if (status !== undefined && status !== 'unpaid')
       httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, 'Invalid invoice status filter');
-    return this.service.listForUser(req.session.userId, req.session, status === 'unpaid');
+    const statuses = parseStatusFilter(raw.statuses, CUSTOMER_INVOICE_STATUSES);
+    const dates = parseDateRangeFilter(raw.from, raw.to);
+    const query = parseInvoiceListQuery(raw.q, raw.sort);
+    const amounts = parseNumberRange(raw.min, raw.max);
+    if (!statuses || !dates || !query || !amounts)
+      httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, 'Invalid invoice filter');
+    if (raw.before !== undefined && typeof raw.before !== 'string')
+      httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, 'Invalid invoice cursor');
+    if (raw.before !== undefined) assertUuid(raw.before as string, 'before');
+    return this.service.listForUser(req.session.userId, req.session, status === 'unpaid', {
+      ...query,
+      ...dates,
+      ...amounts,
+      statuses,
+      ...(raw.before === undefined ? {} : { before: raw.before as string }),
+    });
   }
 
   @Get('bank-receipts')

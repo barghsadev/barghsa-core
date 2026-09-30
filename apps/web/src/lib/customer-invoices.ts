@@ -113,6 +113,7 @@ export interface CustomerInvoiceListItem {
 
 export interface CustomerInvoiceList {
   invoices: CustomerInvoiceListItem[];
+  nextBefore?: string | null;
 }
 
 export interface CustomerBankReceiptListItem {
@@ -180,10 +181,30 @@ export async function fetchInvoiceDetails(invoiceId: string): Promise<CustomerIn
   return readJson<CustomerInvoiceDetails>(res);
 }
 
-export async function fetchInvoiceList(unpaidOnly = false): Promise<CustomerInvoiceList> {
-  const res = await fetch(unpaidOnly ? '/api/invoices?status=unpaid' : '/api/invoices', {
+export async function fetchInvoiceList(
+  unpaidOnly = false,
+  options: {
+    before?: string | undefined;
+    statuses?: string | undefined;
+    from?: string | undefined;
+    to?: string | undefined;
+    q?: string | undefined;
+    sort?: string | undefined;
+    min?: string | undefined;
+    max?: string | undefined;
+    signal?: AbortSignal | undefined;
+  } = {}
+): Promise<CustomerInvoiceList> {
+  const params = new URLSearchParams();
+  if (unpaidOnly) params.set('status', 'unpaid');
+  for (const key of ['before', 'statuses', 'from', 'to', 'q', 'sort', 'min', 'max'] as const) {
+    const value = options[key];
+    if (value && !(key === 'sort' && value === 'created_at:desc')) params.set(key, value);
+  }
+  const res = await fetch(`/api/invoices${params.size ? `?${params}` : ''}`, {
     credentials: 'include',
     headers: { Accept: 'application/json' },
+    ...(options.signal ? { signal: options.signal } : {}),
   });
   if (!res.ok) {
     throw new InvoiceRequestError(res.status, `HTTP ${res.status}`);

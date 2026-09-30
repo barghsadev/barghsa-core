@@ -61,6 +61,119 @@ function read(f: Awaited<ReturnType<typeof fixture>>, detail = true, id: string 
   return fetch(`${http.base}/api/invoices${detail ? '/' + id : ''}`, { headers: f.headers });
 }
 
+it('pages invoice history in both directions at tied and microsecond timestamps', async () => {
+  const f = await fixture();
+  const ids = Array.from({ length: 105 }, () => randomUUID());
+  await http.pool.query(
+    `INSERT INTO invoices(id,profile_id,state,total_amount,created_at)
+    SELECT id, $1, 'Unpaid', 1000, '2026-08-01T00:00:00Z'::timestamptz + ((ordinality / 3)::int * interval '1 microsecond')
+    FROM unnest($2::uuid[]) WITH ORDINALITY AS rows(id, ordinality)`,
+    [f.profile, ids]
+  );
+  const expected = await http.pool.query<{ id: string }>(
+    'SELECT id FROM invoices WHERE profile_id=$1 ORDER BY created_at DESC,id DESC',
+    [f.profile]
+  );
+  for (const sort of ['created_at:desc', 'created_at:asc']) {
+    const seen: string[] = [];
+    let before: string | null = null;
+    do {
+      const params = new URLSearchParams({ sort });
+      if (before) params.set('before', before);
+      const response = await fetch(`${http.base}/api/invoices?${params}`, { headers: f.headers });
+      expect(response.status, http.logs()).toBe(200);
+      const page = (await response.json()) as {
+        invoices: { invoiceId: string }[];
+        nextBefore: string | null;
+      };
+      expect(page.invoices.length).toBeLessThanOrEqual(50);
+      seen.push(...page.invoices.map((invoice) => invoice.invoiceId));
+      before = page.nextBefore;
+    } while (before);
+    const sorted = expected.rows.map((row) => row.id);
+    expect(seen).toEqual(sort.endsWith('desc') ? sorted : sorted.reverse());
+    expect(new Set(seen).size).toBe(106);
+  }
+});
+
+it('combines invoice filters before pagination with exact amounts and private cursors', async () => {
+  const f = await fixture(),
+    foreign = await fixture();
+  const selected = randomUUID(),
+    upper = randomUUID(),
+    draft = randomUUID(),
+    credit = randomUUID();
+  await http.pool.query(
+    `INSERT INTO invoices(id,profile_id,state,total_amount,created_at)
+    SELECT gen_random_uuid(), $1, 'Unpaid', 1000, NOW() FROM generate_series(1,55)`,
+    [f.profile]
+  );
+  await http.pool.query(
+    `INSERT INTO invoices(id,profile_id,state,total_amount,created_at)
+    VALUES ($1,$4,'Paid',9007199254740993,'2026-08-01T00:00:00Z'),
+           ($2,$4,'Paid',9007199254740993,'2026-08-02T00:00:00Z'),
+           ($3,$4,'Draft',9007199254740993,'2026-08-01T00:00:00Z')`,
+    [selected, upper, draft, f.profile]
+  );
+  await http.pool.query(
+    `INSERT INTO invoices(id,profile_id,state,total_amount,adjustment_kind,adjustment_for_invoice_id)
+    VALUES ($1,$2,'Unpaid',1000,'credit',$3)`,
+    [credit, f.profile, f.invoice]
+  );
+  const list = (params: Record<string, string>) =>
+    fetch(`${http.base}/api/invoices?${new URLSearchParams(params)}`, { headers: f.headers });
+  const filter = {
+    statuses: 'Paid',
+    from: '2026-08-01T00:00:00.000Z',
+    to: '2026-08-02T00:00:00.000Z',
+    min: '۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳',
+    max: '9007199254740993',
+    q: selected.slice(0, 18),
+  };
+  const response = await list(filter);
+  expect(response.status, http.logs()).toBe(200);
+  expect(await response.json()).toMatchObject({
+    invoices: [{ invoiceId: selected, totalAmount: '9007199254740993' }],
+    nextBefore: null,
+  });
+  for (const params of [
+    { statuses: 'Paid' },
+    { min: '9007199254740993', max: '9007199254740993' },
+  ]) {
+    const response = await list(params);
+    expect(response.status).toBe(200);
+    const page = (await response.json()) as {
+      invoices: { invoiceId: string }[];
+      nextBefore: string | null;
+    };
+    expect(page.invoices.map((invoice) => invoice.invoiceId).sort()).toEqual(
+      [selected, upper].sort()
+    );
+    expect(page.nextBefore).toBeNull();
+  }
+  const adjacent = await list({ min: '9007199254740992', max: '9007199254740992' });
+  expect(adjacent.status).toBe(200);
+  expect(await adjacent.json()).toMatchObject({ invoices: [], nextBefore: null });
+  for (const q of ['%', '_', '\\', "' OR true --"]) {
+    const response = await list({ q });
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ invoices: [], nextBefore: null });
+  }
+  for (const before of [foreign.invoice, draft, upper, randomUUID()])
+    expect((await list({ ...filter, before })).status).toBe(404);
+  expect((await list({ status: 'unpaid', before: credit })).status).toBe(404);
+  for (const invalid of [
+    { statuses: 'Draft' },
+    { before: 'bad' },
+    { sort: 'total_amount:asc' },
+    { min: '9223372036854775808' },
+    { min: '2', max: '1' },
+    { q: 'x'.repeat(121) },
+    { from: 'not-a-date' },
+  ])
+    expect((await list(invalid)).status).toBe(400);
+});
+
 it('pages receipts across owned invoices at microsecond boundaries and filters status', async () => {
   const f = await fixture();
   const foreign = await fixture();
