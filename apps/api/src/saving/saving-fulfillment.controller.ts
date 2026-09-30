@@ -50,9 +50,13 @@ const addressAmendment = z
     idempotencyKey: z.string().uuid(),
     expectedVersionId: z.string().uuid(),
     expectedAddressId: z.string().uuid(),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
     addressId: z.string().uuid(),
     reason: z.string().trim().min(1).max(1000),
   })
+  .strict();
+const addressAmendmentReviewInput = addressAmendment
+  .pick({ expectedVersionId: true, expectedAddressId: true, addressId: true, reason: true })
   .strict();
 const hardwareAmendment = z
   .object({
@@ -184,6 +188,24 @@ export class SavingFulfillmentController {
       parse(rejection, body),
       req.session,
       req.ip ?? 'unknown'
+    );
+  }
+
+  @Post(':id/amend-address-review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'saving:staff-amend-address-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview the paid saving order address amendment before confirmation' })
+  @ApiZodBody(addressAmendmentReviewInput)
+  amendAddressReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.permission(req, true);
+    return this.service.addressAmendmentReview(
+      id,
+      parse(addressAmendmentReviewInput, body),
+      req.session
     );
   }
 

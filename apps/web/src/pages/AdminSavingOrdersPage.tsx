@@ -4,9 +4,11 @@ import { tSaving } from '@barghsa/i18n/saving';
 import { tSavingStaffReview } from '@barghsa/i18n/saving-staff-review';
 import { t } from '@barghsa/i18n/app';
 import {
+  parseSavingAddressAmendmentReview,
   parseSavingHardwareAmendmentReview,
   parseSavingHardwareUpgradeCancellationReview,
   parseSavingStaffDecisionReview,
+  type SavingAddressAmendmentReview,
   type SavingHardwareAmendmentReview,
   type SavingHardwareUpgradeCancellationReview,
   type SavingStaffDecisionReview,
@@ -157,11 +159,14 @@ export default function AdminSavingOrdersPage() {
   const [amendHardwareReason, setAmendHardwareReason] = useState('');
   const [action, setAction] = useState<TeamAction | null>(null);
   const [decisionReview, setDecisionReview] = useState<SavingStaffDecisionReview | null>(null);
+  const [addressReview, setAddressReview] = useState<SavingAddressAmendmentReview | null>(null);
   const [hardwareReview, setHardwareReview] = useState<SavingHardwareAmendmentReview | null>(null);
   const [upgradeCancellationReview, setUpgradeCancellationReview] =
     useState<SavingHardwareUpgradeCancellationReview | null>(null);
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState(false);
+  const [addressReviewLoading, setAddressReviewLoading] = useState(false);
+  const [addressReviewError, setAddressReviewError] = useState(false);
   const [hardwareReviewLoading, setHardwareReviewLoading] = useState(false);
   const [hardwareReviewError, setHardwareReviewError] = useState(false);
   const [upgradeCancellationReviewLoading, setUpgradeCancellationReviewLoading] = useState(false);
@@ -228,11 +233,14 @@ export default function AdminSavingOrdersPage() {
   useEffect(() => {
     reviewRequest.current++;
     setDecisionReview(null);
+    setAddressReview(null);
     setHardwareReview(null);
     setUpgradeCancellationReview(null);
     setAction(null);
     setReviewLoading(false);
     setReviewError(false);
+    setAddressReviewLoading(false);
+    setAddressReviewError(false);
     setHardwareReviewLoading(false);
     setHardwareReviewError(false);
     setUpgradeCancellationReviewLoading(false);
@@ -342,23 +350,73 @@ export default function AdminSavingOrdersPage() {
     });
   }
 
-  function amendAddress() {
-    if (!detail || !amendReason.trim() || amendAddressId === detail.installationAddressId) return;
-    setAction({
-      title: copy('staffAmendAddress'),
-      description: copy('staffConfirm'),
-      method: 'POST',
-      path: `/api/staff/saving/orders/${detail.id}/amend-address`,
-      body: {
-        idempotencyKey: crypto.randomUUID(),
-        expectedVersionId: detail.versionId,
-        expectedAddressId: detail.installationAddressId,
-        addressId: amendAddressId,
-        reason: amendReason.trim(),
-      },
-      conflictMessage: copy('staffConflict'),
-      forbiddenMessage: copy('staffForbidden'),
-    });
+  async function amendAddress() {
+    if (
+      !detail ||
+      addressReviewLoading ||
+      !amendReason.trim() ||
+      amendAddressId === detail.installationAddressId
+    )
+      return;
+    const order = detail;
+    const reason = amendReason.trim();
+    const addressId = amendAddressId;
+    const request = ++reviewRequest.current;
+    setAddressReviewLoading(true);
+    setAddressReviewError(false);
+    try {
+      const response = await fetch(
+        `/api/staff/saving/orders/${encodeURIComponent(order.id)}/amend-address-review`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({
+            expectedVersionId: order.versionId,
+            expectedAddressId: order.installationAddressId,
+            addressId,
+            reason,
+          }),
+        }
+      );
+      if (!response.ok) throw new Error('Address amendment review unavailable');
+      const financialReview = parseSavingAddressAmendmentReview(await response.json());
+      if (request !== reviewRequest.current) return;
+      if (
+        !financialReview ||
+        financialReview.scope.profileId !== order.profileId ||
+        financialReview.scope.resourceId !== order.id ||
+        financialReview.data.versionId !== order.versionId ||
+        financialReview.data.previousAddressId !== order.installationAddressId ||
+        financialReview.data.replacementAddressId !== addressId ||
+        financialReview.data.reason !== reason
+      )
+        throw new Error('Address amendment review mismatch');
+      setAddressReview(financialReview);
+      setAction({
+        title: copy('staffAmendAddress'),
+        description: copy('staffAddressReviewConfirm'),
+        method: 'POST',
+        path: `/api/staff/saving/orders/${order.id}/amend-address`,
+        body: {
+          idempotencyKey: crypto.randomUUID(),
+          expectedVersionId: order.versionId,
+          expectedAddressId: order.installationAddressId,
+          expectedReviewHash: financialReview.hash,
+          addressId,
+          reason,
+        },
+        conflictMessage: copy('staffConflict'),
+        forbiddenMessage: copy('staffForbidden'),
+      });
+    } catch {
+      if (request === reviewRequest.current) {
+        setAddressReview(null);
+        setAddressReviewError(true);
+      }
+    } finally {
+      if (request === reviewRequest.current) setAddressReviewLoading(false);
+    }
   }
 
   async function amendHardware() {
@@ -641,12 +699,18 @@ export default function AdminSavingOrdersPage() {
                   <Button
                     variant="outline"
                     disabled={
-                      !amendReason.trim() || amendAddressId === detail.installationAddressId
+                      !amendReason.trim() ||
+                      amendAddressId === detail.installationAddressId ||
+                      addressReviewLoading
                     }
-                    onClick={amendAddress}
+                    onClick={() => void amendAddress()}
                   >
                     {copy('staffAmendAddress')}
                   </Button>
+                  {addressReviewLoading ? (
+                    <p role="status">{copy('staffAddressReviewLoading')}</p>
+                  ) : null}
+                  {addressReviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
                 </div>
               )}
               {detail.canAmendHardware && (
@@ -933,6 +997,80 @@ export default function AdminSavingOrdersPage() {
                   </div>
                 }
               />
+            ) : addressReview ? (
+              <FinancialReviewSummary
+                title={copy('staffAddressReviewTitle')}
+                rows={[
+                  {
+                    id: 'customer',
+                    label: copy('customer'),
+                    value: addressReview.data.customerName,
+                  },
+                  {
+                    id: 'profile',
+                    label: copy('staffReviewProfile'),
+                    value: addressReview.data.profileName,
+                  },
+                  {
+                    id: 'bill',
+                    label: copy('staffBill'),
+                    value: addressReview.data.billIdentifier,
+                  },
+                  {
+                    id: 'hardware',
+                    label: copy('stepHardware'),
+                    value: addressReview.data.hardwareTitle[locale],
+                  },
+                  {
+                    id: 'previous-address',
+                    label: copy('staffAddressReviewCurrent'),
+                    value: String(addressReview.data.previousAddress.full_address ?? ''),
+                  },
+                  {
+                    id: 'previous-postal',
+                    label: copy('staffAddressReviewPostal'),
+                    value: String(addressReview.data.previousAddress.postal_code ?? ''),
+                  },
+                  {
+                    id: 'replacement-address',
+                    label: copy('staffAddressReviewReplacement'),
+                    value: addressReview.data.replacementAddress.full_address,
+                  },
+                  {
+                    id: 'replacement-postal',
+                    label: copy('staffAddressReviewPostal'),
+                    value: addressReview.data.replacementAddress.postal_code,
+                  },
+                  {
+                    id: 'contract',
+                    label: copy('staffReviewContractVersion'),
+                    value: money.number(addressReview.data.versionNumber),
+                  },
+                  {
+                    id: 'invoice',
+                    label: copy('staffInvoice'),
+                    value: t(`invoices.state.${addressReview.data.invoiceState}`, locale),
+                  },
+                  {
+                    id: 'paid',
+                    label: copy('staffPaid'),
+                    value: money.money(addressReview.data.paidAmountIrR),
+                  },
+                ]}
+                total={{
+                  label: copy('staffTotal'),
+                  value: money.money(addressReview.data.invoiceTotalIrR),
+                }}
+                notice={
+                  <div className="space-y-2">
+                    <p>{copy('staffAddressReviewOutcome')}</p>
+                    <p>{addressReview.data.reason}</p>
+                    <p className="whitespace-pre-wrap break-words" dir="auto">
+                      {addressReview.data.agreementSnapshot}
+                    </p>
+                  </div>
+                }
+              />
             ) : hardwareReview ? (
               <FinancialReviewSummary
                 title={copy('staffHardwareReviewTitle')}
@@ -1133,6 +1271,7 @@ export default function AdminSavingOrdersPage() {
           onClose={() => {
             setAction(null);
             setDecisionReview(null);
+            setAddressReview(null);
             setHardwareReview(null);
             setUpgradeCancellationReview(null);
           }}

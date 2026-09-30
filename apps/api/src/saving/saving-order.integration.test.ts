@@ -979,9 +979,44 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     idempotencyKey: randomUUID(),
     expectedVersionId: staffDetail.versionId,
     expectedAddressId: input.installationAddressId,
+    expectedReviewHash: '',
     addressId: amendedAddressId,
     reason: 'Customer confirmed the corrected installation address',
   };
+  const addressPreview = await request(
+    `/api/staff/saving/orders/${result.savingOrderId}/amend-address-review`,
+    'POST',
+    {
+      expectedVersionId: amendmentInput.expectedVersionId,
+      expectedAddressId: amendmentInput.expectedAddressId,
+      addressId: amendmentInput.addressId,
+      reason: amendmentInput.reason,
+    },
+    staffHeaders
+  );
+  expect(addressPreview.status, http.logs()).toBe(200);
+  const addressReview = (await addressPreview.json()) as {
+    hash: string;
+    data: {
+      previousAddress: { full_address: string };
+      replacementAddress: { full_address: string; postal_code: string };
+      invoiceState: string;
+      invoiceTotalIrR: string;
+      paidAmountIrR: string;
+      outcome: string;
+    };
+  };
+  expect(addressReview.data).toMatchObject({
+    previousAddress: { full_address: 'Test installation address' },
+    replacementAddress: {
+      full_address: 'Corrected installation address',
+      postal_code: '9876543210',
+    },
+    invoiceState: 'Paid',
+    outcome: 'update_installation_address_without_repricing',
+  });
+  expect(addressReview.data.paidAmountIrR).toBe(addressReview.data.invoiceTotalIrR);
+  amendmentInput.expectedReviewHash = addressReview.hash;
   expect(
     await (
       await request(
@@ -993,6 +1028,8 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     ).json()
   ).toMatchObject({ canAmendAddress: true });
   expect((await request(amendPath, 'POST', amendmentInput)).status).toBe(403);
+  const { expectedReviewHash: _unusedAddressHash, ...addressWithoutHash } = amendmentInput;
+  expect((await request(amendPath, 'POST', addressWithoutHash, staffHeaders)).status).toBe(400);
   expect(
     (
       await request(
@@ -1003,9 +1040,24 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       )
     ).status
   ).toBe(409);
+  await http.pool.query("UPDATE addresses SET postal_code='1111111111' WHERE id=$1", [
+    amendedAddressId,
+  ]);
+  expect((await request(amendPath, 'POST', amendmentInput, staffHeaders)).status).toBe(409);
+  await http.pool.query("UPDATE addresses SET postal_code='9876543210' WHERE id=$1", [
+    amendedAddressId,
+  ]);
   const amended = await request(amendPath, 'POST', amendmentInput, staffHeaders);
   expect(amended.status, http.logs()).toBe(201);
   const amendment = (await amended.json()) as { amendmentId: string };
+  const addressAudit = (
+    await http.pool.query<{ metadata: { reviewHash: string } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='saving.address_amended'
+       AND metadata::jsonb->>'savingOrderId'=$1 ORDER BY created_at DESC LIMIT 1`,
+      [result.savingOrderId]
+    )
+  ).rows[0];
+  expect(addressAudit?.metadata.reviewHash).toBe(addressReview.hash);
   expect((await request(amendPath, 'POST', amendmentInput, staffHeaders)).status).toBe(201);
   expect(
     (

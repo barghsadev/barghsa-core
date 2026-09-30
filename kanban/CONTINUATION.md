@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Saving address amendment financial review](batches/2026-09-30-saving-address-amendment-review.md) binds paid installation-address changes to the exact old and new addresses, contract and unchanged invoice before staff confirmation. Cross-command review tasks remain partial.
+
 [Saving upgrade cancellation financial review](batches/2026-09-30-saving-upgrade-cancellation-review.md) binds cancellation of an unpaid equipment charge to the current invoice, contract and stock-release outcome before staff confirmation. Cross-command review tasks remain partial.
 
 [Saving hardware amendment financial review](batches/2026-09-30-saving-hardware-amendment-review.md) binds paid equipment swaps and upgrades to the exact charge, credit, stock, contract and invoice state before staff confirmation. Cross-command review tasks remain partial.

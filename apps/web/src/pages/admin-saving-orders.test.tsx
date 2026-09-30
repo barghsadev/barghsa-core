@@ -217,7 +217,7 @@ it('shows the locked saving decision and submits its exact review hash', async (
   }
 });
 
-it('confirms exact hardware charges before swapping or cancelling an unpaid upgrade', async () => {
+it('confirms exact saving amendments and unpaid upgrade cancellation', async () => {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const id = '11111111-1111-7111-8111-111111111111';
@@ -227,6 +227,7 @@ it('confirms exact hardware charges before swapping or cancelling an unpaid upgr
   const versionId = '55555555-5555-7555-8555-555555555555';
   const upgradeId = '99999999-9999-7999-8999-999999999999';
   const upgradeInvoiceId = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
+  const targetAddressId = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
   const upgrade = {
     id: upgradeId,
     status: 'awaiting_payment',
@@ -264,7 +265,14 @@ it('confirms exact hardware charges before swapping or cancelling an unpaid upgr
     addressAmendments: [],
     hardwareAmendments: [],
     hardwareUpgrades: [upgrade],
-    addressOptions: [],
+    addressOptions: [
+      {
+        id: '66666666-6666-7666-8666-666666666666',
+        fullAddress: 'Installation address',
+        postalCode: '1234567890',
+      },
+      { id: targetAddressId, fullAddress: 'Replacement address', postalCode: '9876543210' },
+    ],
     hardwareOptions: [
       {
         id: targetHardwareId,
@@ -272,7 +280,7 @@ it('confirms exact hardware charges before swapping or cancelling an unpaid upgr
         priceDeltaIrR: '50000',
       },
     ],
-    canAmendAddress: false,
+    canAmendAddress: true,
     canAmendHardware: true,
   };
   const review = {
@@ -342,6 +350,43 @@ it('confirms exact hardware charges before swapping or cancelling an unpaid upgr
     },
     hash: 'c'.repeat(64),
   };
+  const addressReview = {
+    schemaVersion: 1,
+    scope: { action: 'saving.staff-address-amendment', profileId, resourceId: id },
+    data: {
+      reason: 'Customer confirmed the correction',
+      customerName: 'Buyer Company',
+      profileName: 'Buyer Company',
+      billIdentifier: detail.billIdentifier,
+      orderId: id,
+      hardwareTitle: detail.hardwareTitle,
+      pricingSnapshot: detail.pricingSnapshot,
+      agreementSnapshot: 'Accepted agreement',
+      contractId: '77777777-7777-7777-8777-777777777777',
+      contractState: 'Active',
+      versionId,
+      versionNumber: 1,
+      contractSnapshot: {},
+      invoiceId: '88888888-8888-7888-8888-888888888888',
+      invoiceState: 'Paid',
+      invoiceTotalIrR: '300000',
+      paidAmountIrR: '300000',
+      refundedAmountIrR: '0',
+      pendingRefundAmountIrR: '0',
+      previousAddressId: detail.installationAddressId,
+      previousAddress: { full_address: 'Installation address', postal_code: '1234567890' },
+      replacementAddressId: targetAddressId,
+      replacementAddress: {
+        id: targetAddressId,
+        province_id: 'cccccccc-cccc-7ccc-8ccc-cccccccccccc',
+        city_id: 'dddddddd-dddd-7ddd-8ddd-dddddddddddd',
+        full_address: 'Replacement address',
+        postal_code: '9876543210',
+      },
+      outcome: 'update_installation_address_without_repricing',
+    },
+    hash: 'd'.repeat(64),
+  };
   const fetchMock = vi.fn(async (url: string, _init?: RequestInit) => {
     const data =
       url === '/api/user/settings/timezone'
@@ -350,13 +395,17 @@ it('confirms exact hardware charges before swapping or cancelling an unpaid upgr
           ? cancellationReview
           : url.endsWith('/cancel-hardware-upgrade')
             ? { status: 'cancelled' }
-            : url.endsWith('/amend-hardware-review')
-              ? review
-              : url.endsWith('/amend-hardware')
-                ? { status: 'awaiting_payment' }
-                : url === `/api/staff/saving/orders/${id}`
-                  ? detail
-                  : { orders: [detail], nextAfter: null };
+            : url.endsWith('/amend-address-review')
+              ? addressReview
+              : url.endsWith('/amend-address')
+                ? { amendmentId: 'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee' }
+                : url.endsWith('/amend-hardware-review')
+                  ? review
+                  : url.endsWith('/amend-hardware')
+                    ? { status: 'awaiting_payment' }
+                    : url === `/api/staff/saving/orders/${id}`
+                      ? detail
+                      : { orders: [detail], nextAfter: null };
     return Response.json(data);
   });
   vi.stubGlobal('fetch', fetchMock);
@@ -432,6 +481,48 @@ it('confirms exact hardware charges before swapping or cancelling an unpaid upgr
       upgradeId,
       expectedReviewHash: cancellationReview.hash,
       reason: 'Customer changed their mind',
+    });
+    const addressSelect = container.querySelector<HTMLSelectElement>('#saving-amend-address')!;
+    await act(async () => {
+      addressSelect.value = targetAddressId;
+      addressSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    const addressReason = container.querySelector<HTMLInputElement>('#saving-amend-reason')!;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+        addressReason,
+        'Customer confirmed the correction'
+      );
+      addressReason.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    const amendAddress = [...container.querySelectorAll('button')].find(
+      (button) => button.textContent === 'Amend installation address'
+    );
+    await act(async () => amendAddress!.click());
+    expect(fetchMock).toHaveBeenCalledWith(
+      `/api/staff/saving/orders/${id}/amend-address-review`,
+      expect.objectContaining({
+        body: JSON.stringify({
+          expectedVersionId: versionId,
+          expectedAddressId: detail.installationAddressId,
+          addressId: targetAddressId,
+          reason: 'Customer confirmed the correction',
+        }),
+      })
+    );
+    expect(document.body.textContent).toContain('Replacement address');
+    expect(document.body.textContent).toContain('The paid invoice and contract remain as issued.');
+    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/amend-address'))).toBe(false);
+    const confirmAddress = [
+      ...document.body.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
+    ].find((button) => button.textContent?.includes('Confirm'));
+    await act(async () => confirmAddress!.click());
+    const addressMutation = fetchMock.mock.calls.find(([url]) => url.endsWith('/amend-address'));
+    expect(JSON.parse((addressMutation![1] as RequestInit).body as string)).toMatchObject({
+      expectedReviewHash: addressReview.hash,
+      expectedVersionId: versionId,
+      expectedAddressId: detail.installationAddressId,
+      addressId: targetAddressId,
     });
   } finally {
     await act(async () => root.unmount());
