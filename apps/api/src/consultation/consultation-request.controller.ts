@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
+import { parseStatusFilter, CONSULTATION_REQUEST_STATUSES } from '@barghsa/shared/validation';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
@@ -54,14 +55,23 @@ export class ConsultationRequestController {
   @Get('requests')
   @ApiOperation({ summary: 'List consultation requests for a profile' })
   @ApiQuery({ name: 'before', required: false, format: 'uuid', type: String })
+  @ApiQuery({
+    name: 'statuses',
+    required: false,
+    type: String,
+    description: 'Comma-separated consultation request statuses',
+  })
   list(
     @Query('profileId', new ParseUUIDPipe()) profileId: string,
     @Req() req: AuthenticatedRequest,
-    @Query('before') before?: string
+    @Query('before') before?: string,
+    @Query('statuses') statuses?: string
   ) {
     if (before && !z.string().uuid().safeParse(before).success)
       throw new HttpException({ error: 'VALIDATION:INVALID_CURSOR' }, 400);
-    return this.service.list(req.session, profileId, before);
+    const selectedStatuses = parseStatusFilter(statuses, CONSULTATION_REQUEST_STATUSES);
+    if (!selectedStatuses) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.list(req.session, profileId, before, selectedStatuses);
   }
 
   @Get('requests/:id')

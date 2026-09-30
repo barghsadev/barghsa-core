@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { Button } from '@barghsa/ui';
+import { Button, StatusFilter } from '@barghsa/ui';
+import { CONSULTATION_REQUEST_STATUSES } from '@barghsa/shared/validation';
+import { useCursorHistory } from '../hooks/useCursorHistory.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { statusFilterTone } from '../lib/status-filter-tone.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -29,16 +33,28 @@ interface RequestRow {
   refund_pending: boolean;
 }
 
-export function ConsultationsPage() {
+export function ConsultationsPage({
+  statuses = [],
+  onStatusesChange,
+}: {
+  statuses?: readonly string[];
+  onStatusesChange?: (statuses: string[]) => void;
+}) {
   const navigate = useNavigate();
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const time = useAccountTime(locale);
   const copy = (key: string) => tConsultation(key, locale);
   const [profile, setProfile] = useState<SwitcherProfile | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
-  const [requests, setRequests] = useState<RequestRow[]>([]);
-  const [before, setBefore] = useState<string | null>(null);
-  const [nextBefore, setNextBefore] = useState<string | null>(null);
+  const statusesKey = statuses.join(',');
+  const {
+    items: requests,
+    before,
+    nextBefore,
+    acceptPage,
+    loadMore,
+  } = useCursorHistory<RequestRow>(`${profile?.id ?? ''}:${statusesKey}`);
   const [requestsLoading, setRequestsLoading] = useState(true);
   const [requestsError, setRequestsError] = useState(false);
   const [requestRevision, setRequestRevision] = useState(0);
@@ -90,6 +106,7 @@ export function ConsultationsPage() {
     setRequestsError(false);
     const query = new URLSearchParams({ profileId: profile.id });
     if (before) query.set('before', before);
+    if (statusesKey) query.set('statuses', statusesKey);
     void fetch(`/api/consultations/requests?${query}`, {
       credentials: 'include',
       signal: controller.signal,
@@ -100,12 +117,7 @@ export function ConsultationsPage() {
       })
       .then((result) => {
         if (!controller.signal.aborted) {
-          setRequests((current) => {
-            if (!before) return result.requests;
-            const shown = new Set(current.map((request) => request.id));
-            return [...current, ...result.requests.filter((request) => !shown.has(request.id))];
-          });
-          setNextBefore(result.nextBefore);
+          acceptPage(result.requests, result.nextBefore);
         }
       })
       .catch(() => {
@@ -115,7 +127,7 @@ export function ConsultationsPage() {
         if (!controller.signal.aborted) setRequestsLoading(false);
       });
     return () => controller.abort();
-  }, [profile, before, requestRevision]);
+  }, [profile, before, requestRevision, statusesKey, acceptPage]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -227,6 +239,20 @@ export function ConsultationsPage() {
             <h2 id="consultation-requests-title" className="text-xl font-semibold">
               {copy('myRequests')}
             </h2>
+            {onStatusesChange && (
+              <StatusFilter
+                label={copy('filterStatus')}
+                clearLabel={copy('clearFilters')}
+                countLabel={numbers.number(statuses.length)}
+                value={statuses}
+                onChange={onStatusesChange}
+                options={CONSULTATION_REQUEST_STATUSES.map((value) => ({
+                  value,
+                  label: copy(`status_${value}`),
+                  tone: statusFilterTone(value),
+                }))}
+              />
+            )}
             {requestsLoading && <p role="status">{copy('loading')}</p>}
             {requestsError && <p role="alert">{copy('loadError')}</p>}
             {requestsError && (
@@ -235,7 +261,9 @@ export function ConsultationsPage() {
               </Button>
             )}
             {!requests.length && !requestsLoading && !requestsError && (
-              <p className="text-muted-foreground">{copy('emptyRequests')}</p>
+              <p className="text-muted-foreground">
+                {copy(statuses.length ? 'filteredEmpty' : 'emptyRequests')}
+              </p>
             )}
             <ul className="space-y-3">
               {requests.map((request) => {
@@ -290,11 +318,7 @@ export function ConsultationsPage() {
               })}
             </ul>
             {nextBefore && !requestsError && (
-              <Button
-                variant="outline"
-                disabled={requestsLoading}
-                onClick={() => setBefore(nextBefore)}
-              >
+              <Button variant="outline" disabled={requestsLoading} onClick={loadMore}>
                 {copy('moreRequests')}
               </Button>
             )}

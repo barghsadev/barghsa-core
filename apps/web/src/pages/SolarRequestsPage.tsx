@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
+import { StatusFilter } from '@barghsa/ui';
+import { SOLAR_REQUEST_STATUSES } from '@barghsa/shared/validation';
+import { useCursorHistory } from '../hooks/useCursorHistory.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { statusFilterTone } from '../lib/status-filter-tone.js';
 import { tSolar } from '@barghsa/i18n/solar';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
@@ -18,13 +23,25 @@ interface RequestRow {
   initial_invoice_state: string | null;
 }
 
-export function SolarRequestsPage() {
+export function SolarRequestsPage({
+  statuses = [],
+  onStatusesChange,
+}: {
+  statuses?: readonly string[];
+  onStatusesChange?: (statuses: string[]) => void;
+}) {
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
-  const [rows, setRows] = useState<RequestRow[]>([]);
-  const [before, setBefore] = useState<string | null>(null);
-  const [nextBefore, setNextBefore] = useState<string | null>(null);
+  const statusesKey = statuses.join(',');
+  const {
+    items: rows,
+    before,
+    nextBefore,
+    acceptPage,
+    loadMore,
+  } = useCursorHistory<RequestRow>(statusesKey);
   const [revision, setRevision] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -41,12 +58,12 @@ export function SolarRequestsPage() {
         if (!profileResponse.ok) throw new Error('profile');
         const profile = (await profileResponse.json()) as { activeProfileId: string | null };
         if (!profile.activeProfileId) {
-          setRows([]);
-          setNextBefore(null);
+          if (!controller.signal.aborted) acceptPage([], null);
           return;
         }
         const params = new URLSearchParams({ profileId: profile.activeProfileId });
         if (before) params.set('before', before);
+        if (statusesKey) params.set('statuses', statusesKey);
         const response = await fetch(`/api/solar/requests?${params}`, {
           credentials: 'include',
           signal: controller.signal,
@@ -57,12 +74,7 @@ export function SolarRequestsPage() {
           nextBefore: string | null;
         };
         if (!controller.signal.aborted) {
-          setRows((current) => {
-            if (!before) return result.requests;
-            const shown = new Set(current.map((request) => request.id));
-            return [...current, ...result.requests.filter((request) => !shown.has(request.id))];
-          });
-          setNextBefore(result.nextBefore);
+          acceptPage(result.requests, result.nextBefore);
         }
       } catch {
         if (!controller.signal.aborted) setError(true);
@@ -71,7 +83,7 @@ export function SolarRequestsPage() {
       }
     })();
     return () => controller.abort();
-  }, [before, revision]);
+  }, [before, revision, statusesKey, acceptPage]);
   return (
     <main className="mx-auto max-w-3xl space-y-5 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('myRequests')}</h1>
@@ -82,6 +94,20 @@ export function SolarRequestsPage() {
         {copy('submit')}
       </Link>
       {time.notice}
+      {onStatusesChange && (
+        <StatusFilter
+          label={copy('filterStatus')}
+          clearLabel={copy('clearFilters')}
+          countLabel={numbers.number(statuses.length)}
+          value={statuses}
+          onChange={onStatusesChange}
+          options={SOLAR_REQUEST_STATUSES.map((value) => ({
+            value,
+            label: copy(`status_${value}`),
+            tone: statusFilterTone(value),
+          }))}
+        />
+      )}
       {loading && <p role="status">{copy('loading')}</p>}
       {error && <p role="alert">{copy('notFound')}</p>}
       {error && (
@@ -93,7 +119,9 @@ export function SolarRequestsPage() {
           {copy('retry')}
         </button>
       )}
-      {!loading && !error && !rows.length && <p>{copy('none')}</p>}
+      {!loading && !error && !rows.length && (
+        <p>{copy(statuses.length ? 'filteredEmpty' : 'none')}</p>
+      )}
       <ul className="space-y-3">
         {rows.map((row) => {
           const action = solarNextAction(row, locale);
@@ -136,7 +164,7 @@ export function SolarRequestsPage() {
           type="button"
           className="rounded-md border px-4 py-2 text-sm disabled:opacity-50"
           disabled={loading}
-          onClick={() => setBefore(nextBefore)}
+          onClick={loadMore}
         >
           {copy('moreRequests')}
         </button>

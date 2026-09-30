@@ -141,4 +141,56 @@ it('lists seeded products by profile, submits without invoicing, and isolates hi
   const companyRequest = await post('company', profiles.company!, certificateId, randomUUID());
   expect(companyRequest.status, http.logs()).toBe(201);
   expect(((await companyRequest.json()) as { status: string }).status).toBe('submitted');
+  await http.pool.query(
+    `INSERT INTO consultation_requests
+    (profile_id,product_id,product_snapshot,submitted_by,submission_key,status,submitted_at)
+    SELECT profile_id,product_id,product_snapshot,submitted_by,gen_random_uuid(),'completed',submitted_at + n * interval '1 second'
+    FROM consultation_requests CROSS JOIN generate_series(1,101) n WHERE id=$1`,
+    [created.requestId]
+  );
+  const filtered = await fetch(
+    `${http.base}/api/consultations/requests?profileId=${profiles.individual}&statuses=submitted`,
+    { headers: headers.individual! }
+  );
+  expect(filtered.status, http.logs()).toBe(200);
+  expect(await filtered.json()).toMatchObject({
+    requests: [{ id: created.requestId }],
+    nextBefore: null,
+  });
+  const completedPage = await fetch(
+    `${http.base}/api/consultations/requests?profileId=${profiles.individual}&statuses=completed`,
+    { headers: headers.individual! }
+  );
+  const page = (await completedPage.json()) as {
+    requests: { id: string; status: string }[];
+    nextBefore: string;
+  };
+  expect(page.requests).toHaveLength(100);
+  expect(page.requests.every((row) => row.status === 'completed')).toBe(true);
+  const older = await fetch(
+    `${http.base}/api/consultations/requests?profileId=${profiles.individual}&statuses=completed&before=${page.nextBefore}`,
+    { headers: headers.individual! }
+  );
+  expect(((await older.json()) as { requests: unknown[] }).requests).toHaveLength(1);
+  expect(
+    (
+      await fetch(
+        `${http.base}/api/consultations/requests?profileId=${profiles.individual}&statuses=completed&before=${created.requestId}`,
+        { headers: headers.individual! }
+      )
+    ).status
+  ).toBe(404);
+  expect(
+    (
+      await fetch(
+        `${http.base}/api/consultations/requests?profileId=${profiles.individual}&statuses=unknown`,
+        { headers: headers.individual! }
+      )
+    ).status
+  ).toBe(400);
+  const combined = await fetch(
+    `${http.base}/api/consultations/requests?profileId=${profiles.individual}&statuses=submitted,completed`,
+    { headers: headers.individual! }
+  );
+  expect(((await combined.json()) as { requests: unknown[] }).requests).toHaveLength(100);
 });

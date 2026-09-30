@@ -300,7 +300,7 @@ export class SolarRequestService {
     }
   }
 
-  async list(actor: Actor, profileId: string, before?: string) {
+  async list(actor: Actor, profileId: string, before?: string, statuses: readonly string[] = []) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -310,8 +310,8 @@ export class SolarRequestService {
       const cursor = before
         ? (
             await client.query<{ id: string; submitted_at: string }>(
-              'SELECT id,submitted_at::text AS submitted_at FROM solar_construction_requests WHERE id=$1 AND profile_id=$2',
-              [before, profileId]
+              'SELECT id,submitted_at::text AS submitted_at FROM solar_construction_requests WHERE id=$1 AND profile_id=$2 AND (cardinality($3::text[])=0 OR status=ANY($3::text[]))',
+              [before, profileId, statuses]
             )
           ).rows[0]
         : null;
@@ -330,8 +330,9 @@ export class SolarRequestService {
                  ) i ON r.contract_id IS NOT NULL
                  WHERE r.profile_id=$1
                  AND ($2::timestamptz IS NULL OR (r.submitted_at,r.id) < ($2::timestamptz,$3::uuid))
+                 AND (cardinality($4::text[])=0 OR r.status=ANY($4::text[]))
                ORDER BY r.submitted_at DESC,r.id DESC LIMIT 101`,
-          [profileId, cursor?.submitted_at ?? null, before ?? null]
+          [profileId, cursor?.submitted_at ?? null, before ?? null, statuses]
         )
       ).rows;
       await client.query('COMMIT');

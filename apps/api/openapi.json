@@ -16690,6 +16690,15 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "description": "Comma-separated consultation request statuses",
+            "in": "query",
+            "name": "statuses",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -23245,6 +23254,15 @@
             }
           },
           {
+            "description": "Comma-separated saving order statuses",
+            "in": "query",
+            "name": "statuses",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "in": "query",
             "name": "status",
             "required": false,
@@ -23976,6 +23994,15 @@
             "required": false,
             "schema": {
               "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Comma-separated solar request statuses",
+            "in": "query",
+            "name": "statuses",
+            "required": false,
+            "schema": {
               "type": "string"
             }
           }

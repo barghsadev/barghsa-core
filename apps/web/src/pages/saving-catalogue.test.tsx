@@ -1,7 +1,7 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
-import { SavingsPage } from '../routes/_app/savings.index.js';
+import { SavingsPage } from './SavingsPage.js';
 import { SavingAgreementEditor } from './SavingAgreementEditor.js';
 
 vi.mock('@tanstack/react-router', () => ({

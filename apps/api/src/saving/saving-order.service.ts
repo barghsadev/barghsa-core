@@ -435,7 +435,13 @@ export class SavingOrderService {
     }
   }
 
-  async list(actor: Actor, profileId: string, before?: string, status?: 'pending') {
+  async list(
+    actor: Actor,
+    profileId: string,
+    before?: string,
+    status?: 'pending',
+    statuses: readonly string[] = []
+  ) {
     const client = await getDbPool().connect();
     const pendingOnly = status === 'pending';
     try {
@@ -448,8 +454,9 @@ export class SavingOrderService {
             await client.query<{ submitted_at: string; id: string }>(
               `SELECT submitted_at::text AS submitted_at,id FROM saving_orders
                WHERE id=$1 AND profile_id=$2
-                 AND (NOT $3::boolean OR status IN ('submitted','awaiting_staff_review','approved','in_progress'))`,
-              [before, profileId, pendingOnly]
+                 AND (NOT $3::boolean OR status IN ('submitted','awaiting_staff_review','approved','in_progress'))
+                 AND (cardinality($4::text[])=0 OR status=ANY($4::text[]))`,
+              [before, profileId, pendingOnly, statuses]
             )
           ).rows[0]
         : undefined;
@@ -475,8 +482,9 @@ export class SavingOrderService {
             WHERE s.profile_id=$1
               AND ($2::timestamptz IS NULL OR (s.submitted_at,s.id)<($2::timestamptz,$3::uuid))
               AND (NOT $4::boolean OR s.status IN ('submitted','awaiting_staff_review','approved','in_progress'))
+              AND (cardinality($5::text[])=0 OR s.status=ANY($5::text[]))
             ORDER BY s.submitted_at DESC,s.id DESC LIMIT 101`,
-          [profileId, cursor?.submitted_at ?? null, cursor?.id ?? null, pendingOnly]
+          [profileId, cursor?.submitted_at ?? null, cursor?.id ?? null, pendingOnly, statuses]
         )
       ).rows;
       await requireCurrentSession(client, actor);

@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Customer history status filters](batches/2026-09-30-customer-history-status-filters.md) adds shared multi-select status controls to saving orders, solar requests, and consultation requests. URL selections survive reload and Back; changing filters clears old pages and cursors while preserving the consultation form. PostgreSQL filters before pagination. Broader all-list filter coverage remains open.
+
 [Notification category badges](batches/2026-09-30-notification-status-badges.md) give the customer and staff bell and inbox the same labeled icon and category color. Document events now identify themselves as documents in both dictionaries instead of falling back to System.
 
 [Saving fulfillment progress stepper](batches/2026-09-30-saving-progress-stepper.md) connects completed, current, and pending stages in the shared stepper and uses it on the customer saving-order detail page. Completion dates and handover details remain visible. Solar construction usage remains open until its domain exposes matching stage progress.

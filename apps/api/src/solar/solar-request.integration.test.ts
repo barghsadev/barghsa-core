@@ -265,6 +265,28 @@ it('submits both solar request types, captures agreement, and creates no contrac
   };
   expect(listed.requests).toHaveLength(2);
   expect(listed.nextBefore).toBeNull();
+  const filtered = await request(
+    `/api/solar/requests?profileId=${profileId}&statuses=submitted,uploading_documents`,
+    'GET'
+  );
+  expect(filtered.status, http.logs()).toBe(200);
+  expect(((await filtered.json()) as { requests: unknown[] }).requests).toHaveLength(2);
+  const noMatch = await request(
+    `/api/solar/requests?profileId=${profileId}&statuses=approved`,
+    'GET'
+  );
+  expect(await noMatch.json()).toEqual({ requests: [], nextBefore: null });
+  expect(
+    (
+      await request(
+        `/api/solar/requests?profileId=${profileId}&statuses=approved&before=${listed.requests[0]!.id}`,
+        'GET'
+      )
+    ).status
+  ).toBe(404);
+  expect(
+    (await request(`/api/solar/requests?profileId=${profileId}&statuses=unknown`, 'GET')).status
+  ).toBe(400);
   const olderResponse = await request(
     `/api/solar/requests?profileId=${profileId}&before=${listed.requests[0]!.id}`,
     'GET'
