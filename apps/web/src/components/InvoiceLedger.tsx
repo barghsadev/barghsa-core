@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Button, ListPage, ScrollArea } from '@barghsa/ui';
 import type { FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
@@ -114,6 +115,7 @@ export function InvoiceLedger({
   const [detail, setDetail] = useState<InvoiceDetail | null>(null);
   const [detailStatus, setDetailStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [revision, setRevision] = useState(0);
+  const [detailRevision, setDetailRevision] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -138,6 +140,7 @@ export function InvoiceLedger({
           if (error instanceof Error && error.message === '403') {
             setPages([]);
             setSelectedId(null);
+            setDetail(null);
             setStatus('forbidden');
           } else setStatus('error');
         }
@@ -161,7 +164,7 @@ export function InvoiceLedger({
         if (!controller.signal.aborted) setDetailStatus('error');
       });
     return () => controller.abort();
-  }, [selectedId, revision]);
+  }, [selectedId, detailRevision]);
 
   function lookup(event: FormEvent) {
     event.preventDefault();
@@ -203,145 +206,169 @@ export function InvoiceLedger({
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">{word('description')}</p>
       </div>
-      <div className="flex flex-wrap gap-3">
-        <label className="grid min-w-40 gap-1 text-sm">
-          <span>{word('state')}</span>
-          <select
-            className="rounded-md border border-input bg-background px-3 py-2"
-            value={state}
-            onChange={(event) => {
-              setPages([]);
-              setCursor(null);
-              setSelectedId(null);
-              setDetail(null);
-              setState(event.target.value);
-            }}
-          >
-            <option value="">{word('allStates')}</option>
-            {states.map((value) => (
-              <option key={value} value={value}>
-                {appText(`invoices.state.${value}`, locale)}
-              </option>
-            ))}
-          </select>
-        </label>
-        <form onSubmit={lookup} className="flex flex-1 flex-wrap items-end gap-2">
-          <label className="grid min-w-60 flex-1 gap-1 text-sm">
-            <span>{word('searchId')}</span>
-            <input
-              className="rounded-md border border-input bg-background px-3 py-2 font-mono text-sm"
-              dir="ltr"
-              value={idInput}
-              onChange={(event) => setIdInput(event.target.value)}
-              aria-invalid={inputError === 'invalidId'}
-            />
-          </label>
-          <label className="grid min-w-60 flex-1 gap-1 text-sm">
-            <span>{word('searchProfileId')}</span>
-            <input
-              className="rounded-md border border-input bg-background px-3 py-2 font-mono text-sm"
-              dir="ltr"
-              value={profileInput}
-              onChange={(event) => setProfileInput(event.target.value)}
-              aria-invalid={inputError === 'invalidProfileId'}
-            />
-          </label>
-          <label className="grid min-w-60 flex-1 gap-1 text-sm">
-            <span>{word('searchOrderId')}</span>
-            <input
-              className="rounded-md border border-input bg-background px-3 py-2 font-mono text-sm"
-              dir="ltr"
-              value={orderInput}
-              onChange={(event) => setOrderInput(event.target.value)}
-              aria-invalid={inputError === 'invalidOrderId'}
-            />
-          </label>
-          <button
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-            type="submit"
-          >
-            {word('search')}
-          </button>
-        </form>
-      </div>
-      {inputError ? (
-        <p role="alert" className="text-sm text-destructive">
-          {word(inputError)}
-        </p>
-      ) : null}
-      {status === 'forbidden' ? <p role="alert">{word('forbidden')}</p> : null}
-      {status === 'error' ? (
-        <p role="alert">
-          {word('error')}{' '}
-          <button
-            type="button"
-            className="underline"
-            onClick={() => setRevision((value) => value + 1)}
-          >
-            {word('retry')}
-          </button>
-        </p>
-      ) : null}
-      {status === 'loading' && items.length === 0 ? <p role="status">{word('loading')}</p> : null}
-      {status === 'ready' && items.length === 0 ? (
-        <p className="rounded-md border border-dashed p-6 text-sm text-muted-foreground">
-          {word('empty')}
-        </p>
-      ) : null}
-      {items.length ? (
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[700px] text-start text-sm">
-            <thead className="border-b text-muted-foreground">
-              <tr>
-                <th className="p-2 text-start">{word('invoice')}</th>
-                <th className="p-2 text-start">{word('type')}</th>
-                <th className="p-2 text-start">{word('state')}</th>
-                <th className="p-2 text-start">{word('amount')}</th>
-                <th className="p-2 text-start">{word('paid')}</th>
-                <th className="p-2 text-start">{word('due')}</th>
-                <th className="p-2 text-start">{word('period')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.invoiceId} className="border-b last:border-0">
-                  <td className="p-2">
-                    <button
-                      type="button"
-                      className="font-mono text-primary underline underline-offset-2"
-                      dir="ltr"
-                      aria-label={`${word('detail')}: ${item.invoiceId}`}
-                      onClick={() => setSelectedId(item.invoiceId)}
-                    >
-                      {item.invoiceId.slice(0, 8)}…
-                    </button>
-                  </td>
-                  <td className="p-2">{invoiceType(item.type)}</td>
-                  <td className="p-2">{appText(`invoices.state.${item.state}`, locale)}</td>
-                  <td className="p-2 whitespace-nowrap">{numbers.money(item.totalAmount)}</td>
-                  <td className="p-2 whitespace-nowrap">{numbers.money(item.paidAmount)}</td>
-                  <td className="p-2 whitespace-nowrap">{time.format(item.dueAt)}</td>
-                  <td className="p-2 whitespace-nowrap">
-                    {item.periodStart && item.periodEnd
-                      ? formatInvoiceServicePeriod(item.periodStart, item.periodEnd, time.format)
-                      : '—'}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : null}
-      {current?.nextCursor ? (
-        <button
-          type="button"
-          disabled={status === 'loading'}
-          className="rounded-md border px-4 py-2 text-sm"
-          onClick={() => setCursor(current.nextCursor)}
+      <ListPage>
+        <ListPage.Toolbar
+          filters={
+            <div className="flex min-w-0 flex-wrap items-end gap-3">
+              <label className="grid min-w-40 gap-1 text-sm">
+                <span>{word('state')}</span>
+                <select
+                  className="rounded-md border border-input bg-background px-3 py-2"
+                  value={state}
+                  onChange={(event) => {
+                    setPages([]);
+                    setCursor(null);
+                    setSelectedId(null);
+                    setDetail(null);
+                    setState(event.target.value);
+                  }}
+                >
+                  <option value="">{word('allStates')}</option>
+                  {states.map((value) => (
+                    <option key={value} value={value}>
+                      {appText(`invoices.state.${value}`, locale)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <form
+                onSubmit={lookup}
+                className="flex min-w-0 flex-1 basis-full flex-wrap items-end gap-2 sm:basis-60"
+              >
+                <label className="grid min-w-0 flex-1 basis-60 gap-1 text-sm">
+                  <span>{word('searchId')}</span>
+                  <input
+                    className="w-full min-w-0 rounded-md border border-input bg-background px-3 py-2 font-mono text-sm"
+                    dir="ltr"
+                    value={idInput}
+                    onChange={(event) => setIdInput(event.target.value)}
+                    aria-invalid={inputError === 'invalidId'}
+                  />
+                </label>
+                <label className="grid min-w-0 flex-1 basis-60 gap-1 text-sm">
+                  <span>{word('searchProfileId')}</span>
+                  <input
+                    className="w-full min-w-0 rounded-md border border-input bg-background px-3 py-2 font-mono text-sm"
+                    dir="ltr"
+                    value={profileInput}
+                    onChange={(event) => setProfileInput(event.target.value)}
+                    aria-invalid={inputError === 'invalidProfileId'}
+                  />
+                </label>
+                <label className="grid min-w-0 flex-1 basis-60 gap-1 text-sm">
+                  <span>{word('searchOrderId')}</span>
+                  <input
+                    className="w-full min-w-0 rounded-md border border-input bg-background px-3 py-2 font-mono text-sm"
+                    dir="ltr"
+                    value={orderInput}
+                    onChange={(event) => setOrderInput(event.target.value)}
+                    aria-invalid={inputError === 'invalidOrderId'}
+                  />
+                </label>
+                <button
+                  className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+                  type="submit"
+                >
+                  {word('search')}
+                </button>
+              </form>
+            </div>
+          }
+        />
+        {inputError ? (
+          <p role="alert" className="text-sm text-destructive">
+            {word(inputError)}
+          </p>
+        ) : null}
+        <ListPage.Content
+          loading={status === 'loading'}
+          error={status === 'error' || status === 'forbidden'}
+          empty={items.length === 0}
+          retainContent={items.length > 0 && status !== 'forbidden'}
+          loadingView={<p role="status">{word('loading')}</p>}
+          errorView={
+            status === 'forbidden' ? (
+              <p role="alert">{word('forbidden')}</p>
+            ) : (
+              <div className="space-y-2">
+                <p role="alert">{word('error')}</p>
+                <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
+                  {word('retry')}
+                </Button>
+              </div>
+            )
+          }
+          emptyView={
+            <p className="rounded-md border border-dashed p-6 text-sm text-muted-foreground">
+              {word('empty')}
+            </p>
+          }
         >
-          {status === 'loading' ? word('loading') : word('more')}
-        </button>
-      ) : null}
+          {items.length ? (
+            <ScrollArea
+              scrollbarOrientation="horizontal"
+              role="group"
+              aria-label={word('title')}
+              className="min-w-0 max-w-full"
+            >
+              <table className="w-full min-w-[700px] text-start text-sm">
+                <thead className="border-b text-muted-foreground">
+                  <tr>
+                    <th className="p-2 text-start">{word('invoice')}</th>
+                    <th className="p-2 text-start">{word('type')}</th>
+                    <th className="p-2 text-start">{word('state')}</th>
+                    <th className="p-2 text-start">{word('amount')}</th>
+                    <th className="p-2 text-start">{word('paid')}</th>
+                    <th className="p-2 text-start">{word('due')}</th>
+                    <th className="p-2 text-start">{word('period')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((item) => (
+                    <tr key={item.invoiceId} className="border-b last:border-0">
+                      <td className="p-2">
+                        <button
+                          type="button"
+                          className="font-mono text-primary underline underline-offset-2"
+                          dir="ltr"
+                          aria-label={`${word('detail')}: ${item.invoiceId}`}
+                          onClick={() => setSelectedId(item.invoiceId)}
+                        >
+                          {item.invoiceId.slice(0, 8)}…
+                        </button>
+                      </td>
+                      <td className="p-2">{invoiceType(item.type)}</td>
+                      <td className="p-2">{appText(`invoices.state.${item.state}`, locale)}</td>
+                      <td className="p-2 whitespace-nowrap">{numbers.money(item.totalAmount)}</td>
+                      <td className="p-2 whitespace-nowrap">{numbers.money(item.paidAmount)}</td>
+                      <td className="p-2 whitespace-nowrap">{time.format(item.dueAt)}</td>
+                      <td className="p-2 whitespace-nowrap">
+                        {item.periodStart && item.periodEnd
+                          ? formatInvoiceServicePeriod(
+                              item.periodStart,
+                              item.periodEnd,
+                              time.format
+                            )
+                          : '—'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </ScrollArea>
+          ) : null}
+        </ListPage.Content>
+        <ListPage.Pagination
+          kind="cursor"
+          hasMore={!!current?.nextCursor && status !== 'error' && status !== 'forbidden'}
+          loading={status === 'loading'}
+          onNext={() => {
+            if (current?.nextCursor) setCursor(current.nextCursor);
+          }}
+          label={appText('historyPagination.label', locale)}
+          nextLabel={word('more')}
+        />
+      </ListPage>
 
       {selectedId ? (
         <section
@@ -367,7 +394,7 @@ export function InvoiceLedger({
               <button
                 type="button"
                 className="underline"
-                onClick={() => setRevision((value) => value + 1)}
+                onClick={() => setDetailRevision((value) => value + 1)}
               >
                 {word('retry')}
               </button>
@@ -453,30 +480,37 @@ export function InvoiceLedger({
                   {word('useRefund')}
                 </button>
               )}
-              <div className="overflow-x-auto">
+              <div className="space-y-2">
                 <h4 className="mb-2 font-semibold">{word('lines')}</h4>
-                <table className="w-full min-w-[520px] text-sm">
-                  <thead>
-                    <tr className="border-b text-muted-foreground">
-                      <th className="p-2 text-start">{word('descriptionColumn')}</th>
-                      <th className="p-2 text-start">{word('quantity')}</th>
-                      <th className="p-2 text-start">{word('unitPrice')}</th>
-                      <th className="p-2 text-start">{word('lineTotal')}</th>
-                      <th className="p-2 text-start">{word('vat')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {detail.lines.map((line, index) => (
-                      <tr key={index} className="border-b">
-                        <td className="p-2">{line.description}</td>
-                        <td className="p-2">{numbers.number(line.quantity)}</td>
-                        <td className="p-2">{numbers.money(line.unitPrice)}</td>
-                        <td className="p-2">{numbers.money(line.lineTotal)}</td>
-                        <td className="p-2">{numbers.money(line.vatAmount)}</td>
+                <ScrollArea
+                  scrollbarOrientation="horizontal"
+                  role="region"
+                  aria-label={word('lines')}
+                  className="min-w-0 max-w-full"
+                >
+                  <table className="w-full min-w-[520px] text-sm">
+                    <thead>
+                      <tr className="border-b text-muted-foreground">
+                        <th className="p-2 text-start">{word('descriptionColumn')}</th>
+                        <th className="p-2 text-start">{word('quantity')}</th>
+                        <th className="p-2 text-start">{word('unitPrice')}</th>
+                        <th className="p-2 text-start">{word('lineTotal')}</th>
+                        <th className="p-2 text-start">{word('vat')}</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {detail.lines.map((line, index) => (
+                        <tr key={index} className="border-b">
+                          <td className="p-2">{line.description}</td>
+                          <td className="p-2">{numbers.number(line.quantity)}</td>
+                          <td className="p-2">{numbers.money(line.unitPrice)}</td>
+                          <td className="p-2">{numbers.money(line.lineTotal)}</td>
+                          <td className="p-2">{numbers.money(line.vatAmount)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </ScrollArea>
                 <p className="mt-2 text-sm font-medium">
                   {word('vatTotal')}: {numbers.money(vat)}
                 </p>

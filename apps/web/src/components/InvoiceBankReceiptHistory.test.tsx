@@ -1,0 +1,112 @@
+import { act } from 'react';
+import { createRoot, type Root } from 'react-dom/client';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { InvoiceBankReceiptHistory } from './InvoiceBankReceiptHistory.js';
+
+const first = '11111111-1111-7111-8111-111111111111';
+const older = '22222222-2222-7222-8222-222222222222';
+const stamp = '2026-09-01T00:00:00.123456Z';
+const row = (receiptId: string) => ({
+  receiptId,
+  invoiceId: first,
+  amount: '9007199254740993',
+  state: 'Confirmed',
+  bankName: 'Bank Mellat',
+  paymentDate: '2026-09-01',
+  submittedAt: stamp,
+});
+vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
+vi.mock('../hooks/useAccountTime.js', () => ({
+  useAccountTime: () => ({ format: (value: string) => value }),
+}));
+vi.mock('../hooks/useNumberFormatting.js', () => ({
+  useNumberFormatting: () => ({ money: (value: string) => value }),
+}));
+let host: HTMLDivElement, root: Root;
+beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  host = document.createElement('div');
+  document.body.append(host);
+  root = createRoot(host);
+});
+afterEach(async () => {
+  await act(async () => root.unmount());
+  host.remove();
+  vi.unstubAllGlobals();
+});
+const render = (revision = 0) =>
+  act(async () => root.render(<InvoiceBankReceiptHistory revision={revision} onOpen={vi.fn()} />));
+const click = (label: string) =>
+  act(async () =>
+    (
+      [...host.querySelectorAll('button')].find(
+        (button) => button.textContent === label
+      ) as HTMLButtonElement
+    ).click()
+  );
+
+it('retains accepted rows during a failed page and retries its exact microsecond cursor before going back', async () => {
+  let fail = true;
+  const fetcher = vi.fn(async (input: RequestInfo | URL) => {
+    const more = String(input).includes('beforeAt=');
+    if (more && fail) return new Response(null, { status: 503 });
+    return new Response(
+      JSON.stringify({
+        items: [row(more ? older : first)],
+        nextCursor: more ? null : { beforeAt: stamp, beforeId: first },
+      })
+    );
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await render();
+  await click('Next page');
+  const failed = fetcher.mock.calls.at(-1)![0];
+  expect(host.textContent).toContain(first);
+  expect(host.querySelector('nav')).toBeNull();
+  fail = false;
+  await click('Retry');
+  expect(fetcher.mock.calls.at(-1)![0]).toBe(failed);
+  expect(new URL(String(failed), 'https://example.test').searchParams.get('beforeAt')).toBe(stamp);
+  expect(host.textContent).toContain(older);
+  expect(host.querySelectorAll('nav button')[1]?.hasAttribute('disabled')).toBe(true);
+  await click('Previous page');
+  expect(host.textContent).not.toContain(older);
+  expect(String(fetcher.mock.calls.at(-1)![0])).not.toContain('beforeAt=');
+});
+
+it('reapplying an unchanged invoice filter retries the first page instead of leaving an empty loading state', async () => {
+  const fetcher = vi.fn(
+    async () => new Response(JSON.stringify({ items: [row(first)], nextCursor: null }))
+  );
+  vi.stubGlobal('fetch', fetcher);
+  await render();
+  await act(async () =>
+    host
+      .querySelector('form')!
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  );
+  expect(fetcher).toHaveBeenCalledTimes(2);
+  expect(host.textContent).toContain(first);
+  expect(host.querySelector('[data-slot="list-content"]')?.getAttribute('aria-busy')).toBeNull();
+});
+
+it('discards rows after a forbidden refresh and does not resurrect them during a later failed retry', async () => {
+  let status = 200;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () =>
+      status === 200
+        ? new Response(JSON.stringify({ items: [row(first)], nextCursor: null }))
+        : new Response(null, { status })
+    )
+  );
+  await render();
+  expect(host.textContent).toContain(first);
+  status = 403;
+  await render(1);
+  expect(host.textContent).not.toContain(first);
+  status = 503;
+  await render(2);
+  expect(host.textContent).not.toContain(first);
+  expect(host.textContent).toContain('Could not load receipt history.');
+});

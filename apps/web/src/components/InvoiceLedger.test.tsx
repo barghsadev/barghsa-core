@@ -204,3 +204,89 @@ it('keeps customer and order filters when loading the next ledger page', async (
   expect(next).toContain(`orderId=${ORDER}`);
   expect(next).toContain('beforeAt=');
 });
+
+it('retries a failed cursor without reloading selected invoice details or earlier rows', async () => {
+  const older = '44444444-4444-7444-8444-444444444444';
+  let fail = true;
+  const fetcher = vi.fn(async (input: RequestInfo | URL) => {
+    const path = String(input);
+    if (path.endsWith(`/${ID}`))
+      return new Response(
+        JSON.stringify({
+          ...row,
+          lines: [],
+          activity: { payments: [], bankReceipts: [], refunds: [] },
+        })
+      );
+    if (path.includes('beforeAt=') && fail) return new Response(null, { status: 503 });
+    return new Response(
+      JSON.stringify({
+        items: [{ ...row, invoiceId: path.includes('beforeAt=') ? older : ID }],
+        nextCursor: path.includes('beforeAt=')
+          ? null
+          : { beforeAt: '2026-09-01T00:00:00.123456Z', beforeId: ID },
+      })
+    );
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await act(async () =>
+    root.render(<InvoiceLedger onSelectForDueAt={vi.fn()} onOpenReceipt={vi.fn()} />)
+  );
+  await act(async () => (container.querySelector('tbody button') as HTMLButtonElement).click());
+  const selected = container.querySelector(
+    'section[aria-labelledby="invoice-ledger-detail-title"]'
+  );
+  const click = (text: string) =>
+    [...container.querySelectorAll('button')]
+      .find((button) => button.textContent === text)!
+      .click();
+  await act(async () => click('Load more'));
+  const failed = fetcher.mock.calls.at(-1)![0];
+  expect(container.querySelector('tbody button')).not.toBeNull();
+  expect(container.querySelector('section[aria-labelledby="invoice-ledger-detail-title"]')).toBe(
+    selected
+  );
+  fail = false;
+  await act(async () => click('Retry'));
+  expect(fetcher.mock.calls.at(-1)![0]).toBe(failed);
+  expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith(`/${ID}`))).toHaveLength(1);
+  expect(container.querySelectorAll('tbody button')).toHaveLength(2);
+  expect(container.querySelector('section[aria-labelledby="invoice-ledger-detail-title"]')).toBe(
+    selected
+  );
+});
+
+it('retries invoice detail independently from the ledger', async () => {
+  let fail = true;
+  const fetcher = vi.fn(async (input: RequestInfo | URL) => {
+    if (String(input).endsWith(`/${ID}`))
+      return fail
+        ? new Response(null, { status: 503 })
+        : new Response(
+            JSON.stringify({
+              ...row,
+              lines: [],
+              activity: { payments: [], bankReceipts: [], refunds: [] },
+            })
+          );
+    return new Response(JSON.stringify({ items: [row], nextCursor: null }));
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await act(async () =>
+    root.render(<InvoiceLedger onSelectForDueAt={vi.fn()} onOpenReceipt={vi.fn()} />)
+  );
+  await act(async () => (container.querySelector('tbody button') as HTMLButtonElement).click());
+  fail = false;
+  await act(async () =>
+    (
+      [
+        ...container.querySelectorAll(
+          'section[aria-labelledby="invoice-ledger-detail-title"] button'
+        ),
+      ].find((button) => button.textContent === 'Retry') as HTMLButtonElement
+    ).click()
+  );
+  expect(fetcher.mock.calls.filter(([url]) => !String(url).endsWith(`/${ID}`))).toHaveLength(1);
+  expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith(`/${ID}`))).toHaveLength(2);
+  expect(container.textContent).toContain('Use in due-date tool');
+});

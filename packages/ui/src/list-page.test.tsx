@@ -135,3 +135,44 @@ it('toolbar composition keeps the standalone search debounce and native keyboard
     vi.unstubAllGlobals();
   }
 });
+
+it('cursor back/next controls keep a last page navigable and block both while busy', async () => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  const host = document.createElement('div');
+  document.body.append(host);
+  const root = createRoot(host);
+  const previous = vi.fn(),
+    next = vi.fn();
+  const render = (loading: boolean) =>
+    act(async () =>
+      root.render(
+        <ListPage.Pagination
+          kind="cursor"
+          hasMore={false}
+          loading={loading}
+          onNext={next}
+          label="History pages"
+          nextLabel="Next"
+          previous={{ enabled: true, label: 'Previous', onClick: previous }}
+        />
+      )
+    );
+  try {
+    await render(true);
+    const buttons = host.querySelectorAll('button');
+    expect(buttons).toHaveLength(2);
+    expect(buttons[0]!.disabled).toBe(true);
+    expect(buttons[1]!.disabled).toBe(true);
+    await act(async () => buttons[0]!.click());
+    expect(previous).not.toHaveBeenCalled();
+    await render(false);
+    await act(async () => host.querySelector('button')!.click());
+    expect(previous).toHaveBeenCalledOnce();
+    expect(next).not.toHaveBeenCalled();
+    expect(host.querySelectorAll('button')[1]!.disabled).toBe(true);
+  } finally {
+    await act(async () => root.unmount());
+    host.remove();
+    vi.unstubAllGlobals();
+  }
+});

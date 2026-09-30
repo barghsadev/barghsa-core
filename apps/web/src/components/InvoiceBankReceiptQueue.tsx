@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Alert, AlertDescription, Button, PageLoading, StatusBadge } from '@barghsa/ui';
+import { Alert, AlertDescription, Button, ListPage, PageLoading, StatusBadge } from '@barghsa/ui';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
 import {
@@ -93,6 +93,7 @@ export function InvoiceBankReceiptQueue({
   );
   const [reviewState, setReviewState] = useState<'idle' | 'loading' | 'error'>('idle');
   const [revision, setRevision] = useState(0);
+  const [listRevision, setListRevision] = useState(0);
   const detailRef = useRef<HTMLElement>(null);
   const selectedIdRef = useRef(selectedId);
   selectedIdRef.current = selectedId;
@@ -112,11 +113,21 @@ export function InvoiceBankReceiptQueue({
         }
       })
       .catch((error: unknown) => {
-        if (!controller.signal.aborted)
-          setListState(error instanceof Error && error.message === '403' ? 'forbidden' : 'error');
+        if (!controller.signal.aborted) {
+          const forbidden = error instanceof Error && error.message === '403';
+          if (forbidden) {
+            setItems([]);
+            setSelectedId(null);
+            setDetail(null);
+            setAllocation(null);
+            setAction(null);
+            setFinancialReview(null);
+          }
+          setListState(forbidden ? 'forbidden' : 'error');
+        }
       });
     return () => controller.abort();
-  }, [revision]);
+  }, [revision, listRevision]);
 
   useEffect(() => {
     if (!selectedId) {
@@ -218,49 +229,72 @@ export function InvoiceBankReceiptQueue({
           <h2 className="text-lg font-semibold">{word('title')}</h2>
           <p className="text-sm text-muted-foreground">{word('description')}</p>
         </div>
-        <Button variant="outline" onClick={refresh} disabled={listState === 'loading'}>
-          {word('refresh')}
-        </Button>
       </div>
-      {listState === 'loading' ? <PageLoading label={word('loading')} /> : null}
-      {listState === 'forbidden' ? <p role="alert">{word('forbidden')}</p> : null}
-      {listState === 'error' ? <p role="alert">{word('loadError')}</p> : null}
-      {listState === 'ready' && !items.length ? <p>{word('empty')}</p> : null}
-      {listState === 'ready' && items.length ? (
-        <ul className="divide-y rounded-lg border">
-          {items.map((item) => (
-            <li
-              key={item.receiptId}
-              className="flex flex-wrap items-center justify-between gap-3 p-3"
-            >
-              <div className="space-y-1 text-sm">
-                <p>
-                  {word('invoice')}: <bdi className="break-all">{item.invoiceId}</bdi>
-                </p>
-                <p>
-                  {numbers.money(item.amount)} · {time.format(item.submittedAt)}
-                </p>
-                <p className="break-words">
-                  {word('bankName')}: {item.bankName ?? '—'}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <StatusBadge label={appText(`invoices.activity.state.${item.state}`, locale)} />
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setReason('');
-                    setSelectedSource('pending');
-                    setSelectedId(item.receiptId);
-                  }}
-                >
-                  {word('open')}
+      <ListPage>
+        <ListPage.Toolbar
+          actions={
+            <Button variant="outline" onClick={refresh} disabled={listState === 'loading'}>
+              {word('refresh')}
+            </Button>
+          }
+        />
+        <ListPage.Content
+          loading={listState === 'loading'}
+          error={listState === 'error' || listState === 'forbidden'}
+          empty={items.length === 0}
+          retainContent={items.length > 0 && listState !== 'forbidden'}
+          loadingView={<PageLoading label={word('loading')} />}
+          errorView={
+            listState === 'forbidden' ? (
+              <p role="alert">{word('forbidden')}</p>
+            ) : (
+              <div className="space-y-2">
+                <p role="alert">{word('loadError')}</p>
+                <Button variant="outline" onClick={() => setListRevision((value) => value + 1)}>
+                  {appText('historyPagination.retry', locale)}
                 </Button>
               </div>
-            </li>
-          ))}
-        </ul>
-      ) : null}
+            )
+          }
+          emptyView={<p>{word('empty')}</p>}
+        >
+          {items.length ? (
+            <ul className="divide-y rounded-lg border">
+              {items.map((item) => (
+                <li
+                  key={item.receiptId}
+                  className="flex flex-wrap items-center justify-between gap-3 p-3"
+                >
+                  <div className="space-y-1 text-sm">
+                    <p>
+                      {word('invoice')}: <bdi className="break-all">{item.invoiceId}</bdi>
+                    </p>
+                    <p>
+                      {numbers.money(item.amount)} · {time.format(item.submittedAt)}
+                    </p>
+                    <p className="break-words">
+                      {word('bankName')}: {item.bankName ?? '—'}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <StatusBadge label={appText(`invoices.activity.state.${item.state}`, locale)} />
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setReason('');
+                        setSelectedSource('pending');
+                        setSelectedId(item.receiptId);
+                      }}
+                    >
+                      {word('open')}
+                    </Button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </ListPage.Content>
+      </ListPage>
       <Button
         variant="outline"
         aria-expanded={historyOpen}

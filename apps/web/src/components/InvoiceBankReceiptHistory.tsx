@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { Button, PageLoading, StatusBadge } from '@barghsa/ui';
+import { Button, ListPage, PageLoading, StatusBadge } from '@barghsa/ui';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
@@ -42,6 +42,7 @@ export function InvoiceBankReceiptHistory({
   const [invalidInvoice, setInvalidInvoice] = useState(false);
   const [cursor, setCursor] = useState<Cursor | null>(null);
   const [previous, setPrevious] = useState<Array<Cursor | null>>([]);
+  const [retryRevision, setRetryRevision] = useState(0);
   const [page, setPage] = useState<HistoryPage>({ items: [], nextCursor: null });
   const [loadState, setLoadState] = useState<'loading' | 'ready' | 'error' | 'forbidden'>(
     'loading'
@@ -72,11 +73,14 @@ export function InvoiceBankReceiptHistory({
         }
       })
       .catch((error: unknown) => {
-        if (!controller.signal.aborted)
-          setLoadState(error instanceof Error && error.message === '403' ? 'forbidden' : 'error');
+        if (!controller.signal.aborted) {
+          const forbidden = error instanceof Error && error.message === '403';
+          if (forbidden) setPage({ items: [], nextCursor: null });
+          setLoadState(forbidden ? 'forbidden' : 'error');
+        }
       });
     return () => controller.abort();
-  }, [state, invoiceId, cursor, revision]);
+  }, [state, invoiceId, cursor, revision, retryRevision]);
 
   function applyInvoice(event: FormEvent) {
     event.preventDefault();
@@ -86,6 +90,9 @@ export function InvoiceBankReceiptHistory({
       return;
     }
     setInvalidInvoice(false);
+    setPage({ items: [], nextCursor: null });
+    setLoadState('loading');
+    if (value === invoiceId && !cursor) setRetryRevision((value) => value + 1);
     setCursor(null);
     setPrevious([]);
     setInvoiceId(value);
@@ -94,107 +101,131 @@ export function InvoiceBankReceiptHistory({
   return (
     <section className="space-y-4 border-t pt-4" aria-label={word('historyTitle')}>
       <h3 className="font-semibold">{word('historyTitle')}</h3>
-      <div className="flex flex-wrap items-end gap-3">
-        <label className="flex flex-col gap-1 text-sm">
-          {word('historyState')}
-          <select
-            value={state}
-            onChange={(event) => {
-              setState(event.target.value as typeof state);
-              setCursor(null);
-              setPrevious([]);
-            }}
-            className="min-h-10 rounded-md border bg-background px-3"
-          >
-            <option value="">{word('historyAll')}</option>
-            <option value="Confirmed">
-              {appText('invoices.activity.state.Confirmed', locale)}
-            </option>
-            <option value="Rejected">{appText('invoices.activity.state.Rejected', locale)}</option>
-          </select>
-        </label>
-        <form onSubmit={applyInvoice} className="flex flex-wrap items-end gap-2">
-          <label className="flex flex-col gap-1 text-sm">
-            {word('invoice')}
-            <input
-              value={invoiceInput}
-              onChange={(event) => {
-                setInvoiceInput(event.target.value);
-                setInvalidInvoice(false);
-              }}
-              aria-invalid={invalidInvoice}
-              className="min-h-10 w-72 max-w-full rounded-md border bg-background px-3"
-            />
-          </label>
-          <Button type="submit" variant="outline">
-            {word('historyApply')}
-          </Button>
-        </form>
-      </div>
-      {invalidInvoice ? <p role="alert">{word('historyInvalidInvoice')}</p> : null}
-      {loadState === 'loading' ? <PageLoading label={word('loading')} /> : null}
-      {loadState === 'error' ? <p role="alert">{word('historyError')}</p> : null}
-      {loadState === 'forbidden' ? <p role="alert">{word('forbidden')}</p> : null}
-      {loadState === 'ready' && !page.items.length ? <p>{word('historyEmpty')}</p> : null}
-      {loadState === 'ready' && page.items.length ? (
-        <ul className="divide-y rounded-lg border">
-          {page.items.map((item) => (
-            <li
-              key={item.receiptId}
-              className="flex flex-wrap items-center justify-between gap-3 p-3"
-            >
-              <div className="space-y-1 text-sm">
-                <p>
-                  <bdi className="break-all">{item.receiptId}</bdi>
-                </p>
-                <p>
-                  {word('invoice')}: <bdi className="break-all">{item.invoiceId}</bdi>
-                </p>
-                <p>
-                  {numbers.money(item.amount)} · {time.format(item.submittedAt)}
-                </p>
-                <p className="break-words">
-                  {word('bankName')}: {item.bankName ?? '—'}
-                </p>
-                <p>
-                  {word('paymentDate')}: <bdi>{item.paymentDate}</bdi>
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <StatusBadge label={appText(`invoices.activity.state.${item.state}`, locale)} />
-                <Button variant="outline" onClick={() => onOpen(item.receiptId)}>
-                  {word('open')}
+      <ListPage>
+        <ListPage.Toolbar
+          filters={
+            <div className="flex min-w-0 flex-wrap items-end gap-3">
+              <label className="flex min-w-0 flex-col gap-1 text-sm">
+                {word('historyState')}
+                <select
+                  value={state}
+                  onChange={(event) => {
+                    setPage({ items: [], nextCursor: null });
+                    setLoadState('loading');
+                    setState(event.target.value as typeof state);
+                    setCursor(null);
+                    setPrevious([]);
+                  }}
+                  className="min-h-10 rounded-md border bg-background px-3"
+                >
+                  <option value="">{word('historyAll')}</option>
+                  <option value="Confirmed">
+                    {appText('invoices.activity.state.Confirmed', locale)}
+                  </option>
+                  <option value="Rejected">
+                    {appText('invoices.activity.state.Rejected', locale)}
+                  </option>
+                </select>
+              </label>
+              <form onSubmit={applyInvoice} className="flex min-w-0 flex-wrap items-end gap-2">
+                <label className="flex min-w-0 flex-col gap-1 text-sm">
+                  {word('invoice')}
+                  <input
+                    value={invoiceInput}
+                    onChange={(event) => {
+                      setInvoiceInput(event.target.value);
+                      setInvalidInvoice(false);
+                    }}
+                    aria-invalid={invalidInvoice}
+                    className="min-h-10 w-72 max-w-full rounded-md border bg-background px-3"
+                  />
+                </label>
+                <Button type="submit" variant="outline">
+                  {word('historyApply')}
+                </Button>
+              </form>
+            </div>
+          }
+        />
+        {invalidInvoice ? <p role="alert">{word('historyInvalidInvoice')}</p> : null}
+        <ListPage.Content
+          loading={loadState === 'loading'}
+          error={loadState === 'error' || loadState === 'forbidden'}
+          empty={page.items.length === 0}
+          retainContent={page.items.length > 0 && loadState !== 'forbidden'}
+          loadingView={<PageLoading label={word('loading')} />}
+          errorView={
+            loadState === 'forbidden' ? (
+              <p role="alert">{word('forbidden')}</p>
+            ) : (
+              <div className="space-y-2">
+                <p role="alert">{word('historyError')}</p>
+                <Button variant="outline" onClick={() => setRetryRevision((value) => value + 1)}>
+                  {appText('historyPagination.retry', locale)}
                 </Button>
               </div>
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      {loadState === 'ready' && (previous.length > 0 || page.nextCursor) ? (
-        <nav aria-label={word('historyPages')} className="flex gap-2">
-          <Button
-            variant="outline"
-            disabled={!previous.length}
-            onClick={() => {
-              setCursor(previous.at(-1) ?? null);
-              setPrevious((items) => items.slice(0, -1));
-            }}
-          >
-            {word('historyPrevious')}
-          </Button>
-          <Button
-            variant="outline"
-            disabled={!page.nextCursor}
-            onClick={() => {
+            )
+          }
+          emptyView={<p>{word('historyEmpty')}</p>}
+        >
+          {page.items.length ? (
+            <ul className="divide-y rounded-lg border">
+              {page.items.map((item) => (
+                <li
+                  key={item.receiptId}
+                  className="flex flex-wrap items-center justify-between gap-3 p-3"
+                >
+                  <div className="space-y-1 text-sm">
+                    <p>
+                      <bdi className="break-all">{item.receiptId}</bdi>
+                    </p>
+                    <p>
+                      {word('invoice')}: <bdi className="break-all">{item.invoiceId}</bdi>
+                    </p>
+                    <p>
+                      {numbers.money(item.amount)} · {time.format(item.submittedAt)}
+                    </p>
+                    <p className="break-words">
+                      {word('bankName')}: {item.bankName ?? '—'}
+                    </p>
+                    <p>
+                      {word('paymentDate')}: <bdi>{item.paymentDate}</bdi>
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <StatusBadge label={appText(`invoices.activity.state.${item.state}`, locale)} />
+                    <Button variant="outline" onClick={() => onOpen(item.receiptId)}>
+                      {word('open')}
+                    </Button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </ListPage.Content>
+        {loadState !== 'forbidden' && loadState !== 'error' && (
+          <ListPage.Pagination
+            kind="cursor"
+            hasMore={!!page.nextCursor}
+            loading={loadState === 'loading'}
+            label={word('historyPages')}
+            nextLabel={word('historyNext')}
+            onNext={() => {
               if (!page.nextCursor) return;
               setPrevious((items) => [...items, cursor]);
               setCursor(page.nextCursor);
             }}
-          >
-            {word('historyNext')}
-          </Button>
-        </nav>
-      ) : null}
+            previous={{
+              enabled: previous.length > 0,
+              label: word('historyPrevious'),
+              onClick: () => {
+                setCursor(previous.at(-1) ?? null);
+                setPrevious((items) => items.slice(0, -1));
+              },
+            }}
+          />
+        )}
+      </ListPage>
     </section>
   );
 }

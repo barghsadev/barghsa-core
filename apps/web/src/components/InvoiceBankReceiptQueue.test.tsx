@@ -322,3 +322,69 @@ it('shows the settled allocation from a confirmed receipt without recalculating 
   expect(container.textContent).toContain('150000 IRR');
   expect(fetcher.mock.calls.some(([url]) => String(url).endsWith('/allocation'))).toBe(false);
 });
+
+it('local list retry preserves a selected receipt draft and does not rerun its allocation', async () => {
+  let failList = true;
+  const fetcher = vi.fn(async (input: RequestInfo | URL) => {
+    const path = String(input);
+    if (path.endsWith('/allocation')) return new Response(JSON.stringify(allocation));
+    if (path.endsWith(`/${RECEIPT}`)) return new Response(JSON.stringify(receipt));
+    return failList
+      ? new Response(null, { status: 503 })
+      : new Response(JSON.stringify({ items: [receipt] }));
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await act(async () =>
+    root.render(
+      <InvoiceBankReceiptQueue initialSelection={{ receiptId: RECEIPT, state: 'Submitted' }} />
+    )
+  );
+  const draft = container.querySelector('textarea')!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
+      draft,
+      'Keep this explanation'
+    );
+    draft.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  failList = false;
+  const retry = [...container.querySelectorAll('[data-slot="list-content"] button')].find(
+    (button) => button.textContent === 'Retry'
+  ) as HTMLButtonElement;
+  await act(async () => retry.click());
+  expect(container.querySelector('textarea')).toBe(draft);
+  expect(draft.value).toBe('Keep this explanation');
+  expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith('/allocation'))).toHaveLength(1);
+  expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith(`/${RECEIPT}`))).toHaveLength(1);
+});
+
+it('a forbidden list refresh removes retained receipts and their selected review', async () => {
+  let forbidden = false;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (input: RequestInfo | URL) => {
+      const path = String(input);
+      if (path.endsWith('/allocation')) return new Response(JSON.stringify(allocation));
+      if (path.endsWith(`/${RECEIPT}`)) return new Response(JSON.stringify(receipt));
+      return forbidden
+        ? new Response(null, { status: 403 })
+        : new Response(JSON.stringify({ items: [receipt] }));
+    })
+  );
+  await act(async () =>
+    root.render(
+      <InvoiceBankReceiptQueue initialSelection={{ receiptId: RECEIPT, state: 'Submitted' }} />
+    )
+  );
+  expect(container.querySelector('textarea')).not.toBeNull();
+  forbidden = true;
+  await act(async () =>
+    (
+      [...container.querySelectorAll('button')].find(
+        (button) => button.textContent === 'Refresh'
+      ) as HTMLButtonElement
+    ).click()
+  );
+  expect(container.querySelector('textarea')).toBeNull();
+  expect(container.querySelector('[data-slot="list-content"] ul')).toBeNull();
+});

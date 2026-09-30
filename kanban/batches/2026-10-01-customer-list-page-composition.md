@@ -38,4 +38,4 @@ The first recovery run exposed automatic HTTP retry behavior in the test fixture
 
 ## Publication
 
-The preceding filter-drawer batch is published as `6caa6d4d4efefe40eb725f665afcf34f2b0d59cc`; CI run `36778092189` passes all five gates under the existing temporary fast mode. The coverage gate is an exemption, not measured combined coverage. This batch is committed and pushed directly to main after final related checks, with no PR. Its exact remote commit and CI are verified after push.
+The preceding filter-drawer batch is published as `6caa6d4d4efefe40eb725f665afcf34f2b0d59cc`; CI run `36778092189` passes all five gates under the existing temporary fast mode. The coverage gate is an exemption, not measured combined coverage. This batch is published directly to main as `7dfd27f6bb2cc70f692e5eb340e1fce2e50216c0`, with no PR. CI run `36780246336` passes all five gates under the existing temporary fast mode.

@@ -40,6 +40,7 @@ type ListPaginationProps =
       onNext: () => void;
       label: string;
       nextLabel: string;
+      previous?: { enabled: boolean; label: string; onClick: () => void };
     };
 
 export function ListPagination(props: ListPaginationProps) {
@@ -47,10 +48,26 @@ export function ListPagination(props: ListPaginationProps) {
     const { kind: _kind, ...pagination } = props;
     return <Pagination {...pagination} />;
   }
-  if (!props.hasMore) return null;
+  if (!props.hasMore && !props.previous?.enabled) return null;
   return (
-    <nav data-slot="list-pagination" aria-label={props.label}>
-      <Button type="button" variant="outline" loading={props.loading} onClick={props.onNext}>
+    <nav data-slot="list-pagination" aria-label={props.label} className="flex flex-wrap gap-2">
+      {props.previous && (
+        <Button
+          type="button"
+          variant="outline"
+          disabled={props.loading || !props.previous.enabled}
+          onClick={props.previous.onClick}
+        >
+          {props.previous.label}
+        </Button>
+      )}
+      <Button
+        type="button"
+        variant="outline"
+        loading={props.loading}
+        disabled={!props.hasMore}
+        onClick={props.onNext}
+      >
         {props.nextLabel}
       </Button>
     </nav>
