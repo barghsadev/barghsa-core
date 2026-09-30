@@ -1,3 +1,5 @@
+import { useListView } from '../hooks/useListView.js';
+import { HistoryTable, type HistoryColumn } from '../components/HistoryTable.js';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { HistoryListControls } from '../components/HistoryListControls.js';
@@ -7,7 +9,7 @@ import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { Button, Card, CardContent, StatusFilter } from '@barghsa/ui';
+import { Button, Card, CardContent, StatusFilter, StatusBadge, ListViewToggle } from '@barghsa/ui';
 import { SAVING_ORDER_STATUSES } from '@barghsa/shared/validation';
 import { useCursorHistory } from '../hooks/useCursorHistory.js';
 import { statusFilterTone } from '../lib/status-filter-tone.js';
@@ -46,6 +48,7 @@ export function SavingOrdersPage({
   onClearFilters?: () => void;
   onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
 }) {
+  const { view, setView } = useListView('saving-orders');
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
@@ -125,9 +128,92 @@ export function SavingOrdersPage({
     query.sort,
     acceptPage,
   ]);
+  const columns: HistoryColumn<SavingOrderRow>[] = [
+    {
+      id: 'reference',
+      label: t('historySearch.reference', locale),
+      render: (order) => (
+        <Link
+          to="/savings/orders/$orderId"
+          params={{ orderId: order.id }}
+          className="text-primary underline underline-offset-4"
+        >
+          <bdi dir="ltr" className="break-all">
+            {order.id}
+          </bdi>
+        </Link>
+      ),
+    },
+    {
+      id: 'plan',
+      label: copy('stepPlan'),
+      render: (order) => (
+        <div className="min-w-44 space-y-1">
+          <p className="font-medium" dir="auto">
+            {order.plan_title[locale]}
+          </p>
+          <p className="text-muted-foreground" dir="auto">
+            {order.hardware_title[locale]}
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: 'status',
+      label: t('historyView.status', locale),
+      render: (order) => (
+        <StatusBadge
+          label={
+            statusOptions.find((option) => option.value === order.status)?.label ?? order.status
+          }
+          tone={statusFilterTone(order.status)}
+        />
+      ),
+    },
+    {
+      id: 'amount',
+      label: t('historyView.amount', locale),
+      render: (order) => (
+        <bdi className="whitespace-nowrap">{numbers.money(order.total_amount)}</bdi>
+      ),
+    },
+    {
+      id: 'financial',
+      label: copy('financialStatus'),
+      render: (order) => copy('financial.' + order.financial_status),
+    },
+    {
+      id: 'bill',
+      label: copy('billIdentifier'),
+      render: (order) => <bdi dir="ltr">{order.bill_identifier}</bdi>,
+    },
+    {
+      id: 'submitted',
+      label: copy('submittedAt'),
+      render: (order) => (
+        <time dateTime={order.submitted_at}>
+          {time.format(order.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}
+        </time>
+      ),
+    },
+    {
+      id: 'action',
+      label: copy('nextAction'),
+      render: (order) => {
+        const action = savingNextAction(order);
+        return action.href ? (
+          <Link className="font-medium text-primary underline underline-offset-4" to={action.href}>
+            {copy('action.' + action.kind)}
+          </Link>
+        ) : (
+          copy('action.' + action.kind)
+        );
+      },
+    },
+  ];
   return (
     <main
-      className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8"
+      className={`mx-auto w-full min-w-0 space-y-6 p-4 md:p-8 ${view === 'table' ? 'max-w-7xl' : 'max-w-4xl'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <header className="space-y-2">
@@ -172,6 +258,15 @@ export function SavingOrdersPage({
           {copy('pendingOrders')}
         </Link>
       </nav>
+      <ListViewToggle
+        value={view}
+        onChange={setView}
+        labels={{
+          group: t('historyView.group', locale),
+          table: t('historyView.table', locale),
+          card: t('historyView.card', locale),
+        }}
+      />
       <HistoryFilterPanel
         query={query}
         statuses={statuses}
@@ -220,68 +315,79 @@ export function SavingOrdersPage({
               )}
         </p>
       )}
-      <div className="space-y-3">
-        {orders.map((order) => {
-          const action = savingNextAction(order);
-          return (
-            <Card key={order.id}>
-              <CardContent className="space-y-2 pt-6">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <h2 className="font-semibold">{order.plan_title[locale]}</h2>
-                    <p className="text-sm text-muted-foreground">{order.hardware_title[locale]}</p>
+      {view === 'table' && orders.length ? (
+        <HistoryTable
+          caption={copy('orders')}
+          items={orders}
+          columns={columns}
+          rowKey={(order) => order.id}
+        />
+      ) : (
+        <div className="space-y-3">
+          {orders.map((order) => {
+            const action = savingNextAction(order);
+            return (
+              <Card key={order.id}>
+                <CardContent className="space-y-2 pt-6">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <h2 className="font-semibold">{order.plan_title[locale]}</h2>
+                      <p className="text-sm text-muted-foreground">
+                        {order.hardware_title[locale]}
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-muted px-3 py-1 text-xs">
+                      {copy(
+                        order.status === 'awaiting_staff_review'
+                          ? 'staffReview'
+                          : order.status === 'in_progress'
+                            ? 'inProgress'
+                            : order.status
+                      )}
+                    </span>
                   </div>
-                  <span className="rounded-full bg-muted px-3 py-1 text-xs">
-                    {copy(
-                      order.status === 'awaiting_staff_review'
-                        ? 'staffReview'
-                        : order.status === 'in_progress'
-                          ? 'inProgress'
-                          : order.status
+                  <p className="text-sm">
+                    <bdi>{order.bill_identifier}</bdi> ·{' '}
+                    <time dateTime={order.submitted_at}>
+                      {time.format(order.submitted_at, {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                      })}
+                    </time>
+                  </p>
+                  <p className="break-all text-xs text-muted-foreground">
+                    {t('historySearch.reference', locale)}: <bdi>{order.id}</bdi>
+                  </p>
+                  <p className="font-medium">
+                    <bdi>{numbers.money(order.total_amount)}</bdi>
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {copy('financialStatus')}: {copy('financial.' + order.financial_status)}
+                  </p>
+                  <p className="text-sm">
+                    {copy('nextAction')}:{' '}
+                    {action.href ? (
+                      <Link className="font-medium text-primary hover:underline" to={action.href}>
+                        {copy('action.' + action.kind)}
+                      </Link>
+                    ) : (
+                      <span>{copy('action.' + action.kind)}</span>
                     )}
-                  </span>
-                </div>
-                <p className="text-sm">
-                  <bdi>{order.bill_identifier}</bdi> ·{' '}
-                  <time dateTime={order.submitted_at}>
-                    {time.format(order.submitted_at, {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                    })}
-                  </time>
-                </p>
-                <p className="break-all text-xs text-muted-foreground">
-                  {t('historySearch.reference', locale)}: <bdi>{order.id}</bdi>
-                </p>
-                <p className="font-medium">
-                  <bdi>{numbers.money(order.total_amount)}</bdi>
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {copy('financialStatus')}: {copy('financial.' + order.financial_status)}
-                </p>
-                <p className="text-sm">
-                  {copy('nextAction')}:{' '}
-                  {action.href ? (
-                    <Link className="font-medium text-primary hover:underline" to={action.href}>
-                      {copy('action.' + action.kind)}
-                    </Link>
-                  ) : (
-                    <span>{copy('action.' + action.kind)}</span>
-                  )}
-                </p>
-                <Link
-                  to="/savings/orders/$orderId"
-                  params={{ orderId: order.id }}
-                  className="inline-block text-sm font-medium text-primary hover:underline"
-                >
-                  {copy('orderDetail')}
-                </Link>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+                  </p>
+                  <Link
+                    to="/savings/orders/$orderId"
+                    params={{ orderId: order.id }}
+                    className="inline-block text-sm font-medium text-primary hover:underline"
+                  >
+                    {copy('orderDetail')}
+                  </Link>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
       {nextBefore && state !== 'error' ? (
         <Button variant="outline" disabled={state === 'loading'} onClick={loadMore}>
           {copy('moreOrders')}

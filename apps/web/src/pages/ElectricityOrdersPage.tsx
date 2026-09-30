@@ -1,9 +1,11 @@
+import { useListView } from '../hooks/useListView.js';
+import { HistoryTable, type HistoryColumn } from '../components/HistoryTable.js';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
-import { Button, Card, CardContent, StatusFilter } from '@barghsa/ui';
+import { Button, Card, CardContent, StatusFilter, StatusBadge, ListViewToggle } from '@barghsa/ui';
 import {
   ELECTRICITY_ORDER_STATUSES,
   DEFAULT_HISTORY_SORT,
@@ -92,6 +94,7 @@ export function ElectricityOrdersPage({
   onClearFilters?: () => void;
   onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
 }) {
+  const { view, setView } = useListView('electricity-orders');
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
@@ -180,9 +183,81 @@ export function ElectricityOrdersPage({
     acceptPage,
   ]);
 
+  const formatPeriod = (order: ListedOrder) =>
+    `${time.format(order.periodStart, { year: 'numeric', month: '2-digit', day: '2-digit' })} – ${time.format(new Date(new Date(order.periodEnd).getTime() - 1), { year: 'numeric', month: '2-digit', day: '2-digit' })}`;
+  const columns: HistoryColumn<ListedOrder>[] = [
+    {
+      id: 'reference',
+      label: t('historySearch.reference', locale),
+      render: (order) => (
+        <Link
+          to="/electricity/orders/$orderId"
+          params={{ orderId: order.orderId }}
+          className="break-all font-semibold text-primary underline underline-offset-4"
+        >
+          {t('electricity.orders.view', locale)} · <bdi dir="ltr">{order.orderId}</bdi>
+        </Link>
+      ),
+    },
+    {
+      id: 'status',
+      label: t('historyView.status', locale),
+      render: (order) => (
+        <div className="flex flex-wrap gap-2">
+          <StatusBadge
+            label={t(`electricity.order.status.${order.electricityStatus}`, locale)}
+            tone={statusFilterTone(order.electricityStatus)}
+          />
+          <StatusBadge label={t(`electricity.order.financial.${order.financialStatus}`, locale)} />
+        </div>
+      ),
+    },
+    {
+      id: 'amount',
+      label: t('electricity.order.total', locale),
+      render: (order) => <bdi className="whitespace-nowrap">{numbers.money(order.totalIrR)}</bdi>,
+    },
+    {
+      id: 'quantity',
+      label: t('electricity.order.quantity', locale),
+      render: (order) => <bdi>{numbers.irrDigits(order.totalKwh)} kWh</bdi>,
+    },
+    { id: 'period', label: t('electricity.order.period.selection', locale), render: formatPeriod },
+    {
+      id: 'submitted',
+      label: t('historyView.submitted', locale),
+      render: (order) => (
+        <time dateTime={order.submittedAt}>
+          {time.format(order.submittedAt, { year: 'numeric', month: '2-digit', day: '2-digit' })}
+        </time>
+      ),
+    },
+    {
+      id: 'action',
+      label: t('electricity.order.nextAction', locale),
+      render: (order) => {
+        const action = nextActionLink(order);
+        return (
+          <div className="min-w-44 space-y-2">
+            <p className="text-muted-foreground">
+              {t(`electricity.order.nextAction.${order.nextAction}`, locale)}
+            </p>
+            {action && (
+              <a
+                className="font-medium text-primary underline underline-offset-4"
+                href={action.href}
+              >
+                {t(action.label, locale)}
+              </a>
+            )}
+          </div>
+        );
+      },
+    },
+  ];
   return (
     <main
-      className="container mx-auto max-w-4xl space-y-6 px-4 py-8"
+      className={`container mx-auto min-w-0 space-y-6 px-4 py-8 ${view === 'table' ? 'max-w-7xl' : 'max-w-4xl'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <header className="flex flex-wrap items-center justify-between gap-3">
@@ -235,6 +310,15 @@ export function ElectricityOrdersPage({
           {t('electricity.orders.pending', locale)}
         </Link>
       </nav>
+      <ListViewToggle
+        value={view}
+        onChange={setView}
+        labels={{
+          group: t('historyView.group', locale),
+          table: t('historyView.table', locale),
+          card: t('historyView.card', locale),
+        }}
+      />
       <HistoryFilterPanel
         query={query}
         statuses={statuses}
@@ -292,6 +376,13 @@ export function ElectricityOrdersPage({
             locale
           )}
         </p>
+      ) : view === 'table' ? (
+        <HistoryTable
+          caption={t('electricity.orders.title', locale)}
+          items={orders}
+          columns={columns}
+          rowKey={(order) => order.orderId}
+        />
       ) : (
         <div className="space-y-3">
           {orders.map((order) => {
@@ -316,18 +407,8 @@ export function ElectricityOrdersPage({
                     </span>
                   </div>
                   <p className="text-sm">
-                    {time.format(order.periodStart, {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                    })}{' '}
-                    –{' '}
-                    {time.format(new Date(new Date(order.periodEnd).getTime() - 1), {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                    })}{' '}
-                    · {numbers.irrDigits(order.totalKwh)} kWh · {numbers.money(order.totalIrR)}
+                    {formatPeriod(order)} · {numbers.irrDigits(order.totalKwh)} kWh ·{' '}
+                    {numbers.money(order.totalIrR)}
                   </p>
                   <div className="flex flex-wrap gap-2 text-sm">
                     <span className="rounded-full border px-3 py-1">

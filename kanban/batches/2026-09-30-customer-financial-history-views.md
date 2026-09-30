@@ -18,4 +18,4 @@ Validation:
 - Existing invoice/contract filter browser scenarios: 20 passing across the same five projects. Existing publication, acceptance/upload, signature, activation and version-bound staff context workflows: 14 passing in Chromium, including the two context scenarios rerun after fixture repair.
 - `pnpm format:check`, diff whitespace and `python3 kanban/scripts/build_backlog.py --check` pass.
 
-The preceding filter-chip batch's GitHub CI completed successfully. This batch is committed and pushed directly to main; its CI is checked after push. The scheduler remains paused, and historical loop state and generated queue/ledger are unchanged.
+The preceding filter-chip batch's GitHub CI completed successfully. This batch was committed and pushed directly to main; its [GitHub CI](https://github.com/barghsadev/barghsa-core/actions/runs/36749236042) completed successfully. The scheduler remains paused, and historical loop state and generated queue/ledger are unchanged.

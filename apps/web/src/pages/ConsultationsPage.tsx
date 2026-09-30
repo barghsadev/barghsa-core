@@ -1,3 +1,5 @@
+import { useListView } from '../hooks/useListView.js';
+import { HistoryTable, type HistoryColumn } from '../components/HistoryTable.js';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { HistoryListControls } from '../components/HistoryListControls.js';
@@ -7,7 +9,7 @@ import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { Button, StatusFilter } from '@barghsa/ui';
+import { Button, StatusFilter, StatusBadge, ListViewToggle } from '@barghsa/ui';
 import { CONSULTATION_REQUEST_STATUSES } from '@barghsa/shared/validation';
 import { useCursorHistory } from '../hooks/useCursorHistory.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -60,6 +62,7 @@ export function ConsultationsPage({
   onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
 }) {
   const navigate = useNavigate();
+  const { view, setView } = useListView('consultations');
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const time = useAccountTime(locale);
@@ -203,8 +206,101 @@ export function ConsultationsPage({
     ? [profile.firstName, profile.lastName].filter(Boolean).join(' ') || profile.title || profile.id
     : '';
 
+  const columns: HistoryColumn<RequestRow>[] = [
+    {
+      id: 'reference',
+      label: t('historySearch.reference', locale),
+      render: (request) => (
+        <Link
+          to="/consultations/$requestId"
+          params={{ requestId: request.id }}
+          className="text-primary underline underline-offset-4"
+        >
+          <bdi dir="ltr" className="break-all">
+            {request.id}
+          </bdi>
+        </Link>
+      ),
+    },
+    {
+      id: 'subject',
+      label: t('historyView.subject', locale),
+      render: (request) => (
+        <span className="font-medium" dir="auto">
+          {request.product_snapshot.title[locale]}
+        </span>
+      ),
+    },
+    {
+      id: 'status',
+      label: copy('status'),
+      render: (request) => (
+        <StatusBadge
+          label={copy(`status_${request.status}`)}
+          tone={statusFilterTone(request.status)}
+        />
+      ),
+    },
+    {
+      id: 'owner',
+      label: copy('owner'),
+      render: (request) => (
+        <div className="min-w-40 space-y-1">
+          <p dir="auto">{request.staff_owner_username ?? copy('unassigned')}</p>
+          {request.staff_team && (
+            <p className="text-muted-foreground">
+              {copy('team')}: <span dir="auto">{request.staff_team}</span>
+            </p>
+          )}
+        </div>
+      ),
+    },
+    {
+      id: 'action',
+      label: copy('nextStep'),
+      render: (request) => {
+        const action = consultationNextAction(request, request.refund_pending, locale);
+        const invoiceAction = request.invoice_id && action.href?.startsWith('/invoices/');
+        const href = action.href?.startsWith('#')
+          ? `/consultations/${encodeURIComponent(request.id)}${action.href}`
+          : action.href;
+        return (
+          <div className="min-w-44 space-y-2">
+            {href && !invoiceAction ? (
+              <a href={href} className="text-primary underline underline-offset-4">
+                {action.text}
+              </a>
+            ) : (
+              <p>{action.text}</p>
+            )}
+            {request.invoice_id && invoiceAction && (
+              <Link
+                to="/invoices/$invoiceId"
+                params={{ invoiceId: request.invoice_id }}
+                className="font-medium text-primary underline underline-offset-4"
+              >
+                {copy('viewInvoice')}
+              </Link>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      id: 'submitted',
+      label: copy('submittedAt'),
+      render: (request) => (
+        <time dateTime={request.submitted_at}>
+          {time.format(request.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}
+        </time>
+      ),
+    },
+  ];
   return (
-    <main className="mx-auto max-w-4xl space-y-8 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <main
+      className={`mx-auto w-full min-w-0 space-y-8 px-4 py-8 ${view === 'table' ? 'max-w-7xl' : 'max-w-4xl'}`}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
       <header className="space-y-2">
         <h1 className="text-3xl font-semibold">{copy('title')}</h1>
         <p className="max-w-2xl text-muted-foreground">{copy('intro')}</p>
@@ -215,7 +311,7 @@ export function ConsultationsPage({
       {!loading && !loadError && !profile && <p role="alert">{copy('profileRequired')}</p>}
       {!loading && !loadError && profile && (
         <>
-          <form onSubmit={submit} className="space-y-5">
+          <form onSubmit={submit} className="max-w-4xl space-y-5">
             <div className="rounded-xl border bg-card p-4">
               <span className="text-sm text-muted-foreground">{copy('profile')}</span>
               <p className="font-medium" dir="auto">
@@ -281,6 +377,15 @@ export function ConsultationsPage({
             <h2 id="consultation-requests-title" className="text-xl font-semibold">
               {copy('myRequests')}
             </h2>
+            <ListViewToggle
+              value={view}
+              onChange={setView}
+              labels={{
+                group: t('historyView.group', locale),
+                table: t('historyView.table', locale),
+                card: t('historyView.card', locale),
+              }}
+            />
             <HistoryFilterPanel
               query={query}
               statuses={statuses}
@@ -333,61 +438,72 @@ export function ConsultationsPage({
                   : copy(statuses.length ? 'filteredEmpty' : 'emptyRequests')}
               </p>
             )}
-            <ul className="space-y-3">
-              {requests.map((request) => {
-                const action = consultationNextAction(request, request.refund_pending, locale);
-                return (
-                  <li key={request.id}>
-                    <Link
-                      to="/consultations/$requestId"
-                      params={{ requestId: request.id }}
-                      className="block rounded-xl border bg-card p-4 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
-                    >
-                      <span className="block font-semibold" dir="auto">
-                        {request.product_snapshot.title[locale]}
-                      </span>
-                      <span className="mt-2 block text-sm">
-                        {copy('status')}: {copy(`status_${request.status}`)}
-                      </span>
-                      <span className="block text-sm text-muted-foreground">
-                        {copy('nextStep')}: {action.text}
-                      </span>
-                      <span className="block text-sm text-muted-foreground">
-                        {copy('owner')}:{' '}
-                        <span dir="auto">{request.staff_owner_username ?? copy('unassigned')}</span>
-                      </span>
-                      {request.staff_team && (
-                        <span className="block text-sm text-muted-foreground">
-                          {copy('team')}: <span dir="auto">{request.staff_team}</span>
-                        </span>
-                      )}
-                      <span className="block break-all text-xs text-muted-foreground">
-                        {t('historySearch.reference', locale)}: <bdi>{request.id}</bdi>
-                      </span>
-                      <time
-                        className="mt-2 block text-xs text-muted-foreground"
-                        dateTime={request.submitted_at}
-                      >
-                        {time.format(request.submitted_at, {
-                          year: 'numeric',
-                          month: '2-digit',
-                          day: '2-digit',
-                        })}
-                      </time>
-                    </Link>
-                    {request.invoice_id && action.href?.startsWith('/invoices/') && (
+            {view === 'table' && requests.length ? (
+              <HistoryTable
+                caption={copy('myRequests')}
+                items={requests}
+                columns={columns}
+                rowKey={(request) => request.id}
+              />
+            ) : (
+              <ul className="space-y-3">
+                {requests.map((request) => {
+                  const action = consultationNextAction(request, request.refund_pending, locale);
+                  return (
+                    <li key={request.id}>
                       <Link
-                        to="/invoices/$invoiceId"
-                        params={{ invoiceId: request.invoice_id }}
-                        className="mt-2 inline-block text-sm font-medium text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
+                        to="/consultations/$requestId"
+                        params={{ requestId: request.id }}
+                        className="block rounded-xl border bg-card p-4 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
                       >
-                        {copy('viewInvoice')}
+                        <span className="block font-semibold" dir="auto">
+                          {request.product_snapshot.title[locale]}
+                        </span>
+                        <span className="mt-2 block text-sm">
+                          {copy('status')}: {copy(`status_${request.status}`)}
+                        </span>
+                        <span className="block text-sm text-muted-foreground">
+                          {copy('nextStep')}: {action.text}
+                        </span>
+                        <span className="block text-sm text-muted-foreground">
+                          {copy('owner')}:{' '}
+                          <span dir="auto">
+                            {request.staff_owner_username ?? copy('unassigned')}
+                          </span>
+                        </span>
+                        {request.staff_team && (
+                          <span className="block text-sm text-muted-foreground">
+                            {copy('team')}: <span dir="auto">{request.staff_team}</span>
+                          </span>
+                        )}
+                        <span className="block break-all text-xs text-muted-foreground">
+                          {t('historySearch.reference', locale)}: <bdi>{request.id}</bdi>
+                        </span>
+                        <time
+                          className="mt-2 block text-xs text-muted-foreground"
+                          dateTime={request.submitted_at}
+                        >
+                          {time.format(request.submitted_at, {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                          })}
+                        </time>
                       </Link>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
+                      {request.invoice_id && action.href?.startsWith('/invoices/') && (
+                        <Link
+                          to="/invoices/$invoiceId"
+                          params={{ invoiceId: request.invoice_id }}
+                          className="mt-2 inline-block text-sm font-medium text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
+                        >
+                          {copy('viewInvoice')}
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
             {nextBefore && !requestsError && (
               <Button variant="outline" disabled={requestsLoading} onClick={loadMore}>
                 {copy('moreRequests')}

@@ -1,3 +1,5 @@
+import { useListView } from '../hooks/useListView.js';
+import { HistoryTable, type HistoryColumn } from '../components/HistoryTable.js';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { HistoryListControls } from '../components/HistoryListControls.js';
@@ -6,7 +8,7 @@ import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { StatusFilter } from '@barghsa/ui';
+import { StatusFilter, StatusBadge, ListViewToggle } from '@barghsa/ui';
 import { SOLAR_REQUEST_STATUSES } from '@barghsa/shared/validation';
 import { useCursorHistory } from '../hooks/useCursorHistory.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -48,6 +50,7 @@ export function SolarRequestsPage({
   onClearFilters?: () => void;
   onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
 }) {
+  const { view, setView } = useListView('solar-requests');
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const time = useAccountTime(locale);
@@ -123,8 +126,78 @@ export function SolarRequestsPage({
     query.sort,
     acceptPage,
   ]);
+  const columns: HistoryColumn<RequestRow>[] = [
+    {
+      id: 'reference',
+      label: t('historySearch.reference', locale),
+      render: (row) => (
+        <Link
+          to="/solar/requests/$requestId"
+          params={{ requestId: row.id }}
+          className="text-primary underline underline-offset-4"
+        >
+          <bdi dir="ltr" className="break-all">
+            {row.id}
+          </bdi>
+        </Link>
+      ),
+    },
+    {
+      id: 'type',
+      label: t('historyView.type', locale),
+      render: (row) => copy(row.building_type === 'non_household' ? 'nonHousehold' : 'building'),
+    },
+    {
+      id: 'connection',
+      label: copy('gridType'),
+      render: (row) => copy(row.grid_type === 'off_grid' ? 'offGrid' : 'onGrid'),
+    },
+    {
+      id: 'status',
+      label: copy('status'),
+      render: (row) => (
+        <StatusBadge label={copy(`status_${row.status}`)} tone={statusFilterTone(row.status)} />
+      ),
+    },
+    {
+      id: 'action',
+      label: t('workflow.nextAction', locale),
+      render: (row) => {
+        const action = solarNextAction(row, locale);
+        const href = action.href?.startsWith('#')
+          ? `/solar/requests/${encodeURIComponent(row.id)}${action.href}`
+          : action.href;
+        return (
+          <div className="min-w-44 space-y-1">
+            {href ? (
+              <a href={href} className="text-primary underline underline-offset-4">
+                {action.text}
+              </a>
+            ) : (
+              <p>{action.text}</p>
+            )}
+            <p className="text-muted-foreground">
+              {t('workflow.owner', locale)}: {t(`workflow.owner.${action.owner}`, locale)}
+            </p>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'submitted',
+      label: t('historyView.submitted', locale),
+      render: (row) => (
+        <time dateTime={row.submitted_at}>
+          {time.format(row.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}
+        </time>
+      ),
+    },
+  ];
   return (
-    <main className="mx-auto max-w-3xl space-y-5 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <main
+      className={`mx-auto w-full min-w-0 space-y-5 px-4 py-8 ${view === 'table' ? 'max-w-7xl' : 'max-w-3xl'}`}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
       <h1 className="text-3xl font-semibold">{copy('myRequests')}</h1>
       <Link
         to="/solar/requests/new"
@@ -133,6 +206,15 @@ export function SolarRequestsPage({
         {copy('submit')}
       </Link>
       {time.notice}
+      <ListViewToggle
+        value={view}
+        onChange={setView}
+        labels={{
+          group: t('historyView.group', locale),
+          table: t('historyView.table', locale),
+          card: t('historyView.card', locale),
+        }}
+      />
       <HistoryFilterPanel
         query={query}
         statuses={statuses}
@@ -187,46 +269,55 @@ export function SolarRequestsPage({
             : copy(statuses.length ? 'filteredEmpty' : 'none')}
         </p>
       )}
-      <ul className="space-y-3">
-        {rows.map((row) => {
-          const action = solarNextAction(row, locale);
-          return (
-            <li key={row.id}>
-              <Link
-                to="/solar/requests/$requestId"
-                params={{ requestId: row.id }}
-                className="block rounded-xl border p-4 hover:border-primary"
-              >
-                <span className="font-medium">
-                  {copy(row.building_type === 'non_household' ? 'nonHousehold' : 'building')}
-                </span>
-                <span className="ms-3 text-muted-foreground">
-                  {copy(row.grid_type === 'off_grid' ? 'offGrid' : 'onGrid')}
-                </span>
-                <span className="mt-2 block text-sm">
-                  {copy('status')}: {copy(`status_${row.status}`)}
-                </span>
-                <span className="mt-2 block text-sm text-muted-foreground">
-                  {t('workflow.nextAction', locale)}: {action.text}
-                </span>
-                <span className="block text-sm text-muted-foreground">
-                  {t('workflow.owner', locale)}: {t(`workflow.owner.${action.owner}`, locale)}
-                </span>
-                <span className="block break-all text-xs text-muted-foreground">
-                  {t('historySearch.reference', locale)}: <bdi>{row.id}</bdi>
-                </span>
-                <time className="text-sm text-muted-foreground" dateTime={row.submitted_at}>
-                  {time.format(row.submitted_at, {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                  })}
-                </time>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+      {view === 'table' && rows.length ? (
+        <HistoryTable
+          caption={copy('myRequests')}
+          items={rows}
+          columns={columns}
+          rowKey={(row) => row.id}
+        />
+      ) : (
+        <ul className="space-y-3">
+          {rows.map((row) => {
+            const action = solarNextAction(row, locale);
+            return (
+              <li key={row.id}>
+                <Link
+                  to="/solar/requests/$requestId"
+                  params={{ requestId: row.id }}
+                  className="block rounded-xl border p-4 hover:border-primary"
+                >
+                  <span className="font-medium">
+                    {copy(row.building_type === 'non_household' ? 'nonHousehold' : 'building')}
+                  </span>
+                  <span className="ms-3 text-muted-foreground">
+                    {copy(row.grid_type === 'off_grid' ? 'offGrid' : 'onGrid')}
+                  </span>
+                  <span className="mt-2 block text-sm">
+                    {copy('status')}: {copy(`status_${row.status}`)}
+                  </span>
+                  <span className="mt-2 block text-sm text-muted-foreground">
+                    {t('workflow.nextAction', locale)}: {action.text}
+                  </span>
+                  <span className="block text-sm text-muted-foreground">
+                    {t('workflow.owner', locale)}: {t(`workflow.owner.${action.owner}`, locale)}
+                  </span>
+                  <span className="block break-all text-xs text-muted-foreground">
+                    {t('historySearch.reference', locale)}: <bdi>{row.id}</bdi>
+                  </span>
+                  <time className="text-sm text-muted-foreground" dateTime={row.submitted_at}>
+                    {time.format(row.submitted_at, {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                    })}
+                  </time>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      )}
       {nextBefore && !error && (
         <button
           type="button"
