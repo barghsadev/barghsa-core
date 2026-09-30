@@ -31,7 +31,12 @@ for (const locale of ['fa', 'en'] as const) {
     );
     await page.route('**/api/ai/knowledge/availability', (route) =>
       route.fulfill({
-        json: { available: true, profileId: 'profile-1', slotKey: 'individual_chatbot' },
+        json: {
+          available: true,
+          profileId: 'profile-1',
+          profileName: 'Ari Buyer',
+          slotKey: 'individual_chatbot',
+        },
       })
     );
     await page.route('**/api/dashboard', (route) =>
@@ -75,6 +80,9 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(dialog).toHaveAttribute('data-side', locale === 'fa' ? 'left' : 'right');
     await expect(dialog).toContainText(
       locale === 'fa' ? 'در اختیار مدل قرار نمی‌گیرد' : 'is not sent to the model'
+    );
+    await expect(dialog).toContainText(
+      locale === 'fa' ? 'شما با پروفایل Ari Buyer پرسش می‌کنید.' : "You're asking as Ari Buyer."
     );
     await dialog
       .getByRole('button', {
@@ -121,7 +129,7 @@ test('customer launcher stays hidden when the active profile has no assigned gui
     route.fulfill({ json: { profiles: [{ id: 'profile-1' }], hasDefault: true } })
   );
   await page.route('**/api/ai/knowledge/availability', (route) =>
-    route.fulfill({ json: { available: false, profileId: null, slotKey: null } })
+    route.fulfill({ json: { available: false, profileId: null, profileName: null, slotKey: null } })
   );
   await page.goto('/app');
   await expect(page.locator('#dashboard-navigation')).toHaveCount(1);
@@ -153,7 +161,12 @@ test('account status hides denied fields and refuses a switched profile response
   );
   await page.route('**/api/ai/knowledge/availability', (route) =>
     route.fulfill({
-      json: { available: true, profileId: 'profile-1', slotKey: 'legal_entity_chatbot' },
+      json: {
+        available: true,
+        profileId: 'profile-1',
+        profileName: 'Agent profile',
+        slotKey: 'legal_entity_chatbot',
+      },
     })
   );
   await page.route('**/api/dashboard', (route) => route.fulfill({ json: dashboard }));
@@ -198,6 +211,7 @@ test('the full-page guide answers with sources and handles an unassigned profile
     .context()
     .addCookies([{ name: 'barghsa_csrf', value: 'knowledge-page-fixture', url: baseURL! }]);
   let available = true;
+  let activeProfileId = 'profile-1';
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({ json: { userId: 'viewer', isStaff: false, requiresTosAcceptance: false } })
@@ -205,17 +219,42 @@ test('the full-page guide answers with sources and handles an unassigned profile
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
       json: {
-        profiles: [{ id: 'profile-1', profileType: 'INDIVIDUAL', status: 'ACTIVE' }],
+        profiles: [
+          {
+            id: 'profile-1',
+            profileType: 'INDIVIDUAL',
+            status: 'ACTIVE',
+            firstName: 'Ari',
+            lastName: 'Buyer',
+          },
+          {
+            id: 'profile-2',
+            profileType: 'LEGAL',
+            status: 'ACTIVE',
+            firstName: 'Nova',
+            lastName: 'Energy',
+          },
+        ],
         hasDefault: true,
-        activeProfileId: 'profile-1',
+        activeProfileId,
       },
     })
   );
+  await page.route('**/api/profiles/switch/profile-2', (route) => {
+    activeProfileId = 'profile-2';
+    return route.fulfill({ json: { activeProfileId } });
+  });
   await page.route('**/api/ai/knowledge/availability', (route) =>
     route.fulfill({
       json: available
-        ? { available: true, profileId: 'profile-1', slotKey: 'individual_chatbot' }
-        : { available: false, profileId: null, slotKey: null },
+        ? {
+            available: true,
+            profileId: activeProfileId,
+            profileName: activeProfileId === 'profile-1' ? 'Ari Buyer' : 'Nova Energy',
+            slotKey:
+              activeProfileId === 'profile-1' ? 'individual_chatbot' : 'legal_entity_chatbot',
+          }
+        : { available: false, profileId: null, profileName: null, slotKey: null },
     })
   );
   await page.route('**/api/ai/knowledge/questions', (route) => {
@@ -239,13 +278,24 @@ test('the full-page guide answers with sources and handles an unassigned profile
 
   await page.goto('/ai');
   await expect(page.getByRole('heading', { name: 'Barghsa knowledge guide' })).toBeVisible();
+  await expect(page.getByText("You're asking as Ari Buyer.")).toBeVisible();
   await expect(page.getByRole('link', { name: 'Ask Barghsa guide' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Ask Barghsa guide' })).toHaveCount(0);
-  await page.getByLabel('Write your question').fill('How do invoices work?');
+  const input = page.getByLabel('Write your question');
+  const initialHeight = await input.evaluate((element) => element.getBoundingClientRect().height);
+  await input.fill('Line one\nLine two\nLine three\nLine four\nLine five\nLine six');
+  await expect
+    .poll(() => input.evaluate((element) => element.getBoundingClientRect().height))
+    .toBeGreaterThan(initialHeight);
+  await input.fill('How do invoices work?');
   await page.getByRole('button', { name: 'Send question' }).click();
   await expect(page.getByText('Pay an issued invoice from its detail page.')).toBeVisible();
   await page.getByText('Answer sources').click();
   await expect(page.getByText('invoice-guide.pdf')).toBeVisible();
+
+  await page.getByLabel('Switch active profile').selectOption('profile-2');
+  await expect(page.getByText("You're asking as Nova Energy.")).toBeVisible();
+  await expect(page.getByText('Pay an issued invoice from its detail page.')).toHaveCount(0);
 
   available = false;
   await page.reload();

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ArrowUp, BookOpenText } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
@@ -42,6 +42,7 @@ export default function KnowledgeAssistantPanel({
   locale,
   slotKey,
   profileId,
+  profileName,
   open,
   onOpenChange,
   embedded = false,
@@ -49,6 +50,7 @@ export default function KnowledgeAssistantPanel({
   locale: Locale;
   slotKey: 'individual_chatbot' | 'legal_entity_chatbot';
   profileId: string;
+  profileName: string | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   embedded?: boolean;
@@ -68,6 +70,11 @@ export default function KnowledgeAssistantPanel({
   useEffect(() => {
     if (open) end.current?.scrollIntoView({ block: 'end' });
   }, [open, turns, busy, error]);
+  useLayoutEffect(() => {
+    if (!open || !input.current) return;
+    input.current.style.height = 'auto';
+    input.current.style.height = `${Math.min(input.current.scrollHeight, 240)}px`;
+  }, [draft, open]);
 
   async function send(request?: PendingRequest) {
     if (busy) return;
@@ -215,7 +222,20 @@ export default function KnowledgeAssistantPanel({
       >
         {turns.length === 0 && (
           <div className="space-y-5">
-            <p className="max-w-sm text-base leading-7 text-foreground">{label('welcome')}</p>
+            <div className="space-y-2">
+              {profileName && (
+                <p className="font-semibold text-foreground">
+                  {label('welcomeNamed').replace('{name}', profileName)}
+                </p>
+              )}
+              <p className="max-w-sm text-base leading-7 text-foreground">{label('welcome')}</p>
+              <p className="text-sm text-muted-foreground">
+                {label('profileContext').replace(
+                  '{name}',
+                  profileName ?? label(slotKey === 'legal_entity_chatbot' ? 'legal' : 'individual')
+                )}
+              </p>
+            </div>
             <div className="flex flex-wrap gap-2">
               {suggestions.map((key) => (
                 <button
@@ -351,7 +371,7 @@ export default function KnowledgeAssistantPanel({
         <textarea
           ref={input}
           id="knowledge-question"
-          className="min-h-20 w-full resize-y rounded-lg border bg-background px-3 py-2 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="min-h-20 max-h-60 w-full resize-none overflow-y-auto rounded-lg border bg-background px-3 py-2 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-primary"
           maxLength={1000}
           rows={2}
           value={draft}

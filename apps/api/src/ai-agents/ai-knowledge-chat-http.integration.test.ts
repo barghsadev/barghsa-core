@@ -67,12 +67,12 @@ beforeAll(async () => {
   };
   individualId = (
     await http.pool.query<{ id: string }>(
-      "INSERT INTO profiles(user_id,profile_type,is_default,status) VALUES ('knowledge-user','INDIVIDUAL',true,'ACTIVE') RETURNING id"
+      "INSERT INTO profiles(user_id,profile_type,is_default,status,first_name,last_name) VALUES ('knowledge-user','INDIVIDUAL',true,'ACTIVE','Ava','Customer') RETURNING id"
     )
   ).rows[0]!.id;
   legalId = (
     await http.pool.query<{ id: string }>(
-      "INSERT INTO profiles(user_id,profile_type,status) VALUES ('knowledge-user','LEGAL','ACTIVE') RETURNING id"
+      "INSERT INTO profiles(user_id,profile_type,status,first_name,last_name) VALUES ('knowledge-user','LEGAL','ACTIVE','Acme','Energy') RETURNING id"
     )
   ).rows[0]!.id;
   modelId = (
@@ -137,7 +137,12 @@ function ask(body: unknown, requestHeaders = headers) {
 it('answers from customer/public sources, audits the profile, and replays one request', async () => {
   expect(
     await (await fetch(`${http.base}/api/ai/knowledge/availability`, { headers })).json()
-  ).toEqual({ available: true, profileId: individualId, slotKey: 'individual_chatbot' });
+  ).toEqual({
+    available: true,
+    profileId: individualId,
+    profileName: 'Ava Customer',
+    slotKey: 'individual_chatbot',
+  });
   const requestId = randomUUID();
   const body = { requestId, message: 'What does the guide say?' };
   const first = await ask(body);
@@ -197,7 +202,12 @@ it('denies revoked sources and never replays an answer under another active prof
   expect((await ask(body)).status).toBe(409);
   expect(
     await (await fetch(`${http.base}/api/ai/knowledge/availability`, { headers })).json()
-  ).toEqual({ available: true, profileId: legalId, slotKey: 'legal_entity_chatbot' });
+  ).toEqual({
+    available: true,
+    profileId: legalId,
+    profileName: 'Acme Energy',
+    slotKey: 'legal_entity_chatbot',
+  });
   const legal = await ask({ requestId: randomUUID(), message: 'Public source?' });
   expect(legal.status).toBe(200);
   expect(

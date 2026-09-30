@@ -17,6 +17,7 @@ export interface KnowledgeAnswer {
 
 interface Scope {
   profileId: string;
+  profileName: string | null;
   slotKey: CustomerSlot;
   agentId: string;
 }
@@ -38,12 +39,14 @@ export class AiKnowledgeChatService {
   async availability(userId: string): Promise<{
     available: boolean;
     profileId: string | null;
+    profileName: string | null;
     slotKey: CustomerSlot | null;
   }> {
     const scope = await this.scopeFor(userId);
     return {
       available: scope !== null,
       profileId: scope?.profileId ?? null,
+      profileName: scope?.profileName ?? null,
       slotKey: scope?.slotKey ?? null,
     };
   }
@@ -232,7 +235,12 @@ export class AiKnowledgeChatService {
       (agent.link_mode === 'all_kbs' && counts.eligible !== counts.total)
     )
       return null;
-    return { profileId: active.id, slotKey, agentId: agent.agent_id };
+    return {
+      profileId: active.id,
+      profileName: active.displayName === active.id ? null : active.displayName,
+      slotKey,
+      agentId: agent.agent_id,
+    };
   }
 
   private async assertSourcesAvailable(

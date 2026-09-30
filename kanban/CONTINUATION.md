@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Customer guide conversation context](batches/2026-09-30-assistant-conversation-context.md) adds the active profile name to the guide, grows the input with text, clears prior-profile conversation on switch, and repairs the two navigation unit tests exposed by the previous batch's route hook. Remaining chat criteria stay open.
+
 [Customer assistant full page](batches/2026-09-30-customer-assistant-page.md) replaces the `/ai` placeholder with the existing profile-scoped sourced conversation, adds navigation, and handles unavailable or failed slot checks. The read-only assistant remains separate from streaming and AI write-action tasks.
 
 [Solar document-set decision review](batches/2026-09-30-solar-document-set-review.md) binds additional-file requests and advancement to the postal stage to the current document set and exact outcome. Staff see the server snapshot before confirming; changes invalidate it and audit retains the confirmed version.

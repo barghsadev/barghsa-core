@@ -8,13 +8,16 @@ const KnowledgeAssistantPanel = lazy(() => import('./KnowledgeAssistantPanel.js'
 type Availability = {
   available: boolean;
   profileId: string | null;
+  profileName: string | null;
   slotKey: 'individual_chatbot' | 'legal_entity_chatbot' | null;
 };
 
 export function KnowledgeAssistantLauncher({ locale }: { locale: Locale }) {
   const revision = useProfileContextRevision();
   const trigger = useRef<HTMLButtonElement>(null);
-  const [availability, setAvailability] = useState<Availability | null>(null);
+  const [availability, setAvailability] = useState<(Availability & { revision: number }) | null>(
+    null
+  );
   const [open, setOpen] = useState(false);
   const [opened, setOpened] = useState(false);
 
@@ -28,13 +31,19 @@ export function KnowledgeAssistantLauncher({ locale }: { locale: Locale }) {
     })
       .then(async (response) => (response.ok ? ((await response.json()) as Availability) : null))
       .then((value) => {
-        if (!controller.signal.aborted) setAvailability(value);
+        if (!controller.signal.aborted) setAvailability(value ? { ...value, revision } : null);
       })
       .catch(() => undefined);
     return () => controller.abort();
   }, [revision]);
 
-  if (!availability?.available || !availability.slotKey || !availability.profileId) return null;
+  if (
+    availability?.revision !== revision ||
+    !availability.available ||
+    !availability.slotKey ||
+    !availability.profileId
+  )
+    return null;
 
   return (
     <>
@@ -58,6 +67,7 @@ export function KnowledgeAssistantLauncher({ locale }: { locale: Locale }) {
             locale={locale}
             slotKey={availability.slotKey}
             profileId={availability.profileId}
+            profileName={availability.profileName}
             open={open}
             onOpenChange={(value) => {
               setOpen(value);

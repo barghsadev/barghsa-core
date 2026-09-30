@@ -7,6 +7,7 @@ import KnowledgeAssistantPanel from '../components/KnowledgeAssistantPanel.js';
 type Availability = {
   available: boolean;
   profileId: string | null;
+  profileName: string | null;
   slotKey: 'individual_chatbot' | 'legal_entity_chatbot' | null;
 };
 
@@ -82,6 +83,7 @@ export default function AIChat() {
             key={`${profileRevision}:${availability.profileId}`}
             locale={locale}
             profileId={availability.profileId}
+            profileName={availability.profileName}
             slotKey={availability.slotKey}
             open
             onOpenChange={() => {}}
