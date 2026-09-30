@@ -3777,6 +3777,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "fee": {
                     "pattern": "^[1-9][0-9]{0,18}$",
                     "type": "string"
@@ -3801,7 +3805,8 @@
                   "idempotencyKey",
                   "fee",
                   "reason",
-                  "validUntil"
+                  "validUntil",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -3820,6 +3825,67 @@
           }
         ],
         "summary": "Adjust an accepted paid consultation fee with a charge or credit and refund request",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/admin/consultations/requests/{id}/paid-fee-review": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_paidFeeReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "fee": {
+                    "pattern": "^[1-9][0-9]{0,18}$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "validUntil": {
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "fee",
+                  "reason",
+                  "validUntil"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the paid consultation charge or credit and refund allocation",
         "tags": [
           "Admin · Consultations"
         ]

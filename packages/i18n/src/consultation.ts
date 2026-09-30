@@ -47,6 +47,15 @@ const en: Record<string, string> = {
   adjustPaidFee: 'Adjust paid fee',
   adjustPaidFeeHelp:
     'A higher fee creates an additional invoice for customer acceptance and payment. A lower fee creates a credit and starts a wallet refund request. The paid invoice stays unchanged.',
+  paidFeeReviewTitle: 'Review paid fee adjustment',
+  paidFeeReviewInvoice: 'Paid invoice',
+  paidFeeReviewPrevious: 'Previously agreed fee',
+  paidFeeReviewRevised: 'Revised fee',
+  paidFeeReviewRefundInvoice: 'Wallet refund from invoice',
+  paidFeeReviewChargeOutcome:
+    'An additional charge invoice will require customer acceptance and payment. The paid invoice stays unchanged.',
+  paidFeeReviewCreditOutcome:
+    'A credit will be issued and wallet refund requests will be sent to finance. The paid invoice stays unchanged.',
   adjustmentReason: 'Reason for fee adjustment',
   financialActivity: 'Financial activity',
   chargeAdjustment: 'Additional charge',
@@ -194,6 +203,15 @@ const fa: Record<string, string> = {
   adjustPaidFee: 'اصلاح هزینه پرداخت‌شده',
   adjustPaidFeeHelp:
     'افزایش هزینه، صورتحساب جدیدی برای پذیرش و پرداخت مشتری ایجاد می‌کند. کاهش هزینه، بستانکاری و درخواست بازپرداخت به کیف پول ایجاد می‌کند. صورتحساب پرداخت‌شده بدون تغییر می‌ماند.',
+  paidFeeReviewTitle: 'بررسی اصلاح هزینه پرداخت‌شده',
+  paidFeeReviewInvoice: 'صورتحساب پرداخت‌شده',
+  paidFeeReviewPrevious: 'هزینه توافق‌شده پیشین',
+  paidFeeReviewRevised: 'هزینه اصلاح‌شده',
+  paidFeeReviewRefundInvoice: 'بازپرداخت به کیف پول از صورتحساب',
+  paidFeeReviewChargeOutcome:
+    'صورتحساب هزینه افزوده برای پذیرش و پرداخت مشتری صادر می‌شود. صورتحساب پرداخت‌شده بدون تغییر می‌ماند.',
+  paidFeeReviewCreditOutcome:
+    'بستانکاری صادر و درخواست‌های بازپرداخت به کیف پول برای بررسی مالی ثبت می‌شود. صورتحساب پرداخت‌شده بدون تغییر می‌ماند.',
   adjustmentReason: 'دلیل اصلاح هزینه',
   financialActivity: 'رویدادهای مالی',
   chargeAdjustment: 'هزینه افزوده',

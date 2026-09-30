@@ -75,6 +75,14 @@ async function offerFee(path: string, user: string, body: Record<string, unknown
   return post(path, user, { ...body, expectedReviewHash: review.hash });
 }
 
+async function adjustFee(path: string, user: string, body: Record<string, unknown>) {
+  const { idempotencyKey: _key, ...terms } = body;
+  const preview = await post(path.replace(/\/paid-fee$/, '/paid-fee-review'), user, terms);
+  if (!preview.ok) return preview;
+  const review = (await preview.json()) as { hash: string };
+  return post(path, user, { ...body, expectedReviewHash: review.hash });
+}
+
 async function decide(path: string, user: string, body: Record<string, unknown> = {}) {
   const decision = path.endsWith('/decline') ? 'decline' : 'accept';
   const preview = await post(path.replace(/\/(accept|decline)$/, '/offer-review'), user, {
@@ -234,18 +242,57 @@ it('charges or credits a paid consultation without changing the paid invoice', a
     reason: 'Additional review required',
     validUntil,
   };
-  const charge = await post(`${root}/paid-fee`, 'consultation-finance', chargeInput);
+  const chargePreview = await post(`${root}/paid-fee-review`, 'consultation-finance', {
+    fee: chargeInput.fee,
+    reason: chargeInput.reason,
+    validUntil: chargeInput.validUntil,
+  });
+  expect(chargePreview.status, http.logs()).toBe(200);
+  const chargeReview = (await chargePreview.json()) as {
+    hash: string;
+    data: { previousFee: string; revisedFee: string; difference: string; outcome: string };
+  };
+  expect(chargeReview.data).toMatchObject({
+    previousFee: '500000',
+    revisedFee: '600000',
+    difference: '100000',
+    outcome: 'charge_invoice',
+  });
+  expect((await post(`${root}/paid-fee`, 'consultation-finance', chargeInput)).status).toBe(400);
+  await http.pool.query("UPDATE invoices SET state='PartiallyRefunded' WHERE id=$1", [invoiceId]);
+  expect(
+    (
+      await post(`${root}/paid-fee`, 'consultation-finance', {
+        ...chargeInput,
+        expectedReviewHash: chargeReview.hash,
+      })
+    ).status
+  ).toBe(409);
+  await http.pool.query("UPDATE invoices SET state='Paid' WHERE id=$1", [invoiceId]);
+  const charge = await post(`${root}/paid-fee`, 'consultation-finance', {
+    ...chargeInput,
+    expectedReviewHash: chargeReview.hash,
+  });
   expect(charge.status, http.logs()).toBe(200);
   const chargeBody = (await charge.json()) as {
     invoiceId: string;
     adjustmentInvoiceId: string;
     status: string;
+    financialReview: { hash: string };
   };
   expect(chargeBody).toMatchObject({
     status: 'offer_pending',
     invoiceId: chargeBody.adjustmentInvoiceId,
   });
-  expect((await post(`${root}/paid-fee`, 'consultation-finance', chargeInput)).status).toBe(200);
+  expect(chargeBody.financialReview.hash).toBe(chargeReview.hash);
+  expect(
+    (
+      await post(`${root}/paid-fee`, 'consultation-finance', {
+        ...chargeInput,
+        expectedReviewHash: chargeReview.hash,
+      })
+    ).status
+  ).toBe(200);
   expect(
     (
       await offerFee(`${root}/fee`, 'consultation-finance', {
@@ -263,6 +310,7 @@ it('charges or credits a paid consultation without changing the paid invoice', a
       await post(`${root}/paid-fee`, 'consultation-finance', {
         ...chargeInput,
         reason: 'Different reason',
+        expectedReviewHash: chargeReview.hash,
       })
     ).status
   ).toBe(409);
@@ -279,16 +327,51 @@ it('charges or credits a paid consultation without changing the paid invoice', a
     reason: 'Reduced review scope',
     validUntil,
   };
-  const credit = await post(`${root}/paid-fee`, 'consultation-finance', creditInput);
+  const creditPreview = await post(`${root}/paid-fee-review`, 'consultation-finance', {
+    fee: creditInput.fee,
+    reason: creditInput.reason,
+    validUntil: creditInput.validUntil,
+  });
+  expect(creditPreview.status, http.logs()).toBe(200);
+  const creditReview = (await creditPreview.json()) as {
+    hash: string;
+    data: { difference: string; outcome: string; refundPlan: Array<{ amount: string }> };
+  };
+  expect(creditReview.data.difference).toBe('-150000');
+  expect(creditReview.data.outcome).toBe('credit_and_wallet_refund');
+  expect(creditReview.data.refundPlan.reduce((sum, item) => sum + BigInt(item.amount), 0n)).toBe(
+    150000n
+  );
+  const credit = await post(`${root}/paid-fee`, 'consultation-finance', {
+    ...creditInput,
+    expectedReviewHash: creditReview.hash,
+  });
   expect(credit.status, http.logs()).toBe(200);
   const creditBody = (await credit.json()) as {
     adjustmentInvoiceId: string;
     refundIds: string[];
     status: string;
+    financialReview: { hash: string };
   };
   expect(creditBody.status).toBe('offer_accepted');
+  expect(creditBody.financialReview.hash).toBe(creditReview.hash);
   expect(creditBody.refundIds.length).toBeGreaterThan(0);
-  expect((await post(`${root}/paid-fee`, 'consultation-finance', creditInput)).status).toBe(200);
+  const stored = (
+    await http.pool.query<{ metadata: { financialReview: { hash: string } } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='consultation.fee.adjusted'
+       AND metadata::jsonb->>'idempotencyKey'=$1`,
+      [creditInput.idempotencyKey]
+    )
+  ).rows[0];
+  expect(stored?.metadata.financialReview.hash).toBe(creditReview.hash);
+  expect(
+    (
+      await post(`${root}/paid-fee`, 'consultation-finance', {
+        ...creditInput,
+        expectedReviewHash: creditReview.hash,
+      })
+    ).status
+  ).toBe(200);
   const original = (
     await http.pool.query<{ state: string; total_amount: string }>(
       'SELECT state,total_amount::text FROM invoices WHERE id=$1',
@@ -395,7 +478,7 @@ it('cancels an unpaid revised charge and requests a refund for the prior paid co
   ).toBe(200);
   await pay(invoiceId);
   const validUntil = new Date(Date.now() + 7 * 86_400_000).toISOString();
-  const revised = await post(`${root}/paid-fee`, 'consultation-finance', {
+  const revised = await adjustFee(`${root}/paid-fee`, 'consultation-finance', {
     idempotencyKey: randomUUID(),
     fee: '600000',
     reason: 'Additional review',

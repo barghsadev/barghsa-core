@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Button, FinancialReviewSummary, Label } from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
-import { parseConsultationFeeReview, type ConsultationFeeReview } from '@barghsa/shared/finance';
+import {
+  parseConsultationFeeReview,
+  parseConsultationPaidFeeReview,
+  type ConsultationFeeReview,
+  type ConsultationPaidFeeReview,
+} from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { offerInputFromInstant, offerInstantFromInput } from '../lib/consultation-offer-time.js';
@@ -78,6 +83,7 @@ export function AdminConsultationsPage() {
   const [error, setError] = useState(false);
   const [action, setAction] = useState<TeamAction | null>(null);
   const [feeReview, setFeeReview] = useState<ConsultationFeeReview | null>(null);
+  const [paidFeeReview, setPaidFeeReview] = useState<ConsultationPaidFeeReview | null>(null);
   const [reviewLoading, setReviewLoading] = useState(false);
   function resetQueue(clearSelection = false) {
     setRows([]);
@@ -227,6 +233,48 @@ export function AdminConsultationsPage() {
         throw new Error('fee-review');
       setFeeReview(review);
       prepare('fee', copy(current.invoice_id ? 'replaceFee' : 'issueFee'), {
+        ...terms,
+        idempotencyKey: offerKey,
+        expectedReviewHash: review.hash,
+      });
+    } catch {
+      setError(true);
+      refresh();
+    } finally {
+      setReviewLoading(false);
+    }
+  }
+
+  async function preparePaidFee() {
+    if (!selectedId || !current || !offerDeadline || reviewLoading) return;
+    const terms = { fee, reason: offerReason.trim(), validUntil: offerDeadline.toISOString() };
+    setReviewLoading(true);
+    setError(false);
+    try {
+      const response = await fetch(
+        `/api/admin/consultations/requests/${encodeURIComponent(selectedId)}/paid-fee-review`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify(terms),
+        }
+      );
+      if (!response.ok) throw new Error('paid-fee-review');
+      const review = parseConsultationPaidFeeReview(await response.json());
+      if (
+        !review ||
+        review.scope.resourceId !== selectedId ||
+        review.scope.profileId !== current.profile_id ||
+        review.data.previousFee !== current.fee ||
+        review.data.revisedFee !== terms.fee ||
+        review.data.reason !== terms.reason ||
+        review.data.validUntil !== terms.validUntil ||
+        review.data.paidInvoice.id !== current.invoice_id
+      )
+        throw new Error('paid-fee-review');
+      setPaidFeeReview(review);
+      prepare('paid-fee', copy('adjustPaidFee'), {
         ...terms,
         idempotencyKey: offerKey,
         expectedReviewHash: review.hash,
@@ -555,19 +603,13 @@ export function AdminConsultationsPage() {
                   </label>
                   <Button
                     disabled={
+                      reviewLoading ||
                       !/^[1-9][0-9]{0,18}$/.test(fee) ||
                       fee === current.fee ||
                       !offerReason.trim() ||
                       !validOfferDeadline
                     }
-                    onClick={() =>
-                      prepare('paid-fee', copy('adjustPaidFee'), {
-                        idempotencyKey: offerKey,
-                        fee,
-                        reason: offerReason.trim(),
-                        validUntil: offerDeadline!.toISOString(),
-                      })
-                    }
+                    onClick={() => void preparePaidFee()}
                   >
                     {copy('adjustPaidFee')}
                   </Button>
@@ -733,7 +775,64 @@ export function AdminConsultationsPage() {
         <TeamActionDialog
           action={action}
           summary={
-            feeReview ? (
+            paidFeeReview ? (
+              <FinancialReviewSummary
+                title={copy('paidFeeReviewTitle')}
+                rows={[
+                  { id: 'profile', label: copy('customer'), value: paidFeeReview.data.profileName },
+                  {
+                    id: 'service',
+                    label: copy('details'),
+                    value: paidFeeReview.data.serviceTitle[locale],
+                  },
+                  { id: 'scope', label: copy('scope'), value: paidFeeReview.data.scope },
+                  {
+                    id: 'deliverables',
+                    label: copy('deliverables'),
+                    value: paidFeeReview.data.deliverables,
+                  },
+                  {
+                    id: 'invoice',
+                    label: copy('paidFeeReviewInvoice'),
+                    value: paidFeeReview.data.paidInvoice.id,
+                  },
+                  {
+                    id: 'previousFee',
+                    label: copy('paidFeeReviewPrevious'),
+                    value: `${new Intl.NumberFormat(locale).format(BigInt(paidFeeReview.data.previousFee))} IRR`,
+                  },
+                  {
+                    id: 'change',
+                    label: copy(
+                      paidFeeReview.data.outcome === 'charge_invoice'
+                        ? 'chargeAdjustment'
+                        : 'creditAdjustment'
+                    ),
+                    value: `${new Intl.NumberFormat(locale).format(BigInt(paidFeeReview.data.adjustmentAmount))} IRR`,
+                  },
+                  {
+                    id: 'deadline',
+                    label: copy('offerValidUntil'),
+                    value: time.format(paidFeeReview.data.validUntil),
+                  },
+                  { id: 'reason', label: copy('reason'), value: paidFeeReview.data.reason },
+                  ...paidFeeReview.data.refundPlan.map((refund) => ({
+                    id: `refund-${refund.invoiceId}`,
+                    label: copy('paidFeeReviewRefundInvoice'),
+                    value: `${refund.invoiceId} · ${new Intl.NumberFormat(locale).format(BigInt(refund.amount))} IRR`,
+                  })),
+                ]}
+                total={{
+                  label: copy('paidFeeReviewRevised'),
+                  value: `${new Intl.NumberFormat(locale).format(BigInt(paidFeeReview.data.revisedFee))} IRR`,
+                }}
+                notice={copy(
+                  paidFeeReview.data.outcome === 'charge_invoice'
+                    ? 'paidFeeReviewChargeOutcome'
+                    : 'paidFeeReviewCreditOutcome'
+                )}
+              />
+            ) : feeReview ? (
               <FinancialReviewSummary
                 title={copy('feeReviewTitle')}
                 rows={[
@@ -787,17 +886,19 @@ export function AdminConsultationsPage() {
           onClose={() => {
             setAction(null);
             setFeeReview(null);
+            setPaidFeeReview(null);
           }}
           onSuccess={async (result) => {
             if (
-              feeReview &&
+              (feeReview || paidFeeReview) &&
               (result as { financialReview?: { hash?: string } } | null)?.financialReview?.hash !==
-                feeReview.hash
+                (feeReview ?? paidFeeReview)?.hash
             )
               throw new Error('Consultation fee confirmation did not match the review');
             setReason('');
             setOfferKey(crypto.randomUUID());
             setFeeReview(null);
+            setPaidFeeReview(null);
             refresh();
           }}
         />

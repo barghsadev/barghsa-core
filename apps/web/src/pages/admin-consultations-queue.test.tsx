@@ -8,6 +8,14 @@ afterEach(() => {
   document.documentElement.lang = 'fa';
 });
 
+function fill(element: HTMLInputElement | HTMLTextAreaElement, value: string) {
+  Object.getOwnPropertyDescriptor(Object.getPrototypeOf(element), 'value')?.set?.call(
+    element,
+    value
+  );
+  element.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
 it('keeps earlier consultation work visible after loading another queue page', async () => {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
@@ -147,6 +155,119 @@ it('submits a staff offer deadline in the saved account timezone', async () => {
     expect(submitted).toHaveLength(1);
     expect(submitted[0]?.validUntil).toBe('2099-01-01T12:30:00.000Z');
     expect(submitted[0]?.expectedReviewHash).toBe('a'.repeat(64));
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+  }
+});
+
+it('confirms the reviewed paid-fee charge before sending the staff adjustment', async () => {
+  document.documentElement.lang = 'en';
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  const requestId = '33333333-3333-4333-8333-333333333333';
+  const profileId = '44444444-4444-4444-8444-444444444444';
+  const invoiceId = '55555555-5555-4555-8555-555555555555';
+  const request = {
+    id: requestId,
+    profile_id: profileId,
+    profile_name: 'buyer-two',
+    status: 'offer_accepted',
+    product_snapshot: { title: { en: 'Consultation', fa: 'مشاوره' } },
+    staff_owner_id: null,
+    staff_team: null,
+    submitted_at: '2026-09-23T10:00:00.000Z',
+    priority: 'normal',
+  };
+  const submitted: Array<Record<string, unknown>> = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string, init?: RequestInit) => {
+      let data: unknown;
+      if (url.endsWith('/settings/timezone')) data = { timezone: 'UTC' };
+      else if (url.endsWith('/teams')) data = { teams: [] };
+      else if (url.includes('/requests?')) data = { requests: [request], nextAfter: null };
+      else if (url.endsWith(`/requests/${requestId}`)) {
+        data = {
+          request: {
+            ...request,
+            scope: 'Site survey',
+            deliverables: 'Report',
+            fee: '500000',
+            invoice_id: invoiceId,
+            invoice_state: 'Paid',
+            has_paid_invoice: true,
+            uncovered_credit: '0',
+            offer_valid_until: '2099-01-01T12:30:00.000Z',
+            expected_next_step: null,
+          },
+          history: [],
+        };
+      } else if (url.endsWith('/paid-fee-review')) {
+        const input = JSON.parse(String(init?.body)) as Record<string, string>;
+        data = {
+          schemaVersion: 1,
+          scope: { action: 'consultation.paid-fee-adjustment', profileId, resourceId: requestId },
+          data: {
+            serviceTitle: request.product_snapshot.title,
+            profileName: request.profile_name,
+            scope: 'Site survey',
+            deliverables: 'Report',
+            previousFee: '500000',
+            revisedFee: input.fee,
+            difference: '100000',
+            adjustmentAmount: '100000',
+            reason: input.reason,
+            validUntil: input.validUntil,
+            paidInvoice: {
+              id: invoiceId,
+              state: 'Paid',
+              totalAmount: '500000',
+              paidAmount: '500000',
+            },
+            refundPlan: [],
+            outcome: 'charge_invoice',
+          },
+          hash: 'b'.repeat(64),
+        };
+      } else {
+        submitted.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
+        data = { financialReview: { hash: 'b'.repeat(64) } };
+      }
+      return new Response(JSON.stringify(data), {
+        headers: { 'Content-Type': 'application/json' },
+      });
+    })
+  );
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  const button = (text: string) =>
+    Array.from(document.querySelectorAll('button')).find((item) =>
+      item.textContent?.includes(text)
+    );
+  try {
+    await act(async () => root.render(<AdminConsultationsPage />));
+    await act(async () => button('buyer-two')?.click());
+    const feeInput = Array.from(
+      container.querySelectorAll<HTMLInputElement>('input[type="text"]')
+    ).find((item) => item.value === '500000');
+    expect(feeInput).toBeDefined();
+    await act(async () => {
+      fill(feeInput!, '600000');
+    });
+    const reason = Array.from(container.querySelectorAll('textarea')).find((item) =>
+      item.closest('label')?.textContent?.includes('Reason for fee adjustment')
+    );
+    expect(reason).toBeDefined();
+    await act(async () => {
+      fill(reason!, 'Additional review');
+    });
+    await act(async () => button('Adjust paid fee')?.click());
+    expect(document.body.textContent).toContain('Review paid fee adjustment');
+    expect(document.body.textContent).toContain('100,000 IRR');
+    await act(async () => button('Confirm')?.click());
+    expect(submitted).toHaveLength(1);
+    expect(submitted[0]?.expectedReviewHash).toBe('b'.repeat(64));
   } finally {
     await act(async () => root.unmount());
     container.remove();

@@ -2,7 +2,9 @@
 
 ## Current manual batch — September 30, 2026
 
-[Consultation staff fee-offer review](batches/2026-09-30-consultation-staff-fee-review.md) binds new and replacement unpaid offers to a locked, authoritative customer, service, fee, deadline, and invoice-outcome snapshot before staff confirmation. Paid-fee adjustment review remains open.
+[Consultation paid-fee adjustment review](batches/2026-09-30-consultation-paid-fee-review.md) binds staff charge and credit adjustments to an exact paid-invoice and refund-allocation snapshot before confirmation. The broader cross-command review tasks remain partial.
+
+[Consultation staff fee-offer review](batches/2026-09-30-consultation-staff-fee-review.md) binds new and replacement unpaid offers to a locked, authoritative customer, service, fee, deadline, and invoice-outcome snapshot before staff confirmation.
 
 [Consultation offer decision review](batches/2026-09-30-consultation-offer-decision-review.md) binds customer acceptance and decline to the current service, fee, invoice and payment outcome. The cross-command review tasks remain partial.
 

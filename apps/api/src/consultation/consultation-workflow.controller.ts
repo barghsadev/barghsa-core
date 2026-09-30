@@ -46,8 +46,13 @@ const paidFeeAdjustment = z
     fee: z.string().regex(/^[1-9][0-9]{0,18}$/),
     reason: z.string().trim().min(1).max(1000),
     validUntil: z.iso.datetime({ offset: true }),
+    expectedReviewHash: reviewHash,
   })
   .strict();
+const paidFeeReviewInput = paidFeeAdjustment.omit({
+  idempotencyKey: true,
+  expectedReviewHash: true,
+});
 const paidClosure = z
   .object({
     idempotencyKey: z.string().uuid(),
@@ -186,6 +191,18 @@ export class StaffConsultationWorkflowController {
       parse(paidFeeAdjustment, body),
       req.ip ?? '127.0.0.1'
     );
+  }
+
+  @Post('requests/:id/paid-fee-review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Preview the paid consultation charge or credit and refund allocation' })
+  @ApiZodBody(paidFeeReviewInput)
+  paidFeeReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.workflow.paidFeeReview(req.session, id, parse(paidFeeReviewInput, body));
   }
 
   @Post('requests/:id/paid-cancel')
