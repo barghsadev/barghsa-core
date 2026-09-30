@@ -1044,6 +1044,13 @@
       "when": 1791331201240,
       "tag": "0228_invoice_receipt_submission_review",
       "breakpoints": true
+    },
+    {
+      "idx": 229,
+      "version": "7",
+      "when": 1791331202240,
+      "tag": "0229_solar_request_submission_review",
+      "breakpoints": true
     }
   ]
 }

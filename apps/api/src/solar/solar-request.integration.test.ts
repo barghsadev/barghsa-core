@@ -16,6 +16,18 @@ function request(path: string, method: string, body?: unknown, headers = custome
   });
 }
 
+async function submitReviewed(input: Record<string, unknown>, headers = customerHeaders) {
+  const preview = await request('/api/solar/requests/review', 'POST', input, headers);
+  expect(preview.status, http.logs()).toBe(201);
+  const review = (await preview.json()) as { hash: string };
+  return request(
+    '/api/solar/requests',
+    'POST',
+    { ...input, expectedReviewHash: review.hash },
+    headers
+  );
+}
+
 beforeAll(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   for (const user of ['solar-customer', 'solar-other']) {
@@ -146,19 +158,28 @@ it('submits both solar request types, captures agreement, and creates no contrac
     billIdentifier: '123456789',
     agreementAccepted: true,
   };
-  const badBill = await request('/api/solar/requests', 'POST', {
+  const badBill = await request('/api/solar/requests/review', 'POST', {
     ...buildingInput,
     billIdentifier: undefined,
   });
   expect(badBill.status).toBe(400);
-  const buildingResponse = await request('/api/solar/requests', 'POST', buildingInput);
+  expect((await request('/api/solar/requests', 'POST', buildingInput)).status).toBe(400);
+  expect(
+    (await request('/api/solar/requests/review', 'POST', buildingInput, otherHeaders)).status
+  ).toBe(404);
+  const buildingPreview = await request('/api/solar/requests/review', 'POST', buildingInput);
+  expect(buildingPreview.status, http.logs()).toBe(201);
+  expect(await buildingPreview.json()).toMatchObject({
+    data: { createsContract: false, createsInvoice: false },
+  });
+  const buildingResponse = await submitReviewed(buildingInput);
   expect(buildingResponse.status, http.logs()).toBe(201);
   const building = (await buildingResponse.json()) as { requestId: string; status: string };
   expect(building.status).toBe('submitted');
   expect(
     await (await request(`/api/solar/requests/draft?profileId=${profileId}`, 'GET')).json()
   ).toMatchObject({ data: null });
-  const retry = await request('/api/solar/requests', 'POST', buildingInput);
+  const retry = await submitReviewed(buildingInput);
   expect(retry.status, http.logs()).toBe(201);
   expect(await retry.json()).toMatchObject(building);
   const detailsResponse = await request(`/api/solar/requests/${building.requestId}`, 'GET');
@@ -173,6 +194,13 @@ it('submits both solar request types, captures agreement, and creates no contrac
     agreement_snapshot: 'شرایط ثبت قرارداد را می‌پذیرم.',
   });
   expect(details.request.agreement_accepted_at).toBeTruthy();
+  expect((details.request.submission_review as { hash: string }).hash).toMatch(/^[a-f0-9]{64}$/);
+  const mismatchedReplay = await request('/api/solar/requests', 'POST', {
+    ...buildingInput,
+    totalUnits: 13,
+    expectedReviewHash: (details.request.submission_review as { hash: string }).hash,
+  });
+  expect(mismatchedReplay.status).toBe(409);
 
   const siteInput = {
     profileId,
@@ -186,12 +214,30 @@ it('submits both solar request types, captures agreement, and creates no contrac
     gridType: 'off_grid',
     agreementAccepted: true,
   };
-  const badSite = await request('/api/solar/requests', 'POST', {
+  const badSite = await request('/api/solar/requests/review', 'POST', {
     ...siteInput,
     siteAddressId: randomUUID(),
   });
   expect(badSite.status).toBe(400);
-  const siteResponse = await request('/api/solar/requests', 'POST', siteInput);
+  const sitePreviewResponse = await request('/api/solar/requests/review', 'POST', siteInput);
+  expect(sitePreviewResponse.status, http.logs()).toBe(201);
+  const sitePreview = (await sitePreviewResponse.json()) as {
+    hash: string;
+    data: { siteAddress: string };
+  };
+  expect(sitePreview.data.siteAddress).toBe('Test solar site');
+  await http.pool.query("UPDATE addresses SET full_address='Changed site' WHERE id=$1", [
+    addressId,
+  ]);
+  const staleSite = await request('/api/solar/requests', 'POST', {
+    ...siteInput,
+    expectedReviewHash: sitePreview.hash,
+  });
+  expect(staleSite.status).toBe(409);
+  await http.pool.query("UPDATE addresses SET full_address='Test solar site' WHERE id=$1", [
+    addressId,
+  ]);
+  const siteResponse = await submitReviewed(siteInput);
   expect(siteResponse.status, http.logs()).toBe(201);
   const site = (await siteResponse.json()) as { requestId: string };
   const siteDetail = await request(`/api/solar/requests/${site.requestId}`, 'GET');
@@ -199,6 +245,18 @@ it('submits both solar request types, captures agreement, and creates no contrac
   expect(
     ((await siteDetail.json()) as { request: Record<string, unknown> }).request.site_address
   ).toBe('Test solar site');
+  await http.pool.query("UPDATE addresses SET full_address='New site label' WHERE id=$1", [
+    addressId,
+  ]);
+  const replayPreview = await request('/api/solar/requests/review', 'POST', siteInput);
+  expect(replayPreview.status, http.logs()).toBe(201);
+  expect((await replayPreview.json()) as { hash: string }).toMatchObject({
+    hash: sitePreview.hash,
+  });
+  expect((await submitReviewed(siteInput)).status).toBe(201);
+  await http.pool.query("UPDATE addresses SET full_address='Test solar site' WHERE id=$1", [
+    addressId,
+  ]);
   const listResponse = await request(`/api/solar/requests?profileId=${profileId}`, 'GET');
   expect(listResponse.status, http.logs()).toBe(200);
   const listed = (await listResponse.json()) as {
@@ -259,23 +317,23 @@ it('submits both solar request types, captures agreement, and creates no contrac
     submissionKey: randomUUID(),
   });
   expect(consultation.status, http.logs()).toBe(201);
-  const extra = await request('/api/solar/requests', 'POST', {
+  const extra = await submitReviewed({
     ...buildingInput,
     submissionKey: randomUUID(),
   });
   expect(extra.status, http.logs()).toBe(201);
-  const fifth = await request('/api/solar/requests', 'POST', {
+  const fifth = await submitReviewed({
     ...buildingInput,
     submissionKey: randomUUID(),
   });
   expect(fifth.status, http.logs()).toBe(201);
-  const limited = await request('/api/solar/requests', 'POST', {
+  const limited = await submitReviewed({
     ...buildingInput,
     submissionKey: randomUUID(),
   });
   expect(limited.status, http.logs()).toBe(429);
   expect(await limited.json()).toMatchObject({ error: { code: 'RATE_LIMIT:EXCEEDED' } });
-  const replayAtLimit = await request('/api/solar/requests', 'POST', buildingInput);
+  const replayAtLimit = await submitReviewed(buildingInput);
   expect(replayAtLimit.status, http.logs()).toBe(201);
   expect(await replayAtLimit.json()).toEqual(building);
 
@@ -288,7 +346,7 @@ it('submits both solar request types, captures agreement, and creates no contrac
     "INSERT INTO profile_agents(profile_id,user_id,role) VALUES($1,'solar-other','Manager')",
     [otherProfile]
   );
-  const independent = await request('/api/solar/requests', 'POST', {
+  const independent = await submitReviewed({
     ...buildingInput,
     profileId: otherProfile,
     submissionKey: randomUUID(),
@@ -303,14 +361,12 @@ it('submits both solar request types, captures agreement, and creates no contrac
     expect(next.status, http.logs()).toBe(201);
   }
   const simultaneous = await Promise.all([
-    request('/api/solar/requests', 'POST', {
+    submitReviewed({
       ...buildingInput,
       profileId: otherProfile,
       submissionKey: randomUUID(),
     }),
-    request(
-      '/api/solar/requests',
-      'POST',
+    submitReviewed(
       { ...buildingInput, profileId: otherProfile, submissionKey: randomUUID() },
       otherHeaders
     ),

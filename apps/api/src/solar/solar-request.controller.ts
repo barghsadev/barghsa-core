@@ -17,7 +17,12 @@ import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { SolarRequestService } from './solar-request.service.js';
-import { solarDraftInput, solarSubmission } from './solar-request.validation.js';
+import {
+  solarDraftInput,
+  solarSubmission,
+  solarSubmissionReview,
+  type SolarSubmission,
+} from './solar-request.validation.js';
 import { RequiresCapability } from '../maintenance/maintenance.guard.js';
 
 @ApiTags('Solar construction requests')
@@ -47,6 +52,17 @@ export class SolarRequestController {
     return this.service.saveDraft(req.session, input.data);
   }
 
+  @Post('review')
+  @RequiresCapability('solar_requests')
+  @RateLimit({ namespace: 'solar:review:user', limit: 60, windowMs: 60_000, scope: 'user' })
+  @ApiOperation({ summary: 'Review the authoritative solar request details before submission' })
+  @ApiZodBody(solarSubmissionReview)
+  review(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    const input = solarSubmissionReview.safeParse(body);
+    if (!input.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.review(req.session, input.data);
+  }
+
   @Post()
   @RequiresCapability('solar_requests')
   @RateLimit({ namespace: 'solar:submit:user', limit: 60, windowMs: 60_000, scope: 'user' })
@@ -57,7 +73,7 @@ export class SolarRequestController {
   submit(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
     const input = solarSubmission.safeParse(body);
     if (!input.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
-    return this.service.submit(req.session, input.data, req.ip ?? '127.0.0.1');
+    return this.service.submit(req.session, input.data as SolarSubmission, req.ip ?? '127.0.0.1');
   }
 
   @Get()

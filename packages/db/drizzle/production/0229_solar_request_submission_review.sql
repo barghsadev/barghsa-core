@@ -1,0 +1,1 @@
+ALTER TABLE "solar_construction_requests" ADD COLUMN "submission_review" jsonb;

@@ -15,6 +15,8 @@ test('solar request moves from customer upload through staff review and postal r
   let documentStatus = 'Uploading';
   let staffDocumentStatus = 'pending';
   let postalStatus = 'waiting_for_shipment';
+  let isStaff = false;
+  let operatingContext: 'customer' | 'staff' = 'customer';
   let shipment: Record<string, unknown> | null = null;
   const submissions: Array<Record<string, unknown>> = [];
   const document = {
@@ -41,7 +43,9 @@ test('solar request moves from customer upload through staff review and postal r
 
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false } })
+    route.fulfill({
+      json: { isStaff, operatingContext, userId: 'buyer', requiresTosAcceptance: false },
+    })
   );
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
@@ -77,6 +81,22 @@ test('solar request moves from customer upload through staff review and postal r
       json: { currentStep: 1, data: draft?.data ?? null, updatedAt: draft ? submittedAt : null },
     });
   });
+  await page.route('**/api/solar/requests/review', (route) =>
+    route.fulfill({
+      status: 201,
+      json: {
+        hash: 'a'.repeat(64),
+        data: {
+          submission: route.request().postDataJSON(),
+          siteAddress: null,
+          agreementVersion: 'solar-construction-request-v1',
+          agreementText: 'شرایط ثبت قرارداد را می‌پذیرم.',
+          createsContract: false,
+          createsInvoice: false,
+        },
+      },
+    })
+  );
   await page.route('**/api/solar/requests', (route) => {
     expect(route.request().method()).toBe('POST');
     submissions.push(route.request().postDataJSON() as Record<string, unknown>);
@@ -331,6 +351,9 @@ test('solar request moves from customer upload through staff review and postal r
   await expect(page.getByLabel('Off-grid')).toBeChecked();
   await page.getByLabel('I accept the contract registration terms.').check();
   await page.getByRole('button', { name: 'Submit request' }).click();
+  await expect(page.getByRole('dialog', { name: 'Review your solar request' })).toBeVisible();
+  await expect(page.getByRole('dialog')).toContainText('creates no contract or invoice');
+  await page.getByRole('dialog').getByRole('button', { name: 'Submit request' }).click();
   await expect(page).toHaveURL(new RegExp(`/solar/requests/${requestId}$`));
   expect(submissions).toHaveLength(1);
   expect(submissions[0]).toMatchObject({
@@ -339,6 +362,7 @@ test('solar request moves from customer upload through staff review and postal r
     propertyForm: 'villa',
     gridType: 'off_grid',
     agreementAccepted: true,
+    expectedReviewHash: 'a'.repeat(64),
   });
 
   const documents = page.getByRole('region', { name: 'Document guidance' });
@@ -360,6 +384,8 @@ test('solar request moves from customer upload through staff review and postal r
     documents.getByRole('status').filter({ hasText: 'Document set sent for review.' })
   ).toBeVisible();
 
+  isStaff = true;
+  operatingContext = 'staff';
   await page.goto('/admin/solar-requests');
   await expect(page.getByRole('heading', { name: 'Solar document review' })).toBeVisible();
   await page.getByRole('button', { name: /site-plan\.pdf.*Buyer/ }).click();
@@ -372,6 +398,7 @@ test('solar request moves from customer upload through staff review and postal r
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
   await expect.poll(() => requestStatus).toBe('waiting_for_postal_submission');
 
+  operatingContext = 'customer';
   await page.goto(`/solar/requests/${requestId}`);
   const postal = page.getByRole('region', { name: 'Postal submission of documents' });
   await expect(postal.getByText('Mail the originals.')).toBeVisible();
@@ -384,6 +411,7 @@ test('solar request moves from customer upload through staff review and postal r
   ).toBeVisible();
   expect(shipment).toMatchObject({ courier: 'Post office', trackingNumber: 'TRACK-123' });
 
+  operatingContext = 'staff';
   await page.goto('/admin/solar-postal');
   await expect(page.getByRole('heading', { name: 'Solar postal review' })).toBeVisible();
   await page.getByRole('button', { name: /Buyer.*Shipped/ }).click();
@@ -392,6 +420,7 @@ test('solar request moves from customer upload through staff review and postal r
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
   await expect.poll(() => requestStatus).toBe('postal_documents_received');
 
+  operatingContext = 'customer';
   await page.goto(`/solar/requests/${requestId}`);
   await expect(page.getByText('Postal originals received').first()).toBeVisible();
 });
@@ -457,6 +486,22 @@ test('solar intake returns from address setup with its saved site details', asyn
       json: { currentStep: 1, data: draft?.data ?? null, updatedAt: draft ? submittedAt : null },
     });
   });
+  await page.route('**/api/solar/requests/review', (route) =>
+    route.fulfill({
+      status: 201,
+      json: {
+        hash: 'b'.repeat(64),
+        data: {
+          submission: route.request().postDataJSON(),
+          siteAddress: siteAddress.fullAddress,
+          agreementVersion: 'solar-construction-request-v1',
+          agreementText: 'شرایط ثبت قرارداد را می‌پذیرم.',
+          createsContract: false,
+          createsInvoice: false,
+        },
+      },
+    })
+  );
   await page.route('**/api/solar/requests', (route) => {
     submission = route.request().postDataJSON() as Record<string, unknown>;
     return route.fulfill({ status: 201, json: { requestId } });
@@ -486,11 +531,16 @@ test('solar intake returns from address setup with its saved site details', asyn
   await expect(page.getByLabel('Site address')).toHaveValue(siteAddress.id);
   await page.getByLabel('I accept the contract registration terms.').check();
   await page.getByRole('button', { name: 'Submit request' }).click();
+  await expect(page.getByRole('dialog', { name: 'Review your solar request' })).toContainText(
+    siteAddress.fullAddress
+  );
+  await page.getByRole('dialog').getByRole('button', { name: 'Submit request' }).click();
   await expect(page).toHaveURL(new RegExp(`/solar/requests/${requestId}$`));
   expect(submission).toMatchObject({
     buildingType: 'non_household',
     usableAreaSqm: 250,
     siteAddressId: siteAddress.id,
     gridType: 'off_grid',
+    expectedReviewHash: 'b'.repeat(64),
   });
 });
