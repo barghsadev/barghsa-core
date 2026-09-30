@@ -40,6 +40,7 @@ import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   CUSTOMER_INVOICE_STATUSES,
+  BANK_RECEIPT_STATUSES,
   parseStatusFilter,
   parseDateRangeFilter,
   parseInvoiceListQuery,
@@ -69,12 +70,17 @@ const InvoiceBankReceiptBodySchema = InvoiceBankReceiptFieldsSchema.extend({
 
 const BankReceiptListQuerySchema = z
   .object({
-    state: z.enum(['Submitted', 'UnderReview', 'Confirmed', 'Rejected']).optional(),
+    state: z.enum(BANK_RECEIPT_STATUSES).optional(),
+    statuses: z
+      .string()
+      .refine((value) => parseStatusFilter(value, BANK_RECEIPT_STATUSES) !== null)
+      .optional(),
     beforeAt: z.string().datetime({ offset: true }).optional(),
     beforeId: z.string().uuid().optional(),
   })
   .strict()
-  .refine((query) => (query.beforeAt === undefined) === (query.beforeId === undefined));
+  .refine((query) => (query.beforeAt === undefined) === (query.beforeId === undefined))
+  .refine((query) => query.state === undefined || query.statuses === undefined);
 
 export interface InvoiceBankReceiptResponse {
   ok: true;
@@ -185,6 +191,12 @@ export class CustomerInvoiceController {
     description: 'Cursor timestamp from the previous page',
   })
   @ApiQuery({ name: 'beforeId', required: false, format: 'uuid' })
+  @ApiQuery({
+    name: 'statuses',
+    required: false,
+    description:
+      'Comma-separated Submitted, UnderReview, Confirmed or Rejected states. Cannot be combined with state.',
+  })
   @ApiResponse({
     status: 200,
     description: 'Up to 25 newest receipts and a cursor for older receipts.',
@@ -195,7 +207,13 @@ export class CustomerInvoiceController {
     const parsed = BankReceiptListQuerySchema.safeParse(rawQuery);
     if (!parsed.success)
       httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, 'Invalid receipt list filter');
-    return this.service.listBankReceiptsForUser(req.session.userId, req.session, parsed.data);
+    return this.service.listBankReceiptsForUser(req.session.userId, req.session, {
+      beforeAt: parsed.data.beforeAt,
+      beforeId: parsed.data.beforeId,
+      statuses: parsed.data.state
+        ? [parsed.data.state]
+        : parseStatusFilter(parsed.data.statuses, BANK_RECEIPT_STATUSES)!,
+    });
   }
 
   @Get(':invoiceId')

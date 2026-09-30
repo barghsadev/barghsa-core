@@ -510,7 +510,7 @@ export class CustomerInvoiceDetailsService {
     userId: string,
     actor: InvoiceReadActor,
     filter: {
-      state?: 'Submitted' | 'UnderReview' | 'Confirmed' | 'Rejected' | undefined;
+      statuses?: readonly ('Submitted' | 'UnderReview' | 'Confirmed' | 'Rejected')[] | undefined;
       beforeAt?: string | undefined;
       beforeId?: string | undefined;
     } = {}
@@ -546,12 +546,12 @@ export class CustomerInvoiceDetailsService {
            FROM bank_receipts r
            JOIN invoices i ON i.id=r.invoice_id AND i.profile_id=r.profile_id
           WHERE r.profile_id=$1::uuid AND i.state <> 'Draft'
-            AND ($2::text IS NULL OR r.state=$2)
+            AND (cardinality($2::text[])=0 OR r.state=ANY($2::text[]))
             AND ($3::timestamptz IS NULL OR (r.created_at,r.id) < ($3::timestamptz,$4::uuid))
           ORDER BY r.created_at DESC,r.id DESC LIMIT $5`,
         [
           profileId,
-          filter.state ?? null,
+          filter.statuses ?? [],
           filter.beforeAt ?? null,
           filter.beforeId ?? null,
           pageSize + 1,

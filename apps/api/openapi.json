@@ -21158,6 +21158,13 @@
         "operationId": "CustomerInvoiceController_listBankReceipts",
         "parameters": [
           {
+            "description": "Comma-separated Submitted, UnderReview, Confirmed or Rejected states. Cannot be combined with state.",
+            "in": "query",
+            "name": "statuses",
+            "required": false,
+            "schema": {}
+          },
+          {
             "in": "query",
             "name": "beforeId",
             "required": false,

@@ -28,7 +28,8 @@ const req = {
 function makeController() {
   const getForUser = vi.fn().mockResolvedValue(DETAILS);
   const listForUser = vi.fn().mockResolvedValue(LIST);
-  const service = { getForUser, listForUser };
+  const listBankReceiptsForUser = vi.fn().mockResolvedValue({ items: [], nextCursor: null });
+  const service = { getForUser, listForUser, listBankReceiptsForUser };
   const submit = vi.fn().mockResolvedValue({
     receiptId: 'cccccccc-cccc-7ccc-8ccc-cccccccccccc',
     invoiceId: INVOICE_ID,
@@ -183,5 +184,38 @@ describe('CustomerInvoiceController bank receipt upload (T-04.3.01.02)', () => {
     await expect(controller.reviewBankReceipt(req, INVOICE_ID, body)).rejects.toMatchObject({
       status: 400,
     });
+  });
+});
+
+describe('bank receipt filters', () => {
+  it('normalizes statuses and preserves exact cursor and authenticated actor', async () => {
+    const { controller, service } = makeController();
+    const beforeAt = '2026-09-01T00:00:00.000002Z';
+    await controller.listBankReceipts(req, {
+      statuses: 'Rejected,Submitted,Rejected',
+      beforeAt,
+      beforeId: INVOICE_ID,
+    });
+    expect(service.listBankReceiptsForUser).toHaveBeenCalledWith('user-1', req.session, {
+      statuses: ['Submitted', 'Rejected'],
+      beforeAt,
+      beforeId: INVOICE_ID,
+    });
+    await controller.listBankReceipts(req, { state: 'Rejected' });
+    expect(service.listBankReceiptsForUser).toHaveBeenLastCalledWith('user-1', req.session, {
+      statuses: ['Rejected'],
+    });
+  });
+  it.each([
+    { statuses: 'Pending' },
+    { statuses: 'Submitted,' },
+    { statuses: 'Submitted,Submitted,Submitted,Submitted,Submitted' },
+    { statuses: ['Submitted'] },
+    { state: 'Rejected', statuses: '' },
+    { beforeId: INVOICE_ID },
+  ])('rejects malformed or ambiguous filters %j', (query) => {
+    const { controller, service } = makeController();
+    expect(() => controller.listBankReceipts(req, query)).toThrow(HttpException);
+    expect(service.listBankReceiptsForUser).not.toHaveBeenCalled();
   });
 });

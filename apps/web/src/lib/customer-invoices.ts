@@ -134,12 +134,14 @@ export interface CustomerBankReceiptPage {
 export async function fetchBankReceiptPage(
   options: {
     state?: CustomerBankReceiptListItem['state'];
+    statuses?: readonly CustomerBankReceiptListItem['state'][];
     cursor?: CustomerBankReceiptPage['nextCursor'];
     signal?: AbortSignal;
   } = {}
 ): Promise<CustomerBankReceiptPage> {
   const query = new URLSearchParams();
   if (options.state) query.set('state', options.state);
+  if (options.statuses?.length) query.set('statuses', options.statuses.join(','));
   if (options.cursor) {
     query.set('beforeAt', options.cursor.beforeAt);
     query.set('beforeId', options.cursor.beforeId);

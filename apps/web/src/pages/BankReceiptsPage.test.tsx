@@ -64,7 +64,7 @@ it.each(['en', 'fa'] as const)(
     document.documentElement.lang = locale;
     const fetcher = vi.fn(async (raw: string) => {
       const url = new URL(raw, 'https://app.example.test');
-      if (url.searchParams.get('state') === 'Rejected') {
+      if (url.searchParams.get('statuses') === 'Rejected') {
         return Response.json({ items: [secondReceipt], nextCursor: null });
       }
       if (url.searchParams.has('beforeAt')) {
@@ -99,15 +99,10 @@ it.each(['en', 'fa'] as const)(
     expect(host.textContent).toContain(secondReceipt.invoiceId);
     expect(host.textContent).toContain(locale === 'en' ? 'Not provided' : 'ثبت نشده');
 
-    const select = host.querySelector<HTMLSelectElement>('#bank-receipt-state')!;
-    await act(async () => {
-      Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')!.set!.call(
-        select,
-        'Rejected'
-      );
-      select.dispatchEvent(new Event('change', { bubbles: true }));
-    });
-    expect(fetcher.mock.calls.some(([url]) => String(url).includes('state=Rejected'))).toBe(true);
+    await act(async () => root.render(<BankReceiptsPage statuses={['Rejected']} />));
+    expect(fetcher.mock.calls.some(([url]) => String(url).includes('statuses=Rejected'))).toBe(
+      true
+    );
     expect(host.querySelectorAll('ul > li')).toHaveLength(1);
     expect(host.textContent).not.toContain(firstReceipt.receiptId);
   }
@@ -128,4 +123,41 @@ it('offers a retry after the initial receipt request fails', async () => {
   await act(async () => retry!.click());
   expect(fetcher).toHaveBeenCalledTimes(2);
   expect(host.textContent).toContain('No receipts match');
+});
+
+it('aborts older pages when filters change and ignores a late response', async () => {
+  document.documentElement.lang = 'en';
+  let resolveOlder!: (response: Response) => void;
+  let olderSignal: AbortSignal | undefined;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((raw: string, init?: RequestInit) => {
+      const query = new URL(raw, 'https://app.example.test').searchParams;
+      if (query.has('beforeId')) {
+        olderSignal = init?.signal as AbortSignal;
+        return new Promise<Response>((resolve) => {
+          resolveOlder = resolve;
+        });
+      }
+      return Promise.resolve(
+        Response.json({
+          items: query.has('statuses') ? [secondReceipt] : [firstReceipt],
+          nextCursor: query.has('statuses')
+            ? null
+            : { beforeAt: '2026-09-02T12:00:00.000001Z', beforeId: firstReceipt.receiptId },
+        })
+      );
+    })
+  );
+  await act(async () => root.render(<BankReceiptsPage />));
+  const older = [...host.querySelectorAll('button')].find((button) =>
+    button.textContent?.includes('Show older')
+  )!;
+  await act(async () => older.click());
+  await act(async () => root.render(<BankReceiptsPage statuses={['Rejected']} />));
+  expect(olderSignal?.aborted).toBe(true);
+  await act(async () => resolveOlder(Response.json({ items: [firstReceipt], nextCursor: null })));
+  expect(host.textContent).not.toContain(firstReceipt.receiptId);
+  expect(host.textContent).toContain(secondReceipt.receiptId);
+  expect(host.querySelectorAll('ul > li')).toHaveLength(1);
 });

@@ -1,3 +1,5 @@
+export const BANK_RECEIPT_STATUSES = ['Submitted', 'UnderReview', 'Confirmed', 'Rejected'] as const;
+
 export const SAVING_ORDER_STATUSES = [
   'submitted',
   'awaiting_staff_review',

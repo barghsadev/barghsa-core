@@ -234,6 +234,28 @@ it('pages receipts across owned invoices at microsecond boundaries and filters s
   expect(((await rejected.json()) as typeof page).items.map((item) => item.receiptId)).toEqual([
     ids[26],
   ]);
+  const mixed = await list('?statuses=Rejected,Submitted');
+  expect(mixed.status).toBe(200);
+  const mixedPage = (await mixed.json()) as typeof page;
+  expect(mixedPage.items.map((item) => item.receiptId)).toEqual(
+    page.items.map((item) => item.receiptId)
+  );
+  const mixedOlder = await list(
+    `?statuses=Submitted,Rejected&beforeAt=${encodeURIComponent(mixedPage.nextCursor!.beforeAt)}&beforeId=${mixedPage.nextCursor!.beforeId}`
+  );
+  expect(((await mixedOlder.json()) as typeof page).items.map((item) => item.receiptId)).toEqual([
+    ids[1],
+    ids[0],
+  ]);
+  const none = await list('?statuses=Confirmed,UnderReview');
+  expect(await none.json()).toMatchObject({ items: [], nextCursor: null });
+  for (const invalid of [
+    '?statuses=Pending',
+    '?statuses=Submitted,',
+    '?state=Submitted&statuses=Rejected',
+    '?statuses=Submitted&statuses=Rejected',
+  ])
+    expect((await list(invalid)).status).toBe(400);
   expect((await list('?beforeAt=2026-09-01T00%3A00%3A00Z')).status).toBe(400);
   expect((await list('?state=Pending')).status).toBe(400);
 });
