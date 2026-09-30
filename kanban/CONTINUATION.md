@@ -2,7 +2,9 @@
 
 ## Current manual batch — September 30, 2026
 
-[Customer dashboard upcoming invoices](batches/2026-09-30-dashboard-upcoming-invoices.md) shows the next payable invoices with due-date urgency and direct invoice links, scopes the summary to the active profile, and removes stale dashboard data on profile switch. Latest-orders and active-contract widgets remain open.
+[Customer dashboard recent orders](batches/2026-09-30-dashboard-recent-orders.md) combines the latest five accessible electricity and saving orders with status, date, amount, and working detail/list links. The active-contract widget remains open.
+
+[Customer dashboard upcoming invoices](batches/2026-09-30-dashboard-upcoming-invoices.md) shows the next payable invoices with due-date urgency and direct invoice links, scopes the summary to the active profile, and removes stale dashboard data on profile switch. The active-contract widget remains open.
 
 [Customer guide conversation context](batches/2026-09-30-assistant-conversation-context.md) adds the active profile name to the guide, grows the input with text, clears prior-profile conversation on switch, and repairs the two navigation unit tests exposed by the previous batch's route hook. Remaining chat criteria stay open.
 

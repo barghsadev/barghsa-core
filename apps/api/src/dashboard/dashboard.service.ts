@@ -24,6 +24,14 @@ interface UpcomingInvoiceRow {
   total_unpaid: string;
 }
 
+interface RecentOrderRow {
+  kind: 'electricity' | 'saving';
+  order_id: string;
+  status: string;
+  submitted_at: Date;
+  amount: string | null;
+}
+
 /**
  * Dashboard service (T-08.01.03).
  *
@@ -42,25 +50,53 @@ export class DashboardService {
     const pool = getDbPool();
     const allowed = (permission: AgentPermission) =>
       context.is_owner || hasAnyRolePermission(context.roles, permission);
-    const [profileResult, quickStatus, wallet, upcomingResult] = await Promise.all([
-      pool.query<{ name: string }>(
-        `SELECT COALESCE(NULLIF(l.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',p.title,p.first_name,p.last_name)),''),'') AS name
+    const [profileResult, quickStatus, wallet, upcomingResult, recentOrdersResult] =
+      await Promise.all([
+        pool.query<{ name: string }>(
+          `SELECT COALESCE(NULLIF(l.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',p.title,p.first_name,p.last_name)),''),'') AS name
          FROM profiles p LEFT JOIN legal_profiles l ON l.id=p.id WHERE p.id=$1`,
-        [context.id]
-      ),
-      this.getCountsForContext(context, userId),
-      allowed('wallet:view') ? this.walletService.getWallet(context.id) : Promise.resolve(null),
-      allowed('invoices:view')
-        ? pool.query<UpcomingInvoiceRow>(
-            `SELECT id,due_at,payable_from,
+          [context.id]
+        ),
+        this.getCountsForContext(context, userId),
+        allowed('wallet:view') ? this.walletService.getWallet(context.id) : Promise.resolve(null),
+        allowed('invoices:view')
+          ? pool.query<UpcomingInvoiceRow>(
+              `SELECT id,due_at,payable_from,
                       GREATEST(total_amount-paid_amount,0)::text AS remaining_amount,
                       (SUM(GREATEST(total_amount-paid_amount,0)) OVER ())::text AS total_unpaid
                FROM invoices WHERE profile_id=$1 AND ${UNPAID_CUSTOMER_INVOICE_PREDICATE}
                ORDER BY due_at ASC NULLS LAST,created_at ASC,id ASC LIMIT 3`,
-            [context.id]
-          )
-        : Promise.resolve({ rows: [] as UpcomingInvoiceRow[] }),
-    ]);
+              [context.id]
+            )
+          : Promise.resolve({ rows: [] as UpcomingInvoiceRow[] }),
+        allowed('orders:view')
+          ? pool.query<RecentOrderRow>(
+              `SELECT recent.kind,recent.order_id,recent.status,recent.submitted_at,recent.amount
+             FROM (
+               (SELECT 'electricity'::text AS kind,e.id AS order_id,
+                       e.status,e.submitted_at,i.total_amount::text AS amount
+                FROM electricity_orders e
+                JOIN electricity_contracts ec ON ec.order_id=e.id
+                JOIN contracts c ON c.id=ec.contract_id
+                JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
+                JOIN invoices i ON i.id=ar.initial_invoice_id
+                WHERE e.profile_id=$1 AND e.submitted_at IS NOT NULL
+                ORDER BY e.submitted_at DESC,e.id DESC LIMIT 5)
+               UNION ALL
+               (SELECT 'saving'::text AS kind,s.id AS order_id,
+                       s.status,s.submitted_at,
+                       (SELECT i.total_amount::text FROM invoices i
+                        WHERE i.order_id=s.order_id AND i.type='auto'
+                        ORDER BY i.created_at DESC,i.id DESC LIMIT 1) AS amount
+                FROM saving_orders s
+                WHERE s.profile_id=$1
+                ORDER BY s.submitted_at DESC,s.id DESC LIMIT 5)
+             ) recent
+             ORDER BY recent.submitted_at DESC,recent.order_id DESC LIMIT 5`,
+              [context.id]
+            )
+          : Promise.resolve({ rows: [] as RecentOrderRow[] }),
+      ]);
     if (!profileResult.rows[0]) throw new NotFoundException('Active profile no longer exists');
     const balance = wallet?.availableBalance ?? 0n;
     return {
@@ -68,6 +104,7 @@ export class DashboardService {
       access: {
         wallet: allowed('wallet:view'),
         invoices: allowed('invoices:view'),
+        orders: allowed('orders:view'),
       },
       wallet: allowed('wallet:view')
         ? {
@@ -85,6 +122,13 @@ export class DashboardService {
         dueAt: invoice.due_at?.toISOString() ?? null,
         payableFrom: invoice.payable_from?.toISOString() ?? null,
         remainingAmount: invoice.remaining_amount,
+      })),
+      recentOrders: recentOrdersResult.rows.map((order) => ({
+        kind: order.kind,
+        orderId: order.order_id,
+        status: order.status,
+        submittedAt: order.submitted_at.toISOString(),
+        amountIrR: order.amount,
       })),
       openTickets: quickStatus.openTickets,
       contracts: { active: quickStatus.activeContracts, total: quickStatus.activeContracts },

@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
-import { useAccountTime } from '../hooks/useAccountTime.js';
+import type { useAccountTime } from '../hooks/useAccountTime.js';
 
 export interface UpcomingInvoice {
   invoiceId: string;
@@ -29,11 +29,12 @@ function daysUntil(dueAt: string, timezone: string): number | null {
 export function UpcomingInvoicesWidget({
   invoices,
   locale,
+  time,
 }: {
   invoices: UpcomingInvoice[];
   locale: Locale;
+  time: ReturnType<typeof useAccountTime>;
 }) {
-  const time = useAccountTime(locale);
   return (
     <section
       className="space-y-4 rounded-xl border bg-card p-5"
@@ -51,7 +52,6 @@ export function UpcomingInvoicesWidget({
           {t('dashboard.invoice.viewAll', locale)}
         </Link>
       </div>
-      {time.notice}
       {invoices.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t('dashboard.invoice.empty', locale)}</p>
       ) : (

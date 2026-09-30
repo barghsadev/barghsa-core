@@ -1,6 +1,6 @@
 import { test, expect } from './coverage-fixture';
 
-test('dashboard shows the next due invoice and clears it after switching profiles', async ({
+test('dashboard shows invoices and recent orders, then clears them after switching profiles', async ({
   page,
 }) => {
   await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
@@ -8,6 +8,8 @@ test('dashboard shows the next due invoice and clears it after switching profile
   const invoiceId = '01900000-0000-7000-8000-000000000001';
   const futureInvoiceId = '01900000-0000-7000-8000-000000000002';
   const overdueInvoiceId = '01900000-0000-7000-8000-000000000003';
+  const savingOrderId = '01900000-0000-7000-8000-000000000004';
+  const electricityOrderId = '01900000-0000-7000-8000-000000000005';
   const dueAt = new Date(Date.now() + 3 * 86_400_000).toISOString();
   const payableFrom = new Date(Date.now() + 2 * 86_400_000).toISOString();
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
@@ -52,7 +54,7 @@ test('dashboard shows the next due invoice and clears it after switching profile
           id: activeProfileId,
           name: activeProfileId === 'profile-1' ? 'Ari Buyer' : 'Nova Energy',
         },
-        access: { wallet: true, invoices: true },
+        access: { wallet: true, invoices: true, orders: true },
         wallet: {
           balance: '500000',
           postedBalance: '500000',
@@ -88,6 +90,25 @@ test('dashboard shows the next due invoice and clears it after switching profile
                 },
               ]
             : [],
+        recentOrders:
+          activeProfileId === 'profile-1'
+            ? [
+                {
+                  kind: 'saving',
+                  orderId: savingOrderId,
+                  status: 'in_progress',
+                  submittedAt: '2026-09-29T12:00:00.000Z',
+                  amountIrR: '250000',
+                },
+                {
+                  kind: 'electricity',
+                  orderId: electricityOrderId,
+                  status: 'submitted',
+                  submittedAt: '2026-09-28T12:00:00.000Z',
+                  amountIrR: null,
+                },
+              ]
+            : [],
       },
     })
   );
@@ -108,15 +129,38 @@ test('dashboard shows the next due invoice and clears it after switching profile
     'href',
     '/invoices?status=unpaid'
   );
+  const orders = page.getByRole('region', { name: 'Recent orders' });
+  await expect(orders).toBeVisible();
+  await expect(orders.getByText('In progress')).toBeVisible();
+  await expect(orders.getByText('Amount not available yet')).toBeVisible();
+  await expect(orders.getByText(/250,000/)).toBeVisible();
+  await expect(orders.getByRole('link', { name: `View order · ${savingOrderId}` })).toHaveAttribute(
+    'href',
+    `/savings/orders/${savingOrderId}`
+  );
+  await expect(
+    orders.getByRole('link', { name: `View order · ${electricityOrderId}` })
+  ).toHaveAttribute('href', `/electricity/orders/${electricityOrderId}`);
+  await expect(orders.getByRole('link', { name: 'View all electricity orders' })).toHaveAttribute(
+    'href',
+    '/electricity/orders'
+  );
+  await expect(orders.getByRole('link', { name: 'View all saving orders' })).toHaveAttribute(
+    'href',
+    '/savings/orders'
+  );
 
   await page.getByRole('button', { name: 'Switch language to Persian' }).click();
   const persianInvoices = page.getByRole('region', { name: 'فاکتورهای پیش‌رو' });
   await expect(persianInvoices).toBeVisible();
   await expect(persianInvoices).toHaveCSS('direction', 'rtl');
+  await expect(page.getByRole('region', { name: 'آخرین سفارش‌ها' })).toBeVisible();
   await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
 
   await page.getByLabel('Switch active profile').selectOption('profile-2');
   await expect(page.getByRole('heading', { name: 'Welcome, Nova Energy' })).toBeVisible();
   await expect(invoices.getByText('No unpaid invoices for this profile.')).toBeVisible();
   await expect(invoices.getByRole('link', { name: `Pay now · ${invoiceId}` })).toHaveCount(0);
+  await expect(orders.getByText('No orders for this profile yet.')).toBeVisible();
+  await expect(orders.getByRole('link', { name: `View order · ${savingOrderId}` })).toHaveCount(0);
 });

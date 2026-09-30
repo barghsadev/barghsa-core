@@ -42,6 +42,25 @@ describe('DashboardService quick status', () => {
             },
           ],
         };
+      if (query.includes('SELECT recent.kind'))
+        return {
+          rows: [
+            {
+              kind: 'saving',
+              order_id: 'saving-1',
+              status: 'in_progress',
+              submitted_at: new Date('2026-09-29T12:00:00.000Z'),
+              amount: '250000',
+            },
+            {
+              kind: 'electricity',
+              order_id: 'electricity-1',
+              status: 'submitted',
+              submitted_at: new Date('2026-09-28T12:00:00.000Z'),
+              amount: '100000',
+            },
+          ],
+        };
       return { rows: [{ cnt: 0 }] };
     });
     const overview = await service.getOverview('customer-1');
@@ -52,7 +71,32 @@ describe('DashboardService quick status', () => {
       currency: 'IRR',
       lowBalanceWarning: true,
     });
-    expect(overview.access).toEqual({ wallet: true, invoices: true });
+    expect(overview.access).toEqual({ wallet: true, invoices: true, orders: true });
+    expect(overview.recentOrders).toEqual([
+      {
+        kind: 'saving',
+        orderId: 'saving-1',
+        status: 'in_progress',
+        submittedAt: '2026-09-29T12:00:00.000Z',
+        amountIrR: '250000',
+      },
+      {
+        kind: 'electricity',
+        orderId: 'electricity-1',
+        status: 'submitted',
+        submittedAt: '2026-09-28T12:00:00.000Z',
+        amountIrR: '100000',
+      },
+    ]);
+    const recentQuery = queryFor('SELECT recent.kind');
+    expect(recentQuery?.[0]).toContain('FROM electricity_orders e');
+    expect(recentQuery?.[0]).toContain('JOIN contract_activation_requirements ar');
+    expect(recentQuery?.[0]).toContain('JOIN invoices i ON i.id=ar.initial_invoice_id');
+    expect(recentQuery?.[0]).toContain('FROM saving_orders s');
+    expect(recentQuery?.[0]).toContain(
+      'ORDER BY recent.submitted_at DESC,recent.order_id DESC LIMIT 5'
+    );
+    expect(recentQuery?.[1]).toEqual(['profile-1']);
     expect(overview.upcomingInvoices).toEqual([
       {
         invoiceId: 'invoice-1',
@@ -92,11 +136,13 @@ describe('DashboardService quick status', () => {
     });
 
     const overview = await service.getOverview('legal-user');
-    expect(overview.access).toEqual({ wallet: false, invoices: false });
+    expect(overview.access).toEqual({ wallet: false, invoices: false, orders: false });
     expect(overview.wallet).toBeNull();
     expect(overview.upcomingInvoices).toEqual([]);
+    expect(overview.recentOrders).toEqual([]);
     expect(getWallet).not.toHaveBeenCalled();
     expect(queryFor('FROM invoices')).toBeUndefined();
+    expect(queryFor('SELECT recent.kind')).toBeUndefined();
   });
 
   it('counts active contracts and pending workflow orders without duplicate legacy rows', async () => {
