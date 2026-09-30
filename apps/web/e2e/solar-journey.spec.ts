@@ -298,7 +298,29 @@ test('solar request moves from customer upload through staff review and postal r
       },
     })
   );
+  const postalReviewHash = 'a'.repeat(64);
+  await page.route(`**/api/admin/solar/requests/${requestId}/postal/review`, (route) => {
+    expect(route.request().postDataJSON()).toEqual({ decision: 'received' });
+    return route.fulfill({
+      json: {
+        hash: postalReviewHash,
+        data: {
+          requestId,
+          currentRequestStatus: 'waiting_for_postal_submission',
+          currentPostalStatus: 'shipped',
+          courier: 'Post office',
+          trackingNumber: 'TRACK-123',
+          sendDate: new Date().toISOString().slice(0, 10),
+          receiptImageId: null,
+          reason: null,
+          postalOutcome: 'received',
+          requestOutcome: 'postal_documents_received',
+        },
+      },
+    });
+  });
   await page.route(`**/api/admin/solar/requests/${requestId}/postal/confirm-received`, (route) => {
+    expect(route.request().postDataJSON()).toEqual({ expectedReviewHash: postalReviewHash });
     expect(postalStatus).toBe('shipped');
     postalStatus = 'received';
     requestStatus = 'postal_documents_received';
@@ -417,6 +439,8 @@ test('solar request moves from customer upload through staff review and postal r
   await page.getByRole('button', { name: /Buyer.*Shipped/ }).click();
   await expect(page.getByText('TRACK-123')).toBeVisible();
   await page.getByRole('button', { name: 'Confirm receipt' }).click();
+  await expect(page.getByRole('dialog').getByText('Review postal decision')).toBeVisible();
+  await expect(page.getByRole('dialog').getByText('TRACK-123')).toBeVisible();
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
   await expect.poll(() => requestStatus).toBe('postal_documents_received');
 

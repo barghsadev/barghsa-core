@@ -11,9 +11,11 @@ import { OrdersService } from '../orders/orders.service.js';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 type Actor = AuthenticatedRequest['session'];
+type PostalDecision = 'received' | 'incomplete' | 'not_received';
 export type SolarPostalStaffLane = 'all' | 'needs_staff' | 'waiting_customer';
 export interface PostalGuidance {
   fa: string;
@@ -48,6 +50,7 @@ async function audit(
 @Injectable()
 export class SolarPostalService {
   constructor(private readonly orders: OrdersService) {}
+  private readonly reviews = new ReviewSnapshotService();
 
   async guidance(): Promise<PostalGuidance> {
     const row = (
@@ -265,42 +268,116 @@ export class SolarPostalService {
     }
   }
 
+  private async postalDecisionSnapshot(
+    client: PoolClient,
+    requestId: string,
+    decision: PostalDecision,
+    reason: string | undefined,
+    lock: 'SHARE' | 'UPDATE'
+  ) {
+    const decisionReason = reason?.trim();
+    if (decision !== 'received' && !decisionReason)
+      throw new BadRequestException('Reason is required');
+    const request = (
+      await client.query<{ profile_id: string; status: string; user_id: string }>(
+        `SELECT r.profile_id,r.status,p.user_id FROM solar_construction_requests r
+         JOIN profiles p ON p.id=r.profile_id WHERE r.id=$1 FOR ${lock} OF r`,
+        [requestId]
+      )
+    ).rows[0];
+    if (!request) throw new NotFoundException('Solar request not found');
+    if (request.status !== 'waiting_for_postal_submission')
+      throw new ConflictException('Postal review is not active');
+    const postal = (
+      await client.query<{
+        status: string;
+        courier: string | null;
+        tracking_number: string | null;
+        send_date: string | null;
+        receipt_image_id: string | null;
+      }>(
+        `SELECT status,courier,tracking_number,send_date::date::text AS send_date,receipt_image_id
+         FROM solar_construction_postal WHERE request_id=$1 FOR ${lock}`,
+        [requestId]
+      )
+    ).rows[0];
+    if (!postal || postal.status !== 'shipped')
+      throw new ConflictException('No shipment awaits review');
+    const requestOutcome =
+      decision === 'received' ? 'postal_documents_received' : 'waiting_for_postal_submission';
+    const review = this.reviews.create(
+      { action: `solar.postal.${decision}`, profileId: request.profile_id, resourceId: requestId },
+      {
+        requestId,
+        currentRequestStatus: request.status,
+        currentPostalStatus: postal.status,
+        courier: postal.courier,
+        trackingNumber: postal.tracking_number,
+        sendDate: postal.send_date,
+        receiptImageId: postal.receipt_image_id,
+        decision,
+        reason: decision === 'received' ? null : decisionReason,
+        postalOutcome: decision,
+        requestOutcome,
+        createsContract: false,
+        createsInvoice: false,
+      }
+    );
+    return { request, review, decisionReason, requestOutcome };
+  }
+
+  async reviewDecision(
+    actor: Actor,
+    requestId: string,
+    decision: PostalDecision,
+    reason: string | undefined
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'orders:write');
+      const { review } = await this.postalDecisionSnapshot(
+        client,
+        requestId,
+        decision,
+        reason,
+        'SHARE'
+      );
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async decide(
     actor: Actor,
     requestId: string,
-    decision: 'received' | 'incomplete' | 'not_received',
+    decision: PostalDecision,
     reason: string | undefined,
+    expectedReviewHash: string,
     ip: string
   ) {
-    if (decision !== 'received' && !reason?.trim())
-      throw new BadRequestException('Reason is required');
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actor.userId, 'orders:write');
       await requireSessionStepUp(client, actor);
-      const request = (
-        await client.query<{ profile_id: string; status: string; user_id: string }>(
-          `SELECT r.profile_id,r.status,p.user_id FROM solar_construction_requests r
-         JOIN profiles p ON p.id=r.profile_id WHERE r.id=$1 FOR UPDATE OF r`,
-          [requestId]
-        )
-      ).rows[0];
-      if (!request) throw new NotFoundException('Solar request not found');
-      if (request.status !== 'waiting_for_postal_submission')
-        throw new ConflictException('Postal review is not active');
-      const postal = (
-        await client.query<{ status: string }>(
-          'SELECT status FROM solar_construction_postal WHERE request_id=$1 FOR UPDATE',
-          [requestId]
-        )
-      ).rows[0];
-      if (!postal || postal.status !== 'shipped')
-        throw new ConflictException('No shipment awaits review');
+      const { request, review, decisionReason, requestOutcome } = await this.postalDecisionSnapshot(
+        client,
+        requestId,
+        decision,
+        reason,
+        'UPDATE'
+      );
+      this.reviews.assertConfirmed(review, expectedReviewHash);
       await client.query(
         `UPDATE solar_construction_postal SET status=$2,staff_notes=$3,
          staff_confirmed_by=$4,staff_confirmed_at=NOW() WHERE request_id=$1`,
-        [requestId, decision, reason ?? null, actor.userId]
+        [requestId, decision, decisionReason ?? null, actor.userId]
       );
       if (decision === 'received')
         await client.query(
@@ -323,14 +400,14 @@ export class SolarPostalService {
               body:
                 decision === 'received'
                   ? 'مدارک پستی شما دریافت شد.'
-                  : `ارسال پستی نیازمند پیگیری است: ${reason}`,
+                  : `ارسال پستی نیازمند پیگیری است: ${decisionReason}`,
             },
             en: {
               title: 'Solar postal documents',
               body:
                 decision === 'received'
                   ? 'Your postal documents were received.'
-                  : `Postal submission needs attention: ${reason}`,
+                  : `Postal submission needs attention: ${decisionReason}`,
             },
           },
         },
@@ -340,14 +417,13 @@ export class SolarPostalService {
         client,
         actor,
         `solar.postal.${decision}`,
-        { requestId, reason: reason ?? null },
+        { requestId, reason: decisionReason ?? null, financialReview: review },
         ip
       );
       await client.query('COMMIT');
       return {
         status: decision,
-        requestStatus:
-          decision === 'received' ? 'postal_documents_received' : 'waiting_for_postal_submission',
+        requestStatus: requestOutcome,
       };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});

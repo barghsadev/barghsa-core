@@ -12743,6 +12743,26 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedReviewHash"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": ""
@@ -12778,6 +12798,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "reason": {
                     "maxLength": 1000,
                     "minLength": 1,
@@ -12785,7 +12809,8 @@
                   }
                 },
                 "required": [
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -12828,6 +12853,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "reason": {
                     "maxLength": 1000,
                     "minLength": 1,
@@ -12835,7 +12864,8 @@
                   }
                 },
                 "required": [
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -12854,6 +12884,64 @@
           }
         ],
         "summary": "Mark postal originals not received with a reason",
+        "tags": [
+          "Admin · Solar postal documents"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/postal/review": {
+      "post": {
+        "operationId": "StaffSolarPostalController_reviewDecision",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "decision": {
+                    "enum": [
+                      "received",
+                      "incomplete",
+                      "not_received"
+                    ],
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "decision"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review the current shipment before a staff postal decision",
         "tags": [
           "Admin · Solar postal documents"
         ]

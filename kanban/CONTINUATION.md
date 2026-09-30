@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Solar postal-decision review](batches/2026-09-30-solar-postal-decision-review.md) binds staff receipt, incomplete, and not-received decisions to the current shipment and resulting status. The staff dialog shows the authoritative courier, tracking, date, reason, and outcome, and audit retains the confirmed snapshot. Cross-command review work remains partial.
+
 [Solar final-decision review](batches/2026-09-30-solar-final-decision-review.md) binds approval, rejection and closure without a contract to the current request, postal state, reason and resulting status. The staff dialog displays the authoritative outcome before confirmation, and the audit retains the reviewed snapshot. Cross-command review work remains partial.
 
 [Solar contract and initial invoice review](batches/2026-09-30-solar-contract-invoice-review.md) binds staff issuance to an authoritative contract, invoice and due-rule snapshot, displays it before confirmation, and verifies the created invoice in the same transaction. It also repairs older solar integration fixtures and a CI web-test timeout. Cross-command financial review remains partial.

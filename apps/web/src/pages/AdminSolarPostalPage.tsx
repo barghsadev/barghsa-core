@@ -42,6 +42,21 @@ interface FinalReview {
     outcome: string;
   };
 }
+interface PostalReview {
+  hash: string;
+  data: {
+    requestId: string;
+    currentRequestStatus: string;
+    currentPostalStatus: string;
+    courier: string | null;
+    trackingNumber: string | null;
+    sendDate: string | null;
+    receiptImageId: string | null;
+    reason: string | null;
+    postalOutcome: string;
+    requestOutcome: string;
+  };
+}
 
 export function AdminSolarPostalPage() {
   const locale = useLocale();
@@ -55,7 +70,9 @@ export function AdminSolarPostalPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [reason, setReason] = useState('');
-  const [action, setAction] = useState<(TeamAction & { review?: FinalReview }) | null>(null);
+  const [action, setAction] = useState<
+    (TeamAction & { review?: FinalReview; postalReview?: PostalReview }) | null
+  >(null);
   const [preparingDecision, setPreparingDecision] = useState(false);
   const [error, setError] = useState(false);
   const [revision, setRevision] = useState(0);
@@ -147,18 +164,53 @@ export function AdminSolarPostalPage() {
       },
     });
   }
-  function decide(decision: 'confirm-received' | 'mark-incomplete' | 'mark-not-received') {
+  async function decide(decision: 'confirm-received' | 'mark-incomplete' | 'mark-not-received') {
+    if (preparingDecision) return;
     if (!row || (decision !== 'confirm-received' && !reason.trim())) {
       setError(true);
       return;
     }
-    setAction({
-      title: copy(`postal_${decision}`),
-      description: row.tracking_number ?? row.id,
-      path: `/api/admin/solar/requests/${row.id}/postal/${decision}`,
-      method: 'POST',
-      ...(decision !== 'confirm-received' ? { body: { reason: reason.trim() } } : {}),
-    });
+    const requestId = row.id;
+    const decisionReason = reason.trim();
+    const reviewDecision = {
+      'confirm-received': 'received',
+      'mark-incomplete': 'incomplete',
+      'mark-not-received': 'not_received',
+    }[decision];
+    setPreparingDecision(true);
+    setError(false);
+    try {
+      const response = await fetch(
+        `/api/admin/solar/requests/${encodeURIComponent(requestId)}/postal/review`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({
+            decision: reviewDecision,
+            ...(decision === 'confirm-received' ? {} : { reason: decisionReason }),
+          }),
+        }
+      );
+      if (!response.ok) throw new Error('review');
+      const postalReview = (await response.json()) as PostalReview;
+      setAction({
+        title: copy(`postal_${decision}`),
+        description: requestId,
+        path: `/api/admin/solar/requests/${encodeURIComponent(requestId)}/postal/${decision}`,
+        method: 'POST',
+        body: {
+          ...(decision === 'confirm-received' ? {} : { reason: decisionReason }),
+          expectedReviewHash: postalReview.hash,
+        },
+        conflictMessage: copy('postalReviewChanged'),
+        postalReview,
+      });
+    } catch {
+      setError(true);
+    } finally {
+      setPreparingDecision(false);
+    }
   }
   async function prepareFinalDecision(decision: FinalDecision, requestId: string) {
     if (preparingDecision) return;
@@ -351,19 +403,22 @@ export function AdminSolarPostalPage() {
               <div className="flex flex-wrap gap-2">
                 <button
                   className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
-                  onClick={() => decide('confirm-received')}
+                  disabled={preparingDecision}
+                  onClick={() => void decide('confirm-received')}
                 >
                   {copy('postal_confirm-received')}
                 </button>
                 <button
                   className="rounded-md border px-4 py-2"
-                  onClick={() => decide('mark-incomplete')}
+                  disabled={preparingDecision}
+                  onClick={() => void decide('mark-incomplete')}
                 >
                   {copy('postal_mark-incomplete')}
                 </button>
                 <button
                   className="rounded-md border px-4 py-2"
-                  onClick={() => decide('mark-not-received')}
+                  disabled={preparingDecision}
+                  onClick={() => void decide('mark-not-received')}
                 >
                   {copy('postal_mark-not-received')}
                 </button>
@@ -531,6 +586,67 @@ export function AdminSolarPostalPage() {
                 total={{
                   label: copy('solarFinalOutcome'),
                   value: copy(`status_${action.review.data.outcome}`),
+                }}
+                notice={copy('solarFinalNoFinancialChange')}
+              />
+            ) : action.postalReview ? (
+              <FinancialReviewSummary
+                title={copy('postalReviewTitle')}
+                rows={[
+                  {
+                    id: 'request',
+                    label: copy('staffRequest'),
+                    value: action.postalReview.data.requestId,
+                  },
+                  {
+                    id: 'request-status',
+                    label: copy('solarFinalCurrentStatus'),
+                    value: copy(`status_${action.postalReview.data.currentRequestStatus}`),
+                  },
+                  {
+                    id: 'postal-status',
+                    label: copy('postalStatus'),
+                    value: copy(`postal_${action.postalReview.data.currentPostalStatus}`),
+                  },
+                  {
+                    id: 'courier',
+                    label: copy('postalCourier'),
+                    value: action.postalReview.data.courier ?? copy('solarFinalNotAvailable'),
+                  },
+                  {
+                    id: 'tracking',
+                    label: copy('postalTracking'),
+                    value:
+                      action.postalReview.data.trackingNumber ?? copy('solarFinalNotAvailable'),
+                  },
+                  {
+                    id: 'send-date',
+                    label: copy('postalSendDate'),
+                    value: action.postalReview.data.sendDate ?? copy('solarFinalNotAvailable'),
+                  },
+                  {
+                    id: 'receipt',
+                    label: copy('postalReceipt'),
+                    value: action.postalReview.data.receiptImageId ?? copy('postalNoReceipt'),
+                  },
+                  ...(action.postalReview.data.reason
+                    ? [
+                        {
+                          id: 'reason',
+                          label: copy('reason'),
+                          value: action.postalReview.data.reason,
+                        },
+                      ]
+                    : []),
+                  {
+                    id: 'postal-outcome',
+                    label: copy('postalReviewOutcome'),
+                    value: copy(`postal_${action.postalReview.data.postalOutcome}`),
+                  },
+                ]}
+                total={{
+                  label: copy('solarFinalOutcome'),
+                  value: copy(`status_${action.postalReview.data.requestOutcome}`),
                 }}
                 notice={copy('solarFinalNoFinancialChange')}
               />

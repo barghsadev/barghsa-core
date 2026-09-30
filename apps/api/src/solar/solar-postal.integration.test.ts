@@ -56,6 +56,29 @@ async function reviewFinal(
     };
   };
 }
+async function reviewPostal(
+  id: string,
+  decision: 'received' | 'incomplete' | 'not_received',
+  reason?: string
+) {
+  const response = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${id}/postal/review`,
+    'POST',
+    { decision, ...(reason === undefined ? {} : { reason }) }
+  );
+  expect(response.status, http.logs()).toBe(200);
+  return (await response.json()) as {
+    hash: string;
+    data: {
+      currentPostalStatus: string;
+      trackingNumber: string;
+      reason: string | null;
+      postalOutcome: string;
+      requestOutcome: string;
+    };
+  };
+}
 async function submitSolar(body: Record<string, unknown>) {
   const review = await send('postal-buyer', 'solar/requests/review', 'POST', body);
   expect(review.status, http.logs()).toBe(201);
@@ -250,8 +273,11 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     http.logs()
   ).toBe(200);
   expect(
-    (await send('postal-reviewer', `admin/solar/requests/${id}/postal/confirm-received`, 'POST'))
-      .status,
+    (
+      await send('postal-reviewer', `admin/solar/requests/${id}/postal/confirm-received`, 'POST', {
+        expectedReviewHash: (await reviewPostal(id, 'received')).hash,
+      })
+    ).status,
     http.logs()
   ).toBe(200);
   expect(
@@ -622,11 +648,34 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
   expect(
     (await send('postal-reviewer', `admin/solar/postal-queue?before=${randomUUID()}`)).status
   ).toBe(404);
+  const incompleteReview = await reviewPostal(
+    requestId,
+    'incomplete',
+    'Please send the signed original.'
+  );
+  expect(incompleteReview.data).toMatchObject({
+    trackingNumber: 'TRACK-123',
+    reason: 'Please send the signed original.',
+    requestOutcome: 'waiting_for_postal_submission',
+  });
+  expect(
+    (
+      await send(
+        'postal-reviewer',
+        `admin/solar/requests/${requestId}/postal/mark-incomplete`,
+        'POST',
+        {
+          reason: 'Different reason',
+          expectedReviewHash: incompleteReview.hash,
+        }
+      )
+    ).status
+  ).toBe(409);
   const incomplete = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/postal/mark-incomplete`,
     'POST',
-    { reason: 'Please send the signed original.' }
+    { reason: 'Please send the signed original.', expectedReviewHash: incompleteReview.hash }
   );
   expect(incomplete.status, http.logs()).toBe(200);
   expect(
@@ -650,13 +699,20 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     ).status,
     http.logs()
   ).toBe(200);
+  const receivedBeforeIssue = await reviewPostal(requestId, 'received');
+  const missingReview = await reviewPostal(
+    requestId,
+    'not_received',
+    'Courier could not locate it.'
+  );
+  expect(missingReview.data.trackingNumber).toBe('TRACK-456');
   expect(
     (
       await send(
         'postal-reviewer',
         `admin/solar/requests/${requestId}/postal/mark-not-received`,
         'POST',
-        { reason: 'Courier could not locate it.' }
+        { reason: 'Courier could not locate it.', expectedReviewHash: missingReview.hash }
       )
     ).status,
     http.logs()
@@ -674,16 +730,46 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     (await send('postal-reviewer', `admin/solar/requests/${requestId}/start-final-review`, 'POST'))
       .status
   ).toBe(409);
+  expect(
+    (
+      await send(
+        'postal-reviewer',
+        `admin/solar/requests/${requestId}/postal/confirm-received`,
+        'POST',
+        {
+          expectedReviewHash: receivedBeforeIssue.hash,
+        }
+      )
+    ).status
+  ).toBe(409);
+  const receivedReview = await reviewPostal(requestId, 'received');
+  expect(receivedReview.data).toMatchObject({
+    trackingNumber: 'TRACK-789',
+    requestOutcome: 'postal_documents_received',
+  });
   const received = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/postal/confirm-received`,
-    'POST'
+    'POST',
+    { expectedReviewHash: receivedReview.hash }
   );
   expect(received.status, http.logs()).toBe(200);
   expect(await received.json()).toMatchObject({
     status: 'received',
     requestStatus: 'postal_documents_received',
   });
+  const postalAudit = await http.pool.query<{ event: string; hash: string }>(
+    `SELECT event,metadata::jsonb->'financialReview'->>'hash' AS hash FROM audit_log
+     WHERE metadata::jsonb->>'requestId'=$1 AND event IN
+       ('solar.postal.incomplete','solar.postal.not_received','solar.postal.received')
+     ORDER BY created_at`,
+    [requestId]
+  );
+  expect(postalAudit.rows).toEqual([
+    { event: 'solar.postal.incomplete', hash: incompleteReview.hash },
+    { event: 'solar.postal.not_received', hash: missingReview.hash },
+    { event: 'solar.postal.received', hash: receivedReview.hash },
+  ]);
   expect(
     await (await send('postal-reviewer', 'admin/solar/postal-queue?lane=needs_staff')).json()
   ).toMatchObject({ requests: [{ id: requestId, request_status: 'postal_documents_received' }] });
@@ -889,8 +975,11 @@ it('rejects a final solar request with a customer-visible reason after postal re
     http.logs()
   ).toBe(200);
   expect(
-    (await send('postal-reviewer', `admin/solar/requests/${id}/postal/confirm-received`, 'POST'))
-      .status,
+    (
+      await send('postal-reviewer', `admin/solar/requests/${id}/postal/confirm-received`, 'POST', {
+        expectedReviewHash: (await reviewPostal(id, 'received')).hash,
+      })
+    ).status,
     http.logs()
   ).toBe(200);
   expect(
