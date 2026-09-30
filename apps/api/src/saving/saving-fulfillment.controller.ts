@@ -26,9 +26,17 @@ import {
 } from './saving-fulfillment.service.js';
 
 const review = z
-  .object({ idempotencyKey: z.string().uuid(), expectedVersionId: z.string().uuid() })
+  .object({
+    idempotencyKey: z.string().uuid(),
+    expectedVersionId: z.string().uuid(),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
+  })
   .strict();
 const rejection = review.extend({ reason: z.string().trim().min(1).max(1000) }).strict();
+const decisionReviewInput = z.discriminatedUnion('action', [
+  z.object({ action: z.literal('approve'), reason: z.literal('').default('') }).strict(),
+  z.object({ action: z.literal('reject'), reason: z.string().trim().min(1).max(1000) }).strict(),
+]);
 const stageInput = z
   .object({
     idempotencyKey: z.string().uuid(),
@@ -105,6 +113,23 @@ export class SavingFulfillmentController {
   detail(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
     this.permission(req, false);
     return this.service.detail(id, hasStaffPermission(req, 'invoices:write'));
+  }
+
+  @Post(':id/financial-review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'saving:staff-financial-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({
+    summary: 'Preview exact contract, invoice and refund outcome before saving order decision',
+  })
+  @ApiZodBody(decisionReviewInput)
+  financialReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.permission(req, true);
+    const input = parse(decisionReviewInput, body);
+    return this.service.decisionReview(id, input.action, input.reason, req.session);
   }
 
   @Post(':id/approve')

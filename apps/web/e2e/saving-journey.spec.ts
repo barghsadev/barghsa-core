@@ -26,6 +26,7 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   const drafts: Array<Record<string, unknown>> = [];
   const submissions: Array<Record<string, unknown>> = [];
   const staffActions: Array<{ path: string; body: Record<string, unknown> }> = [];
+  const staffReviewHash = 'b'.repeat(64);
   let approved = false;
   let stageIndex = -1;
   let invoiceState = 'Unpaid';
@@ -314,6 +315,57 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
       },
     })
   );
+  await page.route(`**/api/staff/saving/orders/${savingOrderId}/financial-review`, (route) =>
+    route.fulfill({
+      json: {
+        schemaVersion: 1,
+        scope: { action: 'saving.staff-review.approve', profileId, resourceId: savingOrderId },
+        data: {
+          action: 'approve',
+          reason: '',
+          customerName: 'Buyer',
+          profileName: 'Buyer',
+          billIdentifier: '1234567890123',
+          hardwareTitle: { en: 'Efficient device', fa: 'دستگاه کم‌مصرف' },
+          addressSnapshot: { full_address: 'Saving Street' },
+          pricingSnapshot: {
+            lines: [
+              {
+                title: { en: 'Home saving plan', fa: 'طرح صرفه‌جویی خانه' },
+                amountIrR: '100000',
+                discountIrR: '0',
+                netIrR: '100000',
+                vatIrR: '0',
+              },
+              {
+                title: { en: 'Efficient device', fa: 'دستگاه کم‌مصرف' },
+                amountIrR: '200000',
+                discountIrR: '0',
+                netIrR: '200000',
+                vatIrR: '0',
+              },
+            ],
+          },
+          agreementSnapshot: 'The customer accepts this plan.',
+          contractId,
+          contractState: 'AwaitingStaffReview',
+          versionId: agreementVersionId,
+          versionNumber: 1,
+          contractSnapshot: {},
+          invoiceId,
+          invoiceState: 'Unpaid',
+          invoiceTotal: '300000',
+          paidAmount: '0',
+          refundedAmount: '0',
+          pendingRefundAmount: '0',
+          outcome: 'publish_contract',
+          refundAmount: '0',
+          releasesGiftCode: false,
+        },
+        hash: staffReviewHash,
+      },
+    })
+  );
   await page.route(`**/api/staff/saving/orders/${savingOrderId}/approve`, (route) => {
     staffActions.push({
       path: 'approve',
@@ -403,6 +455,8 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   await page.goto('/admin/saving-orders');
   await page.getByRole('button', { name: /Buyer.*Home saving plan/ }).click();
   await page.getByRole('button', { name: 'Approve request' }).click();
+  await expect(page.getByRole('dialog')).toContainText('Publish contract for customer acceptance');
+  await expect(page.getByRole('dialog')).toContainText('The customer accepts this plan.');
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
   await page.getByRole('button', { name: 'Fulfillment', exact: true }).click();
   await page.getByRole('button', { name: /Buyer.*Home saving plan/ }).click();
@@ -413,7 +467,10 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   await page.getByRole('textbox', { name: 'Reason or progress note' }).fill('Ready to deliver');
   await expect(page.getByRole('button', { name: 'Complete stage' })).toBeDisabled();
   expect(staffActions).toMatchObject([
-    { path: 'approve', body: { expectedVersionId: agreementVersionId } },
+    {
+      path: 'approve',
+      body: { expectedVersionId: agreementVersionId, expectedReviewHash: staffReviewHash },
+    },
   ]);
   operatingContext = 'customer';
   await page.goto(`/savings/orders/${savingOrderId}`);

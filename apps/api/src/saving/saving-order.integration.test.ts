@@ -26,6 +26,20 @@ function request(path: string, method: string, body?: unknown, headers = custome
   });
 }
 
+async function decisionReview(orderId: string, action: 'approve' | 'reject', reason = '') {
+  const response = await request(
+    `/api/staff/saving/orders/${orderId}/financial-review`,
+    'POST',
+    { action, reason },
+    staffHeaders
+  );
+  expect(response.status, http.logs()).toBe(200);
+  return (await response.json()) as {
+    hash: string;
+    data: { outcome: string; refundAmount: string; invoiceId: string };
+  };
+}
+
 beforeAll(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   await http.pool.query(
@@ -589,11 +603,54 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   );
   expect(staffDetailResponse.status, http.logs()).toBe(200);
   const staffDetail = (await staffDetailResponse.json()) as { versionId: string };
-  const approval = { idempotencyKey: randomUUID(), expectedVersionId: staffDetail.versionId };
+  const approvalReview = await decisionReview(result.savingOrderId, 'approve');
+  expect(approvalReview.data.outcome).toBe('publish_contract');
+  const approval = {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: staffDetail.versionId,
+    expectedReviewHash: approvalReview.hash,
+  };
   const approvePath = `/api/staff/saving/orders/${result.savingOrderId}/approve`;
+  expect(
+    (
+      await request(
+        approvePath,
+        'POST',
+        {
+          idempotencyKey: randomUUID(),
+          expectedVersionId: staffDetail.versionId,
+        },
+        staffHeaders
+      )
+    ).status
+  ).toBe(400);
+  const originalInvoiceState = (
+    await http.pool.query<{ state: string }>('SELECT state FROM invoices WHERE id=$1', [
+      approvalReview.data.invoiceId,
+    ])
+  ).rows[0]!.state;
+  await http.pool.query('UPDATE invoices SET state=$2 WHERE id=$1', [
+    approvalReview.data.invoiceId,
+    originalInvoiceState === 'Overdue' ? 'Unpaid' : 'Overdue',
+  ]);
+  expect((await request(approvePath, 'POST', approval, staffHeaders)).status).toBe(409);
+  await http.pool.query('UPDATE invoices SET state=$2 WHERE id=$1', [
+    approvalReview.data.invoiceId,
+    originalInvoiceState,
+  ]);
   const approved = await request(approvePath, 'POST', approval, staffHeaders);
   expect(approved.status, http.logs()).toBe(200);
   expect(await approved.json()).toMatchObject({ status: 'approved' });
+  const decisionAudit = (
+    await http.pool.query<{ metadata: { reviewHash: string; financialReview: { hash: string } } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log
+       WHERE event='saving.order_review.approve' AND metadata::jsonb->>'savingOrderId'=$1
+       ORDER BY created_at DESC LIMIT 1`,
+      [result.savingOrderId]
+    )
+  ).rows[0];
+  expect(decisionAudit?.metadata.reviewHash).toBe(approvalReview.hash);
+  expect(decisionAudit?.metadata.financialReview.hash).toBe(approvalReview.hash);
   const publishedContract = await request(`/api/contracts/${result.contractId}`, 'GET');
   expect(publishedContract.status, http.logs()).toBe(200);
   expect(await publishedContract.json()).toMatchObject({
@@ -1281,12 +1338,19 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   );
   expect(rejectedDetail.status, http.logs()).toBe(200);
   const rejectedVersion = ((await rejectedDetail.json()) as { versionId: string }).versionId;
+  const rejectionReview = await decisionReview(
+    discountedOrder.savingOrderId,
+    'reject',
+    'Device unavailable'
+  );
+  expect(rejectionReview.data.outcome).toBe('cancel_invoice');
   const rejected = await request(
     `/api/staff/saving/orders/${discountedOrder.savingOrderId}/reject`,
     'POST',
     {
       idempotencyKey: randomUUID(),
       expectedVersionId: rejectedVersion,
+      expectedReviewHash: rejectionReview.hash,
       reason: 'Device unavailable',
     },
     staffHeaders
@@ -1347,10 +1411,20 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   );
   expect(paidStaffDetail.status, http.logs()).toBe(200);
   const paidVersion = ((await paidStaffDetail.json()) as { versionId: string }).versionId;
+  const paidReview = await decisionReview(paidOrder.savingOrderId, 'reject', 'Device unavailable');
+  expect(paidReview.data).toMatchObject({
+    outcome: 'refund_obligation',
+    refundAmount: paidQuote.totalIrR,
+  });
   const paidRejected = await request(
     `/api/staff/saving/orders/${paidOrder.savingOrderId}/reject`,
     'POST',
-    { idempotencyKey: randomUUID(), expectedVersionId: paidVersion, reason: 'Device unavailable' },
+    {
+      idempotencyKey: randomUUID(),
+      expectedVersionId: paidVersion,
+      expectedReviewHash: paidReview.hash,
+      reason: 'Device unavailable',
+    },
     staffHeaders
   );
   expect(paidRejected.status, http.logs()).toBe(200);
@@ -1587,10 +1661,15 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   );
   expect(expiryDetail.status, http.logs()).toBe(200);
   const expiryVersion = ((await expiryDetail.json()) as { versionId: string }).versionId;
+  const expiryReview = await decisionReview(expiryOrder.savingOrderId, 'approve');
   const expiryApproval = await request(
     `/api/staff/saving/orders/${expiryOrder.savingOrderId}/approve`,
     'POST',
-    { idempotencyKey: randomUUID(), expectedVersionId: expiryVersion },
+    {
+      idempotencyKey: randomUUID(),
+      expectedVersionId: expiryVersion,
+      expectedReviewHash: expiryReview.hash,
+    },
     staffHeaders
   );
   expect(expiryApproval.status, http.logs()).toBe(200);
@@ -1937,10 +2016,15 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
   });
   expect(staffOrder.revisions[0]).not.toHaveProperty('request_hash');
   const currentVersion = staffOrder.versionId;
+  const currentReview = await decisionReview(order.savingOrderId, 'approve');
   const approval = await request(
     `/api/staff/saving/orders/${order.savingOrderId}/approve`,
     'POST',
-    { idempotencyKey: randomUUID(), expectedVersionId: currentVersion },
+    {
+      idempotencyKey: randomUUID(),
+      expectedVersionId: currentVersion,
+      expectedReviewHash: currentReview.hash,
+    },
     staffHeaders
   );
   expect(approval.status, http.logs()).toBe(200);
@@ -2045,7 +2129,11 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
   const reapproval = await request(
     `/api/staff/saving/orders/${order.savingOrderId}/approve`,
     'POST',
-    { idempotencyKey: randomUUID(), expectedVersionId: reopenedVersion },
+    {
+      idempotencyKey: randomUUID(),
+      expectedVersionId: reopenedVersion,
+      expectedReviewHash: (await decisionReview(order.savingOrderId, 'approve')).hash,
+    },
     staffHeaders
   );
   expect(reapproval.status, http.logs()).toBe(200);
@@ -2159,7 +2247,11 @@ it('credits a cheaper paid hardware swap and preserves the revised price basis f
       await request(
         `${staffPath}/approve`,
         'POST',
-        { idempotencyKey: randomUUID(), expectedVersionId: versionId },
+        {
+          idempotencyKey: randomUUID(),
+          expectedVersionId: versionId,
+          expectedReviewHash: (await decisionReview(order.savingOrderId, 'approve')).hash,
+        },
         staffHeaders
       )
     ).status

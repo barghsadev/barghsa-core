@@ -11,8 +11,10 @@ import { GiftCodeService } from '../admin/gift-code.service.js';
 import {
   auditContract,
   contractIdempotency,
+  staffContractFinancialReview,
   staffContractMutation,
 } from '../contract/contract-transactions.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 import { CreateAdjustmentInvoiceService } from '../invoice/create-adjustment-invoice.service.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
@@ -43,6 +45,7 @@ interface ReviewRow {
   hardware_title: { fa: string; en: string };
   customer_id: string;
   customer_name: string;
+  profile_name: string;
   status: string;
   financial_status: string;
   submitted_at: Date;
@@ -56,6 +59,8 @@ interface ReviewRow {
   contract_id: string;
   contract_state: string;
   version_id: string;
+  version_number: number;
+  contract_snapshot: Record<string, unknown>;
   invoice_id: string;
   invoice_state: string;
   total_amount: string;
@@ -71,10 +76,13 @@ interface StageRow {
 }
 const reviewQuery = `SELECT s.id,s.order_id,s.profile_id,s.saving_plan_id,s.hardware_product_id,
   h.title AS hardware_title,p.user_id AS customer_id,
-  u.username AS customer_name,s.status,s.financial_status,s.submitted_at,
+  u.username AS customer_name,
+  COALESCE(NULLIF(TRIM(CONCAT_WS(' ',p.first_name,p.last_name)),''),NULLIF(p.title,''),p.id::text) AS profile_name,
+  s.status,s.financial_status,s.submitted_at,
   s.bill_identifier,s.address_snapshot,s.installation_address_id,s.pricing_snapshot,s.verification_result,
   s.agreement_snapshot,o.gift_code_id,c.id AS contract_id,c.state AS contract_state,
-  c.current_version_id AS version_id,i.id AS invoice_id,i.state AS invoice_state,
+  c.current_version_id AS version_id,v.version_number,v.content AS contract_snapshot,
+  i.id AS invoice_id,i.state AS invoice_state,
   i.total_amount::text AS total_amount,i.paid_amount::text AS paid_amount,
   i.refunded_amount::text AS refunded_amount,ar.initial_invoice_id AS activation_invoice_id,
   EXISTS(SELECT 1 FROM contract_cancellation_requests cr
@@ -85,6 +93,7 @@ const reviewQuery = `SELECT s.id,s.order_id,s.profile_id,s.saving_plan_id,s.hard
   JOIN products h ON h.id=s.hardware_product_id
   JOIN profiles p ON p.id=s.profile_id JOIN users u ON u.user_id=p.user_id
   JOIN contracts c ON c.order_id=o.id AND c.service_type='savings'
+  JOIN contract_versions v ON v.id=c.current_version_id
   JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
   JOIN invoices i ON i.order_id=o.id AND i.type='auto'
     AND i.adjustment_for_invoice_id IS NULL AND i.replaces_invoice_id IS NULL`;
@@ -94,7 +103,8 @@ export class SavingFulfillmentService {
   constructor(
     private readonly invoices: InvoiceStateMachineService,
     private readonly giftCodes: GiftCodeService,
-    private readonly invoiceAdjustments: CreateAdjustmentInvoiceService
+    private readonly invoiceAdjustments: CreateAdjustmentInvoiceService,
+    private readonly reviews: ReviewSnapshotService
   ) {}
 
   async queue(lane: 'all' | 'review' | 'fulfillment' = 'all', after?: string) {
@@ -386,9 +396,13 @@ export class SavingFulfillmentService {
     });
   }
 
-  private async lockRow(client: PoolClient, id: string): Promise<ReviewRow> {
+  private async lockRow(
+    client: PoolClient,
+    id: string,
+    lock: 'SHARE' | 'UPDATE' = 'UPDATE'
+  ): Promise<ReviewRow> {
     const row = (
-      await client.query<ReviewRow>(`${reviewQuery} WHERE s.id=$1 FOR UPDATE OF s,o,c,i`, [id])
+      await client.query<ReviewRow>(`${reviewQuery} WHERE s.id=$1 FOR ${lock} OF s,o,c,i`, [id])
     ).rows[0];
     if (!row) throw new NotFoundException('Saving order not found');
     return row;
@@ -470,12 +484,81 @@ export class SavingFulfillmentService {
     return refundId;
   }
 
+  private decisionReviewForRow(row: ReviewRow, action: ReviewAction, reason: string) {
+    if (
+      row.status !== 'awaiting_staff_review' ||
+      row.contract_state !== 'AwaitingStaffReview' ||
+      row.activation_invoice_id !== row.invoice_id
+    )
+      throw new ConflictException('Saving order review changed; reload before deciding');
+    if (action === 'reject' && !reason) throw new ConflictException('Rejection requires a reason');
+    if (action === 'reject' && row.invoice_state === 'PaymentUnderReview')
+      throw new ConflictException('Resolve pending payment review before rejection');
+    const paid = BigInt(row.paid_amount);
+    const refunded = BigInt(row.refunded_amount);
+    if (paid < refunded) throw new ConflictException('Invoice refund totals are invalid');
+    if (action === 'reject' && BigInt(row.pending_refund_amount) > 0n)
+      throw new ConflictException('Resolve existing refund before rejecting the order');
+    const refundAmount = action === 'reject' ? paid - refunded : 0n;
+    return this.reviews.create(
+      { action: `saving.staff-review.${action}`, profileId: row.profile_id, resourceId: row.id },
+      {
+        action,
+        reason,
+        customerName: row.customer_name,
+        profileName: row.profile_name,
+        billIdentifier: row.bill_identifier,
+        hardwareTitle: row.hardware_title,
+        addressSnapshot: row.address_snapshot,
+        pricingSnapshot: row.pricing_snapshot,
+        agreementSnapshot: row.agreement_snapshot,
+        contractId: row.contract_id,
+        contractState: row.contract_state,
+        versionId: row.version_id,
+        versionNumber: row.version_number,
+        contractSnapshot: row.contract_snapshot,
+        invoiceId: row.invoice_id,
+        invoiceState: row.invoice_state,
+        invoiceTotal: row.total_amount,
+        paidAmount: row.paid_amount,
+        refundedAmount: row.refunded_amount,
+        pendingRefundAmount: row.pending_refund_amount,
+        outcome:
+          action === 'approve'
+            ? 'publish_contract'
+            : refundAmount > 0n
+              ? 'refund_obligation'
+              : ['Draft', 'Unpaid', 'Overdue'].includes(row.invoice_state)
+                ? 'cancel_invoice'
+                : 'reject_without_refund',
+        refundAmount: refundAmount.toString(),
+        releasesGiftCode: action === 'reject' && paid === 0n && !!row.gift_code_id,
+      }
+    );
+  }
+
+  async decisionReview(id: string, action: ReviewAction, reason: string, actor: Actor) {
+    const profile = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM saving_orders WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!profile) throw new NotFoundException('Saving order not found');
+    return staffContractFinancialReview(profile.profile_id, actor, async (client, archived) => {
+      if (archived) throw new ConflictException('Profile is archived');
+      const row = await this.lockRow(client, id, 'SHARE');
+      return this.decisionReviewForRow(row, action, reason.trim());
+    });
+  }
+
   async decide(
     id: string,
     action: ReviewAction,
     input: {
       idempotencyKey: string;
       expectedVersionId: string;
+      expectedReviewHash: string;
       reason?: string | undefined;
     },
     actor: Actor,
@@ -498,18 +581,11 @@ export class SavingFulfillmentService {
           async () => {
             if (archived) throw new ConflictException('Profile is archived');
             const row = await this.lockRow(client, id);
-            if (
-              row.status !== 'awaiting_staff_review' ||
-              row.version_id !== input.expectedVersionId ||
-              row.contract_state !== 'AwaitingStaffReview' ||
-              row.activation_invoice_id !== row.invoice_id
-            )
+            if (row.version_id !== input.expectedVersionId)
               throw new ConflictException('Saving order review changed; reload before deciding');
             const reason = input.reason?.trim() ?? '';
-            if (action === 'reject' && !reason)
-              throw new ConflictException('Rejection requires a reason');
-            if (action === 'reject' && row.invoice_state === 'PaymentUnderReview')
-              throw new ConflictException('Resolve pending payment review before rejection');
+            const review = this.decisionReviewForRow(row, action, reason);
+            this.reviews.assertConfirmed(review, input.expectedReviewHash);
             let refundId: string | null = null;
             if (action === 'approve') {
               await client.query(
@@ -618,7 +694,13 @@ export class SavingFulfillmentService {
               `saving.order_review.${action}`,
               actor,
               ip,
-              { savingOrderId: id, reason, refundId }
+              {
+                savingOrderId: id,
+                reason,
+                refundId,
+                reviewHash: review.hash,
+                financialReview: review,
+              }
             );
             return {
               savingOrderId: id,

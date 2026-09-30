@@ -1,7 +1,13 @@
-import { useEffect, useState } from 'react';
-import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
+import { useEffect, useRef, useState } from 'react';
+import { Button, Card, CardContent, FinancialReviewSummary, Input, Label } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
+import { t } from '@barghsa/i18n/app';
+import {
+  parseSavingStaffDecisionReview,
+  type SavingStaffDecisionReview,
+} from '@barghsa/shared/finance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { withCsrf } from '../lib/csrf.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -103,6 +109,30 @@ function stagePrerequisites(stage: StageName, order: Detail) {
   return reasons;
 }
 
+function reviewPriceLines(snapshot: Record<string, unknown>) {
+  return Array.isArray(snapshot.lines)
+    ? snapshot.lines.filter(
+        (
+          line
+        ): line is {
+          title: { fa: string; en: string };
+          amountIrR: string;
+          discountIrR: string;
+          netIrR: string;
+          vatIrR: string;
+        } =>
+          !!line &&
+          typeof line === 'object' &&
+          !!line.title &&
+          typeof line.title.fa === 'string' &&
+          typeof line.title.en === 'string' &&
+          ['amountIrR', 'discountIrR', 'netIrR', 'vatIrR'].every(
+            (key) => typeof line[key] === 'string'
+          )
+      )
+    : [];
+}
+
 export default function AdminSavingOrdersPage() {
   const locale = useLocale();
   const time = useAccountTime(locale);
@@ -121,6 +151,10 @@ export default function AdminSavingOrdersPage() {
   const [amendHardwareId, setAmendHardwareId] = useState('');
   const [amendHardwareReason, setAmendHardwareReason] = useState('');
   const [action, setAction] = useState<TeamAction | null>(null);
+  const [decisionReview, setDecisionReview] = useState<SavingStaffDecisionReview | null>(null);
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewError, setReviewError] = useState(false);
+  const reviewRequest = useRef(0);
   const [revision, setRevision] = useState(0);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'forbidden'>('loading');
 
@@ -180,6 +214,11 @@ export default function AdminSavingOrdersPage() {
   }, [after, lane, revision]);
 
   useEffect(() => {
+    reviewRequest.current++;
+    setDecisionReview(null);
+    setAction(null);
+    setReviewLoading(false);
+    setReviewError(false);
     if (!selected) {
       setDetail(null);
       return;
@@ -207,21 +246,58 @@ export default function AdminSavingOrdersPage() {
     return () => controller.abort();
   }, [selected, revision]);
 
-  function review(decision: 'approve' | 'reject') {
-    if (!detail || (decision === 'reject' && !note.trim())) return;
-    setAction({
-      title: copy(decision === 'approve' ? 'staffApprove' : 'staffReject'),
-      description: copy('staffConfirm'),
-      method: 'POST',
-      path: `/api/staff/saving/orders/${detail.id}/${decision}`,
-      body: {
-        idempotencyKey: crypto.randomUUID(),
-        expectedVersionId: detail.versionId,
-        ...(decision === 'reject' ? { reason: note.trim() } : {}),
-      },
-      conflictMessage: copy('staffConflict'),
-      forbiddenMessage: copy('staffForbidden'),
-    });
+  async function review(decision: 'approve' | 'reject') {
+    if (!detail || reviewLoading || (decision === 'reject' && !note.trim())) return;
+    const order = detail;
+    const reason = decision === 'reject' ? note.trim() : '';
+    const request = ++reviewRequest.current;
+    setReviewLoading(true);
+    setReviewError(false);
+    try {
+      const response = await fetch(
+        `/api/staff/saving/orders/${encodeURIComponent(order.id)}/financial-review`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ action: decision, reason }),
+        }
+      );
+      if (!response.ok) throw new Error('Review unavailable');
+      const financialReview = parseSavingStaffDecisionReview(await response.json());
+      if (request !== reviewRequest.current) return;
+      if (
+        !financialReview ||
+        financialReview.data.action !== decision ||
+        financialReview.data.reason !== reason ||
+        financialReview.data.versionId !== order.versionId ||
+        financialReview.scope.profileId !== order.profileId ||
+        financialReview.scope.resourceId !== order.id
+      )
+        throw new Error('Review mismatch');
+      setDecisionReview(financialReview);
+      setAction({
+        title: copy(decision === 'approve' ? 'staffApprove' : 'staffReject'),
+        description: copy('staffReviewConfirm'),
+        method: 'POST',
+        path: `/api/staff/saving/orders/${order.id}/${decision}`,
+        body: {
+          idempotencyKey: crypto.randomUUID(),
+          expectedVersionId: financialReview.data.versionId,
+          expectedReviewHash: financialReview.hash,
+          ...(decision === 'reject' ? { reason } : {}),
+        },
+        conflictMessage: copy('staffConflict'),
+        forbiddenMessage: copy('staffForbidden'),
+      });
+    } catch {
+      if (request === reviewRequest.current) {
+        setDecisionReview(null);
+        setReviewError(true);
+      }
+    } finally {
+      if (request === reviewRequest.current) setReviewLoading(false);
+    }
   }
 
   function advance(stage: StageName, choice: 'complete' | 'skip') {
@@ -509,14 +585,18 @@ export default function AdminSavingOrdersPage() {
               )}
               {detail.status === 'awaiting_staff_review' && (
                 <div className="flex flex-wrap gap-2">
-                  <Button onClick={() => review('approve')}>{copy('staffApprove')}</Button>
+                  <Button disabled={reviewLoading} onClick={() => void review('approve')}>
+                    {copy('staffApprove')}
+                  </Button>
                   <Button
                     variant="destructive"
-                    disabled={!note.trim()}
-                    onClick={() => review('reject')}
+                    disabled={!note.trim() || reviewLoading}
+                    onClick={() => void review('reject')}
                   >
                     {copy('staffReject')}
                   </Button>
+                  {reviewLoading ? <p role="status">{copy('staffReviewLoading')}</p> : null}
+                  {reviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
                 </div>
               )}
               <div className="space-y-2">
@@ -623,7 +703,132 @@ export default function AdminSavingOrdersPage() {
       {action && (
         <TeamActionDialog
           action={action}
-          onClose={() => setAction(null)}
+          summary={
+            decisionReview ? (
+              <FinancialReviewSummary
+                title={copy('staffReviewTitle')}
+                rows={[
+                  {
+                    id: 'customer',
+                    label: copy('customer'),
+                    value: decisionReview.data.customerName,
+                  },
+                  {
+                    id: 'profile',
+                    label: copy('staffReviewProfile'),
+                    value: decisionReview.data.profileName,
+                  },
+                  {
+                    id: 'bill',
+                    label: copy('staffBill'),
+                    value: decisionReview.data.billIdentifier,
+                  },
+                  {
+                    id: 'hardware',
+                    label: copy('stepHardware'),
+                    value: decisionReview.data.hardwareTitle[locale],
+                  },
+                  {
+                    id: 'address',
+                    label: copy('staffAddress'),
+                    value: String(decisionReview.data.addressSnapshot.full_address ?? ''),
+                  },
+                  {
+                    id: 'contract',
+                    label: copy('staffReviewContractVersion'),
+                    value: money.number(decisionReview.data.versionNumber),
+                  },
+                  {
+                    id: 'invoice',
+                    label: copy('staffInvoice'),
+                    value: t(`invoices.state.${decisionReview.data.invoiceState}`, locale),
+                  },
+                  {
+                    id: 'paid',
+                    label: copy('staffPaid'),
+                    value: money.money(decisionReview.data.paidAmount),
+                  },
+                  ...(decisionReview.data.refundedAmount !== '0'
+                    ? [
+                        {
+                          id: 'refunded',
+                          label: copy('staffReviewRefunded'),
+                          value: money.money(decisionReview.data.refundedAmount),
+                        },
+                      ]
+                    : []),
+                  ...(decisionReview.data.pendingRefundAmount !== '0'
+                    ? [
+                        {
+                          id: 'pending-refund',
+                          label: copy('staffReviewPendingRefund'),
+                          value: money.money(decisionReview.data.pendingRefundAmount),
+                        },
+                      ]
+                    : []),
+                  {
+                    id: 'outcome',
+                    label: copy('staffReviewOutcome'),
+                    value: copy(`staffReviewOutcome.${decisionReview.data.outcome}`),
+                  },
+                  ...reviewPriceLines(decisionReview.data.pricingSnapshot).map((line, index) => ({
+                    id: `price-${index}`,
+                    label: line.title[locale],
+                    value: (
+                      <span className="space-y-1 text-sm">
+                        <span className="block">
+                          {copy('staffPrice')}: {money.money(line.amountIrR)}
+                        </span>
+                        <span className="block">
+                          {copy('discount')}: {money.money(line.discountIrR)}
+                        </span>
+                        <span className="block">
+                          {copy('staffReviewNet')}: {money.money(line.netIrR)}
+                        </span>
+                        <span className="block">
+                          {copy('vat')}: {money.money(line.vatIrR)}
+                        </span>
+                      </span>
+                    ),
+                  })),
+                  ...(decisionReview.data.refundAmount !== '0'
+                    ? [
+                        {
+                          id: 'refund',
+                          label: copy('staffReviewRefund'),
+                          value: money.money(decisionReview.data.refundAmount),
+                        },
+                      ]
+                    : []),
+                  ...(decisionReview.data.releasesGiftCode
+                    ? [
+                        {
+                          id: 'gift',
+                          label: copy('giftCode'),
+                          value: copy('staffReviewGiftRelease'),
+                        },
+                      ]
+                    : []),
+                ]}
+                total={{
+                  label: copy('staffTotal'),
+                  value: money.money(decisionReview.data.invoiceTotal),
+                }}
+                notice={
+                  <div className="space-y-2">
+                    {decisionReview.data.reason ? <p>{decisionReview.data.reason}</p> : null}
+                    <p className="whitespace-pre-wrap break-words" dir="auto">
+                      {decisionReview.data.agreementSnapshot}
+                    </p>
+                  </div>
+                }
+              />
+            ) : undefined
+          }
+          onClose={() => {
+            setAction(null);
+            setDecisionReview(null);
+          }}
           onSuccess={async () => {
             setNote('');
             setHandover('');

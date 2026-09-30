@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Saving staff decision financial review](batches/2026-09-30-saving-staff-decision-review.md) binds approval and rejection to the locked saving order, accepted agreement, invoice balances and exact publication or refund outcome. Cross-command review tasks remain partial.
+
 [Electricity customer cancellation financial review](batches/2026-09-30-electricity-cancellation-review.md) binds cancellation to a locked contract, invoice and exact wallet-refund or unpaid-invoice outcome before customer confirmation. The cross-command review tasks remain partial.
 
 [Electricity staff decision financial review](batches/2026-09-30-electricity-staff-decision-review.md) binds staff approval, change requests, and rejection to the current contract, invoice, and exact refund outcome before confirmation. The cross-command review tasks remain partial.
