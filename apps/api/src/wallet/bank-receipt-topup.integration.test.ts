@@ -200,6 +200,64 @@ describe('BankReceiptTopUpService — real PostgreSQL (T-04.2.02.03)', () => {
     });
   });
 
+  it('reviews the verified receipt before any ledger insert and persists the confirmed review', async () => {
+    const attachment = receiptKey('review000001');
+    const input = payload({ idempotencyKey: 'bank-receipt-reviewed', attachmentKey: attachment });
+    await insertReceipt(attachment);
+    const review = await service.review(input);
+    expect(review.data).toMatchObject({
+      profileId: PROFILE_A,
+      amountIrR: '250000',
+      paymentDate: '2026-08-15',
+      payerReference: 'TRK-998877',
+      attachmentKey: attachment,
+      fileName: 'receipt.pdf',
+      stateAfterSubmission: 'Pending',
+      creditRule: 'after_finance_confirmation',
+    });
+    expect(
+      (await fetchLedger(PROFILE_A)).some((row) => row.idempotency_key === input.idempotencyKey)
+    ).toBe(false);
+
+    const result = await service.submit({ ...input, expectedReviewHash: review.hash });
+    const row = (await fetchLedger(PROFILE_A)).find(
+      (entry) => entry.idempotency_key === input.idempotencyKey
+    );
+    expect(row?.metadata).toMatchObject({ financialReview: review });
+    const audit = await ctx.pool.query<{ metadata: { reviewHash: string } }>(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='wallet_bank_receipt_submitted' AND metadata::jsonb->>'receiptId'=$1",
+      [result.transactionId]
+    );
+    expect(audit.rows[0]?.metadata.reviewHash).toBe(review.hash);
+    expect((await service.review(input)).hash).toBe(review.hash);
+    expect(
+      (await service.submit({ ...input, expectedReviewHash: review.hash })).transactionId
+    ).toBe(result.transactionId);
+  });
+
+  it('rejects a changed receipt record or an altered hash before creating a Pending entry', async () => {
+    const attachment = receiptKey('stale0000001');
+    const input = payload({ idempotencyKey: 'bank-receipt-stale', attachmentKey: attachment });
+    await insertReceipt(attachment);
+    const review = await service.review(input);
+    await ctx.pool.query('UPDATE storage_records SET file_name=$2 WHERE storage_key=$1', [
+      attachment,
+      'replacement.pdf',
+    ]);
+    await expect(
+      service.submit({ ...input, expectedReviewHash: review.hash })
+    ).rejects.toBeInstanceOf(ConflictException);
+    expect(
+      (await fetchLedger(PROFILE_A)).some((row) => row.idempotency_key === input.idempotencyKey)
+    ).toBe(false);
+
+    const fresh = await service.review(input);
+    expect(fresh.hash).not.toBe(review.hash);
+    await expect(
+      service.submit({ ...input, expectedReviewHash: '0'.repeat(64) })
+    ).rejects.toBeInstanceOf(ConflictException);
+  });
+
   it('accepts an amount above the online top-up limit', async () => {
     const attachment = receiptKey('overlimit0001');
     await insertReceipt(attachment);

@@ -28,8 +28,10 @@ import {
   bankReceiptTopUpMetadata,
   evaluateBankReceiptStorageMetadata,
   parseBankReceiptTopUpSubmission,
+  parseBankReceiptTopUpReview,
   receiptDetailsMatch,
   invoiceBankReceiptLookupKeys,
+  type BankReceiptTopUpReview,
   type BankReceiptStorageRejection,
   type BankReceiptTopUpDetails,
 } from '@barghsa/shared/finance';
@@ -38,6 +40,7 @@ import {
   claimBankReceiptAttachment,
 } from '../finance/claim-bank-receipt-attachment.js';
 import { WalletService, type TransactionRow } from './wallet.service.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 
 const PG_UNIQUE_VIOLATION = '23505';
 const WALLET_TX_IDEMPOTENCY_CONSTRAINT = 'idx_wallet_tx_idempotency';
@@ -59,6 +62,8 @@ export interface SubmitBankReceiptTopUpInput extends Omit<ReceiptSubmissionActor
   customerNote?: unknown;
   idempotencyKey: string;
   actorId: string;
+  /** Required by the customer HTTP route; internal callers may submit accepted receipts. */
+  expectedReviewHash?: string;
 }
 
 export interface SubmitBankReceiptTopUpResult {
@@ -104,11 +109,133 @@ interface QueryClient {
 @Injectable()
 export class BankReceiptTopUpService {
   private readonly logger = new Logger(BankReceiptTopUpService.name);
+  private readonly reviews = new ReviewSnapshotService();
 
   constructor(
     private readonly walletService: WalletService,
     @Optional() @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider | null = null
   ) {}
+
+  private financialReview(
+    profileId: string,
+    amountIrR: bigint,
+    receipt: BankReceiptTopUpDetails,
+    storageRow: StorageLockRow
+  ): BankReceiptTopUpReview {
+    return this.reviews.create(
+      {
+        action: 'wallet.bank-receipt-topup-submission',
+        profileId,
+        resourceId: profileId,
+      },
+      {
+        profileId,
+        amountIrR: amountIrR.toString(),
+        paymentDate: receipt.paymentDate,
+        payerReference: receipt.payerReference,
+        attachmentKey: receipt.attachmentKey,
+        fileName: storageRow.file_name || receipt.attachmentKey.split('/').at(-1)!,
+        fileSizeBytes: storageRow.file_size == null ? null : String(storageRow.file_size),
+        customerNote: receipt.customerNote,
+        stateAfterSubmission: 'Pending' as const,
+        creditRule: 'after_finance_confirmation' as const,
+      }
+    );
+  }
+
+  async review(input: SubmitBankReceiptTopUpInput): Promise<BankReceiptTopUpReview> {
+    const key = input.idempotencyKey.trim();
+    if (!key) throw httpError(ErrorCodes.VALIDATION_INPUT_MISSING, 'Idempotency key is required');
+    const parsed = parseBankReceiptTopUpSubmission(input);
+    if (!parsed.ok) throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, parsed.message);
+    const pool = getDbPool({ session: true });
+    const client = await pool.connect();
+    const actor: ReceiptSubmissionActor = {
+      userId: input.actorId,
+      sessionId: input.sessionId,
+      csrfToken: input.csrfToken,
+      ...(input.correlationId ? { correlationId: input.correlationId } : {}),
+    };
+    try {
+      await client.query('BEGIN');
+      await lockReceiptSubmissionActor(client, actor, input.profileId);
+      const storageRow = await this.lockAttachmentProvenance(
+        client,
+        parsed.receipt.attachmentKey,
+        actor.userId,
+        input.profileId
+      );
+      const existing = (
+        await client.query('SELECT * FROM wallet_transactions WHERE idempotency_key=$1 FOR SHARE', [
+          key,
+        ])
+      ).rows[0];
+      let review: BankReceiptTopUpReview;
+      if (existing) {
+        assertMatchingPendingBankReceipt(
+          existing as Parameters<typeof assertMatchingPendingBankReceipt>[0],
+          input.profileId,
+          parsed.amountIrR,
+          parsed.receipt
+        );
+        const stored = parseBankReceiptTopUpReview(
+          (existing.metadata as { financialReview?: unknown } | null)?.financialReview
+        );
+        if (stored) {
+          if (
+            stored.data.profileId !== input.profileId ||
+            stored.data.amountIrR !== parsed.amountIrR.toString() ||
+            stored.data.paymentDate !== parsed.receipt.paymentDate ||
+            stored.data.payerReference !== parsed.receipt.payerReference ||
+            stored.data.attachmentKey !== parsed.receipt.attachmentKey ||
+            stored.data.customerNote !== parsed.receipt.customerNote
+          )
+            throw new ConflictException('Stored receipt review requires reconciliation');
+          this.reviews.assertConfirmed(stored, stored.hash);
+          review = stored;
+        } else if ((existing.metadata as { financialReview?: unknown } | null)?.financialReview) {
+          throw new ConflictException('Stored receipt review requires reconciliation');
+        } else {
+          review = this.financialReview(
+            input.profileId,
+            parsed.amountIrR,
+            parsed.receipt,
+            storageRow
+          );
+        }
+      } else {
+        review = this.financialReview(
+          input.profileId,
+          parsed.amountIrR,
+          parsed.receipt,
+          storageRow
+        );
+      }
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  private assertStoredReview(
+    row: TransactionRow,
+    profileId: string,
+    expectedReviewHash: string | undefined
+  ): void {
+    if (!expectedReviewHash) return;
+    const metadata = row.metadata as { financialReview?: unknown } | null;
+    if (!metadata?.financialReview) return; // Accepted before review snapshots were introduced.
+    this.reviews.assertStored(metadata, expectedReviewHash, {
+      action: 'wallet.bank-receipt-topup-submission',
+      profileId,
+      resourceId: profileId,
+    });
+  }
 
   async submit(input: SubmitBankReceiptTopUpInput): Promise<SubmitBankReceiptTopUpResult> {
     const idempotencyKey = input.idempotencyKey.trim();
@@ -144,6 +271,7 @@ export class BankReceiptTopUpService {
             parsed.amountIrR,
             idempotencyKey,
             parsed.receipt,
+            input.expectedReviewHash,
             {
               userId: input.actorId,
               sessionId: input.sessionId,
@@ -226,6 +354,7 @@ export class BankReceiptTopUpService {
     amountIrR: bigint,
     idempotencyKey: string,
     receipt: BankReceiptTopUpDetails,
+    expectedReviewHash: string | undefined,
     actor: ReceiptSubmissionActor
   ): Promise<TransactionRow> {
     let canonicalWalletId: string | undefined;
@@ -263,9 +392,11 @@ export class BankReceiptTopUpService {
           amountIrR,
           receipt
         );
+        const pending = mapTransaction(existing as Parameters<typeof mapTransaction>[0]);
+        this.assertStoredReview(pending, profileId, expectedReviewHash);
         await requireCurrentSession(client, actor);
         await client.query('COMMIT');
-        return mapTransaction(existing as Parameters<typeof mapTransaction>[0]);
+        return pending;
       }
 
       const attachmentResult = await client.query(
@@ -275,6 +406,9 @@ export class BankReceiptTopUpService {
       if (attachmentResult.rows.length > 0) {
         throw new ConflictException('This bank receipt attachment has already been submitted');
       }
+
+      const review = this.financialReview(profileId, amountIrR, receipt, storageRow);
+      if (expectedReviewHash) this.reviews.assertConfirmed(review, expectedReviewHash);
 
       const sealed = await sealBankReceiptAttachment(
         client,
@@ -302,7 +436,10 @@ export class BankReceiptTopUpService {
           amountIrR.toString(),
           idempotencyKey,
           BANK_RECEIPT_TOPUP_DESCRIPTION,
-          JSON.stringify(bankReceiptTopUpMetadata(sealedReceipt)),
+          JSON.stringify({
+            ...bankReceiptTopUpMetadata(sealedReceipt),
+            ...(expectedReviewHash ? { financialReview: review } : {}),
+          }),
           sealed.sealedKey,
         ]
       );
@@ -312,7 +449,8 @@ export class BankReceiptTopUpService {
         actor,
         profileId,
         String(txResult.rows[0]!.id),
-        'wallet'
+        'wallet',
+        expectedReviewHash ? review : undefined
       );
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
@@ -334,6 +472,7 @@ export class BankReceiptTopUpService {
           amountIrR,
           receipt
         );
+        const pending = mapTransaction(committed as Parameters<typeof mapTransaction>[0]);
         await client.query('BEGIN');
         try {
           await lockReceiptSubmissionActor(client, actor, profileId);
@@ -344,13 +483,14 @@ export class BankReceiptTopUpService {
             profileId
           );
           await claimBankReceiptAttachment(client, receipt.attachmentKey, 'wallet_topup');
+          this.assertStoredReview(pending, profileId, expectedReviewHash);
           await requireCurrentSession(client, actor);
           await client.query('COMMIT');
         } catch (protectError) {
           await client.query('ROLLBACK');
           throw protectError;
         }
-        return mapTransaction(committed as Parameters<typeof mapTransaction>[0]);
+        return pending;
       }
       if (isPgUniqueViolation(error, WALLET_TX_RECEIPT_ATTACHMENT_CONSTRAINT)) {
         throw new ConflictException('This bank receipt attachment has already been submitted');

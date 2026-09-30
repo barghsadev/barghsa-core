@@ -53,6 +53,7 @@ export * from './electricity-price-adjustment-review.js';
 export * from './electricity-increase-signing-review.js';
 export * from './electricity-increase-staff-decision-review.js';
 export * from './online-topup-review.js';
+export * from './bank-receipt-topup-review.js';
 export * from './electricity-staff-decision-review.js';
 export * from './electricity-cancellation-review.js';
 export * from './saving-staff-review.js';

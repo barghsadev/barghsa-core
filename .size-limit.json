@@ -73,7 +73,19 @@
     "limitKB": 40
   },
   {
-    "name": "Wallet top-up review validation on demand",
+    "name": "Bank receipt top-up review on demand",
+    "phase": "interaction",
+    "entries": ["src/components/BankReceiptTopUpReviewDialog.tsx"],
+    "limitKB": 15
+  },
+  {
+    "name": "Bank receipt top-up action on demand",
+    "phase": "interaction",
+    "entries": ["src/lib/bank-receipt-topup-action.ts"],
+    "limitKB": 15
+  },
+  {
+    "name": "Wallet review validation on demand",
     "phase": "interaction",
     "entries": ["../../packages/shared/dist/finance/index.js"],
     "limitKB": 60

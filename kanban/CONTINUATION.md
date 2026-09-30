@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Bank-receipt wallet top-up financial review](batches/2026-09-30-bank-receipt-topup-financial-review.md) binds customer submission to a server-confirmed receipt and delayed-credit rule, persists the confirmed snapshot, and rejects stale review hashes. This batch also repairs the previous main CI's high-severity dependency advisories and a mobile header overflow. Cross-command review tasks remain partial.
+
 [Online wallet top-up financial review](batches/2026-09-30-online-topup-financial-review.md) binds gateway initiation to a server-confirmed profile, amount and current limit. The customer confirms the reviewed payment before redirect; pending intents and audit retain the review. Cross-command review tasks remain partial.
 
 [Electricity quantity-increase staff decision review](batches/2026-09-30-electricity-increase-staff-decision-review.md) binds approval and rejection to the current quantity, contract, invoice, policy and exact effective date before staff confirmation. The final charge is calculated at customer signature. Cross-command review tasks remain partial.

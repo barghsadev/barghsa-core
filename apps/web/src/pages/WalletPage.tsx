@@ -16,13 +16,13 @@ import {
 } from 'react';
 import { t } from '@barghsa/i18n/app';
 import type { OnlineTopUpReview } from '@barghsa/shared/finance';
+import type { BankReceiptTopUpReview } from '@barghsa/shared/finance';
 import {
   parseBankReceiptTopUpAmountIrR,
   isValidWalletTopUpLimit,
 } from '@barghsa/shared/finance/browser';
 import type { OnlineTopUpActionError } from '../lib/online-topup-action.js';
 import { useLocale } from '../hooks/useLocale.js';
-import { withCsrf } from '../lib/csrf.js';
 import { useReceiptAttachmentUpload } from '../hooks/useReceiptAttachmentUpload.js';
 import {
   isAllowedInvoiceReceiptFile as isAllowedReceiptFile,
@@ -35,6 +35,9 @@ import { MaintenanceNotice } from '../components/MaintenanceNotice.js';
 import { tMaintenance } from '@barghsa/i18n/maintenance';
 
 const OnlineTopUpReviewDialog = lazy(() => import('../components/OnlineTopUpReviewDialog.js'));
+const BankReceiptTopUpReviewDialog = lazy(
+  () => import('../components/BankReceiptTopUpReviewDialog.js')
+);
 
 interface WalletBalance {
   balance: string;
@@ -108,6 +111,12 @@ export function WalletPage({
   const [receiptPayerRef, setReceiptPayerRef] = useState('');
   const [receiptNote, setReceiptNote] = useState('');
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
+  const [receiptUploaded, setReceiptUploaded] = useState<{
+    file: File;
+    profileId: string;
+    key: string;
+  } | null>(null);
+  const [receiptReview, setReceiptReview] = useState<BankReceiptTopUpReview | null>(null);
   const [receiptSubmitting, setReceiptSubmitting] = useState(false);
   const [receiptError, setReceiptError] = useState<ReceiptError | null>(null);
   const [receiptSuccess, setReceiptSuccess] = useState(false);
@@ -270,51 +279,69 @@ export function WalletPage({
     setReceiptError(null);
     setReceiptSuccess(false);
     try {
-      const attachmentKey = await uploadReceiptAttachment(receiptFile, profileId);
+      const attachmentKey =
+        receiptUploaded?.file === receiptFile && receiptUploaded.profileId === profileId
+          ? receiptUploaded.key
+          : await uploadReceiptAttachment(receiptFile, profileId);
       if (!attachmentKey) {
         setReceiptError('upload');
         return;
       }
-
-      const res = await fetch(`/api/wallet/${profileId}/bank-receipt-top-ups`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'Idempotency-Key': receiptIdempotencyKey,
-        }),
-        body: JSON.stringify({
-          amount: receiptAmountIrR.toString(),
-          paymentDate: receiptDate,
-          payerReference: receiptPayerRef.trim(),
-          attachmentKey,
-          customerNote: receiptNote.trim() === '' ? undefined : receiptNote.trim(),
-        }),
+      setReceiptUploaded({ file: receiptFile, profileId, key: attachmentKey });
+      const { loadBankReceiptTopUpReview } = await import('../lib/bank-receipt-topup-action.js');
+      const result = await loadBankReceiptTopUpReview({
+        profileId,
+        amountIrR: receiptAmountIrR.toString(),
+        paymentDate: receiptDate,
+        payerReference: receiptPayerRef.trim(),
+        attachmentKey,
+        customerNote: receiptNote.trim() || null,
+        idempotencyKey: receiptIdempotencyKey,
       });
-      const payload = (await res.json().catch(() => ({}))) as {
-        state?: string;
-        amount?: unknown;
-        message?: string;
-      };
-      const confirmedAmount = parseBankReceiptTopUpAmountIrR(payload.amount);
-      if (!res.ok || payload.state !== 'Pending' || confirmedAmount !== receiptAmountIrR) {
-        const next = mapReceiptSubmitError(res.status);
+      if (result.kind === 'error') {
+        const next = mapReceiptSubmitError(result.status);
         if (next === 'conflict') setReceiptIdempotencyKey(newIdempotencyKey());
         setReceiptError(next);
         return;
       }
+      setReceiptReview(result.value);
+    } catch {
+      setReceiptError('upload');
+    } finally {
+      setReceiptSubmitting(false);
+    }
+  }
 
+  async function confirmReceiptTopUp() {
+    if (!receiptReview || receiptSubmitting) return;
+    setReceiptSubmitting(true);
+    setReceiptError(null);
+    try {
+      const { submitReviewedBankReceiptTopUp } =
+        await import('../lib/bank-receipt-topup-action.js');
+      const result = await submitReviewedBankReceiptTopUp(receiptReview, receiptIdempotencyKey);
+      if (result.kind === 'error') {
+        setReceiptReview(null);
+        const next = mapReceiptSubmitError(result.status);
+        if (next === 'conflict') setReceiptIdempotencyKey(newIdempotencyKey());
+        setReceiptError(next);
+        return;
+      }
+      setReceiptReview(null);
       setReceiptSuccess(true);
       setReceiptIdempotencyKey(newIdempotencyKey());
       setReceiptFile(null);
+      setReceiptUploaded(null);
       if (receiptFileInput.current) receiptFileInput.current.value = '';
-      const walletRes = await fetch(`/api/wallet/${profileId}`, { credentials: 'include' });
+      const walletRes = await fetch(`/api/wallet/${receiptReview.data.profileId}`, {
+        credentials: 'include',
+      });
       if (walletRes.ok) {
         setWallet((await walletRes.json()) as WalletBalance);
       }
     } catch {
-      setReceiptError('upload');
+      setReceiptReview(null);
+      setReceiptError('generic');
     } finally {
       setReceiptSubmitting(false);
     }
@@ -620,6 +647,7 @@ export function WalletPage({
                   onChange={(event) => {
                     const file = event.target.files?.[0] ?? null;
                     setReceiptFile(file);
+                    setReceiptUploaded(null);
                     if (receiptError === 'invalid-file' || receiptError === 'upload') {
                       setReceiptError(null);
                     }
@@ -677,6 +705,18 @@ export function WalletPage({
                 loading={submitting}
                 onCancel={() => setOnlineReview(null)}
                 onConfirm={() => void confirmOnlineTopUp()}
+              />
+            </Suspense>
+          ) : null}
+
+          {receiptReview ? (
+            <Suspense fallback={<p role="status">{t('wallet.page.reviewLoading', locale)}</p>}>
+              <BankReceiptTopUpReviewDialog
+                review={receiptReview}
+                locale={locale}
+                loading={receiptSubmitting}
+                onCancel={() => setReceiptReview(null)}
+                onConfirm={() => void confirmReceiptTopUp()}
               />
             </Suspense>
           ) : null}

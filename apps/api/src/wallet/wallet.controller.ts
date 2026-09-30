@@ -48,16 +48,22 @@ const InitiateBodySchema = TopUpReviewBodySchema.extend({
   expectedReviewHash: z.string().regex(/^[0-9a-f]{64}$/),
 }).strict();
 
-const BankReceiptBodySchema = z
+const BankReceiptFieldsSchema = z
   .object({
     amount: z.union([z.number(), z.string()]),
     paymentDate: z.string().min(1),
     payerReference: z.string().min(1),
     attachmentKey: z.string().min(1),
     customerNote: z.string().optional(),
-    idempotencyKey: z.string().min(1).optional(),
   })
   .strict();
+const BankReceiptReviewBodySchema = BankReceiptFieldsSchema.extend({
+  idempotencyKey: z.string().min(1),
+}).strict();
+const BankReceiptBodySchema = BankReceiptFieldsSchema.extend({
+  idempotencyKey: z.string().min(1).optional(),
+  expectedReviewHash: z.string().regex(/^[0-9a-f]{64}$/),
+}).strict();
 
 @ApiTags('Wallet')
 @ApiBearerAuth()
@@ -72,6 +78,35 @@ export class WalletController {
     private readonly onlineTopUpService: OnlineTopUpService,
     private readonly bankReceiptTopUpService: BankReceiptTopUpService
   ) {}
+
+  @Post(':profileId/bank-receipt-top-ups/review')
+  @RequiresCapability('wallet_topup')
+  @HttpCode(200)
+  @RateLimit({
+    namespace: 'wallet:bank-receipt-top-up-review:user',
+    scope: 'user',
+    limit: 30,
+    windowMs: 60_000,
+  })
+  @ApiOperation({ summary: 'Review a bank-receipt top-up before creating a Pending entry' })
+  async reviewBankReceiptTopUp(
+    @Param('profileId') profileId: string,
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    assertUuid(profileId, 'profileId');
+    await this.assertProfileAccess(req, profileId, 'bank-receipts:submit');
+    const parsed = BankReceiptReviewBodySchema.safeParse(rawBody ?? {});
+    if (!parsed.success)
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD, 'Bank receipt review fields are required');
+    return this.bankReceiptTopUpService.review({
+      ...parsed.data,
+      profileId,
+      actorId: req.session.userId,
+      sessionId: req.session.sessionId,
+      csrfToken: req.session.csrfToken,
+    });
+  }
 
   /**
    * Verify that the authenticated user has access to the given profile.
@@ -250,7 +285,12 @@ export class WalletController {
   @Post(':profileId/bank-receipt-top-ups')
   @RequiresCapability('wallet_topup')
   @HttpCode(201)
-  @RateLimit({ namespace: 'wallet:bank-receipt-top-up:user', limit: 10, windowMs: 60_000 })
+  @RateLimit({
+    namespace: 'wallet:bank-receipt-top-up:user',
+    scope: 'user',
+    limit: 10,
+    windowMs: 60_000,
+  })
   @ApiOperation({ summary: 'Submit a bank-receipt wallet top-up (Pending until staff confirm)' })
   @ApiHeader({ name: 'Idempotency-Key', required: true })
   @ApiResponse({
@@ -297,6 +337,7 @@ export class WalletController {
       attachmentKey: parsed.data.attachmentKey,
       customerNote: parsed.data.customerNote,
       idempotencyKey,
+      expectedReviewHash: parsed.data.expectedReviewHash,
       actorId: req.session.userId,
       sessionId: req.session.sessionId,
       csrfToken: req.session.csrfToken,

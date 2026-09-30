@@ -18,7 +18,9 @@ export function LanguageSwitcher() {
       }}
     >
       <Languages aria-hidden="true" data-icon="inline-start" />
-      <span lang={locale === 'fa' ? 'en' : 'fa'}>{locale === 'fa' ? 'English' : 'فارسی'}</span>
+      <span className="hidden sm:inline" lang={locale === 'fa' ? 'en' : 'fa'}>
+        {locale === 'fa' ? 'English' : 'فارسی'}
+      </span>
     </Button>
   );
 }

@@ -31,10 +31,32 @@ const review = {
   },
   hash: 'a'.repeat(64),
 };
+const receiptReview = {
+  schemaVersion: 1,
+  scope: {
+    action: 'wallet.bank-receipt-topup-submission',
+    profileId: PROFILE_ID,
+    resourceId: PROFILE_ID,
+  },
+  data: {
+    profileId: PROFILE_ID,
+    amountIrR: '250',
+    paymentDate: '2026-01-01',
+    payerReference: 'BANK-1',
+    attachmentKey: 'receipts/file.pdf',
+    fileName: 'receipt.pdf',
+    fileSizeBytes: '7',
+    customerNote: null,
+    stateAfterSubmission: 'Pending',
+    creditRule: 'after_finance_confirmation',
+  },
+  hash: 'b'.repeat(64),
+};
 let host: HTMLDivElement, root: Root;
 type ResponseMock = Mock<() => Promise<ReturnType<typeof json>>>;
 let profiles: ResponseMock, wallet: ResponseMock, post: ResponseMock;
 let reviewPost: ResponseMock | null;
+let receiptReviewPost: ResponseMock;
 let assign: ReturnType<typeof vi.fn>;
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
@@ -48,6 +70,7 @@ beforeEach(() => {
     .mockResolvedValue(json({ balance: '100', currency: 'IRR', onlineTopUpLimit: 1000 }));
   post = vi.fn().mockResolvedValue(json({}));
   reviewPost = null;
+  receiptReviewPost = vi.fn().mockResolvedValue(json(receiptReview));
   upload.mockReset().mockResolvedValue('receipts/file.pdf');
   assign = vi.fn();
   vi.stubGlobal('location', { assign, href: 'http://localhost/' });
@@ -57,6 +80,8 @@ beforeEach(() => {
       const url = String(input);
       if (init?.method === 'POST' && url.endsWith('/top-ups/review'))
         return reviewPost ? reviewPost() : post();
+      if (init?.method === 'POST' && url.endsWith('/bank-receipt-top-ups/review'))
+        return receiptReviewPost();
       if (init?.method === 'POST') return post();
       if (url === '/api/profiles') return profiles();
       if (url.includes('/transactions')) return json({ transactions: [], nextCursor: null });
@@ -87,15 +112,22 @@ async function submit(receipt = false) {
   await act(async () =>
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
-  if (!receipt) {
-    for (
-      let attempt = 0;
-      attempt < 30 && !element('wallet-error') && !document.querySelector('[role="dialog"]');
-      attempt++
-    ) {
-      await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
-    }
+  for (
+    let attempt = 0;
+    attempt < 30 &&
+    !element(receipt ? 'wallet-receipt-error' : 'wallet-error') &&
+    !document.querySelector('[role="dialog"]');
+    attempt++
+  ) {
+    await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
   }
+}
+async function confirmReceipt() {
+  const confirm = [...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button')].find(
+    (button) => button.textContent?.includes('Confirm and submit receipt')
+  );
+  expect(confirm).toBeDefined();
+  await act(async () => confirm!.click());
 }
 async function receiptFields({
   amount = '250',
@@ -232,18 +264,31 @@ it.each([
   await render();
   await receiptFields();
   await submit(true);
+  await confirmReceipt();
   expect(element('wallet-receipt-error').textContent).toBeTruthy();
   expect(element('wallet-receipt-success')).toBeNull();
 });
 
 it('retains successful receipt confirmation when the subsequent balance reload fails', async () => {
-  post.mockResolvedValue(json({ state: 'Pending', amount: '250' }, 201));
+  post.mockResolvedValue(
+    json({ transactionId: 'receipt-1', state: 'Pending', amount: '250' }, 201)
+  );
   await render();
   await receiptFields();
   wallet.mockResolvedValue(json({}, 503));
   await submit(true);
+  await confirmReceipt();
   expect(element('wallet-receipt-success').textContent).toContain('pending finance confirmation');
   expect(element('wallet-balance').textContent).toContain('100');
+});
+
+it('does not create a Pending receipt when the server review rejects it', async () => {
+  receiptReviewPost.mockResolvedValue(json({}, 409));
+  await render();
+  await receiptFields();
+  await submit(true);
+  expect(element('wallet-receipt-error').textContent).toBeTruthy();
+  expect(post).not.toHaveBeenCalled();
 });
 
 it('renders an explicitly returned non-IRR currency without relabeling it', async () => {

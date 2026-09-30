@@ -1355,6 +1355,11 @@ export const fa: I18nDictionary = {
   'wallet.page.receiptNoteLabel': 'یادداشت (اختیاری)',
   'wallet.page.receiptSubmit': 'ارسال رسید',
   'wallet.page.receiptSubmitting': 'در حال ارسال رسید…',
+  'wallet.page.receiptReviewTitle': 'بررسی شارژ با رسید بانکی',
+  'wallet.page.receiptReviewDescription': 'جزئیات واریز را پیش از ثبت رسید تأیید کنید.',
+  'wallet.page.receiptReviewConfirm': 'تأیید و ثبت رسید',
+  'wallet.page.receiptReviewCreditRule':
+    'رسید در وضعیت در انتظار ثبت می‌شود؛ موجودی فقط پس از تأیید واحد مالی افزایش می‌یابد.',
   'wallet.page.receiptSuccess':
     'رسید ثبت شد و در انتظار تأیید مالی است. موجودی هنوز افزایش نیافته است.',
   'wallet.page.receiptInvalidDate': 'تاریخ واریز باید یک روز تقویمی معتبر و نه در آینده باشد.',
@@ -2812,6 +2817,12 @@ export const en: I18nDictionary = {
   'wallet.page.receiptNoteLabel': 'Note (optional)',
   'wallet.page.receiptSubmit': 'Submit receipt',
   'wallet.page.receiptSubmitting': 'Submitting receipt…',
+  'wallet.page.receiptReviewTitle': 'Review bank receipt top-up',
+  'wallet.page.receiptReviewDescription':
+    'Confirm the transfer details before submitting the receipt.',
+  'wallet.page.receiptReviewConfirm': 'Confirm and submit receipt',
+  'wallet.page.receiptReviewCreditRule':
+    'The receipt remains pending. Your wallet is credited only after finance confirms it.',
   'wallet.page.receiptSuccess':
     'Receipt submitted and pending finance confirmation. The balance has not increased yet.',
   'wallet.page.receiptInvalidDate': 'Enter a real calendar date that is not in the future.',

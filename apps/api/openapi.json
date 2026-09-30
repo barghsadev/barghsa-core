@@ -27745,6 +27745,35 @@
         ]
       }
     },
+    "/api/wallet/{profileId}/bank-receipt-top-ups/review": {
+      "post": {
+        "operationId": "WalletController_reviewBankReceiptTopUp",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review a bank-receipt top-up before creating a Pending entry",
+        "tags": [
+          "Wallet"
+        ]
+      }
+    },
     "/api/wallet/{profileId}/create": {
       "post": {
         "operationId": "WalletController_createWallet",
