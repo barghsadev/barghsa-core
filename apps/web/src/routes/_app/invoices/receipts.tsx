@@ -20,6 +20,9 @@ function ReceiptsRoute() {
   const navigate = Route.useNavigate();
   return (
     <BankReceiptsPage
+      onApplyFilters={(selected) =>
+        void navigate({ search: { statuses: selected.join(',') || undefined } })
+      }
       statuses={parseStatusFilter(search.statuses, BANK_RECEIPT_STATUSES) ?? []}
       onStatusesChange={(statuses) => {
         void navigate({ search: { statuses: statuses.join(',') || undefined } });

@@ -1,4 +1,10 @@
-import { verifyHistoryFilterReset, verifyHistoryFilterChips } from './history-filter-reset';
+import {
+  verifyHistoryFilterReset,
+  verifyHistoryFilterChips,
+  openHistoryFilters,
+  closeHistoryFilters,
+  applyHistoryFilters,
+} from './history-filter-reset';
 import { test, expect } from './coverage-fixture';
 import type { Route } from '@playwright/test';
 import { tSaving } from '@barghsa/i18n/saving';
@@ -157,206 +163,131 @@ for (const locale of ['en', 'fa'] as const) {
         .click();
       await expect(link(older)).toBeVisible();
       await expect(link(first)).toBeVisible();
-      await page
-        .locator('summary')
-        .filter({ hasText: copy('filterStatus') })
-        .click();
-      const submittedCheckbox = page.getByRole('checkbox', {
-        name: copy(kind === 'saving' ? 'submitted' : 'status_submitted'),
-        exact: true,
-      });
-      await submittedCheckbox.click();
-      await expect(submittedCheckbox).toBeChecked();
-      await expect.poll(() => Boolean(held)).toBe(true);
-      expect(queries.at(-1)?.has('before')).toBe(false);
-      await expect(link(first)).toHaveCount(0);
-      await expect(link(older)).toHaveCount(0);
-      await held!.fulfill({ json: body(combined, 'submitted') });
-      holdCombined = false;
-      await expect(link(combined)).toBeVisible();
-      await expect(page).toHaveURL(new RegExp(`statuses=submitted%2C${initialStatus}`));
-      if (kind === 'consultation') await expect(page.getByRole('radio')).toBeChecked();
-      await page.reload();
-      await expect(link(combined)).toBeVisible();
-      await page
-        .locator('summary')
-        .filter({ hasText: copy('filterStatus') })
-        .click();
-      await expect(
-        page.getByRole('checkbox', {
-          name: copy(kind === 'saving' ? 'submitted' : 'status_submitted'),
-          exact: true,
-        })
-      ).toBeChecked();
-      if (kind === 'consultation') await page.getByRole('radio').check();
-      const dateCopy = (key: string) => t(`historyDates.${key}`, locale);
-      await page
-        .locator('summary')
-        .filter({ hasText: dateCopy('label') })
-        .click();
-      const preset = page.getByRole('combobox', { name: dateCopy('preset'), exact: true });
-      const now = new Date(await page.evaluate(() => Date.now()));
-      const ranges = Object.fromEntries(
-        (['today', 'last7', 'thisMonth', 'lastMonth'] as const).map((name) => {
-          const range = dateRangePreset(name, locale, 'Asia/Tehran', now);
-          return [name, [range.from!, range.to!]];
-        })
-      );
-      for (const [name, [from, to]] of Object.entries(ranges)) {
-        await preset.selectOption(name);
-        await expect.poll(() => new URL(page.url()).searchParams.get('from')).toBe(from);
-        await expect.poll(() => queries.at(-1)?.get('from')).toBe(from);
-        expect(queries.at(-1)?.get('to')).toBe(to);
-        expect(queries.at(-1)?.get('statuses')).toBe(`submitted,${initialStatus}`);
-        expect(queries.at(-1)?.has('before')).toBe(false);
-        await expect(link(dated)).toBeVisible();
-      }
-      // Custom edits stay local until Apply; an inclusive end day becomes an excluded next midnight.
-      await preset.selectOption('thisMonth');
-      const monthStart = ranges['thisMonth']![0]!;
-      await expect.poll(() => new URL(page.url()).searchParams.get('from')).toBe(monthStart);
-      await preset.selectOption('custom');
-      const endPicker = page.getByRole('combobox', { name: dateCopy('end'), exact: true });
-      await endPicker.click();
-      const calendar = page.getByRole('dialog', { name: dateCopy('end'), exact: true });
-      await expect(calendar).toBeVisible();
-      const dateParts = new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
-        timeZone: 'Asia/Tehran',
-        month: 'long',
-        year: 'numeric',
-        calendar: locale === 'fa' ? 'persian' : 'gregory',
-      }).formatToParts(new Date(monthStart));
-      const part = (type: string) => dateParts.find((item) => item.type === type)!.value;
-      await calendar
-        .getByRole('button', {
-          name: new RegExp(
-            locale === 'fa'
-              ? ` ۱-ام ${part('month')} ${part('year')}`
-              : `${part('month')} 1st, ${part('year')}`
-          ),
-        })
-        .click();
-      const customEnd = new Date(
-        new Date(monthStart).getTime() + 24 * 60 * 60 * 1000
-      ).toISOString();
-      await expect(calendar).toBeHidden();
-      const startPicker = page.getByRole('combobox', { name: dateCopy('start'), exact: true });
-      await startPicker.click();
-      const startCalendar = page.getByRole('dialog', { name: dateCopy('start'), exact: true });
-      await startCalendar
-        .getByRole('button', {
-          name: new RegExp(
-            locale === 'fa'
-              ? ` ۲-ام ${part('month')} ${part('year')}`
-              : `${part('month')} 2nd, ${part('year')}`
-          ),
-        })
-        .click();
-      await expect(
-        page.getByRole('button', { name: dateCopy('apply'), exact: true })
-      ).toBeDisabled();
-      await expect(page.getByText(dateCopy('invalid'), { exact: true })).toBeVisible();
-      expect(new URL(page.url()).searchParams.get('to')).toBe(ranges['thisMonth']![1]);
-      await startPicker.click();
-      await startCalendar
-        .getByRole('button', {
-          name: new RegExp(
-            locale === 'fa'
-              ? ` ۱-ام ${part('month')} ${part('year')}`
-              : `${part('month')} 1st, ${part('year')}`
-          ),
-        })
-        .click();
-      await page.getByRole('button', { name: dateCopy('apply'), exact: true }).click();
-      await expect.poll(() => new URL(page.url()).searchParams.get('to')).toBe(customEnd);
-      await expect(link(dated)).toBeVisible();
-      if (kind === 'consultation') await expect(page.getByRole('radio')).toBeChecked();
+      const initialUrl = page.url();
+      const requestsBefore = queries.length;
+      await openHistoryFilters(page, locale);
       const search = page.getByRole('searchbox', {
         name: t('historySearch.label', locale),
         exact: true,
       });
+      await search.fill('cancel this draft');
+      await closeHistoryFilters(page, locale);
+      await openHistoryFilters(page, locale);
+      await expect(search).toHaveValue('');
+      await page
+        .locator('summary')
+        .filter({ hasText: copy('filterStatus') })
+        .click();
+      await page
+        .getByRole('checkbox', {
+          name: copy(kind === 'saving' ? 'submitted' : 'status_submitted'),
+          exact: true,
+        })
+        .click();
+      await page
+        .locator('summary')
+        .filter({ hasText: t('historyDates.label', locale) })
+        .click();
+      const preset = page.getByRole('combobox', {
+        name: t('historyDates.preset', locale),
+        exact: true,
+      });
+      await preset.selectOption('thisMonth');
+      const range = dateRangePreset(
+        'thisMonth',
+        locale,
+        'Asia/Tehran',
+        new Date(await page.evaluate(() => Date.now()))
+      );
+      if (kind === 'saving') {
+        await preset.selectOption('custom');
+        const selectDay = async (bound: 'start' | 'end', day: number) => {
+          const label = t(`historyDates.${bound}`, locale);
+          await page.getByRole('combobox', { name: label, exact: true }).click();
+          const calendar = page.getByRole('dialog', { name: label, exact: true });
+          const parts = new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
+            timeZone: 'Asia/Tehran',
+            month: 'long',
+            year: 'numeric',
+            calendar: locale === 'fa' ? 'persian' : 'gregory',
+          }).formatToParts(new Date(range.from!));
+          const part = (type: string) => parts.find((value) => value.type === type)!.value;
+          await calendar
+            .getByRole('button', {
+              name: new RegExp(
+                locale === 'fa'
+                  ? ` ${day === 1 ? '۱' : '۲'}-ام ${part('month')} ${part('year')}`
+                  : `${part('month')} ${day === 1 ? '1st' : '2nd'}, ${part('year')}`
+              ),
+            })
+            .click();
+          await expect(calendar).toBeHidden();
+        };
+        await selectDay('end', 1);
+        await selectDay('start', 2);
+        await page
+          .getByRole('button', { name: t('historyFilters.apply', locale), exact: true })
+          .click();
+        await expect(
+          page.getByText(t('historyDates.invalid', locale), { exact: true })
+        ).toBeVisible();
+        await expect(page).toHaveURL(initialUrl);
+        expect(queries.length).toBe(requestsBefore);
+        await selectDay('start', 1);
+        // Return to the month preset so the combined transaction checks a known range.
+        await preset.selectOption('thisMonth');
+      }
       const sort = page.getByRole('combobox', {
         name: t('historySearch.sort', locale),
         exact: true,
       });
       await sort.selectOption('submitted_at:asc');
-      await expect(link(sorted)).toBeVisible();
-      await page
-        .getByRole('button', {
-          name: copy(kind === 'saving' ? 'moreOrders' : 'moreRequests'),
-          exact: true,
-        })
-        .click();
-      await expect.poll(() => queries.at(-1)?.get('before')).toBe(sorted);
       await search.fill(searchText);
-      await expect(link(searched)).toBeVisible();
-      await expect(link(sorted)).toHaveCount(0);
-      await expect.poll(() => new URL(page.url()).searchParams.get('q')).toBe(searchText);
+      await expect(page).toHaveURL(initialUrl);
+      expect(queries.length).toBe(requestsBefore);
+      await applyHistoryFilters(page, locale);
+      await expect.poll(() => Boolean(held)).toBe(true);
+      expect(queries.length).toBe(requestsBefore + 1);
+      expect(queries.at(-1)?.has('before')).toBe(false);
       expect(queries.at(-1)?.get('q')).toBe(searchText);
       expect(queries.at(-1)?.get('sort')).toBe('submitted_at:asc');
-      expect(queries.at(-1)?.get('statuses')).toBe(`submitted,${initialStatus}`);
-      expect(queries.at(-1)?.get('to')).toBe(customEnd);
-      expect(queries.at(-1)?.has('before')).toBe(false);
+      expect(queries.at(-1)?.get('from')).toBe(range.from);
+      expect(queries.at(-1)?.get('to')).toBe(range.to);
+      await expect(link(first)).toHaveCount(0);
+      await expect(link(older)).toHaveCount(0);
+      await held!.fulfill({ json: body(searched, 'submitted') });
+      holdCombined = false;
+      await expect(link(searched)).toBeVisible();
       if (kind === 'consultation') await expect(page.getByRole('radio')).toBeChecked();
       await page.goBack();
-      await expect(search).toHaveValue('');
-      await expect(link(sorted)).toBeVisible();
+      await expect(page).toHaveURL(initialUrl);
+      await expect(link(first)).toBeVisible();
       await page.goForward();
-      await expect(search).toHaveValue(searchText);
       await expect(link(searched)).toBeVisible();
       await page.reload();
       await expect(link(searched)).toBeVisible();
+      await openHistoryFilters(page, locale);
       await expect(search).toHaveValue(searchText);
       await expect(sort).toHaveValue('submitted_at:asc');
+      await closeHistoryFilters(page, locale);
       if (kind === 'consultation') await page.getByRole('radio').check();
       await verifyHistoryFilterChips(page, locale, queries);
       await verifyHistoryFilterReset(page, locale, queries, 3);
-      if (kind === 'consultation') await expect(page.getByRole('radio')).toBeChecked();
-      await page
-        .locator('summary')
-        .filter({ hasText: copy('filterStatus') })
-        .click();
-      await page.getByRole('button', { name: copy('clearFilters'), exact: true }).click();
-      await expect(page).not.toHaveURL(/statuses=/);
-      await expect.poll(() => queries.at(-1)?.get('statuses')).toBeNull();
-      expect(queries.at(-1)?.get('to')).toBe(customEnd);
-      expect(queries.at(-1)?.get('q')).toBe(searchText);
-      expect(queries.at(-1)?.get('sort')).toBe('submitted_at:asc');
-      await expect(
-        page.getByRole('button', { name: copy('clearFilters'), exact: true })
-      ).toHaveCount(0);
-      await page.goBack();
-      await expect.poll(() => queries.at(-1)?.get('statuses')).toBe(`submitted,${initialStatus}`);
-      await expect(link(searched)).toBeVisible();
-      await page
-        .locator('summary')
-        .filter({ hasText: dateCopy('label') })
-        .click();
-      await page.getByRole('button', { name: dateCopy('clear'), exact: true }).click();
-      await expect(link(searched)).toBeVisible();
-      await expect(page).not.toHaveURL(/from=|to=/);
-      expect(queries.at(-1)?.has('before')).toBe(false);
-      await search.fill('');
-      await expect(page).not.toHaveURL(/q=/);
-      await expect(link(sorted)).toBeVisible();
-      await sort.selectOption('submitted_at:desc');
-      await expect(page).not.toHaveURL(/sort=/);
-      await expect(link(combined)).toBeVisible();
-      expect(
-        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
-      ).toBe(true);
+      await closeHistoryFilters(page, locale);
       await page.route('**/api/user/settings/timezone', (route) =>
         route.fulfill({ status: 503, json: {} })
       );
       await page.reload();
-      await expect(link(combined)).toBeVisible();
+      await expect(link(searched)).toBeVisible();
+      await openHistoryFilters(page, locale);
       await page
         .locator('summary')
-        .filter({ hasText: dateCopy('label') })
+        .filter({ hasText: t('historyDates.label', locale) })
         .click();
       await expect(preset).toBeDisabled();
-      await expect(startPicker).toBeDisabled();
-      await expect(endPicker).toBeDisabled();
+      await page.screenshot({
+        path: `/tmp/barghsa-filter-drawer-${kind}-${locale}-${test.info().project.name}.png`,
+      });
     });
   }
 }

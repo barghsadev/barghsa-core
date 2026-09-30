@@ -21,6 +21,21 @@ function InvoiceListRoute() {
   const navigate = Route.useNavigate();
   return (
     <InvoicesPage
+      onApplyFilters={(selection) =>
+        void navigate({
+          search: (current) => ({
+            ...current,
+            q: selection.query.q.trim() || undefined,
+            sort:
+              selection.query.sort === DEFAULT_INVOICE_LIST_SORT ? undefined : selection.query.sort,
+            statuses: selection.statuses.join(',') || undefined,
+            from: selection.dateRange.from,
+            to: selection.dateRange.to,
+            min: selection.amountRange?.min,
+            max: selection.amountRange?.max,
+          }),
+        })
+      }
       onRemoveFilter={(key, value) =>
         void navigate({ search: (current) => removeHistoryFilter(current, key, value) })
       }

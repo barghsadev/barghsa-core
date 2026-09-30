@@ -1,3 +1,4 @@
+import { useFilterApply } from './filter-apply-context';
 import { useId, useState } from 'react';
 import { Button } from './button';
 import { Field, FieldLabel } from './field';
@@ -26,6 +27,7 @@ export function NumberFilter({
   const [draft, setDraft] = useState(initial);
   if (draft.key !== key) setDraft(initial());
   const parsed = parseRange(draft.min, draft.max);
+  const deferred = useFilterApply(() => (parsed ? () => onChange(parsed) : null));
   const changed = draft.min !== (value.min ?? '') || draft.max !== (value.max ?? '');
   return (
     <fieldset className="min-w-0 space-y-3 rounded-lg border p-3">
@@ -53,16 +55,18 @@ export function NumberFilter({
         </p>
       )}
       <div className="flex flex-wrap gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          disabled={!parsed || !changed}
-          onClick={() => {
-            if (parsed) onChange(parsed);
-          }}
-        >
-          {labels.apply}
-        </Button>
+        {!deferred && (
+          <Button
+            type="button"
+            variant="outline"
+            disabled={!parsed || !changed}
+            onClick={() => {
+              if (parsed) onChange(parsed);
+            }}
+          >
+            {labels.apply}
+          </Button>
+        )}
         <Button
           type="button"
           variant="ghost"

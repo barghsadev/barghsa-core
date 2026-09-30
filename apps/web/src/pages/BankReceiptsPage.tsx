@@ -9,6 +9,8 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useListView } from '../hooks/useListView.js';
 import { HistoryTable } from '../components/HistoryTable.js';
+import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
+import { useHistoryFilterDraft } from '../hooks/useHistoryFilterDraft.js';
 import {
   fetchBankReceiptPage,
   type CustomerBankReceiptListItem,
@@ -20,25 +22,40 @@ type ReceiptState = CustomerBankReceiptListItem['state'];
 export function BankReceiptsPage({
   statuses = [],
   onStatusesChange,
+  onApplyFilters,
 }: {
   statuses?: readonly ReceiptState[];
   onStatusesChange?: (statuses: ReceiptState[]) => void;
+  onApplyFilters?: (statuses: ReceiptState[]) => void;
 }) {
   const filterKey = statuses.join(',');
   const stableStatuses = useMemo(
     () => (filterKey ? (filterKey.split(',') as ReceiptState[]) : []),
     [filterKey]
   );
-  return <ReceiptHistory statuses={stableStatuses} onStatusesChange={onStatusesChange} />;
+  return (
+    <ReceiptHistory
+      statuses={stableStatuses}
+      onStatusesChange={onStatusesChange}
+      onApplyFilters={onApplyFilters}
+    />
+  );
 }
 
 function ReceiptHistory({
   statuses,
   onStatusesChange,
+  onApplyFilters,
 }: {
   statuses: readonly ReceiptState[];
   onStatusesChange: ((statuses: ReceiptState[]) => void) | undefined;
+  onApplyFilters: ((statuses: ReceiptState[]) => void) | undefined;
 }) {
+  const filterDraft = useHistoryFilterDraft(
+    { query: { q: '' }, statuses, dateRange: {} },
+    onApplyFilters ? (selection) => onApplyFilters(selection.statuses as ReceiptState[]) : undefined
+  );
+  const filterStatuses = onApplyFilters ? filterDraft.draft.statuses : statuses;
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
@@ -136,18 +153,40 @@ function ReceiptHistory({
       </nav>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="w-full max-w-sm">
-          <MultiSelectFilter
-            value={statuses}
-            onChange={(values) => onStatusesChange?.(values as ReceiptState[])}
-            options={BANK_RECEIPT_STATUSES.map((value) => ({
+          <HistoryFilterPanel
+            query={{ q: '' }}
+            statuses={statuses}
+            dateRange={{}}
+            onClear={onApplyFilters ? () => onApplyFilters([]) : undefined}
+            onRemoveFilter={
+              onApplyFilters
+                ? (_key, value) => onApplyFilters(statuses.filter((status) => status !== value))
+                : undefined
+            }
+            onOpen={filterDraft.begin}
+            onApply={onApplyFilters ? filterDraft.apply : undefined}
+            statusOptions={BANK_RECEIPT_STATUSES.map((value) => ({
               value,
               label: t(`invoices.activity.state.${value}`, locale),
             }))}
-            label={label('filter')}
-            emptyLabel={label('empty')}
-            clearLabel={t('historyFilters.clearAll', locale)}
-            removeLabel={(value) => t('historyFilters.remove', locale).replace('{filter}', value)}
-          />
+          >
+            <MultiSelectFilter
+              value={filterStatuses}
+              onChange={(values) =>
+                onApplyFilters
+                  ? filterDraft.setStatuses(values)
+                  : onStatusesChange?.(values as ReceiptState[])
+              }
+              options={BANK_RECEIPT_STATUSES.map((value) => ({
+                value,
+                label: t(`invoices.activity.state.${value}`, locale),
+              }))}
+              label={label('filter')}
+              emptyLabel={label('empty')}
+              clearLabel={t('historyFilters.clearAll', locale)}
+              removeLabel={(value) => t('historyFilters.remove', locale).replace('{filter}', value)}
+            />
+          </HistoryFilterPanel>
         </div>
         <ListViewToggle
           value={view}

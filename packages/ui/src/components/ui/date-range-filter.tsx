@@ -1,3 +1,4 @@
+import { useFilterApply } from './filter-apply-context';
 import { useId, useState } from 'react';
 import { TZDate } from 'react-day-picker';
 import { addDays, addMonths, startOfDay, startOfMonth } from 'date-fns';
@@ -93,6 +94,12 @@ export function DateRangeFilter({
     ? new Date(datePickerDayBounds(draft.to, timezone).end.getTime() + 1).toISOString()
     : undefined;
   const invalid = Boolean(start && end && start >= end);
+  const unchanged =
+    draft.from?.toISOString() === value.from &&
+    (draft.to ? new Date(draft.to.getTime() + 1).toISOString() : undefined) === value.to;
+  const deferred = useFilterApply(() =>
+    disabled || unchanged ? () => {} : invalid ? null : () => onChange({ from: start, to: end })
+  );
   return (
     <details className="rounded-lg border bg-card p-3">
       <summary className="cursor-pointer text-sm font-medium">
@@ -112,9 +119,18 @@ export function DateRangeFilter({
             value={draft.custom ? 'custom' : (matchingPreset ?? 'custom')}
             onChange={(event) => {
               const preset = event.target.value;
-              setDraft((current) => ({ ...current, custom: preset === 'custom' }));
-              if (preset !== 'custom')
-                onChange(dateRangePreset(preset as DateRangePreset, locale, timezone));
+              if (preset === 'custom') {
+                setDraft((current) => ({ ...current, custom: true }));
+              } else {
+                const range = dateRangePreset(preset as DateRangePreset, locale, timezone);
+                setDraft({
+                  key: `${range.from ?? ''}:${range.to ?? ''}:${timezone}`,
+                  custom: false,
+                  from: range.from ? new Date(range.from) : undefined,
+                  to: range.to ? new Date(new Date(range.to).getTime() - 1) : undefined,
+                });
+                onChange(range);
+              }
             }}
           >
             <NativeSelectOption value="custom">{labels.custom}</NativeSelectOption>
@@ -157,14 +173,16 @@ export function DateRangeFilter({
           </Field>
         </FieldGroup>
         <div className="flex flex-wrap gap-3">
-          <Button
-            type="button"
-            variant="outline"
-            disabled={disabled || invalid}
-            onClick={() => onChange({ from: start, to: end })}
-          >
-            {labels.apply}
-          </Button>
+          {!deferred && (
+            <Button
+              type="button"
+              variant="outline"
+              disabled={disabled || invalid}
+              onClick={() => onChange({ from: start, to: end })}
+            >
+              {labels.apply}
+            </Button>
+          )}
           {active && (
             <Button
               type="button"

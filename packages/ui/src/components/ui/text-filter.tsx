@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { Field, FieldLabel } from './field';
 import { Input } from './input';
+import { useFilterApply } from './filter-apply-context';
 
 export function TextFilter({
   value,
@@ -19,14 +20,15 @@ export function TextFilter({
   const [draft, setDraft] = useState({ external: value, text: value });
   if (draft.external !== value) setDraft({ external: value, text: value });
   const change = useRef(onChange);
+  const deferred = useFilterApply(() => () => onChange(draft.text.trim()));
   useEffect(() => {
     change.current = onChange;
   }, [onChange]);
   useEffect(() => {
-    if (draft.external !== value || draft.text.trim() === value) return;
+    if (deferred || draft.external !== value || draft.text.trim() === value) return;
     const timer = setTimeout(() => change.current(draft.text.trim()), 300);
     return () => clearTimeout(timer);
-  }, [draft, value]);
+  }, [draft, value, deferred]);
   return (
     <Field>
       <FieldLabel htmlFor={id}>{label}</FieldLabel>

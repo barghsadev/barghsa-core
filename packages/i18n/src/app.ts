@@ -6,6 +6,11 @@ export interface I18nDictionary {
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
   'historyFilters.label': 'فیلترها',
+  'historyFilters.apply': 'اعمال فیلترها',
+  'historyFilters.cancel': 'انصراف',
+  'historyFilters.close': 'بستن فیلترها',
+  'historyFilters.description':
+    'فیلترها را انتخاب کنید و برای اعمال هم‌زمان آن‌ها، «اعمال فیلترها» را بزنید.',
   'historyFilters.clearAll': 'پاک کردن همه فیلترها',
   'historyFilters.activeCount': '{count} فیلتر فعال',
   'historyFilters.selected': 'فیلترهای اعمال‌شده',
@@ -1553,6 +1558,10 @@ export const fa: I18nDictionary = {
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
   'historyFilters.label': 'Filters',
+  'historyFilters.apply': 'Apply filters',
+  'historyFilters.cancel': 'Cancel',
+  'historyFilters.close': 'Close filters',
+  'historyFilters.description': 'Choose filters, then apply your changes together.',
   'historyFilters.clearAll': 'Clear all filters',
   'historyFilters.activeCount': '{count} active filters',
   'historyFilters.selected': 'Applied filters',

@@ -1,3 +1,4 @@
+import { openHistoryFilters, applyHistoryFilters } from './history-filter-reset';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/app';
@@ -104,19 +105,25 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(detail(older)).toBeVisible();
     expect(requests.length).toBe(count);
     await page.setViewportSize({ width: 390, height: 844 });
+    await openHistoryFilters(page, locale);
     const input = page.getByRole('combobox', { name: copy('filter'), exact: true });
     await input.fill('zzzzz');
     await expect(page.getByText(copy('empty'), { exact: true })).toBeVisible();
+    await openHistoryFilters(page, locale);
     await input.fill(state('Rejected'));
     await input.press('ArrowDown');
     await input.press('Enter');
+    await input.press('Escape');
+    await applyHistoryFilters(page, locale);
     await expect.poll(() => requests.at(-1)?.get('statuses')).toBe('Rejected');
     await expect(detail(older)).toHaveCount(0);
     expect(requests.at(-1)?.has('beforeId')).toBe(false);
+    await openHistoryFilters(page, locale);
     await input.fill(state('Submitted'));
     await page.getByRole('option', { name: state('Submitted'), exact: true }).click();
-    await expect.poll(() => requests.at(-1)?.get('statuses')).toBe('Submitted,Rejected');
     await input.press('Escape');
+    await applyHistoryFilters(page, locale);
+    await expect.poll(() => requests.at(-1)?.get('statuses')).toBe('Submitted,Rejected');
     expect(defaultParseSearch(new URL(page.url()).search)['statuses']).toBe('Submitted,Rejected');
     await page.reload();
     await expect(cardButton).toHaveAttribute('aria-pressed', 'true');
@@ -146,10 +153,12 @@ for (const locale of ['en', 'fa'] as const) {
       })
       .click();
     await expect.poll(() => requests.at(-1)?.get('statuses')).toBe('Rejected');
+    await openHistoryFilters(page, locale);
     await input.fill(state('Rejected'));
     await page.getByRole('option', { name: state('Rejected'), exact: true }).click();
-    await expect.poll(() => requests.at(-1)?.has('statuses')).toBe(false);
     await input.press('Escape');
+    await applyHistoryFilters(page, locale);
+    await expect.poll(() => requests.at(-1)?.has('statuses')).toBe(false);
     await page.goto('/invoices/receipts?state=Rejected');
     await expect.poll(() => requests.at(-1)?.get('statuses')).toBe('Rejected');
   });

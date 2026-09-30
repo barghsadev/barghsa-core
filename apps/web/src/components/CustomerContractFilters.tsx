@@ -1,3 +1,7 @@
+import {
+  useHistoryFilterDraft,
+  type HistoryFilterSelection,
+} from '../hooks/useHistoryFilterDraft.js';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from './HistoryFilterPanel.js';
 import { t } from '@barghsa/i18n/app';
@@ -20,12 +24,26 @@ export interface CustomerContractHistoryControls {
   dateRange: DateRangeFilterValue;
   onQueryChange: (query: ContractListQuery) => void;
   onClear?: (() => void) | undefined;
+  onApply?: ((selection: HistoryFilterSelection<ContractListQuery>) => void) | undefined;
   onRemoveFilter?: ((key: HistoryFilterKey, value?: string) => void) | undefined;
   onStatusesChange: (statuses: string[]) => void;
   onDateRangeChange: (range: DateRangeFilterValue) => void;
 }
 
 export function CustomerContractFilters({ history }: { history: CustomerContractHistoryControls }) {
+  const filterDraft = useHistoryFilterDraft(
+    { query: history.query, statuses: history.statuses, dateRange: history.dateRange },
+    history.onApply
+  );
+  const controls = history.onApply
+    ? {
+        ...history,
+        ...filterDraft.draft,
+        onQueryChange: filterDraft.setQuery,
+        onStatusesChange: filterDraft.setStatuses,
+        onDateRangeChange: filterDraft.setDateRange,
+      }
+    : history;
   const locale = useLocale(),
     time = useAccountTime(locale),
     numbers = useNumberFormatting(locale);
@@ -47,6 +65,8 @@ export function CustomerContractFilters({ history }: { history: CustomerContract
       statuses={history.statuses}
       dateRange={history.dateRange}
       onClear={history.onClear}
+      onOpen={filterDraft.begin}
+      onApply={history.onApply ? filterDraft.apply : undefined}
       onRemoveFilter={history.onRemoveFilter}
       statusOptions={statusOptions}
       formatDate={(value) => time.format(value, { dateStyle: 'medium', timeStyle: 'short' })}
@@ -61,14 +81,14 @@ export function CustomerContractFilters({ history }: { history: CustomerContract
         <TextFilter
           label={t('historySearch.label', locale)}
           placeholder={copy('search')}
-          value={history.query.q}
-          onChange={(q) => history.onQueryChange({ ...history.query, q })}
+          value={controls.query.q}
+          onChange={(q) => controls.onQueryChange({ ...controls.query, q })}
         />
         <ListSortDropdown
           label={t('historySearch.sort', locale)}
-          value={history.query.sort}
+          value={controls.query.sort}
           onChange={(sort) =>
-            history.onQueryChange({ ...history.query, sort: sort as ContractListQuery['sort'] })
+            controls.onQueryChange({ ...controls.query, sort: sort as ContractListQuery['sort'] })
           }
           options={(['published_at:desc', 'published_at:asc'] as const).map((value) => ({
             value,
@@ -80,10 +100,10 @@ export function CustomerContractFilters({ history }: { history: CustomerContract
         label={contractText('serviceType', locale)}
         allLabel={contractText('all', locale)}
         emptyLabel={copy('noOptions')}
-        value={history.query.serviceType ?? ''}
+        value={controls.query.serviceType ?? ''}
         onChange={(serviceType) =>
-          history.onQueryChange({
-            ...history.query,
+          controls.onQueryChange({
+            ...controls.query,
             serviceType: serviceType
               ? (serviceType as ContractListQuery['serviceType'])
               : undefined,
@@ -95,8 +115,8 @@ export function CustomerContractFilters({ history }: { history: CustomerContract
         }))}
       />
       <HistoryDateFilter
-        value={history.dateRange}
-        onChange={history.onDateRangeChange}
+        value={controls.dateRange}
+        onChange={controls.onDateRangeChange}
         locale={locale}
         time={time}
         label={copy('published')}
@@ -104,9 +124,9 @@ export function CustomerContractFilters({ history }: { history: CustomerContract
       <StatusFilter
         label={copy('state')}
         clearLabel={copy('clearState')}
-        countLabel={numbers.number(history.statuses.length)}
-        value={history.statuses}
-        onChange={history.onStatusesChange}
+        countLabel={numbers.number(controls.statuses.length)}
+        value={controls.statuses}
+        onChange={controls.onStatusesChange}
         options={statusOptions}
       />
     </HistoryFilterPanel>

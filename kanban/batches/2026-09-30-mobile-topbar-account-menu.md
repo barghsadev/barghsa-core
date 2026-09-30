@@ -40,4 +40,4 @@ Evidence logs: `/tmp/barghsa-mobile-account-*.log`.
 
 ## Publication
 
-The preceding staff-dashboard batch is published as `5f473f6419c4aef3b692eca2b622914ccb694aed`; its CI run `36772450580` passes all five gates. This reviewed and locally validated batch is published directly to main after that verification. Its own remote CI is checked after push; no remote pass is claimed here.
+The preceding staff-dashboard batch is published as `5f473f6419c4aef3b692eca2b622914ccb694aed`; its CI run `36772450580` passes all five gates. This reviewed and locally validated batch is published directly to main after that verification. Published as `2077edca313db7fefc77eb581ec69ac499c6ec15`; remote CI run `36774899041` passes all five gates. The combined-coverage job reports the existing temporary fast-mode exemption.

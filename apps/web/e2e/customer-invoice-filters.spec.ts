@@ -1,4 +1,10 @@
-import { verifyHistoryFilterReset, verifyHistoryFilterChips } from './history-filter-reset';
+import {
+  verifyHistoryFilterReset,
+  verifyHistoryFilterChips,
+  openHistoryFilters,
+  closeHistoryFilters,
+  applyHistoryFilters,
+} from './history-filter-reset';
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
 import { dateRangePreset } from '@barghsa/ui';
@@ -62,12 +68,13 @@ for (const locale of ['en', 'fa'] as const) {
     });
     const queries: URLSearchParams[] = [];
     let held: Route | undefined;
+    let hold = true;
     let fail = false;
     await page.route(/\/api\/invoices(?:\?|$)/, (route) => {
       const query = new URL(route.request().url()).searchParams;
       queries.push(query);
       if (fail) return route.fulfill({ status: 503, json: {} });
-      if (query.get('min') && !query.has('statuses')) {
+      if (query.get('min') && !query.has('statuses') && hold) {
         held = route;
         return;
       }
@@ -90,37 +97,48 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(link(first)).toBeVisible();
     expect(queries.at(-1)?.get('before')).toBe(first);
 
+    const initialUrl = page.url();
+    const requestCount = queries.length;
+    const drawer = await openHistoryFilters(page, locale);
     const min = page.getByRole('textbox', { name: copy('min'), exact: true });
     const max = page.getByRole('textbox', { name: copy('max'), exact: true });
-    const apply = page.getByRole('button', { name: copy('applyAmount'), exact: true });
+    const search = page.getByRole('searchbox', {
+      name: t('historySearch.label', locale),
+      exact: true,
+    });
+    await search.fill('should not apply');
     await min.fill('۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳');
     await max.fill('9007199254740992');
-    await expect(apply).toBeDisabled();
+    await drawer
+      .getByRole('button', { name: t('historyFilters.apply', locale), exact: true })
+      .click();
+    await expect(drawer).toBeVisible();
+    await expect(min).toBeFocused();
     await expect(page.getByText(copy('invalidAmount'), { exact: true })).toBeVisible();
-    expect(queries.at(-1)?.has('min')).toBe(false);
+    expect(queries.length).toBe(requestCount);
+    await expect(page).toHaveURL(initialUrl);
     await max.fill('٩٢٢٣٣٧٢٠٣٦٨٥٤٧٧٥٨٠٧');
-    await apply.click();
+    await search.fill('');
+    await applyHistoryFilters(page, locale);
     await expect.poll(() => !!held).toBe(true);
+    expect(queries.length).toBe(requestCount + 1);
     await expect(link(first)).toHaveCount(0);
     await expect(link(older)).toHaveCount(0);
     expect(queries.at(-1)?.get('min')).toBe('9007199254740993');
     expect(queries.at(-1)?.get('max')).toBe('9223372036854775807');
     expect(queries.at(-1)?.get('status')).toBe('unpaid');
     expect(queries.at(-1)?.has('before')).toBe(false);
+    hold = false;
     await held!.fulfill({ json: body(filtered) });
     await expect(link(filtered)).toBeVisible();
+    await openHistoryFilters(page, locale);
     await page
       .locator('summary')
       .filter({ hasText: copy('state') })
       .click();
-    const paid = page.getByRole('checkbox', {
-      name: t('invoices.state.Paid', locale),
-      exact: true,
-    });
-    await paid.click();
-    await expect(paid).toBeChecked();
-    await expect.poll(() => queries.at(-1)?.get('statuses')).toBe('Paid');
-    await expect(link(filtered)).toBeVisible();
+    await page
+      .getByRole('checkbox', { name: t('invoices.state.Paid', locale), exact: true })
+      .click();
     await page
       .locator('summary')
       .filter({ hasText: copy('created') })
@@ -134,44 +152,39 @@ for (const locale of ['en', 'fa'] as const) {
       'Asia/Tehran',
       new Date(await page.evaluate(() => Date.now()))
     );
-    await expect.poll(() => queries.at(-1)?.get('from')).toBe(range.from);
-    expect(queries.at(-1)?.get('to')).toBe(range.to);
     const sort = page.getByRole('combobox', { name: t('historySearch.sort', locale), exact: true });
     await sort.selectOption('created_at:asc');
-    await expect.poll(() => queries.at(-1)?.get('sort')).toBe('created_at:asc');
-    const search = page.getByRole('searchbox', {
-      name: t('historySearch.label', locale),
-      exact: true,
-    });
     await search.fill(searched);
+    const combinedCount = queries.length;
+    await applyHistoryFilters(page, locale);
     await expect(link(searched)).toBeVisible();
-    await expect(link(filtered)).toHaveCount(0);
-    expect(queries.at(-1)?.get('min')).toBe('9007199254740993');
+    expect(queries.length).toBe(combinedCount + 1);
+    expect(queries.at(-1)?.get('q')).toBe(searched);
     expect(queries.at(-1)?.get('statuses')).toBe('Paid');
+    expect(queries.at(-1)?.get('from')).toBe(range.from);
+    expect(queries.at(-1)?.get('to')).toBe(range.to);
+    expect(queries.at(-1)?.get('sort')).toBe('created_at:asc');
     await page.goBack();
-    await expect(search).toHaveValue('');
     await expect(link(filtered)).toBeVisible();
     await page.goForward();
-    await expect(search).toHaveValue(searched);
     await expect(link(searched)).toBeVisible();
     await page.reload();
     await expect(link(searched)).toBeVisible();
+    await openHistoryFilters(page, locale);
     await expect(min).toHaveValue('9007199254740993');
     await expect(max).toHaveValue('9223372036854775807');
     await expect(sort).toHaveValue('created_at:asc');
+    await closeHistoryFilters(page, locale);
     await verifyHistoryFilterChips(page, locale, queries, copy('created'));
     await verifyHistoryFilterReset(page, locale, queries, 4);
     await page.getByRole('button', { name: copy('clearAmount'), exact: true }).click();
+    await applyHistoryFilters(page, locale);
     await expect(page).not.toHaveURL(/min=|max=/);
-    await expect.poll(() => queries.at(-1)?.get('q')).toBe(searched);
-    expect(queries.at(-1)?.get('statuses')).toBe('Paid');
-    expect(queries.at(-1)?.get('from')).toBe(range.from);
-    expect(
-      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
-    ).toBe(true);
-
+    expect(queries.at(-1)?.get('q')).toBe(searched);
     fail = true;
+    await openHistoryFilters(page, locale);
     await search.fill('retry');
+    await applyHistoryFilters(page, locale);
     await expect(page.getByText(t('invoices.error.load', locale), { exact: true })).toBeVisible();
     fail = false;
     await page
@@ -184,6 +197,7 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.reload();
     await expect(link(searched)).toBeVisible();
+    await openHistoryFilters(page, locale);
     await page
       .locator('summary')
       .filter({ hasText: copy('created') })

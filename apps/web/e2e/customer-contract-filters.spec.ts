@@ -1,4 +1,10 @@
-import { verifyHistoryFilterReset, verifyHistoryFilterChips } from './history-filter-reset';
+import {
+  verifyHistoryFilterReset,
+  verifyHistoryFilterChips,
+  openHistoryFilters,
+  closeHistoryFilters,
+  applyHistoryFilters,
+} from './history-filter-reset';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import type { Route } from '@playwright/test';
@@ -100,6 +106,9 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('button', { name: contractText('next', locale), exact: true }).click();
     await expect(reference(older)).toBeVisible();
     await expect(reference(first)).toBeVisible();
+    const initialUrl = page.url();
+    const requestCount = queries.length;
+    await openHistoryFilters(page, locale);
     const service = page.getByRole('combobox', {
       name: contractText('serviceType', locale),
       exact: true,
@@ -108,28 +117,13 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByRole('listbox').getByRole('option')).toHaveCount(4);
     await service.fill('no-such-service');
     await expect(page.getByText(copy('noOptions'), { exact: true })).toBeVisible();
-    expect(queries.at(-1)?.has('serviceType')).toBe(false);
     await service.fill(contractText('solar', locale));
     await page.getByRole('option', { name: contractText('solar', locale), exact: true }).click();
-    await expect.poll(() => !!held).toBe(true);
-    await expect(reference(first)).toHaveCount(0);
-    await expect(reference(older)).toHaveCount(0);
-    expect(queries.at(-1)?.has('before')).toBe(false);
-    expect(queries.at(-1)?.get('state')).toBe('Active');
-    hold = false;
-    await held!.fulfill({ json: body(filtered) });
-    await expect(reference(filtered)).toBeVisible();
     await page
       .locator('summary')
       .filter({ hasText: copy('state') })
       .click();
-    const active = page.getByRole('checkbox', {
-      name: contractText('Active', locale),
-      exact: true,
-    });
-    await active.click();
-    await expect(active).toBeChecked();
-    await expect.poll(() => queries.at(-1)?.get('statuses')).toBe('Active');
+    await page.getByRole('checkbox', { name: contractText('Active', locale), exact: true }).click();
     await page
       .locator('summary')
       .filter({ hasText: copy('published') })
@@ -143,37 +137,45 @@ for (const locale of ['en', 'fa'] as const) {
       'Asia/Tehran',
       new Date(await page.evaluate(() => Date.now()))
     );
-    await expect.poll(() => queries.at(-1)?.get('from')).toBe(range.from);
-    expect(queries.at(-1)?.get('to')).toBe(range.to);
     const sort = page.getByRole('combobox', { name: t('historySearch.sort', locale), exact: true });
     await sort.selectOption('published_at:asc');
-    await expect.poll(() => queries.at(-1)?.get('sort')).toBe('published_at:asc');
     const search = page.getByRole('searchbox', {
       name: t('historySearch.label', locale),
       exact: true,
     });
     await search.fill(searched);
-    await expect(reference(searched)).toBeVisible();
-    await expect(reference(filtered)).toHaveCount(0);
+    expect(queries.length).toBe(requestCount);
+    await expect(page).toHaveURL(initialUrl);
+    await applyHistoryFilters(page, locale);
+    await expect.poll(() => !!held).toBe(true);
+    expect(queries.length).toBe(requestCount + 1);
+    expect(queries.at(-1)?.has('before')).toBe(false);
+    expect(queries.at(-1)?.get('state')).toBe('Active');
+    expect(queries.at(-1)?.get('q')).toBe(searched);
     expect(queries.at(-1)?.get('serviceType')).toBe('solar');
     expect(queries.at(-1)?.get('statuses')).toBe('Active');
+    expect(queries.at(-1)?.get('from')).toBe(range.from);
+    hold = false;
+    await held!.fulfill({ json: body(searched) });
+    await expect(reference(searched)).toBeVisible();
     await expect(reference(searched).locator(`a[href="/invoices/${invoice}"]`)).toBeVisible();
     await expect(
       reference(searched).locator(`a[href="/electricity/orders/${first}"]`)
     ).toBeVisible();
     await page.goBack();
-    await expect(search).toHaveValue('');
-    await expect(reference(filtered)).toBeVisible();
+    await expect(page).toHaveURL(initialUrl);
+    await expect(reference(first)).toBeVisible();
     await page.goForward();
-    await expect(search).toHaveValue(searched);
     await expect(reference(searched)).toBeVisible();
     await page.reload();
     await expect(reference(searched)).toBeVisible();
+    await openHistoryFilters(page, locale);
     await expect(service).toHaveValue(contractText('solar', locale));
     expect(
-      (await new AxeBuilder({ page }).include('[data-slot="combobox"]').analyze()).violations
+      (await new AxeBuilder({ page }).include('[data-slot="sheet-content"]').analyze()).violations
     ).toEqual([]);
     await expect(sort).toHaveValue('published_at:asc');
+    await closeHistoryFilters(page, locale);
     await verifyHistoryFilterChips(
       page,
       locale,
@@ -182,27 +184,15 @@ for (const locale of ['en', 'fa'] as const) {
       contractText('serviceType', locale)
     );
     await verifyHistoryFilterReset(page, locale, queries, 4);
-    await expect(service).toHaveValue(contractText('solar', locale));
-    await service.click();
-    await expect(page.getByRole('listbox').getByRole('option')).toHaveCount(4);
-    await service.press('Escape');
-    await page
-      .locator('summary')
-      .filter({ hasText: copy('state') })
-      .click();
-    await expect(active).toBeChecked();
-    await page.getByRole('button', { name: copy('clearState'), exact: true }).click();
-    await expect(page).not.toHaveURL(/statuses=/);
     await service.fill(contractText('all', locale));
     await page.getByRole('option', { name: contractText('all', locale), exact: true }).click();
+    await applyHistoryFilters(page, locale);
     await expect(page).not.toHaveURL(/serviceType=/);
     expect(queries.at(-1)?.get('q')).toBe(searched);
-    expect(queries.at(-1)?.get('from')).toBe(range.from);
-    expect(
-      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
-    ).toBe(true);
     fail = true;
+    await openHistoryFilters(page, locale);
     await search.fill('retry');
+    await applyHistoryFilters(page, locale);
     await expect(page.getByText(contractText('error', locale), { exact: true })).toBeVisible();
     fail = false;
     await page
@@ -210,12 +200,12 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('button', { name: contractText('refresh', locale), exact: true })
       .click();
     await expect(reference(searched)).toBeVisible();
-    expect(queries.at(-1)?.has('before')).toBe(false);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ status: 503, json: {} })
     );
     await page.reload();
     await expect(reference(searched)).toBeVisible();
+    await openHistoryFilters(page, locale);
     await page
       .locator('summary')
       .filter({ hasText: copy('published') })

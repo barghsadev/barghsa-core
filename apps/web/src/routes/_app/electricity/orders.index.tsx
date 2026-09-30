@@ -18,6 +18,18 @@ function ElectricityOrdersRoute() {
   const navigate = Route.useNavigate();
   return (
     <ElectricityOrdersPage
+      onApplyFilters={(selection) =>
+        void navigate({
+          search: (current) => ({
+            ...current,
+            q: selection.query.q.trim() || undefined,
+            sort: selection.query.sort === DEFAULT_HISTORY_SORT ? undefined : selection.query.sort,
+            statuses: selection.statuses.join(',') || undefined,
+            from: selection.dateRange.from,
+            to: selection.dateRange.to,
+          }),
+        })
+      }
       onRemoveFilter={(key, value) =>
         void navigate({ search: (current) => removeHistoryFilter(current, key, value) })
       }

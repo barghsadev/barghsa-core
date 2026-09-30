@@ -1,3 +1,7 @@
+import {
+  useHistoryFilterDraft,
+  type HistoryFilterSelection,
+} from '../hooks/useHistoryFilterDraft.js';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { useListView } from '../hooks/useListView.js';
 import { HistoryTable, type HistoryColumn } from '../components/HistoryTable.js';
@@ -45,6 +49,7 @@ export function InvoicesPage({
   query = { q: '', sort: DEFAULT_INVOICE_LIST_SORT },
   onQueryChange,
   onClearFilters,
+  onApplyFilters,
   onRemoveFilter,
   amountRange = {},
   onAmountRangeChange,
@@ -57,10 +62,26 @@ export function InvoicesPage({
   query?: InvoiceListQuery;
   onQueryChange?: (value: InvoiceListQuery) => void;
   onClearFilters?: () => void;
+  onApplyFilters?: (selection: HistoryFilterSelection<InvoiceListQuery>) => void;
   onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
   amountRange?: NumberRangeValue;
   onAmountRangeChange?: (value: NumberRangeValue) => void;
 }) {
+  const filterDraft = useHistoryFilterDraft(
+    { query, statuses, dateRange, amountRange },
+    onApplyFilters
+  );
+  const filterQuery = onApplyFilters ? filterDraft.draft.query : query;
+  const filterStatuses = onApplyFilters ? filterDraft.draft.statuses : statuses;
+  const filterDateRange = onApplyFilters ? filterDraft.draft.dateRange : dateRange;
+  const onDraftQueryChange = onApplyFilters ? filterDraft.setQuery : onQueryChange;
+  const onDraftStatusesChange = onApplyFilters ? filterDraft.setStatuses : onStatusesChange;
+  const onDraftDateRangeChange = onApplyFilters ? filterDraft.setDateRange : onDateRangeChange;
+  const filterAmountRange = onApplyFilters ? (filterDraft.draft.amountRange ?? {}) : amountRange;
+  const onDraftAmountRangeChange = onApplyFilters
+    ? filterDraft.setAmountRange
+    : onAmountRangeChange;
+
   const { view, setView } = useListView('invoices');
   const time = useAccountTime();
   const locale = useLocale();
@@ -242,24 +263,26 @@ export function InvoicesPage({
         statuses={statuses}
         dateRange={dateRange}
         onClear={onClearFilters}
+        onOpen={filterDraft.begin}
+        onApply={onApplyFilters ? filterDraft.apply : undefined}
         onRemoveFilter={onRemoveFilter}
         statusOptions={statusOptions}
         formatDate={(value) => time.format(value, { dateStyle: 'medium', timeStyle: 'short' })}
         dateLabel={t('invoices.filter.created', locale)}
         amountRange={amountRange}
       >
-        {onQueryChange && (
+        {onDraftQueryChange && (
           <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
             <TextFilter
-              value={query.q}
-              onChange={(q) => onQueryChange({ ...query, q })}
+              value={filterQuery.q}
+              onChange={(q) => onDraftQueryChange({ ...filterQuery, q })}
               label={t('historySearch.label', locale)}
               placeholder={t('invoices.filter.search', locale)}
             />
             <ListSortDropdown
-              value={query.sort}
+              value={filterQuery.sort}
               onChange={(sort) =>
-                onQueryChange({ ...query, sort: sort as InvoiceListQuery['sort'] })
+                onDraftQueryChange({ ...filterQuery, sort: sort as InvoiceListQuery['sort'] })
               }
               label={t('historySearch.sort', locale)}
               options={(['created_at:desc', 'created_at:asc'] as const).map((value) => ({
@@ -272,19 +295,19 @@ export function InvoicesPage({
             />
           </div>
         )}
-        {onDateRangeChange && (
+        {onDraftDateRangeChange && (
           <HistoryDateFilter
-            value={dateRange}
-            onChange={onDateRangeChange}
+            value={filterDateRange}
+            onChange={onDraftDateRangeChange}
             locale={locale}
             time={time}
             label={t('invoices.filter.created', locale)}
           />
         )}
-        {onAmountRangeChange && (
+        {onDraftAmountRangeChange && (
           <NumberFilter
-            value={amountRange}
-            onChange={onAmountRangeChange}
+            value={filterAmountRange}
+            onChange={onDraftAmountRangeChange}
             parseRange={parseNumberRange}
             labels={{
               label: t('invoices.filter.amount', locale),
@@ -296,13 +319,13 @@ export function InvoicesPage({
             }}
           />
         )}
-        {onStatusesChange && (
+        {onDraftStatusesChange && (
           <StatusFilter
             label={t('invoices.filter.state', locale)}
             clearLabel={t('invoices.filter.clearState', locale)}
-            countLabel={numbers.number(statuses.length)}
-            value={statuses}
-            onChange={onStatusesChange}
+            countLabel={numbers.number(filterStatuses.length)}
+            value={filterStatuses}
+            onChange={onDraftStatusesChange}
             options={statusOptions}
           />
         )}

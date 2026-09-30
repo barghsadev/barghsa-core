@@ -17,6 +17,21 @@ function ContractsRoute() {
     <ContractsPage
       activeOnly={state === 'Active'}
       history={{
+        onApply: (selection) =>
+          void navigate({
+            search: (current) => ({
+              ...current,
+              q: selection.query.q.trim() || undefined,
+              sort:
+                selection.query.sort === DEFAULT_CONTRACT_LIST_SORT
+                  ? undefined
+                  : selection.query.sort,
+              serviceType: selection.query.serviceType,
+              statuses: selection.statuses.join(',') || undefined,
+              from: selection.dateRange.from,
+              to: selection.dateRange.to,
+            }),
+          }),
         onRemoveFilter: (key, value) =>
           void navigate({ search: (current) => removeHistoryFilter(current, key, value) }),
         onClear: () =>

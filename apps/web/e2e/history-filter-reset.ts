@@ -32,6 +32,7 @@ export async function verifyHistoryFilterChips(
   const filters = page.getByRole('button', {
     name: t('historyFilters.label', locale),
     exact: true,
+    includeHidden: true,
   });
   const selectedStatuses = originalParams.get('statuses')?.split(',') ?? [];
   const actions = [
@@ -71,7 +72,7 @@ export async function verifyHistoryFilterChips(
   );
   await expect(actions[2]!.button).toContainText(t('historyFilters.since', locale));
   await expect(actions[2]!.button).toContainText(t('historyFilters.before', locale));
-  await filters.click();
+  await closeHistoryFilters(page, locale);
   await expect(filters).toHaveAttribute('aria-expanded', 'false');
   for (const action of actions) {
     const requestsBefore = queries.length;
@@ -99,7 +100,7 @@ export async function verifyHistoryFilterChips(
       .poll(() => fields.every((key) => queries.at(-1)?.get(key) === originalParams.get(key)))
       .toBe(true);
   }
-  await filters.click();
+  await openHistoryFilters(page, locale);
   await expect(filters).toHaveAttribute('aria-expanded', 'true');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true
@@ -118,8 +119,9 @@ export async function verifyHistoryFilterReset(
   const filters = page.getByRole('button', {
     name: t('historyFilters.label', locale),
     exact: true,
+    includeHidden: true,
   });
-  const clear = page.getByRole('button', {
+  const clear = page.getByRole('main').getByRole('button', {
     name: t('historyFilters.clearAll', locale),
     exact: true,
   });
@@ -128,13 +130,14 @@ export async function verifyHistoryFilterReset(
     exact: true,
   });
   const keys = ['q', 'statuses', 'from', 'to', 'min', 'max', 'serviceType'];
+  await closeHistoryFilters(page, locale);
   await expect(filters).toHaveAccessibleDescription(
     t('historyFilters.activeCount', locale).replace('{count}', activeCount.toLocaleString(locale))
   );
   await expect(filters.locator('[data-slot="badge"]')).toHaveText(
     activeCount.toLocaleString(locale)
   );
-  await filters.click();
+  await closeHistoryFilters(page, locale);
   await expect(filters).toHaveAttribute('aria-expanded', 'false');
   await expect(search).toBeHidden();
   const requestsBefore = queries.length;
@@ -159,10 +162,40 @@ export async function verifyHistoryFilterReset(
   await expect(page).toHaveURL(original.href);
   await expect.poll(() => queries.at(-1)?.get('q')).toBe(originalParams.get('q'));
   await expect(clear).toBeVisible();
-  await filters.click();
+  await openHistoryFilters(page, locale);
   await expect(filters).toHaveAttribute('aria-expanded', 'true');
   await expect(search).toHaveValue(originalParams.get('q') ?? '');
   expect(
     (await new AxeBuilder({ page }).include('[data-slot="list-filter-panel"]').analyze()).violations
   ).toEqual([]);
+}
+
+export async function openHistoryFilters(page: Page, locale: 'en' | 'fa') {
+  const dialog = page.getByRole('dialog', { name: t('historyFilters.label', locale), exact: true });
+  if (!(await dialog.isVisible()))
+    await page
+      .getByRole('button', { name: t('historyFilters.label', locale), exact: true })
+      .click();
+  await expect(dialog).toBeVisible();
+  await expect
+    .poll(() => dialog.evaluate((element) => getComputedStyle(element).opacity))
+    .toBe('1');
+  return dialog;
+}
+
+export async function closeHistoryFilters(page: Page, locale: 'en' | 'fa') {
+  const dialog = page.getByRole('dialog', { name: t('historyFilters.label', locale), exact: true });
+  if (await dialog.isVisible())
+    await dialog
+      .getByRole('button', { name: t('historyFilters.cancel', locale), exact: true })
+      .click();
+  await expect(dialog).toBeHidden();
+}
+
+export async function applyHistoryFilters(page: Page, locale: 'en' | 'fa') {
+  const dialog = page.getByRole('dialog', { name: t('historyFilters.label', locale), exact: true });
+  await dialog
+    .getByRole('button', { name: t('historyFilters.apply', locale), exact: true })
+    .click();
+  await expect(dialog).toBeHidden();
 }

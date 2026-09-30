@@ -1,3 +1,7 @@
+import {
+  useHistoryFilterDraft,
+  type HistoryFilterSelection,
+} from '../hooks/useHistoryFilterDraft.js';
 import { useListView } from '../hooks/useListView.js';
 import { HistoryTable, type HistoryColumn } from '../components/HistoryTable.js';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
@@ -36,6 +40,7 @@ export function SavingOrdersPage({
   query = { q: '', sort: DEFAULT_HISTORY_SORT },
   onQueryChange,
   onClearFilters,
+  onApplyFilters,
   onRemoveFilter,
 }: {
   pendingOnly?: boolean;
@@ -46,8 +51,17 @@ export function SavingOrdersPage({
   query?: HistoryQuery;
   onQueryChange?: (query: HistoryQuery) => void;
   onClearFilters?: () => void;
+  onApplyFilters?: (selection: HistoryFilterSelection<HistoryQuery>) => void;
   onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
 }) {
+  const filterDraft = useHistoryFilterDraft({ query, statuses, dateRange }, onApplyFilters);
+  const filterQuery = onApplyFilters ? filterDraft.draft.query : query;
+  const filterStatuses = onApplyFilters ? filterDraft.draft.statuses : statuses;
+  const filterDateRange = onApplyFilters ? filterDraft.draft.dateRange : dateRange;
+  const onDraftQueryChange = onApplyFilters ? filterDraft.setQuery : onQueryChange;
+  const onDraftStatusesChange = onApplyFilters ? filterDraft.setStatuses : onStatusesChange;
+  const onDraftDateRangeChange = onApplyFilters ? filterDraft.setDateRange : onDateRangeChange;
+
   const { view, setView } = useListView('saving-orders');
   const locale = useLocale();
   const time = useAccountTime(locale);
@@ -272,33 +286,35 @@ export function SavingOrdersPage({
         statuses={statuses}
         dateRange={dateRange}
         onClear={onClearFilters}
+        onOpen={filterDraft.begin}
+        onApply={onApplyFilters ? filterDraft.apply : undefined}
         onRemoveFilter={onRemoveFilter}
         statusOptions={statusOptions}
         formatDate={(value) => time.format(value, { dateStyle: 'medium', timeStyle: 'short' })}
       >
-        {onQueryChange && (
+        {onDraftQueryChange && (
           <HistoryListControls
-            value={query}
-            onChange={onQueryChange}
+            value={filterQuery}
+            onChange={onDraftQueryChange}
             locale={locale}
             domain="saving"
           />
         )}
-        {onDateRangeChange && (
+        {onDraftDateRangeChange && (
           <HistoryDateFilter
-            value={dateRange}
-            onChange={onDateRangeChange}
+            value={filterDateRange}
+            onChange={onDraftDateRangeChange}
             locale={locale}
             time={time}
           />
         )}
-        {onStatusesChange && (
+        {onDraftStatusesChange && (
           <StatusFilter
             label={copy('filterStatus')}
             clearLabel={copy('clearFilters')}
-            countLabel={numbers.number(statuses.length)}
-            value={statuses}
-            onChange={onStatusesChange}
+            countLabel={numbers.number(filterStatuses.length)}
+            value={filterStatuses}
+            onChange={onDraftStatusesChange}
             options={statusOptions}
           />
         )}

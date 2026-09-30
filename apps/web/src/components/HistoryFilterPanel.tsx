@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { ListFilterPanel, type ListFilterChip } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import type { DateRangeFilterValue, NumberRangeValue } from '@barghsa/shared/validation';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
@@ -12,6 +13,8 @@ export function HistoryFilterPanel({
   dateRange,
   amountRange,
   onClear,
+  onApply,
+  onOpen,
   onRemoveFilter,
   statusOptions = [],
   dateLabel,
@@ -24,6 +27,8 @@ export function HistoryFilterPanel({
   dateRange: DateRangeFilterValue;
   amountRange?: NumberRangeValue | undefined;
   onClear?: (() => void) | undefined;
+  onApply?: (() => void) | undefined;
+  onOpen?: (() => void) | undefined;
   onRemoveFilter?: ((key: HistoryFilterKey, value?: string) => void) | undefined;
   statusOptions?: readonly { value: string; label: string }[];
   dateLabel?: string;
@@ -32,6 +37,7 @@ export function HistoryFilterPanel({
   children: ReactNode;
 }) {
   const locale = useLocale();
+  const profileRevision = useProfileContextRevision();
   const numbers = useNumberFormatting(locale);
   if (!onClear) return children;
   const activeCount = [
@@ -84,6 +90,22 @@ export function HistoryFilterPanel({
         selected: t('historyFilters.selected', locale),
         remove: t('historyFilters.remove', locale),
       }}
+      drawer={
+        onApply && onOpen
+          ? {
+              resetKey: JSON.stringify([profileRevision, query, statuses, dateRange, amountRange]),
+              onApply,
+              onOpen,
+              dir: locale === 'fa' ? 'rtl' : 'ltr',
+              labels: {
+                apply: t('historyFilters.apply', locale),
+                cancel: t('historyFilters.cancel', locale),
+                close: t('historyFilters.close', locale),
+                description: t('historyFilters.description', locale),
+              },
+            }
+          : undefined
+      }
       onClear={onClear}
       chips={chips}
     >
