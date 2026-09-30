@@ -89,6 +89,15 @@ const post = (path: string, body: unknown) =>
     body: JSON.stringify(body),
   });
 
+async function cancellationReview(orderId: string, reason: string) {
+  const response = await post(`orders/${orderId}/cancel-review`, { reason });
+  expect(response.status, http.logs()).toBe(200);
+  return (await response.json()) as {
+    hash: string;
+    data: { invoiceId: string; refundAmount: string; outcome: string };
+  };
+}
+
 async function priceProposalReview(contractId: string, body: Record<string, unknown>) {
   const response = await fetch(
     `${http.base}/api/staff/electricity/contracts/${contractId}/price-adjustments/review`,
@@ -1265,10 +1274,13 @@ it.each([true, false])(
     const detail = (await (
       await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers })
     ).json()) as { versionId: string };
+    const review = await cancellationReview(order.orderId, 'No longer needed');
+    expect(review.data.outcome).toBe('cancel_invoice');
     const cancel = () =>
       post(`orders/${order.orderId}/cancel`, {
         idempotencyKey: key,
         expectedVersionId: detail.versionId,
+        expectedReviewHash: review.hash,
         reason: 'No longer needed',
       });
     const key = randomUUID();
@@ -1553,9 +1565,35 @@ it('lists only the customer profile orders and cancels an unpublished order once
   expect(detail.lines).toEqual(
     expect.arrayContaining([expect.objectContaining({ systemKey: 'thermal', quantityKwh: '10' })])
   );
+  const firstReview = await cancellationReview(order.orderId, 'Delivery is no longer needed');
+  expect(firstReview.data).toMatchObject({
+    invoiceId: order.invoiceId,
+    refundAmount: '0',
+    outcome: 'cancel_invoice',
+  });
+  expect(
+    (
+      await post(`orders/${order.orderId}/cancel`, {
+        idempotencyKey: randomUUID(),
+        expectedVersionId: detail.versionId,
+        reason: 'Delivery is no longer needed',
+      })
+    ).status
+  ).toBe(400);
+  await http.pool.query("UPDATE invoices SET state='Overdue' WHERE id=$1", [order.invoiceId]);
+  const stale = await post(`orders/${order.orderId}/cancel`, {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: detail.versionId,
+    expectedReviewHash: firstReview.hash,
+    reason: 'Delivery is no longer needed',
+  });
+  expect(stale.status, http.logs()).toBe(409);
+  const currentReview = await cancellationReview(order.orderId, 'Delivery is no longer needed');
+  expect(currentReview.hash).not.toBe(firstReview.hash);
   const request = {
     idempotencyKey: randomUUID(),
     expectedVersionId: detail.versionId,
+    expectedReviewHash: currentReview.hash,
     reason: 'Delivery is no longer needed',
   };
   const cancel = () => post(`orders/${order.orderId}/cancel`, request);
@@ -1563,6 +1601,14 @@ it('lists only the customer profile orders and cancels an unpublished order once
   expect(first.status, http.logs()).toBe(200);
   expect(await first.json()).toMatchObject({ status: 'cancelled', refundId: null });
   expect((await cancel()).status).toBe(200);
+  const decisionAudit = (
+    await http.pool.query<{ metadata: { reviewHash: string } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='electricity.order_cancelled'
+       AND metadata::jsonb->>'orderId'=$1 ORDER BY created_at DESC LIMIT 1`,
+      [order.orderId]
+    )
+  ).rows[0];
+  expect(decisionAudit?.metadata.reviewHash).toBe(currentReview.hash);
   const after = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers });
   expect(await after.json()).toMatchObject({
     electricityStatus: 'cancelled',
@@ -1630,9 +1676,18 @@ it('keeps a paid cancellation open through failed retries until finance restores
       order.contractId,
     ])
   ).rows[0].current_version_id;
+  const cancellationSnapshot = await cancellationReview(
+    order.orderId,
+    'Delivery is no longer needed'
+  );
+  expect(cancellationSnapshot.data).toMatchObject({
+    refundAmount: '500000',
+    outcome: 'refund_obligation',
+  });
   const cancelled = await post(`orders/${order.orderId}/cancel`, {
     idempotencyKey: randomUUID(),
     expectedVersionId: versionId,
+    expectedReviewHash: cancellationSnapshot.hash,
     reason: 'Delivery is no longer needed',
   });
   expect(cancelled.status, http.logs()).toBe(200);

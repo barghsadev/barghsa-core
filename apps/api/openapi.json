@@ -19348,6 +19348,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -19367,6 +19371,7 @@
                 "required": [
                   "idempotencyKey",
                   "expectedVersionId",
+                  "expectedReviewHash",
                   "reason"
                 ],
                 "type": "object"
@@ -19381,6 +19386,51 @@
           }
         },
         "summary": "Cancel an unpublished electricity order and queue any mandatory refund",
+        "tags": [
+          "Electricity"
+        ]
+      }
+    },
+    "/api/electricity/orders/{orderId}/cancel-review": {
+      "post": {
+        "operationId": "ElectricityOrderController_cancelReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Authoritative cancellation review."
+          }
+        },
+        "summary": "Preview exact invoice and refund outcome of cancelling an electricity order",
         "tags": [
           "Electricity"
         ]

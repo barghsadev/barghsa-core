@@ -3,6 +3,131 @@ import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
 import { ElectricityOrderDetailsPage } from './ElectricityOrderDetailsPage.js';
 
+it('reviews the exact cancellation refund before submitting its hash', async () => {
+  document.documentElement.lang = 'en';
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  const orderId = '11111111-1111-7111-8111-111111111111';
+  const profileId = '22222222-2222-7222-8222-222222222222';
+  const contractId = '33333333-3333-7333-8333-333333333333';
+  const versionId = '44444444-4444-7444-8444-444444444444';
+  const invoiceId = '55555555-5555-7555-8555-555555555555';
+  const periodStart = '2026-09-23T00:00:00.000Z';
+  const periodEnd = '2026-09-30T00:00:00.000Z';
+  const detail = {
+    orderId,
+    profileId,
+    profileName: 'Buyer Company',
+    mode: 'simple',
+    commercialStatus: 'PENDING',
+    electricityStatus: 'awaiting_staff_review',
+    financialStatus: 'partially_funded',
+    nextAction: 'await_review',
+    periodStart,
+    periodEnd,
+    totalKwh: '10',
+    fullAddress: 'Electricity Street',
+    postalCode: '1234567890',
+    provinceId: '66666666-6666-7666-8666-666666666666',
+    cityId: '77777777-7777-7777-8777-777777777777',
+    contractId,
+    contractState: 'AwaitingStaffReview',
+    versionId,
+    invoiceId,
+    invoiceState: 'PartiallyFunded',
+    totalIrR: '1000',
+    paidIrR: '500',
+    refundedIrR: '0',
+    lines: [],
+  };
+  const review = {
+    schemaVersion: 1,
+    scope: { action: 'electricity.customer-cancel', profileId, resourceId: orderId },
+    data: {
+      reason: 'No longer needed',
+      profileName: 'Buyer Company',
+      commercialStatus: 'awaiting_staff_review',
+      contractId,
+      contractState: 'AwaitingStaffReview',
+      versionId,
+      contractSnapshot: {},
+      invoiceId,
+      invoiceState: 'PartiallyFunded',
+      invoiceTotal: '1000',
+      paidAmount: '500',
+      refundedAmount: '0',
+      pendingRefundAmount: '0',
+      periodStart,
+      periodEnd,
+      totalKwh: '10',
+      pricingSnapshot: { lines: [] },
+      outcome: 'refund_obligation',
+      refundAmount: '500',
+      releasesGiftCode: false,
+    },
+    hash: 'c'.repeat(64),
+  };
+  const fetchMock = vi.fn(
+    async (url: string, _init?: RequestInit) =>
+      new Response(
+        JSON.stringify(
+          url === '/api/user/settings/timezone'
+            ? { timezone: 'Asia/Tehran' }
+            : url.endsWith('/cancel-review')
+              ? review
+              : url.endsWith('/cancel')
+                ? { status: 'cancelled' }
+                : url.includes('/comments')
+                  ? { comments: [], nextBefore: null }
+                  : detail
+        ),
+        { headers: { 'Content-Type': 'application/json' } }
+      )
+  );
+  vi.stubGlobal('fetch', fetchMock);
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => root.render(<ElectricityOrderDetailsPage orderId={orderId} />));
+    const reason = [...container.querySelectorAll('textarea')].find((item) =>
+      item.closest('label')?.textContent?.includes('Cancellation reason')
+    )!;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
+        reason,
+        'No longer needed'
+      );
+      reason.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await act(async () =>
+      reason
+        .closest('form')!
+        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    );
+    expect(fetchMock).toHaveBeenCalledWith(
+      `/api/electricity/orders/${orderId}/cancel-review`,
+      expect.objectContaining({ body: JSON.stringify({ reason: 'No longer needed' }) })
+    );
+    expect(document.body.textContent).toContain('Start wallet refund');
+    expect(document.body.textContent).toContain('500');
+    const confirm = [...document.body.querySelectorAll('button')].find(
+      (button) => button.closest('[role="dialog"]') && button.textContent === 'Cancel order'
+    );
+    await act(async () => confirm!.click());
+    const mutation = fetchMock.mock.calls.find(([url]) => url.endsWith('/cancel'));
+    expect(mutation).toBeDefined();
+    expect(JSON.parse((mutation![1] as RequestInit).body as string)).toMatchObject({
+      expectedReviewHash: review.hash,
+      expectedVersionId: versionId,
+      reason: 'No longer needed',
+    });
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+    vi.unstubAllGlobals();
+  }
+});
+
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
     children,
