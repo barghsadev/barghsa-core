@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Notification category badges](batches/2026-09-30-notification-status-badges.md) give the customer and staff bell and inbox the same labeled icon and category color. Document events now identify themselves as documents in both dictionaries instead of falling back to System.
+
 [Saving fulfillment progress stepper](batches/2026-09-30-saving-progress-stepper.md) connects completed, current, and pending stages in the shared stepper and uses it on the customer saving-order detail page. Completion dates and handover details remain visible. Solar construction usage remains open until its domain exposes matching stage progress.
 
 [Staff dashboard pending verification](batches/2026-09-30-pending-verification-widget.md) completes the existing verification count with the five newest profile links, bilingual identity fallback, and verified CRM navigation. The API already supplied these entries.

@@ -131,6 +131,7 @@ it.each([
   ['finance.chargeback_unresolved', 'payment'],
   ['contract.cancelled', 'contract'],
   ['order.submitted', 'order'],
+  ['document.review_completed', 'document'],
   ['custom.event', 'system'],
 ])('renders business event %s with its notification category', (event, category) => {
   expect(notificationDisplayType(event!)).toBe(category);

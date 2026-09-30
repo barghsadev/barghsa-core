@@ -1,27 +1,11 @@
 import { t, type Locale } from '@barghsa/i18n/app';
 import {
-  ShieldAlertIcon,
-  CreditCardIcon,
-  FileTextIcon,
-  PackageIcon,
-  InfoIcon,
-  type LucideIcon,
-} from 'lucide-react';
-import {
   notificationContent,
   formatRelativeTime,
-  notificationTypeLabelKey,
-  notificationDisplayType,
   toNavigationTarget,
   type NotificationItem,
 } from '../lib/notifications.js';
-
-const TYPE_ICONS: Record<string, LucideIcon> = {
-  security: ShieldAlertIcon,
-  payment: CreditCardIcon,
-  contract: FileTextIcon,
-  order: PackageIcon,
-};
+import { NotificationStatusBadge } from './NotificationStatusBadge.js';
 
 /**
  * A single notification row (shared by the header bell dropdown and the full
@@ -47,9 +31,7 @@ export function NotificationRow({
   muted?: boolean;
   operatingContext?: 'staff' | 'customer';
 }) {
-  const Icon = TYPE_ICONS[notificationDisplayType(item.type)] ?? InfoIcon;
   const { title, body } = notificationContent(item, locale);
-  const typeLabel = t(notificationTypeLabelKey(item.type), locale);
   const timeLabel = formatRelativeTime(item.createdAt, locale);
   const isRtl = locale === 'fa';
   const customerLinkInStaffMode =
@@ -59,14 +41,7 @@ export function NotificationRow({
 
   return (
     <div className="flex w-full items-start gap-3" dir={isRtl ? 'rtl' : 'ltr'}>
-      <span
-        className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
-          unread ? 'bg-primary/10 text-foreground' : 'bg-muted text-muted-foreground'
-        }`}
-        aria-hidden="true"
-      >
-        <Icon className="h-5 w-5" />
-      </span>
+      <NotificationStatusBadge type={item.type} locale={locale} />
       <span className="min-w-0 flex-1">
         <span className="flex items-baseline justify-between gap-2">
           <span
@@ -82,17 +57,9 @@ export function NotificationRow({
             />
           )}
         </span>
-        <span
-          className={`mt-0.5 block text-xs leading-snug ${
-            muted ? 'text-muted-foreground' : 'text-muted-foreground'
-          }`}
-        >
-          {body}
-        </span>
+        <span className="mt-0.5 block text-xs leading-snug text-muted-foreground">{body}</span>
         <span className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
           <span>{timeLabel}</span>
-          <span aria-hidden="true">·</span>
-          <span>{typeLabel}</span>
         </span>
         {customerLinkInStaffMode && (
           <span className="mt-1 block text-xs text-muted-foreground">

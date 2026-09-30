@@ -21,14 +21,19 @@ const item = (title: string, id = '10000000-0000-4000-8000-000000000001') => ({
 const response = (title: string) => ({ data: [item(title)], next_cursor: null, unread_count: 1 });
 async function arrange(page: Page, locale: 'en' | 'fa') {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.addInitScript((language) => {
-    const apply = () => {
-      if (document.documentElement) document.documentElement.lang = language;
-    };
-    apply();
-    new MutationObserver(apply).observe(document, { childList: true });
-  }, locale);
+  await page.addInitScript((language) => localStorage.setItem('barghsa.locale', language), locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        userId: 'notification-customer',
+        isStaff: false,
+        operatingContext: 'customer',
+        canSwitchContext: false,
+        requiresTosAcceptance: false,
+      },
+    })
+  );
   await page.route('**/api/v1/notifications/unread-count', (route) =>
     route.fulfill({ json: { unread_count: 1 } })
   );
@@ -84,8 +89,10 @@ for (const locale of ['en', 'fa'] as const) {
     await error.getByRole('button', { name: t('notifications.retry', locale) }).click();
     const row = page.getByRole('button', { name: /Current all notice/ });
     await expect(row).toBeVisible();
-    await expect(row.locator('svg.lucide-credit-card')).toBeVisible();
-    await expect(row).toContainText(t('notifications.type.payment', locale));
+    const badge = row.locator('span.bg-success-soft');
+    await expect(badge.locator('svg.lucide-credit-card')).toBeVisible();
+    await expect(badge).toContainText(t('notifications.type.payment', locale));
+    await expect(badge).toHaveClass(/bg-success-soft/);
   });
 
   test(`unread notification clicks update optimistically and recover failed writes (${locale})`, async ({
