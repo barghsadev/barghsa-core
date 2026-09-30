@@ -39,4 +39,4 @@ Initial failures exposed an inaccessible electricity scroll region and outdated 
 
 ## Publication
 
-The preceding staff-finance batch is published as `7f54512d6c69e3a43783594ad0e5518065324bde`; CI run `36782061024` passes all five gates under the existing temporary fast mode. The combined-coverage gate remains an exemption, not measured coverage. This reviewed business-queue batch is committed and pushed directly to main after related checks. Its exact remote commit and CI are checked after publication.
+This batch is published as `614e6ef4988e148d7ddc84d46f902247be7207a4`; CI run `36783876844` passes all five gates under the existing temporary fast mode. The combined-coverage gate remains an exemption, not measured coverage. The preceding staff-finance batch is published as `7f54512d6c69e3a43783594ad0e5518065324bde`, with all five gates passing in CI run `36782061024`.

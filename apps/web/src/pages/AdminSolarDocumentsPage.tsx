@@ -1,5 +1,5 @@
-import { useEffect, useState, type FormEvent } from 'react';
-import { Button, FinancialReviewSummary, Input, Label } from '@barghsa/ui';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { Button, FinancialReviewSummary, Input, Label, ListPage } from '@barghsa/ui';
 import { tSolar } from '@barghsa/i18n/solar';
 import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
@@ -90,7 +90,35 @@ export function AdminSolarDocumentsPage() {
   const [nextBeforeDocument, setNextBeforeDocument] = useState<string | null>(null);
   const [documentsLoading, setDocumentsLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [queueError, setQueueError] = useState(false);
+  const [queueDenied, setQueueDenied] = useState(false);
+  const [documentsError, setDocumentsError] = useState(false);
+  const [documentsDenied, setDocumentsDenied] = useState(false);
+  const [detailError, setDetailError] = useState(false);
+  const [guidanceError, setGuidanceError] = useState(false);
+  const [queueRevision, setQueueRevision] = useState(0);
+  const [documentsRevision, setDocumentsRevision] = useState(0);
+  const [detailRevision, setDetailRevision] = useState(0);
+  const [guidanceRevision, setGuidanceRevision] = useState(0);
+  const reviewRequest = useRef(0);
+  function invalidateReview() {
+    reviewRequest.current += 1;
+    setAction(null);
+    setPreparingDecision(false);
+  }
+  function selectRequest(id: string | null, documentId: string | null = null) {
+    invalidateReview();
+    if (selected !== id) {
+      setDetail(null);
+      setDetailError(false);
+      setReason('');
+    }
+    setSelected(id);
+    setPreview(documentId);
+  }
   const refresh = () => {
+    setError(false);
+    invalidateReview();
     setBefore(null);
     setBeforeDocument(null);
     setRevision((value) => value + 1);
@@ -98,12 +126,14 @@ export function AdminSolarDocumentsPage() {
   useEffect(() => {
     const controller = new AbortController();
     setDocumentsLoading(true);
+    setDocumentsError(false);
+    setDocumentsDenied(false);
     void fetch(
       `/api/admin/solar/document-review-queue${beforeDocument ? `?before=${encodeURIComponent(beforeDocument)}` : ''}`,
       { credentials: 'include', signal: controller.signal }
     )
       .then(async (response) => {
-        if (!response.ok) throw new Error('document queue');
+        if (!response.ok) throw new Error(String(response.status));
         return response.json() as Promise<{
           documents: PendingDocumentRow[];
           nextBefore: string | null;
@@ -118,17 +148,25 @@ export function AdminSolarDocumentsPage() {
         });
         setNextBeforeDocument(result.nextBefore);
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+      .catch((cause: unknown) => {
+        if (controller.signal.aborted) return;
+        if (cause instanceof Error && cause.message === '403') {
+          setPendingDocuments([]);
+          setNextBeforeDocument(null);
+          selectRequest(null);
+          setDetail(null);
+          setDocumentsDenied(true);
+        } else setDocumentsError(true);
       })
       .finally(() => {
         if (!controller.signal.aborted) setDocumentsLoading(false);
       });
     return () => controller.abort();
-  }, [beforeDocument, revision]);
+  }, [beforeDocument, revision, documentsRevision]);
   useEffect(() => {
     const controller = new AbortController();
-    setError(false);
+    setQueueError(false);
+    setQueueDenied(false);
     setQueueLoading(true);
     void fetch(
       `/api/admin/solar/requests${before ? `?before=${encodeURIComponent(before)}` : ''}`,
@@ -138,7 +176,7 @@ export function AdminSolarDocumentsPage() {
       }
     )
       .then(async (response) => {
-        if (!response.ok) throw new Error('queue');
+        if (!response.ok) throw new Error(String(response.status));
         return response.json() as Promise<{ requests: RequestRow[]; nextBefore: string | null }>;
       })
       .then((result) => {
@@ -150,15 +188,24 @@ export function AdminSolarDocumentsPage() {
         });
         setNextBefore(result.nextBefore);
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+      .catch((cause: unknown) => {
+        if (controller.signal.aborted) return;
+        if (cause instanceof Error && cause.message === '403') {
+          setRequests([]);
+          setNextBefore(null);
+          selectRequest(null);
+          setDetail(null);
+          setQueueDenied(true);
+        } else setQueueError(true);
       })
       .finally(() => {
         if (!controller.signal.aborted) setQueueLoading(false);
       });
     return () => controller.abort();
-  }, [before, revision]);
+  }, [before, revision, queueRevision]);
   useEffect(() => {
+    setDetailError(false);
+    setDetail(null);
     if (!selected) {
       setDetail(null);
       return;
@@ -176,12 +223,13 @@ export function AdminSolarDocumentsPage() {
         if (!controller.signal.aborted) setDetail(result);
       })
       .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+        if (!controller.signal.aborted) setDetailError(true);
       });
     return () => controller.abort();
-  }, [selected, revision]);
+  }, [selected, revision, detailRevision]);
   useEffect(() => {
     const controller = new AbortController();
+    setGuidanceError(false);
     void fetch('/api/admin/solar/document-guidance', {
       credentials: 'include',
       signal: controller.signal,
@@ -199,10 +247,10 @@ export function AdminSolarDocumentsPage() {
         setEnSuggestions(value.suggestions.map((item) => item.en).join('\n'));
       })
       .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+        if (!controller.signal.aborted) setGuidanceError(true);
       });
     return () => controller.abort();
-  }, []);
+  }, [guidanceRevision]);
   function saveGuidance(event: FormEvent) {
     event.preventDefault();
     const persian = faSuggestions
@@ -250,6 +298,7 @@ export function AdminSolarDocumentsPage() {
       setError(true);
       return;
     }
+    const request = ++reviewRequest.current;
     setPreparingDecision(true);
     setError(false);
     try {
@@ -267,6 +316,7 @@ export function AdminSolarDocumentsPage() {
       );
       if (!response.ok) throw new Error('review');
       const setReview = (await response.json()) as SetReview;
+      if (request !== reviewRequest.current) return;
       setAction({
         title: copy(decision === 'advance' ? 'advancePostal' : 'requestAdditional'),
         description: requestId,
@@ -280,9 +330,9 @@ export function AdminSolarDocumentsPage() {
         setReview,
       });
     } catch {
-      setError(true);
+      if (request === reviewRequest.current) setError(true);
     } finally {
-      setPreparingDecision(false);
+      if (request === reviewRequest.current) setPreparingDecision(false);
     }
   }
   return (
@@ -292,87 +342,154 @@ export function AdminSolarDocumentsPage() {
       {error && <p role="alert">{copy('documentError')}</p>}
       <section className="space-y-3 rounded-xl border p-5">
         <h2 className="text-xl font-semibold">{copy('staffPendingFiles')}</h2>
-        {!pendingDocuments.length && !documentsLoading && <p>{copy('staffNoPendingFiles')}</p>}
-        <ul className="space-y-2">
-          {pendingDocuments.map((document) => (
-            <li key={document.id}>
-              <button
-                type="button"
-                className="w-full rounded-md border p-3 text-start"
-                onClick={() => {
-                  if (selected !== document.request_id) setDetail(null);
-                  setSelected(document.request_id);
-                  setPreview(document.document_id);
-                }}
-              >
-                <span className="block font-medium">{document.file_name}</span>
-                <span className="block text-sm text-muted-foreground">
-                  {copy('staffUploader')}: {document.uploaded_by_name} ·{' '}
-                  {time.format(document.uploaded_at)} · {copy('staffPending')}
-                </span>
-                <span className="block text-xs text-muted-foreground">
-                  {copy('staffRequest')}: <bdi>{document.request_id}</bdi>
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-        {nextBeforeDocument && (
-          <Button
-            variant="outline"
-            disabled={documentsLoading}
-            onClick={() => setBeforeDocument(nextBeforeDocument)}
+        <ListPage>
+          <ListPage.Content
+            loading={documentsLoading}
+            error={documentsError || documentsDenied}
+            empty={!pendingDocuments.length}
+            retainContent={!!pendingDocuments.length && !documentsDenied}
+            loadingView={<p role="status">{copy('loading')}</p>}
+            errorView={
+              documentsDenied ? (
+                <p role="alert">{copy('staffQueueForbidden')}</p>
+              ) : (
+                <div className="space-y-2">
+                  <p role="alert">{copy('staffFilesLoadError')}</p>
+                  <Button variant="outline" onClick={() => setDocumentsRevision((v) => v + 1)}>
+                    {copy('retry')}
+                  </Button>
+                </div>
+              )
+            }
+            emptyView={<p>{copy('staffNoPendingFiles')}</p>}
           >
-            {copy('moreFiles')}
-          </Button>
-        )}
+            <ul className="space-y-2">
+              {pendingDocuments.map((document) => (
+                <li key={document.id}>
+                  <button
+                    type="button"
+                    className="w-full rounded-md border p-3 text-start"
+                    onClick={() => {
+                      selectRequest(document.request_id, document.document_id);
+                    }}
+                  >
+                    <span className="block font-medium">{document.file_name}</span>
+                    <span className="block text-sm text-muted-foreground">
+                      {copy('staffUploader')}: {document.uploaded_by_name} ·{' '}
+                      {time.format(document.uploaded_at)} · {copy('staffPending')}
+                    </span>
+                    <span className="block text-xs text-muted-foreground">
+                      {copy('staffRequest')}: <bdi>{document.request_id}</bdi>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </ListPage.Content>
+          <ListPage.Pagination
+            kind="cursor"
+            hasMore={!!nextBeforeDocument && !documentsError && !documentsDenied}
+            loading={documentsLoading}
+            label={copy('staffPendingFiles')}
+            nextLabel={copy('moreFiles')}
+            onNext={() => setBeforeDocument(nextBeforeDocument)}
+          />
+        </ListPage>
       </section>
       <section className="space-y-3 rounded-xl border p-5">
         <h2 className="text-xl font-semibold">{copy('staffQueue')}</h2>
-        {!requests.length && !queueLoading && <p>{copy('staffEmpty')}</p>}
-        <ul className="space-y-2">
-          {requests.map((row) => (
-            <li key={row.id}>
-              <button
-                type="button"
-                className={`w-full rounded-md border p-3 text-start ${selected === row.id ? 'border-primary' : ''}`}
-                onClick={() => {
-                  setSelected(row.id);
-                  setPreview(null);
-                }}
-              >
-                <span className="block font-medium">{row.profile_name}</span>
-                <span className="block text-sm text-muted-foreground">
-                  {copy(row.building_type === 'non_household' ? 'nonHousehold' : 'building')} ·{' '}
-                  {copy(`status_${row.status}`)} · {row.document_count} ·{' '}
-                  {time.format(row.created_at, { dateStyle: 'medium' })}
-                </span>
-                <span className="block text-xs text-muted-foreground">
-                  {copy('staffRequest')}: <bdi>{row.id}</bdi>
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-        {nextBefore && (
-          <Button variant="outline" disabled={queueLoading} onClick={() => setBefore(nextBefore)}>
-            {copy('moreRequests')}
-          </Button>
-        )}
+        <ListPage>
+          <ListPage.Content
+            loading={queueLoading}
+            error={queueError || queueDenied}
+            empty={!requests.length}
+            retainContent={!!requests.length && !queueDenied}
+            loadingView={<p role="status">{copy('loading')}</p>}
+            errorView={
+              queueDenied ? (
+                <p role="alert">{copy('staffQueueForbidden')}</p>
+              ) : (
+                <div className="space-y-2">
+                  <p role="alert">{copy('staffQueueLoadError')}</p>
+                  <Button variant="outline" onClick={() => setQueueRevision((v) => v + 1)}>
+                    {copy('retry')}
+                  </Button>
+                </div>
+              )
+            }
+            emptyView={<p>{copy('staffEmpty')}</p>}
+          >
+            <ul className="space-y-2">
+              {requests.map((row) => (
+                <li key={row.id}>
+                  <button
+                    type="button"
+                    className={`w-full rounded-md border p-3 text-start ${selected === row.id ? 'border-primary' : ''}`}
+                    onClick={() => {
+                      selectRequest(row.id);
+                    }}
+                  >
+                    <span className="block font-medium">{row.profile_name}</span>
+                    <span className="block text-sm text-muted-foreground">
+                      {copy(row.building_type === 'non_household' ? 'nonHousehold' : 'building')} ·{' '}
+                      {copy(`status_${row.status}`)} · {row.document_count} ·{' '}
+                      {time.format(row.created_at, { dateStyle: 'medium' })}
+                    </span>
+                    <span className="block text-xs text-muted-foreground">
+                      {copy('staffRequest')}: <bdi>{row.id}</bdi>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </ListPage.Content>
+          <ListPage.Pagination
+            kind="cursor"
+            hasMore={!!nextBefore && !queueError && !queueDenied}
+            loading={queueLoading}
+            label={copy('staffQueue')}
+            nextLabel={copy('moreRequests')}
+            onNext={() => setBefore(nextBefore)}
+          />
+        </ListPage>
       </section>
+      {selected && !detail && !detailError && <p role="status">{copy('loading')}</p>}
+      {selected && detailError && (
+        <div role="alert" className="space-y-2">
+          <p>{copy('staffDetailLoadError')}</p>
+          <Button
+            variant="outline"
+            onClick={() => {
+              invalidateReview();
+              setDetailRevision((v) => v + 1);
+            }}
+          >
+            {copy('retry')}
+          </Button>
+        </div>
+      )}
+      {guidanceError && (
+        <div role="alert" className="space-y-2">
+          <p>{copy('staffGuidanceLoadError')}</p>
+          <Button variant="outline" onClick={() => setGuidanceRevision((v) => v + 1)}>
+            {copy('retry')}
+          </Button>
+        </div>
+      )}
       {detail && selected && (
         <section className="space-y-4 rounded-xl border p-5">
           <h2 className="text-xl font-semibold">{copy('staffDocuments')}</h2>
           <p>
-            {copy('status')}: {detail.request.status}
+            {copy('status')}: {copy(`status_${detail.request.status}`)}
           </p>
           <ul className="space-y-3">
             {detail.documents.map((document) => (
               <li key={document.id} className="rounded-md border p-3">
                 <p className="font-medium">{document.file_name}</p>
                 <p className="text-sm text-muted-foreground">
-                  {document.uploaded_by} · {time.format(document.uploaded_at)} · {document.state} ·{' '}
-                  {document.staff_status}
+                  {document.uploaded_by} · {time.format(document.uploaded_at)} ·{' '}
+                  {documentText(document.state, locale)} ·{' '}
+                  {copy(`documentReview_${document.staff_status}`)}
                 </p>
                 {document.staff_reason && <p>{document.staff_reason}</p>}
                 <div className="mt-2 flex flex-wrap gap-2">

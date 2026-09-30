@@ -1,5 +1,9 @@
 import { expect, test } from './coverage-fixture';
 
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
+});
+
 const requestId = '66666666-6666-4666-8666-666666666666';
 const profileId = '11111111-1111-4111-8111-111111111111';
 const reviewHash = 'a'.repeat(64);
@@ -87,7 +91,7 @@ test('staff can reject a postal-reviewed solar request with a reason', async ({ 
   });
 
   await page.goto('/admin/solar-postal');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+
   await page.getByRole('button', { name: /Solar customer/ }).click();
   await expect(page.getByRole('button', { name: 'Reject request' })).toHaveCount(0);
   await page.getByRole('button', { name: 'Start final review' }).click();

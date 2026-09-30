@@ -2,6 +2,10 @@ import { test, expect } from './upload-fixture';
 import { en as documentWords } from '../../../packages/i18n/src/documents';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
+});
+
 const requestId = '22222222-2222-4222-8222-222222222222';
 const documentId = '33333333-3333-4333-8333-333333333333';
 const submittedAt = '2026-09-23T10:00:00.000Z';
@@ -385,7 +389,7 @@ test('solar request moves from customer upload through staff review and postal r
   });
 
   await page.goto('/solar/requests/new');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+
   await expect(
     page.getByRole('heading', { name: 'Solar power station construction request' })
   ).toBeVisible();
@@ -563,7 +567,7 @@ test('solar intake returns from address setup with its saved site details', asyn
   });
 
   await page.goto('/solar/requests/new');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+
   await page.locator('input[value="non_household"]').check();
   await page.locator('#solar-area').fill('250');
   await page.getByLabel('Off-grid').check();
@@ -695,7 +699,7 @@ test('staff confirms the reviewed solar contract and exact initial invoice', asy
   });
 
   await page.goto('/admin/solar-postal');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+
   await page.getByRole('button', { name: /Buyer/ }).click();
   await page.getByLabel('Contract source').selectOption(`template:${templateVersionId}`);
   await page.getByLabel('Contract title').fill('Solar agreement');

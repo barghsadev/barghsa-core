@@ -1,6 +1,6 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { tSolar } from '@barghsa/i18n/solar';
-import { FinancialReviewSummary } from '@barghsa/ui';
+import { Button, FinancialReviewSummary, ListPage } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
@@ -76,17 +76,31 @@ export function AdminSolarPostalPage() {
   const [preparingDecision, setPreparingDecision] = useState(false);
   const [error, setError] = useState(false);
   const [revision, setRevision] = useState(0);
+  const [queueRevision, setQueueRevision] = useState(0);
+  const [guidanceRevision, setGuidanceRevision] = useState(0);
+  const [queueError, setQueueError] = useState(false);
+  const [queueDenied, setQueueDenied] = useState(false);
+  const [guidanceError, setGuidanceError] = useState(false);
+  const reviewRequest = useRef(0);
+  function invalidateReview() {
+    reviewRequest.current += 1;
+    setAction(null);
+    setPreparingDecision(false);
+  }
   const [before, setBefore] = useState<string | null>(null);
   const [nextBefore, setNextBefore] = useState<string | null>(null);
   const [queueLoading, setQueueLoading] = useState(true);
   const [createdContractId, setCreatedContractId] = useState<string | null>(null);
   const refresh = () => {
+    invalidateReview();
     setBefore(null);
     setRevision((value) => value + 1);
   };
   useEffect(() => {
     const controller = new AbortController();
     setQueueLoading(true);
+    setQueueError(false);
+    setQueueDenied(false);
     const query = new URLSearchParams({ lane });
     if (before) query.set('before', before);
     void fetch(`/api/admin/solar/postal-queue?${query}`, {
@@ -94,7 +108,7 @@ export function AdminSolarPostalPage() {
       signal: controller.signal,
     })
       .then(async (response) => {
-        if (!response.ok) throw new Error('queue');
+        if (!response.ok) throw new Error(String(response.status));
         return response.json() as Promise<{ requests: Row[]; nextBefore: string | null }>;
       })
       .then((value) => {
@@ -106,16 +120,25 @@ export function AdminSolarPostalPage() {
         });
         setNextBefore(value.nextBefore);
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+      .catch((cause: unknown) => {
+        if (controller.signal.aborted) return;
+        if (cause instanceof Error && cause.message === '403') {
+          invalidateReview();
+          setRows([]);
+          setNextBefore(null);
+          setSelected(null);
+          setPreview(null);
+          setQueueDenied(true);
+        } else setQueueError(true);
       })
       .finally(() => {
         if (!controller.signal.aborted) setQueueLoading(false);
       });
     return () => controller.abort();
-  }, [before, lane, revision]);
+  }, [before, lane, revision, queueRevision]);
   useEffect(() => {
     const controller = new AbortController();
+    setGuidanceError(false);
     void fetch('/api/admin/solar/postal-guidance', {
       credentials: 'include',
       signal: controller.signal,
@@ -131,10 +154,10 @@ export function AdminSolarPostalPage() {
         setOriginalsEn(value.originals.map((item) => item.en).join('\n'));
       })
       .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+        if (!controller.signal.aborted) setGuidanceError(true);
       });
     return () => controller.abort();
-  }, []);
+  }, [guidanceRevision]);
   const row = rows.find((item) => item.id === selected);
   function saveGuidance(event: FormEvent) {
     event.preventDefault();
@@ -177,6 +200,7 @@ export function AdminSolarPostalPage() {
       'mark-incomplete': 'incomplete',
       'mark-not-received': 'not_received',
     }[decision];
+    const request = ++reviewRequest.current;
     setPreparingDecision(true);
     setError(false);
     try {
@@ -194,6 +218,7 @@ export function AdminSolarPostalPage() {
       );
       if (!response.ok) throw new Error('review');
       const postalReview = (await response.json()) as PostalReview;
+      if (request !== reviewRequest.current) return;
       setAction({
         title: copy(`postal_${decision}`),
         description: requestId,
@@ -207,9 +232,9 @@ export function AdminSolarPostalPage() {
         postalReview,
       });
     } catch {
-      setError(true);
+      if (request === reviewRequest.current) setError(true);
     } finally {
-      setPreparingDecision(false);
+      if (request === reviewRequest.current) setPreparingDecision(false);
     }
   }
   async function prepareFinalDecision(decision: FinalDecision, requestId: string) {
@@ -219,6 +244,7 @@ export function AdminSolarPostalPage() {
       setError(true);
       return;
     }
+    const request = ++reviewRequest.current;
     setPreparingDecision(true);
     setError(false);
     try {
@@ -236,6 +262,7 @@ export function AdminSolarPostalPage() {
       );
       if (!response.ok) throw new Error('review');
       const review = (await response.json()) as FinalReview;
+      if (request !== reviewRequest.current) return;
       setAction({
         title: copy(
           decision === 'approve'
@@ -255,9 +282,9 @@ export function AdminSolarPostalPage() {
         review,
       });
     } catch {
-      setError(true);
+      if (request === reviewRequest.current) setError(true);
     } finally {
-      setPreparingDecision(false);
+      if (request === reviewRequest.current) setPreparingDecision(false);
     }
   }
   return (
@@ -278,70 +305,96 @@ export function AdminSolarPostalPage() {
       )}
       <section className="space-y-3 rounded-xl border p-5">
         <h2 className="text-xl font-semibold">{copy('postalStaffQueue')}</h2>
-        <label className="block max-w-xs space-y-1" htmlFor="solar-postal-lane">
-          <span>{copy('postalLane')}</span>
-          <select
-            id="solar-postal-lane"
-            className="w-full rounded-md border bg-background p-2"
-            value={lane}
-            onChange={(event) => {
-              setRows([]);
-              setBefore(null);
-              setNextBefore(null);
-              setSelected(null);
-              setLane(event.target.value as PostalLane);
-            }}
+        <ListPage>
+          <ListPage.Toolbar
+            filters={
+              <label className="block max-w-xs space-y-1" htmlFor="solar-postal-lane">
+                <span>{copy('postalLane')}</span>
+                <select
+                  id="solar-postal-lane"
+                  className="w-full rounded-md border bg-background p-2"
+                  value={lane}
+                  onChange={(event) => {
+                    invalidateReview();
+                    setRows([]);
+                    setBefore(null);
+                    setNextBefore(null);
+                    setSelected(null);
+                    setLane(event.target.value as PostalLane);
+                  }}
+                >
+                  <option value="needs_staff">{copy('postalLaneAction')}</option>
+                  <option value="waiting_customer">{copy('postalLaneWaiting')}</option>
+                  <option value="all">{copy('postalLaneAll')}</option>
+                </select>
+              </label>
+            }
+          />
+          <ListPage.Content
+            loading={queueLoading}
+            error={queueError || queueDenied}
+            empty={!rows.length}
+            retainContent={!!rows.length && !queueDenied}
+            loadingView={<p role="status">{copy('loading')}</p>}
+            errorView={
+              queueDenied ? (
+                <p role="alert">{copy('staffQueueForbidden')}</p>
+              ) : (
+                <div className="space-y-2">
+                  <p role="alert">{copy('staffQueueLoadError')}</p>
+                  <Button variant="outline" onClick={() => setQueueRevision((v) => v + 1)}>
+                    {copy('retry')}
+                  </Button>
+                </div>
+              )
+            }
+            emptyView={
+              <p>
+                {copy(
+                  lane === 'waiting_customer'
+                    ? 'postalStaffEmptyWaiting'
+                    : lane === 'all'
+                      ? 'postalStaffEmptyAll'
+                      : 'postalStaffEmpty'
+                )}
+              </p>
+            }
           >
-            <option value="needs_staff">{copy('postalLaneAction')}</option>
-            <option value="waiting_customer">{copy('postalLaneWaiting')}</option>
-            <option value="all">{copy('postalLaneAll')}</option>
-          </select>
-        </label>
-        {!rows.length && !queueLoading && (
-          <p>
-            {copy(
-              lane === 'waiting_customer'
-                ? 'postalStaffEmptyWaiting'
-                : lane === 'all'
-                  ? 'postalStaffEmptyAll'
-                  : 'postalStaffEmpty'
-            )}
-          </p>
-        )}
-        <ul className="space-y-2">
-          {rows.map((item) => (
-            <li key={item.id}>
-              <button
-                type="button"
-                className={`w-full rounded-md border p-3 text-start ${selected === item.id ? 'border-primary' : ''}`}
-                onClick={() => {
-                  setSelected(item.id);
-                  setPreview(null);
-                  setReason('');
-                }}
-              >
-                <span className="block font-medium">{item.profile_name}</span>
-                <span className="block text-sm text-muted-foreground">
-                  {copy(`postal_${item.postal_status}`)} ·{' '}
-                  {time.format(item.created_at, { dateStyle: 'medium' })}
-                </span>
-                <span className="block text-xs text-muted-foreground">
-                  {copy('staffRequest')}: <bdi>{item.id}</bdi>
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-        {nextBefore && (
-          <button
-            type="button"
-            className="rounded-md border px-4 py-2"
-            disabled={queueLoading}
-            onClick={() => setBefore(nextBefore)}
-          >
-            {copy('moreRequests')}
-          </button>
-        )}
+            <ul className="space-y-2">
+              {rows.map((item) => (
+                <li key={item.id}>
+                  <button
+                    type="button"
+                    className={`w-full rounded-md border p-3 text-start ${selected === item.id ? 'border-primary' : ''}`}
+                    onClick={() => {
+                      invalidateReview();
+                      setSelected(item.id);
+                      setPreview(null);
+                      setReason('');
+                    }}
+                  >
+                    <span className="block font-medium">{item.profile_name}</span>
+                    <span className="block text-sm text-muted-foreground">
+                      {copy(`postal_${item.postal_status}`)} ·{' '}
+                      {time.format(item.created_at, { dateStyle: 'medium' })}
+                    </span>
+                    <span className="block text-xs text-muted-foreground">
+                      {copy('staffRequest')}: <bdi>{item.id}</bdi>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </ListPage.Content>
+          <ListPage.Pagination
+            kind="cursor"
+            hasMore={!!nextBefore && !queueError && !queueDenied}
+            loading={queueLoading}
+            label={copy('postalStaffQueue')}
+            nextLabel={copy('moreRequests')}
+            onNext={() => setBefore(nextBefore)}
+          />
+        </ListPage>
       </section>
       {row && (
         <section className="space-y-3 rounded-xl border p-5">
@@ -503,6 +556,14 @@ export function AdminSolarPostalPage() {
             />
           )}
         </section>
+      )}
+      {guidanceError && (
+        <div role="alert" className="space-y-2">
+          <p>{copy('staffGuidanceLoadError')}</p>
+          <Button variant="outline" onClick={() => setGuidanceRevision((v) => v + 1)}>
+            {copy('retry')}
+          </Button>
+        </div>
       )}
       {guidance && (
         <form className="space-y-3 rounded-xl border p-5" onSubmit={saveGuidance}>
