@@ -410,8 +410,8 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
     })
   );
 
+  await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
   await page.goto('/savings');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await expect(page.getByRole('heading', { name: 'Home saving plan' })).toBeVisible();
   await page.getByRole('link', { name: 'Start an order' }).click();
   const next = page.getByRole('button', { name: 'Continue', exact: true });
@@ -478,6 +478,10 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   await expect(page.locator('li[aria-current="step"]')).toContainText('Product delivery');
   await page.getByRole('link', { name: 'My saving orders' }).click();
   await expect(page.getByRole('heading', { name: 'My saving orders' })).toBeVisible();
+  await page
+    .getByRole('group', { name: 'List display' })
+    .getByRole('button', { name: 'Cards', exact: true })
+    .click();
   await expect(page.getByRole('heading', { name: 'Home saving plan' })).toBeVisible();
   await expect(page.locator(`time[datetime="${submittedAt}"]`).first()).toHaveText('09/24/2026');
   await page.getByRole('button', { name: 'More orders' }).click();

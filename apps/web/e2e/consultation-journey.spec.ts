@@ -1,5 +1,15 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test } from './coverage-fixture';
+import { expect, test, type Page } from './coverage-fixture';
+import { shellText } from '@barghsa/i18n/shell';
+
+async function switchLanguage(page: Page, locale: 'en' | 'fa') {
+  const switcher = page.getByRole('button', { name: shellText('language', locale), exact: true });
+  const compact = !(await switcher.isVisible());
+  if (compact)
+    await page.getByRole('button', { name: shellText('accountMenu', locale), exact: true }).click();
+  await switcher.click();
+  if (compact) await page.keyboard.press('Escape');
+}
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const productId = '22222222-2222-4222-8222-222222222222';
@@ -219,8 +229,8 @@ test('customer consultation moves through staff offer, payment handoff, and comp
     return route.fulfill({ json: { status } });
   });
 
+  await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
   await page.goto('/consultations');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await expect(page.getByRole('heading', { name: 'Consultations' })).toBeVisible();
   await page.getByRole('radio', { name: /Energy consultation/ }).check();
   await page
@@ -266,7 +276,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
   await page.goto(`/consultations/${requestId}`);
   await expect(page.getByText('Supply assessment')).toBeVisible();
   await expect(page.getByText('Written report')).toBeVisible();
-  await page.getByRole('button', { name: 'Switch language to Persian' }).click();
+  await switchLanguage(page, 'en');
   await page.getByRole('button', { name: 'رد پیشنهاد' }).click();
   const declineReview = page.getByRole('dialog', { name: 'بررسی پیشنهاد مشاوره' });
   await expect(declineReview).toContainText('Supply assessment');
@@ -277,7 +287,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
     .analyze();
   expect(scan.violations).toEqual([]);
   await declineReview.getByRole('button', { name: 'بازگشت به پیشنهاد' }).click();
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+  await switchLanguage(page, 'fa');
   await page.getByRole('button', { name: 'Accept offer and pay' }).click();
   const review = page.getByRole('dialog', { name: 'Review consultation offer' });
   await expect(review).toContainText('500,000');

@@ -1,3 +1,5 @@
+import { ListPage } from '@barghsa/ui';
+import { t as appText } from '@barghsa/i18n/app';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Card, CardContent, FinancialReviewSummary, Input, Label } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
@@ -178,6 +180,9 @@ export default function AdminSavingOrdersPage() {
   const [stageReviewError, setStageReviewError] = useState(false);
   const reviewRequest = useRef(0);
   const [revision, setRevision] = useState(0);
+  const [listRevision, setListRevision] = useState(0);
+  const [detailRevision, setDetailRevision] = useState(0);
+  const [detailError, setDetailError] = useState(false);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'forbidden'>('loading');
 
   function refreshQueue() {
@@ -211,6 +216,8 @@ export default function AdminSavingOrdersPage() {
             setOrders([]);
             setNextAfter(null);
             setSelected(null);
+            reviewRequest.current += 1;
+            setDetail(null);
             setState('forbidden');
           }
           return null;
@@ -233,10 +240,11 @@ export default function AdminSavingOrdersPage() {
         if (!controller.signal.aborted) setState('error');
       });
     return () => controller.abort();
-  }, [after, lane, revision]);
+  }, [after, lane, revision, listRevision]);
 
   useEffect(() => {
     reviewRequest.current++;
+    setDetailError(false);
     setDecisionReview(null);
     setAddressReview(null);
     setHardwareReview(null);
@@ -275,10 +283,10 @@ export default function AdminSavingOrdersPage() {
         }
       })
       .catch(() => {
-        if (!controller.signal.aborted) setState('error');
+        if (!controller.signal.aborted) setDetailError(true);
       });
     return () => controller.abort();
-  }, [selected, revision]);
+  }, [selected, revision, detailRevision]);
 
   async function review(decision: 'approve' | 'reject') {
     if (!detail || reviewLoading || (decision === 'reject' && !note.trim())) return;
@@ -592,340 +600,373 @@ export default function AdminSavingOrdersPage() {
           <h1 className="text-2xl font-semibold">{copy('staffTitle')}</h1>
           <p className="text-muted-foreground">{copy('staffDescription')}</p>
         </div>
-        <Button variant="outline" onClick={refreshQueue}>
-          {copy('staffRefresh')}
-        </Button>
       </header>
       {time.notice}
-      <div className="flex flex-wrap gap-2" aria-label={copy('staffQueue')}>
-        <Button
-          variant={lane === 'review' ? 'secondary' : 'outline'}
-          aria-pressed={lane === 'review'}
-          onClick={() => changeLane('review')}
-        >
-          {copy('staffReviewLane')}
-        </Button>
-        <Button
-          variant={lane === 'fulfillment' ? 'secondary' : 'outline'}
-          aria-pressed={lane === 'fulfillment'}
-          onClick={() => changeLane('fulfillment')}
-        >
-          {copy('staffFulfillmentLane')}
-        </Button>
-      </div>
-      {state === 'loading' && <p role="status">{copy('staffLoading')}</p>}
-      {state === 'error' && <p role="alert">{copy('staffError')}</p>}
-      {state === 'forbidden' && <p role="alert">{copy('staffForbidden')}</p>}
-      <ContractCancellationRequestQueue
-        service="savings"
-        onOpenSavingOrder={(id) => {
-          setSelected(id);
-          setNote('');
-          setHandover('');
-        }}
-      />
-      {state === 'ready' && !orders.length && (
-        <p>{copy(lane === 'review' ? 'staffReviewEmpty' : 'staffFulfillmentEmpty')}</p>
-      )}
-      <div className="grid gap-5 xl:grid-cols-[minmax(16rem,1fr)_minmax(24rem,2fr)]">
-        <div className="space-y-2" aria-label={copy('staffQueue')}>
-          {orders.map((order) => (
-            <Button
-              key={order.id}
-              variant={selected === order.id ? 'secondary' : 'outline'}
-              className="h-auto w-full justify-start whitespace-normal p-4 text-start"
-              onClick={() => {
-                setSelected(order.id);
-                setNote('');
-                setHandover('');
-              }}
-            >
-              <span>
-                <strong className="block">{order.customerName}</strong>
-                <span className="block text-sm">
-                  {order.pricingSnapshot.plan?.title?.[locale] ?? order.id}
-                </span>
-                <span className="block text-xs">
-                  {copy(order.status)} · <bdi>{order.billIdentifier}</bdi>
-                </span>
-              </span>
+      <ListPage>
+        <ListPage.Toolbar
+          filters={
+            <div className="flex flex-wrap gap-2" aria-label={copy('staffQueue')}>
+              <Button
+                variant={lane === 'review' ? 'secondary' : 'outline'}
+                aria-pressed={lane === 'review'}
+                onClick={() => changeLane('review')}
+              >
+                {copy('staffReviewLane')}
+              </Button>
+              <Button
+                variant={lane === 'fulfillment' ? 'secondary' : 'outline'}
+                aria-pressed={lane === 'fulfillment'}
+                onClick={() => changeLane('fulfillment')}
+              >
+                {copy('staffFulfillmentLane')}
+              </Button>
+            </div>
+          }
+          actions={
+            <Button variant="outline" onClick={refreshQueue} disabled={state === 'loading'}>
+              {copy('staffRefresh')}
             </Button>
-          ))}
-          {nextAfter && (
-            <Button
-              variant="outline"
-              className="w-full"
-              disabled={state !== 'ready'}
-              onClick={() => setAfter(nextAfter)}
+          }
+        />
+        <ContractCancellationRequestQueue
+          service="savings"
+          onOpenSavingOrder={(id) => {
+            setSelected(id);
+            setNote('');
+            setHandover('');
+          }}
+        />
+        <div className="grid gap-5 xl:grid-cols-[minmax(16rem,1fr)_minmax(24rem,2fr)]">
+          <div className="space-y-2" aria-label={copy('staffQueue')}>
+            <ListPage.Content
+              loading={state === 'loading'}
+              error={state === 'error' || state === 'forbidden'}
+              empty={orders.length === 0}
+              retainContent={orders.length > 0 && state !== 'forbidden'}
+              loadingView={<p role="status">{copy('staffLoading')}</p>}
+              errorView={
+                state === 'forbidden' ? (
+                  <p role="alert">{copy('staffForbidden')}</p>
+                ) : (
+                  <div className="space-y-2">
+                    <p role="alert">{copy('staffError')}</p>
+                    <Button variant="outline" onClick={() => setListRevision((value) => value + 1)}>
+                      {appText('historyPagination.retry', locale)}
+                    </Button>
+                  </div>
+                )
+              }
+              emptyView={
+                <p>{copy(lane === 'review' ? 'staffReviewEmpty' : 'staffFulfillmentEmpty')}</p>
+              }
             >
-              {copy('staffMoreOrders')}
-            </Button>
+              {orders.map((order) => (
+                <Button
+                  key={order.id}
+                  variant={selected === order.id ? 'secondary' : 'outline'}
+                  className="h-auto w-full justify-start whitespace-normal p-4 text-start"
+                  onClick={() => {
+                    setSelected(order.id);
+                    setNote('');
+                    setHandover('');
+                  }}
+                >
+                  <span>
+                    <strong className="block">{order.customerName}</strong>
+                    <span className="block text-sm">
+                      {order.pricingSnapshot.plan?.title?.[locale] ?? order.id}
+                    </span>
+                    <span className="block text-xs">
+                      {copy(order.status)} · <bdi>{order.billIdentifier}</bdi>
+                    </span>
+                  </span>
+                </Button>
+              ))}
+            </ListPage.Content>
+            <ListPage.Pagination
+              kind="cursor"
+              hasMore={!!nextAfter && state !== 'error' && state !== 'forbidden'}
+              loading={state === 'loading'}
+              onNext={() => setAfter(nextAfter)}
+              label={appText('historyPagination.label', locale)}
+              nextLabel={copy('staffMoreOrders')}
+            />
+          </div>
+          {selected && !detail && !detailError && <p role="status">{copy('staffLoading')}</p>}
+          {selected && detailError && (
+            <div role="alert" className="space-y-2">
+              <p>{copy('staffError')}</p>
+              <Button variant="outline" onClick={() => setDetailRevision((value) => value + 1)}>
+                {appText('historyPagination.retry', locale)}
+              </Button>
+            </div>
           )}
-        </div>
-        {selected && !detail && <p role="status">{copy('staffLoading')}</p>}
-        {detail && (
-          <Card>
-            <CardContent className="space-y-5 pt-6">
-              <div>
-                <h2 className="text-xl font-semibold">{detail.customerName}</h2>
-                <p className="text-sm text-muted-foreground">
-                  {copy(detail.status)} · <bdi>{detail.id}</bdi>
-                </p>
-              </div>
-              <dl className="grid gap-3 text-sm sm:grid-cols-2">
+          {detail && (
+            <Card>
+              <CardContent className="space-y-5 pt-6">
                 <div>
-                  <dt>{copy('staffBill')}</dt>
-                  <dd>
-                    <bdi>{detail.billIdentifier}</bdi>
-                  </dd>
+                  <h2 className="text-xl font-semibold">{detail.customerName}</h2>
+                  <p className="text-sm text-muted-foreground">
+                    {copy(detail.status)} · <bdi>{detail.id}</bdi>
+                  </p>
                 </div>
-                <div>
-                  <dt>{copy('staffAddress')}</dt>
-                  <dd>{detail.addressSnapshot.full_address}</dd>
-                </div>
-                <div>
-                  <dt>{copy('stepHardware')}</dt>
-                  <dd>{detail.hardwareTitle[locale]}</dd>
-                </div>
-                <div>
-                  <dt>{copy('staffInvoice')}</dt>
-                  <dd>
-                    {copy(detail.invoiceState)} · {copy('staffTotal')}{' '}
-                    {money.money(detail.totalIrR)} · {copy('staffPaid')}{' '}
-                    {money.money(detail.paidIrR)}
-                  </dd>
-                </div>
-                <div>
-                  <dt>{copy('staffContract')}</dt>
-                  <dd>{copy(detail.contractState)}</dd>
-                </div>
-              </dl>
-              <SavingOrderRevisionHistory
-                revisions={detail.revisions ?? []}
-                formatTimestamp={time.format}
-              />
-              <SavingAddressAmendmentHistory
-                amendments={detail.addressAmendments ?? []}
-                formatTimestamp={time.format}
-              />
-              <SavingHardwareAmendmentHistory
-                amendments={detail.hardwareAmendments ?? []}
-                formatTimestamp={time.format}
-              />
-              <SavingHardwareUpgradeHistory
-                upgrades={detail.hardwareUpgrades ?? []}
-                onCancel={(upgrade, reason) => void cancelHardwareUpgrade(upgrade, reason)}
-              />
-              {upgradeCancellationReviewLoading ? (
-                <p role="status">{copy('staffUpgradeCancellationLoading')}</p>
-              ) : null}
-              {upgradeCancellationReviewError ? (
-                <p role="alert">{copy('staffReviewError')}</p>
-              ) : null}
-              {detail.canAmendAddress && (
-                <div className="space-y-3 rounded-md border p-4">
-                  <h3 className="font-semibold">{copy('staffAmendAddress')}</h3>
-                  <p className="text-sm text-muted-foreground">{copy('staffAmendAddressHelp')}</p>
-                  <Label htmlFor="saving-amend-address">{copy('stepAddress')}</Label>
-                  <select
-                    id="saving-amend-address"
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-                    value={amendAddressId}
-                    onChange={(event) => setAmendAddressId(event.target.value)}
-                  >
-                    {detail.addressOptions.map((address) => (
-                      <option key={address.id} value={address.id}>
-                        {address.fullAddress} · {address.postalCode}
-                      </option>
-                    ))}
-                  </select>
-                  <Label htmlFor="saving-amend-reason">{copy('staffAmendReason')}</Label>
-                  <Input
-                    id="saving-amend-reason"
-                    value={amendReason}
-                    maxLength={1000}
-                    onChange={(event) => setAmendReason(event.target.value)}
-                  />
-                  <Button
-                    variant="outline"
-                    disabled={
-                      !amendReason.trim() ||
-                      amendAddressId === detail.installationAddressId ||
-                      addressReviewLoading
-                    }
-                    onClick={() => void amendAddress()}
-                  >
-                    {copy('staffAmendAddress')}
-                  </Button>
-                  {addressReviewLoading ? (
-                    <p role="status">{copy('staffAddressReviewLoading')}</p>
-                  ) : null}
-                  {addressReviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
-                </div>
-              )}
-              {detail.canAmendHardware && (
-                <div className="space-y-3 rounded-md border p-4">
-                  <h3 className="font-semibold">{copy('staffAmendHardware')}</h3>
-                  <p className="text-sm text-muted-foreground">{copy('staffAmendHardwareHelp')}</p>
-                  <Label htmlFor="saving-amend-hardware">{copy('stepHardware')}</Label>
-                  <select
-                    id="saving-amend-hardware"
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-                    value={amendHardwareId}
-                    onChange={(event) => setAmendHardwareId(event.target.value)}
-                  >
-                    {detail.hardwareOptions.map((hardware) => (
-                      <option key={hardware.id} value={hardware.id}>
-                        {hardware.title[locale]}
-                        {BigInt(hardware.priceDeltaIrR) < 0n
-                          ? ` · ${copy('hardwareCreditIssued')}: ${money.money((-BigInt(hardware.priceDeltaIrR)).toString())}`
-                          : BigInt(hardware.priceDeltaIrR) > 0n
-                            ? ` · ${copy('hardwareAdditionalCharge')}: ${money.money(hardware.priceDeltaIrR)}`
-                            : ''}
-                      </option>
-                    ))}
-                  </select>
-                  <Label htmlFor="saving-amend-hardware-reason">{copy('staffAmendReason')}</Label>
-                  <Input
-                    id="saving-amend-hardware-reason"
-                    value={amendHardwareReason}
-                    maxLength={1000}
-                    onChange={(event) => setAmendHardwareReason(event.target.value)}
-                  />
-                  <Button
-                    variant="outline"
-                    disabled={
-                      !amendHardwareReason.trim() || !amendHardwareId || hardwareReviewLoading
-                    }
-                    onClick={() => void amendHardware()}
-                  >
-                    {copy('staffAmendHardware')}
-                  </Button>
-                  {hardwareReviewLoading ? (
-                    <p role="status">{copy('staffHardwareReviewLoading')}</p>
-                  ) : null}
-                  {hardwareReviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
-                </div>
-              )}
-              {detail.status === 'awaiting_staff_review' && (
-                <div className="flex flex-wrap gap-2">
-                  <Button disabled={reviewLoading} onClick={() => void review('approve')}>
-                    {copy('staffApprove')}
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    disabled={!note.trim() || reviewLoading}
-                    onClick={() => void review('reject')}
-                  >
-                    {copy('staffReject')}
-                  </Button>
-                  {reviewLoading ? <p role="status">{copy('staffReviewLoading')}</p> : null}
-                  {reviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
-                </div>
-              )}
-              <div className="space-y-2">
-                <Label htmlFor="saving-staff-note">{copy('staffReason')}</Label>
-                <Input
-                  id="saving-staff-note"
-                  value={note}
-                  maxLength={1000}
-                  onChange={(event) => setNote(event.target.value)}
+                <dl className="grid gap-3 text-sm sm:grid-cols-2">
+                  <div>
+                    <dt>{copy('staffBill')}</dt>
+                    <dd>
+                      <bdi>{detail.billIdentifier}</bdi>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{copy('staffAddress')}</dt>
+                    <dd>{detail.addressSnapshot.full_address}</dd>
+                  </div>
+                  <div>
+                    <dt>{copy('stepHardware')}</dt>
+                    <dd>{detail.hardwareTitle[locale]}</dd>
+                  </div>
+                  <div>
+                    <dt>{copy('staffInvoice')}</dt>
+                    <dd>
+                      {copy(detail.invoiceState)} · {copy('staffTotal')}{' '}
+                      {money.money(detail.totalIrR)} · {copy('staffPaid')}{' '}
+                      {money.money(detail.paidIrR)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{copy('staffContract')}</dt>
+                    <dd>{copy(detail.contractState)}</dd>
+                  </div>
+                </dl>
+                <SavingOrderRevisionHistory
+                  revisions={detail.revisions ?? []}
+                  formatTimestamp={time.format}
                 />
-              </div>
-              {detail.stages.some(
-                (stage) => stage.stage === 'equipment_handover' && stage.status === 'in_progress'
-              ) && (
+                <SavingAddressAmendmentHistory
+                  amendments={detail.addressAmendments ?? []}
+                  formatTimestamp={time.format}
+                />
+                <SavingHardwareAmendmentHistory
+                  amendments={detail.hardwareAmendments ?? []}
+                  formatTimestamp={time.format}
+                />
+                <SavingHardwareUpgradeHistory
+                  upgrades={detail.hardwareUpgrades ?? []}
+                  onCancel={(upgrade, reason) => void cancelHardwareUpgrade(upgrade, reason)}
+                />
+                {upgradeCancellationReviewLoading ? (
+                  <p role="status">{copy('staffUpgradeCancellationLoading')}</p>
+                ) : null}
+                {upgradeCancellationReviewError ? (
+                  <p role="alert">{copy('staffReviewError')}</p>
+                ) : null}
+                {detail.canAmendAddress && (
+                  <div className="space-y-3 rounded-md border p-4">
+                    <h3 className="font-semibold">{copy('staffAmendAddress')}</h3>
+                    <p className="text-sm text-muted-foreground">{copy('staffAmendAddressHelp')}</p>
+                    <Label htmlFor="saving-amend-address">{copy('stepAddress')}</Label>
+                    <select
+                      id="saving-amend-address"
+                      className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                      value={amendAddressId}
+                      onChange={(event) => setAmendAddressId(event.target.value)}
+                    >
+                      {detail.addressOptions.map((address) => (
+                        <option key={address.id} value={address.id}>
+                          {address.fullAddress} · {address.postalCode}
+                        </option>
+                      ))}
+                    </select>
+                    <Label htmlFor="saving-amend-reason">{copy('staffAmendReason')}</Label>
+                    <Input
+                      id="saving-amend-reason"
+                      value={amendReason}
+                      maxLength={1000}
+                      onChange={(event) => setAmendReason(event.target.value)}
+                    />
+                    <Button
+                      variant="outline"
+                      disabled={
+                        !amendReason.trim() ||
+                        amendAddressId === detail.installationAddressId ||
+                        addressReviewLoading
+                      }
+                      onClick={() => void amendAddress()}
+                    >
+                      {copy('staffAmendAddress')}
+                    </Button>
+                    {addressReviewLoading ? (
+                      <p role="status">{copy('staffAddressReviewLoading')}</p>
+                    ) : null}
+                    {addressReviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
+                  </div>
+                )}
+                {detail.canAmendHardware && (
+                  <div className="space-y-3 rounded-md border p-4">
+                    <h3 className="font-semibold">{copy('staffAmendHardware')}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {copy('staffAmendHardwareHelp')}
+                    </p>
+                    <Label htmlFor="saving-amend-hardware">{copy('stepHardware')}</Label>
+                    <select
+                      id="saving-amend-hardware"
+                      className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                      value={amendHardwareId}
+                      onChange={(event) => setAmendHardwareId(event.target.value)}
+                    >
+                      {detail.hardwareOptions.map((hardware) => (
+                        <option key={hardware.id} value={hardware.id}>
+                          {hardware.title[locale]}
+                          {BigInt(hardware.priceDeltaIrR) < 0n
+                            ? ` · ${copy('hardwareCreditIssued')}: ${money.money((-BigInt(hardware.priceDeltaIrR)).toString())}`
+                            : BigInt(hardware.priceDeltaIrR) > 0n
+                              ? ` · ${copy('hardwareAdditionalCharge')}: ${money.money(hardware.priceDeltaIrR)}`
+                              : ''}
+                        </option>
+                      ))}
+                    </select>
+                    <Label htmlFor="saving-amend-hardware-reason">{copy('staffAmendReason')}</Label>
+                    <Input
+                      id="saving-amend-hardware-reason"
+                      value={amendHardwareReason}
+                      maxLength={1000}
+                      onChange={(event) => setAmendHardwareReason(event.target.value)}
+                    />
+                    <Button
+                      variant="outline"
+                      disabled={
+                        !amendHardwareReason.trim() || !amendHardwareId || hardwareReviewLoading
+                      }
+                      onClick={() => void amendHardware()}
+                    >
+                      {copy('staffAmendHardware')}
+                    </Button>
+                    {hardwareReviewLoading ? (
+                      <p role="status">{copy('staffHardwareReviewLoading')}</p>
+                    ) : null}
+                    {hardwareReviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
+                  </div>
+                )}
+                {detail.status === 'awaiting_staff_review' && (
+                  <div className="flex flex-wrap gap-2">
+                    <Button disabled={reviewLoading} onClick={() => void review('approve')}>
+                      {copy('staffApprove')}
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      disabled={!note.trim() || reviewLoading}
+                      onClick={() => void review('reject')}
+                    >
+                      {copy('staffReject')}
+                    </Button>
+                    {reviewLoading ? <p role="status">{copy('staffReviewLoading')}</p> : null}
+                    {reviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
+                  </div>
+                )}
                 <div className="space-y-2">
-                  <Label htmlFor="saving-handover">{copy('staffHandover')}</Label>
+                  <Label htmlFor="saving-staff-note">{copy('staffReason')}</Label>
                   <Input
-                    id="saving-handover"
-                    value={handover}
+                    id="saving-staff-note"
+                    value={note}
                     maxLength={1000}
-                    onChange={(event) => setHandover(event.target.value)}
+                    onChange={(event) => setNote(event.target.value)}
                   />
                 </div>
-              )}
-              <ol className="space-y-2">
-                {detail.stages.map((stage) => {
-                  const prerequisites = stagePrerequisites(stage.stage, detail);
-                  return (
-                    <li key={stage.stage} className="rounded-md border p-3">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span>
-                          <strong>{copy(stage.stage)}</strong> · {copy(stage.status)}
-                        </span>
-                        {stage.status === 'in_progress' && (
-                          <span className="flex gap-2">
-                            <Button
-                              size="sm"
-                              disabled={
-                                !note.trim() ||
-                                prerequisites.length > 0 ||
-                                (stage.stage === 'equipment_handover' && !handover.trim())
-                              }
-                              onClick={() => void advance(stage.stage, 'complete')}
-                            >
-                              {copy('staffComplete')}
-                            </Button>
-                            {stage.stage === 'equipment_handover' && (
+                {detail.stages.some(
+                  (stage) => stage.stage === 'equipment_handover' && stage.status === 'in_progress'
+                ) && (
+                  <div className="space-y-2">
+                    <Label htmlFor="saving-handover">{copy('staffHandover')}</Label>
+                    <Input
+                      id="saving-handover"
+                      value={handover}
+                      maxLength={1000}
+                      onChange={(event) => setHandover(event.target.value)}
+                    />
+                  </div>
+                )}
+                <ol className="space-y-2">
+                  {detail.stages.map((stage) => {
+                    const prerequisites = stagePrerequisites(stage.stage, detail);
+                    return (
+                      <li key={stage.stage} className="rounded-md border p-3">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span>
+                            <strong>{copy(stage.stage)}</strong> · {copy(stage.status)}
+                          </span>
+                          {stage.status === 'in_progress' && (
+                            <span className="flex gap-2">
                               <Button
                                 size="sm"
-                                variant="outline"
-                                disabled={!note.trim()}
-                                onClick={() => void advance(stage.stage, 'skip')}
+                                disabled={
+                                  !note.trim() ||
+                                  prerequisites.length > 0 ||
+                                  (stage.stage === 'equipment_handover' && !handover.trim())
+                                }
+                                onClick={() => void advance(stage.stage, 'complete')}
                               >
-                                {copy('staffSkip')}
+                                {copy('staffComplete')}
                               </Button>
-                            )}
-                          </span>
+                              {stage.stage === 'equipment_handover' && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  disabled={!note.trim()}
+                                  onClick={() => void advance(stage.stage, 'skip')}
+                                >
+                                  {copy('staffSkip')}
+                                </Button>
+                              )}
+                            </span>
+                          )}
+                        </div>
+                        {stage.explanation && <p className="mt-2 text-sm">{stage.explanation}</p>}
+                        {stage.status === 'in_progress' && prerequisites.length > 0 && (
+                          <p className="mt-2 text-sm text-muted-foreground">
+                            {prerequisites.map((reason) => copy(reason)).join(' ')}
+                          </p>
                         )}
-                      </div>
-                      {stage.explanation && <p className="mt-2 text-sm">{stage.explanation}</p>}
-                      {stage.status === 'in_progress' && prerequisites.length > 0 && (
-                        <p className="mt-2 text-sm text-muted-foreground">
-                          {prerequisites.map((reason) => copy(reason)).join(' ')}
-                        </p>
-                      )}
-                      {stage.handover_description && (
-                        <p className="mt-2 text-sm">{stage.handover_description}</p>
-                      )}
-                    </li>
-                  );
-                })}
-              </ol>
-              {stageReviewLoading ? <p role="status">{copy('staffStageReviewLoading')}</p> : null}
-              {stageReviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
-              <div>
-                <h3 className="font-semibold">{copy('staffHistory')}</h3>
-                {detail.events.length === 0 ? (
-                  <p className="text-sm">{copy('staffNoHistory')}</p>
-                ) : (
-                  <ol className="space-y-2 text-sm">
-                    {detail.events.map((event) => (
-                      <li key={event.id} className="border-s-2 ps-3">
-                        <strong>{copy(event.stage)}</strong> · {copy(event.from_status)} →{' '}
-                        {copy(event.to_status)}
-                        <span className="block text-muted-foreground">
-                          {event.actor_user_id} ·{' '}
-                          <time dateTime={event.created_at}>{time.format(event.created_at)}</time>
-                        </span>
-                        <span className="block">{event.explanation}</span>
+                        {stage.handover_description && (
+                          <p className="mt-2 text-sm">{stage.handover_description}</p>
+                        )}
                       </li>
-                    ))}
-                  </ol>
-                )}
-              </div>
-              <SavingOrderDocuments orderId={detail.orderId} profileId={detail.profileId} staff />
-              <SavingOrderComments
-                key={detail.id}
-                orderId={detail.id}
-                staff
-                formatTimestamp={time.format}
-              />
-            </CardContent>
-          </Card>
-        )}
-      </div>
+                    );
+                  })}
+                </ol>
+                {stageReviewLoading ? <p role="status">{copy('staffStageReviewLoading')}</p> : null}
+                {stageReviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
+                <div>
+                  <h3 className="font-semibold">{copy('staffHistory')}</h3>
+                  {detail.events.length === 0 ? (
+                    <p className="text-sm">{copy('staffNoHistory')}</p>
+                  ) : (
+                    <ol className="space-y-2 text-sm">
+                      {detail.events.map((event) => (
+                        <li key={event.id} className="border-s-2 ps-3">
+                          <strong>{copy(event.stage)}</strong> · {copy(event.from_status)} →{' '}
+                          {copy(event.to_status)}
+                          <span className="block text-muted-foreground">
+                            {event.actor_user_id} ·{' '}
+                            <time dateTime={event.created_at}>{time.format(event.created_at)}</time>
+                          </span>
+                          <span className="block">{event.explanation}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+                </div>
+                <SavingOrderDocuments orderId={detail.orderId} profileId={detail.profileId} staff />
+                <SavingOrderComments
+                  key={detail.id}
+                  orderId={detail.id}
+                  staff
+                  formatTimestamp={time.format}
+                />
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </ListPage>
       {action && (
         <TeamActionDialog
           action={action}

@@ -82,8 +82,22 @@ test('staff delivery and completion controls explain current prerequisites', asy
     })
   );
 
+  await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        userId: 'saving-staff',
+        isStaff: true,
+        operatingContext: 'staff',
+        canSwitchContext: true,
+        requiresTosAcceptance: false,
+      },
+    })
+  );
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
   await page.goto('/admin/saving-orders');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await page.getByRole('button', { name: 'Fulfillment', exact: true }).click();
   await page.getByRole('button', { name: /Buyer.*Home saving plan/ }).click();
   await page.getByRole('textbox', { name: 'Reason or progress note' }).fill('Ready to advance');

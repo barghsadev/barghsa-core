@@ -38,4 +38,4 @@ Initial browser failures exposed mobile input overflow and a non-keyboard-access
 
 ## Publication
 
-The preceding customer-list batch is published as `7dfd27f6bb2cc70f692e5eb340e1fce2e50216c0`; CI run `36780246336` passes all five gates under the existing temporary fast mode. The combined-coverage gate remains an exemption, not measured coverage. This staff batch is committed and pushed directly to main after final review and related checks. Its exact remote commit and CI are verified after push.
+The preceding customer-list batch is published as `7dfd27f6bb2cc70f692e5eb340e1fce2e50216c0`; CI run `36780246336` passes all five gates under the existing temporary fast mode. The combined-coverage gate remains an exemption, not measured coverage. This staff batch is published directly to main as `7f54512d6c69e3a43783594ad0e5518065324bde`; its remote commit is verified and CI run `36782061024` passes all five gates.
