@@ -44,14 +44,8 @@ for (const locale of ['en', 'fa'] as const) {
   test(`advanced electricity journey follows a localized bundle through payment and contract tracking (${locale})`, async ({
     page,
   }) => {
-    await page.clock.install({ time: new Date('2026-09-23T10:00:00.000Z') });
-    await page.addInitScript((value) => {
-      const apply = () => {
-        document.documentElement.lang = value;
-      };
-      apply();
-      new MutationObserver(apply).observe(document, { childList: true });
-    }, locale);
+    await page.clock.setFixedTime(new Date('2026-09-23T10:00:00.000Z'));
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({
@@ -360,9 +354,6 @@ for (const locale of ['en', 'fa'] as const) {
     );
 
     await page.goto('/electricity');
-    if (locale === 'en') {
-      await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
-    }
     await page
       .getByRole('link', {
         name: locale === 'fa' ? 'سفارش پیشرفته' : 'Advanced order',
@@ -495,6 +486,7 @@ for (const locale of ['en', 'fa'] as const) {
 test('electricity order, paid invoice and published contract keep the selected language', async ({
   page,
 }) => {
+  await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({ json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false } })
@@ -605,7 +597,6 @@ test('electricity order, paid invoice and published contract keep the selected l
   );
 
   await page.goto('/electricity/orders');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await expect(page.getByRole('heading', { name: 'Electricity orders' })).toBeVisible();
   await page.getByRole('link', { name: new RegExp(orderId) }).click();
   await expect(page).toHaveURL(new RegExp(`/electricity/orders/${orderId}$`));

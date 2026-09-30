@@ -1,6 +1,14 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Button, Card, CardContent, FinancialReviewSummary, Input, Label } from '@barghsa/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  FinancialReviewSummary,
+  Input,
+  Label,
+  ListPage,
+} from '@barghsa/ui';
 import {
   parseElectricityPriceAdjustmentReview,
   type ElectricityPriceAdjustmentCalculation,
@@ -57,7 +65,6 @@ function bpsToPercent(value: string, locale: 'en' | 'fa') {
 
 export default function AdminElectricityPriceAdjustmentsPage() {
   const locale = useLocale();
-  const numbers = useNumberFormatting(locale);
   const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
   const initialContractId =
     typeof window === 'undefined'
@@ -65,13 +72,51 @@ export default function AdminElectricityPriceAdjustmentsPage() {
       : (new URLSearchParams(window.location.search).get('contractId') ?? '');
   const [contractInput, setContractInput] = useState(initialContractId);
   const [contractId, setContractId] = useState<string | null>(initialContractId || null);
+  return (
+    <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <header className="space-y-1">
+        <h1 className="text-2xl font-semibold">{copy('title')}</h1>
+        <p className="text-muted-foreground">{copy('description')}</p>
+      </header>
+      <form
+        className="flex flex-wrap items-end gap-3"
+        onSubmit={(event) => {
+          event.preventDefault();
+          setContractId(contractInput.trim());
+        }}
+      >
+        <div className="min-w-64 flex-1 space-y-1">
+          <Label htmlFor="electricity-price-contract">{copy('contractId')}</Label>
+          <Input
+            id="electricity-price-contract"
+            dir="ltr"
+            value={contractInput}
+            onChange={(event) => setContractInput(event.target.value)}
+            required
+          />
+        </div>
+        <Button type="submit">{copy('open')}</Button>
+      </form>
+      {contractId ? <PriceWorkspace key={contractId} contractId={contractId} /> : null}
+    </section>
+  );
+}
+
+function PriceWorkspace({ contractId }: { contractId: string }) {
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
   const [data, setData] = useState<StaffPriceState | null>(null);
   const [effectiveFrom, setEffectiveFrom] = useState('');
   const [percentage, setPercentage] = useState('');
   const [reason, setReason] = useState('');
   const [basis, setBasis] = useState('');
   const [revision, setRevision] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<'load' | 'forbidden' | null>(null);
+  const accessDenied = useRef(false);
+  const reviewGeneration = useRef(0);
+  const acceptedData = useRef<StaffPriceState | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<'load' | 'save' | 'reviewError' | 'forbidden' | null>(null);
   const [action, setAction] = useState<TeamAction | null>(null);
@@ -83,8 +128,7 @@ export default function AdminElectricityPriceAdjustmentsPage() {
     if (!contractId) return;
     const controller = new AbortController();
     setLoading(true);
-    setData(null);
-    setError(null);
+    setLoadError(null);
     void fetch(
       `/api/staff/electricity/contracts/${encodeURIComponent(contractId)}/price-adjustments`,
       {
@@ -93,18 +137,34 @@ export default function AdminElectricityPriceAdjustmentsPage() {
       }
     )
       .then(async (response) => {
-        if (response.status === 403) throw new Error('forbidden');
+        if ([401, 403].includes(response.status)) throw new Error('forbidden');
         if (!response.ok) throw new Error('load');
         return response.json() as Promise<StaffPriceState>;
       })
       .then((value) => {
-        if (!controller.signal.aborted) setData(value);
+        if (controller.signal.aborted) return;
+        if (value.contractId !== contractId || !Array.isArray(value.adjustments))
+          throw new Error('load');
+        if (
+          acceptedData.current &&
+          JSON.stringify(acceptedData.current) !== JSON.stringify(value)
+        ) {
+          ++reviewGeneration.current;
+          setReview(null);
+          setSelectedAdjustment(null);
+          setAction(null);
+          setSaving(false);
+          setProposalKey(crypto.randomUUID());
+        }
+        accessDenied.current = false;
+        acceptedData.current = value;
+        setData(value);
       })
       .catch((caught: unknown) => {
-        if (!controller.signal.aborted)
-          setError(
-            caught instanceof Error && caught.message === 'forbidden' ? 'forbidden' : 'load'
-          );
+        if (controller.signal.aborted) return;
+        const forbidden = caught instanceof Error && caught.message === 'forbidden';
+        setLoadError(forbidden ? 'forbidden' : 'load');
+        if (forbidden) deny();
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
@@ -112,11 +172,48 @@ export default function AdminElectricityPriceAdjustmentsPage() {
     return () => controller.abort();
   }, [contractId, revision]);
 
+  useEffect(
+    () => () => {
+      ++reviewGeneration.current;
+    },
+    []
+  );
+  function deny() {
+    accessDenied.current = true;
+    ++reviewGeneration.current;
+    acceptedData.current = null;
+    setData(null);
+    setEffectiveFrom('');
+    setPercentage('');
+    setReason('');
+    setBasis('');
+    setReview(null);
+    setSelectedAdjustment(null);
+    setAction(null);
+    setSaving(false);
+    setProposalKey(crypto.randomUUID());
+    setError(null);
+    setLoadError('forbidden');
+  }
+
   async function propose(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const percentageBps = percentToBps(percentage);
-    if (!data || !percentageBps || !effectiveFrom || !reason.trim() || !basis.trim() || saving)
+    if (
+      !data ||
+      !data.canPropose ||
+      data.adjustments.some((item) => item.status === 'proposed') ||
+      loading ||
+      loadError ||
+      accessDenied.current ||
+      !percentageBps ||
+      !effectiveFrom ||
+      !reason.trim() ||
+      !basis.trim() ||
+      saving
+    )
       return;
+    const generation = ++reviewGeneration.current;
     setSaving(true);
     setError(null);
     try {
@@ -136,12 +233,14 @@ export default function AdminElectricityPriceAdjustmentsPage() {
           body: JSON.stringify(proposal),
         }
       );
-      if (response.status === 403) {
-        setError('forbidden');
+      if (generation !== reviewGeneration.current || accessDenied.current) return;
+      if ([401, 403].includes(response.status)) {
+        deny();
         return;
       }
       if (!response.ok) throw new Error('Review failed');
       const financialReview = parseElectricityPriceAdjustmentReview(await response.json());
+      if (generation !== reviewGeneration.current || accessDenied.current) return;
       if (
         !financialReview ||
         financialReview.scope.resourceId !== data.contractId ||
@@ -169,13 +268,24 @@ export default function AdminElectricityPriceAdjustmentsPage() {
         forbiddenMessage: copy('forbidden'),
       });
     } catch {
-      setError('reviewError');
+      if (generation === reviewGeneration.current) setError('reviewError');
     } finally {
-      setSaving(false);
+      if (generation === reviewGeneration.current) setSaving(false);
     }
   }
 
   function confirm(adjustment: PriceAdjustment, operation: 'finalize' | 'cancel') {
+    if (
+      !data ||
+      loading ||
+      loadError ||
+      accessDenied.current ||
+      adjustment.status !== 'proposed' ||
+      !(operation === 'finalize' ? data.canFinalize : data.canCancel)
+    )
+      return;
+    ++reviewGeneration.current;
+    setSaving(false);
     setReview(null);
     setSelectedAdjustment(adjustment);
     setAction({
@@ -194,32 +304,34 @@ export default function AdminElectricityPriceAdjustmentsPage() {
     });
   }
 
+  const confirmationGeneration = reviewGeneration.current;
   const proposed =
     data?.adjustments.some((adjustment) => adjustment.status === 'proposed') ?? false;
   return (
-    <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold">{copy('title')}</h1>
-        <p className="text-muted-foreground">{copy('description')}</p>
-      </header>
-      <form
-        className="flex flex-wrap items-end gap-3"
-        onSubmit={(event) => {
-          event.preventDefault();
-          setContractId(contractInput.trim());
-        }}
-      >
-        <div className="min-w-64 flex-1 space-y-1">
-          <Label htmlFor="electricity-price-contract">{copy('contractId')}</Label>
-          <Input
-            id="electricity-price-contract"
-            value={contractInput}
-            onChange={(event) => setContractInput(event.target.value)}
-            required
-          />
+    <ListPage role="region" aria-label={copy('listTitle')}>
+      <ListPage.Toolbar>
+        <Button
+          variant="outline"
+          disabled={loading}
+          onClick={() => setRevision((value) => value + 1)}
+        >
+          {copy('refresh')}
+        </Button>
+      </ListPage.Toolbar>
+      {loadError ? (
+        <div role="alert" className="space-y-2">
+          <p>{copy(loadError)}</p>
+          {loadError !== 'forbidden' && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setRevision((value) => value + 1)}
+            >
+              {copy('retry')}
+            </Button>
+          )}
         </div>
-        <Button type="submit">{copy('open')}</Button>
-      </form>
+      ) : null}
       {loading ? <p role="status">{copy('loading')}</p> : null}
       {error ? <p role="alert">{copy(error)}</p> : null}
       {data ? (
@@ -228,9 +340,6 @@ export default function AdminElectricityPriceAdjustmentsPage() {
             <p className="text-sm text-muted-foreground">
               {copy('termEnds')}: {new Date(data.periodEnd).toLocaleString(locale)}
             </p>
-            <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
-              {copy('refresh')}
-            </Button>
           </div>
           {!data.canPropose && !proposed ? (
             <p role="status">{copy(data.blockedByIncrease ? 'waitForIncrease' : 'notEligible')}</p>
@@ -285,7 +394,10 @@ export default function AdminElectricityPriceAdjustmentsPage() {
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <Button type="submit" disabled={saving || !percentToBps(percentage)}>
+                    <Button
+                      type="submit"
+                      disabled={saving || loading || !!loadError || !percentToBps(percentage)}
+                    >
                       {copy('reviewProposal')}
                     </Button>
                     {saving ? <p role="status">{copy('reviewLoading')}</p> : null}
@@ -296,65 +408,85 @@ export default function AdminElectricityPriceAdjustmentsPage() {
           ) : proposed ? (
             <p className="text-sm">{copy('resolveProposal')}</p>
           ) : null}
-          <div className="space-y-3">
-            {data.adjustments.map((adjustment) => (
-              <Card key={adjustment.adjustmentId}>
-                <CardContent className="space-y-3 pt-6 text-sm">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h2 className="font-semibold">{copy('adjustment')}</h2>
-                    <span>{copy(`status.${adjustment.status}`)}</span>
-                  </div>
-                  <p>
-                    {copy('effective')}: {new Date(adjustment.effectiveFrom).toLocaleString(locale)}
-                  </p>
-                  <p>
-                    {copy('reason')}: {adjustment.reason}
-                  </p>
-                  <p>
-                    {copy('basis')}: {adjustment.contractualBasis}
-                  </p>
-                  <p>
-                    {copy('oldFuture')}:{' '}
-                    {numbers.irrDigits(adjustment.calculation.quote.oldFutureIrR)} IRR
-                  </p>
-                  <p>
-                    {copy('newFuture')}:{' '}
-                    {numbers.irrDigits(adjustment.calculation.quote.newFutureIrR)} IRR
-                  </p>
-                  <p>
-                    {copy('amount')}: {numbers.irrDigits(adjustment.adjustmentAmountIrR)} IRR
-                  </p>
-                  {adjustment.adjustmentInvoiceId ? (
-                    <p>
-                      {copy('invoice')}:{' '}
-                      <a
-                        className="text-primary underline"
-                        href={`/admin/invoices?invoiceId=${encodeURIComponent(adjustment.adjustmentInvoiceId)}`}
-                      >
-                        {adjustment.adjustmentInvoiceId}
-                      </a>
-                    </p>
-                  ) : null}
-                  {adjustment.status === 'proposed' ? (
-                    <div className="flex flex-wrap gap-2">
-                      {data.canFinalize ? (
-                        <Button onClick={() => confirm(adjustment, 'finalize')}>
-                          {copy('finalize')}
-                        </Button>
-                      ) : (
-                        <p>{copy('finalizePermission')}</p>
-                      )}
-                      {data.canCancel ? (
-                        <Button variant="outline" onClick={() => confirm(adjustment, 'cancel')}>
-                          {copy('cancel')}
-                        </Button>
-                      ) : null}
+          <ListPage.Content
+            loading={loading}
+            error={!!loadError}
+            empty={!data.adjustments.length}
+            retainContent={!!data.adjustments.length}
+            emptyView={<p>{copy('empty')}</p>}
+            loadingView={null}
+            errorView={null}
+          >
+            <div className="space-y-3">
+              {data.adjustments.map((adjustment) => (
+                <Card key={adjustment.adjustmentId}>
+                  <CardContent className="space-y-3 pt-6 text-sm">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <h2 className="font-semibold">{copy('adjustment')}</h2>
+                      <span>{copy(`status.${adjustment.status}`)}</span>
                     </div>
-                  ) : null}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                    <p>
+                      {copy('effective')}:{' '}
+                      {new Date(adjustment.effectiveFrom).toLocaleString(locale)}
+                    </p>
+                    <p>
+                      {copy('reason')}: {adjustment.reason}
+                    </p>
+                    <p>
+                      {copy('basis')}: {adjustment.contractualBasis}
+                    </p>
+                    <p>
+                      {copy('oldFuture')}:{' '}
+                      {numbers.irrDigits(adjustment.calculation.quote.oldFutureIrR)} IRR
+                    </p>
+                    <p>
+                      {copy('newFuture')}:{' '}
+                      {numbers.irrDigits(adjustment.calculation.quote.newFutureIrR)} IRR
+                    </p>
+                    <p>
+                      {copy('amount')}: {numbers.irrDigits(adjustment.adjustmentAmountIrR)} IRR
+                    </p>
+                    {adjustment.adjustmentInvoiceId ? (
+                      <p>
+                        {copy('invoice')}:{' '}
+                        <a
+                          className="text-primary underline"
+                          href={`/admin/invoices?invoiceId=${encodeURIComponent(adjustment.adjustmentInvoiceId)}`}
+                        >
+                          <bdi dir="ltr" className="break-all">
+                            {adjustment.adjustmentInvoiceId}
+                          </bdi>
+                        </a>
+                      </p>
+                    ) : null}
+                    {adjustment.status === 'proposed' ? (
+                      <div className="flex flex-wrap gap-2">
+                        {data.canFinalize ? (
+                          <Button
+                            disabled={loading || !!loadError}
+                            onClick={() => confirm(adjustment, 'finalize')}
+                          >
+                            {copy('finalize')}
+                          </Button>
+                        ) : (
+                          <p>{copy('finalizePermission')}</p>
+                        )}
+                        {data.canCancel ? (
+                          <Button
+                            variant="outline"
+                            disabled={loading || !!loadError}
+                            onClick={() => confirm(adjustment, 'cancel')}
+                          >
+                            {copy('cancel')}
+                          </Button>
+                        ) : null}
+                      </div>
+                    ) : null}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </ListPage.Content>
         </div>
       ) : null}
       {action ? (
@@ -379,11 +511,15 @@ export default function AdminElectricityPriceAdjustmentsPage() {
             ) : null
           }
           onClose={() => {
+            if (confirmationGeneration !== reviewGeneration.current) return;
+            ++reviewGeneration.current;
             setAction(null);
             setReview(null);
             setSelectedAdjustment(null);
           }}
           onSuccess={async () => {
+            if (accessDenied.current || confirmationGeneration !== reviewGeneration.current) return;
+            ++reviewGeneration.current;
             if (review) {
               setProposalKey(crypto.randomUUID());
               setReason('');
@@ -398,7 +534,7 @@ export default function AdminElectricityPriceAdjustmentsPage() {
           }}
         />
       ) : null}
-    </section>
+    </ListPage>
   );
 }
 

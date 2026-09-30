@@ -41,4 +41,4 @@ Sixteen new bilingual recovery scenarios and eight existing document upload/revi
 
 The preceding support queue batch is published as `279f98f14543ef3461e43cfca69dd0917bea60e0`; CI run `36788682899` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.
 
-This document batch is committed and pushed directly to main after review and related checks. Its remote commit and CI are verified after publication.
+This document batch is published as `2934bcadfc23ab1837dc92456a4b87e6fc1b0a2b`; CI run `36790376542` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.
