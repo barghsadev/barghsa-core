@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Solar document-set decision review](batches/2026-09-30-solar-document-set-review.md) binds additional-file requests and advancement to the postal stage to the current document set and exact outcome. Staff see the server snapshot before confirming; changes invalidate it and audit retains the confirmed version.
+
 [Solar postal-decision review](batches/2026-09-30-solar-postal-decision-review.md) binds staff receipt, incomplete, and not-received decisions to the current shipment and resulting status. The staff dialog shows the authoritative courier, tracking, date, reason, and outcome, and audit retains the confirmed snapshot. Cross-command review work remains partial.
 
 [Solar final-decision review](batches/2026-09-30-solar-final-decision-review.md) binds approval, rejection and closure without a contract to the current request, postal state, reason and resulting status. The staff dialog displays the authoritative outcome before confirmation, and the audit retains the reviewed snapshot. Cross-command review work remains partial.

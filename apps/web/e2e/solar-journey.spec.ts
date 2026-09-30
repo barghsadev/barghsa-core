@@ -254,10 +254,39 @@ test('solar request moves from customer upload through staff review and postal r
       expect(route.request().postDataJSON()).toEqual({ expectedRevision: document.revision });
       expect(requestStatus).toBe('documents_under_review');
       staffDocumentStatus = 'approved';
+      documentStatus = 'Approved';
       return route.fulfill({ json: { status: staffDocumentStatus } });
     }
   );
+  const setReviewHash = 'b'.repeat(64);
+  await page.route(
+    `**/api/admin/solar/requests/${requestId}/documents/review-set-decision`,
+    (route) => {
+      expect(route.request().postDataJSON()).toEqual({ decision: 'advance' });
+      return route.fulfill({
+        json: {
+          hash: setReviewHash,
+          data: {
+            requestId,
+            currentStatus: 'documents_under_review',
+            documents: [
+              {
+                documentId,
+                fileName: document.originalName,
+                staffStatus: staffDocumentStatus,
+                state: documentStatus,
+              },
+            ],
+            existingRequests: [],
+            description: null,
+            nextStatus: 'waiting_for_postal_submission',
+          },
+        },
+      });
+    }
+  );
   await page.route(`**/api/admin/solar/requests/${requestId}/documents/advance`, (route) => {
+    expect(route.request().postDataJSON()).toEqual({ expectedReviewHash: setReviewHash });
     expect(staffDocumentStatus).toBe('approved');
     requestStatus = 'waiting_for_postal_submission';
     return route.fulfill({ json: { status: requestStatus } });
@@ -417,6 +446,8 @@ test('solar request moves from customer upload through staff review and postal r
   await page
     .getByRole('button', { name: 'Documents sufficient — advance to postal stage' })
     .click();
+  await expect(page.getByRole('dialog').getByText('Review document-stage decision')).toBeVisible();
+  await expect(page.getByRole('dialog').getByText('site-plan.pdf')).toBeVisible();
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
   await expect.poll(() => requestStatus).toBe('waiting_for_postal_submission');
 

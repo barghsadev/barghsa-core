@@ -1,10 +1,12 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { Button, Input, Label } from '@barghsa/ui';
+import { Button, FinancialReviewSummary, Input, Label } from '@barghsa/ui';
 import { tSolar } from '@barghsa/i18n/solar';
+import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { withCsrf } from '../lib/csrf.js';
 
 interface RequestRow {
   id: string;
@@ -46,6 +48,22 @@ interface Guidance {
   en: string;
   suggestions: Array<{ fa: string; en: string }>;
 }
+interface SetReview {
+  hash: string;
+  data: {
+    requestId: string;
+    currentStatus: string;
+    documents: Array<{
+      documentId: string;
+      fileName: string;
+      staffStatus: string;
+      state: string;
+    }>;
+    existingRequests: Array<{ id: string; description: string }>;
+    description: string | null;
+    nextStatus: string;
+  };
+}
 
 export function AdminSolarDocumentsPage() {
   const locale = useLocale();
@@ -62,7 +80,8 @@ export function AdminSolarDocumentsPage() {
     [enSuggestions, setEnSuggestions] = useState('');
   const [reason, setReason] = useState('');
   const [preview, setPreview] = useState<string | null>(null);
-  const [action, setAction] = useState<TeamAction | null>(null);
+  const [action, setAction] = useState<(TeamAction & { setReview?: SetReview }) | null>(null);
+  const [preparingDecision, setPreparingDecision] = useState(false);
   const [revision, setRevision] = useState(0);
   const [before, setBefore] = useState<string | null>(null);
   const [nextBefore, setNextBefore] = useState<string | null>(null);
@@ -223,6 +242,49 @@ export function AdminSolarDocumentsPage() {
       },
     });
   }
+  async function prepareSetDecision(decision: 'request_additional' | 'advance') {
+    if (!selected || preparingDecision) return;
+    const requestId = selected;
+    const description = reason.trim();
+    if (decision === 'request_additional' && !description) {
+      setError(true);
+      return;
+    }
+    setPreparingDecision(true);
+    setError(false);
+    try {
+      const response = await fetch(
+        `/api/admin/solar/requests/${encodeURIComponent(requestId)}/documents/review-set-decision`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({
+            decision,
+            ...(decision === 'request_additional' ? { description } : {}),
+          }),
+        }
+      );
+      if (!response.ok) throw new Error('review');
+      const setReview = (await response.json()) as SetReview;
+      setAction({
+        title: copy(decision === 'advance' ? 'advancePostal' : 'requestAdditional'),
+        description: requestId,
+        method: 'POST',
+        path: `/api/admin/solar/requests/${encodeURIComponent(requestId)}/documents/${decision === 'advance' ? 'advance' : 'request-additional'}`,
+        body: {
+          ...(decision === 'request_additional' ? { description } : {}),
+          expectedReviewHash: setReview.hash,
+        },
+        conflictMessage: copy('documentSetReviewChanged'),
+        setReview,
+      });
+    } catch {
+      setError(true);
+    } finally {
+      setPreparingDecision(false);
+    }
+  }
   return (
     <main className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('staffTitle')}</h1>
@@ -360,29 +422,12 @@ export function AdminSolarDocumentsPage() {
           <div className="flex flex-wrap gap-2">
             <Button
               variant="outline"
-              disabled={!reason.trim()}
-              onClick={() =>
-                setAction({
-                  title: copy('requestAdditional'),
-                  description: reason.trim(),
-                  method: 'POST',
-                  path: `/api/admin/solar/requests/${selected}/documents/request-additional`,
-                  body: { description: reason.trim() },
-                })
-              }
+              disabled={!reason.trim() || preparingDecision}
+              onClick={() => void prepareSetDecision('request_additional')}
             >
               {copy('requestAdditional')}
             </Button>
-            <Button
-              onClick={() =>
-                setAction({
-                  title: copy('advancePostal'),
-                  description: copy('advancePostal'),
-                  method: 'POST',
-                  path: `/api/admin/solar/requests/${selected}/documents/advance`,
-                })
-              }
-            >
+            <Button disabled={preparingDecision} onClick={() => void prepareSetDecision('advance')}>
               {copy('advancePostal')}
             </Button>
           </div>
@@ -415,6 +460,49 @@ export function AdminSolarDocumentsPage() {
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
+          summary={
+            action.setReview ? (
+              <FinancialReviewSummary
+                title={copy('documentSetReviewTitle')}
+                rows={[
+                  {
+                    id: 'request',
+                    label: copy('staffRequest'),
+                    value: action.setReview.data.requestId,
+                  },
+                  {
+                    id: 'current-status',
+                    label: copy('status'),
+                    value: copy(`status_${action.setReview.data.currentStatus}`),
+                  },
+                  ...action.setReview.data.documents.map((document) => ({
+                    id: document.documentId,
+                    label: document.fileName,
+                    value: `${documentText(document.state, locale)} · ${copy(`documentReview_${document.staffStatus}`)}`,
+                  })),
+                  ...action.setReview.data.existingRequests.map((request) => ({
+                    id: request.id,
+                    label: copy('requestedDocuments'),
+                    value: request.description,
+                  })),
+                  ...(action.setReview.data.description
+                    ? [
+                        {
+                          id: 'new-description',
+                          label: copy('requestAdditional'),
+                          value: action.setReview.data.description,
+                        },
+                      ]
+                    : []),
+                ]}
+                total={{
+                  label: copy('solarFinalOutcome'),
+                  value: copy(`status_${action.setReview.data.nextStatus}`),
+                }}
+                notice={copy('solarFinalNoFinancialChange')}
+              />
+            ) : undefined
+          }
           onSuccess={async () => {
             setAction(null);
             setReason('');

@@ -79,6 +79,19 @@ async function reviewPostal(
     };
   };
 }
+async function advanceDocuments(id: string) {
+  const reviewed = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${id}/documents/review-set-decision`,
+    'POST',
+    { decision: 'advance' }
+  );
+  expect(reviewed.status, http.logs()).toBe(200);
+  const { hash } = (await reviewed.json()) as { hash: string };
+  return send('postal-reviewer', `admin/solar/requests/${id}/documents/advance`, 'POST', {
+    expectedReviewHash: hash,
+  });
+}
 async function submitSolar(body: Record<string, unknown>) {
   const review = await send('postal-buyer', 'solar/requests/review', 'POST', body);
   expect(review.status, http.logs()).toBe(201);
@@ -190,11 +203,7 @@ beforeAll(async () => {
     ).status,
     http.logs()
   ).toBe(200);
-  expect(
-    (await send('postal-reviewer', `admin/solar/requests/${requestId}/documents/advance`, 'POST'))
-      .status,
-    http.logs()
-  ).toBe(200);
+  expect((await advanceDocuments(requestId)).status, http.logs()).toBe(200);
 }, 90_000);
 
 it('creates a linked solar draft and invoice atomically, then replays the same command', async () => {
@@ -258,10 +267,7 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     ).status,
     http.logs()
   ).toBe(200);
-  expect(
-    (await send('postal-reviewer', `admin/solar/requests/${id}/documents/advance`, 'POST')).status,
-    http.logs()
-  ).toBe(200);
+  expect((await advanceDocuments(id)).status, http.logs()).toBe(200);
   expect(
     (
       await send('postal-buyer', `solar/requests/${id}/postal/shipment`, 'POST', {
@@ -960,10 +966,7 @@ it('rejects a final solar request with a customer-visible reason after postal re
     ).status,
     http.logs()
   ).toBe(200);
-  expect(
-    (await send('postal-reviewer', `admin/solar/requests/${id}/documents/advance`, 'POST')).status,
-    http.logs()
-  ).toBe(200);
+  expect((await advanceDocuments(id)).status, http.logs()).toBe(200);
   expect(
     (
       await send('postal-buyer', `solar/requests/${id}/postal/shipment`, 'POST', {

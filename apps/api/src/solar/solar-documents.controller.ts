@@ -40,6 +40,15 @@ const review = z
   })
   .strict();
 const additional = z.object({ description: z.string().trim().min(1).max(2000) }).strict();
+const reviewHash = z.string().regex(/^[a-f0-9]{64}$/);
+const confirmedAdditional = additional.safeExtend({ expectedReviewHash: reviewHash });
+const confirmedAdvance = z.object({ expectedReviewHash: reviewHash }).strict();
+const setDecisionReview = z
+  .object({
+    decision: z.enum(['request_additional', 'advance']),
+    description: z.string().trim().min(1).max(2000).optional(),
+  })
+  .strict();
 function parse<S extends z.ZodType>(schema: S, body: unknown): z.output<S> {
   const result = schema.safeParse(body);
   if (!result.success) throw new BadRequestException('Invalid solar document request');
@@ -171,24 +180,49 @@ export class StaffSolarDocumentsController {
   @Post('requests/:id/documents/request-additional')
   @HttpCode(200)
   @ApiOperation({ summary: 'Request an additional or replacement solar document' })
-  @ApiZodBody(additional)
+  @ApiZodBody(confirmedAdditional)
   requestAdditional(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
+    const input = parse(confirmedAdditional, body);
     return this.service.requestAdditional(
       req.session,
       id,
-      parse(additional, body).description,
+      input.description,
+      input.expectedReviewHash,
       req.ip ?? '127.0.0.1'
     );
+  }
+
+  @Post('requests/:id/documents/review-set-decision')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Review current solar document set before a staff stage decision' })
+  @ApiZodBody(setDecisionReview)
+  reviewSetDecision(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const input = parse(setDecisionReview, body);
+    return this.service.reviewSetDecision(req.session, id, input.decision, input.description);
   }
 
   @Post('requests/:id/documents/advance')
   @HttpCode(200)
   @ApiOperation({ summary: 'Advance a sufficient solar document set to postal submission' })
-  advance(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
-    return this.service.advanceToPostal(req.session, id, req.ip ?? '127.0.0.1');
+  @ApiZodBody(confirmedAdvance)
+  advance(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.service.advanceToPostal(
+      req.session,
+      id,
+      parse(confirmedAdvance, body).expectedReviewHash,
+      req.ip ?? '127.0.0.1'
+    );
   }
 }

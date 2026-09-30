@@ -12,6 +12,7 @@ import { requireCurrentSession, requireSessionStepUp } from '../session/session-
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { DocumentService } from '../documents/document.service.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 type Actor = AuthenticatedRequest['session'];
@@ -51,6 +52,7 @@ export class SolarDocumentsService {
     private readonly orders: OrdersService,
     private readonly documents: DocumentService
   ) {}
+  private readonly reviews = new ReviewSnapshotService();
 
   async guidance(): Promise<SolarGuidance> {
     const row = (
@@ -354,25 +356,128 @@ export class SolarDocumentsService {
     );
   }
 
-  async requestAdditional(actor: Actor, requestId: string, description: string, ip: string) {
+  private async documentSetSnapshot(
+    client: PoolClient,
+    requestId: string,
+    decision: 'request_additional' | 'advance',
+    description: string | undefined,
+    lock: 'SHARE' | 'UPDATE'
+  ) {
+    const requestedDescription = description?.trim();
+    if (decision === 'request_additional' && !requestedDescription)
+      throw new BadRequestException('Description is required');
+    const request = (
+      await client.query<{ profile_id: string; status: string; user_id: string }>(
+        `SELECT r.profile_id,r.status,p.user_id FROM solar_construction_requests r
+         JOIN profiles p ON p.id=r.profile_id WHERE r.id=$1 FOR ${lock} OF r`,
+        [requestId]
+      )
+    ).rows[0];
+    if (!request) throw new NotFoundException('Solar request not found');
+    if (!['documents_under_review', 'changes_requested'].includes(request.status))
+      throw new ConflictException('Document review is not active');
+    const documents = (
+      await client.query<{
+        document_id: string;
+        file_name: string;
+        staff_status: string;
+        state: string;
+        revision: number;
+        supersedes_document_id: string | null;
+      }>(
+        `SELECT sd.document_id,sd.file_name,sd.staff_status,d.state,d.revision,
+                d.supersedes_document_id
+         FROM solar_construction_documents sd JOIN documents d ON d.id=sd.document_id
+         WHERE sd.request_id=$1 ORDER BY sd.document_id FOR ${lock} OF d`,
+        [requestId]
+      )
+    ).rows.map((row) => ({
+      documentId: row.document_id,
+      fileName: row.file_name,
+      staffStatus: row.staff_status,
+      state: row.state,
+      revision: row.revision,
+      supersedesDocumentId: row.supersedes_document_id,
+    }));
+    const existingRequests = (
+      await client.query<{ id: string; description: string }>(
+        'SELECT id,description FROM solar_document_requests WHERE request_id=$1 ORDER BY id',
+        [requestId]
+      )
+    ).rows;
+    const nextStatus =
+      decision === 'advance' ? 'waiting_for_postal_submission' : 'changes_requested';
+    const review = this.reviews.create(
+      {
+        action: `solar.documents.${decision}`,
+        profileId: request.profile_id,
+        resourceId: requestId,
+      },
+      {
+        requestId,
+        currentStatus: request.status,
+        documents,
+        existingRequests,
+        decision,
+        description: decision === 'request_additional' ? requestedDescription : null,
+        nextStatus,
+        createsContract: false,
+        createsInvoice: false,
+      }
+    );
+    return { request, review, requestedDescription, nextStatus };
+  }
+
+  async reviewSetDecision(
+    actor: Actor,
+    requestId: string,
+    decision: 'request_additional' | 'advance',
+    description: string | undefined
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'orders:write');
+      const { review } = await this.documentSetSnapshot(
+        client,
+        requestId,
+        decision,
+        description,
+        'SHARE'
+      );
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async requestAdditional(
+    actor: Actor,
+    requestId: string,
+    description: string,
+    expectedReviewHash: string,
+    ip: string
+  ) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actor.userId, 'orders:write');
       await requireSessionStepUp(client, actor);
-      const request = (
-        await client.query<{ profile_id: string; status: string; user_id: string }>(
-          `SELECT r.profile_id,r.status,p.user_id FROM solar_construction_requests r
-         JOIN profiles p ON p.id=r.profile_id WHERE r.id=$1 FOR UPDATE OF r`,
-          [requestId]
-        )
-      ).rows[0];
-      if (!request) throw new NotFoundException('Solar request not found');
-      if (!['documents_under_review', 'changes_requested'].includes(request.status))
-        throw new ConflictException('Document review is not active');
+      const { request, review, requestedDescription } = await this.documentSetSnapshot(
+        client,
+        requestId,
+        'request_additional',
+        description,
+        'UPDATE'
+      );
+      this.reviews.assertConfirmed(review, expectedReviewHash);
       await client.query(
         'INSERT INTO solar_document_requests(request_id,description,requested_by) VALUES($1,$2,$3)',
-        [requestId, description, actor.userId]
+        [requestId, requestedDescription, actor.userId]
       );
       await client.query(
         "UPDATE solar_construction_requests SET status='changes_requested',updated_at=NOW() WHERE id=$1",
@@ -386,8 +491,14 @@ export class SolarDocumentsService {
           type: 'general',
           title: 'Additional solar documents requested',
           localizedContent: {
-            fa: { title: 'مدارک نیروگاه خورشیدی', body: `مدرک تکمیلی درخواست شد: ${description}` },
-            en: { title: 'Solar documents', body: `Additional document requested: ${description}` },
+            fa: {
+              title: 'مدارک نیروگاه خورشیدی',
+              body: `مدرک تکمیلی درخواست شد: ${requestedDescription}`,
+            },
+            en: {
+              title: 'Solar documents',
+              body: `Additional document requested: ${requestedDescription}`,
+            },
           },
         },
         client
@@ -397,7 +508,7 @@ export class SolarDocumentsService {
         actor,
         'solar.documents.additional_requested',
         requestId,
-        { description },
+        { description: requestedDescription, financialReview: review },
         ip
       );
       await client.query('COMMIT');
@@ -410,22 +521,20 @@ export class SolarDocumentsService {
     }
   }
 
-  async advanceToPostal(actor: Actor, requestId: string, ip: string) {
+  async advanceToPostal(actor: Actor, requestId: string, expectedReviewHash: string, ip: string) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actor.userId, 'orders:write');
       await requireSessionStepUp(client, actor);
-      const request = (
-        await client.query<{ profile_id: string; status: string; user_id: string }>(
-          `SELECT r.profile_id,r.status,p.user_id FROM solar_construction_requests r
-         JOIN profiles p ON p.id=r.profile_id WHERE r.id=$1 FOR UPDATE OF r`,
-          [requestId]
-        )
-      ).rows[0];
-      if (!request) throw new NotFoundException('Solar request not found');
-      if (!['documents_under_review', 'changes_requested'].includes(request.status))
-        throw new ConflictException('Document review is not active');
+      const { request, review } = await this.documentSetSnapshot(
+        client,
+        requestId,
+        'advance',
+        undefined,
+        'UPDATE'
+      );
+      this.reviews.assertConfirmed(review, expectedReviewHash);
       await client.query(
         "UPDATE solar_construction_requests SET status='waiting_for_postal_submission',updated_at=NOW() WHERE id=$1",
         [requestId]
@@ -454,7 +563,14 @@ export class SolarDocumentsService {
         },
         client
       );
-      await audit(client, actor, 'solar.documents.approved_for_postal', requestId, {}, ip);
+      await audit(
+        client,
+        actor,
+        'solar.documents.approved_for_postal',
+        requestId,
+        { financialReview: review },
+        ip
+      );
       await client.query('COMMIT');
       return { status: 'waiting_for_postal_submission' };
     } catch (error) {

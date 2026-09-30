@@ -12374,6 +12374,26 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedReviewHash"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": ""
@@ -12413,10 +12433,15 @@
                     "maxLength": 2000,
                     "minLength": 1,
                     "type": "string"
+                  },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
                   }
                 },
                 "required": [
-                  "description"
+                  "description",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -12435,6 +12460,63 @@
           }
         ],
         "summary": "Request an additional or replacement solar document",
+        "tags": [
+          "Admin · Solar documents"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/documents/review-set-decision": {
+      "post": {
+        "operationId": "StaffSolarDocumentsController_reviewSetDecision",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "decision": {
+                    "enum": [
+                      "request_additional",
+                      "advance"
+                    ],
+                    "type": "string"
+                  },
+                  "description": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "decision"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review current solar document set before a staff stage decision",
         "tags": [
           "Admin · Solar documents"
         ]
