@@ -152,12 +152,27 @@ export const fa: I18nDictionary = {
   'admin.electricityIncreases.reason': 'دلیل رد',
   'admin.electricityIncreases.approveDate': 'تاریخ شروع پیشنهادی (اختیاری)',
   'admin.electricityIncreases.approveDateHelp':
-    'خالی بگذارید تا از زمان تأیید محاسبه شود. فقط تحویل آینده واجد شرایط است.',
+    'خالی بگذارید تا تاریخ دقیق در پیش‌نمایش تعیین شود. فقط تحویل آینده واجد شرایط است.',
   'admin.electricityIncreases.approve': 'تأیید و صدور الحاقیه',
   'admin.electricityIncreases.approveConfirm':
     'الحاقیه با شرایط ثبت‌شده صادر و برای مشتری نمایش داده شود؟',
   'admin.electricityIncreases.reject': 'رد درخواست',
   'admin.electricityIncreases.confirm': 'درخواست با این دلیل رد و به مشتری اطلاع داده شود؟',
+  'admin.electricityIncreases.reviewLoading': 'در حال بررسی نتیجه تصمیم…',
+  'admin.electricityIncreases.reviewError': 'بررسی نتیجه تصمیم انجام نشد. دوباره تلاش کنید.',
+  'admin.electricityIncreases.reviewTitle': 'بررسی تصمیم افزایش برق',
+  'admin.electricityIncreases.reviewConfirm': 'این نتیجه دقیق تأیید و ثبت شود؟',
+  'admin.electricityIncreases.increment': 'مقدار افزوده',
+  'admin.electricityIncreases.currentLimit': 'سقف افزایش فعلی',
+  'admin.electricityIncreases.notApplicable': 'ندارد',
+  'admin.electricityIncreases.originalInvoice': 'فاکتور اصلی',
+  'admin.electricityIncreases.decisionOutcome': 'نتیجه این تصمیم',
+  'admin.electricityIncreases.outcome.publish_amendment_for_customer_signature':
+    'انتشار الحاقیه برای امضای مشتری؛ بدون فاکتور جدید در این مرحله',
+  'admin.electricityIncreases.outcome.reject_without_adjustment':
+    'رد درخواست؛ بدون فاکتور یا تغییر مقدار',
+  'admin.electricityIncreases.signingChargeNotice':
+    'مبلغ تعدیل در زمان امضای مشتری با قیمت‌های قطعی و دوره باقیمانده محاسبه می‌شود.',
   'admin.electricityIncreases.conflict': 'درخواست تغییر کرده است. صف را تازه‌سازی کنید.',
   'admin.electricityIncreases.more': 'درخواست‌های بیشتر',
   'admin.electricityOrders.title': 'بررسی سفارش‌های برق',
@@ -1608,13 +1623,28 @@ export const en: I18nDictionary = {
   'admin.electricityIncreases.reason': 'Reason for declining',
   'admin.electricityIncreases.approveDate': 'Proposed start date (optional)',
   'admin.electricityIncreases.approveDateHelp':
-    'Leave blank to use approval time. Only future delivery is eligible.',
+    'Leave blank to choose an exact date in the preview. Only future delivery is eligible.',
   'admin.electricityIncreases.approve': 'Approve and issue amendment',
   'admin.electricityIncreases.approveConfirm':
     'Issue the amendment with these terms and show it to the customer?',
   'admin.electricityIncreases.reject': 'Decline request',
   'admin.electricityIncreases.confirm':
     'Decline this request with the reason and notify the customer?',
+  'admin.electricityIncreases.reviewLoading': 'Checking the decision outcome…',
+  'admin.electricityIncreases.reviewError': 'The decision review could not be loaded. Try again.',
+  'admin.electricityIncreases.reviewTitle': 'Electricity increase decision review',
+  'admin.electricityIncreases.reviewConfirm': 'Confirm this exact outcome?',
+  'admin.electricityIncreases.increment': 'Added quantity',
+  'admin.electricityIncreases.currentLimit': 'Current increase limit',
+  'admin.electricityIncreases.notApplicable': 'Not applicable',
+  'admin.electricityIncreases.originalInvoice': 'Original invoice',
+  'admin.electricityIncreases.decisionOutcome': 'This decision',
+  'admin.electricityIncreases.outcome.publish_amendment_for_customer_signature':
+    'Publish amendment for customer signature; no new invoice yet',
+  'admin.electricityIncreases.outcome.reject_without_adjustment':
+    'Decline request; no invoice or quantity change',
+  'admin.electricityIncreases.signingChargeNotice':
+    'The adjustment is calculated at customer signature from finalized prices and remaining delivery time.',
   'admin.electricityIncreases.conflict': 'The request changed. Refresh the queue.',
   'admin.electricityIncreases.more': 'More requests',
   'admin.electricityOrders.title': 'Electricity order review',

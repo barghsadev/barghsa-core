@@ -1,13 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
+import { Button, Card, CardContent, FinancialReviewSummary, Input, Label } from '@barghsa/ui';
+import {
+  parseElectricityIncreaseStaffDecisionReview,
+  type ElectricityIncreaseStaffDecisionReview,
+} from '@barghsa/shared/finance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { withCsrf } from '../lib/csrf.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 
 interface IncreaseRequest {
   requestId: string;
+  profileId: string;
   contractId: string;
+  versionId: string;
   orderId: string;
   originalKwh: string;
   requestedKwh: string;
@@ -35,12 +42,22 @@ export default function AdminElectricityIncreasesPage() {
   const [reason, setReason] = useState<Record<string, string>>({});
   const [effectiveDate, setEffectiveDate] = useState<Record<string, string>>({});
   const [action, setAction] = useState<TeamAction | null>(null);
+  const [decisionReview, setDecisionReview] =
+    useState<ElectricityIncreaseStaffDecisionReview | null>(null);
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewError, setReviewError] = useState(false);
+  const reviewRequest = useRef(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [denied, setDenied] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
+    reviewRequest.current++;
+    setDecisionReview(null);
+    setAction(null);
+    setReviewLoading(false);
+    setReviewError(false);
     setLoading(true);
     setError(false);
     setDenied(false);
@@ -73,6 +90,69 @@ export default function AdminElectricityIncreasesPage() {
       });
     return () => controller.abort();
   }, [before, revision, view]);
+
+  async function reviewDecision(request: IncreaseRequest, decision: 'approve' | 'reject') {
+    if (reviewLoading) return;
+    const reasonText = (reason[request.requestId] ?? '').trim();
+    if (decision === 'reject' && !reasonText) return;
+    const effectiveFrom =
+      decision === 'approve' && effectiveDate[request.requestId]
+        ? new Date(effectiveDate[request.requestId]!).toISOString()
+        : undefined;
+    const path = `/api/staff/electricity/increase-requests/${encodeURIComponent(request.requestId)}/${decision}`;
+    const previewInput =
+      decision === 'approve' ? (effectiveFrom ? { effectiveFrom } : {}) : { reason: reasonText };
+    const generation = ++reviewRequest.current;
+    setReviewLoading(true);
+    setReviewError(false);
+    try {
+      const response = await fetch(`${path}/review`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify(previewInput),
+      });
+      if (!response.ok) throw new Error('Increase decision review unavailable');
+      const review = parseElectricityIncreaseStaffDecisionReview(await response.json());
+      if (generation !== reviewRequest.current) return;
+      if (
+        !review ||
+        review.scope.profileId !== request.profileId ||
+        review.scope.resourceId !== request.requestId ||
+        review.data.action !== decision ||
+        review.data.contractId !== request.contractId ||
+        review.data.versionId !== request.versionId ||
+        review.data.originalKwh !== request.originalKwh ||
+        review.data.requestedKwh !== request.requestedKwh ||
+        review.data.reason !== (decision === 'reject' ? reasonText : '') ||
+        (effectiveFrom && review.data.effectiveFrom !== effectiveFrom)
+      )
+        throw new Error('Increase decision review mismatch');
+      setDecisionReview(review);
+      setAction({
+        title: copy(decision),
+        description: copy('reviewConfirm'),
+        path,
+        method: 'POST',
+        body: {
+          idempotencyKey: crypto.randomUUID(),
+          expectedReviewHash: review.hash,
+          ...(decision === 'approve'
+            ? { effectiveFrom: review.data.effectiveFrom }
+            : { reason: reasonText }),
+        },
+        conflictMessage: copy('conflict'),
+        forbiddenMessage: copy('forbidden'),
+      });
+    } catch {
+      if (generation === reviewRequest.current) {
+        setDecisionReview(null);
+        setReviewError(true);
+      }
+    } finally {
+      if (generation === reviewRequest.current) setReviewLoading(false);
+    }
+  }
 
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
@@ -195,26 +275,8 @@ export default function AdminElectricityIncreasesPage() {
                   />
                   <p className="text-muted-foreground">{copy('approveDateHelp')}</p>
                   <Button
-                    onClick={() =>
-                      setAction({
-                        title: copy('approve'),
-                        description: copy('approveConfirm'),
-                        path: `/api/staff/electricity/increase-requests/${request.requestId}/approve`,
-                        method: 'POST',
-                        body: {
-                          ...(effectiveDate[request.requestId]
-                            ? {
-                                effectiveFrom: new Date(
-                                  effectiveDate[request.requestId]!
-                                ).toISOString(),
-                              }
-                            : {}),
-                          idempotencyKey: crypto.randomUUID(),
-                        },
-                        conflictMessage: copy('conflict'),
-                        forbiddenMessage: copy('forbidden'),
-                      })
-                    }
+                    disabled={reviewLoading}
+                    onClick={() => void reviewDecision(request, 'approve')}
                   >
                     {copy('approve')}
                   </Button>
@@ -236,21 +298,8 @@ export default function AdminElectricityIncreasesPage() {
                   />
                   <Button
                     variant="destructive"
-                    disabled={!(reason[request.requestId] ?? '').trim()}
-                    onClick={() =>
-                      setAction({
-                        title: copy('reject'),
-                        description: copy('confirm'),
-                        path: `/api/staff/electricity/increase-requests/${request.requestId}/reject`,
-                        method: 'POST',
-                        body: {
-                          reason: reason[request.requestId]?.trim(),
-                          idempotencyKey: crypto.randomUUID(),
-                        },
-                        conflictMessage: copy('conflict'),
-                        forbiddenMessage: copy('forbidden'),
-                      })
-                    }
+                    disabled={!(reason[request.requestId] ?? '').trim() || reviewLoading}
+                    onClick={() => void reviewDecision(request, 'reject')}
                   >
                     {copy('reject')}
                   </Button>
@@ -260,6 +309,8 @@ export default function AdminElectricityIncreasesPage() {
           </Card>
         ))}
       </div>
+      {reviewLoading ? <p role="status">{copy('reviewLoading')}</p> : null}
+      {reviewError ? <p role="alert">{copy('reviewError')}</p> : null}
       {nextBefore ? (
         <Button variant="outline" onClick={() => setBefore(nextBefore)}>
           {copy('more')}
@@ -268,9 +319,79 @@ export default function AdminElectricityIncreasesPage() {
       {action ? (
         <TeamActionDialog
           action={action}
-          onClose={() => setAction(null)}
+          summary={
+            decisionReview ? (
+              <FinancialReviewSummary
+                title={copy('reviewTitle')}
+                rows={[
+                  {
+                    id: 'contract',
+                    label: copy('contract'),
+                    value: decisionReview.data.contractId,
+                  },
+                  {
+                    id: 'quantity',
+                    label: copy('quantity'),
+                    value: `${numbers.irrDigits(decisionReview.data.originalKwh)} → ${numbers.irrDigits(decisionReview.data.requestedKwh)} kWh`,
+                  },
+                  {
+                    id: 'increment',
+                    label: copy('increment'),
+                    value: `${numbers.irrDigits(decisionReview.data.incrementalKwh)} kWh`,
+                  },
+                  {
+                    id: 'policy',
+                    label: copy('currentLimit'),
+                    value:
+                      decisionReview.data.maxPercentageAtDecision === null
+                        ? copy('notApplicable')
+                        : `${numbers.number(decisionReview.data.maxPercentageAtDecision)}%`,
+                  },
+                  {
+                    id: 'effective',
+                    label: copy('effective'),
+                    value: decisionReview.data.effectiveFrom
+                      ? new Date(decisionReview.data.effectiveFrom).toLocaleString(locale)
+                      : copy('notApplicable'),
+                  },
+                  {
+                    id: 'end',
+                    label: copy('end'),
+                    value: new Date(decisionReview.data.periodEnd).toLocaleString(locale),
+                  },
+                  {
+                    id: 'invoice',
+                    label: copy('originalInvoice'),
+                    value: `${copy(`invoice.${decisionReview.data.originalInvoiceState}`)} · ${numbers.irrDigits(decisionReview.data.originalInvoiceTotalIrR)} IRR`,
+                  },
+                  {
+                    id: 'paid',
+                    label: copy('paidAmount'),
+                    value: `${numbers.irrDigits(decisionReview.data.originalInvoicePaidIrR)} IRR`,
+                  },
+                  ...(decisionReview.data.reason
+                    ? [{ id: 'reason', label: copy('reason'), value: decisionReview.data.reason }]
+                    : []),
+                ]}
+                total={{
+                  label: copy('decisionOutcome'),
+                  value: copy(`outcome.${decisionReview.data.outcome}`),
+                }}
+                notice={
+                  decisionReview.data.action === 'approve' ? (
+                    <p>{copy('signingChargeNotice')}</p>
+                  ) : undefined
+                }
+              />
+            ) : undefined
+          }
+          onClose={() => {
+            setAction(null);
+            setDecisionReview(null);
+          }}
           onSuccess={async () => {
             setAction(null);
+            setDecisionReview(null);
             setRevision((value) => value + 1);
           }}
         />

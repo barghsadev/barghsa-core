@@ -418,7 +418,9 @@ it('keeps review, payment and activation on a corrected unpaid invoice', async (
      DO UPDATE SET posted_balance=$2,reserved_balance=0`,
     [input.profileId, original.total_amount]
   );
-  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='buyer'"
+  );
   const paymentPath = `${http.base}/api/invoices/${replacement.invoiceId}/wallet-payment`;
   const paymentReview = await fetch(paymentPath, { headers });
   expect(paymentReview.status, http.logs()).toBe(200);
@@ -1670,7 +1672,9 @@ it('keeps a paid cancellation open through failed retries until finance restores
     "UPDATE invoices SET paid_amount=500000,state='PartiallyFunded' WHERE id=$1",
     [order.invoiceId]
   );
-  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='buyer'"
+  );
   const versionId = (
     await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
       order.contractId,
@@ -1781,7 +1785,9 @@ it('funds the linked invoice and activates only after customer acceptance', asyn
   expect(invoiceDetails.status, http.logs()).toBe(200);
   expect(await invoiceDetails.json()).toMatchObject({ electricityOrderId: order.orderId });
   expect((await activateReadyContracts(http.pool)).activated).toBe(0);
-  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='buyer'"
+  );
   const paymentPath = `${http.base}/api/invoices/${order.invoiceId}/wallet-payment`;
   const walletReviewResponse = await fetch(paymentPath, { headers });
   expect(walletReviewResponse.status, http.logs()).toBe(200);
@@ -1872,7 +1878,9 @@ it.each([
       ).status,
       http.logs()
     ).toBe(200);
-    await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='buyer'"
+    );
     const walletPath = `${http.base}/api/invoices/${order.invoiceId}/wallet-payment`;
     const walletReview = await fetch(walletPath, { headers });
     expect(walletReview.status, http.logs()).toBe(200);
@@ -1989,8 +1997,58 @@ it.each([
       return;
     }
     if (decision !== 'reject') {
-      const approval = { idempotencyKey: randomUUID() };
       const approvePath = `${http.base}/api/staff/electricity/increase-requests/${result.requestId}/approve`;
+      const preview = await fetch(`${approvePath}/review`, {
+        method: 'POST',
+        headers: staffHeaders,
+        body: JSON.stringify({}),
+      });
+      expect(preview.status, http.logs()).toBe(200);
+      const approvalReview = (await preview.json()) as {
+        hash: string;
+        data: { effectiveFrom: string; outcome: string; originalInvoiceState: string };
+      };
+      expect(approvalReview.data).toMatchObject({
+        outcome: 'publish_amendment_for_customer_signature',
+        originalInvoiceState: 'Paid',
+      });
+      const approval = {
+        idempotencyKey: randomUUID(),
+        effectiveFrom: approvalReview.data.effectiveFrom,
+        expectedReviewHash: approvalReview.hash,
+      };
+      expect(
+        (
+          await fetch(approvePath, {
+            method: 'POST',
+            headers: staffHeaders,
+            body: JSON.stringify({
+              ...approval,
+              idempotencyKey: randomUUID(),
+              expectedReviewHash: '0'.repeat(64),
+            }),
+          })
+        ).status
+      ).toBe(409);
+      if (decision === 'approve_future') {
+        await http.pool.query(
+          `UPDATE app_config SET value=jsonb_set(value,'{max_quantity_increase_percent}','25'::jsonb),version=version+1
+           WHERE key='electricity.contract_limits'`
+        );
+        expect(
+          (
+            await fetch(approvePath, {
+              method: 'POST',
+              headers: staffHeaders,
+              body: JSON.stringify({ ...approval, idempotencyKey: randomUUID() }),
+            })
+          ).status
+        ).toBe(409);
+        await http.pool.query(
+          `UPDATE app_config SET value=jsonb_set(value,'{max_quantity_increase_percent}','20'::jsonb),version=version+1
+           WHERE key='electricity.contract_limits'`
+        );
+      }
       const approved = await fetch(approvePath, {
         method: 'POST',
         headers: staffHeaders,
@@ -2012,6 +2070,18 @@ it.each([
           contractId: order.contractId,
         },
       });
+      const approvalAudit = (
+        await http.pool.query<{
+          metadata: { reviewHash: string; financialReview: { hash: string } };
+        }>(
+          `SELECT metadata::jsonb AS metadata FROM audit_log
+           WHERE event='electricity.increase_approved' AND metadata::jsonb->>'requestId'=$1
+           ORDER BY created_at DESC LIMIT 1`,
+          [result.requestId]
+        )
+      ).rows[0];
+      expect(approvalAudit?.metadata.reviewHash).toBe(approvalReview.hash);
+      expect(approvalAudit?.metadata.financialReview.hash).toBe(approvalReview.hash);
       const canonicalDocument = JSON.stringify(
         Object.fromEntries(
           Object.entries(amendment.amendmentDocument).sort(([left], [right]) =>
@@ -2040,7 +2110,7 @@ it.each([
           await fetch(approvePath, {
             method: 'POST',
             headers: staffHeaders,
-            body: JSON.stringify({ idempotencyKey: randomUUID() }),
+            body: JSON.stringify({ ...approval, idempotencyKey: randomUUID() }),
           })
         ).status
       ).toBe(409);
@@ -2353,15 +2423,40 @@ it.each([
       }
       return;
     }
-    const rejected = await fetch(
-      `${http.base}/api/staff/electricity/increase-requests/${result.requestId}/reject`,
-      {
-        method: 'POST',
-        headers: staffHeaders,
-        body: JSON.stringify({ idempotencyKey: randomUUID(), reason: 'Outside approved capacity' }),
-      }
-    );
+    const rejectPath = `${http.base}/api/staff/electricity/increase-requests/${result.requestId}/reject`;
+    const rejectReviewResponse = await fetch(`${rejectPath}/review`, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({ reason: 'Outside approved capacity' }),
+    });
+    expect(rejectReviewResponse.status, http.logs()).toBe(200);
+    const rejectReview = (await rejectReviewResponse.json()) as {
+      hash: string;
+      data: { outcome: string };
+    };
+    expect(rejectReview.data.outcome).toBe('reject_without_adjustment');
+    const rejected = await fetch(rejectPath, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({
+        idempotencyKey: randomUUID(),
+        reason: 'Outside approved capacity',
+        expectedReviewHash: rejectReview.hash,
+      }),
+    });
     expect(rejected.status, http.logs()).toBe(201);
+    const rejectionAudit = (
+      await http.pool.query<{
+        metadata: { reviewHash: string; financialReview: { hash: string } };
+      }>(
+        `SELECT metadata::jsonb AS metadata FROM audit_log
+         WHERE event='electricity.increase_rejected' AND metadata::jsonb->>'requestId'=$1
+         ORDER BY created_at DESC LIMIT 1`,
+        [result.requestId]
+      )
+    ).rows[0];
+    expect(rejectionAudit?.metadata.reviewHash).toBe(rejectReview.hash);
+    expect(rejectionAudit?.metadata.financialReview.hash).toBe(rejectReview.hash);
     expect(await (await fetch(path, { headers })).json()).toMatchObject({
       canRequest: false,
       request: { status: 'rejected', reviewReason: 'Outside approved capacity' },
@@ -2762,7 +2857,9 @@ it.each(['charge', 'credit'] as const)(
       DO UPDATE SET posted_balance=1500000,reserved_balance=0`,
       [input.profileId]
     );
-    await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='buyer'"
+    );
     const originalPaymentPath = `${http.base}/api/invoices/${order.invoiceId}/wallet-payment`;
     const originalPaymentReview = await fetch(originalPaymentPath, { headers });
     expect(originalPaymentReview.status, http.logs()).toBe(200);
@@ -3017,14 +3114,26 @@ it.each(['charge', 'credit'] as const)(
     });
     expect(increaseResponse.status, http.logs()).toBe(201);
     const increaseId = ((await increaseResponse.json()) as { requestId: string }).requestId;
-    const increaseApproval = await fetch(
-      `${http.base}/api/staff/electricity/increase-requests/${increaseId}/approve`,
-      {
-        method: 'POST',
-        headers: staffHeaders,
-        body: JSON.stringify({ idempotencyKey: randomUUID() }),
-      }
-    );
+    const increaseApprovePath = `${http.base}/api/staff/electricity/increase-requests/${increaseId}/approve`;
+    const increaseApprovalReviewResponse = await fetch(`${increaseApprovePath}/review`, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({}),
+    });
+    expect(increaseApprovalReviewResponse.status, http.logs()).toBe(200);
+    const increaseApprovalReview = (await increaseApprovalReviewResponse.json()) as {
+      hash: string;
+      data: { effectiveFrom: string };
+    };
+    const increaseApproval = await fetch(increaseApprovePath, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({
+        idempotencyKey: randomUUID(),
+        effectiveFrom: increaseApprovalReview.data.effectiveFrom,
+        expectedReviewHash: increaseApprovalReview.hash,
+      }),
+    });
     expect(increaseApproval.status, http.logs()).toBe(201);
     const increaseQuote = await fetch(increasePath, { headers });
     expect(increaseQuote.status, http.logs()).toBe(200);
