@@ -188,3 +188,67 @@ test('account status hides denied fields and refuses a switched profile response
   await expect(dialog).not.toContainText('Other profile');
   await expect(dialog).not.toContainText('999999');
 });
+
+test('the full-page guide answers with sources and handles an unassigned profile', async ({
+  page,
+  baseURL,
+}) => {
+  await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
+  await page
+    .context()
+    .addCookies([{ name: 'barghsa_csrf', value: 'knowledge-page-fixture', url: baseURL! }]);
+  let available = true;
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({ json: { userId: 'viewer', isStaff: false, requiresTosAcceptance: false } })
+  );
+  await page.route('**/api/profiles', (route) =>
+    route.fulfill({
+      json: {
+        profiles: [{ id: 'profile-1', profileType: 'INDIVIDUAL', status: 'ACTIVE' }],
+        hasDefault: true,
+        activeProfileId: 'profile-1',
+      },
+    })
+  );
+  await page.route('**/api/ai/knowledge/availability', (route) =>
+    route.fulfill({
+      json: available
+        ? { available: true, profileId: 'profile-1', slotKey: 'individual_chatbot' }
+        : { available: false, profileId: null, slotKey: null },
+    })
+  );
+  await page.route('**/api/ai/knowledge/questions', (route) => {
+    expect(route.request().postDataJSON()).toMatchObject({ message: 'How do invoices work?' });
+    return route.fulfill({
+      json: {
+        reply: 'Pay an issued invoice from its detail page.',
+        sources: [
+          {
+            kbId: '01900000-0000-7000-8000-000000000001',
+            title: 'Invoice guide',
+            documentTitle: 'invoice-guide.pdf',
+            excerpt: 'Issued invoices are visible in your account.',
+          },
+        ],
+        attribution: 'retrieved_context',
+        remainingQuota: 4,
+      },
+    });
+  });
+
+  await page.goto('/ai');
+  await expect(page.getByRole('heading', { name: 'Barghsa knowledge guide' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Ask Barghsa guide' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Ask Barghsa guide' })).toHaveCount(0);
+  await page.getByLabel('Write your question').fill('How do invoices work?');
+  await page.getByRole('button', { name: 'Send question' }).click();
+  await expect(page.getByText('Pay an issued invoice from its detail page.')).toBeVisible();
+  await page.getByText('Answer sources').click();
+  await expect(page.getByText('invoice-guide.pdf')).toBeVisible();
+
+  available = false;
+  await page.reload();
+  await expect(page.getByText('No guide is assigned to your active profile yet.')).toBeVisible();
+  await expect(page.getByLabel('Write your question')).toHaveCount(0);
+});

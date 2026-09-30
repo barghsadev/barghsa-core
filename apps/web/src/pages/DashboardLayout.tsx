@@ -1,4 +1,4 @@
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useLocation } from '@tanstack/react-router';
 import {
   LayoutDashboard,
   Zap,
@@ -12,6 +12,7 @@ import {
   Users,
   Settings,
   FileText,
+  BookOpenText,
 } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { shellText } from '@barghsa/i18n/shell';
@@ -27,6 +28,7 @@ import { KnowledgeAssistantLauncher } from '../components/KnowledgeAssistantLaun
 export function DashboardLayout({ locale: localeOverride }: { locale?: Locale }) {
   const currentLocale = useLocale();
   const locale = localeOverride ?? currentLocale;
+  const onAssistantPage = useLocation({ select: (location) => location.pathname === '/ai' });
   const groups: NavigationGroup[] = [
     {
       label: shellText('overview', locale),
@@ -48,6 +50,7 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
         { to: '/contracts', label: t('dashboard.nav.contracts', locale), icon: FileText },
         { to: '/documents', label: t('dashboard.nav.documentsList', locale), icon: FileText },
         { to: '/tickets', label: t('tickets.title', locale), icon: LifeBuoy },
+        { to: '/ai', label: t('assistant.open', locale), icon: BookOpenText },
       ],
     },
     {
@@ -75,7 +78,7 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
       }
     >
       <Outlet />
-      <KnowledgeAssistantLauncher locale={locale} />
+      {!onAssistantPage && <KnowledgeAssistantLauncher locale={locale} />}
     </AppShell>
   );
 }

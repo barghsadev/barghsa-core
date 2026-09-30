@@ -19,6 +19,9 @@ export const fa: I18nDictionary = {
   'jobs.estimateUnavailable': 'زمان پایان هنوز مشخص نیست.',
   'jobs.estimate': 'زمان تقریبی باقی‌مانده: {remaining}',
   'assistant.open': 'پرسش از راهنمای برقسا',
+  'assistant.page.loading': 'در حال آماده‌سازی راهنما…',
+  'assistant.page.unavailable': 'برای پروفایل فعال شما هنوز راهنمایی فعال نشده است.',
+  'assistant.page.error': 'وضعیت راهنما دریافت نشد. دوباره تلاش کنید.',
   'assistant.title': 'راهنمای دانش برقسا',
   'assistant.scope':
     'پاسخ‌های راهنما فقط از منابع منتشرشده هستند. وضعیت زنده حساب از داشبورد شما خوانده می‌شود و در اختیار مدل قرار نمی‌گیرد.',
@@ -1485,6 +1488,9 @@ export const en: I18nDictionary = {
   'jobs.estimateUnavailable': 'Completion time is not available yet.',
   'jobs.estimate': 'Estimated time remaining: {remaining}',
   'assistant.open': 'Ask Barghsa guide',
+  'assistant.page.loading': 'Preparing your guide…',
+  'assistant.page.unavailable': 'No guide is assigned to your active profile yet.',
+  'assistant.page.error': 'The guide could not be loaded. Please try again.',
   'assistant.title': 'Barghsa knowledge guide',
   'assistant.scope':
     'Guide answers use published sources only. Live account status comes directly from your dashboard and is not sent to the model.',

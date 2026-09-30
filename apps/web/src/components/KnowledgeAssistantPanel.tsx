@@ -44,12 +44,14 @@ export default function KnowledgeAssistantPanel({
   profileId,
   open,
   onOpenChange,
+  embedded = false,
 }: {
   locale: Locale;
   slotKey: 'individual_chatbot' | 'legal_entity_chatbot';
   profileId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  embedded?: boolean;
 }) {
   const [draft, setDraft] = useState('');
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -204,6 +206,210 @@ export default function KnowledgeAssistantPanel({
     }
   }
 
+  const conversation = (
+    <>
+      <div
+        className="min-h-0 flex-1 space-y-6 overflow-y-auto px-5 py-6"
+        role="log"
+        aria-live="polite"
+      >
+        {turns.length === 0 && (
+          <div className="space-y-5">
+            <p className="max-w-sm text-base leading-7 text-foreground">{label('welcome')}</p>
+            <div className="flex flex-wrap gap-2">
+              {suggestions.map((key) => (
+                <button
+                  key={key}
+                  type="button"
+                  className="rounded-full border bg-card px-3 py-2 text-start text-sm text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  onClick={() => {
+                    setDraft(t(key, locale));
+                    input.current?.focus();
+                  }}
+                >
+                  {t(key, locale)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {turns.map((turn) => (
+          <div key={turn.id} className="space-y-3">
+            <div className="ms-auto w-fit max-w-[88%] rounded-2xl rounded-ee-sm bg-primary px-4 py-3 text-primary-foreground">
+              <p className="whitespace-pre-wrap leading-6">{turn.question}</p>
+              <time className="mt-1 block text-end text-xs opacity-75">
+                {new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(
+                  turn.at
+                )}
+              </time>
+            </div>
+            {turn.answer && (
+              <div className="max-w-[92%] space-y-3 rounded-2xl rounded-es-sm bg-muted px-4 py-3 text-foreground">
+                <p className="text-xs font-semibold text-muted-foreground">{label('answer')}</p>
+                <p className="whitespace-pre-wrap leading-7">{turn.answer.reply}</p>
+                <details className="border-t pt-3 text-sm">
+                  <summary className="cursor-pointer font-medium text-primary">
+                    {label('sources')} ·{' '}
+                    {new Intl.NumberFormat(locale).format(turn.answer.sources.length)}
+                  </summary>
+                  <ul className="mt-3 space-y-3">
+                    {turn.answer.sources.map((source, index) => (
+                      <li key={`${source.kbId}-${index}`} className="space-y-1">
+                        <p className="font-medium">{source.title}</p>
+                        {source.documentTitle && (
+                          <p className="text-xs text-muted-foreground">{source.documentTitle}</p>
+                        )}
+                        <p className="text-sm leading-6 text-muted-foreground">{source.excerpt}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              </div>
+            )}
+            {turn.account && (
+              <div className="max-w-[92%] space-y-4 rounded-2xl rounded-es-sm bg-muted px-4 py-4 text-foreground">
+                <div>
+                  <p className="text-sm font-semibold">{label('account.title')}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {turn.account.profileName} · {label('account.direct')}
+                  </p>
+                </div>
+                <dl className="space-y-3 border-t pt-3 text-sm">
+                  <div className="flex items-baseline justify-between gap-4">
+                    <dt>{label('account.wallet')}</dt>
+                    <dd className="text-end font-semibold tabular-nums">
+                      {turn.account.walletBalance === null
+                        ? label('account.unavailable')
+                        : formatCurrencyIrr(turn.account.walletBalance, locale)}
+                    </dd>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-4">
+                    <dt>{label('account.invoices')}</dt>
+                    <dd className="text-end font-semibold tabular-nums">
+                      {turn.account.pendingInvoices === null
+                        ? label('account.unavailable')
+                        : new Intl.NumberFormat(locale).format(turn.account.pendingInvoices)}
+                    </dd>
+                  </div>
+                </dl>
+                <div className="flex flex-wrap gap-x-4 gap-y-2 border-t pt-3 text-sm font-medium text-primary">
+                  {turn.account.walletBalance !== null && (
+                    <Link to="/wallet" onClick={() => onOpenChange(false)}>
+                      {label('account.viewWallet')}
+                    </Link>
+                  )}
+                  {turn.account.pendingInvoices !== null && (
+                    <Link to="/invoices" onClick={() => onOpenChange(false)}>
+                      {label('account.viewInvoices')}
+                    </Link>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+        {busy && (
+          <p className="text-sm text-muted-foreground">
+            {label(accountLoading ? 'account.loading' : 'working')}
+          </p>
+        )}
+        {error && (
+          <div role="alert" className="space-y-2 rounded-lg border border-destructive/30 p-3">
+            <p className="text-sm text-destructive">{error}</p>
+            {retry && (
+              <button
+                type="button"
+                className="text-sm font-semibold text-primary underline-offset-4 hover:underline"
+                onClick={() => void send(retry)}
+              >
+                {label('retry')}
+              </button>
+            )}
+          </div>
+        )}
+        <div ref={end} />
+      </div>
+
+      <form
+        className="space-y-3 border-t bg-card px-5 py-4"
+        onSubmit={(event) => {
+          event.preventDefault();
+          void send();
+        }}
+      >
+        <button
+          type="button"
+          disabled={busy}
+          className="text-start text-sm font-medium text-primary underline-offset-4 hover:underline disabled:opacity-50"
+          onClick={() => void showAccountStatus()}
+        >
+          {label('account.action')}
+        </button>
+        <label htmlFor="knowledge-question" className="sr-only">
+          {label('input')}
+        </label>
+        <textarea
+          ref={input}
+          id="knowledge-question"
+          className="min-h-20 w-full resize-y rounded-lg border bg-background px-3 py-2 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          maxLength={1000}
+          rows={2}
+          value={draft}
+          placeholder={label('input')}
+          disabled={busy}
+          onChange={(event) => {
+            setDraft(event.target.value);
+            setRetry(null);
+            setError(null);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
+              event.preventDefault();
+              void send();
+            }
+          }}
+        />
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground">
+            {turns.at(-1)?.answer
+              ? label('remaining').replace(
+                  '{count}',
+                  new Intl.NumberFormat(locale).format(turns.at(-1)!.answer!.remainingQuota)
+                )
+              : null}
+          </p>
+          <button
+            type="submit"
+            disabled={busy || !draft.trim()}
+            className="inline-flex min-h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+          >
+            <ArrowUp className="size-4 rtl:-rotate-90" aria-hidden="true" />
+            {label('send')}
+          </button>
+        </div>
+      </form>
+    </>
+  );
+  if (embedded)
+    return (
+      <section
+        className="flex h-[calc(100dvh-12rem)] min-h-[32rem] max-h-[56rem] flex-col overflow-hidden rounded-2xl border bg-card shadow-sm"
+        dir={locale === 'fa' ? 'rtl' : 'ltr'}
+        aria-label={label('title')}
+      >
+        <header className="border-b bg-muted/35 px-5 py-5">
+          <div className="mb-2 flex items-center gap-2 text-primary">
+            <BookOpenText className="size-5" aria-hidden="true" />
+            <span className="text-xs font-semibold tracking-wide">
+              {label(slotKey === 'legal_entity_chatbot' ? 'legal' : 'individual')}
+            </span>
+          </div>
+          <h1 className="text-xl font-semibold">{label('title')}</h1>
+          <p className="max-w-prose text-sm leading-6 text-muted-foreground">{label('scope')}</p>
+        </header>
+        {conversation}
+      </section>
+    );
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
@@ -222,189 +428,7 @@ export default function KnowledgeAssistantPanel({
           <SheetTitle className="text-lg font-semibold">{label('title')}</SheetTitle>
           <SheetDescription className="max-w-prose leading-6">{label('scope')}</SheetDescription>
         </SheetHeader>
-
-        <div
-          className="min-h-0 flex-1 space-y-6 overflow-y-auto px-5 py-6"
-          role="log"
-          aria-live="polite"
-        >
-          {turns.length === 0 && (
-            <div className="space-y-5">
-              <p className="max-w-sm text-base leading-7 text-foreground">{label('welcome')}</p>
-              <div className="flex flex-wrap gap-2">
-                {suggestions.map((key) => (
-                  <button
-                    key={key}
-                    type="button"
-                    className="rounded-full border bg-card px-3 py-2 text-start text-sm text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                    onClick={() => {
-                      setDraft(t(key, locale));
-                      input.current?.focus();
-                    }}
-                  >
-                    {t(key, locale)}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-          {turns.map((turn) => (
-            <div key={turn.id} className="space-y-3">
-              <div className="ms-auto w-fit max-w-[88%] rounded-2xl rounded-ee-sm bg-primary px-4 py-3 text-primary-foreground">
-                <p className="whitespace-pre-wrap leading-6">{turn.question}</p>
-                <time className="mt-1 block text-end text-xs opacity-75">
-                  {new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(
-                    turn.at
-                  )}
-                </time>
-              </div>
-              {turn.answer && (
-                <div className="max-w-[92%] space-y-3 rounded-2xl rounded-es-sm bg-muted px-4 py-3 text-foreground">
-                  <p className="text-xs font-semibold text-muted-foreground">{label('answer')}</p>
-                  <p className="whitespace-pre-wrap leading-7">{turn.answer.reply}</p>
-                  <details className="border-t pt-3 text-sm">
-                    <summary className="cursor-pointer font-medium text-primary">
-                      {label('sources')} ·{' '}
-                      {new Intl.NumberFormat(locale).format(turn.answer.sources.length)}
-                    </summary>
-                    <ul className="mt-3 space-y-3">
-                      {turn.answer.sources.map((source, index) => (
-                        <li key={`${source.kbId}-${index}`} className="space-y-1">
-                          <p className="font-medium">{source.title}</p>
-                          {source.documentTitle && (
-                            <p className="text-xs text-muted-foreground">{source.documentTitle}</p>
-                          )}
-                          <p className="text-sm leading-6 text-muted-foreground">
-                            {source.excerpt}
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                </div>
-              )}
-              {turn.account && (
-                <div className="max-w-[92%] space-y-4 rounded-2xl rounded-es-sm bg-muted px-4 py-4 text-foreground">
-                  <div>
-                    <p className="text-sm font-semibold">{label('account.title')}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {turn.account.profileName} · {label('account.direct')}
-                    </p>
-                  </div>
-                  <dl className="space-y-3 border-t pt-3 text-sm">
-                    <div className="flex items-baseline justify-between gap-4">
-                      <dt>{label('account.wallet')}</dt>
-                      <dd className="text-end font-semibold tabular-nums">
-                        {turn.account.walletBalance === null
-                          ? label('account.unavailable')
-                          : formatCurrencyIrr(turn.account.walletBalance, locale)}
-                      </dd>
-                    </div>
-                    <div className="flex items-baseline justify-between gap-4">
-                      <dt>{label('account.invoices')}</dt>
-                      <dd className="text-end font-semibold tabular-nums">
-                        {turn.account.pendingInvoices === null
-                          ? label('account.unavailable')
-                          : new Intl.NumberFormat(locale).format(turn.account.pendingInvoices)}
-                      </dd>
-                    </div>
-                  </dl>
-                  <div className="flex flex-wrap gap-x-4 gap-y-2 border-t pt-3 text-sm font-medium text-primary">
-                    {turn.account.walletBalance !== null && (
-                      <Link to="/wallet" onClick={() => onOpenChange(false)}>
-                        {label('account.viewWallet')}
-                      </Link>
-                    )}
-                    {turn.account.pendingInvoices !== null && (
-                      <Link to="/invoices" onClick={() => onOpenChange(false)}>
-                        {label('account.viewInvoices')}
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-          {busy && (
-            <p className="text-sm text-muted-foreground">
-              {label(accountLoading ? 'account.loading' : 'working')}
-            </p>
-          )}
-          {error && (
-            <div role="alert" className="space-y-2 rounded-lg border border-destructive/30 p-3">
-              <p className="text-sm text-destructive">{error}</p>
-              {retry && (
-                <button
-                  type="button"
-                  className="text-sm font-semibold text-primary underline-offset-4 hover:underline"
-                  onClick={() => void send(retry)}
-                >
-                  {label('retry')}
-                </button>
-              )}
-            </div>
-          )}
-          <div ref={end} />
-        </div>
-
-        <form
-          className="space-y-3 border-t bg-card px-5 py-4"
-          onSubmit={(event) => {
-            event.preventDefault();
-            void send();
-          }}
-        >
-          <button
-            type="button"
-            disabled={busy}
-            className="text-start text-sm font-medium text-primary underline-offset-4 hover:underline disabled:opacity-50"
-            onClick={() => void showAccountStatus()}
-          >
-            {label('account.action')}
-          </button>
-          <label htmlFor="knowledge-question" className="sr-only">
-            {label('input')}
-          </label>
-          <textarea
-            ref={input}
-            id="knowledge-question"
-            className="min-h-20 w-full resize-y rounded-lg border bg-background px-3 py-2 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            maxLength={1000}
-            rows={2}
-            value={draft}
-            placeholder={label('input')}
-            disabled={busy}
-            onChange={(event) => {
-              setDraft(event.target.value);
-              setRetry(null);
-              setError(null);
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
-                event.preventDefault();
-                void send();
-              }
-            }}
-          />
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-xs text-muted-foreground">
-              {turns.at(-1)?.answer
-                ? label('remaining').replace(
-                    '{count}',
-                    new Intl.NumberFormat(locale).format(turns.at(-1)!.answer!.remainingQuota)
-                  )
-                : null}
-            </p>
-            <button
-              type="submit"
-              disabled={busy || !draft.trim()}
-              className="inline-flex min-h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:opacity-50"
-            >
-              <ArrowUp className="size-4 rtl:-rotate-90" aria-hidden="true" />
-              {label('send')}
-            </button>
-          </div>
-        </form>
+        {conversation}
       </SheetContent>
     </Sheet>
   );
