@@ -24399,6 +24399,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -24412,7 +24416,8 @@
                 },
                 "required": [
                   "idempotencyKey",
-                  "expectedVersionId"
+                  "expectedVersionId",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -24426,6 +24431,58 @@
           }
         },
         "summary": "Approve the exact current preliminary electricity contract",
+        "tags": [
+          "Staff · Electricity orders"
+        ]
+      }
+    },
+    "/api/staff/electricity/orders/{id}/financial-review": {
+      "post": {
+        "operationId": "ElectricityStaffReviewController_financialReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "approve",
+                      "request-changes",
+                      "reject"
+                    ],
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Authoritative staff decision review."
+          }
+        },
+        "summary": "Preview the exact staff electricity decision and financial outcome",
         "tags": [
           "Staff · Electricity orders"
         ]
@@ -24450,6 +24507,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -24469,6 +24530,7 @@
                 "required": [
                   "idempotencyKey",
                   "expectedVersionId",
+                  "expectedReviewHash",
                   "reason"
                 ],
                 "type": "object"
@@ -24507,6 +24569,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -24526,6 +24592,7 @@
                 "required": [
                   "idempotencyKey",
                   "expectedVersionId",
+                  "expectedReviewHash",
                   "reason"
                 ],
                 "type": "object"

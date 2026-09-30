@@ -259,6 +259,7 @@ test('simple electricity order moves from reviewed quote through payment and con
   );
   const staffOrder = () => ({
     orderId,
+    profileId,
     contractId,
     contractState: reviewComplete ? 'AwaitingPayment' : 'AwaitingStaffReview',
     invoiceId,
@@ -301,6 +302,38 @@ test('simple electricity order moves from reviewed quote through payment and con
   });
   await page.route('**/api/staff/electricity/orders', (route) =>
     route.fulfill({ json: { orders: reviewComplete ? [] : [staffOrder()], nextAfter: null } })
+  );
+  await page.route(`**/api/staff/electricity/orders/${orderId}/financial-review`, (route) =>
+    route.fulfill({
+      json: {
+        schemaVersion: 1,
+        scope: { action: 'electricity.staff-review.approve', profileId, resourceId: orderId },
+        data: {
+          action: 'approve',
+          reason: '',
+          customerName: 'Buyer',
+          contractId,
+          contractState: 'AwaitingStaffReview',
+          versionId,
+          versionNumber: 1,
+          contractSnapshot: staffOrder().contractSnapshot,
+          invoiceId,
+          invoiceState: 'Unpaid',
+          invoiceTotal: amount,
+          paidAmount: '0',
+          refundedAmount: '0',
+          pendingRefundAmount: '0',
+          periodStart,
+          periodEnd,
+          totalKwh: '11',
+          pricingSnapshot: staffOrder().pricingSnapshot,
+          outcome: 'publish_contract',
+          refundAmount: '0',
+          releasesGiftCode: false,
+        },
+        hash: 'b'.repeat(64),
+      },
+    })
   );
   await page.route(`**/api/staff/electricity/orders/${orderId}/approve`, (route) => {
     staffApprovals.push(route.request().postDataJSON() as Record<string, unknown>);
@@ -573,9 +606,15 @@ test('simple electricity order moves from reviewed quote through payment and con
   );
   await expect(page.getByRole('table')).toContainText('Green electricity');
   await page.getByRole('button', { name: 'Approve order' }).click();
+  await expect(
+    page.getByRole('region', { name: 'Electricity decision financial review' })
+  ).toContainText('1,250,000');
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
   expect(staffApprovals).toHaveLength(1);
-  expect(staffApprovals[0]).toMatchObject({ expectedVersionId: versionId });
+  expect(staffApprovals[0]).toMatchObject({
+    expectedVersionId: versionId,
+    expectedReviewHash: 'b'.repeat(64),
+  });
   operatingContext = 'customer';
   await page.goto(`/electricity/orders/${orderId}`);
   await expect(page.getByRole('region', { name: 'Status and next action' })).toContainText(

@@ -27,9 +27,19 @@ const baseInput = z
   .object({
     idempotencyKey: z.string().uuid(),
     expectedVersionId: z.string().uuid(),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
   })
   .strict();
 const reasonInput = baseInput.extend({ reason: z.string().trim().min(1).max(1000) }).strict();
+const previewInput = z
+  .object({
+    action: z.enum(['approve', 'request-changes', 'reject']),
+    reason: z.string().trim().max(1000).optional(),
+  })
+  .strict()
+  .refine((value) => (value.action === 'approve' ? !value.reason : !!value.reason), {
+    message: 'A reason is required only for change requests and rejection',
+  });
 
 @ApiTags('Staff · Electricity orders')
 @Controller('api/staff/electricity/orders')
@@ -75,6 +85,28 @@ export class ElectricityStaffReviewController {
   detail(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
     this.requirePermission(req, false);
     return this.service.detail(id);
+  }
+
+  @Post(':id/financial-review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'electricity:staff-review-preview:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview the exact staff electricity decision and financial outcome' })
+  @ApiZodBody(previewInput)
+  @ApiResponse({ status: 200, description: 'Authoritative staff decision review.' })
+  financialReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.requirePermission(req, true);
+    const parsed = previewInput.safeParse(body);
+    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.financialReview(
+      id,
+      parsed.data.action,
+      parsed.data.reason?.trim() ?? '',
+      req.session
+    );
   }
 
   @Post(':id/approve')

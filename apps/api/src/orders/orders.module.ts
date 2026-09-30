@@ -65,6 +65,7 @@ import {
 } from '../consultation/consultation-workflow.controller.js';
 import { ConsultationWorkflowService } from '../consultation/consultation-workflow.service.js';
 import { RefundModule } from '../refund/refund.module.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 
 @Module({
   imports: [
@@ -108,6 +109,7 @@ import { RefundModule } from '../refund/refund.module.js';
     HttpBillDataProvider,
     ElectricityDraftService,
     ElectricityStaffReviewService,
+    ReviewSnapshotService,
     ElectricityCommentsService,
     ElectricityIncreaseService,
     ElectricityPriceAdjustmentService,

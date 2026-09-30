@@ -715,12 +715,103 @@ it('derives mandatory green only from advanced thermal quantity', async () => {
   ).toEqual(['free_market']);
 });
 
-const staffPost = (id: string, decision: string, body: unknown) =>
-  fetch(`${http.base}/api/staff/electricity/orders/${id}/${decision}`, {
+const staffReviewHashes = new Map<string, string>();
+const staffPost = async (id: string, decision: string, body: unknown) => {
+  let payload = body;
+  if (body && typeof body === 'object' && !Array.isArray(body)) {
+    const input = body as Record<string, unknown>;
+    if (
+      !input.expectedReviewHash &&
+      typeof input.idempotencyKey === 'string' &&
+      (decision === 'approve' || (typeof input.reason === 'string' && !!input.reason.trim()))
+    ) {
+      let hash = staffReviewHashes.get(input.idempotencyKey);
+      if (!hash) {
+        const preview = await fetch(
+          `${http.base}/api/staff/electricity/orders/${id}/financial-review`,
+          {
+            method: 'POST',
+            headers: staffHeaders,
+            body: JSON.stringify({ action: decision, reason: input.reason ?? '' }),
+          }
+        );
+        if (!preview.ok) return preview;
+        hash = ((await preview.json()) as { hash: string }).hash;
+        staffReviewHashes.set(input.idempotencyKey, hash);
+      }
+      payload = { ...input, expectedReviewHash: hash };
+    }
+  }
+  return fetch(`${http.base}/api/staff/electricity/orders/${id}/${decision}`, {
     method: 'POST',
     headers: staffHeaders,
-    body: JSON.stringify(body),
+    body: JSON.stringify(payload),
   });
+};
+
+it('requires the exact locked staff decision review and audits the confirmed snapshot', async () => {
+  const order = await submittedOrder();
+  const detail = (await (
+    await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
+      headers: staffHeaders,
+    })
+  ).json()) as { versionId: string; invoiceId: string };
+  const preview = await fetch(
+    `${http.base}/api/staff/electricity/orders/${order.orderId}/financial-review`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({ action: 'approve' }),
+    }
+  );
+  expect(preview.status, http.logs()).toBe(200);
+  const review = (await preview.json()) as {
+    hash: string;
+    data: { invoiceId: string; invoiceTotal: string; outcome: string };
+  };
+  expect(review.data).toMatchObject({
+    invoiceId: detail.invoiceId,
+    outcome: 'publish_contract',
+  });
+  const body = { idempotencyKey: randomUUID(), expectedVersionId: detail.versionId };
+  const missingHash = await fetch(
+    `${http.base}/api/staff/electricity/orders/${order.orderId}/approve`,
+    { method: 'POST', headers: staffHeaders, body: JSON.stringify(body) }
+  );
+  expect(missingHash.status).toBe(400);
+  await http.pool.query("UPDATE invoices SET state='Overdue' WHERE id=$1", [detail.invoiceId]);
+  const stale = await staffPost(order.orderId, 'approve', {
+    ...body,
+    expectedReviewHash: review.hash,
+  });
+  expect(stale.status, http.logs()).toBe(409);
+  const refreshed = await fetch(
+    `${http.base}/api/staff/electricity/orders/${order.orderId}/financial-review`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({ action: 'approve' }),
+    }
+  );
+  expect(refreshed.status, http.logs()).toBe(200);
+  const current = (await refreshed.json()) as typeof review;
+  expect(current.hash).not.toBe(review.hash);
+  expect(current.data.invoiceTotal).toBe(review.data.invoiceTotal);
+  const accepted = await staffPost(order.orderId, 'approve', {
+    ...body,
+    expectedReviewHash: current.hash,
+  });
+  expect(accepted.status, http.logs()).toBe(200);
+  const audit = (
+    await http.pool.query<{ metadata: { reviewHash: string; financialReview: typeof review } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='electricity.order_review.approve'
+       AND metadata::jsonb->>'orderId'=$1 ORDER BY created_at DESC LIMIT 1`,
+      [order.orderId]
+    )
+  ).rows[0];
+  expect(audit?.metadata.reviewHash).toBe(current.hash);
+  expect(audit?.metadata.financialReview.data.invoiceId).toBe(detail.invoiceId);
+});
 
 it('queues the exact order for staff and approves it once with customer notification', async () => {
   const order = await submittedOrder();
@@ -1299,9 +1390,24 @@ it('creates a mandatory refund obligation when a paid order is rejected', async 
       order.contractId,
     ])
   ).rows[0].current_version_id;
+  const preview = await fetch(
+    `${http.base}/api/staff/electricity/orders/${order.orderId}/financial-review`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({ action: 'reject', reason: 'Cannot deliver at this address' }),
+    }
+  );
+  expect(preview.status, http.logs()).toBe(200);
+  const review = (await preview.json()) as {
+    hash: string;
+    data: { refundAmount: string; outcome: string };
+  };
+  expect(review.data).toMatchObject({ refundAmount: '500000', outcome: 'refund_obligation' });
   const response = await staffPost(order.orderId, 'reject', {
     idempotencyKey: randomUUID(),
     expectedVersionId: versionId,
+    expectedReviewHash: review.hash,
     reason: 'Cannot deliver at this address',
   });
   expect(response.status, http.logs()).toBe(200);
@@ -1318,6 +1424,14 @@ it('creates a mandatory refund obligation when a paid order is rejected', async 
     await http.pool.query('SELECT * FROM refunds WHERE id=$1', [obligation.refund_id])
   ).rows[0];
   expect(refund).toMatchObject({ amount: '500000', state: 'Processing', destination: 'wallet' });
+  const decisionAudit = (
+    await http.pool.query<{ metadata: { reviewHash: string } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='electricity.order_review.reject'
+       AND metadata::jsonb->>'orderId'=$1 ORDER BY created_at DESC LIMIT 1`,
+      [order.orderId]
+    )
+  ).rows[0];
+  expect(decisionAudit?.metadata.reviewHash).toBe(review.hash);
   await expect(
     http.pool.query(
       "UPDATE refund_obligations SET status='completed',completed_refund_amount=total_paid_amount WHERE id=$1",

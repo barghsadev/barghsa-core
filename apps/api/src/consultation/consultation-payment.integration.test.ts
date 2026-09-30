@@ -540,10 +540,12 @@ it('cancels an unpaid revised charge and requests a refund for the prior paid co
   });
   expect(closePreview.status, http.logs()).toBe(200);
   expect(
-    (await post(`${root}/paid-resolution-review`, 'consultation-payer', {
-      action: 'cancel',
-      reason: input.reason,
-    })).status
+    (
+      await post(`${root}/paid-resolution-review`, 'consultation-payer', {
+        action: 'cancel',
+        reason: input.reason,
+      })
+    ).status
   ).toBe(403);
   const closeReview = (await closePreview.json()) as {
     hash: string;
