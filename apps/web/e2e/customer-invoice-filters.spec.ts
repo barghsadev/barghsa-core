@@ -1,4 +1,4 @@
-import { verifyHistoryFilterReset } from './history-filter-reset';
+import { verifyHistoryFilterReset, verifyHistoryFilterChips } from './history-filter-reset';
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
 import { dateRangePreset } from '@barghsa/ui';
@@ -159,6 +159,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(min).toHaveValue('9007199254740993');
     await expect(max).toHaveValue('9223372036854775807');
     await expect(sort).toHaveValue('created_at:asc');
+    await verifyHistoryFilterChips(page, locale, queries, copy('created'));
     await verifyHistoryFilterReset(page, locale, queries, 4);
     await page.getByRole('button', { name: copy('clearAmount'), exact: true }).click();
     await expect(page).not.toHaveURL(/min=|max=/);

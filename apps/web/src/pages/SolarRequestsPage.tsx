@@ -1,3 +1,4 @@
+import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { HistoryListControls } from '../components/HistoryListControls.js';
 import { DEFAULT_HISTORY_SORT, type HistoryQuery } from '@barghsa/shared/validation';
@@ -36,6 +37,7 @@ export function SolarRequestsPage({
   query = { q: '', sort: DEFAULT_HISTORY_SORT },
   onQueryChange,
   onClearFilters,
+  onRemoveFilter,
 }: {
   statuses?: readonly string[];
   onStatusesChange?: (statuses: string[]) => void;
@@ -44,11 +46,19 @@ export function SolarRequestsPage({
   query?: HistoryQuery;
   onQueryChange?: (query: HistoryQuery) => void;
   onClearFilters?: () => void;
+  onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
 }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
+  const statusOptions: Parameters<typeof StatusFilter>[0]['options'] = SOLAR_REQUEST_STATUSES.map(
+    (value) => ({
+      value,
+      label: copy(`status_${value}`),
+      tone: statusFilterTone(value),
+    })
+  );
   const statusesKey = statuses.join(',');
   const rangeKey = `${dateRange.from ?? ''}:${dateRange.to ?? ''}`;
   const {
@@ -128,6 +138,9 @@ export function SolarRequestsPage({
         statuses={statuses}
         dateRange={dateRange}
         onClear={onClearFilters}
+        onRemoveFilter={onRemoveFilter}
+        statusOptions={statusOptions}
+        formatDate={(value) => time.format(value, { dateStyle: 'medium', timeStyle: 'short' })}
       >
         {onQueryChange && (
           <HistoryListControls
@@ -152,11 +165,7 @@ export function SolarRequestsPage({
             countLabel={numbers.number(statuses.length)}
             value={statuses}
             onChange={onStatusesChange}
-            options={SOLAR_REQUEST_STATUSES.map((value) => ({
-              value,
-              label: copy(`status_${value}`),
-              tone: statusFilterTone(value),
-            }))}
+            options={statusOptions}
           />
         )}
       </HistoryFilterPanel>

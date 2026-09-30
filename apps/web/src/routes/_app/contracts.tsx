@@ -1,3 +1,4 @@
+import { removeHistoryFilter } from '../../lib/history-filter-state.js';
 import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
 import {
   parseStatusFilter,
@@ -16,6 +17,8 @@ function ContractsRoute() {
     <ContractsPage
       activeOnly={state === 'Active'}
       history={{
+        onRemoveFilter: (key, value) =>
+          void navigate({ search: (current) => removeHistoryFilter(current, key, value) }),
         onClear: () =>
           void navigate({
             search: (current) => ({

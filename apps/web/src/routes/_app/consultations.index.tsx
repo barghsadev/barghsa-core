@@ -1,3 +1,4 @@
+import { removeHistoryFilter } from '../../lib/history-filter-state.js';
 import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
 import {
   parseDateRangeFilter,
@@ -16,6 +17,9 @@ function ConsultationsRoute() {
   const navigate = Route.useNavigate();
   return (
     <ConsultationsPage
+      onRemoveFilter={(key, value) =>
+        void navigate({ search: (current) => removeHistoryFilter(current, key, value) })
+      }
       onClearFilters={() =>
         void navigate({
           search: (current) => ({

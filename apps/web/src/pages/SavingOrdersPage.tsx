@@ -1,3 +1,4 @@
+import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { HistoryListControls } from '../components/HistoryListControls.js';
 import { DEFAULT_HISTORY_SORT, type HistoryQuery } from '@barghsa/shared/validation';
@@ -33,6 +34,7 @@ export function SavingOrdersPage({
   query = { q: '', sort: DEFAULT_HISTORY_SORT },
   onQueryChange,
   onClearFilters,
+  onRemoveFilter,
 }: {
   pendingOnly?: boolean;
   statuses?: readonly string[];
@@ -42,11 +44,25 @@ export function SavingOrdersPage({
   query?: HistoryQuery;
   onQueryChange?: (query: HistoryQuery) => void;
   onClearFilters?: () => void;
+  onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
 }) {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
+  const statusOptions: Parameters<typeof StatusFilter>[0]['options'] = SAVING_ORDER_STATUSES.map(
+    (value) => ({
+      value,
+      label: copy(
+        value === 'awaiting_staff_review'
+          ? 'staffReview'
+          : value === 'in_progress'
+            ? 'inProgress'
+            : value
+      ),
+      tone: statusFilterTone(value),
+    })
+  );
   const statusesKey = statuses.join(',');
   const rangeKey = `${dateRange.from ?? ''}:${dateRange.to ?? ''}`;
   const {
@@ -161,6 +177,9 @@ export function SavingOrdersPage({
         statuses={statuses}
         dateRange={dateRange}
         onClear={onClearFilters}
+        onRemoveFilter={onRemoveFilter}
+        statusOptions={statusOptions}
+        formatDate={(value) => time.format(value, { dateStyle: 'medium', timeStyle: 'short' })}
       >
         {onQueryChange && (
           <HistoryListControls
@@ -185,17 +204,7 @@ export function SavingOrdersPage({
             countLabel={numbers.number(statuses.length)}
             value={statuses}
             onChange={onStatusesChange}
-            options={SAVING_ORDER_STATUSES.map((value) => ({
-              value,
-              label: copy(
-                value === 'awaiting_staff_review'
-                  ? 'staffReview'
-                  : value === 'in_progress'
-                    ? 'inProgress'
-                    : value
-              ),
-              tone: statusFilterTone(value),
-            }))}
+            options={statusOptions}
           />
         )}
       </HistoryFilterPanel>

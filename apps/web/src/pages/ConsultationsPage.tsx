@@ -1,3 +1,4 @@
+import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { HistoryListControls } from '../components/HistoryListControls.js';
 import { DEFAULT_HISTORY_SORT, type HistoryQuery } from '@barghsa/shared/validation';
@@ -47,6 +48,7 @@ export function ConsultationsPage({
   query = { q: '', sort: DEFAULT_HISTORY_SORT },
   onQueryChange,
   onClearFilters,
+  onRemoveFilter,
 }: {
   statuses?: readonly string[];
   onStatusesChange?: (statuses: string[]) => void;
@@ -55,6 +57,7 @@ export function ConsultationsPage({
   query?: HistoryQuery;
   onQueryChange?: (query: HistoryQuery) => void;
   onClearFilters?: () => void;
+  onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
 }) {
   const navigate = useNavigate();
   const locale = useLocale();
@@ -63,6 +66,12 @@ export function ConsultationsPage({
   const copy = (key: string) => tConsultation(key, locale);
   const [profile, setProfile] = useState<SwitcherProfile | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
+  const statusOptions: Parameters<typeof StatusFilter>[0]['options'] =
+    CONSULTATION_REQUEST_STATUSES.map((value) => ({
+      value,
+      label: copy(`status_${value}`),
+      tone: statusFilterTone(value),
+    }));
   const statusesKey = statuses.join(',');
   const rangeKey = `${dateRange.from ?? ''}:${dateRange.to ?? ''}`;
   const {
@@ -277,6 +286,11 @@ export function ConsultationsPage({
               statuses={statuses}
               dateRange={dateRange}
               onClear={onClearFilters}
+              onRemoveFilter={onRemoveFilter}
+              statusOptions={statusOptions}
+              formatDate={(value) =>
+                time.format(value, { dateStyle: 'medium', timeStyle: 'short' })
+              }
             >
               {onQueryChange && (
                 <HistoryListControls
@@ -301,11 +315,7 @@ export function ConsultationsPage({
                   countLabel={numbers.number(statuses.length)}
                   value={statuses}
                   onChange={onStatusesChange}
-                  options={CONSULTATION_REQUEST_STATUSES.map((value) => ({
-                    value,
-                    label: copy(`status_${value}`),
-                    tone: statusFilterTone(value),
-                  }))}
+                  options={statusOptions}
                 />
               )}
             </HistoryFilterPanel>

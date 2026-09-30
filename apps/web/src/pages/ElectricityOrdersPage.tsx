@@ -1,3 +1,4 @@
+import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
@@ -79,6 +80,7 @@ export function ElectricityOrdersPage({
   query = { q: '', sort: DEFAULT_HISTORY_SORT },
   onQueryChange,
   onClearFilters,
+  onRemoveFilter,
 }: {
   pendingOnly?: boolean;
   statuses?: readonly string[];
@@ -88,10 +90,17 @@ export function ElectricityOrdersPage({
   query?: HistoryQuery;
   onQueryChange?: (query: HistoryQuery) => void;
   onClearFilters?: () => void;
+  onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
 }) {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
+  const statusOptions: Parameters<typeof StatusFilter>[0]['options'] =
+    ELECTRICITY_ORDER_STATUSES.map((value) => ({
+      value,
+      label: t(`electricity.order.status.${value}`, locale),
+      tone: statusFilterTone(value),
+    }));
   const statusesKey = statuses.join(',');
   const {
     items: orders,
@@ -231,6 +240,9 @@ export function ElectricityOrdersPage({
         statuses={statuses}
         dateRange={dateRange}
         onClear={onClearFilters}
+        onRemoveFilter={onRemoveFilter}
+        statusOptions={statusOptions}
+        formatDate={(value) => time.format(value, { dateStyle: 'medium', timeStyle: 'short' })}
       >
         {onQueryChange && (
           <HistoryListControls
@@ -255,11 +267,7 @@ export function ElectricityOrdersPage({
             countLabel={numbers.number(statuses.length)}
             value={statuses}
             onChange={onStatusesChange}
-            options={ELECTRICITY_ORDER_STATUSES.map((value) => ({
-              value,
-              label: t(`electricity.order.status.${value}`, locale),
-              tone: statusFilterTone(value),
-            }))}
+            options={statusOptions}
           />
         )}
       </HistoryFilterPanel>

@@ -1,3 +1,4 @@
+import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -35,6 +36,7 @@ export function InvoicesPage({
   query = { q: '', sort: DEFAULT_INVOICE_LIST_SORT },
   onQueryChange,
   onClearFilters,
+  onRemoveFilter,
   amountRange = {},
   onAmountRangeChange,
 }: {
@@ -46,6 +48,7 @@ export function InvoicesPage({
   query?: InvoiceListQuery;
   onQueryChange?: (value: InvoiceListQuery) => void;
   onClearFilters?: () => void;
+  onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
   amountRange?: NumberRangeValue;
   onAmountRangeChange?: (value: NumberRangeValue) => void;
 }) {
@@ -53,6 +56,17 @@ export function InvoicesPage({
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
+  const statusOptions: Parameters<typeof StatusFilter>[0]['options'] =
+    CUSTOMER_INVOICE_STATUSES.map((value) => ({
+      value,
+      label: t(stateI18nKey(value), locale),
+      tone:
+        value === 'Paid' || value === 'Refunded'
+          ? 'success'
+          : value === 'Cancelled' || value === 'Overdue'
+            ? 'destructive'
+            : 'warning',
+    }));
   const statusesKey = statuses.join(',');
   const { items, before, nextBefore, acceptPage, loadMore } = useCursorHistory<
     CustomerInvoiceListItem & { id: string }
@@ -150,6 +164,10 @@ export function InvoicesPage({
         statuses={statuses}
         dateRange={dateRange}
         onClear={onClearFilters}
+        onRemoveFilter={onRemoveFilter}
+        statusOptions={statusOptions}
+        formatDate={(value) => time.format(value, { dateStyle: 'medium', timeStyle: 'short' })}
+        dateLabel={t('invoices.filter.created', locale)}
         amountRange={amountRange}
       >
         {onQueryChange && (
@@ -207,16 +225,7 @@ export function InvoicesPage({
             countLabel={numbers.number(statuses.length)}
             value={statuses}
             onChange={onStatusesChange}
-            options={CUSTOMER_INVOICE_STATUSES.map((value) => ({
-              value,
-              label: t(stateI18nKey(value), locale),
-              tone:
-                value === 'Paid' || value === 'Refunded'
-                  ? 'success'
-                  : value === 'Cancelled' || value === 'Overdue'
-                    ? 'destructive'
-                    : 'warning',
-            }))}
+            options={statusOptions}
           />
         )}
       </HistoryFilterPanel>

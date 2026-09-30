@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { ComboBox, ComboBoxInput, ComboBoxItem, ComboBoxPopup } from '../base-ui/combo-box';
 import { Field, FieldLabel } from './field';
 
@@ -19,12 +19,20 @@ export function SelectFilter({
 }) {
   const id = useId();
   const items = [{ value: '', label: allLabel }, ...options];
+  const selected = items.find((item) => item.value === value) ?? null;
+  const labelText = selected?.label ?? '';
+  const [input, setInput] = useState({ value, label: labelText, text: labelText });
+  if (input.value !== value || input.label !== labelText)
+    setInput({ value, label: labelText, text: labelText });
   return (
     <Field>
       <FieldLabel htmlFor={id}>{label}</FieldLabel>
       <ComboBox
         items={items}
-        value={items.find((item) => item.value === value) ?? null}
+        value={selected}
+        inputValue={input.text}
+        filteredItems={input.text === labelText ? items : undefined}
+        onInputValueChange={(text) => setInput({ value, label: labelText, text })}
         itemToStringLabel={(item) => item.label}
         isItemEqualToValue={(item, selected) => item.value === selected.value}
         onValueChange={(item) => onChange(item?.value ?? '')}

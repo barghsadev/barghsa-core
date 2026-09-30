@@ -1,4 +1,4 @@
-import { verifyHistoryFilterReset } from './history-filter-reset';
+import { verifyHistoryFilterReset, verifyHistoryFilterChips } from './history-filter-reset';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import type { Route } from '@playwright/test';
@@ -104,6 +104,8 @@ for (const locale of ['en', 'fa'] as const) {
       name: contractText('serviceType', locale),
       exact: true,
     });
+    await service.click();
+    await expect(page.getByRole('listbox').getByRole('option')).toHaveCount(4);
     await service.fill('no-such-service');
     await expect(page.getByText(copy('noOptions'), { exact: true })).toBeVisible();
     expect(queries.at(-1)?.has('serviceType')).toBe(false);
@@ -172,7 +174,18 @@ for (const locale of ['en', 'fa'] as const) {
       (await new AxeBuilder({ page }).include('[data-slot="combobox"]').analyze()).violations
     ).toEqual([]);
     await expect(sort).toHaveValue('published_at:asc');
+    await verifyHistoryFilterChips(
+      page,
+      locale,
+      queries,
+      copy('published'),
+      contractText('serviceType', locale)
+    );
     await verifyHistoryFilterReset(page, locale, queries, 4);
+    await expect(service).toHaveValue(contractText('solar', locale));
+    await service.click();
+    await expect(page.getByRole('listbox').getByRole('option')).toHaveCount(4);
+    await service.press('Escape');
     await page
       .locator('summary')
       .filter({ hasText: copy('state') })

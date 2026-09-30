@@ -1,3 +1,4 @@
+import { removeHistoryFilter } from '../../../lib/history-filter-state.js';
 import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
 import {
   CUSTOMER_INVOICE_STATUSES,
@@ -20,6 +21,9 @@ function InvoiceListRoute() {
   const navigate = Route.useNavigate();
   return (
     <InvoicesPage
+      onRemoveFilter={(key, value) =>
+        void navigate({ search: (current) => removeHistoryFilter(current, key, value) })
+      }
       onClearFilters={() =>
         void navigate({
           search: (current) => ({

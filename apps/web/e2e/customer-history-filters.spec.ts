@@ -1,4 +1,4 @@
-import { verifyHistoryFilterReset } from './history-filter-reset';
+import { verifyHistoryFilterReset, verifyHistoryFilterChips } from './history-filter-reset';
 import { test, expect } from './coverage-fixture';
 import type { Route } from '@playwright/test';
 import { tSaving } from '@barghsa/i18n/saving';
@@ -309,6 +309,7 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(search).toHaveValue(searchText);
       await expect(sort).toHaveValue('submitted_at:asc');
       if (kind === 'consultation') await page.getByRole('radio').check();
+      await verifyHistoryFilterChips(page, locale, queries);
       await verifyHistoryFilterReset(page, locale, queries, 3);
       if (kind === 'consultation') await expect(page.getByRole('radio')).toBeChecked();
       await page
