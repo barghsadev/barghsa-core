@@ -111,6 +111,7 @@ test('simple electricity order moves from reviewed quote through payment and con
   page,
 }) => {
   test.setTimeout(60_000);
+  await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
   await page.clock.install({ time: new Date(submittedAt) });
   let reviewComplete = false;
   let paid = false;
@@ -535,7 +536,6 @@ test('simple electricity order moves from reviewed quote through payment and con
   );
 
   await page.goto('/electricity');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await page.getByRole('link', { name: 'Order electricity', exact: true }).click();
   await expect(page.locator('#electricity-period option[value="current_month"]')).toContainText(
     'Sep 23, 2026 – Oct 2, 2026'

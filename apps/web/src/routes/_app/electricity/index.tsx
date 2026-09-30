@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
   EmptyState,
+  ListPage,
   PageLoading,
   buttonVariants,
 } from '@barghsa/ui';
@@ -63,7 +64,7 @@ function ElectricityIndexPage() {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const [products, setProducts] = useState<ElectricityProduct[]>([]);
-  const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [state, setState] = useState<'loading' | 'ready' | 'error' | 'denied'>('loading');
   const [revision, setRevision] = useState(0);
 
   useEffect(() => {
@@ -71,7 +72,7 @@ function ElectricityIndexPage() {
     setState('loading');
     void fetch('/api/products/electricity', { signal: abort.signal })
       .then(async (response) => {
-        if (!response.ok) throw new Error('Catalogue unavailable');
+        if (!response.ok) throw new Error(String(response.status));
         const data: unknown = await response.json();
         if (!isCatalogue(data)) throw new Error('Invalid catalogue');
         if (!abort.signal.aborted) {
@@ -79,26 +80,15 @@ function ElectricityIndexPage() {
           setState('ready');
         }
       })
-      .catch(() => {
-        if (!abort.signal.aborted) setState('error');
+      .catch((cause: unknown) => {
+        if (abort.signal.aborted) return;
+        if (cause instanceof Error && cause.message === '403') {
+          setProducts([]);
+          setState('denied');
+        } else setState('error');
       });
     return () => abort.abort();
   }, [revision]);
-
-  if (state === 'loading')
-    return <PageLoading label={t('electricity.catalogue.loading', locale)} />;
-  if (state === 'error')
-    return (
-      <EmptyState
-        title={t('electricity.catalogue.error', locale)}
-        description={t('electricity.catalogue.errorDescription', locale)}
-        action={
-          <Button onClick={() => setRevision((current) => current + 1)}>
-            {t('electricity.order.retry', locale)}
-          </Button>
-        }
-      />
-    );
 
   return (
     <main className="flex flex-col gap-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
@@ -117,65 +107,106 @@ function ElectricityIndexPage() {
           {t('electricity.catalogue.advancedOrder', locale)}
         </Link>
       </header>
-      <div className="grid gap-4 md:grid-cols-2">
-        {products.map((product) => {
-          const title =
-            product.title?.[locale] ||
-            product.title?.en ||
-            product.title?.fa ||
-            t(`electricity.catalogue.${product.systemKey}`, locale);
-          const description =
-            product.description?.[locale] || product.description?.en || product.description?.fa;
-          return (
-            <Card key={product.systemKey} className="flex flex-col">
-              <CardHeader>
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <CardTitle>{title}</CardTitle>
-                  <Badge variant={product.orderable ? 'secondary' : 'outline'}>
-                    {t(
-                      product.orderable
-                        ? 'electricity.catalogue.available'
-                        : 'electricity.catalogue.unavailable',
-                      locale
-                    )}
-                  </Badge>
-                </div>
-                {description ? <CardDescription>{description}</CardDescription> : null}
-              </CardHeader>
-              <CardContent className="flex flex-1 flex-col gap-2 text-sm">
-                <p>
-                  <span className="text-muted-foreground">
-                    {t('electricity.catalogue.price', locale)}:{' '}
-                  </span>
-                  {product.price !== null
-                    ? numbers.money(product.price)
-                    : t('electricity.catalogue.priceUnavailable', locale)}
-                </p>
-                <p className="text-muted-foreground">
-                  {t('electricity.catalogue.limits', locale)}:{' '}
-                  {product.limits.minKwh === '0' && product.limits.maxKwh === '0'
-                    ? t('electricity.catalogue.noLimits', locale)
-                    : `${numbers.irrDigits(product.limits.minKwh)}–${product.limits.maxKwh === '0' ? '∞' : numbers.irrDigits(product.limits.maxKwh)} kWh`}
-                </p>
-              </CardContent>
-              {product.systemKey === 'thermal' && product.orderable && !product.simpleOrderable ? (
-                <CardFooter>
-                  <p className="text-sm text-muted-foreground">
-                    {t('electricity.catalogue.greenRuleBlocked', locale)}
-                  </p>
-                </CardFooter>
-              ) : null}
-              {product.simpleOrderable ? (
-                <CardFooter>
-                  <Link to="/electricity/order" className={buttonVariants()}>
-                    {t('electricity.catalogue.createDraft', locale)}
-                  </Link>
-                </CardFooter>
-              ) : null}
-            </Card>
-          );
-        })}
-      </div>
+      <ListPage>
+        <ListPage.Toolbar
+          actions={
+            <Button
+              variant="outline"
+              disabled={state === 'loading'}
+              onClick={() => setRevision((value) => value + 1)}
+            >
+              {t('electricity.catalogue.refresh', locale)}
+            </Button>
+          }
+        />
+        <ListPage.Content
+          loading={state === 'loading'}
+          error={state === 'error' || state === 'denied'}
+          empty={false}
+          emptyView={null}
+          retainContent={!!products.length && state !== 'denied'}
+          loadingView={<PageLoading label={t('electricity.catalogue.loading', locale)} />}
+          errorView={
+            state === 'denied' ? (
+              <p role="alert">{t('electricity.catalogue.denied', locale)}</p>
+            ) : (
+              <div role="alert">
+                <EmptyState
+                  title={t('electricity.catalogue.error', locale)}
+                  description={t('electricity.catalogue.errorDescription', locale)}
+                  action={
+                    <Button onClick={() => setRevision((value) => value + 1)}>
+                      {t('electricity.order.retry', locale)}
+                    </Button>
+                  }
+                />
+              </div>
+            )
+          }
+        >
+          <div className="grid gap-4 md:grid-cols-2">
+            {products.map((product) => {
+              const title =
+                product.title?.[locale] ||
+                product.title?.en ||
+                product.title?.fa ||
+                t(`electricity.catalogue.${product.systemKey}`, locale);
+              const description =
+                product.description?.[locale] || product.description?.en || product.description?.fa;
+              return (
+                <Card key={product.systemKey} className="flex flex-col">
+                  <CardHeader>
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <CardTitle>{title}</CardTitle>
+                      <Badge variant={product.orderable ? 'secondary' : 'outline'}>
+                        {t(
+                          product.orderable
+                            ? 'electricity.catalogue.available'
+                            : 'electricity.catalogue.unavailable',
+                          locale
+                        )}
+                      </Badge>
+                    </div>
+                    {description ? <CardDescription>{description}</CardDescription> : null}
+                  </CardHeader>
+                  <CardContent className="flex flex-1 flex-col gap-2 text-sm">
+                    <p>
+                      <span className="text-muted-foreground">
+                        {t('electricity.catalogue.price', locale)}:{' '}
+                      </span>
+                      {product.price !== null
+                        ? numbers.money(product.price)
+                        : t('electricity.catalogue.priceUnavailable', locale)}
+                    </p>
+                    <p className="text-muted-foreground">
+                      {t('electricity.catalogue.limits', locale)}:{' '}
+                      {product.limits.minKwh === '0' && product.limits.maxKwh === '0'
+                        ? t('electricity.catalogue.noLimits', locale)
+                        : `${numbers.irrDigits(product.limits.minKwh)}–${product.limits.maxKwh === '0' ? '∞' : numbers.irrDigits(product.limits.maxKwh)} kWh`}
+                    </p>
+                  </CardContent>
+                  {product.systemKey === 'thermal' &&
+                  product.orderable &&
+                  !product.simpleOrderable ? (
+                    <CardFooter>
+                      <p className="text-sm text-muted-foreground">
+                        {t('electricity.catalogue.greenRuleBlocked', locale)}
+                      </p>
+                    </CardFooter>
+                  ) : null}
+                  {product.simpleOrderable ? (
+                    <CardFooter>
+                      <Link to="/electricity/order" className={buttonVariants()}>
+                        {t('electricity.catalogue.createDraft', locale)}
+                      </Link>
+                    </CardFooter>
+                  ) : null}
+                </Card>
+              );
+            })}
+          </div>
+        </ListPage.Content>
+      </ListPage>
     </main>
   );
 }

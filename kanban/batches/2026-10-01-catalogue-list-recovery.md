@@ -42,4 +42,4 @@ An initial focused failure exposed price controls still visible after timezone f
 
 The preceding solar staff queue batch is published as `5cfb0bb8148a96d89b9e804b74ad2f1f0791f68a`; CI run `36785087969` passes all five gates under the existing temporary fast mode. The combined-coverage success is an exemption, not measured coverage.
 
-This reviewed catalogue batch is committed and pushed directly to main after related checks. The remote commit and CI are verified after publication.
+This batch is published as `75b3d0960efdf9ebe39b6ecd631f0e04633218b0`; CI run `36786063541` passes all five gates under the existing temporary fast mode. The combined-coverage success remains an exemption, not measured coverage.

@@ -112,38 +112,72 @@ export function ConsultationsPage({
   const [submitting, setSubmitting] = useState(false);
   const submissionKey = useRef<string | null>(null);
 
+  const [profileRevision, setProfileRevision] = useState(0);
+  const [productsRevision, setProductsRevision] = useState(0);
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [productsError, setProductsError] = useState(false);
+  const [productsDenied, setProductsDenied] = useState(false);
   useEffect(() => {
     const controller = new AbortController();
-    void (async () => {
-      try {
-        const profileResponse = await fetch('/api/profiles', {
-          credentials: 'include',
-          signal: controller.signal,
-        });
-        if (!profileResponse.ok) throw new Error('profile');
-        const data = (await profileResponse.json()) as {
+    setLoading(true);
+    setLoadError(false);
+    void fetch('/api/profiles', { credentials: 'include', signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('profile');
+        return response.json() as Promise<{
           activeProfileId: string | null;
           profiles: SwitcherProfile[];
-        };
-        const active = data.profiles.find((item) => item.id === data.activeProfileId) ?? null;
-        if (!active) return;
-        const productResponse = await fetch(
-          `/api/consultations/products?profileId=${encodeURIComponent(active.id)}`,
-          { credentials: 'include', signal: controller.signal }
-        );
-        if (!productResponse.ok) throw new Error('consultations');
-        const productData = (await productResponse.json()) as { products: Product[] };
+        }>;
+      })
+      .then((data) => {
         if (controller.signal.aborted) return;
-        setProfile(active);
-        setProducts(productData.products);
-      } catch {
+        setProfile(data.profiles.find((item) => item.id === data.activeProfileId) ?? null);
+      })
+      .catch(() => {
         if (!controller.signal.aborted) setLoadError(true);
-      } finally {
+      })
+      .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
-      }
-    })();
+      });
     return () => controller.abort();
-  }, []);
+  }, [profileRevision]);
+  useEffect(() => {
+    if (!profile) return;
+    const controller = new AbortController();
+    setProductsLoading(true);
+    setProductsError(false);
+    setProductsDenied(false);
+    void fetch(`/api/consultations/products?profileId=${encodeURIComponent(profile.id)}`, {
+      credentials: 'include',
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error(String(response.status));
+        return response.json() as Promise<{ products: Product[] }>;
+      })
+      .then((data) => {
+        if (!controller.signal.aborted) setProducts(data.products);
+      })
+      .catch((cause: unknown) => {
+        if (controller.signal.aborted) return;
+        if (cause instanceof Error && cause.message === '403') {
+          setProducts([]);
+          setProductsDenied(true);
+        } else setProductsError(true);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setProductsLoading(false);
+      });
+    return () => controller.abort();
+  }, [profile, productsRevision]);
+  useEffect(() => {
+    if (selectedProductId && !products.some((product) => product.id === selectedProductId)) {
+      setSelectedProductId('');
+      setConfirmed(false);
+      setSubmitError(false);
+      submissionKey.current = null;
+    }
+  }, [products, selectedProductId]);
 
   useEffect(() => {
     if (!profile) return;
@@ -191,7 +225,16 @@ export function ConsultationsPage({
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!profile || !selectedProductId || !confirmed || submitting) return;
+    if (
+      !profile ||
+      !products.some((product) => product.id === selectedProductId) ||
+      productsLoading ||
+      productsError ||
+      productsDenied ||
+      !confirmed ||
+      submitting
+    )
+      return;
     setSubmitting(true);
     setSubmitError(false);
     try {
@@ -322,7 +365,14 @@ export function ConsultationsPage({
       </header>
       {time.notice}
       {loading && <p role="status">{copy('loading')}</p>}
-      {loadError && <p role="alert">{copy('loadError')}</p>}
+      {loadError && (
+        <div role="alert" className="space-y-2">
+          <p>{copy('profileLoadError')}</p>
+          <Button variant="outline" onClick={() => setProfileRevision((value) => value + 1)}>
+            {copy('retry')}
+          </Button>
+        </div>
+      )}
       {!loading && !loadError && !profile && <p role="alert">{copy('profileRequired')}</p>}
       {!loading && !loadError && profile && (
         <>
@@ -335,36 +385,74 @@ export function ConsultationsPage({
             </div>
             <fieldset className="space-y-3">
               <legend className="text-xl font-semibold">{copy('available')}</legend>
-              {!products.length && <p className="text-muted-foreground">{copy('emptyProducts')}</p>}
-              {products.map((product) => (
-                <label
-                  key={product.id}
-                  className={`flex cursor-pointer gap-3 rounded-xl border bg-card p-5 transition-colors hover:border-primary ${selectedProductId === product.id ? 'border-primary ring-1 ring-primary' : ''}`}
+              <ListPage>
+                <ListPage.Toolbar
+                  actions={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={productsLoading}
+                      onClick={() => setProductsRevision((value) => value + 1)}
+                    >
+                      {copy('refreshProducts')}
+                    </Button>
+                  }
+                />
+                <ListPage.Content
+                  loading={productsLoading}
+                  error={productsError || productsDenied}
+                  empty={!products.length}
+                  retainContent={!!products.length && !productsDenied}
+                  loadingView={<p role="status">{copy('loading')}</p>}
+                  errorView={
+                    productsDenied ? (
+                      <p role="alert">{copy('productsDenied')}</p>
+                    ) : (
+                      <div className="space-y-2">
+                        <p role="alert">{copy('productsError')}</p>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => setProductsRevision((value) => value + 1)}
+                        >
+                          {copy('retry')}
+                        </Button>
+                      </div>
+                    )
+                  }
+                  emptyView={<p className="text-muted-foreground">{copy('emptyProducts')}</p>}
                 >
-                  <input
-                    type="radio"
-                    name="consultationProduct"
-                    value={product.id}
-                    checked={selectedProductId === product.id}
-                    onChange={() => {
-                      setSelectedProductId(product.id);
-                      submissionKey.current = null;
-                      setSubmitError(false);
-                    }}
-                    className="mt-1"
-                  />
-                  <span className="space-y-1">
-                    <span className="block font-semibold" dir="auto">
-                      {product.title[locale]}
-                    </span>
-                    {product.description?.[locale] && (
-                      <span className="block text-sm text-muted-foreground" dir="auto">
-                        {product.description[locale]}
+                  {products.map((product) => (
+                    <label
+                      key={product.id}
+                      className={`flex cursor-pointer gap-3 rounded-xl border bg-card p-5 transition-colors hover:border-primary ${selectedProductId === product.id ? 'border-primary ring-1 ring-primary' : ''}`}
+                    >
+                      <input
+                        type="radio"
+                        name="consultationProduct"
+                        value={product.id}
+                        checked={selectedProductId === product.id}
+                        onChange={() => {
+                          setSelectedProductId(product.id);
+                          submissionKey.current = null;
+                          setSubmitError(false);
+                        }}
+                        className="mt-1"
+                      />
+                      <span className="space-y-1">
+                        <span className="block font-semibold" dir="auto">
+                          {product.title[locale]}
+                        </span>
+                        {product.description?.[locale] && (
+                          <span className="block text-sm text-muted-foreground" dir="auto">
+                            {product.description[locale]}
+                          </span>
+                        )}
                       </span>
-                    )}
-                  </span>
-                </label>
-              ))}
+                    </label>
+                  ))}
+                </ListPage.Content>
+              </ListPage>
             </fieldset>
             {products.length > 0 && (
               <>
@@ -382,7 +470,17 @@ export function ConsultationsPage({
                     {copy('submitError')}
                   </p>
                 )}
-                <Button type="submit" disabled={!selectedProductId || !confirmed || submitting}>
+                <Button
+                  type="submit"
+                  disabled={
+                    productsLoading ||
+                    productsError ||
+                    productsDenied ||
+                    !products.some((product) => product.id === selectedProductId) ||
+                    !confirmed ||
+                    submitting
+                  }
+                >
                   {copy(submitting ? 'submitting' : 'request')}
                 </Button>
               </>

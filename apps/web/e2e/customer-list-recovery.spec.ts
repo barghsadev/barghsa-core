@@ -171,7 +171,11 @@ for (const locale of ['en', 'fa'] as const) {
                   ? t('invoices.receipts.retry', locale)
                   : t('historyPagination.retry', locale);
       await page.goto(`${history.path}?statuses=${history.statuses}`);
-      const content = page.getByRole('main').locator('[data-slot="list-content"]');
+      const content = (
+        kind === 'consultation'
+          ? page.locator('section[aria-labelledby="consultation-requests-title"]')
+          : page.getByRole('main')
+      ).locator('[data-slot="list-content"]');
       const record = (id: string) => content.getByText(id, { exact: true }).first();
       const retry = content.getByRole('button', { name: retryLabel, exact: true });
       await expect(retry).toBeVisible();
