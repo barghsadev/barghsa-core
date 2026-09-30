@@ -1,6 +1,6 @@
 # Bank-receipt wallet top-up financial review
 
-Canonical work: `04-invoices-wallet-contracts.md#T-04.CC.07.01` through `.04`, applied to customer bank-receipt wallet top-ups (`T-04.2.02.02`). The cross-command review tasks remain partial.
+Canonical work: `04-invoices-wallet-contracts.md#T-04.CC.07.01` through `.04`, applied to customer bank-receipt wallet top-ups (`T-04.2.02.03`). The cross-command review tasks remain partial.
 
 After uploading a receipt, the customer sees a server-confirmed profile, exact IRR amount, transfer details, verified file name, and the rule that wallet credit waits for finance confirmation. Submission requires the reviewed hash at the HTTP boundary. The service checks it against locked receipt and storage state before sealing the attachment or creating a Pending ledger entry. The confirmed snapshot is retained in transaction metadata and audit; retries retain the original receipt and review.
 
