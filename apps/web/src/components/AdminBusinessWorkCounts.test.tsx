@@ -44,7 +44,21 @@ afterEach(async () => {
 async function renderCounts(value: unknown) {
   vi.stubGlobal(
     'fetch',
-    vi.fn(async () => ({ ok: true, status: 200, json: async () => value }))
+    vi.fn(async (input: RequestInfo | URL) => {
+      const widget = String(input).split('/').at(-1);
+      const keys =
+        widget === 'queue'
+          ? ['pendingTickets', 'electricityOrders', 'savingOrders', 'unassignedConsultations']
+          : widget === 'work'
+            ? ['consultations', 'solarRequests', 'documentReviews', 'refundObligations']
+            : ['failedJobs', 'deadLetterNotifications', 'failedRefundObligations'];
+      const values = value as Record<string, unknown>;
+      return {
+        ok: true,
+        status: 200,
+        json: async () => Object.fromEntries(keys.map((key) => [key, values[key]])),
+      };
+    })
   );
   await act(async () => root.render(<AdminBusinessWorkCounts />));
   await act(async () => {
@@ -133,4 +147,39 @@ it('renders the same failure links and counts in Persian', async () => {
   expect(container.querySelector('a[href="/admin/failed-notifications"]')?.textContent).toContain(
     'اعلان‌های ارسال‌نشده'
   );
+});
+
+it('retries failed work independently and rejects malformed counts instead of inventing zero', async () => {
+  let failures = 0;
+  const fetcher = vi.fn(async (input: RequestInfo | URL) => {
+    const url = String(input);
+    if (url.endsWith('/queue'))
+      return new Response(
+        JSON.stringify({
+          pendingTickets: 3,
+          electricityOrders: null,
+          savingOrders: null,
+          unassignedConsultations: null,
+        })
+      );
+    if (url.endsWith('/work')) return new Response('', { status: 403 });
+    return new Response(
+      JSON.stringify(
+        ++failures === 1
+          ? { failedJobs: -1, deadLetterNotifications: 0, failedRefundObligations: null }
+          : { failedJobs: 2, deadLetterNotifications: 0, failedRefundObligations: null }
+      )
+    );
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await act(async () => root.render(<AdminBusinessWorkCounts />));
+  expect(container.querySelector('a[href="/admin/tickets?status=active"]')?.textContent).toContain(
+    '3'
+  );
+  expect(container.querySelectorAll('[role="region"]')).toHaveLength(2);
+  expect(container.querySelector('a[href="/admin/failed-jobs"]')).toBeNull();
+  await act(async () => (container.querySelector('button') as HTMLButtonElement).click());
+  expect(container.querySelector('a[href="/admin/failed-jobs"]')?.textContent).toContain('2');
+  expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith('/queue'))).toHaveLength(1);
+  expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith('/work'))).toHaveLength(1);
 });

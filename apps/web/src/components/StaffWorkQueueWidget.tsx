@@ -3,14 +3,20 @@ import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 
-interface QueueCounts {
+export interface QueueCounts {
   pendingTickets: number | null;
   electricityOrders: number | null;
   savingOrders: number | null;
   unassignedConsultations: number | null;
 }
 
-export function StaffWorkQueueWidget({ counts }: { counts: QueueCounts }) {
+export function StaffWorkQueueWidget({
+  counts,
+  embedded = false,
+}: {
+  counts: QueueCounts;
+  embedded?: boolean;
+}) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   if (
@@ -32,13 +38,17 @@ export function StaffWorkQueueWidget({ counts }: { counts: QueueCounts }) {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-base font-semibold">{t('dashboard.admin.work.queueTitle', locale)}</h3>
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      {!embedded && (
+        <h3 className="text-base font-semibold">{t('dashboard.admin.work.queueTitle', locale)}</h3>
+      )}
+      <div
+        className={embedded ? 'grid grid-cols-2 gap-3' : 'grid gap-3 sm:grid-cols-2 xl:grid-cols-4'}
+      >
         {counts.pendingTickets !== null && (
           <Link
             to="/admin/tickets"
             search={{ status: 'active' }}
-            className="rounded-xl border bg-card p-4 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="rounded-xl border bg-card p-3 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             <span className="block text-2xl font-semibold">
               {numbers.number(counts.pendingTickets)}
@@ -53,7 +63,7 @@ export function StaffWorkQueueWidget({ counts }: { counts: QueueCounts }) {
             <Link
               key={label}
               to={to}
-              className="rounded-xl border bg-card p-4 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="rounded-xl border bg-card p-3 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <span className="block text-2xl font-semibold">{numbers.number(count)}</span>
               <span className="text-sm text-muted-foreground">
@@ -66,7 +76,7 @@ export function StaffWorkQueueWidget({ counts }: { counts: QueueCounts }) {
           <Link
             to="/admin/consultations"
             search={{ assignment: 'unassigned' }}
-            className="rounded-xl border bg-card p-4 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="rounded-xl border bg-card p-3 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             <span className="block text-2xl font-semibold">
               {numbers.number(counts.unassignedConsultations)}

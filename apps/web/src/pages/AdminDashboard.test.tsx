@@ -42,6 +42,7 @@ describe('AdminDashboard staff widgets', () => {
   let root: Root;
 
   beforeEach(() => {
+    vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
     document.documentElement.lang = 'en';
     container = document.createElement('div');
     document.body.appendChild(container);
@@ -55,6 +56,7 @@ describe('AdminDashboard staff widgets', () => {
     container.remove();
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it('shows recent pending profiles with detail links and a localized fallback name', async () => {
@@ -114,11 +116,11 @@ describe('AdminDashboard staff widgets', () => {
       'fetch',
       vi.fn(async (input: RequestInfo | URL) => {
         const url = String(input);
-        if (url.endsWith('/api/admin/dashboard/business-work-counts')) {
+        if (url.includes('/api/admin/dashboard/widgets/')) {
           return { ok: false, status: 403 };
         }
         if (url.endsWith('/api/crm/dashboard/pending-verification')) {
-          return { ok: true, json: async () => ({ count: 0, profiles: [] }) };
+          return { ok: true, json: async () => ({ enabled: true, count: 0, profiles: [] }) };
         }
         if (url.endsWith('/api/admin/wallet/chargebacks/unresolved-warning')) {
           return {
@@ -150,9 +152,9 @@ describe('AdminDashboard staff widgets', () => {
     });
     await flush();
 
-    const banner = container.querySelector('[role="alert"]');
+    const banner = container.querySelector('[role="alert"][aria-live="assertive"]');
     expect(banner).toBeTruthy();
-    expect(banner?.textContent).toContain('Unresolved chargebacks');
+    expect(container.textContent).toContain('Unresolved chargebacks');
     expect(banner?.textContent).toContain('evt-unmatched');
     expect(banner?.textContent).toContain('150,000');
     expect(banner?.textContent).toContain('IRR');
@@ -174,11 +176,11 @@ describe('AdminDashboard staff widgets', () => {
       'fetch',
       vi.fn(async (input: RequestInfo | URL) => {
         const url = String(input);
-        if (url.endsWith('/api/admin/dashboard/business-work-counts')) {
+        if (url.includes('/api/admin/dashboard/widgets/')) {
           return { ok: false, status: 403 };
         }
         if (url.endsWith('/api/crm/dashboard/pending-verification')) {
-          return { ok: true, json: async () => ({ count: 0, profiles: [] }) };
+          return { ok: true, json: async () => ({ enabled: true, count: 0, profiles: [] }) };
         }
         if (url.endsWith('/api/admin/wallet/chargebacks/unresolved-warning')) {
           return {
@@ -211,7 +213,7 @@ describe('AdminDashboard staff widgets', () => {
     await flush();
 
     expect(container.querySelector('div[dir="rtl"]')).toBeTruthy();
-    expect(container.querySelector('[role="alert"]')?.textContent).toContain('شارژبک حل‌نشده');
+    expect(container.textContent).toContain('شارژبک حل‌نشده');
     expect(container.querySelector('span[dir="ltr"]')?.textContent).toBe('evt-fa');
   });
 
@@ -220,11 +222,11 @@ describe('AdminDashboard staff widgets', () => {
       'fetch',
       vi.fn(async (input: RequestInfo | URL) => {
         const url = String(input);
-        if (url.endsWith('/api/admin/dashboard/business-work-counts')) {
+        if (url.includes('/api/admin/dashboard/widgets/')) {
           return { ok: false, status: 403 };
         }
         if (url.endsWith('/api/crm/dashboard/pending-verification')) {
-          return { ok: true, json: async () => ({ count: 0, profiles: [] }) };
+          return { ok: true, json: async () => ({ enabled: true, count: 0, profiles: [] }) };
         }
         if (url.endsWith('/api/admin/wallet/chargebacks/unresolved-warning')) {
           return {
@@ -246,6 +248,42 @@ describe('AdminDashboard staff widgets', () => {
     });
     await flush();
 
-    expect(container.querySelector('[role="alert"]')).toBeNull();
+    expect(container.querySelector('[role="alert"][aria-live="assertive"]')).toBeNull();
   });
+});
+
+it('shows a retryable failure instead of claiming a stale zero chargeback count is current', async () => {
+  vi.useFakeTimers();
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  document.documentElement.lang = 'en';
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  let status = 200;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(
+      async (input: RequestInfo | URL) =>
+        new Response(
+          JSON.stringify({ count: 0, unmatchedCount: 0, reversalFailedCount: 0, items: [] }),
+          { status: String(input).endsWith('/unresolved-warning') ? status : 403 }
+        )
+    )
+  );
+  try {
+    await act(async () => root.render(<AdminDashboard />));
+    expect(container.textContent).toContain('No unresolved chargebacks.');
+    status = 503;
+    await act(async () => vi.advanceTimersByTime(30_000));
+    expect(container.textContent).not.toContain('No unresolved chargebacks.');
+    expect(container.querySelector('button')?.textContent).toBe('Retry this section');
+    status = 200;
+    await act(async () => (container.querySelector('button') as HTMLButtonElement).click());
+    expect(container.textContent).toContain('No unresolved chargebacks.');
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  }
 });

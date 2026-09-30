@@ -1,3 +1,5 @@
+import { dashboardText } from '@barghsa/i18n/dashboard';
+import { t } from '@barghsa/i18n/app';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 
@@ -7,6 +9,7 @@ for (const locale of ['fa', 'en'])
       page,
     }) => {
       await page.addInitScript((locale) => {
+        localStorage.setItem('barghsa.locale', locale);
         const apply = () => {
           document.documentElement.lang = locale;
           document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
@@ -15,10 +18,17 @@ for (const locale of ['fa', 'en'])
         new MutationObserver(apply).observe(document, { childList: true });
       }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/user', (route) =>
+        route.fulfill({ json: { userId: 'finance', isStaff: true, requiresTosAcceptance: false } })
+      );
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
           json: {
             appTitle: 'Finance review',
+            appTitleFa: 'بررسی مالی',
+            supportEmail: 'support@example.test',
+            supportPhone: '+982112345678',
+            supportMobile: '+989121234567',
             slogan: '',
             primaryColor: '#2563eb',
             secondaryColor: '#64748b',
@@ -128,5 +138,20 @@ for (const locale of ['fa', 'en'])
       await expect(banner).toContainText('evt-open');
       body = { count: 0, unmatchedCount: 0, reversalFailedCount: 0, items: [] };
       await page.clock.runFor(30000);
+      await expect(banner).toHaveCount(0);
+      const widget = page.getByRole('region', {
+        name: t('dashboard.admin.chargebackWarning.title', locale as 'fa' | 'en'),
+        exact: true,
+      });
+      status = 503;
+      await page.clock.runFor(30000);
+      await expect(widget.getByRole('alert')).toContainText(
+        dashboardText('widget.error', locale as 'fa' | 'en')
+      );
+      status = 200;
+      await widget
+        .getByRole('button', { name: dashboardText('widget.retry', locale as 'fa' | 'en') })
+        .click();
+      await expect(widget).toContainText(dashboardText('chargebacks.empty', locale as 'fa' | 'en'));
       await expect(banner).toHaveCount(0);
     });

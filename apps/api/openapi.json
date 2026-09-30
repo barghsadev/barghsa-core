@@ -5972,6 +5972,40 @@
         ]
       }
     },
+    "/api/admin/dashboard/widgets/{widget}": {
+      "get": {
+        "operationId": "BusinessWorkCountsController_widgetCounts",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "widget",
+            "required": true,
+            "schema": {
+              "enum": [
+                "queue",
+                "work",
+                "failures"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read one independently loaded staff dashboard widget",
+        "tags": [
+          "Admin · Dashboard"
+        ]
+      }
+    },
     "/api/admin/document-retention/destruction": {
       "get": {
         "operationId": "DocumentRetentionController_destruction",

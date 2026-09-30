@@ -1,3 +1,4 @@
+import { dashboardText } from '@barghsa/i18n/dashboard';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 
@@ -27,6 +28,10 @@ for (const locale of ['fa', 'en'])
           route.fulfill({
             json: {
               appTitle: 'CRM review',
+              appTitleFa: 'بررسی پروفایل',
+              supportEmail: 'support@example.test',
+              supportPhone: '+982112345678',
+              supportMobile: '+989121234567',
               slogan: '',
               primaryColor: '#2563eb',
               secondaryColor: '#64748b',
@@ -67,10 +72,7 @@ for (const locale of ['fa', 'en'])
         await page.clock.install();
         await page.goto('/admin');
         const widget = page.getByRole('region', {
-          name:
-            locale === 'fa'
-              ? 'ویجت پروفایل‌های منتظر تأیید'
-              : 'Profiles awaiting verification widget',
+          name: locale === 'fa' ? 'پروفایل‌های منتظر تأیید' : 'Profiles awaiting verification',
         });
         const showAll = page.getByRole('link', {
           name:
@@ -125,9 +127,7 @@ for (const locale of ['fa', 'en'])
         ]) {
           body = invalid;
           await page.clock.runFor(30000);
-          await expect(widget).toContainText(
-            locale === 'fa' ? 'خطا در بارگذاری' : 'Failed to load'
-          );
+          await expect(widget).toContainText(dashboardText('widget.error', locale as 'fa' | 'en'));
           await expect(showAll).toHaveCount(0);
         }
         hold = true;

@@ -18,7 +18,7 @@ Authenticated context and widget endpoints send `private, no-store`. Each widget
 
 ## Validation
 
-Validation passes. Evidence logs are `/tmp/barghsa-dashboard-framework-*.log`. The preceding main batch CI, run `36763125527`, is green. CI for this batch is checked after push.
+Validation passes. Evidence logs are `/tmp/barghsa-dashboard-framework-*.log`. The preceding main batch CI, run `36763125527`, is green. This batch CI run `36769075010` passes all five gates.
 
 - Root build, typecheck, lint, format, OpenAPI contract, suppression checks and 64 gzip budgets.
 - Dashboard service and PostgreSQL HTTP tests — 18 cases: authorization, expected-profile binding, parameter validation, private headers, exact amounts, query isolation, and all five resources.

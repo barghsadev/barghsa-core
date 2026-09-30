@@ -1,126 +1,103 @@
-import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
+import { BriefcaseBusiness, ListTodo, TriangleAlert } from 'lucide-react';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { FailedJobsWidget } from './FailedJobsWidget.js';
-import { StaffWorkQueueWidget } from './StaffWorkQueueWidget.js';
+import { staffDashboardReader, useStaffDashboardData } from '../hooks/useStaffDashboardData.js';
+import { DashboardWidget } from './dashboard/DashboardWidget.js';
+import { FailedJobsWidget, type FailedWorkCounts } from './FailedJobsWidget.js';
+import { StaffWorkQueueWidget, type QueueCounts } from './StaffWorkQueueWidget.js';
 
-interface Counts {
+interface WorkCounts {
   consultations: number | null;
-  unassignedConsultations: number | null;
-  electricityOrders: number | null;
-  savingOrders: number | null;
-  pendingTickets: number | null;
   solarRequests: number | null;
   documentReviews: number | null;
   refundObligations: number | null;
-  failedRefundObligations: number | null;
-  failedJobs: number | null;
-  deadLetterNotifications: number | null;
 }
-
-function validCount(value: unknown): value is number | null {
-  return value === null || (typeof value === 'number' && Number.isSafeInteger(value) && value >= 0);
-}
-
-function parseCounts(value: unknown): Counts {
+function parseCounts<T>(value: unknown, keys: readonly string[]): T {
   if (!value || typeof value !== 'object') throw new Error('Invalid work counts');
   const counts = value as Record<string, unknown>;
   if (
-    !validCount(counts.consultations) ||
-    !validCount(counts.unassignedConsultations) ||
-    !validCount(counts.electricityOrders) ||
-    !validCount(counts.savingOrders) ||
-    !validCount(counts.pendingTickets) ||
-    !validCount(counts.solarRequests) ||
-    !validCount(counts.documentReviews) ||
-    !validCount(counts.refundObligations) ||
-    !validCount(counts.failedRefundObligations) ||
-    !validCount(counts.failedJobs) ||
-    !validCount(counts.deadLetterNotifications) ||
-    (counts.failedJobs === null) !== (counts.deadLetterNotifications === null) ||
-    (counts.refundObligations === null) !== (counts.failedRefundObligations === null) ||
-    (counts.electricityOrders === null) !== (counts.savingOrders === null) ||
-    (counts.consultations === null) !== (counts.unassignedConsultations === null) ||
-    (counts.consultations !== null &&
-      counts.unassignedConsultations !== null &&
-      counts.unassignedConsultations > counts.consultations) ||
-    (counts.refundObligations !== null &&
-      counts.failedRefundObligations !== null &&
-      counts.failedRefundObligations > counts.refundObligations)
+    !keys.every(
+      (key) =>
+        counts[key] === null ||
+        (typeof counts[key] === 'number' && Number.isSafeInteger(counts[key]) && counts[key] >= 0)
+    )
   )
     throw new Error('Invalid work counts');
-  return counts as unknown as Counts;
+  return Object.fromEntries(keys.map((key) => [key, counts[key]])) as T;
 }
-
+const readQueue = staffDashboardReader((value) => {
+  const counts = parseCounts<QueueCounts>(value, [
+    'pendingTickets',
+    'electricityOrders',
+    'savingOrders',
+    'unassignedConsultations',
+  ]);
+  if ((counts.electricityOrders === null) !== (counts.savingOrders === null))
+    throw new Error('Invalid order permissions');
+  return Object.values(counts).every((count) => count === null) ? null : counts;
+});
+const readWork = staffDashboardReader((value) => {
+  const counts = parseCounts<WorkCounts>(value, [
+    'consultations',
+    'solarRequests',
+    'documentReviews',
+    'refundObligations',
+  ]);
+  return Object.values(counts).every((count) => count === null) ? null : counts;
+});
+const readFailures = staffDashboardReader((value) => {
+  const counts = parseCounts<FailedWorkCounts>(value, [
+    'failedJobs',
+    'deadLetterNotifications',
+    'failedRefundObligations',
+  ]);
+  if ((counts.failedJobs === null) !== (counts.deadLetterNotifications === null))
+    throw new Error('Invalid job permissions');
+  return Object.values(counts).every((count) => count === null) ? null : counts;
+});
 const cards = [
   { key: 'consultations', route: '/admin/consultations', label: 'consultations' },
   { key: 'solarRequests', route: '/admin/solar-requests', label: 'solarRequests' },
   { key: 'documentReviews', route: '/admin/documents', label: 'documentReviews' },
 ] as const;
 
-export function AdminBusinessWorkCounts() {
+function WorkQueue() {
+  const locale = useLocale();
+  const resource = useStaffDashboardData('/api/admin/dashboard/widgets/queue', readQueue);
+  if (!resource) return null;
+  return (
+    <DashboardWidget
+      title={t('dashboard.admin.work.queueTitle', locale)}
+      icon={ListTodo}
+      resource={resource}
+      locale={locale}
+    >
+      {(counts) => <StaffWorkQueueWidget counts={counts} embedded />}
+    </DashboardWidget>
+  );
+}
+function OpenWork() {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
-  const [counts, setCounts] = useState<Counts | null>(null);
-  const [state, setState] = useState<'loading' | 'ready' | 'error' | 'hidden'>('loading');
-  useEffect(() => {
-    let cancelled = false;
-    let pending = false;
-    const controller = new AbortController();
-    async function refresh() {
-      if (pending) return;
-      pending = true;
-      try {
-        const response = await fetch('/api/admin/dashboard/business-work-counts', {
-          credentials: 'include',
-          signal: controller.signal,
-        });
-        if (response.status === 401 || response.status === 403) {
-          if (!cancelled) setState('hidden');
-          return;
-        }
-        if (!response.ok) throw new Error('Work counts unavailable');
-        const next = parseCounts(await response.json());
-        if (!cancelled) {
-          setCounts(next);
-          setState('ready');
-        }
-      } catch {
-        if (!cancelled) setState('error');
-      } finally {
-        pending = false;
-      }
-    }
-    void refresh();
-    const interval = setInterval(() => void refresh(), 30_000);
-    return () => {
-      cancelled = true;
-      controller.abort();
-      clearInterval(interval);
-    };
-  }, []);
-
-  if (state === 'hidden') return null;
+  const resource = useStaffDashboardData('/api/admin/dashboard/widgets/work', readWork);
+  if (!resource) return null;
   return (
-    <section className="mb-6 space-y-3" aria-label={t('dashboard.admin.work.title', locale)}>
-      <h2 className="text-lg font-semibold">{t('dashboard.admin.work.title', locale)}</h2>
-      {state === 'loading' && <p role="status">{t('dashboard.admin.work.loading', locale)}</p>}
-      {state === 'error' && (
-        <p role="alert" className="text-sm text-destructive">
-          {t('dashboard.admin.work.error', locale)}
-        </p>
-      )}
-      {state === 'ready' && counts && <StaffWorkQueueWidget counts={counts} />}
-      {state === 'ready' && counts && (
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+    <DashboardWidget
+      title={t('dashboard.admin.work.title', locale)}
+      icon={BriefcaseBusiness}
+      resource={resource}
+      locale={locale}
+    >
+      {(counts) => (
+        <div className="grid grid-cols-2 gap-3">
           {cards.map(({ key, route, label }) =>
             counts[key] === null ? null : (
               <Link
                 key={key}
                 to={route}
-                className="rounded-xl border bg-card p-4 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                className="rounded-xl border bg-card p-3 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
                 <span className="block text-2xl font-semibold">{numbers.number(counts[key])}</span>
                 <span className="text-sm text-muted-foreground">
@@ -132,7 +109,7 @@ export function AdminBusinessWorkCounts() {
           {counts.refundObligations !== null && (
             <a
               href="/admin/contracts#refund-obligations"
-              className="rounded-xl border bg-card p-4 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="rounded-xl border bg-card p-3 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <span className="block text-2xl font-semibold">
                 {numbers.number(counts.refundObligations)}
@@ -144,7 +121,32 @@ export function AdminBusinessWorkCounts() {
           )}
         </div>
       )}
-      {state === 'ready' && counts && <FailedJobsWidget counts={counts} />}
-    </section>
+    </DashboardWidget>
+  );
+}
+function Failures() {
+  const locale = useLocale();
+  const resource = useStaffDashboardData('/api/admin/dashboard/widgets/failures', readFailures);
+  if (!resource) return null;
+  return (
+    <DashboardWidget
+      title={t('dashboard.admin.failures.title', locale)}
+      icon={TriangleAlert}
+      resource={resource}
+      locale={locale}
+    >
+      {(counts) => <FailedJobsWidget counts={counts} embedded />}
+    </DashboardWidget>
+  );
+}
+
+/** Sibling widgets own separate reads, retries and permission decisions. */
+export function AdminBusinessWorkCounts() {
+  return (
+    <>
+      <WorkQueue />
+      <OpenWork />
+      <Failures />
+    </>
   );
 }

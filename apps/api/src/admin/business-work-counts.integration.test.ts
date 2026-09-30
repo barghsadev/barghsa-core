@@ -301,3 +301,79 @@ it('counts unresolved obligations and flags failed refunds for finance', async (
     failedRefundObligations: null,
   });
 });
+
+it('loads only the requested widget with current permissions and private caching', async () => {
+  const path = `${http.base}/api/admin/dashboard/widgets`;
+  const queue = await fetch(`${path}/queue`, { headers: headers['work-tickets']! });
+  expect(queue.status, http.logs()).toBe(200);
+  expect(queue.headers.get('cache-control')).toContain('private');
+  expect(queue.headers.get('cache-control')).toContain('no-store');
+  expect(await queue.json()).toEqual({
+    pendingTickets: 1,
+    electricityOrders: null,
+    savingOrders: null,
+    unassignedConsultations: null,
+  });
+  for (const widget of ['work', 'failures'])
+    expect((await fetch(`${path}/${widget}`, { headers: headers['work-tickets']! })).status).toBe(
+      403
+    );
+  expect((await fetch(`${path}/queue`, { headers: headers['work-finance']! })).status).toBe(403);
+  expect((await fetch(`${path}/work`, { headers: headers['work-jobs']! })).status).toBe(403);
+  expect((await fetch(`${path}/failures`, { headers: headers['work-contracts']! })).status).toBe(
+    403
+  );
+  const finance = await fetch(`${path}/failures`, { headers: headers['work-finance']! });
+  expect(await finance.json()).toEqual({
+    failedJobs: null,
+    deadLetterNotifications: null,
+    failedRefundObligations: 1,
+  });
+  expect((await fetch(`${path}/queue`, { headers: headers['work-customer']! })).status).toBe(403);
+  expect((await fetch(`${path}/queue`)).status).toBe(401);
+  expect((await fetch(`${path}/invalid`, { headers: headers['work-admin']! })).status).toBe(400);
+});
+
+it('keeps business queues usable when the background-job read fails', async () => {
+  const path = `${http.base}/api/admin/dashboard/widgets`;
+  await http.pool.query(
+    'ALTER TABLE background_jobs RENAME COLUMN status TO dashboard_fault_status'
+  );
+  try {
+    expect((await fetch(`${path}/failures`, { headers: headers['work-admin']! })).status).toBe(500);
+    const queue = await fetch(`${path}/queue`, { headers: headers['work-admin']! });
+    expect(queue.status, http.logs()).toBe(200);
+    expect(await queue.json()).toEqual({
+      pendingTickets: 2,
+      electricityOrders: 1,
+      savingOrders: 1,
+      unassignedConsultations: 1,
+    });
+    const work = await fetch(`${path}/work`, { headers: headers['work-admin']! });
+    expect(work.status, http.logs()).toBe(200);
+    expect(await work.json()).toEqual({
+      consultations: 2,
+      solarRequests: 1,
+      documentReviews: 0,
+      refundObligations: 1,
+    });
+  } finally {
+    await http.pool.query(
+      'ALTER TABLE background_jobs RENAME COLUMN dashboard_fault_status TO status'
+    );
+  }
+  const recovered = await fetch(`${path}/failures`, { headers: headers['work-admin']! });
+  expect(recovered.status, http.logs()).toBe(200);
+  expect(await recovered.json()).toEqual({
+    failedJobs: 0,
+    deadLetterNotifications: 0,
+    failedRefundObligations: 1,
+  });
+});
+
+it('rejects permissions removed after an earlier successful widget read', async () => {
+  const path = `${http.base}/api/admin/dashboard/widgets/queue`;
+  expect((await fetch(path, { headers: headers['work-tickets']! })).status).toBe(200);
+  await http.pool.query("DELETE FROM user_roles WHERE user_id='work-tickets'");
+  expect((await fetch(path, { headers: headers['work-tickets']! })).status).toBe(403);
+});

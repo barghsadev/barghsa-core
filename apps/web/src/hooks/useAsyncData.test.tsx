@@ -28,6 +28,7 @@ beforeEach(() => {
 afterEach(async () => {
   await act(async () => root.unmount());
   container.remove();
+  vi.useRealTimers();
   vi.unstubAllGlobals();
 });
 
@@ -84,4 +85,64 @@ describe('useAsyncData', () => {
     await act(async () => root.render(null));
     expect(fetcher.mock.calls[0]![1].signal?.aborted).toBe(true);
   });
+});
+
+it('polls without overlapping held reads and cancels the timer on unmount', async () => {
+  vi.useFakeTimers();
+  let finish!: (response: Response) => void;
+  const fetcher = vi.fn(
+    () =>
+      new Promise<Response>((resolve) => {
+        finish = resolve;
+      })
+  );
+  vi.stubGlobal('fetch', fetcher);
+  function Polled() {
+    resource = useAsyncData<string>('/resource', { refreshIntervalMs: 30_000 });
+    return null;
+  }
+  await act(async () => root.render(<Polled />));
+  await act(async () => vi.advanceTimersByTime(90_000));
+  expect(fetcher).toHaveBeenCalledTimes(1);
+  await act(async () => finish(response('first')));
+  await act(async () => vi.advanceTimersByTime(30_000));
+  expect(resource).toMatchObject({ status: 'ready', data: 'first' });
+  expect(fetcher).toHaveBeenCalledTimes(2);
+  await act(async () => finish(response('next')));
+  expect(resource).toMatchObject({ status: 'ready', data: 'next' });
+  await act(async () => root.render(null));
+  await act(async () => vi.advanceTimersByTime(90_000));
+  expect(fetcher).toHaveBeenCalledTimes(2);
+});
+
+it('retains a known warning through failed refresh and retry, but clears it on context change', async () => {
+  vi.useFakeTimers();
+  let finish!: (response: Response) => void;
+  const fetcher = vi
+    .fn()
+    .mockResolvedValueOnce(response('open-warning'))
+    .mockResolvedValueOnce(response({}, 503))
+    .mockImplementation(
+      () =>
+        new Promise<Response>((resolve) => {
+          finish = resolve;
+        })
+    );
+  vi.stubGlobal('fetch', fetcher);
+  function Warning() {
+    resource = useAsyncData<string>('/warning', {
+      refreshIntervalMs: 30_000,
+      retainDataOnRefreshError: true,
+    });
+    return null;
+  }
+  await act(async () => root.render(<Warning />));
+  await act(async () => vi.advanceTimersByTime(30_000));
+  expect(resource).toMatchObject({ status: 'ready', data: 'open-warning', refreshError: true });
+  await act(async () => resource.retry());
+  expect(resource).toMatchObject({ status: 'ready', data: 'open-warning' });
+  await act(async () => finish(response('resolved')));
+  expect(resource).toMatchObject({ status: 'ready', data: 'resolved' });
+  await act(async () => refreshProfileContext());
+  expect(resource).toMatchObject({ status: 'loading', data: null });
 });

@@ -45,7 +45,7 @@ test('staff work cards open the matching pending queues', async ({ page }) => {
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({ json: { userId: 'staff', isStaff: true, requiresTosAcceptance: false } })
   );
-  await page.route('**/api/admin/dashboard/business-work-counts', (route) =>
+  await page.route('**/api/admin/dashboard/widgets/*', (route) =>
     route.fulfill({
       json: {
         consultations: 2,

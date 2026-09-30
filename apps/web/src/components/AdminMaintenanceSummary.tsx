@@ -1,51 +1,68 @@
-import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
+import { Wrench } from 'lucide-react';
 import { tMaintenance } from '@barghsa/i18n/maintenance';
 import { useLocale } from '../hooks/useLocale.js';
 import type { PublicMaintenanceSetting } from '../hooks/useMaintenance.js';
+import { staffDashboardReader, useStaffDashboardData } from '../hooks/useStaffDashboardData.js';
+import { DashboardWidget } from './dashboard/DashboardWidget.js';
+
+const capabilities = [
+  'electricity_checkout',
+  'saving_orders',
+  'solar_requests',
+  'wallet_topup',
+  'ai_chat',
+];
+const readMaintenance = staffDashboardReader<PublicMaintenanceSetting[]>((value) => {
+  if (
+    !value ||
+    typeof value !== 'object' ||
+    !('capabilities' in value) ||
+    !Array.isArray(value.capabilities)
+  )
+    throw new Error('Invalid maintenance status');
+  if (
+    !value.capabilities.every(
+      (setting) =>
+        setting &&
+        typeof setting === 'object' &&
+        capabilities.includes(setting.capability) &&
+        typeof setting.active === 'boolean'
+    )
+  )
+    throw new Error('Invalid maintenance capability');
+  return value.capabilities.filter((setting) => setting.active) as PublicMaintenanceSetting[];
+});
 
 export function AdminMaintenanceSummary() {
   const locale = useLocale();
-  const [active, setActive] = useState<PublicMaintenanceSetting[]>([]);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    async function refresh() {
-      try {
-        const response = await fetch('/api/maintenance', { signal: controller.signal });
-        if (!response.ok) return;
-        const result = (await response.json()) as { capabilities: PublicMaintenanceSetting[] };
-        if (!controller.signal.aborted && Array.isArray(result.capabilities))
-          setActive(result.capabilities.filter((setting) => setting.active));
-      } catch {
-        // Dashboard alerts remain available if maintenance status cannot be read.
-      }
-    }
-    void refresh();
-    const interval = setInterval(() => void refresh(), 30_000);
-    return () => {
-      controller.abort();
-      clearInterval(interval);
-    };
-  }, []);
-
-  if (active.length === 0) return null;
+  const resource = useStaffDashboardData('/api/maintenance', readMaintenance);
+  if (!resource) return null;
   return (
-    <section className="mb-6 rounded-lg border border-warning/30 bg-warning-soft p-4" role="status">
-      <h2 className="font-semibold">{tMaintenance('adminTitle', locale)}</h2>
-      <ul className="mt-2 flex flex-wrap gap-2 text-sm">
-        {active.map((setting) => (
-          <li key={setting.capability} className="rounded-full border border-warning/40 px-3 py-1">
-            {tMaintenance(setting.capability, locale)}: {tMaintenance('active', locale)}
-          </li>
-        ))}
-      </ul>
-      <Link
-        to="/admin/maintenance"
-        className="mt-3 inline-block text-sm font-medium text-primary underline"
-      >
-        {tMaintenance('manage', locale)}
-      </Link>
-    </section>
+    <DashboardWidget
+      title={tMaintenance('adminTitle', locale)}
+      icon={Wrench}
+      locale={locale}
+      resource={resource}
+      empty={(active) => active.length === 0}
+      emptyMessage={tMaintenance('noActive', locale)}
+      viewAll={
+        <Link to="/admin/maintenance" className="text-sm font-medium text-primary underline">
+          {tMaintenance('manage', locale)}
+        </Link>
+      }
+    >
+      {(active) => (
+        <section role="status" className="rounded-md border border-warning/30 bg-warning-soft p-3">
+          <ul className="space-y-3 text-sm">
+            {active.map((setting) => (
+              <li key={setting.capability}>
+                {tMaintenance(setting.capability, locale)}: {tMaintenance('active', locale)}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </DashboardWidget>
   );
 }
