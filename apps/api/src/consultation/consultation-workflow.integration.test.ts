@@ -63,6 +63,14 @@ function post(path: string, user: string, body: unknown) {
   });
 }
 
+async function offerFee(path: string, user: string, body: Record<string, unknown>) {
+  const { idempotencyKey: _key, ...terms } = body;
+  const preview = await post(path.replace(/\/fee$/, '/fee-review'), user, terms);
+  if (!preview.ok) return preview;
+  const review = (await preview.json()) as { hash: string };
+  return post(path, user, { ...body, expectedReviewHash: review.hash });
+}
+
 async function decide(path: string, user: string, body: Record<string, unknown> = {}) {
   const decision = path.endsWith('/decline') ? 'decline' : 'accept';
   const preview = await post(path.replace(/\/(accept|decline)$/, '/offer-review'), user, {
@@ -235,12 +243,55 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
     deliverables: 'Written feasibility report',
     validUntil,
   };
-  expect((await post(`${root}/fee`, 'reviewer', firstOffer)).status).toBe(409);
+  expect((await offerFee(`${root}/fee`, 'reviewer', firstOffer)).status).toBe(409);
   expect((await post(`${root}/review`, 'reviewer', {})).status).toBe(200);
-  const offered = await post(`${root}/fee`, 'reviewer', firstOffer);
+  const firstPreview = await post(`${root}/fee-review`, 'reviewer', {
+    fee: firstOffer.fee,
+    scope: firstOffer.scope,
+    deliverables: firstOffer.deliverables,
+    validUntil: firstOffer.validUntil,
+  });
+  expect(firstPreview.status, http.logs()).toBe(200);
+  const reviewed = (await firstPreview.json()) as {
+    hash: string;
+    data: { fee: string; outcome: string };
+  };
+  expect(reviewed.data).toMatchObject({ fee: '500000', outcome: 'issue_invoice' });
+  expect((await post(`${root}/fee`, 'reviewer', firstOffer)).status).toBe(400);
+  expect(
+    (
+      await post(`${root}/fee`, 'reviewer', {
+        ...firstOffer,
+        fee: '500001',
+        expectedReviewHash: reviewed.hash,
+      })
+    ).status
+  ).toBe(409);
+  const offered = await post(`${root}/fee`, 'reviewer', {
+    ...firstOffer,
+    expectedReviewHash: reviewed.hash,
+  });
   expect(offered.status, http.logs()).toBe(200);
-  const firstId = ((await offered.json()) as { invoiceId: string }).invoiceId;
-  const replayed = await post(`${root}/fee`, 'reviewer', firstOffer);
+  const offerResult = (await offered.json()) as {
+    invoiceId: string;
+    financialReview: { hash: string };
+  };
+  const firstId = offerResult.invoiceId;
+  expect(offerResult.financialReview.hash).toBe(reviewed.hash);
+  const storedReview = (
+    await http.pool.query<{ metadata: { financialReview: { hash: string } } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log
+       WHERE event='consultation.request.changed'
+         AND metadata::jsonb->>'requestId'=$1
+         AND metadata::jsonb->>'action'='fee_offer_review'`,
+      [requestId]
+    )
+  ).rows[0];
+  expect(storedReview?.metadata.financialReview.hash).toBe(reviewed.hash);
+  const replayed = await post(`${root}/fee`, 'reviewer', {
+    ...firstOffer,
+    expectedReviewHash: reviewed.hash,
+  });
   expect(replayed.status, http.logs()).toBe(200);
   expect(await replayed.json()).toMatchObject({ invoiceId: firstId });
   const acceptance = await decide(`/api/consultations/requests/${requestId}/accept`, 'customer');
@@ -257,12 +308,39 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
     state: 'Unpaid',
     total_amount: '500000',
   });
-  const revised = await post(`${root}/fee`, 'reviewer', {
+  const revisionInput = {
     ...firstOffer,
     idempotencyKey: randomUUID(),
     fee: '600000',
     reason: 'Additional engineering analysis is needed',
+  };
+  const revisionPreview = await post(`${root}/fee-review`, 'reviewer', {
+    fee: revisionInput.fee,
+    scope: revisionInput.scope,
+    deliverables: revisionInput.deliverables,
+    validUntil: revisionInput.validUntil,
+    reason: revisionInput.reason,
   });
+  expect(revisionPreview.status, http.logs()).toBe(200);
+  const revisionReview = (await revisionPreview.json()) as {
+    hash: string;
+    data: { previousInvoice: { id: string; state: string; totalAmount: string } };
+  };
+  expect(revisionReview.data.previousInvoice).toMatchObject({
+    id: firstId,
+    state: 'Unpaid',
+    totalAmount: '500000',
+  });
+  await http.pool.query("UPDATE invoices SET state='Overdue' WHERE id=$1", [firstId]);
+  expect(
+    (
+      await post(`${root}/fee`, 'reviewer', {
+        ...revisionInput,
+        expectedReviewHash: revisionReview.hash,
+      })
+    ).status
+  ).toBe(409);
+  const revised = await offerFee(`${root}/fee`, 'reviewer', revisionInput);
   expect(revised.status, http.logs()).toBe(200);
   const secondId = ((await revised.json()) as { invoiceId: string }).invoiceId;
   expect(secondId).not.toBe(firstId);
@@ -334,7 +412,7 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
   await http.pool.query("UPDATE invoices SET state='Paid',paid_amount=600000 WHERE id=$1", [
     secondId,
   ]);
-  const afterPayment = await post(`${root}/fee`, 'reviewer', {
+  const afterPayment = await offerFee(`${root}/fee`, 'reviewer', {
     ...firstOffer,
     idempotencyKey: randomUUID(),
     fee: '700000',
@@ -358,7 +436,7 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
   const anotherId = ((await another.json()) as { requestId: string }).requestId;
   const anotherRoot = `/api/admin/consultations/requests/${anotherId}`;
   expect((await post(`${anotherRoot}/review`, 'reviewer', {})).status).toBe(200);
-  const anotherOffer = await post(`${anotherRoot}/fee`, 'reviewer', {
+  const anotherOffer = await offerFee(`${anotherRoot}/fee`, 'reviewer', {
     ...firstOffer,
     idempotencyKey: randomUUID(),
   });

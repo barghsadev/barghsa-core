@@ -38,6 +38,12 @@ const en: Record<string, string> = {
   issueFee: 'Issue fee offer and invoice',
   replaceFee: 'Replace fee offer and unpaid invoice',
   replaceReason: 'Reason for replacing the previous offer',
+  feeReviewTitle: 'Review fee offer and invoice',
+  feeReviewPreviousInvoice: 'Invoice to cancel',
+  feeReviewPreviousAmount: 'Previous invoice amount',
+  feeReviewIssueOutcome: 'This creates a new unpaid invoice for the customer.',
+  feeReviewReplaceOutcome:
+    'This cancels the unpaid invoice and issues a replacement. No payment is moved.',
   adjustPaidFee: 'Adjust paid fee',
   adjustPaidFeeHelp:
     'A higher fee creates an additional invoice for customer acceptance and payment. A lower fee creates a credit and starts a wallet refund request. The paid invoice stays unchanged.',
@@ -179,6 +185,12 @@ const fa: Record<string, string> = {
   issueFee: 'صدور پیشنهاد و صورتحساب',
   replaceFee: 'جایگزینی پیشنهاد و صورتحساب پرداخت‌نشده',
   replaceReason: 'دلیل جایگزینی پیشنهاد قبلی',
+  feeReviewTitle: 'بررسی پیشنهاد و صورتحساب مشاوره',
+  feeReviewPreviousInvoice: 'صورتحسابی که لغو می‌شود',
+  feeReviewPreviousAmount: 'مبلغ صورتحساب پیشین',
+  feeReviewIssueOutcome: 'یک صورتحساب پرداخت‌نشده جدید برای مشتری صادر می‌شود.',
+  feeReviewReplaceOutcome:
+    'صورتحساب پرداخت‌نشده لغو و صورتحساب جایگزین صادر می‌شود. وجهی جابه‌جا نمی‌شود.',
   adjustPaidFee: 'اصلاح هزینه پرداخت‌شده',
   adjustPaidFeeHelp:
     'افزایش هزینه، صورتحساب جدیدی برای پذیرش و پرداخت مشتری ایجاد می‌کند. کاهش هزینه، بستانکاری و درخواست بازپرداخت به کیف پول ایجاد می‌کند. صورتحساب پرداخت‌شده بدون تغییر می‌ماند.',

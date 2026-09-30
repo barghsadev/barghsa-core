@@ -53,3 +53,4 @@ export * from './electricity-price-adjustment-review.js';
 export * from './electricity-increase-signing-review.js';
 export * from './manual-invoice-review.js';
 export * from './consultation-offer-review.js';
+export * from './consultation-fee-review.js';

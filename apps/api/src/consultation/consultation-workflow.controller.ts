@@ -36,8 +36,10 @@ const feeOffer = z
     deliverables: z.string().trim().min(1).max(4000),
     validUntil: z.iso.datetime({ offset: true }),
     reason: z.string().trim().min(1).max(2000).optional(),
+    expectedReviewHash: reviewHash,
   })
   .strict();
+const feeReviewInput = feeOffer.omit({ idempotencyKey: true, expectedReviewHash: true });
 const paidFeeAdjustment = z
   .object({
     idempotencyKey: z.string().uuid(),
@@ -153,6 +155,18 @@ export class StaffConsultationWorkflowController {
     @Req() req: AuthenticatedRequest
   ) {
     return this.workflow.setFee(req.session, id, parse(feeOffer, body), req.ip ?? '127.0.0.1');
+  }
+
+  @Post('requests/:id/fee-review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Preview the authoritative consultation fee offer and invoice outcome' })
+  @ApiZodBody(feeReviewInput)
+  feeReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.workflow.feeReview(req.session, id, parse(feeReviewInput, body));
   }
 
   @Post('requests/:id/paid-fee')

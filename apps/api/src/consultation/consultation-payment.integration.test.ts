@@ -67,6 +67,14 @@ function post(path: string, user: string, body: unknown) {
   });
 }
 
+async function offerFee(path: string, user: string, body: Record<string, unknown>) {
+  const { idempotencyKey: _key, ...terms } = body;
+  const preview = await post(path.replace(/\/fee$/, '/fee-review'), user, terms);
+  if (!preview.ok) return preview;
+  const review = (await preview.json()) as { hash: string };
+  return post(path, user, { ...body, expectedReviewHash: review.hash });
+}
+
 async function decide(path: string, user: string, body: Record<string, unknown> = {}) {
   const decision = path.endsWith('/decline') ? 'decline' : 'accept';
   const preview = await post(path.replace(/\/(accept|decline)$/, '/offer-review'), user, {
@@ -87,7 +95,7 @@ async function offer() {
   const requestId = ((await created.json()) as { requestId: string }).requestId;
   const root = `/api/admin/consultations/requests/${requestId}`;
   expect((await post(`${root}/review`, 'consultation-finance', {})).status).toBe(200);
-  const offered = await post(`${root}/fee`, 'consultation-finance', {
+  const offered = await offerFee(`${root}/fee`, 'consultation-finance', {
     idempotencyKey: randomUUID(),
     fee: '500000',
     scope: 'Feasibility study',
@@ -240,7 +248,7 @@ it('charges or credits a paid consultation without changing the paid invoice', a
   expect((await post(`${root}/paid-fee`, 'consultation-finance', chargeInput)).status).toBe(200);
   expect(
     (
-      await post(`${root}/fee`, 'consultation-finance', {
+      await offerFee(`${root}/fee`, 'consultation-finance', {
         idempotencyKey: randomUUID(),
         fee: '700000',
         scope: 'Feasibility study',

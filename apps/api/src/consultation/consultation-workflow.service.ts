@@ -23,6 +23,8 @@ import { NotificationsService } from '../notifications/notifications.service.js'
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { canTransitionConsultation, type ConsultationStatus } from './consultation-state.js';
 import {
+  parseConsultationFeeReview,
+  type ConsultationFeeReview,
   parseConsultationOfferReview,
   type ConsultationOfferReview,
 } from '@barghsa/shared/finance';
@@ -346,6 +348,7 @@ export class ConsultationWorkflowService {
       deliverables: string;
       validUntil: string;
       reason?: string | undefined;
+      expectedReviewHash: string;
     },
     ip: string
   ) {
@@ -393,12 +396,38 @@ export class ConsultationWorkflowService {
           current.offer_valid_until?.getTime() !== validUntil.getTime()
         )
           throw new ConflictException('Fee offer request key was already used');
-        return { requestId: id, status: 'offer_pending' as const, invoiceId: previousKey.id };
+        const saved = (
+          await client.query<{ metadata: unknown }>(
+            `SELECT metadata::jsonb AS metadata FROM audit_log
+             WHERE event='consultation.request.changed'
+               AND metadata::jsonb->>'requestId'=$1
+               AND metadata::jsonb->>'action'='fee_offer_review'
+               AND metadata::jsonb->>'idempotencyKey'=$2 LIMIT 1`,
+            [id, input.idempotencyKey]
+          )
+        ).rows[0];
+        const financialReview = new ReviewSnapshotService().assertStored(
+          saved?.metadata,
+          input.expectedReviewHash,
+          { action: 'consultation.fee-offer', profileId: request.profile_id, resourceId: id }
+        );
+        if (
+          (financialReview as ConsultationFeeReview).data.reason !== (input.reason?.trim() ?? null)
+        )
+          throw new ConflictException('Fee offer request key was already used');
+        return {
+          requestId: id,
+          status: 'offer_pending' as const,
+          invoiceId: previousKey.id,
+          financialReview,
+        };
       }
       if (request.status !== 'under_review' && request.status !== 'offer_pending')
         throw new ConflictException('Consultation is not ready for a fee offer');
       if (request.status === 'offer_pending' && !request.invoice_id)
         throw new ConflictException('Existing consultation offer has no invoice');
+      const financialReview = await this.feeReviewForLocked(client, request, input);
+      new ReviewSnapshotService().assertConfirmed(financialReview, input.expectedReviewHash);
       const line = {
         description: 'Consultation fee / هزینه مشاوره',
         quantity: 1,
@@ -457,8 +486,149 @@ export class ConsultationWorkflowService {
       );
       await this.event(client, id, 'offer_pending', actor.userId, input.reason ?? null);
       await this.notify(client, request, 'offer_pending');
-      return { requestId: id, status: 'offer_pending' as const, invoiceId };
+      await this.audit(
+        client,
+        actor.userId,
+        id,
+        { action: 'fee_offer_review', idempotencyKey: input.idempotencyKey, financialReview },
+        ip
+      );
+      return { requestId: id, status: 'offer_pending' as const, invoiceId, financialReview };
     });
+  }
+
+  private async feeReviewForLocked(
+    client: PoolClient,
+    request: RequestRow,
+    input: {
+      fee: string;
+      scope: string;
+      deliverables: string;
+      validUntil: string;
+      reason?: string | undefined;
+    }
+  ): Promise<ConsultationFeeReview> {
+    const fee = BigInt(input.fee);
+    if (fee <= 0n || fee > 9_223_372_036_854_775_807n)
+      throw new BadRequestException('Consultation fee is outside the supported IRR range');
+    const validUntil = new Date(input.validUntil);
+    if (!Number.isFinite(validUntil.getTime()) || validUntil <= new Date())
+      throw new BadRequestException('Offer validity must be in the future');
+    if (request.status !== 'under_review' && request.status !== 'offer_pending')
+      throw new ConflictException('Consultation is not ready for a fee offer');
+    if (request.status === 'offer_pending' && !request.invoice_id)
+      throw new ConflictException('Existing consultation offer has no invoice');
+    const paidHistory = (
+      await client.query<{ paid: boolean }>(
+        'SELECT EXISTS(SELECT 1 FROM invoices WHERE consultation_id=$1 AND paid_amount>0) AS paid',
+        [request.id]
+      )
+    ).rows[0]?.paid;
+    if (paidHistory)
+      throw new ConflictException('Paid consultation fees require the paid adjustment workflow');
+    let previousInvoice: { id: string; state: string; totalAmount: string } | null = null;
+    if (request.invoice_id) {
+      if (!input.reason?.trim())
+        throw new BadRequestException('A reason is required to replace a consultation offer');
+      const previous = (
+        await client.query<{
+          id: string;
+          state: string;
+          total_amount: string;
+          paid_amount: string;
+          consultation_id: string | null;
+          profile_id: string;
+        }>(
+          `SELECT id,state,total_amount,paid_amount,consultation_id,profile_id
+           FROM invoices WHERE id=$1`,
+          [request.invoice_id]
+        )
+      ).rows[0];
+      if (
+        !previous ||
+        previous.consultation_id !== request.id ||
+        previous.profile_id !== request.profile_id ||
+        BigInt(previous.paid_amount) > 0n ||
+        !['Draft', 'Unpaid', 'Overdue'].includes(previous.state)
+      )
+        throw new ConflictException('Consultation invoice cannot be replaced');
+      previousInvoice = {
+        id: previous.id,
+        state: previous.state,
+        totalAmount: previous.total_amount,
+      };
+    }
+    const title = request.product_snapshot?.title;
+    if (!title?.fa || !title.en)
+      throw new ConflictException('Consultation service title is unavailable');
+    const profileName = (
+      await client.query<{ name: string }>(
+        `SELECT COALESCE(NULLIF(lp.legal_name,''),
+          NULLIF(TRIM(CONCAT_WS(' ',p.first_name,p.last_name)),''),p.id::text) AS name
+         FROM profiles p LEFT JOIN legal_profiles lp ON lp.id=p.id WHERE p.id=$1`,
+        [request.profile_id]
+      )
+    ).rows[0]?.name;
+    if (!profileName) throw new ConflictException('Consultation profile is unavailable');
+    const snapshot = new ReviewSnapshotService().create(
+      { action: 'consultation.fee-offer', profileId: request.profile_id, resourceId: request.id },
+      {
+        serviceTitle: { fa: title.fa, en: title.en },
+        profileName,
+        scope: input.scope,
+        deliverables: input.deliverables,
+        fee: input.fee,
+        validUntil: validUntil.toISOString(),
+        reason: previousInvoice ? input.reason!.trim() : null,
+        previousInvoice,
+        outcome: previousInvoice ? 'replace_unpaid_invoice' : 'issue_invoice',
+      }
+    );
+    const review = parseConsultationFeeReview(snapshot);
+    if (!review) throw new ConflictException('Consultation fee review requires reconciliation');
+    return review;
+  }
+
+  async feeReview(
+    actor: Actor,
+    id: string,
+    input: {
+      fee: string;
+      scope: string;
+      deliverables: string;
+      validUntil: string;
+      reason?: string | undefined;
+    }
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const preview = (
+        await client.query<{ profile_id: string; invoice_id: string | null }>(
+          'SELECT profile_id,invoice_id FROM consultation_requests WHERE id=$1',
+          [id]
+        )
+      ).rows[0];
+      if (!preview) throw new NotFoundException('Consultation request not found');
+      await client.query('SELECT id FROM profiles WHERE id=$1 FOR SHARE', [preview.profile_id]);
+      await requireStaffMutationPermission(client, actor.userId, 'orders:write');
+      await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+      await requireCurrentSession(client, actor);
+      if (preview.invoice_id)
+        await client.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [preview.invoice_id]);
+      const request = await this.lockRequest(client, id);
+      if (request.profile_id !== preview.profile_id || request.invoice_id !== preview.invoice_id)
+        throw new ConflictException('Consultation changed; refresh before acting');
+      const review = await this.feeReviewForLocked(client, request, input);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   async adjustPaidFee(

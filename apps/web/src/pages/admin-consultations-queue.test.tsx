@@ -66,9 +66,11 @@ it('submits a staff offer deadline in the saved account timezone', async () => {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const submitted: Array<Record<string, unknown>> = [];
+  const requestId = '11111111-1111-4111-8111-111111111111';
+  const profileId = '22222222-2222-4222-8222-222222222222';
   const request = {
-    id: 'request-1',
-    profile_id: 'profile-1',
+    id: requestId,
+    profile_id: profileId,
     profile_name: 'buyer-one',
     status: 'under_review',
     product_snapshot: { title: { en: 'Consultation', fa: 'مشاوره' } },
@@ -84,7 +86,7 @@ it('submits a staff offer deadline in the saved account timezone', async () => {
       if (url.endsWith('/settings/timezone')) data = { timezone: 'Pacific/Kiritimati' };
       else if (url.endsWith('/teams')) data = { teams: [] };
       else if (url.includes('/requests?')) data = { requests: [request], nextAfter: null };
-      else if (url.endsWith('/requests/request-1')) {
+      else if (url.endsWith(`/requests/${requestId}`)) {
         data = {
           request: {
             ...request,
@@ -99,9 +101,27 @@ it('submits a staff offer deadline in the saved account timezone', async () => {
           },
           history: [],
         };
+      } else if (url.endsWith('/fee-review')) {
+        const input = JSON.parse(String(init?.body)) as Record<string, string>;
+        data = {
+          schemaVersion: 1,
+          scope: { action: 'consultation.fee-offer', profileId, resourceId: requestId },
+          data: {
+            serviceTitle: request.product_snapshot.title,
+            profileName: request.profile_name,
+            scope: input.scope,
+            deliverables: input.deliverables,
+            fee: input.fee,
+            validUntil: input.validUntil,
+            reason: null,
+            previousInvoice: null,
+            outcome: 'issue_invoice',
+          },
+          hash: 'a'.repeat(64),
+        };
       } else {
         submitted.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
-        data = {};
+        data = { financialReview: { hash: 'a'.repeat(64) } };
       }
       return new Response(JSON.stringify(data), {
         headers: { 'Content-Type': 'application/json' },
@@ -122,9 +142,11 @@ it('submits a staff offer deadline in the saved account timezone', async () => {
       '2099-01-02T02:30'
     );
     await act(async () => button('Issue fee offer and invoice')?.click());
+    expect(document.body.textContent).toContain('Review fee offer and invoice');
     await act(async () => button('Confirm')?.click());
     expect(submitted).toHaveLength(1);
     expect(submitted[0]?.validUntil).toBe('2099-01-01T12:30:00.000Z');
+    expect(submitted[0]?.expectedReviewHash).toBe('a'.repeat(64));
   } finally {
     await act(async () => root.unmount());
     container.remove();

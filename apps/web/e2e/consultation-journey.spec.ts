@@ -122,10 +122,32 @@ test('customer consultation moves through staff offer, payment handoff, and comp
     history.push({ status, actor_type: 'staff', reason: null, created_at: submittedAt });
     return route.fulfill({ json: { status } });
   });
+  await page.route(`**/api/admin/consultations/requests/${requestId}/fee-review`, (route) => {
+    const input = route.request().postDataJSON() as Record<string, string>;
+    return route.fulfill({
+      json: {
+        schemaVersion: 1,
+        hash: 'a'.repeat(64),
+        scope: { action: 'consultation.fee-offer', profileId, resourceId: requestId },
+        data: {
+          serviceTitle: title,
+          profileName: 'Example Customer',
+          scope: input.scope,
+          deliverables: input.deliverables,
+          fee: input.fee,
+          validUntil: input.validUntil,
+          reason: null,
+          previousInvoice: null,
+          outcome: 'issue_invoice',
+        },
+      },
+    });
+  });
   await page.route(`**/api/admin/consultations/requests/${requestId}/fee`, (route) => {
     expect(status).toBe('under_review');
     const input = route.request().postDataJSON() as Record<string, string>;
     expect(input).toMatchObject({
+      expectedReviewHash: 'a'.repeat(64),
       fee: '500000',
       scope: 'Supply assessment',
       deliverables: 'Written report',
@@ -138,7 +160,9 @@ test('customer consultation moves through staff offer, payment handoff, and comp
     };
     status = 'offer_pending';
     history.push({ status, actor_type: 'staff', reason: null, created_at: submittedAt });
-    return route.fulfill({ json: { status, invoiceId } });
+    return route.fulfill({
+      json: { status, invoiceId, financialReview: { hash: 'a'.repeat(64) } },
+    });
   });
   await page.route(`**/api/consultations/requests/${requestId}/accept`, (route) => {
     expect(status).toBe('offer_pending');
@@ -220,7 +244,12 @@ test('customer consultation moves through staff offer, payment handoff, and comp
   await page.getByLabel('Scope').fill('Supply assessment');
   await page.getByLabel('Deliverables').fill('Written report');
   await page.getByRole('button', { name: 'Issue fee offer and invoice' }).click();
-  await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
+  const feeReview = page.getByRole('dialog', { name: 'Issue fee offer and invoice' });
+  await expect(feeReview).toContainText('Review fee offer and invoice');
+  await expect(feeReview).toContainText('Supply assessment');
+  await expect(feeReview).toContainText('Written report');
+  await expect(feeReview).toContainText('500,000 IRR');
+  await feeReview.getByRole('button', { name: 'Confirm' }).click();
   await expect.poll(() => status).toBe('offer_pending');
   const savedOffer = page.getByRole('region', { name: 'Current fee offer' });
   await expect(savedOffer).toContainText('500,000 IRR');

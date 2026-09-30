@@ -3571,6 +3571,10 @@
                     "minLength": 1,
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "fee": {
                     "pattern": "^[1-9][0-9]{0,18}$",
                     "type": "string"
@@ -3601,7 +3605,8 @@
                   "fee",
                   "scope",
                   "deliverables",
-                  "validUntil"
+                  "validUntil",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -3620,6 +3625,78 @@
           }
         ],
         "summary": "Issue or replace a consultation fee offer and invoice",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/admin/consultations/requests/{id}/fee-review": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_feeReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "deliverables": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "fee": {
+                    "pattern": "^[1-9][0-9]{0,18}$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "scope": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "validUntil": {
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "fee",
+                  "scope",
+                  "deliverables",
+                  "validUntil"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the authoritative consultation fee offer and invoice outcome",
         "tags": [
           "Admin · Consultations"
         ]
