@@ -57,7 +57,7 @@ it('returns only the active profile’s first three due invoices and totals ever
   expect(response.status, http.logs()).toBe(200);
   const dashboard = (await response.json()) as {
     profile: { id: string };
-    access: { invoices: boolean; orders: boolean };
+    access: { invoices: boolean; orders: boolean; contracts: boolean };
     wallet: { balance: string; lowBalanceWarning: boolean };
     pendingInvoices: number;
     upcomingInvoices: Array<{
@@ -67,11 +67,14 @@ it('returns only the active profile’s first three due invoices and totals ever
       remainingAmount: string;
     }>;
     recentOrders: unknown[];
+    activeContracts: unknown[];
   };
   expect(dashboard.profile.id).toBe(profileId);
   expect(dashboard.access.invoices).toBe(true);
   expect(dashboard.access.orders).toBe(true);
+  expect(dashboard.access.contracts).toBe(true);
   expect(dashboard.recentOrders).toEqual([]);
+  expect(dashboard.activeContracts).toEqual([]);
   expect(dashboard.pendingInvoices).toBe(4);
   expect(dashboard.upcomingInvoices.map((invoice) => invoice.invoiceId)).toEqual(ids.slice(0, 3));
   expect(dashboard.upcomingInvoices.map((invoice) => invoice.remainingAmount)).toEqual([

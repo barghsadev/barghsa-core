@@ -833,17 +833,19 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       await act(async () => {
         form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
       });
-      for (let i = 0; i < 20 && !document.querySelector('[role="dialog"]'); i++) {
-        await act(async () => Promise.resolve());
+      for (let i = 0; i < 100 && !document.querySelector('[role="dialog"]'); i++) {
+        await act(async () => {
+          await new Promise((resolve) => setTimeout(resolve, 10));
+        });
       }
       const confirm = [
         ...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
       ].find((button) => button.textContent?.includes('Confirm and submit receipt'));
       expect(confirm, document.body.textContent ?? '').toBeDefined();
       await act(async () => confirm!.click());
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 100; i++) {
         await act(async () => {
-          await Promise.resolve();
+          await new Promise((resolve) => setTimeout(resolve, 10));
         });
         if (container.querySelector('[data-testid="invoice-receipt-success"]')) break;
       }

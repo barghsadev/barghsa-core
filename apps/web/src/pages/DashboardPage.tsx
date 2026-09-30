@@ -22,10 +22,11 @@ import {
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { LatestOrdersWidget, type RecentOrder } from '../components/LatestOrdersWidget.js';
+import { ActiveContractsWidget, type ActiveContract } from '../components/ActiveContractsWidget.js';
 
 interface DashboardData {
   profile?: { id: string; name: string };
-  access?: { invoices: boolean; orders: boolean };
+  access?: { invoices: boolean; orders: boolean; contracts: boolean };
   wallet: {
     balance: string;
     postedBalance: string;
@@ -37,6 +38,7 @@ interface DashboardData {
   pendingInvoices: number;
   upcomingInvoices?: UpcomingInvoice[];
   recentOrders?: RecentOrder[];
+  activeContracts?: ActiveContract[];
   openTickets: number;
   contracts: { active: number; total: number };
   quickStatus: {
@@ -173,7 +175,10 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
         </div>
       </div>
 
-      {(data.access?.invoices !== false || data.access?.orders !== false) && time.notice}
+      {(data.access?.invoices !== false ||
+        data.access?.orders !== false ||
+        data.access?.contracts !== false) &&
+        time.notice}
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         {data.access?.invoices !== false && (
           <UpcomingInvoicesWidget
@@ -186,6 +191,10 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
           <LatestOrdersWidget orders={data.recentOrders ?? []} locale={locale} time={time} />
         )}
       </div>
+
+      {data.access?.contracts !== false && (
+        <ActiveContractsWidget contracts={data.activeContracts ?? []} locale={locale} time={time} />
+      )}
 
       {/* Quick actions section */}
       <section className="border-t pt-6">

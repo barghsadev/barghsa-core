@@ -1,6 +1,6 @@
 import { test, expect } from './coverage-fixture';
 
-test('dashboard shows invoices and recent orders, then clears them after switching profiles', async ({
+test('dashboard shows invoices, orders and contracts, then clears them after switching profiles', async ({
   page,
 }) => {
   await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
@@ -10,6 +10,10 @@ test('dashboard shows invoices and recent orders, then clears them after switchi
   const overdueInvoiceId = '01900000-0000-7000-8000-000000000003';
   const savingOrderId = '01900000-0000-7000-8000-000000000004';
   const electricityOrderId = '01900000-0000-7000-8000-000000000005';
+  const contractId = '01900000-0000-7000-8000-000000000006';
+  const undatedContractId = '01900000-0000-7000-8000-000000000007';
+  const serviceStartsAt = new Date(Date.now() - 10 * 86_400_000).toISOString();
+  const serviceEndsAt = new Date(Date.now() + 10 * 86_400_000).toISOString();
   const dueAt = new Date(Date.now() + 3 * 86_400_000).toISOString();
   const payableFrom = new Date(Date.now() + 2 * 86_400_000).toISOString();
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
@@ -54,7 +58,7 @@ test('dashboard shows invoices and recent orders, then clears them after switchi
           id: activeProfileId,
           name: activeProfileId === 'profile-1' ? 'Ari Buyer' : 'Nova Energy',
         },
-        access: { wallet: true, invoices: true, orders: true },
+        access: { wallet: true, invoices: true, orders: true, contracts: true },
         wallet: {
           balance: '500000',
           postedBalance: '500000',
@@ -109,6 +113,27 @@ test('dashboard shows invoices and recent orders, then clears them after switchi
                 },
               ]
             : [],
+        activeContracts:
+          activeProfileId === 'profile-1'
+            ? [
+                {
+                  contractId,
+                  contractNumber: '42',
+                  serviceType: 'electricity',
+                  status: 'Active',
+                  serviceStartsAt,
+                  serviceEndsAt,
+                },
+                {
+                  contractId: undatedContractId,
+                  contractNumber: '43',
+                  serviceType: 'savings',
+                  status: 'Active',
+                  serviceStartsAt: null,
+                  serviceEndsAt: null,
+                },
+              ]
+            : [],
       },
     })
   );
@@ -149,12 +174,31 @@ test('dashboard shows invoices and recent orders, then clears them after switchi
     'href',
     '/savings/orders'
   );
+  const contracts = page.getByRole('region', { name: 'Active contracts' });
+  await expect(contracts).toBeVisible();
+  await expect(contracts.getByText('50% of term elapsed')).toBeVisible();
+  await expect(contracts.getByText('Term progress is not available yet.')).toBeVisible();
+  await expect(contracts.getByRole('progressbar', { name: '50% of term elapsed' })).toHaveAttribute(
+    'aria-valuenow',
+    '50'
+  );
+  const contractHref = await contracts
+    .getByRole('link', { name: 'View contract · 42' })
+    .getAttribute('href');
+  const contractSearch = new URL(contractHref!, 'http://localhost').searchParams;
+  expect(contractSearch.get('state')).toBe('Active');
+  expect(contractSearch.get('contractId')).toBe(contractId);
+  await expect(contracts.getByRole('link', { name: 'View all' })).toHaveAttribute(
+    'href',
+    /\/contracts\?state=Active/
+  );
 
   await page.getByRole('button', { name: 'Switch language to Persian' }).click();
   const persianInvoices = page.getByRole('region', { name: 'فاکتورهای پیش‌رو' });
   await expect(persianInvoices).toBeVisible();
   await expect(persianInvoices).toHaveCSS('direction', 'rtl');
   await expect(page.getByRole('region', { name: 'آخرین سفارش‌ها' })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'قراردادهای فعال' })).toBeVisible();
   await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
 
   await page.getByLabel('Switch active profile').selectOption('profile-2');
@@ -163,4 +207,6 @@ test('dashboard shows invoices and recent orders, then clears them after switchi
   await expect(invoices.getByRole('link', { name: `Pay now · ${invoiceId}` })).toHaveCount(0);
   await expect(orders.getByText('No orders for this profile yet.')).toBeVisible();
   await expect(orders.getByRole('link', { name: `View order · ${savingOrderId}` })).toHaveCount(0);
+  await expect(contracts.getByText('No active contracts for this profile.')).toBeVisible();
+  await expect(contracts.getByRole('link', { name: 'View contract · 42' })).toHaveCount(0);
 });

@@ -61,6 +61,19 @@ describe('DashboardService quick status', () => {
             },
           ],
         };
+      if (query.includes('SELECT c.id,c.contract_number::text'))
+        return {
+          rows: [
+            {
+              id: 'contract-1',
+              contract_number: '42',
+              service_type: 'electricity',
+              state: 'Active',
+              service_starts_at: new Date('2026-01-01T00:00:00.000Z'),
+              service_ends_at: new Date('2027-01-01T00:00:00.000Z'),
+            },
+          ],
+        };
       return { rows: [{ cnt: 0 }] };
     });
     const overview = await service.getOverview('customer-1');
@@ -71,7 +84,27 @@ describe('DashboardService quick status', () => {
       currency: 'IRR',
       lowBalanceWarning: true,
     });
-    expect(overview.access).toEqual({ wallet: true, invoices: true, orders: true });
+    expect(overview.access).toEqual({
+      wallet: true,
+      invoices: true,
+      orders: true,
+      contracts: true,
+    });
+    expect(overview.activeContracts).toEqual([
+      {
+        contractId: 'contract-1',
+        contractNumber: '42',
+        serviceType: 'electricity',
+        status: 'Active',
+        serviceStartsAt: '2026-01-01T00:00:00.000Z',
+        serviceEndsAt: '2027-01-01T00:00:00.000Z',
+      },
+    ]);
+    const activeContractQuery = queryFor('SELECT c.id,c.contract_number::text');
+    expect(activeContractQuery?.[0]).toContain("c.state='Active'");
+    expect(activeContractQuery?.[0]).toContain('p.version_id=c.current_version_id');
+    expect(activeContractQuery?.[0]).toContain('LIMIT 3');
+    expect(activeContractQuery?.[1]).toEqual(['profile-1']);
     expect(overview.recentOrders).toEqual([
       {
         kind: 'saving',
@@ -130,16 +163,23 @@ describe('DashboardService quick status', () => {
       if (query.includes('FROM profiles p') && query.includes('JOIN users u'))
         return { rows: [{ id: 'profile-legal', is_owner: false, roles: ['Legal'] }] };
       if (query.includes('FROM profiles p')) return { rows: [{ name: 'Legal profile' }] };
+      if (query.includes('SELECT c.id,c.contract_number::text')) return { rows: [] };
       if (query.includes('FROM contracts') || query.includes('FROM tickets'))
         return { rows: [{ cnt: 0 }] };
       throw new Error('Unauthorized query');
     });
 
     const overview = await service.getOverview('legal-user');
-    expect(overview.access).toEqual({ wallet: false, invoices: false, orders: false });
+    expect(overview.access).toEqual({
+      wallet: false,
+      invoices: false,
+      orders: false,
+      contracts: true,
+    });
     expect(overview.wallet).toBeNull();
     expect(overview.upcomingInvoices).toEqual([]);
     expect(overview.recentOrders).toEqual([]);
+    expect(overview.activeContracts).toEqual([]);
     expect(getWallet).not.toHaveBeenCalled();
     expect(queryFor('FROM invoices')).toBeUndefined();
     expect(queryFor('SELECT recent.kind')).toBeUndefined();

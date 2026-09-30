@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/app';
+import { dashboardText } from '@barghsa/i18n/dashboard';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { tSaving } from '@barghsa/i18n/saving';
 import type { useAccountTime } from '../hooks/useAccountTime.js';
@@ -53,10 +54,10 @@ export function LatestOrdersWidget({
       aria-labelledby="recent-orders-title"
     >
       <h2 id="recent-orders-title" className="text-lg font-semibold">
-        {t('dashboard.orders.title', locale)}
+        {dashboardText('orders.title', locale)}
       </h2>
       {orders.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t('dashboard.orders.empty', locale)}</p>
+        <p className="text-sm text-muted-foreground">{dashboardText('orders.empty', locale)}</p>
       ) : (
         <ul className="divide-y">
           {orders.map((order) => (
@@ -66,7 +67,7 @@ export function LatestOrdersWidget({
             >
               <div className="min-w-0 space-y-1">
                 <p className="text-sm font-medium">
-                  {t(`dashboard.orders.${order.kind}`, locale)} ·{' '}
+                  {dashboardText(`orders.${order.kind}`, locale)} ·{' '}
                   <bdi>{order.orderId.slice(0, 8).toUpperCase()}</bdi>
                 </p>
                 <p className="text-sm text-muted-foreground">
@@ -81,7 +82,7 @@ export function LatestOrdersWidget({
                 </p>
                 <p className="text-sm font-semibold tabular-nums">
                   {order.amountIrR === null
-                    ? t('dashboard.orders.amountUnavailable', locale)
+                    ? dashboardText('orders.amountUnavailable', locale)
                     : formatCurrencyIrr(order.amountIrR, locale)}
                 </p>
               </div>
@@ -90,18 +91,18 @@ export function LatestOrdersWidget({
                   to="/electricity/orders/$orderId"
                   params={{ orderId: order.orderId }}
                   className="text-sm font-medium text-primary underline underline-offset-4"
-                  aria-label={`${t('dashboard.orders.view', locale)} · ${order.orderId}`}
+                  aria-label={`${dashboardText('orders.view', locale)} · ${order.orderId}`}
                 >
-                  {t('dashboard.orders.view', locale)}
+                  {dashboardText('orders.view', locale)}
                 </Link>
               ) : (
                 <Link
                   to="/savings/orders/$orderId"
                   params={{ orderId: order.orderId }}
                   className="text-sm font-medium text-primary underline underline-offset-4"
-                  aria-label={`${t('dashboard.orders.view', locale)} · ${order.orderId}`}
+                  aria-label={`${dashboardText('orders.view', locale)} · ${order.orderId}`}
                 >
-                  {t('dashboard.orders.view', locale)}
+                  {dashboardText('orders.view', locale)}
                 </Link>
               )}
             </li>
@@ -110,10 +111,10 @@ export function LatestOrdersWidget({
       )}
       <div className="flex flex-wrap gap-x-5 gap-y-2 border-t pt-4 text-sm font-medium">
         <Link to="/electricity/orders" className="text-primary underline underline-offset-4">
-          {t('dashboard.orders.viewAllElectricity', locale)}
+          {dashboardText('orders.viewAllElectricity', locale)}
         </Link>
         <Link to="/savings/orders" className="text-primary underline underline-offset-4">
-          {t('dashboard.orders.viewAllSaving', locale)}
+          {dashboardText('orders.viewAllSaving', locale)}
         </Link>
       </div>
     </section>

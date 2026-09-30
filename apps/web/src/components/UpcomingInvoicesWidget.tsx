@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n/app';
+import type { Locale } from '@barghsa/i18n/app';
+import { dashboardText } from '@barghsa/i18n/dashboard';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import type { useAccountTime } from '../hooks/useAccountTime.js';
 
@@ -42,18 +43,18 @@ export function UpcomingInvoicesWidget({
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 id="upcoming-invoices-title" className="text-lg font-semibold">
-          {t('dashboard.invoice.title', locale)}
+          {dashboardText('invoice.title', locale)}
         </h2>
         <Link
           to="/invoices"
           search={{ status: 'unpaid' }}
           className="text-sm font-medium text-primary underline underline-offset-4"
         >
-          {t('dashboard.invoice.viewAll', locale)}
+          {dashboardText('invoice.viewAll', locale)}
         </Link>
       </div>
       {invoices.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t('dashboard.invoice.empty', locale)}</p>
+        <p className="text-sm text-muted-foreground">{dashboardText('invoice.empty', locale)}</p>
       ) : (
         <ul className="divide-y">
           {invoices.map((invoice) => {
@@ -65,18 +66,15 @@ export function UpcomingInvoicesWidget({
               days === null
                 ? null
                 : days < 0
-                  ? t('dashboard.invoice.overdue', locale)
+                  ? dashboardText('invoice.overdue', locale)
                   : days === 0
-                    ? t('dashboard.invoice.dueToday', locale)
-                    : t('dashboard.invoice.daysRemaining', locale).replace(
+                    ? dashboardText('invoice.dueToday', locale)
+                    : dashboardText('invoice.daysRemaining', locale).replace(
                         '{count}',
                         new Intl.NumberFormat(locale).format(days)
                       );
             const canPay = !invoice.payableFrom || Date.parse(invoice.payableFrom) <= Date.now();
-            const action = t(
-              canPay ? 'dashboard.invoice.payNow' : 'dashboard.invoice.view',
-              locale
-            );
+            const action = dashboardText(canPay ? 'invoice.payNow' : 'invoice.view', locale);
             return (
               <li
                 key={invoice.invoiceId}
@@ -84,7 +82,7 @@ export function UpcomingInvoicesWidget({
               >
                 <div className="space-y-1">
                   <p className="text-sm font-medium">
-                    {t('dashboard.invoice.label', locale).replace(
+                    {dashboardText('invoice.label', locale).replace(
                       '{id}',
                       invoice.invoiceId.slice(0, 8).toUpperCase()
                     )}
@@ -93,7 +91,7 @@ export function UpcomingInvoicesWidget({
                     {formatCurrencyIrr(invoice.remainingAmount, locale)}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {t('dashboard.invoice.dueDate', locale)}:{' '}
+                    {dashboardText('invoice.dueDate', locale)}:{' '}
                     {time.format(invoice.dueAt, {
                       year: 'numeric',
                       month: 'short',
