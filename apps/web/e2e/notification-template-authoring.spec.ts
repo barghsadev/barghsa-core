@@ -1,5 +1,8 @@
+import { crmShell } from './crm-shell-fixture';
+import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
+test.use({ viewport: { width: 390, height: 844 } });
 
 for (const locale of ['en', 'fa'] as const) {
   test(`template authoring supports new event keys, native variable drag and keyboard insertion (${locale})`, async ({
@@ -9,7 +12,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page
       .context()
       .addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: 'authoring-test' }]);
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     let saved: Record<string, unknown> | null = null;
     await page.route('**/api/admin/notifications/templates', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: saved ? [saved] : [] });
@@ -18,6 +21,7 @@ for (const locale of ['en', 'fa'] as const) {
       expect(body.bodyTemplate).toBe('Hello {{user.name}}');
       expect(body.variables).toEqual([{ name: 'user.name', description: 'Recipient name' }]);
       saved = {
+        ...notificationTemplate(),
         ...body,
         subject: body.subject ?? null,
         id: 'new-event-template',
@@ -29,9 +33,7 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ status: 201, json: saved });
     });
     await page.goto('/admin/notifications');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
+
     await page
       .getByRole('button', { name: locale === 'fa' ? 'قالب جدید' : 'New Template', exact: true })
       .click();

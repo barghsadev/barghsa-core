@@ -3,6 +3,8 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { Button, ListPage } from '@barghsa/ui';
+import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import type { FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
@@ -12,62 +14,13 @@ import DeliveryWindowConfigPanel from '../components/DeliveryWindowConfigPanel.j
 import TemplatePreviewPanel from '../components/TemplatePreviewPanel.js';
 import BrandedEmailPreview from '../components/BrandedEmailPreview.js';
 
-interface NotificationVariable {
-  name: string;
-  description: string | null;
-}
-
-interface NotificationTemplate {
-  id: string;
-  eventKey: string;
-  channel: 'email' | 'sms' | 'in_app';
-  locale: 'fa' | 'en';
-  subject: string | null;
-  bodyTemplate: string;
-  variables: NotificationVariable[];
-  status: 'draft' | 'active' | 'archived';
-  isActive: boolean;
-  version: number;
-  publishedAt: string | null;
-  createdBy: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-function responseRecord(value: unknown): Record<string, unknown> | null {
-  return value !== null && typeof value === 'object' && !Array.isArray(value)
-    ? (value as Record<string, unknown>)
-    : null;
-}
-
-function validTemplate(value: unknown): value is NotificationTemplate {
-  const row = responseRecord(value);
-  return (
-    !!row &&
-    typeof row.id === 'string' &&
-    row.id.trim() !== '' &&
-    typeof row.eventKey === 'string' &&
-    typeof row.bodyTemplate === 'string' &&
-    (row.subject === null || typeof row.subject === 'string') &&
-    ['email', 'sms', 'in_app'].includes(String(row.channel)) &&
-    ['en', 'fa'].includes(String(row.locale)) &&
-    ['draft', 'active', 'archived'].includes(String(row.status)) &&
-    typeof row.isActive === 'boolean' &&
-    Number.isInteger(row.version) &&
-    Number(row.version) > 0 &&
-    (row.publishedAt == null || typeof row.publishedAt === 'string') &&
-    Array.isArray(row.variables) &&
-    row.variables.every((variable) => {
-      const v = responseRecord(variable);
-      return (
-        !!v &&
-        typeof v.name === 'string' &&
-        (v.description === null || typeof v.description === 'string')
-      );
-    })
-  );
-}
-
+import {
+  responseRecord,
+  validTemplate,
+  templateBasis,
+  type NotificationVariable,
+  type NotificationTemplate,
+} from '../lib/content-catalogues.js';
 function savedTemplate(
   value: unknown,
   status: NotificationTemplate['status'],
@@ -85,12 +38,6 @@ function savedTemplate(
 
 type TemplateChannel = 'email' | 'sms' | 'in_app';
 type TemplateLocale = 'fa' | 'en';
-
-const CHANNEL_LABELS: Record<TemplateChannel, string> = {
-  email: 'Email',
-  sms: 'SMS',
-  in_app: 'In-App',
-};
 
 const LOCALE_LABELS: Record<TemplateLocale, string> = {
   fa: 'فارسی',
@@ -160,15 +107,28 @@ function variablesToText(variables: NotificationVariable[]): string {
 export default function AdminNotificationsPage() {
   const uiLocale = useLocale();
   const numbers = useNumberFormatting(uiLocale);
+  const channelLabels: Record<TemplateChannel, string> = {
+    email: t('admin.notifications.channelEmail', uiLocale),
+    sms: t('admin.notifications.channelSms', uiLocale),
+    in_app: t('admin.notifications.channelInApp', uiLocale),
+  };
   const [templates, setTemplates] = useState<NotificationTemplate[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [accepted, setAccepted] = useState(false);
+  const [panelsReady, setPanelsReady] = useState(false);
+  const refreshButton = useRef<HTMLButtonElement>(null);
+  const templatesRef = useRef(templates);
+  templatesRef.current = templates;
+  const operationInFlight = useRef(false);
+  const mounted = useRef(false);
   const listRequest = useRef<AbortController | null>(null);
   const refreshTemplates = useRef<() => Promise<void>>(async () => {});
   const [protectedAction, setProtectedAction] = useState<{
     action: TeamAction;
     onSuccess: (result: unknown) => Promise<void>;
+    current: () => boolean;
   } | null>(null);
 
   // Filters
@@ -196,7 +156,10 @@ export default function AdminNotificationsPage() {
   const [testSending, setTestSending] = useState(false);
   const testSendInFlight = useRef(false);
   const editorGeneration = useRef(0);
+  const busyTokens = useRef({ save: 0, test: 0, publish: 0, row: 0 });
   const [savedContent, setSavedContent] = useState('');
+  const [editBasis, setEditBasis] = useState<string | null>(null);
+  const publishBasis = useRef<string | null>(null);
   const [testSendMsg, setTestSendMsg] = useState<string | null>(null);
   const [testDestination, setTestDestination] = useState('');
   const bodyRef = useRef<HTMLTextAreaElement | null>(null);
@@ -205,7 +168,75 @@ export default function AdminNotificationsPage() {
   const contentSignature = JSON.stringify([subject, bodyTemplate, variablesStr]);
   const unsavedContent = contentSignature !== savedContent;
 
+  const resetEditorBusy = useCallback(() => {
+    busyTokens.current.save++;
+    busyTokens.current.test++;
+    testSendInFlight.current = false;
+    setSaving(false);
+    setTestSending(false);
+  }, []);
+  const resetCatalogueBusy = useCallback(() => {
+    busyTokens.current.publish++;
+    busyTokens.current.row++;
+    operationInFlight.current = false;
+    setPublishing(false);
+  }, []);
+
+  const clearPrivate = useCallback(() => {
+    editorGeneration.current++;
+    resetEditorBusy();
+    resetCatalogueBusy();
+    listRequest.current?.abort();
+    setTemplates([]);
+    setAccepted(false);
+    setPanelsReady(false);
+    setLoading(false);
+    setLoadFailed(true);
+    setError(null);
+    setShowEditor(false);
+    setEditId(null);
+    setEditBasis(null);
+    setPublishId(null);
+    setProtectedAction(null);
+    setSubject('');
+    setBodyTemplate('');
+    setVariablesStr('');
+    setSavedContent('');
+    setTestDestination('');
+    setTestSendMsg(null);
+  }, [resetEditorBusy, resetCatalogueBusy]);
+  const scope = useCatalogueScope(clearPrivate);
+  const ready = accepted && !loading && !loadFailed && !scope.denied;
+  const selectedTemplate = editId ? templates.find((r) => r.id === editId) : null;
+  const stale =
+    !!editId && (selectedTemplate ? templateBasis(selectedTemplate) : null) !== editBasis;
+  const selectedRef = useRef({ editId, editBasis, publishId });
+  selectedRef.current = { editId, editBasis, publishId };
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      editorGeneration.current++;
+      listRequest.current?.abort();
+    };
+  }, []);
+  const changeFilter = (apply: () => void) => {
+    editorGeneration.current++;
+    resetEditorBusy();
+    resetCatalogueBusy();
+    setShowEditor(false);
+    setEditId(null);
+    setEditBasis(null);
+    setProtectedAction(null);
+    setPublishId(null);
+    setTestSendMsg(null);
+    setAccepted(false);
+    setTemplates([]);
+    apply();
+  };
   const fetchTemplates = useCallback(async () => {
+    if (scope.denied) return;
+    const epoch = scope.version;
     listRequest.current?.abort();
     const request = new AbortController();
     listRequest.current = request;
@@ -219,22 +250,68 @@ export default function AdminNotificationsPage() {
       const res = await fetch(`/api/admin/notifications/templates${qs ? `?${qs}` : ''}`, {
         signal: request.signal,
       });
+      if (request.signal.aborted || scope.live.current !== epoch) return;
+      if (res.status === 401 || res.status === 403) {
+        scope.deny();
+        return;
+      }
       if (!res.ok) throw new Error();
       const data: unknown = await res.json();
-      if (!Array.isArray(data) || !data.every(validTemplate)) throw new Error();
-      if (!request.signal.aborted) {
+      if (
+        !Array.isArray(data) ||
+        !data.every(validTemplate) ||
+        new Set(data.map((r) => r.id)).size !== data.length
+      )
+        throw new Error();
+      if (!request.signal.aborted && scope.live.current === epoch) {
+        const selection = selectedRef.current;
+        if (
+          selection.editId &&
+          selection.editBasis !==
+            (data.find((r) => r.id === selection.editId)
+              ? templateBasis(data.find((r) => r.id === selection.editId)!)
+              : null)
+        ) {
+          editorGeneration.current++;
+          resetEditorBusy();
+          setProtectedAction(null);
+          setTestSendMsg(null);
+        }
+        if (
+          selection.publishId &&
+          publishBasis.current !==
+            (data.find((r) => r.id === selection.publishId)
+              ? templateBasis(data.find((r) => r.id === selection.publishId)!)
+              : null)
+        ) {
+          busyTokens.current.publish++;
+          setPublishing(false);
+          setPublishId(null);
+          setProtectedAction(null);
+          refreshButton.current?.focus();
+        }
         setTemplates(data);
+        setAccepted(true);
+        setPanelsReady(true);
         setLoadFailed(false);
       }
     } catch {
-      if (!request.signal.aborted) {
-        setTemplates([]);
+      if (!request.signal.aborted && scope.live.current === epoch) {
         setLoadFailed(true);
       }
     } finally {
-      if (!request.signal.aborted) setLoading(false);
+      if (!request.signal.aborted && scope.live.current === epoch) setLoading(false);
     }
-  }, [filterLocale, filterChannel, filterStatus]);
+  }, [
+    filterLocale,
+    filterChannel,
+    filterStatus,
+    scope.denied,
+    scope.live,
+    scope.version,
+    scope.deny,
+    resetEditorBusy,
+  ]);
 
   useEffect(() => {
     refreshTemplates.current = fetchTemplates;
@@ -242,6 +319,14 @@ export default function AdminNotificationsPage() {
     return () => listRequest.current?.abort();
   }, [fetchTemplates]);
 
+  const acceptReceipt = (row: NotificationTemplate | null, id?: string) => {
+    listRequest.current?.abort();
+    const next = templatesRef.current.filter((r) => r.id !== (id ?? row?.id));
+    if (row) next.unshift(row);
+    templatesRef.current = next;
+    setTemplates(next);
+    setAccepted(true);
+  };
   async function mutateTemplate(
     action: Pick<TeamAction, 'path' | 'method' | 'body'>,
     titleKey: string,
@@ -249,46 +334,72 @@ export default function AdminNotificationsPage() {
     onSuccess: (result: unknown) => Promise<void>,
     isCurrent: () => boolean = () => true
   ) {
+    const epoch = scope.version;
+    const id = action.path.split('/templates/')[1]?.split('/')[0];
+    const selected = id ? templatesRef.current.find((r) => r.id === id) : null;
+    const basis = selected ? templateBasis(selected) : null;
+    const current = () =>
+      mounted.current &&
+      scope.live.current === epoch &&
+      isCurrent() &&
+      (!id || templatesRef.current.some((r) => r.id === id && templateBasis(r) === basis));
     const payload = action.body === undefined ? undefined : JSON.stringify(action.body);
     const captured = {
       ...action,
+      ...(action.method === 'DELETE' ? { successStatus: 204 } : {}),
       ...(payload === undefined ? {} : { body: JSON.parse(payload) as unknown }),
     };
-    const res = await fetch(captured.path, {
-      method: captured.method,
-      headers: withCsrf({ 'Content-Type': 'application/json' }),
-      ...(payload === undefined ? {} : { body: payload }),
-    });
-    const data: unknown = res.status === 204 ? null : await res.json().catch(() => null);
-    if (!isCurrent()) return;
-    const record = responseRecord(data);
-    const code =
-      typeof record?.error === 'string' ? record.error : responseRecord(record?.error)?.code;
-    if (
-      res.status === 403 &&
-      (code === 'AUTHZ:STEP_UP_REQUIRED' || record?.requiresStepUp === true)
-    ) {
-      setProtectedAction({
-        action: {
-          ...captured,
-          title: t(titleKey, uiLocale),
-          description: t('admin.notifications.confirmAction', uiLocale),
-          requiresPassword: true,
-        },
-        onSuccess,
-      });
-      return;
-    }
-    if (!res.ok) throw new Error(t(errorKey, uiLocale));
     try {
-      await onSuccess(data);
-    } catch {
-      throw new Error(t(errorKey, uiLocale));
+      const res = await fetch(captured.path, {
+        method: captured.method,
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        ...(payload === undefined ? {} : { body: payload }),
+      });
+      const data: unknown = res.status === 204 ? null : await res.json().catch(() => null);
+      if (!current()) return;
+      const record = responseRecord(data);
+      const code =
+        typeof record?.error === 'string' ? record.error : responseRecord(record?.error)?.code;
+      if (
+        res.status === 403 &&
+        (code === 'AUTHZ:STEP_UP_REQUIRED' || record?.requiresStepUp === true)
+      ) {
+        setProtectedAction({
+          action: {
+            ...captured,
+            title: t(titleKey, uiLocale),
+            description: t('admin.notifications.confirmAction', uiLocale),
+            requiresPassword: true,
+          },
+          current,
+          onSuccess: async (result) => {
+            if (!current()) return;
+            await onSuccess(result);
+          },
+        });
+        return;
+      }
+      if (res.status === 401 || res.status === 403) {
+        scope.deny();
+        return;
+      }
+      if (!res.ok) throw new Error(t(errorKey, uiLocale));
+      if (action.method === 'DELETE' && res.status !== 204) throw new Error(t(errorKey, uiLocale));
+      try {
+        await onSuccess(data);
+      } catch {
+        throw new Error(t(errorKey, uiLocale));
+      }
+    } catch (error) {
+      if (current()) throw error;
     }
   }
 
   function openCreate() {
+    if (!ready || protectedAction) return;
+    setEditBasis(null);
     editorGeneration.current++;
+    resetEditorBusy();
     setSavedContent('');
     setViewOnly(false);
     setEditId(null);
@@ -304,7 +415,10 @@ export default function AdminNotificationsPage() {
   }
 
   function openEdit(template: NotificationTemplate, copy = false) {
+    if (!ready || protectedAction) return;
+    setEditBasis(copy ? null : templateBasis(template));
     editorGeneration.current++;
+    resetEditorBusy();
     setSavedContent(
       JSON.stringify([
         template.subject ?? '',
@@ -327,8 +441,11 @@ export default function AdminNotificationsPage() {
 
   function closeEditor() {
     editorGeneration.current++;
+    resetEditorBusy();
     setShowEditor(false);
     setEditId(null);
+    setEditBasis(null);
+    setProtectedAction(null);
   }
 
   /** Insert a {{variable}} placeholder at the caret position in the body. */
@@ -353,11 +470,19 @@ export default function AdminNotificationsPage() {
   }
 
   async function handleTestSend() {
-    if (!editId || unsavedContent || testSendInFlight.current) {
+    if (
+      !ready ||
+      stale ||
+      protectedAction ||
+      !editId ||
+      unsavedContent ||
+      testSendInFlight.current
+    ) {
       setTestSendMsg(null);
       return;
     }
     setError(null);
+    const token = ++busyTokens.current.test;
     testSendInFlight.current = true;
     const generation = editorGeneration.current;
     const expectedChannel = channel;
@@ -404,14 +529,17 @@ export default function AdminNotificationsPage() {
           err instanceof Error ? err.message : t('admin.notifications.error.testSend', uiLocale)
         );
     } finally {
-      testSendInFlight.current = false;
-      setTestSending(false);
+      if (token === busyTokens.current.test) {
+        testSendInFlight.current = false;
+        setTestSending(false);
+      }
     }
   }
 
   async function handleSave(e: FormEvent) {
     e.preventDefault();
-    if (viewOnly || saving || loadFailed) return;
+    if (!ready || stale || protectedAction || viewOnly || saving) return;
+    const token = ++busyTokens.current.save;
     setSaving(true);
     setError(null);
     const generation = editorGeneration.current;
@@ -461,6 +589,7 @@ export default function AdminNotificationsPage() {
             )
           )
             throw new Error();
+          acceptReceipt(saved);
           if (generation === editorGeneration.current) closeEditor();
           await refreshTemplates.current();
         },
@@ -470,13 +599,15 @@ export default function AdminNotificationsPage() {
       if (generation === editorGeneration.current)
         setError(t('admin.notifications.error.save', uiLocale));
     } finally {
-      setSaving(false);
+      if (token === busyTokens.current.save) setSaving(false);
     }
   }
 
   async function handlePublish() {
-    if (!publishId || publishing || loadFailed) return;
+    if (!ready || protectedAction || !publishId || publishing) return;
+    const token = ++busyTokens.current.publish;
     setPublishing(true);
+    const epoch = scope.version;
     setError(null);
     const id = publishId;
     try {
@@ -485,20 +616,43 @@ export default function AdminNotificationsPage() {
         'admin.notifications.publish',
         'admin.notifications.error.publish',
         async (result) => {
-          savedTemplate(result, 'active', id);
+          const saved = savedTemplate(result, 'active', id);
+          const original = templatesRef.current.find((r) => r.id === id);
+          if (
+            !original ||
+            saved.eventKey !== original.eventKey ||
+            saved.channel !== original.channel ||
+            saved.locale !== original.locale ||
+            saved.bodyTemplate !== original.bodyTemplate ||
+            saved.subject !== original.subject ||
+            JSON.stringify(saved.variables) !== JSON.stringify(original.variables)
+          )
+            throw new Error();
+          acceptReceipt(saved);
           setPublishId((current) => (current === id ? null : current));
           await refreshTemplates.current();
-        }
+        },
+        () => token === busyTokens.current.publish
       );
     } catch {
-      setError(t('admin.notifications.error.publish', uiLocale));
+      if (token === busyTokens.current.publish && scope.live.current === epoch && mounted.current)
+        setError(t('admin.notifications.error.publish', uiLocale));
     } finally {
-      setPublishing(false);
+      if (token === busyTokens.current.publish) setPublishing(false);
     }
   }
 
   async function handleUnpublish(id: string) {
-    if (loadFailed || !window.confirm(t('admin.notifications.unpublishConfirm', uiLocale))) return;
+    if (
+      !ready ||
+      protectedAction ||
+      operationInFlight.current ||
+      !window.confirm(t('admin.notifications.unpublishConfirm', uiLocale))
+    )
+      return;
+    const token = ++busyTokens.current.row;
+    operationInFlight.current = true;
+    const epoch = scope.version;
     setError(null);
     try {
       await mutateTemplate(
@@ -506,17 +660,42 @@ export default function AdminNotificationsPage() {
         'admin.notifications.unpublish',
         'admin.notifications.error.unpublish',
         async (result) => {
-          savedTemplate(result, 'archived', id);
+          const saved = savedTemplate(result, 'archived', id);
+          const original = templatesRef.current.find((r) => r.id === id);
+          if (
+            !original ||
+            saved.eventKey !== original.eventKey ||
+            saved.channel !== original.channel ||
+            saved.locale !== original.locale ||
+            saved.bodyTemplate !== original.bodyTemplate ||
+            saved.subject !== original.subject ||
+            JSON.stringify(saved.variables) !== JSON.stringify(original.variables)
+          )
+            throw new Error();
+          acceptReceipt(saved);
           await refreshTemplates.current();
-        }
+        },
+        () => token === busyTokens.current.row
       );
     } catch {
-      setError(t('admin.notifications.error.unpublish', uiLocale));
+      if (token === busyTokens.current.row && scope.live.current === epoch && mounted.current)
+        setError(t('admin.notifications.error.unpublish', uiLocale));
+    } finally {
+      if (token === busyTokens.current.row) operationInFlight.current = false;
     }
   }
 
   async function handleDelete(id: string) {
-    if (loadFailed || !window.confirm(t('admin.notifications.deleteConfirm', uiLocale))) return;
+    if (
+      !ready ||
+      protectedAction ||
+      operationInFlight.current ||
+      !window.confirm(t('admin.notifications.deleteConfirm', uiLocale))
+    )
+      return;
+    const token = ++busyTokens.current.row;
+    operationInFlight.current = true;
+    const epoch = scope.version;
     setError(null);
     try {
       await mutateTemplate(
@@ -524,32 +703,31 @@ export default function AdminNotificationsPage() {
         'admin.notifications.delete',
         'admin.notifications.error.delete',
         async () => {
+          acceptReceipt(null, id);
           await refreshTemplates.current();
-        }
+        },
+        () => token === busyTokens.current.row
       );
     } catch {
-      setError(t('admin.notifications.error.delete', uiLocale));
+      if (token === busyTokens.current.row && scope.live.current === epoch && mounted.current)
+        setError(t('admin.notifications.error.delete', uiLocale));
+    } finally {
+      if (token === busyTokens.current.row) operationInFlight.current = false;
     }
   }
 
-  if (loading && templates.length === 0) {
-    return (
-      <div className="p-4 text-muted-foreground">{t('admin.notifications.loading', uiLocale)}</div>
-    );
-  }
-
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="min-w-0 space-y-6" dir={uiLocale === 'fa' ? 'rtl' : 'ltr'}>
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">{t('admin.notifications.title', uiLocale)}</h1>
         {!showEditor && (
-          <button
+          <Button
             onClick={openCreate}
-            disabled={loading || loadFailed}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            disabled={!ready || !!protectedAction}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded"
           >
             {t('admin.notifications.newTemplate', uiLocale)}
-          </button>
+          </Button>
         )}
       </div>
 
@@ -558,578 +736,689 @@ export default function AdminNotificationsPage() {
           action={protectedAction.action}
           onSuccess={protectedAction.onSuccess}
           onClose={() => setProtectedAction(null)}
+          onDenied={scope.deny}
+          confirmationDisabled={!ready || stale || !protectedAction.current()}
+          finalFocus={() => refreshButton.current}
+          summary={
+            <Button
+              type="button"
+              variant="outline"
+              disabled={loading}
+              onClick={() => void fetchTemplates()}
+            >
+              {t('admin.notifications.refresh', uiLocale)}
+            </Button>
+          }
         />
       )}
-      {loadFailed && (
-        <div role="alert" className="rounded border p-3">
-          <p>{t('admin.notifications.error.load', uiLocale)}</p>
-          <button type="button" disabled={loading} onClick={() => void fetchTemplates()}>
-            {t('admin.notifications.retry', uiLocale)}
-          </button>
-        </div>
+      {panelsReady && !scope.denied && (
+        <>
+          {/* Template preview (T-05.04.03) */}
+          <TemplatePreviewPanel uiLocale={uiLocale} templates={templates} loading={loading} />
+
+          {/* Delivery-window config (T-05.03.03) */}
+          <DeliveryWindowConfigPanel uiLocale={uiLocale} />
+
+          {/* Dead-letter queue (T-05.01.06) */}
+          <DeadLetterPanel uiLocale={uiLocale} />
+          <CustomerCorrectionsSection locale={uiLocale} />
+        </>
       )}
-      {error && (
-        <div
-          role="alert"
-          className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded relative"
-        >
-          {error}
-          <button
+      <ListPage>
+        <ListPage.Toolbar>
+          <Button
+            ref={refreshButton}
             type="button"
-            aria-label={t('admin.notifications.dismissError', uiLocale)}
-            onClick={() => setError(null)}
-            className="absolute top-2 end-2 text-destructive hover:text-red-700"
+            variant="outline"
+            onClick={() => (scope.denied ? scope.recover() : void fetchTemplates())}
           >
-            ✕
-          </button>
-        </div>
-      )}
-
-      {/* Template preview (T-05.04.03) */}
-      <TemplatePreviewPanel uiLocale={uiLocale} templates={templates} loading={loading} />
-
-      {/* Delivery-window config (T-05.03.03) */}
-      <DeliveryWindowConfigPanel uiLocale={uiLocale} />
-
-      {/* Dead-letter queue (T-05.01.06) */}
-      <DeadLetterPanel uiLocale={uiLocale} />
-      <CustomerCorrectionsSection locale={uiLocale} />
-
-      {/* Filters */}
-      <div className="flex gap-4 items-center">
-        <select
-          aria-label={t('admin.notifications.locale', uiLocale)}
-          value={filterLocale}
-          onChange={(e) => setFilterLocale(e.target.value)}
-          className="border border-input rounded px-3 py-1.5 text-sm"
-        >
-          <option value="">{t('admin.notifications.allLocales', uiLocale)}</option>
-          <option value="fa">فارسی</option>
-          <option value="en">English</option>
-        </select>
-        <select
-          aria-label={t('admin.notifications.channel', uiLocale)}
-          value={filterChannel}
-          onChange={(e) => setFilterChannel(e.target.value)}
-          className="border border-input rounded px-3 py-1.5 text-sm"
-        >
-          <option value="">{t('admin.notifications.allChannels', uiLocale)}</option>
-          <option value="email">Email</option>
-          <option value="sms">SMS</option>
-          <option value="in_app">In-App</option>
-        </select>
-        <select
-          aria-label={t('admin.notifications.allStatus', uiLocale)}
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="border border-input rounded px-3 py-1.5 text-sm"
-        >
-          <option value="">{t('admin.notifications.allStatus', uiLocale)}</option>
-          <option value="draft">Draft</option>
-          <option value="active">{t('admin.notifications.active', uiLocale)}</option>
-          <option value="archived">{t('admin.notifications.archived', uiLocale)}</option>
-        </select>
-      </div>
-
-      {/* Editor form */}
-      {showEditor && (
-        <form
-          onSubmit={handleSave}
-          className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
-        >
-          <fieldset disabled={saving} className="contents">
-            <h2 className="text-lg font-semibold">
-              {viewOnly
-                ? t('admin.notifications.view', uiLocale)
-                : editId
-                  ? t('admin.notifications.editTitle', uiLocale)
-                  : t('admin.notifications.createTitle', uiLocale)}
-            </h2>
-
-            {/* Event key */}
-            <div>
-              <label
-                htmlFor="notification-template-eventKey"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                {t('admin.notifications.eventKey', uiLocale)}{' '}
-                <span className="text-destructive">*</span>
-              </label>
-              {editId ? (
-                <input
-                  id="notification-template-eventKey"
-                  readOnly
-                  value={eventKey}
-                  className="text-sm text-muted-foreground py-2"
-                />
-              ) : (
-                <input
-                  id="notification-template-eventKey"
-                  list="notification-event-suggestions"
-                  value={eventKey}
-                  onChange={(e) => setEventKey(e.target.value)}
-                  className="w-full border border-input rounded px-3 py-2"
-                  required
-                  maxLength={100}
-                  pattern="\S+"
-                />
-              )}
-              <datalist id="notification-event-suggestions">
-                {[
-                  ...new Set([
-                    ...KNOWN_EVENT_KEYS,
-                    ...templates.map((template) => template.eventKey),
-                  ]),
-                ]
-                  .sort()
-                  .map((key) => (
-                    <option key={key} value={key} />
-                  ))}
-              </datalist>
-            </div>
-
-            {/* Channel + Locale */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="notification-template-channel"
-                  className="block text-sm font-medium text-foreground mb-1"
-                >
-                  {t('admin.notifications.channel', uiLocale)}{' '}
-                  <span className="text-destructive">*</span>
-                </label>
-                {editId ? (
-                  <input
-                    id="notification-template-channel"
-                    readOnly
-                    value={CHANNEL_LABELS[channel as TemplateChannel] ?? channel}
-                    className="text-sm text-muted-foreground py-2"
-                  />
-                ) : (
-                  <select
-                    id="notification-template-channel"
-                    value={channel}
-                    onChange={(e) => setChannel(e.target.value as TemplateChannel)}
-                    className="w-full border border-input rounded px-3 py-2"
-                    required
-                  >
-                    {CHANNEL_OPTIONS.map((c) => (
-                      <option key={c} value={c}>
-                        {CHANNEL_LABELS[c]}
-                      </option>
-                    ))}
-                  </select>
-                )}
-              </div>
-              <div>
-                <label
-                  htmlFor="notification-template-locale"
-                  className="block text-sm font-medium text-foreground mb-1"
-                >
-                  {t('admin.notifications.locale', uiLocale)}{' '}
-                  <span className="text-destructive">*</span>
-                </label>
-                {editId ? (
-                  <input
-                    id="notification-template-locale"
-                    readOnly
-                    value={LOCALE_LABELS[locale as TemplateLocale] ?? locale}
-                    className="text-sm text-muted-foreground py-2"
-                  />
-                ) : (
-                  <select
-                    id="notification-template-locale"
-                    value={locale}
-                    onChange={(e) => setLocale(e.target.value as TemplateLocale)}
-                    className="w-full border border-input rounded px-3 py-2"
-                    required
-                  >
-                    {LOCALE_OPTIONS.map((l) => (
-                      <option key={l} value={l}>
-                        {LOCALE_LABELS[l]}
-                      </option>
-                    ))}
-                  </select>
-                )}
-              </div>
-            </div>
-
-            {/* Subject (email only) */}
-            {channel === 'email' && (
-              <div>
-                <label
-                  htmlFor="notification-template-subject"
-                  className="block text-sm font-medium text-foreground mb-1"
-                >
-                  {t('admin.notifications.subject', uiLocale)}
-                </label>
-                <input
-                  type="text"
-                  id="notification-template-subject"
-                  readOnly={viewOnly || testSending}
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  className="w-full border border-input rounded px-3 py-2"
-                  placeholder="e.g. Your profile has been verified"
-                  maxLength={200}
-                />
-              </div>
-            )}
-
-            {/* Body template + variable sidebar + preview */}
-            <div>
-              <label
-                htmlFor="notification-template-bodyTemplate"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                {t('admin.notifications.bodyTemplate', uiLocale)}{' '}
-                <span className="text-destructive">*</span>
-              </label>
-              <p id="notification-body-hint" className="text-xs text-muted-foreground mb-1">
-                {t('admin.notifications.bodyHint', uiLocale)}
-              </p>
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <textarea
-                    aria-describedby="notification-body-hint"
-                    ref={bodyRef}
-                    id="notification-template-bodyTemplate"
-                    readOnly={viewOnly || testSending}
-                    value={bodyTemplate}
-                    onChange={(e) => setBodyTemplate(e.target.value)}
-                    className="w-full border border-input rounded px-3 py-2 font-mono text-sm"
-                    rows={8}
-                    required
-                    dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                  />
-                </div>
-                {parsedVariables.length > 0 && (
-                  <aside className="w-48 shrink-0 border border-border rounded-lg p-3 bg-muted/40">
-                    <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
-                      {t('admin.notifications.variables', uiLocale)}
-                    </h4>
-                    <p className="text-[11px] text-muted-foreground mb-2">
-                      {t('admin.notifications.insertHint', uiLocale)}
-                    </p>
-                    <ul className="space-y-1">
-                      {parsedVariables.map((v) => (
-                        <li key={v.name}>
-                          <button
-                            type="button"
-                            disabled={viewOnly || testSending}
-                            draggable={!viewOnly && !testSending}
-                            onDragStart={(event) => {
-                              event.dataTransfer.setData('text/plain', `{{${v.name}}}`);
-                              event.dataTransfer.effectAllowed = 'copy';
-                            }}
-                            onClick={() => insertVariable(v.name)}
-                            className="w-full text-left px-2 py-1 text-xs font-mono bg-card text-card-foreground border border-border rounded hover:bg-blue-50 hover:border-blue-300"
-                            title={v.description ?? undefined}
-                          >
-                            {'{{'}
-                            {v.name}
-                            {'}}'}
-                          </button>
-                          {v.description && (
-                            <p className="px-1 pt-0.5 text-[11px] text-muted-foreground leading-snug">
-                              {v.description}
-                            </p>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  </aside>
-                )}
-              </div>
-              {/* Live preview pane */}
-              <div className="mt-3 border border-border rounded-lg p-4 bg-muted/40">
-                <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
-                  {t('admin.notifications.preview', uiLocale)}
-                </h4>
-                {channel === 'email' && subject.trim() !== '' && (
-                  <p className="text-sm text-foreground mb-2" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-                    <span className="font-semibold">
-                      {t('admin.notifications.subjectLabel', uiLocale)}
-                    </span>{' '}
-                    {renderTemplatePreview(subject, parsedVariables, undefined, false).output}
-                  </p>
-                )}
-                {channel === 'email' ? (
-                  <BrandedEmailPreview
-                    body={renderTemplatePreview(bodyTemplate, parsedVariables).output}
-                    locale={locale}
-                    title={t('admin.notifications.preview', uiLocale)}
-                  />
-                ) : (
-                  <pre
-                    className="text-sm whitespace-pre-wrap font-sans text-foreground"
-                    dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                  >
-                    {renderTemplatePreview(bodyTemplate, parsedVariables, undefined, false).output}
-                  </pre>
-                )}
-              </div>
-            </div>
-
-            {/* Variables (allow-list: names + optional descriptions) */}
-            <div>
-              <label
-                htmlFor="notification-template-variablesLabel"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                {t('admin.notifications.variablesLabel', uiLocale)}
-              </label>
-              <p className="text-xs text-muted-foreground mb-1">
-                {t('admin.notifications.variablesHintNew', uiLocale)}
-              </p>
-              <textarea
-                id="notification-template-variablesLabel"
-                readOnly={viewOnly || testSending}
-                value={variablesStr}
-                onChange={(e) => setVariablesStr(e.target.value)}
-                className="w-full border border-input rounded px-3 py-2 font-mono text-sm"
-                rows={3}
-                placeholder="userName: The user's display name, profileLink: Verification link"
-                dir="ltr"
-              />
-            </div>
-
-            {/* Save / Cancel */}
-            <div className="flex gap-3 items-center">
-              {editId && (
-                <>
-                  <div className="flex flex-col gap-1">
-                    <label htmlFor="test-destination" className="text-xs text-muted-foreground">
-                      {t('admin.notifications.testDestinationLabel', uiLocale)}
-                    </label>
-                    <input
-                      id="test-destination"
-                      disabled={testSending}
-                      type="text"
-                      value={testDestination}
-                      onChange={(e) => {
-                        setTestSendMsg(null);
-                        setTestDestination(e.target.value);
-                      }}
-                      placeholder={t('admin.notifications.testDestinationPlaceholder', uiLocale)}
-                      className="border border-input rounded px-3 py-2 text-sm"
-                      dir="ltr"
-                    />
-                    <span className="text-xs text-muted-foreground">
-                      {t('admin.notifications.testDestinationHint', uiLocale)}
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleTestSend}
-                    disabled={testSending || saving || unsavedContent}
-                    className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50"
-                  >
-                    {testSending
-                      ? t('admin.notifications.sending', uiLocale)
-                      : t('admin.notifications.testSend', uiLocale)}
-                  </button>
-                  {unsavedContent && (
-                    <span className="text-sm text-warning">
-                      {t('admin.notifications.saveBeforeTest', uiLocale)}
-                    </span>
-                  )}
-                  {testSendMsg && !unsavedContent && (
-                    <span className="text-sm text-success">{testSendMsg}</span>
-                  )}
-                </>
-              )}
-              <button
-                type="submit"
-                disabled={saving || viewOnly || testSending || loadFailed}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-              >
-                {saving
-                  ? t('admin.notifications.saving', uiLocale)
-                  : editId
-                    ? t('admin.notifications.update', uiLocale)
-                    : t('admin.notifications.create', uiLocale)}
-              </button>
-              <button
-                type="button"
-                onClick={closeEditor}
-                className="px-4 py-2 border border-input rounded hover:bg-muted"
-              >
-                {t('admin.notifications.cancel', uiLocale)}
-              </button>
-            </div>
-          </fieldset>
-        </form>
-      )}
-
-      {/* Publish confirm dialog */}
-      {publishId && (
-        <div className="bg-warning-soft border border-warning/20 rounded-lg p-4 space-y-3">
-          <h3 className="font-semibold">{t('admin.notifications.publishTitle', uiLocale)}</h3>
-          <p className="text-sm text-muted-foreground">
-            {t('admin.notifications.publishDesc', uiLocale)}
-          </p>
-          <div className="flex gap-3">
-            <button
-              onClick={handlePublish}
-              disabled={publishing}
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+            {t('admin.notifications.refresh', uiLocale)}
+          </Button>
+          {/* Filters */}
+          <div className="flex flex-wrap gap-4 items-center">
+            <select
+              aria-label={t('admin.notifications.locale', uiLocale)}
+              value={filterLocale}
+              onChange={(e) => changeFilter(() => setFilterLocale(e.target.value))}
+              className="border border-input rounded px-3 py-1.5 text-sm"
             >
-              {publishing
-                ? t('admin.notifications.publishing', uiLocale)
-                : t('admin.notifications.publish', uiLocale)}
-            </button>
-            <button
-              onClick={() => setPublishId(null)}
-              className="px-4 py-2 border border-input rounded hover:bg-muted"
+              <option value="">{t('admin.notifications.allLocales', uiLocale)}</option>
+              <option value="fa">فارسی</option>
+              <option value="en">English</option>
+            </select>
+            <select
+              aria-label={t('admin.notifications.channel', uiLocale)}
+              value={filterChannel}
+              onChange={(e) => changeFilter(() => setFilterChannel(e.target.value))}
+              className="border border-input rounded px-3 py-1.5 text-sm"
             >
-              {t('admin.notifications.cancel', uiLocale)}
-            </button>
+              <option value="">{t('admin.notifications.allChannels', uiLocale)}</option>
+              <option value="email">{channelLabels.email}</option>
+              <option value="sms">{channelLabels.sms}</option>
+              <option value="in_app">{channelLabels.in_app}</option>
+            </select>
+            <select
+              aria-label={t('admin.notifications.allStatus', uiLocale)}
+              value={filterStatus}
+              onChange={(e) => changeFilter(() => setFilterStatus(e.target.value))}
+              className="border border-input rounded px-3 py-1.5 text-sm"
+            >
+              <option value="">{t('admin.notifications.allStatus', uiLocale)}</option>
+              <option value="draft">{t('admin.notifications.draft', uiLocale)}</option>
+              <option value="active">{t('admin.notifications.active', uiLocale)}</option>
+              <option value="archived">{t('admin.notifications.archived', uiLocale)}</option>
+            </select>
           </div>
-        </div>
-      )}
+        </ListPage.Toolbar>
+        <ListPage.Content
+          loading={loading}
+          error={loadFailed || scope.denied}
+          empty={false}
+          emptyView={null}
+          retainContent={accepted}
+          loadingView={<p role="status">{t('admin.notifications.loading', uiLocale)}</p>}
+          errorView={
+            <div role="alert">
+              <p>
+                {t(
+                  scope.denied ? 'admin.notifications.denied' : 'admin.notifications.error.load',
+                  uiLocale
+                )}
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => (scope.denied ? scope.recover() : void fetchTemplates())}
+              >
+                {t('admin.notifications.retry', uiLocale)}
+              </Button>
+            </div>
+          }
+        >
+          {error && (
+            <div
+              role="alert"
+              className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded relative"
+            >
+              {error}
+              <Button
+                type="button"
+                aria-label={t('admin.notifications.dismissError', uiLocale)}
+                onClick={() => setError(null)}
+                variant="ghost"
+                className="absolute top-2 end-2 text-destructive"
+              >
+                ✕
+              </Button>
+            </div>
+          )}
 
-      {/* Template list */}
-      <div className="bg-card text-card-foreground rounded-lg border border-border overflow-hidden">
-        <table className="min-w-full divide-y divide-border">
-          <thead className="bg-muted/40">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
-                {t('admin.notifications.col.event', uiLocale)}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
-                {t('admin.notifications.channel', uiLocale)}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
-                {t('admin.notifications.locale', uiLocale)}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
-                {t('admin.notifications.col.status', uiLocale)}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
-                {t('admin.notifications.col.subject', uiLocale)}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
-                {t('admin.notifications.col.active', uiLocale)}
-              </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase">
-                {t('admin.notifications.col.actions', uiLocale)}
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {templates.length === 0 && (
-              <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
-                  {t('admin.notifications.empty', uiLocale)}
-                </td>
-              </tr>
-            )}
-            {templates.map((template) => (
-              <tr key={template.id} className="hover:bg-muted">
-                <td className="px-4 py-3 text-sm font-mono">
-                  {template.eventKey}
-                  <div className="text-xs text-muted-foreground">
-                    {t('admin.notifications.preview.version', uiLocale)}{' '}
-                    {numbers.number(template.version)}
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-sm">
-                  <span
-                    className={`inline-block px-2 py-0.5 text-xs rounded ${
-                      template.channel === 'email'
-                        ? 'bg-blue-100 text-blue-800'
-                        : template.channel === 'sms'
-                          ? 'bg-purple-100 text-purple-800'
-                          : 'bg-muted text-foreground'
-                    }`}
-                  >
-                    {CHANNEL_LABELS[template.channel]}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-sm">
-                  <span className={template.locale === 'fa' ? 'font-medium' : ''}>
-                    {LOCALE_LABELS[template.locale]}
-                  </span>
-                </td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`inline-block px-2 py-0.5 text-xs rounded ${
-                      template.status === 'draft'
-                        ? 'bg-warning-soft text-warning'
-                        : 'bg-success-soft text-success'
-                    }`}
-                  >
-                    {template.status === 'archived'
-                      ? t('admin.notifications.archived', uiLocale)
-                      : template.status}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-sm text-muted-foreground max-w-[200px] truncate">
-                  {template.subject ?? '—'}
-                </td>
-                <td className="px-4 py-3">
-                  {template.isActive ? (
-                    <span className="text-success text-sm font-medium">
-                      ✓ {t('admin.notifications.active', uiLocale)}
-                    </span>
-                  ) : (
-                    <span className="text-muted-foreground text-sm">—</span>
-                  )}
-                </td>
-                <td className="px-4 py-3 text-right text-sm space-x-2">
-                  {template.status === 'draft' && template.publishedAt == null && (
-                    <>
-                      <button
-                        onClick={() => openEdit(template)}
-                        className="text-blue-600 hover:underline"
+          {accepted && !scope.denied && (
+            <>
+              {/* Editor form */}
+              {showEditor && (
+                <form
+                  onSubmit={handleSave}
+                  className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
+                >
+                  <fieldset disabled={saving || !!protectedAction} className="contents">
+                    <h2 className="text-lg font-semibold">
+                      {viewOnly
+                        ? t('admin.notifications.view', uiLocale)
+                        : editId
+                          ? t('admin.notifications.editTitle', uiLocale)
+                          : t('admin.notifications.createTitle', uiLocale)}
+                    </h2>
+
+                    {/* Event key */}
+                    <div>
+                      <label
+                        htmlFor="notification-template-eventKey"
+                        className="block text-sm font-medium text-foreground mb-1"
                       >
-                        {t('admin.notifications.edit', uiLocale)}
-                      </button>
-                      <button
-                        onClick={() => setPublishId(template.id)}
-                        className="text-success hover:underline"
-                      >
-                        {t('admin.notifications.publish', uiLocale)}
-                      </button>
-                      <button
-                        onClick={() => handleDelete(template.id)}
-                        className="text-destructive hover:underline"
-                      >
-                        {t('admin.notifications.delete', uiLocale)}
-                      </button>
-                    </>
-                  )}
-                  {(template.status !== 'draft' || template.publishedAt != null) && (
-                    <>
-                      <button
-                        onClick={() => openEdit(template)}
-                        className="text-blue-600 hover:underline"
-                      >
-                        {t('admin.notifications.view', uiLocale)}
-                      </button>
-                      <button
-                        onClick={() => openEdit(template, true)}
-                        className="text-blue-600 hover:underline"
-                      >
-                        {t('admin.notifications.newVersion', uiLocale)}
-                      </button>
-                      {template.status === 'active' && (
-                        <button
-                          onClick={() => handleUnpublish(template.id)}
-                          className="text-orange-600 hover:underline"
-                        >
-                          {t('admin.notifications.unpublish', uiLocale)}
-                        </button>
+                        {t('admin.notifications.eventKey', uiLocale)}{' '}
+                        <span className="text-destructive">*</span>
+                      </label>
+                      {editId ? (
+                        <input
+                          id="notification-template-eventKey"
+                          readOnly
+                          value={eventKey}
+                          className="w-full min-w-0 text-sm text-muted-foreground py-2"
+                        />
+                      ) : (
+                        <input
+                          id="notification-template-eventKey"
+                          list="notification-event-suggestions"
+                          value={eventKey}
+                          onChange={(e) => setEventKey(e.target.value)}
+                          className="w-full border border-input rounded px-3 py-2"
+                          required
+                          maxLength={100}
+                          pattern="\S+"
+                        />
                       )}
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                      <datalist id="notification-event-suggestions">
+                        {[
+                          ...new Set([
+                            ...KNOWN_EVENT_KEYS,
+                            ...templates.map((template) => template.eventKey),
+                          ]),
+                        ]
+                          .sort()
+                          .map((key) => (
+                            <option key={key} value={key} />
+                          ))}
+                      </datalist>
+                    </div>
+
+                    {/* Channel + Locale */}
+                    <div className="grid min-w-0 grid-cols-2 gap-4 [&>div]:min-w-0">
+                      <div>
+                        <label
+                          htmlFor="notification-template-channel"
+                          className="block text-sm font-medium text-foreground mb-1"
+                        >
+                          {t('admin.notifications.channel', uiLocale)}{' '}
+                          <span className="text-destructive">*</span>
+                        </label>
+                        {editId ? (
+                          <input
+                            id="notification-template-channel"
+                            readOnly
+                            value={channelLabels[channel as TemplateChannel] ?? channel}
+                            className="w-full min-w-0 text-sm text-muted-foreground py-2"
+                          />
+                        ) : (
+                          <select
+                            id="notification-template-channel"
+                            value={channel}
+                            onChange={(e) => setChannel(e.target.value as TemplateChannel)}
+                            className="w-full border border-input rounded px-3 py-2"
+                            required
+                          >
+                            {CHANNEL_OPTIONS.map((c) => (
+                              <option key={c} value={c}>
+                                {channelLabels[c]}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="notification-template-locale"
+                          className="block text-sm font-medium text-foreground mb-1"
+                        >
+                          {t('admin.notifications.locale', uiLocale)}{' '}
+                          <span className="text-destructive">*</span>
+                        </label>
+                        {editId ? (
+                          <input
+                            id="notification-template-locale"
+                            readOnly
+                            value={LOCALE_LABELS[locale as TemplateLocale] ?? locale}
+                            className="w-full min-w-0 text-sm text-muted-foreground py-2"
+                          />
+                        ) : (
+                          <select
+                            id="notification-template-locale"
+                            value={locale}
+                            onChange={(e) => setLocale(e.target.value as TemplateLocale)}
+                            className="w-full border border-input rounded px-3 py-2"
+                            required
+                          >
+                            {LOCALE_OPTIONS.map((l) => (
+                              <option key={l} value={l}>
+                                {LOCALE_LABELS[l]}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Subject (email only) */}
+                    {channel === 'email' && (
+                      <div>
+                        <label
+                          htmlFor="notification-template-subject"
+                          className="block text-sm font-medium text-foreground mb-1"
+                        >
+                          {t('admin.notifications.subject', uiLocale)}
+                        </label>
+                        <input
+                          type="text"
+                          id="notification-template-subject"
+                          readOnly={viewOnly || testSending}
+                          value={subject}
+                          onChange={(e) => setSubject(e.target.value)}
+                          className="w-full border border-input rounded px-3 py-2"
+                          placeholder="e.g. Your profile has been verified"
+                          maxLength={200}
+                        />
+                      </div>
+                    )}
+
+                    {/* Body template + variable sidebar + preview */}
+                    <div>
+                      <label
+                        htmlFor="notification-template-bodyTemplate"
+                        className="block text-sm font-medium text-foreground mb-1"
+                      >
+                        {t('admin.notifications.bodyTemplate', uiLocale)}{' '}
+                        <span className="text-destructive">*</span>
+                      </label>
+                      <p id="notification-body-hint" className="text-xs text-muted-foreground mb-1">
+                        {t('admin.notifications.bodyHint', uiLocale)}
+                      </p>
+                      <div className="flex gap-4">
+                        <div className="flex-1">
+                          <textarea
+                            aria-describedby="notification-body-hint"
+                            ref={bodyRef}
+                            id="notification-template-bodyTemplate"
+                            readOnly={viewOnly || testSending}
+                            value={bodyTemplate}
+                            onChange={(e) => setBodyTemplate(e.target.value)}
+                            className="w-full border border-input rounded px-3 py-2 font-mono text-sm"
+                            rows={8}
+                            required
+                            dir={locale === 'fa' ? 'rtl' : 'ltr'}
+                          />
+                        </div>
+                        {parsedVariables.length > 0 && (
+                          <aside className="w-48 shrink-0 border border-border rounded-lg p-3 bg-muted/40">
+                            <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
+                              {t('admin.notifications.variables', uiLocale)}
+                            </h3>
+                            <p className="text-[11px] text-muted-foreground mb-2">
+                              {t('admin.notifications.insertHint', uiLocale)}
+                            </p>
+                            <ul className="space-y-1">
+                              {parsedVariables.map((v) => (
+                                <li key={v.name}>
+                                  <Button
+                                    type="button"
+                                    disabled={viewOnly || testSending}
+                                    draggable={!viewOnly && !testSending}
+                                    onDragStart={(event) => {
+                                      event.dataTransfer.setData('text/plain', `{{${v.name}}}`);
+                                      event.dataTransfer.effectAllowed = 'copy';
+                                    }}
+                                    onClick={() => insertVariable(v.name)}
+                                    className="w-full text-left px-2 py-1 text-xs font-mono bg-card text-card-foreground border border-border rounded hover:bg-blue-50 hover:border-blue-300"
+                                    title={v.description ?? undefined}
+                                  >
+                                    {'{{'}
+                                    {v.name}
+                                    {'}}'}
+                                  </Button>
+                                  {v.description && (
+                                    <p className="px-1 pt-0.5 text-[11px] text-muted-foreground leading-snug">
+                                      {v.description}
+                                    </p>
+                                  )}
+                                </li>
+                              ))}
+                            </ul>
+                          </aside>
+                        )}
+                      </div>
+                      {/* Live preview pane */}
+                      <div className="mt-3 border border-border rounded-lg p-4 bg-muted/40">
+                        <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
+                          {t('admin.notifications.preview', uiLocale)}
+                        </h3>
+                        {channel === 'email' && subject.trim() !== '' && (
+                          <p
+                            className="text-sm text-foreground mb-2"
+                            dir={locale === 'fa' ? 'rtl' : 'ltr'}
+                          >
+                            <span className="font-semibold">
+                              {t('admin.notifications.subjectLabel', uiLocale)}
+                            </span>{' '}
+                            {
+                              renderTemplatePreview(subject, parsedVariables, undefined, false)
+                                .output
+                            }
+                          </p>
+                        )}
+                        {channel === 'email' ? (
+                          <BrandedEmailPreview
+                            body={renderTemplatePreview(bodyTemplate, parsedVariables).output}
+                            locale={locale}
+                            title={t('admin.notifications.preview', uiLocale)}
+                          />
+                        ) : (
+                          <pre
+                            className="text-sm whitespace-pre-wrap font-sans text-foreground"
+                            dir={locale === 'fa' ? 'rtl' : 'ltr'}
+                          >
+                            {
+                              renderTemplatePreview(bodyTemplate, parsedVariables, undefined, false)
+                                .output
+                            }
+                          </pre>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Variables (allow-list: names + optional descriptions) */}
+                    <div>
+                      <label
+                        htmlFor="notification-template-variablesLabel"
+                        className="block text-sm font-medium text-foreground mb-1"
+                      >
+                        {t('admin.notifications.variablesLabel', uiLocale)}
+                      </label>
+                      <p className="text-xs text-muted-foreground mb-1">
+                        {t('admin.notifications.variablesHintNew', uiLocale)}
+                      </p>
+                      <textarea
+                        id="notification-template-variablesLabel"
+                        readOnly={viewOnly || testSending}
+                        value={variablesStr}
+                        onChange={(e) => setVariablesStr(e.target.value)}
+                        className="w-full border border-input rounded px-3 py-2 font-mono text-sm"
+                        rows={3}
+                        placeholder="userName: The user's display name, profileLink: Verification link"
+                        dir="ltr"
+                      />
+                    </div>
+
+                    {stale && (
+                      <div className="space-y-2">
+                        <p role="alert">{t('admin.notifications.stale', uiLocale)}</p>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={!ready || !selectedTemplate}
+                          onClick={() => selectedTemplate && openEdit(selectedTemplate)}
+                        >
+                          {t('admin.notifications.reset', uiLocale)}
+                        </Button>
+                      </div>
+                    )}
+                    {/* Save / Cancel */}
+                    <div className="flex flex-wrap gap-3 items-center">
+                      {editId && (
+                        <>
+                          <div className="flex flex-col gap-1">
+                            <label
+                              htmlFor="test-destination"
+                              className="text-xs text-muted-foreground"
+                            >
+                              {t('admin.notifications.testDestinationLabel', uiLocale)}
+                            </label>
+                            <input
+                              id="test-destination"
+                              disabled={testSending}
+                              type="text"
+                              value={testDestination}
+                              onChange={(e) => {
+                                setTestSendMsg(null);
+                                setTestDestination(e.target.value);
+                              }}
+                              placeholder={t(
+                                'admin.notifications.testDestinationPlaceholder',
+                                uiLocale
+                              )}
+                              className="w-full min-w-0 border border-input rounded px-3 py-2 text-sm"
+                              dir="ltr"
+                            />
+                            <span className="text-xs text-muted-foreground">
+                              {t('admin.notifications.testDestinationHint', uiLocale)}
+                            </span>
+                          </div>
+                          <Button
+                            type="button"
+                            onClick={handleTestSend}
+                            disabled={
+                              !ready ||
+                              stale ||
+                              !!protectedAction ||
+                              testSending ||
+                              saving ||
+                              unsavedContent
+                            }
+                            className="px-4 py-2 bg-primary text-primary-foreground rounded disabled:opacity-50"
+                          >
+                            {testSending
+                              ? t('admin.notifications.sending', uiLocale)
+                              : t('admin.notifications.testSend', uiLocale)}
+                          </Button>
+                          {unsavedContent && (
+                            <span className="text-sm text-warning">
+                              {t('admin.notifications.saveBeforeTest', uiLocale)}
+                            </span>
+                          )}
+                          {testSendMsg && !unsavedContent && (
+                            <span className="text-sm text-success">{testSendMsg}</span>
+                          )}
+                        </>
+                      )}
+                      <Button
+                        type="submit"
+                        disabled={
+                          !ready || stale || saving || viewOnly || testSending || !!protectedAction
+                        }
+                        className="px-4 py-2 bg-primary text-primary-foreground rounded disabled:opacity-50"
+                      >
+                        {saving
+                          ? t('admin.notifications.saving', uiLocale)
+                          : editId
+                            ? t('admin.notifications.update', uiLocale)
+                            : t('admin.notifications.create', uiLocale)}
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={closeEditor}
+                        className="px-4 py-2 border border-input rounded hover:bg-muted"
+                      >
+                        {t('admin.notifications.cancel', uiLocale)}
+                      </Button>
+                    </div>
+                  </fieldset>
+                </form>
+              )}
+
+              {/* Publish confirm dialog */}
+              {publishId && (
+                <div className="bg-warning-soft border border-warning/20 rounded-lg p-4 space-y-3">
+                  <h3 className="font-semibold">
+                    {t('admin.notifications.publishTitle', uiLocale)}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {t('admin.notifications.publishDesc', uiLocale)}
+                  </p>
+                  <div className="flex gap-3">
+                    <Button
+                      onClick={handlePublish}
+                      disabled={!ready || publishing || !!protectedAction}
+                      className="px-4 py-2 bg-primary text-primary-foreground rounded disabled:opacity-50"
+                    >
+                      {publishing
+                        ? t('admin.notifications.publishing', uiLocale)
+                        : t('admin.notifications.publish', uiLocale)}
+                    </Button>
+                    <Button
+                      onClick={() => setPublishId(null)}
+                      className="px-4 py-2 border border-input rounded hover:bg-muted"
+                    >
+                      {t('admin.notifications.cancel', uiLocale)}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Template list */}
+              <div
+                role="region"
+                aria-label={t('admin.notifications.title', uiLocale)}
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users must be able to focus and scroll this history.
+                tabIndex={0}
+                className="min-w-0 bg-card text-card-foreground rounded-lg border border-border overflow-x-auto"
+              >
+                <table className="min-w-full divide-y divide-border">
+                  <thead className="bg-muted/40">
+                    <tr>
+                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
+                        {t('admin.notifications.col.event', uiLocale)}
+                      </th>
+                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
+                        {t('admin.notifications.channel', uiLocale)}
+                      </th>
+                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
+                        {t('admin.notifications.locale', uiLocale)}
+                      </th>
+                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
+                        {t('admin.notifications.col.status', uiLocale)}
+                      </th>
+                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
+                        {t('admin.notifications.col.subject', uiLocale)}
+                      </th>
+                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
+                        {t('admin.notifications.col.active', uiLocale)}
+                      </th>
+                      <th className="px-4 py-3 text-end text-xs font-medium text-muted-foreground uppercase">
+                        {t('admin.notifications.col.actions', uiLocale)}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {templates.length === 0 && (
+                      <tr>
+                        <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
+                          {t('admin.notifications.empty', uiLocale)}
+                        </td>
+                      </tr>
+                    )}
+                    {templates.map((template) => (
+                      <tr key={template.id} className="hover:bg-muted">
+                        <td className="px-4 py-3 text-sm font-mono">
+                          {template.eventKey}
+                          <div className="text-xs text-muted-foreground">
+                            {t('admin.notifications.preview.version', uiLocale)}{' '}
+                            {numbers.number(template.version)}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          <span
+                            className={`inline-block px-2 py-0.5 text-xs rounded ${
+                              template.channel === 'email'
+                                ? 'bg-blue-100 text-blue-800'
+                                : template.channel === 'sms'
+                                  ? 'bg-purple-100 text-purple-800'
+                                  : 'bg-muted text-foreground'
+                            }`}
+                          >
+                            {channelLabels[template.channel]}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          <span className={template.locale === 'fa' ? 'font-medium' : ''}>
+                            {LOCALE_LABELS[template.locale]}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={`inline-block px-2 py-0.5 text-xs rounded ${
+                              template.status === 'draft'
+                                ? 'bg-warning-soft text-warning'
+                                : 'bg-success-soft text-success'
+                            }`}
+                          >
+                            {template.status === 'archived'
+                              ? t('admin.notifications.archived', uiLocale)
+                              : t(`admin.notifications.${template.status}`, uiLocale)}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-muted-foreground max-w-[200px] truncate">
+                          {template.subject ?? '—'}
+                        </td>
+                        <td className="px-4 py-3">
+                          {template.isActive ? (
+                            <span className="text-success text-sm font-medium">
+                              ✓ {t('admin.notifications.active', uiLocale)}
+                            </span>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">—</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-end text-sm space-x-2">
+                          {template.status === 'draft' && template.publishedAt == null && (
+                            <>
+                              <Button
+                                disabled={!ready || !!protectedAction}
+                                onClick={() => openEdit(template)}
+                                variant="outline"
+                                className="text-foreground hover:underline"
+                              >
+                                {t('admin.notifications.edit', uiLocale)}
+                              </Button>
+                              <Button
+                                disabled={!ready || !!protectedAction}
+                                onClick={() => {
+                                  if (!ready || protectedAction) return;
+                                  publishBasis.current = templateBasis(template);
+                                  setPublishId(template.id);
+                                }}
+                                variant="outline"
+                                className="text-foreground hover:underline"
+                              >
+                                {t('admin.notifications.publish', uiLocale)}
+                              </Button>
+                              <Button
+                                disabled={!ready || !!protectedAction}
+                                onClick={() => handleDelete(template.id)}
+                                variant="outline"
+                                className="text-destructive hover:underline"
+                              >
+                                {t('admin.notifications.delete', uiLocale)}
+                              </Button>
+                            </>
+                          )}
+                          {(template.status !== 'draft' || template.publishedAt != null) && (
+                            <>
+                              <Button
+                                disabled={!ready || !!protectedAction}
+                                onClick={() => openEdit(template)}
+                                variant="outline"
+                                className="text-foreground hover:underline"
+                              >
+                                {t('admin.notifications.view', uiLocale)}
+                              </Button>
+                              <Button
+                                disabled={!ready || !!protectedAction}
+                                onClick={() => openEdit(template, true)}
+                                variant="outline"
+                                className="text-foreground hover:underline"
+                              >
+                                {t('admin.notifications.newVersion', uiLocale)}
+                              </Button>
+                              {template.status === 'active' && (
+                                <Button
+                                  disabled={!ready || !!protectedAction}
+                                  onClick={() => handleUnpublish(template.id)}
+                                  variant="outline"
+                                  className="text-foreground hover:underline"
+                                >
+                                  {t('admin.notifications.unpublish', uiLocale)}
+                                </Button>
+                              )}
+                            </>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </ListPage.Content>
+      </ListPage>
     </div>
   );
 }

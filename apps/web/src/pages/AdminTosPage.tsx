@@ -2,9 +2,10 @@ import { adminTosText } from './admin-tos-text.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { adminControlsText } from '@barghsa/i18n/admin-controls';
 import { useLocale } from '../hooks/useLocale.js';
-import { Dialog, DialogContent, DialogTitle } from '@barghsa/ui';
+import { Button, ListPage, Dialog, DialogContent, DialogTitle } from '@barghsa/ui';
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
+import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import type { FormEvent } from 'react';
 
 const TosRichText = lazy(() => import('./TosRichText.js'));
@@ -40,45 +41,7 @@ async function responseCode(response: Response): Promise<string | undefined> {
   return undefined;
 }
 
-interface TosVersion {
-  revision?: string;
-  id: string;
-  versionId: string;
-  contentFa: string;
-  contentEn: string;
-  changeType: 'major' | 'minor' | null;
-  status: 'draft' | 'published';
-  isActive: boolean;
-  publishedAt: string | null;
-  createdBy: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-function isVersion(value: unknown): value is TosVersion {
-  if (!value || typeof value !== 'object') return false;
-  const v = value as Record<string, unknown>;
-  const date = (input: unknown) => typeof input === 'string' && Number.isFinite(Date.parse(input));
-  return (
-    (v.revision === undefined ||
-      (typeof v.revision === 'string' && /^[a-f0-9]{64}$/.test(v.revision))) &&
-    typeof v.id === 'string' &&
-    v.id.length > 0 &&
-    typeof v.versionId === 'string' &&
-    v.versionId.length > 0 &&
-    typeof v.contentFa === 'string' &&
-    typeof v.contentEn === 'string' &&
-    (v.status === 'draft' || v.status === 'published') &&
-    (v.changeType === null || v.changeType === 'major' || v.changeType === 'minor') &&
-    typeof v.isActive === 'boolean' &&
-    (!v.isActive || v.status === 'published') &&
-    (v.createdBy === null || typeof v.createdBy === 'string') &&
-    date(v.createdAt) &&
-    date(v.updatedAt) &&
-    (v.status === 'published' ? date(v.publishedAt) : v.publishedAt === null)
-  );
-}
-
+import { isVersion, type TosVersion } from '../lib/content-catalogues.js';
 /**
  * Admin TOS editor page (T-09.03.01) with version history (T-09.03.02).
  *
@@ -90,10 +53,17 @@ export default function AdminTosPage() {
   const locale = useLocale();
   const text = adminTosText(locale);
   const historyRequest = useRef(0);
+  const mounted = useRef(false);
+  const publishBaseline = useRef<string | null>(null);
   const saveInFlight = useRef(false);
   const [versions, setVersions] = useState<TosVersion[]>([]);
   const [loading, setLoading] = useState(true);
   const [historyReady, setHistoryReady] = useState(false);
+  const [historyAccepted, setHistoryAccepted] = useState(false);
+  const refreshButton = useRef<HTMLButtonElement>(null);
+  const editorGeneration = useRef(0);
+  const publishGeneration = useRef(0);
+  const busyTokens = useRef({ save: 0, publish: 0, discard: 0 });
   const [error, setError] = useState<{ key: MessageKey; status?: number } | null>(null);
 
   // Draft editor state
@@ -124,16 +94,70 @@ export default function AdminTosPage() {
   const [viewVersion, setViewVersion] = useState<TosVersion | null>(null);
   const [detailLocale, setDetailLocale] = useState<'fa' | 'en'>('fa');
 
+  const resetEditorBusy = useCallback(() => {
+    busyTokens.current.save++;
+    saveInFlight.current = false;
+    setSaving(false);
+  }, []);
+  const clearPrivate = useCallback(() => {
+    resetEditorBusy();
+    busyTokens.current.publish++;
+    busyTokens.current.discard++;
+    publishInFlight.current = false;
+    discardInFlight.current = false;
+    setPublishing(false);
+    setDiscarding(false);
+    historyRequest.current++;
+    editorGeneration.current++;
+    publishGeneration.current++;
+    setVersions([]);
+    setHistoryReady(false);
+    setHistoryAccepted(false);
+    setLoading(false);
+    setShowEditor(false);
+    setEditId(null);
+    setEditRevision(null);
+    setEditConflict(false);
+    setVersionId('');
+    setContentFa('');
+    setContentEn('');
+    setPublishVersion(null);
+    setPreviewReady(false);
+    setViewVersion(null);
+    setError({ key: 'denied' });
+  }, [resetEditorBusy]);
+  const scope = useCatalogueScope(clearPrivate);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      editorGeneration.current++;
+      publishGeneration.current++;
+    };
+  }, []);
+  const currentEditor = useRef({ editId, editRevision });
+  currentEditor.current = { editId, editRevision };
+  const currentPublish = useRef(publishVersion);
+  currentPublish.current = publishVersion;
   const fetchVersions = useCallback(async () => {
-    const request = ++historyRequest.current;
+    if (scope.denied) return;
+    const epoch = scope.version,
+      request = ++historyRequest.current;
+    const current = () =>
+      mounted.current && scope.live.current === epoch && request === historyRequest.current;
     try {
       setLoading(true);
       setHistoryReady(false);
       setError(null);
       const res = await fetch('/api/admin/tos/versions');
+      if (!current()) return;
+      if (res.status === 401 || res.status === 403) {
+        scope.deny();
+        return;
+      }
       if (!res.ok) throw new TosUiError('historyFailed', res.status);
       const data: unknown = await res.json();
-      if (request !== historyRequest.current) return;
+      if (!current()) return;
       if (
         !Array.isArray(data) ||
         !data.every(isVersion) ||
@@ -143,17 +167,47 @@ export default function AdminTosPage() {
       ) {
         throw new TosUiError('invalidHistory');
       }
+      const edited = currentEditor.current;
+      if (
+        edited.editId &&
+        !data.some(
+          (v) =>
+            v.id === edited.editId && v.status === 'draft' && v.revision === edited.editRevision
+        )
+      ) {
+        editorGeneration.current++;
+        resetEditorBusy();
+        setEditConflict(true);
+        setError({ key: 'draftChanged' });
+      }
+      const preview = currentPublish.current;
+      if (
+        preview &&
+        (!data.some(
+          (v) => v.id === preview.id && v.status === 'draft' && v.revision === preview.revision
+        ) ||
+          (data.find((v) => v.isActive)?.revision ?? null) !== publishBaseline.current)
+      ) {
+        publishGeneration.current++;
+        busyTokens.current.publish++;
+        publishInFlight.current = false;
+        setPublishing(false);
+        setPublishVersion(null);
+        setPreviewReady(false);
+        refreshButton.current?.focus();
+      }
       setVersions(data);
+      setHistoryAccepted(true);
       setHistoryReady(true);
     } catch (err) {
-      if (request === historyRequest.current) setError(displayError(err, 'historyFailed'));
+      if (current()) setError(displayError(err, 'historyFailed'));
     } finally {
-      if (request === historyRequest.current) setLoading(false);
+      if (current()) setLoading(false);
     }
-  }, []);
+  }, [scope.denied, scope.version, scope.live, scope.deny, resetEditorBusy]);
 
   useEffect(() => {
-    fetchVersions();
+    void fetchVersions();
     return () => {
       historyRequest.current++;
     };
@@ -165,6 +219,8 @@ export default function AdminTosPage() {
 
   function openCreate() {
     if (!historyReady || loading) return;
+    editorGeneration.current++;
+    resetEditorBusy();
     setEditId(null);
     setEditRevision(null);
     setEditConflict(false);
@@ -180,6 +236,8 @@ export default function AdminTosPage() {
       setError({ key: 'previewRequired' });
       return;
     }
+    editorGeneration.current++;
+    resetEditorBusy();
     setEditId(v.id);
     setEditRevision(v.revision);
     setEditConflict(false);
@@ -190,6 +248,7 @@ export default function AdminTosPage() {
   }
 
   function openView(v: TosVersion) {
+    if (!historyReady || loading || scope.denied) return;
     setViewVersion(v);
     setDetailLocale(locale);
   }
@@ -206,6 +265,11 @@ export default function AdminTosPage() {
       setError({ key: 'requiredContent' });
       return;
     }
+    const epoch = scope.version,
+      generation = editorGeneration.current;
+    const current = () =>
+      mounted.current && scope.live.current === epoch && generation === editorGeneration.current;
+    const token = ++busyTokens.current.save;
     saveInFlight.current = true;
     setSaving(true);
 
@@ -223,6 +287,11 @@ export default function AdminTosPage() {
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(body),
         });
+        if (!current()) return;
+        if (res.status === 401 || res.status === 403) {
+          scope.deny();
+          return;
+        }
         if (res.status === 409) {
           setEditConflict(true);
           throw new TosUiError('draftChanged');
@@ -231,6 +300,7 @@ export default function AdminTosPage() {
           throw new TosUiError('saveFailed', res.status);
         }
         const result: unknown = await res.json().catch(() => null);
+        if (!current()) return;
         if (
           !isVersion(result) ||
           !result.revision ||
@@ -243,6 +313,8 @@ export default function AdminTosPage() {
           setHistoryReady(false);
           throw new TosUiError('unconfirmedWrite');
         }
+        historyRequest.current++;
+        setVersions((previous) => [result, ...previous.filter((v) => v.id !== result.id)]);
       } else {
         // Create new draft
         const res = await fetch('/api/admin/tos/versions', {
@@ -250,6 +322,11 @@ export default function AdminTosPage() {
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({ versionId, contentFa, contentEn }),
         });
+        if (!current()) return;
+        if (res.status === 401 || res.status === 403) {
+          scope.deny();
+          return;
+        }
         if (res.status === 409) {
           if ((await responseCode(res)) === 'TOS_VERSION_ID_TAKEN') {
             throw new TosUiError('versionIdTaken');
@@ -261,6 +338,7 @@ export default function AdminTosPage() {
           throw new TosUiError('saveFailed', res.status);
         }
         const result: unknown = await res.json().catch(() => null);
+        if (!current()) return;
         if (
           !isVersion(result) ||
           !result.revision ||
@@ -273,25 +351,41 @@ export default function AdminTosPage() {
           setHistoryReady(false);
           throw new TosUiError('unconfirmedWrite');
         }
+        historyRequest.current++;
+        setVersions((previous) => [result, ...previous.filter((v) => v.id !== result.id)]);
       }
 
+      if (!current()) return;
       setShowEditor(false);
       await fetchVersions();
     } catch (err) {
-      setError(displayError(err, 'saveFailed'));
+      if (current()) setError(displayError(err, 'saveFailed'));
     } finally {
-      saveInFlight.current = false;
-      setSaving(false);
+      if (token === busyTokens.current.save) {
+        saveInFlight.current = false;
+        setSaving(false);
+      }
     }
   }
 
   async function reloadDraft() {
-    if (!editId || saveInFlight.current) return;
+    if (!editId || saveInFlight.current || scope.denied || loading) return;
+    const epoch = scope.version,
+      generation = editorGeneration.current;
+    const current = () =>
+      mounted.current && scope.live.current === epoch && generation === editorGeneration.current;
+    const token = ++busyTokens.current.save;
     saveInFlight.current = true;
     setSaving(true);
     try {
       const response = await fetch(`/api/admin/tos/versions/${editId}`);
+      if (!current()) return;
+      if (response.status === 401 || response.status === 403) {
+        scope.deny();
+        return;
+      }
       const result: unknown = await response.json();
+      if (!current()) return;
       if (!response.ok || !isVersion(result) || result.id !== editId || !result.revision)
         throw new TosUiError('unconfirmedWrite');
       if (result.status !== 'draft') {
@@ -302,10 +396,12 @@ export default function AdminTosPage() {
       openEdit(result);
       setError(null);
     } catch (error) {
-      setError(displayError(error, 'historyFailed'));
+      if (current()) setError(displayError(error, 'historyFailed'));
     } finally {
-      saveInFlight.current = false;
-      setSaving(false);
+      if (token === busyTokens.current.save) {
+        saveInFlight.current = false;
+        setSaving(false);
+      }
     }
   }
 
@@ -316,6 +412,11 @@ export default function AdminTosPage() {
       setError({ key: 'previewRequired' });
       return;
     }
+    const epoch = scope.version,
+      generation = publishGeneration.current;
+    const current = () =>
+      mounted.current && scope.live.current === epoch && generation === publishGeneration.current;
+    const token = ++busyTokens.current.publish;
     publishInFlight.current = true;
     setPublishing(true);
 
@@ -325,6 +426,11 @@ export default function AdminTosPage() {
         headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ changeType, expectedRevision: publishVersion.revision }),
       });
+      if (!current()) return;
+      if (res.status === 401 || res.status === 403) {
+        scope.deny();
+        return;
+      }
       if (res.status === 409) {
         setPreviewReady(false);
         throw new TosUiError('previewChanged');
@@ -334,6 +440,7 @@ export default function AdminTosPage() {
       }
 
       const result: unknown = await res.json().catch(() => null);
+      if (!current()) return;
       if (
         !isVersion(result) ||
         result.id !== publishVersion.id ||
@@ -347,13 +454,20 @@ export default function AdminTosPage() {
         setPreviewReady(false);
         throw new TosUiError('unconfirmedWrite');
       }
+      historyRequest.current++;
+      setVersions((previous) => [
+        result,
+        ...previous.filter((v) => v.id !== result.id).map((v) => ({ ...v, isActive: false })),
+      ]);
       setPublishVersion(null);
       await fetchVersions();
     } catch (err) {
-      setError(displayError(err, 'publishFailed'));
+      if (current()) setError(displayError(err, 'publishFailed'));
     } finally {
-      publishInFlight.current = false;
-      setPublishing(false);
+      if (token === busyTokens.current.publish) {
+        publishInFlight.current = false;
+        setPublishing(false);
+      }
     }
   }
 
@@ -365,6 +479,9 @@ export default function AdminTosPage() {
     }
     if (!window.confirm(text.confirmDiscard)) return;
 
+    const epoch = scope.version;
+    const current = () => mounted.current && scope.live.current === epoch;
+    const token = ++busyTokens.current.discard;
     discardInFlight.current = true;
     setDiscarding(true);
     try {
@@ -375,473 +492,548 @@ export default function AdminTosPage() {
           method: 'DELETE',
         }
       );
+      if (!current()) return;
+      if (res.status === 401 || res.status === 403) {
+        scope.deny();
+        return;
+      }
       if (res.status === 409) {
         setHistoryReady(false);
         throw new TosUiError('draftChanged');
       }
+      if (!current()) return;
       if (res.status !== 204) {
         throw new TosUiError('discardFailed', res.status);
       }
+      historyRequest.current++;
+      setVersions((previous) => previous.filter((v) => v.id !== version.id));
       await fetchVersions();
     } catch (err) {
-      setError(displayError(err, 'discardFailed'));
+      if (current()) setError(displayError(err, 'discardFailed'));
     } finally {
-      discardInFlight.current = false;
-      setDiscarding(false);
+      if (token === busyTokens.current.discard) {
+        discardInFlight.current = false;
+        setDiscarding(false);
+      }
     }
-  }
-
-  if (loading && versions.length === 0) {
-    return <div className="p-4 text-muted-foreground">{text.loading}</div>;
   }
 
   return (
     <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       {time.notice}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">{text.title}</h1>
         {!hasDraft && !showEditor && (
-          <button
+          <Button
             onClick={openCreate}
             disabled={!historyReady || loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded"
           >
             {text.newDraft}
-          </button>
+          </Button>
         )}
       </div>
 
-      {error && (
+      {!scope.denied && error && (
         <div
           role="alert"
           className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded relative"
         >
           {text[error.key]}
           {error.status ? ` (HTTP ${error.status})` : ''}
-          <button
+          <Button
             aria-label={adminControlsText('dismissError', locale)}
             onClick={() => setError(null)}
-            className="absolute top-2 end-2 text-destructive hover:text-red-700"
+            variant="ghost"
+            className="absolute top-2 end-2 text-destructive"
           >
             ✕
-          </button>
+          </Button>
         </div>
       )}
 
-      {!historyReady && !loading && (
-        <button type="button" onClick={fetchVersions} className="rounded border px-4 py-2">
+      {!scope.denied && !historyReady && !loading && (
+        <Button type="button" onClick={fetchVersions} className="rounded border px-4 py-2">
           {text.retry}
-        </button>
+        </Button>
       )}
 
-      {/* Draft editor */}
-      {showEditor && (
-        <form
-          onSubmit={handleSave}
-          className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
-        >
-          <h2 className="text-lg font-semibold">{editId ? text.editDraft : text.createNewDraft}</h2>
-
-          <div>
-            <label
-              htmlFor="admintospage-field-1"
-              className="block text-sm font-medium text-foreground mb-1"
-            >
-              {text.versionId} <span className="text-destructive">*</span>
-            </label>
-            <input
-              id="admintospage-field-1"
-              type="text"
-              value={versionId}
-              onChange={(e) => setVersionId(e.target.value)}
-              className="w-full border border-input rounded px-3 py-2"
-              placeholder={text.versionExample}
-              maxLength={50}
-              required
-              disabled={!!editId || saving}
-            />
-          </div>
-
-          <Suspense fallback={<p role="status">{text.editorLoading}</p>}>
-            <div className="space-y-2">
-              <p className="font-medium">{text.persian} *</p>
-              <TosRichText
-                key={`${editId ?? 'new'}-${editRevision}-fa`}
-                value={contentFa}
-                onChange={setContentFa}
-                label={text.persian}
-                language="fa"
-                locale={locale}
-                disabled={saving || !historyReady || loading}
-              />
-            </div>
-            <div className="space-y-2">
-              <p className="font-medium">{text.english} *</p>
-              <TosRichText
-                key={`${editId ?? 'new'}-${editRevision}-en`}
-                value={contentEn}
-                onChange={setContentEn}
-                label={text.english}
-                language="en"
-                locale={locale}
-                disabled={saving || !historyReady || loading}
-              />
-            </div>
-          </Suspense>
-
-          {!editId && savedDraft && historyReady && (
-            <div className="space-y-2">
-              <p role="status">{text.createConflict}</p>
-              <button
-                type="button"
-                disabled={saving}
-                onClick={() => {
-                  openEdit(savedDraft);
-                  setError(null);
-                }}
-                className="rounded border px-4 py-2"
-              >
-                {text.openSavedDraft}
-              </button>
-            </div>
-          )}
-          {editConflict && editId && (
-            <button
-              type="button"
-              onClick={reloadDraft}
-              disabled={saving}
-              className="rounded border px-4 py-2"
-            >
-              {text.reloadDraft}
-            </button>
-          )}
-          <div className="flex gap-3">
-            <button
-              type="submit"
-              disabled={saving || !historyReady || loading || editConflict || (!editId && hasDraft)}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-            >
-              {saving ? text.saving : editId ? text.updateDraft : text.createDraft}
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowEditor(false)}
-              disabled={saving}
-              className="px-4 py-2 border border-input rounded hover:bg-muted"
-            >
-              {text.cancel}
-            </button>
-          </div>
-        </form>
-      )}
-
-      {/* Publish dialog */}
-      {publishVersion && (
-        <div
-          role="region"
-          aria-label={text.publishTitle}
-          className="bg-warning-soft border border-warning/20 rounded-lg p-4 space-y-3"
-        >
-          <h3 className="font-semibold">{text.publishTitle}</h3>
-          <p className="text-sm text-muted-foreground">{text.materialHelp}</p>
-          <div className="flex gap-2">
-            {(['fa', 'en'] as const).map((language) => (
-              <button
-                type="button"
-                key={language}
-                aria-pressed={previewLocale === language}
-                disabled={publishing}
-                onClick={() => setPreviewLocale(language)}
-                className="rounded border px-3 py-1 aria-pressed:bg-blue-100"
-              >
-                {language === 'fa' ? text.persian : text.english}
-              </button>
-            ))}
-          </div>
-          <Suspense fallback={<p role="status">{text.previewLoading}</p>}>
-            <TosPreview
-              current={
-                (previewLocale === 'fa'
-                  ? versions.find((v) => v.isActive)?.contentFa
-                  : versions.find((v) => v.isActive)?.contentEn) ?? ''
-              }
-              proposed={
-                previewLocale === 'fa' ? publishVersion.contentFa : publishVersion.contentEn
-              }
-              locale={locale}
-              language={previewLocale}
-              onReady={markPreviewReady}
-            />
-          </Suspense>
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={changeType === 'major'}
-              disabled={publishing}
-              onChange={(event) => setChangeType(event.target.checked ? 'major' : 'minor')}
-            />
-            {text.materialChange}
-          </label>
-          <div className="flex gap-3">
-            <button
-              onClick={handlePublish}
-              disabled={publishing || !historyReady || loading || !previewReady}
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
-            >
-              {publishing ? text.publishing : text.publish}
-            </button>
-            <button
-              disabled={publishing}
-              onClick={() => {
-                setPublishVersion(null);
-                void fetchVersions();
-              }}
-              className="px-4 py-2 border border-input rounded hover:bg-muted"
-            >
-              {text.cancel}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Version detail modal (T-09.03.02) */}
-      {viewVersion && (
-        <Dialog
-          open
-          onOpenChange={(open) => {
-            if (!open) closeView();
-          }}
-        >
-          <DialogContent
-            showCloseButton={false}
-            className="bg-card text-card-foreground rounded-lg shadow-xl sm:max-w-3xl w-full max-h-[85vh] flex flex-col p-0 gap-0"
+      <ListPage>
+        <ListPage.Toolbar>
+          <Button
+            ref={refreshButton}
+            type="button"
+            variant="outline"
+            onClick={() => (scope.denied ? scope.recover() : void fetchVersions())}
           >
-            {time.notice}
-            {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-              <div>
-                <DialogTitle className="text-lg font-semibold">
-                  {text.versionTitle} {viewVersion.versionId}
-                </DialogTitle>
-                <p className="text-sm text-muted-foreground">
-                  {text[viewVersion.status]} ·
-                  {viewVersion.changeType && (
-                    <span
-                      className={`ms-1 inline-block px-2 py-0.5 text-xs rounded ${
-                        viewVersion.changeType === 'major'
-                          ? 'bg-danger-soft text-destructive'
-                          : 'bg-muted text-foreground'
-                      }`}
+            {text.refresh}
+          </Button>
+        </ListPage.Toolbar>
+        <ListPage.Content
+          loading={loading}
+          error={!historyReady && !!error}
+          empty={false}
+          emptyView={null}
+          retainContent={historyAccepted}
+          loadingView={<p role="status">{text.loading}</p>}
+          errorView={scope.denied ? <p role="alert">{text.denied}</p> : null}
+        >
+          {historyAccepted && !scope.denied && (
+            <>
+              {/* Draft editor */}
+              {showEditor && (
+                <form
+                  onSubmit={handleSave}
+                  className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
+                >
+                  <h2 className="text-lg font-semibold">
+                    {editId ? text.editDraft : text.createNewDraft}
+                  </h2>
+
+                  <div>
+                    <label
+                      htmlFor="admintospage-field-1"
+                      className="block text-sm font-medium text-foreground mb-1"
                     >
-                      {text[viewVersion.changeType]}
-                    </span>
-                  )}
-                  {viewVersion.isActive && (
-                    <span className="ms-2 text-success text-sm font-medium">✓ {text.active}</span>
-                  )}
-                </p>
-              </div>
-              <button
-                onClick={closeView}
-                aria-label={text.close}
-                className="text-muted-foreground hover:text-muted-foreground text-xl leading-none"
-              >
-                ✕
-              </button>
-            </div>
+                      {text.versionId} <span className="text-destructive">*</span>
+                    </label>
+                    <input
+                      id="admintospage-field-1"
+                      type="text"
+                      value={versionId}
+                      onChange={(e) => setVersionId(e.target.value)}
+                      className="w-full border border-input rounded px-3 py-2"
+                      placeholder={text.versionExample}
+                      maxLength={50}
+                      required
+                      disabled={!!editId || saving}
+                    />
+                  </div>
 
-            {/* Metadata */}
-            <div className="px-6 py-3 bg-muted/40 border-b border-border grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-muted-foreground">{text.versionId}:</span>{' '}
-                <span className="font-medium">{viewVersion.versionId}</span>
-              </div>
-              <div>
-                <span className="text-muted-foreground">{text.author}:</span>{' '}
-                <span className="font-medium">{viewVersion.createdBy ?? '—'}</span>
-              </div>
-              <div>
-                <span className="text-muted-foreground">{text.published}:</span>{' '}
-                <span className="font-medium">{time.format(viewVersion.publishedAt)}</span>
-              </div>
-              <div>
-                <span className="text-muted-foreground">{text.created}:</span>{' '}
-                <span className="font-medium">{time.format(viewVersion.createdAt)}</span>
-              </div>
-            </div>
+                  <Suspense fallback={<p role="status">{text.editorLoading}</p>}>
+                    <div className="space-y-2">
+                      <p className="font-medium">{text.persian} *</p>
+                      <TosRichText
+                        key={`${editId ?? 'new'}-${editRevision}-fa`}
+                        value={contentFa}
+                        onChange={setContentFa}
+                        label={text.persian}
+                        language="fa"
+                        locale={locale}
+                        disabled={saving || !historyReady || loading}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <p className="font-medium">{text.english} *</p>
+                      <TosRichText
+                        key={`${editId ?? 'new'}-${editRevision}-en`}
+                        value={contentEn}
+                        onChange={setContentEn}
+                        label={text.english}
+                        language="en"
+                        locale={locale}
+                        disabled={saving || !historyReady || loading}
+                      />
+                    </div>
+                  </Suspense>
 
-            {/* Locale toggle */}
-            <div className="px-6 py-3 border-b border-border flex gap-2">
-              <button
-                onClick={() => setDetailLocale('fa')}
-                className={`px-3 py-1 text-sm rounded ${
-                  detailLocale === 'fa'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-muted text-foreground hover:bg-accent'
-                }`}
-              >
-                فارسی
-              </button>
-              <button
-                onClick={() => setDetailLocale('en')}
-                className={`px-3 py-1 text-sm rounded ${
-                  detailLocale === 'en'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-muted text-foreground hover:bg-accent'
-                }`}
-              >
-                English
-              </button>
-            </div>
-
-            {/* Content */}
-            <div className="px-6 py-4 overflow-y-auto flex-1">
-              <Suspense fallback={<p role="status">{text.previewLoading}</p>}>
-                <TosContent
-                  content={detailLocale === 'fa' ? viewVersion.contentFa : viewVersion.contentEn}
-                  language={detailLocale}
-                />
-              </Suspense>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
-
-      {/* Version list */}
-      <div className="bg-card text-card-foreground rounded-lg border border-border overflow-x-auto">
-        <table className="min-w-full divide-y divide-border">
-          <caption className="sr-only">{text.history}</caption>
-          <thead className="bg-muted/40">
-            <tr>
-              <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                {text.version}
-              </th>
-              <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                {text.status}
-              </th>
-              <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                {text.change}
-              </th>
-              <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                {text.active}
-              </th>
-              <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                {text.published}
-              </th>
-              <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                {text.author}
-              </th>
-              <th className="px-4 py-3 text-end text-xs font-medium text-muted-foreground uppercase">
-                {text.actions}
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {historyReady && versions.length === 0 && (
-              <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
-                  {text.empty}
-                </td>
-              </tr>
-            )}
-            {versions.map((v) => (
-              <tr key={v.id} className="hover:bg-muted">
-                <td className="px-4 py-3 text-sm font-medium">{v.versionId}</td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`inline-block px-2 py-0.5 text-xs rounded ${
-                      v.status === 'draft'
-                        ? 'bg-warning-soft text-warning'
-                        : 'bg-success-soft text-success'
-                    }`}
-                  >
-                    {text[v.status]}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-sm">
-                  {v.status === 'published' ? (
-                    <span
-                      className={`inline-block px-2 py-0.5 text-xs rounded ${
-                        v.changeType === 'major'
-                          ? 'bg-danger-soft text-destructive'
-                          : 'bg-muted text-foreground'
-                      }`}
-                    >
-                      {v.changeType ? text[v.changeType] : text.notRecorded}
-                    </span>
-                  ) : (
-                    <span className="text-muted-foreground">—</span>
-                  )}
-                </td>
-                <td className="px-4 py-3">
-                  {v.isActive ? (
-                    <span className="text-success text-sm font-medium">✓ {text.active}</span>
-                  ) : (
-                    <span className="text-muted-foreground text-sm">—</span>
-                  )}
-                </td>
-                <td className="px-4 py-3 text-sm text-muted-foreground">
-                  {time.format(v.publishedAt)}
-                </td>
-                <td className="px-4 py-3 text-sm text-muted-foreground">
-                  {v.createdBy ? (
-                    <span className="font-mono text-xs" title={v.createdBy}>
-                      {v.createdBy}
-                    </span>
-                  ) : (
-                    <span className="text-muted-foreground">—</span>
-                  )}
-                </td>
-                <td className="px-4 py-3 text-end text-sm [&_button]:ms-2">
-                  <button
-                    onClick={() => openView(v)}
-                    className="text-indigo-600 hover:text-indigo-800"
-                  >
-                    {text.view}
-                  </button>
-                  {v.status === 'draft' && (
-                    <>
-                      <button
-                        onClick={() => openEdit(v)}
-                        disabled={
-                          !historyReady || loading || showEditor || !!publishVersion || discarding
-                        }
-                        className="text-blue-600 hover:text-blue-800 disabled:opacity-40"
-                      >
-                        {text.edit}
-                      </button>
-                      <button
+                  {!editId && savedDraft && historyReady && (
+                    <div className="space-y-2">
+                      <p role="status">{text.createConflict}</p>
+                      <Button
+                        type="button"
+                        disabled={saving}
                         onClick={() => {
-                          setPublishVersion(v);
-                          setPreviewLocale(locale);
-                          setChangeType('minor');
-                          setPreviewReady(false);
-                          if (!v.revision) setError({ key: 'previewRequired' });
+                          openEdit(savedDraft);
+                          setError(null);
                         }}
-                        disabled={
-                          !historyReady || loading || showEditor || !!publishVersion || discarding
-                        }
-                        className="text-success hover:text-green-800 disabled:opacity-40"
+                        className="rounded border px-4 py-2"
                       >
-                        {text.publish}
-                      </button>
-                      <button
-                        onClick={() => handleDiscard(v)}
-                        disabled={
-                          !historyReady || loading || showEditor || !!publishVersion || discarding
-                        }
-                        className="text-destructive hover:text-red-800 disabled:opacity-40"
-                      >
-                        {text.discard}
-                      </button>
-                    </>
+                        {text.openSavedDraft}
+                      </Button>
+                    </div>
                   )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                  {editConflict && editId && (
+                    <Button
+                      type="button"
+                      onClick={reloadDraft}
+                      disabled={saving}
+                      className="rounded border px-4 py-2"
+                    >
+                      {text.reloadDraft}
+                    </Button>
+                  )}
+                  <div className="flex flex-wrap gap-3">
+                    <Button
+                      type="submit"
+                      disabled={
+                        saving || !historyReady || loading || editConflict || (!editId && hasDraft)
+                      }
+                      className="px-4 py-2 bg-primary text-primary-foreground rounded disabled:opacity-50"
+                    >
+                      {saving ? text.saving : editId ? text.updateDraft : text.createDraft}
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        editorGeneration.current++;
+                        setShowEditor(false);
+                      }}
+                      disabled={saving}
+                      className="px-4 py-2 border border-input rounded hover:bg-muted"
+                    >
+                      {text.cancel}
+                    </Button>
+                  </div>
+                </form>
+              )}
+
+              {/* Publish dialog */}
+              {publishVersion && (
+                <div
+                  role="region"
+                  aria-label={text.publishTitle}
+                  className="bg-warning-soft border border-warning/20 rounded-lg p-4 space-y-3"
+                >
+                  <h3 className="font-semibold">{text.publishTitle}</h3>
+                  <p className="text-sm text-muted-foreground">{text.materialHelp}</p>
+                  <div className="flex gap-2">
+                    {(['fa', 'en'] as const).map((language) => (
+                      <Button
+                        type="button"
+                        key={language}
+                        aria-pressed={previewLocale === language}
+                        disabled={publishing}
+                        onClick={() => setPreviewLocale(language)}
+                        variant="outline"
+                        className="rounded border px-3 py-1 aria-pressed:bg-muted"
+                      >
+                        {language === 'fa' ? text.persian : text.english}
+                      </Button>
+                    ))}
+                  </div>
+                  <Suspense fallback={<p role="status">{text.previewLoading}</p>}>
+                    <TosPreview
+                      current={
+                        (previewLocale === 'fa'
+                          ? versions.find((v) => v.isActive)?.contentFa
+                          : versions.find((v) => v.isActive)?.contentEn) ?? ''
+                      }
+                      proposed={
+                        previewLocale === 'fa' ? publishVersion.contentFa : publishVersion.contentEn
+                      }
+                      locale={locale}
+                      language={previewLocale}
+                      onReady={markPreviewReady}
+                    />
+                  </Suspense>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={changeType === 'major'}
+                      disabled={publishing}
+                      onChange={(event) => setChangeType(event.target.checked ? 'major' : 'minor')}
+                    />
+                    {text.materialChange}
+                  </label>
+                  <div className="flex flex-wrap gap-3">
+                    <Button
+                      onClick={handlePublish}
+                      disabled={publishing || !historyReady || loading || !previewReady}
+                      className="px-4 py-2 bg-primary text-primary-foreground rounded disabled:opacity-50"
+                    >
+                      {publishing ? text.publishing : text.publish}
+                    </Button>
+                    <Button
+                      disabled={publishing}
+                      onClick={() => {
+                        setPublishVersion(null);
+                        void fetchVersions();
+                      }}
+                      className="px-4 py-2 border border-input rounded hover:bg-muted"
+                    >
+                      {text.cancel}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Version detail modal (T-09.03.02) */}
+              {viewVersion && (
+                <Dialog
+                  open
+                  onOpenChange={(open) => {
+                    if (!open) closeView();
+                  }}
+                >
+                  <DialogContent
+                    showCloseButton={false}
+                    className="bg-card text-card-foreground rounded-lg shadow-xl sm:max-w-3xl w-full max-h-[85vh] flex flex-col p-0 gap-0"
+                  >
+                    {time.notice}
+                    {/* Header */}
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+                      <div>
+                        <DialogTitle className="text-lg font-semibold">
+                          {text.versionTitle} {viewVersion.versionId}
+                        </DialogTitle>
+                        <p className="text-sm text-muted-foreground">
+                          {text[viewVersion.status]} ·
+                          {viewVersion.changeType && (
+                            <span
+                              className={`ms-1 inline-block px-2 py-0.5 text-xs rounded ${
+                                viewVersion.changeType === 'major'
+                                  ? 'bg-danger-soft text-destructive'
+                                  : 'bg-muted text-foreground'
+                              }`}
+                            >
+                              {text[viewVersion.changeType]}
+                            </span>
+                          )}
+                          {viewVersion.isActive && (
+                            <span className="ms-2 text-success text-sm font-medium">
+                              ✓ {text.active}
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                      <Button
+                        onClick={closeView}
+                        aria-label={text.close}
+                        variant="ghost"
+                        className="text-muted-foreground text-xl leading-none"
+                      >
+                        ✕
+                      </Button>
+                    </div>
+
+                    {/* Metadata */}
+                    <div className="px-6 py-3 bg-muted/40 border-b border-border grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">{text.versionId}:</span>{' '}
+                        <span className="font-medium">{viewVersion.versionId}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">{text.author}:</span>{' '}
+                        <span className="font-medium">{viewVersion.createdBy ?? '—'}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">{text.published}:</span>{' '}
+                        <span className="font-medium">{time.format(viewVersion.publishedAt)}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">{text.created}:</span>{' '}
+                        <span className="font-medium">{time.format(viewVersion.createdAt)}</span>
+                      </div>
+                    </div>
+
+                    {/* Locale toggle */}
+                    <div className="px-6 py-3 border-b border-border flex gap-2">
+                      <Button
+                        onClick={() => setDetailLocale('fa')}
+                        className={`px-3 py-1 text-sm rounded ${
+                          detailLocale === 'fa'
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-muted text-foreground hover:bg-accent'
+                        }`}
+                      >
+                        فارسی
+                      </Button>
+                      <Button
+                        onClick={() => setDetailLocale('en')}
+                        className={`px-3 py-1 text-sm rounded ${
+                          detailLocale === 'en'
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-muted text-foreground hover:bg-accent'
+                        }`}
+                      >
+                        English
+                      </Button>
+                    </div>
+
+                    {/* Content */}
+                    <div className="px-6 py-4 overflow-y-auto flex-1">
+                      <Suspense fallback={<p role="status">{text.previewLoading}</p>}>
+                        <TosContent
+                          content={
+                            detailLocale === 'fa' ? viewVersion.contentFa : viewVersion.contentEn
+                          }
+                          language={detailLocale}
+                        />
+                      </Suspense>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
+
+              {/* Version list */}
+              <div
+                role="region"
+                aria-label={text.history}
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users must be able to focus and scroll this history.
+                tabIndex={0}
+                className="min-w-0 bg-card text-card-foreground rounded-lg border border-border overflow-x-auto"
+              >
+                <table className="min-w-full divide-y divide-border">
+                  <caption className="sr-only">{text.history}</caption>
+                  <thead className="bg-muted/40">
+                    <tr>
+                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
+                        {text.version}
+                      </th>
+                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
+                        {text.status}
+                      </th>
+                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
+                        {text.change}
+                      </th>
+                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
+                        {text.active}
+                      </th>
+                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
+                        {text.published}
+                      </th>
+                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
+                        {text.author}
+                      </th>
+                      <th className="px-4 py-3 text-end text-xs font-medium text-muted-foreground uppercase">
+                        {text.actions}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {historyReady && versions.length === 0 && (
+                      <tr>
+                        <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
+                          {text.empty}
+                        </td>
+                      </tr>
+                    )}
+                    {versions.map((v) => (
+                      <tr key={v.id} className="hover:bg-muted">
+                        <td className="px-4 py-3 text-sm font-medium [overflow-wrap:anywhere]">
+                          {v.versionId}
+                        </td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={`inline-block px-2 py-0.5 text-xs rounded ${
+                              v.status === 'draft'
+                                ? 'bg-warning-soft text-warning'
+                                : 'bg-success-soft text-success'
+                            }`}
+                          >
+                            {text[v.status]}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          {v.status === 'published' ? (
+                            <span
+                              className={`inline-block px-2 py-0.5 text-xs rounded ${
+                                v.changeType === 'major'
+                                  ? 'bg-danger-soft text-destructive'
+                                  : 'bg-muted text-foreground'
+                              }`}
+                            >
+                              {v.changeType ? text[v.changeType] : text.notRecorded}
+                            </span>
+                          ) : (
+                            <span className="text-muted-foreground">—</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          {v.isActive ? (
+                            <span className="text-success text-sm font-medium">
+                              ✓ {text.active}
+                            </span>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">—</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-muted-foreground">
+                          {time.format(v.publishedAt)}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-muted-foreground">
+                          {v.createdBy ? (
+                            <span className="font-mono text-xs" title={v.createdBy}>
+                              {v.createdBy}
+                            </span>
+                          ) : (
+                            <span className="text-muted-foreground">—</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-end text-sm [&_button]:ms-2">
+                          <Button
+                            onClick={() => openView(v)}
+                            variant="outline"
+                            className="text-foreground hover:underline"
+                          >
+                            {text.view}
+                          </Button>
+                          {v.status === 'draft' && (
+                            <>
+                              <Button
+                                onClick={() => openEdit(v)}
+                                disabled={
+                                  !historyReady ||
+                                  loading ||
+                                  showEditor ||
+                                  !!publishVersion ||
+                                  discarding
+                                }
+                                variant="outline"
+                                className="text-foreground hover:underline disabled:opacity-40"
+                              >
+                                {text.edit}
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  publishBaseline.current =
+                                    versions.find((v) => v.isActive)?.revision ?? null;
+                                  publishGeneration.current++;
+                                  setPublishVersion(v);
+                                  setPreviewLocale(locale);
+                                  setChangeType('minor');
+                                  setPreviewReady(false);
+                                  if (!v.revision) setError({ key: 'previewRequired' });
+                                }}
+                                disabled={
+                                  !historyReady ||
+                                  loading ||
+                                  showEditor ||
+                                  !!publishVersion ||
+                                  discarding
+                                }
+                                variant="outline"
+                                className="text-foreground hover:underline disabled:opacity-40"
+                              >
+                                {text.publish}
+                              </Button>
+                              <Button
+                                onClick={() => handleDiscard(v)}
+                                disabled={
+                                  !historyReady ||
+                                  loading ||
+                                  showEditor ||
+                                  !!publishVersion ||
+                                  discarding
+                                }
+                                variant="outline"
+                                className="text-destructive hover:underline disabled:opacity-40"
+                              >
+                                {text.discard}
+                              </Button>
+                            </>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </ListPage.Content>
+      </ListPage>
     </div>
   );
 }

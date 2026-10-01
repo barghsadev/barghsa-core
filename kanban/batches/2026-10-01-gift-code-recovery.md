@@ -32,3 +32,5 @@ Final related web validation passes 409 cases: 26 new recovery/DTO cases, the ex
 The preceding inbox batch is published as `72d102d37192a6490344649bf5d1a98d5e1d2249`; CI run `36844817822` passes all five jobs under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.
 
 This batch is published directly to main after final validation, with remote SHA, clean-worktree and CI registration readback. No PR is created; historical supervisor state remains unchanged.
+
+Verified publication: `466acda9ff6eee4f6325e4181f8acba05d567098`. CI run `36846226007` passes all five jobs under the existing temporary fast mode. Combined coverage remains an exemption, not measured coverage.

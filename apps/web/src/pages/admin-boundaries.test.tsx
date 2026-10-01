@@ -664,7 +664,7 @@ it.each([
   );
   await act(async () => root.render(<AdminTosPage />));
   await clickText('Publish');
-  const region = host.querySelector('[role=region]')!;
+  const region = host.querySelector('[role=region][aria-label="Publish TOS Version"]')!;
   const publish = Array.from(region.querySelectorAll('button')).find(
     (button) => button.textContent === 'Publish'
   )!;
@@ -676,11 +676,11 @@ it.each([
     expectedRevision: revisionTerms.revision,
   });
   if (scenario.success) {
-    expect(host.querySelector('[role=region]')).toBeNull();
+    expect(host.querySelector('[role=region][aria-label="Publish TOS Version"]')).toBeNull();
     expect(host.querySelector('[role=alert]')).toBeNull();
   } else {
     expect(host.querySelector('[role=alert]')).not.toBeNull();
-    expect(host.querySelector('[role=region]')).not.toBeNull();
+    expect(host.querySelector('[role=region][aria-label="Publish TOS Version"]')).not.toBeNull();
     if (scenario.status !== 503) expect(publish.disabled).toBe(true);
   }
 });

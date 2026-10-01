@@ -1,12 +1,16 @@
+import { crmShell } from './crm-shell-fixture';
+import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
+test.use({ viewport: { width: 390, height: 844 } });
 
 for (const locale of ['en', 'fa'] as const) {
   test(`preview selector and rendered version agree across filters (${locale})`, async ({
     page,
   }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     const base = {
+      ...notificationTemplate(),
       eventKey: 'fixture.versions',
       channel: 'in_app',
       locale,
@@ -67,9 +71,7 @@ for (const locale of ['en', 'fa'] as const) {
       })
     );
     await page.goto('/admin/notifications');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
+
     const version = page.locator('#tpl-preview-version');
     const body = page.locator('pre');
     await expect(body).toHaveText('Active user.name');

@@ -29,6 +29,7 @@ export interface TeamAction {
   path: string;
   method: 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   body?: unknown;
+  successStatus?: number;
   signsOut?: boolean;
   requiresPassword?: boolean;
   conflictMessage?: string;
@@ -176,6 +177,10 @@ export function TeamActionDialog({
                 ? (action.forbiddenMessage ?? t('team.forbidden', locale))
                 : t('team.error', locale))
         );
+        return;
+      }
+      if (action.successStatus !== undefined && response.status !== action.successStatus) {
+        setError(t('team.error', locale));
         return;
       }
       if (action.signsOut || data?.sessionRevoked === true) {

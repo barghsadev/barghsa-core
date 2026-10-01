@@ -1,3 +1,4 @@
+import { crmShell } from './crm-shell-fixture';
 import { dismissMessages } from './dismiss-messages';
 import { cookieResponse } from './cookie-response';
 import { formatBrowserDate } from './browser-date';
@@ -110,6 +111,12 @@ for (const locale of ['en', 'fa']) {
   });
 }
 
+async function tosShell(page: Page, locale = 'en') {
+  await crmShell(page, locale as 'en' | 'fa');
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ status: 404, json: {} })
+  );
+}
 async function shell(page: Page, locale = 'en') {
   await page.addInitScript((value) => {
     if (document.documentElement) document.documentElement.lang = value;
@@ -194,7 +201,7 @@ for (const locale of ['en', 'fa']) {
 test('TOS detail has a name, contains keyboard focus and restores its trigger', async ({
   page,
 }) => {
-  await shell(page);
+  await tosShell(page);
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
   );
@@ -1663,7 +1670,7 @@ for (const locale of ['en', 'fa']) {
   test(`geography filters and terms error dismissal have localized names (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
+    await tosShell(page, locale);
     await page.goto('/admin/geography');
     const search = page.getByRole('textbox', {
       name: locale === 'fa' ? 'جستجوی استان‌ها' : 'Search provinces',
@@ -2797,7 +2804,7 @@ for (const locale of ['en', 'fa']) {
 }
 
 test('TOS network failures stay localized in Persian and block writes', async ({ page }) => {
-  await shell(page, 'fa');
+  await tosShell(page, 'fa');
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
@@ -2810,7 +2817,7 @@ test('TOS network failures stay localized in Persian and block writes', async ({
 
 for (const failure of ['unavailable', 'malformed']) {
   test(`TOS history blocks new drafts until a valid reload (${failure})`, async ({ page }) => {
-    await shell(page);
+    await tosShell(page);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'Asia/Tehran' } })
     );
@@ -2839,7 +2846,7 @@ for (const locale of ['en', 'fa']) {
   test(`TOS rich text saves formatting and freezes content while saving (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
+    await tosShell(page, locale);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'Asia/Tehran' } })
     );
@@ -2871,8 +2878,7 @@ for (const locale of ['en', 'fa']) {
     await expect(english).toHaveAttribute('dir', 'ltr');
     await persian.fill('شرایط جدید');
     await english.fill('Important terms');
-    await english.press('ArrowRight');
-    for (const _character of 'Important terms') await english.press('Shift+ArrowLeft');
+    await english.press('ControlOrMeta+A');
     await page
       .getByRole('group', {
         name: locale === 'fa' ? 'محتوای انگلیسی: قالب‌بندی' : 'English content: Formatting',
@@ -2913,7 +2919,7 @@ for (const locale of ['en', 'fa']) {
 test('TOS editor preserves unsupported existing formatting when editing another language', async ({
   page,
 }) => {
-  await shell(page);
+  await tosShell(page);
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
@@ -2952,7 +2958,7 @@ test('TOS editor preserves unsupported existing formatting when editing another 
 });
 
 test('TOS preview renders safely, shows changes and blocks stale publication', async ({ page }) => {
-  await shell(page);
+  await tosShell(page);
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
@@ -3029,7 +3035,7 @@ test('TOS preview renders safely, shows changes and blocks stale publication', a
 test('TOS edit conflicts preserve local text and reload the newer revision explicitly', async ({
   page,
 }) => {
-  await shell(page);
+  await tosShell(page);
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
@@ -3073,7 +3079,7 @@ test('TOS edit conflicts preserve local text and reload the newer revision expli
 });
 
 test('TOS creation does not report malformed success as a saved draft', async ({ page }) => {
-  await shell(page);
+  await tosShell(page);
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
@@ -3096,7 +3102,7 @@ test('TOS creation does not report malformed success as a saved draft', async ({
 test('TOS draft creation conflicts retain local content until explicit replacement', async ({
   page,
 }) => {
-  await shell(page);
+  await tosShell(page);
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );

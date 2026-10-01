@@ -1,31 +1,21 @@
+import { crmShell } from './crm-shell-fixture';
+import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { test, expect } from './coverage-fixture';
 
-const template = {
-  id: 'template-recovery',
-  eventKey: 'welcome_email',
-  channel: 'email',
-  locale: 'en',
-  subject: 'Recovery subject',
-  bodyTemplate: 'Recovery body',
-  variables: [],
-  status: 'draft',
-  isActive: false,
-  version: 1,
-  publishedAt: null,
-};
+test.use({ viewport: { width: 390, height: 844 } });
+const template = notificationTemplate();
+
 for (const locale of ['en', 'fa'] as const) {
   test(`notification template list rejects malformed data and retries (${locale})`, async ({
     page,
   }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     let valid = false;
     await page.route('**/api/admin/notifications/templates', (route) =>
       route.fulfill({ json: valid ? [template] : {} })
     );
     await page.goto('/admin/notifications');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
+
     await expect(
       page.getByRole('alert').filter({
         hasText:
@@ -50,7 +40,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`notification create preserves input until valid password-protected acknowledgement (${locale})`, async ({
     page,
   }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     let attempts = 0;
     let verified = false;
     let saved = false;
@@ -71,9 +61,7 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ json: { ok: true } });
     });
     await page.goto('/admin/notifications');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
+
     await page
       .getByRole('button', { name: locale === 'fa' ? 'قالب جدید' : 'New Template', exact: true })
       .click();
@@ -104,7 +92,7 @@ for (const operation of ['publish', 'unpublish', 'delete', 'test-send', 'edit'] 
   test(`notification ${operation} resumes the captured action after password verification`, async ({
     page,
   }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, 'en');
     let current = {
       ...template,
       subject: template.subject as string | null,
@@ -196,14 +184,14 @@ for (const operation of ['publish', 'unpublish', 'delete', 'test-send', 'edit'] 
     else
       await expect(
         row
-          .getByRole('cell', { name: operation === 'publish' ? 'active' : 'Archived', exact: true })
+          .getByRole('cell', { name: operation === 'publish' ? 'Active' : 'Archived', exact: true })
           .first()
       ).toBeVisible();
   });
 }
 
 test('notification publication rejects a different template acknowledgement', async ({ page }) => {
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, 'en');
   await page.route('**/api/admin/notifications/templates', (route) =>
     route.fulfill({ json: [template] })
   );
@@ -211,9 +199,7 @@ test('notification publication rejects a different template acknowledgement', as
     route.fulfill({ json: { ...template, id: 'other-template', status: 'active', isActive: true } })
   );
   await page.goto('/admin/notifications');
-  await page.evaluate(() => {
-    document.documentElement.lang = 'en';
-  });
+
   await page
     .getByRole('row')
     .filter({ hasText: template.subject })
@@ -230,7 +216,7 @@ test('notification publication rejects a different template acknowledgement', as
 });
 
 test('late notification test-send challenge does not reopen a closed editor', async ({ page }) => {
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, 'en');
   await page.route('**/api/admin/notifications/templates', (route) =>
     route.fulfill({ json: [template] })
   );
@@ -251,9 +237,7 @@ test('late notification test-send challenge does not reopen a closed editor', as
     }
   );
   await page.goto('/admin/notifications');
-  await page.evaluate(() => {
-    document.documentElement.lang = 'en';
-  });
+
   await page
     .getByRole('row')
     .filter({ hasText: template.subject })
