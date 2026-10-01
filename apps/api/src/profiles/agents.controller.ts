@@ -99,6 +99,11 @@ export class AgentsController {
       .object({
         username: z.string().min(1).max(254),
         role: z.enum(['Manager', 'Finance', 'Legal']),
+        message: z
+          .string()
+          .max(1000)
+          .refine((value) => !value.includes('\0'))
+          .optional(),
       })
       .safeParse(body);
     if (!parsed.success || !z.uuid().safeParse(profileId).success)
@@ -108,7 +113,8 @@ export class AgentsController {
       profileId,
       parsed.data.username,
       parsed.data.role,
-      req.session
+      req.session,
+      parsed.data.message
     );
     this.logger.log(`Invitation ${result.id} created for profile ${profileId} by user ${userId}`);
     return result;

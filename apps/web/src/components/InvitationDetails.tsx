@@ -22,6 +22,12 @@ export function InvitationDetails({
       </summary>
       <p className="my-3">{t(`invitation.details.${details.role}`, locale)}</p>
       <dl className="space-y-3 text-sm">
+        {details.message && (
+          <div>
+            <dt className="font-medium">{t('invitation.details.message', locale)}</dt>
+            <dd className="whitespace-pre-wrap [overflow-wrap:anywhere]">{details.message}</dd>
+          </div>
+        )}
         <div>
           <dt className="font-medium">{t('invitation.details.inviter', locale)}</dt>
           <dd>{details.inviterName ?? t('invitation.details.unavailable', locale)}</dd>

@@ -10,6 +10,10 @@ export interface TeamEntry {
   status: string;
   joinedAt: string | null;
   createdAt: string;
+  invitedAt?: string | null;
+  /** Recorded account sign-in, not presence or profile activity history. */
+  lastActiveAt?: string | null;
+  message?: string | null;
 }
 export interface Team {
   profileId: string;
@@ -69,7 +73,14 @@ export function validTeam(v: unknown): v is Team {
       ids.has(entry.id) ||
       !nullableText(entry.username) ||
       !nullableText(entry.name) ||
-      !date(entry.createdAt)
+      !date(entry.createdAt) ||
+      (entry.invitedAt !== undefined && entry.invitedAt !== null && !date(entry.invitedAt)) ||
+      (entry.lastActiveAt !== undefined &&
+        entry.lastActiveAt !== null &&
+        !date(entry.lastActiveAt)) ||
+      (entry.message !== undefined &&
+        entry.message !== null &&
+        (typeof entry.message !== 'string' || entry.message.length > 1000))
     )
       return false;
     ids.add(entry.id);
@@ -94,6 +105,7 @@ export function validTeam(v: unknown): v is Team {
       entry.username.trim().length > 0 &&
       TEAM_ROLES.includes(entry.role as TeamRole) &&
       entry.status === 'Pending' &&
+      (entry.lastActiveAt === undefined || entry.lastActiveAt === null) &&
       entry.joinedAt === null
     );
   });
@@ -134,6 +146,7 @@ export const teamBasis = (team: Team) =>
         row.name,
         row.joinedAt,
         row.createdAt,
+        row.message ?? null,
       ])
       .sort((a, b) => String(a[0]).localeCompare(String(b[0]))),
   ]);

@@ -52,11 +52,17 @@ async function legal(owner: Account) {
   );
   return { id, nationalIdentifier };
 }
-function invite(profileId: string, actor: Account, username: string, role = 'Finance') {
+function invite(
+  profileId: string,
+  actor: Account,
+  username: string,
+  role = 'Finance',
+  message?: string
+) {
   return fetch(`${http.base}/api/profiles/${profileId}/invitations`, {
     method: 'POST',
     headers: actor.headers,
-    body: JSON.stringify({ username, role }),
+    body: JSON.stringify({ username, role, ...(message === undefined ? {} : { message }) }),
   });
 }
 async function pending(actor: { headers: Record<string, string> }) {
@@ -371,3 +377,127 @@ it('opposite invitations complete without account-lock deadlock', async () => {
     await http.pool.query('DROP FUNCTION pause_invitation_audit()');
   }
 }, 15000);
+
+it('stores an optional plain-text note privately and preserves the invitation date on acceptance', async () => {
+  const owner = await account(),
+    recipient = await account(),
+    stranger = await account(),
+    profile = await legal(owner);
+  const message = '  Welcome to the team.\n<script>plain text only</script>  ';
+  const response = await invite(profile.id, owner, recipient.username, 'Legal', message);
+  expect(response.status, http.logs()).toBe(201);
+  const { id } = (await response.json()) as { id: string };
+  const saved = (
+    await http.pool.query('SELECT message,created_at FROM profile_invitations WHERE id=$1', [id])
+  ).rows[0];
+  expect(saved.message).toBe(message.trim());
+  expect(await pending(recipient)).toEqual([
+    expect.objectContaining({ id, message: message.trim() }),
+  ]);
+  expect(await pending(stranger)).toEqual([]);
+  const accepted = await fetch(`${http.base}/api/invitations/${id}/accept`, {
+    method: 'POST',
+    headers: recipient.headers,
+  });
+  expect(accepted.status, (await accepted.text()) + http.logs()).toBe(200);
+  const member = (
+    await http.pool.query(
+      'SELECT invited_at,joined_at FROM profile_agents WHERE profile_id=$1 AND user_id=$2',
+      [profile.id, recipient.id]
+    )
+  ).rows[0];
+  expect(member.invited_at).toEqual(saved.created_at);
+  expect(member.joined_at.getTime()).toBeGreaterThanOrEqual(saved.created_at.getTime());
+});
+it('reads one unarchived individual name and recorded sign-in without duplicating membership rows', async () => {
+  const owner = await account(),
+    member = await account(),
+    profile = await legal(owner);
+  await http.pool.query(
+    "INSERT INTO profile_agents(profile_id,user_id,role,invited_at) VALUES ($1,$2,'Manager','2026-08-01T00:00:00Z')",
+    [profile.id, member.id]
+  );
+  await http.pool.query("UPDATE users SET last_login_at='2026-09-01T00:00:00Z' WHERE user_id=$1", [
+    member.id,
+  ]);
+  await http.pool.query(
+    `INSERT INTO profiles(user_id,profile_type,first_name,last_name,is_default,archived)
+    VALUES ($1,'INDIVIDUAL','Hidden','Archived',false,true),($1,'INDIVIDUAL','Old','Name',false,false),($1,'INDIVIDUAL','Current','Name',true,false)`,
+    [member.id]
+  );
+  const response = await fetch(`${http.base}/api/profiles/${profile.id}/agents`, {
+    headers: owner.headers,
+  });
+  expect(response.status, http.logs()).toBe(200);
+  const rows = ((await response.json()) as AgentListResponseDto).agents.filter(
+    (row) => row.userId === member.id
+  );
+  expect(rows).toHaveLength(1);
+  expect(rows[0]).toMatchObject({
+    name: 'Current Name',
+    invitedAt: '2026-08-01T00:00:00.000Z',
+    lastActiveAt: '2026-09-01T00:00:00.000Z',
+    message: null,
+  });
+});
+it.each(['x'.repeat(1001), 'invalid\0message'])(
+  'rejects invalid invitation notes without creating side effects',
+  async (message) => {
+    const owner = await account(),
+      recipient = await account(),
+      profile = await legal(owner);
+    expect((await invite(profile.id, owner, recipient.username, 'Finance', message)).status).toBe(
+      400
+    );
+    expect(await effects(profile.id, recipient)).toEqual({
+      invitations: [],
+      audit: [],
+      notices: [],
+    });
+  }
+);
+it('treats a blank note as absent and still rejects self and existing-member invitations', async () => {
+  const owner = await account(),
+    recipient = await account(),
+    profile = await legal(owner);
+  expect((await invite(profile.id, owner, owner.username, 'Finance', 'hello')).status).toBe(400);
+  await http.pool.query(
+    "INSERT INTO profile_agents(profile_id,user_id,role) VALUES ($1,$2,'Legal')",
+    [profile.id, recipient.id]
+  );
+  expect((await invite(profile.id, owner, recipient.username, 'Finance', 'hello')).status).toBe(
+    409
+  );
+  const username = `${randomUUID()}@example.test`;
+  expect((await invite(profile.id, owner, username, 'Finance', '  ')).status).toBe(201);
+  expect(
+    (
+      await http.pool.query('SELECT message FROM profile_invitations WHERE profile_id=$1', [
+        profile.id,
+      ])
+    ).rows
+  ).toEqual([{ message: null }]);
+});
+
+it.each(['Owner', 'Manager'])(
+  '%s cannot invite their own normalized identity and creates no side effects',
+  async (role) => {
+    const owner = await account(),
+      actor = role === 'Owner' ? owner : await account(),
+      profile = await legal(owner);
+    if (role === 'Manager')
+      await http.pool.query(
+        "INSERT INTO profile_agents(profile_id,user_id,role) VALUES ($1,$2,'Manager')",
+        [profile.id, actor.id]
+      );
+    const response = await invite(
+      profile.id,
+      actor,
+      actor.username.toUpperCase(),
+      'Finance',
+      'Self note'
+    );
+    expect(response.status, http.logs()).toBe(400);
+    expect(await effects(profile.id, actor)).toEqual({ invitations: [], audit: [], notices: [] });
+  }
+);

@@ -2,6 +2,17 @@ import { t as appText } from './app.js';
 import { lookup } from './lookup.js';
 
 const fa: Record<string, string> = {
+  'team.invitedOn': 'تاریخ دعوت',
+  'team.lastActive': 'آخرین فعالیت',
+  'team.lastActiveHint':
+    'آخرین ورود ثبت\u200cشده به حساب؛ وضعیت آنلاین یا تاریخچه فعالیت این پروفایل نیست.',
+  'team.message': 'پیام اختیاری',
+  'team.messageHint':
+    'حداکثر ۱۰۰۰ نویسه. گیرنده این پیام را در جزئیات دعوت\u200cنامه می\u200cبیند.',
+  'team.unnamed': 'عضو تیم',
+  'team.invalidInvitation':
+    'ایمیل یا شماره موبایل معتبر وارد کنید. نمی\u200cتوانید خودتان را دعوت کنید.',
+
   'team.refreshProfiles': 'بازخوانی پروفایل',
   'team.refreshTransfers': 'بازخوانی درخواست‌های مالکیت',
   'team.refreshMembers': 'بازخوانی اعضا',
@@ -65,6 +76,16 @@ const fa: Record<string, string> = {
 };
 
 const en: Record<string, string> = {
+  'team.invitedOn': 'Invited on',
+  'team.lastActive': 'Last active',
+  'team.lastActiveHint':
+    'Last recorded account sign-in. This does not indicate online presence or activity in this profile.',
+  'team.message': 'Optional message',
+  'team.messageHint':
+    'Up to 1,000 characters. The recipient sees this message in the invitation details.',
+  'team.unnamed': 'Team member',
+  'team.invalidInvitation': 'Enter a valid email or mobile number. You cannot invite yourself.',
+
   'team.refreshProfiles': 'Refresh profile',
   'team.refreshTransfers': 'Refresh ownership requests',
   'team.refreshMembers': 'Refresh members',

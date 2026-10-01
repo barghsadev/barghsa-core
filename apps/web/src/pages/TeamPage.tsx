@@ -3,6 +3,9 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { t } from '@barghsa/i18n/team';
 import {
   Badge,
+  Avatar,
+  AvatarFallback,
+  Textarea,
   ListPage,
   Button,
   Dialog,
@@ -15,6 +18,8 @@ import {
   DialogFooter,
 } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
+import { Crown } from 'lucide-react';
+import { maskDestination } from '../lib/mask-destination.js';
 import { withCsrf } from '../lib/csrf.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 
@@ -227,6 +232,7 @@ function TeamMembers({
   const teamHeading = useRef<HTMLHeadingElement>(null);
   const [username, setUsername] = useState('');
   const [role, setRole] = useState<Role>('Manager');
+  const [message, setMessage] = useState('');
   const [inviting, setInviting] = useState(false);
   const [invitationOpen, setInvitationOpen] = useState(false);
   const inviteTrigger = useRef<HTMLButtonElement>(null);
@@ -251,6 +257,7 @@ function TeamMembers({
     setOwnershipStep(null);
     setAction(null);
     setUsername('');
+    setMessage('');
     setRecipientId('');
     setError(null);
     setNotice(null);
@@ -346,7 +353,11 @@ function TeamMembers({
           method: 'POST',
           credentials: 'include',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ username: username.trim(), role }),
+          body: JSON.stringify({
+            username: username.trim(),
+            role,
+            ...(message.trim() ? { message: message.trim() } : {}),
+          }),
         }
       );
       if (!current()) return;
@@ -357,7 +368,13 @@ function TeamMembers({
       if (!response.ok) {
         setError(
           word(
-            response.status === 409 ? 'conflict' : response.status === 429 ? 'rateLimit' : 'error'
+            response.status === 409
+              ? 'conflict'
+              : response.status === 429
+                ? 'rateLimit'
+                : response.status === 400
+                  ? 'invalidInvitation'
+                  : 'error'
           )
         );
         return;
@@ -376,6 +393,7 @@ function TeamMembers({
         return;
       }
       setUsername('');
+      setMessage('');
       restoreInviteFocus.current = true;
       setInvitationOpen(false);
       await load();
@@ -426,6 +444,13 @@ function TeamMembers({
     await load();
     setNotice(action?.successMessage ?? word('saved'));
   };
+  const startOwnership = () => {
+    if (!ready || !eligibleOwners.length || action || ownershipStep) return;
+    reviewBasis.current = basis;
+    setNotice(null);
+    setRecipientId('');
+    setOwnershipStep('verify');
+  };
   const closeOwnership = () => {
     restoreTransferFocus.current = true;
     setOwnershipStep(null);
@@ -456,21 +481,17 @@ function TeamMembers({
           >
             {word('refreshMembers')}
           </Button>
-          {team?.canTransferOwnership && (
-            <Button
-              ref={transferTrigger}
-              variant="outline"
-              disabled={!ready || !eligibleOwners.length || !!action || !!ownershipStep}
-              onClick={() => {
-                reviewBasis.current = basis;
-                setNotice(null);
-                setRecipientId('');
-                setOwnershipStep('verify');
-              }}
-            >
-              {word('transfer')}
-            </Button>
-          )}
+          {team?.canTransferOwnership &&
+            !Array.from(members.values()).some((member) => member.roles.includes('Owner')) && (
+              <Button
+                ref={transferTrigger}
+                variant="outline"
+                disabled={!ready || !eligibleOwners.length || !!action || !!ownershipStep}
+                onClick={startOwnership}
+              >
+                {word('transfer')}
+              </Button>
+            )}
         </ListPage.Toolbar>
         <ListPage.Content
           loading={loading}
@@ -498,6 +519,7 @@ function TeamMembers({
                 <h2 id="members-title" className="text-lg font-semibold">
                   {word('members')}
                 </h2>
+                <p className="text-sm text-muted-foreground">{word('lastActiveHint')}</p>
                 <div
                   role="region"
                   aria-label={word('members')}
@@ -513,7 +535,9 @@ function TeamMembers({
                           word('agent'),
                           word('roles'),
                           word('status'),
+                          word('invitedOn'),
                           word('joined'),
+                          word('lastActive'),
                           word('actions'),
                         ].map((label) => (
                           <th key={label} scope="col" className="p-3 text-start font-medium">
@@ -525,7 +549,7 @@ function TeamMembers({
                     <tbody>
                       {members.size === 0 && invitations.length === 0 && (
                         <tr>
-                          <td colSpan={5} className="p-3">
+                          <td colSpan={7} className="p-3">
                             {word('empty')}
                           </td>
                         </tr>
@@ -535,6 +559,13 @@ function TeamMembers({
                           formatJoinedAt={(value) => time.format(value, { dateStyle: 'medium' })}
                           key={userId}
                           entry={member.entry}
+                          onTransfer={
+                            team.canTransferOwnership && member.roles.includes('Owner')
+                              ? startOwnership
+                              : undefined
+                          }
+                          transferRef={transferTrigger}
+                          canTransfer={!!eligibleOwners.length}
                           canCommand={ready}
                           locked={!!action || !!ownershipStep}
                           roles={member.roles}
@@ -560,7 +591,9 @@ function TeamMembers({
                       ))}
                       {invitations.map((entry) => (
                         <tr key={entry.id} className="border-t align-top">
-                          <td className="p-3">{entry.username}</td>
+                          <td className="p-3">
+                            <TeamIdentity entry={entry} />
+                          </td>
                           <td className="p-3">
                             <Badge variant="secondary">{word(entry.role)}</Badge>
                           </td>
@@ -570,6 +603,8 @@ function TeamMembers({
                               {time.format(entry.createdAt, { dateStyle: 'medium' })}
                             </time>
                           </td>
+                          <td className="p-3">—</td>
+                          <td className="p-3">—</td>
                           <td className="p-3">
                             <Button
                               variant="outline"
@@ -645,6 +680,20 @@ function TeamMembers({
                   ))}
                 </select>
               </div>
+              <div className="space-y-1">
+                <Label htmlFor="invite-message">{word('message')}</Label>
+                <Textarea
+                  id="invite-message"
+                  maxLength={1000}
+                  value={message}
+                  aria-describedby="invite-message-hint"
+                  disabled={inviting}
+                  onChange={(event) => setMessage(event.target.value)}
+                />
+                <p id="invite-message-hint" className="text-sm text-muted-foreground">
+                  {word('messageHint')}
+                </p>
+              </div>
               {username.trim() && (
                 <p role="status" className="[overflow-wrap:anywhere]">
                   {word('invitePreview')
@@ -719,7 +768,11 @@ function TeamMembers({
                         event.preventDefault();
                         const member = eligibleOwners.find(([id]) => id === recipientId)?.[1];
                         if (!ready || !team?.canTransferOwnership || !member) return;
-                        const name = member.entry.name ?? member.entry.username ?? recipientId;
+                        const name =
+                          member.entry.name ??
+                          (member.entry.username
+                            ? maskDestination(member.entry.username)
+                            : word('unnamed'));
                         setOwnershipStep('confirm');
                         openAction({
                           title: word('transfer'),
@@ -753,7 +806,10 @@ function TeamMembers({
                           </option>
                           {eligibleOwners.map(([id, member]) => (
                             <option key={id} value={id}>
-                              {member.entry.name ?? member.entry.username ?? id}
+                              {member.entry.name ??
+                                (member.entry.username
+                                  ? maskDestination(member.entry.username)
+                                  : word('unnamed'))}
                             </option>
                           ))}
                         </select>
@@ -779,6 +835,36 @@ function TeamMembers({
     </section>
   );
 }
+function TeamIdentity({ entry, owner = false }: { entry: Entry; owner?: boolean }) {
+  const locale = useLocale();
+  const contact = entry.username ? maskDestination(entry.username) : null;
+  const name = entry.name?.trim() || contact || t('team.unnamed', locale);
+  const initials =
+    entry.name
+      ?.trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((part) => Array.from(part)[0])
+      .join('') || (contact ? Array.from(contact)[0] : '?');
+  return (
+    <div className="flex min-w-40 items-start gap-2">
+      <Avatar aria-hidden="true">
+        <AvatarFallback>{initials}</AvatarFallback>
+      </Avatar>
+      <div className="min-w-0 space-y-1 [overflow-wrap:anywhere]">
+        <h3 className="flex items-center gap-1 font-medium">
+          {owner && <Crown className="size-4 shrink-0 text-primary" aria-hidden="true" />}
+          {entry.name?.trim() ? name : <bdi dir="ltr">{name}</bdi>}
+        </h3>
+        {entry.name?.trim() && contact && (
+          <p className="text-muted-foreground">
+            <bdi dir="ltr">{contact}</bdi>
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
 function Member({
   entry,
   roles,
@@ -787,8 +873,14 @@ function Member({
   formatJoinedAt,
   canCommand,
   locked,
+  onTransfer,
+  transferRef,
+  canTransfer,
 }: {
   entry: Entry;
+  onTransfer: (() => void) | undefined;
+  transferRef: React.RefObject<HTMLButtonElement | null>;
+  canTransfer: boolean;
   canCommand: boolean;
   locked: boolean;
   formatJoinedAt: (value: string) => string;
@@ -809,12 +901,9 @@ function Member({
   return (
     <tr className="border-t align-top">
       <td className="p-3">
-        <h3 className="font-medium">
-          {owner && <span aria-hidden="true">♛ </span>}
-          {entry.name ?? entry.username ?? entry.userId}
-        </h3>
+        <TeamIdentity entry={entry} owner={owner} />
       </td>
-      <td className="p-3">
+      <td className="p-3 min-w-44">
         <div className="mb-2 flex flex-wrap gap-1">
           {roles.map((role) => (
             <Badge key={role} variant="secondary">
@@ -867,14 +956,38 @@ function Member({
       </td>
       <td className="p-3">{word('active')}</td>
       <td className="p-3 whitespace-nowrap">
+        {entry.invitedAt ? (
+          <time dateTime={entry.invitedAt}>{formatJoinedAt(entry.invitedAt)}</time>
+        ) : (
+          '—'
+        )}
+      </td>
+      <td className="p-3 whitespace-nowrap">
         {entry.joinedAt ? (
           <time dateTime={entry.joinedAt}>{formatJoinedAt(entry.joinedAt)}</time>
         ) : (
           '—'
         )}
       </td>
-      <td className="p-3">
+      <td className="p-3 whitespace-nowrap" title={word('lastActiveHint')}>
+        {entry.lastActiveAt ? (
+          <time dateTime={entry.lastActiveAt}>{formatJoinedAt(entry.lastActiveAt)}</time>
+        ) : (
+          '—'
+        )}
+      </td>
+      <td className="p-3 min-w-56">
         <div className="flex flex-wrap gap-2">
+          {onTransfer && (
+            <Button
+              ref={transferRef}
+              variant="outline"
+              disabled={!canCommand || locked || !canTransfer}
+              onClick={onTransfer}
+            >
+              {word('transfer')}
+            </Button>
+          )}
           <Button
             variant="outline"
             disabled={

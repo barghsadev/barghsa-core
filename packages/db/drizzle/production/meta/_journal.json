@@ -1051,6 +1051,13 @@
       "when": 1791331202240,
       "tag": "0229_solar_request_submission_review",
       "breakpoints": true
+    },
+    {
+      "idx": 230,
+      "version": "7",
+      "when": 1791331202241,
+      "tag": "0230_team_directory_metadata",
+      "breakpoints": true
     }
   ]
 }

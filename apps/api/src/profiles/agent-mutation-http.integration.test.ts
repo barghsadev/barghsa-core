@@ -245,3 +245,27 @@ it('unchanged self roles preserve credentials and do not request sign-out', asyn
   expect(await response.json()).toMatchObject({ roles: ['Manager'], sessionRevoked: false });
   expect(await snapshot(c)).toEqual(before);
 });
+
+it('preserves original invitation and membership dates through a full role replacement', async () => {
+  const c = await setup();
+  await http.pool.query(
+    "UPDATE profile_agents SET invited_at='2026-07-01T00:00:00Z',joined_at='2026-07-02T00:00:00Z',created_at='2026-07-02T00:00:00Z' WHERE profile_id=$1 AND user_id=$2",
+    [c.profileId, c.target]
+  );
+  const response = await mutate(c, 'roles', ['Finance', 'Legal']);
+  expect(response.status, http.logs()).toBe(200);
+  const rows = (
+    await http.pool.query(
+      'SELECT role,invited_at,joined_at,created_at FROM profile_agents WHERE profile_id=$1 AND user_id=$2 ORDER BY role',
+      [c.profileId, c.target]
+    )
+  ).rows;
+  expect(rows).toEqual(
+    ['Finance', 'Legal'].map((role) => ({
+      role,
+      invited_at: new Date('2026-07-01T00:00:00Z'),
+      joined_at: new Date('2026-07-02T00:00:00Z'),
+      created_at: new Date('2026-07-02T00:00:00Z'),
+    }))
+  );
+});

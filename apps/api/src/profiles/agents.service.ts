@@ -25,6 +25,9 @@ export interface AgentDto {
   status: 'Pending' | 'Active';
   joinedAt: string | null;
   createdAt: string;
+  invitedAt: string | null;
+  lastActiveAt: string | null;
+  message: string | null;
 }
 
 export interface AgentListResponseDto {
@@ -64,10 +67,15 @@ export class AgentsService {
 
     // Query active agents (joined users)
     const agentsResult = await pool.query(
-      `SELECT pa.id, pa.user_id, pa.role, pa.joined_at, pa.created_at,
-              NULL::text AS first_name, NULL::text AS last_name, u.username
+      `SELECT pa.id, pa.user_id, pa.role, pa.joined_at, pa.created_at, pa.invited_at,
+              personal.first_name, personal.last_name, u.username, u.last_login_at
        FROM profile_agents pa
        LEFT JOIN users u ON u.user_id = pa.user_id
+       LEFT JOIN LATERAL (
+         SELECT first_name, last_name FROM profiles
+         WHERE user_id = pa.user_id AND profile_type = 'INDIVIDUAL' AND NOT archived
+         ORDER BY is_default DESC, created_at ASC, id ASC LIMIT 1
+       ) personal ON true
        WHERE pa.profile_id = $1
        ORDER BY pa.joined_at ASC`,
       [profileId]
@@ -88,13 +96,16 @@ export class AgentsService {
         status: 'Active',
         joinedAt: row.joined_at ? new Date(row.joined_at as Date).toISOString() : null,
         createdAt: new Date(row.created_at as Date).toISOString(),
+        invitedAt: row.invited_at ? new Date(row.invited_at as Date).toISOString() : null,
+        lastActiveAt: row.last_login_at ? new Date(row.last_login_at as Date).toISOString() : null,
+        message: null,
       });
     }
 
     // Query pending invitations
     // Do NOT join with users table — privacy: must not reveal registration status
     const invitesResult = await pool.query(
-      `SELECT id, username, role, created_at
+      `SELECT id, username, role, created_at, message
        FROM profile_invitations
        WHERE profile_id = $1 AND status = 'Pending' AND (expires_at IS NULL OR expires_at > clock_timestamp())
        ORDER BY created_at ASC`,
@@ -112,6 +123,9 @@ export class AgentsService {
         status: 'Pending',
         joinedAt: null,
         createdAt: new Date(row.created_at as Date).toISOString(),
+        invitedAt: new Date(row.created_at as Date).toISOString(),
+        lastActiveAt: null,
+        message: (row.message as string) ?? null,
       });
     }
 
@@ -274,7 +288,8 @@ export class AgentsService {
     profileId: string,
     username: string,
     role: string,
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    message?: string
   ): Promise<{ id: string }> {
     const pool = getDbPool();
     const userId = actor.userId;
@@ -294,6 +309,14 @@ export class AgentsService {
         403
       );
     }
+
+    if (
+      message !== undefined &&
+      (typeof message !== 'string' || message.length > 1000 || message.includes('\0'))
+    ) {
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    }
+    const invitationMessage = message?.trim() || null;
 
     // ── Validate role ──────────────────────────────────────
     if (!AgentsService.VALID_INVITE_ROLES.has(role)) {
@@ -374,6 +397,16 @@ export class AgentsService {
     try {
       await client.query('BEGIN');
       const recipientUserId = await this.lockInvitationActor(client, profileId, actor, normalised);
+      if (recipientUserId === actor.userId) {
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message: 'You cannot invite yourself',
+          },
+          400
+        );
+      }
 
       // ── Check: invitee must not already be a pending invite ──
       // Check runs for both registered and unregistered users
@@ -414,9 +447,9 @@ export class AgentsService {
       }
 
       await client.query(
-        `INSERT INTO profile_invitations (id, profile_id, username, role, invited_by, status, expires_at, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, 'Pending', NOW() + INTERVAL '7 days', NOW(), NOW())`,
-        [invitationId, profileId, normalised, role, userId]
+        `INSERT INTO profile_invitations (id, profile_id, username, role, invited_by, message, status, expires_at, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, 'Pending', NOW() + INTERVAL '7 days', NOW(), NOW())`,
+        [invitationId, profileId, normalised, role, userId, invitationMessage]
       );
 
       await client.query(
@@ -466,6 +499,7 @@ export class AgentsService {
       inviterName: string | null;
       createdAt: string;
       expiresAt: string | null;
+      message: string | null;
       entity: { nationalIdentifier: string | null; registrationNumber: string | null };
     }>;
   }> {
@@ -484,7 +518,7 @@ export class AgentsService {
               COALESCE(lp.legal_name, NULLIF(concat_ws(' ', p.first_name, p.last_name), ''), p.id::text) AS profile_name,
               pi.role, pi.invited_by,
               u.username AS inviter_name,
-              pi.created_at, pi.expires_at, lp.national_identifier, lp.registration_number
+              pi.created_at, pi.expires_at, pi.message, lp.national_identifier, lp.registration_number
        FROM profile_invitations pi
        JOIN profiles p ON p.id = pi.profile_id
        LEFT JOIN legal_profiles lp ON lp.id = p.id
@@ -503,6 +537,7 @@ export class AgentsService {
       inviterName: (row.inviter_name as string) ?? null,
       createdAt: new Date(row.created_at as Date).toISOString(),
       expiresAt: row.expires_at ? new Date(row.expires_at as Date).toISOString() : null,
+      message: (row.message as string) ?? null,
       entity: {
         nationalIdentifier: (row.national_identifier as string) ?? null,
         registrationNumber: (row.registration_number as string) ?? null,
@@ -567,7 +602,7 @@ export class AgentsService {
         );
       const invite = (
         await client.query(
-          'SELECT profile_id,username,role,status,expires_at FROM profile_invitations WHERE id=$1 FOR UPDATE',
+          'SELECT profile_id,username,role,status,expires_at,created_at FROM profile_invitations WHERE id=$1 FOR UPDATE',
           [inviteId]
         )
       ).rows[0];
@@ -619,9 +654,9 @@ export class AgentsService {
         [inviteId]
       );
       await client.query(
-        `INSERT INTO profile_agents(id,profile_id,user_id,role,joined_at,created_at,updated_at)
-         VALUES ($1,$2,$3,$4,clock_timestamp(),clock_timestamp(),clock_timestamp())`,
-        [uuidv7(), profileId, actor.userId, invite.role]
+        `INSERT INTO profile_agents(id,profile_id,user_id,role,invited_at,joined_at,created_at,updated_at)
+         VALUES ($1,$2,$3,$4,$5,clock_timestamp(),clock_timestamp(),clock_timestamp())`,
+        [uuidv7(), profileId, actor.userId, invite.role, invite.created_at]
       );
       // The account lock serializes membership/default changes. Only initialize a
       // first choice; an unavailable saved/default profile still requires selection.
@@ -1241,7 +1276,7 @@ export class AgentsService {
         );
       }
       const existing = await client.query(
-        'SELECT id,role FROM profile_agents WHERE profile_id=$1 AND user_id=$2 FOR UPDATE',
+        'SELECT id,role,joined_at,created_at,invited_at FROM profile_agents WHERE profile_id=$1 AND user_id=$2 FOR UPDATE',
         [profileId, targetUserId]
       );
       if (!existing.rows.length)
@@ -1258,6 +1293,16 @@ export class AgentsService {
         await client.query('COMMIT');
         return { sessionRevoked: false };
       }
+      const earliest = (field: 'joined_at' | 'created_at' | 'invited_at') => {
+        const dates = existing.rows
+          .map((row) => row[field])
+          .filter(Boolean)
+          .map((value) => new Date(value));
+        return dates.length ? new Date(Math.min(...dates.map((value) => value.getTime()))) : null;
+      };
+      const joinedAt = earliest('joined_at'),
+        createdAt = earliest('created_at'),
+        invitedAt = earliest('invited_at');
       await client.query(
         'DELETE FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND NOT (role=ANY($3::text[]))',
         [profileId, targetUserId, roles]
@@ -1272,10 +1317,10 @@ export class AgentsService {
         [targetUserId, revokedAt]
       );
       await client.query(
-        `INSERT INTO profile_agents(id,profile_id,user_id,role,joined_at,created_at,updated_at)
-        SELECT uuid_generate_v7(),$1,$2,role,NOW(),NOW(),NOW() FROM unnest($3::text[]) AS role
+        `INSERT INTO profile_agents(id,profile_id,user_id,role,joined_at,created_at,invited_at,updated_at)
+        SELECT uuid_generate_v7(),$1,$2,role,COALESCE($4::timestamptz,NOW()),COALESCE($5::timestamptz,NOW()),$6::timestamptz,NOW() FROM unnest($3::text[]) AS role
         ON CONFLICT (profile_id,user_id,role) DO NOTHING`,
-        [profileId, targetUserId, roles]
+        [profileId, targetUserId, roles, joinedAt, createdAt, invitedAt]
       );
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)

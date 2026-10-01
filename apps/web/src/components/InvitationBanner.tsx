@@ -17,6 +17,7 @@ export interface PendingInvitation {
   inviterName: string | null;
   createdAt: string;
   expiresAt: string | null;
+  message?: string | null;
   entity?: { nationalIdentifier: string | null; registrationNumber: string | null };
 }
 

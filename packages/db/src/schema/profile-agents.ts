@@ -37,6 +37,9 @@ export const profileAgents = pgTable(
     /** When the invitation was accepted and this agent was added. */
     joinedAt: timestamp('joined_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
+    /** Original invitation date; null for direct/legacy membership. */
+    invitedAt: timestamp('invited_at', { withTimezone: true, mode: 'date' }),
+
     /** When the agent record was created. */
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
@@ -64,6 +67,7 @@ export const createProfileAgentsTable = sql`
     user_id TEXT NOT NULL,
     role TEXT NOT NULL,
     joined_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    invited_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   );

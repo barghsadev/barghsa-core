@@ -24,7 +24,7 @@ Both languages and themes, invitation/password content Axe, full-page Axe after 
 
 The preceding content publishing batch is `c8d0aee6265540bea8c764d4f9dc09d04c98de57`. GitHub CI run `36849225318` passes all five jobs under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.
 
-This batch is published directly to main following validation. Remote SHA and GitHub CI registration are read back after the push; the next batch records the immutable publication and completed CI status. No PR is created; historical supervisor state remains unchanged.
+This batch is published directly to main as `b6ce38235c37651db2e6a301a93a45922fa63acf`. Remote SHA and clean worktree were verified. GitHub CI run `36851257592` passes all five jobs under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage. No PR is created; historical supervisor state remains unchanged.
 
 ## Commands
 

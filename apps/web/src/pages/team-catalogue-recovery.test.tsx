@@ -31,8 +31,13 @@ async function click(name: string, dialog = false) {
 }
 async function fill(selector: string, value: string) {
   await act(async () => {
-    const element = document.querySelector<HTMLInputElement>(selector)!;
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(element, value);
+    const element = document.querySelector<HTMLInputElement | HTMLTextAreaElement>(selector)!;
+    Object.getOwnPropertyDescriptor(
+      element instanceof HTMLTextAreaElement
+        ? HTMLTextAreaElement.prototype
+        : HTMLInputElement.prototype,
+      'value'
+    )!.set!.call(element, value);
     element.dispatchEvent(new Event('input', { bubbles: true }));
   });
 }
@@ -244,7 +249,7 @@ for (const status of [403])
     deny = true;
     await click('Refresh members', true);
     expect(document.querySelector('[role=dialog]')).toBeNull();
-    expect(host.textContent).not.toContain('member@example.test');
+    expect(host.textContent).not.toContain('m***@example.test');
     expect(host.textContent).toContain('Transfer company');
     deny = false;
     await click('Refresh members');
@@ -259,10 +264,10 @@ it('account denial clears both catalogues and pending confirmation before recove
   await click('Refresh profile');
   expect(document.querySelector('[role=dialog]')).toBeNull();
   expect(host.textContent).not.toContain('Transfer company');
-  expect(host.textContent).not.toContain('member@example.test');
+  expect(host.textContent).not.toContain('m***@example.test');
   deny = false;
   await click('Refresh profile');
-  expect(host.textContent).toContain('member@example.test');
+  expect(host.textContent).toContain('m***@example.test');
 });
 it('profile replacement discards old invitation work and ignores late success', async () => {
   let changed = false,
@@ -338,7 +343,7 @@ it('owner row explains why removal and reassignment are unavailable', async () =
 });
 it('strict effect replay retains independent collection readiness', async () => {
   await render(baseline, true);
-  expect(host.textContent).toContain('member@example.test');
+  expect(host.textContent).toContain('m***@example.test');
   expect(host.textContent).toContain('Transfer company');
 });
 it('confirmed role choices remain current after authoritative membership reload', async () => {
@@ -399,7 +404,79 @@ it.each(['read', 'invite', 'remove'])(
       await submit();
     }
     expect(host.textContent).not.toContain('Transfer company');
-    expect(host.textContent).not.toContain('member@example.test');
+    expect(host.textContent).not.toContain('m***@example.test');
     expect(document.querySelector('[role=dialog]')).toBeNull();
   }
 );
+
+it('masks directory identities and shows names, avatars and known dates without exposing contact text', async () => {
+  const team = teamCatalogue();
+  team.agents[0] = {
+    ...team.agents[0]!,
+    name: 'Example Member',
+    invitedAt: '2026-07-01T00:00:00Z',
+    lastActiveAt: '2026-09-01T00:00:00Z',
+  };
+  await render((path) => (path.endsWith('/agents') ? reply(team) : baseline(path)));
+  expect(host.textContent).toContain('Example Member');
+  expect(host.textContent).toContain('m***@example.test');
+  expect(host.textContent).toContain('i***@example.test');
+  expect(host.textContent).not.toContain('member@example.test');
+  expect(host.textContent).not.toContain('invited@example.test');
+  expect(host.querySelectorAll('[data-slot=avatar]')).toHaveLength(2);
+  expect(host.querySelector('time[datetime="2026-07-01T00:00:00Z"]')).not.toBeNull();
+  expect(host.querySelector('time[datetime="2026-09-01T00:00:00Z"]')).not.toBeNull();
+});
+it('retains an optional message through failures, submits it and clears it only after an acknowledged invitation', async () => {
+  let fail = true;
+  const requests = await render((path, init) =>
+    init?.method ? reply(fail ? {} : { id: 'invite-note' }, fail ? 409 : 201) : baseline(path)
+  );
+  await click('Invite a team member');
+  await fill('#team-username', 'new@example.test');
+  await fill('#invite-message', '  Personal note\n<script>text</script>  ');
+  await submit();
+  expect(document.querySelector<HTMLTextAreaElement>('#invite-message')!.value).toBe(
+    '  Personal note\n<script>text</script>  '
+  );
+  expect(document.querySelector('[role=alert]')).not.toBeNull();
+  fail = false;
+  await submit();
+  expect(
+    JSON.parse(requests.mock.calls.find(([, init]) => init?.method)![1]!.body as string)
+  ).toEqual({
+    username: 'new@example.test',
+    role: 'Manager',
+    message: 'Personal note\n<script>text</script>',
+  });
+  await click('Invite a team member');
+  expect(document.querySelector<HTMLTextAreaElement>('#invite-message')!.value).toBe('');
+});
+it('offers one transfer action on the owner row and preserves safe masked recipient labels', async () => {
+  const team = teamCatalogue();
+  team.agents.unshift({
+    ...team.agents[0]!,
+    id: 'owner-one',
+    userId: 'owner',
+    role: 'Owner',
+    name: 'Example Owner',
+  });
+  await render((path) => (path.endsWith('/agents') ? reply(team) : baseline(path)));
+  const buttons = [...host.querySelectorAll<HTMLButtonElement>('button')].filter(
+    (b) => b.textContent === 'Transfer ownership'
+  );
+  expect(buttons).toHaveLength(1);
+  expect(buttons[0]!.closest('tr')?.textContent).toContain('Example Owner');
+  await click('Transfer ownership');
+  expect(document.querySelector('[role=dialog]')?.textContent).toContain('Confirm your password');
+});
+it.each([
+  { lastActiveAt: 'invalid' },
+  { invitedAt: 'invalid' },
+  { message: 2 },
+  { message: 'x'.repeat(1001) },
+])('rejects invalid optional directory metadata %j', (metadata) => {
+  expect(
+    validTeam({ ...teamCatalogue(), agents: [{ ...teamCatalogue().agents[0], ...metadata }] })
+  ).toBe(false);
+});

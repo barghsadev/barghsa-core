@@ -56,7 +56,7 @@ async function shell(
             id: 'member-one',
             type: 'agent',
             userId: 'member',
-            username: 'member@example.test',
+            username: 'm***@example.test',
             name: memberName,
             role: 'Manager',
             status: 'Active',
@@ -184,8 +184,8 @@ for (const locale of ['fa', 'en'] as const) {
     await page.goto('/settings/team');
     // Scope is a real accessible table; invitees expose no registration detail.
     const table = page.getByRole('table');
-    await expect(table.getByRole('columnheader')).toHaveCount(5);
-    const pendingRow = table.getByRole('row').filter({ hasText: 'invited@example.test' });
+    await expect(table.getByRole('columnheader')).toHaveCount(7);
+    const pendingRow = table.getByRole('row').filter({ hasText: 'i***@example.test' });
     await expect(pendingRow).toContainText(fa ? 'در انتظار' : 'Pending');
     const trigger = page.getByRole('button', {
       name: fa ? 'دعوت عضو تیم' : 'Invite a team member',
@@ -383,7 +383,7 @@ for (const locale of ['fa', 'en'] as const) {
     ).toContainText(locale === 'fa' ? 'دعوت‌نامه ارسال شد' : 'Invitation sent');
     const member = page
       .getByRole('row')
-      .filter({ has: page.getByRole('heading', { name: 'member@example.test' }) });
+      .filter({ has: page.getByRole('heading', { name: 'm***@example.test' }) });
     await expect(member.locator('time')).toHaveText(
       await formatBrowserDate(
         page,
@@ -565,7 +565,7 @@ for (const action of [
         })
     ).toContainText(
       action.suffix === 'transfer-ownership'
-        ? 'Transfer request sent to member@example.test. They must accept.'
+        ? 'Transfer request sent to m***@example.test. They must accept.'
         : 'Change saved'
     );
   });
@@ -809,7 +809,7 @@ for (const locale of ['en', 'fa'] as const) {
       await page.goto('/settings/team');
       const member = page
         .getByRole('row')
-        .filter({ has: page.getByRole('heading', { name: 'member@example.test' }) });
+        .filter({ has: page.getByRole('heading', { name: 'm***@example.test' }) });
       if (operation === 'roles') {
         await member
           .getByRole('checkbox', { name: locale === 'fa' ? 'مالی' : 'Finance', exact: true })

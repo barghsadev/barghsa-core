@@ -283,7 +283,9 @@ it('rejects duplicate members and pending invitations without writes', async () 
   const c = await setup(),
     before = await state(c);
   for (const username of [`${c.actor}@example.test`, 'existing@example.test'])
-    expect((await request(c, 'create', { body: { username, role: 'Finance' } })).status).toBe(409);
+    expect((await request(c, 'create', { body: { username, role: 'Finance' } })).status).toBe(
+      username === `${c.actor}@example.test` ? 400 : 409
+    );
   expect(await state(c)).toEqual(before);
 });
 it('validates bodies and IDs before database writes', async () => {

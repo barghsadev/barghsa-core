@@ -35,6 +35,9 @@ export const profileInvitations = pgTable('profile_invitations', {
   /** Intended role: Manager, Finance, Legal. */
   role: text('role').notNull(),
 
+  /** Optional plain-text note delivered only with the invitation. */
+  message: text('message'),
+
   /** User id of the person who sent the invitation. */
   invitedBy: text('invited_by').notNull(),
 
@@ -64,6 +67,7 @@ export const createProfileInvitationsTable = sql`
     profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     username TEXT NOT NULL,
     role TEXT NOT NULL,
+    message TEXT CHECK (message IS NULL OR char_length(message) <= 1000),
     invited_by TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Accepted', 'Withdrawn', 'Declined', 'Expired')),
     expires_at TIMESTAMPTZ,
