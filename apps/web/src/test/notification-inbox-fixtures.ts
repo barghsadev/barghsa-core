@@ -23,3 +23,8 @@ export const notificationPage = (title = 'Current notice') => ({
   next_cursor: null as string | null,
   unread_count: 1,
 });
+
+export const notificationCursor = (
+  timestamp = '2026-10-01T00:00:00.123456Z',
+  id = '10000000-0000-4000-8000-000000000001'
+) => btoa(`${timestamp}|${id}`).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');

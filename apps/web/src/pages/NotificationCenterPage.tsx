@@ -16,6 +16,7 @@ import {
   type NotificationItem,
 } from '../lib/notifications.js';
 import { NotificationRow } from '../components/NotificationRow.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 
 const PAGE_SIZE = 20;
 
@@ -29,8 +30,10 @@ const PAGE_SIZE = 20;
  */
 export function NotificationCenterPage({
   operatingContext = 'customer',
+  queries,
 }: {
   operatingContext?: 'staff' | 'customer';
+  queries?: ListQueryBinding;
 }) {
   const locale = useLocale();
   const navigate = useNavigate();
@@ -38,7 +41,11 @@ export function NotificationCenterPage({
   const [items, setItems] = useState<NotificationItem[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [filter, setFilter] = useState<NotificationFilter>('all');
+  const [localFilter, setLocalFilter] = useState<NotificationFilter>('all');
+  const filter = queries ? (queries.query.filters.filter as NotificationFilter) : localFilter;
+  const cursor = queries?.query.cursor || undefined;
+  const setFilter = (value: NotificationFilter) =>
+    queries ? queries.setQuery({ filters: { filter: value } }) : setLocalFilter(value);
   const [loading, setLoading] = useState(true),
     [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<'read' | 'write' | null>(null),
@@ -50,8 +57,12 @@ export function NotificationCenterPage({
   const failedCursor = useRef<string | undefined>(undefined),
     cursors = useRef(new Set<string>());
   const key = `${operatingContext}:${filter}`;
-  const liveKey = useRef(key);
-  liveKey.current = key;
+  const scope = JSON.stringify([key, cursor]);
+  const liveKey = useRef(scope);
+  liveKey.current = scope;
+  const acceptedScope = useRef<string | null>(null);
+  const intendedNavigation = useRef<{ scope: string; append: boolean } | null>(null);
+  const failedAppend = useRef(false);
   const clearDenied = useCallback(() => {
     requestVersion.current++;
     writing.current = false;
@@ -59,6 +70,7 @@ export function NotificationCenterPage({
     setNextCursor(null);
     setUnreadCount(0);
     setAcceptedKey(null);
+    acceptedScope.current = null;
     setDenied(true);
     setError('read');
     setLoading(false);
@@ -69,12 +81,12 @@ export function NotificationCenterPage({
   }, []);
   const deny = useNotificationAccessDenied(operatingContext, clearDenied);
   const load = useCallback(
-    async (cursor?: string) => {
+    async (cursor?: string, append = !!cursor) => {
       if (writing.current) return;
       const version = ++requestVersion.current;
       setLoading(!cursor);
       setLoadingMore(!!cursor);
-      const current = () => requestVersion.current === version && liveKey.current === key;
+      const current = () => requestVersion.current === version && liveKey.current === scope;
       try {
         const page = await fetchNotifications(cursor, filter, PAGE_SIZE);
         if (!current()) return;
@@ -83,16 +95,17 @@ export function NotificationCenterPage({
           (page.next_cursor === cursor || (cursor && cursors.current.has(page.next_cursor)))
         )
           throw new Error('Repeated notification cursor');
-        if (!cursor) cursors.current.clear();
+        if (!append) cursors.current.clear();
         if (cursor) cursors.current.add(cursor);
         setItems((prev) =>
-          cursor
+          append
             ? [...new Map([...prev, ...page.data].map((item) => [item.id, item])).values()]
             : page.data
         );
         setNextCursor(page.next_cursor);
         setUnreadCount(page.unread_count);
         setAcceptedKey(key);
+        acceptedScope.current = scope;
         setDenied(false);
         setError(null);
       } catch (failure) {
@@ -100,6 +113,7 @@ export function NotificationCenterPage({
         if (isNotificationDenied(failure)) deny();
         else {
           failedCursor.current = cursor;
+          failedAppend.current = append;
           setError('read');
         }
       } finally {
@@ -109,30 +123,49 @@ export function NotificationCenterPage({
         }
       }
     },
-    [filter, key, deny]
+    [filter, key, scope, deny]
   );
   useEffect(() => {
-    setItems([]);
-    setNextCursor(null);
-    setUnreadCount(0);
-    setAcceptedKey(null);
+    const intended = intendedNavigation.current;
+    const retaining = intended?.scope === scope;
+    intendedNavigation.current = null;
+    if (!retaining) {
+      setItems([]);
+      setNextCursor(null);
+      setUnreadCount(0);
+      setAcceptedKey(null);
+      acceptedScope.current = null;
+      cursors.current.clear();
+    }
     setDenied(false);
     setError(null);
     setMarkingAll(false);
     failedCursor.current = undefined;
-    cursors.current.clear();
-    void load();
+    void load(cursor, retaining ? intended.append : false);
     return () => {
       requestVersion.current++;
       writing.current = false;
     };
   }, [load]);
-  const ready = acceptedKey === key && !denied && !loading && !loadingMore && !error && !markingAll;
+  function refresh() {
+    if (queries && cursor) {
+      intendedNavigation.current = { scope: JSON.stringify([key, undefined]), append: false };
+      queries.setQuery({ cursor: '' });
+    } else void load();
+  }
+  const ready =
+    acceptedKey === key &&
+    acceptedScope.current === scope &&
+    !denied &&
+    !loading &&
+    !loadingMore &&
+    !error &&
+    !markingAll;
   const markRead = async (item?: NotificationItem) => {
     if (!ready || writing.current) return;
     const target = item ? toNavigationTarget(item, operatingContext) : null;
     const version = ++requestVersion.current;
-    const current = () => requestVersion.current === version && liveKey.current === key;
+    const current = () => requestVersion.current === version && liveKey.current === scope;
     const previousItems = items,
       previousCount = unreadCount;
     writing.current = true;
@@ -208,7 +241,7 @@ export function NotificationCenterPage({
             type="button"
             variant="outline"
             disabled={loading || loadingMore || markingAll}
-            onClick={() => void load()}
+            onClick={refresh}
           >
             {t('notifications.refresh', locale)}
           </Button>
@@ -254,7 +287,14 @@ export function NotificationCenterPage({
                 type="button"
                 variant="outline"
                 disabled={loading || loadingMore || markingAll}
-                onClick={() => void load(error === 'read' ? failedCursor.current : undefined)}
+                onClick={() =>
+                  denied
+                    ? refresh()
+                    : void load(
+                        error === 'read' ? failedCursor.current : cursor,
+                        error === 'read' ? failedAppend.current : false
+                      )
+                }
               >
                 {t('notifications.retry', locale)}
               </Button>
@@ -303,10 +343,24 @@ export function NotificationCenterPage({
         </ListPage.Content>
         <ListPage.Pagination
           kind="cursor"
-          hasMore={acceptedKey === key && !!nextCursor && !error && !denied}
+          hasMore={
+            acceptedKey === key &&
+            !!nextCursor &&
+            !error &&
+            !denied &&
+            (loading || loadingMore || !queries || queries.canAdvance(nextCursor))
+          }
           loading={loading || loadingMore || markingAll}
           onNext={() => {
-            if (ready && nextCursor) void load(nextCursor);
+            if (ready && nextCursor) {
+              if (queries) {
+                intendedNavigation.current = {
+                  scope: JSON.stringify([key, nextCursor]),
+                  append: true,
+                };
+                queries.next(nextCursor);
+              } else void load(nextCursor);
+            }
           }}
           label={t('historyPagination.label', locale)}
           nextLabel={t('notifications.loadMore', locale)}

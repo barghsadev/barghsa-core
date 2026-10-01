@@ -5,6 +5,7 @@ import AxeBuilder from '@axe-core/playwright';
 import {
   notificationItem as item,
   notificationPage as data,
+  notificationCursor,
 } from '../src/test/notification-inbox-fixtures';
 test.use({ viewport: { width: 390, height: 844 } });
 for (const context of ['customer', 'staff'] as const)
@@ -73,7 +74,7 @@ for (const context of ['customer', 'staff'] as const)
                   q.has('cursor') ? '10000000-0000-4000-8000-000000000002' : item().id
                 ),
               ],
-              next_cursor: q.has('cursor') ? null : 'older-page',
+              next_cursor: q.has('cursor') ? null : notificationCursor(),
               unread_count: 2,
             },
           });
@@ -99,11 +100,12 @@ for (const context of ['customer', 'staff'] as const)
           .getByRole('button', { name: text('retry'), exact: true })
           .click();
         await expect(main.getByRole('button', { name: /Older notice/ })).toBeVisible();
-        expect(cursors.slice(0, 3)).toEqual([null, 'older-page', 'older-page']);
+        expect(cursors.slice(0, 3)).toEqual([null, notificationCursor(), notificationCursor()]);
         // Refresh remains independent of a retry for the failed older page.
         failed = true;
         await main.getByRole('button', { name: text('refresh'), exact: true }).click();
         await expect(main.getByRole('button', { name: /Older notice/ })).toBeVisible();
+        await expect(main.getByRole('alert')).toBeVisible();
         failed = false;
         await main
           .getByRole('alert')

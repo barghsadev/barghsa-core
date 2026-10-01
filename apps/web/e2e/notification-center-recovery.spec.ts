@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import type { Page, Route } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
+import { notificationCursor } from '../src/test/notification-inbox-fixtures';
 
 const item = (title: string, id = '10000000-0000-4000-8000-000000000001') => ({
   id,
@@ -108,7 +109,7 @@ for (const locale of ['en', 'fa'] as const) {
           ...response('Pending notice'),
           data: read ? [] : [item('Pending notice')],
           unread_count: read ? 0 : 2,
-          next_cursor: read ? null : 'older-page',
+          next_cursor: read ? null : notificationCursor(),
         },
       })
     );
