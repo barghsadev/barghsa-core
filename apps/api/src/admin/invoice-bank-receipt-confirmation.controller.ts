@@ -24,6 +24,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { z } from 'zod';
+import {
+  parseHistoryQuery,
+  parseDateRangeFilter,
+  parseNumberRange,
+  HISTORY_SORT_OPTIONS,
+} from '@barghsa/shared/validation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
@@ -44,10 +50,20 @@ const HistoryQuerySchema = z
   .object({
     state: z.enum(['Confirmed', 'Rejected']).optional(),
     invoiceId: z.string().uuid().optional(),
+    q: z.string().optional(),
+    sort: z.enum(HISTORY_SORT_OPTIONS).optional(),
+    from: z.string().optional(),
+    to: z.string().optional(),
+    min: z.string().optional(),
+    max: z.string().optional(),
     beforeAt: z.string().datetime({ offset: true }).optional(),
     beforeId: z.string().uuid().optional(),
   })
-  .refine((value) => Boolean(value.beforeAt) === Boolean(value.beforeId));
+  .strict()
+  .refine((value) => Boolean(value.beforeAt) === Boolean(value.beforeId))
+  .refine((value) => parseHistoryQuery(value.q, value.sort) !== null)
+  .refine((value) => parseDateRangeFilter(value.from, value.to) !== null)
+  .refine((value) => parseNumberRange(value.min, value.max) !== null);
 
 function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
@@ -143,12 +159,53 @@ export class InvoiceBankReceiptConfirmationController {
   }
 
   @Get('history')
-  @ApiOperation({ summary: 'List confirmed and rejected invoice receipts, newest first' })
+  @ApiOperation({ summary: 'Search and filter confirmed and rejected invoice receipts' })
+  @ApiQuery({
+    name: 'q',
+    required: false,
+    type: String,
+    description:
+      'Literal receipt/invoice/profile ID, bank name or payer reference substring, up to 120 characters',
+  })
+  @ApiQuery({
+    name: 'sort',
+    required: false,
+    enum: HISTORY_SORT_OPTIONS,
+    description: 'Submission order, newest first by default',
+  })
+  @ApiQuery({
+    name: 'from',
+    required: false,
+    type: String,
+    description: 'Inclusive submission timestamp in canonical UTC milliseconds',
+  })
+  @ApiQuery({
+    name: 'to',
+    required: false,
+    type: String,
+    description: 'Exclusive submission timestamp in canonical UTC milliseconds',
+  })
+  @ApiQuery({
+    name: 'min',
+    required: false,
+    type: String,
+    description: 'Inclusive exact IRR amount lower bound',
+  })
+  @ApiQuery({
+    name: 'max',
+    required: false,
+    type: String,
+    description: 'Inclusive exact IRR amount upper bound',
+  })
   @ApiQuery({ name: 'state', required: false, enum: ['Confirmed', 'Rejected'] })
   @ApiQuery({ name: 'invoiceId', required: false, format: 'uuid' })
   @ApiQuery({ name: 'beforeAt', required: false, format: 'date-time' })
   @ApiQuery({ name: 'beforeId', required: false, format: 'uuid' })
-  @ApiResponse({ status: 200, description: 'At most 25 receipts and a cursor for the next page.' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'At most 25 receipts and an exact timestamp/UUID cursor for the next page in the selected order.',
+  })
   @ApiResponse({ status: 400, description: 'Invalid filters or cursor' })
   @ApiResponse({ status: 403, description: 'Finance permission required' })
   async history(
@@ -159,7 +216,10 @@ export class InvoiceBankReceiptConfirmationController {
     const parsed = HistoryQuerySchema.safeParse(raw);
     if (!parsed.success)
       httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid receipt history filters');
-    return this.service.listHistory(parsed.data);
+    const query = parseHistoryQuery(parsed.data.q, parsed.data.sort)!;
+    const dates = parseDateRangeFilter(parsed.data.from, parsed.data.to)!;
+    const amounts = parseNumberRange(parsed.data.min, parsed.data.max)!;
+    return this.service.listHistory({ ...parsed.data, ...query, ...dates, ...amounts });
   }
 
   @Get(':receiptId/allocation')

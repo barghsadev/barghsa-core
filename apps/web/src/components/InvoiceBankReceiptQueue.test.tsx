@@ -46,7 +46,10 @@ vi.mock('../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ notice: null, format: (value: string) => value }),
 }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ money: (value: string) => `${value} IRR` }),
+  useNumberFormatting: () => ({
+    number: (value: number) => String(value),
+    money: (value: string) => `${value} IRR`,
+  }),
 }));
 vi.mock('./TeamActionDialog.js', () => ({
   TeamActionDialog: ({

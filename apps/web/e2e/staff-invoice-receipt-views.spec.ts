@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
+import { dateRangePreset } from '@barghsa/ui';
 import { test, expect } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { verifyClippedContrast } from './clipped-contrast';
@@ -243,6 +244,151 @@ for (const locale of ['en', 'fa'] as const)
         'true'
       );
       await expect(history.getByText(olderId, { exact: true })).toHaveCount(1);
+      const historyFilterButton = history.getByRole('button', {
+        name: appText('historyFilters.label', locale),
+        exact: true,
+      });
+      const openFilters = () => historyFilterButton.click();
+      const drawer = page.getByRole('dialog', {
+        name: appText('historyFilters.label', locale),
+        exact: true,
+      });
+      const historySearch = drawer.getByRole('searchbox', {
+        name: appText('historySearch.label', locale),
+        exact: true,
+      });
+      const applyFilters = () =>
+        drawer
+          .getByRole('button', { name: appText('historyFilters.apply', locale), exact: true })
+          .click();
+      const readsBeforeDraft = historyReads.length;
+      await openFilters();
+      await historySearch.fill('discard this search');
+      await drawer
+        .getByRole('button', { name: appText('historyFilters.cancel', locale), exact: true })
+        .click();
+      await openFilters();
+      await expect(historySearch).toHaveValue('');
+      expect(historyReads).toHaveLength(readsBeforeDraft);
+      await historySearch.fill('  Bank_%\\  ');
+      await drawer
+        .getByRole('combobox', { name: appText('historySearch.sort', locale), exact: true })
+        .selectOption('submitted_at:asc');
+      await drawer
+        .getByRole('textbox', { name: appText('invoices.filter.min', locale), exact: true })
+        .fill(locale === 'fa' ? '۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳' : amount);
+      await drawer
+        .getByRole('textbox', { name: appText('invoices.filter.max', locale), exact: true })
+        .fill(amount);
+      await drawer
+        .locator('summary')
+        .filter({ hasText: word('submitted') })
+        .click();
+      await drawer
+        .getByRole('combobox', { name: appText('historyDates.preset', locale), exact: true })
+        .selectOption('thisMonth');
+      const range = dateRangePreset(
+        'thisMonth',
+        locale,
+        'Pacific/Kiritimati',
+        new Date(await page.evaluate(() => Date.now()))
+      );
+      await applyFilters();
+      await expect.poll(() => new URLSearchParams(historyReads.at(-1)).get('q')).toBe('Bank_%\\');
+      expect(historyReads).toHaveLength(readsBeforeDraft + 1);
+      const appliedHistory = new URLSearchParams(historyReads.at(-1));
+      expect(appliedHistory.get('sort')).toBe('submitted_at:asc');
+      expect(appliedHistory.get('min')).toBe(amount);
+      expect(appliedHistory.get('max')).toBe(amount);
+      expect(appliedHistory.get('from')).toBe(range.from);
+      expect(appliedHistory.get('to')).toBe(range.to);
+      expect(appliedHistory.has('beforeId')).toBe(false);
+      await expect(history.getByText(receiptId, { exact: true })).toBeVisible();
+      await history
+        .getByRole('combobox', { name: word('historyState'), exact: true })
+        .selectOption('Confirmed');
+      await history.getByRole('textbox', { name: word('invoice'), exact: true }).fill(invoiceId);
+      await history.getByRole('button', { name: word('historyApply'), exact: true }).click();
+      await expect
+        .poll(() => new URLSearchParams(historyReads.at(-1)).get('invoiceId'))
+        .toBe(invoiceId);
+      expect(new URLSearchParams(historyReads.at(-1)).get('state')).toBe('Confirmed');
+      await page.reload();
+      await expect(history.getByText(receiptId, { exact: true })).toBeVisible();
+      expect(new URLSearchParams(historyReads.at(-1)).get('min')).toBe(amount);
+      expect(new URLSearchParams(historyReads.at(-1)).get('sort')).toBe('submitted_at:asc');
+      await openFilters();
+      await expect(historySearch).toHaveValue('Bank_%\\');
+      await expect(
+        drawer.getByRole('textbox', { name: appText('invoices.filter.min', locale), exact: true })
+      ).toHaveValue(amount);
+      await drawer
+        .getByRole('textbox', { name: appText('invoices.filter.min', locale), exact: true })
+        .fill('2');
+      await drawer
+        .getByRole('textbox', { name: appText('invoices.filter.max', locale), exact: true })
+        .fill('1');
+      const readsBeforeInvalid = historyReads.length;
+      await applyFilters();
+      await expect(drawer).toBeVisible();
+      await expect(drawer.getByRole('alert')).toBeVisible();
+      expect(historyReads).toHaveLength(readsBeforeInvalid);
+      await drawer
+        .getByRole('button', { name: appText('historyFilters.cancel', locale), exact: true })
+        .click();
+      failed = true;
+      await history
+        .getByRole('button', { name: appText('invoices.receipts.newer', locale), exact: true })
+        .click();
+      await expect(history.getByRole('alert')).toBeVisible();
+      const historyFailedQuery = historyReads.at(-1);
+      failed = false;
+      await history
+        .getByRole('button', { name: appText('historyPagination.retry', locale), exact: true })
+        .click();
+      await expect(history.getByText(olderId, { exact: true })).toBeVisible();
+      expect(historyReads.at(-1)).toBe(historyFailedQuery);
+      expect(new URLSearchParams(historyFailedQuery).get('beforeAt')).toBe(stamp);
+      expect(new URLSearchParams(historyFailedQuery).get('min')).toBe(amount);
+      const invoiceChip = history.getByRole('button', {
+        name: appText('historyFilters.remove', locale).replace(
+          '{filter}',
+          `${word('invoice')}: ${invoiceId}`
+        ),
+        exact: true,
+      });
+      await invoiceChip.click();
+      await expect
+        .poll(() => new URLSearchParams(historyReads.at(-1)).has('invoiceId'))
+        .toBe(false);
+      expect(new URLSearchParams(historyReads.at(-1)).get('q')).toBe('Bank_%\\');
+      expect(new URLSearchParams(historyReads.at(-1)).has('beforeId')).toBe(false);
+      await history
+        .getByRole('button', { name: appText('invoices.receipts.newer', locale), exact: true })
+        .click();
+      await expect(history.getByText(olderId, { exact: true })).toBeVisible();
+      await history
+        .getByRole('button', { name: appText('historyFilters.clearAll', locale), exact: true })
+        .click();
+      await expect.poll(() => new URLSearchParams(historyReads.at(-1)).has('q')).toBe(false);
+      expect(new URLSearchParams(historyReads.at(-1)).get('sort')).toBe('submitted_at:asc');
+      expect(new URLSearchParams(historyReads.at(-1)).has('min')).toBe(false);
+      expect(new URLSearchParams(historyReads.at(-1)).has('state')).toBe(false);
+      await page.goBack();
+      await expect(history.getByText(olderId, { exact: true })).toBeVisible();
+      expect(new URLSearchParams(historyReads.at(-1)).get('q')).toBe('Bank_%\\');
+      const finalAccessibility = await new AxeBuilder({ page })
+        .include('#invoice-receipt-panel')
+        .analyze();
+      expect(finalAccessibility.violations).toEqual([]);
+      await verifyClippedContrast(page, finalAccessibility);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true
+      );
+      if (locale === 'fa' && darkMode && info.project.name === 'mobile-safari') {
+        await historyFilterButton.scrollIntoViewIfNeeded();
+        await page.screenshot({ path: '/tmp/barghsa-staff-receipt-history-query-fa-dark.png' });
+      }
       await pending.getByRole('button', { name: word('open'), exact: true }).click();
       await page.locator('#invoice-receipt-reason').fill('Clear this obsolete draft');
       const historyReadCount = historyReads.length;

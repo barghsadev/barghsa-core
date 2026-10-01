@@ -1,7 +1,9 @@
-import { act } from 'react';
+import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { InvoiceBankReceiptHistory } from './InvoiceBankReceiptHistory.js';
+import { useListQuery } from '../hooks/useListQuery.js';
+import { invoiceReceiptQueryOptions } from '../lib/finance-list-query.js';
 
 const first = '11111111-1111-7111-8111-111111111111';
 const older = '22222222-2222-7222-8222-222222222222';
@@ -20,7 +22,10 @@ vi.mock('../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ format: (value: string) => value }),
 }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ money: (value: string) => value }),
+  useNumberFormatting: () => ({
+    number: (value: number) => String(value),
+    money: (value: string) => value,
+  }),
 }));
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {
@@ -113,3 +118,61 @@ it.each([401, 403])(
     expect(host.textContent).toContain('Could not load receipt history.');
   }
 );
+
+it('aborts an old cursor read and hides the previous criteria while rejecting its late response', async () => {
+  let finish!: (response: Response) => void;
+  const delayed = new Promise<Response>((resolve) => {
+    finish = resolve;
+  });
+  let change!: (value: Record<string, unknown>) => void;
+  let oldSignal: AbortSignal | undefined;
+  const fetcher = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+    const params = new URL(String(input), 'https://example.test').searchParams;
+    if (params.has('beforeAt')) {
+      oldSignal = init?.signal ?? undefined;
+      return delayed;
+    }
+    if (params.get('q') === 'new')
+      return new Response(JSON.stringify({ items: [row(older)], nextCursor: null }));
+    return new Response(
+      JSON.stringify({ items: [row(first)], nextCursor: { beforeAt: stamp, beforeId: first } })
+    );
+  });
+  vi.stubGlobal('fetch', fetcher);
+  function Harness() {
+    const [raw, setRaw] = useState<Record<string, unknown>>({ receipt_q: 'old' });
+    change = setRaw;
+    const binding = useListQuery(invoiceReceiptQueryOptions, raw, (update) => setRaw(update));
+    return <InvoiceBankReceiptHistory revision={0} onOpen={vi.fn()} binding={binding} />;
+  }
+  await act(async () => root.render(<Harness />));
+  await click('Next page');
+  await act(async () => change({ receipt_q: 'new' }));
+  expect(oldSignal?.aborted).toBe(true);
+  expect(host.textContent).toContain(older);
+  await act(async () =>
+    finish(new Response(JSON.stringify({ items: [row(first)], nextCursor: null })))
+  );
+  expect(
+    [...host.querySelectorAll('[data-slot="list-content"] bdi')].filter(
+      (node) => node.textContent === first
+    )
+  ).toHaveLength(1);
+  expect(host.querySelector('[data-slot="list-content"]')!.textContent).toContain(older);
+});
+it('does not refetch reviewed history when only another list namespace changes', async () => {
+  let change!: (value: Record<string, unknown>) => void;
+  const fetcher = vi.fn(
+    async () => new Response(JSON.stringify({ items: [row(first)], nextCursor: null }))
+  );
+  vi.stubGlobal('fetch', fetcher);
+  function Harness() {
+    const [raw, setRaw] = useState<Record<string, unknown>>({ receipt_q: 'bank' });
+    change = setRaw;
+    const binding = useListQuery(invoiceReceiptQueryOptions, raw, (update) => setRaw(update));
+    return <InvoiceBankReceiptHistory revision={0} onOpen={vi.fn()} binding={binding} />;
+  }
+  await act(async () => root.render(<Harness />));
+  await act(async () => change({ receipt_q: 'bank', queue_q: 'different', state: 'Paid' }));
+  expect(fetcher).toHaveBeenCalledTimes(1);
+});

@@ -153,6 +153,12 @@ describe('invoice bank-receipt confirmation and rejection permission gate (T-04.
       beforeId: RECEIPT_ID,
     });
     expect(service.listHistory).toHaveBeenCalledWith({
+      q: '',
+      sort: 'submitted_at:desc',
+      from: undefined,
+      to: undefined,
+      min: undefined,
+      max: undefined,
       state: 'Confirmed',
       invoiceId: INVOICE_ID,
       beforeAt: '2026-09-01T10:00:00.000200Z',
@@ -252,4 +258,39 @@ it('validates literal queue search, order and paired exact cursor before listing
     await expect(controller.list(adminReq, query)).rejects.toMatchObject({ status: 400 });
   }
   expect(service.listPendingPage).toHaveBeenCalledTimes(1);
+});
+
+it('normalizes reviewed receipt search and exact ranges, rejecting ambiguous and invalid criteria before reads', async () => {
+  const { controller, service } = makeController();
+  await controller.history(adminReq, {
+    q: '  بانک_%\\  ',
+    sort: 'submitted_at:asc',
+    min: '۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳',
+    max: '9223372036854775807',
+    from: '2026-09-01T00:00:00.000Z',
+    to: '2026-10-01T00:00:00.000Z',
+  });
+  expect(service.listHistory).toHaveBeenCalledWith(
+    expect.objectContaining({
+      q: 'بانک_%\\',
+      sort: 'submitted_at:asc',
+      min: '9007199254740993',
+      max: '9223372036854775807',
+    })
+  );
+  for (const query of [
+    { q: 'x'.repeat(121) },
+    { q: 'bank\nname' },
+    { q: ['one', 'two'] },
+    { sort: 'amount:asc' },
+    { min: '9223372036854775808' },
+    { min: Number('9007199254740993') },
+    { min: '2', max: '1' },
+    { max: '-1' },
+    { unknown: 'private' },
+    { from: '2026-02-30T00:00:00.000Z' },
+    { from: '2026-10-01T00:00:00.000Z', to: '2026-09-01T00:00:00.000Z' },
+  ])
+    await expect(controller.history(adminReq, query)).rejects.toMatchObject({ status: 400 });
+  expect(service.listHistory).toHaveBeenCalledTimes(1);
 });

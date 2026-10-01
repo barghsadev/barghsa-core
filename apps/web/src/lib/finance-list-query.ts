@@ -1,4 +1,4 @@
-import { parseDateRangeFilter } from '@barghsa/shared/validation';
+import { parseDateRangeFilter, parseNumberRange } from '@barghsa/shared/validation';
 import { isInvoiceUuid } from './due-at-override.js';
 import { listChoice, writeListQuery, type ListQueryOptions } from './list-query.js';
 
@@ -68,7 +68,19 @@ export const invoiceLedgerQueryOptions: ListQueryOptions = {
 export const invoiceReceiptQueryOptions: ListQueryOptions = {
   ...invoiceLedgerQueryOptions,
   prefix: 'receipt_',
-  filters: { state: listChoice(['Confirmed', 'Rejected']), invoiceId: uuid },
+  searchLimit: 120,
+  sortFields: ['submitted_at'],
+  defaultSort: 'submitted_at',
+  pageSizes: [25],
+  defaultPageSize: 25,
+  filters: {
+    state: listChoice(['Confirmed', 'Rejected']),
+    invoiceId: uuid,
+    from: (value) => parseDateRangeFilter(value, undefined)?.from ?? '',
+    to: (value) => parseDateRangeFilter(undefined, value)?.to ?? '',
+    min: (value) => parseNumberRange(value, undefined)?.min ?? '',
+    max: (value) => parseNumberRange(undefined, value)?.max ?? '',
+  },
 };
 export const pendingReceiptQueryOptions: ListQueryOptions = {
   prefix: 'queue_',
@@ -92,8 +104,14 @@ export function pendingReceiptSearch(raw: Record<string, unknown>) {
   );
 }
 export function invoiceListsSearch(raw: Record<string, unknown>) {
+  const dates = parseDateRangeFilter(raw.receipt_from, raw.receipt_to) ?? {};
+  const amounts = parseNumberRange(raw.receipt_min, raw.receipt_max) ?? {};
   const cursors = {
     ...raw,
+    receipt_from: dates.from,
+    receipt_to: dates.to,
+    receipt_min: amounts.min,
+    receipt_max: amounts.max,
     cursor: encodeFinanceCursor(decodeFinanceCursor(raw.cursor)),
     receipt_cursor: encodeFinanceCursor(decodeFinanceCursor(raw.receipt_cursor)),
   };
@@ -111,6 +129,12 @@ export function invoiceListsSearch(raw: Record<string, unknown>) {
     'receipt_state',
     'receipt_invoiceId',
     'receipt_cursor',
+    'receipt_q',
+    'receipt_order',
+    'receipt_from',
+    'receipt_to',
+    'receipt_min',
+    'receipt_max',
   ];
   const result = {
     ...Object.fromEntries(own.map((key) => [key, normalized[key]])),
@@ -126,7 +150,17 @@ export function invoiceListsSearch(raw: Record<string, unknown>) {
           : undefined;
   result.receiptHistory = flag(
     raw.receiptHistory,
-    !!(result.receipt_state || result.receipt_invoiceId || result.receipt_cursor)
+    !!(
+      result.receipt_state ||
+      result.receipt_invoiceId ||
+      result.receipt_cursor ||
+      result.receipt_q ||
+      result.receipt_order ||
+      result.receipt_from ||
+      result.receipt_to ||
+      result.receipt_min ||
+      result.receipt_max
+    )
   );
   result.receipts = flag(
     raw.receipts,

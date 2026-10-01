@@ -21,6 +21,7 @@ export function HistoryFilterPanel({
   formatDate = (value) => value,
   serviceLabel,
   children,
+  extraChips = [],
 }: {
   query: { q: string; serviceType?: string | undefined };
   statuses: readonly string[];
@@ -35,20 +36,22 @@ export function HistoryFilterPanel({
   formatDate?: (value: string) => string;
   serviceLabel?: string;
   children: ReactNode;
+  extraChips?: readonly ListFilterChip[];
 }) {
   const locale = useLocale();
   const profileRevision = useProfileContextRevision();
   const numbers = useNumberFormatting(locale);
   if (!onClear) return children;
-  const activeCount = [
-    query.q,
-    query.serviceType,
-    statuses.length,
-    dateRange.from || dateRange.to,
-    amountRange?.min || amountRange?.max,
-  ].filter(Boolean).length;
+  const activeCount =
+    [
+      query.q,
+      query.serviceType,
+      statuses.length,
+      dateRange.from || dateRange.to,
+      amountRange?.min || amountRange?.max,
+    ].filter(Boolean).length + extraChips.length;
   const countLabel = numbers.number(activeCount);
-  const chips: ListFilterChip[] = [];
+  const chips: ListFilterChip[] = [...extraChips];
   const add = (id: string, label: string, key: HistoryFilterKey, value?: string) => {
     if (onRemoveFilter) chips.push({ id, label, onRemove: () => onRemoveFilter(key, value) });
   };
@@ -93,7 +96,14 @@ export function HistoryFilterPanel({
       drawer={
         onApply && onOpen
           ? {
-              resetKey: JSON.stringify([profileRevision, query, statuses, dateRange, amountRange]),
+              resetKey: JSON.stringify([
+                profileRevision,
+                query,
+                statuses,
+                dateRange,
+                amountRange,
+                extraChips.map(({ id, label }) => [id, label]),
+              ]),
               onApply,
               onOpen,
               dir: locale === 'fa' ? 'rtl' : 'ltr',

@@ -1,5 +1,5 @@
 import type { ReceiptQueueQuery, ReceiptQueuePage } from '../common/receipt-queue-query.js';
-import { literalSearchPattern } from '@barghsa/shared/validation';
+import { literalSearchPattern, type HistorySort } from '@barghsa/shared/validation';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { applyReceiptEmergencyOverride } from '../admin/receipt-emergency-override.js';
 import { lockDualApprovalThreshold } from '../admin/dual-approval-threshold-lock.js';
@@ -310,9 +310,17 @@ export class InvoiceBankReceiptConfirmationService {
   async listHistory(input: {
     state?: 'Confirmed' | 'Rejected' | undefined;
     invoiceId?: string | undefined;
+    q?: string | undefined;
+    sort?: HistorySort | undefined;
+    from?: string | undefined;
+    to?: string | undefined;
+    min?: string | undefined;
+    max?: string | undefined;
     beforeAt?: string | undefined;
     beforeId?: string | undefined;
   }): Promise<InvoiceBankReceiptHistoryPageDto> {
+    const direction = input.sort === 'submitted_at:asc' ? 'ASC' : 'DESC';
+    const comparison = direction === 'ASC' ? '>' : '<';
     const result = await getDbPool().query(
       `SELECT id, invoice_id, amount, state, payment_date, bank_name, created_at,
               to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS cursor_at
@@ -320,10 +328,29 @@ export class InvoiceBankReceiptConfirmationService {
         WHERE state IN ('Confirmed', 'Rejected')
           AND ($1::text IS NULL OR state = $1)
           AND ($2::uuid IS NULL OR invoice_id = $2)
-          AND ($3::timestamptz IS NULL OR (created_at, id) < ($3::timestamptz, $4::uuid))
-        ORDER BY created_at DESC, id DESC
+          AND ($3::timestamptz IS NULL OR (created_at, id) ${comparison} ($3::timestamptz, $4::uuid))
+          AND ($5::text IS NULL OR id::text ILIKE $5 ESCAPE E'\\\\'
+            OR invoice_id::text ILIKE $5 ESCAPE E'\\\\'
+            OR profile_id::text ILIKE $5 ESCAPE E'\\\\'
+            OR bank_name ILIKE $5 ESCAPE E'\\\\'
+            OR payer_reference ILIKE $5 ESCAPE E'\\\\')
+          AND ($6::timestamptz IS NULL OR created_at >= $6::timestamptz)
+          AND ($7::timestamptz IS NULL OR created_at < $7::timestamptz)
+          AND ($8::bigint IS NULL OR amount >= $8::bigint)
+          AND ($9::bigint IS NULL OR amount <= $9::bigint)
+        ORDER BY created_at ${direction}, id ${direction}
         LIMIT 26`,
-      [input.state ?? null, input.invoiceId ?? null, input.beforeAt ?? null, input.beforeId ?? null]
+      [
+        input.state ?? null,
+        input.invoiceId ?? null,
+        input.beforeAt ?? null,
+        input.beforeId ?? null,
+        literalSearchPattern(input.q ?? ''),
+        input.from ?? null,
+        input.to ?? null,
+        input.min ?? null,
+        input.max ?? null,
+      ]
     );
     const rows = result.rows as Array<
       Pick<

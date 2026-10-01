@@ -7,8 +7,13 @@ import { useListView } from '../hooks/useListView.js';
 import { StaffInvoiceReceiptList } from './StaffInvoiceReceiptList.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
 
-import type { ListQueryBinding } from '../hooks/useListQuery.js';
-import { decodeFinanceCursor, encodeFinanceCursor } from '../lib/finance-list-query.js';
+import { useListQuery, type ListQueryBinding } from '../hooks/useListQuery.js';
+import { InvoiceReceiptHistoryFilters } from './InvoiceReceiptHistoryFilters.js';
+import {
+  decodeFinanceCursor,
+  encodeFinanceCursor,
+  invoiceReceiptQueryOptions,
+} from '../lib/finance-list-query.js';
 
 interface HistoryItem {
   receiptId: string;
@@ -40,21 +45,18 @@ export function InvoiceBankReceiptHistory({
   const locale = useLocale();
   const { view, setView } = useListView('staff-invoice-receipts-history');
   const word = (key: string) => adminText(`admin.invoiceReceipts.${key}`, locale);
-  const [localState, setLocalState] = useState<'' | 'Confirmed' | 'Rejected'>('');
-  const state = binding?.query.filters.state ?? localState;
+  const [raw, setRaw] = useState<Record<string, unknown>>({});
+  const local = useListQuery(invoiceReceiptQueryOptions, raw, (update) => setRaw(update));
+  const queryBinding = binding ?? local;
+  const { query } = queryBinding;
+  const state = query.filters.state ?? '';
   const [invoiceInput, setInvoiceInput] = useState('');
-  const [localInvoiceId, setLocalInvoiceId] = useState('');
-  const invoiceId = binding?.query.filters.invoiceId ?? localInvoiceId;
+  const invoiceId = query.filters.invoiceId ?? '';
   const [invalidInvoice, setInvalidInvoice] = useState(false);
-  const [localCursor, setLocalCursor] = useState<Cursor | null>(null);
-  const cursor = useMemo(
-    () => (binding ? decodeFinanceCursor(binding.query.cursor) : localCursor),
-    [binding?.query.cursor, localCursor]
-  );
+  const cursor = useMemo(() => decodeFinanceCursor(query.cursor), [query.cursor]);
   const cursorKey = encodeFinanceCursor(cursor);
-  const [previous, setPrevious] = useState<Array<Cursor | null>>([]);
   const [retryRevision, setRetryRevision] = useState(0);
-  const criteria = JSON.stringify([state, invoiceId]);
+  const criteria = JSON.stringify([query.search, query.order, query.filters]);
   const [accepted, setAccepted] = useState({
     criteria,
     page: { items: [], nextCursor: null } as HistoryPage,
@@ -66,15 +68,21 @@ export function InvoiceBankReceiptHistory({
   );
 
   useEffect(() => {
-    if (!binding) return;
     setInvoiceInput(invoiceId);
     setInvalidInvoice(false);
-  }, [invoiceId, !!binding]);
+  }, [invoiceId]);
   useEffect(() => {
     const controller = new AbortController();
     const query = new URLSearchParams();
     if (state) query.set('state', state);
     if (invoiceId) query.set('invoiceId', invoiceId);
+    if (queryBinding.query.search) query.set('q', queryBinding.query.search);
+    if (queryBinding.query.order !== 'desc')
+      query.set('sort', `submitted_at:${queryBinding.query.order}`);
+    for (const key of ['from', 'to', 'min', 'max']) {
+      const value = queryBinding.query.filters[key];
+      if (value) query.set(key, value);
+    }
     if (cursor) {
       query.set('beforeAt', cursor.beforeAt);
       query.set('beforeId', cursor.beforeId);
@@ -102,7 +110,7 @@ export function InvoiceBankReceiptHistory({
         }
       });
     return () => controller.abort();
-  }, [state, invoiceId, cursorKey, revision, retryRevision]);
+  }, [criteria, cursorKey, revision, retryRevision]);
 
   function applyInvoice(event: FormEvent) {
     event.preventDefault();
@@ -115,10 +123,7 @@ export function InvoiceBankReceiptHistory({
     setPage({ items: [], nextCursor: null });
     setLoadState('loading');
     if (value === invoiceId && !cursor) setRetryRevision((value) => value + 1);
-    setLocalCursor(null);
-    setPrevious([]);
-    if (binding) binding.setQuery({ filters: { invoiceId: value }, cursor: '' });
-    else setLocalInvoiceId(value);
+    queryBinding.setQuery({ filters: { invoiceId: value }, cursor: '' });
   }
 
   return (
@@ -128,6 +133,7 @@ export function InvoiceBankReceiptHistory({
         <ListPage.Toolbar
           filters={
             <div className="flex min-w-0 flex-wrap items-end gap-3">
+              <InvoiceReceiptHistoryFilters binding={queryBinding} />
               <label className="flex min-w-0 flex-col gap-1 text-sm">
                 {word('historyState')}
                 <select
@@ -135,10 +141,7 @@ export function InvoiceBankReceiptHistory({
                   onChange={(event) => {
                     setPage({ items: [], nextCursor: null });
                     setLoadState('loading');
-                    if (binding) binding.setQuery({ filters: { state: event.target.value } });
-                    else setLocalState(event.target.value as typeof localState);
-                    setLocalCursor(null);
-                    setPrevious([]);
+                    queryBinding.setQuery({ filters: { state: event.target.value } });
                   }}
                   className="min-h-10 rounded-md border bg-background px-3"
                 >
@@ -216,29 +219,24 @@ export function InvoiceBankReceiptHistory({
           <ListPage.Pagination
             kind="cursor"
             hasMore={
-              !!page.nextCursor &&
-              (!binding || binding.canAdvance(encodeFinanceCursor(page.nextCursor)))
+              !!page.nextCursor && queryBinding.canAdvance(encodeFinanceCursor(page.nextCursor))
             }
             loading={loadState === 'loading'}
             label={word('historyPages')}
-            nextLabel={word('historyNext')}
+            nextLabel={
+              query.order === 'asc'
+                ? appText('invoices.receipts.newer', locale)
+                : word('historyNext')
+            }
             onNext={() => {
               if (!page.nextCursor) return;
-              if (binding) binding.next(encodeFinanceCursor(page.nextCursor));
-              else {
-                setPrevious((items) => [...items, cursor]);
-                setLocalCursor(page.nextCursor);
-              }
+              queryBinding.next(encodeFinanceCursor(page.nextCursor));
             }}
             previous={{
-              enabled: binding ? binding.hasPrevious : previous.length > 0,
+              enabled: queryBinding.hasPrevious,
               label: word('historyPrevious'),
               onClick: () => {
-                if (binding) binding.previous();
-                else {
-                  setLocalCursor(previous.at(-1) ?? null);
-                  setPrevious((items) => items.slice(0, -1));
-                }
+                queryBinding.previous();
               },
             }}
           />

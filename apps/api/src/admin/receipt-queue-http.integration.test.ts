@@ -57,7 +57,7 @@ async function owner() {
     "INSERT INTO invoices(id,profile_id,state,total_amount) VALUES ($1,$2,'Unpaid',9223372036854775807)",
     [invoice, profile]
   );
-  return { profile, invoice };
+  return { profile, invoice, user };
 }
 async function seed(
   kind: Kind,
@@ -69,10 +69,11 @@ async function seed(
     state?: string;
     credit?: boolean;
     channel?: string;
+    amount?: string;
   }
 ) {
   const id = randomUUID(),
-    amount = '9007199254740993',
+    amount = options.amount ?? '9007199254740993',
     index = options.index ?? 0;
   if (kind === 'wallet') {
     const metadata = {
@@ -99,7 +100,7 @@ async function seed(
     );
   } else {
     await http.pool.query(
-      `INSERT INTO bank_receipts(id,invoice_id,profile_id,amount,state,payment_date,payer_reference,bank_name,attachment_key,created_at,rejection_reason) VALUES ($1,$2,$3,$4::bigint,$5,'2026-09-01',$6,$7,$8,'2026-09-01T00:00:00Z'::timestamptz + ($9::int * interval '1 microsecond'),CASE WHEN $5='Rejected' THEN 'Mismatch' ELSE NULL END)`,
+      `INSERT INTO bank_receipts(id,invoice_id,profile_id,amount,state,payment_date,payer_reference,bank_name,attachment_key,created_at,rejection_reason,confirmed_by,confirmed_at) VALUES ($1,$2,$3,$4::bigint,$5,'2026-09-01',$6,$7,$8,'2026-09-01T00:00:00Z'::timestamptz + ($9::int * interval '1 microsecond'),CASE WHEN $5='Rejected' THEN 'Mismatch' ELSE NULL END,CASE WHEN $5='Confirmed' THEN $10::text ELSE NULL END,CASE WHEN $5='Confirmed' THEN '2026-09-01T00:00:00Z'::timestamptz ELSE NULL END)`,
       [
         id,
         scope.invoice,
@@ -110,6 +111,7 @@ async function seed(
         options.bank,
         `sealed/${id}`,
         Math.floor(index / 3),
+        scope.user,
       ]
     );
   }
@@ -214,3 +216,132 @@ it.each(kinds)(
     expect((await read(kind, allowed)).status).toBe(403);
   }
 );
+
+const historyPath = `${path('invoice')}/history`;
+async function readHistory(
+  who: Awaited<ReturnType<typeof actor>>,
+  query: Record<string, string> = {}
+) {
+  return fetch(`${http.base}${historyPath}?${new URLSearchParams(query)}`, {
+    headers: who.headers,
+  });
+}
+it('pages terminal invoice history in both submission orders with exact microsecond ties', async () => {
+  const who = await actor([permission('invoice')]),
+    scope = await owner(),
+    bank = randomUUID();
+  for (let index = 0; index < 61; index++)
+    await seed('invoice', scope, { bank, index, state: index % 2 ? 'Rejected' : 'Confirmed' });
+  await seed('invoice', scope, { bank, state: 'Submitted' });
+  const rows = await http.pool.query<{ id: string }>(
+    "SELECT id FROM bank_receipts WHERE profile_id=$1 AND state IN ('Confirmed','Rejected') ORDER BY created_at ASC,id ASC",
+    [scope.profile]
+  );
+  const ascending = rows.rows.map((row) => row.id);
+  for (const sort of [undefined, 'submitted_at:desc', 'submitted_at:asc']) {
+    const seen: Array<string | undefined> = [];
+    let cursor: Page['nextCursor'] = null,
+      pages = 0;
+    do {
+      const result = await page(
+        await readHistory(who, { q: bank, ...(sort ? { sort } : {}), ...(cursor ?? {}) })
+      );
+      expect(result.items.length).toBeLessThanOrEqual(25);
+      expect(result.items.every((row) => row.amount === '9007199254740993')).toBe(true);
+      seen.push(...result.items.map(idOf));
+      cursor = result.nextCursor;
+      if (cursor) expect(cursor.beforeAt).toMatch(/\.\d{6}Z$/);
+      expect(++pages).toBeLessThan(5);
+    } while (cursor);
+    expect(seen).toEqual(sort?.endsWith('asc') ? ascending : [...ascending].reverse());
+    expect(new Set(seen).size).toBe(61);
+  }
+});
+it('combines literal history search, IDs, terminal state, half-open dates and inclusive exact IRR bounds', async () => {
+  const who = await actor([permission('invoice')]),
+    scope = await owner(),
+    token = randomUUID();
+  const bank = `${token}_%\\بانک`,
+    reference = `${token}-TRANSFER`;
+  const first = await seed('invoice', scope, { bank, reference, state: 'Confirmed' });
+  const second = await seed('invoice', scope, {
+    bank,
+    state: 'Rejected',
+    amount: '9007199254740994',
+  });
+  await http.pool.query("UPDATE bank_receipts SET created_at='2026-09-02T00:00:00Z' WHERE id=$1", [
+    second,
+  ]);
+  await seed('invoice', scope, { bank: `${token}XYبانک`, state: 'Confirmed' });
+  await seed('invoice', scope, { bank, state: 'Submitted' });
+  for (const q of [reference.toLowerCase(), first])
+    expect((await page(await readHistory(who, { q }))).items.map(idOf)).toEqual([first]);
+  for (const q of [scope.profile, scope.invoice])
+    expect((await page(await readHistory(who, { q }))).items).toHaveLength(3);
+  expect((await page(await readHistory(who, { q: bank }))).items.map(idOf)).toEqual([
+    second,
+    first,
+  ]);
+  const combined = await page(
+    await readHistory(who, {
+      q: bank,
+      invoiceId: scope.invoice,
+      state: 'Confirmed',
+      sort: 'submitted_at:asc',
+      from: '2026-09-01T00:00:00.000Z',
+      to: '2026-09-02T00:00:00.000Z',
+      min: '۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳',
+      max: '9007199254740993',
+    })
+  );
+  expect(combined.items.map(idOf)).toEqual([first]);
+  expect(Object.keys(combined.items[0]!).sort()).toEqual(
+    ['receiptId', 'invoiceId', 'amount', 'bankName', 'state', 'paymentDate', 'submittedAt'].sort()
+  );
+  expect(
+    (await page(await readHistory(who, { q: bank, from: '2026-09-02T00:00:00.000Z' }))).items.map(
+      idOf
+    )
+  ).toEqual([second]);
+  expect(
+    (await page(await readHistory(who, { q: bank, to: '2026-09-02T00:00:00.000Z' }))).items.map(
+      idOf
+    )
+  ).toEqual([first]);
+  expect(
+    (
+      await page(
+        await readHistory(who, { q: bank, min: '9007199254740994', max: '9007199254740994' })
+      )
+    ).items.map(idOf)
+  ).toEqual([second]);
+  expect(
+    (await page(await readHistory(who, { invoiceId: scope.invoice, q: randomUUID() }))).items
+  ).toEqual([]);
+});
+it('requires current invoice receipt permission and rejects malformed or repeated history fields', async () => {
+  const who = await actor([permission('invoice')]),
+    denied = await actor([permission('wallet')]);
+  expect((await readHistory(denied)).status).toBe(403);
+  expect((await fetch(`${http.base}${historyPath}`)).status).toBe(401);
+  for (const query of [
+    { q: 'x'.repeat(121) },
+    { q: 'bank\nname' },
+    { sort: 'amount:desc' },
+    { min: '9223372036854775808' },
+    { min: '2', max: '1' },
+    { max: '-1' },
+    { from: '2026-02-30T00:00:00.000Z' },
+    { from: '2026-09-02T00:00:00.000Z', to: '2026-09-01T00:00:00.000Z' },
+    { unknown: 'private' },
+    { state: 'Submitted' },
+    { beforeId: randomUUID() },
+  ])
+    expect((await readHistory(who, query)).status).toBe(400);
+  for (const query of ['q=one&q=two', 'min=1&min=2', 'state=Confirmed&state=Rejected'])
+    expect(
+      (await fetch(`${http.base}${historyPath}?${query}`, { headers: who.headers })).status
+    ).toBe(400);
+  await http.pool.query('DELETE FROM user_roles WHERE user_id=$1', [who.user]);
+  expect((await readHistory(who)).status).toBe(403);
+});

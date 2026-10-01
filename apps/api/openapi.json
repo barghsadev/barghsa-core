@@ -8279,11 +8279,69 @@
               ],
               "type": "string"
             }
+          },
+          {
+            "description": "Inclusive exact IRR amount upper bound",
+            "in": "query",
+            "name": "max",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Inclusive exact IRR amount lower bound",
+            "in": "query",
+            "name": "min",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Exclusive submission timestamp in canonical UTC milliseconds",
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Inclusive submission timestamp in canonical UTC milliseconds",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Submission order, newest first by default",
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "enum": [
+                "submitted_at:desc",
+                "submitted_at:asc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Literal receipt/invoice/profile ID, bank name or payer reference substring, up to 120 characters",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "At most 25 receipts and a cursor for the next page."
+            "description": "At most 25 receipts and an exact timestamp/UUID cursor for the next page in the selected order."
           },
           "400": {
             "description": "Invalid filters or cursor"
@@ -8297,7 +8355,7 @@
             "bearer": []
           }
         ],
-        "summary": "List confirmed and rejected invoice receipts, newest first",
+        "summary": "Search and filter confirmed and rejected invoice receipts",
         "tags": [
           "Admin · Invoice bank receipts"
         ]

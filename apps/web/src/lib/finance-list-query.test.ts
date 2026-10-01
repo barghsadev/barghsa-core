@@ -178,3 +178,68 @@ it('drops malformed queue pagination and private parameters while retaining supp
     })
   ).toEqual({ queue_q: undefined, queue_order: undefined, queue_cursor: undefined });
 });
+
+it('preserves exact history amounts and independent queue/ledger scopes through history updates', () => {
+  const raw = invoiceListsSearch({
+    state: 'Paid',
+    cursor,
+    queue_q: 'pending',
+    queue_cursor: cursor,
+    receipt_q: '  بانک_%  ',
+    receipt_order: 'asc',
+    receipt_cursor: cursor,
+    receipt_from: '2026-09-01T00:00:00.000Z',
+    receipt_to: '2026-10-01T00:00:00.000Z',
+    receipt_min: '۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳',
+    receipt_max: '9223372036854775807',
+  });
+  expect(raw).toMatchObject({
+    receipt_q: 'بانک_%',
+    receipt_order: 'asc',
+    receipt_min: '9007199254740993',
+    receipt_max: '9223372036854775807',
+    receipts: 'true',
+    receiptHistory: 'true',
+  });
+  expect(
+    invoiceListsSearch(writeListQuery(raw, invoiceReceiptQueryOptions, { search: 'next' }))
+  ).toMatchObject({
+    state: 'Paid',
+    cursor,
+    queue_q: 'pending',
+    queue_cursor: cursor,
+    receipt_q: 'next',
+    receipt_order: 'asc',
+    receipt_cursor: undefined,
+    receipt_min: '9007199254740993',
+    receipt_max: '9223372036854775807',
+  });
+});
+it('drops invalid history ranges and rounded numeric URL bounds instead of guessing an amount', () => {
+  expect(
+    invoiceListsSearch({
+      receipt_min: Number('9007199254740993'),
+      receipt_max: '1',
+      receipt_from: '2026-02-30T00:00:00.000Z',
+      receipt_to: '2026-03-01T00:00:00.000Z',
+    })
+  ).toMatchObject({
+    receipt_min: undefined,
+    receipt_max: undefined,
+    receipt_from: undefined,
+    receipt_to: undefined,
+  });
+  expect(
+    invoiceListsSearch({
+      receipt_min: '2',
+      receipt_max: '1',
+      receipt_from: '2026-10-01T00:00:00.000Z',
+      receipt_to: '2026-09-01T00:00:00.000Z',
+    })
+  ).toMatchObject({
+    receipt_min: undefined,
+    receipt_max: undefined,
+    receipt_from: undefined,
+    receipt_to: undefined,
+  });
+});
