@@ -712,6 +712,7 @@ export default function AdminStaffUsersPage() {
                   description: `${name(editing)} (${editing.username}). ${label('roles')}: ${roleSummary(roleIds)}. ${label('reason')}: ${reason.trim()}. ${label('rolesHelp')}`,
                   path: `/api/admin/users/${encodeURIComponent(editing.userId)}/roles`,
                   method: 'PUT',
+                  requiresOtp: true,
                   body: { roleIds: [...roleIds], reason: reason.trim() },
                   signsOut: editing.userId === access.userId,
                   forbiddenMessage: label('forbidden'),

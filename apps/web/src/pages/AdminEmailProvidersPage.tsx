@@ -327,7 +327,7 @@ export default function AdminEmailProvidersPage() {
     if (!(error instanceof ProviderStepUpError)) return false;
     setProtectedAction({
       basis,
-      action: { ...error.action, title, description, requiresPassword: true },
+      action: { ...error.action, title, description, requiresOtp: true },
       onSuccess,
     });
     return true;

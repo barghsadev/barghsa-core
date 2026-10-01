@@ -44,6 +44,8 @@ export const sessions = pgTable('sessions', {
 
   /** Timestamp of last step-up authentication (T-02.02.04). Null until first step-up. */
   stepUpVerifiedAt: timestamp('step_up_verified_at', { withTimezone: true, mode: 'date' }),
+  /** OTP proof is distinct from password step-up and is never inherited by rotation. */
+  otpStepUpVerifiedAt: timestamp('otp_step_up_verified_at', { withTimezone: true, mode: 'date' }),
 
   /** Absolute session expiry (default 24h from creation). */
   expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull(),
@@ -75,6 +77,7 @@ export const createSessionsTable = sql`
     family_id TEXT,
     device_info JSONB,
     step_up_verified_at TIMESTAMPTZ,
+    otp_step_up_verified_at TIMESTAMPTZ,
     expires_at TIMESTAMPTZ NOT NULL,
     idle_deadline TIMESTAMPTZ NOT NULL,
     revoked_at TIMESTAMPTZ,
@@ -92,6 +95,7 @@ export const createSessionsTable = sql`
  * SQL to add new columns to an existing sessions table (backward-compatible migration).
  */
 export const migrateSessionsTable = sql`
+  ALTER TABLE sessions ADD COLUMN IF NOT EXISTS otp_step_up_verified_at TIMESTAMPTZ;
   DO $$
   BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'sessions' AND column_name = 'refresh_token_hash') THEN

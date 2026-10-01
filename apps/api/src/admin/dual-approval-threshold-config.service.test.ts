@@ -5,6 +5,7 @@ const thresholdActor = {
 };
 vi.mock('../session/session-step-up.js', () => ({
   requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+  requireSessionOtpStepUp: vi.fn().mockResolvedValue(new Date()),
 }));
 vi.mock('./dual-approval-threshold-lock.js', () => ({
   lockDualApprovalThreshold: vi.fn().mockResolvedValue(undefined),

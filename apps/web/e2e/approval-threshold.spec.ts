@@ -1,33 +1,25 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
+import { crmShell } from './crm-shell-fixture';
+import { mockOtpStepUp, completeOtp } from './otp-step-up-fixture';
 
 const path = '**/api/admin/config/dual-approval-threshold';
-async function shell(page: Page, locale = 'en') {
-  await page.addInitScript((value) => {
-    const apply = () => {
-      if (document.documentElement) document.documentElement.lang = value;
-    };
-    apply();
-    new MutationObserver(apply).observe(document, { childList: true });
-  }, locale);
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+async function shell(page: Page, locale: 'en' | 'fa' = 'en') {
+  await crmShell(page, locale);
   await page.route('**/api/admin/approval-requests?*', (route) => route.fulfill({ json: [] }));
 }
-for (const locale of ['en', 'fa']) {
+
+for (const locale of ['en', 'fa'] as const) {
   test(`threshold validates money and verifies before saving the captured value (${locale})`, async ({
     page,
   }) => {
     await shell(page, locale);
-    let verified = false;
+    const auth = await mockOtpStepUp(page);
     const writes: unknown[] = [];
-    await page.route('**/api/auth/step-up', (route) => {
-      verified = true;
-      return route.fulfill({ json: { verified: true } });
-    });
     await page.route(path, (route) => {
       if (route.request().method() === 'GET')
         return route.fulfill({ json: { thresholdIrR: 100000 } });
-      expect(verified).toBe(true);
+      expect(auth.verified).toBe(true);
       writes.push(route.request().postDataJSON());
       return route.fulfill({ json: { thresholdIrR: 250000 } });
     });
@@ -65,12 +57,7 @@ for (const locale of ['en', 'fa']) {
     expect(writes).toEqual([]);
     await expect(page.locator('#receipt-threshold')).toBeDisabled();
     const dialog = page.getByRole('dialog');
-    await dialog
-      .getByLabel(locale === 'en' ? 'Confirm your password' : 'رمز عبور خود را تأیید کنید')
-      .fill('Test-password-123!');
-    await dialog
-      .getByRole('button', { name: locale === 'en' ? 'Confirm' : 'تأیید', exact: true })
-      .click();
+    await completeOtp(dialog, locale);
     await expect(dialog).toHaveCount(0);
     await expect(panel.getByRole('status')).toHaveText(
       locale === 'en' ? 'Threshold saved.' : 'آستانه ذخیره شد.'
@@ -121,14 +108,13 @@ test('failed threshold save never reports success or changes the loaded value', 
         : { status: 500, json: {} }
     )
   );
-  await page.route('**/api/auth/step-up', (route) => route.fulfill({ json: { verified: true } }));
+  await mockOtpStepUp(page);
   await page.goto('/admin/approval-requests');
   const field = page.getByLabel('Threshold (IRR)');
   await field.fill('250000');
   await page.getByRole('button', { name: 'Save threshold' }).click();
   const dialog = page.getByRole('dialog');
-  await dialog.getByLabel('Confirm your password').fill('Test-password-123!');
-  await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
+  await completeOtp(dialog, 'en');
   await expect(dialog.getByRole('alert')).toBeVisible();
   await expect(page.getByText('Threshold saved.', { exact: true })).toHaveCount(0);
   await expect(field).toHaveValue('250000');

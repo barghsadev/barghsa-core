@@ -5,7 +5,7 @@ import {
   type VerificationModeConfig,
   type VerificationModeChange,
 } from './verification-mode-config.js';
-import { requireSessionStepUp } from '../session/session-step-up.js';
+import { requireSessionStepUp, requireSessionOtpStepUp } from '../session/session-step-up.js';
 import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission, requireStaffStepUp } from './staff-mutation-permission.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -805,7 +805,7 @@ export class AdminService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:roles:edit', targetUserId);
-      const stepUpVerifiedAt = await requireStaffStepUp(client, actor);
+      const stepUpVerifiedAt = await requireSessionOtpStepUp(client, actor);
 
       // Serialize replacement and session revocation with other account edits.
       const locked = await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [
@@ -825,7 +825,7 @@ export class AdminService {
         previousRoleIds.length === roleIds.length &&
         previousRoleIds.every((id: string) => roleIds.includes(id))
       ) {
-        await requireStaffStepUp(client, actor);
+        await requireSessionOtpStepUp(client, actor);
         await client.query('COMMIT');
         return { userId: targetUserId, roleIds, previousRoleIds };
       }
@@ -878,7 +878,7 @@ export class AdminService {
         ]
       );
 
-      await requireStaffStepUp(client, actor, actorUserId === targetUserId ? now : undefined);
+      await requireSessionOtpStepUp(client, actor, actorUserId === targetUserId ? now : undefined);
       await client.query('COMMIT');
 
       this.logger.log(
@@ -1241,7 +1241,7 @@ export class AdminService {
       await client.query('BEGIN');
       await lockDualApprovalThreshold(client, 'write');
       await requireStaffMutationPermission(client, actorUserId, 'admin:financial:edit');
-      await requireSessionStepUp(client, actor);
+      await requireSessionOtpStepUp(client, actor);
 
       // The advisory lock also protects creation when no config row exists.
       const prevResult = await client.query(
@@ -1294,7 +1294,7 @@ export class AdminService {
         ]
       );
 
-      await requireSessionStepUp(client, actor);
+      await requireSessionOtpStepUp(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(

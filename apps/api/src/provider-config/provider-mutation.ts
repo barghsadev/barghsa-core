@@ -4,7 +4,7 @@ import { v7 as uuidv7 } from 'uuid';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import type { PoolClient, ProviderPool } from './provider-config.di.js';
 import type { ValidatedSession } from '../session/session.service.js';
-import { requireSessionStepUp } from '../session/session-step-up.js';
+import { requireSessionOtpStepUp } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 
 export type ProviderMutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
@@ -28,7 +28,7 @@ export async function mutateProvider<T extends { id: string; status: string }>(
     await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [
       `notification-provider:${channel}`,
     ]);
-    const stepUpVerifiedAt = await requireSessionStepUp(client, session);
+    const stepUpVerifiedAt = await requireSessionOtpStepUp(client, session);
     const result = await work(client);
     await client.query(
       `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
@@ -48,7 +48,7 @@ export async function mutateProvider<T extends { id: string; status: string }>(
         correlationIdStorage.getStore() ?? uuidv7(),
       ]
     );
-    await requireSessionStepUp(client, session);
+    await requireSessionOtpStepUp(client, session);
     await client.query('COMMIT');
     return result;
   } catch (error) {

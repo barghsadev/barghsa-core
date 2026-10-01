@@ -29,7 +29,7 @@ const fa: Record<string, string> = {
   'admin.receiptThreshold.description':
     'پرداخت\u200cهای بانکی، بازپرداخت\u200cها و اصلاحات مالی دستی با مبلغ مساوی یا بیشتر از این آستانه ریالی به تأیید کارشناس مجاز دوم نیاز دارند.',
   'admin.receiptThreshold.stepUp':
-    'تغییرات به تأیید رمز عبور نیاز دارند و در سابقه حسابرسی ثبت می\u200cشوند.',
+    'تغییرات به تأیید کد یک‌بارمصرف نیاز دارند و در سابقه حسابرسی ثبت می‌شوند.',
   'admin.receiptThreshold.label': 'آستانه (ریال)',
   'admin.receiptThreshold.save': 'ذخیره آستانه',
   'admin.receiptThreshold.saved': 'آستانه ذخیره شد.',
@@ -132,7 +132,7 @@ const en: Record<string, string> = {
   'admin.receiptThreshold.description':
     'Bank payments, refunds and manual adjustments at or above this IRR amount require a second authorized reviewer.',
   'admin.receiptThreshold.stepUp':
-    'Changes require password verification and are recorded in audit history.',
+    'Changes require one-time-code verification and are recorded in audit history.',
   'admin.receiptThreshold.label': 'Threshold (IRR)',
   'admin.receiptThreshold.save': 'Save threshold',
   'admin.receiptThreshold.saved': 'Threshold saved.',

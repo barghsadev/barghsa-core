@@ -82,9 +82,11 @@ ${message.activationUrl}`
     if (providers.rows.length !== 1 || !provider) throw new Error('Auth provider unavailable');
     if (provider.transport === 'smsir' && !email) {
       const config = SmsirConfigSchema.parse(provider.config);
-      const mapping = config.template_mappings?.find(
-        (item) => item.event_key === `otp:${message.purpose}`
-      );
+      const mapping =
+        config.template_mappings?.find((item) => item.event_key === `otp:${message.purpose}`) ??
+        (message.purpose === 'step_up'
+          ? config.template_mappings?.find((item) => item.event_key === 'otp:login')
+          : undefined);
       if (
         !mapping ||
         !/^\d+$/.test(mapping.template_id) ||

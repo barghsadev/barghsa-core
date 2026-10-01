@@ -27,7 +27,7 @@ beforeAll(async () => {
     actor.userId,
   ]);
   await http.pool.query(
-    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())",
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,otp_step_up_verified_at) VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW(),NOW())",
     [actor.sessionId, actor.userId, actor.csrfToken, randomUUID()]
   );
 }, 40000);
@@ -37,7 +37,7 @@ afterAll(async () => {
 beforeEach(async () => {
   vi.restoreAllMocks();
   await http.pool.query(
-    "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '1 hour',step_up_verified_at=NOW() WHERE session_id=$1",
+    "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '1 hour',step_up_verified_at=NOW(),otp_step_up_verified_at=NOW() WHERE session_id=$1",
     [actor.sessionId]
   );
   await http.pool.query('DELETE FROM email_provider_configs');

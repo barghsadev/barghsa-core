@@ -10,7 +10,13 @@ import { RateLimitService } from '../rate-limit/rate-limit.service.js';
 import { readOtpConfig, type OtpConfig } from './otp-config.js';
 
 export type OtpPurpose =
-  'registration' | 'login' | 'password_reset' | 'change_username' | 'add_email' | 'add_mobile';
+  | 'registration'
+  | 'login'
+  | 'password_reset'
+  | 'change_username'
+  | 'add_email'
+  | 'add_mobile'
+  | 'step_up';
 
 export interface OtpChallengeResult {
   challengeId: string;
@@ -64,8 +70,9 @@ export class OtpService {
     tosVersionId?: string,
     binding:
       | {
-          purpose: 'change_username' | 'add_email' | 'add_mobile';
+          purpose: 'change_username' | 'add_email' | 'add_mobile' | 'step_up';
           userId: string;
+          sessionId?: string;
           authVersion?: number;
           previousChallengeId?: string;
         }
@@ -112,8 +119,9 @@ export class OtpService {
     tosVersionId?: string,
     binding:
       | {
-          purpose: 'change_username' | 'add_email' | 'add_mobile';
+          purpose: 'change_username' | 'add_email' | 'add_mobile' | 'step_up';
           userId: string;
+          sessionId?: string;
           authVersion?: number;
           previousChallengeId?: string;
         }
@@ -131,8 +139,8 @@ export class OtpService {
     const pool = transactionClient ?? getDbPool();
     await pool.query(
       `WITH challenge AS (
-         INSERT INTO otp_challenges (challenge_id, destination, otp_hash, password_hash, tos_version_id, attempts_remaining, expires_at, purpose, user_id, auth_version, previous_challenge_id)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $12, $13) RETURNING challenge_id
+         INSERT INTO otp_challenges (challenge_id, destination, otp_hash, password_hash, tos_version_id, attempts_remaining, expires_at, purpose, user_id, auth_version, previous_challenge_id, step_up_session_id)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $12, $13, $15) RETURNING challenge_id
        ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,correlation_id)
          SELECT $10,challenge_id,$3,$11,$7,$14 FROM challenge`,
       [
@@ -150,6 +158,7 @@ export class OtpService {
         binding?.authVersion ?? null,
         binding?.previousChallengeId ?? null,
         correlationIdStorage.getStore() ?? null,
+        binding?.sessionId ?? null,
       ]
     );
 

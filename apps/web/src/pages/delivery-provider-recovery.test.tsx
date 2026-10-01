@@ -95,8 +95,17 @@ for (const scenario of scenarios) {
     } = {}
   ) {
     const fetcher = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
-      if (String(input).endsWith('/auth/step-up'))
-        return options.stepUp?.() ?? reply({ verified: true });
+      if (String(input).endsWith('/step-up/otp/send'))
+        return reply({
+          challengeId: '00000000-0000-4000-8000-000000000001',
+          expiresAt: new Date(Date.now() + 300000).toISOString(),
+          channel: 'email',
+        });
+      if (String(input).endsWith('/step-up/otp/verify'))
+        return (
+          options.stepUp?.() ??
+          reply({ verified: true, stepUpVerifiedAt: new Date().toISOString() })
+        );
       if (String(input).endsWith('/template-event-keys'))
         return options.events?.() ?? reply(['auth.otp']);
       if (init?.method && init.method !== 'GET') return options.write?.() ?? reply({});
@@ -181,7 +190,7 @@ for (const scenario of scenarios) {
     expect(host.querySelector('form')).toBeNull();
     expect(host.querySelector('tbody tr')).toBeNull();
   });
-  it(`${scenario.name}: read recovery retains password and pauses its captured command`, async () => {
+  it(`${scenario.name}: read recovery retains OTP and pauses its captured command`, async () => {
     let failed = false;
     reads({
       list: () => reply([scenario.row], failed ? 503 : 200),
@@ -190,12 +199,14 @@ for (const scenario of scenarios) {
     await render();
     await click(scenario.edit);
     await submit();
-    await fill('[role=dialog] input[type=password]', 'synthetic-password');
+    await click('Send verification code', true);
+    await fill('[role=dialog] input[autocomplete=one-time-code]', '123456');
     failed = true;
     await click('Refresh providers', true);
     expect(
-      document.querySelector<HTMLInputElement>('[role=dialog] input[type=password]')!.value
-    ).toBe('synthetic-password');
+      document.querySelector<HTMLInputElement>('[role=dialog] input[autocomplete=one-time-code]')!
+        .value
+    ).toBe('123456');
     expect(
       document.querySelector<HTMLButtonElement>('[role=dialog] button[type=submit]')!.disabled
     ).toBe(true);
@@ -205,7 +216,7 @@ for (const scenario of scenarios) {
       document.querySelector<HTMLButtonElement>('[role=dialog] button[type=submit]')!.disabled
     ).toBe(false);
   });
-  it(`${scenario.name}: a changed provider invalidates pending password verification`, async () => {
+  it(`${scenario.name}: a changed provider invalidates pending OTP verification`, async () => {
     let changed = false,
       resolve!: (response: Response) => void;
     const fetcher = reads({
@@ -219,11 +230,14 @@ for (const scenario of scenarios) {
     await render();
     await click(scenario.edit);
     await submit();
-    await fill('[role=dialog] input[type=password]', 'synthetic-password');
+    await click('Send verification code', true);
+    await fill('[role=dialog] input[autocomplete=one-time-code]', '123456');
     await submit(true);
     changed = true;
     await click('Refresh providers', true);
-    await act(async () => resolve(reply({ verified: true })));
+    await act(async () =>
+      resolve(reply({ verified: true, stepUpVerifiedAt: new Date().toISOString() }))
+    );
     expect(document.querySelector('[role=dialog]')).toBeNull();
     expect(fetcher.mock.calls.filter(([, init]) => init?.method === 'PUT')).toHaveLength(1);
   });
@@ -243,7 +257,8 @@ for (const scenario of scenarios) {
     await render();
     await click(scenario.edit);
     await submit();
-    await fill('[role=dialog] input[type=password]', 'synthetic-password');
+    await click('Send verification code', true);
+    await fill('[role=dialog] input[autocomplete=one-time-code]', '123456');
     await submit(true);
     denied = true;
     await click('Refresh providers', true);

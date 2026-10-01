@@ -1,5 +1,5 @@
 import { mutateProvider, testProvider, type ProviderMutationSession } from './provider-mutation.js';
-import { requireSessionStepUp } from '../session/session-step-up.js';
+import { requireSessionOtpStepUp } from '../session/session-step-up.js';
 import { resolveProviderTestRecipient } from './provider-test-recipient.js';
 import { Injectable, Logger, HttpException, Inject, Optional } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
@@ -662,7 +662,7 @@ export class SmsProviderConfigService {
     }
     // A selected event controls order only; activation requires every mapping.
     mappings.sort((a, b) => Number(b.event_key === eventKey) - Number(a.event_key === eventKey));
-    await requireSessionStepUp(client, session);
+    await requireSessionOtpStepUp(client, session);
     let outcome: { ok: boolean; error?: string } = { ok: true };
     for (const mapping of mappings) {
       outcome = await this.smsirTester.test(
@@ -670,7 +670,7 @@ export class SmsProviderConfigService {
         target,
         mapping.event_key,
         async () => {
-          await requireSessionStepUp(client, session);
+          await requireSessionOtpStepUp(client, session);
         }
       );
       if (!outcome.ok) break;

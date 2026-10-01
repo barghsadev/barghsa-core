@@ -25,7 +25,7 @@ beforeAll(async () => {
   const session = randomUUID(),
     csrf = randomUUID();
   await http.pool.query(
-    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,'provider-editor',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())",
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,otp_step_up_verified_at) VALUES ($1,'provider-editor',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW(),NOW())",
     [session, csrf, randomUUID()]
   );
   headers = {

@@ -43,6 +43,7 @@ function buildHarness() {
             active: true,
             fresh: true,
             step_up_verified_at: new Date('2026-09-09T00:00:00Z'),
+            otp_step_up_verified_at: new Date('2026-09-09T00:00:00Z'),
           },
         ],
       };

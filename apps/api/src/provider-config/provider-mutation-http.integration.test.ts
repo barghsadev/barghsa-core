@@ -37,7 +37,7 @@ beforeAll(async () => {
     "INSERT INTO user_roles(user_id,role_id) VALUES ('provider-writer','provider-writer')"
   );
   await http.pool.query(
-    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,'provider-writer',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())",
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,otp_step_up_verified_at) VALUES ($1,'provider-writer',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW(),NOW())",
     [session, csrf, randomUUID()]
   );
   headers = {
@@ -51,7 +51,7 @@ afterAll(async () => {
 }, 15000);
 beforeEach(async () => {
   await http.pool.query(
-    "UPDATE sessions SET csrf_token=$2,revoked_at=NULL,expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '1 hour',step_up_verified_at=NOW() WHERE session_id=$1",
+    "UPDATE sessions SET csrf_token=$2,revoked_at=NULL,expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '1 hour',step_up_verified_at=NOW(),otp_step_up_verified_at=NOW() WHERE session_id=$1",
     [session, csrf]
   );
   await http.pool.query('DELETE FROM email_provider_configs');
@@ -226,7 +226,7 @@ for (const channel of ['email', 'sms']) {
               ? "expires_at=NOW()-INTERVAL '1 second'"
               : change === 'csrf'
                 ? "csrf_token='changed-after-guard'"
-                : "step_up_verified_at=NOW()-INTERVAL '1 day'";
+                : "otp_step_up_verified_at=NOW()-INTERVAL '1 day'";
           await http.pool.query(`UPDATE sessions SET ${assignment} WHERE session_id=$1`, [session]);
           await blocker.query('COMMIT');
           expect((await pending).status).toBe(change === 'expiry' ? 401 : 403);
@@ -248,7 +248,7 @@ for (const channel of ['email', 'sms']) {
               ? "expires_at=NOW()-INTERVAL '1 second'"
               : change === 'csrf'
                 ? "csrf_token='changed-at-audit'"
-                : "step_up_verified_at=NOW()-INTERVAL '1 day'";
+                : "otp_step_up_verified_at=NOW()-INTERVAL '1 day'";
           await http.pool.query(
             `CREATE OR REPLACE FUNCTION invalidate_provider_session() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN UPDATE sessions SET ${assignment} WHERE session_id='${session}'; RETURN NEW; END $$; CREATE TRIGGER invalidate_provider_session BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION invalidate_provider_session()`
           );

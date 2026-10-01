@@ -100,7 +100,7 @@ for (const locale of ['en', 'fa'] as const)
         fullPage: true,
       });
     });
-    test(`SMS mappings and password recover through independent reads (${locale}, ${theme})`, async ({
+    test(`SMS mappings and OTP recover through independent reads (${locale}, ${theme})`, async ({
       page,
     }) => {
       await crmShell(page, locale);
@@ -179,13 +179,28 @@ for (const locale of ['en', 'fa'] as const)
       await page.locator('form button[type=submit]').click();
       const dialog = page.getByRole('dialog');
       await expect(dialog).toBeVisible();
-      await dialog.locator('input[type=password]').fill('synthetic-password');
+      await page.route('**/api/auth/step-up/otp/send', (route) =>
+        route.fulfill({
+          json: {
+            challengeId: '00000000-0000-4000-8000-000000000001',
+            expiresAt: new Date(Date.now() + 300000).toISOString(),
+            channel: 'sms',
+          },
+        })
+      );
+      await dialog
+        .getByRole('button', {
+          name: locale === 'en' ? 'Send verification code' : 'ارسال کد تأیید',
+          exact: true,
+        })
+        .click();
+      await dialog.locator('input[autocomplete=one-time-code]').fill('123456');
       fail = true;
       await dialog.getByRole('button', { name: text('retryEvents'), exact: true }).click();
       await expect(
         dialog.getByRole('alert').filter({ hasText: text('eventsFailed') })
       ).toBeVisible();
-      await expect(dialog.locator('input[type=password]')).toHaveValue('synthetic-password');
+      await expect(dialog.locator('input[autocomplete=one-time-code]')).toHaveValue('123456');
       await expect(dialog.locator('button[type=submit]')).toBeDisabled();
       fail = false;
       await dialog.getByRole('button', { name: text('retryEvents'), exact: true }).click();

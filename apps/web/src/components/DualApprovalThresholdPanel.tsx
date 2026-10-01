@@ -58,7 +58,7 @@ export default function DualApprovalThresholdPanel() {
       path,
       method: 'PUT',
       body: { threshold_irr: value },
-      requiresPassword: true,
+      requiresOtp: true,
     });
   }
   if (forbidden) return null;
@@ -121,6 +121,14 @@ export default function DualApprovalThresholdPanel() {
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
+          onDenied={() => {
+            generation.current++;
+            setCurrent(null);
+            setDraft('');
+            setAction(null);
+            setSaved(false);
+            setForbidden(true);
+          }}
           onSuccess={async (result) => {
             const value = (result as { thresholdIrR?: unknown } | null)?.thresholdIrR;
             if (!isValidDualApprovalThreshold(value))

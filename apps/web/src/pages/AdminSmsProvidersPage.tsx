@@ -264,7 +264,7 @@ export default function AdminSmsProvidersPage() {
             ...e.action,
             title: text('title'),
             description: text('confirm'),
-            requiresPassword: true,
+            requiresOtp: true,
           },
           onSuccess: async (result) => {
             if (current()) await accept(result);

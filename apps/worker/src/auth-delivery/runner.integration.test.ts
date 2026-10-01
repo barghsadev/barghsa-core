@@ -78,6 +78,24 @@ async function state(id: string) {
   return (await pool.query('SELECT * FROM auth_delivery_outbox WHERE id=$1', [id])).rows[0];
 }
 
+it('cancels pending step-up delivery after its bound session is revoked', async () => {
+  const { id, challenge } = await queued();
+  const session = randomUUID();
+  await pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,expires_at,idle_deadline,revoked_at)
+    VALUES($1,'delivery-user','fixture-only',NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,
+    [session]
+  );
+  await pool.query(
+    "UPDATE otp_challenges SET purpose='step_up',step_up_session_id=$1 WHERE challenge_id=$2",
+    [session, challenge]
+  );
+  const send = vi.fn();
+  expect(await runAuthDelivery(pool, send)).toBe('cancelled');
+  expect(send).not.toHaveBeenCalled();
+  expect(await state(id)).toMatchObject({ status: 'cancelled', encrypted_payload: null });
+});
+
 it('retains request correlation across retry and secret erasure without logging the message', async () => {
   const { id } = await queued();
   const correlationId = randomUUID();
@@ -404,6 +422,29 @@ it('normalizes Iranian mobile numbers, sends the exact OTP mapping and enforces 
   await expect(send({ ...message, id: 'message-2' })).rejects.toThrow('SMS provider quota reached');
   expect(request).toHaveBeenCalledOnce();
 });
+
+for (const dedicated of [false, true]) {
+  it(`delivers OTP step-up through ${dedicated ? 'dedicated' : 'existing login'} SMS mapping`, async () => {
+    await smsProvider({
+      ...smsConfig,
+      template_mappings: [
+        ...smsConfig.template_mappings,
+        ...(dedicated
+          ? [{ event_key: 'otp:step_up', template_id: '456', variables: { code: 'OTP' } }]
+          : []),
+      ],
+    });
+    const request = vi.fn<typeof fetch>(
+      async () =>
+        new Response(JSON.stringify({ status: 1, data: { messageId: 123 } }), { status: 200 })
+    );
+    await createAuthSender(pool, request)({ ...message, purpose: 'step_up' });
+    expect(JSON.parse(String(request.mock.calls[0]![1]?.body))).toMatchObject({
+      TemplateId: dedicated ? 456 : 123,
+      Parameters: [{ Name: dedicated ? 'OTP' : 'CODE', Value: code }],
+    });
+  });
+}
 async function emailProvider() {
   await pool.query(
     `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status,last_test_at,delivery_verified_at,delivery_config_hash)

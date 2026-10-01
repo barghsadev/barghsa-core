@@ -22,6 +22,7 @@ import {
 } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
+import { StepUpAuthGate } from './StepUpAuthGate.js';
 
 export interface TeamAction {
   title: string;
@@ -32,12 +33,13 @@ export interface TeamAction {
   successStatus?: number;
   signsOut?: boolean;
   requiresPassword?: boolean;
+  requiresOtp?: boolean;
   conflictMessage?: string;
   forbiddenMessage?: string;
   errorMessages?: Record<string, string | ((response: unknown) => string)>;
 }
 
-/** The action is captured when opened; password verification retries that same action. */
+/** The action is captured when opened; successful verification retries that same action. */
 export function TeamActionDialog({
   action,
   verification,
@@ -83,6 +85,7 @@ export function TeamActionDialog({
   }, []);
 
   const [needsPassword, setNeedsPassword] = useState(!action || action.requiresPassword === true);
+  const [needsOtp, setNeedsOtp] = useState(action?.requiresOtp === true);
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -109,14 +112,15 @@ export function TeamActionDialog({
     setRetryAt(Date.now() + milliseconds);
     return true;
   }
-  async function submit(event: FormEvent) {
-    event.preventDefault();
+  async function submit(event?: FormEvent, otpVerified = false) {
+    event?.preventDefault();
+    if (needsOtp && !otpVerified) return;
     if (confirmationDisabled || inFlight.current || retryAt > Date.now()) return;
     inFlight.current = true;
     setBusy(true);
     setError(null);
     try {
-      if (needsPassword || !action) {
+      if (!otpVerified && (needsPassword || !action)) {
         const verified = await fetch('/api/auth/step-up', {
           method: 'POST',
           credentials: 'include',
@@ -159,7 +163,8 @@ export function TeamActionDialog({
         response.status === 403 &&
         (code === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code || data?.requiresStepUp === true)
       ) {
-        setNeedsPassword(true);
+        if (data?.requiresOtp === true || action.requiresOtp) setNeedsOtp(true);
+        else setNeedsPassword(true);
         return;
       }
       if ((response.status === 401 || response.status === 403) && onDenied) {
@@ -210,7 +215,29 @@ export function TeamActionDialog({
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
         finalFocus={finalFocus}
       >
-        {selection && !needsPassword ? (
+        {needsOtp ? (
+          <div className="space-y-4">
+            <DialogHeader className="pr-8">
+              <DialogTitle>{copy.title}</DialogTitle>
+              <DialogDescription>{copy.description}</DialogDescription>
+            </DialogHeader>
+            {summary}
+            <StepUpAuthGate
+              disabled={confirmationDisabled || busy}
+              {...(onDenied ? { onDenied } : {})}
+              onVerified={async () => {
+                if (!mounted.current || !canConfirm.current || currentAction.current !== action)
+                  return;
+                setNeedsOtp(false);
+                setNeedsPassword(false);
+                await submit(undefined, true);
+              }}
+            />
+            <Button type="button" variant="outline" disabled={busy} onClick={onClose}>
+              {t('team.cancel', locale)}
+            </Button>
+          </div>
+        ) : selection && !needsPassword ? (
           selection
         ) : (
           <form onSubmit={submit} className="space-y-4">

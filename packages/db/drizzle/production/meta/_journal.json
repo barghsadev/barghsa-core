@@ -1065,6 +1065,13 @@
       "when": 1791331202242,
       "tag": "0231_team_activity_history",
       "breakpoints": true
+    },
+    {
+      "idx": 232,
+      "version": "7",
+      "when": 1791331202243,
+      "tag": "0232_admin_otp_step_up",
+      "breakpoints": true
     }
   ]
 }

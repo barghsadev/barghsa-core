@@ -16752,6 +16752,126 @@
         ]
       }
     },
+    "/api/auth/step-up/otp/send": {
+      "post": {
+        "operationId": "OtpStepUpController_send",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "challengeId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "channel": {
+                      "enum": [
+                        "email",
+                        "sms"
+                      ],
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "format": "date-time",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "challengeId",
+                    "expiresAt",
+                    "channel"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Send a session-bound sensitive-action OTP to an existing login identifier",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/step-up/otp/verify": {
+      "post": {
+        "operationId": "OtpStepUpController_verify",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "challengeId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "code": {
+                    "pattern": "^\\d{6}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "challengeId",
+                  "code"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "stepUpVerifiedAt": {
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "verified": {
+                      "enum": [
+                        true
+                      ],
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "verified",
+                    "stepUpVerifiedAt"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Consume a session-bound OTP and rotate the session and CSRF credentials",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/api/auth/trusted-devices": {
       "get": {
         "operationId": "TrustedDevicesController_list",

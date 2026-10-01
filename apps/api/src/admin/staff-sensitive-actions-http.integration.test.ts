@@ -16,8 +16,8 @@ async function session(userId: string) {
     csrfToken = randomUUID(),
     familyId = randomUUID();
   const result = await http.pool.query(
-    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
-    VALUES ($1,$2,$3,$4,clock_timestamp()+INTERVAL '1 day',clock_timestamp()+INTERVAL '30 minutes',clock_timestamp()) RETURNING step_up_verified_at`,
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,otp_step_up_verified_at)
+    VALUES ($1,$2,$3,$4,clock_timestamp()+INTERVAL '1 day',clock_timestamp()+INTERVAL '30 minutes',clock_timestamp(),clock_timestamp()) RETURNING step_up_verified_at`,
     [sessionId, userId, csrfToken, familyId]
   );
   await http.pool.query(
@@ -150,7 +150,7 @@ async function auditBoundary(
   try {
     if (mode === 'step-up expiry')
       await http.pool.query(
-        "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '15 minutes'+INTERVAL '2 seconds' WHERE session_id=$1",
+        "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '15 minutes'+INTERVAL '2 seconds',otp_step_up_verified_at=clock_timestamp()-INTERVAL '15 minutes'+INTERVAL '2 seconds' WHERE session_id=$1",
         [s.actor.sessionId]
       );
     if (mode === 'session expiry')

@@ -53,6 +53,8 @@ export async function runAuthDelivery(
     WHERE d.id=$1 AND c.otp_hash=d.code_hash AND c.consumed_at IS NULL
       AND c.expires_at > NOW() AND d.expires_at > NOW() AND c.attempts_remaining > 0
       AND (c.user_id IS NULL OR EXISTS (SELECT 1 FROM users u WHERE u.user_id=c.user_id AND u.auth_version=c.auth_version AND u.disabled_at IS NULL))
+      AND (c.purpose<>'step_up' OR EXISTS (SELECT 1 FROM sessions s WHERE s.session_id=c.step_up_session_id
+        AND s.user_id=c.user_id AND s.revoked_at IS NULL AND s.expires_at>NOW() AND s.idle_deadline>NOW()))
     UNION ALL
     SELECT 'staff_activation' AS purpose,u.username AS destination FROM auth_delivery_outbox d JOIN users u ON u.user_id=d.user_id
     WHERE d.id=$1 AND d.kind='staff_activation' AND u.activation_token=d.code_hash AND u.is_staff=true

@@ -56,3 +56,26 @@ export async function requireSessionStepUp(
     throw new HttpException({ error: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code }, 403);
   return session.stepUpVerifiedAt;
 }
+
+/** Sensitive settings require OTP proof on this exact live session, not password proof. */
+export async function requireSessionOtpStepUp(
+  client: { query(sql: string, params?: unknown[]): Promise<{ rows: Record<string, unknown>[] }> },
+  actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+  expectedRevokedAt?: Date
+): Promise<Date> {
+  await requireCurrentSession(client, actor, expectedRevokedAt);
+  const result = await client.query(
+    `SELECT otp_step_up_verified_at,
+      otp_step_up_verified_at<=clock_timestamp() AND
+      otp_step_up_verified_at>clock_timestamp()-($3::double precision*INTERVAL '1 millisecond') AS fresh
+     FROM sessions WHERE session_id=$1 AND user_id=$2`,
+    [actor.sessionId, actor.userId, SessionService.STEP_UP_WINDOW_MS]
+  );
+  const proof = result.rows[0];
+  if (!proof?.fresh || !proof.otp_step_up_verified_at)
+    throw new HttpException(
+      { error: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code, requiresOtp: true },
+      403
+    );
+  return proof.otp_step_up_verified_at as Date;
+}

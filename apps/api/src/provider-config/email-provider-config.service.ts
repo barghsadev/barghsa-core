@@ -1,5 +1,5 @@
 import { mutateProvider, testProvider, type ProviderMutationSession } from './provider-mutation.js';
-import { requireSessionStepUp } from '../session/session-step-up.js';
+import { requireSessionOtpStepUp } from '../session/session-step-up.js';
 import { resolveProviderTestRecipient } from './provider-test-recipient.js';
 import { Injectable, Logger, HttpException, Inject, Optional } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
@@ -696,9 +696,9 @@ export class EmailProviderConfigService {
     }
 
     const target = await resolveProviderTestRecipient(query, session, 'email', recipient);
-    await requireSessionStepUp(query, session);
+    await requireSessionOtpStepUp(query, session);
     const outcome = await this.smtpTester.test(parsed.config, target, async () => {
-      await requireSessionStepUp(query, session);
+      await requireSessionOtpStepUp(query, session);
     });
     const recorded = await this.recordTest(
       id,
@@ -760,9 +760,9 @@ export class EmailProviderConfigService {
       );
     }
 
-    await requireSessionStepUp(query, session);
+    await requireSessionOtpStepUp(query, session);
     const outcome = await this.resendTester.test(parsed.config, target, async () => {
-      await requireSessionStepUp(query, session);
+      await requireSessionOtpStepUp(query, session);
     });
     const recorded = await this.recordTest(
       id,

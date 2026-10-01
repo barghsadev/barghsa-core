@@ -1,6 +1,8 @@
 import { sql } from 'drizzle-orm';
+import { sessions } from './sessions';
 import {
   check,
+  index,
   integer,
   pgTable,
   text,
@@ -60,6 +62,9 @@ export const otpChallenges = pgTable(
     /** FK to users.user_id, set for login OTP challenges (T-02.01.03). */
     userId: text('user_id'),
     authVersion: integer('auth_version'),
+    stepUpSessionId: text('step_up_session_id').references(() => sessions.sessionId, {
+      onDelete: 'cascade',
+    }),
     previousChallengeId: text('previous_challenge_id').references(
       (): AnyPgColumn => otpChallenges.challengeId
     ),
@@ -86,6 +91,7 @@ export const otpChallenges = pgTable(
     updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
   (table) => [
+    index('idx_otp_step_up_session').on(table.stepUpSessionId),
     uniqueIndex('uq_otp_reset_token_hash')
       .on(table.resetTokenHash)
       .where(sql`${table.resetTokenHash} IS NOT NULL`),
@@ -108,9 +114,14 @@ export const otpChallenges = pgTable(
     ${table.purpose} = 'legacy_invalid'
     OR (${table.purpose} = 'registration' AND ${table.userId} IS NULL
         AND ${table.passwordHash} IS NOT NULL AND ${table.tosVersionId} IS NOT NULL)
-    OR (${table.purpose} IN ('login','password_reset','change_username','add_email','add_mobile')
+    OR (${table.purpose} IN ('login','password_reset','change_username','add_email','add_mobile','step_up')
         AND ${table.userId} IS NOT NULL)
   `
+    ),
+    check(
+      'otp_step_up_session_binding',
+      sql`(${table.purpose}='step_up' AND ${table.stepUpSessionId} IS NOT NULL AND ${table.authVersion} IS NOT NULL)
+        OR (${table.purpose}<>'step_up' AND ${table.stepUpSessionId} IS NULL)`
     ),
   ]
 );
@@ -124,6 +135,7 @@ export const createOtpChallengesTable = sql`
     challenge_id TEXT PRIMARY KEY,
     destination TEXT NOT NULL,
     purpose TEXT NOT NULL DEFAULT 'legacy_invalid',
+    step_up_session_id TEXT,
     otp_hash TEXT NOT NULL,
     attempts_remaining INTEGER NOT NULL DEFAULT 5,
     resend_count INTEGER NOT NULL DEFAULT 0,
@@ -155,6 +167,7 @@ export const createOtpChallengesTable = sql`
   END $$;
 
   ALTER TABLE otp_challenges ADD COLUMN IF NOT EXISTS purpose TEXT NOT NULL DEFAULT 'legacy_invalid';
+  ALTER TABLE otp_challenges ADD COLUMN IF NOT EXISTS step_up_session_id TEXT;
 
   -- Migration: add user_id column for login OTP challenges (T-02.01.03)
   DO $$ BEGIN
