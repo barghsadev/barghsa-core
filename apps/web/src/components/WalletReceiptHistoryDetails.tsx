@@ -12,16 +12,25 @@ export function WalletReceiptHistoryDetails({
   receipt,
   locale,
   formatTime,
+  open,
+  onOpenChange,
 }: {
   receiptId: string;
   profileId: string;
   receipt: WalletBankReceiptHistory;
   locale: Locale;
   formatTime: ReturnType<typeof useAccountTime>['format'];
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) {
   const word = (key: string) => t(`wallet.receipt.${key}`, locale);
   return (
-    <details className="rounded-lg border border-border bg-background px-3 py-2 text-sm">
+    <details
+      data-slot="wallet-receipt-details"
+      open={open}
+      onToggle={(event) => onOpenChange?.(event.currentTarget.open)}
+      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+    >
       <summary className="cursor-pointer rounded font-medium text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
         {word('details')}
       </summary>

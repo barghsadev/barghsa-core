@@ -226,12 +226,68 @@ for (const locale of ['en', 'fa'] as const)
         exact: true,
       });
       const word = (key: string) => receiptText(`wallet.receipt.${key}`, locale);
-      const details = history.locator('li > details');
+      const details = history.locator('[data-slot=wallet-receipt-details]');
       await expect(details).toHaveCount(1);
+      if (test.info().project.name === 'chromium') {
+        const initialReads = reads;
+        await page.setViewportSize({ width: 1280, height: 900 });
+        await expect(history.getByRole('table')).toBeVisible();
+        expect(
+          await page.evaluate(
+            (id) => localStorage.getItem(`barghsa.list-view:${id}:customer-wallet-transactions`),
+            profileId
+          )
+        ).toBeNull();
+        await page.setViewportSize({ width: 390, height: 844 });
+        await expect(history.getByRole('table')).toHaveCount(0);
+        expect(reads).toBe(initialReads);
+      }
+      if (locale === 'fa' && darkMode)
+        await history
+          .locator('[data-slot="card"]')
+          .first()
+          .screenshot({
+            path: `/tmp/barghsa-wallet-views-card-fa-dark-${test.info().project.name}.png`,
+          });
       const count = reads;
       await details.locator(':scope > summary').focus();
       await details.locator(':scope > summary').press('Enter');
       await expect(details).toHaveAttribute('open', '');
+      await expect(history.getByRole('table')).toHaveCount(0);
+      const beforeView = { reads, url: page.url() };
+      await history
+        .getByRole('button', { name: t('historyView.table', locale), exact: true })
+        .click();
+      const table = history.getByRole('table', {
+        name: `${t('wallet.history.title', locale)} · ${t('historyView.table', locale)}`,
+        exact: true,
+      });
+      await expect(table).toBeVisible();
+      await expect(table.getByRole('columnheader')).toHaveCount(11);
+      await expect(table).toContainText('TRK-123');
+      await expect(table).toContainText('بانک ملی');
+      await expect(details).toHaveAttribute('open', '');
+      expect(reads).toBe(beforeView.reads);
+      expect(previewRequests).toHaveLength(0);
+      expect(page.url()).toBe(beforeView.url);
+      const scroll = history.locator('[data-slot="scroll-area-viewport"]');
+      await scroll.focus();
+      await scroll.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
+      await expect(scroll).toBeFocused();
+      const tableScan = await new AxeBuilder({ page })
+        .include('main [data-slot="list-page"]')
+        .analyze();
+      expect(tableScan.violations).toEqual([]);
+      await verifyClippedContrast(page, tableScan);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true
+      );
+      await history
+        .getByRole('button', { name: t('historyView.card', locale), exact: true })
+        .click();
+      await expect(table).toHaveCount(0);
+      await expect(details).toHaveAttribute('open', '');
+      expect(reads).toBe(beforeView.reads);
       await expect(details).toContainText(receiptId);
       await expect(details).toContainText('بانک ملی');
       await expect(details).toContainText('TRK-123');
@@ -406,6 +462,13 @@ for (const locale of ['en', 'fa'] as const)
       await expect(details).toHaveCount(1);
       expect(queries.at(-1)?.get('cursor')).toBe('older-page');
       const failedQuery = queries.at(-1)!.toString();
+      const failedReads = reads;
+      await history
+        .getByRole('button', { name: t('historyView.table', locale), exact: true })
+        .click();
+      await expect(history.getByRole('table')).toBeVisible();
+      expect(reads).toBe(failedReads);
+      await expect(history.getByRole('alert')).toBeVisible();
       await history
         .getByRole('button', { name: t('wallet.history.retry', locale), exact: true })
         .click();
@@ -416,6 +479,10 @@ for (const locale of ['en', 'fa'] as const)
       await expect(history).toBeVisible();
       await expect.poll(() => queries.at(-1)?.get('cursor')).toBe('older-page');
       expect(page.url()).toBe(pageUrl);
+      await expect(history.getByRole('table')).toBeVisible();
+      await expect(
+        history.getByRole('button', { name: t('historyView.table', locale), exact: true })
+      ).toHaveAttribute('aria-pressed', 'true');
       expect(queries.at(-1)?.toString()).toBe(failedQuery);
       await history
         .getByRole('button', { name: t('historyFilters.clearAll', locale), exact: true })
@@ -437,8 +504,8 @@ for (const locale of ['en', 'fa'] as const)
         true
       );
       if (locale === 'fa' && darkMode)
-        await page.screenshot({
-          path: `/tmp/barghsa-wallet-history-query-fa-dark-${test.info().project.name}.png`,
+        await history.locator('[data-slot=scroll-area]').screenshot({
+          path: `/tmp/barghsa-wallet-views-fa-dark-${test.info().project.name}.png`,
         });
       await history
         .getByRole('button', { name: t('historyFilters.clearAll', locale), exact: true })

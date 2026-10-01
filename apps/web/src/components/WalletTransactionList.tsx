@@ -1,46 +1,15 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
-import { Button, ListPage } from '@barghsa/ui';
+import { Button, ListPage, ListViewToggle, type ListView } from '@barghsa/ui';
 import { useListQuery, type ListQueryBinding } from '../hooks/useListQuery.js';
 import { walletHistoryQueryOptions } from '../lib/wallet-history-query.js';
 import { WalletHistoryFilters } from './WalletHistoryFilters.js';
 import { t, type Locale } from '@barghsa/i18n/app';
-import {
-  ArrowDownLeft,
-  ArrowUpRight,
-  LockKeyhole,
-  LockKeyholeOpen,
-  RotateCcw,
-  SlidersHorizontal,
-  Wallet,
-  type LucideIcon,
-} from 'lucide-react';
-import { formatIrr } from '../lib/customer-invoices.js';
-import { isInvoiceUuid } from '../lib/invoice-uuid.js';
-import type { WalletBankReceiptHistory } from '@barghsa/shared/finance';
-import { WalletReceiptHistoryDetails } from './WalletReceiptHistoryDetails.js';
+import { WalletTransactionRecords, type WalletTransaction } from './WalletTransactionRecords.js';
+import { useListView } from '../hooks/useListView.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 
-const typeIcons: Record<string, LucideIcon> = {
-  topup: ArrowDownLeft,
-  payment: ArrowUpRight,
-  refund: RotateCcw,
-  reservation: LockKeyhole,
-  release: LockKeyholeOpen,
-  reversal: RotateCcw,
-  compensating: SlidersHorizontal,
-};
-interface Transaction {
-  bankReceipt?: WalletBankReceiptHistory;
-  id: string;
-  type: string;
-  amount: string;
-  state: string;
-  refId: string | null;
-  description: string | null;
-  createdAt: string;
-}
 interface Page {
-  transactions: Transaction[];
+  transactions: WalletTransaction[];
   nextCursor: string | null;
 }
 
@@ -75,6 +44,7 @@ function History({
   binding: ListQueryBinding;
 }) {
   const id = useId();
+  const { view, setView } = useListView('customer-wallet-transactions');
   const time = useAccountTime(locale);
   const label = (key: string) => t(`wallet.history.${key}`, locale);
   const params = new URLSearchParams({ sort: binding.query.order });
@@ -95,13 +65,27 @@ function History({
       </h2>
       {time.notice}
       <ListPage>
-        <ListPage.Toolbar filters={<WalletHistoryFilters binding={binding} locale={locale} />} />
+        <ListPage.Toolbar
+          filters={<WalletHistoryFilters binding={binding} locale={locale} />}
+          actions={
+            <ListViewToggle
+              value={view}
+              onChange={setView}
+              labels={{
+                group: t('historyView.group', locale),
+                table: t('historyView.table', locale),
+                card: t('historyView.card', locale),
+              }}
+            />
+          }
+        />
         <HistoryPage
           profileId={profileId}
           locale={locale}
           filters={params.toString()}
           binding={binding}
           formatTime={time.format}
+          view={view}
         />
       </ListPage>
     </section>
@@ -113,12 +97,14 @@ function HistoryPage({
   filters,
   binding,
   formatTime,
+  view,
 }: {
   profileId: string;
   locale: Locale;
   filters: string;
   binding: ListQueryBinding;
   formatTime: ReturnType<typeof useAccountTime>['format'];
+  view: ListView;
 }) {
   const criteria = JSON.stringify([profileId, filters]);
   const [accepted, setAccepted] = useState<{ criteria: string; page: Page | null }>({
@@ -183,72 +169,14 @@ function HistoryPage({
         emptyView={<p>{label('empty')}</p>}
       >
         {page?.transactions.length ? (
-          <ol className="divide-y divide-border">
-            {page.transactions.map((tx) => {
-              const Icon = typeIcons[tx.type] ?? Wallet;
-              const amount = BigInt(tx.amount);
-              const settled = tx.state === 'Completed';
-              const invoiceHref =
-                tx.type === 'payment' && tx.refId && isInvoiceUuid(tx.refId)
-                  ? `/invoices/${encodeURIComponent(tx.refId)}`
-                  : null;
-              return (
-                <li key={tx.id} className="flex flex-col gap-2 py-4">
-                  <div className="flex flex-wrap justify-between gap-2">
-                    <strong className="flex items-center gap-2">
-                      <Icon aria-hidden="true" className="size-4 shrink-0" />
-                      {label(`type.${tx.type}`)}
-                    </strong>
-                    <bdi
-                      className={`font-semibold tabular-nums ${settled && amount > 0n ? 'text-success' : settled && amount < 0n ? 'text-destructive' : 'text-foreground'}`}
-                    >
-                      {amount > 0n ? '+' : ''}
-                      {formatIrr(tx.amount, locale)} {label('irr')}
-                    </bdi>
-                  </div>
-                  <div className="flex flex-wrap justify-between gap-2 text-sm">
-                    <span
-                      className={`rounded-full border px-2 py-0.5 ${settled ? 'border-success/30 bg-success-soft text-success' : ['Failed', 'Rejected', 'Reversed'].includes(tx.state) ? 'border-destructive/30 bg-danger-soft text-destructive' : 'border-border bg-muted text-foreground'}`}
-                    >
-                      {label(`state.${tx.state}`)}
-                    </span>
-                    <time dateTime={tx.createdAt}>
-                      {formatTime(tx.createdAt, { dateStyle: 'medium', timeStyle: 'short' })}
-                    </time>
-                  </div>
-                  <p className="text-sm text-muted-foreground">{label(`description.${tx.type}`)}</p>
-                  {tx.description && (
-                    <p className="text-sm" dir="auto">
-                      {tx.description}
-                    </p>
-                  )}
-                  {tx.refId && (
-                    <p className="break-all text-sm">
-                      {label('reference')}:{' '}
-                      {invoiceHref ? (
-                        <a className="text-primary underline underline-offset-2" href={invoiceHref}>
-                          <bdi>
-                            {label('viewInvoice')}: {tx.refId}
-                          </bdi>
-                        </a>
-                      ) : (
-                        <bdi>{tx.refId}</bdi>
-                      )}
-                    </p>
-                  )}
-                  {tx.bankReceipt && (
-                    <WalletReceiptHistoryDetails
-                      receiptId={tx.id}
-                      profileId={profileId}
-                      receipt={tx.bankReceipt}
-                      locale={locale}
-                      formatTime={formatTime}
-                    />
-                  )}
-                </li>
-              );
-            })}
-          </ol>
+          <WalletTransactionRecords
+            key={criteria}
+            items={page.transactions}
+            view={view}
+            profileId={profileId}
+            locale={locale}
+            formatTime={formatTime}
+          />
         ) : null}
       </ListPage.Content>
       <ListPage.Pagination

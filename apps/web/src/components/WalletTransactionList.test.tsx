@@ -3,6 +3,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { tWalletReceipts as receiptText } from '@barghsa/i18n/wallet-receipts';
 import { WalletTransactionList } from './WalletTransactionList.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
 
 let currentLocale: 'en' | 'fa' = 'en';
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => currentLocale }));
@@ -21,6 +22,7 @@ vi.mock('../hooks/useAccountTime.js', () => ({
 
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {
+  localStorage.clear();
   currentLocale = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   host = document.createElement('div');
@@ -31,6 +33,7 @@ afterEach(async () => {
   await act(async () => root.unmount());
   host.remove();
   vi.unstubAllGlobals();
+  localStorage.clear();
 });
 const tx = {
   id: 'tx-1',
@@ -45,10 +48,18 @@ const response = (transactions = [tx], nextCursor: string | null = null) => ({
   ok: true,
   json: async () => ({ transactions, nextCursor }),
 });
-async function render(profileId = 'profile-a', locale: 'en' | 'fa' = 'en') {
+async function render(
+  profileId = 'profile-a',
+  locale: 'en' | 'fa' = 'en',
+  account = 'wallet-user'
+) {
   currentLocale = locale;
   await act(async () =>
-    root.render(<WalletTransactionList profileId={profileId} locale={locale} />)
+    root.render(
+      <AccountUserProvider value={account}>
+        <WalletTransactionList profileId={profileId} locale={locale} />
+      </AccountUserProvider>
+    )
   );
 }
 function button(text: string) {
@@ -67,6 +78,54 @@ async function select(selector: string, value: string) {
 }
 
 describe('WalletTransactionList', () => {
+  it('switches views without reading another page and keeps cursor/retry scope', async () => {
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(response([tx], 'page-two'))
+      .mockResolvedValueOnce({ ok: false, status: 503 })
+      .mockResolvedValueOnce(response([{ ...tx, description: 'Page two' }]));
+    vi.stubGlobal('fetch', fetcher);
+    await render();
+    expect(host.querySelector('table')).toBeNull();
+    await click('Table');
+    expect(host.querySelector('table caption')?.textContent).toContain('Transaction history');
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    await click('Next page');
+    const url = fetcher.mock.calls.at(-1)![0];
+    await click('Cards');
+    expect(host.textContent).toContain('Bank transfer');
+    expect(host.querySelector('[role=alert]')).not.toBeNull();
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    await click('Try again');
+    expect(fetcher.mock.calls.at(-1)![0]).toBe(url);
+    expect(host.textContent).toContain('Page two');
+    expect(localStorage.getItem('barghsa.list-view:wallet-user:customer-wallet-transactions')).toBe(
+      'card'
+    );
+  });
+  it('defaults to a table on desktop and isolates wallet preferences by account and history', async () => {
+    vi.stubGlobal('matchMedia', () => ({
+      matches: true,
+      addEventListener() {},
+      removeEventListener() {},
+    }));
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response()));
+    await render();
+    expect(host.querySelector('table')).not.toBeNull();
+    expect(localStorage.length).toBe(0);
+    await click('Cards');
+    await render('profile-a', 'en', 'another-user');
+    expect(host.querySelector('table')).not.toBeNull();
+    expect(localStorage.getItem('barghsa.list-view:wallet-user:customer-wallet-transactions')).toBe(
+      'card'
+    );
+    expect(
+      localStorage.getItem('barghsa.list-view:another-user:customer-wallet-transactions')
+    ).toBeNull();
+    expect(localStorage.getItem('barghsa.list-view:wallet-user:invoices')).toBeNull();
+    await render('profile-a', 'en', 'wallet-user');
+    expect(host.querySelector('table')).toBeNull();
+  });
   it('shows exact signed amounts, references and localized states', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response()));
     await render();
