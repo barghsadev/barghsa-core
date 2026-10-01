@@ -87,6 +87,23 @@ async function render() {
   await act(async () => root.render(<InvoiceBankReceiptQueue />));
 }
 
+it('previews the selected invoice receipt using its API attachment key and retains the original link', async () => {
+  const baseFetch = api();
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string) => {
+      const response = await baseFetch(url);
+      if (new URL(url, 'https://app.example.test').pathname.endsWith(`/${RECEIPT}`))
+        return new Response(JSON.stringify({ ...receipt, attachmentKey: 'receipts/signed.PNG' }));
+      return response;
+    })
+  );
+  await render();
+  await click('Review receipt');
+  expect(container.querySelector('img')?.getAttribute('src')).toBe(receipt.attachmentUrl);
+  expect(container.querySelector('a')?.getAttribute('href')).toBe(receipt.attachmentUrl);
+});
+
 it('opens a receipt selected from an invoice without an unnecessary allocation preview', async () => {
   const fetcher = api();
   vi.stubGlobal('fetch', fetcher);

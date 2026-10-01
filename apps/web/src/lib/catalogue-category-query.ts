@@ -1,4 +1,4 @@
-import { listChoice, type ListQueryOptions } from '../hooks/useListQuery.js';
+import { listChoice, type ListQueryOptions } from './list-query.js';
 
 export const productCatalogueTypes = [
   'consultation',

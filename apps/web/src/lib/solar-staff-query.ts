@@ -1,4 +1,5 @@
-import { listChoice, type ListQueryBinding, type ListQueryOptions } from '../hooks/useListQuery.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import { listChoice, type ListQueryOptions } from './list-query.js';
 import { staffOrderId } from './staff-order-list-query.js';
 
 const base: ListQueryOptions = {

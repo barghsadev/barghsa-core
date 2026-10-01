@@ -1,9 +1,4 @@
-import {
-  listChoice,
-  listText,
-  parseListQuery,
-  type ListQueryOptions,
-} from '../hooks/useListQuery.js';
+import { listChoice, listText, parseListQuery, type ListQueryOptions } from './list-query.js';
 import { GIFT_CODE_PAGE_SIZE } from './gift-code-catalogue.js';
 
 const uuid = (value: unknown) =>

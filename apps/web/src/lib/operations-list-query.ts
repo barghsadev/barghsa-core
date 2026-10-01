@@ -1,5 +1,5 @@
 import { BACKGROUND_JOB_TYPES } from '@barghsa/shared/admin';
-import { listChoice, parseListQuery, type ListQueryOptions } from '../hooks/useListQuery.js';
+import { listChoice, parseListQuery, type ListQueryOptions } from './list-query.js';
 
 const base: ListQueryOptions = {
   searchLimit: 0,

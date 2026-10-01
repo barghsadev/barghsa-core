@@ -25,6 +25,7 @@ import { withCsrf } from '../lib/csrf.js';
 import { useListView } from '../hooks/useListView.js';
 import { StaffInvoiceReceiptList } from './StaffInvoiceReceiptList.js';
 import { ReceiptDepositDate } from './ReceiptDepositDate.js';
+import { StaffReceiptAttachmentPreview } from './StaffReceiptAttachmentPreview.js';
 
 const base = '/api/admin/invoices/bank-receipts';
 
@@ -40,6 +41,7 @@ interface Receipt {
   customerNote: string | null;
   submittedAt: string;
   attachmentUrl: string | null;
+  attachmentKey?: string | null;
   canConfirm: boolean;
   canReject: boolean;
   rejectionReason: string | null;
@@ -390,14 +392,13 @@ export function InvoiceBankReceiptQueue({
               </dl>
               {detail.customerNote ? <p className="text-sm">{detail.customerNote}</p> : null}
               {detail.attachmentUrl ? (
-                <a
-                  href={detail.attachmentUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-primary underline underline-offset-4"
-                >
-                  {word('attachment')}
-                </a>
+                <StaffReceiptAttachmentPreview
+                  key={detail.receiptId}
+                  url={detail.attachmentUrl}
+                  attachmentKey={detail.attachmentKey}
+                  label={word('attachment')}
+                  openLabel={word('attachment')}
+                />
               ) : (
                 <p role="alert" className="text-sm">
                   {word(

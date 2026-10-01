@@ -1,4 +1,4 @@
-import { listChoice, type ListQueryOptions } from '../hooks/useListQuery.js';
+import { listChoice, type ListQueryOptions } from './list-query.js';
 
 /** Preserve the API's timestamp/UUID boundary, including PostgreSQL microseconds. */
 export function notificationInboxCursor(value: unknown): string {

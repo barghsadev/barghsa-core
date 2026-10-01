@@ -1,4 +1,4 @@
-import { listChoice, parseListQuery, type ListQueryOptions } from '../hooks/useListQuery.js';
+import { listChoice, parseListQuery, type ListQueryOptions } from './list-query.js';
 import { notificationPanelSearch } from './notification-panel-query.js';
 
 const base: ListQueryOptions = {

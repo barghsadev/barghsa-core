@@ -1,4 +1,4 @@
-import { listPage, parseListQuery, type ListQueryOptions } from '../hooks/useListQuery.js';
+import { listPage, parseListQuery, type ListQueryOptions } from './list-query.js';
 
 const base: ListQueryOptions = {
   searchLimit: 0,

@@ -20,7 +20,8 @@ const receipt = {
   payerReference: 'BANK-REF',
   customerNote: null,
   submittedAt: stamp,
-  attachmentUrl: null,
+  attachmentUrl: '/mock/invoice-receipt.png?signed=1',
+  attachmentKey: 'receipts/invoice.png',
   canConfirm: false,
   canReject: true,
   rejectionReason: null,
@@ -37,6 +38,12 @@ for (const locale of ['en', 'fa'] as const)
       page,
     }, info) => {
       await crmShell(page, locale);
+      await page.route('**/mock/invoice-receipt.png?**', (r) =>
+        r.fulfill({
+          contentType: 'image/svg+xml',
+          body: '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="240"><rect width="600" height="240" fill="#e8ece7"/><text x="40" y="100" fill="#203e35" font-size="32">Invoice receipt fixture</text></svg>',
+        })
+      );
       await page.route('**/api/user/settings/timezone', (r) =>
         r.fulfill({ json: { timezone: 'Pacific/Kiritimati' } })
       );
@@ -160,6 +167,15 @@ for (const locale of ['en', 'fa'] as const)
       await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
       await expect.poll(() => viewport.evaluate((node) => node.scrollLeft)).not.toBe(position);
       await pending.getByRole('button', { name: word('open'), exact: true }).click();
+      const detail = queue.getByRole('region', { name: word('detail'), exact: true });
+      const image = detail.getByRole('img', { name: word('attachment'), exact: true });
+      await expect(image).toBeVisible();
+      await expect
+        .poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth))
+        .toBe(600);
+      await expect(
+        detail.getByRole('link', { name: word('attachment'), exact: true })
+      ).toHaveAttribute('href', receipt.attachmentUrl);
       await page.locator('#invoice-receipt-reason').fill('Keep investigation');
       const counts = [queueReads, detailReads, allocationReads];
       await pending.getByRole('button', { name: cardLabel, exact: true }).click();

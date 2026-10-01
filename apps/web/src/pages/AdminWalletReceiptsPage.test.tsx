@@ -181,6 +181,37 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     vi.restoreAllMocks();
   });
 
+  it('changes views without clearing invoice/rejection drafts or refetching review data', async () => {
+    await act(async () => root.render(<AdminWalletReceiptsPage />));
+    await flush();
+    const invoice = container.querySelector<HTMLInputElement>('#apply-invoice-id')!;
+    const reason = container.querySelector<HTMLTextAreaElement>('#reject-reason')!;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+        invoice,
+        INVOICE_ID
+      );
+      invoice.dispatchEvent(new Event('input', { bubbles: true }));
+      Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
+        reason,
+        'Keep this bank investigation'
+      );
+      reason.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await flush();
+    const count = vi.mocked(fetch).mock.calls.length;
+    for (const label of ['Table', 'Cards']) {
+      const toggle = [...container.querySelectorAll<HTMLButtonElement>('button')].find(
+        (button) => button.textContent === label
+      )!;
+      await act(async () => toggle.click());
+      expect(invoice.value).toBe(INVOICE_ID);
+      expect(reason.value).toBe('Keep this bank investigation');
+      expect(container.querySelector('nav button[aria-current="true"]')).not.toBeNull();
+      expect(vi.mocked(fetch).mock.calls.length).toBe(count);
+    }
+  });
+
   it('renders pending receipts and confirms the selected one', async () => {
     await act(async () => {
       root.render(<AdminWalletReceiptsPage />);

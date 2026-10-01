@@ -1,4 +1,4 @@
-import { listChoice, listPage, type ListQueryOptions } from '../hooks/useListQuery.js';
+import { listChoice, listPage, type ListQueryOptions } from './list-query.js';
 import { isInvoiceUuid } from './invoice-uuid.js';
 
 const correctionStatus = (value: unknown) =>

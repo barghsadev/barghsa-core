@@ -1,4 +1,4 @@
-import { listChoice, type ListQueryOptions } from '../hooks/useListQuery.js';
+import { listChoice, type ListQueryOptions } from './list-query.js';
 import { staffOrderId } from './staff-order-list-query.js';
 const publicId = (value: unknown) =>
   typeof value === 'string' && value === value.trim() ? staffOrderId(value) : '';

@@ -1,6 +1,6 @@
 import { parseDateRangeFilter } from '@barghsa/shared/validation';
 import { isInvoiceUuid } from './due-at-override.js';
-import { listChoice, writeListQuery, type ListQueryOptions } from '../hooks/useListQuery.js';
+import { listChoice, writeListQuery, type ListQueryOptions } from './list-query.js';
 
 export interface FinanceCursor {
   beforeAt: string;

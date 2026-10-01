@@ -19,14 +19,14 @@ import {
   type BankReceiptConfirmationReview,
 } from '@barghsa/shared/finance';
 import { BankReceiptFinancialReview } from '../components/BankReceiptFinancialReview.js';
-import { Button, ListPage, ScrollArea } from '@barghsa/ui';
+import { Button, ListPage, ListViewToggle, ScrollArea } from '@barghsa/ui';
+import { t as appText } from '@barghsa/i18n/app';
+import { useListView } from '../hooks/useListView.js';
+import { StaffWalletReceiptList } from '../components/StaffWalletReceiptList.js';
+import { StaffReceiptAttachmentPreview } from '../components/StaffReceiptAttachmentPreview.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
-import {
-  isImageAttachment,
-  isPdfAttachment,
-  isTransactionUuid,
-} from '../lib/bank-receipt-confirmation.js';
+import { isTransactionUuid } from '../lib/bank-receipt-confirmation.js';
 import WalletTopUpLimitConfigPanel from '../components/WalletTopUpLimitConfigPanel.js';
 
 /**
@@ -206,6 +206,7 @@ export default function AdminWalletReceiptsPage() {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
+  const { view, setView } = useListView('staff-wallet-receipts-pending');
   const [items, setItems] = useState<BankReceiptReviewDto[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selected, setSelected] = useState<BankReceiptReviewDto | null>(null);
@@ -791,6 +792,15 @@ export default function AdminWalletReceiptsPage() {
         <ListPage.Toolbar>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-semibold">{t('admin.walletReceipts.queueLabel', locale)}</h2>
+            <ListViewToggle
+              value={view}
+              onChange={setView}
+              labels={{
+                group: appText('historyView.group', locale),
+                table: appText('historyView.table', locale),
+                card: appText('historyView.card', locale),
+              }}
+            />
             <Button
               variant="outline"
               disabled={loading || acting || stepUpOpen}
@@ -800,7 +810,9 @@ export default function AdminWalletReceiptsPage() {
             </Button>
           </div>
         </ListPage.Toolbar>
-        <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
+        <div
+          className={`grid min-w-0 gap-6 ${view === 'card' ? 'lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]' : ''}`}
+        >
           <ListPage.Content
             loading={loading}
             error={!!queueError || denied}
@@ -823,31 +835,15 @@ export default function AdminWalletReceiptsPage() {
               aria-label={t('admin.walletReceipts.queueLabel', locale)}
               className="bg-card text-card-foreground rounded-lg border border-border p-3 space-y-1"
             >
-              {items.map((row) => {
-                const active = row.transactionId === selectedId;
-                return (
-                  <button
-                    key={row.transactionId}
-                    type="button"
-                    disabled={acting || stepUpOpen}
-                    onClick={() => {
-                      if (row.transactionId !== selectedIdRef.current)
-                        selectReceipt(row.transactionId);
-                    }}
-                    className={`w-full text-start rounded px-3 py-2 text-sm ${
-                      active ? 'bg-blue-50 text-blue-900' : 'hover:bg-muted'
-                    }`}
-                    aria-current={active ? 'true' : undefined}
-                  >
-                    <span className="block font-medium">
-                      {numbers.irrDigits(row.amount)} {row.currency}
-                    </span>
-                    <span className="block text-xs text-muted-foreground" dir="ltr">
-                      {row.payerReference}
-                    </span>
-                  </button>
-                );
-              })}
+              <StaffWalletReceiptList
+                items={items}
+                view={view}
+                selectedId={selectedId}
+                disabled={acting || stepUpOpen}
+                onSelect={(id) => {
+                  if (id !== selectedIdRef.current) selectReceipt(id);
+                }}
+              />
             </nav>
           </ListPage.Content>
 
@@ -928,29 +924,16 @@ export default function AdminWalletReceiptsPage() {
                 <h3 className="text-sm font-medium text-foreground mb-2">
                   {t('admin.walletReceipts.attachment', locale)}
                 </h3>
-                {selected.attachmentUrl && isImageAttachment(selected.attachmentKey) ? (
-                  <img
-                    src={selected.attachmentUrl}
-                    alt={t('admin.walletReceipts.attachmentAlt', locale)}
-                    className="max-h-80 rounded border border-border"
+                {selected.attachmentUrl ? (
+                  <StaffReceiptAttachmentPreview
+                    key={selected.transactionId}
+                    url={selected.attachmentUrl}
+                    attachmentKey={selected.attachmentKey}
+                    label={t('admin.walletReceipts.attachmentAlt', locale)}
+                    openLabel={t('admin.walletReceipts.openAttachment', locale)}
                   />
-                ) : selected.attachmentUrl && isPdfAttachment(selected.attachmentKey) ? (
-                  <iframe
-                    title={t('admin.walletReceipts.attachmentAlt', locale)}
-                    src={selected.attachmentUrl}
-                    className="w-full h-80 rounded border border-border"
-                  />
-                ) : selected.attachmentUrl ? (
-                  <a
-                    href={selected.attachmentUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-blue-600 hover:underline"
-                  >
-                    {t('admin.walletReceipts.openAttachment', locale)}
-                  </a>
                 ) : (
-                  <p className="text-sm text-muted-foreground" dir="ltr">
+                  <p className="break-all text-sm text-muted-foreground" dir="ltr">
                     {selected.attachmentKey ?? t('admin.walletReceipts.none', locale)}
                   </p>
                 )}
