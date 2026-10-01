@@ -16,6 +16,8 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { offerInputFromInstant, offerInstantFromInput } from '../lib/consultation-offer-time.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
+import { staffOrderId } from '../lib/staff-order-list-query.js';
+import type { ConsultationListQuery } from '../lib/support-list-query.js';
 
 interface RequestRow {
   id: string;
@@ -60,21 +62,44 @@ const statuses = [
   'cancelled',
 ] as const;
 
-export function AdminConsultationsPage() {
+export function AdminConsultationsPage({ queries }: { queries?: ConsultationListQuery } = {}) {
   const { assignment: initialAssignment } = useSearch({ from: '/admin/consultations' });
   const locale = useLocale();
   const time = useAccountTime(locale);
   const copy = (key: string) => tConsultation(key, locale);
-  const [rows, setRows] = useState<RequestRow[]>([]);
-  const [after, setAfter] = useState<string | null>(null);
-  const [nextAfter, setNextAfter] = useState<string | null>(null);
+  const [accepted, setAccepted] = useState<{
+    criteria: string;
+    cursor: string | null;
+    rows: RequestRow[];
+    nextAfter: string | null;
+  } | null>(null);
+  const [localAfter, setLocalAfter] = useState<string | null>(null);
+  const after = queries ? queries.queue.query.cursor || null : localAfter;
+  const setAfter = (value: string | null) =>
+    queries ? queries.queue.setQuery({ cursor: value ?? '' }) : setLocalAfter(value);
   const [queueLoading, setQueueLoading] = useState(true);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [detail, setDetail] = useState<Detail | null>(null);
+  const [localSelected, setLocalSelected] = useState<string | null>(null);
+  const selectedId = queries ? queries.selected : localSelected;
+  const setSelectedId = (id: string | null, replace = false) =>
+    queries ? queries.select(id, replace) : setLocalSelected(id);
+  const [loadedDetail, setDetail] = useState<Detail | null>(null);
+  const detail = loadedDetail?.request.id === selectedId ? loadedDetail : null;
   const [status, setStatus] = useState('');
   const [assignment, setAssignment] = useState(initialAssignment ?? 'all');
   const [priority, setPriority] = useState('all');
   const [minAgeDays, setMinAgeDays] = useState('0');
+  const appliedStatus = queries ? queries.queue.query.filters.status || '' : status;
+  const appliedAssignment = queries ? queries.queue.query.filters.assignment || 'all' : assignment;
+  const appliedPriority = queries ? queries.queue.query.filters.priority || 'all' : priority;
+  const appliedMinAgeDays = queries ? queries.queue.query.filters.minAgeDays || '0' : minAgeDays;
+  const criteria = JSON.stringify([
+    appliedStatus,
+    appliedAssignment,
+    appliedPriority,
+    appliedMinAgeDays,
+  ]);
+  const rows = accepted?.criteria === criteria ? accepted.rows : [];
+  const nextAfter = accepted?.criteria === criteria ? accepted.nextAfter : null;
   const [team, setTeam] = useState('');
   const [teams, setTeams] = useState<string[]>([]);
   const [reason, setReason] = useState('');
@@ -102,9 +127,8 @@ export function AdminConsultationsPage() {
   );
   const [reviewLoading, setReviewLoading] = useState(false);
   function resetQueue(clearSelection = false) {
-    setRows([]);
+    setAccepted(null);
     setAfter(null);
-    setNextAfter(null);
     if (clearSelection) setSelectedId(null);
   }
   function refresh() {
@@ -137,8 +161,12 @@ export function AdminConsultationsPage() {
     setQueueError(false);
     setQueueDenied(false);
     setQueueLoading(true);
-    const query = new URLSearchParams({ assignment, priority, minAgeDays });
-    if (status) query.set('status', status);
+    const query = new URLSearchParams({
+      assignment: appliedAssignment,
+      priority: appliedPriority,
+      minAgeDays: appliedMinAgeDays,
+    });
+    if (appliedStatus) query.set('status', appliedStatus);
     if (after) query.set('after', after);
     void fetch(`/api/admin/consultations/requests?${query}`, {
       credentials: 'include',
@@ -150,21 +178,29 @@ export function AdminConsultationsPage() {
       })
       .then((result) => {
         if (!controller.signal.aborted) {
-          setRows((current) => {
-            if (!after) return result.requests;
-            const shown = new Set(current.map((request) => request.id));
-            return [...current, ...result.requests.filter((request) => !shown.has(request.id))];
+          setAccepted((current) => {
+            const extending =
+              !!after &&
+              current?.criteria === criteria &&
+              current.nextAfter === after &&
+              current.cursor !== after;
+            const previous = extending ? current.rows : [];
+            const shown = new Set(previous.map((request) => request.id));
+            return {
+              criteria,
+              cursor: after,
+              rows: [...previous, ...result.requests.filter((request) => !shown.has(request.id))],
+              nextAfter: staffOrderId(result.nextAfter) || null,
+            };
           });
-          setNextAfter(result.nextAfter);
         }
       })
       .catch((error: unknown) => {
         if (controller.signal.aborted) return;
-        if (error instanceof Error && error.message === '403') {
+        if (error instanceof Error && ['401', '403'].includes(error.message)) {
           reviewRequest.current += 1;
-          setRows([]);
-          setNextAfter(null);
-          setSelectedId(null);
+          setAccepted(null);
+          setSelectedId(null, true);
           setDetail(null);
           setAction(null);
           setFeeReview(null);
@@ -178,7 +214,28 @@ export function AdminConsultationsPage() {
         if (!controller.signal.aborted) setQueueLoading(false);
       });
     return () => controller.abort();
-  }, [status, assignment, priority, minAgeDays, after, revision, listRevision]);
+  }, [
+    appliedStatus,
+    appliedAssignment,
+    appliedPriority,
+    appliedMinAgeDays,
+    criteria,
+    after,
+    revision,
+    listRevision,
+  ]);
+
+  useEffect(() => {
+    setReason('');
+    setTeam('');
+    setFee('');
+    setScope('');
+    setDeliverables('');
+    setValidUntil('');
+    setOfferReason('');
+    setOfferKey(crypto.randomUUID());
+    setError(false);
+  }, [selectedId]);
 
   useEffect(() => {
     reviewRequest.current += 1;
@@ -406,10 +463,13 @@ export function AdminConsultationsPage() {
                 <span>{copy('filterStatus')}</span>
                 <select
                   className="w-full rounded-md border bg-background p-2"
-                  value={status}
+                  value={appliedStatus}
                   onChange={(event) => {
-                    resetQueue(true);
-                    setStatus(event.target.value);
+                    if (queries) queries.setFilters({ status: event.target.value });
+                    else {
+                      resetQueue(true);
+                      setStatus(event.target.value);
+                    }
                   }}
                 >
                   <option value="">{copy('openRequests')}</option>
@@ -424,10 +484,13 @@ export function AdminConsultationsPage() {
                 <span>{copy('filterAssignment')}</span>
                 <select
                   className="w-full rounded-md border bg-background p-2"
-                  value={assignment}
+                  value={appliedAssignment}
                   onChange={(event) => {
-                    resetQueue(true);
-                    setAssignment(event.target.value);
+                    if (queries) queries.setFilters({ assignment: event.target.value });
+                    else {
+                      resetQueue(true);
+                      setAssignment(event.target.value);
+                    }
                   }}
                 >
                   <option value="all">{copy('all')}</option>
@@ -439,10 +502,13 @@ export function AdminConsultationsPage() {
                 <span>{copy('priority')}</span>
                 <select
                   className="w-full rounded-md border bg-background p-2"
-                  value={priority}
+                  value={appliedPriority}
                   onChange={(event) => {
-                    resetQueue(true);
-                    setPriority(event.target.value);
+                    if (queries) queries.setFilters({ priority: event.target.value });
+                    else {
+                      resetQueue(true);
+                      setPriority(event.target.value);
+                    }
                   }}
                 >
                   <option value="all">{copy('all')}</option>
@@ -454,10 +520,13 @@ export function AdminConsultationsPage() {
                 <span>{copy('age')}</span>
                 <select
                   className="w-full rounded-md border bg-background p-2"
-                  value={minAgeDays}
+                  value={appliedMinAgeDays}
                   onChange={(event) => {
-                    resetQueue(true);
-                    setMinAgeDays(event.target.value);
+                    if (queries) queries.setFilters({ minAgeDays: event.target.value });
+                    else {
+                      resetQueue(true);
+                      setMinAgeDays(event.target.value);
+                    }
                   }}
                 >
                   <option value="0">{copy('all')}</option>
@@ -540,9 +609,24 @@ export function AdminConsultationsPage() {
             </ListPage.Content>
             <ListPage.Pagination
               kind="cursor"
-              hasMore={!!nextAfter && !queueError && !queueDenied}
+              hasMore={
+                !!nextAfter &&
+                !queueError &&
+                !queueDenied &&
+                (queueLoading ||
+                  (queries ? queries.queue.canAdvance(nextAfter) : nextAfter !== after))
+              }
               loading={queueLoading}
-              onNext={() => setAfter(nextAfter)}
+              onNext={() => {
+                if (!nextAfter) return;
+                if (queries) queries.queue.next(nextAfter);
+                else setAfter(nextAfter);
+              }}
+              previous={{
+                enabled: !queueDenied && (queries?.queue.hasPrevious ?? false),
+                onClick: () => queries?.queue.previous(),
+                label: appText('historyPagination.previous', locale),
+              }}
               label={appText('historyPagination.label', locale)}
               nextLabel={copy('moreWork')}
             />

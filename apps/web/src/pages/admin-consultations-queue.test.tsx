@@ -52,7 +52,10 @@ it('keeps earlier consultation work visible after loading another queue page', a
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const calls: string[] = [];
   const row = (id: string) => ({
-    id,
+    id:
+      id === 'first-work'
+        ? '86000000-0000-4000-8000-000000000001'
+        : '86000000-0000-4000-8000-000000000002',
     profile_id: 'profile-1',
     profile_name: id,
     status: 'submitted',
@@ -74,7 +77,10 @@ it('keeps earlier consultation work visible after loading another queue page', a
               ? { teams: [] }
               : new URL(url, 'http://localhost').searchParams.has('after')
                 ? { requests: [row('older-work')], nextAfter: null }
-                : { requests: [row('first-work')], nextAfter: 'first-work' }
+                : {
+                    requests: [row('first-work')],
+                    nextAfter: '86000000-0000-4000-8000-000000000001',
+                  }
         ),
         { headers: { 'Content-Type': 'application/json' } }
       );
@@ -94,7 +100,9 @@ it('keeps earlier consultation work visible after loading another queue page', a
     await act(async () => more?.click());
     expect(container.textContent).toContain('first-work');
     expect(container.textContent).toContain('older-work');
-    expect(calls.some((url) => url.includes('after=first-work'))).toBe(true);
+    expect(calls.some((url) => url.includes('after=86000000-0000-4000-8000-000000000001'))).toBe(
+      true
+    );
   } finally {
     await act(async () => root.unmount());
     container.remove();

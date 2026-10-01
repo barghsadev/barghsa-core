@@ -1,4 +1,4 @@
-import { act } from 'react';
+import { act, type ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import Electricity from './AdminElectricityOrdersPage.js';
@@ -67,7 +67,7 @@ function fill(element: HTMLInputElement | HTMLTextAreaElement, value: string) {
   );
   element.dispatchEvent(new Event('input', { bubbles: true }));
 }
-async function mount(Page: typeof Electricity) {
+async function mount(Page: ComponentType) {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const container = document.createElement('div');

@@ -5,6 +5,7 @@ import { Button, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
+import type { SupportListQuery } from '../lib/support-list-query.js';
 import { ProfileClosureReview } from '../components/ProfileClosureReview.js';
 import {
   isAllowedInvoiceReceiptFile,
@@ -80,8 +81,8 @@ const transitions: Record<Status, Status[]> = {
   resolved: ['closed'],
   closed: [],
 };
-export function CustomerTicketsPage() {
-  return <Tickets staff={false} />;
+export function CustomerTicketsPage({ queries }: { queries?: SupportListQuery } = {}) {
+  return <Tickets staff={false} {...(queries ? { queries } : {})} />;
 }
 function RelatedTicketRecord({
   ticket,
@@ -112,10 +113,12 @@ function RelatedTicketRecord({
     </span>
   );
 }
-export function StaffTicketsPage() {
-  return <Tickets staff />;
+export function StaffTicketsPage({ queries }: { queries?: SupportListQuery } = {}) {
+  return <Tickets staff {...(queries ? { queries } : {})} />;
 }
-function Tickets({ staff }: { staff: boolean }) {
+function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuery }) {
+  const queryRef = useRef(queries);
+  queryRef.current = queries;
   const time = useAccountTime();
   const routeSearch = useSearch({ strict: false }) as {
     ticketId?: string;
@@ -138,19 +141,37 @@ function Tickets({ staff }: { staff: boolean }) {
     [acceptedPage, setAcceptedPage] = useState(1),
     [queueAccessDenied, setQueueAccessDenied] = useState(false);
   const queueDenied = useRef(false);
-  const [page, setPage] = useState(1),
-    [filter, setFilter] = useState(routeSearch.status === 'active' ? 'active' : ''),
-    [search, setSearch] = useState(''),
-    [term, setTerm] = useState('');
-  const [sort, setSort] = useState('desc'),
+  const [localPage, setLocalPage] = useState(1),
+    [localFilter, setLocalFilter] = useState(routeSearch.status === 'active' ? 'active' : ''),
+    [localSearch, setLocalSearch] = useState(''),
+    [localTerm, setTerm] = useState('');
+  const page = queries?.queue.query.page ?? localPage;
+  const filter = queries?.queue.query.filters.status ?? localFilter;
+  const search = queries?.queue.searchInput ?? localSearch;
+  const term = queries?.queue.query.search ?? localTerm;
+  const setPage = (value: number, replace = false) =>
+    queryRef.current
+      ? queryRef.current.queue.setQuery({ page: value }, replace)
+      : setLocalPage(value);
+  const setFilter = (value: string) =>
+    queries ? queries.queue.setQuery({ filters: { status: value } }) : setLocalFilter(value);
+  const setSearch = (value: string) =>
+    queries ? queries.queue.setSearchInput(value) : setLocalSearch(value);
+  const [localSort, setLocalSort] = useState('desc'),
     [error, setError] = useState(''),
     [saved, setSaved] = useState(false),
     [busy, setBusy] = useState(false);
-  const [detail, setDetail] = useState<Ticket | null>(null),
+  const sort = queries?.queue.query.order ?? localSort;
+  const setSort = (value: string) =>
+    queries
+      ? queries.queue.setQuery({ order: value === 'asc' ? 'asc' : 'desc' })
+      : setLocalSort(value);
+  const [loadedDetail, setDetail] = useState<Ticket | null>(null),
     [comments, setComments] = useState<Comment[]>([]),
     [detailLoading, setDetailLoading] = useState(false),
     [detailError, setDetailError] = useState(''),
     [selectedId, setSelectedId] = useState('');
+  const detail = !queries || loadedDetail?.id === queries.selected ? loadedDetail : null;
   const [reply, setReply] = useState(''),
     [internal, setInternal] = useState(false),
     [nextStatus, setNextStatus] = useState<Status>('open');
@@ -177,7 +198,8 @@ function Tickets({ staff }: { staff: boolean }) {
     [optionsError, setOptionsError] = useState('');
   const context = JSON.stringify([prefix, term, sort, filter, activeScoped]);
   const visibleQueue = acceptedContext === context ? queue : null;
-  function discardDetail() {
+  function discardDetail(updateUrl = true) {
+    if (updateUrl && queryRef.current?.selected) queryRef.current.select(null, true);
     ++detailGeneration.current;
     setDetail(null);
     setComments([]);
@@ -203,7 +225,8 @@ function Tickets({ staff }: { staff: boolean }) {
         ...(activeScoped ? { scope: 'active' } : {}),
       });
       const response = await fetch(`${prefix}?${query}`, { credentials: 'include' });
-      if (!response.ok) throw new Error(response.status === 403 ? 'forbidden' : 'error');
+      if (!response.ok)
+        throw new Error([401, 403].includes(response.status) ? 'forbidden' : 'error');
       const data = (await response.json()) as Queue;
       if (
         !Array.isArray(data.data) ||
@@ -218,7 +241,7 @@ function Tickets({ staff }: { staff: boolean }) {
         setAcceptedContext(context);
         setAcceptedPage(page);
         // Removed tickets can make the requested page disappear while it is loading.
-        if (page > Math.max(1, data.totalPages)) setPage(Math.max(1, data.totalPages));
+        if (page > Math.max(1, data.totalPages)) setPage(Math.max(1, data.totalPages), true);
         // A refreshed authority can revoke closure approval or assignment controls.
         if (staff && !data.viewer?.canAssignOthers) {
           setAssignees([]);
@@ -252,7 +275,10 @@ function Tickets({ staff }: { staff: boolean }) {
       if (current === generation.current) setLoading(false);
     }
   }, [prefix, page, term, sort, filter, activeScoped, context, staff]);
+  const latestLoad = useRef(load);
+  latestLoad.current = load;
   useEffect(() => {
+    if (queries) return;
     setFilter(routeSearch.status === 'active' ? 'active' : '');
     setPage(1);
   }, [routeSearch.status]);
@@ -263,7 +289,7 @@ function Tickets({ staff }: { staff: boolean }) {
     };
   }, [load]);
   useEffect(() => {
-    if (search.trim() === term) return;
+    if (queries || search.trim() === term) return;
     const timer = setTimeout(() => {
       setTerm(search.trim());
       setPage(1);
@@ -345,7 +371,10 @@ function Tickets({ staff }: { staff: boolean }) {
         fetch(`${prefix}/${encodeURIComponent(id)}`, { credentials: 'include' }),
         fetch(`${prefix}/${encodeURIComponent(id)}/comments`, { credentials: 'include' }),
       ]);
-      if (recordResponse.status === 403 || commentsResponse.status === 403)
+      if (
+        [401, 403].includes(recordResponse.status) ||
+        [401, 403].includes(commentsResponse.status)
+      )
         throw new Error('forbidden');
       if (!recordResponse.ok || !commentsResponse.ok) throw new Error('error');
       const [ticket, conversation] = await Promise.all([
@@ -366,9 +395,14 @@ function Tickets({ staff }: { staff: boolean }) {
       if (current === detailGeneration.current) setDetailLoading(false);
     }
   }
+  const selectedLink = queries ? queries.selected : routeSearch.ticketId;
   useEffect(() => {
-    if (routeSearch.ticketId) void select(routeSearch.ticketId);
-  }, [routeSearch.ticketId, prefix]);
+    if (selectedLink) void select(selectedLink);
+    else if (queries) discardDetail(false);
+    return () => {
+      ++detailGeneration.current;
+    };
+  }, [selectedLink, prefix]);
   useEffect(() => {
     if (detail) heading.current?.focus();
   }, [detail?.id]);
@@ -379,6 +413,7 @@ function Tickets({ staff }: { staff: boolean }) {
     []
   );
   async function mutate(path: string, method: string, payload: unknown, id?: string) {
+    const selection = detailGeneration.current;
     if (inFlight.current) return;
     inFlight.current = true;
     setBusy(true);
@@ -392,21 +427,24 @@ function Tickets({ staff }: { staff: boolean }) {
         body: JSON.stringify(payload),
       });
       if (!response.ok) {
-        setError(
-          response.status === 409 ? 'conflict' : response.status === 403 ? 'forbidden' : 'error'
-        );
+        if (selection === detailGeneration.current)
+          setError(
+            response.status === 409 ? 'conflict' : response.status === 403 ? 'forbidden' : 'error'
+          );
         return;
       }
-      setSaved(true);
-      await Promise.all([load(), ...(id ? [select(id)] : [])]);
+      if (selection === detailGeneration.current) setSaved(true);
+      await latestLoad.current();
+      if (id && selection === detailGeneration.current) await select(id);
     } catch {
-      setError('error');
+      if (selection === detailGeneration.current) setError('error');
     } finally {
       inFlight.current = false;
       setBusy(false);
     }
   }
   async function create(event: FormEvent) {
+    const selection = detailGeneration.current;
     event.preventDefault();
     if (
       inFlight.current ||
@@ -457,7 +495,11 @@ function Tickets({ staff }: { staff: boolean }) {
       setFiles([]);
       uploads.current.clear();
       setFileVersion((value) => value + 1);
-      await Promise.all([load(), select(created.id)]);
+      await latestLoad.current();
+      if (selection === detailGeneration.current) {
+        if (queryRef.current) queryRef.current.select(created.id);
+        else await select(created.id);
+      }
     } catch {
       setError('error');
     } finally {
@@ -699,7 +741,7 @@ function Tickets({ staff }: { staff: boolean }) {
                 value={filter}
                 onChange={(event) => {
                   setFilter(event.target.value);
-                  setPage(1);
+                  if (!queries) setPage(1);
                 }}
               >
                 <option value="">{text('all')}</option>
@@ -719,7 +761,7 @@ function Tickets({ staff }: { staff: boolean }) {
                 value={sort}
                 onChange={(event) => {
                   setSort(event.target.value);
-                  setPage(1);
+                  if (!queries) setPage(1);
                 }}
               >
                 <option value="desc">{text('newest')}</option>
@@ -783,7 +825,8 @@ function Tickets({ staff }: { staff: boolean }) {
                           className="text-blue-700 dark:text-blue-300 underline text-start"
                           onClick={() => {
                             setError('');
-                            void select(item.id);
+                            if (queries && queries.selected !== item.id) queries.select(item.id);
+                            else void select(item.id);
                           }}
                         >
                           {item.subject}
