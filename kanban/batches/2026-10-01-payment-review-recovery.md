@@ -43,4 +43,4 @@ The browser run reuses the existing production static-server harness and one wor
 
 The preceding contract finance batch is published as `8cbd24f6971a5cea379990226c7f2291ee2b61ce`; CI run `36815639338` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.
 
-This payment review batch is committed and pushed directly to main after review and related checks. Its remote commit and CI are read back after publication. No PR is created. The all-list and receipt-pattern parents remain partial for the open work listed above.
+This payment review batch is published directly to main as `46898927197c2b5337732f6f8b8b5998c14d4153`. Its remote commit is verified; CI run `36817128210` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage. No PR is created. The all-list and receipt-pattern parents remain partial for the open work listed above.

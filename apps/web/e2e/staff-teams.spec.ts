@@ -4,13 +4,19 @@ for (const locale of ['en', 'fa'])
   test(`staff team and routing changes survive confirmation and failure (${locale})`, async ({
     page,
   }) => {
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'admin',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: false,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     const text =
       locale === 'fa'
         ? {
@@ -113,6 +119,17 @@ for (const locale of ['en', 'fa'])
 
 test('denied team settings show a retry without mutation controls', async ({ page }) => {
   await page.route('**/api/**', (route) => route.fulfill({ status: 403, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        userId: 'admin',
+        isStaff: true,
+        operatingContext: 'staff',
+        canSwitchContext: false,
+        requiresTosAcceptance: false,
+      },
+    })
+  );
   await page.goto('/admin/staff-teams');
   await expect(page.getByRole('alert')).toBeVisible();
   await expect(page.locator('form')).toHaveCount(0);
@@ -122,13 +139,19 @@ for (const locale of ['en', 'fa']) {
   test(`fallback priorities reorder, survive failed saves and clear on manual selection (${locale})`, async ({
     page,
   }) => {
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'admin',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: false,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     const first = '11111111-1111-4111-8111-111111111111';
     const second = '22222222-2222-4222-8222-222222222222';
     const third = '33333333-3333-4333-8333-333333333333';
@@ -192,7 +215,7 @@ for (const locale of ['en', 'fa']) {
       .click();
     await expect(page.locator('#fallback-team-ticket-2')).toHaveValue(second);
     await expect(page.locator('#fallback-strategy-ticket-2')).toHaveValue('expertise');
-    for (const select of await page.locator('select').all())
+    for (const select of await page.locator('#admin-content select').all())
       await expect(select).toHaveAccessibleName(/.+/);
     const save = page.getByRole('button', {
       name: locale === 'fa' ? 'ذخیره قوانین تخصیص' : 'Save assignment rules',

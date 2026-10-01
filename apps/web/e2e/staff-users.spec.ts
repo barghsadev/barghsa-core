@@ -7,12 +7,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`staff permissions, confirmation and step-up failures remain recoverable (${locale})`, async ({
     page,
   }) => {
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     const fa = locale === 'fa';
     let allowed = true,
       failLoad = true,
@@ -20,6 +15,17 @@ for (const locale of ['en', 'fa'] as const) {
       failSave = true;
     const attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'admin',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: false,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
     );
@@ -139,18 +145,24 @@ for (const locale of ['en', 'fa'] as const) {
   test(`permission history filters full calendar days and preserves retry (${locale})`, async ({
     page,
   }) => {
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     const fa = locale === 'fa',
       target = '10000000-0000-4000-8000-000000000003';
     let fail = true;
     let failTimezone = true;
     const queries: URLSearchParams[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'admin',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: false,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     await page.route('**/api/user/settings/timezone', (route) =>
       failTimezone
         ? route.fulfill(fa ? { json: { timezone: 'invalid-zone' } } : { status: 503, json: {} })
@@ -301,15 +313,21 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await page.clock.install();
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     const fa = locale === 'fa';
     let attempts = 0;
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'admin',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: false,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
     );

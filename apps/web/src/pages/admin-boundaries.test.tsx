@@ -114,6 +114,7 @@ for (const locale of ['en', 'fa']) {
           body = { thresholdIrR: 1000000, version: 0 };
         else if (url.endsWith('/staff-access'))
           body = {
+            userId: 'admin',
             canView: true,
             canCreate: true,
             canEditRoles: true,

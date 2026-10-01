@@ -9,14 +9,20 @@ for (const locale of ['en', 'fa'] as const) {
     baseURL,
   }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await context.addCookies([{ name: 'barghsa_csrf', value: 'before-create', url: baseURL! }]);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'admin',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: false,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'UTC' } })
     );
