@@ -7,6 +7,7 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { documentUrl } from '../lib/documents.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 
 type Category = 'general' | 'contract' | 'invoice';
 type FileInfo = {
@@ -40,14 +41,21 @@ type Draft = { title: string; description: string; category: Category };
 const blank = (): Draft => ({ title: '', description: '', category: 'general' });
 const MAX_FILE = 10 * 1024 * 1024;
 
-export default function AdminDocumentTemplatesPage() {
+export default function AdminDocumentTemplatesPage({
+  queries,
+}: { queries?: ListQueryBinding } = {}) {
   const locale = useLocale();
   const word = (key: Parameters<typeof documentTemplateText>[0]) =>
     documentTemplateText(key, locale);
   const time = useAccountTime();
-  const [searchInput, setSearchInput] = useState('');
-  const [search, setSearch] = useState('');
-  const [category, setCategory] = useState<Category | ''>('');
+  const [searchInput, setSearchInput] = useState(queries?.query.search || '');
+  const [localSearch, setSearch] = useState('');
+  const [localCategory, setCategory] = useState<Category | ''>('');
+  const search = queries ? queries.query.search : localSearch;
+  const category = queries ? queries.query.filters.category || '' : localCategory;
+  useEffect(() => {
+    if (queries) setSearchInput(search);
+  }, [search]);
   const [selected, setSelected] = useState<string | null>(null);
   const [rows, setRows] = useState<Template[] | null>(null);
   const [detail, setDetail] = useState<Template | null>(null);
@@ -240,6 +248,7 @@ export default function AdminDocumentTemplatesPage() {
   }
 
   const latest = detail?.versions?.[0];
+  const actionGeneration = linkGeneration.current;
   return (
     <section
       className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-4 md:p-8"
@@ -270,7 +279,8 @@ export default function AdminDocumentTemplatesPage() {
             className="flex min-w-0 flex-wrap items-end gap-3"
             onSubmit={(event) => {
               event.preventDefault();
-              setSearch(searchInput.trim());
+              if (queries) queries.setQuery({ search: searchInput.trim() });
+              else setSearch(searchInput.trim());
             }}
           >
             <div className="min-w-52 flex-1 space-y-1">
@@ -288,7 +298,10 @@ export default function AdminDocumentTemplatesPage() {
                 id="document-template-category"
                 className="h-10 w-full rounded-md border bg-background px-3"
                 value={category}
-                onChange={(event) => setCategory(event.target.value as Category | '')}
+                onChange={(event) => {
+                  if (queries) queries.setQuery({ filters: { category: event.target.value } });
+                  else setCategory(event.target.value as Category | '');
+                }}
               >
                 <option value="">{word('allCategories')}</option>
                 {(['general', 'contract', 'invoice'] as const).map((value) => (
@@ -347,9 +360,7 @@ export default function AdminDocumentTemplatesPage() {
                         className="w-full px-2 py-3 text-start hover:bg-muted focus-visible:outline focus-visible:outline-2"
                         aria-current={selected === row.id ? 'page' : undefined}
                         onClick={() => {
-                          setSelected(row.id);
-                          setDraft(null);
-                          setSaved(false);
+                          choose(row.id);
                         }}
                       >
                         <span className="block font-medium" dir="auto">
@@ -677,7 +688,7 @@ export default function AdminDocumentTemplatesPage() {
           action={action}
           onClose={() => setAction(null)}
           onSuccess={async (result) => {
-            if (accessDenied.current) return;
+            if (accessDenied.current || actionGeneration !== linkGeneration.current) return;
             const next = result as Template | null;
             choose(next?.id ?? selected);
             setSaved(true);

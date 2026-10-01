@@ -315,9 +315,9 @@ export default function TemplatePreviewPanel({
               {/* Rendered subject (email only) */}
               {selected.channel === 'email' && subjectPreview != null && (
                 <div className="border border-border rounded-lg p-4 bg-muted/40">
-                  <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
+                  <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
                     {t('admin.notifications.subjectLabel', uiLocale)}
-                  </h4>
+                  </h3>
                   <p
                     dir={selected.locale === 'fa' ? 'rtl' : 'ltr'}
                     className="text-sm text-foreground"
@@ -329,9 +329,9 @@ export default function TemplatePreviewPanel({
 
               {/* Rendered body */}
               <div className="border border-border rounded-lg p-4 bg-muted/40">
-                <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
+                <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
                   {t('admin.notifications.bodyTemplate', uiLocale)}
-                </h4>
+                </h3>
                 {selected.channel === 'email' ? (
                   <BrandedEmailPreview
                     body={bodyPreview?.output ?? ''}
@@ -350,9 +350,9 @@ export default function TemplatePreviewPanel({
 
               {/* Available variables + descriptions */}
               <div className="border border-border rounded-lg p-4">
-                <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
+                <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
                   {t('admin.notifications.preview.variables', uiLocale)}
-                </h4>
+                </h3>
                 {selected.variables.length === 0 ? (
                   <p className="text-sm text-muted-foreground">
                     {t('admin.notifications.preview.noVariables', uiLocale)}
@@ -388,9 +388,9 @@ export default function TemplatePreviewPanel({
               {/* Missing / undeclared variable warnings */}
               {problems.size > 0 && (
                 <div className="bg-warning-soft border border-warning/20 rounded-lg p-4">
-                  <h4 className="text-sm font-semibold text-warning">
+                  <h3 className="text-sm font-semibold text-warning">
                     {t('admin.notifications.preview.warnings.title', uiLocale)}
-                  </h4>
+                  </h3>
                   <ul className="mt-2 space-y-1 text-sm text-warning">
                     {[...undeclared].map((name) => (
                       <li key={name}>

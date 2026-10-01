@@ -5,6 +5,7 @@ import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Button, ListPage } from '@barghsa/ui';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import type { FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
@@ -104,7 +105,7 @@ function variablesToText(variables: NotificationVariable[]): string {
  * Lists all notification templates, allows creating/editing drafts,
  * publishing active templates, and unpublishing.
  */
-export default function AdminNotificationsPage() {
+export default function AdminNotificationsPage({ queries }: { queries?: ListQueryBinding } = {}) {
   const uiLocale = useLocale();
   const numbers = useNumberFormatting(uiLocale);
   const channelLabels: Record<TemplateChannel, string> = {
@@ -132,9 +133,14 @@ export default function AdminNotificationsPage() {
   } | null>(null);
 
   // Filters
-  const [filterLocale, setFilterLocale] = useState<string>('');
-  const [filterChannel, setFilterChannel] = useState<string>('');
-  const [filterStatus, setFilterStatus] = useState<string>('');
+  const [localLocale, setFilterLocale] = useState<string>('');
+  const [localChannel, setFilterChannel] = useState<string>('');
+  const [localStatus, setFilterStatus] = useState<string>('');
+  const filterLocale = queries ? queries.query.filters.locale || '' : localLocale;
+  const filterChannel = queries ? queries.query.filters.channel || '' : localChannel;
+  const filterStatus = queries ? queries.query.filters.status || '' : localStatus;
+  const criteria = JSON.stringify([filterLocale, filterChannel, filterStatus]);
+  const previousCriteria = useRef(criteria);
 
   // Editor state
   const [showEditor, setShowEditor] = useState(false);
@@ -220,7 +226,7 @@ export default function AdminNotificationsPage() {
       listRequest.current?.abort();
     };
   }, []);
-  const changeFilter = (apply: () => void) => {
+  const clearFilterWork = useCallback(() => {
     editorGeneration.current++;
     resetEditorBusy();
     resetCatalogueBusy();
@@ -232,8 +238,16 @@ export default function AdminNotificationsPage() {
     setTestSendMsg(null);
     setAccepted(false);
     setTemplates([]);
+  }, [resetEditorBusy, resetCatalogueBusy]);
+  const changeFilter = (apply: () => void) => {
+    if (!queries) clearFilterWork();
     apply();
   };
+  useEffect(() => {
+    if (previousCriteria.current === criteria) return;
+    previousCriteria.current = criteria;
+    if (queries) clearFilterWork();
+  }, [criteria, clearFilterWork]);
   const fetchTemplates = useCallback(async () => {
     if (scope.denied) return;
     const epoch = scope.version;
@@ -779,7 +793,13 @@ export default function AdminNotificationsPage() {
             <select
               aria-label={t('admin.notifications.locale', uiLocale)}
               value={filterLocale}
-              onChange={(e) => changeFilter(() => setFilterLocale(e.target.value))}
+              onChange={(e) =>
+                changeFilter(() =>
+                  queries
+                    ? queries.setQuery({ filters: { locale: e.target.value } })
+                    : setFilterLocale(e.target.value)
+                )
+              }
               className="border border-input rounded px-3 py-1.5 text-sm"
             >
               <option value="">{t('admin.notifications.allLocales', uiLocale)}</option>
@@ -789,7 +809,13 @@ export default function AdminNotificationsPage() {
             <select
               aria-label={t('admin.notifications.channel', uiLocale)}
               value={filterChannel}
-              onChange={(e) => changeFilter(() => setFilterChannel(e.target.value))}
+              onChange={(e) =>
+                changeFilter(() =>
+                  queries
+                    ? queries.setQuery({ filters: { channel: e.target.value } })
+                    : setFilterChannel(e.target.value)
+                )
+              }
               className="border border-input rounded px-3 py-1.5 text-sm"
             >
               <option value="">{t('admin.notifications.allChannels', uiLocale)}</option>
@@ -800,7 +826,13 @@ export default function AdminNotificationsPage() {
             <select
               aria-label={t('admin.notifications.allStatus', uiLocale)}
               value={filterStatus}
-              onChange={(e) => changeFilter(() => setFilterStatus(e.target.value))}
+              onChange={(e) =>
+                changeFilter(() =>
+                  queries
+                    ? queries.setQuery({ filters: { status: e.target.value } })
+                    : setFilterStatus(e.target.value)
+                )
+              }
               className="border border-input rounded px-3 py-1.5 text-sm"
             >
               <option value="">{t('admin.notifications.allStatus', uiLocale)}</option>
