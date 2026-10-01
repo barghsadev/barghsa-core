@@ -1,3 +1,4 @@
+import { giftCode } from '../test/gift-code-fixtures.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
@@ -11,30 +12,7 @@ vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: String, number: String, percent: String }),
 }));
 
-function code(index: number) {
-  return {
-    id: `00000000-0000-7000-8000-${String(index).padStart(12, '0')}`,
-    code: `CODE${String(index).padStart(2, '0')}`,
-    discountType: 'fixed_irr',
-    discountValue: '1000',
-    maxCapIrr: null,
-    eligibility: 'public',
-    profileIds: [],
-    totalLimit: null,
-    perProfileLimit: null,
-    validFrom: '2026-01-01T00:00:00.000Z',
-    validUntil: null,
-    minOrderAmount: '0',
-    categories: [],
-    restoreOnCancel: true,
-    restoreAfterPayment: false,
-    status: 'active',
-    createdBy: 'staff-1',
-    createdAt: '2026-09-24T00:00:00.000Z',
-    updatedAt: '2026-09-24T00:00:00.000Z',
-    usage: { consumed: 1, released: 1, totalDiscountIrr: '1000' },
-  };
-}
+const code = giftCode;
 
 it('loads another code page and shows per-profile usage with restoration history', async () => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);

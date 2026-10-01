@@ -6,14 +6,33 @@ interface ProfileOption {
   profileType: string;
   archived: boolean;
 }
+function isProfileOptions(value: unknown): value is ProfileOption[] {
+  return (
+    Array.isArray(value) &&
+    value.length <= 200 &&
+    value.every(
+      (row) =>
+        !!row &&
+        typeof row === 'object' &&
+        typeof row.id === 'string' &&
+        /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(row.id) &&
+        typeof row.title === 'string' &&
+        typeof row.profileType === 'string' &&
+        typeof row.archived === 'boolean'
+    ) &&
+    new Set(value.map((row) => row.id)).size === value.length
+  );
+}
 export function GiftProfilePicker({
   ids,
   onChange,
   label,
+  onDenied,
 }: {
   ids: string[];
   onChange: (ids: string[]) => void;
   label: (key: string) => string;
+  onDenied?: () => void;
 }) {
   const [search, setSearch] = useState(''),
     [query, setQuery] = useState(''),
@@ -32,8 +51,12 @@ export function GiftProfilePicker({
       signal: abort.signal,
     })
       .then(async (response) => {
+        if (!abort.signal.aborted && (response.status === 401 || response.status === 403))
+          onDenied?.();
         if (!response.ok) throw new Error('Load failed');
-        return (await response.json()) as ProfileOption[];
+        const data: unknown = await response.json();
+        if (!isProfileOptions(data)) throw new Error('Invalid profile options');
+        return data;
       })
       .then((rows) => {
         if (!abort.signal.aborted) setOptions(rows);
@@ -45,7 +68,7 @@ export function GiftProfilePicker({
         if (!abort.signal.aborted) setLoading(false);
       });
     return () => abort.abort();
-  }, [query, revision]);
+  }, [query, revision, onDenied]);
   useEffect(() => {
     const abort = new AbortController();
     setSelectedError(false);
@@ -58,8 +81,12 @@ export function GiftProfilePicker({
           `/api/admin/promotions/gift-codes/profiles?ids=${encodeURIComponent(batch.join(','))}`,
           { signal: abort.signal }
         );
+        if (!abort.signal.aborted && (response.status === 401 || response.status === 403))
+          onDenied?.();
         if (!response.ok) throw new Error('Load failed');
-        return (await response.json()) as ProfileOption[];
+        const data: unknown = await response.json();
+        if (!isProfileOptions(data)) throw new Error('Invalid profile options');
+        return data;
       })
     )
       .then((rows) => {
@@ -69,7 +96,7 @@ export function GiftProfilePicker({
         if (!abort.signal.aborted) setSelectedError(true);
       });
     return () => abort.abort();
-  }, [ids, revision]);
+  }, [ids, revision, onDenied]);
   const byId = new Map([...options, ...selected].map((row) => [row.id, row]));
   const allIds = [...new Set([...ids, ...options.map((row) => row.id)])];
   return (

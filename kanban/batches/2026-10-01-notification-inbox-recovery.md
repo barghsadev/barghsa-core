@@ -36,3 +36,5 @@ All 92 related web cases pass: nineteen new inbox recovery/race cases, thirty-tw
 The preceding assignment-settings batch is published as `135bde3bba3efbf5723bfd24a1e7e758c3db08c0`. CI run `36842678973` passes all five jobs under the existing temporary fast mode; combined-coverage success remains an exemption, not measured coverage. Its progress records are updated.
 
 This inbox batch is published directly to main after review and final validation. Remote SHA and CI availability are read back after publication; no remote CI success is claimed without a registered, passing run. No PR is created. Historical supervisor state remains unchanged.
+
+Verified publication: `72d102d37192a6490344649bf5d1a98d5e1d2249`. CI run `36844817822` passes all five jobs under the existing temporary fast mode. Combined coverage is an exemption, not measured coverage.

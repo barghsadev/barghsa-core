@@ -1,22 +1,19 @@
 import { test, expect } from './coverage-fixture';
+import { crmShell } from './crm-shell-fixture';
+import { giftCode } from '../src/test/gift-code-fixtures';
+test.use({ viewport: { width: 390, height: 844 } });
 for (const locale of ['en', 'fa'])
   test(`gift-code editor retries captured settings (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await crmShell(page, locale as 'en' | 'fa');
     let failed = true,
       verified = false,
       denied = false;
     const attempts: unknown[] = [];
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill(failed ? { status: 503, json: {} } : { json: { timezone: 'Asia/Tehran' } })
     );
-    await page.route('**/api/admin/promotions/gift-codes', (route) => {
+    await page.route('**/api/admin/promotions/gift-codes*', (route) => {
       if (route.request().method() === 'GET')
         return route.fulfill(
           denied ? { status: 403, json: {} } : failed ? { status: 503, json: {} } : { json: [] }
@@ -25,7 +22,10 @@ for (const locale of ['en', 'fa'])
       if (!verified)
         return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
       denied = true;
-      return route.fulfill({ status: 201, json: {} });
+      return route.fulfill({
+        status: 201,
+        json: { ...giftCode(), ...route.request().postDataJSON(), code: 'LOCAL-CODE' },
+      });
     });
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct';
@@ -62,6 +62,8 @@ for (const locale of ['en', 'fa'])
         perProfileLimit: null,
         minOrderAmount: '0',
         categories: [],
+        restoreOnCancel: true,
+        restoreAfterPayment: false,
         validUntil: null,
       })
     );
@@ -76,14 +78,9 @@ for (const locale of ['en', 'fa'])
 test('gift windows display account time, preserve untouched instants and convert edits', async ({
   page,
 }) => {
-  await page.addInitScript(() => {
-    if (document.documentElement) document.documentElement.lang = 'en';
-    new MutationObserver(() => {
-      document.documentElement.lang = 'en';
-    }).observe(document, { childList: true });
-  });
+  await crmShell(page, 'en');
   let row = {
-    id: 'gift-zone',
+    ...giftCode(),
     code: 'ACCOUNT-ZONE',
     discountType: 'fixed_irr',
     discountValue: '1000',
@@ -100,20 +97,25 @@ test('gift windows display account time, preserve untouched instants and convert
     usage: { consumed: 0, released: 0, totalDiscountIrr: '0' },
   };
   const attempts: Array<Record<string, unknown>> = [];
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
-  await page.route('**/api/admin/promotions/gift-codes', (route) => route.fulfill({ json: [row] }));
-  await page.route('**/api/admin/promotions/gift-codes/gift-zone/stats', (route) =>
-    route.fulfill({ json: { code: row } })
+  await page.route('**/api/admin/promotions/gift-codes*', (route) =>
+    route.fulfill({ json: [row] })
   );
-  await page.route('**/api/admin/promotions/gift-codes/gift-zone', (route) => {
-    const body = route.request().postDataJSON();
-    attempts.push(body);
-    row = { ...row, ...body };
-    return route.fulfill({ json: row });
-  });
+  await page.route(
+    '**/api/admin/promotions/gift-codes/00000000-0000-7000-8000-000000000000/stats',
+    (route) => route.fulfill({ json: { code: row, perProfile: [], recentRedemptions: [] } })
+  );
+  await page.route(
+    '**/api/admin/promotions/gift-codes/00000000-0000-7000-8000-000000000000',
+    (route) => {
+      const body = route.request().postDataJSON();
+      attempts.push(body);
+      row = { ...row, ...body };
+      return route.fulfill({ json: row });
+    }
+  );
   await page.goto('/admin/gift-codes');
   const edit = page.getByRole('button', { name: 'Edit ACCOUNT-ZONE', exact: true });
   await edit.click();
