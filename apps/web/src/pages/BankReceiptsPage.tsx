@@ -1,9 +1,24 @@
-import { ListPage } from '@barghsa/ui';
+import { ListPage, ListToolbar } from '@barghsa/ui';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Loader2Icon, ReceiptText } from 'lucide-react';
-import { Button, MultiSelectFilter, ListViewToggle } from '@barghsa/ui';
-import { BANK_RECEIPT_STATUSES } from '@barghsa/shared/validation';
+import {
+  Button,
+  MultiSelectFilter,
+  ListViewToggle,
+  TextFilter,
+  ListSortDropdown,
+  NumberFilter,
+} from '@barghsa/ui';
+import {
+  BANK_RECEIPT_STATUSES,
+  DEFAULT_HISTORY_SORT,
+  HISTORY_SORT_OPTIONS,
+  parseNumberRange,
+  type HistoryQuery,
+  type DateRangeFilterValue,
+  type NumberRangeValue,
+} from '@barghsa/shared/validation';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -11,61 +26,78 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useListView } from '../hooks/useListView.js';
 import { HistoryTable } from '../components/HistoryTable.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
-import { useHistoryFilterDraft } from '../hooks/useHistoryFilterDraft.js';
+import {
+  useHistoryFilterDraft,
+  type HistoryFilterSelection,
+} from '../hooks/useHistoryFilterDraft.js';
 import {
   fetchBankReceiptPage,
   type CustomerBankReceiptListItem,
   type CustomerBankReceiptPage,
 } from '../lib/customer-invoices.js';
 
+import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import type { HistoryFilterKey } from '../lib/history-filter-state.js';
+
 type ReceiptState = CustomerBankReceiptListItem['state'];
 
-export function BankReceiptsPage({
-  statuses = [],
-  onStatusesChange,
-  onApplyFilters,
-}: {
+interface BankReceiptsPageProps {
   statuses?: readonly ReceiptState[];
   onStatusesChange?: (statuses: ReceiptState[]) => void;
-  onApplyFilters?: (statuses: ReceiptState[]) => void;
-}) {
-  const filterKey = statuses.join(',');
-  const stableStatuses = useMemo(
-    () => (filterKey ? (filterKey.split(',') as ReceiptState[]) : []),
-    [filterKey]
-  );
-  return (
-    <ReceiptHistory
-      statuses={stableStatuses}
-      onStatusesChange={onStatusesChange}
-      onApplyFilters={onApplyFilters}
-    />
-  );
+  query?: HistoryQuery;
+  dateRange?: DateRangeFilterValue;
+  amountRange?: NumberRangeValue;
+  onApplyFilters?: (selection: HistoryFilterSelection<HistoryQuery>) => void;
+  onClearFilters?: () => void;
+  onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
+}
+
+export function BankReceiptsPage(props: BankReceiptsPageProps) {
+  const revision = useProfileContextRevision();
+  const scope = JSON.stringify([
+    revision,
+    props.statuses,
+    props.query,
+    props.dateRange,
+    props.amountRange,
+  ]);
+  return <ReceiptHistory scope={scope} {...props} />;
 }
 
 function ReceiptHistory({
-  statuses,
+  scope,
+  statuses = [],
   onStatusesChange,
+  query = { q: '', sort: DEFAULT_HISTORY_SORT },
+  dateRange = {},
+  amountRange = {},
   onApplyFilters,
-}: {
-  statuses: readonly ReceiptState[];
-  onStatusesChange: ((statuses: ReceiptState[]) => void) | undefined;
-  onApplyFilters: ((statuses: ReceiptState[]) => void) | undefined;
-}) {
+  onClearFilters,
+  onRemoveFilter,
+}: BankReceiptsPageProps & { scope: string }) {
+  const statusesKey = statuses.join(',');
   const filterDraft = useHistoryFilterDraft(
-    { query: { q: '' }, statuses, dateRange: {} },
-    onApplyFilters ? (selection) => onApplyFilters(selection.statuses as ReceiptState[]) : undefined
+    { query, statuses, dateRange, amountRange },
+    onApplyFilters
   );
   const filterStatuses = onApplyFilters ? filterDraft.draft.statuses : statuses;
+  const filterQuery = filterDraft.draft.query;
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const { view, setView } = useListView('bank-receipts');
-  const [items, setItems] = useState<CustomerBankReceiptListItem[]>([]);
-  const [cursor, setCursor] = useState<CustomerBankReceiptPage['nextCursor']>(null);
-  const [loadState, setLoadState] = useState<'loading' | 'ready' | 'error'>('loading');
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [moreError, setMoreError] = useState(false);
+  const emptyResult = {
+    scope,
+    items: [] as CustomerBankReceiptListItem[],
+    cursor: null as CustomerBankReceiptPage['nextCursor'],
+    loadState: 'loading' as 'loading' | 'ready' | 'error',
+    loadingMore: false,
+    moreError: false,
+  };
+  const [result, setResult] = useState(emptyResult);
+  const { items, cursor, loadState, loadingMore, moreError } =
+    result.scope === scope ? result : emptyResult;
   const [revision, setRevision] = useState(0);
   const moreRequest = useRef<AbortController | null>(null);
   const label = (key: string) => t(`invoices.receipts.${key}`, locale);
@@ -81,53 +113,84 @@ function ReceiptHistory({
   useEffect(() => {
     const request = new AbortController();
     moreRequest.current?.abort();
-    setLoadState('loading');
-    setItems([]);
-    setCursor(null);
-    setLoadingMore(false);
-    setMoreError(false);
-    void fetchBankReceiptPage({ statuses, signal: request.signal })
+    setResult(emptyResult);
+    void fetchBankReceiptPage({
+      statuses,
+      ...query,
+      ...dateRange,
+      ...amountRange,
+      signal: request.signal,
+    })
       .then((page) => {
         if (request.signal.aborted) return;
-        setItems(page.items);
-        setCursor(page.nextCursor);
-        setLoadState('ready');
+        setResult({
+          ...emptyResult,
+          items: page.items,
+          cursor: page.nextCursor,
+          loadState: 'ready',
+        });
       })
       .catch(() => {
-        if (!request.signal.aborted) setLoadState('error');
+        if (!request.signal.aborted) setResult({ ...emptyResult, loadState: 'error' });
       });
     return () => {
       request.abort();
       moreRequest.current?.abort();
     };
-  }, [statuses, revision]);
+  }, [
+    scope,
+    statusesKey,
+    query.q,
+    query.sort,
+    dateRange.from,
+    dateRange.to,
+    amountRange.min,
+    amountRange.max,
+    revision,
+  ]);
 
   function loadMore() {
     if (!cursor || loadingMore) return;
     const request = new AbortController();
     moreRequest.current = request;
-    setLoadingMore(true);
-    setMoreError(false);
+    setResult((current) => ({ ...current, loadingMore: true, moreError: false }));
     void fetchBankReceiptPage({
       statuses,
+      ...query,
+      ...dateRange,
+      ...amountRange,
       cursor,
       signal: request.signal,
     })
       .then((page) => {
         if (request.signal.aborted) return;
-        setItems((current) => [
-          ...current,
-          ...page.items.filter(
-            (item) => !current.some((existing) => existing.receiptId === item.receiptId)
-          ),
-        ]);
-        setCursor(page.nextCursor);
+        setResult((current) =>
+          current.scope === scope
+            ? {
+                ...current,
+                items: [
+                  ...current.items,
+                  ...page.items.filter(
+                    (item) =>
+                      !current.items.some((existing) => existing.receiptId === item.receiptId)
+                  ),
+                ],
+                cursor: page.nextCursor,
+              }
+            : current
+        );
       })
       .catch(() => {
-        if (!request.signal.aborted) setMoreError(true);
+        if (!request.signal.aborted)
+          setResult((current) =>
+            current.scope === scope ? { ...current, moreError: true } : current
+          );
       })
       .finally(() => {
-        if (!request.signal.aborted) setLoadingMore(false);
+        if (!request.signal.aborted)
+          setResult((current) =>
+            current.scope === scope ? { ...current, loadingMore: false } : current
+          );
       });
   }
 
@@ -156,15 +219,14 @@ function ReceiptHistory({
         <ListPage.Toolbar
           filters={
             <HistoryFilterPanel
-              query={{ q: '' }}
+              query={query}
               statuses={statuses}
-              dateRange={{}}
-              onClear={onApplyFilters ? () => onApplyFilters([]) : undefined}
-              onRemoveFilter={
-                onApplyFilters
-                  ? (_key, value) => onApplyFilters(statuses.filter((status) => status !== value))
-                  : undefined
-              }
+              dateRange={dateRange}
+              amountRange={amountRange}
+              dateLabel={label('submittedAt')}
+              formatDate={(value) => time.format(value)}
+              onClear={onClearFilters}
+              onRemoveFilter={onRemoveFilter}
               onOpen={filterDraft.begin}
               onApply={onApplyFilters ? filterDraft.apply : undefined}
               statusOptions={BANK_RECEIPT_STATUSES.map((value) => ({
@@ -172,6 +234,61 @@ function ReceiptHistory({
                 label: t(`invoices.activity.state.${value}`, locale),
               }))}
             >
+              {onApplyFilters && (
+                <>
+                  <ListToolbar
+                    search={
+                      <TextFilter
+                        value={filterQuery.q}
+                        onChange={(q) => filterDraft.setQuery({ ...filterQuery, q })}
+                        label={t('historySearch.label', locale)}
+                        placeholder={label('search')}
+                      />
+                    }
+                    sort={
+                      <ListSortDropdown
+                        value={filterQuery.sort}
+                        onChange={(sort) =>
+                          filterDraft.setQuery({
+                            ...filterQuery,
+                            sort: sort as HistoryQuery['sort'],
+                          })
+                        }
+                        label={t('historySearch.sort', locale)}
+                        options={HISTORY_SORT_OPTIONS.map((value) => ({
+                          value,
+                          label: t(
+                            value.endsWith('desc')
+                              ? 'historySearch.newest'
+                              : 'historySearch.oldest',
+                            locale
+                          ),
+                        }))}
+                      />
+                    }
+                  />
+                  <HistoryDateFilter
+                    value={filterDraft.draft.dateRange}
+                    onChange={filterDraft.setDateRange}
+                    locale={locale}
+                    time={time}
+                    label={label('submittedAt')}
+                  />
+                  <NumberFilter
+                    value={filterDraft.draft.amountRange ?? {}}
+                    onChange={filterDraft.setAmountRange}
+                    parseRange={parseNumberRange}
+                    labels={{
+                      label: t('invoices.filter.amount', locale),
+                      min: t('invoices.filter.min', locale),
+                      max: t('invoices.filter.max', locale),
+                      apply: t('invoices.filter.applyAmount', locale),
+                      clear: t('invoices.filter.clearAmount', locale),
+                      invalid: t('invoices.filter.invalidAmount', locale),
+                    }}
+                  />
+                </>
+              )}
               <MultiSelectFilter
                 value={filterStatuses}
                 onChange={(values) =>
@@ -340,7 +457,7 @@ function ReceiptHistory({
           loading={loadingMore}
           onNext={loadMore}
           label={t('historyPagination.label', locale)}
-          nextLabel={label('older')}
+          nextLabel={label(query.sort === 'submitted_at:asc' ? 'newer' : 'older')}
         />
       </ListPage>
     </div>

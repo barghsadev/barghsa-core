@@ -198,12 +198,16 @@ describe('bank receipt filters', () => {
       beforeId: INVOICE_ID,
     });
     expect(service.listBankReceiptsForUser).toHaveBeenCalledWith('user-1', req.session, {
+      q: '',
+      sort: 'submitted_at:desc',
       statuses: ['Submitted', 'Rejected'],
       beforeAt,
       beforeId: INVOICE_ID,
     });
     await controller.listBankReceipts(req, { state: 'Rejected' });
     expect(service.listBankReceiptsForUser).toHaveBeenLastCalledWith('user-1', req.session, {
+      q: '',
+      sort: 'submitted_at:desc',
       statuses: ['Rejected'],
     });
   });
@@ -214,6 +218,16 @@ describe('bank receipt filters', () => {
     { statuses: ['Submitted'] },
     { state: 'Rejected', statuses: '' },
     { beforeId: INVOICE_ID },
+    { q: ['bank'] },
+    { q: 'x'.repeat(121) },
+    { q: 'bank\nname' },
+    { sort: 'amount:desc' },
+    { min: '1.1' },
+    { max: '9223372036854775808' },
+    { min: '20', max: '10' },
+    { from: '2026-10-01T00:00:00Z', to: '2026-09-01T00:00:00Z' },
+    { from: 'not-a-date' },
+    { unknown: 'private' },
   ])('rejects malformed or ambiguous filters %j', (query) => {
     const { controller, service } = makeController();
     expect(() => controller.listBankReceipts(req, query)).toThrow(HttpException);
@@ -238,4 +252,30 @@ it('validates receipt preview IDs and forwards the current session without expos
     req.session
   );
   expect(image.getHeaders()).toMatchObject({ type: 'image/png', disposition: 'inline', length: 3 });
+});
+
+it('normalizes receipt search, exact amounts and half-open submission dates', async () => {
+  const { controller, service } = makeController();
+  await controller.listBankReceipts(req, {
+    q: '  Bank_%  ',
+    sort: 'submitted_at:asc',
+    min: '۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳',
+    max: '9007199254740994',
+    from: '2026-09-01T00:00:00.000Z',
+    to: '2026-10-01T00:00:00.000Z',
+    statuses: 'Confirmed',
+  });
+  expect(service.listBankReceiptsForUser).toHaveBeenCalledWith(
+    'user-1',
+    req.session,
+    expect.objectContaining({
+      q: 'Bank_%',
+      sort: 'submitted_at:asc',
+      min: '9007199254740993',
+      max: '9007199254740994',
+      from: '2026-09-01T00:00:00.000Z',
+      to: '2026-10-01T00:00:00.000Z',
+      statuses: ['Confirmed'],
+    })
+  );
 });

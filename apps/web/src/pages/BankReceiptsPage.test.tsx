@@ -162,3 +162,91 @@ it('aborts older pages when filters change and ignores a late response', async (
   expect(host.textContent).toContain(secondReceipt.receiptId);
   expect(host.querySelectorAll('ul > li')).toHaveLength(1);
 });
+
+it('keeps exact receipt criteria through ascending pagination and retry', async () => {
+  document.documentElement.lang = 'en';
+  let failMore = true;
+  const requests: URLSearchParams[] = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (raw: string) => {
+      const params = new URL(raw, 'https://app.example.test').searchParams;
+      requests.push(params);
+      if (params.has('beforeId') && failMore) {
+        failMore = false;
+        throw new Error('offline');
+      }
+      return Response.json({
+        items: params.has('beforeId') ? [secondReceipt] : [firstReceipt],
+        nextCursor: params.has('beforeId')
+          ? null
+          : { beforeAt: '2026-09-02T12:00:00.000001Z', beforeId: firstReceipt.receiptId },
+      });
+    })
+  );
+  await act(async () =>
+    root.render(
+      <BankReceiptsPage
+        query={{ q: 'Bank_%', sort: 'submitted_at:asc' }}
+        statuses={['Submitted', 'Rejected']}
+        dateRange={{ from: '2026-09-01T00:00:00.000Z', to: '2026-10-01T00:00:00.000Z' }}
+        amountRange={{ min: '9007199254740993', max: '9007199254740994' }}
+      />
+    )
+  );
+  const next = [...host.querySelectorAll('button')].find((b) =>
+    b.textContent?.includes('Show newer receipts')
+  )!;
+  await act(async () => next.click());
+  expect(host.textContent).toContain(firstReceipt.receiptId);
+  expect(host.querySelector('[role="alert"]')).not.toBeNull();
+  const retry = [...host.querySelectorAll('button')].find((b) =>
+    b.textContent?.includes('Try again')
+  )!;
+  await act(async () => retry.click());
+  expect(host.textContent).toContain(secondReceipt.receiptId);
+  expect(requests).toHaveLength(3);
+  for (const params of requests) {
+    expect(Object.fromEntries(params)).toMatchObject({
+      q: 'Bank_%',
+      sort: 'submitted_at:asc',
+      statuses: 'Submitted,Rejected',
+      from: '2026-09-01T00:00:00.000Z',
+      to: '2026-10-01T00:00:00.000Z',
+      min: '9007199254740993',
+      max: '9007199254740994',
+    });
+  }
+  expect(requests[1]!.toString()).toBe(requests[2]!.toString());
+});
+
+it('clears the old receipt scope immediately and rejects late search responses', async () => {
+  document.documentElement.lang = 'en';
+  let resolveOld!: (response: Response) => void;
+  let oldSignal: AbortSignal | undefined;
+  const fetcher = vi.fn((raw: string, init?: RequestInit) => {
+    if (new URL(raw, 'https://app.example.test').searchParams.get('q') === 'old') {
+      oldSignal = init?.signal as AbortSignal;
+      return new Promise<Response>((resolve) => {
+        resolveOld = resolve;
+      });
+    }
+    return Promise.resolve(Response.json({ items: [secondReceipt], nextCursor: null }));
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await act(async () =>
+    root.render(<BankReceiptsPage query={{ q: 'old', sort: 'submitted_at:desc' }} />)
+  );
+  await act(async () =>
+    root.render(<BankReceiptsPage query={{ q: 'current', sort: 'submitted_at:asc' }} />)
+  );
+  expect(oldSignal?.aborted).toBe(true);
+  await act(async () => resolveOld(Response.json({ items: [firstReceipt], nextCursor: null })));
+  expect(host.textContent).toContain(secondReceipt.receiptId);
+  expect(host.textContent).not.toContain(firstReceipt.receiptId);
+  const count = fetcher.mock.calls.length;
+  await act(async () =>
+    root.render(<BankReceiptsPage query={{ q: 'current', sort: 'submitted_at:asc' }} />)
+  );
+  expect(fetcher).toHaveBeenCalledTimes(count);
+});

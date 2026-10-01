@@ -512,6 +512,12 @@ export class CustomerInvoiceDetailsService {
     actor: InvoiceReadActor,
     filter: {
       statuses?: readonly ('Submitted' | 'UnderReview' | 'Confirmed' | 'Rejected')[] | undefined;
+      q?: string | undefined;
+      sort?: 'submitted_at:desc' | 'submitted_at:asc' | undefined;
+      from?: string | undefined;
+      to?: string | undefined;
+      min?: string | undefined;
+      max?: string | undefined;
       beforeAt?: string | undefined;
       beforeId?: string | undefined;
     } = {}
@@ -529,6 +535,9 @@ export class CustomerInvoiceDetailsService {
   }> {
     return this.authorizedRead(userId, actor, async (profileId, client) => {
       const pageSize = 25;
+      const ascending = filter.sort === 'submitted_at:asc';
+      const direction = ascending ? 'ASC' : 'DESC';
+      const comparison = ascending ? '>' : '<';
       const result = await client.query<{
         receiptId: string;
         invoiceId: string;
@@ -548,14 +557,27 @@ export class CustomerInvoiceDetailsService {
            JOIN invoices i ON i.id=r.invoice_id AND i.profile_id=r.profile_id
           WHERE r.profile_id=$1::uuid AND i.state <> 'Draft'
             AND (cardinality($2::text[])=0 OR r.state=ANY($2::text[]))
-            AND ($3::timestamptz IS NULL OR (r.created_at,r.id) < ($3::timestamptz,$4::uuid))
-          ORDER BY r.created_at DESC,r.id DESC LIMIT $5`,
+            AND ($3::timestamptz IS NULL OR (r.created_at,r.id) ${comparison} ($3::timestamptz,$4::uuid))
+            AND ($6::text IS NULL OR r.id::text ILIKE $6 ESCAPE E'\\\\'
+              OR r.invoice_id::text ILIKE $6 ESCAPE E'\\\\'
+              OR r.bank_name ILIKE $6 ESCAPE E'\\\\'
+              OR r.payer_reference ILIKE $6 ESCAPE E'\\\\')
+            AND ($7::timestamptz IS NULL OR r.created_at >= $7::timestamptz)
+            AND ($8::timestamptz IS NULL OR r.created_at < $8::timestamptz)
+            AND ($9::bigint IS NULL OR r.amount >= $9::bigint)
+            AND ($10::bigint IS NULL OR r.amount <= $10::bigint)
+          ORDER BY r.created_at ${direction},r.id ${direction} LIMIT $5`,
         [
           profileId,
           filter.statuses ?? [],
           filter.beforeAt ?? null,
           filter.beforeId ?? null,
           pageSize + 1,
+          literalSearchPattern(filter.q ?? ''),
+          filter.from ?? null,
+          filter.to ?? null,
+          filter.min ?? null,
+          filter.max ?? null,
         ]
       );
       const page = result.rows.slice(0, pageSize);

@@ -133,6 +133,12 @@ export interface CustomerBankReceiptPage {
 
 export async function fetchBankReceiptPage(
   options: {
+    q?: string;
+    sort?: 'submitted_at:desc' | 'submitted_at:asc';
+    from?: string | undefined;
+    to?: string | undefined;
+    min?: string | undefined;
+    max?: string | undefined;
     state?: CustomerBankReceiptListItem['state'];
     statuses?: readonly CustomerBankReceiptListItem['state'][];
     cursor?: CustomerBankReceiptPage['nextCursor'];
@@ -140,6 +146,10 @@ export async function fetchBankReceiptPage(
   } = {}
 ): Promise<CustomerBankReceiptPage> {
   const query = new URLSearchParams();
+  if (options.q) query.set('q', options.q);
+  if (options.sort && options.sort !== 'submitted_at:desc') query.set('sort', options.sort);
+  for (const field of ['from', 'to', 'min', 'max'] as const)
+    if (options[field] !== undefined) query.set(field, options[field]);
   if (options.state) query.set('state', options.state);
   if (options.statuses?.length) query.set('statuses', options.statuses.join(','));
   if (options.cursor) {

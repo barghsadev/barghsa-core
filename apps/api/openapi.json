@@ -21583,6 +21583,53 @@
         "operationId": "CustomerInvoiceController_listBankReceipts",
         "parameters": [
           {
+            "description": "Inclusive maximum receipt amount in IRR",
+            "in": "query",
+            "name": "max",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "description": "Inclusive minimum receipt amount in IRR",
+            "in": "query",
+            "name": "min",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "description": "Exclusive submission timestamp",
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "description": "Inclusive submission timestamp",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "enum": [
+                "submitted_at:desc",
+                "submitted_at:asc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Literal receipt/invoice ID, bank name or payer reference substring, up to 120 characters",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {}
+          },
+          {
             "description": "Comma-separated Submitted, UnderReview, Confirmed or Rejected states. Cannot be combined with state.",
             "in": "query",
             "name": "statuses",
@@ -21621,7 +21668,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Up to 25 newest receipts and a cursor for older receipts."
+            "description": "Up to 25 receipts in the selected submission order and a cursor for the next page."
           },
           "400": {
             "description": "Invalid state or cursor."

@@ -643,3 +643,131 @@ it('checks the active invoice and receipt before redirecting to its attachment',
   ]);
   expect((await attachment(f, f.invoice, receiptId)).status).toBe(404);
 });
+
+it('searches receipt public references literally and applies exact date/amount/status filters', async () => {
+  const f = await fixture();
+  const foreign = await fixture();
+  const chosen = randomUUID(),
+    other = randomUUID(),
+    draft = randomUUID();
+  await http.pool.query(
+    "INSERT INTO invoices(id,profile_id,state,total_amount) VALUES ($1,$2,'Draft',1000)",
+    [draft, f.profile]
+  );
+  for (const [id, invoiceId, profileId, bank, ref, value, at, state] of [
+    [
+      chosen,
+      f.invoice,
+      f.profile,
+      'بانک_%\\آزمایش',
+      'transfer-special',
+      '9007199254740993',
+      '2026-09-01T00:00:00.000Z',
+      'Rejected',
+    ],
+    [
+      other,
+      f.invoice,
+      f.profile,
+      'بانکXYآزمایش',
+      'other',
+      '9007199254740994',
+      '2026-10-01T00:00:00.000Z',
+      'Submitted',
+    ],
+    [
+      randomUUID(),
+      foreign.invoice,
+      foreign.profile,
+      'بانک_%\\آزمایش',
+      'transfer-special',
+      '9007199254740993',
+      '2026-09-01T00:00:00.000Z',
+      'Rejected',
+    ],
+    [
+      randomUUID(),
+      draft,
+      f.profile,
+      'بانک_%\\آزمایش',
+      'transfer-special',
+      '9007199254740993',
+      '2026-09-01T00:00:00.000Z',
+      'Rejected',
+    ],
+  ])
+    await http.pool.query(
+      `INSERT INTO bank_receipts(id,invoice_id,profile_id,amount,payment_date,payer_reference,bank_name,attachment_key,created_at,state,rejection_reason) VALUES ($1,$2,$3,$6::bigint,'2026-09-01',$5,$4,'private-sealed-key-'||($1::uuid)::text,$7::timestamptz,$8,CASE WHEN $8='Rejected' THEN 'Mismatch' ELSE NULL END)`,
+      [id, invoiceId, profileId, bank, ref, value, at, state]
+    );
+  const list = async (params: Record<string, string>) => {
+    const response = await fetch(
+      `${http.base}/api/invoices/bank-receipts?${new URLSearchParams(params)}`,
+      { headers: f.headers }
+    );
+    expect(response.status, http.logs()).toBe(200);
+    const body = (await response.json()) as {
+      items: { receiptId: string; amount: string }[];
+      nextCursor: unknown;
+    };
+    expect(JSON.stringify(body)).not.toContain('private-sealed-key');
+    return body;
+  };
+  for (const q of [chosen.slice(0, 12), 'بانک_%\\', 'TRANSFER-SPECIAL'])
+    expect((await list({ q })).items.map((r) => r.receiptId)).toEqual([chosen]);
+  expect((await list({ q: f.invoice })).items.map((r) => r.receiptId)).toEqual([other, chosen]);
+  expect(
+    (
+      await list({
+        from: '2026-09-01T00:00:00.000Z',
+        to: '2026-10-01T00:00:00.000Z',
+        min: '۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳',
+        max: '9007199254740993',
+        statuses: 'Rejected',
+        q: 'transfer',
+      })
+    ).items
+  ).toEqual([expect.objectContaining({ receiptId: chosen, amount: '9007199254740993' })]);
+  expect(
+    (await list({ min: '9007199254740994', max: '9007199254740994' })).items.map((r) => r.receiptId)
+  ).toEqual([other]);
+  expect((await list({ q: 'missing' })).items).toEqual([]);
+});
+
+it('pages searched receipts in both submission directions without losing tied microseconds', async () => {
+  const f = await fixture();
+  const ids = Array.from({ length: 61 }, () => randomUUID());
+  await http.pool.query(
+    `INSERT INTO bank_receipts(id,invoice_id,profile_id,amount,payment_date,payer_reference,bank_name,attachment_key,created_at)
+    SELECT id,$1,$2,1000,'2026-09-01','needle','needle bank','private-'||id::text, '2026-09-01T00:00:00.000Z'::timestamptz + ((ordinality / 3)::int * interval '1 microsecond') FROM unnest($3::uuid[]) WITH ORDINALITY AS rows(id,ordinality)`,
+    [f.invoice, f.profile, ids]
+  );
+  const sorted = (
+    await http.pool.query<{ id: string }>(
+      'SELECT id FROM bank_receipts WHERE profile_id=$1 ORDER BY created_at ASC,id ASC',
+      [f.profile]
+    )
+  ).rows.map((r) => r.id);
+  for (const sort of ['submitted_at:asc', 'submitted_at:desc']) {
+    let cursor: { beforeAt: string; beforeId: string } | null = null;
+    const seen: string[] = [];
+    let pages = 0;
+    do {
+      const params = new URLSearchParams({ q: 'needle', sort, ...(cursor ?? {}) });
+      const response = await fetch(`${http.base}/api/invoices/bank-receipts?${params}`, {
+        headers: f.headers,
+      });
+      expect(response.status, http.logs()).toBe(200);
+      const body = (await response.json()) as {
+        items: { receiptId: string }[];
+        nextCursor: { beforeAt: string; beforeId: string } | null;
+      };
+      seen.push(...body.items.map((r) => r.receiptId));
+      cursor = body.nextCursor;
+      if (cursor) expect(cursor.beforeAt).toMatch(/\.\d{6}Z$/);
+      expect(++pages).toBeLessThan(5);
+    } while (cursor);
+    expect(seen).toEqual(sort.endsWith('asc') ? sorted : [...sorted].reverse());
+    expect(new Set(seen).size).toBe(61);
+  }
+});

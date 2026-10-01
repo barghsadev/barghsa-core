@@ -45,6 +45,8 @@ import {
   parseStatusFilter,
   parseDateRangeFilter,
   parseInvoiceListQuery,
+  parseHistoryQuery,
+  HISTORY_SORT_OPTIONS,
   parseNumberRange,
 } from '@barghsa/shared/validation';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -76,6 +78,12 @@ const BankReceiptListQuerySchema = z
       .string()
       .refine((value) => parseStatusFilter(value, BANK_RECEIPT_STATUSES) !== null)
       .optional(),
+    q: z.string().optional(),
+    sort: z.enum(HISTORY_SORT_OPTIONS).optional(),
+    from: z.string().optional(),
+    to: z.string().optional(),
+    min: z.string().optional(),
+    max: z.string().optional(),
     beforeAt: z.string().datetime({ offset: true }).optional(),
     beforeId: z.string().uuid().optional(),
   })
@@ -198,9 +206,29 @@ export class CustomerInvoiceController {
     description:
       'Comma-separated Submitted, UnderReview, Confirmed or Rejected states. Cannot be combined with state.',
   })
+  @ApiQuery({
+    name: 'q',
+    required: false,
+    description:
+      'Literal receipt/invoice ID, bank name or payer reference substring, up to 120 characters',
+  })
+  @ApiQuery({ name: 'sort', required: false, enum: HISTORY_SORT_OPTIONS })
+  @ApiQuery({ name: 'from', required: false, description: 'Inclusive submission timestamp' })
+  @ApiQuery({ name: 'to', required: false, description: 'Exclusive submission timestamp' })
+  @ApiQuery({
+    name: 'min',
+    required: false,
+    description: 'Inclusive minimum receipt amount in IRR',
+  })
+  @ApiQuery({
+    name: 'max',
+    required: false,
+    description: 'Inclusive maximum receipt amount in IRR',
+  })
   @ApiResponse({
     status: 200,
-    description: 'Up to 25 newest receipts and a cursor for older receipts.',
+    description:
+      'Up to 25 receipts in the selected submission order and a cursor for the next page.',
   })
   @ApiResponse({ status: 400, description: 'Invalid state or cursor.' })
   @ApiResponse({ status: 404, description: 'No active profile.' })
@@ -208,7 +236,15 @@ export class CustomerInvoiceController {
     const parsed = BankReceiptListQuerySchema.safeParse(rawQuery);
     if (!parsed.success)
       httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, 'Invalid receipt list filter');
+    const query = parseHistoryQuery(parsed.data.q, parsed.data.sort);
+    const dates = parseDateRangeFilter(parsed.data.from, parsed.data.to);
+    const amounts = parseNumberRange(parsed.data.min, parsed.data.max);
+    if (!query || !dates || !amounts)
+      httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, 'Invalid receipt list filter');
     return this.service.listBankReceiptsForUser(req.session.userId, req.session, {
+      ...query,
+      ...dates,
+      ...amounts,
       beforeAt: parsed.data.beforeAt,
       beforeId: parsed.data.beforeId,
       statuses: parsed.data.state
