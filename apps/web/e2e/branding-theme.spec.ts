@@ -1,16 +1,18 @@
 import AxeBuilder from '@axe-core/playwright';
 import { brandingText } from '@barghsa/i18n/branding';
+import { crmShell } from './crm-shell-fixture';
+import { t as settingsText } from '@barghsa/i18n/admin-ui';
 import { shellText } from '@barghsa/i18n/shell';
 import { test, expect } from './coverage-fixture';
 
+test.use({ viewport: { width: 390, height: 844 } });
 for (const locale of ['fa', 'en'] as const)
   for (const darkMode of [false, true]) {
     test(`branding editor and live preview remain readable (${locale}, dark=${darkMode})`, async ({
       page,
     }) => {
-      await page.setViewportSize({ width: 390, height: 844 });
       await page.emulateMedia({ reducedMotion: 'reduce' });
-      await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+      await crmShell(page, locale);
       const config = {
         appTitle: 'Theme preview',
         appTitleFa: 'آزمون نمایش',
@@ -31,16 +33,12 @@ for (const locale of ['fa', 'en'] as const)
         darkMode,
       };
       let preference: 'light' | 'dark' | null = null;
-      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
       await page.route('**/api/user/settings/theme', async (route) => {
         if (route.request().method() === 'PUT') {
           preference = (route.request().postDataJSON() as { mode: typeof preference }).mode;
         }
         await route.fulfill({ json: { mode: preference } });
       });
-      await page.route('**/api/auth/user', (route) =>
-        route.fulfill({ json: { isStaff: true, userId: 'owner', requiresTosAcceptance: false } })
-      );
       await page.route('**/api/user/settings/timezone', (route) =>
         route.fulfill({ json: { timezone: 'Asia/Tehran' } })
       );
@@ -56,6 +54,21 @@ for (const locale of ['fa', 'en'] as const)
             createdAt: '2026-09-01T00:00:00Z',
             updatedAt: '2026-09-01T00:00:00Z',
           },
+        })
+      );
+      await page.route('**/api/admin/branding/configs', (route) =>
+        route.fulfill({
+          json: [
+            {
+              id: '11111111-1111-4111-8111-111111111111',
+              config,
+              version: 1,
+              status: 'active',
+              createdBy: 'system',
+              createdAt: '2026-09-01T00:00:00Z',
+              updatedAt: '2026-09-01T00:00:00Z',
+            },
+          ],
         })
       );
       await page.goto('/admin/branding');
@@ -85,6 +98,9 @@ for (const locale of ['fa', 'en'] as const)
           .toEqual([]);
       };
       await scan();
+      await page
+        .getByRole('button', { name: settingsText('admin.settings.edit', locale), exact: true })
+        .click();
       expect
         .soft(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
         .toBe(true);
@@ -95,7 +111,9 @@ for (const locale of ['fa', 'en'] as const)
         })
         .fill('#777777');
       await expect(
-        preview.getByRole('button', { name: brandingText('primary', locale), exact: true })
+        preview
+          .getByRole('group', { name: settingsText('admin.settings.draft', locale), exact: true })
+          .getByText(brandingText('primary', locale), { exact: true })
       ).toHaveCSS('background-color', 'rgb(119, 119, 119)');
       await scan();
       // Preview follows the draft without changing the active application theme.

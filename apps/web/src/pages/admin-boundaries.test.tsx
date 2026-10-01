@@ -748,13 +748,20 @@ it('previews and saves bounded brand layout settings', async () => {
     if (init?.method === 'PUT') {
       const body = JSON.parse(String(init.body)) as { config: typeof brandConfig };
       return new Response(
-        JSON.stringify({ ...brand, status: 'draft', version: 2, config: body.config })
+        JSON.stringify({
+          ...brand,
+          id: 'brand-two',
+          status: 'draft',
+          version: 2,
+          config: body.config,
+        })
       );
     }
-    return new Response(JSON.stringify(brand));
+    return new Response(JSON.stringify(_url.endsWith('/configs') ? [brand] : brand));
   });
   vi.stubGlobal('fetch', requests);
   await act(async () => root.render(<AdminBrandingConfig />));
+  await clickText('Edit');
   await setInput(
     host.querySelector<HTMLInputElement>('input[aria-label="Light background hex value"]')!,
     '#eef2e8'
@@ -1056,7 +1063,13 @@ it.each([
     vi.fn(
       async (_url, init) =>
         new Response(
-          JSON.stringify(init?.method === 'POST' ? { ...brand, ...scenario.patch } : initial)
+          JSON.stringify(
+            init?.method === 'POST'
+              ? { ...brand, ...scenario.patch }
+              : String(_url).endsWith('/configs')
+                ? [initial]
+                : initial
+          )
         )
     )
   );
@@ -1138,17 +1151,21 @@ it.each([
             init?.method === 'PUT'
               ? {
                   ...brand,
+                  id: 'brand-two',
                   status: 'draft',
                   version: 2,
                   config: { ...brandConfig, appTitle: 'Updated brand' },
                   ...scenario.patch,
                 }
-              : brand
+              : String(_url).endsWith('/configs')
+                ? [brand]
+                : brand
           )
         )
     )
   );
   await act(async () => root.render(<AdminBrandingConfig />));
+  await clickText('Edit');
   await setInput(
     host.querySelector<HTMLInputElement>('#adminbrandingconfig-field-2')!,
     'Updated brand'

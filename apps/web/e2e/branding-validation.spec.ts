@@ -1,15 +1,10 @@
+import { crmShell } from './crm-shell-fixture';
+import { brandSettings } from '../src/test/branding-settings-fixtures';
+import { brandingText } from '@barghsa/i18n/branding';
+import { t as settingsText } from '@barghsa/i18n/admin-ui';
 import { test, expect } from './coverage-fixture';
 
-const config = {
-  appTitle: 'Brand validation',
-  slogan: '',
-  primaryColor: '#2563eb',
-  secondaryColor: '#64748b',
-  accentColor: '#f59e0b',
-  logoUrl: null,
-  faviconUrl: null,
-  darkMode: false,
-};
+const config = brandSettings;
 const valid = {
   id: '11111111-1111-4111-8111-111111111111',
   version: 1,
@@ -24,16 +19,9 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((language) => {
-      if (document.documentElement) document.documentElement.lang = language;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = language;
-      }).observe(document, { childList: true });
-    }, locale);
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
-    await page.route('**/api/auth/user', (route) =>
-      route.fulfill({ json: { isStaff: true, userId: valid.id, requiresTosAcceptance: false } })
-    );
+    await crmShell(page, locale as 'en' | 'fa');
+    await page.route('**/api/admin/branding/configs', (route) => route.fulfill({ json: [valid] }));
+    const draftId = '11111111-1111-4111-8111-111111111112';
     let response: unknown = { ...valid, config: { ...config, numberStyle: ['western'] } };
     let saveResponse = 'invalid';
     const writes: unknown[] = [];
@@ -51,7 +39,7 @@ for (const locale of ['en', 'fa'])
                 ? { ...valid, status: 'draft', version: 2, config }
                 : saveResponse === 'wrong-status'
                   ? { ...valid, version: 2, config: body.config }
-                  : { ...valid, status: 'draft', version: 2, config: body.config },
+                  : { ...valid, id: draftId, status: 'draft', version: 2, config: body.config },
       });
     });
     let activationResponse = 'wrong-id';
@@ -63,7 +51,7 @@ for (const locale of ['en', 'fa'])
         json: {
           ...valid,
           config: { ...config, appTitle: 'Retained draft' },
-          id: activationResponse === 'wrong-id' ? 'another-draft' : valid.id,
+          id: activationResponse === 'wrong-id' ? 'another-draft' : draftId,
           version: activationResponse === 'wrong-version' ? 3 : 2,
           status: activationResponse === 'wrong-status' ? 'draft' : 'active',
         },
@@ -89,13 +77,25 @@ for (const locale of ['en', 'fa'])
           .getByRole('alert')
           .filter({ hasText: fa ? 'دریافت تنظیمات برند ناموفق' : 'Could not load branding' })
       ).toBeVisible();
-      await expect(save).toBeDisabled();
+      await expect(
+        page.getByRole('button', {
+          name: brandingText('save', locale as 'en' | 'fa'),
+          exact: true,
+          disabled: false,
+        })
+      ).toHaveCount(0);
     }
     expect(writes).toEqual([]);
     response = valid;
     await refresh.click();
+    await page
+      .getByRole('button', {
+        name: settingsText('admin.settings.edit', locale as 'en' | 'fa'),
+        exact: true,
+      })
+      .click();
     const title = page.getByRole('textbox', {
-      name: fa ? 'نام برنامه' : 'App Title',
+      name: brandingText('appTitle', locale as 'en' | 'fa'),
       exact: true,
       includeHidden: true,
     });
@@ -125,7 +125,5 @@ for (const locale of ['en', 'fa'])
     activationResponse = 'valid';
     await confirm.click();
     await expect(dialog).toHaveCount(0);
-    expect(activations).toEqual(
-      Array.from({ length: 4 }, () => ({ draftId: valid.id, expectedVersion: 2 }))
-    );
+    expect(activations).toEqual(Array.from({ length: 4 }, () => ({ draftId, expectedVersion: 2 })));
   });

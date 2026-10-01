@@ -9,6 +9,8 @@ import {
   ListPage,
   ScrollArea,
 } from '@barghsa/ui';
+import { ConfigPreviewCard } from '../components/ConfigPreviewCard.js';
+import { t as settingsText } from '@barghsa/i18n/admin-ui';
 import { tVat } from '@barghsa/i18n/vat';
 import {
   CHARGE_CATEGORIES,
@@ -573,6 +575,43 @@ export default function AdminVatPage() {
                 </div>
               )}
               {invalidDate && <p role="alert">{label('invalidDate')}</p>}
+              {editor.kind === 'rate' && (
+                <ConfigPreviewCard
+                  title={settingsText('admin.settings.comparison', locale)}
+                  current={
+                    <div className="flex flex-col gap-2">
+                      <p>{label(`category.${category}`)}</p>
+                      <p>
+                        {(() => {
+                          const current = rates.find(
+                            (row) =>
+                              row.category === category &&
+                              vatWindowStatus(row.effectiveFrom, row.effectiveUntil) === 'current'
+                          );
+                          return current
+                            ? numbers.percent(current.rateBasisPoints / 10000)
+                            : settingsText('admin.settings.none', locale);
+                        })()}
+                      </p>
+                    </div>
+                  }
+                  draft={
+                    <div className="flex flex-col gap-2">
+                      <p>{label(`category.${category}`)}</p>
+                      <p>
+                        {/^(?:\d+(?:\.\d{1,2})?|\.\d{1,2})$/.test(percent) && Number(percent) <= 100
+                          ? numbers.percent(Number(percent) / 100)
+                          : label('invalid')}
+                      </p>
+                      <p>
+                        {scheduled
+                          ? `${label('schedule')} ${date ? dateText(date.toISOString()) : label('chooseDate')} ${time}`
+                          : label('immediate')}
+                      </p>
+                    </div>
+                  }
+                />
+              )}
               <div className="flex gap-2">
                 <Button
                   type="submit"

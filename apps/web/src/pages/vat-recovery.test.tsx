@@ -390,3 +390,16 @@ it.each(['', '/overrides', '/products'])(
     expect(host.querySelector('[data-testid="confirmation"]')).toBeNull();
   }
 );
+
+it('compares the active category rate and fractional draft without committing the preview', async () => {
+  mock((path) => response(data(path)));
+  await render();
+  await click('Add rate');
+  await fill('#vat-percent', '.5');
+  const preview = host.querySelector('[data-testid=config-preview]')!;
+  expect(preview.textContent).toContain('9%');
+  expect(preview.textContent).toContain('0.5%');
+  expect(captured.action).toBeNull();
+  await fill('#vat-percent', '1.234');
+  expect(preview.textContent).toContain('Check the form values.');
+});

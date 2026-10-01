@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button, Input, Label, ListPage } from '@barghsa/ui';
+import { ConfigPreviewCard } from '../components/ConfigPreviewCard.js';
+import { t as settingsText } from '@barghsa/i18n/admin-ui';
 import { documentTemplateText } from '@barghsa/i18n/document-templates';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -450,6 +452,17 @@ export default function AdminDocumentTemplatesPage() {
                     ))}
                   </select>
                 </div>
+                <ConfigPreviewCard
+                  title={`${settingsText('admin.settings.comparison', locale)}: ${word('edit')}`}
+                  current={
+                    detail ? (
+                      <TemplateSummary value={detail} locale={locale} />
+                    ) : (
+                      <p>{settingsText('admin.settings.none', locale)}</p>
+                    )
+                  }
+                  draft={<TemplateSummary value={draft} locale={locale} />}
+                />
                 <div className="flex gap-2">
                   <Button type="submit" disabled={!!selected && detailState !== 'ready'}>
                     {word('save')}
@@ -465,6 +478,35 @@ export default function AdminDocumentTemplatesPage() {
                 <form className="space-y-4 border-y py-5" onSubmit={createVersion}>
                   <h3 className="text-lg font-semibold">{word('publishVersion')}</h3>
                   <p className="text-sm text-muted-foreground">{word('versionHelp')}</p>
+                  <ConfigPreviewCard
+                    title={`${settingsText('admin.settings.comparison', locale)}: ${word('publishVersion')}`}
+                    current={
+                      <ul className="flex flex-col gap-2">
+                        {latest?.files.map((file) => (
+                          <li key={file.id} dir="auto">
+                            {file.originalName}
+                          </li>
+                        ))}
+                      </ul>
+                    }
+                    draft={
+                      <ul className="flex flex-col gap-2">
+                        {latest?.files
+                          .filter((file) => retained.includes(file.id))
+                          .map((file) => (
+                            <li key={file.id} dir="auto">
+                              {file.originalName}
+                            </li>
+                          ))}
+                        {files.map((file, index) => (
+                          <li key={index} dir="auto">
+                            {file.name}
+                          </li>
+                        ))}
+                      </ul>
+                    }
+                  />
+
                   {latest?.files.length ? (
                     <fieldset className="space-y-2">
                       <legend className="font-medium">{word('currentFiles')}</legend>
@@ -644,5 +686,25 @@ export default function AdminDocumentTemplatesPage() {
         />
       ) : null}
     </section>
+  );
+}
+
+function TemplateSummary({ value, locale }: { value: Draft; locale: 'fa' | 'en' }) {
+  return (
+    <dl className="flex min-w-0 flex-col gap-3">
+      {(['title', 'description', 'category'] as const).map((key) => (
+        <div key={key}>
+          <dt className="text-muted-foreground">
+            {documentTemplateText(
+              key === 'title' ? 'name' : key === 'description' ? 'details' : 'category',
+              locale
+            )}
+          </dt>
+          <dd className="whitespace-pre-wrap break-words" dir="auto">
+            {key === 'category' ? documentTemplateText(value.category, locale) : value[key]}
+          </dd>
+        </div>
+      ))}
+    </dl>
   );
 }

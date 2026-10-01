@@ -3,6 +3,30 @@ import type { I18nDictionary, Locale } from './index.js';
 import { t as sharedText } from './crm.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'admin.settings.current': 'فعلی',
+  'admin.settings.draft': 'پیش‌نویس',
+  'admin.settings.active': 'فعال',
+  'admin.settings.superseded': 'جایگزین‌شده',
+  'admin.settings.version': 'نسخه {version}',
+  'admin.settings.updatedAt': 'آخرین ذخیره',
+  'admin.settings.updatedBy': 'ذخیره‌کننده',
+  'admin.settings.noActive': 'تنظیمات پیش‌فرض منتشر شده‌اند. هنوز نسخه ذخیره‌شده‌ای فعال نیست.',
+  'admin.settings.history': 'نمایش تاریخچه',
+  'admin.settings.noHistory': 'هنوز نسخه‌ای ذخیره نشده است.',
+  'admin.settings.rollback': 'بازیابی به‌صورت پیش‌نویس',
+  'admin.settings.edit': 'ویرایش',
+  'admin.settings.cancelEdit': 'لغو ویرایش',
+  'admin.settings.resetDraft': 'استفاده از آخرین تنظیمات ذخیره‌شده',
+  'admin.settings.resetRequired':
+    'تنظیمات ذخیره‌شده تغییر کرده‌اند. ویرایش شما حفظ شده است. برای ادامه، آخرین تنظیمات ذخیره‌شده را انتخاب کنید.',
+  'admin.settings.historyError':
+    'تاریخچه تنظیمات تأیید نشد. پیش از ذخیره یا انتشار دوباره تلاش کنید.',
+  'admin.settings.retryHistory': 'تلاش دوباره برای تاریخچه',
+  'admin.settings.rollbackConfirm':
+    'نسخه {version} در پیش‌نویس جدید کپی شود؟ تنظیمات منتشرشده تا زمان انتشار آن پیش‌نویس فعال می‌مانند.',
+  'admin.settings.denied': 'دیگر به این تنظیمات دسترسی ندارید.',
+  'admin.settings.comparison': 'مقایسه تنظیمات',
+  'admin.settings.none': 'ندارد',
   'admin.settings.navigation': 'بخش تنظیمات',
   'admin.settings.branding': 'هویت بصری',
   'admin.settings.staff': 'کارکنان و نقش‌ها',
@@ -1564,6 +1588,30 @@ export const fa: I18nDictionary = {
   'admin.approvals.walletReceipts': 'نمایش رسیدهای کیف پول',
 };
 export const en: I18nDictionary = {
+  'admin.settings.current': 'Current',
+  'admin.settings.draft': 'Draft',
+  'admin.settings.active': 'Active',
+  'admin.settings.superseded': 'Superseded',
+  'admin.settings.version': 'Version {version}',
+  'admin.settings.updatedAt': 'Last saved',
+  'admin.settings.updatedBy': 'Saved by',
+  'admin.settings.noActive': 'Default settings are published. No saved version is active.',
+  'admin.settings.history': 'View history',
+  'admin.settings.noHistory': 'No saved versions yet.',
+  'admin.settings.rollback': 'Restore as draft',
+  'admin.settings.edit': 'Edit',
+  'admin.settings.cancelEdit': 'Cancel editing',
+  'admin.settings.resetDraft': 'Use latest saved settings',
+  'admin.settings.resetRequired':
+    'Saved settings changed. Your edits are retained. Use the latest saved settings before continuing.',
+  'admin.settings.historyError':
+    'Could not verify settings history. Retry before saving or publishing.',
+  'admin.settings.retryHistory': 'Retry history',
+  'admin.settings.rollbackConfirm':
+    'Copy version {version} into a new draft? Published settings remain active until you activate that draft.',
+  'admin.settings.denied': 'You no longer have access to these settings.',
+  'admin.settings.comparison': 'Compare settings',
+  'admin.settings.none': 'None',
   'admin.settings.navigation': 'Settings section',
   'admin.settings.branding': 'Branding',
   'admin.settings.staff': 'Staff and roles',
