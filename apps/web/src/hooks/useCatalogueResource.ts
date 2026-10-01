@@ -26,6 +26,7 @@ export function useCatalogueResource<T>(
   validate: (value: unknown) => value is T
 ) {
   const { live, version, denied, deny } = scope;
+  const sequence = useRef(0);
   const [attempt, setAttempt] = useState(0);
   const [result, setResult] = useState<{
     key: string;
@@ -34,14 +35,29 @@ export function useCatalogueResource<T>(
     error: boolean;
   } | null>(null);
   const key = `${version}:${path}`;
+  const liveKey = useRef(key);
+  liveKey.current = key;
   const retry = useCallback(() => setAttempt((v) => v + 1), []);
+  /** Publish a validated mutation receipt before reloading its authoritative catalogue. */
+  const accept = useCallback(
+    (data: T) => {
+      if (!path || denied || live.current !== version || liveKey.current !== key || !validate(data))
+        return false;
+      sequence.current++;
+      setResult({ key, data, loading: false, error: false });
+      return true;
+    },
+    [path, denied, live, version, validate, key]
+  );
   useEffect(() => {
     if (!path || denied) {
       setResult(null);
       return;
     }
     const controller = new AbortController();
-    const current = () => !controller.signal.aborted && live.current === version;
+    const read = ++sequence.current;
+    const current = () =>
+      !controller.signal.aborted && live.current === version && read === sequence.current;
     setResult((previous) => ({
       key,
       data: previous?.key === key ? previous.data : null,
@@ -79,5 +95,6 @@ export function useCatalogueResource<T>(
     loading: !!path && !denied && (accepted?.loading ?? true),
     error: accepted?.error ?? false,
     retry,
+    accept,
   };
 }

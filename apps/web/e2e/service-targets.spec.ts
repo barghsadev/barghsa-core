@@ -1,15 +1,10 @@
+import { crmShell } from './crm-shell-fixture';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 test('target validation and confirmation preserve settings through a failed save', async ({
   page,
 }) => {
-  await page.addInitScript(() => {
-    if (document.documentElement) document.documentElement.lang = 'en';
-    new MutationObserver(() => {
-      if (document.documentElement) document.documentElement.lang = 'en';
-    }).observe(document, { childList: true });
-  });
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, 'en');
   await mockOppositeNumerals(page, 'en');
   let values = { ticket: 24, verification_case: null },
     verified = false,
@@ -51,7 +46,10 @@ test('target validation and confirmation preserve settings through a failed save
   expect(attempts).toEqual(Array(3).fill({ ticket: 72, verification_case: null }));
 });
 test('target settings deny controls when access is unavailable', async ({ page }) => {
-  await page.route('**/api/**', (route) => route.fulfill({ status: 403, json: {} }));
+  await crmShell(page, 'en');
+  await page.route('**/api/admin/config/service-response-targets', (route) =>
+    route.fulfill({ status: 403, json: {} })
+  );
   await page.goto('/admin/service-targets');
   await expect(page.getByRole('alert')).toBeVisible();
   await expect(page.locator('form')).toHaveCount(0);

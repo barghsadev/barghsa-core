@@ -31,4 +31,4 @@ Final related web validation passes 433 cases: twenty-three new recovery/race ca
 
 The preceding operational-queue batch is published as `1ee49bea2881aef5d68e8a18b8c267fa6b4003aa`. CI run `36839086915` passes all five jobs under the existing temporary fast mode; combined-coverage success remains an exemption, not measured coverage. Its progress records are updated.
 
-This provider batch is published directly to main after review and final validation. Remote SHA and CI availability are read back after publication; no remote CI success is claimed without a registered, passing run. No PR is created. Historical supervisor state remains unchanged.
+This provider batch is published directly to main as `ce887033844d111ee7ea3bbee38cb9478677b09e`; remote SHA and clean worktree are verified. CI run `36840973870` passes all five jobs under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage. No PR is created. Historical supervisor state remains unchanged.

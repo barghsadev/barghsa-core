@@ -1,23 +1,15 @@
+import { crmShell } from './crm-shell-fixture';
+import { assignmentAgent, assignmentSlots } from '../src/test/assignment-settings-fixtures';
 import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
   test(`slot assignment retries after password verification (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await crmShell(page, locale);
     let failed = true,
       verified = false,
       denied = false;
     const attempts: unknown[] = [];
-    const agent = {
-      id: '01900000-0000-7000-8000-000000000001',
-      title: 'Local support',
-      enabled: false,
-    };
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    const agent = assignmentAgent;
     await page.route('**/api/admin/agents', (route) => route.fulfill({ json: [agent] }));
     await page.route('**/api/admin/agent-slots', (route) =>
       route.fulfill(
@@ -26,10 +18,7 @@ for (const locale of ['en', 'fa'])
           : failed
             ? { status: 503, json: {} }
             : {
-                json: [
-                  { slotKey: 'individual_chatbot', agent: null, alsoUsedIn: [] },
-                  { slotKey: 'staff_chatbot', agent, alsoUsedIn: [] },
-                ],
+                json: assignmentSlots(),
               }
       )
     );
@@ -38,7 +27,14 @@ for (const locale of ['en', 'fa'])
       if (!verified)
         return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
       denied = true;
-      return route.fulfill({ json: {} });
+      return route.fulfill({
+        json: {
+          ...assignmentSlots()[0],
+          agent,
+          alsoUsedIn: ['staff_chatbot'],
+          updatedAt: '2026-10-01T01:00:00Z',
+        },
+      });
     });
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct';
@@ -84,5 +80,5 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('alert')).toContainText(
       fa ? 'اجازه مدیریت' : 'permission to manage'
     );
-    await expect(page.locator('select')).toHaveCount(0);
+    await expect(page.locator('select[id^=slot-]')).toHaveCount(0);
   });

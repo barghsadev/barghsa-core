@@ -386,6 +386,20 @@ export const fa: I18nDictionary = {
   'admin.agents.changed':
     'یکی از موارد انتخاب‌شده دیگر در دسترس نیست. تازه‌سازی و دوباره انتخاب کنید.',
   'admin.slots.title': 'جایگاه‌های عامل',
+  'admin.slots.agentsLoading': 'در حال دریافت عامل\u200cها…',
+  'admin.slots.agentsError': 'دریافت عامل\u200cها انجام نشد. انتخاب\u200cهای شما حفظ شده\u200cاند.',
+  'admin.slots.agentsRetry': 'تلاش دوباره برای عامل\u200cها',
+  'admin.slots.current': 'تخصیص ذخیره\u200cشده',
+  'admin.slots.stale':
+    'تخصیص ذخیره\u200cشده تغییر کرده است. انتخاب شما حفظ شده؛ پیش از ذخیره به تخصیص فعلی بازگردید.',
+  'admin.slots.unavailable': 'عامل انتخاب\u200cشده دیگر در دسترس نیست. عامل دیگری انتخاب کنید.',
+  'admin.slots.unavailableChoice': 'عامل انتخاب\u200cشده در دسترس نیست',
+  'admin.slots.reset': 'بازگشت به تخصیص فعلی',
+  'admin.targets.refresh': 'تازه\u200cسازی زمان\u200cهای هدف',
+  'admin.targets.reset': 'بازگشت به زمان\u200cهای فعلی',
+  'admin.targets.stale':
+    'زمان\u200cهای ذخیره\u200cشده تغییر کرده\u200cاند. پیش\u200cنویس شما حفظ شده؛ پیش از ذخیره به زمان\u200cهای فعلی بازگردید.',
+
   'admin.slots.description':
     'عامل هر گفت‌وگو را انتخاب کنید. یک عامل می‌تواند در چند جایگاه استفاده شود.',
   'admin.slots.refresh': 'تازه‌سازی',
@@ -1919,6 +1933,20 @@ export const en: I18nDictionary = {
   'admin.agents.invalid': 'Check the agent title, model and selected links.',
   'admin.agents.changed': 'A selected record is no longer available. Refresh and select again.',
   'admin.slots.title': 'Agent slots',
+  'admin.slots.agentsLoading': 'Loading agents…',
+  'admin.slots.agentsError': 'Agents could not be loaded. Your choices are retained.',
+  'admin.slots.agentsRetry': 'Retry agents',
+  'admin.slots.current': 'Saved assignment',
+  'admin.slots.stale':
+    'The saved assignment changed. Your choice is retained; reset to the current assignment before saving.',
+  'admin.slots.unavailable': 'The selected agent is no longer available. Choose another agent.',
+  'admin.slots.unavailableChoice': 'Selected agent unavailable',
+  'admin.slots.reset': 'Reset to current assignment',
+  'admin.targets.refresh': 'Refresh response targets',
+  'admin.targets.reset': 'Reset to current targets',
+  'admin.targets.stale':
+    'Saved targets changed. Your draft is retained; reset to the current targets before saving.',
+
   'admin.slots.description':
     'Choose the agent assigned to each chatbot. One agent can serve several slots.',
   'admin.slots.refresh': 'Refresh',
