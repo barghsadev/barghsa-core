@@ -377,6 +377,33 @@ export class WalletController {
   })
   @ApiQuery({ name: 'from', required: false, type: String, description: 'Inclusive ISO timestamp' })
   @ApiQuery({ name: 'to', required: false, type: String, description: 'Inclusive ISO timestamp' })
+  @ApiQuery({
+    name: 'until',
+    required: false,
+    type: String,
+    description: 'Exclusive ISO timestamp; cannot be combined with the legacy inclusive to bound',
+  })
+  @ApiQuery({
+    name: 'q',
+    required: false,
+    type: String,
+    description:
+      'Literal transaction ID, public reference/description or original bank receipt bank/reference substring, up to 120 characters',
+  })
+  @ApiQuery({
+    name: 'min',
+    required: false,
+    type: String,
+    description:
+      'Inclusive exact IRR transaction magnitude lower bound, regardless of credit/debit sign',
+  })
+  @ApiQuery({
+    name: 'max',
+    required: false,
+    type: String,
+    description:
+      'Inclusive exact IRR transaction magnitude upper bound, regardless of credit/debit sign',
+  })
   @ApiQuery({ name: 'sort', required: false, enum: ['asc', 'desc'] })
   @ApiQuery({ name: 'cursor', required: false, type: String })
   @ApiResponse({

@@ -61,6 +61,12 @@
     "limitKB": 35
   },
   {
+    "name": "History date picker on demand",
+    "phase": "interaction",
+    "entries": ["src/components/HistoryDateFilter.tsx"],
+    "limitKB": 60
+  },
+  {
     "name": "Wallet top-up review on demand",
     "phase": "interaction",
     "entries": ["src/components/OnlineTopUpReviewDialog.tsx"],

@@ -399,3 +399,231 @@ it('returns receipt details and recorded verification events without exposing pr
     occurredAt: '2026-09-03T10:00:00.000Z',
   });
 });
+
+it('searches only public wallet fields and original receipt metadata literally, with exact magnitude/date bounds', async () => {
+  const f = await seed(['Finance']),
+    other = await seed();
+  for (const fixture of [f, other])
+    await http.pool.query('INSERT INTO wallets(profile_id) VALUES($1)', [fixture.profile]);
+  const token = randomUUID(),
+    bank = `${token}_%\\بانک`,
+    reference = `${token}-TRANSFER`,
+    receipt = randomUUID(),
+    debit = randomUUID(),
+    second = randomUUID(),
+    credit = randomUUID(),
+    legacyCredit = randomUUID();
+  const metadata = {
+    channel: 'bank_receipt',
+    receipt: { bankName: bank, payerReference: reference, paymentDate: '2026-09-01' },
+    staffDecision: {
+      actorUserId: 'private-search-sentinel',
+      reason: 'private-search-sentinel',
+      customerVisible: false,
+    },
+  };
+  for (const [id, profile, type, amount, state, date, evidence, description] of [
+    [
+      receipt,
+      f.profile,
+      'topup',
+      '9007199254740993',
+      'Pending',
+      '2026-09-01T00:00:00.000001Z',
+      metadata,
+      null,
+    ],
+    [
+      debit,
+      f.profile,
+      'payment',
+      '-9007199254740993',
+      'Completed',
+      '2026-09-01T00:00:00.000002Z',
+      {},
+      `${token} public payment`,
+    ],
+    [
+      second,
+      f.profile,
+      'topup',
+      '9007199254740994',
+      'Released',
+      '2026-09-02T00:00:00.000000Z',
+      metadata,
+      null,
+    ],
+    [
+      credit,
+      f.profile,
+      'topup',
+      '9007199254740993',
+      'Completed',
+      '2026-09-01T00:00:00.000003Z',
+      { ...metadata, pendingTransactionId: receipt },
+      null,
+    ],
+    [
+      legacyCredit,
+      f.profile,
+      'topup',
+      '9007199254740993',
+      'Completed',
+      '2026-09-01T00:00:00.000003Z',
+      metadata,
+      null,
+    ],
+    [
+      randomUUID(),
+      other.profile,
+      'topup',
+      '9007199254740993',
+      'Pending',
+      '2026-09-01T00:00:00Z',
+      metadata,
+      null,
+    ],
+  ] as const)
+    await http.pool.query(
+      'INSERT INTO wallet_transactions(id,wallet_id,type,amount,state,idempotency_key,metadata,created_at,description,ref_id) VALUES($1::uuid,$2,$3,$4::bigint,$5,$1::text,$6::jsonb,$7::timestamptz,$8,$9)',
+      [
+        id,
+        profile,
+        type,
+        amount,
+        state,
+        JSON.stringify(evidence),
+        date,
+        description,
+        id === debit ? reference : null,
+      ]
+    );
+  const readQuery = async (query: Record<string, string>) => {
+    const response = await f.read(`/transactions?${new URLSearchParams(query)}`);
+    expect(response.status, http.logs()).toBe(200);
+    expect(response.headers.get('cache-control')).toContain('no-store');
+    return (await response.json()) as { transactions: { id: string; amount: string }[] };
+  };
+  expect((await readQuery({ q: bank })).transactions.map((row) => row.id)).toEqual([
+    second,
+    receipt,
+  ]);
+  expect(
+    (await readQuery({ q: reference.toLowerCase() })).transactions.map((row) => row.id)
+  ).toEqual([second, debit, receipt]);
+  expect((await readQuery({ q: debit })).transactions.map((row) => row.id)).toEqual([debit]);
+  expect((await readQuery({ q: 'public payment' })).transactions.map((row) => row.id)).toEqual([
+    debit,
+  ]);
+  expect((await readQuery({ q: 'private-search-sentinel' })).transactions).toEqual([]);
+  expect(
+    (
+      await readQuery({
+        q: token,
+        min: '۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳',
+        max: '9007199254740993',
+        from: '2026-09-01T00:00:00.000Z',
+        until: '2026-09-02T00:00:00.000Z',
+        sort: 'asc',
+      })
+    ).transactions.map((row) => row.id)
+  ).toEqual([receipt, debit]);
+  expect(
+    (
+      await readQuery({
+        q: bank,
+        type: 'topup',
+        state: 'Pending',
+        min: '9007199254740993',
+        max: '9007199254740993',
+      })
+    ).transactions.map((row) => row.id)
+  ).toEqual([receipt]);
+  expect(
+    (await readQuery({ q: bank, until: '2026-09-02T00:00:00.000Z' })).transactions.map(
+      (row) => row.id
+    )
+  ).toEqual([receipt]);
+  expect(
+    (await readQuery({ q: bank, to: '2026-09-02T00:00:00.000Z' })).transactions.map((row) => row.id)
+  ).toEqual([second, receipt]);
+  // abs(bigint) would overflow for the minimum stored debit; numeric magnitude does not.
+  const minimumDebit = randomUUID();
+  await http.pool.query(
+    "INSERT INTO wallet_transactions(id,wallet_id,type,amount,state,idempotency_key,description) VALUES($1::uuid,$2,'payment',-9223372036854775808,'Completed',$1::text,$3)",
+    [minimumDebit, f.profile, 'minimum-debit-' + token]
+  );
+  expect(
+    (await readQuery({ q: 'minimum-debit-' + token, min: '9223372036854775807' })).transactions.map(
+      (row) => row.amount
+    )
+  ).toEqual(['-9223372036854775808']);
+  expect(
+    (await readQuery({ q: 'minimum-debit-' + token, max: '9223372036854775807' })).transactions
+  ).toEqual([]);
+  for (const query of [
+    'q=one&q=two',
+    'q=' + 'x'.repeat(121),
+    'q=bad%0Aquery',
+    'min=2&max=1',
+    'min=-1',
+    'max=9223372036854775808',
+    'until=2026-02-30T00%3A00%3A00Z',
+    'from=2026-09-02T00%3A00%3A00Z&until=2026-09-02T00%3A00%3A00Z',
+    'to=2026-09-02T00%3A00%3A00Z&until=2026-09-02T00%3A00%3A00Z',
+  ])
+    expect((await f.read(`/transactions?${query}`)).status).toBe(400);
+});
+it('binds new wallet search/amount/date cursors to every criterion while retaining tied exact pagination', async () => {
+  const f = await seed();
+  await http.pool.query('INSERT INTO wallets(profile_id) VALUES($1)', [f.profile]);
+  const token = randomUUID(),
+    ids = [randomUUID(), randomUUID(), randomUUID()].sort();
+  for (const id of ids)
+    await http.pool.query(
+      "INSERT INTO wallet_transactions(id,wallet_id,type,amount,state,idempotency_key,created_at,description) VALUES($1::uuid,$2,'topup',9007199254740993,'Pending',$1::text,'2026-09-01T00:00:00.123456Z',$3)",
+      [id, f.profile, token]
+    );
+  const criteria = {
+    q: token,
+    min: '9007199254740993',
+    max: '9007199254740993',
+    until: '2026-09-02T00:00:00.000Z',
+    limit: '1',
+  };
+  let original = '';
+  for (const sort of ['asc', 'desc']) {
+    let cursor = '',
+      count = 0;
+    const seen: string[] = [];
+    do {
+      const response = await f.read(
+        `/transactions?${new URLSearchParams({ ...criteria, sort, ...(cursor ? { cursor } : {}) })}`
+      );
+      expect(response.status).toBe(200);
+      const result = (await response.json()) as {
+        transactions: { id: string; createdAt: string }[];
+        nextCursor: string | null;
+      };
+      seen.push(...result.transactions.map((row) => row.id));
+      expect(result.transactions[0]!.createdAt).toBe('2026-09-01T00:00:00.123456Z');
+      cursor = result.nextCursor ?? '';
+      if (sort === 'desc' && count === 0) original = cursor;
+      expect(++count).toBeLessThan(5);
+    } while (cursor);
+    expect(seen).toEqual(sort === 'asc' ? ids : [...ids].reverse());
+  }
+  for (const patch of [
+    { q: 'different' },
+    { min: '0' },
+    { max: '9223372036854775807' },
+    { until: '2026-09-03T00:00:00.000Z' },
+  ])
+    expect(
+      (
+        await f.read(
+          `/transactions?${new URLSearchParams({ ...criteria, sort: 'desc', cursor: original, ...patch })}`
+        )
+      ).status
+    ).toBe(400);
+});

@@ -4,6 +4,11 @@ import type { PoolClient } from 'pg';
 import { z } from 'zod';
 import { readWalletBankReceiptHistory } from '@barghsa/shared/finance';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import {
+  parseHistoryQuery,
+  parseNumberRange,
+  literalSearchPattern,
+} from '@barghsa/shared/validation';
 
 const types = [
   'topup',
@@ -23,7 +28,36 @@ const states = [
   'Released',
   'Reversed',
 ] as const;
-const timestamp = z.string().datetime({ offset: true });
+const timestamp = z
+  .string()
+  .datetime({ offset: true })
+  .refine((value) => {
+    const day = value.slice(0, 10);
+    const parsed = new Date(`${day}T00:00:00.000Z`);
+    const offset = value.match(/[+-](\d{2}):?(\d{2})$/);
+    const validOffset = !offset || (Number(offset[1]) <= 15 && Number(offset[2]) <= 59);
+    return (
+      validOffset &&
+      Number.isFinite(Date.parse(value)) &&
+      !day.startsWith('0000') &&
+      Number.isFinite(parsed.getTime()) &&
+      parsed.toISOString().slice(0, 10) === day
+    );
+  });
+/** Compare accepted ISO instants without dropping PostgreSQL's fractional precision. */
+function compareInstants(left: string, right: string): number {
+  const split = (value: string) => {
+    const fraction = value.match(/\.(\d+)(?=Z|[+-]\d{2}:?\d{2}$)/)?.[1] ?? '';
+    return { second: Date.parse(value.replace(/\.\d+(?=Z|[+-]\d{2}:?\d{2}$)/, '')), fraction };
+  };
+  const a = split(left);
+  const b = split(right);
+  if (a.second !== b.second) return a.second - b.second;
+  const precision = Math.max(a.fraction.length, b.fraction.length);
+  const af = a.fraction.padEnd(precision, '0');
+  const bf = b.fraction.padEnd(precision, '0');
+  return af === bf ? 0 : af < bf ? -1 : 1;
+}
 const querySchema = z
   .object({
     limit: z
@@ -36,6 +70,10 @@ const querySchema = z
     state: z.enum(states).optional(),
     from: timestamp.optional(),
     to: timestamp.optional(),
+    until: timestamp.optional(),
+    q: z.string().optional(),
+    min: z.string().optional(),
+    max: z.string().optional(),
     sort: z.enum(['asc', 'desc']).default('desc'),
     cursor: z
       .string()
@@ -45,7 +83,11 @@ const querySchema = z
       .optional(),
   })
   .strict()
-  .refine((q) => !q.from || !q.to || Date.parse(q.from) <= Date.parse(q.to));
+  .refine((q) => !q.from || !q.to || compareInstants(q.from, q.to) <= 0)
+  .refine((q) => !q.from || !q.until || compareInstants(q.from, q.until) < 0)
+  .refine((q) => q.to === undefined || q.until === undefined)
+  .refine((q) => parseHistoryQuery(q.q, undefined) !== null)
+  .refine((q) => parseNumberRange(q.min, q.max) !== null);
 const cursorSchema = z
   .object({ v: z.literal(1), scope: z.string(), at: timestamp, id: z.string().uuid() })
   .strict();
@@ -63,7 +105,9 @@ function invalid(): never {
 export function parseWalletHistoryQuery(raw: unknown) {
   const result = querySchema.safeParse(raw);
   if (!result.success) invalid();
-  return result.data;
+  const search = parseHistoryQuery(result.data.q, undefined)!;
+  const amount = parseNumberRange(result.data.min, result.data.max)!;
+  return { ...result.data, q: search.q, ...amount };
 }
 type HistoryQuery = ReturnType<typeof parseWalletHistoryQuery>;
 
@@ -82,6 +126,17 @@ export async function readWalletHistory(
         query.from ?? null,
         query.to ?? null,
         query.sort,
+        // Preserve legacy cursors when no newly introduced criterion is active.
+        ...(query.q || query.min !== undefined || query.max !== undefined || query.until
+          ? [
+              {
+                q: query.q,
+                min: query.min ?? null,
+                max: query.max ?? null,
+                until: query.until ?? null,
+              },
+            ]
+          : []),
       ])
     )
     .digest('hex');
@@ -95,6 +150,19 @@ export async function readWalletHistory(
   if (query.state) where.push(`state = ${bind(query.state)}`);
   if (query.from) where.push(`created_at >= ${bind(query.from)}::timestamptz`);
   if (query.to) where.push(`created_at <= ${bind(query.to)}::timestamptz`);
+  if (query.until) where.push(`created_at < ${bind(query.until)}::timestamptz`);
+  if (query.min !== undefined) where.push(`abs(amount::numeric) >= ${bind(query.min)}::numeric`);
+  if (query.max !== undefined) where.push(`abs(amount::numeric) <= ${bind(query.max)}::numeric`);
+  if (query.q) {
+    const pattern = bind(literalSearchPattern(query.q));
+    where.push(`(id::text ILIKE ${pattern} ESCAPE E'\\\\'
+        OR ref_id::text ILIKE ${pattern} ESCAPE E'\\\\'
+        OR description ILIKE ${pattern} ESCAPE E'\\\\'
+        OR (type = 'topup' AND state IN ('Pending','Released','Rejected')
+          AND metadata->>'channel' = 'bank_receipt' AND NOT (metadata ? 'pendingTransactionId')
+          AND (metadata#>>'{receipt,bankName}' ILIKE ${pattern} ESCAPE E'\\\\'
+            OR metadata#>>'{receipt,payerReference}' ILIKE ${pattern} ESCAPE E'\\\\'))) `);
+  }
   if (query.cursor) {
     let decoded: unknown;
     try {

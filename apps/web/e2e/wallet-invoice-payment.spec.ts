@@ -1,3 +1,5 @@
+import { t } from '@barghsa/i18n/app';
+import { openHistoryFilters, applyHistoryFilters } from './history-filter-reset';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
@@ -77,6 +79,9 @@ function financialReview(
 test('wallet gateway return restores only the invoice bound to its top-up', async ({ page }) => {
   await shell(page, 'en', false, '100000', () => '0');
   await page.goto('/wallet');
+  await expect(
+    page.getByRole('heading', { name: t('wallet.history.title', 'en'), exact: true })
+  ).toBeVisible();
   await page.evaluate(
     ({ topUpId, invoice }) => {
       window.sessionStorage.setItem(
@@ -88,6 +93,19 @@ test('wallet gateway return restores only the invoice bound to its top-up', asyn
   );
   await page.goto(`/wallet?paymentOrderId=${transactionId}&paymentAuthority=auth-return`);
   const returnLink = page.getByRole('link', { name: 'Return to invoice' });
+  await expect(returnLink).toHaveAttribute('href', `/invoices/${invoiceId}`);
+  await openHistoryFilters(page, 'en');
+  await page
+    .getByRole('dialog')
+    .getByRole('searchbox', { name: t('historySearch.label', 'en'), exact: true })
+    .fill('receipt');
+  await applyHistoryFilters(page, 'en');
+  const search = new URL(page.url()).searchParams;
+  expect(search.get('paymentOrderId')).toBe(transactionId);
+  expect(search.get('paymentAuthority')).toBe('auth-return');
+  expect(search.get('history_q')).toBe('receipt');
+  await expect(returnLink).toHaveAttribute('href', `/invoices/${invoiceId}`);
+  await page.reload();
   await expect(returnLink).toHaveAttribute('href', `/invoices/${invoiceId}`);
   await page.goto(
     `/wallet?paymentOrderId=44444444-4444-7444-8444-444444444444&paymentAuthority=auth-return`

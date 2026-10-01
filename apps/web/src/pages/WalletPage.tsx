@@ -1,3 +1,4 @@
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { WalletTransactionList } from '../components/WalletTransactionList.js';
 import {
   OnlinePaymentReturnPanel,
@@ -91,7 +92,12 @@ function mapReceiptSubmitError(status: number): ReceiptError {
 export function WalletPage({
   paymentReturn,
   returnInvoiceId,
-}: { paymentReturn?: WalletPaymentReturn | undefined; returnInvoiceId?: string | undefined } = {}) {
+  historyQuery,
+}: {
+  paymentReturn?: WalletPaymentReturn | undefined;
+  returnInvoiceId?: string | undefined;
+  historyQuery?: ListQueryBinding;
+} = {}) {
   const uploadReceiptAttachment = useReceiptAttachmentUpload();
   const receiptFileInput = useRef<HTMLInputElement>(null);
   const locale = useLocale();
@@ -733,6 +739,7 @@ export function WalletPage({
               key={`${profileId}-${receiptSuccess}`}
               profileId={profileId}
               locale={locale}
+              {...(historyQuery ? { binding: historyQuery } : {})}
             />
           )}
 

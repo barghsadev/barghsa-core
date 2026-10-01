@@ -1,6 +1,13 @@
 import AxeBuilder from '@axe-core/playwright';
 import { createServer, type Server, type IncomingHttpHeaders } from 'node:http';
 import { t } from '@barghsa/i18n/app';
+import { dateRangePreset } from '@barghsa/ui';
+import { defaultParseSearch } from '@tanstack/react-router';
+import {
+  openHistoryFilters,
+  applyHistoryFilters,
+  closeHistoryFilters,
+} from './history-filter-reset';
 import { tWalletReceipts as receiptText } from '@barghsa/i18n/wallet-receipts';
 import { test, expect } from './coverage-fixture';
 import { verifyClippedContrast } from './clipped-contrast';
@@ -135,6 +142,8 @@ for (const locale of ['en', 'fa'] as const)
           return r.continue({ url: new URL('/attachment', originalUrl).href });
         });
       let reads = 0;
+      let failNextPage = false;
+      const queries: URLSearchParams[] = [];
       const receipt = {
         paymentDate: '2026-09-01',
         payerReference: 'TRK-123',
@@ -163,7 +172,12 @@ for (const locale of ['en', 'fa'] as const)
       await page.route(`**/api/wallet/${profileId}/transactions?*`, (r) => {
         reads++;
         const params = new URL(r.request().url()).searchParams;
+        queries.push(params);
         const more = params.has('cursor');
+        if (more && failNextPage) {
+          failNextPage = false;
+          return r.fulfill({ status: 503, json: { message: 'Try again' } });
+        }
         const pending = params.get('state') === 'Pending';
         return r.fulfill({
           json: {
@@ -311,10 +325,127 @@ for (const locale of ['en', 'fa'] as const)
         `/api/wallet/${profileId}/bank-receipt-top-ups/${rejectedId}/preview?revision=0`
       );
       await expect.poll(() => previewRequests.length).toBe(3);
-      await history.locator('select[name="state"]').selectOption('Pending');
-      await history
-        .getByRole('button', { name: t('wallet.history.apply', locale), exact: true })
+      const bankDraft = page.locator('#receipt-bank-name');
+      await bankDraft.fill('Unsubmitted bank draft');
+      await openHistoryFilters(page, locale);
+      let drawer = page.getByRole('dialog');
+      const search = drawer.getByRole('searchbox', {
+        name: t('historySearch.label', locale),
+        exact: true,
+      });
+      await search.fill('Cancelled search');
+      await closeHistoryFilters(page, locale);
+      expect(queries.at(-1)?.get('q')).toBeNull();
+      await expect(bankDraft).toHaveValue('Unsubmitted bank draft');
+
+      await openHistoryFilters(page, locale);
+      drawer = page.getByRole('dialog');
+      await drawer
+        .getByRole('searchbox', { name: t('historySearch.label', locale), exact: true })
+        .fill('TRK_%\\');
+      await drawer
+        .getByRole('combobox', { name: t('wallet.history.sort', locale), exact: true })
+        .selectOption('submitted_at:asc');
+      await drawer.locator('[name="type"]').selectOption('topup');
+      const minimum = drawer.getByRole('textbox', {
+        name: t('invoices.filter.min', locale),
+        exact: true,
+      });
+      const maximum = drawer.getByRole('textbox', {
+        name: t('invoices.filter.max', locale),
+        exact: true,
+      });
+      await minimum.fill(locale === 'fa' ? '۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳' : amount);
+      await maximum.fill('1');
+      const countBeforeApply = reads;
+      await drawer
+        .getByRole('button', { name: t('historyFilters.apply', locale), exact: true })
         .click();
+      await expect(drawer).toBeVisible();
+      expect(reads).toBe(countBeforeApply);
+      await maximum.fill(amount);
+      await drawer
+        .locator('summary')
+        .filter({ hasText: t('wallet.history.date', locale) })
+        .click();
+      await drawer
+        .getByRole('combobox', { name: t('historyDates.preset', locale), exact: true })
+        .selectOption('thisMonth');
+      const range = dateRangePreset(
+        'thisMonth',
+        locale,
+        'Pacific/Kiritimati',
+        new Date(await page.evaluate(() => Date.now()))
+      );
+      await applyHistoryFilters(page, locale);
+      await expect(drawer).not.toBeVisible();
+      await expect.poll(() => queries.at(-1)?.get('q')).toBe('TRK_%\\');
+      expect(queries.at(-1)?.get('sort')).toBe('asc');
+      expect(queries.at(-1)?.get('type')).toBe('topup');
+      expect(queries.at(-1)?.get('min')).toBe(amount);
+      expect(queries.at(-1)?.get('max')).toBe(amount);
+      expect(queries.at(-1)?.get('from')).toBe(range.from);
+      expect(queries.at(-1)?.get('until')).toBe(range.to);
+      expect(queries.at(-1)?.has('to')).toBe(false);
+      expect(queries.at(-1)?.has('cursor')).toBe(false);
+      expect(queries.at(-1)?.get('limit')).toBe('25');
+      await expect(bankDraft).toHaveValue('Unsubmitted bank draft');
+      const appliedUrl = page.url();
+      expect(defaultParseSearch(new URL(appliedUrl).search)).toMatchObject({
+        history_q: 'TRK_%\\',
+        history_order: 'asc',
+        history_min: amount,
+        history_max: amount,
+      });
+
+      failNextPage = true;
+      await history
+        .getByRole('button', { name: t('wallet.history.next', locale), exact: true })
+        .click();
+      await expect(history.getByRole('alert')).toBeVisible();
+      await expect(details).toHaveCount(1);
+      expect(queries.at(-1)?.get('cursor')).toBe('older-page');
+      const failedQuery = queries.at(-1)!.toString();
+      await history
+        .getByRole('button', { name: t('wallet.history.retry', locale), exact: true })
+        .click();
+      await expect(history.getByRole('alert')).toHaveCount(0);
+      expect(queries.at(-1)?.toString()).toBe(failedQuery);
+      const pageUrl = page.url();
+      await page.reload();
+      await expect(history).toBeVisible();
+      await expect.poll(() => queries.at(-1)?.get('cursor')).toBe('older-page');
+      expect(page.url()).toBe(pageUrl);
+      expect(queries.at(-1)?.toString()).toBe(failedQuery);
+      await history
+        .getByRole('button', { name: t('historyFilters.clearAll', locale), exact: true })
+        .click();
+      await expect.poll(() => queries.at(-1)?.get('q')).toBeNull();
+      expect(queries.at(-1)?.has('cursor')).toBe(false);
+      expect(queries.at(-1)?.has('min')).toBe(false);
+      expect(queries.at(-1)?.get('sort')).toBe('asc');
+      await page.goBack();
+      await expect(page).toHaveURL(pageUrl);
+      await expect.poll(() => queries.at(-1)?.get('cursor')).toBe('older-page');
+      expect(queries.at(-1)?.get('min')).toBe(amount);
+      const controlScan = await new AxeBuilder({ page })
+        .include('main [data-slot="list-page"]')
+        .analyze();
+      expect(controlScan.violations).toEqual([]);
+      await verifyClippedContrast(page, controlScan);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true
+      );
+      if (locale === 'fa' && darkMode)
+        await page.screenshot({
+          path: `/tmp/barghsa-wallet-history-query-fa-dark-${test.info().project.name}.png`,
+        });
+      await history
+        .getByRole('button', { name: t('historyFilters.clearAll', locale), exact: true })
+        .click();
+      await openHistoryFilters(page, locale);
+      await page.getByRole('dialog').locator('select[name="state"]').selectOption('Pending');
+      await applyHistoryFilters(page, locale);
       await details.locator(':scope > summary').click();
       await expect(details).toContainText(word('awaiting.second_approval'));
       await expect(details).not.toContainText(word('confirmed'));

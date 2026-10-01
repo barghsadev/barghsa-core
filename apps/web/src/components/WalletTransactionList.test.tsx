@@ -4,6 +4,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { tWalletReceipts as receiptText } from '@barghsa/i18n/wallet-receipts';
 import { WalletTransactionList } from './WalletTransactionList.js';
 
+let currentLocale: 'en' | 'fa' = 'en';
+vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => currentLocale }));
+
 vi.mock('../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({
     format: (value: string) =>
@@ -18,6 +21,8 @@ vi.mock('../hooks/useAccountTime.js', () => ({
 
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {
+  currentLocale = 'en';
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   host = document.createElement('div');
   document.body.append(host);
   root = createRoot(host);
@@ -41,15 +46,24 @@ const response = (transactions = [tx], nextCursor: string | null = null) => ({
   json: async () => ({ transactions, nextCursor }),
 });
 async function render(profileId = 'profile-a', locale: 'en' | 'fa' = 'en') {
+  currentLocale = locale;
   await act(async () =>
     root.render(<WalletTransactionList profileId={profileId} locale={locale} />)
   );
 }
 function button(text: string) {
-  return [...host.querySelectorAll('button')].find((el) => el.textContent === text)!;
+  return [...document.querySelectorAll('button')].find((el) => el.textContent === text)!;
 }
 async function click(text: string) {
   await act(async () => button(text).click());
+}
+
+async function select(selector: string, value: string) {
+  await act(async () => {
+    const element = document.querySelector<HTMLSelectElement>(`[role=dialog] ${selector}`)!;
+    element.value = value;
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  });
 }
 
 describe('WalletTransactionList', () => {
@@ -62,7 +76,7 @@ describe('WalletTransactionList', () => {
     expect(host.textContent).toContain('invoice-ref');
     expect(host.textContent).toContain('Sep 2, 2026');
     expect(host.querySelector('a[href^="/invoices/"]')).toBeNull();
-    expect(button('Next page').disabled).toBe(true);
+    expect(button('Next page')).toBeUndefined();
   });
   it('links a wallet payment to its invoice and distinguishes settled debits', async () => {
     const invoiceId = '11111111-1111-7111-8111-111111111111';
@@ -99,17 +113,13 @@ describe('WalletTransactionList', () => {
     expect(String(fetcher.mock.calls.at(-1)![0])).toContain('cursor=next-cursor');
     await click('Previous page');
     expect(String(fetcher.mock.calls.at(-1)![0])).not.toContain('cursor=');
-    host.querySelector<HTMLSelectElement>('[name=type]')!.value = 'payment';
-    host.querySelector<HTMLInputElement>('[name=from]')!.value = '2026-09-01';
-    host.querySelector<HTMLInputElement>('[name=to]')!.value = '2026-09-02';
-    await act(async () =>
-      host
-        .querySelector('form')!
-        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-    );
+    await click('Next page');
+    await click('Filters');
+    await select('[name=type]', 'payment');
+    expect(String(fetcher.mock.calls.at(-1)![0])).toContain('cursor=');
+    await click('Apply filters');
     expect(String(fetcher.mock.calls.at(-1)![0])).toContain('type=payment');
     expect(String(fetcher.mock.calls.at(-1)![0])).not.toContain('cursor=');
-    expect(String(fetcher.mock.calls.at(-1)![0])).toContain('to=2026-09-02T23%3A59%3A59.999999Z');
   });
   it('supports empty, failed and retry states', async () => {
     vi.stubGlobal(
@@ -120,6 +130,56 @@ describe('WalletTransactionList', () => {
     expect(host.querySelector('[role=alert]')).not.toBeNull();
     await click('Try again');
     expect(host.textContent).toContain('No transactions match these filters.');
+  });
+  it('retains accepted rows on a page failure and retries the same cursor', async () => {
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(response([tx], 'page-two'))
+      .mockResolvedValueOnce({ ok: false, status: 503 })
+      .mockResolvedValueOnce(response([{ ...tx, id: 'tx-2', description: 'Second page' }]));
+    vi.stubGlobal('fetch', fetcher);
+    await render();
+    await click('Next page');
+    expect(host.textContent).toContain('Bank transfer');
+    expect(host.querySelector('[role=alert]')).not.toBeNull();
+    const failedUrl = fetcher.mock.calls.at(-1)![0];
+    await click('Try again');
+    expect(fetcher.mock.calls.at(-1)![0]).toBe(failedUrl);
+    expect(host.textContent).toContain('Second page');
+    expect(host.textContent).not.toContain('Bank transfer');
+  });
+  it.each([401, 403, 404])(
+    'clears accepted private rows when authorization fails (%s)',
+    async (status) => {
+      vi.stubGlobal(
+        'fetch',
+        vi
+          .fn()
+          .mockResolvedValueOnce(response([tx], 'page-two'))
+          .mockResolvedValueOnce({ ok: false, status })
+      );
+      await render();
+      await click('Next page');
+      expect(host.textContent).not.toContain('Bank transfer');
+      expect(host.querySelector('[role=alert]')).not.toBeNull();
+    }
+  );
+  it('resets a profile-bound cursor when the active profile changes', async () => {
+    const fetcher = vi.fn().mockResolvedValue(response([tx], 'page-two'));
+    vi.stubGlobal('fetch', fetcher);
+    await render();
+    await click('Next page');
+    await render('profile-b');
+    const url = String(fetcher.mock.calls.at(-1)![0]);
+    expect(url).toContain('/wallet/profile-b/');
+    expect(url).not.toContain('cursor=');
+  });
+  it('does not advance into a repeated continuation', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response([tx], 'same-page')));
+    await render();
+    await click('Next page');
+    expect(button('Next page').disabled).toBe(true);
+    expect(button('Previous page').disabled).toBe(false);
   });
   it('discards delayed results after a profile switch and renders Persian RTL', async () => {
     let finish!: (value: ReturnType<typeof response>) => void;
@@ -160,8 +220,9 @@ describe('WalletTransactionList', () => {
     const fetcher = vi.fn().mockResolvedValue(response([]));
     vi.stubGlobal('fetch', fetcher);
     await render();
-    host.querySelector<HTMLSelectElement>('[name=state]')!.value = 'Completed';
-    host.querySelector<HTMLSelectElement>('[name=sort]')!.value = 'asc';
+    await click('Filters');
+    await select('[name=state]', 'Completed');
+    await select('select:not([name])', 'submitted_at:asc');
     await click('Apply filters');
     const url = String(fetcher.mock.calls.at(-1)![0]);
     expect(url).toContain('state=Completed');
