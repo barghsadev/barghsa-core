@@ -1,5 +1,11 @@
 import { lookup } from './lookup.js';
 const fa: Record<string, string> = {
+  'admin.walletReceipts.queue.refresh': 'تازه‌سازی فهرست رسیدها',
+  'admin.walletReceipts.queue.retry': 'تلاش دوباره برای فهرست رسیدها',
+  'admin.walletReceipts.queue.forbidden': 'اجازه مشاهده این رسیدها را ندارید.',
+  'admin.walletReceipts.detail.loading': 'در حال بررسی آخرین اطلاعات رسید…',
+  'admin.walletReceipts.detail.error': 'جزئیات رسید دریافت نشد. پیش‌نویس بررسی شما حفظ شده است.',
+  'admin.walletReceipts.detail.retry': 'تلاش دوباره برای جزئیات رسید',
   'admin.walletReceipts.review.title': 'بررسی نهایی رسید بانکی',
   'admin.walletReceipts.review.refresh': 'بررسی آخرین اطلاعات',
   'admin.walletReceipts.review.loading': 'در حال آماده‌سازی بررسی مالی…',
@@ -96,6 +102,13 @@ const fa: Record<string, string> = {
   'admin.walletReceipts.error.allocationPending': 'صبر کنید تا پیش‌نمایش مانده فاکتور آماده شود',
 };
 const en: Record<string, string> = {
+  'admin.walletReceipts.queue.refresh': 'Refresh receipt queue',
+  'admin.walletReceipts.queue.retry': 'Retry receipt queue',
+  'admin.walletReceipts.queue.forbidden': 'You cannot view these receipts.',
+  'admin.walletReceipts.detail.loading': 'Checking the selected receipt…',
+  'admin.walletReceipts.detail.error':
+    'Receipt details could not be loaded. Your review draft is kept.',
+  'admin.walletReceipts.detail.retry': 'Retry receipt details',
   'admin.walletReceipts.review.title': 'Review bank receipt confirmation',
   'admin.walletReceipts.review.refresh': 'Review latest details',
   'admin.walletReceipts.review.loading': 'Preparing the financial review…',

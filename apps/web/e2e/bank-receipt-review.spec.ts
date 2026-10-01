@@ -23,16 +23,19 @@ const receipt = {
   creditTransactionId: null,
 };
 async function shell(page: Page, locale: 'en' | 'fa') {
-  await page.addInitScript((locale) => {
-    const apply = () => {
-      if (!document.documentElement) return;
-      document.documentElement.lang = locale;
-      document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
-    };
-    apply();
-    new MutationObserver(apply).observe(document, { childList: true });
-  }, locale);
+  await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        userId: 'finance',
+        isStaff: true,
+        operatingContext: 'staff',
+        canSwitchContext: false,
+        requiresTosAcceptance: false,
+      },
+    })
+  );
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );

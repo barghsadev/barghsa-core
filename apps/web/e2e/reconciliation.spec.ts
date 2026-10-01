@@ -5,17 +5,23 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     let fail = true,
       canView = true,
       canResolve = false;
     const queries: string[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'finance',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: false,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
     );
@@ -73,6 +79,10 @@ for (const locale of ['en', 'fa'])
     ).toBeDisabled();
     expect(queries.some((query) => query.includes('offset=25'))).toBe(true);
     canResolve = true;
+    await page
+      .getByRole('button', { name: fa ? 'تازه‌سازی مغایرت‌ها' : 'Refresh exceptions', exact: true })
+      .click();
+    await expect(page.getByRole('button', { name: 'Mismatch 0', exact: true })).toBeVisible();
     const beforeInvalid = queries.length;
     await page
       .getByLabel(fa ? 'تاریخ ایجاد از' : 'Created from', { exact: true })
@@ -117,7 +127,7 @@ for (const locale of ['en', 'fa'])
       .click();
     canView = false;
     await page
-      .getByRole('button', { name: fa ? 'اعمال فیلترها' : 'Apply filters', exact: true })
+      .getByRole('button', { name: fa ? 'تازه‌سازی مغایرت‌ها' : 'Refresh exceptions', exact: true })
       .click();
     await expect(page.getByRole('alert')).toContainText(fa ? 'اجازه مشاهده' : 'permission to view');
     await expect(page.getByRole('table')).toHaveCount(0);

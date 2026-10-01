@@ -693,6 +693,11 @@ export const fa: I18nDictionary = {
   'admin.green.templateSave': 'ذخیره قالب قرارداد',
   'admin.green.templateConfirm':
     'این قالب برای قراردادهای اولیه سفارش‌های جدید برق استفاده می‌شود.',
+  'admin.reconciliation.pages': 'صفحه‌های مغایرت مالی',
+  'admin.reconciliation.refresh': 'تازه‌سازی مغایرت‌ها',
+  'admin.reconciliation.accessError': 'دسترسی شما به مغایرت‌ها بررسی نشد. کار باز شما حفظ شده است.',
+  'admin.reconciliation.accessRetry': 'تلاش دوباره برای بررسی دسترسی',
+  'admin.reconciliation.tableTitle': 'نتیجه‌های مغایرت مالی',
   'admin.reconciliation.title': 'مغایرت‌های مالی',
   'admin.reconciliation.description': 'مغایرت‌های گزارش‌شده را بررسی و نتیجه رسیدگی را ثبت کنید.',
   'admin.reconciliation.status': 'وضعیت',
@@ -2175,6 +2180,12 @@ export const en: I18nDictionary = {
     'Supported placeholders: {{date}}, {{customerName}}, and {{amount}} (IRR).',
   'admin.green.templateSave': 'Save contract template',
   'admin.green.templateConfirm': 'Use this template for new preliminary electricity contracts.',
+  'admin.reconciliation.pages': 'Reconciliation pages',
+  'admin.reconciliation.refresh': 'Refresh exceptions',
+  'admin.reconciliation.accessError':
+    'Your reconciliation access could not be checked. Your open work is kept.',
+  'admin.reconciliation.accessRetry': 'Retry access check',
+  'admin.reconciliation.tableTitle': 'Reconciliation results',
   'admin.reconciliation.title': 'Reconciliation exceptions',
   'admin.reconciliation.description':
     'Review reported mismatches and record each investigation outcome.',

@@ -67,6 +67,18 @@ export function TeamActionDialog({
   const numbers = useNumberFormatting(locale);
   const [busy, setBusy] = useState(false);
   const inFlight = useRef(false);
+  const mounted = useRef(false);
+  const currentAction = useRef(action);
+  const canConfirm = useRef(!confirmationDisabled);
+  currentAction.current = action;
+  canConfirm.current = !confirmationDisabled;
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
   const [needsPassword, setNeedsPassword] = useState(!action || action.requiresPassword === true);
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -108,6 +120,7 @@ export function TeamActionDialog({
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({ password }),
         });
+        if (!mounted.current || !canConfirm.current || currentAction.current !== action) return;
         setPassword('');
         if (rateLimited(verified)) return;
         if (!verified.ok) {
@@ -137,6 +150,7 @@ export function TeamActionDialog({
         ...(requestBody === undefined ? {} : { body: requestBody }),
       });
       const data = await response.json().catch(() => null);
+      if (!mounted.current || currentAction.current !== action) return;
       const code = typeof data?.error === 'string' ? data.error : data?.error?.code;
       if (
         response.status === 403 &&
@@ -163,12 +177,12 @@ export function TeamActionDialog({
         return;
       }
       await onSuccess(data);
-      onClose();
+      if (mounted.current && currentAction.current === action) onClose();
     } catch {
-      setError(t('team.error', locale));
+      if (mounted.current && currentAction.current === action) setError(t('team.error', locale));
     } finally {
       inFlight.current = false;
-      setBusy(false);
+      if (mounted.current) setBusy(false);
     }
   }
 

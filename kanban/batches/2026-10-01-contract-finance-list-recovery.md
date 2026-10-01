@@ -43,4 +43,4 @@ Earlier runs failed or were interrupted during severe host load/memory pressure.
 
 The preceding electricity change batch is published as `4f6923750381f4a10f5ab3da9de8edf17809d6c0`; CI run `36791662796` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.
 
-This contract finance batch is committed and pushed directly to main after review and related checks. Its remote commit and CI are read back after publication. No PR is created. Other list adoption, legacy filter URL serialization and broader search/sort remain open, keeping the all-list parent partial.
+This contract finance batch is published as `8cbd24f6971a5cea379990226c7f2291ee2b61ce`. Its remote main commit is read back, and CI run `36815639338` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage. No PR is created. Other list adoption, legacy filter URL serialization and broader search/sort remain open, keeping the all-list parent partial.
