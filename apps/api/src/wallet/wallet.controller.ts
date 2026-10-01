@@ -400,6 +400,51 @@ export class WalletController {
               refId: { type: 'string', nullable: true },
               description: { type: 'string', nullable: true },
               createdAt: { type: 'string', format: 'date-time' },
+              bankReceipt: {
+                type: 'object',
+                description:
+                  'Original bank receipt details only; settlement credits omit this field.',
+                required: [
+                  'paymentDate',
+                  'payerReference',
+                  'bankName',
+                  'customerNote',
+                  'rejectionReason',
+                  'timeline',
+                ],
+                properties: {
+                  paymentDate: { type: 'string', format: 'date', nullable: true },
+                  payerReference: { type: 'string', nullable: true },
+                  bankName: { type: 'string', nullable: true },
+                  customerNote: { type: 'string', nullable: true },
+                  rejectionReason: { type: 'string', nullable: true },
+                  timeline: {
+                    type: 'object',
+                    required: ['events', 'awaiting'],
+                    properties: {
+                      awaiting: {
+                        type: 'string',
+                        enum: ['review', 'second_approval', null],
+                        nullable: true,
+                      },
+                      events: {
+                        type: 'array',
+                        items: {
+                          type: 'object',
+                          required: ['state', 'occurredAt'],
+                          properties: {
+                            state: {
+                              type: 'string',
+                              enum: ['submitted', 'approval_requested', 'confirmed', 'rejected'],
+                            },
+                            occurredAt: { type: 'string', format: 'date-time', nullable: true },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },

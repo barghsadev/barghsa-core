@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CustomerWalletInvoicePaymentController } from './customer-wallet-invoice-payment.controller.js';
 import { CustomerWalletInvoicePaymentService } from './customer-wallet-invoice-payment.service.js';
+import { CustomerWalletReceiptController } from './customer-wallet-receipt.controller.js';
 import { WalletController } from './wallet.controller.js';
 import { WalletService } from './wallet.service.js';
 import { OnlineTopUpService } from './online-topup.service.js';
@@ -22,6 +23,7 @@ import { InvoiceModule } from '../invoice/invoice.module.js';
   imports: [SessionModule, ProfilesModule, InvoiceModule],
   controllers: [
     WalletController,
+    CustomerWalletReceiptController,
     OnlineTopUpCallbackController,
     ChargebackDetectionController,
     CustomerWalletInvoicePaymentController,

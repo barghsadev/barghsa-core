@@ -1,24 +1,31 @@
 import { useState } from 'react';
 import { Button } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 
 /** Request private image bytes only when the customer opens the receipt preview. */
 export function ReceiptAttachmentPreview({
   invoiceId,
+  profileId,
+  locale: localeOverride,
   receiptId,
   initiallyOpen = false,
 }: {
-  invoiceId: string;
   receiptId: string;
   initiallyOpen?: boolean;
-}) {
-  const locale = useLocale();
+  locale?: Locale;
+} & ({ invoiceId: string; profileId?: never } | { profileId: string; invoiceId?: never })) {
+  const currentLocale = useLocale();
+  const locale = localeOverride ?? currentLocale;
   const [open, setOpen] = useState(initiallyOpen);
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
   const [revision, setRevision] = useState(0);
   const label = (key: string) => t(`invoices.activity.${key}`, locale);
-  const path = `/api/invoices/${encodeURIComponent(invoiceId)}/bank-receipts/${encodeURIComponent(receiptId)}/preview`;
+  const base =
+    invoiceId !== undefined
+      ? `/api/invoices/${encodeURIComponent(invoiceId)}/bank-receipts`
+      : `/api/wallet/${encodeURIComponent(profileId)}/bank-receipt-top-ups`;
+  const path = `${base}/${encodeURIComponent(receiptId)}/preview`;
   return (
     <details
       open={open}

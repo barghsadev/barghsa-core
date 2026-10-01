@@ -1,17 +1,20 @@
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
-import type { Locale } from '@barghsa/i18n/app';
+import { t as appText, type Locale } from '@barghsa/i18n/app';
 import type { WalletBankReceiptHistory } from '@barghsa/shared/finance';
 import type { useAccountTime } from '../hooks/useAccountTime.js';
+import { ReceiptAttachmentPreview } from './ReceiptAttachmentPreview.js';
 import { ReceiptDepositDate } from './ReceiptDepositDate.js';
 import { WalletReceiptTimeline } from './WalletReceiptTimeline.js';
 
 export function WalletReceiptHistoryDetails({
   receiptId,
+  profileId,
   receipt,
   locale,
   formatTime,
 }: {
   receiptId: string;
+  profileId: string;
   receipt: WalletBankReceiptHistory;
   locale: Locale;
   formatTime: ReturnType<typeof useAccountTime>['format'];
@@ -59,6 +62,15 @@ export function WalletReceiptHistoryDetails({
             </p>
           </div>
         )}
+        <ReceiptAttachmentPreview profileId={profileId} receiptId={receiptId} locale={locale} />
+        <a
+          href={`/api/wallet/${encodeURIComponent(profileId)}/bank-receipt-top-ups/${encodeURIComponent(receiptId)}/attachment`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block text-primary underline underline-offset-4"
+        >
+          {appText('invoices.activity.viewReceiptAttachment', locale)}
+        </a>
         <WalletReceiptTimeline
           timeline={receipt.timeline}
           locale={locale}

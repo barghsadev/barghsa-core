@@ -245,6 +245,7 @@ function HistoryPage({
                 {tx.bankReceipt && (
                   <WalletReceiptHistoryDetails
                     receiptId={tx.id}
+                    profileId={profileId}
                     receipt={tx.bankReceipt}
                     locale={locale}
                     formatTime={formatTime}

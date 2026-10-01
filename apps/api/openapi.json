@@ -29375,6 +29375,116 @@
         ]
       }
     },
+    "/api/wallet/{profileId}/bank-receipt-top-ups/{receiptId}/attachment": {
+      "get": {
+        "operationId": "CustomerWalletReceiptController_attachment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "receiptId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirects to a short-lived attachment URL."
+          },
+          "400": {
+            "description": "Invalid profile or receipt ID."
+          },
+          "401": {
+            "description": "Not authenticated."
+          },
+          "404": {
+            "description": "Receipt unavailable on the active profile."
+          },
+          "503": {
+            "description": "Receipt storage is unavailable."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Open the sealed original wallet receipt on the active profile",
+        "tags": [
+          "Wallet"
+        ]
+      }
+    },
+    "/api/wallet/{profileId}/bank-receipt-top-ups/{receiptId}/preview": {
+      "get": {
+        "operationId": "CustomerWalletReceiptController_preview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "receiptId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Bounded private PNG preview."
+          },
+          "400": {
+            "description": "Invalid profile or receipt ID."
+          },
+          "401": {
+            "description": "Not authenticated."
+          },
+          "404": {
+            "description": "Receipt unavailable on the active profile."
+          },
+          "503": {
+            "description": "Preview cannot be generated."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview a wallet receipt image or first PDF page on the active profile",
+        "tags": [
+          "Wallet"
+        ]
+      }
+    },
     "/api/wallet/{profileId}/create": {
       "post": {
         "operationId": "WalletController_createWallet",
@@ -29593,6 +29703,85 @@
                             "example": "9007199254740993",
                             "pattern": "^-?[0-9]+$",
                             "type": "string"
+                          },
+                          "bankReceipt": {
+                            "description": "Original bank receipt details only; settlement credits omit this field.",
+                            "properties": {
+                              "bankName": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "customerNote": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "payerReference": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "paymentDate": {
+                                "format": "date",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "rejectionReason": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "timeline": {
+                                "properties": {
+                                  "awaiting": {
+                                    "enum": [
+                                      "review",
+                                      "second_approval",
+                                      null
+                                    ],
+                                    "nullable": true,
+                                    "type": "string"
+                                  },
+                                  "events": {
+                                    "items": {
+                                      "properties": {
+                                        "occurredAt": {
+                                          "format": "date-time",
+                                          "nullable": true,
+                                          "type": "string"
+                                        },
+                                        "state": {
+                                          "enum": [
+                                            "submitted",
+                                            "approval_requested",
+                                            "confirmed",
+                                            "rejected"
+                                          ],
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "state",
+                                        "occurredAt"
+                                      ],
+                                      "type": "object"
+                                    },
+                                    "type": "array"
+                                  }
+                                },
+                                "required": [
+                                  "events",
+                                  "awaiting"
+                                ],
+                                "type": "object"
+                              }
+                            },
+                            "required": [
+                              "paymentDate",
+                              "payerReference",
+                              "bankName",
+                              "customerNote",
+                              "rejectionReason",
+                              "timeline"
+                            ],
+                            "type": "object"
                           },
                           "createdAt": {
                             "format": "date-time",
