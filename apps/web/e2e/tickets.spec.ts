@@ -1,6 +1,7 @@
 import { formatBrowserDate } from './browser-date';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
+import { t } from '@barghsa/i18n/app';
 const profileId = '11111111-1111-4111-8111-111111111111',
   ticketId = '22222222-2222-4222-8222-222222222222';
 const key = 'uploads/document/33333333-3333-4333-8333-333333333333.pdf';
@@ -18,6 +19,148 @@ const item = {
   relatedEntityType: null,
   relatedEntityId: null,
 };
+for (const staff of [false, true])
+  for (const locale of ['en', 'fa'] as const)
+    test(`${staff ? 'staff' : 'customer'} ticket queue views keep disclosure, conversation and failed-page recovery (${locale})`, async ({
+      page,
+    }, testInfo) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.clock.setFixedTime(new Date('2026-10-01T12:00:00Z'));
+      await shell(page, locale, staff);
+      await page.route('**/api/public/branding/config', (route) =>
+        route.fulfill({
+          json: {
+            appTitle: 'Support',
+            appTitleFa: 'پشتیبانی',
+            supportEmail: 'support@example.test',
+            supportPhone: '02126658042',
+            supportMobile: '09123456789',
+            slogan: '',
+            primaryColor: '#2563eb',
+            secondaryColor: '#64748b',
+            accentColor: '#f59e0b',
+            logoUrl: null,
+            faviconUrl: null,
+            darkMode: locale === 'fa',
+            numberStyle: locale === 'fa' ? 'persian' : 'western',
+          },
+        })
+      );
+      const row = {
+        ...item,
+        priority: 'high',
+        updatedAt: '2026-10-01T11:50:00Z',
+        relatedEntityType: 'invoice',
+        relatedEntityId: profileId,
+        assignedTo: 'staff',
+      };
+      const prefix = staff ? '/api/staff/tickets' : '/api/tickets';
+      let reads = 0,
+        detailReads = 0,
+        status = 200;
+      await page.route(
+        (url) => url.pathname === prefix,
+        (route) => {
+          reads++;
+          return route.fulfill({
+            status,
+            json: {
+              data: [row],
+              totalPages: 2,
+              responseTargetHours: 24,
+              viewer: { userId: 'staff', canWrite: true, canAssignOthers: true },
+            },
+          });
+        }
+      );
+      await page.route(`**${prefix}/${ticketId}`, (route) => {
+        detailReads++;
+        return route.fulfill({ json: row });
+      });
+      await page.route(`**${prefix}/${ticketId}/comments`, (route) => route.fulfill({ json: [] }));
+      await page.route('**/api/staff/tickets/assignees', (route) =>
+        route.fulfill({ json: [{ id: 'staff', name: 'Support agent' }] })
+      );
+      const copy = (key: string) => t(`tickets.${key}`, locale);
+      const records = page.locator('[data-slot=ticket-queue-records]');
+      const cards = page.getByRole('button', { name: t('historyView.card', locale), exact: true });
+      const table = page.getByRole('button', { name: t('historyView.table', locale), exact: true });
+      const path = staff ? '/admin/tickets' : '/tickets';
+      await page.goto(path);
+      await expect(cards).toHaveAttribute('aria-pressed', 'true');
+      await expect(records.getByRole('button', { name: item.subject, exact: true })).toBeVisible();
+      await expect(records).toContainText('P1');
+      await expect(records).toContainText(locale === 'fa' ? '۱۰ دقیقه پیش' : '10 minutes ago');
+      const exact = await formatBrowserDate(
+        page,
+        locale,
+        { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'short' },
+        row.updatedAt
+      );
+      await expect(records).toContainText(exact);
+      const disclosure = records.locator('details');
+      await expect(disclosure).not.toHaveAttribute('open');
+      await disclosure.locator('summary').focus();
+      await page.keyboard.press('Enter');
+      await expect(disclosure).toHaveAttribute('open', '');
+      if (staff) {
+        await expect(records).toContainText('Support agent');
+        await expect(records.getByRole('link')).toHaveCount(0);
+      } else
+        await expect(records.getByRole('link')).toHaveAttribute('href', `/invoices/${profileId}`);
+      const initialReads = reads;
+      await page.setViewportSize({ width: 1280, height: 900 });
+      await expect(records.getByRole('table')).toBeVisible();
+      await expect(records.getByRole('columnheader')).toHaveCount(staff ? 9 : 6);
+      await page.setViewportSize({ width: 390, height: 844 });
+      await expect(records.locator('details')).toHaveAttribute('open', '');
+      expect(reads).toBe(initialReads);
+      await records.getByRole('button', { name: item.subject, exact: true }).click();
+      await expect(page.getByRole('heading', { name: item.subject, level: 2 })).toBeFocused();
+      await page.locator('#ticket-reply').fill('Keep this reply');
+      const selectedReads = detailReads;
+      status = 503;
+      await page.getByRole('button', { name: copy('next'), exact: true }).click();
+      await expect(page.getByRole('alert')).toContainText(copy('queueError'));
+      const failedReads = reads;
+      await table.click();
+      await expect(records.getByRole('table')).toBeVisible();
+      await cards.click();
+      await expect(records.locator('details')).toHaveAttribute('open', '');
+      await expect(page.locator('#ticket-reply')).toHaveValue('Keep this reply');
+      expect(reads).toBe(failedReads);
+      expect(detailReads).toBe(selectedReads);
+      status = 200;
+      await page.getByRole('button', { name: copy('retry'), exact: true }).click();
+      await expect(page.getByRole('alert')).toHaveCount(0);
+      expect(reads).toBe(failedReads + 1);
+      await expect(page.locator('#ticket-reply')).toHaveValue('Keep this reply');
+      if (locale === 'fa') await expect(page.locator('html')).toHaveClass(/dark/);
+      else await expect(page.locator('html')).not.toHaveClass(/dark/);
+      expect(
+        (
+          await new AxeBuilder({ page })
+            .include('section.max-w-5xl')
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+            .analyze()
+        ).violations
+      ).toEqual([]);
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+      ).toBe(true);
+      if (locale === 'fa')
+        await records.screenshot({
+          path: `/tmp/barghsa-ticket-views-${staff ? 'staff' : 'customer'}-${testInfo.project.name}.png`,
+        });
+      await table.click();
+      await page.reload();
+      await expect(table).toHaveAttribute('aria-pressed', 'true');
+      await expect(records.getByRole('table')).toBeVisible();
+      status = 403;
+      await page.getByRole('button', { name: copy('refresh'), exact: true }).click();
+      await expect(records).toHaveCount(0);
+      await expect(page.locator('#ticket-reply')).toHaveCount(0);
+    });
 async function shell(page: Page, locale = 'en', staff = false) {
   await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
@@ -110,6 +253,9 @@ for (const locale of ['en', 'fa'])
     await page.route(`**/api/tickets/${ticketId}/comments`, (route) => route.fulfill({ json: [] }));
     await page.goto('/tickets');
     await page
+      .getByRole('button', { name: locale === 'en' ? 'Table' : 'جدول', exact: true })
+      .click();
+    await page
       .getByRole('button', { name: locale === 'en' ? 'Create ticket' : 'ایجاد تیکت', exact: true })
       .click();
     await page.locator('#ticket-subject').fill(item.subject);
@@ -178,6 +324,9 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.route(`**/api/tickets/${ticketId}/comments`, (route) => route.fulfill({ json: [] }));
     await page.goto('/tickets');
+    await page
+      .getByRole('button', { name: locale === 'en' ? 'Table' : 'جدول', exact: true })
+      .click();
     const invoiceLink = page.getByRole('link', {
       name: `${locale === 'en' ? 'Invoice' : 'صورتحساب'} ${profileId}`,
       exact: true,

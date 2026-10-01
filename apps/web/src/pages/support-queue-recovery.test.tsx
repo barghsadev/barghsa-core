@@ -89,6 +89,13 @@ for (const Page of [CustomerTicketsPage, StaffTicketsPage]) {
       await act(async () => button(host, 'Retry').click());
       await act(async () => button(host, supportTicket.subject).click());
       await change(host, '#ticket-reply', 'Unsaved response');
+      const beforeView = calls.length;
+      await act(async () => button(host, 'Table').click());
+      await act(async () => button(host, 'Cards').click());
+      expect(calls).toHaveLength(beforeView);
+      expect(host.querySelector<HTMLTextAreaElement>('#ticket-reply')?.value).toBe(
+        'Unsaved response'
+      );
       if (Page === StaffTicketsPage) {
         await act(async () =>
           host.querySelector<HTMLInputElement>('input[type=checkbox]')!.click()
@@ -100,7 +107,9 @@ for (const Page of [CustomerTicketsPage, StaffTicketsPage]) {
       expect(host.textContent).toContain('changed or needs reopening');
       status = 503;
       await act(async () => button(host, 'Next').click());
-      expect(host.querySelector('tbody')?.textContent).toContain(supportTicket.subject);
+      expect(host.querySelector('[data-slot="ticket-queue-records"]')?.textContent).toContain(
+        supportTicket.subject
+      );
       expect(host.querySelector('h2')?.textContent).toBe(supportTicket.subject);
       expect(host.querySelector<HTMLTextAreaElement>('#ticket-reply')?.value).toBe(
         'Unsaved response'
@@ -147,7 +156,7 @@ it('queue permission denial invalidates a racing detail response and clears sele
     status = 403;
     await act(async () => button(host, 'Refresh tickets').click());
     await act(async () => finish!(Response.json(supportTicket)));
-    expect(host.querySelector('tbody')).toBeNull();
+    expect(host.querySelector('[data-slot="ticket-queue-records"]')).toBeNull();
     expect(host.querySelector('article')).toBeNull();
     expect(host.querySelector('[data-slot="list-content"] button')).toBeNull();
     expect(host.textContent).toContain('no longer have permission');
@@ -170,7 +179,7 @@ it('detail failure retries only the selected ticket and comments, without reload
   const { host, close } = await mount(CustomerTicketsPage);
   try {
     await act(async () => button(host, supportTicket.subject).click());
-    expect(host.querySelector('tbody')).not.toBeNull();
+    expect(host.querySelector('[data-slot="ticket-queue-records"]')).not.toBeNull();
     const count = calls.length;
     status = 200;
     await act(async () => button(host, 'Retry').click());
@@ -257,9 +266,11 @@ it('a malformed queue refresh retains accepted rows, while a changed filter cann
   try {
     malformed = true;
     await act(async () => button(host, 'Refresh tickets').click());
-    expect(host.querySelector('tbody')?.textContent).toContain(supportTicket.subject);
+    expect(host.querySelector('[data-slot="ticket-queue-records"]')?.textContent).toContain(
+      supportTicket.subject
+    );
     await change(host, '#ticket-filter', 'resolved');
-    expect(host.querySelector('tbody')).toBeNull();
+    expect(host.querySelector('[data-slot="ticket-queue-records"]')).toBeNull();
     expect(host.querySelector('[role="alert"]')).not.toBeNull();
   } finally {
     await close();
@@ -359,7 +370,9 @@ it('detail permission denial hides its work and offers no retry while the author
   try {
     await act(async () => button(host, supportTicket.subject).click());
     expect(host.querySelector('article')).toBeNull();
-    expect(host.querySelector('tbody')?.textContent).toContain(supportTicket.subject);
+    expect(host.querySelector('[data-slot="ticket-queue-records"]')?.textContent).toContain(
+      supportTicket.subject
+    );
     expect(host.querySelector('[role="alert"] button')).toBeNull();
     expect(host.textContent).toContain('no longer have permission');
   } finally {
@@ -405,7 +418,9 @@ it('a shrinking queue returns to its last valid page instead of trapping navigat
   try {
     await act(async () => button(host, 'Next').click());
     expect(pages).toEqual([1, 2, 1]);
-    expect(host.querySelector('tbody')?.textContent).toContain(supportTicket.subject);
+    expect(host.querySelector('[data-slot="ticket-queue-records"]')?.textContent).toContain(
+      supportTicket.subject
+    );
     expect(host.querySelector('[aria-current="page"]')?.textContent).toBe('1');
   } finally {
     await close();

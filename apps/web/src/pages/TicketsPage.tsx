@@ -1,47 +1,24 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useSearch } from '@tanstack/react-router';
-import { Button, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
+import { Button, Input, Label, ListPage, ListViewToggle } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import type { SupportListQuery } from '../lib/support-list-query.js';
+import { useListView } from '../hooks/useListView.js';
+import {
+  TicketQueueRecords,
+  RelatedTicketRecord,
+  type Ticket,
+  type TicketStatus,
+} from '../components/TicketQueueRecords.js';
 import { ProfileClosureReview } from '../components/ProfileClosureReview.js';
 import {
   isAllowedInvoiceReceiptFile,
   uploadTicketAttachment,
 } from '../lib/invoice-bank-receipt-upload.js';
 
-type Status = 'open' | 'in_progress' | 'waiting_customer' | 'waiting_staff' | 'resolved' | 'closed';
-interface Ticket {
-  id: string;
-  subject: string;
-  body: string;
-  category?: 'general' | 'billing' | 'orders' | 'privacy';
-  privacyRequestType?: 'export' | 'closure' | null;
-  privacyClosureCompletedAt?: string | null;
-  privacyClosureAnonymized?: boolean | null;
-  privacyClosureRetained?: Record<string, number> | null;
-  privacyClosureExportTicketId?: string | null;
-  status: Status;
-  priority: string;
-  profileId: string | null;
-  assignedTeamId?: string | null;
-  userId: string;
-  assignedTo: string | null;
-  updatedAt: string;
-  relatedEntityId: string | null;
-  relatedEntityType: string | null;
-  attachments: string[];
-  attachmentDownloadUrls?: string[];
-  customer?: {
-    userId: string;
-    username: string;
-    email: string | null;
-    mobile: string | null;
-    profile: { id: string; title: string | null } | null;
-  };
-}
 interface Comment {
   id: string;
   authorId: string;
@@ -65,7 +42,7 @@ interface Options {
   records: { id: string; type: string; created_at: string }[];
   hasMoreRecords?: boolean;
 }
-const statuses: Status[] = [
+const statuses: TicketStatus[] = [
   'open',
   'in_progress',
   'waiting_customer',
@@ -73,7 +50,7 @@ const statuses: Status[] = [
   'resolved',
   'closed',
 ];
-const transitions: Record<Status, Status[]> = {
+const transitions: Record<TicketStatus, TicketStatus[]> = {
   open: ['in_progress'],
   in_progress: ['waiting_customer', 'waiting_staff', 'resolved'],
   waiting_customer: ['in_progress'],
@@ -84,35 +61,6 @@ const transitions: Record<Status, Status[]> = {
 export function CustomerTicketsPage({ queries }: { queries?: SupportListQuery } = {}) {
   return <Tickets staff={false} {...(queries ? { queries } : {})} />;
 }
-function RelatedTicketRecord({
-  ticket,
-  staff,
-  locale,
-}: {
-  ticket: Ticket;
-  staff: boolean;
-  locale: 'fa' | 'en';
-}) {
-  if (!ticket.relatedEntityId) return <>{t('tickets.none', locale)}</>;
-  const label = `${t(`tickets.${ticket.relatedEntityType ?? 'related'}`, locale)} ${ticket.relatedEntityId}`;
-  if (!staff && ticket.relatedEntityType === 'invoice')
-    return (
-      <a
-        className="text-blue-700 dark:text-blue-300 underline break-all"
-        href={`/invoices/${encodeURIComponent(ticket.relatedEntityId)}`}
-      >
-        {label}
-      </a>
-    );
-  return (
-    <span className="break-all">
-      {label}
-      <span className="block text-sm text-muted-foreground">
-        {t('tickets.recordUnavailable', locale)}
-      </span>
-    </span>
-  );
-}
 export function StaffTicketsPage({ queries }: { queries?: SupportListQuery } = {}) {
   return <Tickets staff {...(queries ? { queries } : {})} />;
 }
@@ -120,6 +68,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
   const queryRef = useRef(queries);
   queryRef.current = queries;
   const time = useAccountTime();
+  const { view, setView } = useListView(staff ? 'staff-tickets' : 'customer-tickets');
   const routeSearch = useSearch({ strict: false }) as {
     ticketId?: string;
     status?: 'active';
@@ -174,7 +123,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
   const detail = !queries || loadedDetail?.id === queries.selected ? loadedDetail : null;
   const [reply, setReply] = useState(''),
     [internal, setInternal] = useState(false),
-    [nextStatus, setNextStatus] = useState<Status>('open');
+    [nextStatus, setNextStatus] = useState<TicketStatus>('open');
   const [teams, setTeams] = useState<{ id: string; name: string; members: string[] }[]>([]),
     [teamId, setTeamId] = useState('');
   const [assignees, setAssignees] = useState<{ id: string; name: string }[]>([]),
@@ -384,7 +333,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
       if (current === detailGeneration.current && !queueDenied.current) {
         setDetail(ticket);
         setComments(conversation);
-        setNextStatus(transitions[ticket.status as Status]?.[0] ?? 'open');
+        setNextStatus(transitions[ticket.status as TicketStatus]?.[0] ?? 'open');
         setAssignee(ticket.assignedTo ?? '');
         setTeamId(ticket.assignedTeamId ?? '');
       }
@@ -722,7 +671,19 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
         </form>
       )}
       <ListPage>
-        <ListPage.Toolbar>
+        <ListPage.Toolbar
+          actions={
+            <ListViewToggle
+              value={view}
+              onChange={setView}
+              labels={{
+                group: t('historyView.group', locale),
+                table: t('historyView.table', locale),
+                card: t('historyView.card', locale),
+              }}
+            />
+          }
+        >
           <fieldset disabled={busy} className="flex min-w-0 flex-wrap items-end gap-3">
             <div>
               <Label htmlFor="ticket-search">{text('search')}</Label>
@@ -792,87 +753,23 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
           emptyView={<p>{text('empty')}</p>}
         >
           {visibleQueue && (
-            <ScrollArea
-              scrollbarOrientation="horizontal"
-              role="region"
-              aria-label={text(staff ? 'staffTitle' : 'title')}
-            >
-              <table className="w-full text-start">
-                <caption className="sr-only">{text(staff ? 'staffTitle' : 'title')}</caption>
-                <thead>
-                  <tr>
-                    {[
-                      'subject',
-                      'category',
-                      'status',
-                      'priority',
-                      'updated',
-                      'related',
-                      ...(staff ? ['customer', 'assignee', 'target'] : []),
-                    ].map((key) => (
-                      <th scope="col" key={key} className="p-2 text-start">
-                        {text(key)}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {visibleQueue.data.map((item) => (
-                    <tr key={item.id} className="border-t">
-                      <td className="p-2">
-                        <button
-                          disabled={busy}
-                          className="text-blue-700 dark:text-blue-300 underline text-start"
-                          onClick={() => {
-                            setError('');
-                            if (queries && queries.selected !== item.id) queries.select(item.id);
-                            else void select(item.id);
-                          }}
-                        >
-                          {item.subject}
-                        </button>
-                      </td>
-                      <td className="p-2">{text(`category.${item.category ?? 'general'}`)}</td>
-                      <td className="p-2">
-                        <span className="rounded-full bg-muted px-2 py-1 text-sm font-medium">
-                          {text(item.status)}
-                        </span>
-                      </td>
-                      <td className="p-2">
-                        <span className="rounded-full border px-2 py-1 text-sm">
-                          {text(item.priority)}
-                        </span>
-                      </td>
-                      <td className="p-2 whitespace-nowrap">{formatDate(item.updatedAt)}</td>
-                      <td className="p-2">
-                        <RelatedTicketRecord ticket={item} staff={staff} locale={locale} />
-                      </td>
-                      {staff && (
-                        <>
-                          <td className="p-2">{item.userId}</td>
-                          <td className="p-2">
-                            {assignees.find((person) => person.id === item.assignedTo)?.name ??
-                              item.assignedTo ??
-                              text('unassigned')}
-                          </td>
-                          <td className="p-2 whitespace-nowrap">
-                            {visibleQueue.responseTargetHours &&
-                            ['open', 'in_progress', 'waiting_staff'].includes(item.status)
-                              ? formatDate(
-                                  new Date(
-                                    new Date(item.updatedAt).getTime() +
-                                      visibleQueue.responseTargetHours * 3600000
-                                  ).toISOString()
-                                )
-                              : text('none')}
-                          </td>
-                        </>
-                      )}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </ScrollArea>
+            <TicketQueueRecords
+              key={context}
+              items={visibleQueue.data}
+              staff={staff}
+              locale={locale}
+              view={view}
+              busy={busy}
+              selectedId={selectedId}
+              assignees={assignees}
+              responseTargetHours={visibleQueue.responseTargetHours}
+              formatDate={formatDate}
+              onSelect={(id) => {
+                setError('');
+                if (queries && queries.selected !== id) queries.select(id);
+                else void select(id);
+              }}
+            />
           )}
         </ListPage.Content>
         <ListPage.Pagination
@@ -1145,7 +1042,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
                   disabled={busy}
                   className="block rounded border border-input bg-background text-foreground p-2"
                   value={nextStatus}
-                  onChange={(event) => setNextStatus(event.target.value as Status)}
+                  onChange={(event) => setNextStatus(event.target.value as TicketStatus)}
                 >
                   {[
                     ...transitions[detail.status],

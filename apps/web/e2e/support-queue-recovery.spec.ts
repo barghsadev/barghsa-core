@@ -212,6 +212,7 @@ for (const staff of [false, true])
             .evaluate((input: HTMLInputElement) => input.files?.[0]?.name)
         ).toBe('draft.pdf');
       }
+      await list.getByRole('button', { name: t('historyView.table', locale), exact: true }).click();
       const viewport = list.locator('[data-slot="scroll-area-viewport"]');
       await viewport.focus();
       await expect(viewport).toBeFocused();
