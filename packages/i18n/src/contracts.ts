@@ -247,6 +247,13 @@ export const en = {
   loading: 'Loading contracts…',
   error: 'This contract is unavailable or your access changed. Refresh to try again.',
   refresh: 'Refresh',
+  retry: 'Try again',
+  cancellationRequestQueueError:
+    'Cancellation requests could not be loaded. Your open contract review is kept.',
+  cancellationRequestQueuePages: 'Cancellation request pages',
+  cancellationQueueError:
+    'Refund obligations could not be loaded. Your bank references and confirmation are kept.',
+  cancellationQueuePages: 'Contract refund pages',
   next: 'Load more',
   empty: 'No contracts found',
   emptyHint: 'Published contracts will appear here when they are ready for you.',
@@ -560,6 +567,13 @@ export const fa: Record<keyof typeof en, string> = {
   loading: 'در حال دریافت قراردادها…',
   error: 'قرارداد در دسترس نیست یا دسترسی شما تغییر کرده است. دوباره تازه‌سازی کنید.',
   refresh: 'تازه‌سازی',
+  retry: 'تلاش دوباره',
+  cancellationRequestQueueError:
+    'درخواست‌های لغو بارگذاری نشدند. بررسی باز قرارداد شما حفظ شده است.',
+  cancellationRequestQueuePages: 'صفحه‌های درخواست لغو',
+  cancellationQueueError:
+    'تعهدهای بازپرداخت بارگذاری نشدند. شناسه‌های بانکی و تأیید شما حفظ شده‌اند.',
+  cancellationQueuePages: 'صفحه‌های بازپرداخت قرارداد',
   next: 'نمایش بیشتر',
   empty: 'قراردادی پیدا نشد',
   emptyHint: 'قراردادهای منتشرشده پس از آماده‌شدن اینجا نمایش داده می‌شوند.',

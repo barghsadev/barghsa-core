@@ -59,10 +59,10 @@ it('hides finance obligations from an unauthorized staff member', async () => {
 it('recovers from a failed load and retains scheduled automatic retries without a manual action', async () => {
   request.mockRejectedValueOnce(new Error('offline'));
   await render();
-  expect(container.textContent).toContain(en.error);
+  expect(container.textContent).toContain(en.cancellationQueueError);
   request.mockResolvedValue({ obligations: [row('scheduled')], nextBefore: null });
   await click(en.refresh);
-  expect(container.textContent).not.toContain(en.error);
+  expect(container.textContent).not.toContain(en.cancellationQueueError);
   expect(container.textContent).toContain(en.cancellationQueueScheduled);
   expect(container.textContent).not.toContain(en['cancellation.queue.process']);
 });

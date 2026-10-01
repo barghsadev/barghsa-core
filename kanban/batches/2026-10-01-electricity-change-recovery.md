@@ -41,4 +41,4 @@ All eighteen browser cases pass in the final run without failures or retries: tw
 
 The preceding document batch is published as `2934bcadfc23ab1837dc92456a4b87e6fc1b0a2b`; CI run `36790376542` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.
 
-This electricity change batch is committed and pushed directly to main after review and related checks. Its remote commit and CI are verified after publication.
+This electricity change batch is published as `4f6923750381f4a10f5ab3da9de8edf17809d6c0`. CI run `36791662796` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.

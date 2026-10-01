@@ -83,7 +83,15 @@ for (const locale of ['fa', 'en']) {
     await expect(dialog).toHaveCount(0);
     expect(actions).toHaveLength(2);
     expect(actions[0]).toBe(actions[1]);
-    await expect(page.locator('#admin-content').getByRole('status')).toContainText(
+    await expect(
+      page
+        .locator('#admin-content')
+        .getByRole('status')
+        .filter({
+          hasText:
+            locale === 'fa' ? 'باید در روند مربوط به خود تکمیل شود' : 'must still be completed',
+        })
+    ).toContainText(
       locale === 'fa' ? 'باید در روند مربوط به خود تکمیل شود' : 'must still be completed'
     );
   });
@@ -130,7 +138,7 @@ test('pagination and history expose no decision controls', async ({ page }) => {
   await page.getByLabel('Status', { exact: true }).selectOption('approved');
   await expect(page.getByText('reviewer@example.test')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Approve', exact: true })).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Previous', exact: true })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Previous', exact: true })).toHaveCount(0);
 });
 test('a refund approval link loads its exact request beyond the queue page', async ({ page }) => {
   await shell(page);
@@ -284,7 +292,15 @@ for (const locale of ['fa', 'en'])
     await dialog
       .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
       .click();
-    await expect(page.locator('#admin-content').getByRole('status')).toContainText(
+    await expect(
+      page
+        .locator('#admin-content')
+        .getByRole('status')
+        .filter({
+          hasText:
+            locale === 'fa' ? 'اصلاح تأییدشده صادر می‌شود' : 'Approved adjustments are issued',
+        })
+    ).toContainText(
       locale === 'fa' ? 'اصلاح تأییدشده صادر می‌شود' : 'Approved adjustments are issued'
     );
   });

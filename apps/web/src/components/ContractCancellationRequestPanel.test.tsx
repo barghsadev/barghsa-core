@@ -241,8 +241,8 @@ it('hides the queue after permission denial', async () => {
 it('recovers a queue load error', async () => {
   request.mockRejectedValueOnce(new Error('offline'));
   await act(async () => root.render(<ContractCancellationRequestQueue />));
-  expect(container.textContent).toContain(en.error);
+  expect(container.textContent).toContain(en.cancellationRequestQueueError);
   request.mockResolvedValue({ requests: [], nextBefore: null });
   await click(en.refresh);
-  expect(container.textContent).not.toContain(en.error);
+  expect(container.textContent).not.toContain(en.cancellationRequestQueueError);
 });

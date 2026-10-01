@@ -6,13 +6,19 @@ for (const locale of ['en', 'fa'] as const)
     locale + ': finance retries failed returns and records then reconciles bank transfers',
     async ({ page }) => {
       const w = locale === 'fa' ? fa : en;
-      await page.addInitScript((language) => {
-        if (document.documentElement) document.documentElement.lang = language;
-        new MutationObserver(() => {
-          if (document.documentElement) document.documentElement.lang = language;
-        }).observe(document, { childList: true });
-      }, locale);
+      await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 403, json: {} }));
+      await page.route('**/api/auth/user', (route) =>
+        route.fulfill({
+          json: {
+            userId: 'finance',
+            isStaff: true,
+            operatingContext: 'staff',
+            canSwitchContext: false,
+            requiresTosAcceptance: false,
+          },
+        })
+      );
       await page.route('**/api/admin/contracts?*', (route) =>
         route.fulfill({ json: { contracts: [], nextBefore: null } })
       );
