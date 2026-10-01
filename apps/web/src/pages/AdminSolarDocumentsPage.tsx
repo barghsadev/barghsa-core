@@ -7,6 +7,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
+import type { SolarDocumentQueries } from '../lib/solar-staff-query.js';
 
 interface RequestRow {
   id: string;
@@ -65,7 +66,7 @@ interface SetReview {
   };
 }
 
-export function AdminSolarDocumentsPage() {
+export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQueries } = {}) {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
@@ -83,11 +84,15 @@ export function AdminSolarDocumentsPage() {
   const [action, setAction] = useState<(TeamAction & { setReview?: SetReview }) | null>(null);
   const [preparingDecision, setPreparingDecision] = useState(false);
   const [revision, setRevision] = useState(0);
-  const [before, setBefore] = useState<string | null>(null);
+  const [localBefore, setBefore] = useState<string | null>(null);
+  const before = queries ? queries.requests.query.cursor || null : localBefore;
   const [nextBefore, setNextBefore] = useState<string | null>(null);
+  const acceptedCursor = useRef<string | null>(null);
   const [queueLoading, setQueueLoading] = useState(true);
-  const [beforeDocument, setBeforeDocument] = useState<string | null>(null);
+  const [localBeforeDocument, setBeforeDocument] = useState<string | null>(null);
+  const beforeDocument = queries ? queries.files.query.cursor || null : localBeforeDocument;
   const [nextBeforeDocument, setNextBeforeDocument] = useState<string | null>(null);
+  const acceptedDocumentCursor = useRef<string | null>(null);
   const [documentsLoading, setDocumentsLoading] = useState(true);
   const [error, setError] = useState(false);
   const [queueError, setQueueError] = useState(false);
@@ -101,6 +106,12 @@ export function AdminSolarDocumentsPage() {
   const [detailRevision, setDetailRevision] = useState(0);
   const [guidanceRevision, setGuidanceRevision] = useState(0);
   const reviewRequest = useRef(0);
+  const commandGeneration = useRef(0);
+  function propose(next: NonNullable<typeof action>) {
+    commandGeneration.current = ++reviewRequest.current;
+    setPreparingDecision(false);
+    setAction(next);
+  }
   function invalidateReview() {
     reviewRequest.current += 1;
     setAction(null);
@@ -116,12 +127,37 @@ export function AdminSolarDocumentsPage() {
     setSelected(id);
     setPreview(documentId);
   }
+  const extendingScope = useRef<string | null>(null);
+  const queryScope = JSON.stringify([before, beforeDocument]);
+  const previousScope = useRef(queryScope);
+  if (previousScope.current !== queryScope) {
+    previousScope.current = queryScope;
+    ++reviewRequest.current;
+  }
+  useEffect(() => {
+    invalidateReview();
+    if (extendingScope.current !== queryScope) selectRequest(null);
+    extendingScope.current = null;
+  }, [queryScope]);
+  useEffect(
+    () => () => {
+      ++reviewRequest.current;
+    },
+    []
+  );
   const refresh = () => {
     setError(false);
     invalidateReview();
-    setBefore(null);
-    setBeforeDocument(null);
-    setRevision((value) => value + 1);
+    if (queries) {
+      queries.reset();
+      if (!before) setQueueRevision((value) => value + 1);
+      if (!beforeDocument) setDocumentsRevision((value) => value + 1);
+      setDetailRevision((value) => value + 1);
+    } else {
+      setBefore(null);
+      setBeforeDocument(null);
+      setRevision((value) => value + 1);
+    }
   };
   useEffect(() => {
     const controller = new AbortController();
@@ -141,16 +177,21 @@ export function AdminSolarDocumentsPage() {
       })
       .then((result) => {
         if (controller.signal.aborted) return;
+        const extending =
+          !!beforeDocument &&
+          nextBeforeDocument === beforeDocument &&
+          acceptedDocumentCursor.current !== beforeDocument;
         setPendingDocuments((current) => {
-          if (!beforeDocument) return result.documents;
+          if (!extending) return result.documents;
           const shown = new Set(current.map((document) => document.id));
           return [...current, ...result.documents.filter((document) => !shown.has(document.id))];
         });
+        acceptedDocumentCursor.current = beforeDocument;
         setNextBeforeDocument(result.nextBefore);
       })
       .catch((cause: unknown) => {
         if (controller.signal.aborted) return;
-        if (cause instanceof Error && cause.message === '403') {
+        if (cause instanceof Error && ['401', '403'].includes(cause.message)) {
           setPendingDocuments([]);
           setNextBeforeDocument(null);
           selectRequest(null);
@@ -181,16 +222,18 @@ export function AdminSolarDocumentsPage() {
       })
       .then((result) => {
         if (controller.signal.aborted) return;
+        const extending = !!before && nextBefore === before && acceptedCursor.current !== before;
         setRequests((current) => {
-          if (!before) return result.requests;
+          if (!extending) return result.requests;
           const shown = new Set(current.map((request) => request.id));
           return [...current, ...result.requests.filter((request) => !shown.has(request.id))];
         });
+        acceptedCursor.current = before;
         setNextBefore(result.nextBefore);
       })
       .catch((cause: unknown) => {
         if (controller.signal.aborted) return;
-        if (cause instanceof Error && cause.message === '403') {
+        if (cause instanceof Error && ['401', '403'].includes(cause.message)) {
           setRequests([]);
           setNextBefore(null);
           selectRequest(null);
@@ -265,7 +308,7 @@ export function AdminSolarDocumentsPage() {
       setError(true);
       return;
     }
-    setAction({
+    propose({
       title: copy('saveGuidance'),
       description: copy('saveGuidance'),
       path: '/api/admin/solar/document-guidance',
@@ -279,7 +322,7 @@ export function AdminSolarDocumentsPage() {
   }
   function review(document: DocumentRow, decision: 'approve' | 'reject') {
     if (decision === 'reject' && !reason.trim()) return;
-    setAction({
+    propose({
       title: copy(decision),
       description: document.file_name,
       path: `/api/admin/solar/requests/${selected}/documents/${document.document_id}/${decision}`,
@@ -317,7 +360,7 @@ export function AdminSolarDocumentsPage() {
       if (!response.ok) throw new Error('review');
       const setReview = (await response.json()) as SetReview;
       if (request !== reviewRequest.current) return;
-      setAction({
+      propose({
         title: copy(decision === 'advance' ? 'advancePostal' : 'requestAdditional'),
         description: requestId,
         method: 'POST',
@@ -335,8 +378,9 @@ export function AdminSolarDocumentsPage() {
       if (request === reviewRequest.current) setPreparingDecision(false);
     }
   }
+  const actionGeneration = commandGeneration.current;
   return (
-    <main className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('staffTitle')}</h1>
       {time.notice}
       {error && <p role="alert">{copy('documentError')}</p>}
@@ -388,11 +432,22 @@ export function AdminSolarDocumentsPage() {
           </ListPage.Content>
           <ListPage.Pagination
             kind="cursor"
-            hasMore={!!nextBeforeDocument && !documentsError && !documentsDenied}
+            hasMore={
+              !!nextBeforeDocument &&
+              !documentsError &&
+              !documentsDenied &&
+              (acceptedDocumentCursor.current !== beforeDocument ||
+                (nextBeforeDocument !== beforeDocument &&
+                  (!queries || queries.files.canAdvance(nextBeforeDocument))))
+            }
             loading={documentsLoading}
             label={copy('staffPendingFiles')}
             nextLabel={copy('moreFiles')}
-            onNext={() => setBeforeDocument(nextBeforeDocument)}
+            onNext={() => {
+              extendingScope.current = JSON.stringify([before, nextBeforeDocument]);
+              if (queries && nextBeforeDocument) queries.files.next(nextBeforeDocument);
+              else setBeforeDocument(nextBeforeDocument);
+            }}
           />
         </ListPage>
       </section>
@@ -445,11 +500,21 @@ export function AdminSolarDocumentsPage() {
           </ListPage.Content>
           <ListPage.Pagination
             kind="cursor"
-            hasMore={!!nextBefore && !queueError && !queueDenied}
+            hasMore={
+              !!nextBefore &&
+              !queueError &&
+              !queueDenied &&
+              (acceptedCursor.current !== before ||
+                (nextBefore !== before && (!queries || queries.requests.canAdvance(nextBefore))))
+            }
             loading={queueLoading}
             label={copy('staffQueue')}
             nextLabel={copy('moreRequests')}
-            onNext={() => setBefore(nextBefore)}
+            onNext={() => {
+              extendingScope.current = JSON.stringify([nextBefore, beforeDocument]);
+              if (queries && nextBefore) queries.requests.next(nextBefore);
+              else setBefore(nextBefore);
+            }}
           />
         </ListPage>
       </section>
@@ -576,7 +641,9 @@ export function AdminSolarDocumentsPage() {
       {action && (
         <TeamActionDialog
           action={action}
-          onClose={() => setAction(null)}
+          onClose={() => {
+            if (actionGeneration === reviewRequest.current) invalidateReview();
+          }}
           summary={
             action.setReview ? (
               <FinancialReviewSummary
@@ -621,6 +688,7 @@ export function AdminSolarDocumentsPage() {
             ) : undefined
           }
           onSuccess={async () => {
+            if (actionGeneration !== reviewRequest.current) return;
             setAction(null);
             setReason('');
             setPreview(null);
@@ -628,6 +696,6 @@ export function AdminSolarDocumentsPage() {
           }}
         />
       )}
-    </main>
+    </div>
   );
 }

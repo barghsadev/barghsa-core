@@ -63,7 +63,7 @@ function fill(element: HTMLInputElement | HTMLTextAreaElement, value: string) {
   );
   element.dispatchEvent(new Event('input', { bubbles: true }));
 }
-async function mount(Page: typeof Documents) {
+async function mount(Page: () => ReturnType<typeof Documents>) {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const container = document.createElement('div');
@@ -89,75 +89,76 @@ function defaultData(url: string) {
     nextBefore: null,
   };
 }
-for (const { name, Page, base, key, row, slot, more } of cases) {
-  it(`${name}: exact page retry preserves selected review, guidance and sibling resources; 403 removes stale work`, async () => {
-    let status = 503;
-    const queries: string[] = [],
-      otherReads: string[] = [];
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async (url: string) => {
-        const parsed = new URL(url, 'http://localhost');
-        if (parsed.pathname !== base) {
-          otherReads.push(url);
-          return Response.json(defaultData(url));
-        }
-        queries.push(url);
-        if (parsed.searchParams.has('before') && status !== 200)
-          return new Response('{}', { status });
-        const next = parsed.searchParams.has('before');
-        return Response.json({
-          [key]: [row(next ? olderSolar : firstSolar)],
-          nextBefore: next ? olderSolar : firstSolar,
-        });
-      })
-    );
-    const { container, close } = await mount(Page);
-    try {
-      await act(async () =>
-        button(container, name === 'files' ? 'first.pdf' : 'First solar buyer').click()
+for (const { name, Page, base, key, row, slot, more } of cases)
+  for (const deniedStatus of [401, 403]) {
+    it(`${name}: exact page retry preserves selected review, guidance and sibling resources; ${deniedStatus} removes stale work`, async () => {
+      let status = 503;
+      const queries: string[] = [],
+        otherReads: string[] = [];
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async (url: string) => {
+          const parsed = new URL(url, 'http://localhost');
+          if (parsed.pathname !== base) {
+            otherReads.push(url);
+            return Response.json(defaultData(url));
+          }
+          queries.push(url);
+          if (parsed.searchParams.has('before') && status !== 200)
+            return new Response('{}', { status });
+          const next = parsed.searchParams.has('before');
+          return Response.json({
+            [key]: [row(next ? olderSolar : firstSolar)],
+            nextBefore: next ? olderSolar : firstSolar,
+          });
+        })
       );
-      const input =
-        name === 'postal'
-          ? container.querySelector<HTMLTextAreaElement>('section textarea')!
-          : container.querySelector<HTMLInputElement>('#solar-review-reason')!;
-      const guidance = container.querySelector<HTMLTextAreaElement>('form textarea')!;
-      await act(async () => {
-        fill(input, 'Keep this explanation');
-        fill(guidance, 'Keep this guidance draft');
-      });
-      if (name !== 'postal') {
-        expect(container.textContent).toContain('Awaiting review');
-        expect(container.textContent).toContain('Pending staff review');
-        expect(container.textContent).not.toContain('documents_under_review');
-        expect(container.textContent).not.toContain('SubmittedForReview');
+      const { container, close } = await mount(Page);
+      try {
+        await act(async () =>
+          button(container, name === 'files' ? 'first.pdf' : 'First solar buyer').click()
+        );
+        const input =
+          name === 'postal'
+            ? container.querySelector<HTMLTextAreaElement>('section textarea')!
+            : container.querySelector<HTMLInputElement>('#solar-review-reason')!;
+        const guidance = container.querySelector<HTMLTextAreaElement>('form textarea')!;
+        await act(async () => {
+          fill(input, 'Keep this explanation');
+          fill(guidance, 'Keep this guidance draft');
+        });
+        if (name !== 'postal') {
+          expect(container.textContent).toContain('Awaiting review');
+          expect(container.textContent).toContain('Pending staff review');
+          expect(container.textContent).not.toContain('documents_under_review');
+          expect(container.textContent).not.toContain('SubmittedForReview');
+        }
+        const otherCount = otherReads.length;
+        await act(async () => button(container, more).click());
+        const content = container.querySelectorAll('[data-slot="list-content"]')[slot]!;
+        expect(content.querySelector('[role="alert"]')).not.toBeNull();
+        const failed = queries.at(-1);
+        status = 200;
+        await act(async () => button(content, 'Try again').click());
+        expect(queries.at(-1)).toBe(failed);
+        expect(content.textContent).toContain(name === 'files' ? 'older.pdf' : 'Older solar buyer');
+        expect(input.value).toBe('Keep this explanation');
+        expect(guidance.value).toBe('Keep this guidance draft');
+        expect(otherReads).toHaveLength(otherCount);
+        if (name === 'files')
+          expect(container.querySelector('[data-testid="preview"]')?.textContent).toBe(firstSolar);
+        status = deniedStatus;
+        await act(async () => button(container, more).click());
+        expect(content.querySelector('button')).toBeNull();
+        expect(container.querySelector('#solar-review-reason')).toBeNull();
+        expect(container.querySelector('section textarea')).toBeNull();
+        expect(container.querySelector('[data-testid="preview"]')).toBeNull();
+        expect(guidance.value).toBe('Keep this guidance draft');
+      } finally {
+        await close();
       }
-      const otherCount = otherReads.length;
-      await act(async () => button(container, more).click());
-      const content = container.querySelectorAll('[data-slot="list-content"]')[slot]!;
-      expect(content.querySelector('[role="alert"]')).not.toBeNull();
-      const failed = queries.at(-1);
-      status = 200;
-      await act(async () => button(content, 'Try again').click());
-      expect(queries.at(-1)).toBe(failed);
-      expect(content.textContent).toContain(name === 'files' ? 'older.pdf' : 'Older solar buyer');
-      expect(input.value).toBe('Keep this explanation');
-      expect(guidance.value).toBe('Keep this guidance draft');
-      expect(otherReads).toHaveLength(otherCount);
-      if (name === 'files')
-        expect(container.querySelector('[data-testid="preview"]')?.textContent).toBe(firstSolar);
-      status = 403;
-      await act(async () => button(container, more).click());
-      expect(content.querySelector('button')).toBeNull();
-      expect(container.querySelector('#solar-review-reason')).toBeNull();
-      expect(container.querySelector('section textarea')).toBeNull();
-      expect(container.querySelector('[data-testid="preview"]')).toBeNull();
-      expect(guidance.value).toBe('Keep this guidance draft');
-    } finally {
-      await close();
-    }
-  });
-}
+    });
+  }
 it('document detail failure leaves both queues available and retries only the selected documents', async () => {
   let fail = true;
   const calls: string[] = [];

@@ -7,6 +7,7 @@ import { DocumentDetail } from '../components/DocumentDetail.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { SolarContractForm } from '../components/SolarContractForm.js';
 import { withCsrf } from '../lib/csrf.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 
 interface Guidance {
   fa: string;
@@ -58,12 +59,15 @@ interface PostalReview {
   };
 }
 
-export function AdminSolarPostalPage() {
+export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding } = {}) {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
   const [rows, setRows] = useState<Row[]>([]);
-  const [lane, setLane] = useState<PostalLane>('needs_staff');
+  const [localLane, setLane] = useState<PostalLane>('needs_staff');
+  const lane = (queries?.query.filters.lane || localLane) as PostalLane;
+  const [acceptedLane, setAcceptedLane] = useState(lane);
+  const visibleRows = acceptedLane === lane ? rows : [];
   const [guidance, setGuidance] = useState<Guidance | null>(null);
   const [originalsFa, setOriginalsFa] = useState('');
   const [originalsEn, setOriginalsEn] = useState('');
@@ -82,19 +86,55 @@ export function AdminSolarPostalPage() {
   const [queueDenied, setQueueDenied] = useState(false);
   const [guidanceError, setGuidanceError] = useState(false);
   const reviewRequest = useRef(0);
+  const commandGeneration = useRef(0);
+  function propose(next: NonNullable<typeof action>) {
+    commandGeneration.current = ++reviewRequest.current;
+    setPreparingDecision(false);
+    setAction(next);
+  }
   function invalidateReview() {
     reviewRequest.current += 1;
     setAction(null);
     setPreparingDecision(false);
   }
-  const [before, setBefore] = useState<string | null>(null);
+  const [localBefore, setBefore] = useState<string | null>(null);
+  const before = queries ? queries.query.cursor || null : localBefore;
   const [nextBefore, setNextBefore] = useState<string | null>(null);
+  const acceptedCursor = useRef<string | null>(null);
+  const extendingCursor = useRef<string | null>(null);
+  const queryScope = JSON.stringify([lane, before]);
+  const previousScope = useRef(queryScope);
+  if (previousScope.current !== queryScope) {
+    previousScope.current = queryScope;
+    ++reviewRequest.current;
+  }
+  useEffect(() => {
+    invalidateReview();
+    if (!before || extendingCursor.current !== before) {
+      setSelected(null);
+      setPreview(null);
+      setReason('');
+      setError(false);
+    }
+    extendingCursor.current = null;
+  }, [queryScope]);
+  useEffect(
+    () => () => {
+      ++reviewRequest.current;
+    },
+    []
+  );
   const [queueLoading, setQueueLoading] = useState(true);
   const [createdContractId, setCreatedContractId] = useState<string | null>(null);
   const refresh = () => {
     invalidateReview();
-    setBefore(null);
-    setRevision((value) => value + 1);
+    if (queries) {
+      queries.setQuery({ cursor: '' });
+      if (!before) setQueueRevision((value) => value + 1);
+    } else {
+      setBefore(null);
+      setRevision((value) => value + 1);
+    }
   };
   useEffect(() => {
     const controller = new AbortController();
@@ -113,16 +153,23 @@ export function AdminSolarPostalPage() {
       })
       .then((value) => {
         if (controller.signal.aborted) return;
+        const extending =
+          !!before &&
+          nextBefore === before &&
+          acceptedCursor.current !== before &&
+          acceptedLane === lane;
         setRows((current) => {
-          if (!before) return value.requests;
+          if (!extending) return value.requests;
           const shown = new Set(current.map((request) => request.id));
           return [...current, ...value.requests.filter((request) => !shown.has(request.id))];
         });
+        acceptedCursor.current = before;
+        setAcceptedLane(lane);
         setNextBefore(value.nextBefore);
       })
       .catch((cause: unknown) => {
         if (controller.signal.aborted) return;
-        if (cause instanceof Error && cause.message === '403') {
+        if (cause instanceof Error && ['401', '403'].includes(cause.message)) {
           invalidateReview();
           setRows([]);
           setNextBefore(null);
@@ -158,7 +205,7 @@ export function AdminSolarPostalPage() {
       });
     return () => controller.abort();
   }, [guidanceRevision]);
-  const row = rows.find((item) => item.id === selected);
+  const row = visibleRows.find((item) => item.id === selected);
   function saveGuidance(event: FormEvent) {
     event.preventDefault();
     if (!guidance) return;
@@ -174,7 +221,7 @@ export function AdminSolarPostalPage() {
       setError(true);
       return;
     }
-    setAction({
+    propose({
       title: copy('postalSaveGuidance'),
       description: copy('postalSaveGuidance'),
       path: '/api/admin/solar/postal-guidance',
@@ -219,7 +266,7 @@ export function AdminSolarPostalPage() {
       if (!response.ok) throw new Error('review');
       const postalReview = (await response.json()) as PostalReview;
       if (request !== reviewRequest.current) return;
-      setAction({
+      propose({
         title: copy(`postal_${decision}`),
         description: requestId,
         path: `/api/admin/solar/requests/${encodeURIComponent(requestId)}/postal/${decision}`,
@@ -263,7 +310,7 @@ export function AdminSolarPostalPage() {
       if (!response.ok) throw new Error('review');
       const review = (await response.json()) as FinalReview;
       if (request !== reviewRequest.current) return;
-      setAction({
+      propose({
         title: copy(
           decision === 'approve'
             ? 'solarFinalApprove'
@@ -287,8 +334,10 @@ export function AdminSolarPostalPage() {
       if (request === reviewRequest.current) setPreparingDecision(false);
     }
   }
+  const actionGeneration = commandGeneration.current;
+  const viewGeneration = reviewRequest.current;
   return (
-    <main className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('postalStaffTitle')}</h1>
       {time.notice}
       {error && <p role="alert">{copy('postalError')}</p>}
@@ -315,6 +364,10 @@ export function AdminSolarPostalPage() {
                   className="w-full rounded-md border bg-background p-2"
                   value={lane}
                   onChange={(event) => {
+                    if (queries) {
+                      queries.setQuery({ filters: { lane: event.target.value } });
+                      return;
+                    }
                     invalidateReview();
                     setRows([]);
                     setBefore(null);
@@ -333,8 +386,8 @@ export function AdminSolarPostalPage() {
           <ListPage.Content
             loading={queueLoading}
             error={queueError || queueDenied}
-            empty={!rows.length}
-            retainContent={!!rows.length && !queueDenied}
+            empty={!visibleRows.length}
+            retainContent={!!visibleRows.length && !queueDenied}
             loadingView={<p role="status">{copy('loading')}</p>}
             errorView={
               queueDenied ? (
@@ -361,7 +414,7 @@ export function AdminSolarPostalPage() {
             }
           >
             <ul className="space-y-2">
-              {rows.map((item) => (
+              {visibleRows.map((item) => (
                 <li key={item.id}>
                   <button
                     type="button"
@@ -388,11 +441,21 @@ export function AdminSolarPostalPage() {
           </ListPage.Content>
           <ListPage.Pagination
             kind="cursor"
-            hasMore={!!nextBefore && !queueError && !queueDenied}
+            hasMore={
+              !!nextBefore &&
+              !queueError &&
+              !queueDenied &&
+              (acceptedCursor.current !== before ||
+                (nextBefore !== before && (!queries || queries.canAdvance(nextBefore))))
+            }
             loading={queueLoading}
             label={copy('postalStaffQueue')}
             nextLabel={copy('moreRequests')}
-            onNext={() => setBefore(nextBefore)}
+            onNext={() => {
+              extendingCursor.current = nextBefore;
+              if (queries && nextBefore) queries.next(nextBefore);
+              else setBefore(nextBefore);
+            }}
           />
         </ListPage>
       </section>
@@ -499,7 +562,7 @@ export function AdminSolarPostalPage() {
                     type="button"
                     className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
                     onClick={() =>
-                      setAction({
+                      propose({
                         title: copy('solarStartFinalReview'),
                         description: row.id,
                         path: `/api/admin/solar/requests/${row.id}/start-final-review`,
@@ -549,6 +612,7 @@ export function AdminSolarPostalPage() {
               requestId={row.id}
               profileId={row.profile_id}
               onCreated={(contractId) => {
+                if (viewGeneration !== reviewRequest.current) return;
                 setCreatedContractId(contractId);
                 setSelected(null);
                 refresh();
@@ -602,7 +666,9 @@ export function AdminSolarPostalPage() {
       {action && (
         <TeamActionDialog
           action={action}
-          onClose={() => setAction(null)}
+          onClose={() => {
+            if (actionGeneration === reviewRequest.current) invalidateReview();
+          }}
           summary={
             action.review ? (
               <FinancialReviewSummary
@@ -714,12 +780,13 @@ export function AdminSolarPostalPage() {
             ) : undefined
           }
           onSuccess={async () => {
+            if (actionGeneration !== reviewRequest.current) return;
             setError(false);
             refresh();
             setReason('');
           }}
         />
       )}
-    </main>
+    </div>
   );
 }
