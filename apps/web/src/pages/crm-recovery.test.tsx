@@ -1,9 +1,11 @@
-import { act } from 'react';
+import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import Directory from './CrmProfileList.js';
 import Corrections from './CrmCorrectionsPage.js';
 import type { TeamAction } from '../components/TeamActionDialog.js';
+import { useListQuery } from '../hooks/useListQuery.js';
+import { crmCorrectionQueryOptions, crmCorrectionSearch } from '../lib/crm-correction-query.js';
 import {
   crmUser,
   crmCase,
@@ -135,6 +137,143 @@ async function creationDraft() {
 }
 const confirmation = () => host.querySelector('[data-testid="confirmation"]');
 const note = () => host.querySelector<HTMLTextAreaElement>('#case-notes')?.value;
+let navigateQueue: (raw: Record<string, unknown>) => void;
+let queueSearch: Record<string, unknown>;
+let replaceNavigation: boolean | undefined;
+function BoundCorrections() {
+  const [raw, setRaw] = useState<Record<string, unknown>>({});
+  navigateQueue = setRaw;
+  queueSearch = raw;
+  const queries = useListQuery(crmCorrectionQueryOptions, raw, (update, options) => {
+    replaceNavigation = options?.replace;
+    setRaw((current) => crmCorrectionSearch(update(current)));
+  });
+  return <Corrections queries={queries} />;
+}
+async function boundQueue() {
+  replaceNavigation = undefined;
+  await act(async () => root.render(<BoundCorrections />));
+}
+it.each([false, true])(
+  'bound queue retries exact pages and retains independent creation drafts (profile=%s)',
+  async (profile) => {
+    if (profile) routeSearch.profileId = crmProfileId;
+    let failed = true;
+    const reads = mock((path) =>
+      response(
+        { ...baseData(path), ...(path.startsWith(queuePath) ? { total: 41 } : {}) },
+        path.includes('offset=20') && failed ? 503 : 200
+      )
+    );
+    await boundQueue();
+    if (profile) await creationDraft();
+    await click('Review case');
+    await fill('#case-notes', 'Private review');
+    await click('Next');
+    expect(queueSearch.page).toBe(2);
+    expect(note()).toBeUndefined();
+    expect(host.textContent).toContain('Corrected');
+    const failedRead = reads.mock.calls.at(-1)![0];
+    failed = false;
+    await click('Retry correction queue');
+    expect(reads.mock.calls.at(-1)![0]).toBe(failedRead);
+    if (profile) {
+      expect(host.querySelector<HTMLInputElement>('#correction-value')!.value).toBe('New name');
+      expect(host.querySelector<HTMLInputElement>('#correction-files')!.files![0]!.name).toBe(
+        'evidence.pdf'
+      );
+      expect(reads.mock.calls.filter(([path]) => path === profilePath)).toHaveLength(1);
+    }
+    await fill('#case-status', 'Approved');
+    expect(queueSearch.status).toBe('Approved');
+    expect(queueSearch.page).toBeUndefined();
+    expect(String(reads.mock.calls.at(-1)![0])).toContain('offset=0');
+  }
+);
+it('history invalidates review receipts and closes without disturbing newer work', async () => {
+  const reads = mock((path) =>
+    response({ ...baseData(path), ...(path.startsWith(queuePath) ? { total: 41 } : {}) })
+  );
+  await boundQueue();
+  await click('Review case');
+  await fill('#case-notes', 'Old notes');
+  await click('Review decision');
+  const obsoleteSuccess = captured.success!,
+    obsoleteClose = captured.close!;
+  await act(async () => navigateQueue({ page: 2 }));
+  expect(confirmation()).toBeNull();
+  expect(note()).toBeUndefined();
+  await click('Review case');
+  await fill('#case-notes', 'New notes');
+  await click('Review decision');
+  const before = reads.mock.calls.length;
+  await act(async () => {
+    obsoleteClose();
+    await obsoleteSuccess(acknowledgement);
+  });
+  expect(confirmation()).not.toBeNull();
+  expect(note()).toBe('New notes');
+  expect(reads).toHaveBeenCalledTimes(before);
+  expect(queueSearch.page).toBe(2);
+});
+it('a valid creation receipt refreshes the current history page and keeps its route', async () => {
+  routeSearch.profileId = crmProfileId;
+  const reads = mock((path) =>
+    response({ ...baseData(path), ...(path.startsWith(queuePath) ? { total: 41 } : {}) })
+  );
+  await boundQueue();
+  await creationDraft();
+  await click('Upload evidence and review request');
+  const success = captured.success!;
+  await act(async () => navigateQueue({ page: 2, status: 'Approved' }));
+  expect(confirmation()).not.toBeNull();
+  await act(async () => success({ ...acknowledgement, status: 'Open' }));
+  expect(confirmation()).toBeNull();
+  expect(queueSearch).toEqual({ page: 2, status: 'Approved' });
+  const latest = new URL(String(reads.mock.calls.at(-1)![0]), 'https://example.test').searchParams;
+  expect(latest.get('offset')).toBe('20');
+  expect(latest.get('status')).toBe('Approved');
+  expect(host.querySelector<HTMLInputElement>('#correction-value')!.value).toBe('');
+});
+it('shrinking queue replaces the invalid page instead of adding history', async () => {
+  mock((path) =>
+    response({ ...baseData(path), ...(path.startsWith(queuePath) ? { total: 1 } : {}) })
+  );
+  await boundQueue();
+  await act(async () => navigateQueue({ page: 7 }));
+  expect(queueSearch.page).toBeUndefined();
+  expect(replaceNavigation).toBe(true);
+});
+it('an obsolete queue response cannot repair the current history page', async () => {
+  let release: (value: Response) => void;
+  mock((path) =>
+    path.includes('offset=20')
+      ? new Promise<Response>((resolve) => {
+          release = resolve;
+        })
+      : response(
+          path.startsWith(queuePath)
+            ? {
+                ...crmQueue,
+                total: 61,
+                cases: [
+                  {
+                    ...crmCase,
+                    requestedValue: path.includes('offset=40') ? 'Current history' : 'First page',
+                  },
+                ],
+              }
+            : baseData(path)
+        )
+  );
+  await boundQueue();
+  await act(async () => navigateQueue({ page: 2 }));
+  await act(async () => navigateQueue({ page: 3 }));
+  expect(host.textContent).toContain('Current history');
+  await act(async () => release(response({ ...crmQueue, total: 1 })));
+  expect(queueSearch.page).toBe(3);
+  expect(host.textContent).toContain('Current history');
+});
 it('directory retains expanded profiles through failed cursor navigation and retries the exact page', async () => {
   let fail = false;
   const reads = mock((path) =>
@@ -422,7 +561,7 @@ it('changed queue actor invalidates private review and creation drafts', async (
   expect(host.querySelector('#case-notes')).toBeNull();
   expect(host.querySelector<HTMLInputElement>('#correction-value')!.value).toBe('');
 });
-it('failed queue page retains review and exact offset, successful next page does not discard off-page review', async () => {
+it('failed queue page retains rows and exact offset while clearing off-page review', async () => {
   let fail = false;
   const reads = mock((path) =>
     response(
@@ -443,14 +582,14 @@ it('failed queue page retains review and exact offset, successful next page does
   await fill('#case-notes', 'Keep across page');
   fail = true;
   await click('Next');
-  expect(note()).toBe('Keep across page');
+  expect(note()).toBeUndefined();
+  expect(host.textContent).toContain('Corrected');
   const failed = reads.mock.calls.at(-1)![0];
   fail = false;
   await click('Retry correction queue');
   expect(reads.mock.calls.at(-1)![0]).toBe(failed);
-  expect(note()).toBe('Keep across page');
-  await click('Review decision');
-  expect(captured.disabled).toBe(false);
+  expect(note()).toBeUndefined();
+  expect(host.querySelector('#case-decision')).toBeNull();
 });
 it('malformed queue and detail retain accepted work while blocking confirmation', async () => {
   let malformed = false;

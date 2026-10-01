@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { useSearch } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/crm';
 import { Button, Input, Label, ListPage } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
+import { useListQuery, type ListQueryBinding } from '../hooks/useListQuery.js';
+import { crmCorrectionQueryOptions, crmCorrectionSearch } from '../lib/crm-correction-query.js';
 import {
   uploadVerificationEvidence,
   isAllowedInvoiceReceiptFile,
@@ -90,30 +92,59 @@ const profileBasis = (data: CorrectionProfile) =>
     data.profile.archived,
     data.viewerPermissions.canEditIdentity,
   ]);
-export default function CrmCorrectionsPage() {
+export function CrmCorrectionsRoutePage() {
+  const search = useSearch({ from: '/admin/crm/corrections' });
+  const navigate = useNavigate({ from: '/admin/crm/corrections' });
+  const queries = useListQuery(crmCorrectionQueryOptions, search, (update, options) => {
+    void navigate({
+      search: (raw) => crmCorrectionSearch(update(raw)),
+      replace: options?.replace ?? false,
+      resetScroll: false,
+    });
+  });
+  return <CrmCorrectionsPage queries={queries} />;
+}
+export default function CrmCorrectionsPage({ queries }: { queries?: ListQueryBinding } = {}) {
   const { profileId, fieldName } = useSearch({ from: '/admin/crm/corrections' });
   return (
     <Corrections
       key={(profileId ?? 'queue') + ':' + (fieldName ?? '')}
       profileId={profileId}
       initialField={fieldName}
+      {...(queries ? { queries } : {})}
     />
   );
 }
 function Corrections({
   profileId,
   initialField,
+  queries,
 }: {
   profileId: string | undefined;
   initialField: string | undefined;
+  queries?: ListQueryBinding;
 }) {
   const locale = useLocale();
   const generation = useRef(0),
     workGeneration = useRef(0),
     uploading = useRef(false);
   const queueController = useRef<AbortController | null>(null);
-  const [status, setStatus] = useState<Status>('Open'),
-    [offset, setOffset] = useState(0);
+  const [localStatus, setLocalStatus] = useState<Status>('Open'),
+    [localOffset, setLocalOffset] = useState(0);
+  const queryRef = useRef(queries);
+  queryRef.current = queries;
+  const status = queries ? (queries.query.filters.status as Status) : localStatus;
+  const offset = queries ? (queries.query.page - 1) * 20 : localOffset;
+  const setOffset = useCallback(
+    (next: number | ((previous: number) => number), replace = false) => {
+      if (queryRef.current) {
+        const previous = (queryRef.current.query.page - 1) * 20;
+        const value = typeof next === 'function' ? next(previous) : next;
+        queryRef.current.setQuery({ page: Math.floor(value / 20) + 1 }, replace);
+      } else setLocalOffset(next);
+    },
+    []
+  );
   const criteria = JSON.stringify([profileId, status]);
   const [accepted, setAccepted] = useState<{
     criteria: string;
@@ -216,7 +247,10 @@ function Corrections({
   const canCreate =
     profileRead.data?.viewerPermissions.canEditIdentity === true &&
     profileRead.data.profile.archived === false;
-  const selectedItem = selected?.criteria === criteria && !queueForbidden ? selected.item : null;
+  const selectedItem =
+    selected?.criteria === criteria && selected.offset === offset && !queueForbidden
+      ? selected.item
+      : null;
   const validateDetail = useCallback(
     (value: unknown): value is Detail => {
       const data = value as Detail | null;
@@ -296,7 +330,7 @@ function Corrections({
       }
       setQueueForbidden(false);
       if (offset > 0 && offset >= data.total) {
-        setOffset(Math.max(0, Math.ceil(data.total / 20) - 1) * 20);
+        setOffset(Math.max(0, Math.ceil(data.total / 20) - 1) * 20, true);
         return;
       }
       setAccepted({ criteria, offset, data });
@@ -318,6 +352,8 @@ function Corrections({
     clearCreation,
     profileRead.retry,
   ]);
+  const queueRead = useRef(load);
+  queueRead.current = load;
   useEffect(() => {
     void load();
     return () => {
@@ -325,7 +361,7 @@ function Corrections({
       queueController.current?.abort();
     };
   }, [load]);
-  useEffect(() => clearReview(), [criteria, clearReview]);
+  useEffect(() => clearReview(), [criteria, offset, clearReview]);
   useEffect(
     () => () => {
       ++workGeneration.current;
@@ -453,6 +489,7 @@ function Corrections({
   });
   const hasEvidence =
     !!detail?.evidenceUrls.length && evidence.length === detail.evidenceUrls.length;
+  const actionGeneration = workGeneration.current;
   return (
     <section className="space-y-5 max-w-5xl mx-auto" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header>
@@ -601,8 +638,11 @@ function Corrections({
                   disabled={busy || !!action}
                   value={status}
                   onChange={(event) => {
-                    setStatus(event.target.value as Status);
-                    setOffset(0);
+                    if (queries) queries.setQuery({ filters: { status: event.target.value } });
+                    else {
+                      setLocalStatus(event.target.value as Status);
+                      setLocalOffset(0);
+                    }
                   }}
                   className="rounded border bg-background text-foreground p-2"
                 >
@@ -661,7 +701,9 @@ function Corrections({
                         </span>
                         <Button
                           variant="outline"
-                          disabled={!!action || busy || loading || queueError}
+                          disabled={
+                            !!action || busy || loading || queueError || accepted?.offset !== offset
+                          }
                           onClick={() => select(item)}
                         >
                           {t('crm.corrections.details', locale)}
@@ -864,6 +906,7 @@ function Corrections({
                 : createButton.current
           }
           onClose={() => {
+            if (actionGeneration !== workGeneration.current) return;
             ++workGeneration.current;
             actionRef.current = null;
             setAction(null);
@@ -893,7 +936,7 @@ function Corrections({
             if (action.expected.id) clearReview();
             else clearCreation();
             setSaved(true);
-            await load();
+            await queueRead.current();
           })(workGeneration.current)}
         />
       )}

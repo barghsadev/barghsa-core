@@ -68,6 +68,38 @@ it('changes one list while preserving the other list and unrelated route context
     city_page: 5,
   });
 });
+it.each([provinceQueryOptions, crmQueryOptions])(
+  'sanitizes invalid UI updates while retaining unrelated scope (%j)',
+  (options) => {
+    const raw = { otherPage: 7, profileId: 'kept' };
+    const result = writeListQuery(raw, options, {
+      search: 'x'.repeat(1001),
+      sort: 'unknown',
+      order: 'asc',
+      page: -7,
+      pageSize: 999,
+      cursor: 'x'.repeat(4097),
+      filters: { status: 'unknown', verification: 'unknown' },
+    });
+    expect(result).toMatchObject({
+      ...raw,
+      q: undefined,
+      sort: undefined,
+      order: 'asc',
+      page: undefined,
+      pageSize: undefined,
+      cursor: undefined,
+    });
+    expect(parseListQuery(result, options)).toMatchObject({
+      search: '',
+      sort: options.defaultSort,
+      order: 'asc',
+      page: 1,
+      pageSize: options.defaultPageSize,
+      cursor: '',
+    });
+  }
+);
 it('clears cursors when criteria change but keeps exact opaque cursors for pagination', () => {
   const raw = { q: 'Customer', verification: 'PENDING', cursor: 'opaque+/=token' };
   expect(parseListQuery(raw, crmQueryOptions).cursor).toBe('opaque+/=token');

@@ -86,31 +86,22 @@ export function writeListQuery(
     next.cursor = '';
   }
   const prefix = options.prefix ?? '';
-  const result: Search = { ...raw };
-  const set = (key: string, value: unknown) => {
-    result[prefix + key] = value;
+  const serialize = (state: ListQueryState): Search => {
+    const result: Search = { ...raw };
+    const set = (key: string, value: unknown) => {
+      result[prefix + key] = value;
+    };
+    set('q', state.search || undefined);
+    set('sort', state.sort === options.defaultSort ? undefined : state.sort);
+    set('order', state.order === (options.defaultOrder ?? 'desc') ? undefined : state.order);
+    set('page', options.pagination === 'page' && state.page !== 1 ? state.page : undefined);
+    set('pageSize', state.pageSize === options.defaultPageSize ? undefined : state.pageSize);
+    set('cursor', options.pagination === 'cursor' ? state.cursor || undefined : undefined);
+    for (const key of Object.keys(options.filters)) set(key, state.filters[key] || undefined);
+    return result;
   };
-  set('q', next.search || undefined);
-  set('sort', next.sort === options.defaultSort ? undefined : next.sort);
-  set('order', next.order === (options.defaultOrder ?? 'desc') ? undefined : next.order);
-  set('page', options.pagination === 'page' && next.page !== 1 ? next.page : undefined);
-  set('pageSize', next.pageSize === options.defaultPageSize ? undefined : next.pageSize);
-  set('cursor', options.pagination === 'cursor' ? next.cursor || undefined : undefined);
-  for (const key of Object.keys(options.filters)) set(key, next.filters[key] || undefined);
   // Apply the same validation to UI updates and direct links.
-  const accepted = parseListQuery(result, options);
-  const clean: Search = { ...result };
-  clean[prefix + 'q'] = accepted.search || undefined;
-  clean[prefix + 'sort'] = accepted.sort === options.defaultSort ? undefined : accepted.sort;
-  clean[prefix + 'order'] =
-    accepted.order === (options.defaultOrder ?? 'desc') ? undefined : accepted.order;
-  clean[prefix + 'page'] = accepted.page === 1 ? undefined : accepted.page;
-  clean[prefix + 'pageSize'] =
-    accepted.pageSize === options.defaultPageSize ? undefined : accepted.pageSize;
-  clean[prefix + 'cursor'] = accepted.cursor || undefined;
-  for (const key of Object.keys(options.filters))
-    clean[prefix + key] = accepted.filters[key] || undefined;
-  return clean;
+  return serialize(parseListQuery(serialize(next), options));
 }
 
 /** Route adapters pass their router search and navigation, keeping list views testable. */
