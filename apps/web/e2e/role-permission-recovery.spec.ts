@@ -1,5 +1,6 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
+import { crmShell } from './crm-shell-fixture';
 
 const roles = [
   {
@@ -21,7 +22,7 @@ const result = (userId: string) => ({
 
 for (const locale of ['en', 'fa'] as const) {
   test(`roles reject malformed lists and recover (${locale})`, async ({ page }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     let valid = false;
     await page.route('**/api/admin/roles', (route) => route.fulfill({ json: valid ? roles : {} }));
     await page.goto('/admin/roles');
@@ -47,7 +48,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     const fa = locale === 'fa';
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     const writes: string[] = [];
     page.on('request', (request) => {
       if (request.url().includes('/api/admin/') && request.method() !== 'GET')
@@ -122,7 +123,7 @@ for (const locale of ['en', 'fa'] as const) {
   });
 
   test(`permission lookup rejects another user and recovers (${locale})`, async ({ page }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await page.route('**/api/admin/roles', (route) => route.fulfill({ json: roles }));
     let valid = false;
     await page.route('**/api/admin/users/requested/effective-permissions', (route) =>
@@ -147,7 +148,7 @@ for (const locale of ['en', 'fa'] as const) {
 }
 
 test('editing a lookup cancels its pending permissions result', async ({ page }) => {
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, 'en');
   await page.route('**/api/admin/roles', (route) => route.fulfill({ json: roles }));
   let release!: () => void;
   const pending = new Promise<void>((resolve) => {

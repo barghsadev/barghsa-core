@@ -72,7 +72,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('button', { name: u('create'), exact: true }).click();
     await page.locator('#staff-firstName').fill('Retained name');
     const viewport = page
-      .getByRole('region', { name: u('title'), exact: true })
+      .getByRole('region', { name: u('table'), exact: true })
       .locator('[data-slot="scroll-area-viewport"]');
     await viewport.focus();
     await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');

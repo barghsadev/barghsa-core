@@ -1,6 +1,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
+import { t } from '@barghsa/i18n/admin-ui';
 import Users from './AdminStaffUsersPage.js';
 import Teams from './AdminStaffTeamsPage.js';
 import type { TeamAction } from '../components/TeamActionDialog.js';
@@ -547,4 +548,26 @@ it('an actor change removes the prior creator one-time password even when both a
   await click('Refresh staff and access');
   expect(host.querySelector('#staff-created-password')).toBeNull();
   expect(host.textContent).not.toContain('new.staff@example.test');
+});
+
+it('directory page changes reject late confirmations without erasing independent creation drafts', async () => {
+  const fetcher = vi.fn(async (input: RequestInfo | URL) => read(input));
+  vi.stubGlobal('fetch', fetcher);
+  await render(Users);
+  await click(t('admin.staff.disable', 'en'));
+  const oldSuccess = captured.success!,
+    oldClose = captured.close!;
+  await click('Next');
+  expect(host.querySelector('[role=dialog]')).toBeNull();
+  await click('Create staff user');
+  await fill('#staff-firstName', 'After navigation');
+  const reads = fetcher.mock.calls.length;
+  await act(async () => {
+    await oldSuccess({});
+    oldClose();
+  });
+  await tick();
+  expect(host.querySelector<HTMLInputElement>('#staff-firstName')?.value).toBe('After navigation');
+  expect(fetcher.mock.calls).toHaveLength(reads);
+  expect(host.textContent).not.toContain(t('admin.staff.saved', 'en'));
 });

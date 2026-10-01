@@ -1,3 +1,4 @@
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import type { FormEvent } from 'react';
 import { Button, Label, ListPage, ScrollArea } from '@barghsa/ui';
@@ -50,7 +51,7 @@ function validRoles(value: unknown): value is StaffRole[] {
   );
 }
 
-export default function AdminRolesPage() {
+export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding } = {}) {
   const locale = useLocale();
   const roleText = (id: string, field: 'name' | 'description', fallback: string) => {
     const key = `admin.staff.role.${id}.${field}`;
@@ -70,7 +71,8 @@ export default function AdminRolesPage() {
   const catalogueRequest = useRef<AbortController | null>(null);
   const lookupRequest = useRef<AbortController | null>(null);
 
-  const [module, setModule] = useState('');
+  const [localModule, setModule] = useState('');
+  const module = queries ? queries.query.filters.module : localModule;
   const catalogueGroups = groupPermissions([
     ...new Set(
       roles?.flatMap((role) => role.permissions).filter((permission) => permission !== '*') ?? []
@@ -181,7 +183,11 @@ export default function AdminRolesPage() {
                 id="role-module"
                 className="block w-full rounded border bg-background px-3 py-2 text-sm"
                 value={selectedGroup?.group ?? ''}
-                onChange={(event) => setModule(event.target.value)}
+                onChange={(event) =>
+                  queries
+                    ? queries.setQuery({ filters: { module: event.target.value } })
+                    : setModule(event.target.value)
+                }
               >
                 <option value="">{t('admin.roles.compare.all', locale)}</option>
                 {catalogueGroups.map((group) => (

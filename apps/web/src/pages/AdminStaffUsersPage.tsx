@@ -1,3 +1,4 @@
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { StaffEffectivePermissions } from '../components/StaffEffectivePermissions.js';
@@ -7,6 +8,8 @@ import { t } from '@barghsa/i18n/admin-ui';
 import { Button, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+
+type StaffAction = TeamAction & { pageOffset: number };
 
 interface Access {
   userId: string;
@@ -46,7 +49,7 @@ const blank = () => ({
 
 const staffBasis = (staff: Staff) => JSON.stringify({ ...staff, lastLoginAt: null });
 
-export default function AdminStaffUsersPage() {
+export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBinding } = {}) {
   const time = useAccountTime();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -54,15 +57,16 @@ export default function AdminStaffUsersPage() {
   const [access, setAccess] = useState<Access | null>(null),
     [roles, setRoles] = useState<Role[]>([]);
   const [list, setList] = useState<StaffList>({ items: [], total: 0 });
-  const [offset, setOffset] = useState(0),
+  const [localOffset, setOffset] = useState(0),
     [loading, setLoading] = useState(true),
     [error, setError] = useState(false);
+  const offset = queries ? (queries.query.page - 1) * 25 : localOffset;
   const [draft, setDraft] = useState(blank),
     [showCreate, setShowCreate] = useState(false);
   const [editing, setEditing] = useState<Staff | null>(null),
     [roleIds, setRoleIds] = useState<string[]>([]),
     [reason, setReason] = useState('');
-  const [action, setAction] = useState<TeamAction | null>(null);
+  const [action, setAction] = useState<StaffAction | null>(null);
   const [created, setCreated] = useState<{ username: string; password?: string } | null>(null);
   const [saved, setSaved] = useState(false);
   const [activationNotice, setActivationNotice] = useState(false);
@@ -82,9 +86,23 @@ export default function AdminStaffUsersPage() {
   const workGeneration = useRef(0),
     accessRef = useRef<Access | null>(null),
     editingRef = useRef<Staff | null>(null),
-    actionRef = useRef<TeamAction | null>(null),
+    actionRef = useRef<StaffAction | null>(null),
     rowsRef = useRef<Staff[]>([]),
     rolesRef = useRef<Role[]>([]);
+  const offsetRef = useRef(offset);
+  offsetRef.current = offset;
+  const previousOffset = useRef(offset);
+  if (previousOffset.current !== offset) {
+    previousOffset.current = offset;
+    ++workGeneration.current;
+  }
+  useEffect(() => {
+    setAction(null);
+    setPermissionTarget(null);
+    setHistory(null);
+    setSaved(false);
+    setActivationNotice(false);
+  }, [offset]);
   editingRef.current = editing;
   actionRef.current = action;
   function clearAction() {
@@ -467,7 +485,7 @@ export default function AdminStaffUsersPage() {
                 <ScrollArea
                   scrollbarOrientation="horizontal"
                   role="region"
-                  aria-label={label('title')}
+                  aria-label={label('table')}
                   className="min-w-0 max-w-full rounded border bg-card"
                 >
                   <table className="w-full min-w-[52rem] text-sm text-start">
@@ -557,6 +575,7 @@ export default function AdminStaffUsersPage() {
                                       setActivationNotice(false);
                                       setSaved(false);
                                       setAction({
+                                        pageOffset: offset,
                                         title: label('resendActivation'),
                                         description: `${staff.username}. ${label('resendHelp')}`,
                                         path: `/api/admin/users/${encodeURIComponent(staff.userId)}/resend-activation`,
@@ -594,6 +613,7 @@ export default function AdminStaffUsersPage() {
                                   onClick={() => {
                                     setSaved(false);
                                     setAction({
+                                      pageOffset: offset,
                                       title: label('disable'),
                                       description: `${name(staff)} (${staff.username}). ${label('disableHelp')}`,
                                       path: `/api/admin/staff/${encodeURIComponent(staff.userId)}/disable`,
@@ -619,13 +639,25 @@ export default function AdminStaffUsersPage() {
                 kind="cursor"
                 label={label('pages')}
                 loading={loading || accessLoading}
-                hasMore={!error && !accessError && offset + 25 < list.total}
+                hasMore={
+                  !error &&
+                  !accessError &&
+                  offset + 25 < list.total &&
+                  (!queries || queries.query.page < 1_000_000)
+                }
                 nextLabel={label('next')}
-                onNext={() => setOffset((v) => v + 25)}
+                onNext={() =>
+                  queries
+                    ? queries.setQuery({ page: queries.query.page + 1 })
+                    : setOffset((v) => v + 25)
+                }
                 previous={{
                   enabled: !error && !accessError && offset > 0,
                   label: label('previous'),
-                  onClick: () => setOffset((v) => Math.max(0, v - 25)),
+                  onClick: () =>
+                    queries
+                      ? queries.setQuery({ page: Math.max(1, queries.query.page - 1) })
+                      : setOffset((v) => Math.max(0, v - 25)),
                 }}
               />
             </>
@@ -666,6 +698,7 @@ export default function AdminStaffUsersPage() {
                 setSaved(false);
                 setCreated(null);
                 setAction({
+                  pageOffset: offset,
                   title: label('create'),
                   description: `${draft.firstName} ${draft.lastName} (${draft.username}). ${label('roles')}: ${roleSummary(draft.roleIds)}. ${label(draft.activationMethod === 'link' ? 'linkHelp' : 'passwordOnce')}`,
                   path: '/api/admin/users/create-staff',
@@ -752,6 +785,7 @@ export default function AdminStaffUsersPage() {
                 event.preventDefault();
                 if (rolesDisabled) return;
                 setAction({
+                  pageOffset: offset,
                   title: label('editRoles'),
                   description: `${name(editing)} (${editing.username}). ${label('roles')}: ${roleSummary(roleIds)}. ${label('reason')}: ${reason.trim()}. ${label('rolesHelp')}`,
                   path: `/api/admin/users/${encodeURIComponent(editing.userId)}/roles`,
@@ -801,6 +835,7 @@ export default function AdminStaffUsersPage() {
         <TeamActionDialog
           action={action}
           confirmationDisabled={
+            action.pageOffset !== offset ||
             loading ||
             error ||
             accessLoading ||
@@ -809,11 +844,14 @@ export default function AdminStaffUsersPage() {
               (optionsLoading || optionsError))
           }
           onClose={() => {
-            if (actionGeneration === workGeneration.current) clearAction();
+            if (actionGeneration === workGeneration.current && actionRef.current === action)
+              clearAction();
           }}
           onSuccess={async (result) => {
             if (
               actionGeneration !== workGeneration.current ||
+              action.pageOffset !== offsetRef.current ||
+              actionRef.current !== action ||
               !accessRef.current ||
               accessLoading ||
               accessError
