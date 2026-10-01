@@ -65,6 +65,7 @@ function isInvoiceResponse(value: unknown, expectedId: string): value is Invoice
 }
 
 export interface InvoiceListQueries {
+  pending?: import('../hooks/useListQuery.js').ListQueryBinding;
   ledger: import('../hooks/useListQuery.js').ListQueryBinding;
   history: import('../components/InvoiceBankReceiptQueue.js').ReceiptHistoryQuery;
   receiptsOpen: boolean;
@@ -312,7 +313,12 @@ export default function AdminInvoicesPage({ queries }: { queries?: InvoiceListQu
           <InvoiceBankReceiptQueue
             key={receiptSelection?.revision}
             initialSelection={receiptSelection}
-            {...(queries ? { historyQuery: queries.history } : {})}
+            {...(queries
+              ? {
+                  historyQuery: queries.history,
+                  ...(queries.pending ? { pendingQuery: queries.pending } : {}),
+                }
+              : {})}
           />
         ) : null}
       </section>

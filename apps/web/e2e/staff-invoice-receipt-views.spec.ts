@@ -79,9 +79,22 @@ for (const locale of ['en', 'fa'] as const)
         allocationReads = 0,
         failed = true;
       const historyReads: string[] = [];
-      await page.route('**/api/admin/invoices/bank-receipts', (r) => {
+      const queueQueries: string[] = [];
+      let pendingFailure = false;
+      await page.route(/\/api\/admin\/invoices\/bank-receipts(?:\?|$)/, (r) => {
+        const query = new URL(r.request().url()).searchParams;
+        queueQueries.push(query.toString());
         queueReads++;
-        return r.fulfill({ json: { items: [receipt] } });
+        return r.fulfill({
+          status: pendingFailure && query.has('beforeAt') ? 503 : 200,
+          json: {
+            items: [{ ...receipt, receiptId: query.has('beforeAt') ? olderId : receiptId }],
+            nextCursor:
+              query.has('q') && !query.has('beforeAt')
+                ? { beforeAt: stamp, beforeId: receiptId }
+                : null,
+          },
+        });
       });
       await page.route(`**/api/admin/invoices/bank-receipts/${receiptId}`, (r) => {
         detailReads++;
@@ -230,6 +243,51 @@ for (const locale of ['en', 'fa'] as const)
         'true'
       );
       await expect(history.getByText(olderId, { exact: true })).toHaveCount(1);
+      await pending.getByRole('button', { name: word('open'), exact: true }).click();
+      await page.locator('#invoice-receipt-reason').fill('Clear this obsolete draft');
+      const historyReadCount = historyReads.length;
+      const historyCursor = new URL(page.url()).searchParams.get('receipt_cursor');
+      const search = pending.getByRole('searchbox');
+      await search.fill('Bank_%\\');
+      await expect.poll(() => new URLSearchParams(queueQueries.at(-1)).get('q')).toBe('Bank_%\\');
+      await expect(page.locator('#invoice-receipt-reason')).toHaveCount(0);
+      await pending.getByRole('combobox').selectOption('submitted_at:desc');
+      await expect
+        .poll(() => new URLSearchParams(queueQueries.at(-1)).get('sort'))
+        .toBe('submitted_at:desc');
+      expect(new URL(page.url()).searchParams.get('receipt_cursor')).toBe(historyCursor);
+      expect(historyReads).toHaveLength(historyReadCount);
+      pendingFailure = true;
+      await pending
+        .getByRole('button', { name: appText('invoices.receipts.older', locale), exact: true })
+        .click();
+      await expect(pending.getByRole('alert')).toBeVisible();
+      const pendingFailedQuery = queueQueries.at(-1);
+      expect(new URLSearchParams(pendingFailedQuery).get('beforeAt')).toBe(stamp);
+      expect(new URLSearchParams(pendingFailedQuery).get('beforeId')).toBe(receiptId);
+      pendingFailure = false;
+      await pending
+        .getByRole('button', { name: appText('historyPagination.retry', locale), exact: true })
+        .click();
+      await expect(pending.getByText(olderId, { exact: true })).toBeVisible();
+      await expect(pending.getByText(receiptId, { exact: true })).toHaveCount(0);
+      expect(queueQueries.at(-1)).toBe(pendingFailedQuery);
+      await pending
+        .getByRole('button', { name: appText('historyPagination.previous', locale), exact: true })
+        .click();
+      await expect(pending.getByText(receiptId, { exact: true })).toBeVisible();
+      await page.reload();
+      await expect(search).toHaveValue('Bank_%\\');
+      await expect(pending.getByRole('combobox')).toHaveValue('submitted_at:desc');
+      await expect(history.getByText(olderId, { exact: true })).toHaveCount(1);
+      await pending
+        .getByRole('button', { name: appText('historyFilters.clearAll', locale), exact: true })
+        .click();
+      await expect(search).toHaveValue('');
+      await expect.poll(() => queueQueries.at(-1)).toBe('');
+      await page.goBack();
+      await expect(search).toHaveValue('Bank_%\\');
+      await expect(pending.getByRole('combobox')).toHaveValue('submitted_at:desc');
       await page.goto('/admin/invoices');
       await page
         .locator('#invoice-receipt-panel')

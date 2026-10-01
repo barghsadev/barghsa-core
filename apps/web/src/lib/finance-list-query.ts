@@ -70,6 +70,27 @@ export const invoiceReceiptQueryOptions: ListQueryOptions = {
   prefix: 'receipt_',
   filters: { state: listChoice(['Confirmed', 'Rejected']), invoiceId: uuid },
 };
+export const pendingReceiptQueryOptions: ListQueryOptions = {
+  prefix: 'queue_',
+  searchLimit: 120,
+  filters: {},
+  sortFields: ['submitted_at'],
+  defaultSort: 'submitted_at',
+  defaultOrder: 'asc',
+  pageSizes: [25],
+  defaultPageSize: 25,
+  pagination: 'cursor',
+};
+export function pendingReceiptSearch(raw: Record<string, unknown>) {
+  const normalized = writeListQuery(
+    { ...raw, queue_cursor: encodeFinanceCursor(decodeFinanceCursor(raw.queue_cursor)) },
+    pendingReceiptQueryOptions,
+    {}
+  );
+  return Object.fromEntries(
+    ['queue_q', 'queue_order', 'queue_cursor'].map((key) => [key, normalized[key]])
+  );
+}
 export function invoiceListsSearch(raw: Record<string, unknown>) {
   const cursors = {
     ...raw,
@@ -91,7 +112,10 @@ export function invoiceListsSearch(raw: Record<string, unknown>) {
     'receipt_invoiceId',
     'receipt_cursor',
   ];
-  const result = Object.fromEntries(own.map((key) => [key, normalized[key]]));
+  const result = {
+    ...Object.fromEntries(own.map((key) => [key, normalized[key]])),
+    ...pendingReceiptSearch(raw),
+  };
   const flag = (value: unknown, fallback: boolean) =>
     value === true || value === 'true'
       ? 'true'
@@ -104,6 +128,10 @@ export function invoiceListsSearch(raw: Record<string, unknown>) {
     raw.receiptHistory,
     !!(result.receipt_state || result.receipt_invoiceId || result.receipt_cursor)
   );
-  result.receipts = flag(raw.receipts, result.receiptHistory === 'true');
+  result.receipts = flag(
+    raw.receipts,
+    result.receiptHistory === 'true' ||
+      !!(result.queue_q || result.queue_order || result.queue_cursor)
+  );
   return result;
 }

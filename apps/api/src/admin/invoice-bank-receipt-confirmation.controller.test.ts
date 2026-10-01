@@ -50,7 +50,7 @@ const nonAdminReq = {
 } as unknown as AuthenticatedRequest;
 
 function makeController() {
-  const listPending = vi.fn().mockResolvedValue([DTO]);
+  const listPendingPage = vi.fn().mockResolvedValue({ items: [DTO], nextCursor: null });
   const listHistory = vi.fn().mockResolvedValue({ items: [], nextCursor: null });
   const get = vi.fn().mockResolvedValue(DTO);
   const review = vi.fn().mockResolvedValue({ hash: REVIEW_HASH });
@@ -80,7 +80,7 @@ function makeController() {
     walletCreditAmount: '150000',
     isOverpayment: true,
   });
-  const service = { listPending, listHistory, get, review, confirm, reject, previewAllocation };
+  const service = { listPendingPage, listHistory, get, review, confirm, reject, previewAllocation };
   const correlationId = { getCorrelationId: vi.fn().mockReturnValue('corr-1') };
   const controller = new InvoiceBankReceiptConfirmationController(
     service as never,
@@ -108,7 +108,7 @@ describe('invoice bank-receipt confirmation and rejection permission gate (T-04.
     expect(String(rejectionBody(rejection).message)).toContain(
       INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION
     );
-    expect(service.listPending).not.toHaveBeenCalled();
+    expect(service.listPendingPage).not.toHaveBeenCalled();
   });
 
   it('rejects non-admin on confirm with AUTHZ_FORBIDDEN', async () => {
@@ -140,8 +140,8 @@ describe('invoice bank-receipt confirmation and rejection permission gate (T-04.
   it('allows admin list and wraps items', async () => {
     const { controller, service } = makeController();
     const result = await controller.list(adminReq);
-    expect(result).toEqual({ items: [DTO] });
-    expect(service.listPending).toHaveBeenCalledOnce();
+    expect(result).toEqual({ items: [DTO], nextCursor: null });
+    expect(service.listPendingPage).toHaveBeenCalledOnce();
   });
 
   it('accepts a validated history filter and paired cursor', async () => {
@@ -223,4 +223,33 @@ describe('invoice bank-receipt confirmation and rejection permission gate (T-04.
     expect(preview.isOverpayment).toBe(true);
     expect(service.previewAllocation).toHaveBeenCalledWith(RECEIPT_ID);
   });
+});
+
+it('validates literal queue search, order and paired exact cursor before listing', async () => {
+  const { controller, service } = makeController();
+  const id = '11111111-1111-4111-8111-111111111111';
+  await controller.list(adminReq, {
+    q: '  Bank_%  ',
+    sort: 'submitted_at:desc',
+    beforeAt: '2026-09-01T00:00:00.000001Z',
+    beforeId: id,
+  });
+  expect(service.listPendingPage).toHaveBeenCalledWith({
+    q: 'Bank_%',
+    sort: 'submitted_at:desc',
+    beforeAt: '2026-09-01T00:00:00.000001Z',
+    beforeId: id,
+  });
+  for (const query of [
+    { q: ['bank'] },
+    { q: 'x'.repeat(121) },
+    { q: 'bank\nname' },
+    { sort: 'amount:asc' },
+    { beforeId: id },
+    { beforeAt: 'invalid', beforeId: id },
+    { unknown: 'private' },
+  ]) {
+    await expect(controller.list(adminReq, query)).rejects.toMatchObject({ status: 400 });
+  }
+  expect(service.listPendingPage).toHaveBeenCalledTimes(1);
 });

@@ -1,9 +1,17 @@
+import { useReceiptQueueQuery, receiptQueueParams } from '../hooks/useReceiptQueueQuery.js';
+import {
+  ReceiptQueueControls,
+  ReceiptQueuePagination,
+} from '../components/ReceiptQueueControls.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import type { FinanceCursor } from '../lib/finance-list-query.js';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type FormEvent,
@@ -206,7 +214,11 @@ function formatPaymentDate(value: string | null, locale: Locale): string {
   return t('admin.walletReceipts.none', locale);
 }
 
-export default function AdminWalletReceiptsPage() {
+export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQueryBinding } = {}) {
+  const queueBinding = useReceiptQueueQuery(binding);
+  const queueParams = receiptQueueParams(queueBinding);
+  const queueScopeRef = useRef(queueParams);
+  const [nextCursor, setNextCursor] = useState<FinanceCursor | null>(null);
   const time = useAccountTime();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -315,6 +327,18 @@ export default function AdminWalletReceiptsPage() {
     },
     []
   );
+  useLayoutEffect(() => {
+    if (queueScopeRef.current === queueParams) return;
+    queueScopeRef.current = queueParams;
+    queueController.current?.abort();
+    ++accessGeneration.current;
+    rowsRef.current = [];
+    setItems([]);
+    setNextCursor(null);
+    selectReceipt(null);
+    setQueueError(null);
+    setLoading(true);
+  }, [queueParams]);
   const loadQueue = useCallback(async () => {
     queueController.current?.abort();
     const controller = new AbortController();
@@ -323,7 +347,7 @@ export default function AdminWalletReceiptsPage() {
     setQueueError(null);
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/wallet/bank-receipt-top-ups', {
+      const res = await fetch(`/api/admin/wallet/bank-receipt-top-ups${queueParams}`, {
         signal: controller.signal,
       });
       if (controller.signal.aborted || accessOwner !== accessGeneration.current) return;
@@ -333,10 +357,14 @@ export default function AdminWalletReceiptsPage() {
       }
       if (!res.ok)
         throw new Error(await parseError(res, t('admin.walletReceipts.error.load', locale)));
-      const data = (await res.json()) as { items?: BankReceiptReviewDto[] };
+      const data = (await res.json()) as {
+        items?: BankReceiptReviewDto[];
+        nextCursor?: FinanceCursor | null;
+      };
       if (!Array.isArray(data.items)) throw new Error(t('admin.walletReceipts.error.load', locale));
       if (controller.signal.aborted || accessOwner !== accessGeneration.current) return;
       const next = data.items;
+      setNextCursor(data.nextCursor ?? null);
       const current = selectedIdRef.current;
       const previous = rowsRef.current.find((row) => row.transactionId === current);
       const fresh = next.find((row) => row.transactionId === current);
@@ -358,7 +386,7 @@ export default function AdminWalletReceiptsPage() {
     } finally {
       if (!controller.signal.aborted && accessOwner === accessGeneration.current) setLoading(false);
     }
-  }, [locale]);
+  }, [locale, queueParams]);
   useEffect(() => {
     void loadQueue();
     return () => queueController.current?.abort();
@@ -796,7 +824,7 @@ export default function AdminWalletReceiptsPage() {
       )}
 
       <ListPage>
-        <ListPage.Toolbar>
+        <ListPage.Toolbar filters={<ReceiptQueueControls binding={queueBinding} />}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-semibold">{t('admin.walletReceipts.queueLabel', locale)}</h2>
             <ListViewToggle
@@ -817,6 +845,13 @@ export default function AdminWalletReceiptsPage() {
             </Button>
           </div>
         </ListPage.Toolbar>
+        {!denied && (
+          <ReceiptQueuePagination
+            binding={queueBinding}
+            nextCursor={queueError ? null : nextCursor}
+            loading={loading}
+          />
+        )}
         <div
           className={`grid min-w-0 gap-6 ${view === 'card' ? 'lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]' : ''}`}
         >

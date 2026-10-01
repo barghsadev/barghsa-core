@@ -74,28 +74,40 @@ for (const locale of ['en', 'fa'] as const)
         detailReads = 0,
         reviewReads = 0,
         queueStatus = 200;
-      await page.route(`**${base}`, (r) => {
+      const queueQueries: string[] = [];
+      await page.route(new RegExp(base + '(?:\\?|$)'), (r) => {
+        const query = new URL(r.request().url()).searchParams;
+        queueQueries.push(query.toString());
         queueReads++;
         return r.fulfill({
           status: queueStatus,
           json: {
-            items: [
-              receipt,
-              {
-                ...receipt,
-                transactionId: secondReceiptId,
-                payerReference: 'TRK-second',
-                paymentDate: null,
-                dualApproval: {
-                  requestId: 'approval',
-                  initiatorId: 'another-finance',
-                  invoiceId: paymentInvoiceId,
-                },
-              },
-            ],
+            nextCursor:
+              query.has('q') && !query.has('beforeAt')
+                ? { beforeAt: receipt.submittedAt, beforeId: receiptId }
+                : null,
+            items: query.has('beforeAt')
+              ? [{ ...receipt, transactionId: secondReceiptId, canDecide: false }]
+              : [
+                  receipt,
+                  {
+                    ...receipt,
+                    transactionId: secondReceiptId,
+                    payerReference: 'TRK-second',
+                    paymentDate: null,
+                    dualApproval: {
+                      requestId: 'approval',
+                      initiatorId: 'another-finance',
+                      invoiceId: paymentInvoiceId,
+                    },
+                  },
+                ],
           },
         });
       });
+      await page.route(`**${base}/${secondReceiptId}`, (r) =>
+        r.fulfill({ json: { ...receipt, transactionId: secondReceiptId, canDecide: false } })
+      );
       await page.route(`**${base}/${receiptId}`, (r) => {
         detailReads++;
         return r.fulfill({ json: receipt });
@@ -233,5 +245,57 @@ for (const locale of ['en', 'fa'] as const)
         'aria-pressed',
         'true'
       );
+      await expect(confirm).toBeEnabled();
+      await page.locator('#apply-invoice-id').fill(paymentInvoiceId);
+      await expect(confirm).toBeEnabled();
+      await page.locator('#reject-reason').fill('Clear this obsolete draft');
+      const search = panel.getByRole('searchbox');
+      await search.fill('Bank_%\\');
+      await expect.poll(() => new URLSearchParams(queueQueries.at(-1)).get('q')).toBe('Bank_%\\');
+      await expect(page.locator('#apply-invoice-id')).toHaveValue('');
+      await expect(page.locator('#reject-reason')).toHaveValue('');
+      await panel.getByRole('combobox').selectOption('submitted_at:desc');
+      await expect
+        .poll(() => new URLSearchParams(queueQueries.at(-1)).get('sort'))
+        .toBe('submitted_at:desc');
+      await expect(confirm).toBeEnabled();
+      await page.locator('#reject-reason').fill('Retain this search draft');
+      const queryBeforeRefresh = queueQueries.at(-1);
+      await panel.getByRole('button', { name: word('queue.refresh'), exact: true }).click();
+      await expect(confirm).toBeEnabled();
+      expect(queueQueries.at(-1)).toBe(queryBeforeRefresh);
+      await expect(page.locator('#reject-reason')).toHaveValue('Retain this search draft');
+      queueStatus = 503;
+      await panel
+        .getByRole('button', { name: appText('invoices.receipts.older', locale), exact: true })
+        .click();
+      await expect(
+        panel.getByRole('button', { name: word('queue.retry'), exact: true })
+      ).toBeVisible();
+      const failedQuery = queueQueries.at(-1);
+      expect(new URLSearchParams(failedQuery).get('beforeAt')).toBe(receipt.submittedAt);
+      expect(new URLSearchParams(failedQuery).get('beforeId')).toBe(receiptId);
+      queueStatus = 200;
+      await panel.getByRole('button', { name: word('queue.retry'), exact: true }).click();
+      await expect(queue.getByText(secondReceiptId, { exact: true })).toBeVisible();
+      await expect(queue.getByText(receiptId, { exact: true })).toHaveCount(0);
+      expect(queueQueries.at(-1)).toBe(failedQuery);
+      await panel
+        .getByRole('button', { name: appText('historyPagination.previous', locale), exact: true })
+        .click();
+      await expect(queue.getByText(receiptId, { exact: true })).toBeVisible();
+      expect(new URLSearchParams(queueQueries.at(-1)).has('beforeAt')).toBe(false);
+      await page.reload();
+      await expect(search).toHaveValue('Bank_%\\');
+      await expect(panel.getByRole('combobox')).toHaveValue('submitted_at:desc');
+      await expect(confirm).toBeEnabled();
+      await panel
+        .getByRole('button', { name: appText('historyFilters.clearAll', locale), exact: true })
+        .click();
+      await expect(search).toHaveValue('');
+      await expect.poll(() => queueQueries.at(-1)).toBe('');
+      await page.goBack();
+      await expect(search).toHaveValue('Bank_%\\');
+      await expect(panel.getByRole('combobox')).toHaveValue('submitted_at:desc');
     });
   }

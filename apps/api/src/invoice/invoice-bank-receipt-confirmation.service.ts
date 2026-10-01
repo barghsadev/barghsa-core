@@ -1,3 +1,5 @@
+import type { ReceiptQueueQuery, ReceiptQueuePage } from '../common/receipt-queue-query.js';
+import { literalSearchPattern } from '@barghsa/shared/validation';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { applyReceiptEmergencyOverride } from '../admin/receipt-emergency-override.js';
 import { lockDualApprovalThreshold } from '../admin/dual-approval-threshold-lock.js';
@@ -260,20 +262,36 @@ export class InvoiceBankReceiptConfirmationService {
   }
 
   async listPending(): Promise<InvoiceBankReceiptConfirmDto[]> {
+    return (await this.listPendingPage()).items;
+  }
+
+  async listPendingPage(
+    input: ReceiptQueueQuery = { q: '', sort: 'submitted_at:asc' }
+  ): Promise<ReceiptQueuePage<InvoiceBankReceiptConfirmDto>> {
+    const direction = input.sort === 'submitted_at:desc' ? 'DESC' : 'ASC';
+    const comparison = direction === 'DESC' ? '<' : '>';
     const pool = getDbPool();
     const result = await pool.query(
-      `SELECT ${RECEIPT_SELECT}
+      `SELECT ${RECEIPT_SELECT}, to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS cursor_at
          FROM bank_receipts
         WHERE state IN ('Submitted', 'UnderReview')
-        ORDER BY created_at ASC`
+          AND ($1::text IS NULL OR id::text ILIKE $1 ESCAPE E'\\\\'
+            OR invoice_id::text ILIKE $1 ESCAPE E'\\\\'
+            OR profile_id::text ILIKE $1 ESCAPE E'\\\\'
+            OR bank_name ILIKE $1 ESCAPE E'\\\\'
+            OR payer_reference ILIKE $1 ESCAPE E'\\\\')
+          AND ($2::timestamptz IS NULL OR (created_at,id) ${comparison} ($2::timestamptz,$3::uuid))
+        ORDER BY created_at ${direction},id ${direction} LIMIT 26`,
+      [literalSearchPattern(input.q), input.beforeAt ?? null, input.beforeId ?? null]
     );
     const items: InvoiceBankReceiptConfirmDto[] = [];
+    const page = result.rows.slice(0, 25) as Array<BankReceiptRow & { cursor_at: string }>;
     const dualByReceipt = await this.loadPendingDualApprovalsByReceiptIds(
       pool,
-      result.rows.map((row) => (row as BankReceiptRow).id)
+      page.map((row) => row.id)
     );
     const thresholdRead = await this.loadDualApprovalThreshold(pool);
-    for (const row of result.rows as BankReceiptRow[]) {
+    for (const row of page) {
       const pending = dualByReceipt.get(row.id);
       items.push(
         await this.toDto(row, {
@@ -281,7 +299,12 @@ export class InvoiceBankReceiptConfirmationService {
         })
       );
     }
-    return items;
+    const last = page.at(-1);
+    return {
+      items,
+      nextCursor:
+        result.rows.length > 25 && last ? { beforeAt: last.cursor_at, beforeId: last.id } : null,
+    };
   }
 
   async listHistory(input: {

@@ -8182,10 +8182,48 @@
     "/api/admin/invoices/bank-receipts": {
       "get": {
         "operationId": "InvoiceBankReceiptConfirmationController_list",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeId",
+            "required": false,
+            "schema": {
+              "format": "uuid"
+            }
+          },
+          {
+            "description": "Exact timestamp from the next-page cursor",
+            "in": "query",
+            "name": "beforeAt",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "enum": [
+                "submitted_at:asc",
+                "submitted_at:desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Literal receipt, invoice/profile ID, bank name or payer reference substring, up to 120 characters",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {}
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Submitted / UnderReview receipts."
+            "description": "At most 25 Submitted / UnderReview receipts in submission order (oldest first by default), with items and a nullable nextCursor. Supply both exact cursor fields to fetch the next page."
+          },
+          "400": {
+            "description": "Invalid or ambiguous receipt queue query"
           },
           "403": {
             "description": "Finance permission required"
@@ -15211,10 +15249,48 @@
     "/api/admin/wallet/bank-receipt-top-ups": {
       "get": {
         "operationId": "BankReceiptConfirmationController_list",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeId",
+            "required": false,
+            "schema": {
+              "format": "uuid"
+            }
+          },
+          {
+            "description": "Exact timestamp from the next-page cursor",
+            "in": "query",
+            "name": "beforeAt",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "enum": [
+                "submitted_at:asc",
+                "submitted_at:desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Literal receipt/profile ID, bank name or payer reference substring, up to 120 characters",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {}
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Pending receipts awaiting finance review."
+            "description": "At most 25 pending receipts in submission order (oldest first by default), with items and a nullable nextCursor. Supply both exact cursor fields to fetch the next page."
+          },
+          "400": {
+            "description": "Invalid or ambiguous receipt queue query"
           },
           "403": {
             "description": "Finance permission required"

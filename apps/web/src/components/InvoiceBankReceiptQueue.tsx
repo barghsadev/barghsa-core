@@ -1,4 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useReceiptQueueQuery, receiptQueueParams } from '../hooks/useReceiptQueueQuery.js';
+import { ReceiptQueueControls, ReceiptQueuePagination } from './ReceiptQueueControls.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import type { FinanceCursor } from '../lib/finance-list-query.js';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   Alert,
   AlertDescription,
@@ -81,10 +85,18 @@ export interface ReceiptHistoryQuery {
 export function InvoiceBankReceiptQueue({
   initialSelection,
   historyQuery,
+  pendingQuery,
 }: {
   initialSelection?: { receiptId: string; state: string } | null;
   historyQuery?: ReceiptHistoryQuery;
+  pendingQuery?: ListQueryBinding;
 } = {}) {
+  const queueBinding = useReceiptQueueQuery(pendingQuery);
+  const queueParams = receiptQueueParams(queueBinding);
+  const queueScopeRef = useRef(queueParams);
+  const [nextCursor, setNextCursor] = useState<FinanceCursor | null>(null);
+  const actionRef = useRef<TeamAction | null>(null);
+  const reviewGeneration = useRef(0);
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
@@ -121,7 +133,34 @@ export function InvoiceBankReceiptQueue({
   const detailRef = useRef<HTMLElement>(null);
   const selectedIdRef = useRef(selectedId);
   selectedIdRef.current = selectedId;
+  actionRef.current = action;
 
+  useLayoutEffect(() => {
+    if (queueScopeRef.current === queueParams) return;
+    queueScopeRef.current = queueParams;
+    setItems([]);
+    setNextCursor(null);
+    setListState('loading');
+    if (selectedSource === 'pending') {
+      reviewGeneration.current++;
+      selectedIdRef.current = null;
+      setSelectedId(null);
+      setDetail(null);
+      setAllocation(null);
+      setReason('');
+      actionRef.current = null;
+      setAction(null);
+      setFinancialReview(null);
+      setReviewState('idle');
+    }
+  }, [queueParams]);
+  useLayoutEffect(() => {
+    reviewGeneration.current++;
+    actionRef.current = null;
+    setAction(null);
+    setFinancialReview(null);
+    setReviewState('idle');
+  }, [selectedId, selectedSource, revision]);
   useEffect(() => {
     if (selectedId) detailRef.current?.scrollIntoView?.({ block: 'start' });
   }, [selectedId, selectedSource]);
@@ -129,18 +168,27 @@ export function InvoiceBankReceiptQueue({
   useEffect(() => {
     const controller = new AbortController();
     setListState('loading');
-    void getJson<{ items: Receipt[] }>(base, controller.signal)
+    void getJson<{ items: Receipt[]; nextCursor?: FinanceCursor | null }>(
+      `${base}${queueParams}`,
+      controller.signal
+    )
       .then((value) => {
-        if (!controller.signal.aborted) {
+        if (!controller.signal.aborted && queueScopeRef.current === queueParams) {
           setItems(value.items);
+          setNextCursor(value.nextCursor ?? null);
           setListState('ready');
         }
       })
       .catch((error: unknown) => {
-        if (!controller.signal.aborted) {
-          const forbidden = error instanceof Error && error.message === '403';
+        if (!controller.signal.aborted && queueScopeRef.current === queueParams) {
+          const forbidden =
+            error instanceof Error && (error.message === '403' || error.message === '401');
           if (forbidden) {
+            reviewGeneration.current++;
+            selectedIdRef.current = null;
+            actionRef.current = null;
             setItems([]);
+            setNextCursor(null);
             setSelectedId(null);
             setDetail(null);
             setAllocation(null);
@@ -151,7 +199,7 @@ export function InvoiceBankReceiptQueue({
         }
       });
     return () => controller.abort();
-  }, [revision, listRevision]);
+  }, [revision, listRevision, queueParams]);
 
   useEffect(() => {
     if (!selectedId) {
@@ -199,6 +247,7 @@ export function InvoiceBankReceiptQueue({
       return;
     const rejection = reason.trim();
     if (kind === 'reject' && (!detail.canReject || !rejection)) return;
+    const generation = reviewGeneration.current;
     let confirmation: BankReceiptConfirmationReview | null = null;
     if (kind === 'confirm') {
       setReviewState('loading');
@@ -214,7 +263,8 @@ export function InvoiceBankReceiptQueue({
         );
         if (!response.ok) throw new Error(String(response.status));
         confirmation = parseBankReceiptConfirmationReview(await response.json());
-        if (selectedIdRef.current !== detail.receiptId) return;
+        if (generation !== reviewGeneration.current || selectedIdRef.current !== detail.receiptId)
+          return;
         if (
           !confirmation ||
           confirmation.scope.action !== 'invoice.bank-receipt-confirmation' ||
@@ -227,6 +277,7 @@ export function InvoiceBankReceiptQueue({
         setFinancialReview(confirmation);
         setReviewState('idle');
       } catch {
+        if (generation !== reviewGeneration.current) return;
         setFinancialReview(null);
         setReviewState('error');
         return;
@@ -256,6 +307,7 @@ export function InvoiceBankReceiptQueue({
       </div>
       <ListPage>
         <ListPage.Toolbar
+          filters={<ReceiptQueueControls binding={queueBinding} />}
           actions={
             <div className="flex flex-wrap items-center gap-2">
               <ListViewToggle
@@ -306,6 +358,13 @@ export function InvoiceBankReceiptQueue({
             />
           ) : null}
         </ListPage.Content>
+        {listState !== 'forbidden' && (
+          <ReceiptQueuePagination
+            binding={queueBinding}
+            nextCursor={listState === 'error' ? null : nextCursor}
+            loading={listState === 'loading'}
+          />
+        )}
       </ListPage>
       <Button
         variant="outline"
@@ -536,10 +595,12 @@ export function InvoiceBankReceiptQueue({
             ) : null
           }
           onClose={() => {
+            if (actionRef.current !== action) return;
             setAction(null);
             setFinancialReview(null);
           }}
           onSuccess={async () => {
+            if (actionRef.current !== action) return;
             setAction(null);
             setFinancialReview(null);
             setReason('');

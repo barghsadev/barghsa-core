@@ -5,6 +5,8 @@ import {
   invoiceListsSearch,
   invoiceLedgerQueryOptions,
   invoiceReceiptQueryOptions,
+  pendingReceiptQueryOptions,
+  pendingReceiptSearch,
 } from './finance-list-query.js';
 import { writeListQuery } from '../hooks/useListQuery.js';
 const id = '82000000-0000-4000-8000-000000000001';
@@ -118,4 +120,61 @@ it('opens filtered history links and preserves explicit collapse across subseque
       writeListQuery(collapsed, invoiceLedgerQueryOptions, { filters: { state: 'Paid' } })
     )
   ).toMatchObject({ receipts: 'false', receiptHistory: 'false' });
+});
+
+it('keeps pending receipt search/order/cursor separate from ledger and reviewed receipt scope', () => {
+  const raw = invoiceListsSearch({
+    state: 'Paid',
+    cursor,
+    receipt_state: 'Rejected',
+    receipt_cursor: cursor,
+    queue_q: '  بانک_%  ',
+    queue_order: 'desc',
+    queue_cursor: [stamp, id],
+  });
+  expect(raw).toMatchObject({
+    queue_q: 'بانک_%',
+    queue_order: 'desc',
+    queue_cursor: cursor,
+    receipts: 'true',
+    state: 'Paid',
+    cursor,
+    receipt_state: 'Rejected',
+    receipt_cursor: cursor,
+  });
+  const next = invoiceListsSearch(
+    writeListQuery(raw, pendingReceiptQueryOptions, { search: 'next' })
+  );
+  expect(next).toMatchObject({
+    queue_q: 'next',
+    queue_order: 'desc',
+    queue_cursor: undefined,
+    state: 'Paid',
+    cursor,
+    receipt_state: 'Rejected',
+    receipt_cursor: cursor,
+  });
+  expect(
+    invoiceListsSearch(
+      writeListQuery(raw, invoiceReceiptQueryOptions, { filters: { state: 'Confirmed' } })
+    )
+  ).toMatchObject({ queue_q: 'بانک_%', queue_cursor: cursor, receipt_cursor: undefined });
+});
+it('drops malformed queue pagination and private parameters while retaining supported selections', () => {
+  expect(
+    pendingReceiptSearch({
+      queue_q: 'Bank',
+      queue_order: 'desc',
+      queue_cursor: 'bad',
+      key: 'sealed',
+      limit: 5000,
+    })
+  ).toEqual({ queue_q: 'Bank', queue_order: 'desc', queue_cursor: undefined });
+  expect(
+    pendingReceiptSearch({
+      queue_q: 'x'.repeat(121),
+      queue_order: 'invalid',
+      queue_cursor: [stamp, 'invalid'],
+    })
+  ).toEqual({ queue_q: undefined, queue_order: undefined, queue_cursor: undefined });
 });

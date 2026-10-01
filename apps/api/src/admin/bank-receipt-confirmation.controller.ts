@@ -1,3 +1,4 @@
+import { ReceiptQueueQuerySchema, type ReceiptQueuePage } from '../common/receipt-queue-query.js';
 import {
   readReceiptEmergencyOverrideReason,
   RECEIPT_EMERGENCY_OVERRIDE_PERMISSION,
@@ -21,6 +22,7 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -99,12 +101,35 @@ export class BankReceiptConfirmationController {
 
   @Get()
   @ApiOperation({ summary: 'List pending bank-receipt wallet top-ups (staff)' })
-  @ApiResponse({ status: 200, description: 'Pending receipts awaiting finance review.' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'At most 25 pending receipts in submission order (oldest first by default), with items and a nullable nextCursor. Supply both exact cursor fields to fetch the next page.',
+  })
+  @ApiResponse({ status: 400, description: 'Invalid or ambiguous receipt queue query' })
   @ApiResponse({ status: 403, description: 'Finance permission required' })
-  async list(@Req() req: AuthenticatedRequest): Promise<{ items: BankReceiptReviewDto[] }> {
+  @ApiQuery({
+    name: 'q',
+    required: false,
+    description:
+      'Literal receipt/profile ID, bank name or payer reference substring, up to 120 characters',
+  })
+  @ApiQuery({ name: 'sort', required: false, enum: ['submitted_at:asc', 'submitted_at:desc'] })
+  @ApiQuery({
+    name: 'beforeAt',
+    required: false,
+    description: 'Exact timestamp from the next-page cursor',
+  })
+  @ApiQuery({ name: 'beforeId', required: false, format: 'uuid' })
+  async list(
+    @Req() req: AuthenticatedRequest,
+    @Query() raw: unknown = {}
+  ): Promise<ReceiptQueuePage<BankReceiptReviewDto>> {
     this.assertConfirmPermission(req);
-    const items = await this.service.listPending();
-    return { items };
+    const parsed = ReceiptQueueQuerySchema.safeParse(raw);
+    if (!parsed.success)
+      httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, 'Invalid receipt queue query');
+    return this.service.listPendingPage(parsed.data);
   }
 
   @Get(':transactionId/allocation')

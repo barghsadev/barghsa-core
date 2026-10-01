@@ -4,6 +4,7 @@ import {
   invoiceListsSearch,
   invoiceLedgerQueryOptions,
   invoiceReceiptQueryOptions,
+  pendingReceiptQueryOptions,
 } from '../../lib/finance-list-query.js';
 import { RouteSkeleton } from '../../components/RouteSkeleton.js';
 import { RouteErrorBoundary } from '../../components/RouteErrorBoundary.js';
@@ -22,11 +23,13 @@ function InvoicesRoute() {
       resetScroll: false,
     });
   const ledger = useListQuery(invoiceLedgerQueryOptions, search, change);
+  const pending = useListQuery(pendingReceiptQueryOptions, search, change);
   const history = useListQuery(invoiceReceiptQueryOptions, search, change);
   return (
     <Invoices
       queries={{
         ledger,
+        pending,
         history: {
           query: history,
           open: search.receiptHistory === 'true',

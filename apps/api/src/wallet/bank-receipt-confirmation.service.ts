@@ -1,3 +1,5 @@
+import type { ReceiptQueueQuery, ReceiptQueuePage } from '../common/receipt-queue-query.js';
+import { literalSearchPattern } from '@barghsa/shared/validation';
 import { parseBankReceiptBankName } from '@barghsa/shared/finance';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
@@ -215,22 +217,47 @@ export class BankReceiptConfirmationService {
   }
 
   async listPending(): Promise<BankReceiptReviewDto[]> {
+    return (await this.listPendingPage()).items;
+  }
+
+  async listPendingPage(
+    input: ReceiptQueueQuery = { q: '', sort: 'submitted_at:asc' }
+  ): Promise<ReceiptQueuePage<BankReceiptReviewDto>> {
+    const direction = input.sort === 'submitted_at:desc' ? 'DESC' : 'ASC';
+    const comparison = direction === 'DESC' ? '<' : '>';
     const pool = getDbPool();
     const result = await pool.query(
-      `SELECT *
+      `SELECT *, to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS cursor_at
          FROM wallet_transactions
         WHERE type = 'topup'
           AND state = 'Pending'
           AND receipt_attachment_key IS NOT NULL
           AND metadata->>'channel' = $1
-        ORDER BY created_at ASC`,
-      [BANK_RECEIPT_TOPUP_CHANNEL]
+          AND NOT (metadata ? 'pendingTransactionId')
+          AND ($2::text IS NULL OR id::text ILIKE $2 ESCAPE E'\\\\'
+            OR wallet_id::text ILIKE $2 ESCAPE E'\\\\'
+            OR metadata#>>'{receipt,bankName}' ILIKE $2 ESCAPE E'\\\\'
+            OR metadata#>>'{receipt,payerReference}' ILIKE $2 ESCAPE E'\\\\')
+          AND ($3::timestamptz IS NULL OR (created_at,id) ${comparison} ($3::timestamptz,$4::uuid))
+        ORDER BY created_at ${direction},id ${direction} LIMIT 26`,
+      [
+        BANK_RECEIPT_TOPUP_CHANNEL,
+        literalSearchPattern(input.q),
+        input.beforeAt ?? null,
+        input.beforeId ?? null,
+      ]
     );
     const items: BankReceiptReviewDto[] = [];
-    for (const row of result.rows as LedgerRow[]) {
+    const page = result.rows.slice(0, 25) as Array<LedgerRow & { cursor_at: string }>;
+    for (const row of page) {
       items.push(await this.toDto(row));
     }
-    return items;
+    const last = page.at(-1);
+    return {
+      items,
+      nextCursor:
+        result.rows.length > 25 && last ? { beforeAt: last.cursor_at, beforeId: last.id } : null,
+    };
   }
 
   async get(transactionId: string): Promise<BankReceiptReviewDto> {

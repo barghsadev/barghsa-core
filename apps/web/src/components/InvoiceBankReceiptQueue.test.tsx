@@ -39,6 +39,7 @@ const allocation = {
 const harness = vi.hoisted(() => ({
   locale: 'en' as 'en' | 'fa',
   action: null as TeamAction | null,
+  finish: null as (() => Promise<void>) | null,
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => harness.locale }));
 vi.mock('../hooks/useAccountTime.js', () => ({
@@ -58,6 +59,7 @@ vi.mock('./TeamActionDialog.js', () => ({
     onSuccess: () => Promise<void>;
   }) => {
     harness.action = action;
+    harness.finish = onSuccess;
     return (
       <div>
         {summary}
@@ -73,6 +75,7 @@ beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   harness.locale = 'en';
   harness.action = null;
+  harness.finish = null;
   container = document.createElement('div');
   document.body.append(container);
   root = createRoot(container);
@@ -293,7 +296,8 @@ it('filters and pages terminal receipts, then opens their historic detail', asyn
   await click('Reviewed receipt history');
   expect(container.textContent).toContain(RECEIPT);
   expect(container.textContent).toContain('Bank Mellat');
-  const state = container.querySelector('select')!;
+  const history = container.querySelector('[aria-label="Reviewed receipt history"]')!;
+  const state = history.querySelector('select')!;
   await act(async () => {
     Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')!.set!.call(
       state,
@@ -302,7 +306,7 @@ it('filters and pages terminal receipts, then opens their historic detail', asyn
     state.dispatchEvent(new Event('change', { bubbles: true }));
   });
   expect(fetcher.mock.calls.some(([url]) => String(url).includes('state=Rejected'))).toBe(true);
-  const invoiceInput = container.querySelector('input')!;
+  const invoiceInput = history.querySelector('input')!;
   await act(async () => {
     Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
       invoiceInput,
@@ -430,4 +434,67 @@ it('a forbidden list refresh removes retained receipts and their selected review
   );
   expect(container.querySelector('textarea')).toBeNull();
   expect(container.querySelector('[data-slot="list-content"] ul')).toBeNull();
+});
+
+async function changeQueueOrder() {
+  const select = container.querySelector('select')!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')!.set!.call(
+      select,
+      'submitted_at:desc'
+    );
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+}
+
+it.each(['resolve', 'reject'] as const)(
+  'discards a late financial review that %ss after the same receipt is reopened in another queue',
+  async (outcome) => {
+    let finish!: (value: Response) => void;
+    let fail!: (reason: Error) => void;
+    const pending = new Promise<Response>((resolve, reject) => {
+      finish = resolve;
+      fail = reject;
+    });
+    const baseFetch = api();
+    let reviewCalls = 0;
+    const fetcher = vi.fn(async (raw: string) => {
+      if (raw.endsWith('/confirm/review') && ++reviewCalls === 1) return pending;
+      return baseFetch(raw);
+    });
+    vi.stubGlobal('fetch', fetcher);
+    await render();
+    await click('Review receipt');
+    await click('Confirm receipt');
+    await changeQueueOrder();
+    expect(container.querySelector('textarea')).toBeNull();
+    expect(container.textContent).not.toContain('Finish action');
+    expect(fetcher.mock.calls.some(([url]) => url.includes('sort=submitted_at%3Adesc'))).toBe(true);
+    await click('Review receipt');
+    await click('Confirm receipt');
+    expect(container.textContent).toContain('Finish action');
+    const currentAction = harness.action;
+    await act(async () => {
+      if (outcome === 'resolve') finish(await baseFetch('/confirm/review'));
+      else fail(new Error('Old review failed'));
+    });
+    expect(harness.action).toBe(currentAction);
+    expect(container.textContent).toContain('Finish action');
+    expect(container.querySelector('[role="alert"]')).toBeNull();
+  }
+);
+
+it('invalidates an approval dialog and its late success callback when pending queue criteria change', async () => {
+  const fetcher = api();
+  vi.stubGlobal('fetch', fetcher);
+  await render();
+  await click('Review receipt');
+  await click('Confirm receipt');
+  const oldFinish = harness.finish!;
+  await changeQueueOrder();
+  expect(container.textContent).not.toContain('Finish action');
+  expect(container.querySelector('textarea')).toBeNull();
+  const reads = fetcher.mock.calls.length;
+  await act(async () => oldFinish());
+  expect(fetcher).toHaveBeenCalledTimes(reads);
 });
