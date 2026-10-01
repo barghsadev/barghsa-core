@@ -18,7 +18,9 @@ import {
   parseBankReceiptRejectReason,
   parseBankReceiptConfirmationReview,
   type BankReceiptConfirmationReview,
+  type WalletBankReceiptTimeline,
 } from '@barghsa/shared/finance';
+import { WalletReceiptTimeline } from '../components/WalletReceiptTimeline.js';
 import { BankReceiptFinancialReview } from '../components/BankReceiptFinancialReview.js';
 import { Button, ListPage, ListViewToggle, ScrollArea } from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
@@ -66,6 +68,7 @@ interface BankReceiptReviewDto {
   attachmentUrl: string | null;
   customerNote: string | null;
   submittedAt: string;
+  verificationTimeline?: WalletBankReceiptTimeline;
   canDecide: boolean;
   staffDecision: StaffDecision | null;
   creditTransactionId: string | null;
@@ -951,6 +954,13 @@ export default function AdminWalletReceiptsPage() {
                 )}
               </div>
 
+              {selected.verificationTimeline && (
+                <WalletReceiptTimeline
+                  timeline={selected.verificationTimeline}
+                  locale={locale}
+                  formatTime={time.format}
+                />
+              )}
               {selected.canDecide ? (
                 <div className="space-y-4 border-t border-border pt-4">
                   <div>

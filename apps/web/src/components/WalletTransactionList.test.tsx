@@ -1,6 +1,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { tWalletReceipts as receiptText } from '@barghsa/i18n/wallet-receipts';
 import { WalletTransactionList } from './WalletTransactionList.js';
 
 vi.mock('../hooks/useAccountTime.js', () => ({
@@ -193,4 +194,93 @@ describe('WalletTransactionList', () => {
     expect(host.querySelector('[role=alert]')).toBeNull();
     expect(host.textContent).toContain('No transactions match these filters.');
   });
+});
+
+it.each(['en', 'fa'] as const)(
+  'offers inline bank receipt details with recorded and missing event times (%s)',
+  async (locale) => {
+    const bankReceipt = {
+      paymentDate: '2026-09-01',
+      payerReference: 'TRK-123',
+      bankName: 'بانک ملی',
+      customerNote: '<script>untrusted note</script>',
+      rejectionReason: 'Please provide the deposit reference',
+      timeline: {
+        events: [
+          { state: 'submitted', occurredAt: tx.createdAt },
+          { state: 'approval_requested', occurredAt: null },
+          { state: 'rejected', occurredAt: '2026-09-02T12:00:00Z' },
+        ],
+        awaiting: null,
+      },
+    };
+    const fetcher = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        transactions: [{ ...tx, state: 'Rejected', bankReceipt }],
+        nextCursor: null,
+      }),
+    });
+    vi.stubGlobal('fetch', fetcher);
+    await render('profile-a', locale);
+    const word = (key: string) => receiptText(`wallet.receipt.${key}`, locale);
+    expect(host.querySelector('summary')?.textContent).toBe(word('details'));
+    const details = host.querySelector('details')!;
+    expect(details.open).toBe(false);
+    details.open = true;
+    expect(details.textContent).toContain('TRK-123');
+    expect(details.textContent).toContain('بانک ملی');
+    expect(details.textContent).toContain(tx.id);
+    expect(details.textContent).toContain(word('unknownTime'));
+    expect(details.textContent).toContain(word('rejected'));
+    expect(details.textContent).toContain('Please provide the deposit reference');
+    expect(details.querySelector('script')).toBeNull();
+    expect(details.querySelector('time[datetime="2026-09-01"]')?.textContent).toBe(
+      new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
+        calendar: locale === 'fa' ? 'persian' : 'gregory',
+        dateStyle: 'medium',
+        timeZone: 'UTC',
+      }).format(new Date('2026-09-01T00:00:00Z'))
+    );
+    const timeline = details.querySelector(`section[aria-label="${word('timeline')}"]`)!;
+    expect(timeline.getAttribute('dir')).toBe(locale === 'fa' ? 'rtl' : 'ltr');
+    expect(timeline.querySelectorAll('li')).toHaveLength(3);
+    expect(timeline.querySelectorAll('time')).toHaveLength(2);
+    expect(timeline.querySelector('time')?.textContent).toContain('Sep 2, 2026');
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  }
+);
+
+it('distinguishes a pending second review from an applied payment', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        transactions: [
+          {
+            ...tx,
+            bankReceipt: {
+              paymentDate: null,
+              payerReference: null,
+              bankName: null,
+              customerNote: null,
+              rejectionReason: null,
+              timeline: {
+                events: [
+                  { state: 'submitted', occurredAt: tx.createdAt },
+                  { state: 'approval_requested', occurredAt: null },
+                ],
+                awaiting: 'second_approval',
+              },
+            },
+          },
+        ],
+        nextCursor: null,
+      }),
+    })
+  );
+  await render();
+  expect(host.textContent).toContain('Awaiting a second reviewer. No funds have been applied yet.');
+  expect(host.querySelector('details')?.textContent).not.toContain('Receipt confirmed');
 });

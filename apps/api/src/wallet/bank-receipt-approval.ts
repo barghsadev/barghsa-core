@@ -14,6 +14,7 @@ import { requireCurrentFinancePermission } from '../admin/approval-permissions.j
 import type { WalletQueryClient } from './wallet.service.js';
 
 export interface WalletReceiptApproval {
+  requestedAt?: string;
   requestId: string;
   initiatorId: string;
   fingerprint: string;
@@ -99,6 +100,7 @@ export async function gateWalletReceiptApproval(
   await requireCurrentFinancePermission(client, input.actorUserId);
   if (!saved) {
     const binding: WalletReceiptApproval = {
+      requestedAt: input.now.toISOString(),
       requestId: randomUUID(),
       initiatorId: input.actorUserId,
       fingerprint,

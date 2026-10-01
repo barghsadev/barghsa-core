@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { HttpException } from '@nestjs/common';
 import type { PoolClient } from 'pg';
 import { z } from 'zod';
+import { readWalletBankReceiptHistory } from '@barghsa/shared/finance';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
 const types = [
@@ -117,8 +118,9 @@ export async function readWalletHistory(
     ref_id: string | null;
     description: string | null;
     created_at: string;
+    metadata: unknown;
   }>(
-    `SELECT id, type, amount::text, state, ref_id, description,
+    `SELECT id, type, amount::text, state, ref_id, description, metadata,
     to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS created_at
     FROM wallet_transactions WHERE ${where.join(' AND ')}
     ORDER BY wallet_transactions.created_at ${direction}, id ${direction} LIMIT ${bind(limit + 1)}`,
@@ -127,15 +129,24 @@ export async function readWalletHistory(
   const page = result.rows.slice(0, limit);
   const last = page.at(-1);
   return {
-    transactions: page.map((row) => ({
-      id: row.id,
-      type: row.type,
-      amount: row.amount,
-      state: row.state,
-      refId: row.ref_id,
-      description: row.description,
-      createdAt: row.created_at,
-    })),
+    transactions: page.map((row) => {
+      const bankReceipt = readWalletBankReceiptHistory({
+        type: row.type,
+        state: row.state,
+        createdAt: row.created_at,
+        metadata: row.metadata,
+      });
+      return {
+        id: row.id,
+        type: row.type,
+        amount: row.amount,
+        state: row.state,
+        refId: row.ref_id,
+        description: row.description,
+        createdAt: row.created_at,
+        ...(bankReceipt ? { bankReceipt } : {}),
+      };
+    }),
     nextCursor:
       result.rows.length > limit && last
         ? Buffer.from(JSON.stringify({ v: 1, scope, at: last.created_at, id: last.id })).toString(

@@ -68,3 +68,5 @@ export * from './consultation-offer-review.js';
 export * from './consultation-fee-review.js';
 export * from './consultation-paid-fee-review.js';
 export * from './consultation-paid-resolution-review.js';
+
+export * from './wallet-bank-receipt-history.js';

@@ -1,3 +1,4 @@
+import type { WalletBankReceiptHistory } from '@barghsa/shared/finance';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -283,4 +284,118 @@ it('paginates timestamp ties in both directions, filters, and binds cursors to t
     f.user,
   ]);
   expect((await f.read('/transactions')).status).toBe(404);
+});
+
+it('returns receipt details and recorded verification events without exposing private metadata or duplicate credits', async () => {
+  const f = await seed(['Finance']),
+    other = await seed();
+  const receiptId = randomUUID(),
+    creditId = randomUUID(),
+    legacyCreditId = randomUUID();
+  const submittedAt = '2026-09-01T23:30:00.123456Z';
+  const metadata = {
+    channel: 'bank_receipt',
+    receipt: {
+      paymentDate: '2026-09-01',
+      payerReference: 'TRK-123',
+      bankName: 'بانک ملی',
+      customerNote: 'Branch transfer',
+      attachmentKey: 'private-receipt-key',
+    },
+    dualApproval: {
+      requestId: 'private-request',
+      initiatorId: 'private-initiator',
+      fingerprint: 'private-fingerprint',
+      invoiceId: null,
+      requestedAt: '2026-09-02T10:00:00.000Z',
+    },
+    staffDecision: {
+      decision: 'confirmed',
+      actorUserId: 'private-actor',
+      decidedAt: '2026-09-03T10:00:00.000Z',
+      reason: 'private-reason',
+      customerVisible: false,
+      creditTransactionId: creditId,
+    },
+    financialReview: { privateReview: true },
+    sessionId: 'private-session',
+  };
+  for (const profile of [f.profile, other.profile])
+    await http.pool.query('INSERT INTO wallets(profile_id) VALUES($1)', [profile]);
+  for (const [id, profile, state, evidence] of [
+    [receiptId, f.profile, 'Released', metadata],
+    [creditId, f.profile, 'Completed', { ...metadata, pendingTransactionId: receiptId }],
+    [legacyCreditId, f.profile, 'Completed', metadata],
+    [randomUUID(), other.profile, 'Released', metadata],
+  ] as const)
+    await http.pool.query(
+      "INSERT INTO wallet_transactions(id,wallet_id,type,amount,state,idempotency_key,metadata,created_at) VALUES($1::uuid,$2,'topup',9007199254740993,$3,$1::text,$4::jsonb,$5::timestamptz)",
+      [id, profile, state, JSON.stringify(evidence), submittedAt]
+    );
+  const response = await f.read('/transactions');
+  expect(response.status).toBe(200);
+  const body = (await response.json()) as {
+    transactions: { id: string; amount: string; createdAt: string; bankReceipt?: unknown }[];
+    nextCursor: string | null;
+  };
+  expect(body.transactions).toHaveLength(3);
+  expect(body.transactions.find((tx) => tx.id === receiptId)).toEqual({
+    id: receiptId,
+    type: 'topup',
+    amount: '9007199254740993',
+    state: 'Released',
+    refId: null,
+    description: null,
+    createdAt: submittedAt,
+    bankReceipt: {
+      paymentDate: '2026-09-01',
+      payerReference: 'TRK-123',
+      bankName: 'بانک ملی',
+      customerNote: 'Branch transfer',
+      rejectionReason: null,
+      timeline: {
+        events: [
+          { state: 'submitted', occurredAt: submittedAt },
+          { state: 'approval_requested', occurredAt: '2026-09-02T10:00:00.000Z' },
+          { state: 'confirmed', occurredAt: '2026-09-03T10:00:00.000Z' },
+        ],
+        awaiting: null,
+      },
+    },
+  });
+  expect(body.transactions.find((tx) => tx.id === creditId)).not.toHaveProperty('bankReceipt');
+  expect(body.transactions.find((tx) => tx.id === legacyCreditId)).not.toHaveProperty(
+    'bankReceipt'
+  );
+  expect(JSON.stringify(body)).not.toMatch(
+    /private-|financialReview|actorUserId|attachmentKey|pendingTransactionId/
+  );
+  expect(
+    (await fetch(`${http.base}/api/wallet/${other.profile}/transactions`, { headers: f.headers }))
+      .status
+  ).toBe(404);
+  await http.pool.query(
+    "UPDATE wallet_transactions SET state='Rejected',metadata=metadata||$2::jsonb WHERE id=$1",
+    [
+      receiptId,
+      JSON.stringify({
+        staffDecision: {
+          ...metadata.staffDecision,
+          decision: 'rejected',
+          customerVisible: true,
+          reason: 'Please provide a readable deposit reference',
+        },
+      }),
+    ]
+  );
+  const rejected = (await (await f.read('/transactions?state=Rejected')).json()) as {
+    transactions: { bankReceipt: WalletBankReceiptHistory }[];
+  };
+  expect(rejected.transactions[0]!.bankReceipt.rejectionReason).toBe(
+    'Please provide a readable deposit reference'
+  );
+  expect(rejected.transactions[0]!.bankReceipt.timeline.events.at(-1)).toEqual({
+    state: 'rejected',
+    occurredAt: '2026-09-03T10:00:00.000Z',
+  });
 });

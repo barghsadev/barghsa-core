@@ -400,6 +400,14 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
         });
         expect(pending.state).toBe('Pending');
         expect(pending.dualApproval?.requestId).toBeTruthy();
+        expect(pending.dualApproval?.requestedAt).toBe(NOW.toISOString());
+        expect(pending.verificationTimeline.events.at(-1)).toEqual({
+          state: 'approval_requested',
+          occurredAt: NOW.toISOString(),
+        });
+        expect(pending.verificationTimeline.awaiting).toBe('second_approval');
+        const reloaded = await service.get(transactionId);
+        expect(reloaded.verificationTimeline).toEqual(pending.verificationTimeline);
         expect(await walletBalances()).toEqual(before);
         expect(await invoicePaid(invoiceId)).toBe(0n);
         if (change === 'invoice')
@@ -422,6 +430,13 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
             expectedReviewHash: secondReview.hash,
           });
           expect(confirmed.state).toBe('Released');
+          expect(confirmed.verificationTimeline.awaiting).toBeNull();
+          expect(confirmed.verificationTimeline.events.map((event) => event.state)).toEqual([
+            'submitted',
+            'approval_requested',
+            'confirmed',
+          ]);
+          expect(confirmed.verificationTimeline.events.at(-1)?.occurredAt).toBe(NOW.toISOString());
           expect(confirmed.reviewHash).toBe(review.hash);
           expect(await invoicePaid(invoiceId)).toBe(100_000n);
           expect((await walletBalances()).posted - before.posted).toBe(150_000n);

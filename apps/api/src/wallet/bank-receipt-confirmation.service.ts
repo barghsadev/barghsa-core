@@ -56,6 +56,8 @@ import {
   parseBankReceiptConfirmationReview,
   readBankReceiptOverpaymentSnapshot,
   readBankReceiptStaffDecision,
+  readWalletBankReceiptHistory,
+  type WalletBankReceiptTimeline,
   remainingForBankReceiptSettlement,
   type BankReceiptOverpaymentSnapshot,
   type BankReceiptStaffDecisionSnapshot,
@@ -115,6 +117,7 @@ export interface BankReceiptReviewDto {
   customerNote: string | null;
   bankName: string | null;
   submittedAt: string;
+  verificationTimeline: WalletBankReceiptTimeline;
   canDecide: boolean;
   staffDecision: BankReceiptStaffDecisionSnapshot | null;
   creditTransactionId: string | null;
@@ -1175,6 +1178,14 @@ export class BankReceiptConfirmationService {
       customerNote: receipt?.customerNote ?? null,
       bankName: receipt?.bankName ?? null,
       submittedAt: toIso(row.created_at),
+      verificationTimeline: readWalletBankReceiptHistory({
+        type: row.type,
+        state: row.state,
+        createdAt: toIso(row.created_at),
+        metadata: extra.dualApproval
+          ? { ...(row.metadata as Record<string, unknown>), dualApproval: extra.dualApproval }
+          : row.metadata,
+      })?.timeline ?? { events: [], awaiting: null },
       canDecide: row.state === 'Pending',
       staffDecision,
       creditTransactionId,

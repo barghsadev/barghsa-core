@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import { formatIrr } from '../lib/customer-invoices.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
+import type { WalletBankReceiptHistory } from '@barghsa/shared/finance';
+import { WalletReceiptHistoryDetails } from './WalletReceiptHistoryDetails.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 
 const types = ['topup', 'payment', 'refund', 'reservation', 'release', 'reversal', 'compensating'];
@@ -27,6 +29,7 @@ const typeIcons: Record<string, LucideIcon> = {
   compensating: SlidersHorizontal,
 };
 interface Transaction {
+  bankReceipt?: WalletBankReceiptHistory;
   id: string;
   type: string;
   amount: string;
@@ -238,6 +241,14 @@ function HistoryPage({
                       <bdi>{tx.refId}</bdi>
                     )}
                   </p>
+                )}
+                {tx.bankReceipt && (
+                  <WalletReceiptHistoryDetails
+                    receiptId={tx.id}
+                    receipt={tx.bankReceipt}
+                    locale={locale}
+                    formatTime={formatTime}
+                  />
                 )}
               </li>
             );

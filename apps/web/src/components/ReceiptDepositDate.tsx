@@ -1,15 +1,19 @@
 import { useMemo } from 'react';
+import type { Locale } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 
 /** A bank deposit date is a Gregorian calendar day, not an account-timezone instant. */
 export function ReceiptDepositDate({
   value,
   calendar = 'gregory',
+  locale: localeOverride,
 }: {
   value: string | null | undefined;
   calendar?: 'gregory' | 'persian';
+  locale?: Locale;
 }) {
-  const locale = useLocale();
+  const currentLocale = useLocale();
+  const locale = localeOverride ?? currentLocale;
   const formatter = useMemo(
     () =>
       new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {

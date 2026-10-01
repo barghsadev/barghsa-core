@@ -22,6 +22,10 @@ const receipt = {
   submittedAt: '2026-09-01T23:30:00.123456Z',
   attachmentKey: 'receipts/bank.png',
   attachmentUrl: '/mock/bank-receipt.png?signed=1',
+  verificationTimeline: {
+    events: [{ state: 'submitted', occurredAt: '2026-09-01T23:30:00.123456Z' }],
+    awaiting: 'review',
+  },
 };
 test.use({ viewport: { width: 390, height: 844 } });
 for (const locale of ['en', 'fa'] as const)
@@ -154,6 +158,13 @@ for (const locale of ['en', 'fa'] as const)
       await expect(queue.locator(`time[datetime="${receipt.submittedAt}"]`).first()).toHaveText(
         submitted
       );
+      const timeline = panel.getByRole('region', {
+        name: walletText('wallet.receipt.timeline', locale),
+        exact: true,
+      });
+      await expect(timeline.getByRole('listitem')).toHaveCount(1);
+      await expect(timeline.locator('time')).toHaveText(submitted);
+      await expect(timeline).toContainText(walletText('wallet.receipt.awaiting.review', locale));
       const image = panel.getByRole('img', { name: word('attachmentAlt'), exact: true });
       await image.scrollIntoViewIfNeeded();
       await expect(image).toBeVisible();
