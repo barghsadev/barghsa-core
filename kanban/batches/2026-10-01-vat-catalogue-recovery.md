@@ -37,4 +37,4 @@ Evidence logs: `/tmp/barghsa-vat-recovery-*.log`. New scenarios cover bilingual 
 
 The preceding knowledge/policy batch is published as `f566832afb195a4ce91289aeab8075b63ab95351`; CI run `36825440239` passes all five gates under the existing temporary fast mode, including the previous AI catalogue fixture repairs. Combined-coverage success remains an exemption, not measured coverage.
 
-This VAT batch is committed and pushed directly to main after review and the checks above. Remote SHA and CI registration are read back after publication. No PR is created. The broader parent remains partial.
+This VAT batch is published as `003b51186cec9462fc2c5e5a2a1365bee2621104`. Remote main is read back and CI run `36832144458` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage. No PR is created. The broader parent remains partial.

@@ -2,6 +2,14 @@ import { lookup } from './lookup.js';
 import { t as sharedText, type I18nDictionary, type Locale } from './index.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'crm.corrections.chooseFiles': 'انتخاب مدارک',
+  'crm.corrections.noFiles': 'مدرکی انتخاب نشده است.',
+  'crm.list.retry': 'تلاش دوباره برای کاربران',
+  'crm.list.timezoneError': 'منطقه زمانی حساب بارگذاری نشد. دوباره تلاش کنید.',
+  'crm.list.timezoneRetry': 'تلاش دوباره برای منطقه زمانی',
+  'crm.corrections.queueRetry': 'تلاش دوباره برای صف اصلاح هویت',
+  'crm.corrections.detailRetry': 'تلاش دوباره برای جزئیات درخواست',
+  'crm.corrections.profileRetry': 'تلاش دوباره برای دسترسی پروفایل',
   'crm.legal.edit': 'ویرایش اطلاعات حقوقی',
   'crm.legal.description':
     'فقط اطلاعات غیرهویتی تغییر می‌کند. نام و شناسه ملی شخص حقوقی نیاز به درخواست اصلاح دارد.',
@@ -313,6 +321,14 @@ export const fa: I18nDictionary = {
   'crm.list.PENDING_VERIFICATION': 'در انتظار تأیید',
 };
 export const en: I18nDictionary = {
+  'crm.corrections.chooseFiles': 'Choose evidence files',
+  'crm.corrections.noFiles': 'No evidence files selected.',
+  'crm.list.retry': 'Retry users',
+  'crm.list.timezoneError': 'Could not load the account timezone. Retry to continue.',
+  'crm.list.timezoneRetry': 'Retry timezone',
+  'crm.corrections.queueRetry': 'Retry correction queue',
+  'crm.corrections.detailRetry': 'Retry case details',
+  'crm.corrections.profileRetry': 'Retry profile access',
   'crm.legal.edit': 'Edit legal details',
   'crm.legal.description':
     'Only nonidentity information changes here. Legal name and national identifier require a correction case.',

@@ -8,6 +8,8 @@ import {
   Input,
   Label,
   DatePicker,
+  ListPage,
+  ScrollArea,
   datePickerCalendarDate,
   datePickerDayBounds,
 } from '@barghsa/ui';
@@ -47,22 +49,35 @@ export default function CrmProfileList() {
   const [text, setText] = useState('');
   const [term, setTerm] = useState('');
   const [cursors, setCursors] = useState<string[]>(['']);
-  const [result, setResult] = useState<{
+  const criteria = JSON.stringify([filters, term, preference.timezone]);
+  const [accepted, setAccepted] = useState<{
+    criteria: string;
     users: User[];
     cursor: string | null;
     hasMore: boolean;
   } | null>(null);
+  const result = accepted?.criteria === criteria ? accepted : null;
   const [loading, setLoading] = useState(true);
+  const [denied, setDenied] = useState(false);
+  const [revision, setRevision] = useState(0);
+  const controllerRef = useRef<AbortController | null>(null);
   const [error, setError] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const generation = useRef(0);
   const sortFocus = useRef<string | null>(null);
   useEffect(() => {
-    if (loading) return;
+    if (loading || !result || !sortFocus.current) return;
     const sort = sortFocus.current;
-    sortFocus.current = null;
-    if (sort && document.activeElement === document.body)
-      document.getElementById('crm-sort-' + sort)?.focus();
+    const frame = requestAnimationFrame(() => {
+      if (sortFocus.current !== sort) return;
+      const button = document.getElementById('crm-sort-' + sort);
+      if (!button) return;
+      sortFocus.current = null;
+      const active = document.activeElement;
+      if (active === document.body || active?.closest('[data-slot="scroll-area-viewport"]'))
+        button.focus();
+    });
+    return () => cancelAnimationFrame(frame);
   }, [loading, result]);
   useEffect(() => {
     if (text.trim() === term) return;
@@ -75,18 +90,19 @@ export default function CrmProfileList() {
   useEffect(() => {
     setCursors(['']);
   }, [preference.timezone]);
+  useEffect(() => setExpanded({}), [criteria]);
   const cursor = cursors.at(-1) ?? '';
   const load = useCallback(async () => {
     const current = ++generation.current;
-    if (preference.status !== 'ready') {
+    controllerRef.current?.abort();
+    const controller = new AbortController();
+    controllerRef.current = controller;
+    if (denied || preference.status !== 'ready') {
       setLoading(false);
-      setResult(null);
       return;
     }
     setLoading(true);
     setError(false);
-    setResult(null);
-    setExpanded({});
     const params = new URLSearchParams({ limit: '20', order: filters.order });
     for (const [key, value] of Object.entries({ ...filters, search: term, cursor })) {
       if (value) params.set(key, String(value));
@@ -102,7 +118,23 @@ export default function CrmProfileList() {
       );
     }
     try {
-      const response = await fetch(`/api/crm/users?${params}`, { credentials: 'include' });
+      const response = await fetch(`/api/crm/users?${params}`, {
+        credentials: 'include',
+        signal: controller.signal,
+      });
+      if (current !== generation.current || controller.signal.aborted) return;
+      if ([401, 403].includes(response.status)) {
+        ++generation.current;
+        setDenied(true);
+        setAccepted(null);
+        setExpanded({});
+        setText('');
+        setTerm('');
+        setFilters(emptyFilters);
+        setCursors(['']);
+        setLoading(false);
+        return;
+      }
       if (!response.ok) throw new Error('CRM unavailable');
       const data = await response.json();
       if (
@@ -138,19 +170,29 @@ export default function CrmProfileList() {
         )
       )
         throw new Error('Invalid CRM response');
-      if (current === generation.current) setResult(data);
+      if (current === generation.current && !controller.signal.aborted) {
+        setAccepted({ ...data, criteria });
+        setExpanded((previous) =>
+          Object.fromEntries(
+            Object.entries(previous).filter(([id]) =>
+              data.users.some((user: User) => user.userId === id)
+            )
+          )
+        );
+      }
     } catch {
-      if (current === generation.current) setError(true);
+      if (current === generation.current && !controller.signal.aborted) setError(true);
     } finally {
       if (current === generation.current) setLoading(false);
     }
-  }, [filters, term, cursor, preference.status, preference.timezone]);
+  }, [filters, term, cursor, criteria, denied, preference.status, preference.timezone]);
   useEffect(() => {
     void load();
     return () => {
       ++generation.current;
+      controllerRef.current?.abort();
     };
-  }, [load]);
+  }, [load, revision]);
   function update(key: keyof typeof filters, value: string | boolean) {
     setFilters((previous) => ({ ...previous, [key]: value }));
     setCursors(['']);
@@ -268,7 +310,10 @@ export default function CrmProfileList() {
           disabled={loading || preference.status === 'loading'}
           onClick={() => {
             if (preference.status === 'error') preference.retry();
-            else void load();
+            else {
+              setDenied(false);
+              setRevision((v) => v + 1);
+            }
           }}
         >
           {t('crm.list.refresh', locale)}
@@ -312,192 +357,225 @@ export default function CrmProfileList() {
             </Button>
           ))}
       </div>
-      {loading || preference.status === 'loading' ? (
-        <p role="status">{t('crm.list.loading', locale)}</p>
-      ) : error || preference.status === 'error' ? (
-        <p role="alert">{t('crm.list.error', locale)}</p>
-      ) : !result?.users.length ? (
-        <p>{t('crm.list.empty', locale)}</p>
-      ) : (
-        <div
-          className="overflow-x-auto rounded-lg border bg-card text-card-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users must be able to scroll every table column.
-          tabIndex={0}
-          role="region"
-          aria-label={t('crm.list.title', locale)}
-        >
-          <table className="w-full min-w-[48rem] text-start text-sm">
-            <caption className="sr-only">{t('crm.list.title', locale)}</caption>
-            <thead>
-              <tr className="border-b">
-                {[
-                  ['username', 'username'],
-                  ['', 'type'],
-                  ['createdAt', 'registered'],
-                  ['lastLogin', 'lastLogin'],
-                  ['', 'verification'],
-                  ['profileCount', 'profiles'],
-                ].map(([sort, label]) => (
-                  <th
-                    key={label}
-                    scope="col"
-                    className="p-3 text-start font-semibold"
-                    aria-sort={
-                      sort
-                        ? filters.sort === sort
-                          ? filters.order === 'asc'
-                            ? 'ascending'
-                            : 'descending'
-                          : 'none'
-                        : undefined
-                    }
-                  >
-                    {sort ? (
-                      <button
-                        id={'crm-sort-' + sort}
-                        type="button"
-                        className="inline-flex items-center gap-1 underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                        onClick={() => {
-                          sortFocus.current = sort;
-                          setFilters((previous) => ({
-                            ...previous,
-                            sort: sort!,
-                            order:
-                              previous.sort === sort && previous.order === 'asc' ? 'desc' : 'asc',
-                          }));
-                          setCursors(['']);
-                        }}
-                      >
-                        {t('crm.list.' + label, locale)}
-                        {filters.sort === sort &&
-                          (filters.order === 'asc' ? (
-                            <ArrowUp aria-hidden="true" className="size-4" />
-                          ) : (
-                            <ArrowDown aria-hidden="true" className="size-4" />
-                          ))}
-                      </button>
-                    ) : (
-                      t('crm.list.' + label, locale)
-                    )}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {result.users.map((user) => {
-                const profileListId = 'profiles-' + encodeURIComponent(user.userId);
-                return (
-                  <Fragment key={user.userId}>
-                    <tr className="border-b">
-                      <th scope="row" className="p-3 text-start font-medium">
-                        <span dir="auto" className="break-all">
-                          {user.username}
-                        </span>
-                      </th>
-                      <td className="p-3">
-                        <div className="flex flex-wrap gap-2">
-                          {(['INDIVIDUAL', 'LEGAL'] as const)
-                            .filter((type) =>
-                              user.profiles.some((profile) => profile.profileType === type)
-                            )
-                            .map((type) => (
-                              <span
-                                key={type}
-                                className="inline-flex items-center gap-1 whitespace-nowrap"
-                              >
-                                {type === 'LEGAL' ? (
-                                  <Building2 aria-hidden="true" className="size-4" />
-                                ) : (
-                                  <UserRound aria-hidden="true" className="size-4" />
-                                )}
-                                {t('crm.list.' + type, locale)}
-                              </span>
-                            ))}
-                          {user.profileCount === 0 && '—'}
-                        </div>
-                      </td>
-                      <td className="p-3">{date(user.registrationDate)}</td>
-                      <td className="p-3">{date(user.lastLogin)}</td>
-                      <td className="p-3">
-                        {t(
-                          'crm.list.' +
-                            (user.hasVerifiedProfile
-                              ? 'VERIFIED'
-                              : user.profiles.some(
-                                    (profile) => profile.status === 'PENDING_VERIFICATION'
-                                  )
-                                ? 'PENDING'
-                                : 'UNVERIFIED'),
-                          locale
-                        )}
-                      </td>
-                      <td className="p-3">
-                        <Button
-                          variant="outline"
-                          disabled={user.profileCount === 0}
-                          aria-expanded={!!expanded[user.userId]}
-                          aria-controls={profileListId}
-                          onClick={() =>
-                            setExpanded((previous) => ({
-                              ...previous,
-                              [user.userId]: !previous[user.userId],
-                            }))
-                          }
-                        >
-                          {t('crm.list.profiles', locale)}: {numbers.number(user.profileCount)}
-                        </Button>
-                      </td>
-                    </tr>
-                    {expanded[user.userId] && (
-                      <tr className="border-b">
-                        <td colSpan={6} className="p-3">
-                          <ul
-                            id={profileListId}
-                            className="sticky start-0 w-fit max-w-[calc(100vw-4rem)] space-y-2 break-words"
-                          >
-                            {user.profiles.map((profile) => (
-                              <li key={profile.id}>
-                                <a
-                                  className="text-blue-700 dark:text-blue-300 underline"
-                                  href={'/admin/crm/profiles/' + encodeURIComponent(profile.id)}
-                                >
-                                  {profile.title || t('crm.list.' + profile.profileType, locale)} ·{' '}
-                                  {t('crm.list.view', locale)}
-                                </a>
-                                <span className="ms-2">
-                                  {t('crm.list.' + profile.status, locale)}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        </td>
-                      </tr>
-                    )}
-                  </Fragment>
-                );
-              })}
-            </tbody>
-          </table>
+      {preference.status === 'error' && (
+        <div role="alert">
+          <p>{t('crm.list.timezoneError', locale)}</p>
+          <Button onClick={preference.retry}>{t('crm.list.timezoneRetry', locale)}</Button>
         </div>
       )}
-      <nav aria-label={t('crm.list.title', locale)} className="flex gap-2">
-        <Button
-          variant="outline"
-          disabled={loading || cursors.length === 1}
-          onClick={() => setCursors((previous) => previous.slice(0, -1))}
-        >
-          {t('crm.list.previous', locale)}
-        </Button>
-        <Button
-          variant="outline"
-          disabled={loading || error || !result?.hasMore || !result.cursor}
-          onClick={() => {
-            if (result?.cursor) setCursors((previous) => [...previous, result.cursor!]);
-          }}
-        >
-          {t('crm.list.next', locale)}
-        </Button>
-      </nav>
+      {denied ? (
+        <p role="alert">{t('crm.profile.error.accessDenied', locale)}</p>
+      ) : (
+        <ListPage>
+          <ListPage.Content
+            loading={loading || preference.status === 'loading'}
+            error={error}
+            empty={!result?.users.length}
+            retainContent={!!result?.users.length}
+            loadingView={<p role="status">{t('crm.list.loading', locale)}</p>}
+            emptyView={preference.status === 'ready' ? <p>{t('crm.list.empty', locale)}</p> : null}
+            errorView={
+              <div role="alert">
+                <p>{t('crm.list.error', locale)}</p>
+                <Button onClick={() => void load()}>{t('crm.list.retry', locale)}</Button>
+              </div>
+            }
+          >
+            {!!result?.users.length && (
+              <ScrollArea
+                scrollbarOrientation="horizontal"
+                className="max-w-full min-w-0 rounded-lg border bg-card text-card-foreground"
+                role="region"
+                aria-label={t('crm.list.title', locale)}
+              >
+                <table className="w-full min-w-[48rem] text-start text-sm">
+                  <caption className="sr-only">{t('crm.list.title', locale)}</caption>
+                  <thead>
+                    <tr className="border-b">
+                      {[
+                        ['username', 'username'],
+                        ['', 'type'],
+                        ['createdAt', 'registered'],
+                        ['lastLogin', 'lastLogin'],
+                        ['', 'verification'],
+                        ['profileCount', 'profiles'],
+                      ].map(([sort, label]) => (
+                        <th
+                          key={label}
+                          scope="col"
+                          className="p-3 text-start font-semibold"
+                          aria-sort={
+                            sort
+                              ? filters.sort === sort
+                                ? filters.order === 'asc'
+                                  ? 'ascending'
+                                  : 'descending'
+                                : 'none'
+                              : undefined
+                          }
+                        >
+                          {sort ? (
+                            <button
+                              id={'crm-sort-' + sort}
+                              type="button"
+                              className="inline-flex items-center gap-1 underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                              onClick={() => {
+                                sortFocus.current = sort;
+                                setFilters((previous) => ({
+                                  ...previous,
+                                  sort: sort!,
+                                  order:
+                                    previous.sort === sort && previous.order === 'asc'
+                                      ? 'desc'
+                                      : 'asc',
+                                }));
+                                setCursors(['']);
+                              }}
+                            >
+                              {t('crm.list.' + label, locale)}
+                              {filters.sort === sort &&
+                                (filters.order === 'asc' ? (
+                                  <ArrowUp aria-hidden="true" className="size-4" />
+                                ) : (
+                                  <ArrowDown aria-hidden="true" className="size-4" />
+                                ))}
+                            </button>
+                          ) : (
+                            t('crm.list.' + label, locale)
+                          )}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {result.users.map((user) => {
+                      const profileListId = 'profiles-' + encodeURIComponent(user.userId);
+                      return (
+                        <Fragment key={user.userId}>
+                          <tr className="border-b">
+                            <th scope="row" className="p-3 text-start font-medium">
+                              <span dir="auto" className="break-all">
+                                {user.username}
+                              </span>
+                            </th>
+                            <td className="p-3">
+                              <div className="flex flex-wrap gap-2">
+                                {(['INDIVIDUAL', 'LEGAL'] as const)
+                                  .filter((type) =>
+                                    user.profiles.some((profile) => profile.profileType === type)
+                                  )
+                                  .map((type) => (
+                                    <span
+                                      key={type}
+                                      className="inline-flex items-center gap-1 whitespace-nowrap"
+                                    >
+                                      {type === 'LEGAL' ? (
+                                        <Building2 aria-hidden="true" className="size-4" />
+                                      ) : (
+                                        <UserRound aria-hidden="true" className="size-4" />
+                                      )}
+                                      {t('crm.list.' + type, locale)}
+                                    </span>
+                                  ))}
+                                {user.profileCount === 0 && '—'}
+                              </div>
+                            </td>
+                            <td className="p-3">{date(user.registrationDate)}</td>
+                            <td className="p-3">{date(user.lastLogin)}</td>
+                            <td className="p-3">
+                              {t(
+                                'crm.list.' +
+                                  (user.hasVerifiedProfile
+                                    ? 'VERIFIED'
+                                    : user.profiles.some(
+                                          (profile) => profile.status === 'PENDING_VERIFICATION'
+                                        )
+                                      ? 'PENDING'
+                                      : 'UNVERIFIED'),
+                                locale
+                              )}
+                            </td>
+                            <td className="p-3">
+                              <Button
+                                variant="outline"
+                                disabled={user.profileCount === 0}
+                                aria-expanded={!!expanded[user.userId]}
+                                aria-controls={profileListId}
+                                onClick={() =>
+                                  setExpanded((previous) => ({
+                                    ...previous,
+                                    [user.userId]: !previous[user.userId],
+                                  }))
+                                }
+                              >
+                                {t('crm.list.profiles', locale)}:{' '}
+                                {numbers.number(user.profileCount)}
+                              </Button>
+                            </td>
+                          </tr>
+                          {expanded[user.userId] && (
+                            <tr className="border-b">
+                              <td colSpan={6} className="p-3">
+                                <ul
+                                  id={profileListId}
+                                  className="sticky start-0 w-fit max-w-[calc(100vw-4rem)] space-y-2 break-words"
+                                >
+                                  {user.profiles.map((profile) => (
+                                    <li key={profile.id}>
+                                      <a
+                                        className="text-blue-700 dark:text-blue-300 underline"
+                                        href={
+                                          '/admin/crm/profiles/' + encodeURIComponent(profile.id)
+                                        }
+                                      >
+                                        {profile.title ||
+                                          t('crm.list.' + profile.profileType, locale)}{' '}
+                                        · {t('crm.list.view', locale)}
+                                      </a>
+                                      <span className="ms-2">
+                                        {t('crm.list.' + profile.status, locale)}
+                                      </span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </td>
+                            </tr>
+                          )}
+                        </Fragment>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </ScrollArea>
+            )}
+          </ListPage.Content>
+          <nav aria-label={t('crm.list.title', locale)} className="flex gap-2">
+            <Button
+              variant="outline"
+              disabled={loading || denied || preference.status !== 'ready' || cursors.length === 1}
+              onClick={() => setCursors((previous) => previous.slice(0, -1))}
+            >
+              {t('crm.list.previous', locale)}
+            </Button>
+            <Button
+              variant="outline"
+              disabled={
+                loading ||
+                error ||
+                denied ||
+                preference.status !== 'ready' ||
+                !result?.hasMore ||
+                !result.cursor
+              }
+              onClick={() => {
+                if (result?.cursor) setCursors((previous) => [...previous, result.cursor!]);
+              }}
+            >
+              {t('crm.list.next', locale)}
+            </Button>
+          </nav>
+        </ListPage>
+      )}
     </section>
   );
 }

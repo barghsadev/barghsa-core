@@ -1,3 +1,4 @@
+import { crmShell } from './crm-shell-fixture';
 import { verifyClippedContrast } from './clipped-contrast';
 import AxeBuilder from '@axe-core/playwright';
 import { mockOppositeNumerals } from './number-preference-fixture';
@@ -20,13 +21,7 @@ const user = {
 };
 for (const locale of ['en', 'fa'])
   test(`CRM filters, profile links and cursor navigation (${locale})`, async ({ page }) => {
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await mockOppositeNumerals(page, locale);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'Asia/Tehran' } })
@@ -109,13 +104,7 @@ for (const locale of ['en', 'fa'])
     expect(requests.at(-1)!.searchParams.has('search')).toBe(false);
   });
 test('CRM access errors remain errors and can be retried', async ({ page }) => {
-  await page.addInitScript(() => {
-    if (document.documentElement) document.documentElement.lang = 'en';
-    new MutationObserver(() => {
-      if (document.documentElement) document.documentElement.lang = 'en';
-    }).observe(document, { childList: true });
-  });
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, 'en');
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
@@ -126,7 +115,7 @@ test('CRM access errors remain errors and can be retried', async ({ page }) => {
     )
   );
   await page.goto('/admin/crm');
-  await expect(page.getByRole('alert')).toContainText('Check your access');
+  await expect(page.getByRole('alert')).toContainText('Access denied');
   allowed = true;
   await page.getByRole('button', { name: 'Refresh', exact: true }).click();
   await expect(page.getByText('No matching users.')).toBeVisible();
@@ -134,13 +123,7 @@ test('CRM access errors remain errors and can be retried', async ({ page }) => {
 test('Persian picker uses Jalali month boundaries and sends Gregorian API dates', async ({
   page,
 }) => {
-  await page.addInitScript(() => {
-    if (document.documentElement) document.documentElement.lang = 'fa';
-    new MutationObserver(() => {
-      if (document.documentElement) document.documentElement.lang = 'fa';
-    }).observe(document, { childList: true });
-  });
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, 'fa');
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
@@ -172,13 +155,7 @@ test('Persian picker uses Jalali month boundaries and sends Gregorian API dates'
   );
 });
 test('Jalali leap-day selection and keyboard dismissal preserve the date', async ({ page }) => {
-  await page.addInitScript(() => {
-    if (document.documentElement) document.documentElement.lang = 'fa';
-    new MutationObserver(() => {
-      if (document.documentElement) document.documentElement.lang = 'fa';
-    }).observe(document, { childList: true });
-  });
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, 'fa');
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
@@ -209,15 +186,9 @@ test('Jalali leap-day selection and keyboard dismissal preserve the date', async
 test('CRM waits for account timezone, retries and displays registration in that zone', async ({
   page,
 }) => {
-  await page.addInitScript(() => {
-    if (document.documentElement) document.documentElement.lang = 'en';
-    new MutationObserver(() => {
-      document.documentElement.lang = 'en';
-    }).observe(document, { childList: true });
-  });
+  await crmShell(page, 'en');
   let failed = true;
   let queries = 0;
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill(failed ? { status: 503, json: {} } : { json: { timezone: 'Asia/Tehran' } })
   );
@@ -261,19 +232,21 @@ for (const locale of ['fa', 'en'])
         darkMode +
         ')',
       async ({ page }, testInfo) => {
-        await page.addInitScript((locale) => {
-          const apply = () => {
-            document.documentElement.lang = locale;
-            document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
-          };
-          if (document.documentElement) apply();
-          new MutationObserver(apply).observe(document, { childList: true });
-        }, locale);
-        await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+        await crmShell(page, locale);
         await page.route('**/api/public/branding/config', (route) =>
           route.fulfill({
             json: {
               appTitle: 'CRM review',
+              appTitleFa: 'مدیریت مشتریان',
+              supportEmail: 'support@example.test',
+              supportPhone: '+982112345678',
+              supportMobile: '+989121234567',
+              backgroundColor: '#f6f7f4',
+              darkBackgroundColor: '#15201c',
+              fontFamily: 'vazirmatn',
+              borderRadiusRem: 0.75,
+              spacingScale: 1,
+              numberStyle: 'locale',
               slogan: '',
               primaryColor: '#2563eb',
               secondaryColor: '#64748b',
@@ -427,7 +400,7 @@ for (const locale of ['fa', 'en'])
             .getByRole('button', { name: locale === 'fa' ? 'تازه‌سازی' : 'Refresh', exact: true })
             .click();
           await expect(main.getByRole('alert')).toBeVisible();
-          await expect(table).toHaveCount(0);
+          await expect(table).toBeVisible();
         }
         override = { users: [], cursor: null, hasMore: false };
         await main

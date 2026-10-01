@@ -1,5 +1,9 @@
+import { verifyClippedContrast } from './clipped-contrast';
+import { t as crmText } from '@barghsa/i18n/crm';
+import { crmShell } from './crm-shell-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
+test.use({ viewport: { width: 390, height: 844 } });
 const profileId = '11111111-1111-4111-8111-111111111111',
   caseId = '22222222-2222-4222-8222-222222222222';
 const key = 'uploads/document/33333333-3333-4333-8333-333333333333.pdf';
@@ -13,13 +17,7 @@ const item = {
   createdBy: 'creator',
 };
 async function shell(page: Page, locale = 'en') {
-  await page.addInitScript((value) => {
-    if (document.documentElement) document.documentElement.lang = value;
-    new MutationObserver(() => {
-      if (document.documentElement) document.documentElement.lang = value;
-    }).observe(document, { childList: true });
-  }, locale);
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, locale);
   await page.route(`**/api/crm/profiles/${profileId}`, (route) =>
     route.fulfill({
       json: {
@@ -43,6 +41,16 @@ for (const [locale, darkMode] of [
       route.fulfill({
         json: {
           appTitle: 'Correction review',
+          appTitleFa: 'اصلاح هویت',
+          supportEmail: 'support@example.test',
+          supportPhone: '+982112345678',
+          supportMobile: '+989121234567',
+          backgroundColor: '#f6f7f4',
+          darkBackgroundColor: '#15201c',
+          fontFamily: 'vazirmatn',
+          borderRadiusRem: 0.75,
+          spacingScale: 1,
+          numberStyle: 'locale',
           slogan: '',
           primaryColor: '#2563eb',
           secondaryColor: '#64748b',
@@ -99,25 +107,19 @@ for (const [locale, darkMode] of [
     await expect
       .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
       .toBe(darkMode);
-    const viewport = page.viewportSize()!;
-    const sectionHeight = await page
-      .locator('section:has(#correction-field)')
-      .evaluate((node) => node.scrollHeight);
-    await page.setViewportSize({ width: viewport.width, height: sectionHeight + 300 });
     const accessibility = await new AxeBuilder({ page })
       .include('section:has(#correction-field)')
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
       .analyze();
     expect(accessibility.violations).toEqual([]);
-    expect(accessibility.incomplete.filter((item) => item.id === 'color-contrast')).toEqual([]);
-    await page.setViewportSize(viewport);
+    await verifyClippedContrast(page, accessibility);
     await page.locator('#correction-field').focus();
     await page.keyboard.press('Tab');
     await expect(page.locator('#correction-value')).toBeFocused();
     await page.keyboard.press('Tab');
     await expect(page.locator('#correction-reason')).toBeFocused();
     await page.keyboard.press('Tab');
-    await expect(page.locator('#correction-files')).toBeFocused();
+    await expect(page.locator('#correction-file-picker')).toBeFocused();
     await page.locator('#correction-value').fill('Corrected');
     await page.locator('#correction-reason').fill('Document checked');
     await page.locator('#correction-files').setInputFiles({
@@ -164,68 +166,69 @@ for (const [locale, darkMode] of [
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
       .analyze();
     expect(confirmationAccessibility.violations).toEqual([]);
-    // Axe can see different obscured page elements behind this transparent,
-    // wrapped description even though its dialog is opaque. Resolve only that
-    // reported node with rendered colors and hit-testing each visible text line.
+    // Wrapped description/alert text can appear partially obscured to Axe.
+    // Verify every reported text node against its opaque dialog background and
+    // hit-test its visible lines rather than assuming one affected node.
     for (const item of confirmationAccessibility.incomplete.filter(
       (item) => item.id === 'color-contrast'
     )) {
-      expect(item.nodes).toHaveLength(1);
-      expect(item.nodes[0]!.html).toContain('data-slot="dialog-description"');
-      const measured = await dialog.locator('[data-slot="dialog-description"]').evaluate((node) => {
-        const popup = node.closest('[role="dialog"]')!;
-        const canvas = document.createElement('canvas');
-        canvas.width = canvas.height = 1;
-        const ctx = canvas.getContext('2d')!;
-        const color = (value: string) => {
-          ctx.clearRect(0, 0, 1, 1);
-          ctx.fillStyle = value;
-          ctx.fillRect(0, 0, 1, 1);
-          return Array.from(ctx.getImageData(0, 0, 1, 1).data);
-        };
-        const fg = color(getComputedStyle(node).color),
-          bg = color(getComputedStyle(popup).backgroundColor);
-        const luminance = (rgb: number[]) =>
-          rgb.slice(0, 3).reduce((sum, value, index) => {
-            const s = value / 255;
-            return (
-              sum +
-              [0.2126, 0.7152, 0.0722][index]! *
-                (s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4)
-            );
-          }, 0);
-        const f = luminance(fg),
-          b = luminance(bg);
-        const range = document.createRange();
-        range.selectNodeContents(node);
-        const unobscured = Array.from(range.getClientRects()).every((rect) =>
-          node.contains(
-            document.elementFromPoint(
-              rect.x + Math.min(10, rect.width / 2),
-              rect.y + rect.height / 2
+      for (const reported of item.nodes) {
+        expect(reported.html).toMatch(/data-slot="dialog-description"|role="alert"/);
+        const measured = await dialog.locator(reported.target[0] as string).evaluate((node) => {
+          const popup = node.closest('[role="dialog"]')!;
+          const canvas = document.createElement('canvas');
+          canvas.width = canvas.height = 1;
+          const ctx = canvas.getContext('2d')!;
+          const color = (value: string) => {
+            ctx.clearRect(0, 0, 1, 1);
+            ctx.fillStyle = value;
+            ctx.fillRect(0, 0, 1, 1);
+            return Array.from(ctx.getImageData(0, 0, 1, 1).data);
+          };
+          const fg = color(getComputedStyle(node).color),
+            bg = color(getComputedStyle(popup).backgroundColor);
+          const luminance = (rgb: number[]) =>
+            rgb.slice(0, 3).reduce((sum, value, index) => {
+              const s = value / 255;
+              return (
+                sum +
+                [0.2126, 0.7152, 0.0722][index]! *
+                  (s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4)
+              );
+            }, 0);
+          const f = luminance(fg),
+            b = luminance(bg);
+          const range = document.createRange();
+          range.selectNodeContents(node);
+          const unobscured = Array.from(range.getClientRects()).every((rect) =>
+            node.contains(
+              document.elementFromPoint(
+                rect.x + Math.min(10, rect.width / 2),
+                rect.y + rect.height / 2
+              )
             )
-          )
-        );
-        let opaque = true;
-        for (let ancestor: Element | null = node; ancestor; ancestor = ancestor.parentElement)
-          if (getComputedStyle(ancestor).opacity !== '1') opaque = false;
-        return {
-          ratio: (Math.max(f, b) + 0.05) / (Math.min(f, b) + 0.05),
-          fg,
-          bg,
-          unobscured,
-          opaque,
-        };
-      });
-      expect(measured.fg[3]).toBe(255);
-      expect(measured.bg[3]).toBe(255);
-      expect(measured.opaque).toBe(true);
-      expect(measured.unobscured).toBe(true);
-      expect(measured.ratio).toBeGreaterThanOrEqual(4.5);
-      await testInfo.attach('resolved-description-contrast', {
-        contentType: 'application/json',
-        body: JSON.stringify(measured),
-      });
+          );
+          let opaque = true;
+          for (let ancestor: Element | null = node; ancestor; ancestor = ancestor.parentElement)
+            if (getComputedStyle(ancestor).opacity !== '1') opaque = false;
+          return {
+            ratio: (Math.max(f, b) + 0.05) / (Math.min(f, b) + 0.05),
+            fg,
+            bg,
+            unobscured,
+            opaque,
+          };
+        });
+        expect(measured.fg[3]).toBe(255);
+        expect(measured.bg[3]).toBe(255);
+        expect(measured.opaque).toBe(true);
+        expect(measured.unobscured).toBe(true);
+        expect(measured.ratio).toBeGreaterThanOrEqual(4.5);
+        await testInfo.attach('resolved-dialog-text-contrast', {
+          contentType: 'application/json',
+          body: JSON.stringify(measured),
+        });
+      }
     }
     await expect(page.locator('#correction-value')).toHaveValue('Corrected');
     await expect(page.locator('#correction-reason')).toHaveValue('Document checked');
@@ -276,6 +279,16 @@ for (const [locale, darkMode] of [
       route.fulfill({
         json: {
           appTitle: 'Correction review',
+          appTitleFa: 'اصلاح هویت',
+          supportEmail: 'support@example.test',
+          supportPhone: '+982112345678',
+          supportMobile: '+989121234567',
+          backgroundColor: '#f6f7f4',
+          darkBackgroundColor: '#15201c',
+          fontFamily: 'vazirmatn',
+          borderRadiusRem: 0.75,
+          spacingScale: 1,
+          numberStyle: 'locale',
           slogan: '',
           primaryColor: '#2563eb',
           secondaryColor: '#64748b',
@@ -545,7 +558,13 @@ for (const locale of ['en', 'fa'])
     profileStatus = 503;
     await refresh.click();
     await expect(page.getByRole('alert')).toBeVisible();
-    await expect(page.locator('#correction-value')).toHaveCount(0);
+    await expect(page.locator('#correction-value')).toBeVisible();
+    await expect(
+      page.getByRole('button', {
+        name: crmText('crm.corrections.upload', locale),
+        exact: true,
+      })
+    ).toBeDisabled();
     profileStatus = 200;
     await refresh.click();
     await expect(page.locator('#correction-value')).toBeVisible();
