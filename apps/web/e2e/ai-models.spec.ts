@@ -4,7 +4,15 @@ import { t } from '@barghsa/i18n/admin-ui';
 async function mockUnknownApi(page: import('@playwright/test').Page) {
   await page.route('**/api/**', (route) =>
     new URL(route.request().url()).pathname === '/api/auth/user'
-      ? route.fulfill({ json: { isStaff: true } })
+      ? route.fulfill({
+          json: {
+            userId: 'admin',
+            isStaff: true,
+            operatingContext: 'staff',
+            canSwitchContext: false,
+            requiresTosAcceptance: false,
+          },
+        })
       : route.fulfill({ status: 404, json: {} })
   );
 }
@@ -115,6 +123,10 @@ for (const locale of ['en', 'fa'] as const)
       status: 'unreachable',
       lastTestedAt: null,
       lastTestError: 'Provider unavailable',
+      lastTestLatencyMs: null,
+      circuitOpen: false,
+      circuitCooldownUntil: null,
+      budget: null,
     };
     await mockUnknownApi(page);
     await page.route('**/api/user/settings/timezone', (route) =>

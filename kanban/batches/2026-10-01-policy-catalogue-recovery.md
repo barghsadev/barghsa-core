@@ -35,4 +35,4 @@ Twelve production browser scenarios pass across Chromium and mobile Safari: eigh
 
 The preceding staff directory batch is verified on main as `0b3529eb51ca826852e72303bdd140564aadf55d`; CI run `36819348656` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.
 
-This policy catalogue batch is committed and pushed directly to main after review and related checks. Its remote commit and CI registration are read back after publication. No PR is created. The all-list parent remains partial for the open work above.
+This policy catalogue batch is published directly to main as `44b535eefeb8f550622a2d32c9615cfcf5d22b7d`. Its remote commit is verified; CI run `36820034160` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage. No PR is created. The all-list parent remains partial for the open work above.

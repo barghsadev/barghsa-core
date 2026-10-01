@@ -1,0 +1,53 @@
+export const aiModel = {
+  id: '01900000-0000-7000-8000-000000000001',
+  title: 'Support model',
+  providerType: 'openai_compatible' as const,
+  baseUrl: 'https://model.example.test/v1',
+  modelName: 'support',
+  config: { max_tokens: 256, temperature: 0 },
+  isEnabled: true,
+  apiTokenMasked: '********1234',
+  status: 'reachable' as const,
+  lastTestedAt: null,
+  lastTestError: null,
+  lastTestLatencyMs: null,
+  circuitOpen: false,
+  circuitCooldownUntil: null,
+  budget: {
+    monthlyTokenLimit: 10000,
+    monthlyCostLimitMicros: 5000000,
+    inputPricePerMillionMicros: 1000000,
+    outputPricePerMillionMicros: 2000000,
+    usedInputTokens: 100,
+    usedOutputTokens: 50,
+    usedCostMicros: 200,
+    periodStart: '2026-10-01T00:00:00Z',
+    alertedAt: null,
+  },
+};
+export const aiAgent = {
+  id: '01900000-0000-7000-8000-000000000011',
+  title: 'Energy guide',
+  description: 'Customer guidance',
+  modelId: aiModel.id,
+  modelTitle: aiModel.title,
+  enabled: true,
+};
+export const aiOptions = {
+  models: [{ id: aiModel.id, title: aiModel.title }],
+  kbs: [{ id: 'kb-one', title: 'Tariffs' }],
+  policies: [],
+  kbGroups: [],
+  policyGroups: [],
+};
+export const aiDetail = {
+  ...aiAgent,
+  systemPrompt: 'Use supplied facts',
+  temperature: null,
+  maxTokens: null,
+  linkMode: 'any_kb' as const,
+  kbs: aiOptions.kbs,
+  policies: [],
+  kbGroups: [],
+  policyGroups: [],
+};

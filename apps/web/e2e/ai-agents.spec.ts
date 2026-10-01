@@ -2,7 +2,15 @@ import { test, expect } from './coverage-fixture';
 async function mockUnknownApi(page: import('@playwright/test').Page) {
   await page.route('**/api/**', (route) =>
     new URL(route.request().url()).pathname === '/api/auth/user'
-      ? route.fulfill({ json: { isStaff: true } })
+      ? route.fulfill({
+          json: {
+            userId: 'admin',
+            isStaff: true,
+            operatingContext: 'staff',
+            canSwitchContext: false,
+            requiresTosAcceptance: false,
+          },
+        })
       : route.fulfill({ status: 404, json: {} })
   );
 }
