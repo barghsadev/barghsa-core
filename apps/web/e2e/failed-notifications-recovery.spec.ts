@@ -1,6 +1,8 @@
+import { crmShell } from './crm-shell-fixture';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 
+test.use({ viewport: { width: 390, height: 844 } });
 const row = {
   id: '10000000-0000-4000-8000-000000000001',
   outboxId: '20000000-0000-4000-8000-000000000001',
@@ -25,8 +27,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`delivery history is scoped, paginated, accessible and recovers (${locale})`, async ({
     page,
   }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'UTC' } })
     );
@@ -66,9 +67,6 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.goto(fa ? '/admin/notifications' : '/admin/failed-notifications');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
     await page
       .locator('summary')
       .filter({ hasText: fa ? 'جزئیات پوشانده‌شده' : 'Masked details' })
@@ -122,7 +120,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`failed notification reads reject malformed authority and rows (${locale})`, async ({
     page,
   }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     let access: unknown = { canView: 'false', canRetry: 'false' };
     let data: unknown = [row];
     let reads = 0;
@@ -134,9 +132,6 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ json: data });
     });
     await page.goto('/admin/failed-notifications');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
     const reload = page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true });
     const error = page.getByRole('alert').filter({
       hasText: fa ? 'خطا در بارگذاری صف پیام‌های ناموفق' : 'Failed to load dead-letter queue',
@@ -169,7 +164,7 @@ for (const locale of ['en', 'fa'] as const) {
     test(`failed notification ${kind} requires exact acknowledgment (${locale})`, async ({
       page,
     }) => {
-      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await crmShell(page, locale);
       await page.route('**/api/admin/failed-notifications/access', (route) =>
         route.fulfill({ json: { canView: true, canRetry: true } })
       );
@@ -199,9 +194,6 @@ for (const locale of ['en', 'fa'] as const) {
         return route.fulfill({ json: response });
       });
       await page.goto('/admin/failed-notifications');
-      await page.evaluate((lang) => {
-        document.documentElement.lang = lang;
-      }, locale);
       const label = fa
         ? { retry: 'تلاش مجدد', resolve: 'حل‌شده', dismiss: 'بستن' }[kind]
         : { retry: 'Retry', resolve: 'Resolve', dismiss: 'Dismiss' }[kind];

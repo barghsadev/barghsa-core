@@ -47,6 +47,7 @@ export function TeamActionDialog({
   onClose,
   onSuccess,
   finalFocus,
+  onDenied,
 }: (
   | { action: TeamAction; verification?: never; selection?: never }
   | {
@@ -61,6 +62,7 @@ export function TeamActionDialog({
   focusConfirmation?: boolean;
   summary?: ReactNode;
   confirmationDisabled?: boolean;
+  onDenied?: () => void;
 }) {
   const locale = useLocale();
   const copy = action ?? verification;
@@ -157,6 +159,10 @@ export function TeamActionDialog({
         (code === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code || data?.requiresStepUp === true)
       ) {
         setNeedsPassword(true);
+        return;
+      }
+      if ((response.status === 401 || response.status === 403) && onDenied) {
+        onDenied();
         return;
       }
       if (rateLimited(response)) return;

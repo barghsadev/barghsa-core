@@ -1,11 +1,12 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { BACKGROUND_JOB_TYPES } from '@barghsa/shared/admin';
-import { Button, Label } from '@barghsa/ui';
+import { Button, Label, ListPage, ScrollArea } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useOperationalQueue } from '../hooks/useOperationalQueue.js';
 interface Job {
   id: string;
   jobType: string;
@@ -20,6 +21,41 @@ interface Job {
   resolvedAt: string | null;
   resolvedByUsername: string | null;
 }
+function isJob(value: unknown): value is Job {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const row = value as Job;
+  const date = (v: unknown) => typeof v === 'string' && Number.isFinite(Date.parse(v));
+  const nullableText = (v: unknown) => v === null || typeof v === 'string';
+  return (
+    typeof row.id === 'string' &&
+    /^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(row.id) &&
+    typeof row.jobType === 'string' &&
+    !!row.jobType &&
+    ['failed', 'retrying', 'dead_letter', 'resolved'].includes(row.status) &&
+    nullableText(row.error) &&
+    typeof row.errorCategory === 'string' &&
+    Number.isSafeInteger(row.attempts) &&
+    row.attempts >= 0 &&
+    Number.isSafeInteger(row.maxAttempts) &&
+    row.maxAttempts > 0 &&
+    date(row.firstFailedAt) &&
+    date(row.lastRunAt) &&
+    (row.nextRunAt === null || date(row.nextRunAt)) &&
+    (row.resolvedAt === null || date(row.resolvedAt)) &&
+    nullableText(row.resolvedByUsername)
+  );
+}
+const jobBasis = (row: Job) =>
+  JSON.stringify([
+    row.id,
+    row.jobType,
+    row.status,
+    row.error,
+    row.errorCategory,
+    row.attempts,
+    row.maxAttempts,
+    row.lastRunAt,
+  ]);
 const statuses = ['failed', 'retrying', 'dead_letter', 'resolved', 'all'];
 const pageSize = 25;
 export default function AdminFailedJobsPage() {
@@ -29,13 +65,7 @@ export default function AdminFailedJobsPage() {
   const label = (key: string) => t(`admin.jobs.${key}`, locale);
   const [status, setStatus] = useState('failed'),
     [jobType, setJobType] = useState('');
-  const [offset, setOffset] = useState(0),
-    [revision, setRevision] = useState(0);
-  const [jobs, setJobs] = useState<Job[]>([]),
-    [hasMore, setHasMore] = useState(false);
-  const [access, setAccess] = useState<{ canView: boolean; canRetry: boolean } | null>(null);
-  const [loading, setLoading] = useState(true),
-    [error, setError] = useState(false);
+  const [offset, setOffset] = useState(0);
   const [selected, setSelected] = useState<string[]>([]),
     [notice, setNotice] = useState<{
       kind: 'retry' | 'resolve';
@@ -43,54 +73,90 @@ export default function AdminFailedJobsPage() {
       skipped: number;
     } | null>(null);
   const [action, setAction] = useState<
-    (TeamAction & { kind: 'retry' | 'resolve'; count: number }) | null
+    | (TeamAction & {
+        kind: 'retry' | 'resolve';
+        count: number;
+        rows: Job[];
+        trigger: HTMLElement | null;
+      })
+    | null
   >(null);
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError(false);
+  const savedTrigger = useRef<HTMLElement | null>(null);
+  const refreshButton = useRef<HTMLButtonElement>(null);
+  const clearPrivate = useCallback(() => {
     setSelected([]);
-    void (async () => {
-      try {
-        const accessResponse = await fetch('/api/admin/failed-jobs/access', {
-          signal: controller.signal,
-        });
-        if (!accessResponse.ok) throw new Error('Unavailable');
-        const permissions = (await accessResponse.json()) as {
-          canView: boolean;
-          canRetry: boolean;
-        };
-        if (controller.signal.aborted) return;
-        setAccess(permissions);
-        if (!permissions.canView) {
-          setJobs([]);
-          setHasMore(false);
-          return;
-        }
-        const query = new URLSearchParams({
-          limit: String(pageSize + 1),
-          offset: String(offset),
-          ...(status === 'all' ? {} : { status }),
-          ...(jobType ? { jobType } : {}),
-        });
-        const response = await fetch(`/api/admin/failed-jobs?${query}`, {
-          signal: controller.signal,
-        });
-        if (!response.ok) throw new Error('Unavailable');
-        const result = (await response.json()) as Job[];
-        if (!Array.isArray(result)) throw new Error('Invalid response');
-        if (!controller.signal.aborted) {
-          setJobs(result.slice(0, pageSize));
-          setHasMore(result.length > pageSize);
-        }
-      } catch {
-        if (!controller.signal.aborted) setError(true);
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
-      }
-    })();
-    return () => controller.abort();
-  }, [status, jobType, offset, revision]);
+    setAction(null);
+    setNotice(null);
+    savedTrigger.current = null;
+  }, []);
+  const criteria = new URLSearchParams({
+    ...(status === 'all' ? {} : { status }),
+    ...(jobType ? { jobType } : {}),
+  }).toString();
+  const queue = useOperationalQueue(
+    '/api/admin/failed-jobs',
+    criteria,
+    offset,
+    isJob,
+    clearPrivate
+  );
+  const { access, loading, error } = queue;
+  const jobs = queue.data?.rows ?? [],
+    hasMore = queue.data?.hasMore ?? false;
+  const previousCriteria = useRef(criteria);
+  useEffect(() => {
+    if (previousCriteria.current === criteria) return;
+    previousCriteria.current = criteria;
+    clearPrivate();
+  }, [criteria, clearPrivate]);
+  useEffect(() => {
+    if (!queue.data || loading || error) return;
+    const eligible = queue.data.rows.filter((row) =>
+      ['failed', 'dead_letter'].includes(row.status)
+    );
+    setSelected((current) => current.filter((id) => eligible.some((row) => row.id === id)));
+    if (
+      action &&
+      action.rows.some(
+        (row) =>
+          !queue.data!.rows.some((next) => next.id === row.id && jobBasis(next) === jobBasis(row))
+      )
+    )
+      setAction(null);
+  }, [queue.data, loading, error, action]);
+  useEffect(() => {
+    if (access.data && !access.data.canRetry) {
+      setSelected([]);
+      setAction(null);
+    }
+  }, [access.data]);
+  useEffect(() => {
+    if (!queue.ready || action || !savedTrigger.current) return;
+    const target = savedTrigger.current;
+    const frame = requestAnimationFrame(() => {
+      if (savedTrigger.current !== target) return;
+      savedTrigger.current = null;
+      if (target.isConnected && !target.hasAttribute('disabled')) target.focus();
+      else refreshButton.current?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [queue.ready, action]);
+  const recovery = (
+    <div className="space-y-2">
+      <Button type="button" variant="outline" disabled={access.loading} onClick={access.retry}>
+        {label('accessRetry')}
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        disabled={loading || !queue.canView}
+        onClick={queue.retry}
+      >
+        {label('queueRetry')}
+      </Button>
+      {(error || access.error) && <p role="alert">{label('error')}</p>}
+    </div>
+  );
   const jobName = (type: string) => {
     const key = `admin.jobs.type.${type}`,
       value = t(key, locale);
@@ -98,9 +164,24 @@ export default function AdminFailedJobsPage() {
   };
   const date = (value: string | null) => (value ? time.format(value) : label('none'));
   function act(kind: 'retry' | 'resolve', ids: string[]) {
+    if (!queue.canRetry) return;
+    const rows = jobs.filter((row) => ids.includes(row.id));
+    if (
+      !rows.length ||
+      rows.length !== ids.length ||
+      rows.some((row) =>
+        kind === 'retry'
+          ? !['failed', 'dead_letter'].includes(row.status)
+          : row.status === 'resolved'
+      )
+    )
+      return;
+    savedTrigger.current = null;
     const bulk = ids.length > 1;
     setAction({
       kind,
+      rows,
+      trigger: document.activeElement instanceof HTMLElement ? document.activeElement : null,
       count: ids.length,
       title: label(kind === 'resolve' ? 'resolve' : bulk ? 'bulk' : 'retry'),
       description:
@@ -125,7 +206,12 @@ export default function AdminFailedJobsPage() {
           <h1 className="text-2xl font-semibold">{label('title')}</h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{label('description')}</p>
         </div>
-        <Button variant="outline" disabled={loading} onClick={() => setRevision((v) => v + 1)}>
+        <Button
+          variant="outline"
+          disabled={loading || access.loading}
+          ref={refreshButton}
+          onClick={queue.refresh}
+        >
           {label('refresh')}
         </Button>
       </header>
@@ -138,16 +224,9 @@ export default function AdminFailedJobsPage() {
                 .replace('{skipped}', numbers.number(notice.skipped))}
         </p>
       )}
-      {loading && <p role="status">{label('loading')}</p>}
-      {error && (
-        <div role="alert" className="space-y-3">
-          <p>{label('error')}</p>
-          <Button onClick={() => setRevision((v) => v + 1)}>{label('reload')}</Button>
-        </div>
-      )}
-      {!loading && !error && !access?.canView && <p role="alert">{label('forbidden')}</p>}
-      {access?.canView && (
-        <>
+      {queue.denied && <p role="alert">{label('forbidden')}</p>}
+      <ListPage>
+        <ListPage.Toolbar>
           <div className="flex flex-wrap items-end gap-4">
             <div role="group" aria-label={label('status')} className="flex flex-wrap gap-2">
               {statuses.map((value) => (
@@ -189,19 +268,35 @@ export default function AdminFailedJobsPage() {
           <p className="text-xs text-muted-foreground">
             {time.status === 'ready' && label('timezone').replace('{zone}', time.timezone)}
           </p>
-          {access.canRetry && (
+          {access.data?.canRetry && (
             <Button
-              disabled={loading || error || !selected.length}
+              disabled={!queue.canRetry || !selected.length}
               onClick={() => act('retry', selected)}
             >
               {label('bulk')} ({numbers.number(selected.length)})
             </Button>
           )}
-          {loading || error ? null : !jobs.length ? (
-            <p>{label('empty')}</p>
-          ) : (
-            <div className="overflow-x-auto rounded-lg border bg-card text-card-foreground">
-              <table className="w-full text-start text-sm">
+        </ListPage.Toolbar>
+        <ListPage.Content
+          loading={loading || access.loading}
+          error={error || access.error}
+          retainContent={queue.data !== null}
+          empty={queue.ready && !jobs.length}
+          emptyView={<p>{label('empty')}</p>}
+          loadingView={<p role="status">{label('loading')}</p>}
+          errorView={
+            <div role="alert">
+              <p>{label('error')}</p>
+              <Button onClick={queue.refresh}>{label('reload')}</Button>
+            </div>
+          }
+        >
+          {queue.data && (
+            <ScrollArea
+              scrollbarOrientation="horizontal"
+              className="min-w-0 rounded-lg border bg-card text-card-foreground"
+            >
+              <table className="w-full min-w-[52rem] text-start text-sm" aria-busy={loading}>
                 <caption className="sr-only">{label('title')}</caption>
                 <thead>
                   <tr className="border-b bg-muted/40">
@@ -216,20 +311,25 @@ export default function AdminFailedJobsPage() {
                   {jobs.map((job) => (
                     <tr key={job.id} className="border-b last:border-0" data-job-id={job.id}>
                       <td className="p-3">
-                        {access.canRetry && ['failed', 'dead_letter'].includes(job.status) && (
-                          <input
-                            type="checkbox"
-                            aria-label={label('selectJob').replace('{type}', jobName(job.jobType))}
-                            checked={selected.includes(job.id)}
-                            onChange={(event) =>
-                              setSelected((current) =>
-                                event.target.checked
-                                  ? [...current, job.id]
-                                  : current.filter((id) => id !== job.id)
-                              )
-                            }
-                          />
-                        )}
+                        {access.data?.canRetry &&
+                          ['failed', 'dead_letter'].includes(job.status) && (
+                            <input
+                              type="checkbox"
+                              disabled={!queue.canRetry}
+                              aria-label={label('selectJob').replace(
+                                '{type}',
+                                jobName(job.jobType)
+                              )}
+                              checked={selected.includes(job.id)}
+                              onChange={(event) =>
+                                setSelected((current) =>
+                                  event.target.checked
+                                    ? [...current, job.id]
+                                    : current.filter((id) => id !== job.id)
+                                )
+                              }
+                            />
+                          )}
                       </td>
                       <th scope="row" className="p-3 text-start font-medium">
                         <span>{jobName(job.jobType)}</span>
@@ -283,18 +383,21 @@ export default function AdminFailedJobsPage() {
                       <td className="whitespace-nowrap p-3">{date(job.lastRunAt)}</td>
                       <td className="p-3">
                         <div className="flex flex-wrap gap-2">
-                          {access.canRetry && ['failed', 'dead_letter'].includes(job.status) && (
+                          {access.data?.canRetry &&
+                            ['failed', 'dead_letter'].includes(job.status) && (
+                              <Button
+                                size="sm"
+                                disabled={!queue.canRetry}
+                                variant="outline"
+                                onClick={() => act('retry', [job.id])}
+                              >
+                                {label('retry')}
+                              </Button>
+                            )}
+                          {access.data?.canRetry && job.status !== 'resolved' && (
                             <Button
                               size="sm"
-                              variant="outline"
-                              onClick={() => act('retry', [job.id])}
-                            >
-                              {label('retry')}
-                            </Button>
-                          )}
-                          {access.canRetry && job.status !== 'resolved' && (
-                            <Button
-                              size="sm"
+                              disabled={!queue.canRetry}
                               variant="outline"
                               onClick={() => act('resolve', [job.id])}
                             >
@@ -307,35 +410,66 @@ export default function AdminFailedJobsPage() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </ScrollArea>
           )}
-          <nav aria-label={label('pagination')} className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              disabled={loading || error || !offset}
-              onClick={() => setOffset((v) => Math.max(0, v - pageSize))}
-            >
-              {label('previous')}
-            </Button>
-            <span>{label('page').replace('{page}', numbers.number(offset / pageSize + 1))}</span>
-            <Button
-              variant="outline"
-              disabled={loading || error || !hasMore}
-              onClick={() => setOffset((v) => v + pageSize)}
-            >
-              {label('next')}
-            </Button>
-          </nav>
-        </>
-      )}
-      {action && (
+        </ListPage.Content>
+        <nav aria-label={label('pagination')} className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            disabled={!queue.canView || loading || error || !offset}
+            onClick={() => setOffset((v) => Math.max(0, v - pageSize))}
+          >
+            {label('previous')}
+          </Button>
+          <span>
+            {label('page').replace(
+              '{page}',
+              numbers.number((queue.data?.offset ?? offset) / pageSize + 1)
+            )}
+          </span>
+          <Button
+            variant="outline"
+            disabled={!queue.canView || loading || error || !hasMore}
+            onClick={() => setOffset((v) => v + pageSize)}
+          >
+            {label('next')}
+          </Button>
+        </nav>
+      </ListPage>
+      {action && !queue.denied && (
         <TeamActionDialog
           action={action}
+          onDenied={queue.deny}
+          confirmationDisabled={!queue.canRetry}
+          summary={recovery}
+          finalFocus={() =>
+            action.trigger?.isConnected && !action.trigger.hasAttribute('disabled')
+              ? action.trigger
+              : refreshButton.current
+          }
           onClose={() => setAction(null)}
           onSuccess={async (result) => {
-            const count = Array.isArray(result) ? result.length : 1;
+            const acknowledged = Array.isArray(result) ? result : [result];
+            if (
+              (action.count > 1 ? !Array.isArray(result) : Array.isArray(result)) ||
+              acknowledged.length > action.count ||
+              new Set(acknowledged.map((row) => (row as Job)?.id)).size !== acknowledged.length ||
+              !acknowledged.every(
+                (row) =>
+                  isJob(row) &&
+                  action.rows.some(
+                    (chosen) => chosen.id === row.id && chosen.jobType === row.jobType
+                  ) &&
+                  row.status === (action.kind === 'retry' ? 'retrying' : 'resolved')
+              ) ||
+              (action.count === 1 && acknowledged.length !== 1)
+            )
+              throw new Error('Invalid action acknowledgment');
+            const count = acknowledged.length;
             setNotice({ kind: action.kind, count, skipped: action.count - count });
-            setRevision((v) => v + 1);
+            savedTrigger.current = action.trigger;
+            setSelected([]);
+            queue.refresh();
           }}
         />
       )}

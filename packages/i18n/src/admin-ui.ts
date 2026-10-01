@@ -820,6 +820,8 @@ export const fa: I18nDictionary = {
   'admin.jobs.description':
     'خطاهای کارهای دوره‌ای را بررسی کنید، اجرای دوباره بخواهید یا خطا را حل‌شده علامت بزنید.',
   'admin.jobs.refresh': 'تازه‌سازی',
+  'admin.jobs.accessRetry': 'تلاش مجدد دسترسی',
+  'admin.jobs.queueRetry': 'تلاش مجدد صف',
   'admin.jobs.loading': 'در حال دریافت کارها…',
   'admin.jobs.error': 'دریافت کارها انجام نشد. دوباره تلاش کنید.',
   'admin.jobs.reload': 'تلاش مجدد',
@@ -2351,6 +2353,8 @@ export const en: I18nDictionary = {
   'admin.jobs.description':
     'Inspect recurring worker failures, request another attempt, or mark a failure resolved.',
   'admin.jobs.refresh': 'Refresh',
+  'admin.jobs.accessRetry': 'Retry access',
+  'admin.jobs.queueRetry': 'Retry queue',
   'admin.jobs.loading': 'Loading jobs…',
   'admin.jobs.error': 'Jobs could not be loaded. Try again.',
   'admin.jobs.reload': 'Try again',

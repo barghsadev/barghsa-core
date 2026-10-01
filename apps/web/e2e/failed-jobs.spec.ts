@@ -1,18 +1,14 @@
+import { crmShell } from './crm-shell-fixture';
 import { formatBrowserDate } from './browser-date';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 import { ErrorCodes } from '@barghsa/shared/errors';
+test.use({ viewport: { width: 390, height: 844 } });
 for (const locale of ['en', 'fa'])
   test(`job filters and retry failures preserve selection and current permissions (${locale})`, async ({
     page,
   }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
     const jobs = Array.from({ length: 26 }, (_, index) => ({
       id: `10000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
       jobType:
@@ -27,6 +23,7 @@ for (const locale of ['en', 'fa'])
                 : 'auth_delivery',
       status: 'failed',
       error: 'Test transport failed',
+      errorCategory: 'transient',
       attempts: 5,
       maxAttempts: 5,
       lastRunAt: '2026-09-01T12:00:00Z',
@@ -42,7 +39,7 @@ for (const locale of ['en', 'fa'])
       failSave = true;
     const queries: URLSearchParams[] = [],
       attempts: unknown[] = [];
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await mockOppositeNumerals(page, locale);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
@@ -138,6 +135,9 @@ for (const locale of ['en', 'fa'])
     await password.fill('correct-password');
     await confirm.click();
     await expect(dialog).toHaveCount(0);
+    await expect(
+      page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true })
+    ).toBeFocused();
     expect(attempts).toHaveLength(3);
     for (const value of attempts) expect(value).toEqual({ ids: [jobs[0]!.id, jobs[1]!.id] });
     await expect(page.getByRole('checkbox')).toHaveCount(0);
