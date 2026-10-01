@@ -31,6 +31,6 @@ Migration `0233_ticket_reply_evidence` adds format, attachments, author context 
 
 ## Publication and remaining work
 
-Publish as a conventional commit directly to main using Git/GitHub CLI, then read back local/origin/GitHub commit SHA, clean tree and exact-commit CI registration. Remote CI remains pending at publication; the preceding detail commit's security, integrity and secret checks pass while its test job is still running.
+Publish as a conventional commit directly to main using Git/GitHub CLI, then read back local/origin/GitHub commit SHA, clean tree and exact-commit CI registration. Remote CI remains pending at publication; the preceding detail commit's security, integrity and secret checks pass. Its completed CI run exposed the AI audit-ID redaction regression, repaired in the [following batch](2026-10-02-ai-audit-identifiers.md).
 
 Full public support display names/avatar images, unavailable related-record destinations and other unfinished domain requirements remain open. Existing user-selected CI fast mode and coverage exemption are unchanged. Historical supervisor state, handoffs and completion ledgers are not edited.

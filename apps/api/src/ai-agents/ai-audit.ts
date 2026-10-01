@@ -2,6 +2,10 @@ import { getDbPool, type NewAiAuditRecord } from '@barghsa/db';
 import { v7 as uuidv7 } from 'uuid';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { redactAiText, type SensitiveCategory } from './ai-prompt-redaction.js';
+import { z } from 'zod';
+
+const auditIdentifier = z.string().uuid();
+const inputIdentifierKeys = new Set(['requestId', 'agentId', 'conversationId']);
 
 export type AiAuditEvent = Pick<
   NewAiAuditRecord,
@@ -41,9 +45,23 @@ function sanitize(value: unknown, categories: Set<SensitiveCategory>, depth = 0)
   return null;
 }
 
-function safePayload(payload: Record<string, unknown>): Record<string, unknown> {
+function safePayload(
+  payload: Record<string, unknown>,
+  structuredInput = false
+): Record<string, unknown> {
   const categories = new Set<SensitiveCategory>();
-  const sanitized = sanitize(payload, categories) as Record<string, unknown>;
+  const sanitized = Object.fromEntries(
+    Object.entries(payload)
+      .slice(0, 30)
+      .map(([key, value]) => [
+        key.slice(0, 120),
+        // Typed input IDs must stay usable for audit lookup. Free-form and output
+        // content still follows the full sensitive-data redaction policy.
+        structuredInput && inputIdentifierKeys.has(key) && auditIdentifier.safeParse(value).success
+          ? value
+          : sanitize(value, categories, 1),
+      ])
+  );
   return { ...sanitized, redactionCategories: [...categories] };
 }
 
@@ -62,7 +80,7 @@ export async function appendAiAudit(event: AiAuditEvent): Promise<void> {
       event.profileId ?? null,
       event.agentSlot ?? null,
       event.toolName,
-      JSON.stringify(safePayload(event.input)),
+      JSON.stringify(safePayload(event.input, true)),
       JSON.stringify(safePayload(event.output)),
       event.authorizationResult,
       event.confirmationRequired ?? false,

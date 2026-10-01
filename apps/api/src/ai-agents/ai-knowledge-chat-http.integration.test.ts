@@ -143,7 +143,7 @@ it('answers from customer/public sources, audits the profile, and replays one re
     profileName: 'Ava Customer',
     slotKey: 'individual_chatbot',
   });
-  const requestId = randomUUID();
+  const requestId = '00000000-0000-4000-8000-000000000000';
   const body = { requestId, message: 'What does the guide say?' };
   const first = await ask(body);
   expect(first.status).toBe(200);
@@ -173,6 +173,7 @@ it('answers from customer/public sources, audits the profile, and replays one re
   expect(audit.rows[0]).toMatchObject({
     profile_id: individualId,
     agent_slot: 'individual_chatbot',
+    input: { requestId, message: body.message, redactionCategories: [] },
   });
 }, 30_000);
 
