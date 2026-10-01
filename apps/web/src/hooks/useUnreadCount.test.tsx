@@ -4,9 +4,11 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { useUnreadCount } from './useUnreadCount.js';
 
 let root: Root, host: HTMLDivElement, state: ReturnType<typeof useUnreadCount>;
+let enabled = true;
+const denied = vi.fn();
 const requests: Array<(response: Response) => void> = [];
 function Consumer() {
-  state = useUnreadCount();
+  state = useUnreadCount(undefined, { enabled, onDenied: denied });
   return <span>{state.unreadCount}</span>;
 }
 async function reply(count: number) {
@@ -16,6 +18,8 @@ async function reply(count: number) {
   );
 }
 beforeEach(async () => {
+  enabled = true;
+  denied.mockClear();
   vi.useFakeTimers();
   requests.length = 0;
   vi.stubGlobal(
@@ -69,4 +73,35 @@ it('does not overlap slow polls and cleans up after unmount', async () => {
   await act(async () => vi.advanceTimersByTime(60000));
   expect(requests).toHaveLength(0);
   expect(host.textContent).toBe('');
+});
+
+it('denied counts clear the badge and disabled polling cannot revive it', async () => {
+  await reply(2);
+  await act(async () => vi.advanceTimersByTime(30000));
+  await act(async () => requests.shift()!(new Response('{}', { status: 403 })));
+  expect(denied).toHaveBeenCalledTimes(1);
+  expect(host.textContent).toBe('0');
+  enabled = false;
+  await act(async () =>
+    root.render(
+      <StrictMode>
+        <Consumer />
+      </StrictMode>
+    )
+  );
+  await act(async () => vi.advanceTimersByTime(90000));
+  expect(requests).toHaveLength(0);
+});
+it('a disabled surface ignores an already pending poll without notifying a new scope', async () => {
+  enabled = false;
+  await act(async () =>
+    root.render(
+      <StrictMode>
+        <Consumer />
+      </StrictMode>
+    )
+  );
+  await reply(8);
+  expect(host.textContent).toBe('0');
+  expect(denied).not.toHaveBeenCalled();
 });

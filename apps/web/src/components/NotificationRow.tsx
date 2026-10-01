@@ -57,7 +57,9 @@ export function NotificationRow({
             />
           )}
         </span>
-        <span className="mt-0.5 block text-xs leading-snug text-muted-foreground">{body}</span>
+        <span className="mt-0.5 block [overflow-wrap:anywhere] text-xs leading-snug text-muted-foreground">
+          {body}
+        </span>
         <span className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
           <span>{timeLabel}</span>
         </span>

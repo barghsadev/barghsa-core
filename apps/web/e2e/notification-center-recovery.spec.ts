@@ -19,8 +19,8 @@ const item = (title: string, id = '10000000-0000-4000-8000-000000000001') => ({
   createdAt: '2026-09-12T10:00:00Z',
 });
 const response = (title: string) => ({ data: [item(title)], next_cursor: null, unread_count: 1 });
+test.use({ viewport: { width: 390, height: 844 } });
 async function arrange(page: Page, locale: 'en' | 'fa') {
-  await page.setViewportSize({ width: 390, height: 844 });
   await page.addInitScript((language) => localStorage.setItem('barghsa.locale', language), locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>

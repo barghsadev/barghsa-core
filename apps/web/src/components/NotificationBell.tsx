@@ -3,17 +3,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, type NavigateOptions } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { BellIcon, CheckCheckIcon } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuSeparator,
-} from '@barghsa/ui';
+import { Popover, PopoverTrigger, PopoverContent, PopoverTitle } from '@barghsa/ui';
+import { useNotificationAccessDenied } from '../hooks/useNotificationAccessDenied.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useUnreadCount } from '../hooks/useUnreadCount.js';
 import { useUnreadDocumentTitle } from '../hooks/useUnreadDocumentTitle.js';
 import {
   fetchNotifications,
+  isNotificationDenied,
   markOneRead,
   markAllRead,
   toNavigationTarget,
@@ -26,7 +23,7 @@ const DROPDOWN_SIZE = 10;
 /**
  * Header notification bell (E-05, T-05.02.03 / T-05.02.04).
  *
- * A bell icon with an unread-count badge that opens a dropdown showing the
+ * A bell icon with an unread-count badge that opens a popover showing the
  * latest notifications plus quick actions ("mark all read", "view all"). Each
  * item is marked read on click and navigates to its linked record when one is
  * set. The badge is kept real-time by a 30s short-poll (T-05.02.04), read
@@ -45,12 +42,33 @@ export function NotificationBell({
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<'read' | 'write' | null>(null);
+  const [denied, setDenied] = useState(false),
+    [acceptedContext, setAcceptedContext] = useState<string | null>(null);
+  const liveContext = useRef(operatingContext);
+  liveContext.current = operatingContext;
+  const onCountDenied = useRef(() => {});
   const [writing, setWriting] = useState(false);
   const writingRef = useRef(false);
   const requestVersion = useRef(0);
 
-  const { unreadCount, setUnreadCount, optimisticDecrement } = useUnreadCount();
+  const { unreadCount, setUnreadCount, optimisticDecrement } = useUnreadCount(undefined, {
+    enabled: !denied,
+    onDenied: () => onCountDenied.current(),
+  });
+  const clearDenied = useCallback(() => {
+    requestVersion.current++;
+    writingRef.current = false;
+    setWriting(false);
+    setItems([]);
+    setUnreadCount(0);
+    setAcceptedContext(null);
+    setDenied(true);
+    setLoading(false);
+    setError('read');
+  }, [setUnreadCount]);
+  const deny = useNotificationAccessDenied(operatingContext, clearDenied);
+  onCountDenied.current = deny;
 
   // Mirror the unread count into the tab title while it is backgrounded.
   useUnreadDocumentTitle(unreadCount, numbers.number(unreadCount, { useGrouping: false }));
@@ -61,20 +79,29 @@ export function NotificationBell({
     setLoading(true);
     try {
       const page = await fetchNotifications(undefined, 'all', DROPDOWN_SIZE);
-      if (requestVersion.current !== version) return;
+      if (requestVersion.current !== version || liveContext.current !== operatingContext) return;
       setItems(page.data);
+      setAcceptedContext(operatingContext);
+      setDenied(false);
       setUnreadCount(page.unread_count);
       setError(null);
-    } catch {
-      if (requestVersion.current === version) setError(t('notifications.error.load', locale));
+    } catch (failure) {
+      if (requestVersion.current !== version || liveContext.current !== operatingContext) return;
+      if (isNotificationDenied(failure)) deny();
+      else setError('read');
     } finally {
       if (requestVersion.current === version) setLoading(false);
     }
-  }, [locale, setUnreadCount]);
+  }, [operatingContext, setUnreadCount, deny]);
 
   // Load once on mount so the badge is accurate before the dropdown is opened.
   useEffect(() => {
     setWriting(false);
+    setItems([]);
+    setUnreadCount(0);
+    setAcceptedContext(null);
+    setDenied(false);
+    setError(null);
     void load();
     return () => {
       requestVersion.current++;
@@ -88,7 +115,8 @@ export function NotificationBell({
   };
 
   const markRead = async (item?: NotificationItem) => {
-    if (writingRef.current) return;
+    if (writingRef.current || loading || error || denied || acceptedContext !== operatingContext)
+      return;
     const target = item ? toNavigationTarget(item, operatingContext) : null;
     const version = ++requestVersion.current;
     const previousItems = items;
@@ -107,20 +135,25 @@ export function NotificationBell({
           ? unreadCount
           : await markOneRead(item.id)
         : await markAllRead();
-      if (requestVersion.current !== version) return;
+      if (requestVersion.current !== version || liveContext.current !== operatingContext) return;
       setUnreadCount(count);
-    } catch {
-      if (requestVersion.current !== version) return;
+    } catch (failure) {
+      if (requestVersion.current !== version || liveContext.current !== operatingContext) return;
+      if (isNotificationDenied(failure)) {
+        deny();
+        return;
+      }
       setItems(previousItems);
       setUnreadCount(previousCount);
-      setError(t('notifications.error.load', locale));
+      setError('write');
+      return;
     } finally {
       if (requestVersion.current === version) {
         writingRef.current = false;
         setWriting(false);
       }
     }
-    if (requestVersion.current !== version) return;
+    if (requestVersion.current !== version || liveContext.current !== operatingContext) return;
     if (target)
       navigate({
         to: target.to,
@@ -136,8 +169,8 @@ export function NotificationBell({
   );
 
   return (
-    <DropdownMenu open={open} onOpenChange={handleOpenChange}>
-      <DropdownMenuTrigger
+    <Popover open={open} onOpenChange={handleOpenChange}>
+      <PopoverTrigger
         data-testid="notification-bell"
         aria-label={bellAria}
         className="relative inline-flex size-11 items-center justify-center rounded-lg border border-border bg-card text-card-foreground text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
@@ -151,61 +184,73 @@ export function NotificationBell({
             {badgeLabel}
           </span>
         )}
-      </DropdownMenuTrigger>
+      </PopoverTrigger>
 
-      <DropdownMenuContent
-        align="start"
-        className="w-96 max-w-[90vw]"
-        data-testid="notification-panel"
-      >
+      <PopoverContent align="start" className="w-96 max-w-[90vw]" data-testid="notification-panel">
         <div className="flex items-center justify-between px-1.5 py-1">
-          <span className="text-sm font-medium text-foreground">
+          <PopoverTitle className="text-sm font-medium text-foreground">
             {t('notifications.bellLabel', locale)}
-          </span>
+          </PopoverTitle>
           <button
             type="button"
+            tabIndex={0}
             onClick={() => void markRead()}
             className="inline-flex items-center gap-1 rounded px-1.5 py-1 text-xs text-foreground hover:bg-primary/5 disabled:opacity-50"
-            disabled={unreadCount === 0 || writing || loading}
+            disabled={
+              unreadCount === 0 ||
+              writing ||
+              loading ||
+              !!error ||
+              denied ||
+              acceptedContext !== operatingContext
+            }
           >
             <CheckCheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
             {t('notifications.markAllRead', locale)}
           </button>
         </div>
-        <DropdownMenuSeparator />
+        <hr className="my-1 border-border" />
 
-        {loading ? (
-          <div className="space-y-3 p-2" aria-busy="true">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="flex items-start gap-3 animate-pulse">
-                <div className="size-11 rounded-full bg-muted" />
-                <div className="flex-1 space-y-2 py-0.5">
-                  <div className="h-3 w-3/4 rounded bg-muted" />
-                  <div className="h-3 w-1/2 rounded bg-muted" />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : error ? (
+        {loading && (
+          <p role="status" className="p-3 text-sm">
+            {t('notifications.loading', locale)}
+          </p>
+        )}
+        {error && (
           <div className="p-3 text-sm text-destructive" role="alert">
-            <p>{error}</p>
-            <button type="button" onClick={() => void load()} className="mt-2 underline">
+            <p>
+              {t(
+                denied
+                  ? 'notifications.error.denied'
+                  : error === 'write'
+                    ? 'notifications.error.write'
+                    : 'notifications.error.load',
+                locale
+              )}
+            </p>
+            <button
+              type="button"
+              tabIndex={0}
+              disabled={loading || writing}
+              onClick={() => void load()}
+              className="mt-2 underline"
+            >
               {t('notifications.retry', locale)}
             </button>
           </div>
-        ) : items.length === 0 ? (
-          <p className="px-3 py-6 text-center text-sm text-muted-foreground">
-            {t('notifications.empty.title', locale)}
-          </p>
-        ) : (
+        )}
+        {acceptedContext === operatingContext && items.length > 0 && (
           <ul className="max-h-80 overflow-y-auto p-1">
             {items.map((item) => (
               <li key={item.id}>
                 <button
                   type="button"
+                  tabIndex={0}
                   onClick={() => void markRead(item)}
-                  disabled={writing}
-                  className="flex w-full items-start gap-3 rounded-md px-1.5 py-2 text-start hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  disabled={
+                    writing || loading || !!error || denied || acceptedContext !== operatingContext
+                  }
+                  className="flex w-full items-start gap-3 rounded-md px-1.5 py-2 text-start hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   dir={locale === 'fa' ? 'rtl' : 'ltr'}
                 >
                   <NotificationRow
@@ -219,10 +264,16 @@ export function NotificationBell({
             ))}
           </ul>
         )}
+        {!loading && !error && acceptedContext === operatingContext && items.length === 0 && (
+          <p className="px-3 py-6 text-center text-sm text-muted-foreground">
+            {t('notifications.empty.title', locale)}
+          </p>
+        )}
 
-        <DropdownMenuSeparator />
+        <hr className="my-1 border-border" />
         <div className="px-1.5 py-1">
           <Link
+            tabIndex={0}
             to={operatingContext === 'staff' ? '/admin/inbox' : '/notifications'}
             onClick={() => setOpen(false)}
             className="block rounded-md px-1.5 py-1.5 text-center text-sm font-medium text-foreground hover:bg-primary/5"
@@ -230,7 +281,7 @@ export function NotificationBell({
             {t('notifications.viewAll', locale)}
           </Link>
         </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </PopoverContent>
+    </Popover>
   );
 }

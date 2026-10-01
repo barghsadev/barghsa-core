@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { crmShell } from './crm-shell-fixture';
 import { mockOppositeNumerals } from './number-preference-fixture';
 
 for (const locale of ['en', 'fa'])
@@ -6,14 +7,8 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     await page.clock.install();
-    await page.addInitScript((language) => {
-      if (document.documentElement) document.documentElement.lang = language;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = language;
-      }).observe(document, { childList: true });
-    }, locale);
+    await crmShell(page, locale);
     let count = 12;
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await mockOppositeNumerals(page, locale);
     await page.route('**/api/v1/notifications?*', (route) =>
       route.fulfill({ json: { data: [], unread_count: count, next_cursor: null } })
@@ -21,7 +16,7 @@ for (const locale of ['en', 'fa'])
     await page.route('**/api/v1/notifications/unread-count', (route) =>
       route.fulfill({ json: { unread_count: count } })
     );
-    await page.goto('/dashboard');
+    await page.goto('/admin');
     const bell = page.getByRole('button', {
       name: locale === 'fa' ? /مشاهده اعلان‌ها/ : /View notifications/,
     });
@@ -35,7 +30,7 @@ for (const locale of ['en', 'fa'])
       document.dispatchEvent(new Event('visibilitychange'));
     });
     await expect(page).toHaveTitle(
-      locale === 'fa' ? '(12) Preference test' : '(۱۲) Preference test'
+      locale === 'fa' ? '(12) آزمایش ترجیح نمایش' : '(۱۲) Preference test'
     );
     await page.evaluate(() => {
       document.title = '(2026) New brand';

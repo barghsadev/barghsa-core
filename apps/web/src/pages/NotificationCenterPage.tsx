@@ -3,10 +3,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, type NavigateOptions } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { BellIcon, CheckCheckIcon, Loader2Icon, InboxIcon } from 'lucide-react';
-import { Button } from '@barghsa/ui';
+import { Button, ListPage } from '@barghsa/ui';
+import { useNotificationAccessDenied } from '../hooks/useNotificationAccessDenied.js';
 import { useLocale } from '../hooks/useLocale.js';
 import {
   fetchNotifications,
+  isNotificationDenied,
   markOneRead,
   markAllRead,
   toNavigationTarget,
@@ -37,64 +39,104 @@ export function NotificationCenterPage({
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
   const [filter, setFilter] = useState<NotificationFilter>('all');
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true),
+    [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState<'read' | 'write' | null>(null),
+    [denied, setDenied] = useState(false);
+  const [acceptedKey, setAcceptedKey] = useState<string | null>(null);
   const [markingAll, setMarkingAll] = useState(false);
-  const writing = useRef(false);
-  const requestVersion = useRef(0);
-
+  const writing = useRef(false),
+    requestVersion = useRef(0);
+  const failedCursor = useRef<string | undefined>(undefined),
+    cursors = useRef(new Set<string>());
+  const key = `${operatingContext}:${filter}`;
+  const liveKey = useRef(key);
+  liveKey.current = key;
+  const clearDenied = useCallback(() => {
+    requestVersion.current++;
+    writing.current = false;
+    setItems([]);
+    setNextCursor(null);
+    setUnreadCount(0);
+    setAcceptedKey(null);
+    setDenied(true);
+    setError('read');
+    setLoading(false);
+    setLoadingMore(false);
+    setMarkingAll(false);
+    failedCursor.current = undefined;
+    cursors.current.clear();
+  }, []);
+  const deny = useNotificationAccessDenied(operatingContext, clearDenied);
   const load = useCallback(
-    async (cursor?: string, currentFilter: NotificationFilter = filter) => {
+    async (cursor?: string) => {
       if (writing.current) return;
       const version = ++requestVersion.current;
       setLoading(!cursor);
-      setLoadingMore(Boolean(cursor));
+      setLoadingMore(!!cursor);
+      const current = () => requestVersion.current === version && liveKey.current === key;
       try {
-        const page = await fetchNotifications(cursor, currentFilter, PAGE_SIZE);
-        if (requestVersion.current !== version) return;
-        setItems((prev) => (cursor ? [...prev, ...page.data] : [...page.data]));
+        const page = await fetchNotifications(cursor, filter, PAGE_SIZE);
+        if (!current()) return;
+        if (
+          page.next_cursor &&
+          (page.next_cursor === cursor || (cursor && cursors.current.has(page.next_cursor)))
+        )
+          throw new Error('Repeated notification cursor');
+        if (!cursor) cursors.current.clear();
+        if (cursor) cursors.current.add(cursor);
+        setItems((prev) =>
+          cursor
+            ? [...new Map([...prev, ...page.data].map((item) => [item.id, item])).values()]
+            : page.data
+        );
         setNextCursor(page.next_cursor);
         setUnreadCount(page.unread_count);
+        setAcceptedKey(key);
+        setDenied(false);
         setError(null);
-      } catch {
-        if (requestVersion.current === version) setError(t('notifications.error.load', locale));
+      } catch (failure) {
+        if (!current()) return;
+        if (isNotificationDenied(failure)) deny();
+        else {
+          failedCursor.current = cursor;
+          setError('read');
+        }
       } finally {
-        if (requestVersion.current === version) {
+        if (current()) {
           setLoading(false);
           setLoadingMore(false);
         }
       }
     },
-    [filter, locale]
+    [filter, key, deny]
   );
-
   useEffect(() => {
-    setLoading(true);
-    setMarkingAll(false);
     setItems([]);
     setNextCursor(null);
-    void load(undefined, filter);
+    setUnreadCount(0);
+    setAcceptedKey(null);
+    setDenied(false);
+    setError(null);
+    setMarkingAll(false);
+    failedCursor.current = undefined;
+    cursors.current.clear();
+    void load();
     return () => {
       requestVersion.current++;
       writing.current = false;
     };
-  }, [filter, load]);
-
-  const handleLoadMore = () => {
-    if (nextCursor && !loadingMore) void load(nextCursor);
-  };
-
+  }, [load]);
+  const ready = acceptedKey === key && !denied && !loading && !loadingMore && !error && !markingAll;
   const markRead = async (item?: NotificationItem) => {
-    if (writing.current) return;
+    if (!ready || writing.current) return;
     const target = item ? toNavigationTarget(item, operatingContext) : null;
     const version = ++requestVersion.current;
+    const current = () => requestVersion.current === version && liveKey.current === key;
     const previousItems = items,
       previousCount = unreadCount;
     writing.current = true;
     setMarkingAll(true);
-    setLoading(false);
-    setLoadingMore(false);
     setError(null);
     setUnreadCount(item ? Math.max(0, unreadCount - Number(!item.isRead)) : 0);
     setItems((prev) =>
@@ -112,171 +154,164 @@ export function NotificationCenterPage({
           ? unreadCount
           : await markOneRead(item.id)
         : await markAllRead();
-      if (requestVersion.current === version) {
-        setUnreadCount(count);
-        if (filter === 'unread' && count === 0) setNextCursor(null);
-      }
-    } catch {
-      if (requestVersion.current === version) {
+      if (!current()) return;
+      setUnreadCount(count);
+      if (filter === 'unread' && count === 0) setNextCursor(null);
+      if (target)
+        navigate({
+          to: target.to,
+          search: target.search as NavigateOptions['search'],
+        } as NavigateOptions);
+    } catch (failure) {
+      if (!current()) return;
+      if (isNotificationDenied(failure)) deny();
+      else {
         setItems(previousItems);
         setUnreadCount(previousCount);
-        setError(t('notifications.error.load', locale));
+        setError('write');
       }
     } finally {
-      if (requestVersion.current === version) {
+      if (current()) {
         writing.current = false;
         setMarkingAll(false);
       }
     }
-    if (requestVersion.current === version && target)
-      navigate({
-        to: target.to,
-        search: target.search as NavigateOptions['search'],
-      } as NavigateOptions);
   };
 
   const isRtl = locale === 'fa';
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
+    <section className="mx-auto min-w-0 max-w-3xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <BellIcon className="h-6 w-6 text-foreground" aria-hidden="true" />
-          <h1 className="text-2xl font-bold text-foreground">{t('notifications.title', locale)}</h1>
+          <BellIcon className="h-6 w-6" aria-hidden="true" />
+          <h1 className="text-2xl font-bold">{t('notifications.title', locale)}</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => void markRead()}
-            disabled={unreadCount === 0 || markingAll || loading}
-            className="gap-2"
-          >
-            {markingAll ? (
-              <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
-            ) : (
-              <CheckCheckIcon className="h-4 w-4" aria-hidden="true" />
-            )}
-            {t('notifications.markAllRead', locale)}
-          </Button>
-        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => void markRead()}
+          disabled={!ready || unreadCount === 0}
+          className="gap-2"
+        >
+          {markingAll ? (
+            <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
+          ) : (
+            <CheckCheckIcon className="h-4 w-4" aria-hidden="true" />
+          )}
+          {t('notifications.markAllRead', locale)}
+        </Button>
       </header>
-
-      {/* Filter toggle */}
-      <div
-        role="tablist"
-        aria-label={t('notifications.bellLabel', locale)}
-        className="flex gap-1 rounded-lg bg-muted p-1 text-sm"
-      >
-        {(['all', 'unread'] as NotificationFilter[]).map((value) => (
-          <button
-            key={value}
-            type="button"
-            role="tab"
-            aria-selected={filter === value}
-            onClick={() => setFilter(value)}
-            disabled={markingAll}
-            className={`flex-1 rounded-md px-3 py-1.5 transition-colors ${
-              filter === value
-                ? 'bg-card text-card-foreground text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            {value === 'all'
-              ? t('notifications.bellLabel', locale)
-              : t('notifications.unread', locale)}
-          </button>
-        ))}
-      </div>
-
-      {/* Loading skeleton */}
-      {loading && (
-        <div
-          className="space-y-3 rounded-lg border border-border bg-card text-card-foreground p-4"
-          aria-busy="true"
-        >
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="flex items-start gap-3 animate-pulse">
-              <div className="h-10 w-10 rounded-full bg-muted" />
-              <div className="flex-1 space-y-2 py-0.5">
-                <div className="h-3 w-3/4 rounded bg-muted" />
-                <div className="h-3 w-1/2 rounded bg-muted" />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Error state */}
-      {!loading && error && (
-        <div
-          className="rounded-lg border border-destructive/30 bg-destructive/10 p-6 text-center"
-          role="alert"
-        >
-          <p className="text-destructive">{error}</p>
-          <Button variant="outline" onClick={() => void load()} className="mt-3">
-            {t('notifications.retry', locale)}
-          </Button>
-        </div>
-      )}
-
-      {/* Empty state */}
-      {!loading && !error && items.length === 0 && (
-        <div className="rounded-lg border border-border bg-card text-card-foreground p-10 text-center">
-          <InboxIcon className="mx-auto h-10 w-10 text-muted-foreground" aria-hidden="true" />
-          <h2 className="mt-3 text-lg font-semibold text-foreground">
-            {filter === 'unread'
-              ? t('notifications.empty.unread', locale)
-              : t('notifications.empty.title', locale)}
-          </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {t('notifications.empty.body', locale)}
-          </p>
-        </div>
-      )}
-
-      {/* List */}
-      {!loading && !error && items.length > 0 && (
-        <ul className="divide-y divide-border rounded-lg border border-border bg-card text-card-foreground">
-          {items.map((item) => (
-            <li key={item.id}>
-              <button
-                type="button"
-                onClick={() => void markRead(item)}
-                disabled={markingAll}
-                className="flex w-full items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
-                dir={isRtl ? 'rtl' : 'ltr'}
-                aria-label={`${t('notifications.markReadAria', locale)} — ${notificationContent(item, locale).title}`}
-              >
-                <span className={item.isRead ? 'opacity-70' : ''}>
-                  <NotificationRow
-                    item={item}
-                    locale={locale}
-                    unread={!item.isRead}
-                    muted={item.isRead}
-                    operatingContext={operatingContext}
-                  />
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {/* Load more */}
-      {!loading && !error && nextCursor && (
-        <div className="text-center">
+      <ListPage>
+        <ListPage.Toolbar>
           <Button
+            type="button"
             variant="outline"
-            onClick={handleLoadMore}
-            disabled={loadingMore || markingAll}
-            className="gap-2"
+            disabled={loading || loadingMore || markingAll}
+            onClick={() => void load()}
           >
-            {loadingMore && <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />}
-            {t('notifications.loadMore', locale)}
+            {t('notifications.refresh', locale)}
           </Button>
-        </div>
-      )}
-    </div>
+          <div
+            role="tablist"
+            aria-label={t('notifications.bellLabel', locale)}
+            className="flex gap-1 rounded-lg bg-muted p-1 text-sm"
+          >
+            {(['all', 'unread'] as NotificationFilter[]).map((value) => (
+              <button
+                key={value}
+                type="button"
+                role="tab"
+                aria-selected={filter === value}
+                onClick={() => setFilter(value)}
+                disabled={markingAll}
+                className={`flex-1 rounded-md px-3 py-1.5 transition-colors ${filter === value ? 'bg-card text-card-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                {t(value === 'all' ? 'notifications.bellLabel' : 'notifications.unread', locale)}
+              </button>
+            ))}
+          </div>
+        </ListPage.Toolbar>
+        <ListPage.Content
+          loading={loading || loadingMore}
+          error={!!error || denied}
+          empty={items.length === 0}
+          retainContent={acceptedKey === key && items.length > 0}
+          loadingView={<p role="status">{t('notifications.loading', locale)}</p>}
+          errorView={
+            <div role="alert" className="space-y-2 rounded-lg border border-destructive/30 p-4">
+              <p>
+                {t(
+                  denied
+                    ? 'notifications.error.denied'
+                    : error === 'write'
+                      ? 'notifications.error.write'
+                      : 'notifications.error.load',
+                  locale
+                )}
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={loading || loadingMore || markingAll}
+                onClick={() => void load(error === 'read' ? failedCursor.current : undefined)}
+              >
+                {t('notifications.retry', locale)}
+              </Button>
+            </div>
+          }
+          emptyView={
+            <div className="rounded-lg border bg-card p-10 text-center">
+              <InboxIcon className="mx-auto h-10 w-10 text-muted-foreground" aria-hidden="true" />
+              <h2 className="mt-3 text-lg font-semibold">
+                {t(
+                  filter === 'unread' ? 'notifications.empty.unread' : 'notifications.empty.title',
+                  locale
+                )}
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {t('notifications.empty.body', locale)}
+              </p>
+            </div>
+          }
+        >
+          {acceptedKey === key && items.length > 0 && (
+            <ul className="divide-y divide-border rounded-lg border bg-card text-card-foreground">
+              {items.map((item) => (
+                <li key={item.id}>
+                  <button
+                    type="button"
+                    onClick={() => void markRead(item)}
+                    disabled={!ready}
+                    className="flex w-full min-w-0 items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
+                    aria-label={`${t('notifications.markReadAria', locale)} — ${notificationContent(item, locale).title}`}
+                  >
+                    <span className="min-w-0 flex-1">
+                      <NotificationRow
+                        item={item}
+                        locale={locale}
+                        unread={!item.isRead}
+                        muted={item.isRead}
+                        operatingContext={operatingContext}
+                      />
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </ListPage.Content>
+        <ListPage.Pagination
+          kind="cursor"
+          hasMore={acceptedKey === key && !!nextCursor && !error && !denied}
+          loading={loading || loadingMore || markingAll}
+          onNext={() => {
+            if (ready && nextCursor) void load(nextCursor);
+          }}
+          label={t('historyPagination.label', locale)}
+          nextLabel={t('notifications.loadMore', locale)}
+        />
+      </ListPage>
+    </section>
   );
 }

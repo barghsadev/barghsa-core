@@ -75,6 +75,65 @@ export function notificationTypeLabelKey(type: string): string {
   return `notifications.type.${notificationDisplayType(type)}`;
 }
 
+export class NotificationApiError extends Error {
+  constructor(readonly status: number) {
+    super('Notification request unavailable');
+  }
+}
+export const isNotificationDenied = (error: unknown) =>
+  error instanceof NotificationApiError && (error.status === 401 || error.status === 403);
+const record = (value: unknown): value is Record<string, unknown> =>
+  !!value && typeof value === 'object' && !Array.isArray(value);
+const timestamp = (value: unknown) =>
+  typeof value === 'string' && Number.isFinite(Date.parse(value));
+const count = (value: unknown): value is number =>
+  typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
+export function isNotificationItem(value: unknown): value is NotificationItem {
+  return (
+    record(value) &&
+    typeof value.id === 'string' &&
+    /^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(value.id) &&
+    typeof value.type === 'string' &&
+    !!value.type.trim() &&
+    typeof value.titleI18nKey === 'string' &&
+    typeof value.bodyI18nKey === 'string' &&
+    record(value.params) &&
+    (value.linkRoute === null || typeof value.linkRoute === 'string') &&
+    (value.linkParams === null || record(value.linkParams)) &&
+    typeof value.isRead === 'boolean' &&
+    (value.readAt === null || timestamp(value.readAt)) &&
+    timestamp(value.createdAt) &&
+    (value.localizedContent == null ||
+      (record(value.localizedContent) &&
+        Object.values(value.localizedContent).every(
+          (content) =>
+            record(content) && typeof content.title === 'string' && typeof content.body === 'string'
+        )))
+  );
+}
+export function isNotificationPage(value: unknown): value is NotificationPage {
+  return (
+    record(value) &&
+    Array.isArray(value.data) &&
+    value.data.every(isNotificationItem) &&
+    new Set(value.data.map((item) => item.id)).size === value.data.length &&
+    (value.next_cursor === null ||
+      (typeof value.next_cursor === 'string' &&
+        !!value.next_cursor &&
+        value.next_cursor.length <= 2000)) &&
+    count(value.unread_count)
+  );
+}
+async function responseJson(response: Response): Promise<unknown> {
+  if (!response.ok) throw new NotificationApiError(response.status);
+  return response.json();
+}
+async function responseCount(response: Response): Promise<number> {
+  const body = await responseJson(response);
+  if (!record(body) || !count(body.unread_count)) throw new Error('Invalid unread count');
+  return body.unread_count;
+}
+
 /**
  * Fetch a page of notifications.
  *
@@ -92,8 +151,14 @@ export async function fetchNotifications(
   const res = await fetch(`/api/v1/notifications?${params.toString()}`, {
     credentials: 'include',
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return (await res.json()) as NotificationPage;
+  const body = await responseJson(res);
+  if (
+    !isNotificationPage(body) ||
+    body.data.length > limit ||
+    (filter === 'unread' && body.data.some((item) => item.isRead))
+  )
+    throw new Error('Invalid notification page');
+  return body;
 }
 
 /** Mark a single notification read. Returns the fresh unread count. */
@@ -103,9 +168,7 @@ export async function markOneRead(id: string): Promise<number> {
     credentials: 'include',
     headers: withCsrf({ 'Content-Type': 'application/json' }),
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const body = (await res.json()) as { unread_count: number };
-  return body.unread_count;
+  return responseCount(res);
 }
 
 /** Mark every notification in the active profile read. Returns the new count. */
@@ -115,9 +178,7 @@ export async function markAllRead(): Promise<number> {
     credentials: 'include',
     headers: withCsrf({ 'Content-Type': 'application/json' }),
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const body = (await res.json()) as { unread_count: number };
-  return body.unread_count;
+  return responseCount(res);
 }
 
 /**
@@ -131,9 +192,7 @@ export async function fetchUnreadCount(): Promise<number> {
   const res = await fetch('/api/v1/notifications/unread-count', {
     credentials: 'include',
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const body = (await res.json()) as { unread_count: number };
-  return body.unread_count;
+  return responseCount(res);
 }
 
 /**

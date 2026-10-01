@@ -1554,6 +1554,10 @@ export const fa: I18nDictionary = {
   'notifications.type.document': 'سند',
   'notifications.type.system': 'سیستم',
   'notifications.error.load': 'خطا در بارگذاری اعلان‌ها',
+  'notifications.refresh': 'تازه‌سازی اعلان‌ها',
+  'notifications.error.denied': 'دسترسی به اعلان‌ها در دسترس نیست. برای بررسی دوباره تلاش کنید.',
+  'notifications.error.write':
+    'خوانده‌شدن اعلان تأیید نشد. پیش از تلاش دوباره فهرست را تازه‌سازی کنید.',
   'notifications.retry': 'تلاش دوباره',
   'notifications.unread': 'فقط خوانده‌نشده',
   'notifications.finance.chargeback_unresolved.title': 'هشدار مالی — شارژبک حل‌نشده',
@@ -3125,6 +3129,10 @@ export const en: I18nDictionary = {
   'notifications.type.document': 'Document',
   'notifications.type.system': 'System',
   'notifications.error.load': 'Failed to load notifications',
+  'notifications.refresh': 'Refresh notifications',
+  'notifications.error.denied': 'Notification access is unavailable. Retry to check access again.',
+  'notifications.error.write':
+    'The read change was not confirmed. Refresh the list before trying again.',
   'notifications.retry': 'Retry',
   'notifications.unread': 'Unread only',
   'notifications.finance.chargeback_unresolved.title': 'Finance alert — unresolved chargeback',

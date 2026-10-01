@@ -129,7 +129,7 @@ describe('fetchUnreadCount', () => {
 
   it('throws when the endpoint is not ok', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 500 }));
-    await expect(fetchUnreadCount()).rejects.toThrow('HTTP 500');
+    await expect(fetchUnreadCount()).rejects.toMatchObject({ status: 500 });
   });
 });
 
