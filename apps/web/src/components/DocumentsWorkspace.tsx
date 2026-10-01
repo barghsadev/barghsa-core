@@ -15,6 +15,10 @@ import {
   StatusBadge,
 } from '@barghsa/ui';
 import { documentText } from '@barghsa/i18n/documents';
+import { t as appText } from '@barghsa/i18n/app';
+import { useCursorPageRows } from '../hooks/useCursorPageRows.js';
+import { staffOrderId } from '../lib/staff-order-list-query.js';
+import type { RecordListQuery } from '../lib/record-list-query.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { DocumentDetail } from './DocumentDetail.js';
@@ -46,25 +50,45 @@ export interface DocumentFilters {
   businessRecordId: string;
 }
 const uuid = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
-export function DocumentsWorkspace({ staff = false }: { staff?: boolean }) {
+export function DocumentsWorkspace({
+  staff = false,
+  queries,
+}: {
+  staff?: boolean;
+  queries?: RecordListQuery | undefined;
+}) {
   const revision = useProfileContextRevision();
-  return <Workspace key={`${staff}:${revision}`} staff={staff} />;
+  return <Workspace key={`${staff}:${revision}`} staff={staff} queries={queries} />;
 }
-function Workspace({ staff }: { staff: boolean }) {
+function Workspace({ staff, queries }: { staff: boolean; queries?: RecordListQuery | undefined }) {
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
   const [activeProfile, setActiveProfile] = useState<string | null>(null);
   const [profileError, setProfileError] = useState(false);
   const [profileRetry, setProfileRetry] = useState(0);
-  const [filters, setFilters] = useState<DocumentFilters>({
-    kind: 'standalone',
-    state: staff ? 'SubmittedForReview' : '',
-    category: '',
-    query: '',
-    profileId: '',
-    businessRecordId: '',
-  });
-  const [applied, setApplied] = useState(filters);
+  const routeFilters: DocumentFilters = {
+    kind: (queries?.queue.query.filters.kind || 'standalone') as DocumentKind,
+    state: queries
+      ? queries.queue.query.filters.state === 'all'
+        ? ''
+        : queries.queue.query.filters.state || ''
+      : staff
+        ? 'SubmittedForReview'
+        : '',
+    category: queries?.queue.query.filters.category || '',
+    query: queries?.queue.query.search || '',
+    profileId: staff ? queries?.queue.query.filters.profileId || '' : '',
+    businessRecordId: queries?.queue.query.filters.businessRecordId || '',
+  };
+  const basis = JSON.stringify(routeFilters);
+  const [filters, setFilters] = useState<DocumentFilters>(routeFilters);
+  const [localApplied, setApplied] = useState(filters);
+  const applied = queries ? routeFilters : localApplied;
+  useEffect(() => {
+    if (!queries) return;
+    setFilters(routeFilters);
+    setInvalid(false);
+  }, [basis]);
   const [invalid, setInvalid] = useState(false);
   const [generation, setGeneration] = useState(0);
   useEffect(() => {
@@ -95,8 +119,19 @@ function Workspace({ staff }: { staff: boolean }) {
       return;
     }
     setInvalid(false);
-    setApplied({ ...filters });
-    setGeneration((value) => value + 1);
+    if (queries) {
+      queries.apply(filters.query, {
+        kind: filters.kind,
+        state: filters.state || (staff ? 'all' : ''),
+        category: filters.category,
+        profileId: staff ? filters.profileId : '',
+        businessRecordId: filters.businessRecordId,
+      });
+      if (JSON.stringify(filters) === basis) setGeneration((value) => value + 1);
+    } else {
+      setApplied({ ...filters });
+      setGeneration((value) => value + 1);
+    }
   }
   function change(key: keyof DocumentFilters, value: string) {
     setFilters((previous) => ({ ...previous, [key]: value }));
@@ -216,6 +251,7 @@ function Workspace({ staff }: { staff: boolean }) {
           staff={staff}
           showRetention={staff}
           filters={applied}
+          queries={queries}
           profileId={staff ? applied.profileId : activeProfile!}
         />
       )}
@@ -243,26 +279,65 @@ function Results({
   filters,
   profileId,
   association,
+  queries,
 }: {
   staff: boolean;
   showRetention?: boolean;
   filters: DocumentFilters;
   profileId: string;
   association?: OrderDocumentAssociation | SolarDocumentAssociation;
+  queries?: RecordListQuery | undefined;
 }) {
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
-  const [items, setItems] = useState<BusinessDocument[] | null>(null);
-  const [next, setNext] = useState<string | null>(null);
-  const [cursor, setCursor] = useState<string | null>(null);
+  const [localItems, setItems] = useState<BusinessDocument[] | null>(null);
+  const [localNext, setNext] = useState<string | null>(null);
+  const [localCursor, setCursor] = useState<string | null>(null);
+  const cursor = queries ? queries.queue.query.cursor : localCursor;
+  const urlRows = useCursorPageRows<BusinessDocument>(
+    JSON.stringify([
+      staff,
+      profileId,
+      filters.kind,
+      filters.state,
+      filters.category,
+      filters.query.trim(),
+      filters.businessRecordId,
+      filters.contractVersionId,
+      association,
+    ]),
+    cursor || ''
+  );
   const [refresh, setRefresh] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [denied, setDenied] = useState(false);
   const accessDenied = useRef(false);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [upload, setUpload] = useState<{ replacement: BusinessDocument | null } | null>(null);
-  const [uploaded, setUploaded] = useState(false);
+  const mounted = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  const items = denied ? null : queries ? urlRows.rows : localItems;
+  const next = denied ? null : queries ? urlRows.next : localNext;
+  const [localSelected, setLocalSelected] = useState<string | null>(null);
+  const queryRef = useRef(queries);
+  queryRef.current = queries;
+  const selected = denied ? null : queries ? queries.selected : localSelected;
+  const setSelected = (id: string | null, replace = false) =>
+    queryRef.current ? queryRef.current.select(id, { replace }) : setLocalSelected(id);
+  const [upload, setUpload] = useState<{
+    replacement: BusinessDocument | null;
+    selection: string | null;
+  } | null>(null);
+  const visibleUpload =
+    upload && (!queries || upload.selection === queries.selected) ? upload : null;
+  const [uploaded, setUploaded] = useState<string | null>(null);
+  useEffect(() => {
+    if (upload && queries && upload.selection !== queries.selected) setUpload(null);
+  }, [selected]);
   const params = new URLSearchParams({ businessRecordType: filters.kind });
   if (profileId) params.set('profileId', profileId);
   if (filters.contractVersionId) params.set('contractVersionId', filters.contractVersionId);
@@ -288,15 +363,20 @@ function Results({
             throw new DocumentRequestError(502, null);
           accessDenied.current = false;
           setDenied(false);
-          setItems((previous) =>
-            cursor
-              ? [
-                  ...(previous ?? []),
-                  ...page.documents.filter((item) => !previous?.some((old) => old.id === item.id)),
-                ]
-              : page.documents
-          );
-          setNext(page.nextBefore);
+          if (queries) urlRows.acceptPage(page.documents, staffOrderId(page.nextBefore) || null);
+          else {
+            setItems((previous) =>
+              cursor
+                ? [
+                    ...(previous ?? []),
+                    ...page.documents.filter(
+                      (item) => !previous?.some((old) => old.id === item.id)
+                    ),
+                  ]
+                : page.documents
+            );
+            setNext(page.nextBefore);
+          }
         }
       })
       .catch((reason: unknown) => {
@@ -308,19 +388,21 @@ function Results({
           accessDenied.current = true;
           setDenied(true);
           setItems(null);
+          urlRows.discard();
           setNext(null);
-          setSelected(null);
+          setSelected(null, true);
           setUpload(null);
-          setUploaded(false);
+          setUploaded(null);
         }
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [path, refresh]);
+  }, [path, refresh, urlRows.acceptPage]);
   function reload() {
-    setCursor(null);
+    if (queryRef.current) queryRef.current.queue.setQuery({ cursor: '' });
+    else setCursor(null);
     setNext(null);
     setRefresh((value) => value + 1);
   }
@@ -334,32 +416,42 @@ function Results({
           <Button
             onClick={() => {
               if (accessDenied.current) return;
-              setUpload({ replacement: null });
+              setUpload({ replacement: null, selection: null });
               setSelected(null);
-              setUploaded(false);
+              setUploaded(null);
             }}
           >
             {word('upload')}
           </Button>
         ) : null}
       </ListPage.Toolbar>
-      {uploaded ? <p role="status">{word('uploadComplete')}</p> : null}
+      {uploaded && uploaded === selected ? <p role="status">{word('uploadComplete')}</p> : null}
       {staff && filters.kind === 'standalone' && !profileId ? (
         <p className="text-sm text-muted-foreground">{word('selectProfile')}</p>
       ) : null}
-      {upload ? (
+      {visibleUpload ? (
         <DocumentUpload
           staff={staff}
           profileId={profileId}
-          replacement={upload.replacement}
+          replacement={visibleUpload.replacement}
           {...(association ? { association } : {})}
           onClose={() => setUpload(null)}
           onUploaded={(document) => {
-            if (accessDenied.current) return;
+            if (
+              !mounted.current ||
+              accessDenied.current ||
+              (queryRef.current && queryRef.current.selected !== visibleUpload.selection)
+            )
+              return;
             setUpload(null);
-            setSelected(document.id);
-            setUploaded(true);
-            reload();
+            setUploaded(document.id);
+            if (queryRef.current) {
+              queryRef.current.select(document.id, { resetCursor: true });
+              setRefresh((value) => value + 1);
+            } else {
+              setSelected(document.id);
+              reload();
+            }
           }}
         />
       ) : null}
@@ -381,7 +473,7 @@ function Results({
           onReplace={(document) => {
             if (accessDenied.current) return;
             setSelected(null);
-            setUpload({ replacement: document });
+            setUpload({ replacement: document, selection: null });
           }}
         />
       ) : null}
@@ -433,12 +525,24 @@ function Results({
       </ListPage.Content>
       <ListPage.Pagination
         kind="cursor"
-        hasMore={!!next && !error && !denied}
+        hasMore={
+          !!next &&
+          !error &&
+          !denied &&
+          (loading || (queries ? queries.queue.canAdvance(next) : true))
+        }
         loading={loading}
         label={word('pages')}
         nextLabel={word('next')}
+        previous={{
+          enabled: !denied && (queries?.queue.hasPrevious ?? false),
+          onClick: () => queries?.queue.previous(),
+          label: appText('historyPagination.previous', locale),
+        }}
         onNext={() => {
-          if (next) setCursor(next);
+          if (!next) return;
+          if (queries) queries.queue.next(next);
+          else setCursor(next);
         }}
       />
     </ListPage>

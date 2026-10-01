@@ -2,7 +2,7 @@ import { HistoryTable, type HistoryColumn } from './HistoryTable.js';
 import { useListView } from '../hooks/useListView.js';
 import { ContractRefundQueue } from './ContractRefundQueue.js';
 import { ContractCancellationRequestQueue } from './ContractCancellationRequestQueue.js';
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import {
   Alert,
@@ -27,7 +27,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { documentRequest } from '../lib/documents.js';
+import { documentRequest, DocumentRequestError } from '../lib/documents.js';
 import { contractBase, contractStates, type ContractSummary } from '../lib/contracts.js';
 import { ContractActivationRules } from './ContractActivationRules.js';
 import { ContractDetail } from './ContractDetail.js';
@@ -39,15 +39,20 @@ import {
 } from './CustomerContractFilters.js';
 import { DEFAULT_CONTRACT_LIST_SORT } from '@barghsa/shared/validation';
 import { useCursorHistory } from '../hooks/useCursorHistory.js';
+import { useCursorPageRows } from '../hooks/useCursorPageRows.js';
+import { staffOrderId } from '../lib/staff-order-list-query.js';
+import type { RecordListQuery } from '../lib/record-list-query.js';
 
 export function ContractsWorkspace({
   staff = false,
   initialState,
   customerHistory,
+  queries,
 }: {
   staff?: boolean;
   initialState?: 'Active' | undefined;
   customerHistory?: CustomerContractHistoryControls | undefined;
+  queries?: RecordListQuery | undefined;
 }) {
   const revision = useProfileContextRevision();
   return (
@@ -56,6 +61,7 @@ export function ContractsWorkspace({
       staff={staff}
       initialState={initialState}
       customerHistory={customerHistory}
+      queries={queries}
     />
   );
 }
@@ -63,20 +69,33 @@ function Workspace({
   staff,
   initialState,
   customerHistory,
+  queries,
 }: {
   staff: boolean;
   initialState?: 'Active' | undefined;
   customerHistory?: CustomerContractHistoryControls | undefined;
+  queries?: RecordListQuery | undefined;
 }) {
   const locale = useLocale();
   const word = (key: string) => contractText(key, locale);
-  const [filters, setFilters] = useState({
-    contractNumber: '',
-    profileId: '',
-    state: '',
-    serviceType: '',
-  });
-  const [query, setQuery] = useState(initialState ? 'state=Active' : '');
+  const routeFilters = {
+    contractNumber: queries?.queue.query.filters.contractNumber || '',
+    profileId: queries?.queue.query.filters.profileId || '',
+    state: queries?.queue.query.filters.state || '',
+    serviceType: queries?.queue.query.filters.serviceType || '',
+  };
+  const basis = JSON.stringify(routeFilters);
+  const [filters, setFilters] = useState(routeFilters);
+  const [localQuery, setQuery] = useState(initialState ? 'state=Active' : '');
+  const query = queries
+    ? new URLSearchParams(Object.entries(routeFilters).filter(([, value]) => value)).toString()
+    : localQuery;
+  useEffect(() => {
+    if (!queries) return;
+    setFilters(routeFilters);
+    setInvalid(false);
+    setInvalidNumber(false);
+  }, [basis]);
   const [generation, setGeneration] = useState(0);
   const [invalid, setInvalid] = useState(false);
   const [invalidNumber, setInvalidNumber] = useState(false);
@@ -116,8 +135,13 @@ function Workspace({
     setCreatedId(null);
     const params = new URLSearchParams();
     for (const [key, value] of Object.entries(filters)) if (value) params.set(key, value);
-    setQuery(params.toString());
-    setGeneration((value) => value + 1);
+    if (queries) {
+      queries.apply('', filters);
+      if (JSON.stringify(filters) === basis) setGeneration((value) => value + 1);
+    } else {
+      setQuery(params.toString());
+      setGeneration((value) => value + 1);
+    }
   }
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
@@ -210,7 +234,8 @@ function Workspace({
       {staff ? (
         <ContractDraftEditor
           onSaved={(id) => {
-            setCreatedId(id);
+            if (queries) queries.select(id, { resetCursor: true });
+            else setCreatedId(id);
             setGeneration((value) => value + 1);
           }}
         />
@@ -223,6 +248,7 @@ function Workspace({
         staff={staff}
         query={staff ? query : customerParams.toString()}
         customerHistory={customerHistory}
+        queries={queries}
         initialSelected={createdId ?? new URLSearchParams(window.location.search).get('contractId')}
       />
     </div>
@@ -233,11 +259,13 @@ function ContractResults({
   customerHistory,
   query,
   initialSelected,
+  queries,
 }: {
   staff: boolean;
   query: string;
   customerHistory?: CustomerContractHistoryControls | undefined;
   initialSelected: string | null;
+  queries?: RecordListQuery | undefined;
 }) {
   const { view, setView } = useListView('contracts');
   const locale = useLocale();
@@ -246,16 +274,26 @@ function ContractResults({
   const word = (key: string) => contractText(key, locale);
   const [reload, setReload] = useState(0);
   const [retryRevision, setRetryRevision] = useState(0);
-  const {
-    items,
-    before: cursor,
-    nextBefore: next,
-    acceptPage,
-    loadMore,
-  } = useCursorHistory<ContractSummary>(`${staff}:${query}:${reload}`);
+  const legacy = useCursorHistory<ContractSummary>(`${staff}:${query}:${reload}`);
+  const cursor = queries ? queries.queue.query.cursor : legacy.before;
+  const urlRows = useCursorPageRows<ContractSummary>(`${staff}:${query}`, cursor || '');
+  const [denied, setDenied] = useState(false);
+  const items = denied ? [] : queries ? urlRows.rows : legacy.items;
+  const next = denied ? null : queries ? urlRows.next : legacy.nextBefore;
+  const acceptPage = queries ? urlRows.acceptPage : legacy.acceptPage;
+  const loadMore = () => {
+    if (!next) return;
+    if (queries) queries.queue.next(next);
+    else legacy.loadMore();
+  };
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [selected, setSelected] = useState<string | null>(initialSelected);
+  const [localSelected, setLocalSelected] = useState<string | null>(initialSelected);
+  const queryRef = useRef(queries);
+  queryRef.current = queries;
+  const selected = denied ? null : queries ? queries.selected : localSelected;
+  const setSelected = (id: string | null, replace = false) =>
+    queryRef.current ? queryRef.current.select(id, { replace }) : setLocalSelected(id);
   useEffect(() => {
     const controller = new AbortController();
     const params = new URLSearchParams(query);
@@ -268,10 +306,20 @@ function ContractResults({
     )
       .then((page) => {
         if (controller.signal.aborted) return;
-        acceptPage(page.contracts, page.nextBefore);
+        setDenied(false);
+        acceptPage(
+          page.contracts,
+          queries ? staffOrderId(page.nextBefore) || null : page.nextBefore
+        );
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+      .catch((reason: unknown) => {
+        if (controller.signal.aborted) return;
+        setError(true);
+        if (reason instanceof DocumentRequestError && [401, 403].includes(reason.status)) {
+          setDenied(true);
+          urlRows.discard();
+          setSelected(null, true);
+        }
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
@@ -279,6 +327,7 @@ function ContractResults({
     return () => controller.abort();
   }, [staff, query, cursor, reload, retryRevision, acceptPage]);
   function refresh() {
+    if (queryRef.current) queryRef.current.queue.setQuery({ cursor: '' });
     setReload((value) => value + 1);
   }
   const renderIdentity = (item: ContractSummary) => (
@@ -498,7 +547,7 @@ function ContractResults({
     },
   ];
   return (
-    <ListPage>
+    <ListPage role="region" aria-label={word(staff ? 'staffTitle' : 'title')}>
       {!staff && time.notice}
       <ListPage.Toolbar
         filters={
@@ -543,11 +592,13 @@ function ContractResults({
         errorView={
           <div className="space-y-2">
             <Alert variant="destructive">
-              <AlertDescription>{word('error')}</AlertDescription>
+              <AlertDescription>{word(denied ? 'denied' : 'error')}</AlertDescription>
             </Alert>
-            <Button variant="outline" onClick={() => setRetryRevision((value) => value + 1)}>
-              {appText('historyPagination.retry', locale)}
-            </Button>
+            {!denied && (
+              <Button variant="outline" onClick={() => setRetryRevision((value) => value + 1)}>
+                {appText('historyPagination.retry', locale)}
+              </Button>
+            )}
           </div>
         }
         emptyView={<EmptyState title={word('empty')} description={word('emptyHint')} />}
@@ -583,9 +634,19 @@ function ContractResults({
       </ListPage.Content>
       <ListPage.Pagination
         kind="cursor"
-        hasMore={!!next && !error}
+        hasMore={
+          !!next &&
+          !error &&
+          !denied &&
+          (loading || (queries ? queries.queue.canAdvance(next) : true))
+        }
         loading={loading}
         onNext={loadMore}
+        previous={{
+          enabled: !denied && (queries?.queue.hasPrevious ?? false),
+          onClick: () => queries?.queue.previous(),
+          label: appText('historyPagination.previous', locale),
+        }}
         label={appText('historyPagination.label', locale)}
         nextLabel={word('next')}
       />

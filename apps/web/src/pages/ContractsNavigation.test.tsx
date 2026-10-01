@@ -1,5 +1,4 @@
 import { Route as CustomerRoute } from '../routes/_app/contracts.js';
-import AdminContractsPage from './AdminContractsPage.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
@@ -14,6 +13,23 @@ vi.mock('@tanstack/react-router', async () => ({
   Outlet: () => null,
   useLocation: ({ select }: { select: (location: { pathname: string }) => unknown }) =>
     select({ pathname: '/contracts' }),
+}));
+vi.mock('../components/ContractsWorkspace.js', () => ({
+  ContractsWorkspace: ({
+    staff,
+    queries,
+  }: {
+    staff?: boolean;
+    queries?: import('../lib/record-list-query.js').RecordListQuery;
+  }) => (
+    <section aria-label={staff ? 'Staff contracts' : 'Customer contracts'}>
+      <input
+        aria-label="Restored criterion"
+        value={queries?.queue.query.filters.contractNumber || ''}
+        readOnly
+      />
+    </section>
+  ),
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
 vi.mock('../components/AppShell.js', () => ({
@@ -41,7 +57,14 @@ it('makes the implemented document workspaces reachable from both existing shell
     });
     expect(router.matchRoutes('/contracts').at(-1)?.routeId).toBe('/_app/contracts');
     expect(router.matchRoutes('/admin/contracts').at(-1)?.routeId).toBe('/admin/contracts');
-    expect(ContractsRoute.options.component).toBe(AdminContractsPage);
+    vi.spyOn(ContractsRoute, 'useSearch').mockReturnValue({
+      contractNumber: '9223372036854775807',
+    });
+    vi.spyOn(ContractsRoute, 'useNavigate').mockReturnValue(vi.fn());
+    const StaffView = ContractsRoute.options.component!;
+    await act(async () => root.render(<StaffView />));
+    expect(container.querySelector('[aria-label="Staff contracts"]')).not.toBeNull();
+    expect(container.querySelector<HTMLInputElement>('input')?.value).toBe('9223372036854775807');
     const Pending = ContractsRoute.options.pendingComponent;
     await act(async () => root.render(Pending ? <Pending /> : null));
     expect(container.querySelector('[role=status]')).not.toBeNull();
@@ -58,5 +81,6 @@ it('makes the implemented document workspaces reachable from both existing shell
   } finally {
     await act(async () => root.unmount());
     container.remove();
+    vi.restoreAllMocks();
   }
 });

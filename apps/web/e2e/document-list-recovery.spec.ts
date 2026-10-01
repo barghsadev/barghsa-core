@@ -110,6 +110,12 @@ for (const staff of [false, true])
       const main = page.getByRole('main');
       const list = main.getByRole('region', { name: word('listTitle'), exact: true });
       const content = list.locator('[data-slot="list-content"]');
+      if (staff) {
+        await expect
+          .poll(() => new URL(queries.at(-1)!, 'https://local').searchParams.get('q'))
+          .toBe('Review');
+      }
+      await expect(content).not.toHaveAttribute('aria-busy', 'true');
       await expect(content.getByRole('alert')).toBeVisible();
       status = 200;
       await content.getByRole('button', { name: word('retry'), exact: true }).click();

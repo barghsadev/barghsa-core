@@ -1,5 +1,5 @@
 import { DocumentsWorkspace } from '../components/DocumentsWorkspace.js';
-
-export default function DocumentsPage() {
-  return <DocumentsWorkspace />;
+import type { RecordListQuery } from '../lib/record-list-query.js';
+export default function DocumentsPage({ queries }: { queries?: RecordListQuery } = {}) {
+  return <DocumentsWorkspace {...(queries ? { queries } : {})} />;
 }
