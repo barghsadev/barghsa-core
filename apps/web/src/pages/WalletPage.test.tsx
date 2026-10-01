@@ -122,14 +122,20 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
   }
 
   async function confirmOnlineReview() {
-    for (let attempt = 0; attempt < 30 && !document.querySelector('[role="dialog"]'); attempt++) {
-      await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
-    }
-    const button = [...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button')].find(
-      (item) => item.textContent?.includes('Confirm') || item.textContent?.includes('تأیید')
+    const button = await vi.waitFor(
+      async () => {
+        await flushFetches();
+        const confirm = [
+          ...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
+        ].find(
+          (item) => item.textContent?.includes('Confirm') || item.textContent?.includes('تأیید')
+        );
+        expect(confirm).toBeDefined();
+        return confirm!;
+      },
+      { timeout: 2000 }
     );
-    expect(button).toBeDefined();
-    await act(async () => button!.click());
+    await act(async () => button.click());
     await flushFetches();
   }
 

@@ -1621,9 +1621,15 @@ function setThresholdHttp(user: string, amount: number) {
     body: JSON.stringify({ threshold_irr: amount }),
   });
 }
+async function grantThresholdOtpProof() {
+  await http.pool.query(
+    "UPDATE sessions SET otp_step_up_verified_at=clock_timestamp() WHERE user_id IN ('reviewer','initiator')"
+  );
+}
 for (const expiry of ['session', 'step-up'] as const) {
   it(`threshold change rolls back config, version and audit when ${expiry} expires during its audit`, async () => {
     await resetReceiptReviewer();
+    await grantThresholdOtpProof();
     const config = (
       await http.pool.query("SELECT * FROM app_config WHERE key='finance.dual_approval_threshold'")
     ).rows;
@@ -1640,7 +1646,7 @@ for (const expiry of ['session', 'step-up'] as const) {
       await http.pool.query(
         expiry === 'session'
           ? "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '800 milliseconds' WHERE user_id='reviewer'"
-          : "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '15 minutes'+INTERVAL '800 milliseconds' WHERE user_id='reviewer'"
+          : "UPDATE sessions SET otp_step_up_verified_at=clock_timestamp()-INTERVAL '15 minutes'+INTERVAL '800 milliseconds' WHERE user_id='reviewer'"
       );
       pending = setThresholdHttp('reviewer', 500000);
       await expect
@@ -1674,6 +1680,7 @@ for (const expiry of ['session', 'step-up'] as const) {
 }
 it('threshold concurrent first writes preserve the complete previous value and version audit chain', async () => {
   await resetReceiptReviewer();
+  await grantThresholdOtpProof();
   await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='initiator'");
   await http.pool.query("DELETE FROM app_config WHERE key='finance.dual_approval_threshold'");
   const before = Number(
@@ -1730,6 +1737,7 @@ it('threshold concurrent first writes preserve the complete previous value and v
 for (const kind of ['wallet', 'invoice', 'generic'] as const) {
   it(`threshold change waits for the policy used by an in-flight ${kind} decision`, async () => {
     await resetReceiptReviewer();
+    await grantThresholdOtpProof();
     await http.pool.query(
       "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='initiator'"
     );

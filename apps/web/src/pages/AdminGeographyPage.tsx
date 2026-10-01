@@ -10,33 +10,62 @@ const selectClass =
   'h-10 rounded-md border border-input bg-background px-3 text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { geographyBasis, useGeographyList } from '../hooks/useGeographyList.js';
-export default function AdminGeographyPage() {
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
+export interface GeographyQueryBinding {
+  provinces: ListQueryBinding;
+  cities: ListQueryBinding;
+  expanded: string | null;
+  setExpanded: (id: string | null, replace?: boolean) => void;
+  clear: () => void;
+}
+export default function AdminGeographyPage({ query }: { query?: GeographyQueryBinding } = {}) {
   const locale = useLocale();
   const t = (key: GeographyTextKey) => geographyText(key, locale);
   const { number } = useNumberFormatting(locale);
-  const [expanded, setExpanded] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [searchInput, setSearchInput] = useState('');
-  const [status, setStatus] = useState('');
+  const [localExpanded, setLocalExpanded] = useState<string | null>(null);
+  const [localPage, setLocalPage] = useState(1);
+  const [localSearch, setLocalSearch] = useState('');
+  const [localSearchInput, setLocalSearchInput] = useState('');
+  const [localStatus, setLocalStatus] = useState('');
+  const queryRef = useRef(query);
+  queryRef.current = query;
+  const expanded = query ? query.expanded : localExpanded;
+  const page = query?.provinces.query.page ?? localPage;
+  const search = query?.provinces.query.search ?? localSearch;
+  const searchInput = query?.provinces.searchInput ?? localSearchInput;
+  const status = query?.provinces.query.filters.status ?? localStatus;
+  const setExpanded = useCallback((id: string | null, replace = false) => {
+    if (queryRef.current) {
+      if (queryRef.current.expanded !== id) queryRef.current.setExpanded(id, replace);
+    } else setLocalExpanded(id);
+  }, []);
+  const setPage = useCallback((next: number | ((value: number) => number), replace = false) => {
+    if (queryRef.current) {
+      const value = typeof next === 'function' ? next(queryRef.current.provinces.query.page) : next;
+      queryRef.current.provinces.setQuery({ page: value }, replace);
+    } else setLocalPage(next);
+  }, []);
+  const repairPage = useCallback((value: number) => setPage(value, true), [setPage]);
   const [modal, setModal] = useState<GeographyModal | null>(null);
   const savedTrigger = useRef<HTMLElement | null>(null);
   useEffect(() => {
+    if (query) return;
     if (searchInput === search) return;
     const timer = setTimeout(() => {
-      setSearch(searchInput);
+      setLocalSearch(searchInput);
       setPage(1);
     }, 300);
     return () => clearTimeout(timer);
-  }, [searchInput, search]);
+  }, [searchInput, search, query, setPage]);
   const clearPrivate = useCallback(() => {
     savedTrigger.current = null;
-    setExpanded(null);
+    setLocalExpanded(null);
     setModal(null);
-    setSearchInput('');
-    setSearch('');
-    setStatus('');
-    setPage(1);
+    setLocalSearchInput('');
+    setLocalSearch('');
+    setLocalStatus('');
+    setLocalPage(1);
+    queryRef.current?.clear();
   }, []);
   const scope = useCatalogueScope(clearPrivate);
   const load = useCallback(
@@ -47,7 +76,7 @@ export default function AdminGeographyPage() {
     [search, status]
   );
   const criteria = JSON.stringify([search, status]);
-  const list = useGeographyList(scope, criteria, page, load, setPage);
+  const list = useGeographyList(scope, criteria, page, load, repairPage);
   const provinces = list.data?.rows ?? [],
     total = list.data?.total ?? 0,
     loading = list.loading,
@@ -59,12 +88,12 @@ export default function AdminGeographyPage() {
     if (acceptedCriteria.current === criteria) return;
     savedTrigger.current = null;
     acceptedCriteria.current = criteria;
-    setExpanded(null);
+    if (!queryRef.current) setExpanded(null, true);
     setModal(null);
   }, [criteria]);
   useEffect(() => {
     if (!list.data || loading || error) return;
-    if (expanded && !list.data.rows.some((row) => row.id === expanded)) setExpanded(null);
+    if (expanded && !list.data.rows.some((row) => row.id === expanded)) setExpanded(null, true);
     if (modal?.province && list.acceptedPage === modalPage.current) {
       const next = list.data.rows.find((row) => row.id === modal.province?.id);
       if (!next || geographyBasis(next) !== geographyBasis(modal.province)) setModal(null);
@@ -130,15 +159,22 @@ export default function AdminGeographyPage() {
             aria-label={t('search')}
             placeholder={t('search')}
             value={searchInput}
-            onChange={(event) => setSearchInput(event.target.value)}
+            onChange={(event) =>
+              query
+                ? query.provinces.setSearchInput(event.target.value)
+                : setLocalSearchInput(event.target.value)
+            }
           />
           <select
             className={selectClass}
             aria-label={t('filterStatus')}
             value={status}
             onChange={(event) => {
-              setStatus(event.target.value);
-              setPage(1);
+              if (query) query.provinces.setQuery({ filters: { status: event.target.value } });
+              else {
+                setLocalStatus(event.target.value);
+                setPage(1);
+              }
             }}
           >
             <option value="">{t('all')}</option>
@@ -245,6 +281,7 @@ export default function AdminGeographyPage() {
                               scope={scope}
                               parentReady={ready}
                               parentRecovery={recovery}
+                              {...(query ? { query: query.cities } : {})}
                             />
                           </td>
                         </tr>

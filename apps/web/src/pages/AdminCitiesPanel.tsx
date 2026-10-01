@@ -32,6 +32,7 @@ import {
   useGeographyList,
   type GeographyScope,
 } from '../hooks/useGeographyList.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 
 function ImportCitiesDialog({
   province,
@@ -173,38 +174,55 @@ export function CitiesPanel({
   scope: outerScope,
   parentReady = true,
   parentRecovery,
+  query,
 }: {
   province: Province;
   scope?: GeographyScope;
   parentReady?: boolean;
   parentRecovery?: ReactNode;
+  query?: ListQueryBinding;
 }) {
   const locale = useLocale();
   const { number } = useNumberFormatting(locale);
   const t = (key: GeographyTextKey) => geographyText(key, locale);
-  const [page, setPage] = useState(1);
-  const [searchInput, setSearchInput] = useState('');
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState('');
+  const [localPage, setLocalPage] = useState(1);
+  const [localSearchInput, setLocalSearchInput] = useState('');
+  const [localSearch, setLocalSearch] = useState('');
+  const [localStatus, setLocalStatus] = useState('');
+  const queryRef = useRef(query);
+  queryRef.current = query;
+  const page = query?.query.page ?? localPage;
+  const searchInput = query?.searchInput ?? localSearchInput;
+  const search = query?.query.search ?? localSearch;
+  const status = query?.query.filters.status ?? localStatus;
+  const setPage = useCallback((next: number | ((value: number) => number), replace = false) => {
+    if (queryRef.current) {
+      const value = typeof next === 'function' ? next(queryRef.current.query.page) : next;
+      queryRef.current.setQuery({ page: value }, replace);
+    } else setLocalPage(next);
+  }, []);
+  const repairPage = useCallback((value: number) => setPage(value, true), [setPage]);
   const [modal, setModal] = useState<GeographyModal | null>(null);
   const [importTrigger, setImportTrigger] = useState<HTMLElement | null>(null);
   const savedTrigger = useRef<HTMLElement | null>(null);
   useEffect(() => {
+    if (query) return;
     if (searchInput === search) return;
     const timer = setTimeout(() => {
-      setSearch(searchInput);
+      setLocalSearch(searchInput);
       setPage(1);
     }, 300);
     return () => clearTimeout(timer);
-  }, [searchInput, search]);
+  }, [searchInput, search, query, setPage]);
   const clearPrivate = useCallback(() => {
     savedTrigger.current = null;
     setModal(null);
     setImportTrigger(null);
-    setSearchInput('');
-    setSearch('');
-    setStatus('');
-    setPage(1);
+    setLocalSearchInput('');
+    setLocalSearch('');
+    setLocalStatus('');
+    setLocalPage(1);
+    queryRef.current?.clear();
   }, []);
   const localScope = useCatalogueScope(clearPrivate),
     scope = outerScope ?? localScope;
@@ -216,7 +234,7 @@ export function CitiesPanel({
     [province.id, search, status]
   );
   const criteria = JSON.stringify([province.id, search, status]);
-  const list = useGeographyList(scope, criteria, page, load, setPage);
+  const list = useGeographyList(scope, criteria, page, load, repairPage);
   const cities = list.data?.rows ?? [],
     total = list.data?.total ?? 0,
     loading = list.loading,
@@ -324,7 +342,11 @@ export function CitiesPanel({
             aria-label={t('citySearch')}
             placeholder={t('citySearch')}
             value={searchInput}
-            onChange={(event) => setSearchInput(event.target.value)}
+            onChange={(event) =>
+              query
+                ? query.setSearchInput(event.target.value)
+                : setLocalSearchInput(event.target.value)
+            }
             className="max-w-sm"
           />
           <select
@@ -332,8 +354,11 @@ export function CitiesPanel({
             className="h-10 rounded-md border border-input bg-background px-3"
             value={status}
             onChange={(event) => {
-              setStatus(event.target.value);
-              setPage(1);
+              if (query) query.setQuery({ filters: { status: event.target.value } });
+              else {
+                setLocalStatus(event.target.value);
+                setPage(1);
+              }
             }}
           >
             <option value="">{t('all')}</option>

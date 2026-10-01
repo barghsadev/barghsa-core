@@ -1,5 +1,5 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowDown, ArrowUp, Building2, UserRound } from 'lucide-react';
 import { useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/crm';
@@ -15,6 +15,7 @@ import {
 } from '@barghsa/ui';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 interface User {
   userId: string;
   username: string;
@@ -33,12 +34,12 @@ const emptyFilters = {
   order: 'desc',
   staffOnly: false,
 };
-export default function CrmProfileList() {
+export default function CrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const preference = useTimezone();
   const search = useSearch({ from: '/admin/crm/' });
-  const [filters, setFilters] = useState({
+  const [localFilters, setLocalFilters] = useState({
     ...emptyFilters,
     verification: ['VERIFIED', 'UNVERIFIED', 'PENDING', 'DISABLED'].includes(
       search.verification ?? ''
@@ -46,8 +47,37 @@ export default function CrmProfileList() {
       ? search.verification!
       : '',
   });
-  const [text, setText] = useState('');
-  const [term, setTerm] = useState('');
+  const [localText, setLocalText] = useState('');
+  const [localTerm, setLocalTerm] = useState('');
+  const filters = useMemo(
+    () =>
+      query
+        ? {
+            ...emptyFilters,
+            type: query.query.filters.type ?? '',
+            verification: query.query.filters.verification ?? '',
+            dateFrom: query.query.filters.dateFrom ?? '',
+            dateTo: query.query.filters.dateTo ?? '',
+            staffOnly: query.query.filters.staffOnly === 'true',
+            sort: query.query.sort,
+            order: query.query.order,
+          }
+        : localFilters,
+    [query?.query, localFilters]
+  );
+  const text = query?.searchInput ?? localText;
+  const term = query?.query.search ?? localTerm;
+  const queryRef = useRef(query);
+  queryRef.current = query;
+  const setFilters = setLocalFilters;
+  const setText = useCallback((value: string) => {
+    if (queryRef.current) queryRef.current.setSearchInput(value);
+    else setLocalText(value);
+  }, []);
+  const setTerm = useCallback((value: string) => {
+    if (queryRef.current) queryRef.current.setQuery({ search: value });
+    else setLocalTerm(value);
+  }, []);
   const [cursors, setCursors] = useState<string[]>(['']);
   const criteria = JSON.stringify([filters, term, preference.timezone]);
   const [accepted, setAccepted] = useState<{
@@ -80,18 +110,23 @@ export default function CrmProfileList() {
     return () => cancelAnimationFrame(frame);
   }, [loading, result]);
   useEffect(() => {
+    if (query) return;
     if (text.trim() === term) return;
     const timer = setTimeout(() => {
       setTerm(text.trim());
       setCursors(['']);
     }, 300);
     return () => clearTimeout(timer);
-  }, [text, term]);
+  }, [text, term, query, setTerm]);
+  const previousTimezone = useRef(preference.timezone);
   useEffect(() => {
     setCursors(['']);
+    if (previousTimezone.current !== preference.timezone)
+      queryRef.current?.setQuery({ cursor: '' }, true);
+    previousTimezone.current = preference.timezone;
   }, [preference.timezone]);
   useEffect(() => setExpanded({}), [criteria]);
-  const cursor = cursors.at(-1) ?? '';
+  const cursor = query?.query.cursor ?? cursors.at(-1) ?? '';
   const load = useCallback(async () => {
     const current = ++generation.current;
     controllerRef.current?.abort();
@@ -128,9 +163,12 @@ export default function CrmProfileList() {
         setDenied(true);
         setAccepted(null);
         setExpanded({});
-        setText('');
-        setTerm('');
-        setFilters(emptyFilters);
+        if (queryRef.current) queryRef.current.clear();
+        else {
+          setText('');
+          setTerm('');
+          setFilters(emptyFilters);
+        }
         setCursors(['']);
         setLoading(false);
         return;
@@ -194,7 +232,14 @@ export default function CrmProfileList() {
     };
   }, [load, revision]);
   function update(key: keyof typeof filters, value: string | boolean) {
-    setFilters((previous) => ({ ...previous, [key]: value }));
+    if (query) {
+      if (key === 'order') query.setQuery({ order: value === 'asc' ? 'asc' : 'desc' });
+      else if (key === 'sort') query.setQuery({ sort: String(value) });
+      else
+        query.setQuery({
+          filters: { [key]: typeof value === 'boolean' ? (value ? 'true' : '') : value },
+        });
+    } else setFilters((previous) => ({ ...previous, [key]: value }));
     setCursors(['']);
   }
   function date(value: string | null) {
@@ -294,9 +339,12 @@ export default function CrmProfileList() {
         <Button
           variant="outline"
           onClick={() => {
-            setFilters(emptyFilters);
-            setText('');
-            setTerm('');
+            if (query) query.clear();
+            else {
+              setFilters(emptyFilters);
+              setText('');
+              setTerm('');
+            }
             setCursors(['']);
           }}
         >
@@ -421,14 +469,23 @@ export default function CrmProfileList() {
                               className="inline-flex items-center gap-1 underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                               onClick={() => {
                                 sortFocus.current = sort;
-                                setFilters((previous) => ({
-                                  ...previous,
-                                  sort: sort!,
-                                  order:
-                                    previous.sort === sort && previous.order === 'asc'
-                                      ? 'desc'
-                                      : 'asc',
-                                }));
+                                if (query)
+                                  query.setQuery({
+                                    sort: sort!,
+                                    order:
+                                      filters.sort === sort && filters.order === 'asc'
+                                        ? 'desc'
+                                        : 'asc',
+                                  });
+                                else
+                                  setFilters((previous) => ({
+                                    ...previous,
+                                    sort: sort!,
+                                    order:
+                                      previous.sort === sort && previous.order === 'asc'
+                                        ? 'desc'
+                                        : 'asc',
+                                  }));
                                 setCursors(['']);
                               }}
                             >
@@ -552,8 +609,15 @@ export default function CrmProfileList() {
           <nav aria-label={t('crm.list.title', locale)} className="flex gap-2">
             <Button
               variant="outline"
-              disabled={loading || denied || preference.status !== 'ready' || cursors.length === 1}
-              onClick={() => setCursors((previous) => previous.slice(0, -1))}
+              disabled={
+                loading ||
+                denied ||
+                preference.status !== 'ready' ||
+                (query ? !query.hasPrevious : cursors.length === 1)
+              }
+              onClick={() =>
+                query ? query.previous() : setCursors((previous) => previous.slice(0, -1))
+              }
             >
               {t('crm.list.previous', locale)}
             </Button>
@@ -565,10 +629,14 @@ export default function CrmProfileList() {
                 denied ||
                 preference.status !== 'ready' ||
                 !result?.hasMore ||
-                !result.cursor
+                !result.cursor ||
+                (query ? !query.canAdvance(result.cursor) : false)
               }
               onClick={() => {
-                if (result?.cursor) setCursors((previous) => [...previous, result.cursor!]);
+                if (result?.cursor) {
+                  if (query) query.next(result.cursor);
+                  else setCursors((previous) => [...previous, result.cursor!]);
+                }
               }}
             >
               {t('crm.list.next', locale)}
