@@ -10,13 +10,20 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { GiftProfilePicker } from '../components/GiftProfilePicker.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { useGiftCodeCatalogue } from '../hooks/useGiftCodeCatalogue.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import { giftFilter } from '../lib/gift-list-query.js';
 import {
   giftCodeBasis,
   isGiftCodeStats,
   matchesGiftReceipt,
   type GiftCodeStats,
 } from '../lib/gift-code-catalogue.js';
-type GiftReview = TeamAction & { epoch: number; id: string | null; basis: string };
+type GiftReview = TeamAction & {
+  epoch: number;
+  id: string | null;
+  basis: string;
+  queryScope: string;
+};
 type DateField = {
   date: Date | undefined;
   time: string;
@@ -86,7 +93,17 @@ function draftFrom(row: GiftCodeDto | undefined, zone: string): Draft {
     end: dateField(row?.validUntil ?? null, zone),
   };
 }
-export default function AdminGiftCodesPage() {
+export default function AdminGiftCodesPage({
+  queries,
+  selection,
+}: {
+  queries?: ListQueryBinding;
+  selection?: {
+    id: string;
+    set: (id: string) => void;
+    apply: (filters: Record<string, string>) => void;
+  };
+} = {}) {
   const preference = useTimezone();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -94,7 +111,7 @@ export default function AdminGiftCodesPage() {
   const money = numbers.money;
   const [draft, setDraft] = useState<Draft | null>(null),
     [draftBasis, setDraftBasis] = useState<string | null>(null),
-    [editor, setEditor] = useState<string | null>(null);
+    [localEditor, setEditor] = useState<string | null>(null);
   const [action, setAction] = useState<GiftReview | null>(null),
     [saved, setSaved] = useState(false),
     [invalidDate, setInvalidDate] = useState(false);
@@ -103,7 +120,18 @@ export default function AdminGiftCodesPage() {
     [type, setType] = useState(''),
     [eligibility, setEligibility] = useState(''),
     [expiry, setExpiry] = useState(''),
-    [filter, setFilter] = useState('');
+    [localFilter, setFilter] = useState('');
+  const filter = queries ? giftFilter(queries.query.filters) : localFilter;
+  const applied = queries?.query.filters;
+  const appliedKey = JSON.stringify(applied);
+  useEffect(() => {
+    if (!applied) return;
+    setSearch(applied.search || '');
+    setStatus(applied.status || '');
+    setType(applied.discountType || '');
+    setEligibility(applied.eligibility || '');
+    setExpiry(applied.expiry || '');
+  }, [appliedKey]);
   const refreshButton = useRef<HTMLButtonElement>(null);
   const clearPrivate = useCallback(() => {
     setDraft(null);
@@ -114,7 +142,17 @@ export default function AdminGiftCodesPage() {
     setInvalidDate(false);
   }, []);
   const scope = useCatalogueScope(clearPrivate);
-  const catalogue = useGiftCodeCatalogue(scope, filter, preference.status === 'ready');
+  const catalogue = useGiftCodeCatalogue(scope, filter, preference.status === 'ready', queries);
+  const editor = scope.denied ? null : selection ? selection.id || null : localEditor;
+  const [editorScope, setEditorScope] = useState(editor);
+  if (editorScope !== editor) {
+    setEditorScope(editor);
+    setDraft(null);
+    setDraftBasis(null);
+    setAction(null);
+    setInvalidDate(false);
+  }
+  const queryScope = JSON.stringify([filter, queries?.query.cursor ?? '', editor]);
   const validateStats = useCallback(
     (value: unknown): value is GiftCodeStats => isGiftCodeStats(value) && value.code.id === editor,
     [editor]
@@ -146,7 +184,7 @@ export default function AdminGiftCodesPage() {
     preference.status === 'ready' &&
     catalogue.rows !== null &&
     !catalogue.loading &&
-    !catalogue.error;
+    !catalogue.pending;
   const editorReady =
     ready &&
     (editor === 'new' ||
@@ -157,23 +195,23 @@ export default function AdminGiftCodesPage() {
   const currentBasis =
     action?.id && action.path.endsWith('/toggle') ? rows.find((r) => r.id === action.id) : null;
   const reviewBasis = currentBasis ? giftCodeBasis(currentBasis) : editor ? editorBasis : null;
-  const liveReview = useRef({ action, basis: reviewBasis });
-  liveReview.current = { action, basis: reviewBasis };
+  const liveReview = useRef({ action, basis: reviewBasis, queryScope });
+  liveReview.current = { action, basis: reviewBasis, queryScope };
   useEffect(() => {
-    if (
-      editor &&
-      !draft &&
-      !scope.denied &&
-      preference.status === 'ready' &&
-      (editor === 'new' || stats)
-    ) {
+    if (editor && !draft && editorReady) {
       setDraft(draftFrom(stats?.code, zone));
       setDraftBasis(editorBasis);
     }
-  }, [editor, draft, scope.denied, preference.status, stats, zone, editorBasis]);
+  }, [editor, draft, editorReady, stats, zone, editorBasis]);
   useEffect(() => {
-    if (action && (action.epoch !== scope.version || action.basis !== reviewBasis)) setAction(null);
-  }, [action, reviewBasis, scope.version]);
+    if (
+      action &&
+      (action.epoch !== scope.version ||
+        action.basis !== reviewBasis ||
+        action.queryScope !== queryScope)
+    )
+      setAction(null);
+  }, [action, reviewBasis, scope.version, queryScope]);
   const refresh = () => {
     if (preference.status === 'error') preference.retry();
     if (scope.denied) scope.recover();
@@ -205,7 +243,8 @@ export default function AdminGiftCodesPage() {
     setInvalidDate(false);
     setSaved(false);
     setAction(null);
-    setEditor(value);
+    if (selection) selection.set(value || '');
+    else setEditor(value);
   }
   function propose(
     path: string,
@@ -219,6 +258,7 @@ export default function AdminGiftCodesPage() {
     setSaved(false);
     setAction({
       epoch: scope.version,
+      queryScope,
       id: row?.id ?? (editor === 'new' ? null : editor),
       basis: row ? giftCodeBasis(row) : editorBasis!,
       path,
@@ -292,19 +332,24 @@ export default function AdminGiftCodesPage() {
             className="grid items-end gap-3 sm:grid-cols-2 lg:grid-cols-3"
             onSubmit={(event) => {
               event.preventDefault();
-              choose(null);
-              setFilter(
-                new URLSearchParams({
-                  ...(search ? { search } : {}),
-                  ...(status ? { status } : {}),
-                  ...(type ? { discountType: type } : {}),
-                  ...(eligibility ? { eligibility } : {}),
-                  ...(expiry ? { expiry } : {}),
-                }).toString()
-              );
+              const filters = {
+                search: search.trim(),
+                status,
+                discountType: type,
+                eligibility,
+                expiry,
+              };
+              if (queries) {
+                if (selection) selection.apply(filters);
+                else queries.setQuery({ filters, cursor: '' });
+                if (giftFilter(filters) === filter && !queries.query.cursor) catalogue.retry();
+              } else {
+                choose(null);
+                setFilter(giftFilter(filters));
+                catalogue.retry();
+              }
               if (preference.status === 'error') preference.retry();
               if (scope.denied) scope.recover();
-              else catalogue.retry();
             }}
           >
             <div>
@@ -400,6 +445,11 @@ export default function AdminGiftCodesPage() {
                   >
                     {label('refreshStats')}
                   </Button>
+                  {!draft && (
+                    <Button type="button" variant="outline" onClick={() => choose(null)}>
+                      {label('cancel')}
+                    </Button>
+                  )}
                   {detail.loading && <p role="status">{label('loading')}</p>}
                   {detail.error && (
                     <p role="alert">
@@ -849,13 +899,15 @@ export default function AdminGiftCodesPage() {
             if (
               scope.live.current !== action.epoch ||
               liveReview.current.action !== action ||
-              liveReview.current.basis !== action.basis
+              liveReview.current.basis !== action.basis ||
+              liveReview.current.queryScope !== action.queryScope
             )
               return;
             if (!matchesGiftReceipt(result, action.body, action.id))
               throw new Error('Invalid gift receipt');
             catalogue.accept(result);
-            setEditor(null);
+            if (selection) selection.set('');
+            else setEditor(null);
             setDraft(null);
             setDraftBasis(null);
             setAction(null);

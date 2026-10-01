@@ -323,3 +323,40 @@ it('a receipt can publish before failed authoritative refresh without retaining 
     host.querySelector<HTMLButtonElement>('button[aria-label="Deactivate CODE00"]')!.disabled
   ).toBe(true);
 });
+
+it('restored code selection waits for the catalogue baseline before initializing an editable draft', async () => {
+  let finish!: (value: Response) => void;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((input: RequestInfo | URL) =>
+      String(input).includes('/stats')
+        ? Promise.resolve(reply(stats()))
+        : new Promise<Response>((resolve) => {
+            finish = resolve;
+          })
+    )
+  );
+  const selection = { id: giftCode().id, set: vi.fn(), apply: vi.fn() };
+  await act(async () => root.render(<Page selection={selection} />));
+  expect(host.querySelector('#gift-value')).toBeNull();
+  await act(async () => finish(reply([giftCode()])));
+  expect(host.querySelector<HTMLInputElement>('#gift-value')?.value).toBe('1000');
+  const save = host.querySelector<HTMLButtonElement>(
+    'form[aria-label="Gift-code settings"] button[type=submit]'
+  );
+  expect(save?.disabled).toBe(false);
+  expect(host.textContent).not.toContain('Reset to saved');
+});
+it('unavailable restored code statistics can be closed without an initialized draft', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (input: RequestInfo | URL) =>
+      String(input).includes('/stats') ? reply({}, 404) : reply([giftCode(1)])
+    )
+  );
+  const selection = { id: giftCode().id, set: vi.fn(), apply: vi.fn() };
+  await act(async () => root.render(<Page selection={selection} />));
+  expect(host.querySelector('#gift-value')).toBeNull();
+  await click('Cancel');
+  expect(selection.set).toHaveBeenCalledWith('');
+});

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { GiftCodeDto } from '@barghsa/shared/promotions';
 import { GIFT_CODE_PAGE_SIZE, isGiftCodePage } from '../lib/gift-code-catalogue.js';
 import type { useCatalogueScope } from './useCatalogueResource.js';
+import type { ListQueryBinding } from './useListQuery.js';
 export function giftCodeListPath(filter: string, before?: string): string {
   const query = new URLSearchParams(filter);
   query.set('limit', String(GIFT_CODE_PAGE_SIZE));
@@ -11,51 +12,61 @@ export function giftCodeListPath(filter: string, before?: string): string {
 export function useGiftCodeCatalogue(
   scope: ReturnType<typeof useCatalogueScope>,
   filter: string,
-  enabled: boolean
+  enabled: boolean,
+  queries?: ListQueryBinding
 ) {
   const { live, version, denied, deny } = scope;
   const [attempt, setAttempt] = useState(0);
-  const [result, setResult] = useState<{
+  const [localCursor, setLocalCursor] = useState({ filter, value: '' });
+  const cursor = queries
+    ? queries.query.cursor
+    : localCursor.filter === filter
+      ? localCursor.value
+      : '';
+  const key = `${version}:${filter}`;
+  const requestKey = `${key}:${cursor}`;
+  const currentKey = useRef(requestKey);
+  currentKey.current = requestKey;
+  const sequence = useRef(0);
+  const [accepted, setAccepted] = useState<{
     key: string;
-    rows: GiftCodeDto[] | null;
+    cursor: string;
+    rows: GiftCodeDto[];
+    next: string | null;
+  } | null>(null);
+  const acceptedRef = useRef(accepted);
+  acceptedRef.current = accepted;
+  const [state, setState] = useState<{
+    requestKey: string;
     loading: boolean;
     error: boolean;
-    hasMore: boolean;
-    more: 'idle' | 'loading' | 'error';
   } | null>(null);
-  const key = `${version}:${filter}`;
-  const currentKey = useRef(key);
-  currentKey.current = key;
-  const sequence = useRef(0),
-    moreBusy = useRef(false);
-  const retry = useCallback(() => {
+  const retry = () => {
     sequence.current++;
-    setAttempt((v) => v + 1);
-  }, []);
+    if (cursor && !(state?.requestKey === requestKey && state.error)) {
+      if (queries) queries.setQuery({ cursor: '' });
+      else setLocalCursor({ filter, value: '' });
+    } else setAttempt((value) => value + 1);
+  };
   useEffect(() => {
     if (denied || !enabled) {
-      setResult(null);
+      setAccepted(null);
+      setState(null);
       return;
     }
     const controller = new AbortController(),
       read = ++sequence.current;
-    moreBusy.current = false;
     const current = () =>
       !controller.signal.aborted &&
       live.current === version &&
-      currentKey.current === key &&
+      currentKey.current === requestKey &&
       read === sequence.current;
-    setResult((old) => ({
-      key,
-      rows: old?.key === key ? old.rows : null,
-      loading: true,
-      error: false,
-      hasMore: false,
-      more: 'idle',
-    }));
+    setState({ requestKey, loading: true, error: false });
     void (async () => {
       try {
-        const response = await fetch(giftCodeListPath(filter), { signal: controller.signal });
+        const response = await fetch(giftCodeListPath(filter, cursor), {
+          signal: controller.signal,
+        });
         if (!current()) return;
         if (response.status === 401 || response.status === 403) {
           deny();
@@ -64,97 +75,81 @@ export function useGiftCodeCatalogue(
         if (!response.ok) throw new Error('Unavailable');
         const data: unknown = await response.json();
         if (!current()) return;
-        if (!isGiftCodePage(data)) throw new Error('Invalid gift codes');
-        setResult({
-          key,
-          rows: data,
-          loading: false,
-          error: false,
-          hasMore: data.length === GIFT_CODE_PAGE_SIZE,
-          more: 'idle',
-        });
-      } catch {
-        if (current())
-          setResult((old) => ({
+        const old = acceptedRef.current;
+        const extending =
+          !!cursor && old?.key === key && old.next === cursor && old.cursor !== cursor;
+        if (
+          !isGiftCodePage(data) ||
+          (data.length === GIFT_CODE_PAGE_SIZE &&
+            (data.at(-1)!.id === cursor ||
+              (extending && old.rows.some((row) => row.id === data.at(-1)!.id))))
+        )
+          throw new Error('Invalid gift codes');
+        setAccepted((old) => {
+          const extending =
+            !!cursor && old?.key === key && old.next === cursor && old.cursor !== cursor;
+          const previous = extending ? old.rows : [];
+          const known = new Set(previous.map((row) => row.id));
+          const next = data.length === GIFT_CODE_PAGE_SIZE ? data.at(-1)!.id : null;
+          return {
             key,
-            rows: old?.key === key ? old.rows : null,
-            loading: false,
-            error: true,
-            hasMore: false,
-            more: 'idle',
-          }));
+            cursor,
+            rows: [...previous, ...data.filter((row) => !known.has(row.id))],
+            next,
+          };
+        });
+        setState({ requestKey, loading: false, error: false });
+      } catch {
+        if (current()) setState({ requestKey, loading: false, error: true });
       }
     })();
     return () => {
       controller.abort();
       sequence.current++;
     };
-  }, [denied, enabled, key, filter, live, version, deny, attempt]);
-  const accepted = !denied && enabled && result?.key === key ? result : null;
-  const loadMore = async () => {
-    if (
-      !accepted?.hasMore ||
-      !accepted.rows?.length ||
-      accepted.loading ||
-      accepted.error ||
-      moreBusy.current
-    )
+  }, [denied, enabled, key, requestKey, cursor, filter, live, version, deny, attempt]);
+  const data = !denied && enabled && accepted?.key === key ? accepted : null;
+  const status = state?.requestKey === requestKey ? state : null;
+  const loading = enabled && !denied && (status?.loading ?? true);
+  const error = status?.error ?? false;
+  const more = !!cursor && !!data && data.cursor !== cursor;
+  const loadMore = () => {
+    if (loading || (!more && error)) return;
+    if (more) {
+      setAttempt((value) => value + 1);
       return;
-    const read = sequence.current,
-      cursor = accepted.rows.at(-1)!.id;
-    const current = () =>
-      live.current === version && currentKey.current === key && read === sequence.current;
-    moreBusy.current = true;
-    setResult((old) => old && { ...old, more: 'loading' });
-    try {
-      const response = await fetch(giftCodeListPath(filter, cursor));
-      if (!current()) return;
-      if (response.status === 401 || response.status === 403) {
-        deny();
-        return;
-      }
-      if (!response.ok) throw new Error('Unavailable');
-      const data: unknown = await response.json();
-      if (!current()) return;
-      if (
-        !isGiftCodePage(data) ||
-        (data.length === GIFT_CODE_PAGE_SIZE &&
-          accepted.rows!.some((r) => r.id === data.at(-1)!.id))
-      )
-        throw new Error('Invalid next page');
-      setResult((old) => {
-        if (!old || old.key !== key) return old;
-        const known = new Set(old.rows?.map((r) => r.id));
-        return {
-          ...old,
-          rows: [...(old.rows ?? []), ...data.filter((r) => !known.has(r.id))],
-          hasMore: data.length === GIFT_CODE_PAGE_SIZE,
-          more: 'idle',
-        };
-      });
-    } catch {
-      if (current()) setResult((old) => old && { ...old, more: 'error' });
-    } finally {
-      if (current()) moreBusy.current = false;
     }
+    if (!data?.next) return;
+    if (queries) queries.next(data.next);
+    else setLocalCursor({ filter, value: data.next });
   };
-  const accept = (row: GiftCodeDto) => {
-    if (denied || live.current !== version || currentKey.current !== key) return;
-    sequence.current++;
-    setResult((old) =>
-      old?.key === key
-        ? { ...old, rows: old.rows?.map((r) => (r.id === row.id ? row : r)) ?? null, more: 'idle' }
-        : old
-    );
-  };
+  const accept = useCallback(
+    (row: GiftCodeDto) => {
+      if (denied || live.current !== version || currentKey.current !== requestKey) return;
+      sequence.current++;
+      setAccepted((old) =>
+        old?.key === key
+          ? { ...old, rows: old.rows.map((item) => (item.id === row.id ? row : item)) }
+          : old
+      );
+    },
+    [denied, live, version, requestKey, key]
+  );
   return {
-    rows: accepted?.rows ?? null,
-    loading: enabled && !denied && (accepted?.loading ?? true),
-    error: accepted?.error ?? false,
-    hasMore: accepted?.hasMore ?? false,
-    more: accepted?.more ?? 'idle',
+    rows: data?.rows ?? null,
+    loading: loading && !more,
+    error: error && !more,
+    hasMore: !!data?.next && (more || !queries || queries.canAdvance(data.next)),
+    more: more
+      ? loading
+        ? ('loading' as const)
+        : error
+          ? ('error' as const)
+          : ('idle' as const)
+      : ('idle' as const),
     retry,
     loadMore,
     accept,
+    pending: loading || error,
   };
 }
