@@ -138,7 +138,7 @@ it('rejects acceptance when expiry changes while the decision waits', async () =
         async () =>
           (
             await http.pool.query(`SELECT count(*)::int AS count FROM pg_stat_activity
-      WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT profile_id,username,role,status,expires_at FROM profile_invitations%FOR UPDATE'`)
+      WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT profile_id,username,role,status,expires_at,created_at FROM profile_invitations%FOR UPDATE'`)
           ).rows[0].count
       )
       .toBe(1);

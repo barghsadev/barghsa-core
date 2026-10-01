@@ -60,10 +60,17 @@ async function getJson<T>(url: string, signal: AbortSignal): Promise<T> {
   return (await response.json()) as T;
 }
 
+export interface ReceiptHistoryQuery {
+  query: import('../hooks/useListQuery.js').ListQueryBinding;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
 export function InvoiceBankReceiptQueue({
   initialSelection,
+  historyQuery,
 }: {
   initialSelection?: { receiptId: string; state: string } | null;
+  historyQuery?: ReceiptHistoryQuery;
 } = {}) {
   const locale = useLocale();
   const time = useAccountTime(locale);
@@ -79,9 +86,12 @@ export function InvoiceBankReceiptQueue({
       ? 'history'
       : 'pending'
   );
-  const [historyOpen, setHistoryOpen] = useState(
+  const [localHistoryOpen, setLocalHistoryOpen] = useState(
     initialSelection?.state === 'Confirmed' || initialSelection?.state === 'Rejected'
   );
+  const historyOpen = historyQuery?.open ?? localHistoryOpen;
+  const setHistoryOpen = (value: boolean) =>
+    historyQuery ? historyQuery.setOpen(value) : setLocalHistoryOpen(value);
   const [detail, setDetail] = useState<Receipt | null>(null);
   const [allocation, setAllocation] = useState<Allocation | null>(null);
   const [detailState, setDetailState] = useState<'loading' | 'ready' | 'error'>('loading');
@@ -298,12 +308,13 @@ export function InvoiceBankReceiptQueue({
       <Button
         variant="outline"
         aria-expanded={historyOpen}
-        onClick={() => setHistoryOpen((value) => !value)}
+        onClick={() => setHistoryOpen(!historyOpen)}
       >
         {word('historyTitle')}
       </Button>
       {historyOpen ? (
         <InvoiceBankReceiptHistory
+          {...(historyQuery ? { binding: historyQuery.query } : {})}
           revision={revision}
           onOpen={(receiptId) => {
             setReason('');

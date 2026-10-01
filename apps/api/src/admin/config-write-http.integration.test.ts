@@ -114,7 +114,7 @@ beforeAll(async () => {
     const session = randomUUID(),
       csrf = randomUUID();
     await http.pool.query(
-      "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())",
+      "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,otp_step_up_verified_at) VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW()-INTERVAL '1 second',NOW()-INTERVAL '1 second')",
       [session, user, csrf, randomUUID()]
     );
     headers[user] = {
@@ -146,7 +146,7 @@ const walletLimit = cases.find((item) => item.path === 'wallet-top-up-limit')!;
 const daytimeWindow = cases.find((item) => item.path === 'delivery-window')!;
 async function resetWalletLimitActor() {
   await http.pool.query(
-    "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,expires_at=clock_timestamp()+INTERVAL '1 day',idle_deadline=clock_timestamp()+INTERVAL '30 minutes',step_up_verified_at=clock_timestamp() WHERE user_id='operator'",
+    "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,expires_at=clock_timestamp()+INTERVAL '1 day',idle_deadline=clock_timestamp()+INTERVAL '30 minutes',step_up_verified_at=clock_timestamp()-INTERVAL '1 second',otp_step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='operator'",
     [headers.operator!['X-CSRF-Token']]
   );
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, ListPage, ScrollArea } from '@barghsa/ui';
 import type { FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -7,6 +7,8 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import { decodeFinanceCursor, encodeFinanceCursor } from '../lib/finance-list-query.js';
 import { formatInvoiceServicePeriod } from '../lib/invoice-service-period.js';
 
 interface InvoiceRow {
@@ -84,13 +86,16 @@ export function InvoiceLedger({
   onSelectForRefund,
   onOpenReceipt,
   initialInvoiceId = '',
+  query,
 }: {
   onSelectForDueAt: (invoiceId: string) => void;
   onSelectForRefund?: (invoiceId: string) => void;
   onOpenReceipt: (receiptId: string, state: string) => void;
   initialInvoiceId?: string;
+  query?: ListQueryBinding;
 }) {
-  const deepLinkId = isInvoiceUuid(initialInvoiceId) ? initialInvoiceId : '';
+  const deepLinkId =
+    query?.query.filters.invoiceId ?? (isInvoiceUuid(initialInvoiceId) ? initialInvoiceId : '');
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
@@ -98,15 +103,28 @@ export function InvoiceLedger({
   const invoiceType = (value: string | null) =>
     value === 'manual' || value === 'auto' ? word(`type.${value}`) : (value ?? word('unknown'));
   const activityState = (value: string) => appText(`invoices.activity.state.${value}`, locale);
-  const [state, setState] = useState('');
+  const [localState, setLocalState] = useState('');
+  const state = query?.query.filters.state ?? localState;
   const [idInput, setIdInput] = useState(deepLinkId);
-  const [invoiceId, setInvoiceId] = useState(deepLinkId);
+  const [localInvoiceId, setLocalInvoiceId] = useState(deepLinkId);
+  const invoiceId = query?.query.filters.invoiceId ?? localInvoiceId;
   const [profileInput, setProfileInput] = useState('');
-  const [profileId, setProfileId] = useState('');
+  const [localProfileId, setLocalProfileId] = useState('');
+  const profileId = query?.query.filters.profileId ?? localProfileId;
   const [orderInput, setOrderInput] = useState('');
-  const [orderId, setOrderId] = useState('');
-  const [cursor, setCursor] = useState<Page['nextCursor']>(null);
-  const [pages, setPages] = useState<Page[]>([]);
+  const [localOrderId, setLocalOrderId] = useState('');
+  const orderId = query?.query.filters.orderId ?? localOrderId;
+  const [localCursor, setLocalCursor] = useState<Page['nextCursor']>(null);
+  const cursor = useMemo(
+    () => (query ? decodeFinanceCursor(query.query.cursor) : localCursor),
+    [query?.query.cursor, localCursor]
+  );
+  const cursorKey = encodeFinanceCursor(cursor);
+  const criteria = JSON.stringify([state, invoiceId, profileId, orderId]);
+  const [accepted, setAccepted] = useState({ criteria, cursor: cursorKey, pages: [] as Page[] });
+  const pages = accepted.criteria === criteria ? accepted.pages : [];
+  const setPages = (pages: Page[]) => setAccepted({ criteria, cursor: cursorKey, pages });
+  const previousCriteria = useRef(criteria);
   const [status, setStatus] = useState<'loading' | 'ready' | 'forbidden' | 'error'>('loading');
   const [inputError, setInputError] = useState<
     'invalidId' | 'invalidProfileId' | 'invalidOrderId' | null
@@ -117,6 +135,19 @@ export function InvoiceLedger({
   const [revision, setRevision] = useState(0);
   const [detailRevision, setDetailRevision] = useState(0);
 
+  useEffect(() => {
+    if (!query) return;
+    setIdInput(invoiceId);
+    setProfileInput(profileId);
+    setOrderInput(orderId);
+    setInputError(null);
+  }, [invoiceId, profileId, orderId, !!query]);
+  useEffect(() => {
+    if (previousCriteria.current === criteria) return;
+    previousCriteria.current = criteria;
+    setSelectedId(null);
+    setDetail(null);
+  }, [criteria]);
   useEffect(() => {
     const controller = new AbortController();
     const params = new URLSearchParams();
@@ -132,12 +163,30 @@ export function InvoiceLedger({
     void getJson<Page>(`${base}${params.size ? `?${params}` : ''}`, controller.signal)
       .then((page) => {
         if (controller.signal.aborted) return;
-        setPages((current) => (cursor ? [...current, page] : [page]));
+        setAccepted((current) => {
+          const sameCriteria = current.criteria === criteria;
+          const extending =
+            !!cursorKey &&
+            sameCriteria &&
+            cursorKey !== current.cursor &&
+            cursorKey === encodeFinanceCursor(current.pages.at(-1)?.nextCursor);
+          const refreshing =
+            sameCriteria && cursorKey === current.cursor && current.pages.length > 0;
+          return {
+            criteria,
+            cursor: cursorKey,
+            pages: extending
+              ? [...current.pages, page]
+              : refreshing
+                ? [...current.pages.slice(0, -1), page]
+                : [page],
+          };
+        });
         setStatus('ready');
       })
       .catch((error: unknown) => {
         if (!controller.signal.aborted) {
-          if (error instanceof Error && error.message === '403') {
+          if (error instanceof Error && ['401', '403'].includes(error.message)) {
             setPages([]);
             setSelectedId(null);
             setDetail(null);
@@ -146,7 +195,7 @@ export function InvoiceLedger({
         }
       });
     return () => controller.abort();
-  }, [state, invoiceId, profileId, orderId, cursor, revision]);
+  }, [state, invoiceId, profileId, orderId, cursorKey, criteria, revision]);
 
   useEffect(() => {
     if (!selectedId) return;
@@ -181,12 +230,19 @@ export function InvoiceLedger({
     if (invalid) return setInputError(invalid[1]);
     setInputError(null);
     setPages([]);
-    setCursor(null);
+    setLocalCursor(null);
     setSelectedId(null);
     setDetail(null);
-    setInvoiceId(id);
-    setProfileId(profile);
-    setOrderId(order);
+    if (query)
+      query.setQuery({
+        filters: { invoiceId: id, profileId: profile, orderId: order },
+        cursor: '',
+      });
+    else {
+      setLocalInvoiceId(id);
+      setLocalProfileId(profile);
+      setLocalOrderId(order);
+    }
     if (id === invoiceId && profile === profileId && order === orderId && !cursor)
       setRevision((value) => value + 1);
   }
@@ -217,10 +273,11 @@ export function InvoiceLedger({
                   value={state}
                   onChange={(event) => {
                     setPages([]);
-                    setCursor(null);
+                    setLocalCursor(null);
                     setSelectedId(null);
                     setDetail(null);
-                    setState(event.target.value);
+                    if (query) query.setQuery({ filters: { state: event.target.value } });
+                    else setLocalState(event.target.value);
                   }}
                 >
                   <option value="">{word('allStates')}</option>
@@ -360,13 +417,30 @@ export function InvoiceLedger({
         </ListPage.Content>
         <ListPage.Pagination
           kind="cursor"
-          hasMore={!!current?.nextCursor && status !== 'error' && status !== 'forbidden'}
+          hasMore={
+            !!current?.nextCursor &&
+            (status === 'loading' ||
+              (status === 'ready' &&
+                (!query || query.canAdvance(encodeFinanceCursor(current.nextCursor)))))
+          }
           loading={status === 'loading'}
           onNext={() => {
-            if (current?.nextCursor) setCursor(current.nextCursor);
+            if (current?.nextCursor) {
+              if (query) query.next(encodeFinanceCursor(current.nextCursor));
+              else setLocalCursor(current.nextCursor);
+            }
           }}
           label={appText('historyPagination.label', locale)}
           nextLabel={word('more')}
+          {...(query
+            ? {
+                previous: {
+                  enabled: status !== 'error' && status !== 'forbidden' && query.hasPrevious,
+                  label: word('previous'),
+                  onClick: query.previous,
+                },
+              }
+            : {})}
         />
       </ListPage>
 

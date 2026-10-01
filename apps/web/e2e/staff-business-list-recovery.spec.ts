@@ -31,6 +31,9 @@ async function shell(page: Page, locale: 'en' | 'fa') {
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
+  await page.route('**/api/admin/contract-cancellation-requests?*', (route) =>
+    route.fulfill({ json: { requests: [], nextBefore: null } })
+  );
   await page.route('**/api/admin/consultations/teams', (route) =>
     route.fulfill({ json: { teams: [] } })
   );
@@ -107,7 +110,14 @@ for (const locale of ['en', 'fa'] as const) {
       });
       await page.goto(path);
       const list = page.locator('[data-slot="list-page"]').first();
-      const content = list.locator('[data-slot="list-content"]').first();
+      const content =
+        name === 'saving'
+          ? list
+              .getByLabel(tSaving('staffQueue', locale), { exact: true })
+              .filter({ has: page.locator('[data-slot="list-content"]') })
+              .locator('[data-slot="list-content"]')
+              .first()
+          : list.locator('[data-slot="list-content"]').first();
       await content.getByRole('button', { name: /First buyer/ }).click();
       const retryWord =
         name === 'consultation'

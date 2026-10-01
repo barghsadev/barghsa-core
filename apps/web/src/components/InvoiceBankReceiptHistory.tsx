@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Button, ListPage, PageLoading, StatusBadge } from '@barghsa/ui';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
@@ -6,6 +6,9 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
+
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import { decodeFinanceCursor, encodeFinanceCursor } from '../lib/finance-list-query.js';
 
 interface HistoryItem {
   receiptId: string;
@@ -28,26 +31,46 @@ interface HistoryPage {
 export function InvoiceBankReceiptHistory({
   onOpen,
   revision,
+  binding,
 }: {
   onOpen: (receiptId: string) => void;
   revision: number;
+  binding?: ListQueryBinding;
 }) {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const word = (key: string) => adminText(`admin.invoiceReceipts.${key}`, locale);
-  const [state, setState] = useState<'' | 'Confirmed' | 'Rejected'>('');
+  const [localState, setLocalState] = useState<'' | 'Confirmed' | 'Rejected'>('');
+  const state = binding?.query.filters.state ?? localState;
   const [invoiceInput, setInvoiceInput] = useState('');
-  const [invoiceId, setInvoiceId] = useState('');
+  const [localInvoiceId, setLocalInvoiceId] = useState('');
+  const invoiceId = binding?.query.filters.invoiceId ?? localInvoiceId;
   const [invalidInvoice, setInvalidInvoice] = useState(false);
-  const [cursor, setCursor] = useState<Cursor | null>(null);
+  const [localCursor, setLocalCursor] = useState<Cursor | null>(null);
+  const cursor = useMemo(
+    () => (binding ? decodeFinanceCursor(binding.query.cursor) : localCursor),
+    [binding?.query.cursor, localCursor]
+  );
+  const cursorKey = encodeFinanceCursor(cursor);
   const [previous, setPrevious] = useState<Array<Cursor | null>>([]);
   const [retryRevision, setRetryRevision] = useState(0);
-  const [page, setPage] = useState<HistoryPage>({ items: [], nextCursor: null });
+  const criteria = JSON.stringify([state, invoiceId]);
+  const [accepted, setAccepted] = useState({
+    criteria,
+    page: { items: [], nextCursor: null } as HistoryPage,
+  });
+  const page = accepted.criteria === criteria ? accepted.page : { items: [], nextCursor: null };
+  const setPage = (page: HistoryPage) => setAccepted({ criteria, page });
   const [loadState, setLoadState] = useState<'loading' | 'ready' | 'error' | 'forbidden'>(
     'loading'
   );
 
+  useEffect(() => {
+    if (!binding) return;
+    setInvoiceInput(invoiceId);
+    setInvalidInvoice(false);
+  }, [invoiceId, !!binding]);
   useEffect(() => {
     const controller = new AbortController();
     const query = new URLSearchParams();
@@ -74,13 +97,13 @@ export function InvoiceBankReceiptHistory({
       })
       .catch((error: unknown) => {
         if (!controller.signal.aborted) {
-          const forbidden = error instanceof Error && error.message === '403';
+          const forbidden = error instanceof Error && ['401', '403'].includes(error.message);
           if (forbidden) setPage({ items: [], nextCursor: null });
           setLoadState(forbidden ? 'forbidden' : 'error');
         }
       });
     return () => controller.abort();
-  }, [state, invoiceId, cursor, revision, retryRevision]);
+  }, [state, invoiceId, cursorKey, revision, retryRevision]);
 
   function applyInvoice(event: FormEvent) {
     event.preventDefault();
@@ -93,9 +116,10 @@ export function InvoiceBankReceiptHistory({
     setPage({ items: [], nextCursor: null });
     setLoadState('loading');
     if (value === invoiceId && !cursor) setRetryRevision((value) => value + 1);
-    setCursor(null);
+    setLocalCursor(null);
     setPrevious([]);
-    setInvoiceId(value);
+    if (binding) binding.setQuery({ filters: { invoiceId: value }, cursor: '' });
+    else setLocalInvoiceId(value);
   }
 
   return (
@@ -112,8 +136,9 @@ export function InvoiceBankReceiptHistory({
                   onChange={(event) => {
                     setPage({ items: [], nextCursor: null });
                     setLoadState('loading');
-                    setState(event.target.value as typeof state);
-                    setCursor(null);
+                    if (binding) binding.setQuery({ filters: { state: event.target.value } });
+                    else setLocalState(event.target.value as typeof localState);
+                    setLocalCursor(null);
                     setPrevious([]);
                   }}
                   className="min-h-10 rounded-md border bg-background px-3"
@@ -206,21 +231,30 @@ export function InvoiceBankReceiptHistory({
         {loadState !== 'forbidden' && loadState !== 'error' && (
           <ListPage.Pagination
             kind="cursor"
-            hasMore={!!page.nextCursor}
+            hasMore={
+              !!page.nextCursor &&
+              (!binding || binding.canAdvance(encodeFinanceCursor(page.nextCursor)))
+            }
             loading={loadState === 'loading'}
             label={word('historyPages')}
             nextLabel={word('historyNext')}
             onNext={() => {
               if (!page.nextCursor) return;
-              setPrevious((items) => [...items, cursor]);
-              setCursor(page.nextCursor);
+              if (binding) binding.next(encodeFinanceCursor(page.nextCursor));
+              else {
+                setPrevious((items) => [...items, cursor]);
+                setLocalCursor(page.nextCursor);
+              }
             }}
             previous={{
-              enabled: previous.length > 0,
+              enabled: binding ? binding.hasPrevious : previous.length > 0,
               label: word('historyPrevious'),
               onClick: () => {
-                setCursor(previous.at(-1) ?? null);
-                setPrevious((items) => items.slice(0, -1));
+                if (binding) binding.previous();
+                else {
+                  setLocalCursor(previous.at(-1) ?? null);
+                  setPrevious((items) => items.slice(0, -1));
+                }
               },
             }}
           />

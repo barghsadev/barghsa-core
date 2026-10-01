@@ -64,7 +64,13 @@ function isInvoiceResponse(value: unknown, expectedId: string): value is Invoice
   );
 }
 
-export default function AdminInvoicesPage() {
+export interface InvoiceListQueries {
+  ledger: import('../hooks/useListQuery.js').ListQueryBinding;
+  history: import('../components/InvoiceBankReceiptQueue.js').ReceiptHistoryQuery;
+  receiptsOpen: boolean;
+  setReceiptsOpen: (open: boolean, history?: boolean) => void;
+}
+export default function AdminInvoicesPage({ queries }: { queries?: InvoiceListQueries } = {}) {
   const time = useAccountTime();
   const [dueTimezone, setDueTimezone] = useState('');
   const canEditTime = time.status === 'ready' && dueTimezone === time.timezone;
@@ -76,7 +82,10 @@ export default function AdminInvoicesPage() {
         ? ''
         : new URLSearchParams(window.location.search).get('invoiceId')) ?? ''
   );
-  const [showReceiptQueue, setShowReceiptQueue] = useState(false);
+  const [localReceiptQueue, setLocalReceiptQueue] = useState(false);
+  const showReceiptQueue = queries?.receiptsOpen ?? localReceiptQueue;
+  const setShowReceiptQueue = (value: boolean, history?: boolean) =>
+    queries ? queries.setReceiptsOpen(value, history) : setLocalReceiptQueue(value);
   const [receiptSelection, setReceiptSelection] = useState<{
     receiptId: string;
     state: string;
@@ -247,6 +256,7 @@ export default function AdminInvoicesPage() {
     <div className="max-w-4xl space-y-8">
       <h1 className="text-2xl font-bold">{t('admin.invoices.nav', locale)}</h1>
       <InvoiceLedger
+        {...(queries ? { query: queries.ledger } : {})}
         initialInvoiceId={
           typeof window === 'undefined'
             ? ''
@@ -267,7 +277,7 @@ export default function AdminInvoicesPage() {
             state,
             revision: (current?.revision ?? 0) + 1,
           }));
-          setShowReceiptQueue(true);
+          setShowReceiptQueue(true, state === 'Confirmed' || state === 'Rejected');
           document.getElementById('invoice-receipt-panel')?.scrollIntoView?.({ block: 'start' });
         }}
       />
@@ -294,7 +304,7 @@ export default function AdminInvoicesPage() {
           type="button"
           className="rounded-md border bg-card px-4 py-2 text-sm font-medium text-foreground"
           aria-expanded={showReceiptQueue}
-          onClick={() => setShowReceiptQueue((value) => !value)}
+          onClick={() => setShowReceiptQueue(!showReceiptQueue)}
         >
           {t('admin.invoiceReceipts.title', locale)}
         </button>
@@ -302,6 +312,7 @@ export default function AdminInvoicesPage() {
           <InvoiceBankReceiptQueue
             key={receiptSelection?.revision}
             initialSelection={receiptSelection}
+            {...(queries ? { historyQuery: queries.history } : {})}
           />
         ) : null}
       </section>

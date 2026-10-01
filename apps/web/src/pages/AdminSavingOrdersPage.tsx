@@ -19,6 +19,7 @@ import {
 } from '@barghsa/shared/finance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
+import { staffOrderId, type StaffOrderListQuery } from '../lib/staff-order-list-query.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -144,17 +145,31 @@ function reviewPriceLines(snapshot: Record<string, unknown>) {
     : [];
 }
 
-export default function AdminSavingOrdersPage() {
+export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrderListQuery } = {}) {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const money = useNumberFormatting(locale);
   const copy = (key: string) => tSavingStaffReview(key, locale) ?? tSaving(key, locale);
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [lane, setLane] = useState<'review' | 'fulfillment'>('review');
-  const [after, setAfter] = useState<string | null>(null);
-  const [nextAfter, setNextAfter] = useState<string | null>(null);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [detail, setDetail] = useState<Detail | null>(null);
+  const [accepted, setAccepted] = useState<{
+    criteria: string;
+    cursor: string | null;
+    orders: Order[];
+    nextAfter: string | null;
+  } | null>(null);
+  const [localLane, setLocalLane] = useState<'review' | 'fulfillment'>('review');
+  const lane = queries?.queue.query.filters.lane || localLane;
+  const orders = accepted?.criteria === lane ? accepted.orders : [];
+  const nextAfter = accepted?.criteria === lane ? accepted.nextAfter : null;
+  const [localAfter, setLocalAfter] = useState<string | null>(null);
+  const after = queries ? queries.queue.query.cursor || null : localAfter;
+  const setAfter = (value: string | null) =>
+    queries ? queries.queue.setQuery({ cursor: value ?? '' }) : setLocalAfter(value);
+  const [localSelected, setLocalSelected] = useState<string | null>(null);
+  const selected = queries ? queries.selected : localSelected;
+  const setSelected = (id: string | null, replace = false) =>
+    queries ? queries.select(id, replace) : setLocalSelected(id);
+  const [loadedDetail, setDetail] = useState<Detail | null>(null);
+  const detail = loadedDetail?.id === selected ? loadedDetail : null;
   const [note, setNote] = useState('');
   const [handover, setHandover] = useState('');
   const [amendAddressId, setAmendAddressId] = useState('');
@@ -186,19 +201,19 @@ export default function AdminSavingOrdersPage() {
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'forbidden'>('loading');
 
   function refreshQueue() {
-    setOrders([]);
+    setAccepted(null);
     setAfter(null);
-    setNextAfter(null);
     setRevision((value) => value + 1);
   }
 
   function changeLane(value: 'review' | 'fulfillment') {
     if (value === lane) return;
-    setLane(value);
-    setOrders([]);
-    setAfter(null);
-    setNextAfter(null);
-    setSelected(null);
+    if (queries) queries.changeLane(value);
+    else {
+      setLocalLane(value);
+      setLocalAfter(null);
+      setSelected(null);
+    }
   }
 
   useEffect(() => {
@@ -211,11 +226,10 @@ export default function AdminSavingOrdersPage() {
       signal: controller.signal,
     })
       .then(async (response) => {
-        if (response.status === 403) {
+        if (response.status === 401 || response.status === 403) {
           if (!controller.signal.aborted) {
-            setOrders([]);
-            setNextAfter(null);
-            setSelected(null);
+            setAccepted(null);
+            setSelected(null, true);
             reviewRequest.current += 1;
             setDetail(null);
             setState('forbidden');
@@ -227,12 +241,21 @@ export default function AdminSavingOrdersPage() {
       })
       .then((value) => {
         if (!controller.signal.aborted && value) {
-          setOrders((current) => {
-            if (!after) return value.orders;
-            const shown = new Set(current.map((order) => order.id));
-            return [...current, ...value.orders.filter((order) => !shown.has(order.id))];
+          setAccepted((current) => {
+            const extending =
+              !!after &&
+              current?.criteria === lane &&
+              current.nextAfter === after &&
+              current.cursor !== after;
+            const previous = extending ? current.orders : [];
+            const shown = new Set(previous.map((order) => order.id));
+            return {
+              criteria: lane,
+              cursor: after,
+              orders: [...previous, ...value.orders.filter((order) => !shown.has(order.id))],
+              nextAfter: staffOrderId(value.nextAfter) || null,
+            };
           });
-          setNextAfter(value.nextAfter);
           setState('ready');
         }
       })
@@ -241,6 +264,13 @@ export default function AdminSavingOrdersPage() {
       });
     return () => controller.abort();
   }, [after, lane, revision, listRevision]);
+
+  useEffect(() => {
+    setNote('');
+    setHandover('');
+    setAmendReason('');
+    setAmendHardwareReason('');
+  }, [selected, lane]);
 
   useEffect(() => {
     reviewRequest.current++;
@@ -685,9 +715,24 @@ export default function AdminSavingOrdersPage() {
             </ListPage.Content>
             <ListPage.Pagination
               kind="cursor"
-              hasMore={!!nextAfter && state !== 'error' && state !== 'forbidden'}
+              hasMore={
+                !!nextAfter &&
+                state !== 'error' &&
+                state !== 'forbidden' &&
+                (state === 'loading' ||
+                  (queries ? queries.queue.canAdvance(nextAfter) : nextAfter !== after))
+              }
               loading={state === 'loading'}
-              onNext={() => setAfter(nextAfter)}
+              onNext={() => {
+                if (!nextAfter) return;
+                if (queries) queries.queue.next(nextAfter);
+                else setAfter(nextAfter);
+              }}
+              previous={{
+                enabled: state !== 'forbidden' && (queries?.queue.hasPrevious ?? false),
+                onClick: () => queries?.queue.previous(),
+                label: appText('historyPagination.previous', locale),
+              }}
               label={appText('historyPagination.label', locale)}
               nextLabel={copy('staffMoreOrders')}
             />

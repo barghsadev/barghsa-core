@@ -25,6 +25,7 @@ import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
 import { commercialStatusTone, financialStatusTone } from '../lib/electricity-status-tone.js';
 import { electricityTimelineKeys } from '../lib/electricity-timeline.js';
 import { withCsrf } from '../lib/csrf.js';
+import { staffOrderId, type StaffOrderListQuery } from '../lib/staff-order-list-query.js';
 
 interface ReviewOrder {
   orderId: string;
@@ -118,7 +119,9 @@ function contractTemplate(snapshot: Record<string, unknown>) {
   return { name: template.name, versionNumber: template.versionNumber, text: template.text };
 }
 
-export default function AdminElectricityOrdersPage() {
+export default function AdminElectricityOrdersPage({
+  queries,
+}: { queries?: StaffOrderListQuery } = {}) {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
@@ -127,18 +130,32 @@ export default function AdminElectricityOrdersPage() {
     const day = { year: 'numeric', month: '2-digit', day: '2-digit' } as const;
     return `${time.format(start, day)} – ${time.format(new Date(new Date(end).getTime() - 1), day)}`;
   };
-  const [orders, setOrders] = useState<ReviewOrder[]>([]);
-  const [after, setAfter] = useState<string | null>(null);
-  const [nextAfter, setNextAfter] = useState<string | null>(null);
-  const [selectedId, setSelectedId] = useState<string | null>(() =>
-    new URLSearchParams(window.location.search).get('orderId')
+  const [accepted, setAccepted] = useState<{
+    criteria: string;
+    cursor: string | null;
+    orders: ReviewOrder[];
+    nextAfter: string | null;
+  } | null>(null);
+  const [localAfter, setLocalAfter] = useState<string | null>(null);
+  const after = queries ? queries.queue.query.cursor || null : localAfter;
+  const setAfter = (value: string | null) =>
+    queries ? queries.queue.setQuery({ cursor: value ?? '' }) : setLocalAfter(value);
+  const [localSelected, setLocalSelected] = useState<string | null>(
+    () => staffOrderId(new URLSearchParams(window.location.search).get('orderId')) || null
   );
+  const selectedId = queries ? queries.selected : localSelected;
+  const setSelectedId = (id: string | null, replace = false) =>
+    queries ? queries.select(id, replace) : setLocalSelected(id);
   const [lookupId, setLookupId] = useState(
     () => new URLSearchParams(window.location.search).get('orderId') ?? ''
   );
   const [lookupInvalid, setLookupInvalid] = useState(false);
-  const [queueView, setQueueView] = useState<'review' | 'conversations'>('review');
-  const [detail, setDetail] = useState<ReviewOrder | null>(null);
+  const [localView, setLocalView] = useState<'review' | 'conversations'>('review');
+  const queueView = queries?.queue.query.filters.view || localView;
+  const orders = accepted?.criteria === queueView ? accepted.orders : [];
+  const nextAfter = accepted?.criteria === queueView ? accepted.nextAfter : null;
+  const [loadedDetail, setDetail] = useState<ReviewOrder | null>(null);
+  const detail = loadedDetail?.orderId === selectedId ? loadedDetail : null;
   const [detailError, setDetailError] = useState(false);
   const [reason, setReason] = useState('');
   const [action, setAction] = useState<TeamAction | null>(null);
@@ -155,9 +172,8 @@ export default function AdminElectricityOrdersPage() {
 
   function refreshQueue() {
     reviewRequest.current += 1;
-    setOrders([]);
+    setAccepted(null);
     setAfter(null);
-    setNextAfter(null);
     setRevision((value) => value + 1);
   }
 
@@ -171,9 +187,11 @@ export default function AdminElectricityOrdersPage() {
     setReviewError(false);
     setDecisionReview(null);
     setReviewLoading(false);
-    const url = new URL(window.location.href);
-    url.searchParams.set('orderId', id);
-    window.history.replaceState(window.history.state, '', url.toString());
+    if (!queries) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('orderId', id);
+      window.history.replaceState(window.history.state, '', url.toString());
+    }
     if (id === selectedId) setDetailRevision((value) => value + 1);
   }
 
@@ -200,12 +218,11 @@ export default function AdminElectricityOrdersPage() {
       signal: controller.signal,
     })
       .then(async (response) => {
-        if (response.status === 403) {
+        if (response.status === 401 || response.status === 403) {
           if (!controller.signal.aborted) {
             setDenied(true);
-            setOrders([]);
-            setNextAfter(null);
-            setSelectedId(null);
+            setAccepted(null);
+            setSelectedId(null, true);
             reviewRequest.current += 1;
             setDetail(null);
             setDetailError(false);
@@ -220,12 +237,21 @@ export default function AdminElectricityOrdersPage() {
       })
       .then((value) => {
         if (!controller.signal.aborted && value) {
-          setOrders((current) => {
-            if (!after) return value.orders;
-            const shown = new Set(current.map((order) => order.orderId));
-            return [...current, ...value.orders.filter((order) => !shown.has(order.orderId))];
+          setAccepted((current) => {
+            const extending =
+              !!after &&
+              current?.criteria === queueView &&
+              current.nextAfter === after &&
+              current.cursor !== after;
+            const previous = extending ? current.orders : [];
+            const shown = new Set(previous.map((order) => order.orderId));
+            return {
+              criteria: queueView,
+              cursor: after,
+              orders: [...previous, ...value.orders.filter((order) => !shown.has(order.orderId))],
+              nextAfter: staffOrderId(value.nextAfter) || null,
+            };
           });
-          setNextAfter(value.nextAfter);
         }
       })
       .catch(() => {
@@ -238,6 +264,17 @@ export default function AdminElectricityOrdersPage() {
   }, [after, revision, queueView, listRevision]);
 
   useEffect(() => {
+    setLookupId(selectedId ?? '');
+    setLookupInvalid(false);
+    setReason('');
+  }, [selectedId, queueView]);
+
+  useEffect(() => {
+    reviewRequest.current++;
+    setAction(null);
+    setDecisionReview(null);
+    setReviewLoading(false);
+    setReviewError(false);
     if (!selectedId) {
       setDetail(null);
       return;
@@ -355,8 +392,13 @@ export default function AdminElectricityOrdersPage() {
                 <Button
                   variant={queueView === 'review' ? 'secondary' : 'outline'}
                   onClick={() => {
-                    setQueueView('review');
-                    refreshQueue();
+                    if (queueView === 'review') return;
+                    if (queries) queries.changeLane('review');
+                    else {
+                      setLocalView('review');
+                      setLocalAfter(null);
+                      setSelectedId(null);
+                    }
                   }}
                 >
                   {copy('reviewView')}
@@ -364,8 +406,13 @@ export default function AdminElectricityOrdersPage() {
                 <Button
                   variant={queueView === 'conversations' ? 'secondary' : 'outline'}
                   onClick={() => {
-                    setQueueView('conversations');
-                    refreshQueue();
+                    if (queueView === 'conversations') return;
+                    if (queries) queries.changeLane('conversations');
+                    else {
+                      setLocalView('conversations');
+                      setLocalAfter(null);
+                      setSelectedId(null);
+                    }
                   }}
                 >
                   {copy('conversationView')}
@@ -428,9 +475,23 @@ export default function AdminElectricityOrdersPage() {
             </ListPage.Content>
             <ListPage.Pagination
               kind="cursor"
-              hasMore={!!nextAfter && !error && !denied}
+              hasMore={
+                !!nextAfter &&
+                !error &&
+                !denied &&
+                (loading || (queries ? queries.queue.canAdvance(nextAfter) : nextAfter !== after))
+              }
               loading={loading}
-              onNext={() => setAfter(nextAfter)}
+              onNext={() => {
+                if (!nextAfter) return;
+                if (queries) queries.queue.next(nextAfter);
+                else setAfter(nextAfter);
+              }}
+              previous={{
+                enabled: !denied && (queries?.queue.hasPrevious ?? false),
+                onClick: () => queries?.queue.previous(),
+                label: appText('historyPagination.previous', locale),
+              }}
               label={appText('historyPagination.label', locale)}
               nextLabel={copy('more')}
             />

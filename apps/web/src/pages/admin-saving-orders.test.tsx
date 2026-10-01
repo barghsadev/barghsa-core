@@ -36,7 +36,12 @@ it('loads older review orders and keeps fulfillment separate', async () => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const calls: string[] = [];
   const order = (id: string) => ({
-    id,
+    id:
+      id === 'first-review'
+        ? '85000000-0000-4000-8000-000000000001'
+        : id === 'older-review'
+          ? '85000000-0000-4000-8000-000000000002'
+          : '85000000-0000-4000-8000-000000000003',
     customerName: id,
     status: 'awaiting_staff_review',
     billIdentifier: id,
@@ -56,7 +61,10 @@ it('loads older review orders and keeps fulfillment separate', async () => {
             ? { orders: [order('fulfillment-order')], nextAfter: null }
             : after
               ? { orders: [order('older-review')], nextAfter: null }
-              : { orders: [order('first-review')], nextAfter: 'first-review' }
+              : {
+                  orders: [order('first-review')],
+                  nextAfter: '85000000-0000-4000-8000-000000000001',
+                }
         ),
         { headers: { 'Content-Type': 'application/json' } }
       );
@@ -78,7 +86,9 @@ it('loads older review orders and keeps fulfillment separate', async () => {
     await click('More orders');
     expect(container.textContent).toContain('first-review');
     expect(container.textContent).toContain('older-review');
-    expect(calls).toContain('/api/staff/saving/orders?lane=review&after=first-review');
+    expect(calls).toContain(
+      '/api/staff/saving/orders?lane=review&after=85000000-0000-4000-8000-000000000001'
+    );
     await click('Fulfillment');
     expect(container.textContent).toContain('fulfillment-order');
     expect(container.textContent).not.toContain('first-review');

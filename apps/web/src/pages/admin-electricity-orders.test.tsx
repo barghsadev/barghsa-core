@@ -12,7 +12,7 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const previousUrl = window.location.href;
   const order = {
-    orderId: 'order-1',
+    orderId: '84000000-0000-4000-8000-000000000001',
     contractId: '22222222-2222-7222-8222-222222222222',
     contractState: 'AwaitingCustomerAcceptance',
     invoiceId: '11111111-1111-7111-8111-111111111111',
@@ -39,7 +39,7 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     settingsSnapshot: { green: false },
     fullAddress: 'Electricity Street',
     contractSnapshot: {
-      orderId: 'order-1',
+      orderId: '84000000-0000-4000-8000-000000000001',
       template: {
         templateId: 'template-1',
         versionId: 'template-version-2',
@@ -115,7 +115,7 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
                   ],
                   nextBefore: null,
                 }
-              : url.endsWith('/order-1')
+              : url.endsWith('/84000000-0000-4000-8000-000000000001')
                 ? order
                 : url.includes('/conversations')
                   ? {
@@ -124,10 +124,16 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
                     }
                   : url.includes('?after=')
                     ? {
-                        orders: [{ ...order, orderId: 'order-2', customerName: 'Later Buyer' }],
+                        orders: [
+                          {
+                            ...order,
+                            orderId: '84000000-0000-4000-8000-000000000002',
+                            customerName: 'Later Buyer',
+                          },
+                        ],
                         nextAfter: null,
                       }
-                    : { orders: [order], nextAfter: 'order-1' }
+                    : { orders: [order], nextAfter: '84000000-0000-4000-8000-000000000001' }
         ),
         { headers: { 'Content-Type': 'application/json' } }
       )
@@ -144,9 +150,11 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     );
     expect(queueButton).toBeDefined();
     await act(async () => queueButton!.click());
-    expect(new URLSearchParams(window.location.search).get('orderId')).toBe('order-1');
+    expect(new URLSearchParams(window.location.search).get('orderId')).toBe(
+      '84000000-0000-4000-8000-000000000001'
+    );
     expect(fetchMock).toHaveBeenCalledWith(
-      '/api/staff/electricity/orders/order-1',
+      '/api/staff/electricity/orders/84000000-0000-4000-8000-000000000001',
       expect.any(Object)
     );
     const statusLabels = [...container.querySelectorAll('dl dt')].map((item) => item.textContent);
@@ -207,7 +215,7 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     expect(more).toBeDefined();
     await act(async () => more!.click());
     expect(fetchMock).toHaveBeenCalledWith(
-      '/api/staff/electricity/orders?after=order-1',
+      '/api/staff/electricity/orders?after=84000000-0000-4000-8000-000000000001',
       expect.any(Object)
     );
     expect(container.textContent).toContain('Electricity Buyer');

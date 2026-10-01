@@ -90,23 +90,26 @@ it('reapplying an unchanged invoice filter retries the first page instead of lea
   expect(host.querySelector('[data-slot="list-content"]')?.getAttribute('aria-busy')).toBeNull();
 });
 
-it('discards rows after a forbidden refresh and does not resurrect them during a later failed retry', async () => {
-  let status = 200;
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(async () =>
-      status === 200
-        ? new Response(JSON.stringify({ items: [row(first)], nextCursor: null }))
-        : new Response(null, { status })
-    )
-  );
-  await render();
-  expect(host.textContent).toContain(first);
-  status = 403;
-  await render(1);
-  expect(host.textContent).not.toContain(first);
-  status = 503;
-  await render(2);
-  expect(host.textContent).not.toContain(first);
-  expect(host.textContent).toContain('Could not load receipt history.');
-});
+it.each([401, 403])(
+  'discards rows after denied refresh and does not resurrect them during a failed retry (%s)',
+  async (deniedStatus) => {
+    let status = 200;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        status === 200
+          ? new Response(JSON.stringify({ items: [row(first)], nextCursor: null }))
+          : new Response(null, { status })
+      )
+    );
+    await render();
+    expect(host.textContent).toContain(first);
+    status = deniedStatus;
+    await render(1);
+    expect(host.textContent).not.toContain(first);
+    status = 503;
+    await render(2);
+    expect(host.textContent).not.toContain(first);
+    expect(host.textContent).toContain('Could not load receipt history.');
+  }
+);

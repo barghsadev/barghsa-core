@@ -7,6 +7,7 @@ export interface I18nDictionary {
 export const fa: I18nDictionary = {
   'historyFilters.label': 'فیلترها',
   'historyPagination.label': 'صفحه‌های سوابق',
+  'historyPagination.previous': 'صفحهٔ قبل',
   'historyPagination.retry': 'تلاش دوباره',
   'historyFilters.apply': 'اعمال فیلترها',
   'historyFilters.cancel': 'انصراف',
@@ -1573,6 +1574,7 @@ export const fa: I18nDictionary = {
 export const en: I18nDictionary = {
   'historyFilters.label': 'Filters',
   'historyPagination.label': 'History pages',
+  'historyPagination.previous': 'Previous page',
   'historyPagination.retry': 'Retry',
   'historyFilters.apply': 'Apply filters',
   'historyFilters.cancel': 'Cancel',

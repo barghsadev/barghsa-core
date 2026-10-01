@@ -115,17 +115,20 @@ it('opens staff invoice detail with line VAT and payment history, then selects i
   expect(onSelectForDueAt).toHaveBeenCalledWith(ID);
 });
 
-it('shows a permission error without exposing ledger rows', async () => {
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(async () => new Response(null, { status: 403 }))
-  );
-  await act(async () =>
-    root.render(<InvoiceLedger onSelectForDueAt={vi.fn()} onOpenReceipt={vi.fn()} />)
-  );
-  expect(container.textContent).toContain('You do not have permission to view invoices.');
-  expect(container.querySelector('tbody')).toBeNull();
-});
+it.each([401, 403])(
+  'shows a permission error without exposing ledger rows (%s)',
+  async (status) => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response(null, { status }))
+    );
+    await act(async () =>
+      root.render(<InvoiceLedger onSelectForDueAt={vi.fn()} onOpenReceipt={vi.fn()} />)
+    );
+    expect(container.textContent).toContain('You do not have permission to view invoices.');
+    expect(container.querySelector('tbody')).toBeNull();
+  }
+);
 
 it('loads an exact invoice from a staff deep link', async () => {
   const fetcher = vi.fn(
