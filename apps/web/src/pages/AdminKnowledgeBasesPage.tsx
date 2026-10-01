@@ -1,3 +1,4 @@
+import type { KnowledgeCatalogueKind } from '../lib/catalogue-category-query.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useState, useRef, useCallback, type FormEvent } from 'react';
 import { Button, Input, Label, ListPage } from '@barghsa/ui';
@@ -136,7 +137,15 @@ function draftFor(entry?: Entry): Draft {
     vectorEmbeddingModel: entry?.vectorEmbeddingModel ?? '',
   };
 }
-export default function AdminKnowledgeBasesPage() {
+export default function AdminKnowledgeBasesPage({
+  initialKind = 'knowledge-bases',
+  onKindChange,
+  focusCategory = false,
+}: {
+  initialKind?: KnowledgeCatalogueKind;
+  focusCategory?: boolean;
+  onKindChange?: (value: KnowledgeCatalogueKind) => void;
+} = {}) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`admin.kb.${key}`, locale);
@@ -152,7 +161,7 @@ export default function AdminKnowledgeBasesPage() {
         } as Record<string, string>
       )[code ?? ''] ?? 'errorGeneric'
     );
-  const [kind, setKind] = useState<Kind>('knowledge-bases');
+  const [kind, setKind] = useState<Kind>(initialKind);
   const [selected, setSelected] = useState<string | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [member, setMember] = useState('');
@@ -455,13 +464,17 @@ export default function AdminKnowledgeBasesPage() {
         {(['knowledge-bases', 'kb-groups'] as const).map((value) => (
           <Button
             key={value}
+            autoFocus={focusCategory && kind === value}
             variant={kind === value ? 'default' : 'outline'}
             aria-pressed={kind === value}
             onClick={() => {
               if (kind === value) return;
               clearWork();
-              scope.recover();
-              setKind(value);
+              if (onKindChange) onKindChange(value);
+              else {
+                scope.recover();
+                setKind(value);
+              }
             }}
           >
             {label(value)}

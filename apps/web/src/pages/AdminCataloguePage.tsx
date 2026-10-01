@@ -1,3 +1,4 @@
+import type { ProductCatalogueType } from '../lib/catalogue-category-query.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
@@ -71,12 +72,20 @@ const categoryOptions: Record<ProductType, string[]> = {
   saving_plan: [],
 };
 const base = '/api/admin/catalogue/products';
-export default function AdminCataloguePage() {
+export default function AdminCataloguePage({
+  initialType = 'consultation',
+  onTypeChange,
+  focusCategory = false,
+}: {
+  initialType?: ProductCatalogueType;
+  focusCategory?: boolean;
+  onTypeChange?: (value: ProductCatalogueType) => void;
+} = {}) {
   const preference = useTimezone();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => tCatalogue(key, locale);
-  const [type, setType] = useState<ProductType>('consultation'),
+  const [type, setType] = useState<ProductType>(initialType),
     [rows, setRows] = useState<Product[]>([]);
   const [hardwareOptions, setHardwareOptions] = useState<Product[]>([]);
   const [preventActiveDuplicates, setPreventActiveDuplicates] = useState(true);
@@ -104,6 +113,10 @@ export default function AdminCataloguePage() {
   const tabButtons = useRef<Array<HTMLButtonElement | null>>([]);
   function switchType(value: ProductType) {
     if (value === type) return;
+    if (onTypeChange) {
+      onTypeChange(value);
+      return;
+    }
     setState('loading');
     setRows([]);
     choose(null);
@@ -346,6 +359,7 @@ export default function AdminCataloguePage() {
             {types.map((value, index) => (
               <Button
                 key={value}
+                autoFocus={focusCategory && type === value}
                 role="tab"
                 id={`catalogue-tab-${value}`}
                 aria-controls={`catalogue-panel-${value}`}

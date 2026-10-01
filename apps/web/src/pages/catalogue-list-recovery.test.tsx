@@ -42,13 +42,13 @@ function data(url: string, type: CatalogueType = 'consultation') {
   if (url.endsWith('/configuration')) return catalogueConfig;
   return catalogueDetail(type, url.includes(secondId) ? secondId : id);
 }
-async function mount(type: CatalogueType = 'consultation') {
+async function mount(type: CatalogueType = 'consultation', props: Parameters<typeof Page>[0] = {}) {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const host = document.createElement('div');
   document.body.append(host);
   const root = createRoot(host);
-  await act(async () => root.render(<Page />));
+  await act(async () => root.render(<Page {...props} />));
   if (type !== 'consultation') await act(async () => button(host, tCatalogue(type, 'en')).click());
   return {
     host,
@@ -250,6 +250,35 @@ it('hardware permission denial discards an open editor and prevents a late list 
       'Sample product'
     );
     expect(host.textContent).not.toContain('Add product');
+  } finally {
+    await close();
+  }
+});
+
+it('a pending controlled category navigation keeps the accepted view usable if history cancels it', async () => {
+  const change = vi.fn();
+  const fetch = vi.fn(async (url: string) => Response.json(data(url, 'electricity')));
+  vi.stubGlobal('fetch', fetch);
+  const { host, close } = await mount('consultation', {
+    initialType: 'electricity',
+    onTypeChange: change,
+  });
+  try {
+    await act(async () => button(host, 'Edit Sample product').click());
+    const title = host.querySelector<HTMLInputElement>('#catalogue-titleEn')!;
+    await act(async () => fill(title, 'Retained until navigation commits'));
+    const before = fetch.mock.calls.length;
+    await act(async () => button(host, 'Hardware').click());
+    expect(change).toHaveBeenCalledWith('hardware');
+    expect(host.querySelector('#catalogue-tab-electricity')?.getAttribute('aria-selected')).toBe(
+      'true'
+    );
+    expect(host.querySelector('[data-slot="list-content"]')?.getAttribute('aria-busy')).not.toBe(
+      'true'
+    );
+    expect(title.value).toBe('Retained until navigation commits');
+    expect(button(host, 'Edit Sample product')).toBeDefined();
+    expect(fetch).toHaveBeenCalledTimes(before);
   } finally {
     await close();
   }

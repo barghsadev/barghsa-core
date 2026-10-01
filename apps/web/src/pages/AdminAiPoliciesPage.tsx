@@ -1,3 +1,4 @@
+import type { PolicyCatalogueKind } from '../lib/catalogue-category-query.js';
 import { useEffect, useState, useRef, useCallback, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { Button, Input, Label, ListPage } from '@barghsa/ui';
@@ -102,10 +103,18 @@ function draftFor(row?: Entry): Draft {
     windowSeconds: typeof rules.windowSeconds === 'number' ? String(rules.windowSeconds) : '60',
   };
 }
-export default function AdminAiPoliciesPage() {
+export default function AdminAiPoliciesPage({
+  initialKind = 'policies',
+  onKindChange,
+  focusCategory = false,
+}: {
+  initialKind?: PolicyCatalogueKind;
+  focusCategory?: boolean;
+  onKindChange?: (value: PolicyCatalogueKind) => void;
+} = {}) {
   const locale = useLocale(),
     label = (key: string) => t(`admin.policies.${key}`, locale);
-  const [kind, setKind] = useState<Kind>('policies');
+  const [kind, setKind] = useState<Kind>(initialKind);
   const [selected, setSelected] = useState<string | null>(null),
     [member, setMember] = useState(''),
     [memberPriority, setMemberPriority] = useState(''),
@@ -416,13 +425,17 @@ export default function AdminAiPoliciesPage() {
         {(['policies', 'policy-groups'] as const).map((value) => (
           <Button
             key={value}
+            autoFocus={focusCategory && kind === value}
             aria-pressed={kind === value}
             variant={kind === value ? 'default' : 'outline'}
             onClick={() => {
               if (kind === value) return;
               clearWork();
-              scope.recover();
-              setKind(value);
+              if (onKindChange) onKindChange(value);
+              else {
+                scope.recover();
+                setKind(value);
+              }
             }}
           >
             {label(value)}

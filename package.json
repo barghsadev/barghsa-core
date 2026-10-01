@@ -64,6 +64,7 @@
       "geoip-country>ip-address": "10.5.0",
       "undici@7": "7.29.1",
       "undici@8": "8.10.2",
+      "piscina@<4.9.4": "4.9.4",
       "fast-uri": "3.1.8",
       "esbuild@>=0.27.3 <0.28.1": "0.28.2"
     },
