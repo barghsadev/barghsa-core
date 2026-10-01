@@ -1,18 +1,14 @@
 import { test, expect } from './coverage-fixture';
+import { crmShell } from './crm-shell-fixture';
+import { contractTemplate } from '../src/test/contract-settings-fixtures';
 for (const locale of ['en', 'fa'])
   test(`template editor retries captured metadata (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await crmShell(page, locale);
     let failed = true,
       verified = false,
       denied = false;
     const attempts: unknown[] = [];
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
     );
@@ -25,7 +21,10 @@ for (const locale of ['en', 'fa'])
       if (!verified)
         return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
       denied = true;
-      return route.fulfill({ status: 201, json: {} });
+      return route.fulfill({
+        status: 201,
+        json: { ...contractTemplate, name: 'Local contract', description: '' },
+      });
     });
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct';

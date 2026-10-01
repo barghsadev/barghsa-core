@@ -1,5 +1,7 @@
 import { lookup } from './lookup.js';
 const fa = {
+  'admin.templates.listRetry': 'تلاش مجدد فهرست قالب‌ها',
+  'admin.templates.detailRetry': 'تلاش مجدد تاریخچه قالب',
   'admin.templates.chooseFile': 'انتخاب فایل',
   'admin.templates.title': 'قالب‌های قرارداد',
   'admin.templates.refresh': 'تازه‌سازی',
@@ -43,6 +45,8 @@ const fa = {
   'admin.templates.missing': 'قالب دیگر وجود ندارد. تازه‌سازی کنید.',
 };
 const en: Record<keyof typeof fa, string> = {
+  'admin.templates.listRetry': 'Retry template list',
+  'admin.templates.detailRetry': 'Retry template history',
   'admin.templates.chooseFile': 'Choose file',
   'admin.templates.title': 'Contract templates',
   'admin.templates.refresh': 'Refresh',

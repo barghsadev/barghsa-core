@@ -1,80 +1,192 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, Input, Label } from '@barghsa/ui';
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { Button, Input, Label, ListPage } from '@barghsa/ui';
 import { contractTemplatesText } from '@barghsa/i18n/contract-templates';
-import type { ContractTemplateDto, ContractTemplateDetailDto } from '@barghsa/shared/admin';
+import type {
+  ContractTemplateDto,
+  ContractTemplateDetailDto,
+  ContractTemplateVersionDto,
+} from '@barghsa/shared/admin';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 type Draft = { name: string; description: string; status: 'active' | 'inactive' };
 type Upload = { fileName: string; contentType: string; content: string };
 const MAX_BYTES = 10 * 1024 * 1024;
+const record = (value: unknown): value is Record<string, unknown> =>
+  !!value && typeof value === 'object' && !Array.isArray(value);
+const integer = (value: unknown, min = 0): value is number =>
+  typeof value === 'number' && Number.isSafeInteger(value) && value >= min;
+function validVersion(value: unknown): value is ContractTemplateVersionDto {
+  return (
+    record(value) &&
+    integer(value.versionNumber, 1) &&
+    typeof value.storageKey === 'string' &&
+    typeof value.fileName === 'string' &&
+    (value.contentType === null || typeof value.contentType === 'string') &&
+    (value.fileSize === null || integer(value.fileSize)) &&
+    Array.isArray(value.placeholders) &&
+    value.placeholders.every((item) => typeof item === 'string') &&
+    typeof value.createdBy === 'string' &&
+    typeof value.createdAt === 'string' &&
+    Number.isFinite(Date.parse(value.createdAt))
+  );
+}
+function validTemplate(value: unknown): value is ContractTemplateDto {
+  return (
+    record(value) &&
+    typeof value.id === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value.id) &&
+    typeof value.name === 'string' &&
+    (value.description === null || typeof value.description === 'string') &&
+    (value.status === 'active' || value.status === 'inactive') &&
+    integer(value.versionCount) &&
+    (value.latestVersion === null || validVersion(value.latestVersion))
+  );
+}
+const validList = (value: unknown): value is ContractTemplateDto[] =>
+  Array.isArray(value) &&
+  value.every(validTemplate) &&
+  new Set(value.map((row) => row.id)).size === value.length;
+const validDetail = (value: unknown): value is ContractTemplateDetailDto =>
+  validTemplate(value) &&
+  record(value) &&
+  Array.isArray(value.versions) &&
+  value.versions.every(validVersion) &&
+  value.versions.length === value.versionCount &&
+  new Set(value.versions.map((v) => v.versionNumber)).size === value.versions.length;
+const metadata = (row: ContractTemplateDto) =>
+  JSON.stringify([row.id, row.name, row.description, row.status]);
+const basis = (row: ContractTemplateDto) =>
+  JSON.stringify([metadata(row), row.versionCount, row.latestVersion]);
+const draftOf = (row: ContractTemplateDto): Draft => ({
+  name: row.name,
+  description: row.description ?? '',
+  status: row.status,
+});
 export default function AdminContractTemplatesPage() {
   const time = useAccountTime();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => contractTemplatesText(`admin.templates.${key}`, locale);
-  const [rows, setRows] = useState<ContractTemplateDto[]>([]),
-    [detail, setDetail] = useState<ContractTemplateDetailDto | null>(null);
   const [selected, setSelected] = useState<string | null>(null),
     [draft, setDraft] = useState<Draft | null>(null);
-  const [state, setState] = useState<'loading' | 'ready' | 'denied' | 'error'>('loading'),
-    [revision, setRevision] = useState(0);
   const [action, setAction] = useState<TeamAction | null>(null),
     [saved, setSaved] = useState(false);
   const [upload, setUpload] = useState<Upload | null>(null),
     [fileError, setFileError] = useState(false),
     [reading, setReading] = useState(false);
-  const fileGeneration = useRef(0);
-  const fileInput = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    const abort = new AbortController();
+  const fileGeneration = useRef(0),
+    workGeneration = useRef(0),
+    fileInput = useRef<HTMLInputElement>(null);
+  const actionRef = useRef<TeamAction | null>(null),
+    acceptedDetail = useRef<ContractTemplateDetailDto | null>(null);
+  const acceptedRows = useRef<ContractTemplateDto[] | null>(null);
+  const closeAction = useCallback(() => {
+    workGeneration.current++;
+    actionRef.current = null;
+    setAction(null);
+  }, []);
+  const clearEditor = useCallback(() => {
+    closeAction();
     fileGeneration.current++;
+    acceptedDetail.current = null;
+    setSelected(null);
+    setDraft(null);
     setUpload(null);
     setFileError(false);
     setReading(false);
-    setState('loading');
-    setRows([]);
-    setDetail(null);
-    setDraft(null);
-    void (async () => {
-      try {
-        const responses = await Promise.all(
-          [
-            '/api/admin/contract-templates',
-            ...(selected && selected !== 'new'
-              ? [`/api/admin/contract-templates/${selected}`]
-              : []),
-          ].map((path) => fetch(path, { signal: abort.signal }))
-        );
-        if (responses.some((response) => response.status === 403)) {
-          if (!abort.signal.aborted) setState('denied');
-          return;
-        }
-        if (responses.some((response) => !response.ok)) throw new Error('Load failed');
-        const data = await Promise.all(responses.map((response) => response.json()));
-        if (abort.signal.aborted) return;
-        setRows(data[0] as ContractTemplateDto[]);
-        if (selected === 'new') setDraft({ name: '', description: '', status: 'active' });
-        else if (selected) {
-          const row = data[1] as ContractTemplateDetailDto;
-          setDetail(row);
-          setDraft({ name: row.name, description: row.description ?? '', status: row.status });
-        }
-        setState('ready');
-      } catch {
-        if (!abort.signal.aborted) setState('error');
-      }
-    })();
-    return () => {
-      abort.abort();
+    setSaved(false);
+    if (fileInput.current) fileInput.current.value = '';
+  }, [closeAction]);
+  const denied = useCallback(() => {
+    acceptedRows.current = null;
+    clearEditor();
+  }, [clearEditor]);
+  const scope = useCatalogueScope(denied);
+  const catalogue = useCatalogueResource(scope, '/api/admin/contract-templates', validList);
+  const validateSelected = useCallback(
+    (value: unknown): value is ContractTemplateDetailDto =>
+      validDetail(value) && value.id === selected,
+    [selected]
+  );
+  const history = useCatalogueResource(
+    scope,
+    selected && selected !== 'new' ? `/api/admin/contract-templates/${selected}` : null,
+    validateSelected
+  );
+  const rows = catalogue.data ?? [],
+    detail = history.data;
+  const listReady =
+    !scope.denied && !catalogue.loading && !catalogue.error && catalogue.data !== null;
+  const detailReady = selected === 'new' || (!!detail && !history.loading && !history.error);
+  const ready = listReady && detailReady;
+  useEffect(
+    () => () => {
+      workGeneration.current++;
       fileGeneration.current++;
-    };
-  }, [selected, revision]);
+      actionRef.current = null;
+    },
+    []
+  );
+  useEffect(() => {
+    if (!catalogue.data || catalogue.loading || catalogue.error) return;
+    const previous = acceptedRows.current;
+    acceptedRows.current = catalogue.data;
+    if (actionRef.current?.method === 'DELETE') {
+      const id = actionRef.current.path.split('/').at(-1);
+      const before = previous?.find((row) => row.id === id),
+        after = catalogue.data.find((row) => row.id === id);
+      if (!after || (before && basis(before) !== basis(after))) closeAction();
+    }
+    if (!selected || selected === 'new') return;
+    const next = catalogue.data.find((row) => row.id === selected);
+    if (!next) {
+      clearEditor();
+      return;
+    }
+    const before = previous?.find((row) => row.id === selected);
+    if (before && basis(before) !== basis(next)) {
+      closeAction();
+      history.retry();
+    }
+  }, [
+    catalogue.data,
+    catalogue.loading,
+    catalogue.error,
+    selected,
+    closeAction,
+    clearEditor,
+    history.retry,
+  ]);
+  useEffect(() => {
+    if (!detail || history.loading || history.error) return;
+    const previous = acceptedDetail.current;
+    if (!previous || metadata(previous) !== metadata(detail)) setDraft(draftOf(detail));
+    if (
+      previous &&
+      (basis(previous) !== basis(detail) ||
+        JSON.stringify(previous.versions) !== JSON.stringify(detail.versions))
+    )
+      closeAction();
+    acceptedDetail.current = detail;
+  }, [detail, history.loading, history.error, closeAction]);
   function chooseEditor(value: string | null) {
-    setState('loading');
+    if (value === selected) {
+      if (history.error) history.retry();
+      return;
+    }
+    clearEditor();
     setSelected(value);
-    setRevision((current) => current + 1);
+    if (value === 'new') setDraft({ name: '', description: '', status: 'active' });
+  }
+  function refresh() {
+    if (scope.denied) scope.recover();
+    else {
+      catalogue.retry();
+      if (selected && selected !== 'new') history.retry();
+    }
   }
   function propose(
     path: string,
@@ -83,8 +195,10 @@ export default function AdminContractTemplatesPage() {
     description: string,
     body?: unknown
   ) {
+    if (!listReady || (method !== 'DELETE' && !detailReady)) return;
+    closeAction();
     setSaved(false);
-    setAction({
+    const next: TeamAction = {
       path,
       method,
       title,
@@ -100,11 +214,13 @@ export default function AdminContractTemplatesPage() {
         CONTRACT_TEMPLATE_STORAGE_DISABLED: label('storageUnavailable'),
         CONTRACT_TEMPLATE_NOT_FOUND: label('missing'),
       },
-    });
+    };
+    actionRef.current = next;
+    setAction(next);
   }
   function save(event: FormEvent) {
     event.preventDefault();
-    if (!draft || !selected) return;
+    if (!draft || !selected || !ready || !draft.name.trim()) return;
     propose(
       `/api/admin/contract-templates${selected === 'new' ? '' : `/${selected}`}`,
       selected === 'new' ? 'POST' : 'PATCH',
@@ -122,7 +238,7 @@ export default function AdminContractTemplatesPage() {
     setUpload(null);
     setFileError(false);
     setReading(false);
-    if (!file) return;
+    if (!file || scope.denied || actionRef.current || !selected || selected === 'new') return;
     if (
       file.size > MAX_BYTES ||
       file.size === 0 ||
@@ -144,6 +260,7 @@ export default function AdminContractTemplatesPage() {
       if (generation === fileGeneration.current) setReading(false);
     }
   }
+  const completionGeneration = workGeneration.current;
   return (
     <div
       className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 md:p-8"
@@ -152,192 +269,298 @@ export default function AdminContractTemplatesPage() {
       {time.notice}
       <h1 className="text-2xl font-semibold">{label('title')}</h1>
       <div>
-        <Button
-          variant="outline"
-          onClick={() => {
-            setSelected(null);
-            setRevision((value) => value + 1);
-          }}
-        >
+        <Button variant="outline" disabled={catalogue.loading || history.loading} onClick={refresh}>
           {label('refresh')}
         </Button>
       </div>
       {saved && <p role="status">{label('saved')}</p>}
-      {state === 'loading' && <p role="status">{label('loading')}</p>}
-      {state === 'denied' && <p role="alert">{label('denied')}</p>}
-      {state === 'error' && <p role="alert">{label('error')}</p>}
-      {state === 'ready' && (
-        <>
-          <div>
-            <Button onClick={() => chooseEditor('new')}>{label('add')}</Button>
-          </div>
-          {draft && (
-            <form
-              aria-label={label('editor')}
-              onSubmit={save}
-              className="flex flex-col gap-4 border-y py-5"
-            >
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="template-name">{label('name')}</Label>
-                <Input
-                  id="template-name"
-                  required
-                  maxLength={200}
-                  value={draft.name}
-                  onChange={(event) => setDraft({ ...draft, name: event.target.value })}
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="template-description">{label('description')}</Label>
-                <textarea
-                  id="template-description"
-                  className="min-h-24 rounded-md border bg-background p-3"
-                  maxLength={2000}
-                  value={draft.description}
-                  onChange={(event) => setDraft({ ...draft, description: event.target.value })}
-                />
-              </div>
-              {selected !== 'new' && (
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={draft.status === 'active'}
-                    onChange={(event) =>
-                      setDraft({ ...draft, status: event.target.checked ? 'active' : 'inactive' })
-                    }
-                  />
-                  {label('active')}
-                </label>
+      <ListPage>
+        {scope.denied && <p role="alert">{label('denied')}</p>}
+        <ListPage.Content
+          empty={false}
+          emptyView={null}
+          loading={catalogue.loading}
+          error={catalogue.error}
+          retainContent={catalogue.data !== null}
+          loadingView={<p role="status">{label('loading')}</p>}
+          errorView={
+            <div role="alert">
+              {label('error')}{' '}
+              <Button variant="outline" onClick={catalogue.retry}>
+                {label('listRetry')}
+              </Button>
+            </div>
+          }
+        >
+          {!scope.denied && catalogue.data !== null && (
+            <>
+              <ListPage.Toolbar>
+                <Button disabled={!listReady || !!action} onClick={() => chooseEditor('new')}>
+                  {label('add')}
+                </Button>
+              </ListPage.Toolbar>
+              {history.loading && <p role="status">{label('loading')}</p>}
+              {history.error && (
+                <div role="alert">
+                  {label('error')}{' '}
+                  <Button variant="outline" onClick={history.retry}>
+                    {label('detailRetry')}
+                  </Button>
+                </div>
               )}
-              <div className="flex gap-2">
-                <Button type="submit" disabled={!draft.name.trim()}>
-                  {label('save')}
-                </Button>
-                <Button type="button" variant="outline" onClick={() => chooseEditor(null)}>
-                  {label('cancel')}
-                </Button>
-              </div>
-            </form>
-          )}
-          {detail && (
-            <section aria-label={label('history')} className="flex flex-col gap-4">
-              <h2 className="text-xl font-semibold">{label('history')}</h2>
-              <div
-                className="rounded-md border border-dashed p-4"
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  void readFile(event.dataTransfer.files[0]);
-                }}
-              >
-                <Label htmlFor="template-file">{label('file')}</Label>
-                <p className="my-2 text-sm text-muted-foreground">{label('fileHelp')}</p>
-                <Button type="button" variant="outline" onClick={() => fileInput.current?.click()}>
-                  {label('chooseFile')}
-                </Button>
-                <input
-                  id="template-file"
-                  ref={fileInput}
-                  type="file"
-                  accept="text/*,.txt,.html,.md,.csv"
-                  className="hidden"
-                  onChange={(event) => {
-                    void readFile(event.target.files?.[0]);
-                    event.target.value = '';
-                  }}
-                />
-              </div>
-              {fileError && <p role="alert">{label('fileError')}</p>}
-              {reading && <p role="status">{label('reading')}</p>}
-              {upload && <p className="break-words">{upload.fileName}</p>}
-              <div>
-                <Button
-                  disabled={!upload || reading}
-                  onClick={() =>
-                    upload &&
-                    propose(
-                      `/api/admin/contract-templates/${detail.id}/versions`,
-                      'POST',
-                      label('upload'),
-                      label('confirmUpload'),
-                      { ...upload }
-                    )
-                  }
+              {draft && (
+                <form
+                  aria-label={label('editor')}
+                  onSubmit={save}
+                  className="flex flex-col gap-4 border-y py-5"
                 >
-                  {label('upload')}
-                </Button>
-              </div>
-              {!detail.versions.length && <p>{label('noVersions')}</p>}
-              <ol className="divide-y">
-                {detail.versions.map((version) => (
-                  <li key={version.versionNumber} className="flex flex-col gap-2 py-4">
-                    <h3 className="font-semibold">
-                      {label('version')} {numbers.number(version.versionNumber)}
-                    </h3>
-                    <p className="break-words">{version.fileName}</p>
-                    <time dateTime={version.createdAt}>{time.format(version.createdAt)}</time>
-                    <p>{label('placeholders')}</p>
-                    <p className="break-words" dir="ltr">
-                      {version.placeholders.length
-                        ? version.placeholders.map((value) => `{{${value}}}`).join(', ')
-                        : label('noPlaceholders')}
-                    </p>
+                  <fieldset disabled={!!action} className="space-y-4">
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="template-name">{label('name')}</Label>
+                      <Input
+                        id="template-name"
+                        required
+                        maxLength={200}
+                        value={draft.name}
+                        onChange={(event) => setDraft({ ...draft, name: event.target.value })}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="template-description">{label('description')}</Label>
+                      <textarea
+                        id="template-description"
+                        className="min-h-24 rounded-md border bg-background p-3"
+                        maxLength={2000}
+                        value={draft.description}
+                        onChange={(event) =>
+                          setDraft({ ...draft, description: event.target.value })
+                        }
+                      />
+                    </div>
+                    {selected !== 'new' && (
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={draft.status === 'active'}
+                          onChange={(event) =>
+                            setDraft({
+                              ...draft,
+                              status: event.target.checked ? 'active' : 'inactive',
+                            })
+                          }
+                        />
+                        {label('active')}
+                      </label>
+                    )}
+                    <div className="flex gap-2">
+                      <Button type="submit" disabled={!draft.name.trim() || !ready}>
+                        {label('save')}
+                      </Button>
+                      <Button type="button" variant="outline" onClick={() => chooseEditor(null)}>
+                        {label('cancel')}
+                      </Button>
+                    </div>
+                  </fieldset>
+                </form>
+              )}
+              {detail && (
+                <section aria-label={label('history')} className="flex flex-col gap-4">
+                  <h2 className="text-xl font-semibold">{label('history')}</h2>
+                  <div
+                    className="rounded-md border border-dashed p-4"
+                    onDragOver={(event) => event.preventDefault()}
+                    onDrop={(event) => {
+                      event.preventDefault();
+                      if (!action) void readFile(event.dataTransfer.files[0]);
+                    }}
+                  >
+                    <Label htmlFor="template-file">{label('file')}</Label>
+                    <p className="my-2 text-sm text-muted-foreground">{label('fileHelp')}</p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={!!action}
+                      onClick={() => fileInput.current?.click()}
+                    >
+                      {label('chooseFile')}
+                    </Button>
+                    <input
+                      id="template-file"
+                      ref={fileInput}
+                      type="file"
+                      accept="text/*,.txt,.html,.md,.csv"
+                      className="hidden"
+                      disabled={!!action}
+                      onChange={(event) => {
+                        void readFile(event.target.files?.[0]);
+                        event.target.value = '';
+                      }}
+                    />
+                  </div>
+                  {fileError && <p role="alert">{label('fileError')}</p>}
+                  {reading && <p role="status">{label('reading')}</p>}
+                  {upload && <p className="break-words">{upload.fileName}</p>}
+                  <div>
+                    <Button
+                      disabled={!upload || reading || !ready || !!action}
+                      onClick={() =>
+                        upload &&
+                        propose(
+                          `/api/admin/contract-templates/${detail.id}/versions`,
+                          'POST',
+                          label('upload'),
+                          label('confirmUpload'),
+                          { ...upload }
+                        )
+                      }
+                    >
+                      {label('upload')}
+                    </Button>
+                  </div>
+                  {!detail.versions.length && <p>{label('noVersions')}</p>}
+                  <ol className="divide-y">
+                    {detail.versions.map((version) => (
+                      <li key={version.versionNumber} className="flex flex-col gap-2 py-4">
+                        <h3 className="font-semibold">
+                          {label('version')} {numbers.number(version.versionNumber)}
+                        </h3>
+                        <p className="break-words">{version.fileName}</p>
+                        <time dateTime={version.createdAt}>{time.format(version.createdAt)}</time>
+                        <p>{label('placeholders')}</p>
+                        <p className="break-words" dir="ltr">
+                          {version.placeholders.length
+                            ? version.placeholders.map((value) => `{{${value}}}`).join(', ')
+                            : label('noPlaceholders')}
+                        </p>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+              )}
+              {!rows.length && <p>{label('empty')}</p>}
+              <ul className="divide-y">
+                {rows.map((row) => (
+                  <li
+                    key={row.id}
+                    className="flex flex-col gap-3 py-4 sm:flex-row sm:items-start sm:justify-between"
+                  >
+                    <div className="min-w-0">
+                      <h2 className="break-words font-semibold">{row.name}</h2>
+                      <p className="whitespace-pre-wrap break-words text-sm">{row.description}</p>
+                      <p>
+                        {label(row.status)} · {label('versions')}:{' '}
+                        {numbers.number(row.versionCount)}
+                      </p>
+                    </div>
+                    <div className="flex shrink-0 flex-wrap gap-2">
+                      <Button
+                        variant="outline"
+                        aria-label={`${label('open')} ${row.name}`}
+                        disabled={!listReady || !!action}
+                        onClick={() => chooseEditor(row.id)}
+                      >
+                        {label('open')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        disabled={row.versionCount > 0 || !listReady || !!action}
+                        aria-label={`${label('delete')} ${row.name}`}
+                        onClick={() =>
+                          propose(
+                            `/api/admin/contract-templates/${row.id}`,
+                            'DELETE',
+                            label('delete'),
+                            `${row.name}. ${label('confirmDelete')}`
+                          )
+                        }
+                      >
+                        {label('delete')}
+                      </Button>
+                    </div>
                   </li>
                 ))}
-              </ol>
-            </section>
+              </ul>
+            </>
           )}
-          {!rows.length && <p>{label('empty')}</p>}
-          <ul className="divide-y">
-            {rows.map((row) => (
-              <li
-                key={row.id}
-                className="flex flex-col gap-3 py-4 sm:flex-row sm:items-start sm:justify-between"
-              >
-                <div className="min-w-0">
-                  <h2 className="break-words font-semibold">{row.name}</h2>
-                  <p className="whitespace-pre-wrap break-words text-sm">{row.description}</p>
-                  <p>
-                    {label(row.status)} · {label('versions')}: {numbers.number(row.versionCount)}
-                  </p>
-                </div>
-                <div className="flex shrink-0 flex-wrap gap-2">
-                  <Button
-                    variant="outline"
-                    aria-label={`${label('open')} ${row.name}`}
-                    onClick={() => chooseEditor(row.id)}
-                  >
-                    {label('open')}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    disabled={row.versionCount > 0}
-                    aria-label={`${label('delete')} ${row.name}`}
-                    onClick={() =>
-                      propose(
-                        `/api/admin/contract-templates/${row.id}`,
-                        'DELETE',
-                        label('delete'),
-                        `${row.name}. ${label('confirmDelete')}`
-                      )
-                    }
-                  >
-                    {label('delete')}
-                  </Button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+        </ListPage.Content>
+      </ListPage>
       {action && (
         <TeamActionDialog
           action={action}
-          onClose={() => setAction(null)}
-          onSuccess={async () => {
-            if (selected === 'new' || action.method === 'DELETE') setSelected(null);
+          onClose={closeAction}
+          confirmationDisabled={!listReady || (action.method !== 'DELETE' && !detailReady)}
+          summary={
+            <div className="space-y-2">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={catalogue.loading || history.loading}
+                onClick={refresh}
+              >
+                {label('refresh')}
+              </Button>
+              {catalogue.error && (
+                <div role="alert">
+                  {label('error')}{' '}
+                  <Button type="button" variant="outline" onClick={catalogue.retry}>
+                    {label('listRetry')}
+                  </Button>
+                </div>
+              )}
+              {history.error && (
+                <div role="alert">
+                  {label('error')}{' '}
+                  <Button type="button" variant="outline" onClick={history.retry}>
+                    {label('detailRetry')}
+                  </Button>
+                </div>
+              )}
+            </div>
+          }
+          onSuccess={async (result) => {
+            if (
+              completionGeneration !== workGeneration.current ||
+              actionRef.current !== action ||
+              scope.denied
+            )
+              return;
+            if (action.method === 'DELETE') {
+              if (!record(result) || result.deleted !== true)
+                throw new Error('Invalid deletion acknowledgement');
+            } else if (action.path.endsWith('/versions')) {
+              if (
+                !validVersion(result) ||
+                result.fileName !== (action.body as Upload).fileName ||
+                result.versionNumber <= (detail?.latestVersion?.versionNumber ?? 0)
+              )
+                throw new Error('Invalid version acknowledgement');
+            } else {
+              const expected = action.body as Draft;
+              if (
+                !validTemplate(result) ||
+                (selected !== 'new' && result.id !== selected) ||
+                result.name !== expected.name ||
+                (result.description ?? '') !== expected.description ||
+                (selected !== 'new' && result.status !== expected.status)
+              )
+                throw new Error('Invalid template acknowledgement');
+            }
+            closeAction();
+            if (
+              selected === 'new' ||
+              (action.method === 'DELETE' && action.path.endsWith(`/${selected}`))
+            )
+              clearEditor();
+            else if (action.method !== 'DELETE') {
+              if (action.path.endsWith('/versions')) {
+                fileGeneration.current++;
+                setUpload(null);
+              }
+              if (!action.path.endsWith('/versions')) acceptedDetail.current = null;
+              history.retry();
+            }
             setSaved(true);
-            setRevision((value) => value + 1);
+            catalogue.retry();
           }}
         />
       )}

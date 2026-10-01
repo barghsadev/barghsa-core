@@ -384,7 +384,8 @@ it.each([404, 503, 'network'] as const)(
 );
 
 const template = {
-  id: 'template-one',
+  id: '11111111-1111-4111-8111-111111111111',
+  latestVersion: null,
   name: 'Agreement',
   description: null,
   status: 'inactive',
@@ -397,7 +398,9 @@ async function openTemplate() {
       async (url) =>
         new Response(
           JSON.stringify(
-            String(url).endsWith('/template-one') ? { ...template, versions: [] } : [template]
+            String(url).endsWith('/11111111-1111-4111-8111-111111111111')
+              ? { ...template, versions: [] }
+              : [template]
           )
         )
     )

@@ -38,4 +38,4 @@ Evidence logs: `/tmp/barghsa-crm-recovery-*.log`. The first security run reports
 
 The preceding VAT batch is published as `003b51186cec9462fc2c5e5a2a1365bee2621104`. CI run `36832144458` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.
 
-This CRM batch is published directly to main after review and final validation. Remote SHA and CI registration are read back after publication. No PR is created. No historical supervisor state is changed.
+This CRM batch is published directly to main as `dea09e44913fb12f8793239a1502fd5a2f6ae936` after review and final validation. Remote SHA and clean worktree are verified. GitHub has not registered a CI run for this SHA at the latest inspection; no CI success is claimed. No PR is created. No historical supervisor state is changed.

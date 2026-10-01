@@ -1,20 +1,16 @@
 import { test, expect } from './coverage-fixture';
+import { crmShell } from './crm-shell-fixture';
+import { electricityLimits } from '../src/test/contract-settings-fixtures';
 for (const locale of ['en', 'fa'])
   test(`contract limits recover from failures without losing the proposal (${locale})`, async ({
     page,
   }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await crmShell(page, locale);
     let failed = true,
       verified = false,
       denied = false;
     const attempts: unknown[] = [];
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/admin/config/contract-electricity-limits', (route) => {
       if (route.request().method() === 'GET')
         return route.fulfill(
@@ -34,7 +30,7 @@ for (const locale of ['en', 'fa'])
       if (!verified)
         return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
       denied = true;
-      return route.fulfill({ json: {} });
+      return route.fulfill({ json: { ...electricityLimits, leadTimeDays: 14 } });
     });
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct';
@@ -48,9 +44,9 @@ for (const locale of ['en', 'fa'])
       exact: true,
     });
     await lead.fill('-1');
-    await page
-      .getByRole('button', { name: fa ? 'ذخیره محدودیت‌ها' : 'Save limits', exact: true })
-      .click();
+    await expect(
+      page.getByRole('button', { name: fa ? 'ذخیره محدودیت‌ها' : 'Save limits', exact: true })
+    ).toBeDisabled();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await lead.fill('14');
     await page
