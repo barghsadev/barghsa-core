@@ -25,7 +25,7 @@ export const catalogueRole = {
 };
 export const effectivePermissions = {
   userId: 'staff-one',
-  isAdmin: true,
+  isAdmin: false,
   isWildcard: false,
   roleIds: ['finance'],
   roleNames: ['Finance reviewer'],

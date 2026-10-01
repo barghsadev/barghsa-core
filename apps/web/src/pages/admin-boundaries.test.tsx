@@ -322,7 +322,7 @@ const effective = {
   isAdmin: false,
   isWildcard: false,
   roleIds: ['reviewer'],
-  roleNames: ['Review role'],
+  roleNames: ['Review role', 'Unknown role'],
   permissions: [{ permission: 'users:read', group: 'users' }],
 };
 const invalidEffective: unknown[] = [
@@ -1014,14 +1014,14 @@ it.each(
       isWildcard: true,
       roleIds: ['admin'],
       roleNames: ['Administrator'],
-      permissions: [],
+      permissions: [{ permission: '*', group: 'admin' }],
     },
     { isAdmin: false, isWildcard: false, roleIds: [], roleNames: [], permissions: [] },
     {
       isAdmin: false,
       isWildcard: false,
       roleIds: ['reviewer', 'unknown'],
-      roleNames: ['Review role'],
+      roleNames: ['Review role', 'Unknown role'],
       permissions: [
         { permission: 'custom:read', group: 'custom' },
         { permission: 'users:read', group: 'users' },
@@ -1047,8 +1047,10 @@ it.each(
   );
   expect(host.querySelector('[role=alert]')).toBeNull();
   expect(host.textContent).toContain('staff-one');
-  for (const permission of data.permissions)
-    expect(host.textContent).toContain(permission.permission);
+  if (data.isWildcard) expect(host.textContent).toContain('This user is granted every permission.');
+  else
+    for (const permission of data.permissions)
+      expect(host.textContent).toContain(permission.permission);
 });
 
 it.each([

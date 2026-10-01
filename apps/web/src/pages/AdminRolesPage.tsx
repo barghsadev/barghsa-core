@@ -1,8 +1,14 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import type { FormEvent } from 'react';
-import { Button, ListPage, ScrollArea } from '@barghsa/ui';
+import { Button, Label, ListPage, ScrollArea } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
+import {
+  groupPermissions,
+  validEffective,
+  type EffectivePermissions,
+} from '../lib/staff-permissions.js';
+import { EffectivePermissionsView } from '../components/EffectivePermissionsView.js';
 
 /**
  * Staff role management page (T-09.05.01).
@@ -18,15 +24,6 @@ interface StaffRole {
   description: string;
   permissions: string[];
   predefined: boolean;
-}
-
-interface EffectivePermissions {
-  userId: string;
-  isAdmin: boolean;
-  roleIds: string[];
-  roleNames: string[];
-  permissions: { permission: string; group: string }[];
-  isWildcard: boolean;
 }
 
 function record(value: unknown): value is Record<string, unknown> {
@@ -53,68 +50,6 @@ function validRoles(value: unknown): value is StaffRole[] {
   );
 }
 
-function validEffective(value: unknown, userId: string): value is EffectivePermissions {
-  return (
-    record(value) &&
-    value.userId === userId &&
-    typeof value.isAdmin === 'boolean' &&
-    typeof value.isWildcard === 'boolean' &&
-    strings(value.roleIds) &&
-    strings(value.roleNames) &&
-    Array.isArray(value.permissions) &&
-    value.permissions.every(
-      (item) =>
-        record(item) && typeof item.permission === 'string' && typeof item.group === 'string'
-    )
-  );
-}
-
-/** Permission groups ordered for stable display. */
-const GROUP_ORDER = [
-  'admin',
-  'users',
-  'profiles',
-  'tickets',
-  'crm',
-  'verification',
-  'finance',
-  'invoices',
-  'payments',
-  'reports',
-  'legal',
-  'contracts',
-  'compliance',
-  'operations',
-  'orders',
-  'scheduling',
-  'config',
-  'staff',
-];
-
-/** Group permissions by their prefix (module). */
-function groupPermissions(permissions: string[]): { group: string; permissions: string[] }[] {
-  const map = new Map<string, string[]>();
-  for (const p of permissions) {
-    const group = p.split(':')[0] ?? 'other';
-    const list = map.get(group) ?? [];
-    list.push(p);
-    map.set(group, list);
-  }
-  const groups = [...map.entries()].map(([group, perms]) => ({
-    group,
-    permissions: perms.sort(),
-  }));
-  const sorted = groups.sort((a, b) => {
-    const ia = GROUP_ORDER.indexOf(a.group);
-    const ib = GROUP_ORDER.indexOf(b.group);
-    if (ia === -1 && ib === -1) return a.group.localeCompare(b.group);
-    if (ia === -1) return 1;
-    if (ib === -1) return -1;
-    return ia - ib;
-  });
-  return sorted;
-}
-
 export default function AdminRolesPage() {
   const locale = useLocale();
   const roleText = (id: string, field: 'name' | 'description', fallback: string) => {
@@ -135,6 +70,13 @@ export default function AdminRolesPage() {
   const catalogueRequest = useRef<AbortController | null>(null);
   const lookupRequest = useRef<AbortController | null>(null);
 
+  const [module, setModule] = useState('');
+  const catalogueGroups = groupPermissions([
+    ...new Set(
+      roles?.flatMap((role) => role.permissions).filter((permission) => permission !== '*') ?? []
+    ),
+  ]);
+  const selectedGroup = catalogueGroups.find((group) => group.group === module);
   const [staffUserId, setStaffUserId] = useState('');
   const [effective, setEffective] = useState<EffectivePermissions | null>(null);
   const [permLoading, setPermLoading] = useState(false);
@@ -146,6 +88,7 @@ export default function AdminRolesPage() {
     setForbidden(true);
     setRoles(null);
     setStaffUserId('');
+    setModule('');
     setEffective(null);
     setPermError(null);
     setPermLoading(false);
@@ -231,6 +174,28 @@ export default function AdminRolesPage() {
 
       <ListPage>
         <ListPage.Toolbar>
+          {!forbidden && roles && (
+            <div className="space-y-1">
+              <Label htmlFor="role-module">{t('admin.roles.compare.module', locale)}</Label>
+              <select
+                id="role-module"
+                className="block w-full rounded border bg-background px-3 py-2 text-sm"
+                value={selectedGroup?.group ?? ''}
+                onChange={(event) => setModule(event.target.value)}
+              >
+                <option value="">{t('admin.roles.compare.all', locale)}</option>
+                {catalogueGroups.map((group) => (
+                  <option key={group.group} value={group.group}>
+                    {groupName(group.group)}
+                  </option>
+                ))}
+              </select>
+              <p className="text-sm text-muted-foreground">
+                {t('admin.roles.compare.help', locale)}
+              </p>
+            </div>
+          )}
+
           <Button variant="outline" disabled={isLoading} onClick={() => setReload((v) => v + 1)}>
             {t('admin.jobs.refresh', locale)}
           </Button>
@@ -258,7 +223,7 @@ export default function AdminRolesPage() {
               <ScrollArea
                 scrollbarOrientation="horizontal"
                 role="region"
-                aria-label={t('admin.roles.title', locale)}
+                aria-label={t('admin.roles.catalogue', locale)}
                 className="max-w-full min-w-0 rounded-lg border bg-card"
               >
                 <table className="w-full min-w-[44rem] divide-y divide-border">
@@ -274,7 +239,9 @@ export default function AdminRolesPage() {
                   </thead>
                   <tbody className="divide-y divide-border">
                     {roles?.map((role) => {
-                      const groups = groupPermissions(role.permissions);
+                      const groups = selectedGroup
+                        ? [selectedGroup]
+                        : groupPermissions(role.permissions);
                       return (
                         <tr key={role.roleId}>
                           <th scope="row" className="px-4 py-4 align-top text-start font-normal">
@@ -293,7 +260,7 @@ export default function AdminRolesPage() {
                             </p>
                           </th>
                           <td className="px-4 py-4">
-                            {role.permissions.length === 0 ? (
+                            {groups.length === 0 ? (
                               <span className="text-xs text-muted-foreground">
                                 {t('admin.roles.no.permissions', locale)}
                               </span>
@@ -310,7 +277,10 @@ export default function AdminRolesPage() {
                                           <label className="flex items-start gap-2">
                                             <input
                                               type="checkbox"
-                                              checked
+                                              checked={
+                                                role.permissions.includes('*') ||
+                                                role.permissions.includes(p)
+                                              }
                                               disabled
                                               className="mt-0.5 shrink-0"
                                             />
@@ -380,52 +350,7 @@ export default function AdminRolesPage() {
                 </p>
               )}
 
-              {effective && (
-                <div className="mt-5 rounded-md border p-4">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <bdi dir="ltr" className="font-mono text-sm break-all">
-                      {effective.userId}
-                    </bdi>
-                    {effective.isAdmin && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-muted">
-                        {t('admin.roles.effective.admin', locale)}
-                      </span>
-                    )}
-                  </div>
-                  {effective.roleNames.length > 0 && (
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      {t('admin.roles.effective.roles', locale)}:{' '}
-                      {effective.roleIds
-                        .map((id, index) => roleText(id, 'name', effective.roleNames[index] ?? id))
-                        .join(locale === 'fa' ? '، ' : ', ')}
-                    </p>
-                  )}
-                  {effective.isWildcard ? (
-                    <p className="mt-3 text-sm">{t('admin.roles.effective.wildcard', locale)}</p>
-                  ) : effective.permissions.length === 0 ? (
-                    <p className="mt-3 text-sm text-muted-foreground">
-                      {t('admin.roles.effective.none', locale)}
-                    </p>
-                  ) : (
-                    <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
-                      {groupPermissions(effective.permissions.map((p) => p.permission)).map((g) => (
-                        <div key={g.group}>
-                          <div className="text-xs font-semibold text-muted-foreground">
-                            {groupName(g.group)}
-                          </div>
-                          <ul className="mt-1 space-y-0.5">
-                            {g.permissions.map((p) => (
-                              <li key={p} className="text-xs font-mono break-all">
-                                <bdi dir="ltr">{p}</bdi>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
+              {effective && <EffectivePermissionsView data={effective} />}
             </section>
           </>
         )}

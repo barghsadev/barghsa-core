@@ -80,7 +80,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#staffUserId').fill('staff-one');
     await page.getByRole('button', { name: r('effective.lookup'), exact: true }).click();
     await expect(page.locator('main')).toContainText('staff-one');
-    await inspect(page, r('title'), locale, info.project.name, 'roles');
+    await inspect(page, r('catalogue'), locale, info.project.name, 'roles');
     fail = true;
     await page.getByRole('button', { name: refresh, exact: true }).click();
     await expect(page.getByRole('alert')).toContainText(r('load.failed'));

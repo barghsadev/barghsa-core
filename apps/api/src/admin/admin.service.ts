@@ -5,7 +5,11 @@ import {
   type VerificationModeConfig,
   type VerificationModeChange,
 } from './verification-mode-config.js';
-import { requireSessionStepUp, requireSessionOtpStepUp } from '../session/session-step-up.js';
+import {
+  requireCurrentSession,
+  requireSessionStepUp,
+  requireSessionOtpStepUp,
+} from '../session/session-step-up.js';
 import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission, requireStaffStepUp } from './staff-mutation-permission.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -947,73 +951,71 @@ export class AdminService {
    * @param targetUserId - The staff user whose effective permissions to resolve
    * @throws 404 when the user does not exist
    */
-  async getEffectivePermissions(targetUserId: string): Promise<EffectivePermissionsResult> {
-    const pool = getDbPool();
-
-    const userResult = await pool.query(
-      `SELECT user_id, is_admin, disabled_at FROM users WHERE user_id = $1`,
-      [targetUserId]
-    );
-    if (userResult.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: 'USER_NOT_FOUND', message: 'User not found' },
-        404
+  async getEffectivePermissions(
+    targetUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
+  ): Promise<EffectivePermissionsResult> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:roles:edit', targetUserId);
+      await requireCurrentSession(client, actor);
+      const userResult = await client.query(
+        `SELECT user_id, is_admin, disabled_at, activation_token IS NOT NULL AS activation_pending FROM users WHERE user_id = $1`,
+        [targetUserId]
       );
-    }
-    const isAdmin = userResult.rows[0]!.is_admin === true;
+      if (userResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 404, error: 'USER_NOT_FOUND', message: 'User not found' },
+          404
+        );
+      }
+      const isAdmin = userResult.rows[0]!.is_admin === true;
 
-    const rolesResult = await pool.query(
-      `SELECT r.role_id, r.name, r.permissions
-       FROM user_roles ur
-       JOIN staff_roles r ON r.role_id = ur.role_id
-       WHERE ur.user_id = $1`,
-      [targetUserId]
-    );
+      const rolesResult = await client.query(
+        `SELECT r.role_id, r.name, r.permissions
+     FROM user_roles ur
+     JOIN staff_roles r ON r.role_id = ur.role_id
+     WHERE ur.user_id = $1 ORDER BY r.role_id FOR SHARE OF ur,r`,
+        [targetUserId]
+      );
 
-    const roleIds: string[] = [];
-    const roleNames: string[] = [];
-    const permissionSet = new Set<string>();
+      const roleIds: string[] = [];
+      const roleNames: string[] = [];
+      const permissionSet = new Set<string>();
 
-    for (const row of rolesResult.rows) {
-      roleIds.push(row.role_id);
-      roleNames.push(row.name);
-      for (const p of parsePermissionsStored(row.permissions)) permissionSet.add(p);
-    }
+      for (const row of rolesResult.rows) {
+        roleIds.push(row.role_id);
+        roleNames.push(row.name);
+        for (const p of parsePermissionsStored(row.permissions)) permissionSet.add(p);
+      }
 
-    if (userResult.rows[0]!.disabled_at) {
-      return {
+      const active = !userResult.rows[0]!.disabled_at && !userResult.rows[0]!.activation_pending;
+      const isWildcard = active && (isAdmin || permissionSet.has('*'));
+      const permissions = !active
+        ? []
+        : isWildcard
+          ? [{ permission: '*', group: 'admin' }]
+          : [...permissionSet]
+              .sort()
+              .map((permission) => ({ permission, group: permission.split(':')[0] ?? 'other' }));
+      const result: EffectivePermissionsResult = {
         userId: targetUserId,
         isAdmin,
         roleIds,
         roleNames,
-        permissions: [],
-        isWildcard: false,
+        permissions,
+        isWildcard,
       };
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
     }
-
-    if (isAdmin || permissionSet.has('*')) {
-      return {
-        userId: targetUserId,
-        isAdmin,
-        roleIds,
-        roleNames,
-        permissions: [{ permission: '*', group: 'admin' }],
-        isWildcard: true,
-      };
-    }
-
-    const permissions = [...permissionSet]
-      .sort()
-      .map((permission) => ({ permission, group: permission.split(':')[0] ?? 'other' }));
-
-    return {
-      userId: targetUserId,
-      isAdmin,
-      roleIds,
-      roleNames,
-      permissions,
-      isWildcard: false,
-    };
   }
 
   /**

@@ -1,5 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
+import { mockOtpStepUp } from './otp-step-up-fixture';
+import { t } from '@barghsa/i18n/admin-ui';
 
 test.use({ timezoneId: 'America/Los_Angeles' });
 
@@ -11,7 +13,6 @@ for (const locale of ['en', 'fa'] as const) {
     const fa = locale === 'fa';
     let allowed = true,
       failLoad = true,
-      verified = false,
       failSave = true;
     const attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
@@ -66,20 +67,17 @@ for (const locale of ['en', 'fa'] as const) {
             },
           })
     );
+    const auth = await mockOtpStepUp(page);
     await page.route('**/api/admin/users/target/roles', (route) => {
       attempts.push(route.request().postDataJSON());
-      if (!verified)
+      if (!auth.verified)
         return route.fulfill({
           status: 403,
-          json: { error: 'AUTHZ:STEP_UP:REQUIRED', requiresStepUp: true },
+          json: { error: 'AUTHZ:STEP_UP_REQUIRED', requiresOtp: true },
         });
       if (failSave) return route.fulfill({ status: 503, json: {} });
       allowed = false;
       return route.fulfill({ json: { roleIds: ['role-finance'] } });
-    });
-    await page.route('**/api/auth/step-up', (route) => {
-      verified = route.request().postDataJSON().password === 'right-password';
-      return route.fulfill({ status: verified ? 200 : 401, json: {} });
     });
     await page.goto('/admin/users');
     await expect(page.getByRole('alert')).toBeVisible();
@@ -117,23 +115,22 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('button', { name: fa ? 'ذخیره نقش‌ها' : 'Save roles', exact: true })
       .click();
     const dialog = page.getByRole('dialog'),
-      confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
+      word = (key: string) => t(`admin.stepUp.${key}`, locale);
     expect(attempts).toHaveLength(0);
-    await confirm.click();
-    await expect(page.locator('#team-step-up-password')).toBeVisible();
-    await page.locator('#team-step-up-password').fill('wrong-password');
-    await confirm.click();
+    await dialog.getByRole('button', { name: word('send'), exact: true }).click();
+    const code = dialog.getByLabel(word('code'), { exact: true });
+    await code.fill('111111');
+    await dialog.getByRole('button', { name: word('verify'), exact: true }).click();
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    expect(attempts).toHaveLength(0);
+    await code.fill('123456');
+    await dialog.getByRole('button', { name: word('verify'), exact: true }).click();
     await expect(dialog.getByRole('alert')).toBeVisible();
     expect(attempts).toHaveLength(1);
-    await page.locator('#team-step-up-password').fill('right-password');
-    await confirm.click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
-    await expect(page.locator('#team-step-up-password')).toHaveValue('');
     failSave = false;
-    await page.locator('#team-step-up-password').fill('right-password');
-    await confirm.click();
+    await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
     await expect(dialog).toHaveCount(0);
-    expect(attempts).toEqual(Array(3).fill({ roleIds: ['role-finance'], reason: 'New duties' }));
+    expect(attempts).toEqual(Array(2).fill({ roleIds: ['role-finance'], reason: 'New duties' }));
     await expect(page.getByRole('table')).toHaveCount(0);
     await expect(
       page.getByRole('button', { name: fa ? 'ویرایش نقش‌ها' : 'Edit roles', exact: true })

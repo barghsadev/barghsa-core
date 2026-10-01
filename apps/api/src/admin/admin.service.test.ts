@@ -9,6 +9,12 @@ vi.mock('./staff-mutation-permission.js', () => ({
   requireStaffStepUp: vi.fn(async () => new Date('2026-09-08T12:00:00Z')),
 }));
 
+vi.mock('../session/session-step-up.js', async (original) => ({
+  ...(await original<typeof import('../session/session-step-up.js')>()),
+  requireCurrentSession: vi.fn(async () => ({ stepUpVerifiedAt: null, stepUpFresh: false })),
+  requireSessionOtpStepUp: vi.fn(async () => new Date('2026-09-08T12:00:00Z')),
+}));
+
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {
@@ -689,7 +695,10 @@ describe('AdminService.listStaffRoles', () => {
 describe('AdminService.getEffectivePermissions', () => {
   it('returns the union of permissions across roles for a non-admin', async () => {
     const { pool } = mockPool();
-    pool.query
+    const { client } = mockClient();
+    pool.connect.mockResolvedValue(client);
+    client.query.mockResolvedValueOnce({ rows: [] });
+    client.query
       .mockResolvedValueOnce({ rows: [{ user_id: 'u1', is_admin: false }] }) // user lookup
       .mockResolvedValueOnce({
         // roles lookup
@@ -711,7 +720,7 @@ describe('AdminService.getEffectivePermissions', () => {
     const { AdminService: Svc } = await import('./admin.service.js');
     service = new Svc();
 
-    const result = await service.getEffectivePermissions('u1');
+    const result = await service.getEffectivePermissions('u1', staffActor('admin'));
     expect(result.isAdmin).toBe(false);
     expect(result.isWildcard).toBe(false);
     expect(result.roleIds).toEqual(['role-crm', 'role-support']);
@@ -724,7 +733,10 @@ describe('AdminService.getEffectivePermissions', () => {
 
   it('returns the wildcard set for an admin user', async () => {
     const { pool } = mockPool();
-    pool.query
+    const { client } = mockClient();
+    pool.connect.mockResolvedValue(client);
+    client.query.mockResolvedValueOnce({ rows: [] });
+    client.query
       .mockResolvedValueOnce({ rows: [{ user_id: 'u1', is_admin: true }] })
       .mockResolvedValueOnce({ rows: [] });
 
@@ -732,7 +744,7 @@ describe('AdminService.getEffectivePermissions', () => {
     const { AdminService: Svc } = await import('./admin.service.js');
     service = new Svc();
 
-    const result = await service.getEffectivePermissions('u1');
+    const result = await service.getEffectivePermissions('u1', staffActor('admin'));
     expect(result.isAdmin).toBe(true);
     expect(result.isWildcard).toBe(true);
     expect(result.permissions[0]?.permission).toBe('*');
@@ -740,13 +752,18 @@ describe('AdminService.getEffectivePermissions', () => {
 
   it('throws 404 for an unknown user', async () => {
     const { pool } = mockPool();
-    pool.query.mockResolvedValueOnce({ rows: [] });
+    const { client } = mockClient();
+    pool.connect.mockResolvedValue(client);
+    client.query.mockResolvedValueOnce({ rows: [] });
+    client.query.mockResolvedValueOnce({ rows: [] });
 
     vi.doMock('@barghsa/db', () => mockDbModule(pool));
     const { AdminService: Svc } = await import('./admin.service.js');
     service = new Svc();
 
-    await expect(service.getEffectivePermissions('missing')).rejects.toMatchObject({ status: 404 });
+    await expect(
+      service.getEffectivePermissions('missing', staffActor('admin'))
+    ).rejects.toMatchObject({ status: 404 });
   });
 });
 

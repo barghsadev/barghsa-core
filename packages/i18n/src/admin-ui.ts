@@ -1385,6 +1385,19 @@ export const fa: I18nDictionary = {
   'admin.notifications.preview.warnings.title': 'مشکلات متغیرها',
   'admin.notifications.preview.warnings.undeclared': 'این متغیر در فهرست مجاز قالب تعریف نشده است.',
   'admin.notifications.preview.warnings.missing': 'این متغیر موردنیاز ارزش نمونه‌ای ندارد.',
+  'admin.roles.catalogue': 'جدول دسترسی نقش‌ها',
+  'admin.roles.compare.module': 'بخش دسترسی',
+  'admin.roles.compare.all': 'همه بخش\u200cها',
+  'admin.roles.compare.help':
+    'برای مقایسه دسترسی\u200cهای داده\u200cشده و داده\u200cنشده نقش\u200cها، یک بخش را انتخاب کنید. نقش\u200cهای از پیش تعریف\u200cشده فقط خواندنی هستند.',
+  'admin.roles.effective.inspect': 'نمایش دسترسی\u200cهای مؤثر',
+  'admin.roles.effective.accountHelp':
+    'دسترسی\u200cها از مجموع نقش\u200cها به دست می\u200cآیند. حساب غیرفعال یا در انتظار فعال\u200cسازی، دسترسی مؤثری ندارد.',
+  'admin.roles.effective.paused':
+    'پس از بازیابی فهرست و دسترسی\u200cها، دوباره بررسی می\u200cکنیم.',
+  'admin.roles.effective.retained':
+    'آخرین نتیجه حفظ شده است؛ تا دریافت نتیجه جدید، تغییر دسترسی\u200cها تأیید نمی\u200cشود.',
+  'admin.roles.effective.close': 'بستن دسترسی\u200cها',
   'admin.roles.title': 'نقش‌ها و دسترسی‌ها',
   'admin.roles.forbidden': 'اجازه مشاهده نقش‌ها و دسترسی‌ها را ندارید.',
   'admin.roles.empty': 'هنوز نقشی ثبت نشده است.',
@@ -3050,6 +3063,19 @@ export const en: I18nDictionary = {
   'admin.notifications.preview.warnings.undeclared':
     'This variable is not in the template allow-list.',
   'admin.notifications.preview.warnings.missing': 'This required variable has no sample value.',
+  'admin.roles.catalogue': 'Role permission table',
+  'admin.roles.compare.module': 'Permission module',
+  'admin.roles.compare.all': 'All modules',
+  'admin.roles.compare.help':
+    'Select a module to compare granted and ungranted permissions. Predefined roles are read-only.',
+  'admin.roles.effective.inspect': 'View effective permissions',
+  'admin.roles.effective.accountHelp':
+    'Access combines assigned roles. Disabled accounts and accounts awaiting activation have no effective permissions.',
+  'admin.roles.effective.paused':
+    'Inspection resumes after the staff list and access are available.',
+  'admin.roles.effective.retained':
+    'The last result is retained. Access changes are unconfirmed until a new result loads.',
+  'admin.roles.effective.close': 'Close permissions',
   'admin.roles.title': 'Roles & Permissions',
   'admin.roles.forbidden': 'You do not have permission to view roles and permissions.',
   'admin.roles.empty': 'No roles yet.',

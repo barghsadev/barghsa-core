@@ -18,15 +18,13 @@ export async function mockOtpStepUp(page: Page, rejectFirst = false) {
     state.verified = true;
     // WebKit does not persist Set-Cookie from mocked responses. Model the
     // verified server cookie before releasing the response to the application.
-    await page
-      .context()
-      .addCookies([
-        {
-          name: 'barghsa_csrf',
-          value: 'rotated-otp-proof',
-          url: new URL(route.request().url()).origin,
-        },
-      ]);
+    await page.context().addCookies([
+      {
+        name: 'barghsa_csrf',
+        value: 'rotated-otp-proof',
+        url: new URL(route.request().url()).origin,
+      },
+    ]);
     return route.fulfill({
       headers: { 'set-cookie': 'barghsa_csrf=rotated-otp-proof; Path=/; SameSite=Strict' },
       json: { verified: true, stepUpVerifiedAt: new Date().toISOString() },

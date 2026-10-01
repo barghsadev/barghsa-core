@@ -6,6 +6,7 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
   HttpCode,
   HttpException,
   Logger,
@@ -757,6 +758,7 @@ export class AdminController {
    * Permission: `admin:roles:edit`, matching the role catalogue.
    */
   @Get('users/:userId/effective-permissions')
+  @Header('Cache-Control', 'private, no-store')
   @ApiOperation({ summary: 'Get effective permissions for a staff user' })
   @ApiParam({ name: 'userId', description: 'Staff user UUID' })
   @ApiResponse({
@@ -779,7 +781,7 @@ export class AdminController {
         403
       );
     }
-    return this.adminService.getEffectivePermissions(userId);
+    return this.adminService.getEffectivePermissions(userId, req.session);
   }
 
   /**

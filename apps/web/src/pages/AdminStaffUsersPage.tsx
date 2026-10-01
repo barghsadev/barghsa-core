@@ -1,5 +1,6 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
+import { StaffEffectivePermissions } from '../components/StaffEffectivePermissions.js';
 import { StaffPermissionHistory } from '../components/StaffPermissionHistory.js';
 import { useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -65,6 +66,10 @@ export default function AdminStaffUsersPage() {
   const [created, setCreated] = useState<{ username: string; password?: string } | null>(null);
   const [saved, setSaved] = useState(false);
   const [activationNotice, setActivationNotice] = useState(false);
+  const [permissionTarget, setPermissionTarget] = useState<Staff | null>(null);
+  const permissionTargetRef = useRef<Staff | null>(null),
+    permissionTrigger = useRef<HTMLButtonElement | null>(null);
+  permissionTargetRef.current = permissionTarget;
   const [history, setHistory] = useState<{ userId: string; username: string } | 'all' | null>(null);
   const [accessLoading, setAccessLoading] = useState(true),
     [accessError, setAccessError] = useState(false),
@@ -101,6 +106,7 @@ export default function AdminStaffUsersPage() {
     setReason('');
     setCreated(null);
     setHistory(null);
+    setPermissionTarget(null);
     setSaved(false);
     setActivationNotice(false);
     setLoading(false);
@@ -152,12 +158,14 @@ export default function AdminStaffUsersPage() {
           setRoleIds([]);
           setReason('');
           setHistory(null);
+          setPermissionTarget(null);
         }
         if (!next.canCreate) {
           setShowCreate(false);
           setDraft(blank());
           setCreated(null);
         }
+        if (!next.canEditRoles || !next.canView) setPermissionTarget(null);
         if (!next.canEditRoles) {
           setEditing(null);
           setRoleIds([]);
@@ -205,6 +213,9 @@ export default function AdminStaffUsersPage() {
         if (!data || !Array.isArray(data.items) || !Number.isInteger(data.total) || data.total < 0)
           throw new Error('Invalid staff list');
         if (controller.signal.aborted || !accessRef.current) return;
+        const inspected = permissionTargetRef.current;
+        if (inspected && !data.items.some((row) => staffBasis(row) === staffBasis(inspected)))
+          setPermissionTarget(null);
         const selected = editingRef.current;
         if (selected && !data.items.some((row) => staffBasis(row) === staffBasis(selected))) {
           setEditing(null);
@@ -292,7 +303,8 @@ export default function AdminStaffUsersPage() {
         return role ? roleText(role, 'name') : id;
       })
       .join(', ') || label('noRoles');
-  const disabled = loading || error || accessLoading || accessError || !!action;
+  const disabled =
+    loading || error || accessLoading || accessError || !!action || !!permissionTarget;
   const rolesDisabled = disabled || optionsLoading || optionsError;
   const name = (staff: Staff) =>
     [staff.firstName, staff.lastName].filter(Boolean).join(' ') || staff.username;
@@ -513,7 +525,19 @@ export default function AdminStaffUsersPage() {
                             {staff.lastLoginAt ? time.format(staff.lastLoginAt) : label('never')}
                           </td>
                           <td className="p-3">
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-2">
+                              {access.canEditRoles && (
+                                <Button
+                                  variant="outline"
+                                  disabled={disabled}
+                                  onClick={(event) => {
+                                    permissionTrigger.current = event.currentTarget;
+                                    setPermissionTarget(staff);
+                                  }}
+                                >
+                                  {t('admin.roles.effective.inspect', locale)}
+                                </Button>
+                              )}
                               <Button
                                 variant="outline"
                                 disabled={disabled}
@@ -605,6 +629,26 @@ export default function AdminStaffUsersPage() {
                 }}
               />
             </>
+          )}
+          {permissionTarget && access?.canView && access.canEditRoles && (
+            <StaffEffectivePermissions
+              key={permissionTarget.userId}
+              target={{
+                userId: permissionTarget.userId,
+                username: permissionTarget.username,
+                name: name(permissionTarget),
+              }}
+              paused={loading || error || accessLoading || accessError}
+              finalFocus={() =>
+                permissionTrigger.current?.isConnected ? permissionTrigger.current : false
+              }
+              onClose={() => setPermissionTarget(null)}
+              onDenied={(status) => {
+                setPermissionTarget(null);
+                if (status === 401) denyAccess();
+                else refreshAccess();
+              }}
+            />
           )}
           {history && access?.canView && (
             <StaffPermissionHistory
