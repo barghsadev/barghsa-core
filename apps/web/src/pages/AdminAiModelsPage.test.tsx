@@ -31,6 +31,7 @@ const model = {
   lastTestLatencyMs: 125,
   circuitOpen: false,
   circuitCooldownUntil: null,
+  budget: null,
 };
 let container: HTMLDivElement;
 let root: Root;

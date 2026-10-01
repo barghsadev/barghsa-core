@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
 import AxeBuilder from '@axe-core/playwright';
+test.use({ viewport: { width: 390, height: 844 } });
 for (const locale of ['en', 'fa'])
   test(`Policy form retries captured input after password verification (${locale})`, async ({
     page,
@@ -14,6 +15,17 @@ for (const locale of ['en', 'fa'])
       denied = false;
     const attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'admin',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: false,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     await page.route('**/api/admin/policies', (route) => {
       if (route.request().method() === 'GET')
         return route.fulfill(
@@ -76,7 +88,6 @@ for (const locale of ['en', 'fa'] as const)
     page,
   }) => {
     const label = (key: string) => t(`admin.policies.${key}`, locale);
-    await page.setViewportSize({ width: 390, height: 844 });
     await page.addInitScript((value) => {
       localStorage.setItem('barghsa.locale', value);
     }, locale);
@@ -96,6 +107,17 @@ for (const locale of ['en', 'fa'] as const)
       memberOverride: number | null = null,
       groupExists = false;
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'admin',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: false,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     await page.route('**/api/admin/policies', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: [policy] });
       writes.push(route.request().postDataJSON());

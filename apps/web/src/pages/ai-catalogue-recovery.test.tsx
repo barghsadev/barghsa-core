@@ -112,10 +112,10 @@ it('model catalogue retry retains creation text and private token and freezes th
   await fill('#ai-model-title', 'Draft model');
   await fill('#ai-model-baseUrl', 'https://new.example.test/v1');
   await fill('#ai-model-modelName', 'new');
-  await fill('#ai-model-token', 'test-private-token');
+  await fill('#ai-model-token', 'test-token');
   fail = true;
   await click('Refresh');
-  expect(host.querySelector<HTMLInputElement>('#ai-model-token')!.value).toBe('test-private-token');
+  expect(host.querySelector<HTMLInputElement>('#ai-model-token')!.value).toBe('test-token');
   await fill('#ai-model-title', 'During recovery');
   fail = false;
   await click('Retry');
@@ -126,7 +126,7 @@ it('model catalogue retry retains creation text and private token and freezes th
     baseUrl: 'https://new.example.test/v1',
     modelName: 'new',
     config: { max_tokens: 256, temperature: 0 },
-    apiToken: 'test-private-token',
+    apiToken: 'test-token',
   });
 });
 it('model health telemetry preserves config editing while configuration changes discard it', async () => {
@@ -212,7 +212,7 @@ it('model denial clears secrets, rows and pending command', async () => {
   modelsFetch(() => response([aiModel], deny ? 401 : 200));
   await render(Models);
   await click('Add model');
-  await fill('#ai-model-token', 'test-private-token');
+  await fill('#ai-model-token', 'test-token');
   await click('Test connection');
   const old = captured.success!;
   deny = true;

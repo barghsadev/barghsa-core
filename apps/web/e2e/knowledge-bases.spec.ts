@@ -2,13 +2,20 @@ import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
-async function switchLocale(page: Page, locale: string) {
-  if (locale === 'en') await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
-}
-async function mockUnknownApi(page: Page) {
+test.use({ viewport: { width: 390, height: 844 } });
+async function mockUnknownApi(page: Page, locale: string) {
+  await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
   await page.route('**/api/**', (route) =>
     new URL(route.request().url()).pathname === '/api/auth/user'
-      ? route.fulfill({ json: { isStaff: true } })
+      ? route.fulfill({
+          json: {
+            userId: 'admin',
+            isStaff: true,
+            operatingContext: 'staff',
+            canSwitchContext: false,
+            requiresTosAcceptance: false,
+          },
+        })
       : route.fulfill({ status: 404, json: {} })
   );
 }
@@ -21,7 +28,7 @@ for (const locale of ['en', 'fa'])
       verified = false,
       denied = false;
     const attempts: unknown[] = [];
-    await mockUnknownApi(page);
+    await mockUnknownApi(page, locale);
     await mockOppositeNumerals(page, locale);
     await page.route('**/api/admin/knowledge-bases', (route) => {
       if (route.request().method() === 'GET')
@@ -39,7 +46,6 @@ for (const locale of ['en', 'fa'])
       return route.fulfill({ status: verified ? 200 : 401, json: {} });
     });
     await page.goto('/admin/knowledge-bases');
-    await switchLocale(page, locale);
     await expect(page.getByRole('alert')).toBeVisible();
     failed = false;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
@@ -105,7 +111,7 @@ for (const locale of ['en', 'fa'])
     await page
       .context()
       .addCookies([{ name: 'barghsa_csrf', value: 'kb-query-fixture', url: baseURL! }]);
-    await mockUnknownApi(page);
+    await mockUnknownApi(page, locale);
     await mockOppositeNumerals(page, locale);
     await page.route('**/api/admin/**', (route) => {
       const path = new URL(route.request().url()).pathname;
@@ -135,7 +141,6 @@ for (const locale of ['en', 'fa'])
       return route.fulfill({ status: 404, json: {} });
     });
     await page.goto('/admin/knowledge-bases');
-    await switchLocale(page, locale);
     await page.getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Operations` }).click();
     await page.getByLabel(fa ? 'آزمایش جستجو' : 'Test search').fill('meter charge');
     await page.getByRole('button', { name: fa ? 'جستجو' : 'Search', exact: true }).click();
@@ -145,6 +150,7 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'گروه‌های پایگاه دانش' : 'Knowledge-base groups' })
       .click();
     await page.getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Staff knowledge` }).click();
+    await page.getByLabel(fa ? 'آزمایش جستجو' : 'Test search').fill('meter charge');
     await page.getByRole('button', { name: fa ? 'جستجو' : 'Search', exact: true }).click();
     await expect(page.getByText('Meter charge guidance')).toBeVisible();
     expect(queries).toEqual([
@@ -179,7 +185,7 @@ for (const locale of ['en', 'fa'])
     };
     let linked = false;
     let attached = true;
-    await mockUnknownApi(page);
+    await mockUnknownApi(page, locale);
     await mockOppositeNumerals(page, locale);
     await page.route('**/api/admin/**', (route) => {
       const path = new URL(route.request().url()).pathname;
@@ -232,7 +238,6 @@ for (const locale of ['en', 'fa'])
       return route.fulfill({ status: 404, json: {} });
     });
     await page.goto('/admin/knowledge-bases');
-    await switchLocale(page, locale);
     await expect(page.locator('main')).toContainText(fa ? '1' : '۱');
     await page
       .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Operations`, exact: true })
@@ -292,7 +297,6 @@ for (const locale of ['en', 'fa'])
       exact: true,
     });
     await expect(remove).toBeVisible();
-    await page.setViewportSize({ width: 390, height: 844 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true
     );
@@ -327,7 +331,7 @@ for (const locale of ['en', 'fa']) {
         verified = false,
         puts = 0,
         attachments = 0;
-      await mockUnknownApi(page);
+      await mockUnknownApi(page, locale);
       await mockOppositeNumerals(page, locale);
       await page.route('**/api/admin/knowledge-bases', (route) => route.fulfill({ json: [kb] }));
       await page.route(`**/api/admin/knowledge-bases/${kb.id}`, (route) =>
@@ -399,7 +403,6 @@ for (const locale of ['en', 'fa']) {
         return route.fulfill({ status: 200 });
       });
       await page.goto('/admin/knowledge-bases');
-      await switchLocale(page, locale);
       await page
         .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Operations`, exact: true })
         .click();
@@ -440,7 +443,6 @@ for (const locale of ['en', 'fa']) {
       await expect(page.getByText('new-guide.pdf', { exact: true })).toBeVisible();
       expect(attachments).toBe(2);
       expect(puts).toBe(2);
-      await page.setViewportSize({ width: 390, height: 844 });
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true
       );
