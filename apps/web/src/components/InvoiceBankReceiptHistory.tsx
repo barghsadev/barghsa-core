@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { Button, ListPage, PageLoading, StatusBadge } from '@barghsa/ui';
+import { Button, ListPage, ListViewToggle, PageLoading } from '@barghsa/ui';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
-import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useListView } from '../hooks/useListView.js';
+import { StaffInvoiceReceiptList } from './StaffInvoiceReceiptList.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
 
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
@@ -38,8 +38,7 @@ export function InvoiceBankReceiptHistory({
   binding?: ListQueryBinding;
 }) {
   const locale = useLocale();
-  const time = useAccountTime(locale);
-  const numbers = useNumberFormatting(locale);
+  const { view, setView } = useListView('staff-invoice-receipts-history');
   const word = (key: string) => adminText(`admin.invoiceReceipts.${key}`, locale);
   const [localState, setLocalState] = useState<'' | 'Confirmed' | 'Rejected'>('');
   const state = binding?.query.filters.state ?? localState;
@@ -171,6 +170,17 @@ export function InvoiceBankReceiptHistory({
               </form>
             </div>
           }
+          actions={
+            <ListViewToggle
+              value={view}
+              onChange={setView}
+              labels={{
+                group: appText('historyView.group', locale),
+                table: appText('historyView.table', locale),
+                card: appText('historyView.card', locale),
+              }}
+            />
+          }
         />
         {invalidInvoice ? <p role="alert">{word('historyInvalidInvoice')}</p> : null}
         <ListPage.Content
@@ -194,38 +204,12 @@ export function InvoiceBankReceiptHistory({
           emptyView={<p>{word('historyEmpty')}</p>}
         >
           {page.items.length ? (
-            <ul className="divide-y rounded-lg border">
-              {page.items.map((item) => (
-                <li
-                  key={item.receiptId}
-                  className="flex flex-wrap items-center justify-between gap-3 p-3"
-                >
-                  <div className="space-y-1 text-sm">
-                    <p>
-                      <bdi className="break-all">{item.receiptId}</bdi>
-                    </p>
-                    <p>
-                      {word('invoice')}: <bdi className="break-all">{item.invoiceId}</bdi>
-                    </p>
-                    <p>
-                      {numbers.money(item.amount)} · {time.format(item.submittedAt)}
-                    </p>
-                    <p className="break-words">
-                      {word('bankName')}: {item.bankName ?? '—'}
-                    </p>
-                    <p>
-                      {word('paymentDate')}: <bdi>{item.paymentDate}</bdi>
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <StatusBadge label={appText(`invoices.activity.state.${item.state}`, locale)} />
-                    <Button variant="outline" onClick={() => onOpen(item.receiptId)}>
-                      {word('open')}
-                    </Button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            <StaffInvoiceReceiptList
+              items={page.items}
+              view={view}
+              caption={word('historyTitle')}
+              onOpen={onOpen}
+            />
           ) : null}
         </ListPage.Content>
         {loadState !== 'forbidden' && loadState !== 'error' && (

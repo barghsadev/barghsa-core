@@ -109,6 +109,32 @@ async function click(text: string) {
   if (!button) throw new Error(`Missing button: ${text}`);
   await act(async () => button.click());
 }
+it('switches receipt views without refetching or clearing an open rejection draft', async () => {
+  const fetcher = api();
+  vi.stubGlobal('fetch', fetcher);
+  await render();
+  await click('Review receipt');
+  const input = container.querySelector<HTMLTextAreaElement>('#invoice-receipt-reason')!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
+      input,
+      'Retain bank investigation'
+    );
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  const count = fetcher.mock.calls.length;
+  await click('Table');
+  expect(container.querySelectorAll('th')).toHaveLength(8);
+  expect(container.querySelector<HTMLTextAreaElement>('#invoice-receipt-reason')!.value).toBe(
+    'Retain bank investigation'
+  );
+  await click('Cards');
+  expect(container.querySelector('table')).toBeNull();
+  expect(container.querySelector<HTMLTextAreaElement>('#invoice-receipt-reason')!.value).toBe(
+    'Retain bank investigation'
+  );
+  expect(fetcher).toHaveBeenCalledTimes(count);
+});
 function api(options: { preview?: boolean; pending?: boolean } = {}) {
   return vi.fn(async (raw: string) => {
     const url = new URL(raw, 'https://app.example.test');

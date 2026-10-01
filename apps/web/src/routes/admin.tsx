@@ -11,9 +11,9 @@ export const Route = createFileRoute('/admin')({
     const session = await readSessionContext(abortController.signal);
     if (session === null) throw redirect({ to: '/login', replace: true });
     if (session.operatingContext !== 'staff') throw redirect({ to: '/app', replace: true });
-    return { isStaff: true };
+    return { isStaff: true, userId: session.userId ?? null };
   },
-  component: lazyRouteComponent(() => import('../pages/AdminLayout.js')),
+  component: lazyRouteComponent(() => import('../pages/AdminLayout.js'), 'AdminContextLayout'),
   pendingComponent: () => <RouteSkeleton layout="admin" />,
   errorComponent: RouteErrorBoundary,
 });

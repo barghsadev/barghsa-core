@@ -1,5 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { Alert, AlertDescription, Button, ListPage, PageLoading, StatusBadge } from '@barghsa/ui';
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  ListPage,
+  ListViewToggle,
+  PageLoading,
+  StatusBadge,
+} from '@barghsa/ui';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
 import {
@@ -14,6 +22,9 @@ import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { InvoiceBankReceiptHistory } from './InvoiceBankReceiptHistory.js';
 import { BankReceiptFinancialReview } from './BankReceiptFinancialReview.js';
 import { withCsrf } from '../lib/csrf.js';
+import { useListView } from '../hooks/useListView.js';
+import { StaffInvoiceReceiptList } from './StaffInvoiceReceiptList.js';
+import { ReceiptDepositDate } from './ReceiptDepositDate.js';
 
 const base = '/api/admin/invoices/bank-receipts';
 
@@ -76,6 +87,7 @@ export function InvoiceBankReceiptQueue({
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const word = (key: string) => adminText(`admin.invoiceReceipts.${key}`, locale);
+  const { view, setView } = useListView('staff-invoice-receipts-pending');
   const [items, setItems] = useState<Receipt[]>([]);
   const [listState, setListState] = useState<'loading' | 'ready' | 'forbidden' | 'error'>(
     'loading'
@@ -243,9 +255,20 @@ export function InvoiceBankReceiptQueue({
       <ListPage>
         <ListPage.Toolbar
           actions={
-            <Button variant="outline" onClick={refresh} disabled={listState === 'loading'}>
-              {word('refresh')}
-            </Button>
+            <div className="flex flex-wrap items-center gap-2">
+              <ListViewToggle
+                value={view}
+                onChange={setView}
+                labels={{
+                  group: appText('historyView.group', locale),
+                  table: appText('historyView.table', locale),
+                  card: appText('historyView.card', locale),
+                }}
+              />
+              <Button variant="outline" onClick={refresh} disabled={listState === 'loading'}>
+                {word('refresh')}
+              </Button>
+            </div>
           }
         />
         <ListPage.Content
@@ -269,39 +292,16 @@ export function InvoiceBankReceiptQueue({
           emptyView={<p>{word('empty')}</p>}
         >
           {items.length ? (
-            <ul className="divide-y rounded-lg border">
-              {items.map((item) => (
-                <li
-                  key={item.receiptId}
-                  className="flex flex-wrap items-center justify-between gap-3 p-3"
-                >
-                  <div className="space-y-1 text-sm">
-                    <p>
-                      {word('invoice')}: <bdi className="break-all">{item.invoiceId}</bdi>
-                    </p>
-                    <p>
-                      {numbers.money(item.amount)} · {time.format(item.submittedAt)}
-                    </p>
-                    <p className="break-words">
-                      {word('bankName')}: {item.bankName ?? '—'}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <StatusBadge label={appText(`invoices.activity.state.${item.state}`, locale)} />
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setReason('');
-                        setSelectedSource('pending');
-                        setSelectedId(item.receiptId);
-                      }}
-                    >
-                      {word('open')}
-                    </Button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            <StaffInvoiceReceiptList
+              items={items}
+              view={view}
+              caption={word('title')}
+              onOpen={(receiptId) => {
+                setReason('');
+                setSelectedSource('pending');
+                setSelectedId(receiptId);
+              }}
+            />
           ) : null}
         </ListPage.Content>
       </ListPage>
@@ -364,7 +364,7 @@ export function InvoiceBankReceiptQueue({
                 <div>
                   <dt className="text-muted-foreground">{word('paymentDate')}</dt>
                   <dd>
-                    <bdi>{detail.paymentDate}</bdi>
+                    <ReceiptDepositDate value={detail.paymentDate} />
                   </dd>
                 </div>
                 <div>

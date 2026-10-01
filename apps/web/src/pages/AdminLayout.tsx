@@ -1,5 +1,5 @@
 import { contractText } from '@barghsa/i18n/contracts';
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useRouteContext } from '@tanstack/react-router';
 import {
   Activity,
   BadgeCheck,
@@ -50,6 +50,16 @@ import { tMaintenance } from '@barghsa/i18n/maintenance';
 import { AppShell, type NavigationGroup } from '../components/AppShell.js';
 import { NotificationBell } from '../components/NotificationBell.js';
 import { AdminSettingsLayout } from '../components/AdminSettingsLayout.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
+
+export function AdminContextLayout() {
+  const { userId } = useRouteContext({ from: '/admin' });
+  return (
+    <AccountUserProvider value={userId}>
+      <AdminLayout />
+    </AccountUserProvider>
+  );
+}
 
 export default function AdminLayout() {
   const locale = useLocale();
