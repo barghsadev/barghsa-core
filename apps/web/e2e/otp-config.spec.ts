@@ -1,18 +1,10 @@
+import { crmShell } from './crm-shell-fixture';
 import { cookieResponse } from './cookie-response';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 
 async function shell(page: Page, locale: string) {
-  await page.addInitScript((lang) => {
-    const apply = () => {
-      if (!document.documentElement) return;
-      document.documentElement.lang = lang;
-      document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
-    };
-    apply();
-    new MutationObserver(apply).observe(document, { childList: true });
-  }, locale);
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, locale);
   await page.route('**/api/admin/config/profile-verification-mode', (route) =>
     route.fulfill({ json: { mode: 'MANUAL', draft: null, version: 0 } })
   );

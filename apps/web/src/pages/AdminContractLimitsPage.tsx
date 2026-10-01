@@ -5,6 +5,7 @@ import type { ContractElectricityLimits } from '@barghsa/shared/admin';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
+import { SettingsFormSection } from '../components/SettingsFormSection.js';
 const fields: Array<{ key: keyof ContractElectricityLimits; min: number; max: number }> = [
   { key: 'maxQuantityIncreasePercent', min: 0, max: 1000 },
   { key: 'maxContractDuration', min: 1, max: 1200 },
@@ -113,10 +114,18 @@ export default function AdminContractLimitsPage() {
       )}
       {config && (
         <>
-          <p className="rounded border bg-card text-card-foreground p-3">{label('scope')}</p>
-          <form
+          <SettingsFormSection
+            title={t('admin.settings.contractTerms', locale)}
+            description={label('scope')}
             onSubmit={submit}
-            className="max-w-xl space-y-5 rounded-lg border bg-card text-card-foreground p-5"
+            className="max-w-xl"
+            saved={saved}
+            savedMessage={label('saved')}
+            actions={
+              <Button type="submit" disabled={!!action || !ready || !validLimits(config)}>
+                {label('save')}
+              </Button>
+            }
           >
             <fieldset disabled={!!action} className="space-y-5">
               {fields.map((field) => (
@@ -145,11 +154,8 @@ export default function AdminContractLimitsPage() {
                   </p>
                 </div>
               ))}
-              <Button type="submit" disabled={!ready || !validLimits(config)}>
-                {label('save')}
-              </Button>
             </fieldset>
-          </form>
+          </SettingsFormSection>
         </>
       )}
       {action && (

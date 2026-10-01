@@ -2,6 +2,8 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { Button, Input, Label } from '@barghsa/ui';
+import { SettingsFormSection } from './SettingsFormSection.js';
 
 const TeamActionDialog = lazy(() =>
   import('./TeamActionDialog.js').then((module) => ({ default: module.TeamActionDialog }))
@@ -66,41 +68,59 @@ export function OtpConfigPanel() {
   const value = Number(seconds);
   const valid = seconds.trim() !== '' && Number.isInteger(value) && value >= 60 && value <= 900;
   return (
-    <section className="mt-8 border-t border-border pt-6" aria-labelledby="otp-config-title">
-      <h2 id="otp-config-title" className="text-xl font-semibold">
-        {text('otpTitle')}
-      </h2>
-      <p className="mt-2 text-sm text-muted-foreground">{text('otpDescription')}</p>
-      {loading && (
-        <p role="status" className="mt-3">
-          {text('otpLoading')}
-        </p>
-      )}
-      {failed && (
-        <p role="alert" className="mt-3 text-destructive">
-          {text('otpLoadFailed')}
-        </p>
-      )}
-      {saved && (
-        <p role="status" className="mt-3">
-          {text('otpSaved')}
-        </p>
-      )}
-      <form
-        className="mt-4 max-w-xl space-y-3"
+    <>
+      <SettingsFormSection
+        title={text('otpTitle')}
+        headingId="otp-config-title"
+        description={text('otpDescription')}
+        className="mt-8 max-w-xl"
+        saved={saved}
+        savedMessage={text('otpSaved')}
         onSubmit={(event) => {
           event.preventDefault();
           if (!current || !valid || loading || proposal || value === current.ttlSeconds) return;
           setSaved(false);
           setProposal({ ttlSeconds: value, expectedVersion: current.version });
         }}
+        actions={
+          <>
+            <Button
+              ref={saveRef}
+              type="submit"
+              disabled={loading || !current || !!proposal || !valid || value === current.ttlSeconds}
+            >
+              {text('otpSave')}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={loading || !!proposal}
+              onClick={() => setReload((count) => count + 1)}
+            >
+              {text('otpReload')}
+            </Button>
+          </>
+        }
       >
+        {loading && (
+          <p role="status" className="mt-3">
+            {text('otpLoading')}
+          </p>
+        )}
+        {failed && (
+          <p role="alert" className="mt-3 text-destructive">
+            {text('otpLoadFailed')}
+          </p>
+        )}
+        {saved && (
+          <p role="status" className="mt-3">
+            {text('otpSaved')}
+          </p>
+        )}
         <fieldset disabled={loading || current === null || proposal !== null} className="space-y-2">
           <legend className="sr-only">{text('otpTitle')}</legend>
-          <label htmlFor="otp-lifetime" className="block text-sm font-medium">
-            {text('otpLabel')}
-          </label>
-          <input
+          <Label htmlFor="otp-lifetime">{text('otpLabel')}</Label>
+          <Input
             id="otp-lifetime"
             type="number"
             min={60}
@@ -109,7 +129,6 @@ export function OtpConfigPanel() {
             required
             value={seconds}
             aria-describedby="otp-lifetime-hint"
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-foreground focus-visible:outline-2 focus-visible:outline-ring"
             onChange={(event) => {
               setSeconds(event.target.value);
               setSaved(false);
@@ -120,24 +139,8 @@ export function OtpConfigPanel() {
               .replace('{min}', numbers.number(60))
               .replace('{max}', numbers.number(900))}
           </p>
-          <button
-            ref={saveRef}
-            type="submit"
-            disabled={!valid || value === current?.ttlSeconds}
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-50"
-          >
-            {text('otpSave')}
-          </button>
         </fieldset>
-        <button
-          type="button"
-          disabled={loading || proposal !== null}
-          onClick={() => setReload((count) => count + 1)}
-          className="text-sm underline disabled:opacity-50"
-        >
-          {text('otpReload')}
-        </button>
-      </form>
+      </SettingsFormSection>
       {proposal && (
         <Suspense fallback={<p role="status">{text('loading')}</p>}>
           <TeamActionDialog
@@ -166,6 +169,6 @@ export function OtpConfigPanel() {
           />
         </Suspense>
       )}
-    </section>
+    </>
   );
 }

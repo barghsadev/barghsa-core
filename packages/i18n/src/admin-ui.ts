@@ -3,6 +3,20 @@ import type { I18nDictionary, Locale } from './index.js';
 import { t as sharedText } from './crm.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'admin.settings.navigation': 'بخش تنظیمات',
+  'admin.settings.branding': 'هویت بصری',
+  'admin.settings.staff': 'کارکنان و نقش‌ها',
+  'admin.settings.geography': 'جغرافیا',
+  'admin.settings.products': 'محصولات',
+  'admin.settings.pricing': 'قیمت‌گذاری و مالیات',
+  'admin.settings.gifts': 'کدهای هدیه',
+  'admin.settings.notifications': 'اعلان‌ها',
+  'admin.settings.documents': 'اسناد',
+  'admin.settings.electricity': 'برق',
+  'admin.settings.ai': 'تنظیمات هوش مصنوعی',
+  'admin.settings.security': 'امنیت',
+  'admin.settings.system': 'سیستم',
+  'admin.settings.contractTerms': 'مدت و افزایش قرارداد',
   'admin.invoiceReceipts.title': 'بررسی رسیدهای صورتحساب',
   'admin.invoiceReceipts.description':
     'رسیدهای در انتظار بررسی مالی و سهم صورتحساب و کیف پول را بررسی کنید.',
@@ -1550,6 +1564,20 @@ export const fa: I18nDictionary = {
   'admin.approvals.walletReceipts': 'نمایش رسیدهای کیف پول',
 };
 export const en: I18nDictionary = {
+  'admin.settings.navigation': 'Settings section',
+  'admin.settings.branding': 'Branding',
+  'admin.settings.staff': 'Staff and roles',
+  'admin.settings.geography': 'Geography',
+  'admin.settings.products': 'Products',
+  'admin.settings.pricing': 'Pricing and VAT',
+  'admin.settings.gifts': 'Gift codes',
+  'admin.settings.notifications': 'Notifications',
+  'admin.settings.documents': 'Documents',
+  'admin.settings.electricity': 'Electricity',
+  'admin.settings.ai': 'AI orchestration',
+  'admin.settings.security': 'Security',
+  'admin.settings.system': 'System',
+  'admin.settings.contractTerms': 'Duration and quantity limits',
   'admin.invoiceReceipts.title': 'Review invoice receipts',
   'admin.invoiceReceipts.description':
     'Review receipts awaiting finance and the invoice and wallet allocation.',

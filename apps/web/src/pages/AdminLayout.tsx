@@ -49,6 +49,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { tMaintenance } from '@barghsa/i18n/maintenance';
 import { AppShell, type NavigationGroup } from '../components/AppShell.js';
 import { NotificationBell } from '../components/NotificationBell.js';
+import { AdminSettingsLayout } from '../components/AdminSettingsLayout.js';
 
 export default function AdminLayout() {
   const locale = useLocale();
@@ -201,7 +202,9 @@ export default function AdminLayout() {
       actions={<NotificationBell operatingContext="staff" />}
       banners={<TosBanner locale={locale} />}
     >
-      <Outlet />
+      <AdminSettingsLayout groups={groups} locale={locale}>
+        <Outlet />
+      </AdminSettingsLayout>
     </AppShell>
   );
 }
