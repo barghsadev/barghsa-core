@@ -2,6 +2,48 @@ import { HttpException } from '@nestjs/common';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
+export const TicketReplySchema = z
+  .object({
+    body: z.string().max(10000),
+    visibility: z.enum(['public', 'internal']).optional(),
+    bodyFormat: z.enum(['plain', 'markdown']).optional(),
+    attachments: z
+      .array(z.string().regex(/^uploads\/(document|image)\/[a-f0-9-]+\.(pdf|png|jpe?g|webp)$/i))
+      .max(5)
+      .optional(),
+    submissionId: z.string().uuid().optional(),
+  })
+  .strict()
+  .refine(
+    (value) => Boolean(value.body.trim() || value.attachments?.length),
+    'A reply requires text or attachments'
+  )
+  .refine(
+    (value) => !value.attachments || new Set(value.attachments).size === value.attachments.length,
+    'Attachments must be distinct'
+  );
+export type TicketReplyOptions = Pick<
+  z.infer<typeof TicketReplySchema>,
+  'bodyFormat' | 'attachments' | 'submissionId'
+>;
+export function ticketReply(input: unknown) {
+  const result = TicketReplySchema.safeParse(input);
+  if (!result.success) throw new HttpException('Invalid ticket reply', 400);
+  return result.data;
+}
+export const ticketReplyApiSchema = {
+  type: 'object' as const,
+  additionalProperties: false,
+  required: ['body'],
+  properties: {
+    body: { type: 'string', maxLength: 10000 },
+    visibility: { type: 'string', enum: ['public', 'internal'] },
+    bodyFormat: { type: 'string', enum: ['plain', 'markdown'] },
+    attachments: { type: 'array', maxItems: 5, uniqueItems: true, items: { type: 'string' } },
+    submissionId: { type: 'string', format: 'uuid' },
+  },
+};
+
 const positiveInteger = (max: number) =>
   z
     .string()

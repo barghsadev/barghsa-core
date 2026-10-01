@@ -1,4 +1,4 @@
-import { ticketListQuery } from './ticket-input.js';
+import { ticketReply, ticketReplyApiSchema, ticketListQuery } from './ticket-input.js';
 import { z } from 'zod';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
@@ -376,13 +376,11 @@ export class StaffTicketsController {
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 403, description: 'Not staff' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
+  @ApiBody({ schema: ticketReplyApiSchema })
   async addComment(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body()
-    body: {
-      body: string;
-      visibility?: 'public' | 'internal';
-    },
+    raw: unknown,
     @Req() req: AuthenticatedRequest
   ) {
     if (
@@ -395,14 +393,16 @@ export class StaffTicketsController {
         403
       );
     }
-    const visibility = body?.visibility ?? 'public';
+    const body = ticketReply(raw);
+    const visibility = body.visibility ?? 'public';
     return this.ticketsService.staffAddComment(
       id,
       req.session.userId,
-      body?.body,
+      body.body,
       visibility,
       this.assignedScope(req, 'write'),
-      req.session
+      req.session,
+      body
     );
   }
 }

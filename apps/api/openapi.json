@@ -27857,6 +27857,52 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "attachments": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 5,
+                    "type": "array",
+                    "uniqueItems": true
+                  },
+                  "body": {
+                    "maxLength": 10000,
+                    "type": "string"
+                  },
+                  "bodyFormat": {
+                    "enum": [
+                      "plain",
+                      "markdown"
+                    ],
+                    "type": "string"
+                  },
+                  "submissionId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "visibility": {
+                    "enum": [
+                      "public",
+                      "internal"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "201": {
             "description": "Comment added."
@@ -28399,6 +28445,52 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "attachments": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 5,
+                    "type": "array",
+                    "uniqueItems": true
+                  },
+                  "body": {
+                    "maxLength": 10000,
+                    "type": "string"
+                  },
+                  "bodyFormat": {
+                    "enum": [
+                      "plain",
+                      "markdown"
+                    ],
+                    "type": "string"
+                  },
+                  "submissionId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "visibility": {
+                    "enum": [
+                      "public",
+                      "internal"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "201": {
             "description": "Comment added."

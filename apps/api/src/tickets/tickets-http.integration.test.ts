@@ -1,3 +1,4 @@
+import type { TicketCommentRow } from './tickets.service.js';
 import { createServer, type Server } from 'node:http';
 import { randomUUID } from 'node:crypto';
 import { afterAll, afterEach, beforeAll, beforeEach, expect, it } from 'vitest';
@@ -1474,4 +1475,225 @@ it('validates list pagination and filters before SQL on customer and staff paths
     expect(empty.status).toBe(200);
     expect(await empty.json()).toMatchObject({ data: [], page: 100000, limit: 100 });
   }
+});
+
+async function replyUpload(id: string, user = 'customer', extra: Record<string, unknown> = {}) {
+  const bytes = Buffer.from('%PDF-1.7\nReply evidence');
+  const context = { purpose: 'ticket_reply_attachment', ticketId: id, ...extra };
+  const meta = {
+    fileName: 'reply.pdf',
+    contentType: 'application/pdf',
+    fileSize: bytes.length,
+    category: 'document',
+    ...context,
+  };
+  const issued = await fetch(`${http.base}/api/upload/presigned-url`, {
+    method: 'POST',
+    headers: headers[user]!,
+    body: JSON.stringify(meta),
+  });
+  if (issued.status !== 201 && issued.status !== 200) return { response: issued, key: '' };
+  const value = (await issued.json()) as { key: string; presignedUrl: string };
+  objects.set(value.key, bytes);
+  const verified = await fetch(`${http.base}/api/upload/${encodeURIComponent(value.key)}/verify`, {
+    method: 'POST',
+    headers: headers[user]!,
+  });
+  expect(verified.status, http.logs()).toBe(200);
+  const recorded = await fetch(`${http.base}/api/upload/${encodeURIComponent(value.key)}/record`, {
+    method: 'POST',
+    headers: headers[user]!,
+    body: JSON.stringify(meta),
+  });
+  return { response: recorded, key: value.key };
+}
+async function postReply(id: string, user: string, input: Record<string, unknown>) {
+  return fetch(
+    `${http.base}/api/${user === 'customer' || user === 'staffCustomer' ? 'tickets' : 'staff/tickets'}/${id}/comments`,
+    { method: 'POST', headers: headers[user]!, body: JSON.stringify(input) }
+  );
+}
+it('uploads and seals customer/staff reply files, keeps internal evidence private and preserves legacy text', async () => {
+  const id = await ticket('waiting_customer');
+  const upload = await replyUpload(id);
+  expect(upload.response.status, http.logs()).toBe(200);
+  const sent = await postReply(id, 'customer', {
+    body: '**Customer answer**',
+    bodyFormat: 'markdown',
+    attachments: [upload.key],
+    submissionId: randomUUID(),
+  });
+  expect(sent.status, http.logs()).toBe(201);
+  const reply = (await sent.json()) as TicketCommentRow;
+  expect(reply).toMatchObject({ bodyFormat: 'markdown', authorContext: 'customer' });
+  expect(reply.attachments).toHaveLength(1);
+  expect(reply.attachments[0]!).toMatchObject({
+    fileName: 'reply.pdf',
+    contentType: 'application/pdf',
+  });
+  expect(reply.attachments[0]!.key).toMatch(/^ticket-reply-attachments\//);
+  const signed = new URL(reply.attachments[0]!.url);
+  expect(signed.searchParams.get('X-Amz-Expires')).toBe('300');
+  objects.set(upload.key, Buffer.from('%PDF-1.7\nReplaced source'));
+  expect(await (await fetch(signed)).text()).toContain('Reply evidence');
+  const internalUpload = await replyUpload(id, 'staff');
+  expect(internalUpload.response.status, http.logs()).toBe(200);
+  expect(
+    (
+      await postReply(id, 'staff', {
+        body: '',
+        visibility: 'internal',
+        attachments: [internalUpload.key],
+      })
+    ).status
+  ).toBe(201);
+  expect((await postReply(id, 'staff', { body: '**Literal old syntax**' })).status).toBe(201);
+  const customerRead = (await (
+    await fetch(`${http.base}/api/tickets/${id}/comments`, { headers: headers.customer! })
+  ).json()) as TicketCommentRow[];
+  expect(customerRead).toHaveLength(2);
+  expect(customerRead[1]).toMatchObject({
+    bodyFormat: 'plain',
+    authorContext: 'staff',
+    attachments: [],
+  });
+  expect(JSON.stringify(customerRead)).not.toContain(internalUpload.key);
+  const staffRead = (await (
+    await fetch(`${http.base}/api/staff/tickets/${id}/comments`, { headers: headers.staff! })
+  ).json()) as TicketCommentRow[];
+  expect(staffRead).toHaveLength(3);
+  expect(staffRead[1]).toMatchObject({ visibility: 'internal' });
+  expect(staffRead[1]!.attachments).toHaveLength(1);
+  expect(
+    (await http.pool.query('SELECT status FROM tickets WHERE id=$1', [id])).rows[0]!.status
+  ).toBe('in_progress');
+});
+it('authorizes reply uploads against current owner, assignment, operating context, profile and lifecycle', async () => {
+  const id = await ticket();
+  expect((await replyUpload(id, 'assigned')).response.status).toBe(404);
+  expect((await replyUpload(id, 'staffCustomer')).response.status).toBe(404);
+  expect((await replyUpload(id, 'customer', { profileId: randomUUID() })).response.status).toBe(
+    400
+  );
+  expect(
+    (await replyUpload(id, 'customer', { purpose: 'ticket_attachment' })).response.status
+  ).toBe(400);
+  await assign(id, 'assigned');
+  const issued = await replyUpload(id, 'assigned');
+  expect(issued.response.status, http.logs()).toBe(200);
+  expect(
+    (
+      await fetch(`${http.base}/api/upload/${encodeURIComponent(issued.key)}/record`, {
+        method: 'POST',
+        headers: headers.assigned!,
+        body: JSON.stringify({ purpose: 'ticket_reply_attachment', ticketId: await ticket() }),
+      })
+    ).status
+  ).toBe(409);
+  await assign(id, 'staff');
+  expect(
+    (await postReply(id, 'assigned', { body: 'Revoked assignment', attachments: [issued.key] }))
+      .status
+  ).toBe(404);
+  expect((await replyUpload(await ticket('closed'))).response.status).toBe(400);
+  expect((await replyUpload(await ticket('resolved'))).response.status).toBe(400);
+});
+it('rejects cross-ticket, cross-uploader, unverified and duplicate reply attachments and invalid formats', async () => {
+  const id = await ticket(),
+    other = await ticket();
+  const upload = await replyUpload(id);
+  expect(upload.response.status).toBe(200);
+  for (const [target, user, options] of [
+    [other, 'customer', {}],
+    [id, 'staff', {}],
+    [id, 'customer', { attachments: [upload.key, upload.key] }],
+    [id, 'customer', { bodyFormat: 'html' }],
+    [id, 'customer', { visibility: 'internal' }],
+  ] as const) {
+    const response = await postReply(target, user, {
+      body: 'Reply',
+      attachments: [upload.key],
+      ...options,
+    });
+    expect(response.status).toBe(options.visibility === 'internal' ? 403 : 400);
+  }
+  await http.pool.query(
+    `UPDATE storage_records SET metadata=metadata || '{"verified":false}'::jsonb WHERE storage_key=$1`,
+    [upload.key]
+  );
+  expect(
+    (await postReply(id, 'customer', { body: 'Unverified', attachments: [upload.key] })).status
+  ).toBe(400);
+  expect(
+    (await http.pool.query('SELECT id FROM ticket_comments WHERE ticket_id=$1', [id])).rows
+  ).toHaveLength(0);
+});
+it('deduplicates concurrent/lost reply acknowledgements, conflicts on changed content and rechecks authority before replay', async () => {
+  const id = await ticket();
+  await assign(id, 'assigned');
+  const upload = await replyUpload(id, 'assigned');
+  expect(upload.response.status).toBe(200);
+  const input = {
+    body: 'One durable reply',
+    bodyFormat: 'markdown',
+    attachments: [upload.key],
+    submissionId: randomUUID(),
+  };
+  const responses = await Promise.all([
+    postReply(id, 'assigned', input),
+    postReply(id, 'assigned', input),
+  ]);
+  expect(responses.map((response) => response.status)).toEqual([201, 201]);
+  const rows = await Promise.all(
+    responses.map(async (response) => (await response.json()) as TicketCommentRow)
+  );
+  expect(rows[0]!.id).toBe(rows[1]!.id);
+  expect(rows[0]!.attachments[0]!.key).toBe(rows[1]!.attachments[0]!.key);
+  expect(
+    (
+      await http.pool.query(
+        `SELECT id FROM audit_log WHERE event='ticket_comment_added' AND metadata::jsonb->>'ticketId'=$1`,
+        [id]
+      )
+    ).rows
+  ).toHaveLength(1);
+  expect((await postReply(id, 'assigned', { ...input, body: 'Changed' })).status).toBe(409);
+  await http.pool.query("UPDATE tickets SET status='closed' WHERE id=$1", [id]);
+  expect((await postReply(id, 'assigned', input)).status).toBe(201);
+  await assign(id, 'staff');
+  expect((await postReply(id, 'assigned', input)).status).toBe(404);
+});
+it('rolls back reply sealing and retry identity when its audit fails', async () => {
+  const id = await ticket();
+  const upload = await replyUpload(id);
+  expect(upload.response.status).toBe(200);
+  const input = { body: 'Atomic reply', attachments: [upload.key], submissionId: randomUUID() };
+  await http.pool
+    .query(`CREATE FUNCTION fail_reply_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+    IF NEW.event='ticket_comment_added' THEN RAISE EXCEPTION 'test failure'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER fail_reply_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_reply_audit()`);
+  try {
+    expect((await postReply(id, 'customer', input)).status).toBe(500);
+    expect(
+      (await http.pool.query('SELECT id FROM ticket_comments WHERE ticket_id=$1', [id])).rows
+    ).toHaveLength(0);
+    expect(
+      (
+        await http.pool.query(
+          `SELECT status,metadata FROM storage_records WHERE metadata->>'ticketId'=$1 AND storage_key LIKE 'ticket-reply-attachments/%'`,
+          [id]
+        )
+      ).rows
+    ).toEqual([
+      expect.objectContaining({
+        status: 'removed',
+        metadata: expect.objectContaining({ provisionalCopy: true, deletionRequested: true }),
+      }),
+    ]);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER fail_reply_audit ON audit_log; DROP FUNCTION fail_reply_audit()'
+    );
+  }
+  expect((await postReply(id, 'customer', input)).status).toBe(201);
 });

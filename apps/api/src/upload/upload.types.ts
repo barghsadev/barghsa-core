@@ -5,6 +5,7 @@ export const UploadContextSchema = z
   .object({
     purpose: z.string().trim().min(1).max(64).optional(),
     profileId: z.string().uuid().optional(),
+    ticketId: z.string().uuid().optional(),
   })
   .strict();
 export type UploadContext = z.infer<typeof UploadContextSchema>;
@@ -61,6 +62,7 @@ export const RecordUploadRequestSchema = z
     category: z.enum(UPLOAD_CATEGORIES as [string, ...string[]]).optional(),
     purpose: z.string().trim().min(1).max(64).optional(),
     profileId: z.string().uuid().optional(),
+    ticketId: z.string().uuid().optional(),
   })
   .strict();
 

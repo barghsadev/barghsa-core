@@ -1,4 +1,4 @@
-import { ticketPagination } from './ticket-input.js';
+import { ticketReply, ticketPagination, type TicketReplyOptions } from './ticket-input.js';
 import {
   authorizeTicketAccess,
   authorizeTicketMutation,
@@ -76,6 +76,10 @@ export interface TicketCommentRow {
   authorId: string;
   body: string;
   visibility: 'public' | 'internal';
+  bodyFormat: 'plain' | 'markdown';
+  authorContext: 'customer' | 'staff' | 'unknown';
+  attachments: { key: string; fileName: string; contentType: string; url: string }[];
+  attachmentCount: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -152,6 +156,13 @@ function mapCommentRow(row: Record<string, unknown>): TicketCommentRow {
     authorId: row.author_id as string,
     body: row.body as string,
     visibility: (row.visibility as 'public' | 'internal') ?? 'public',
+    bodyFormat: row.body_format === 'markdown' ? 'markdown' : 'plain',
+    authorContext:
+      row.author_context === 'customer' || row.author_context === 'staff'
+        ? row.author_context
+        : 'unknown',
+    attachments: [],
+    attachmentCount: Array.isArray(row.attachments) ? row.attachments.length : 0,
     createdAt: row.created_at as Date,
     updatedAt: row.updated_at as Date,
   };
@@ -1263,7 +1274,7 @@ export class TicketsService {
       );
     }
 
-    return result.rows.map(mapCommentRow);
+    return this.commentRecords(result.rows, pool);
   }
 
   /**
@@ -1276,11 +1287,65 @@ export class TicketsService {
     body: string,
     visibility: 'public' | 'internal' = 'public',
     isAdmin: boolean = false,
-    actor?: TicketActor
+    actor?: TicketActor,
+    options: TicketReplyOptions = {}
   ): Promise<TicketCommentRow> {
     if (!isAdmin && visibility !== 'public')
       throw new HttpException('Only staff can add internal notes', 403);
-    return this.insertComment(ticketId, userId, body, visibility, userId, undefined, actor);
+    return this.insertComment(
+      ticketId,
+      userId,
+      body,
+      visibility,
+      userId,
+      undefined,
+      actor,
+      options
+    );
+  }
+
+  private async commentRecords(
+    rows: Record<string, unknown>[],
+    client: Pick<PoolClient, 'query'>
+  ): Promise<TicketCommentRow[]> {
+    const keys = rows.flatMap((row) =>
+      Array.isArray(row.attachments)
+        ? row.attachments.filter(
+            (key): key is string =>
+              typeof key === 'string' && key.startsWith('ticket-reply-attachments/')
+          )
+        : []
+    );
+    const files = keys.length
+      ? (
+          await client.query(
+            `SELECT storage_key,file_name,content_type FROM storage_records WHERE storage_key=ANY($1::text[]) AND status='immutable' AND metadata->>'purpose'='ticket_reply_attachment' AND metadata->>'ticketId'=ANY($2::text[])`,
+            [keys, rows.map((row) => row.ticket_id)]
+          )
+        ).rows
+      : [];
+    const urls = await this.attachmentService.downloadUrls(
+      files.map((file) => file.storage_key as string),
+      'ticket_reply_attachment'
+    );
+    const details = new Map(
+      files.map((file, index) => [
+        file.storage_key,
+        {
+          key: file.storage_key as string,
+          fileName: file.file_name as string,
+          contentType: file.content_type as string,
+          url: urls[index],
+        },
+      ])
+    );
+    return rows.map((row) => ({
+      ...mapCommentRow(row),
+      attachments: (Array.isArray(row.attachments) ? row.attachments : []).flatMap((key) => {
+        const file = details.get(key);
+        return file?.url ? [file as TicketCommentRow['attachments'][number]] : [];
+      }),
+    }));
   }
 
   private async insertComment(
@@ -1290,32 +1355,81 @@ export class TicketsService {
     visibility: string,
     ownerId?: string,
     assignedTo?: string,
-    actor?: TicketActor
+    actor?: TicketActor,
+    options: TicketReplyOptions = {}
   ): Promise<TicketCommentRow> {
-    if (typeof body !== 'string' || !body.trim())
-      throw new HttpException('Comment body is required', 400);
-    if (body.trim().length > 10000)
-      throw new HttpException('Comment body must be 10,000 characters or fewer', 400);
-    if (visibility !== 'public' && visibility !== 'internal')
-      throw new HttpException('Invalid comment visibility', 400);
+    const input = ticketReply({ body, visibility, ...options });
+    const bodyFormat = input.bodyFormat ?? 'plain';
+    const attachmentKeys = input.attachments ?? [];
+    const authorContext = ownerId ? 'customer' : 'staff';
+    const hash = createHash('sha256')
+      .update(
+        JSON.stringify({
+          body: input.body.trim(),
+          visibility: input.visibility ?? 'public',
+          bodyFormat,
+          attachmentKeys,
+          authorContext,
+        })
+      )
+      .digest('hex');
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       if (actor) assignedTo = await authorizeTicketMutation(client, actor, actorId, !ownerId);
       const ticket = (
         await client.query(
-          `SELECT * FROM tickets WHERE id=$1
-        AND ($2::text IS NULL OR user_id=$2) AND ($3::text IS NULL OR assigned_to=$3) FOR UPDATE`,
+          `SELECT * FROM tickets WHERE id=$1 AND ($2::text IS NULL OR user_id=$2)
+         AND ($3::text IS NULL OR assigned_to=$3) FOR UPDATE`,
           [ticketId, ownerId ?? null, assignedTo ?? null]
         )
       ).rows[0];
       if (!ticket) throw new HttpException('Ticket not found', 404);
+      if (input.submissionId) {
+        const prior = (
+          await client.query(
+            'SELECT * FROM ticket_comments WHERE ticket_id=$1 AND author_id=$2 AND submission_id=$3',
+            [ticketId, actorId, input.submissionId]
+          )
+        ).rows[0];
+        if (prior) {
+          if (prior.submission_hash !== hash)
+            throw new HttpException(
+              'This reply submission was already used for different content',
+              409
+            );
+          const records = await this.commentRecords([prior], client);
+          if (actor) await requireCurrentSession(client, actor);
+          await client.query('COMMIT');
+          return records[0]!;
+        }
+      }
       if (ticket.status === 'closed' || ticket.status === 'resolved')
         throw new HttpException('Reopen the ticket before replying', 409);
+      const sealed = attachmentKeys.length
+        ? await this.attachmentService.seal(
+            client,
+            attachmentKeys,
+            actorId,
+            ticket.profile_id ?? null,
+            'ticket_reply_attachment',
+            ticketId
+          )
+        : [];
       const result = await client.query(
-        `INSERT INTO ticket_comments(ticket_id,author_id,body,visibility)
-        VALUES ($1,$2,$3,$4) RETURNING *`,
-        [ticketId, actorId, body.trim(), visibility]
+        `INSERT INTO ticket_comments(ticket_id,author_id,body,visibility,body_format,author_context,attachments,submission_id,submission_hash)
+         VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8,$9) RETURNING *`,
+        [
+          ticketId,
+          actorId,
+          input.body.trim(),
+          visibility,
+          bodyFormat,
+          authorContext,
+          JSON.stringify(sealed),
+          input.submissionId ?? null,
+          input.submissionId ? hash : null,
+        ]
       );
       const status =
         ownerId && visibility === 'public' && ticket.status === 'waiting_customer'
@@ -1334,6 +1448,7 @@ export class TicketsService {
             ticketId,
             commentId: result.rows[0].id,
             visibility,
+            attachmentCount: sealed.length,
             from: ticket.status,
             to: status,
           }),
@@ -1346,8 +1461,9 @@ export class TicketsService {
         visibility === 'internal' ? 'internal' : 'reply'
       );
       if (actor) await requireCurrentSession(client, actor);
+      const records = await this.commentRecords(result.rows, client);
       await client.query('COMMIT');
-      return mapCommentRow(result.rows[0]);
+      return records[0]!;
     } catch (error) {
       await client.query('ROLLBACK');
       throw error;
@@ -1637,7 +1753,7 @@ export class TicketsService {
       [ticketId, assignedTo ?? null]
     );
 
-    return result.rows.map(mapCommentRow);
+    return this.commentRecords(result.rows, pool);
   }
 
   /**
@@ -1650,7 +1766,8 @@ export class TicketsService {
     body: string,
     visibility: 'public' | 'internal' = 'public',
     assignedTo?: string,
-    actor?: TicketActor
+    actor?: TicketActor,
+    options: TicketReplyOptions = {}
   ): Promise<TicketCommentRow> {
     return this.insertComment(
       ticketId,
@@ -1659,7 +1776,8 @@ export class TicketsService {
       visibility,
       undefined,
       assignedTo,
-      actor
+      actor,
+      options
     );
   }
 }

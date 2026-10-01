@@ -18,9 +18,11 @@ import {
 import type { DualApprovalQueryClient } from '../admin/dual-approval-resolution.js';
 const MAX_BYTES = 10 * 1024 * 1024;
 const MIME = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
-export type AttachmentPurpose = 'ticket_attachment' | 'legal_profile_document' | 'branding_logo';
+export type AttachmentPurpose =
+  'ticket_attachment' | 'ticket_reply_attachment' | 'legal_profile_document' | 'branding_logo';
 function prefix(purpose: AttachmentPurpose) {
   if (purpose === 'branding_logo') return 'branding-assets/';
+  if (purpose === 'ticket_reply_attachment') return 'ticket-reply-attachments/';
   return purpose === 'ticket_attachment' ? 'ticket-attachments/' : 'legal-profile-documents/';
 }
 @Injectable()
@@ -33,7 +35,8 @@ export class VerifiedAttachmentsService {
     keys: string[],
     actorId: string,
     profileId: string | null,
-    purpose: AttachmentPurpose = 'ticket_attachment'
+    purpose: AttachmentPurpose = 'ticket_attachment',
+    ticketId?: string
   ): Promise<string[]> {
     if (!keys.length || keys.length > 5 || new Set(keys).size !== keys.length)
       throw new BadRequestException('One to five distinct attachment files are required');
@@ -52,7 +55,8 @@ export class VerifiedAttachmentsService {
         metadata?.verified !== true ||
         metadata.uploadedBy !== actorId ||
         (metadata.profileId ?? null) !== profileId ||
-        metadata.purpose !== purpose
+        metadata.purpose !== purpose ||
+        (purpose === 'ticket_reply_attachment' && (!ticketId || metadata.ticketId !== ticketId))
       )
         throw new BadRequestException(
           'Attachment must be a verified upload for this profile by this uploader'
@@ -79,6 +83,7 @@ export class VerifiedAttachmentsService {
         profileId,
         uploadedBy: actorId,
         sourceKey: key,
+        ...(ticketId ? { ticketId } : {}),
       });
       const reservation = (
         await client.query(
@@ -105,6 +110,7 @@ export class VerifiedAttachmentsService {
             uploadedBy: actorId,
             sourceKey: key,
             sha256: digest,
+            ...(ticketId ? { ticketId } : {}),
           }),
           total,
           contentType,

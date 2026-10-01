@@ -179,6 +179,7 @@ export class UploadService {
       context: {
         purpose: req.purpose,
         profileId: req.profileId,
+        ticketId: req.ticketId,
         operatingContext: actor.session.operatingContext,
       },
     });
@@ -538,9 +539,10 @@ export class UploadService {
     const context = UploadContextSchema.safeParse({
       purpose: body.purpose ?? reserved.purpose ?? issued.metadata.purpose,
       profileId: body.profileId ?? reserved.profileId ?? issued.metadata.profileId,
+      ticketId: body.ticketId ?? reserved.ticketId ?? issued.metadata.ticketId,
     });
     if (!context.success) throw new BadRequestException('Invalid upload association');
-    for (const field of ['purpose', 'profileId'] as const) {
+    for (const field of ['purpose', 'profileId', 'ticketId'] as const) {
       if (reserved[field] !== undefined && reserved[field] !== context.data[field])
         throw new ConflictException('Upload was authorized for a different purpose or profile');
     }
@@ -548,7 +550,8 @@ export class UploadService {
     if (issued.status === 'active') {
       if (
         (body.purpose !== undefined && body.purpose !== issued.metadata.purpose) ||
-        (body.profileId !== undefined && body.profileId !== issued.metadata.profileId)
+        (body.profileId !== undefined && body.profileId !== issued.metadata.profileId) ||
+        (body.ticketId !== undefined && body.ticketId !== issued.metadata.ticketId)
       )
         throw new ConflictException(
           'The upload is already recorded for a different purpose or profile'
@@ -616,7 +619,7 @@ export class UploadService {
       throw err;
     }
 
-    const { purpose, profileId } = context.data;
+    const { purpose, profileId, ticketId } = context.data;
     await requireUploadContext(this.profilesService, req, context.data);
 
     await completeUpload({
@@ -636,6 +639,7 @@ export class UploadService {
         uploadedBy: req.session.userId,
         ...(profileId ? { profileId } : {}),
         ...(purpose ? { purpose } : {}),
+        ...(ticketId ? { ticketId } : {}),
       },
     });
 

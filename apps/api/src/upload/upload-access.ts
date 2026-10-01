@@ -4,6 +4,8 @@ import type { ProfilesService } from '../profiles/profiles.service.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import type { UploadContext } from './upload.types.js';
+import { getDbPool } from '@barghsa/db';
+import { authorizeTicketMutation } from '../tickets/ticket-actor.js';
 
 /** Upload association never grants authority to the later business operation. */
 export async function requireUploadContext(
@@ -11,7 +13,41 @@ export async function requireUploadContext(
   request: AuthenticatedRequest,
   context: UploadContext
 ) {
-  const { purpose, profileId } = context;
+  const { purpose, profileId, ticketId } = context;
+  if (purpose === 'ticket_reply_attachment') {
+    if (!ticketId) throw new BadRequestException('A reply upload requires a ticket');
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const staff = request.session.operatingContext === 'staff';
+      const scope = await authorizeTicketMutation(
+        client,
+        request.session,
+        request.session.userId,
+        staff
+      );
+      const ticket = (
+        await client.query(
+          `SELECT profile_id,status FROM tickets WHERE id=$1 AND ($2::text IS NULL OR user_id=$2)
+         AND ($3::text IS NULL OR assigned_to=$3) FOR SHARE`,
+          [ticketId, staff ? null : request.session.userId, scope ?? null]
+        )
+      ).rows[0];
+      if (!ticket) throw new NotFoundException('Ticket not found');
+      if ((ticket.profile_id ?? null) !== (profileId ?? null))
+        throw new BadRequestException('Reply upload profile must match the ticket');
+      if (['closed', 'resolved'].includes(ticket.status))
+        throw new BadRequestException('Reopen the ticket before uploading a reply attachment');
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+    return;
+  }
+  if (ticketId) throw new BadRequestException('Only reply attachments may specify a ticket');
   const staffPurpose = [
     'staff_business_document',
     'branding_logo',

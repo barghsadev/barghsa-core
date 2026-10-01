@@ -1,3 +1,4 @@
+import { TicketReplyInput } from '../components/TicketReplyInput.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useSearch } from '@tanstack/react-router';
@@ -360,14 +361,21 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
     },
     []
   );
-  async function mutate(path: string, method: string, payload: unknown, id?: string) {
+  async function mutate(
+    path: string,
+    method: string,
+    payload: unknown | (() => Promise<unknown>),
+    id?: string
+  ): Promise<boolean> {
     const selection = detailGeneration.current;
-    if (inFlight.current) return;
+    if (inFlight.current) return false;
     inFlight.current = true;
     setBusy(true);
     setSaved(false);
     setError('');
     try {
+      if (typeof payload === 'function') payload = await payload();
+      if (selection !== detailGeneration.current) return false;
       const response = await fetch(path, {
         method,
         credentials: 'include',
@@ -379,16 +387,19 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
           setError(
             response.status === 409 ? 'conflict' : response.status === 403 ? 'forbidden' : 'error'
           );
-        return;
+        return false;
       }
       if (selection === detailGeneration.current) {
         setSaved(true);
+        if (path.endsWith('/comments')) setReply('');
         if (path.endsWith('/status')) setStatusReason('');
       }
       await latestLoad.current();
       if (id && selection === detailGeneration.current) await select(id);
+      return true;
     } catch {
       if (selection === detailGeneration.current) setError('error');
+      return false;
     } finally {
       inFlight.current = false;
       setBusy(false);
@@ -1133,44 +1144,21 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
             formatDate={formatDate}
           />
           {canWrite && !['closed', 'resolved'].includes(detail.status) && (
-            <form
-              className="space-y-3"
-              onSubmit={(event) => {
-                event.preventDefault();
-                if (reply.trim())
-                  void mutate(
-                    `${prefix}/${detail.id}/comments`,
-                    'POST',
-                    { body: reply.trim(), visibility: staff && internal ? 'internal' : 'public' },
-                    detail.id
-                  );
-              }}
-            >
-              <Label htmlFor="ticket-reply">{text('reply')}</Label>
-              <textarea
-                id="ticket-reply"
-                disabled={busy}
-                required
-                maxLength={10000}
-                className="block w-full rounded border border-input bg-background text-foreground p-2"
-                value={reply}
-                onChange={(event) => setReply(event.target.value)}
-              />
-              {staff && (
-                <Label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    disabled={busy}
-                    checked={internal}
-                    onChange={(event) => setInternal(event.target.checked)}
-                  />
-                  {text('internal')}
-                </Label>
-              )}
-              <Button className="hover:bg-primary" disabled={busy || !reply.trim()} type="submit">
-                {text(busy ? 'saving' : 'send')}
-              </Button>
-            </form>
+            <TicketReplyInput
+              key={detail.id}
+              ticketId={detail.id}
+              profileId={detail.profileId}
+              locale={locale}
+              staff={staff}
+              busy={busy}
+              body={reply}
+              onBodyChange={setReply}
+              internal={internal}
+              onInternalChange={setInternal}
+              onSubmit={(prepare) =>
+                mutate(`${prefix}/${detail.id}/comments`, 'POST', prepare, detail.id)
+              }
+            />
           )}
         </article>
       )}

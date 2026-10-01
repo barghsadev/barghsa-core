@@ -479,7 +479,13 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
   await page.route(`**/api/staff/tickets/${ticketId}/comments`, (route) => {
     if (route.request().method() === 'GET') return route.fulfill({ json: notes });
     const body = route.request().postDataJSON();
-    expect(body).toEqual({ body: 'Private reasoning', visibility: 'internal' });
+    expect(body).toMatchObject({
+      body: 'Private reasoning',
+      visibility: 'internal',
+      bodyFormat: 'markdown',
+      attachments: [],
+    });
+    expect(body.submissionId).toMatch(/^[a-f0-9-]{36}$/);
     if (fail) {
       fail = false;
       return route.fulfill({ status: 409, json: {} });
@@ -513,9 +519,12 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
   await expect(page.getByRole('alert')).toContainText('ticket changed');
   await expect(page.locator('#ticket-reply')).toHaveValue('Private reasoning');
   await page.getByRole('button', { name: 'Send reply', exact: true }).click();
-  await expect(page.getByText('Private reasoning', { exact: true })).toBeVisible();
+  await expect(
+    page.locator('[data-slot=ticket-comment]').getByText('Private reasoning', { exact: true })
+  ).toBeVisible();
   await expect(
     page
+      .locator('[data-slot=ticket-comment]')
       .getByText('Private reasoning', { exact: true })
       .locator('xpath=ancestor::li[@data-slot="ticket-comment"]')
   ).toContainText(
@@ -528,6 +537,7 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
   );
   await expect(
     page
+      .locator('[data-slot=ticket-comment]')
       .getByText('Private reasoning', { exact: true })
       .locator('xpath=ancestor::li[@data-slot="ticket-comment"]')
   ).toHaveClass(/bg-warning-soft/);
@@ -734,3 +744,226 @@ test('ticket deep links remain available without a profile or active profile sel
   await expect(page.getByRole('heading', { name: item.subject, level: 2 })).toBeVisible();
   await expect(page.getByRole('dialog')).toHaveCount(0);
 });
+
+for (const staff of [false, true])
+  for (const locale of ['en', 'fa'] as const)
+    test(`${staff ? 'staff' : 'customer'} formatted reply attachments survive a lost acknowledgement (${locale})`, async ({
+      page,
+    }, testInfo) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await shell(page, locale, staff);
+      const prefix = staff ? '/api/staff/tickets' : '/api/tickets',
+        copy = (key: string) => t(`tickets.${key}`, locale);
+      await page.route('**/api/public/branding/config', (route) =>
+        route.fulfill({
+          json: {
+            appTitle: 'Support',
+            appTitleFa: 'پشتیبانی',
+            supportEmail: '',
+            supportPhone: '',
+            supportMobile: '',
+            slogan: '',
+            primaryColor: '#2563eb',
+            secondaryColor: '#64748b',
+            accentColor: '#f59e0b',
+            logoUrl: null,
+            faviconUrl: null,
+            darkMode: locale === 'fa',
+            numberStyle: locale === 'fa' ? 'persian' : 'western',
+          },
+        })
+      );
+      await page.route(
+        (url) => url.pathname === prefix,
+        (route) =>
+          route.fulfill({
+            json: {
+              data: [item],
+              totalPages: 1,
+              viewer: { userId: 'staff', canWrite: true, canAssignOthers: true },
+            },
+          })
+      );
+      await page.route(`**${prefix}/${ticketId}`, (route) => route.fulfill({ json: item }));
+      await page.route('**/api/staff/tickets/assignees', (route) =>
+        route.fulfill({ json: [{ id: 'staff', name: 'Support colleague' }] })
+      );
+      const png = Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Z1EAAAAAASUVORK5CYII=',
+        'base64'
+      );
+      const publicUrl = 'http://127.0.0.1:4173/reply-evidence/public.png',
+        privateUrl = 'http://127.0.0.1:4173/reply-evidence/private.png';
+      let privateReads = 0,
+        presigns = 0,
+        puts = 0,
+        writes = 0;
+      await page.route('**/reply-evidence/**', (route) => {
+        if (route.request().url() === privateUrl) privateReads++;
+        return route.fulfill({ body: png, contentType: 'image/png' });
+      });
+      let notes: Record<string, unknown>[] = [
+        {
+          id: 'private',
+          authorId: 'staff',
+          body: 'Secret reply evidence',
+          visibility: 'internal',
+          createdAt: item.updatedAt,
+          attachments: [
+            { key: 'private', fileName: 'private.png', contentType: 'image/png', url: privateUrl },
+          ],
+        },
+      ];
+      let first: Record<string, unknown> | undefined;
+      await page.route(`**${prefix}/${ticketId}/comments`, async (route) => {
+        if (route.request().method() === 'GET') return route.fulfill({ json: notes });
+        const input = route.request().postDataJSON();
+        writes++;
+        expect(input).toMatchObject({
+          bodyFormat: 'markdown',
+          visibility: staff ? 'internal' : 'public',
+          attachments: [key],
+        });
+        expect(input.submissionId).toMatch(/^[a-f0-9-]{36}$/);
+        if (!first) {
+          first = input;
+          notes = [
+            ...notes,
+            {
+              ...input,
+              id: 'durable',
+              authorId: staff ? 'staff' : 'customer',
+              authorContext: staff ? 'staff' : 'customer',
+              createdAt: item.updatedAt,
+              attachments: [
+                { key: 'sealed', fileName: 'reply.png', contentType: 'image/png', url: publicUrl },
+              ],
+            },
+          ];
+          return route.abort('failed');
+        }
+        expect(input).toEqual(first);
+        return route.fulfill({ status: 201, json: notes[1] });
+      });
+      await page.route('**/api/upload/presigned-url', (route) => {
+        presigns++;
+        expect(route.request().postDataJSON()).toMatchObject({
+          purpose: 'ticket_reply_attachment',
+          profileId,
+          ticketId,
+          fileName: 'reply.png',
+        });
+        return route.fulfill({
+          json: {
+            key,
+            presignedUrl: 'http://127.0.0.1:4173/reply-upload',
+            headers: { 'If-None-Match': '*' },
+          },
+        });
+      });
+      await page.route('**/reply-upload', (route) => {
+        puts++;
+        return route.fulfill({ status: 200 });
+      });
+      await page.route('**/api/upload/*/verify', (route) =>
+        route.fulfill({ json: { status: 'confirmed' } })
+      );
+      await page.route('**/api/upload/*/record', (route) => {
+        expect(route.request().postDataJSON()).toMatchObject({
+          purpose: 'ticket_reply_attachment',
+          profileId,
+          ticketId,
+        });
+        return route.fulfill({ status: 201, json: { status: 'recorded', key } });
+      });
+      await page.goto(staff ? '/admin/tickets' : '/tickets');
+      await page.getByRole('button', { name: item.subject, exact: true }).click();
+      const composer = page.locator('[data-slot=ticket-reply-input]'),
+        reply = page.locator('#ticket-reply');
+      await reply.fill('Reply evidence');
+      await reply.evaluate((node) => node.setSelectionRange(0, node.value.length));
+      await composer.getByRole('button', { name: copy('bold'), exact: true }).click();
+      await expect(reply).toHaveValue('**Reply evidence**');
+      await reply.evaluate((node) => node.setSelectionRange(0, node.value.length));
+      await composer.getByRole('button', { name: copy('italic'), exact: true }).click();
+      await reply.evaluate((node) => node.setSelectionRange(0, node.value.length));
+      await composer.getByRole('button', { name: copy('bulletList'), exact: true }).click();
+      await composer
+        .locator('summary')
+        .filter({ hasText: copy('insertLink') })
+        .click();
+      await page.locator('#ticket-reply-link').fill('javascript:alert(1)');
+      await expect(
+        composer.getByRole('button', { name: copy('insertLink'), exact: true })
+      ).toBeDisabled();
+      await page.locator('#ticket-reply-link').fill('https://example.test/help');
+      await reply.evaluate((node) =>
+        node.setSelectionRange(
+          node.value.indexOf('Reply'),
+          node.value.indexOf('evidence') + 'evidence'.length
+        )
+      );
+      await composer.getByRole('button', { name: copy('insertLink'), exact: true }).click();
+      await composer
+        .locator('summary')
+        .filter({ hasText: copy('previewReply') })
+        .click();
+      await expect(composer.locator('strong')).toContainText('Reply evidence');
+      await expect(composer.locator('a[href="https://example.test/help"]')).toHaveText(
+        'Reply evidence'
+      );
+      await page.locator('#ticket-reply-files').setInputFiles({
+        name: 'bad.exe',
+        mimeType: 'application/octet-stream',
+        buffer: Buffer.from('bad'),
+      });
+      await expect(composer.getByRole('alert')).toHaveText(copy('invalidReplyFiles'));
+      await page
+        .locator('#ticket-reply-files')
+        .setInputFiles({ name: 'reply.png', mimeType: 'image/png', buffer: png });
+      await expect(composer.getByRole('alert')).toHaveCount(0);
+      const dropped = await page.evaluateHandle(() => {
+        const data = new DataTransfer();
+        data.items.add(new File(['%PDF-1.7\nExtra'], 'dropped.pdf', { type: 'application/pdf' }));
+        return data;
+      });
+      await composer.locator('div.border-dashed').dispatchEvent('drop', { dataTransfer: dropped });
+      await composer
+        .getByRole('button', { name: `${copy('removeFile')} dropped.pdf`, exact: true })
+        .click();
+      if (staff) await composer.getByRole('checkbox').check();
+      await composer.getByRole('button', { name: copy('send'), exact: true }).click();
+      await expect(page.getByRole('alert')).toBeVisible();
+      await expect(reply).not.toHaveValue('');
+      await expect(
+        composer.getByRole('button', { name: `${copy('removeFile')} reply.png`, exact: true })
+      ).toBeVisible();
+      await composer.getByRole('button', { name: copy('send'), exact: true }).click();
+      await expect(reply).toHaveValue('');
+      await expect(
+        composer.getByRole('button', { name: `${copy('removeFile')} reply.png`, exact: true })
+      ).toHaveCount(0);
+      expect({ presigns, puts, writes }).toEqual({ presigns: 1, puts: 1, writes: 2 });
+      const message = page.locator('[data-slot=ticket-comment]').filter({ hasText: 'reply.png' });
+      await expect(message.locator('strong')).toContainText('Reply evidence');
+      await expect(message.getByRole('link', { name: 'reply.png', exact: true })).toHaveAttribute(
+        'href',
+        publicUrl
+      );
+      if (!staff) {
+        await expect(page.getByText('Secret reply evidence')).toHaveCount(0);
+        expect(privateReads).toBe(0);
+      }
+      await composer.scrollIntoViewIfNeeded();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true
+      );
+      const violations = (
+        await new AxeBuilder({ page }).include('[data-slot=ticket-detail]').analyze()
+      ).violations;
+      expect(violations).toEqual([]);
+      if (locale === 'fa')
+        await page.locator('[data-slot=ticket-detail]').screenshot({
+          path: `/tmp/barghsa-ticket-reply-${staff ? 'staff' : 'customer'}-${testInfo.project.name}.png`,
+        });
+    });

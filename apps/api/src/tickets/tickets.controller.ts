@@ -1,4 +1,4 @@
-import { ticketListQuery } from './ticket-input.js';
+import { ticketReply, ticketReplyApiSchema, ticketListQuery } from './ticket-input.js';
 import {
   Body,
   Controller,
@@ -341,17 +341,16 @@ export class TicketsController {
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
+  @ApiBody({ schema: ticketReplyApiSchema })
   async addComment(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body()
-    body: {
-      body: string;
-      visibility?: 'public' | 'internal';
-    },
+    raw: unknown,
     @Req() req: AuthenticatedRequest
   ) {
     // Internal notes belong only to the staff endpoint.
-    const visibility = body?.visibility ?? 'public';
+    const body = ticketReply(raw);
+    const visibility = body.visibility ?? 'public';
     if (visibility === 'internal') {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can add internal notes' },
@@ -361,10 +360,11 @@ export class TicketsController {
     return this.ticketsService.addComment(
       id,
       req.session.userId,
-      body?.body,
+      body.body,
       visibility,
       false,
-      req.session
+      req.session,
+      body
     );
   }
 }

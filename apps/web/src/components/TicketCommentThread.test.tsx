@@ -105,3 +105,51 @@ it('keeps an internal note distinguishable when the author owns the ticket in cu
   expect(host.querySelector('li')).toBeNull();
   expect(host.textContent).toContain('No messages yet.');
 });
+
+it('renders explicit markdown safely, preserves plain text, uses stored author context and hides internal file URLs', async () => {
+  await render(false, 'en', [
+    {
+      ...comments[0]!,
+      authorContext: 'staff',
+      bodyFormat: 'markdown',
+      body: '**Answer** <script>alert(1)</script> [bad](javascript:alert(1)) ![remote](https://track.example.test/pixel)',
+      attachments: [
+        {
+          key: 'image',
+          fileName: 'evidence.png',
+          contentType: 'image/png',
+          url: 'https://storage.example.test/image',
+        },
+      ],
+    },
+    {
+      ...comments[2]!,
+      attachments: [
+        {
+          key: 'private',
+          fileName: 'private.pdf',
+          contentType: 'application/pdf',
+          url: 'https://storage.example.test/private',
+        },
+      ],
+    },
+    { ...comments[1]!, body: '**literal**' },
+  ]);
+  expect(host.querySelector('strong')?.textContent).toBe('Answer');
+  expect(host.querySelector('script')).toBeNull();
+  expect(host.querySelector('[href^="javascript:"]')).toBeNull();
+  expect(host.innerHTML).not.toContain('src="https://track');
+  expect(host.textContent).toContain('**literal**');
+  expect(host.innerHTML).not.toContain('storage.example.test/private');
+  expect(host.querySelector('img')?.getAttribute('src')).toBe('https://storage.example.test/image');
+  expect(host.querySelector('[data-slot="ticket-comment"]')?.className).toContain(
+    'border-primary/40'
+  );
+});
+
+it('shows unavailable reply files without claiming an empty conversation attachment list', async () => {
+  await render(false, 'fa', [{ ...comments[0]!, attachmentCount: 1, attachments: [] }]);
+  expect(host.querySelector('[role="status"]')?.textContent).toBe(
+    t('tickets.filesUnavailable', 'fa')
+  );
+});

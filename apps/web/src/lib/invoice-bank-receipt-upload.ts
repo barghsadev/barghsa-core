@@ -112,10 +112,19 @@ export async function uploadLegalProfileDocument(
   return uploadVerifiedAttachment(file, profileId, 'legal_profile_document');
 }
 
+export async function uploadTicketReplyAttachment(
+  file: File,
+  profileId: string | null,
+  ticketId: string
+): Promise<string | null> {
+  return uploadVerifiedAttachment(file, profileId, 'ticket_reply_attachment', ticketId);
+}
+
 async function uploadVerifiedAttachment(
   file: File,
   profileId: string | null,
-  purpose: string
+  purpose: string,
+  ticketId?: string
 ): Promise<string | null> {
   const evaluated = evaluateInvoiceBankReceiptClientFile({
     name: file.name,
@@ -140,6 +149,7 @@ async function uploadVerifiedAttachment(
       category,
       purpose,
       ...(profileId ? { profileId } : {}),
+      ...(ticketId ? { ticketId } : {}),
       metadata: { recordType: 'receipt' },
     }),
   });
@@ -185,6 +195,7 @@ async function uploadVerifiedAttachment(
       category,
       purpose,
       ...(profileId ? { profileId } : {}),
+      ...(ticketId ? { ticketId } : {}),
     }),
   });
   if (!recordRes.ok) return null;
