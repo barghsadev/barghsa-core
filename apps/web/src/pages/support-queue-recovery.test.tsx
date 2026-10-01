@@ -100,6 +100,7 @@ for (const Page of [CustomerTicketsPage, StaffTicketsPage]) {
         await act(async () =>
           host.querySelector<HTMLInputElement>('input[type=checkbox]')!.click()
         );
+        await change(host, '#ticket-status-reason', 'Awaiting another document');
         await change(host, '#ticket-team', 'team');
         await change(host, '#ticket-assignee', 'other');
       }
@@ -127,6 +128,9 @@ for (const Page of [CustomerTicketsPage, StaffTicketsPage]) {
         'Unsaved response'
       );
       if (Page === StaffTicketsPage) {
+        expect(host.querySelector<HTMLTextAreaElement>('#ticket-status-reason')?.value).toBe(
+          'Awaiting another document'
+        );
         expect(host.querySelector<HTMLInputElement>('input[type=checkbox]')?.checked).toBe(true);
         expect(host.querySelector<HTMLSelectElement>('#ticket-assignee')?.value).toBe('other');
         expect(host.querySelector<HTMLSelectElement>('#ticket-team')?.value).toBe('team');
@@ -422,6 +426,46 @@ it('a shrinking queue returns to its last valid page instead of trapping navigat
       supportTicket.subject
     );
     expect(host.querySelector('[aria-current="page"]')?.textContent).toBe('1');
+  } finally {
+    await close();
+  }
+});
+
+it('staff status changes require a reason, keep it after failure, and clear it only after confirmed success', async () => {
+  let responseStatus = 409;
+  const writes: unknown[] = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string, init?: RequestInit) => {
+      if (init?.method) {
+        writes.push(JSON.parse(String(init.body)));
+        return new Response('{}', { status: responseStatus });
+      }
+      return Response.json(data(url));
+    })
+  );
+  const { host, close } = await mount(StaffTicketsPage);
+  try {
+    await act(async () => button(host, supportTicket.subject).click());
+    expect(host.querySelector('[data-slot="ticket-detail"] header')?.textContent).toContain(
+      supportTicket.createdAt
+    );
+    expect(host.querySelector('[data-slot="ticket-detail"] header')?.textContent).toContain('P2');
+    expect(button(host, 'Save status').disabled).toBe(true);
+    await change(host, '#ticket-status-reason', '   ');
+    expect(button(host, 'Save status').disabled).toBe(true);
+    await change(host, '#ticket-status-reason', '  Customer confirmed the solution  ');
+    await change(host, '#ticket-next-status', 'resolved');
+    await act(async () => button(host, 'Save status').click());
+    expect(writes).toEqual([{ status: 'resolved', reason: 'Customer confirmed the solution' }]);
+    expect(host.querySelector<HTMLTextAreaElement>('#ticket-status-reason')?.value).toBe(
+      '  Customer confirmed the solution  '
+    );
+    responseStatus = 200;
+    await act(async () => button(host, 'Save status').click());
+    expect(writes).toHaveLength(2);
+    expect(host.querySelector<HTMLTextAreaElement>('#ticket-status-reason')?.value).toBe('');
+    expect(button(host, 'Save status').disabled).toBe(true);
   } finally {
     await close();
   }

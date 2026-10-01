@@ -14,6 +14,7 @@ const item = {
   userId: 'customer',
   profileId,
   assignedTo: null,
+  createdAt: '2026-08-31T12:00:00Z',
   updatedAt: '2026-09-01T01:00:00Z',
   attachments: [],
   relatedEntityType: null,
@@ -117,6 +118,18 @@ for (const staff of [false, true])
       expect(reads).toBe(initialReads);
       await records.getByRole('button', { name: item.subject, exact: true }).click();
       await expect(page.getByRole('heading', { name: item.subject, level: 2 })).toBeFocused();
+      await expect(page.locator('[data-slot=ticket-detail] header time').first()).toHaveAttribute(
+        'datetime',
+        item.createdAt
+      );
+      await expect(page.locator('[data-slot=ticket-detail] header')).toContainText(
+        await formatBrowserDate(
+          page,
+          locale,
+          { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'short' },
+          item.createdAt
+        )
+      );
       await page.locator('#ticket-reply').fill('Keep this reply');
       const selectedReads = detailReads;
       status = 503;
@@ -474,8 +487,19 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
     notes = [{ id: 'note', ...body, authorId: 'staff', createdAt: item.updatedAt }];
     return route.fulfill({ status: 201, json: notes[0] });
   });
+  let failedStatus = false;
   await page.route(`**/api/staff/tickets/${ticketId}/status`, (route) => {
-    current = { ...current, status: route.request().postDataJSON().status };
+    const input = route.request().postDataJSON();
+    expect(input.reason).toBe(
+      input.status === 'resolved'
+        ? 'Customer confirmed the solution'
+        : 'Customer needs another review'
+    );
+    if (!failedStatus) {
+      failedStatus = true;
+      return route.fulfill({ status: 503, json: {} });
+    }
+    current = { ...current, status: input.status };
     return route.fulfill({ json: current });
   });
   await page.goto('/admin/tickets');
@@ -490,7 +514,11 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
   await expect(page.locator('#ticket-reply')).toHaveValue('Private reasoning');
   await page.getByRole('button', { name: 'Send reply', exact: true }).click();
   await expect(page.getByText('Private reasoning', { exact: true })).toBeVisible();
-  await expect(page.getByText('Private reasoning', { exact: true }).locator('..')).toContainText(
+  await expect(
+    page
+      .getByText('Private reasoning', { exact: true })
+      .locator('xpath=ancestor::li[@data-slot="ticket-comment"]')
+  ).toContainText(
     await formatBrowserDate(
       page,
       'en',
@@ -498,16 +526,27 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
       item.updatedAt
     )
   );
-  await expect(page.getByText('Private reasoning', { exact: true }).locator('..')).toHaveClass(
-    /bg-warning-soft/
-  );
+  await expect(
+    page
+      .getByText('Private reasoning', { exact: true })
+      .locator('xpath=ancestor::li[@data-slot="ticket-comment"]')
+  ).toHaveClass(/bg-warning-soft/);
   await page.screenshot({ path: '/tmp/barghsa-ticket-staff-review.png', fullPage: true });
   await page.locator('#ticket-next-status').selectOption('resolved');
+  await expect(page.getByRole('button', { name: 'Save status', exact: true })).toBeDisabled();
+  await page.locator('#ticket-status-reason').fill('Customer confirmed the solution');
+  await page.getByRole('button', { name: 'Save status', exact: true }).click();
+  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(page.locator('#ticket-status-reason')).toHaveValue(
+    'Customer confirmed the solution'
+  );
   await page.getByRole('button', { name: 'Save status', exact: true }).click();
   await expect(page.locator('#ticket-reply')).toHaveCount(0);
   await page.locator('#ticket-next-status').selectOption('open');
+  await page.locator('#ticket-status-reason').fill('Customer needs another review');
   await page.getByRole('button', { name: 'Save status', exact: true }).click();
   await page.locator('#ticket-next-status').selectOption('in_progress');
+  await page.locator('#ticket-status-reason').fill('Staff follow-up');
   await expect(page.getByRole('button', { name: 'Save status', exact: true })).toBeEnabled();
 });
 test('staff with broad read access only edit tickets assigned to them', async ({ page }) => {
@@ -663,6 +702,7 @@ test('assigned-only staff see no reassignment control and stale lists cannot rep
   await page.goto('/admin/tickets');
   await page.getByRole('button', { name: item.subject, exact: true }).click();
   await expect(page.locator('#ticket-assignee')).toHaveCount(0);
+  await page.locator('#ticket-status-reason').fill('Staff follow-up');
   await expect(page.getByRole('button', { name: 'Save status', exact: true })).toBeEnabled();
   const request = page.waitForRequest((request) => request.url().includes('search=old'));
   await page.locator('#ticket-search').fill('old');

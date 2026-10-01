@@ -150,6 +150,7 @@ for (const staff of [false, true])
         await expect(page.locator('#ticket-team')).toBeEnabled();
         await page.locator('#ticket-team').selectOption('team');
         await page.locator('#ticket-assignee').selectOption('other');
+        await page.locator('#ticket-status-reason').fill('Awaiting another document');
         await main.getByRole('checkbox', { name: copy('internal'), exact: true }).check();
       } else {
         await main.getByRole('button', { name: copy('create'), exact: true }).click();
@@ -200,6 +201,9 @@ for (const staff of [false, true])
       if (staff) {
         await expect(page.locator('#ticket-team')).toHaveValue('team');
         await expect(page.locator('#ticket-assignee')).toHaveValue('other');
+        await expect(page.locator('#ticket-status-reason')).toHaveValue(
+          'Awaiting another document'
+        );
         await expect(
           main.getByRole('checkbox', { name: copy('internal'), exact: true })
         ).toBeChecked();
@@ -224,6 +228,10 @@ for (const staff of [false, true])
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true
       );
+      if (locale === 'fa' && testInfo.project.name === 'mobile-safari')
+        await main.locator('section[aria-labelledby="ticket-conversation-heading"]').screenshot({
+          path: `/tmp/barghsa-ticket-thread-${staff ? 'staff' : 'customer'}-fa-mobile-safari.png`,
+        });
       if (locale === 'fa' && testInfo.project.name === 'mobile-safari')
         await page.screenshot({
           path: `/tmp/barghsa-support-${staff ? 'staff' : 'customer'}-fa-mobile-safari.png`,

@@ -9,6 +9,7 @@ export const supportTicket = {
   profileId: null,
   assignedTo: 'staff',
   assignedTeamId: null,
+  createdAt: '2026-08-31T12:00:00Z',
   updatedAt: '2026-09-01T01:00:00Z',
   attachments: [],
   relatedEntityType: null,

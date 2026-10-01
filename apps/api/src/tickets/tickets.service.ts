@@ -1163,8 +1163,14 @@ export class TicketsService {
     actorId: string,
     ownerId?: string,
     assignedTo?: string,
-    actor?: TicketActor
+    actor?: TicketActor,
+    reason?: string
   ): Promise<TicketRow> {
+    if (
+      reason !== undefined &&
+      (typeof reason !== 'string' || !reason.trim() || reason.trim().length > 2000)
+    )
+      throw new HttpException('Status reason must be 1 to 2,000 characters', 400);
     const transitions: Record<string, string[]> = {
       open: ['in_progress'],
       in_progress: ['waiting_customer', 'waiting_staff', 'resolved'],
@@ -1206,7 +1212,16 @@ export class TicketsService {
       );
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata) VALUES ($1,$2,'ticket_status_changed',$3::jsonb)`,
-        [randomUUID(), actorId, JSON.stringify({ ticketId, from: row.status, to: status })]
+        [
+          randomUUID(),
+          actorId,
+          JSON.stringify({
+            ticketId,
+            from: row.status,
+            to: status,
+            ...(reason !== undefined ? { reason: reason.trim() } : {}),
+          }),
+        ]
       );
       await this.notifyTicket(client, mapRow(result.rows[0]), actorId, 'status');
       if (actor) await requireCurrentSession(client, actor);
@@ -1597,9 +1612,10 @@ export class TicketsService {
     status: string,
     actorId: string,
     assignedTo?: string,
-    actor?: TicketActor
+    actor?: TicketActor,
+    reason?: string
   ): Promise<TicketRow> {
-    return this.changeStatus(ticketId, status, actorId, undefined, assignedTo, actor);
+    return this.changeStatus(ticketId, status, actorId, undefined, assignedTo, actor, reason);
   }
 
   /**

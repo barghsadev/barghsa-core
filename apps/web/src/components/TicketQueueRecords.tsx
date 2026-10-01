@@ -30,6 +30,7 @@ export interface Ticket {
   assignedTeamId?: string | null;
   userId: string;
   assignedTo: string | null;
+  createdAt?: string;
   updatedAt: string;
   relatedEntityId: string | null;
   relatedEntityType: string | null;
@@ -129,24 +130,10 @@ export function TicketQueueRecords({
       </Button>
     );
   }
-  function status(item: Ticket) {
-    return (
-      <Badge
-        variant={item.status === 'resolved' || item.status === 'closed' ? 'secondary' : 'outline'}
-      >
-        {text(item.status)}
-      </Badge>
-    );
-  }
-  function priority(item: Ticket) {
-    const code = { high: 'P1', normal: 'P2', low: 'P3' }[item.priority];
-    return (
-      <Badge variant={item.priority === 'high' ? 'destructive' : 'outline'}>
-        <bdi dir="ltr">{code ?? item.priority}</bdi>
-        {code && <span>{text(item.priority)}</span>}
-      </Badge>
-    );
-  }
+  const status = (item: Ticket) => <TicketStatusBadge status={item.status} locale={locale} />;
+  const priority = (item: Ticket) => (
+    <TicketPriorityBadge priority={item.priority} locale={locale} />
+  );
   function updated(item: Ticket) {
     const stamp = new Date(item.updatedAt);
     const age = now.getTime() - stamp.getTime();
@@ -270,5 +257,23 @@ export function TicketQueueRecords({
         </ul>
       )}
     </div>
+  );
+}
+
+export function TicketStatusBadge({ status, locale }: { status: TicketStatus; locale: Locale }) {
+  return (
+    <Badge variant={status === 'resolved' || status === 'closed' ? 'secondary' : 'outline'}>
+      {t(`tickets.${status}`, locale)}
+    </Badge>
+  );
+}
+
+export function TicketPriorityBadge({ priority, locale }: { priority: string; locale: Locale }) {
+  const code = { high: 'P1', normal: 'P2', low: 'P3' }[priority];
+  return (
+    <Badge variant={priority === 'high' ? 'destructive' : 'outline'}>
+      <bdi dir="ltr">{code ?? priority}</bdi>
+      {code && <span>{t(`tickets.${priority}`, locale)}</span>}
+    </Badge>
   );
 }

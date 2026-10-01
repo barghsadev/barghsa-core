@@ -850,12 +850,12 @@ it('rolls back assignment when recording its audit fails', async () => {
   }
   expect((await assign(id)).status).toBe(200);
 });
-function status(id: string, value: unknown, user = 'staff') {
+function status(id: string, value: unknown, user = 'staff', reason?: string) {
   const path = user === 'staff' ? 'staff/tickets' : 'tickets';
   return fetch(`${http.base}/api/${path}/${id}/status`, {
     method: 'PATCH',
     headers: headers[user]!,
-    body: JSON.stringify({ status: value }),
+    body: JSON.stringify({ status: value, ...(reason !== undefined ? { reason } : {}) }),
   });
 }
 function comment(id: string, body: unknown, visibility: unknown = 'public', user = 'staff') {
@@ -866,6 +866,75 @@ function comment(id: string, body: unknown, visibility: unknown = 'public', user
     body: JSON.stringify({ body, visibility }),
   });
 }
+it('stores a trimmed staff status reason once and keeps audit reasoning out of customer responses', async () => {
+  const id = await ticket();
+  await assign(id);
+  const reason = '  Customer confirmed delivery.\nResolved after follow-up.  ';
+  expect((await status(id, 'resolved', 'staff', reason)).status).toBe(200);
+  const audit = await http.pool.query(
+    "SELECT user_id,metadata::jsonb AS metadata FROM audit_log WHERE event='ticket_status_changed' AND metadata::jsonb->>'ticketId'=$1",
+    [id]
+  );
+  expect(audit.rows).toHaveLength(1);
+  expect(audit.rows[0].user_id).toBe('staff');
+  expect(audit.rows[0].metadata).toMatchObject({
+    ticketId: id,
+    from: 'in_progress',
+    to: 'resolved',
+    reason: reason.trim(),
+  });
+  expect((await status(id, 'resolved', 'staff', 'A repeated request')).status).toBe(200);
+  const after = await http.pool.query(
+    "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='ticket_status_changed' AND metadata::jsonb->>'ticketId'=$1",
+    [id]
+  );
+  expect(after.rows).toHaveLength(1);
+  expect(after.rows[0].metadata.reason).toBe(reason.trim());
+  const customer = await fetch(`${http.base}/api/tickets/${id}`, { headers: headers.customer! });
+  expect(customer.status).toBe(200);
+  expect(await customer.text()).not.toContain('Customer confirmed delivery');
+});
+it('rejects invalid staff status reasons and preserves write and assignment permissions', async () => {
+  const id = await ticket();
+  await assign(id);
+  for (const reason of ['', '   ', null, 1, 'x'.repeat(2001)]) {
+    const response = await fetch(`${http.base}/api/staff/tickets/${id}/status`, {
+      method: 'PATCH',
+      headers: headers.staff!,
+      body: JSON.stringify({ status: 'resolved', reason }),
+    });
+    expect(response.status).toBe(400);
+  }
+  expect(
+    (
+      await fetch(`${http.base}/api/staff/tickets/${id}/status`, {
+        method: 'PATCH',
+        headers: headers.customer!,
+        body: JSON.stringify({ status: 'resolved', reason: 'Not authorized' }),
+      })
+    ).status
+  ).toBe(403);
+  expect(
+    (
+      await fetch(`${http.base}/api/staff/tickets/${id}/status`, {
+        method: 'PATCH',
+        headers: headers.assigned!,
+        body: JSON.stringify({ status: 'resolved', reason: 'Not my assignment' }),
+      })
+    ).status
+  ).toBe(404);
+  expect(
+    (await http.pool.query('SELECT status FROM tickets WHERE id=$1', [id])).rows[0].status
+  ).toBe('in_progress');
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM audit_log WHERE event='ticket_status_changed' AND metadata::jsonb->>'ticketId'=$1",
+        [id]
+      )
+    ).rows
+  ).toHaveLength(0);
+});
 it('enforces the support lifecycle, hides internal notes, and resumes work after a customer reply', async () => {
   const id = await ticket();
   expect((await status(id, 'closed')).status).toBe(409);
@@ -915,7 +984,9 @@ it('rolls back comments and status changes when their audits fail, and serialize
     IF NEW.event IN ('ticket_comment_added','ticket_status_changed') THEN RAISE EXCEPTION 'test failure'; END IF; RETURN NEW; END $$;
     CREATE TRIGGER fail_ticket_mutation_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_ticket_mutation_audit()`);
   try {
-    expect((await status(id, 'resolved')).status).toBe(500);
+    expect((await status(id, 'resolved', 'staff', 'Audit must commit this reason')).status).toBe(
+      500
+    );
     expect((await comment(id, 'Not committed')).status).toBe(500);
     expect(
       (await http.pool.query('SELECT status FROM tickets WHERE id=$1', [id])).rows[0].status

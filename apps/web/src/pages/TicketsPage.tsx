@@ -10,22 +10,18 @@ import { useListView } from '../hooks/useListView.js';
 import {
   TicketQueueRecords,
   RelatedTicketRecord,
+  TicketStatusBadge,
+  TicketPriorityBadge,
   type Ticket,
   type TicketStatus,
 } from '../components/TicketQueueRecords.js';
+import { TicketCommentThread, type TicketComment } from '../components/TicketCommentThread.js';
 import { ProfileClosureReview } from '../components/ProfileClosureReview.js';
 import {
   isAllowedInvoiceReceiptFile,
   uploadTicketAttachment,
 } from '../lib/invoice-bank-receipt-upload.js';
 
-interface Comment {
-  id: string;
-  authorId: string;
-  body: string;
-  visibility: string;
-  createdAt: string;
-}
 interface Queue {
   responseTargetHours?: number | null;
   data: Ticket[];
@@ -116,14 +112,15 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
       ? queries.queue.setQuery({ order: value === 'asc' ? 'asc' : 'desc' })
       : setLocalSort(value);
   const [loadedDetail, setDetail] = useState<Ticket | null>(null),
-    [comments, setComments] = useState<Comment[]>([]),
+    [comments, setComments] = useState<TicketComment[]>([]),
     [detailLoading, setDetailLoading] = useState(false),
     [detailError, setDetailError] = useState(''),
     [selectedId, setSelectedId] = useState('');
   const detail = !queries || loadedDetail?.id === queries.selected ? loadedDetail : null;
   const [reply, setReply] = useState(''),
     [internal, setInternal] = useState(false),
-    [nextStatus, setNextStatus] = useState<TicketStatus>('open');
+    [nextStatus, setNextStatus] = useState<TicketStatus>('open'),
+    [statusReason, setStatusReason] = useState('');
   const [teams, setTeams] = useState<{ id: string; name: string; members: string[] }[]>([]),
     [teamId, setTeamId] = useState('');
   const [assignees, setAssignees] = useState<{ id: string; name: string }[]>([]),
@@ -155,6 +152,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
     setDetailLoading(false);
     setDetailError('');
     setSelectedId('');
+    setStatusReason('');
     setReply('');
     setInternal(false);
     setAssignee('');
@@ -307,6 +305,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
   }, [staff, prefix, queue?.viewer?.canAssignOthers, assignmentVersion]);
   async function select(id: string) {
     if (queueDenied.current) return;
+    if (selectedId !== id) setStatusReason('');
     setSelectedId(id);
     setDetailError('');
     const current = ++detailGeneration.current;
@@ -382,7 +381,10 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
           );
         return;
       }
-      if (selection === detailGeneration.current) setSaved(true);
+      if (selection === detailGeneration.current) {
+        setSaved(true);
+        if (path.endsWith('/status')) setStatusReason('');
+      }
       await latestLoad.current();
       if (id && selection === detailGeneration.current) await select(id);
     } catch {
@@ -802,13 +804,41 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
         </div>
       )}
       {detail && (
-        <article className="rounded border bg-card text-card-foreground p-4 space-y-4 break-words">
-          <h2 ref={heading} tabIndex={-1} className="text-xl font-semibold">
-            {detail.subject}
-          </h2>
-          <p>
-            {text(detail.status)} · {text(detail.priority)}
-          </p>
+        <article
+          data-slot="ticket-detail"
+          className="rounded border bg-card text-card-foreground p-4 space-y-4 break-words"
+        >
+          <header className="flex flex-col gap-3">
+            <h2 ref={heading} tabIndex={-1} className="text-xl font-semibold">
+              {detail.subject}
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              <TicketStatusBadge status={detail.status} locale={locale} />
+              <TicketPriorityBadge priority={detail.priority} locale={locale} />
+            </div>
+            <dl className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <dt className="text-sm text-muted-foreground">{text('created')}</dt>
+                <dd>
+                  <time dateTime={detail.createdAt}>{formatDate(detail.createdAt ?? null)}</time>
+                </dd>
+              </div>
+              <div>
+                <dt className="text-sm text-muted-foreground">{text('updated')}</dt>
+                <dd>
+                  <time dateTime={detail.updatedAt}>{formatDate(detail.updatedAt)}</time>
+                </dd>
+              </div>
+              {detail.relatedEntityId && (
+                <div className="min-w-0 sm:col-span-2">
+                  <dt className="text-sm text-muted-foreground">{text('related')}</dt>
+                  <dd>
+                    <RelatedTicketRecord ticket={detail} staff={staff} locale={locale} />
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </header>
           <p className="whitespace-pre-wrap">{detail.body}</p>
           <p>
             {text('category')}: {text(`category.${detail.category ?? 'general'}`)}
@@ -876,11 +906,6 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
                 </div>
               </dl>
             </section>
-          )}
-          {detail.relatedEntityId && (
-            <p>
-              <RelatedTicketRecord ticket={detail} staff={staff} locale={locale} />
-            </p>
           )}
           {(detail.attachmentDownloadUrls ?? [])
             .filter((url) => /^https?:\/\//.test(url))
@@ -1054,14 +1079,29 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
                   ))}
                 </select>
               </div>
+              <div className="min-w-0 flex-1 basis-full">
+                <Label htmlFor="ticket-status-reason">{text('statusReason')}</Label>
+                <textarea
+                  id="ticket-status-reason"
+                  rows={2}
+                  maxLength={2000}
+                  required
+                  disabled={busy}
+                  className="block w-full rounded border border-input bg-background text-foreground p-2"
+                  value={statusReason}
+                  onChange={(event) => setStatusReason(event.target.value)}
+                />
+              </div>
               <Button
                 className="hover:bg-primary"
-                disabled={busy || (detail.status === 'open' && !detail.assignedTo)}
+                disabled={
+                  busy || !statusReason.trim() || (detail.status === 'open' && !detail.assignedTo)
+                }
                 onClick={() =>
                   void mutate(
                     `${prefix}/${detail.id}/status`,
                     'PATCH',
-                    { status: nextStatus },
+                    { status: nextStatus, reason: statusReason.trim() },
                     detail.id
                   )
                 }
@@ -1081,20 +1121,17 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
               {text('reopen')}
             </Button>
           )}
-          <h3 className="font-semibold">{text('conversation')}</h3>
-          {comments
-            .filter((item) => staff || item.visibility === 'public')
-            .map((item) => (
-              <div
-                key={item.id}
-                className={`rounded border p-3 ${item.visibility === 'internal' ? 'border-warning/20 bg-warning-soft dark:border-amber-700 dark:bg-amber-950' : 'bg-muted'}`}
-              >
-                <p className="text-sm">
-                  {item.authorId} · {formatDate(item.createdAt)} · {text(item.visibility)}
-                </p>
-                <p className="whitespace-pre-wrap">{item.body}</p>
-              </div>
-            ))}
+          <TicketCommentThread
+            comments={comments}
+            ownerId={detail.userId}
+            staff={staff}
+            locale={locale}
+            customerName={
+              staff ? (detail.customer?.profile?.title ?? detail.customer?.username) : null
+            }
+            assignees={assignees}
+            formatDate={formatDate}
+          />
           {canWrite && !['closed', 'resolved'].includes(detail.status) && (
             <form
               className="space-y-3"

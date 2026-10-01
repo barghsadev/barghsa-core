@@ -270,13 +270,33 @@ export class StaffTicketsController {
    */
   @Patch(':id/status')
   @ApiOperation({ summary: 'Staff update ticket status' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['status'],
+      properties: {
+        status: {
+          type: 'string',
+          enum: ['open', 'in_progress', 'waiting_customer', 'waiting_staff', 'resolved', 'closed'],
+        },
+        reason: {
+          type: 'string',
+          minLength: 1,
+          maxLength: 2000,
+          description:
+            'Staff reason stored with the status-change audit; optional for existing clients.',
+        },
+      },
+    },
+  })
   @ApiResponse({ status: 200, description: 'Status updated.' })
   @ApiResponse({ status: 400, description: 'Invalid status' })
   @ApiResponse({ status: 403, description: 'Not staff' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async updateTicketStatus(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() body: { status: string },
+    @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
     if (
@@ -289,12 +309,28 @@ export class StaffTicketsController {
         403
       );
     }
+    const parsed = z
+      .object({
+        status: z.enum([
+          'open',
+          'in_progress',
+          'waiting_customer',
+          'waiting_staff',
+          'resolved',
+          'closed',
+        ]),
+        reason: z.string().trim().min(1).max(2000).optional(),
+      })
+      .strict()
+      .safeParse(body);
+    if (!parsed.success) throw new HttpException('Invalid status change', 400);
     return this.ticketsService.staffUpdateTicketStatus(
       id,
-      body?.status,
+      parsed.data.status,
       req.session.userId,
       this.assignedScope(req, 'write'),
-      req.session
+      req.session,
+      parsed.data.reason
     );
   }
 
