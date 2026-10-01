@@ -1,6 +1,11 @@
 import { lookup } from './lookup.js';
 
 const fa = {
+  'admin.providers.refresh': 'تازه‌سازی ارائه‌دهنده‌ها',
+  'admin.providers.denied':
+    'دسترسی به تنظیمات ارائه‌دهنده‌ها مجاز نیست. دوباره دسترسی را بررسی کنید.',
+  'admin.providers.stale':
+    'نسخه ذخیره‌شده تغییر کرده است. پیش‌نویس شما حفظ شده؛ پیش از ذخیره، ویرایش را ببندید و نسخه جدید را باز کنید.',
   'admin.providers.title': 'ارائه‌دهنده‌های ایمیل',
   'admin.providers.subtitle': 'پیکربندی و چرخه‌ی حیات ارائه‌دهنده‌های ایمیل (SMTP / Resend).',
   'admin.providers.new': 'ارائه‌دهنده جدید',
@@ -93,6 +98,11 @@ const fa = {
 };
 
 const en: Record<keyof typeof fa, string> = {
+  'admin.providers.refresh': 'Refresh providers',
+  'admin.providers.denied': 'Provider settings access was denied. Recheck access to continue.',
+  'admin.providers.stale':
+    'The saved version changed. Your draft is retained; close the editor and reopen the latest version before saving.',
+
   'admin.providers.title': 'Email Providers',
   'admin.providers.subtitle': 'Configure and manage email provider (SMTP / Resend) lifecycle.',
   'admin.providers.new': 'New provider',
@@ -190,6 +200,17 @@ export function providerText(key: string, locale: 'en' | 'fa'): string {
 }
 
 const smsEn = {
+  refresh: 'Refresh providers',
+  denied: 'Provider settings access was denied. Recheck access to continue.',
+  stale:
+    'The saved version changed. Your draft is retained; close the editor and reopen the latest version before saving.',
+  eventsLoading: 'Loading event keys…',
+  eventsFailed:
+    'Event keys could not be loaded. Your mappings are retained. Retry before saving or testing.',
+  retryEvents: 'Retry event keys',
+  eventsChanged:
+    'Some mapped events are no longer available. Review or remove those mappings before saving.',
+
   tabs: 'Notification delivery',
   email: 'Email',
   sms: 'SMS.ir',
@@ -263,6 +284,17 @@ const smsEn = {
   healthLastFailure: 'Last failure',
 };
 const smsFa: Record<keyof typeof smsEn, string> = {
+  refresh: 'تازه‌سازی ارائه‌دهنده‌ها',
+  denied: 'دسترسی به تنظیمات ارائه‌دهنده‌ها مجاز نیست. دوباره دسترسی را بررسی کنید.',
+  stale:
+    'نسخه ذخیره‌شده تغییر کرده است. پیش‌نویس شما حفظ شده؛ پیش از ذخیره، ویرایش را ببندید و نسخه جدید را باز کنید.',
+  eventsLoading: 'در حال بارگذاری کلیدهای رویداد…',
+  eventsFailed:
+    'کلیدهای رویداد بارگذاری نشدند. نگاشت‌های شما حفظ شده‌اند. پیش از ذخیره یا آزمایش دوباره تلاش کنید.',
+  retryEvents: 'تلاش دوباره برای کلیدهای رویداد',
+  eventsChanged:
+    'برخی رویدادهای نگاشت‌شده دیگر در دسترس نیستند. پیش از ذخیره نگاشت‌ها را بررسی یا حذف کنید.',
+
   tabs: 'ارسال اعلان‌ها',
   email: 'ایمیل',
   sms: 'SMS.ir',

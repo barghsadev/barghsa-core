@@ -1,8 +1,10 @@
+import { crmShell } from './crm-shell-fixture';
 import { cookieResponse } from './cookie-response';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
+test.use({ viewport: { width: 390, height: 844 } });
 
 function provider(id = 'sms-draft', status = 'draft') {
   return {
@@ -26,7 +28,7 @@ function provider(id = 'sms-draft', status = 'draft') {
 }
 async function shell(page: Page, locale: 'en' | 'fa', baseURL: string) {
   await page.context().addCookies([{ url: baseURL, name: 'barghsa_csrf', value: 'sms-initial' }]);
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, locale);
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
@@ -35,9 +37,6 @@ async function shell(page: Page, locale: 'en' | 'fa', baseURL: string) {
     route.fulfill({ json: ['auth.otp', 'invoice.created'] })
   );
   await page.goto('/admin/providers');
-  await page.evaluate((lang) => {
-    document.documentElement.lang = lang;
-  }, locale);
 }
 for (const locale of ['en', 'fa'] as const) {
   const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
@@ -391,7 +390,6 @@ for (const locale of ['en', 'fa'] as const) {
     page,
     baseURL,
   }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
     await shell(page, locale, baseURL!);
     await page.route('**/api/admin/sms-providers', (route) =>
       route.fulfill({ json: [provider()] })

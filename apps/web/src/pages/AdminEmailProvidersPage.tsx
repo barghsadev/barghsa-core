@@ -1,3 +1,10 @@
+import { Button, ListPage, ScrollArea } from '@barghsa/ui';
+import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
+import {
+  useProviderCatalogue,
+  providerBasis,
+  useProviderCommandGuard,
+} from '../hooks/useProviderCatalogue.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { ProviderHealthMetrics } from '../components/ProviderHealthMetrics.js';
 import { ProviderAlertHistory } from '../components/ProviderAlertHistory.js';
@@ -169,13 +176,13 @@ function resendConfig(form: ResendForm): Record<string, unknown> {
 export default function AdminEmailProvidersPage() {
   const time = useAccountTime();
   const uiLocale = useLocale();
-  const [providers, setProviders] = useState<EmailProvider[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadFailed, setLoadFailed] = useState(false);
-  const readRequest = useRef<AbortController | null>(null);
+  const [invalidConfig, setInvalidConfig] = useState(false);
+  const [editBasis, setEditBasis] = useState<string | null>(null);
+  const inFlight = useRef(false);
   const [busy, setBusy] = useState(false);
   const [protectedAction, setProtectedAction] = useState<{
     action: TeamAction;
+    basis: string;
     onSuccess: (result: unknown) => Promise<void>;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -192,33 +199,73 @@ export default function AdminEmailProvidersPage() {
   // Per-row test outcome cache
   const [testOutcome, setTestOutcome] = useState<Record<string, TestConnectionOutcome>>({});
 
-  const fetchAll = useCallback(async () => {
-    readRequest.current?.abort();
-    const controller = new AbortController();
-    readRequest.current = controller;
-    setLoading(true);
+  const clearPrivate = useCallback(() => {
+    setShowEditor(false);
+    setEditId(null);
+    setEditBasis(null);
+    setForm(EMPTY_SMTP);
+    setLabel('');
+    setTransport('smtp');
+    setProtectedAction(null);
+    setTestOutcome({});
     setError(null);
-    try {
-      const data = await listProviders(controller.signal);
-      if (controller.signal.aborted) return;
-      setProviders(data);
-      setLoadFailed(false);
-    } catch {
-      if (controller.signal.aborted) return;
-      setLoadFailed(true);
-      setError(providerText('admin.providers.error.load', uiLocale));
-    } finally {
-      if (!controller.signal.aborted) setLoading(false);
-    }
-  }, [uiLocale]);
-
+    setNotice(null);
+    setInvalidConfig(false);
+    setBusy(false);
+  }, []);
+  const scope = useCatalogueScope(clearPrivate);
+  const catalogue = useProviderCatalogue(scope, listProviders);
+  const providers = catalogue.data ?? [];
+  const loading = catalogue.loading;
+  const loadFailed = catalogue.error || invalidConfig;
+  const rowBasis = (p: EmailProvider, test = true) =>
+    providerBasis({
+      id: p.id,
+      label: p.label,
+      transport: p.transport,
+      status: p.status,
+      ...(test ? { lastTestStatus: p.lastTestStatus } : {}),
+      maskedConfig: p.maskedConfig,
+    });
+  const basis = providerBasis(providers.map((p) => rowBasis(p)).sort());
+  const capture = useProviderCommandGuard(basis, scope.live);
+  useEffect(() => setTestOutcome({}), [basis]);
+  const staleEditor =
+    editId !== null &&
+    editBasis !==
+      rowBasis(
+        providers.find((p) => p.id === editId) ?? {
+          id: '',
+          label: '',
+          transport: 'smtp',
+          status: 'disabled',
+          lastTestStatus: 'pending',
+        },
+        false
+      );
+  const fetchAll = useCallback(async () => {
+    setInvalidConfig(false);
+    await catalogue.refresh();
+  }, [catalogue.refresh]);
   useEffect(() => {
-    void fetchAll();
-    return () => readRequest.current?.abort();
-  }, [fetchAll]);
+    if (protectedAction && protectedAction.basis !== basis) setProtectedAction(null);
+    setBusy(false);
+  }, [basis, protectedAction]);
+  const recover = () => (scope.denied ? scope.recover() : void fetchAll());
+  const recovery = (
+    <div className="space-y-2">
+      <Button type="button" variant="outline" disabled={loading || busy} onClick={recover}>
+        {providerText(
+          loadFailed || scope.denied ? 'admin.providers.retry' : 'admin.providers.refresh',
+          uiLocale
+        )}
+      </Button>
+    </div>
+  );
 
   function openCreate() {
     setEditId(null);
+    setEditBasis(null);
     setEditStatus(null);
     setLabel('');
     setTransport('smtp');
@@ -238,11 +285,11 @@ export default function AdminEmailProvidersPage() {
     try {
       saved = savedForm(p);
     } catch {
-      setError(providerText('admin.providers.error.load', uiLocale));
-      setLoadFailed(true);
+      setInvalidConfig(true);
       return;
     }
     setEditId(p.id);
+    setEditBasis(rowBasis(p, false));
     setEditStatus(p.status);
     setLabel(p.label);
     setTransport(p.transport);
@@ -257,6 +304,7 @@ export default function AdminEmailProvidersPage() {
     setForm(transport === 'smtp' ? { ...EMPTY_SMTP } : { ...EMPTY_RESEND });
     setLabel('');
     setEditId(null);
+    setEditBasis(null);
     setEditStatus(null);
   }
 
@@ -278,6 +326,7 @@ export default function AdminEmailProvidersPage() {
   ): boolean {
     if (!(error instanceof ProviderStepUpError)) return false;
     setProtectedAction({
+      basis,
       action: { ...error.action, title, description, requiresPassword: true },
       onSuccess,
     });
@@ -286,7 +335,18 @@ export default function AdminEmailProvidersPage() {
 
   async function handleSave(e: FormEvent) {
     e.preventDefault();
-    if (busy || loading || loadFailed) return;
+    if (
+      inFlight.current ||
+      protectedAction ||
+      busy ||
+      loading ||
+      loadFailed ||
+      scope.denied ||
+      staleEditor
+    )
+      return;
+    inFlight.current = true;
+    const current = capture();
     setBusy(true);
     setError(null);
     setNotice(null);
@@ -317,10 +377,16 @@ export default function AdminEmailProvidersPage() {
           await createProvider(transport, label.trim(), resendConfig(f));
         }
       }
+      if (!current()) return;
       setTestOutcome({});
       closeEditor();
       await fetchAll();
     } catch (err) {
+      if (!current()) return;
+      if (err instanceof ProviderRequestError && err.denied) {
+        scope.deny();
+        return;
+      }
       if (
         offerStepUp(
           err,
@@ -330,6 +396,7 @@ export default function AdminEmailProvidersPage() {
           ),
           label.trim(),
           async (result) => {
+            if (!current()) return;
             const saved = validateProviderResult(result, 'draft', editId ?? undefined);
             if (saved.transport !== transport) throw new ProviderRequestError();
             setTestOutcome({});
@@ -345,25 +412,36 @@ export default function AdminEmailProvidersPage() {
           : providerText('admin.providers.error.save', uiLocale)
       );
     } finally {
-      setBusy(false);
+      inFlight.current = false;
+      if (current()) setBusy(false);
     }
   }
 
   async function handleTest(p: EmailProvider, recipient: string) {
+    if (inFlight.current || protectedAction || loading || loadFailed || scope.denied) return;
+    inFlight.current = true;
+    const current = capture();
     setBusy(true);
     setError(null);
     setNotice(null);
     try {
       const outcome = await testConnection(p.id, recipient);
+      if (!current()) return;
       setTestOutcome((prev) => ({ ...prev, [p.id]: outcome }));
       await fetchAll();
     } catch (err) {
+      if (!current()) return;
+      if (err instanceof ProviderRequestError && err.denied) {
+        scope.deny();
+        return;
+      }
       if (
         offerStepUp(
           err,
           providerText('admin.providers.test.run', uiLocale),
           p.label,
           async (result) => {
+            if (!current()) return;
             const outcome = validateConnectionResult(result, p.id);
             setTestOutcome((prev) => ({ ...prev, [p.id]: outcome }));
             await fetchAll();
@@ -377,24 +455,35 @@ export default function AdminEmailProvidersPage() {
         [p.id]: { ok: false, error: providerText('admin.providers.error.test', uiLocale) },
       }));
     } finally {
-      setBusy(false);
+      inFlight.current = false;
+      if (current()) setBusy(false);
     }
   }
 
   async function handleActivate(p: EmailProvider) {
+    if (inFlight.current || protectedAction || loading || loadFailed || scope.denied) return;
+    inFlight.current = true;
+    const current = capture();
     setBusy(true);
     setError(null);
     setNotice(null);
     try {
       await activateProvider(p.id);
+      if (!current()) return;
       await fetchAll();
     } catch (err) {
+      if (!current()) return;
+      if (err instanceof ProviderRequestError && err.denied) {
+        scope.deny();
+        return;
+      }
       if (
         offerStepUp(
           err,
           providerText('admin.providers.activate', uiLocale),
           p.label,
           async (result) => {
+            if (!current()) return;
             validateProviderResult(result, 'active', p.id);
             await fetchAll();
           }
@@ -403,25 +492,36 @@ export default function AdminEmailProvidersPage() {
         return;
       setError(providerText('admin.providers.error.activate', uiLocale));
     } finally {
-      setBusy(false);
+      inFlight.current = false;
+      if (current()) setBusy(false);
     }
   }
 
   async function handleDisable(p: EmailProvider) {
     if (!window.confirm(providerText('admin.providers.disableConfirm', uiLocale))) return;
+    if (inFlight.current || protectedAction || loading || loadFailed || scope.denied) return;
+    inFlight.current = true;
+    const current = capture();
     setBusy(true);
     setError(null);
     setNotice(null);
     try {
       await disableProvider(p.id);
+      if (!current()) return;
       await fetchAll();
     } catch (err) {
+      if (!current()) return;
+      if (err instanceof ProviderRequestError && err.denied) {
+        scope.deny();
+        return;
+      }
       if (
         offerStepUp(
           err,
           providerText('admin.providers.disable', uiLocale),
           p.label,
           async (result) => {
+            if (!current()) return;
             validateProviderResult(result, 'disabled', p.id);
             await fetchAll();
           }
@@ -430,37 +530,49 @@ export default function AdminEmailProvidersPage() {
         return;
       setError(providerText('admin.providers.error.disable', uiLocale));
     } finally {
-      setBusy(false);
+      inFlight.current = false;
+      if (current()) setBusy(false);
     }
   }
 
   async function handleRollback(p: EmailProvider) {
     if (!window.confirm(providerText('admin.providers.rollbackConfirm', uiLocale))) return;
+    if (inFlight.current || protectedAction || loading || loadFailed || scope.denied) return;
+    inFlight.current = true;
+    const current = capture();
     setBusy(true);
     setError(null);
     setNotice(null);
     try {
       await rollbackProvider(p.id);
-      await fetchAll();
+      if (!current()) return;
       setNotice(providerText('admin.providers.rollback', uiLocale));
+      await fetchAll();
     } catch (err) {
+      if (!current()) return;
+      if (err instanceof ProviderRequestError && err.denied) {
+        scope.deny();
+        return;
+      }
       if (
         offerStepUp(
           err,
           providerText('admin.providers.rollback', uiLocale),
           p.label,
           async (result) => {
+            if (!current()) return;
             const saved = validateProviderResult(result, 'active');
             if (saved.id === p.id) throw new ProviderRequestError();
-            await fetchAll();
             setNotice(providerText('admin.providers.rollback', uiLocale));
+            await fetchAll();
           }
         )
       )
         return;
       setError(providerText('admin.providers.error.rollback', uiLocale));
     } finally {
-      setBusy(false);
+      inFlight.current = false;
+      if (current()) setBusy(false);
     }
   }
 
@@ -485,9 +597,9 @@ export default function AdminEmailProvidersPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6" dir={uiLocale === 'fa' ? 'rtl' : 'ltr'}>
       {time.notice}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">{providerText('admin.providers.title', uiLocale)}</h1>
           <p className="text-sm text-muted-foreground mt-1">
@@ -500,8 +612,8 @@ export default function AdminEmailProvidersPage() {
         {!showEditor && (
           <button
             onClick={openCreate}
-            disabled={busy || loading || loadFailed}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            disabled={busy || loading || loadFailed || scope.denied || !!protectedAction}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
           >
             {providerText('admin.providers.new', uiLocale)}
           </button>
@@ -514,25 +626,13 @@ export default function AdminEmailProvidersPage() {
           className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded relative"
         >
           {error}
-          {loadFailed && (
-            <button
-              type="button"
-              onClick={() => void fetchAll()}
-              disabled={loading}
-              className="ms-3 underline"
-            >
-              {providerText('admin.providers.retry', uiLocale)}
-            </button>
-          )}
-          {!loadFailed && (
-            <button
-              onClick={() => setError(null)}
-              className="absolute top-2 right-2 text-destructive hover:text-red-700"
-              aria-label={t('admin.notifications.dismissError', uiLocale)}
-            >
-              ✕
-            </button>
-          )}
+          <button
+            onClick={() => setError(null)}
+            className="absolute top-2 end-2 text-destructive hover:text-red-700"
+            aria-label={t('admin.notifications.dismissError', uiLocale)}
+          >
+            ✕
+          </button>
         </div>
       )}
 
@@ -541,7 +641,7 @@ export default function AdminEmailProvidersPage() {
           {notice}
           <button
             onClick={() => setNotice(null)}
-            className="absolute top-2 right-2 text-success hover:text-green-700"
+            className="absolute top-2 end-2 text-success hover:text-green-700"
             aria-label={providerText('admin.providers.dismissNotice', uiLocale)}
           >
             ✕
@@ -555,7 +655,8 @@ export default function AdminEmailProvidersPage() {
           onSubmit={handleSave}
           className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
         >
-          <fieldset disabled={busy} className="space-y-4">
+          {staleEditor && <p role="alert">{providerText('admin.providers.stale', uiLocale)}</p>}
+          <fieldset disabled={busy || !!protectedAction} className="space-y-4">
             <h2 className="text-lg font-semibold">
               {editId
                 ? providerText('admin.providers.update.title', uiLocale)
@@ -613,8 +714,10 @@ export default function AdminEmailProvidersPage() {
             <div className="flex gap-3 pt-2">
               <button
                 type="submit"
-                disabled={busy || loading || loadFailed}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                disabled={
+                  busy || loading || loadFailed || scope.denied || !!protectedAction || staleEditor
+                }
+                className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 disabled:opacity-50"
               >
                 {busy
                   ? providerText('admin.providers.saving', uiLocale)
@@ -625,7 +728,7 @@ export default function AdminEmailProvidersPage() {
               <button
                 type="button"
                 onClick={closeEditor}
-                disabled={busy}
+                disabled={busy || !!protectedAction}
                 className="px-4 py-2 border border-input rounded text-sm hover:bg-muted disabled:opacity-50"
               >
                 {providerText('admin.providers.cancel', uiLocale)}
@@ -639,199 +742,269 @@ export default function AdminEmailProvidersPage() {
         <TeamActionDialog
           action={protectedAction.action}
           onSuccess={protectedAction.onSuccess}
+          confirmationDisabled={
+            loading || loadFailed || scope.denied || staleEditor || protectedAction.basis !== basis
+          }
+          summary={
+            <>
+              {(loadFailed || scope.denied) && (
+                <p role="alert">
+                  {providerText(
+                    scope.denied ? 'admin.providers.denied' : 'admin.providers.error.load',
+                    uiLocale
+                  )}
+                </p>
+              )}
+              {recovery}
+            </>
+          }
+          onDenied={scope.deny}
+          finalFocus={() =>
+            document.querySelector<HTMLButtonElement>('[data-slot="list-page"] button')
+          }
           onClose={() => setProtectedAction(null)}
         />
       )}
 
-      {/* Provider list */}
-      <div className="overflow-x-auto bg-card text-card-foreground rounded-lg border border-border">
-        {loading && (
-          <div className="p-4 text-muted-foreground">
-            {providerText('admin.providers.loading', uiLocale)}
-          </div>
-        )}
-        <table className="min-w-full divide-y divide-border text-sm">
-          <thead className="bg-muted/40">
-            <tr>
-              <th className="px-4 py-3 text-left font-semibold text-muted-foreground">
-                {providerText('admin.providers.col.label', uiLocale)}
-              </th>
-              <th className="px-4 py-3 text-left font-semibold text-muted-foreground">
-                {providerText('admin.providers.col.transport', uiLocale)}
-              </th>
-              <th className="px-4 py-3 text-left font-semibold text-muted-foreground">
-                {providerText('admin.providers.col.status', uiLocale)}
-              </th>
-              <th className="px-4 py-3 text-left font-semibold text-muted-foreground">
-                {providerText('admin.providers.col.test', uiLocale)}
-              </th>
-              <th className="px-4 py-3 text-left font-semibold text-muted-foreground">
-                {providerText('admin.providers.col.activated', uiLocale)}
-              </th>
-              <th className="px-4 py-3 text-left font-semibold text-muted-foreground">
-                {providerText('admin.providers.col.actions', uiLocale)}
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {providers.length === 0 && !loading && !loadFailed ? (
-              <tr>
-                <td colSpan={6} className="px-4 py-6 text-center text-muted-foreground">
-                  {providerText('admin.providers.empty', uiLocale)}
-                </td>
-              </tr>
-            ) : (
-              providers.map((p) => {
-                const risky = activeProviderIsRisky(p);
-                return (
-                  <tr key={p.id} className="align-top">
-                    <td className="px-4 py-3 font-medium">{p.label}</td>
-                    <td className="px-4 py-3">
-                      <span className="text-xs uppercase tracking-wide text-muted-foreground">
-                        {providerText(`admin.providers.transport.${p.transport}`, uiLocale)}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[p.status]}`}
-                      >
-                        {providerText(`admin.providers.status.${p.status}`, uiLocale)}
-                      </span>
-                      {p.status === 'superseded' && (
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {providerText('admin.providers.supersededNote', uiLocale)}
-                        </p>
-                      )}
-                      {p.status === 'active' && (
-                        <>
-                          <p
-                            className={`mt-1 text-xs ${p.degraded ? 'text-destructive' : 'text-muted-foreground'}`}
-                          >
-                            {healthLabel(p)}
-                          </p>
-                          {p.degraded && p.lastFailureAt && (
-                            <p className="mt-1 text-xs text-muted-foreground">
-                              {providerText('admin.providers.health.lastFailure', uiLocale)}:{' '}
-                              {time.format(p.lastFailureAt)}
-                            </p>
-                          )}
-                        </>
-                      )}
-                      <ProviderHealthMetrics
-                        metrics={p.healthMetrics}
-                        active={p.status === 'active'}
-                      />
-                      <ProviderAlertHistory events={p.alertHistory} />
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${TEST_COLORS[p.lastTestStatus]}`}
-                      >
-                        {lastTestLabel(p)}
-                      </span>
-                      {p.lastTestAt && (
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {time.format(p.lastTestAt)}
-                        </p>
-                      )}
-                      {p.lastTestError && (
-                        <p className="text-xs text-destructive mt-1" title={p.lastTestError}>
-                          {p.lastTestError}
-                        </p>
-                      )}
-                      {(() => {
-                        const outcome = testOutcome[p.id];
-                        if (outcome) {
-                          return (
-                            <p
-                              className={`text-xs mt-1 ${outcome.ok ? 'text-success' : 'text-destructive'}`}
-                            >
-                              {outcome.ok
-                                ? providerText('admin.providers.test.passed', uiLocale)
-                                : outcome.error ||
-                                  providerText('admin.providers.test.failed', uiLocale)}
-                            </p>
-                          );
-                        }
-                        return null;
-                      })()}
-                    </td>
-                    <td className="px-4 py-3">
-                      {p.activatedAt ? time.format(p.activatedAt) : '—'}
-                      {p.activatedAt && p.activatedBy && (
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {providerText('admin.providers.meta.activatedBy', uiLocale)}:{' '}
-                          {p.activatedBy}
-                        </p>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 space-y-1">
-                      {/* Draft row actions */}
-                      {p.status === 'draft' && (
-                        <>
-                          <button
-                            onClick={() => openEdit(p)}
-                            disabled={busy || loading || loadFailed}
-                            className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-left"
-                          >
-                            {providerText('admin.providers.update', uiLocale)}
-                          </button>
-                          <EmailTestRow
-                            provider={p}
-                            onTest={handleTest}
-                            busy={busy || loading || loadFailed}
-                          />
-                          <button
-                            onClick={() => handleActivate(p)}
-                            disabled={
-                              busy || loading || loadFailed || p.lastTestStatus !== 'passed'
-                            }
-                            title={
-                              p.lastTestStatus !== 'passed'
-                                ? providerText('admin.providers.activateHint', uiLocale)
-                                : undefined
-                            }
-                            className="px-3 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700 disabled:opacity-40 w-full text-left"
-                          >
-                            {providerText('admin.providers.activate', uiLocale)}
-                          </button>
-                        </>
-                      )}
-
-                      {p.status === 'active' && (
-                        <>
-                          {risky && (
-                            <div className="bg-warning-soft border border-warning/20 text-warning px-2 py-1.5 rounded text-xs mb-2">
-                              {providerText('admin.providers.disableWarn', uiLocale)}
-                            </div>
-                          )}
-                          <button
-                            onClick={() => handleDisable(p)}
-                            disabled={busy || loading || loadFailed}
-                            className="px-3 py-1 border border-destructive/20 text-destructive rounded text-xs hover:bg-red-50 disabled:opacity-50 w-full text-left"
-                          >
-                            {providerText('admin.providers.disable', uiLocale)}
-                          </button>
-                        </>
-                      )}
-
-                      {(p.status === 'superseded' || p.status === 'disabled') && (
-                        <button
-                          onClick={() => handleRollback(p)}
-                          disabled={busy || loading || loadFailed}
-                          className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-left"
-                        >
-                          {providerText('admin.providers.rollback', uiLocale)}
-                        </button>
-                      )}
+      <ListPage>
+        <ListPage.Toolbar>{!loadFailed && !scope.denied && recovery}</ListPage.Toolbar>
+        <ListPage.Content
+          loading={loading}
+          error={loadFailed || scope.denied}
+          empty={false}
+          emptyView={null}
+          retainContent={catalogue.data !== null}
+          loadingView={<p role="status">{providerText('admin.providers.loading', uiLocale)}</p>}
+          errorView={
+            <div role="alert" className="space-y-2">
+              {providerText(
+                scope.denied ? 'admin.providers.denied' : 'admin.providers.error.load',
+                uiLocale
+              )}
+              {recovery}
+            </div>
+          }
+        >
+          <ScrollArea
+            scrollbarOrientation="horizontal"
+            aria-label={providerText('admin.providers.title', uiLocale)}
+            className="bg-card text-card-foreground rounded-lg border border-border"
+          >
+            <table className="min-w-full divide-y divide-border text-sm">
+              <thead className="bg-muted/40">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-start font-semibold text-muted-foreground"
+                  >
+                    {providerText('admin.providers.col.label', uiLocale)}
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-start font-semibold text-muted-foreground"
+                  >
+                    {providerText('admin.providers.col.transport', uiLocale)}
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-start font-semibold text-muted-foreground"
+                  >
+                    {providerText('admin.providers.col.status', uiLocale)}
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-start font-semibold text-muted-foreground"
+                  >
+                    {providerText('admin.providers.col.test', uiLocale)}
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-start font-semibold text-muted-foreground"
+                  >
+                    {providerText('admin.providers.col.activated', uiLocale)}
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-start font-semibold text-muted-foreground"
+                  >
+                    {providerText('admin.providers.col.actions', uiLocale)}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {providers.length === 0 && !loading && !loadFailed ? (
+                  <tr>
+                    <td colSpan={6} className="px-4 py-6 text-center text-muted-foreground">
+                      {providerText('admin.providers.empty', uiLocale)}
                     </td>
                   </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
+                ) : (
+                  providers.map((p) => {
+                    const risky = activeProviderIsRisky(p);
+                    return (
+                      <tr key={p.id} className="align-top">
+                        <td className="px-4 py-3 font-medium">{p.label}</td>
+                        <td className="px-4 py-3">
+                          <span className="text-xs uppercase tracking-wide text-muted-foreground">
+                            {providerText(`admin.providers.transport.${p.transport}`, uiLocale)}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[p.status]}`}
+                          >
+                            {providerText(`admin.providers.status.${p.status}`, uiLocale)}
+                          </span>
+                          {p.status === 'superseded' && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {providerText('admin.providers.supersededNote', uiLocale)}
+                            </p>
+                          )}
+                          {p.status === 'active' && (
+                            <>
+                              <p
+                                className={`mt-1 text-xs ${p.degraded ? 'text-destructive' : 'text-muted-foreground'}`}
+                              >
+                                {healthLabel(p)}
+                              </p>
+                              {p.degraded && p.lastFailureAt && (
+                                <p className="mt-1 text-xs text-muted-foreground">
+                                  {providerText('admin.providers.health.lastFailure', uiLocale)}:{' '}
+                                  {time.format(p.lastFailureAt)}
+                                </p>
+                              )}
+                            </>
+                          )}
+                          <ProviderHealthMetrics
+                            metrics={p.healthMetrics}
+                            active={p.status === 'active'}
+                          />
+                          <ProviderAlertHistory events={p.alertHistory} />
+                        </td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${TEST_COLORS[p.lastTestStatus]}`}
+                          >
+                            {lastTestLabel(p)}
+                          </span>
+                          {p.lastTestAt && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {time.format(p.lastTestAt)}
+                            </p>
+                          )}
+                          {p.lastTestError && (
+                            <p className="text-xs text-destructive mt-1" title={p.lastTestError}>
+                              {p.lastTestError}
+                            </p>
+                          )}
+                          {(() => {
+                            const outcome = testOutcome[p.id];
+                            if (outcome) {
+                              return (
+                                <p
+                                  className={`text-xs mt-1 ${outcome.ok ? 'text-success' : 'text-destructive'}`}
+                                >
+                                  {outcome.ok
+                                    ? providerText('admin.providers.test.passed', uiLocale)
+                                    : outcome.error ||
+                                      providerText('admin.providers.test.failed', uiLocale)}
+                                </p>
+                              );
+                            }
+                            return null;
+                          })()}
+                        </td>
+                        <td className="px-4 py-3">
+                          {p.activatedAt ? time.format(p.activatedAt) : '—'}
+                          {p.activatedAt && p.activatedBy && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {providerText('admin.providers.meta.activatedBy', uiLocale)}:{' '}
+                              {p.activatedBy}
+                            </p>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 space-y-1">
+                          {/* Draft row actions */}
+                          {p.status === 'draft' && (
+                            <>
+                              <button
+                                onClick={() => openEdit(p)}
+                                disabled={
+                                  busy || loading || loadFailed || scope.denied || !!protectedAction
+                                }
+                                className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-start"
+                              >
+                                {providerText('admin.providers.update', uiLocale)}
+                              </button>
+                              <EmailTestRow
+                                provider={p}
+                                onTest={handleTest}
+                                busy={
+                                  busy || loading || loadFailed || scope.denied || !!protectedAction
+                                }
+                              />
+                              <button
+                                onClick={() => handleActivate(p)}
+                                disabled={
+                                  busy ||
+                                  loading ||
+                                  loadFailed ||
+                                  scope.denied ||
+                                  !!protectedAction ||
+                                  p.lastTestStatus !== 'passed'
+                                }
+                                title={
+                                  p.lastTestStatus !== 'passed'
+                                    ? providerText('admin.providers.activateHint', uiLocale)
+                                    : undefined
+                                }
+                                className="px-3 py-1 bg-primary text-primary-foreground rounded text-xs hover:bg-primary/90 disabled:opacity-40 w-full text-start"
+                              >
+                                {providerText('admin.providers.activate', uiLocale)}
+                              </button>
+                            </>
+                          )}
+
+                          {p.status === 'active' && (
+                            <>
+                              {risky && (
+                                <div className="bg-warning-soft border border-warning/20 text-warning px-2 py-1.5 rounded text-xs mb-2">
+                                  {providerText('admin.providers.disableWarn', uiLocale)}
+                                </div>
+                              )}
+                              <button
+                                onClick={() => handleDisable(p)}
+                                disabled={
+                                  busy || loading || loadFailed || scope.denied || !!protectedAction
+                                }
+                                className="px-3 py-1 border border-destructive/20 text-destructive rounded text-xs hover:bg-red-50 disabled:opacity-50 w-full text-start"
+                              >
+                                {providerText('admin.providers.disable', uiLocale)}
+                              </button>
+                            </>
+                          )}
+
+                          {(p.status === 'superseded' || p.status === 'disabled') && (
+                            <button
+                              onClick={() => handleRollback(p)}
+                              disabled={
+                                busy || loading || loadFailed || scope.denied || !!protectedAction
+                              }
+                              className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-start"
+                            >
+                              {providerText('admin.providers.rollback', uiLocale)}
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </ScrollArea>
+        </ListPage.Content>
+      </ListPage>
     </div>
   );
 }
@@ -1019,6 +1192,14 @@ function EmailTestRow({
 }) {
   const uiLocale = useLocale();
   const [recipient, setRecipient] = useState('');
+  const basis = providerBasis([
+    provider.id,
+    provider.label,
+    provider.transport,
+    provider.status,
+    provider.maskedConfig,
+  ]);
+  useEffect(() => setRecipient(''), [basis]);
   return (
     <div className="space-y-1">
       <input
@@ -1034,7 +1215,7 @@ function EmailTestRow({
       <button
         onClick={() => onTest(provider, recipient.trim())}
         disabled={busy || !recipient.trim()}
-        className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-left"
+        className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-start"
       >
         {busy ? (
           providerText('admin.providers.test.running', uiLocale)

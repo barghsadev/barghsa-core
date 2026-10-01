@@ -31,4 +31,4 @@ The pinned static security scan passes all five rule fixtures and scans 1,311 fi
 
 The preceding geography batch is published as `e6cab8a025f04338f0b1d1c5d0b9a84f18c841c9`. CI run `36837452104` passes all five jobs under the existing temporary fast mode; combined-coverage success remains an exemption, not measured coverage. Its progress records are updated.
 
-This operational batch is published directly to main after review and final validation. Remote SHA and CI availability are read back after publication; no remote CI success is claimed without a registered, passing run. No PR is created. Historical supervisor state remains unchanged.
+This operational batch is published directly to main as `1ee49bea2881aef5d68e8a18b8c267fa6b4003aa`. Remote SHA and clean worktree are verified. CI run `36839086915` passes all five jobs under the existing temporary fast mode; combined-coverage success remains an exemption, not measured coverage. No PR is created. Historical supervisor state remains unchanged.

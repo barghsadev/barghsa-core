@@ -1,10 +1,11 @@
+import { crmShell } from './crm-shell-fixture';
 import { test, expect } from './coverage-fixture';
 import { providerText } from '@barghsa/i18n/providers';
 
 for (const locale of ['en', 'fa'] as const) {
   const text = (key: string) => providerText(`admin.providers.${key}`, locale);
   test(`active email breaker state is visible to staff (${locale})`, async ({ page }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await page.route('**/api/admin/email-providers', (route) =>
       route.fulfill({
         json: [
@@ -38,9 +39,7 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.route('**/api/admin/sms-providers', (route) => route.fulfill({ json: [] }));
     await page.goto('/admin/providers');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
+
     const row = page.getByRole('row').filter({ hasText: 'Active email' });
     await expect(page.getByRole('link', { name: text('runbook') })).toHaveAttribute(
       'href',
@@ -89,7 +88,7 @@ for (const locale of ['en', 'fa'] as const) {
         },
       };
       let writes = 0;
-      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await crmShell(page, locale);
       await page.route('**/api/user/settings/timezone', (route) =>
         route.fulfill({ json: { timezone: 'Asia/Tehran' } })
       );
@@ -111,9 +110,7 @@ for (const locale of ['en', 'fa'] as const) {
         return route.fulfill({ json: { ...row, test: { ok: true, error: null } } });
       });
       await page.goto('/admin/providers');
-      await page.evaluate((lang) => {
-        document.documentElement.lang = lang;
-      }, locale);
+
       const providerRow = page.getByRole('row').filter({ hasText: 'Saved email' });
       const send = providerRow.getByRole('button', { name: text('test.run'), exact: false });
       await expect(send).toBeDisabled();
@@ -188,7 +185,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     let config: unknown = null;
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'Asia/Tehran' } })
     );
@@ -207,9 +204,7 @@ for (const locale of ['en', 'fa'] as const) {
       })
     );
     await page.goto('/admin/providers');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
+
     for (const bad of [
       null,
       { host: 'smtp.example.test', from_email: 'mail@example.test', port: '465' },

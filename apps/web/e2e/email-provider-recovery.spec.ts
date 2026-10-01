@@ -1,17 +1,16 @@
+import { crmShell } from './crm-shell-fixture';
 import { cookieResponse } from './cookie-response';
 import { test, expect } from './coverage-fixture';
 
 for (const locale of ['en', 'fa'] as const) {
   test(`provider list rejects malformed data and recovers (${locale})`, async ({ page }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     let valid = false;
     await page.route('**/api/admin/email-providers', (route) =>
       route.fulfill({ json: valid ? [] : null })
     );
     await page.goto('/admin/providers');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
+
     await expect(
       page.getByRole('alert').filter({
         hasText: locale === 'fa' ? 'خطا در بارگذاری ارائه‌دهنده‌ها' : 'Failed to load providers',
@@ -37,7 +36,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`provider save requires acknowledgement and preserves secret for retry (${locale})`, async ({
     page,
   }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     let saves = 0;
     await page.route('**/api/admin/email-providers', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: [] });
@@ -56,9 +55,7 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.goto('/admin/providers');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
+
     await page
       .getByRole('button', {
         name: locale === 'fa' ? 'ارائه‌دهنده جدید' : 'New provider',
@@ -102,7 +99,7 @@ for (const locale of ['en', 'fa'] as const) {
     };
     let testCalls = 0;
     let activateCalls = 0;
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await page.route('**/api/admin/email-providers**', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: [provider] });
       const path = new URL(route.request().url()).pathname;
@@ -125,9 +122,7 @@ for (const locale of ['en', 'fa'] as const) {
     });
     page.on('dialog', (dialog) => dialog.accept());
     await page.goto('/admin/providers');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
+
     const row = page.getByRole('row').filter({ hasText: 'Lifecycle provider' });
     const activate = row.getByRole('button', { name: fa ? 'فعال‌سازی' : 'Activate', exact: true });
     const connection = row.getByRole('button', {
@@ -176,7 +171,7 @@ for (const locale of ['en', 'fa'] as const) {
     let currentCsrf = 'provider-ui-csrf';
     await page.context().addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: currentCsrf }]);
     const attempts: unknown[] = [];
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await page.route('**/api/admin/email-providers', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: [] });
       expect(route.request().headers()['x-csrf-token']).toBe(currentCsrf);
@@ -206,9 +201,7 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.goto('/admin/providers');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
+
     await page
       .getByRole('button', { name: fa ? 'ارائه‌دهنده جدید' : 'New provider', exact: true })
       .click();
@@ -253,7 +246,7 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
       lastTestStatus: 'passed',
     };
     const attempts: string[] = [];
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, 'en');
     await page.route('**/api/admin/email-providers**', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: [provider] });
       const path = new URL(route.request().url()).pathname;
@@ -285,9 +278,7 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
     });
     page.on('dialog', (dialog) => dialog.accept());
     await page.goto('/admin/providers');
-    await page.evaluate(() => {
-      document.documentElement.lang = 'en';
-    });
+
     const names = {
       'test-connection': 'Send test email',
       activate: 'Activate',
@@ -325,7 +316,7 @@ test('provider draft edit preserves its stored secret through step-up', async ({
   };
   let verified = false;
   const attempts: unknown[] = [];
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, 'en');
   await page.route('**/api/admin/email-providers**', (route) => {
     if (route.request().method() === 'GET') return route.fulfill({ json: [provider] });
     expect(route.request().method()).toBe('PUT');
@@ -340,9 +331,7 @@ test('provider draft edit preserves its stored secret through step-up', async ({
     return route.fulfill({ json: {} });
   });
   await page.goto('/admin/providers');
-  await page.evaluate(() => {
-    document.documentElement.lang = 'en';
-  });
+
   await page
     .getByRole('row')
     .filter({ hasText: 'Existing provider' })

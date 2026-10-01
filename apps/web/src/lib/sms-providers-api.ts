@@ -37,6 +37,7 @@ export interface SmsProvider {
   creditCheckedAt: string | null;
   lowCreditAlertActive: boolean;
   keyConfigured: boolean;
+  keyRevision: string | null;
   config: SmsConfig;
 }
 
@@ -113,6 +114,7 @@ export function readSmsProvider(
     lowCreditAlertActive: row.lowCreditAlertActive === true,
     // Never copy the masked credential into form state or send it back on update.
     keyConfigured: typeof c.api_key === 'string' && c.api_key.length > 0,
+    keyRevision: typeof c.api_key === 'string' ? c.api_key : null,
     config: {
       sender: string(c.sender),
       timeout: number(c.timeout, 15, 1, 300),
@@ -135,16 +137,25 @@ export function readSmsProvider(
     },
   };
 }
-export async function loadSmsProviders(signal: AbortSignal) {
-  const [rows, events] = await Promise.all([
-    smsRequest('', 'GET', undefined, signal),
-    smsRequest('/template-event-keys', 'GET', undefined, signal),
-  ]);
-  if (!Array.isArray(rows) || !Array.isArray(events)) throw new ProviderRequestError();
+export async function listSmsProviders(signal?: AbortSignal) {
+  const rows = await smsRequest('', 'GET', undefined, signal);
+  if (!Array.isArray(rows)) throw new ProviderRequestError();
   const providers = rows.map((row) => readSmsProvider(row));
   if (new Set(providers.map((row) => row.id)).size !== providers.length)
     throw new ProviderRequestError();
-  return { providers, events: [...new Set(events.map(string))].sort() };
+  return providers;
+}
+export async function listSmsEventKeys(signal?: AbortSignal) {
+  const events = await smsRequest('/template-event-keys', 'GET', undefined, signal);
+  if (!Array.isArray(events)) throw new ProviderRequestError();
+  return [...new Set(events.map(string))].sort();
+}
+export async function loadSmsProviders(signal: AbortSignal) {
+  const [providers, events] = await Promise.all([
+    listSmsProviders(signal),
+    listSmsEventKeys(signal),
+  ]);
+  return { providers, events };
 }
 export function sameSmsConfig(a: SmsConfig, b: SmsConfig) {
   const canonical = (c: SmsConfig) => ({

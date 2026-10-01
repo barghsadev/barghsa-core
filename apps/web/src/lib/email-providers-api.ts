@@ -40,7 +40,11 @@ export interface TestConnectionOutcome {
   ok: boolean;
   error: string | null;
 }
-export class ProviderRequestError extends Error {}
+export class ProviderRequestError extends Error {
+  constructor(readonly denied = false) {
+    super('Provider request unavailable');
+  }
+}
 export class ProviderStepUpError extends ProviderRequestError {
   constructor(readonly action: Pick<TeamAction, 'path' | 'method' | 'body'>) {
     super();
@@ -173,10 +177,11 @@ export async function providerRequest(
         });
       }
     }
-    if (!response.ok) throw new ProviderRequestError();
+    if (!response.ok)
+      throw new ProviderRequestError(response.status === 401 || response.status === 403);
     return await response.json();
   } catch (error) {
-    if (signal?.aborted || error instanceof ProviderStepUpError) throw error;
+    if (signal?.aborted || error instanceof ProviderRequestError) throw error;
     throw new ProviderRequestError();
   }
 }
@@ -191,7 +196,9 @@ export function validateProviderResult(value: unknown, status: Status, id?: stri
 export async function listProviders(signal?: AbortSignal): Promise<EmailProvider[]> {
   const data = await request('', 'GET', undefined, signal);
   if (!Array.isArray(data)) throw new ProviderRequestError();
-  return data.map(provider);
+  const rows = data.map(provider);
+  if (new Set(rows.map((row) => row.id)).size !== rows.length) throw new ProviderRequestError();
+  return rows;
 }
 export async function createProvider(
   transport: Transport,

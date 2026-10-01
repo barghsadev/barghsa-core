@@ -1,6 +1,11 @@
-/* eslint-disable jsx-a11y/no-noninteractive-tabindex -- Labelled horizontal table regions need keyboard focus so keyboard users can scroll them. */
+import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
+import {
+  useProviderCatalogue,
+  providerBasis,
+  useProviderCommandGuard,
+} from '../hooks/useProviderCatalogue.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, Input, Label } from '@barghsa/ui';
+import { Button, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
 import { buildSmsTestParameters } from '@barghsa/shared/notifications';
 import { smsProviderText } from '@barghsa/i18n/providers';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -14,7 +19,8 @@ import {
   type Status,
 } from '../lib/email-providers-api.js';
 import {
-  loadSmsProviders,
+  listSmsProviders,
+  listSmsEventKeys,
   readSmsProvider,
   sameSmsConfig,
   smsRequest,
@@ -134,11 +140,8 @@ export default function AdminSmsProvidersPage() {
       return `${text('healthPaused')} ${time.format(provider.breakerCooldownUntil)}`;
     return text('healthProbe');
   };
-  const [providers, setProviders] = useState<SmsProvider[]>([]),
-    [events, setEvents] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true),
-    [loadFailed, setLoadFailed] = useState(false),
-    [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [editSource, setEditSource] = useState<{ id: string; basis: string } | null>(null);
   const [editor, setEditor] = useState<Editor | null>(null),
     [selected, setSelected] = useState<string | null>(null),
     [firstEvent, setFirstEvent] = useState('');
@@ -146,32 +149,90 @@ export default function AdminSmsProvidersPage() {
     [notice, setNotice] = useState<string | null>(null);
   const [protectedAction, setProtectedAction] = useState<{
     action: TeamAction;
+    basis: string;
     onSuccess: (result: unknown) => Promise<void>;
   } | null>(null);
-  const request = useRef<AbortController | null>(null),
-    inFlight = useRef(false);
-  const refresh = useCallback(async () => {
-    request.current?.abort();
-    const controller = new AbortController();
-    request.current = controller;
-    setLoading(true);
-    try {
-      const result = await loadSmsProviders(controller.signal);
-      if (controller.signal.aborted) return;
-      setProviders(result.providers);
-      setEvents(result.events);
-      setLoadFailed(false);
-    } catch {
-      if (!controller.signal.aborted) setLoadFailed(true);
-    } finally {
-      if (!controller.signal.aborted) setLoading(false);
-    }
+  const inFlight = useRef(false);
+  const clearPrivate = useCallback(() => {
+    setEditor(null);
+    setEditSource(null);
+    setSelected(null);
+    setFirstEvent('');
+    setProtectedAction(null);
+    setError(null);
+    setNotice(null);
+    setBusy(false);
   }, []);
+  const scope = useCatalogueScope(clearPrivate);
+  const catalogue = useProviderCatalogue(scope, listSmsProviders);
+  const eventKeys = useProviderCatalogue(scope, listSmsEventKeys);
+  const providers = catalogue.data ?? [],
+    events = eventKeys.data ?? [];
+  const loading = catalogue.loading,
+    loadFailed = catalogue.error;
+  const refresh = catalogue.refresh;
+  const rowBasis = (p: SmsProvider, test = true) =>
+    providerBasis({
+      id: p.id,
+      label: p.label,
+      status: p.status,
+      keyConfigured: p.keyConfigured,
+      keyRevision: p.keyRevision,
+      ...(test ? { lastTestStatus: p.lastTestStatus } : {}),
+      config: p.config,
+    });
+  const basis = providerBasis([providers.map((p) => rowBasis(p)).sort(), events]);
+  const capture = useProviderCommandGuard(basis, scope.live);
+  const staleEditor =
+    !!editor &&
+    !!editSource &&
+    !providers.some((p) => p.id === editSource.id && rowBasis(p, false) === editSource.basis);
+  const disabled = loading || loadFailed || scope.denied || busy || !!protectedAction;
+  const eventsReady =
+    eventKeys.data !== null && !eventKeys.loading && !eventKeys.error && !scope.denied;
+  const invalidEvents = !!editor && editor.mappings.some((m) => !events.includes(m.event.trim()));
   useEffect(() => {
-    void refresh();
-    return () => request.current?.abort();
-  }, [refresh]);
-  const disabled = loading || loadFailed || busy || !!protectedAction;
+    if (protectedAction && protectedAction.basis !== basis) setProtectedAction(null);
+    setBusy(false);
+  }, [basis, protectedAction]);
+  useEffect(() => {
+    if (
+      catalogue.data &&
+      selected &&
+      !catalogue.data.some((p) => p.id === selected && p.status === 'draft')
+    ) {
+      setSelected(null);
+      setFirstEvent('');
+    }
+  }, [catalogue.data, selected]);
+  const recovery = (
+    <div className="flex flex-wrap gap-3">
+      <div>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={loading || busy}
+          onClick={() => (scope.denied ? scope.recover() : void refresh())}
+        >
+          {text(loadFailed || scope.denied ? 'retry' : 'refresh')}
+        </Button>
+      </div>
+      {!scope.denied && (
+        <div>
+          {eventKeys.loading && <p role="status">{text('eventsLoading')}</p>}
+          {eventKeys.error && <p role="alert">{text('eventsFailed')}</p>}
+          <Button
+            type="button"
+            variant="outline"
+            disabled={eventKeys.loading || busy}
+            onClick={() => void eventKeys.refresh()}
+          >
+            {text('retryEvents')}
+          </Button>
+        </div>
+      )}
+    </div>
+  );
   const testProvider = providers.find((p) => p.id === selected);
   const testMappings = [...(testProvider?.config.template_mappings ?? [])].sort(
     (a, b) => Number(b.event_key === firstEvent) - Number(a.event_key === firstEvent)
@@ -181,33 +242,43 @@ export default function AdminSmsProvidersPage() {
     action: Pick<TeamAction, 'path' | 'method' | 'body'>,
     accept: (result: unknown) => Promise<void>
   ) {
-    if (inFlight.current || protectedAction) return;
+    if (inFlight.current || disabled || !eventsReady) return;
+    const current = capture();
     inFlight.current = true;
     setBusy(true);
     setError(null);
     setNotice(null);
     try {
-      await accept(await smsRequest(action.path, action.method as 'POST' | 'PUT', action.body));
+      const result = await smsRequest(action.path, action.method as 'POST' | 'PUT', action.body);
+      if (current()) await accept(result);
     } catch (e) {
+      if (!current()) return;
+      if (e instanceof ProviderRequestError && e.denied) {
+        scope.deny();
+        return;
+      }
       if (e instanceof ProviderStepUpError)
         setProtectedAction({
+          basis,
           action: {
             ...e.action,
             title: text('title'),
             description: text('confirm'),
             requiresPassword: true,
           },
-          onSuccess: accept,
+          onSuccess: async (result) => {
+            if (current()) await accept(result);
+          },
         });
       else setError(text('unavailable'));
     } finally {
       inFlight.current = false;
-      setBusy(false);
+      if (current()) setBusy(false);
     }
   }
   async function save(event: FormEvent) {
     event.preventDefault();
-    if (!editor || disabled) return;
+    if (!editor || disabled || !eventsReady || staleEditor || invalidEvents) return;
     let config: SmsConfig;
     try {
       config = configFor(editor);
@@ -239,11 +310,13 @@ export default function AdminSmsProvidersPage() {
     );
   }
   function lifecycle(row: SmsProvider, operation: 'activate' | 'disable' | 'rollback') {
-    if (disabled) return;
+    if (disabled || !eventsReady) return;
+    const current = capture();
     setError(null);
     setNotice(null);
     const status: Status = operation === 'disable' ? 'disabled' : 'active';
     setProtectedAction({
+      basis,
       action: {
         title: text(operation),
         description: text(operation === 'rollback' ? 'rollbackNotice' : 'confirm'),
@@ -251,6 +324,7 @@ export default function AdminSmsProvidersPage() {
         method: 'POST',
       },
       onSuccess: async (result) => {
+        if (!current()) return;
         const saved = readSmsProvider(result, {
           status,
           ...(operation !== 'rollback' ? { id: row.id } : {}),
@@ -265,6 +339,7 @@ export default function AdminSmsProvidersPage() {
   async function test() {
     if (
       disabled ||
+      !eventsReady ||
       !testProvider ||
       testProvider.status !== 'draft' ||
       !testMappings.length ||
@@ -307,22 +382,47 @@ export default function AdminSmsProvidersPage() {
   }
   function open(row?: SmsProvider, clone = false) {
     setEditor(editorFor(row, clone));
+    setEditSource(row ? { id: row.id, basis: rowBasis(row, false) } : null);
     setSelected(null);
     setError(null);
     setNotice(null);
   }
 
   return (
-    <section aria-labelledby="sms-title" className="space-y-5 text-foreground">
+    <section
+      aria-labelledby="sms-title"
+      className="min-w-0 space-y-5 text-foreground"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
       {time.notice}
       {protectedAction && (
         <TeamActionDialog
           action={protectedAction.action}
           onClose={() => setProtectedAction(null)}
           onSuccess={protectedAction.onSuccess}
+          summary={
+            <>
+              {(loadFailed || scope.denied) && (
+                <p role="alert">{text(scope.denied ? 'denied' : 'loadFailed')}</p>
+              )}
+              {recovery}
+            </>
+          }
+          onDenied={scope.deny}
+          finalFocus={() =>
+            document.querySelector<HTMLButtonElement>('[data-slot="list-page"] button')
+          }
+          confirmationDisabled={
+            loading ||
+            loadFailed ||
+            scope.denied ||
+            !eventsReady ||
+            staleEditor ||
+            protectedAction.basis !== basis
+          }
         />
       )}
-      <header className="flex items-start justify-between gap-4">
+      <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 id="sms-title" className="text-2xl font-bold">
             {text('title')}
@@ -334,150 +434,158 @@ export default function AdminSmsProvidersPage() {
         </Button>
       </header>
       <p className="text-sm text-muted-foreground">{text('recovery')}</p>
-      {loading && <p role="status">{smsProviderText('tabs', locale)}…</p>}
-      {loadFailed && (
-        <div role="alert">
-          <p>{text('loadFailed')}</p>
-          <Button variant="outline" disabled={loading || busy} onClick={() => void refresh()}>
-            {text('retry')}
-          </Button>
-        </div>
-      )}
       {error && (
         <p role="alert" className="text-destructive">
           {error}
         </p>
       )}
       {notice && <p role="status">{notice}</p>}
-      {!loading && !loadFailed && !providers.length && <p>{text('empty')}</p>}
-      {providers.length > 0 && (
-        <div className="overflow-x-auto" tabIndex={0} role="group" aria-label={text('title')}>
-          <table className="w-full text-start text-sm">
-            <caption className="sr-only">{text('title')}</caption>
-            <thead>
-              <tr>
-                {['label', 'status', 'lastTest', 'version', 'actions'].map((k) => (
-                  <th key={k} className="p-2 text-start">
-                    {text(k as 'label' | 'status' | 'lastTest' | 'version' | 'actions')}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {providers.map((p) => (
-                <tr key={p.id} className="border-t">
-                  <td className="p-2">{p.label}</td>
-                  <td className="p-2">
-                    {text(p.status)}
-                    {p.status === 'active' && (
-                      <>
-                        <p
-                          className={`text-xs ${p.degraded ? 'text-destructive' : 'text-muted-foreground'}`}
-                        >
-                          {healthLabel(p)}
-                        </p>
-                        {p.degraded && p.lastFailureAt && (
-                          <p className="text-xs text-muted-foreground">
-                            {text('healthLastFailure')}: {time.format(p.lastFailureAt)}
-                          </p>
-                        )}
-                        {p.creditCheckedAt && p.lowCreditBalance !== null && (
+      <ListPage>
+        <ListPage.Toolbar>{recovery}</ListPage.Toolbar>
+        <ListPage.Content
+          loading={loading}
+          error={loadFailed || scope.denied}
+          retainContent={catalogue.data !== null}
+          loadingView={<p role="status">{smsProviderText('tabs', locale)}…</p>}
+          errorView={<p role="alert">{text(scope.denied ? 'denied' : 'loadFailed')}</p>}
+          empty={!providers.length}
+          emptyView={<p>{text('empty')}</p>}
+        >
+          <ScrollArea scrollbarOrientation="horizontal" aria-label={text('title')}>
+            <table className="w-full text-start text-sm">
+              <caption className="sr-only">{text('title')}</caption>
+              <thead>
+                <tr>
+                  {['label', 'status', 'lastTest', 'version', 'actions'].map((k) => (
+                    <th key={k} className="p-2 text-start">
+                      {text(k as 'label' | 'status' | 'lastTest' | 'version' | 'actions')}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {providers.map((p) => (
+                  <tr key={p.id} className="border-t">
+                    <td className="p-2">{p.label}</td>
+                    <td className="p-2">
+                      {text(p.status)}
+                      {p.status === 'active' && (
+                        <>
                           <p
-                            className={`text-xs ${p.lowCreditAlertActive ? 'text-destructive' : 'text-muted-foreground'}`}
+                            className={`text-xs ${p.degraded ? 'text-destructive' : 'text-muted-foreground'}`}
                           >
-                            {text('creditBalance')}: {p.lowCreditBalance.toLocaleString(locale)} ·{' '}
-                            {text('creditChecked')}: {time.format(p.creditCheckedAt)}
+                            {healthLabel(p)}
                           </p>
-                        )}
-                        {p.lowCreditAlertActive && (
-                          <p className="text-xs font-medium text-destructive">
-                            {text('creditLow')}
-                          </p>
-                        )}
-                      </>
-                    )}
-                    <ProviderHealthMetrics
-                      metrics={p.healthMetrics}
-                      active={p.status === 'active'}
-                    />
-                    <ProviderAlertHistory events={p.alertHistory} />
-                  </td>
-                  <td>
-                    {text(
-                      p.lastTestStatus === 'passed'
-                        ? 'testPassed'
-                        : p.lastTestStatus === 'failed'
-                          ? 'testFailed'
-                          : 'pending'
-                    )}
-                  </td>
-                  <td>{time.format(p.createdAt)}</td>
-                  <td className="flex flex-wrap gap-2 p-2">
-                    {p.status === 'draft' ? (
-                      <>
+                          {p.degraded && p.lastFailureAt && (
+                            <p className="text-xs text-muted-foreground">
+                              {text('healthLastFailure')}: {time.format(p.lastFailureAt)}
+                            </p>
+                          )}
+                          {p.creditCheckedAt && p.lowCreditBalance !== null && (
+                            <p
+                              className={`text-xs ${p.lowCreditAlertActive ? 'text-destructive' : 'text-muted-foreground'}`}
+                            >
+                              {text('creditBalance')}: {p.lowCreditBalance.toLocaleString(locale)} ·{' '}
+                              {text('creditChecked')}: {time.format(p.creditCheckedAt)}
+                            </p>
+                          )}
+                          {p.lowCreditAlertActive && (
+                            <p className="text-xs font-medium text-destructive">
+                              {text('creditLow')}
+                            </p>
+                          )}
+                        </>
+                      )}
+                      <ProviderHealthMetrics
+                        metrics={p.healthMetrics}
+                        active={p.status === 'active'}
+                      />
+                      <ProviderAlertHistory events={p.alertHistory} />
+                    </td>
+                    <td>
+                      {text(
+                        p.lastTestStatus === 'passed'
+                          ? 'testPassed'
+                          : p.lastTestStatus === 'failed'
+                            ? 'testFailed'
+                            : 'pending'
+                      )}
+                    </td>
+                    <td>{time.format(p.createdAt)}</td>
+                    <td className="flex flex-wrap gap-2 p-2">
+                      {p.status === 'draft' ? (
+                        <>
+                          <Button
+                            variant="outline"
+                            disabled={disabled || !!editor}
+                            onClick={() => open(p)}
+                          >
+                            {text('edit')}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            disabled={disabled || !!editor || !p.config.template_mappings.length}
+                            onClick={() => {
+                              setSelected(p.id);
+                              setFirstEvent(p.config.template_mappings[0]?.event_key ?? '');
+                              setNotice(null);
+                              setError(null);
+                            }}
+                          >
+                            {text('preview')}
+                          </Button>
+                          <Button
+                            disabled={
+                              disabled || !eventsReady || !!editor || p.lastTestStatus !== 'passed'
+                            }
+                            onClick={() => lifecycle(p, 'activate')}
+                          >
+                            {text('activate')}
+                          </Button>
+                        </>
+                      ) : (
                         <Button
                           variant="outline"
                           disabled={disabled || !!editor}
-                          onClick={() => open(p)}
+                          onClick={() => open(p, true)}
                         >
-                          {text('edit')}
+                          {text('clone')}
                         </Button>
+                      )}
+                      {p.status === 'active' && (
                         <Button
                           variant="outline"
-                          disabled={disabled || !!editor || !p.config.template_mappings.length}
-                          onClick={() => {
-                            setSelected(p.id);
-                            setFirstEvent(p.config.template_mappings[0]?.event_key ?? '');
-                            setNotice(null);
-                            setError(null);
-                          }}
+                          disabled={disabled || !eventsReady || !!editor}
+                          onClick={() => lifecycle(p, 'disable')}
                         >
-                          {text('preview')}
+                          {text('disable')}
                         </Button>
+                      )}
+                      {(p.status === 'superseded' || p.status === 'disabled') && (
                         <Button
-                          disabled={disabled || !!editor || p.lastTestStatus !== 'passed'}
-                          onClick={() => lifecycle(p, 'activate')}
+                          variant="outline"
+                          disabled={disabled || !eventsReady || !!editor}
+                          onClick={() => lifecycle(p, 'rollback')}
                         >
-                          {text('activate')}
+                          {text('rollback')}
                         </Button>
-                      </>
-                    ) : (
-                      <Button
-                        variant="outline"
-                        disabled={disabled || !!editor}
-                        onClick={() => open(p, true)}
-                      >
-                        {text('clone')}
-                      </Button>
-                    )}
-                    {p.status === 'active' && (
-                      <Button
-                        variant="outline"
-                        disabled={disabled || !!editor}
-                        onClick={() => lifecycle(p, 'disable')}
-                      >
-                        {text('disable')}
-                      </Button>
-                    )}
-                    {(p.status === 'superseded' || p.status === 'disabled') && (
-                      <Button
-                        variant="outline"
-                        disabled={disabled || !!editor}
-                        onClick={() => lifecycle(p, 'rollback')}
-                      >
-                        {text('rollback')}
-                      </Button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </ScrollArea>
+        </ListPage.Content>
+      </ListPage>
       {editor && (
-        <form onSubmit={save} className="rounded border p-4 space-y-4">
-          <fieldset disabled={disabled} className="space-y-4">
+        <form onSubmit={save} className="min-w-0 rounded border p-4 space-y-4">
+          {staleEditor && <p role="alert">{text('stale')}</p>}
+          {invalidEvents && eventsReady && <p role="alert">{text('eventsChanged')}</p>}
+          <fieldset
+            disabled={busy || !!protectedAction || scope.denied}
+            className="min-w-0 space-y-4"
+          >
             <legend className="font-semibold">{text(editor.id ? 'edit' : 'new')}</legend>
             <div className="grid gap-4 md:grid-cols-2">
               {(['label', 'sender', 'timeout', 'throughput', 'credit'] as const).map((key) => (
@@ -521,21 +629,30 @@ export default function AdminSmsProvidersPage() {
                 <option key={event} value={event} />
               ))}
             </datalist>
-            <div
-              className="overflow-x-auto"
-              tabIndex={0}
-              role="group"
+            <ScrollArea
+              scrollbarOrientation="horizontal"
               aria-label={text('mappings')}
+              className="min-w-0"
             >
-              <table className="w-full text-sm">
+              <table className="min-w-[64rem] w-full text-sm">
                 <caption className="font-semibold text-start">{text('mappings')}</caption>
                 <thead>
                   <tr>
-                    <th>{text('event')}</th>
-                    <th>{text('language')}</th>
-                    <th>{text('template')}</th>
-                    <th>{text('parameter')}</th>
-                    <th>{text('actions')}</th>
+                    <th scope="col" className="text-start">
+                      {text('event')}
+                    </th>
+                    <th scope="col" className="text-start">
+                      {text('language')}
+                    </th>
+                    <th scope="col" className="text-start">
+                      {text('template')}
+                    </th>
+                    <th scope="col" className="text-start">
+                      {text('parameter')}
+                    </th>
+                    <th scope="col" className="text-start">
+                      {text('actions')}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -649,7 +766,7 @@ export default function AdminSmsProvidersPage() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </ScrollArea>
             <Button
               type="button"
               variant="outline"
@@ -658,7 +775,12 @@ export default function AdminSmsProvidersPage() {
               {text('addMapping')}
             </Button>
             <div className="flex gap-2">
-              <Button type="submit">{text('save')}</Button>
+              <Button
+                type="submit"
+                disabled={disabled || !eventsReady || staleEditor || invalidEvents}
+              >
+                {text('save')}
+              </Button>
               <Button type="button" variant="outline" onClick={() => setEditor(null)}>
                 {text('cancel')}
               </Button>
@@ -712,7 +834,9 @@ export default function AdminSmsProvidersPage() {
             </div>
           ))}
           <Button
-            disabled={disabled || testProvider.status !== 'draft' || !testMappings.length}
+            disabled={
+              disabled || !eventsReady || testProvider.status !== 'draft' || !testMappings.length
+            }
             onClick={() => void test()}
           >
             {text('test')}

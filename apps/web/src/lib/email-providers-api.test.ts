@@ -135,3 +135,16 @@ it('does not turn ordinary permission denial into a step-up prompt', async () =>
   respond({ error: 'AUTHZ:FORBIDDEN' }, 403);
   await expect(activateProvider(row.id)).rejects.not.toBeInstanceOf(ProviderStepUpError);
 });
+
+it('rejects duplicate provider identities', async () => {
+  respond([row, row]);
+  await expect(listProviders()).rejects.toThrow();
+});
+it.each([401, 403])(
+  'preserves permission denial %s without leaking server details',
+  async (status) => {
+    respond({ message: 'private connection detail' }, status);
+    await expect(listProviders()).rejects.toMatchObject({ denied: true });
+    await expect(activateProvider(row.id)).rejects.toMatchObject({ denied: true });
+  }
+);
