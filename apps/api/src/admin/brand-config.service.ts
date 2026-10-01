@@ -125,6 +125,9 @@ export class BrandConfigService {
       const version = await this.currentVersion(client);
       if (version !== expectedVersion || version >= 2147483647)
         throw new ConflictException('Brand configuration changed');
+      const previous = await client.query<{ config: unknown }>(
+        'SELECT config FROM brand_config ORDER BY version DESC LIMIT 1'
+      );
       let savedConfig = { ...config };
       if (logoUploadKey) {
         if (!this.attachments) throw new BadRequestException('Logo storage is unavailable');
@@ -156,7 +159,13 @@ export class BrandConfigService {
         [uuidv7(), JSON.stringify(savedConfig), version + 1, userId]
       );
       const dto = this.rowToDto(result.rows[0]);
-      await this.audit(client, userId, 'branding.draft_created', dto);
+      await this.audit(
+        client,
+        userId,
+        'branding.draft_created',
+        dto,
+        previous.rows[0]?.config ?? null
+      );
       return dto;
     });
   }
@@ -177,6 +186,9 @@ export class BrandConfigService {
       );
       if (!draft.rows[0])
         throw new ConflictException('Brand draft changed or was already activated');
+      const previous = await client.query<{ config: unknown }>(
+        "SELECT config FROM brand_config WHERE status='active' LIMIT 1"
+      );
       await client.query("UPDATE brand_config SET status='superseded' WHERE status='active'");
       const result = await client.query(
         `UPDATE brand_config SET status='active' WHERE id=$1
@@ -184,7 +196,7 @@ export class BrandConfigService {
         [draftId]
       );
       const dto = this.rowToDto(result.rows[0]);
-      await this.audit(client, userId, 'branding.activated', dto);
+      await this.audit(client, userId, 'branding.activated', dto, previous.rows[0]?.config ?? null);
       return dto;
     });
   }
@@ -196,7 +208,13 @@ export class BrandConfigService {
     return result.rows[0]!.version;
   }
 
-  private async audit(client: PoolClient, userId: string, event: string, dto: BrandConfigDto) {
+  private async audit(
+    client: PoolClient,
+    userId: string,
+    event: string,
+    dto: BrandConfigDto,
+    previous: unknown
+  ) {
     await client.query(
       `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
        VALUES($1,$2,$3,$4::jsonb,$5,NULL)`,
@@ -204,7 +222,7 @@ export class BrandConfigService {
         uuidv7(),
         userId,
         event,
-        JSON.stringify({ configId: dto.id, version: dto.version }),
+        JSON.stringify({ configId: dto.id, version: dto.version, previous, current: dto.config }),
         uuidv7(),
       ]
     );

@@ -12,6 +12,7 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { useLocale } from '../hooks/useLocale.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { isResponseTargets, targetBasis } from '../lib/assignment-settings.js';
+import { AuditLogViewer } from '../components/AuditLogViewer.js';
 
 type TargetsReview = TeamAction & {
   proposal: ServiceResponseTargets;
@@ -185,6 +186,13 @@ export default function AdminServiceTargetsPage() {
           )}
         </ListPage.Content>
       </ListPage>
+      {!scope.denied && catalogue.data && (
+        <AuditLogViewer
+          scope="service-response-targets"
+          refreshKey={currentBasis ?? ''}
+          onDenied={scope.deny}
+        />
+      )}
       {action && (
         <TeamActionDialog
           action={action}

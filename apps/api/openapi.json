@@ -1677,6 +1677,212 @@
         ]
       }
     },
+    "/api/admin/config/audit": {
+      "get": {
+        "operationId": "ConfigAuditController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": true,
+            "schema": {
+              "enum": [
+                "branding",
+                "otp",
+                "service-response-targets"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "items": {
+                      "items": {
+                        "properties": {
+                          "actorId": {
+                            "maxLength": 128,
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "changes": {
+                            "items": {
+                              "properties": {
+                                "current": {
+                                  "properties": {
+                                    "recorded": {
+                                      "type": "boolean"
+                                    },
+                                    "value": {
+                                      "anyOf": [
+                                        {
+                                          "maxLength": 2048,
+                                          "nullable": true,
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "number"
+                                        },
+                                        {
+                                          "type": "boolean"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "recorded",
+                                    "value"
+                                  ],
+                                  "type": "object"
+                                },
+                                "field": {
+                                  "enum": [
+                                    "appTitle",
+                                    "appTitleFa",
+                                    "slogan",
+                                    "supportEmail",
+                                    "supportPhone",
+                                    "supportMobile",
+                                    "primaryColor",
+                                    "secondaryColor",
+                                    "accentColor",
+                                    "backgroundColor",
+                                    "darkBackgroundColor",
+                                    "fontFamily",
+                                    "borderRadiusRem",
+                                    "spacingScale",
+                                    "logoUrl",
+                                    "faviconUrl",
+                                    "darkMode",
+                                    "numberStyle",
+                                    "ttlSeconds",
+                                    "ticket",
+                                    "verification_case"
+                                  ],
+                                  "type": "string"
+                                },
+                                "previous": {
+                                  "properties": {
+                                    "recorded": {
+                                      "type": "boolean"
+                                    },
+                                    "value": {
+                                      "anyOf": [
+                                        {
+                                          "maxLength": 2048,
+                                          "nullable": true,
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "number"
+                                        },
+                                        {
+                                          "type": "boolean"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "recorded",
+                                    "value"
+                                  ],
+                                  "type": "object"
+                                }
+                              },
+                              "required": [
+                                "field",
+                                "previous",
+                                "current"
+                              ],
+                              "type": "object"
+                            },
+                            "maxItems": 18,
+                            "type": "array"
+                          },
+                          "createdAt": {
+                            "format": "date-time",
+                            "type": "string"
+                          },
+                          "detailsAvailable": {
+                            "type": "boolean"
+                          },
+                          "event": {
+                            "enum": [
+                              "updated",
+                              "draft_created",
+                              "activated"
+                            ],
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "version": {
+                            "maximum": 2147483647,
+                            "minimum": 1,
+                            "nullable": true,
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "actorId",
+                          "createdAt",
+                          "event",
+                          "version",
+                          "detailsAvailable",
+                          "changes"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 50,
+                      "type": "array"
+                    },
+                    "nextCursor": {
+                      "maxLength": 512,
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "scope": {
+                      "enum": [
+                        "branding",
+                        "otp",
+                        "service-response-targets"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "scope",
+                    "items",
+                    "nextCursor"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Read safe field changes for one authorized settings scope",
+        "tags": [
+          "Admin · Settings"
+        ]
+      }
+    },
     "/api/admin/config/contract-electricity-limits": {
       "get": {
         "description": "Current maxQuantityIncreasePercent / maxContractDuration / leadTimeDays. Returns the documented defaults (20, 24 Jalali months, 0 days) when nothing is persisted.",

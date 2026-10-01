@@ -44,6 +44,7 @@ import { ServiceDuePeriodService } from './service-due-period.service.js';
 import { BusinessWorkCountsController } from './business-work-counts.controller.js';
 import { InvoiceLedgerController } from './invoice-ledger.controller.js';
 import { InvoiceLedgerService } from './invoice-ledger.service.js';
+import { ConfigAuditController } from './config-audit.controller.js';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { InvoiceLedgerService } from './invoice-ledger.service.js';
     WalletModule,
   ],
   controllers: [
+    ConfigAuditController,
     AdminBrandAssetController,
     AdminController,
     DualApprovalController,

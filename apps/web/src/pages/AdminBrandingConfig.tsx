@@ -15,6 +15,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { ConfigPreviewCard } from '../components/ConfigPreviewCard.js';
 import { VersionedSettingsCard } from '../components/VersionedSettingsCard.js';
+import { AuditLogViewer } from '../components/AuditLogViewer.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import {
   parseConfigDto,
@@ -833,6 +834,13 @@ export default function AdminBrandingConfig() {
             )
           }
           draft={<BrandingPreview config={config} locale={locale} logo={displayedLogo} />}
+        />
+      )}
+      {!scope.denied && activeConfig && (
+        <AuditLogViewer
+          scope="branding"
+          refreshKey={brandingBasis(activeConfig)}
+          onDenied={scope.deny}
         />
       )}
     </div>

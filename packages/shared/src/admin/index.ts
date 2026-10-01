@@ -8,3 +8,4 @@ export * from './upload-policies.js';
 export * from './contract-electricity-limits.js';
 
 export * from './staff-permissions.js';
+export * from './config-audit.js';

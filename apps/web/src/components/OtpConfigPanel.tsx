@@ -4,6 +4,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { Button, Input, Label } from '@barghsa/ui';
 import { SettingsFormSection } from './SettingsFormSection.js';
+import { AuditLogViewer } from './AuditLogViewer.js';
 
 const TeamActionDialog = lazy(() =>
   import('./TeamActionDialog.js').then((module) => ({ default: module.TeamActionDialog }))
@@ -41,7 +42,14 @@ export function OtpConfigPanel() {
     null
   );
   const saveRef = useRef<HTMLButtonElement>(null);
+  const generation = useRef(0),
+    completionGeneration = generation.current;
+  function closeReview() {
+    generation.current++;
+    setProposal(null);
+  }
   useEffect(() => {
+    generation.current++;
     const controller = new AbortController();
     setLoading(true);
     setFailed(false);
@@ -63,7 +71,10 @@ export function OtpConfigPanel() {
         if (!controller.signal.aborted) setLoading(false);
       }
     })();
-    return () => controller.abort();
+    return () => {
+      generation.current++;
+      controller.abort();
+    };
   }, [reload]);
   const value = Number(seconds);
   const valid = seconds.trim() !== '' && Number.isInteger(value) && value >= 60 && value <= 900;
@@ -141,6 +152,20 @@ export function OtpConfigPanel() {
           </p>
         </fieldset>
       </SettingsFormSection>
+      {current && (
+        <AuditLogViewer
+          scope="otp"
+          refreshKey={current.version}
+          onDenied={() => {
+            generation.current++;
+            setCurrent(null);
+            setSeconds('');
+            setSaved(false);
+            setProposal(null);
+            setFailed(true);
+          }}
+        />
+      )}
       {proposal && (
         <Suspense fallback={<p role="status">{text('loading')}</p>}>
           <TeamActionDialog
@@ -154,8 +179,9 @@ export function OtpConfigPanel() {
               requiresPassword: true,
               conflictMessage: text('otpConflict'),
             }}
-            onClose={() => setProposal(null)}
+            onClose={closeReview}
             onSuccess={async (raw) => {
+              if (generation.current !== completionGeneration) return;
               const config = readConfig(raw);
               if (
                 config.ttlSeconds !== proposal.ttlSeconds ||
