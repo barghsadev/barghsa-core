@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { Button, Input, Label, ListPage } from '@barghsa/ui';
-import { useAiCatalogueResource, useAiCatalogueScope } from '../hooks/useAiCatalogueResource.js';
+import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 const types = [
@@ -137,9 +137,9 @@ export default function AdminAiPoliciesPage() {
     draftBasis.current = null;
     setNotice(false);
   }, [clearSelection]);
-  const scope = useAiCatalogueScope(clearWork);
-  const list = useAiCatalogueResource(scope, `/api/admin/${kind}`, validEntries);
-  const choices = useAiCatalogueResource(
+  const scope = useCatalogueScope(clearWork);
+  const list = useCatalogueResource(scope, `/api/admin/${kind}`, validEntries);
+  const choices = useCatalogueResource(
     scope,
     kind === 'policy-groups' ? '/api/admin/policies' : null,
     validEntries
@@ -149,7 +149,7 @@ export default function AdminAiPoliciesPage() {
       record(value) && value.id === selected && validEntries(value.members),
     [selected]
   );
-  const selectedRead = useAiCatalogueResource(
+  const selectedRead = useCatalogueResource(
     scope,
     selected && kind === 'policy-groups'
       ? `/api/admin/policy-groups/${encodeURIComponent(selected)}`

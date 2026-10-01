@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-/** Shared permission boundary for the resources of one staff AI catalogue. */
-export function useAiCatalogueScope(onDenied: () => void) {
+/** Shared permission boundary for the resources of one staff catalogue. */
+export function useCatalogueScope(onDenied: () => void) {
   const live = useRef(0);
   const [version, setVersion] = useState(0);
   const [denied, setDenied] = useState(false);
@@ -20,8 +20,8 @@ export function useAiCatalogueScope(onDenied: () => void) {
 }
 
 /** Retain accepted data on local retry; a new path or permission epoch cannot reuse it. */
-export function useAiCatalogueResource<T>(
-  scope: ReturnType<typeof useAiCatalogueScope>,
+export function useCatalogueResource<T>(
+  scope: ReturnType<typeof useCatalogueScope>,
   path: string | null,
   validate: (value: unknown) => value is T
 ) {

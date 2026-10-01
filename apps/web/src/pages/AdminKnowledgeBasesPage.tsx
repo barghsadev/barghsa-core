@@ -5,7 +5,7 @@ import { KnowledgeBaseDocumentPicker } from '../components/KnowledgeBaseDocument
 import { t } from '@barghsa/i18n/admin-ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
-import { useAiCatalogueResource, useAiCatalogueScope } from '../hooks/useAiCatalogueResource.js';
+import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { withCsrf } from '../lib/csrf.js';
 interface Entry {
   id: string;
@@ -187,9 +187,9 @@ export default function AdminKnowledgeBasesPage() {
     setNotice(false);
     draftBasis.current = null;
   }, [clearDetail]);
-  const scope = useAiCatalogueScope(clearWork);
-  const list = useAiCatalogueResource(scope, `/api/admin/${kind}`, validEntries);
-  const choices = useAiCatalogueResource(
+  const scope = useCatalogueScope(clearWork);
+  const list = useCatalogueResource(scope, `/api/admin/${kind}`, validEntries);
+  const choices = useCatalogueResource(
     scope,
     kind === 'kb-groups' ? '/api/admin/knowledge-bases' : null,
     validEntries
@@ -198,7 +198,7 @@ export default function AdminKnowledgeBasesPage() {
     (value: unknown): value is Detail => validDetail(value) && value.id === selected,
     [selected]
   );
-  const selectedRead = useAiCatalogueResource(
+  const selectedRead = useCatalogueResource(
     scope,
     selected ? `/api/admin/${kind}/${encodeURIComponent(selected)}` : null,
     validateDetail

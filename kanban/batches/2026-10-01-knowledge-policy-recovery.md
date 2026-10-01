@@ -44,3 +44,5 @@ Evidence logs: `/tmp/barghsa-knowledge-policy-*.log`; final source checks use `*
 ## Publication
 
 This batch is committed and pushed directly to main after review and the checks above. Remote SHA and CI registration are read back after publication. No PR is created; the broader parent remains partial.
+
+Published commit: `f566832afb195a4ce91289aeab8075b63ab95351`. CI run `36825440239` passes all five gates under the existing temporary fast mode. Combined-coverage success is an exemption, not measured coverage. This verifies the preceding AI catalogue fixture repairs as well.

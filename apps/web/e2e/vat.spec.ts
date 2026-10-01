@@ -1,20 +1,27 @@
 import AxeBuilder from '@axe-core/playwright';
 import { tVat } from '@barghsa/i18n/vat';
 import { test, expect } from './coverage-fixture';
+test.use({ viewport: { width: 390, height: 844 } });
 for (const locale of ['en', 'fa'])
   test(`VAT editor retries captured percentage (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     let failed = true,
       verified = false,
       denied = false;
     const attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'admin',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: false,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill(failed ? { status: 503, json: {} } : { json: { timezone: 'Asia/Tehran' } })
     );
@@ -36,7 +43,7 @@ for (const locale of ['en', 'fa'])
       return route.fulfill({ status: verified ? 200 : 401, json: {} });
     });
     await page.goto('/admin/vat');
-    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(page.getByRole('alert')).toHaveCount(2);
     failed = false;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
     await page.getByRole('button', { name: fa ? 'افزودن نرخ' : 'Add rate', exact: true }).click();
@@ -61,14 +68,20 @@ for (const locale of ['en', 'fa'])
 for (const skippedTime of [false, true]) {
   test(`VAT schedules account-zone time and rejects DST gaps: ${skippedTime}`, async ({ page }) => {
     const zone = skippedTime ? 'America/New_York' : 'Asia/Tehran';
-    await page.addInitScript(() => {
-      if (document.documentElement) document.documentElement.lang = 'en';
-      new MutationObserver(() => {
-        document.documentElement.lang = 'en';
-      }).observe(document, { childList: true });
-    });
+    await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
     const attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'admin',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: false,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: zone } })
     );
@@ -115,9 +128,9 @@ for (const skippedTime of [false, true]) {
 for (const locale of ['en', 'fa'] as const) {
   test(`VAT tables retain history and manage product overrides (${locale})`, async ({ page }) => {
     const label = (key: string) => tVat(`admin.vat.${key}`, locale);
-    await page.setViewportSize({ width: 390, height: 844 });
     await page.addInitScript((value) => {
       localStorage.setItem('theme', 'dark');
+      localStorage.setItem('barghsa.locale', value);
       const apply = () => {
         document.documentElement.classList.add('dark');
         document.documentElement.lang = value;
@@ -173,6 +186,17 @@ for (const locale of ['en', 'fa'] as const) {
     const writes: unknown[] = [];
     const product = locale === 'fa' ? 'تجهیزات آزمایشی' : 'Test hardware';
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'admin',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: false,
+          requiresTosAcceptance: false,
+        },
+      })
+    );
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'Asia/Tehran' } })
     );
@@ -221,7 +245,9 @@ for (const locale of ['en', 'fa'] as const) {
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
     ).toBe(true);
-    const scrollRegion = page.getByRole('region', { name: label('rates'), exact: true });
+    const scrollRegion = page
+      .getByRole('region', { name: label('rates'), exact: true })
+      .locator('[data-slot="scroll-area-viewport"]');
     await scrollRegion.focus();
     await expect(scrollRegion).toBeFocused();
     await page.keyboard.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
