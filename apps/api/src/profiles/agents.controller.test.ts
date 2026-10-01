@@ -68,7 +68,11 @@ describe('AgentsController', () => {
         req
       );
 
-      expect(result).toEqual({ message: 'Invitation withdrawn successfully.' });
+      expect(result).toEqual({
+        id: '00000000-0000-4000-8000-000000000002',
+        status: 'Withdrawn',
+        message: 'Invitation withdrawn successfully.',
+      });
       expect(mockAgentsService.withdrawInvitation).toHaveBeenCalledWith(
         '00000000-0000-4000-8000-000000000001',
         '00000000-0000-4000-8000-000000000002',

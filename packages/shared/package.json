@@ -209,6 +209,16 @@
         "types": "./dist/cjs/errors/domain-error-codes.d.ts",
         "default": "./dist/cjs/errors/domain-error-codes.js"
       }
+    },
+    "./team-activity": {
+      "import": {
+        "types": "./dist/team-activity/index.d.ts",
+        "default": "./dist/team-activity/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/team-activity/index.d.ts",
+        "default": "./dist/cjs/team-activity/index.js"
+      }
     }
   },
   "scripts": {

@@ -23342,6 +23342,47 @@
         ]
       }
     },
+    "/api/profiles/{profileId}/agents/{userId}/activity": {
+      "get": {
+        "operationId": "AgentsController_activity",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile and member scoped activity, newest first, up to 50 entries with an opaque nextCursor. No raw audit metadata."
+          },
+          "400": {
+            "description": "Invalid or wrong-scope cursor or identifier."
+          },
+          "403": {
+            "description": "Current owner or manager required."
+          },
+          "404": {
+            "description": "Member no longer belongs to this profile."
+          }
+        },
+        "summary": "Public activity summaries for a current member of a legal profile",
+        "tags": [
+          "Agents"
+        ]
+      }
+    },
     "/api/profiles/{profileId}/agents/{userId}/roles": {
       "put": {
         "operationId": "AgentsController_setAgentRoles",

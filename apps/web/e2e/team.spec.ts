@@ -545,7 +545,13 @@ for (const action of [
       requests++;
       expect(route.request().method()).toBe(action.method);
       expect(route.request().postDataJSON()).toEqual(action.body);
-      return route.fulfill({ json: { saved: true } });
+      return route.fulfill({
+        json: action.suffix.startsWith('invitations/')
+          ? { id: 'invitation-one', status: 'Withdrawn' }
+          : action.suffix.startsWith('agents/')
+            ? { removed: true }
+            : { saved: true },
+      });
     });
     await page.goto('/settings/team');
     await page.getByRole('button', { name: action.label, exact: true }).click();

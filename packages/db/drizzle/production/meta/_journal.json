@@ -1058,6 +1058,13 @@
       "when": 1791331202241,
       "tag": "0230_team_directory_metadata",
       "breakpoints": true
+    },
+    {
+      "idx": 231,
+      "version": "7",
+      "when": 1791331202242,
+      "tag": "0231_team_activity_history",
+      "breakpoints": true
     }
   ]
 }

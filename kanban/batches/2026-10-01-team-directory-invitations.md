@@ -28,7 +28,7 @@ Final root build/types, root plus affected lint, formatting, contract/suppressio
 
 The previous team-recovery batch is `b6ce38235c37651db2e6a301a93a45922fa63acf`. GitHub CI run `36851257592` passes all five jobs under the existing temporary fast mode. Combined-coverage success is an exemption, not measured coverage.
 
-This batch is committed and pushed directly to main after validation. Remote SHA, clean worktree and exact-commit GitHub CI registration are read back after publication; the next batch records the immutable SHA and completed CI result. No PR is created. Historical supervisor state, scheduler and CI gates remain unchanged.
+This batch is committed and pushed directly to main as `5aec92e78fbb9aaafa234559bb2a7ed1aa72e6bf` after validation. Remote SHA, clean worktree and exact-commit GitHub CI registration are read back after publication; the next batch records the immutable SHA and completed CI result. No PR is created. Historical supervisor state, scheduler and CI gates remain unchanged.
 
 ## Commands
 

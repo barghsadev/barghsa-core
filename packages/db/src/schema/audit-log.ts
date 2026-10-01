@@ -38,6 +38,12 @@ export const auditLog = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
   (t) => [
+    index('audit_log_member_activity_idx').on(t.userId, t.createdAt, t.id),
+    index('audit_log_profile_activity_idx').on(
+      sql`((CASE WHEN ${t.metadata} IS JSON OBJECT THEN ${t.metadata}::jsonb ELSE '{}'::jsonb END)->>'profileId')`,
+      t.createdAt,
+      t.id
+    ),
     index('audit_log_solar_request_history_idx')
       .on(sql`((${t.metadata}::jsonb->>'requestId'))`, t.createdAt, t.id)
       .where(sql`${t.event} LIKE 'solar.%' AND ${t.metadata} IS NOT NULL`),

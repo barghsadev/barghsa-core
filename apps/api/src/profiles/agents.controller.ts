@@ -11,6 +11,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -28,6 +29,29 @@ export class AgentsController {
   private readonly logger = new Logger(AgentsController.name);
 
   constructor(private readonly agentsService: AgentsService) {}
+
+  @Get('agents/:userId/activity')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'agents:activity:profile', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Public activity summaries for a current member of a legal profile' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Profile and member scoped activity, newest first, up to 50 entries with an opaque nextCursor. No raw audit metadata.',
+  })
+  @ApiResponse({ status: 400, description: 'Invalid or wrong-scope cursor or identifier.' })
+  @ApiResponse({ status: 403, description: 'Current owner or manager required.' })
+  @ApiResponse({ status: 404, description: 'Member no longer belongs to this profile.' })
+  async activity(
+    @Param('profileId') profileId: string,
+    @Param('userId') userId: string,
+    @Query('cursor') cursor: string | undefined,
+    @Req() req: AuthenticatedRequest
+  ) {
+    if (cursor !== undefined && typeof cursor !== 'string')
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    return this.agentsService.listAgentActivity(profileId, userId, req.session.userId, cursor);
+  }
 
   /**
    * GET /api/profiles/:profileId/agents
@@ -146,7 +170,7 @@ export class AgentsController {
     await this.agentsService.withdrawInvitation(profileId, inviteId, req.session);
 
     this.logger.log(`Invitation ${inviteId} withdrawn from profile ${profileId} by user ${userId}`);
-    return { message: 'Invitation withdrawn successfully.' };
+    return { id: inviteId, status: 'Withdrawn', message: 'Invitation withdrawn successfully.' };
   }
 
   @Put('agents/:userId/roles')

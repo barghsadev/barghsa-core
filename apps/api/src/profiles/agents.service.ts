@@ -14,6 +14,7 @@ import {
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { notifyAgentInvitation } from './invitation-notifications.js';
+import { listAgentActivity } from './agent-activity.js';
 
 export interface AgentDto {
   id: string;
@@ -38,6 +39,7 @@ export interface AgentListResponseDto {
 
 @Injectable()
 export class AgentsService {
+  listAgentActivity = listAgentActivity;
   private readonly logger = new Logger(AgentsService.name);
 
   constructor(

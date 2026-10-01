@@ -3,8 +3,6 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { t } from '@barghsa/i18n/team';
 import {
   Badge,
-  Avatar,
-  AvatarFallback,
   Textarea,
   ListPage,
   Button,
@@ -18,10 +16,16 @@ import {
   DialogFooter,
 } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
-import { Crown } from 'lucide-react';
 import { maskDestination } from '../lib/mask-destination.js';
 import { withCsrf } from '../lib/csrf.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { AgentDetailDialog } from '../components/AgentDetailDialog.js';
+import {
+  TeamIdentity,
+  TeamRoleFields,
+  useTeamRoleDraft,
+  teamMemberLabel,
+} from '../components/TeamMemberFields.js';
 
 import { useCatalogueScope, useCatalogueResource } from '../hooks/useCatalogueResource.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -220,6 +224,9 @@ function TeamMembers({
 }) {
   const time = useAccountTime();
   const locale = useLocale();
+  const [detail, setDetail] = useState<{ type: 'agent' | 'invitation'; id: string } | null>(null);
+  const detailTrigger = useRef<HTMLButtonElement | null>(null);
+  const [activityRevision, setActivityRevision] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [action, setAction] = useState<
     (TeamAction & { successMessage?: string; onConfirmed?: () => void }) | null
@@ -254,6 +261,7 @@ function TeamMembers({
     invitationPending.current = false;
     setInviting(false);
     setInvitationOpen(false);
+    setDetail(null);
     setOwnershipStep(null);
     setAction(null);
     setUsername('');
@@ -279,10 +287,13 @@ function TeamMembers({
         profileName: resource.data.profileName || profile.title || word('legalEntity'),
       }
     : null;
-  const denyTeam = (status?: 401 | 403) => {
-    if (status === 401) onSessionDenied();
-    scope.deny();
-  };
+  const denyTeam = useCallback(
+    (status?: 401 | 403) => {
+      if (status === 401) onSessionDenied();
+      scope.deny();
+    },
+    [onSessionDenied, scope.deny]
+  );
   const loading = resource.loading;
   const ready = profileReady && !!team && !resource.loading && !resource.error && !scope.denied;
   const basis = team ? teamBasis(team) : null;
@@ -416,9 +427,27 @@ function TeamMembers({
     members.set(entry.userId, member);
   }
   const invitations = team?.agents.filter((entry) => entry.type === 'invitation') ?? [];
-  const eligibleOwners = Array.from(members).filter(([, member]) =>
-    member.roles.some((role) => ROLES.some((eligible) => eligible === role))
+  const eligibleOwners = Array.from(members).filter(
+    ([, member]) =>
+      !member.roles.includes('Owner') &&
+      member.roles.some((role) => ROLES.some((eligible) => eligible === role))
   );
+  const detailedMember = detail?.type === 'agent' ? members.get(detail.id) : undefined;
+  const detailedEntry =
+    detailedMember?.entry ??
+    (detail?.type === 'invitation'
+      ? invitations.find((entry) => entry.id === detail.id)
+      : undefined);
+  const closeDetail = () => {
+    setDetail(null);
+    (detailTrigger.current?.isConnected ? detailTrigger.current : refreshMembers.current)?.focus();
+  };
+  useEffect(() => {
+    if (ready && detail && !detailedEntry) {
+      setDetail(null);
+      refreshMembers.current?.focus();
+    }
+  }, [ready, detail, detailedEntry]);
   const base = `/api/profiles/${encodeURIComponent(team?.profileId ?? '')}`;
   const openAction = (next: TeamAction & { successMessage?: string; onConfirmed?: () => void }) => {
     if (!ready) return;
@@ -440,10 +469,54 @@ function TeamMembers({
       )
         throw new Error();
     }
+    if (action?.method === 'DELETE') {
+      const receipt = result && typeof result === 'object' ? result : null;
+      const accepted = action.path.includes('/invitations/')
+        ? receipt &&
+          'id' in receipt &&
+          'status' in receipt &&
+          action.path.endsWith(`/invitations/${encodeURIComponent(String(receipt.id))}`) &&
+          receipt.status === 'Withdrawn'
+        : receipt && 'removed' in receipt && receipt.removed === true;
+      if (!accepted) throw new Error();
+      setDetail(null);
+    }
     action?.onConfirmed?.();
+    setActivityRevision((value) => value + 1);
     await load();
     setNotice(action?.successMessage ?? word('saved'));
   };
+  const saveMember = (userId: string, entry: Entry, roles: Role[], onConfirmed: () => void) =>
+    openAction({
+      title: word('saveRoles'),
+      description: word('rolesTargetWarning')
+        .replace('{name}', teamMemberLabel(entry, word('unnamed')))
+        .replace('{roles}', roles.map((role) => word(role)).join('، ')),
+      path: `${base}/agents/${encodeURIComponent(userId)}/roles`,
+      method: 'PUT',
+      body: { roles },
+      onConfirmed,
+    });
+  const removeMember = (userId: string, entry: Entry) =>
+    openAction({
+      title: word('remove'),
+      description: word('removeTargetWarning').replace(
+        '{name}',
+        teamMemberLabel(entry, word('unnamed'))
+      ),
+      path: `${base}/agents/${encodeURIComponent(userId)}`,
+      method: 'DELETE',
+    });
+  const withdraw = (entry: Entry) =>
+    openAction({
+      title: word('withdraw'),
+      description: word('withdrawTargetWarning').replace(
+        '{name}',
+        teamMemberLabel(entry, word('unnamed'))
+      ),
+      path: `${base}/invitations/${encodeURIComponent(entry.id)}`,
+      method: 'DELETE',
+    });
   const startOwnership = () => {
     if (!ready || !eligibleOwners.length || action || ownershipStep) return;
     reviewBasis.current = basis;
@@ -569,24 +642,14 @@ function TeamMembers({
                           canCommand={ready}
                           locked={!!action || !!ownershipStep}
                           roles={member.roles}
+                          onDetails={(button) => {
+                            detailTrigger.current = button;
+                            setDetail({ type: 'agent', id: userId });
+                          }}
                           onSave={(roles, onConfirmed) =>
-                            openAction({
-                              title: word('saveRoles'),
-                              description: word('rolesWarning'),
-                              path: `${base}/agents/${encodeURIComponent(userId)}/roles`,
-                              method: 'PUT',
-                              body: { roles },
-                              onConfirmed,
-                            })
+                            saveMember(userId, member.entry, roles, onConfirmed)
                           }
-                          onRemove={() =>
-                            openAction({
-                              title: word('remove'),
-                              description: word('removeWarning'),
-                              path: `${base}/agents/${encodeURIComponent(userId)}`,
-                              method: 'DELETE',
-                            })
-                          }
+                          onRemove={() => removeMember(userId, member.entry)}
                         />
                       ))}
                       {invitations.map((entry) => (
@@ -609,14 +672,17 @@ function TeamMembers({
                             <Button
                               variant="outline"
                               disabled={!ready || !!action || !!ownershipStep}
-                              onClick={() =>
-                                openAction({
-                                  title: word('withdraw'),
-                                  description: word('withdrawWarning'),
-                                  path: `${base}/invitations/${encodeURIComponent(entry.id)}`,
-                                  method: 'DELETE',
-                                })
-                              }
+                              onClick={(event) => {
+                                detailTrigger.current = event.currentTarget;
+                                setDetail({ type: 'invitation', id: entry.id });
+                              }}
+                            >
+                              {word('details')}
+                            </Button>
+                            <Button
+                              variant="outline"
+                              disabled={!ready || !!action || !!ownershipStep}
+                              onClick={() => withdraw(entry)}
                             >
                               {word('withdraw')}
                             </Button>
@@ -631,6 +697,24 @@ function TeamMembers({
           )}
         </ListPage.Content>
       </ListPage>
+      {detail && detailedEntry && (
+        <AgentDetailDialog
+          key={`${detail.type}:${detail.id}`}
+          entry={detailedEntry}
+          roles={detailedMember?.roles ?? [detailedEntry.role]}
+          profileId={profile.id}
+          scope={scope}
+          onUnauthorized={onSessionDenied}
+          visible={!action && !ownershipStep}
+          canCommand={ready}
+          onClose={closeDetail}
+          onSave={(roles, onConfirmed) => saveMember(detail.id, detailedEntry, roles, onConfirmed)}
+          onRemove={() => removeMember(detail.id, detailedEntry)}
+          onWithdraw={() => withdraw(detailedEntry)}
+          revision={activityRevision}
+          refreshMembers={resource.retry}
+        />
+      )}
       {invitationOpen && (
         <Dialog
           open
@@ -743,7 +827,13 @@ function TeamMembers({
               {word('refreshMembers')}
             </Button>
           }
-          finalFocus={action.path === `${base}/transfer-ownership` ? transferTrigger : undefined}
+          finalFocus={
+            detail
+              ? false
+              : action.path === `${base}/transfer-ownership`
+                ? transferTrigger
+                : refreshMembers
+          }
         />
       )}
       {ownershipStep && (
@@ -835,36 +925,6 @@ function TeamMembers({
     </section>
   );
 }
-function TeamIdentity({ entry, owner = false }: { entry: Entry; owner?: boolean }) {
-  const locale = useLocale();
-  const contact = entry.username ? maskDestination(entry.username) : null;
-  const name = entry.name?.trim() || contact || t('team.unnamed', locale);
-  const initials =
-    entry.name
-      ?.trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((part) => Array.from(part)[0])
-      .join('') || (contact ? Array.from(contact)[0] : '?');
-  return (
-    <div className="flex min-w-40 items-start gap-2">
-      <Avatar aria-hidden="true">
-        <AvatarFallback>{initials}</AvatarFallback>
-      </Avatar>
-      <div className="min-w-0 space-y-1 [overflow-wrap:anywhere]">
-        <h3 className="flex items-center gap-1 font-medium">
-          {owner && <Crown className="size-4 shrink-0 text-primary" aria-hidden="true" />}
-          {entry.name?.trim() ? name : <bdi dir="ltr">{name}</bdi>}
-        </h3>
-        {entry.name?.trim() && contact && (
-          <p className="text-muted-foreground">
-            <bdi dir="ltr">{contact}</bdi>
-          </p>
-        )}
-      </div>
-    </div>
-  );
-}
 function Member({
   entry,
   roles,
@@ -876,8 +936,10 @@ function Member({
   onTransfer,
   transferRef,
   canTransfer,
+  onDetails,
 }: {
   entry: Entry;
+  onDetails: (button: HTMLButtonElement) => void;
   onTransfer: (() => void) | undefined;
   transferRef: React.RefObject<HTMLButtonElement | null>;
   canTransfer: boolean;
@@ -889,13 +951,9 @@ function Member({
   onRemove: () => void;
 }) {
   const locale = useLocale();
-  const roleBasis = [...roles].sort().join(',');
-  const [draft, setDraft] = useState({
-    basis: roleBasis,
-    roles: roles.filter((role): role is Role => ROLES.includes(role as Role)),
-  });
-  const selected = draft.roles;
-  const stale = draft.basis !== roleBasis;
+  const draft = useTeamRoleDraft(roles);
+  const selected = draft.selected,
+    stale = draft.stale;
   const owner = roles.includes('Owner');
   const word = (key: string) => t(`team.${key}`, locale);
   return (
@@ -911,48 +969,7 @@ function Member({
             </Badge>
           ))}
         </div>
-        <>
-          {!owner && (
-            <fieldset disabled={locked} className="flex flex-wrap gap-3">
-              <legend className="sr-only">{word('roles')}</legend>
-              {ROLES.map((role) => (
-                <label key={role} className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    tabIndex={0}
-                    checked={selected.includes(role)}
-                    onChange={(event) =>
-                      setDraft((current) => ({
-                        ...current,
-                        roles: event.target.checked
-                          ? [...current.roles, role]
-                          : current.roles.filter((item) => item !== role),
-                      }))
-                    }
-                  />
-                  {word(role)}
-                </label>
-              ))}
-            </fieldset>
-          )}
-          {stale && (
-            <div className="space-y-2">
-              <p role="status">{word('staleRoles')}</p>
-              <Button
-                variant="outline"
-                disabled={!canCommand || locked}
-                onClick={() =>
-                  setDraft({
-                    basis: roleBasis,
-                    roles: roles.filter((role): role is Role => ROLES.includes(role as Role)),
-                  })
-                }
-              >
-                {word('resetRoles')}
-              </Button>
-            </div>
-          )}
-        </>
+        {!owner && <TeamRoleFields draft={draft} locked={locked} canCommand={canCommand} />}
       </td>
       <td className="p-3">{word('active')}</td>
       <td className="p-3 whitespace-nowrap">
@@ -976,8 +993,15 @@ function Member({
           '—'
         )}
       </td>
-      <td className="p-3 min-w-56">
+      <td className="p-3 min-w-80">
         <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            disabled={!canCommand || locked}
+            onClick={(event) => onDetails(event.currentTarget)}
+          >
+            {word('details')}
+          </Button>
           {onTransfer && (
             <Button
               ref={transferRef}
@@ -998,11 +1022,7 @@ function Member({
               !selected.length ||
               (selected.length === roles.length && selected.every((role) => roles.includes(role)))
             }
-            onClick={() =>
-              onSave(selected, () =>
-                setDraft({ basis: [...selected].sort().join(','), roles: selected })
-              )
-            }
+            onClick={() => onSave(selected, draft.confirm)}
           >
             {word('saveRoles')}
           </Button>

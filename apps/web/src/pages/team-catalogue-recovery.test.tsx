@@ -1,3 +1,4 @@
+import { validTeamActivity } from '@barghsa/shared/team-activity';
 import { act, StrictMode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -480,3 +481,256 @@ it.each([
     validTeam({ ...teamCatalogue(), agents: [{ ...teamCatalogue().agents[0], ...metadata }] })
   ).toBe(false);
 });
+
+const historyPage = (cursor: string | null = null) => ({
+  profileId: teamCatalogue().profileId,
+  userId: 'member',
+  items: [
+    {
+      id: 'activity-first',
+      kind: 'orderCreated',
+      performed: true,
+      createdAt: '2026-09-01T00:00:00Z',
+    },
+  ],
+  nextCursor: cursor,
+});
+const detailDialog = () => document.querySelector<HTMLElement>('[role=dialog]')!;
+it('keeps accepted activity and the role draft through a failed next page and retries the same cursor', async () => {
+  let fail = true;
+  const reads: string[] = [];
+  await render((path) => {
+    if (path.includes('/activity')) {
+      reads.push(path);
+      return path.includes('?cursor=')
+        ? fail
+          ? reply({}, 503)
+          : reply({
+              ...historyPage(),
+              items: [
+                {
+                  id: 'activity-second',
+                  kind: 'rolesChanged',
+                  performed: false,
+                  createdAt: '2026-08-01T00:00:00Z',
+                },
+              ],
+            })
+        : reply(historyPage('next-page'));
+    }
+    return baseline(path);
+  }, true);
+  await click('View details');
+  expect(detailDialog().textContent).toContain('Order created');
+  const choice = [...detailDialog().querySelectorAll<HTMLInputElement>('input')].find(
+    (n) => n.parentElement?.textContent === 'Finance'
+  )!;
+  await act(async () => choice.click());
+  expect(choice.checked).toBe(true);
+  await click('Older activity', true);
+  expect(detailDialog().textContent).toContain('Could not load activity');
+  expect(detailDialog().textContent).toContain('Order created');
+  expect(choice.checked).toBe(true);
+  fail = false;
+  await click('Retry activity', true);
+  expect(reads.slice(-2)).toEqual([
+    expect.stringContaining('?cursor=next-page'),
+    expect.stringContaining('?cursor=next-page'),
+  ]);
+  expect(detailDialog().textContent).toContain('Member roles changed');
+  expect(detailDialog().textContent).toContain('Access change made by another person');
+  expect(choice.checked).toBe(true);
+  await click('Save roles', true);
+  expect(detailDialog().textContent).toContain('m***@example.test');
+  expect(detailDialog().textContent).toContain('Finance');
+  await click('Cancel', true);
+  expect(
+    [...detailDialog().querySelectorAll<HTMLInputElement>('input')].find(
+      (n) => n.parentElement?.textContent === 'Finance'
+    )!.checked
+  ).toBe(true);
+});
+it('keeps the detail role draft through a team read failure and requires resetting changed saved roles', async () => {
+  let mode = 'ready';
+  await render((path) =>
+    path.includes('/activity')
+      ? reply(historyPage())
+      : path.endsWith('/agents')
+        ? mode === 'error'
+          ? reply({}, 503)
+          : reply({
+              ...teamCatalogue(),
+              agents: teamCatalogue().agents.map((entry) =>
+                entry.type === 'agent' && mode === 'changed' ? { ...entry, role: 'Legal' } : entry
+              ),
+            })
+        : baseline(path)
+  );
+  await click('View details');
+  const checkbox = () =>
+    [...detailDialog().querySelectorAll<HTMLInputElement>('input')].find(
+      (n) => n.parentElement?.textContent === 'Finance'
+    )!;
+  await act(async () => checkbox().click());
+  mode = 'error';
+  await click('Refresh members', true);
+  expect(checkbox().checked).toBe(true);
+  expect(
+    [...detailDialog().querySelectorAll<HTMLButtonElement>('button')].find(
+      (n) => n.textContent === 'Save roles'
+    )!.disabled
+  ).toBe(true);
+  mode = 'changed';
+  await click('Refresh members', true);
+  expect(checkbox().checked).toBe(true);
+  expect(detailDialog().textContent).toContain('Saved roles changed');
+  await click('Reset to saved roles', true);
+  expect(checkbox().checked).toBe(false);
+});
+it.each([401, 403])(
+  'activity %s clears private detail and invalidates late reads, preserving only allowed account data',
+  async (status) => {
+    let deny = false,
+      resolve!: (response: Response) => void;
+    await render((path) =>
+      path.includes('/activity')
+        ? deny
+          ? new Promise<Response>((done) => {
+              resolve = done;
+            })
+          : reply(historyPage())
+        : baseline(path)
+    );
+    await click('View details');
+    deny = true;
+    await click('Refresh activity', true);
+    await act(async () => resolve(reply({}, status)));
+    expect(document.querySelector('[role=dialog]')).toBeNull();
+    expect(host.textContent).not.toContain('m***@example.test');
+    expect(host.textContent?.includes('Transfer company')).toBe(status === 403);
+  }
+);
+it('pending detail shows plain-text invitation information without querying a recipient account or history', async () => {
+  const requests = await render((path) =>
+    path.endsWith('/agents')
+      ? reply({
+          ...teamCatalogue(),
+          agents: teamCatalogue().agents.map((entry) =>
+            entry.type === 'invitation'
+              ? { ...entry, message: '<script>private note</script>' }
+              : entry
+          ),
+        })
+      : baseline(path)
+  );
+  const row = [...host.querySelectorAll('tr')].find((row) =>
+    row.textContent?.includes('i***@example.test')
+  )!;
+  await act(async () =>
+    [...row.querySelectorAll<HTMLButtonElement>('button')]
+      .find((button) => button.textContent === 'View details')!
+      .click()
+  );
+  expect(detailDialog().textContent).toContain('<script>private note</script>');
+  expect(detailDialog().querySelector('script')).toBeNull();
+  expect(detailDialog().textContent).toContain('Recipient account information is kept private');
+  expect(requests.mock.calls.some(([path]) => String(path).includes('/activity'))).toBe(false);
+  await click('Withdraw invitation', true);
+  expect(detailDialog().textContent).toContain('i***@example.test');
+});
+it('ignores a late history response after switching profile context', async () => {
+  let resolve!: (response: Response) => void;
+  await render((path) =>
+    path.includes('/activity')
+      ? new Promise<Response>((done) => {
+          resolve = done;
+        })
+      : baseline(path)
+  );
+  await click('View details');
+  await act(async () => refreshProfileContext());
+  await act(async () => resolve(reply(historyPage())));
+  expect(document.querySelector('[role=dialog]')).toBeNull();
+  expect(host.textContent).not.toContain('Order created');
+});
+it('deduplicates overlapping pages and stops a repeated cursor', async () => {
+  await render((path) =>
+    path.includes('/activity') ? reply(historyPage('same-page')) : baseline(path)
+  );
+  await click('View details');
+  await click('Older activity', true);
+  expect(detailDialog().querySelectorAll('ol li')).toHaveLength(1);
+  expect(detailDialog().textContent).not.toContain('Older activity');
+});
+it.each([
+  { ...historyPage(), profileId: 'foreign' },
+  { ...historyPage(), userId: 'foreign' },
+  { ...historyPage(), items: [{ ...historyPage().items[0], kind: 'privateEvent' }] },
+  { ...historyPage(), items: [historyPage().items[0], historyPage().items[0]] },
+  { ...historyPage(), nextCursor: '../unsafe' },
+  { ...historyPage(), items: [], nextCursor: 'unsafe-loop' },
+])('rejects malformed and wrong-scope activity %j', (value) =>
+  expect(validTeamActivity(value, teamCatalogue().profileId, 'member')).toBe(false)
+);
+
+it('never offers an Owner with a Manager role as the new owner', async () => {
+  const team = teamCatalogue();
+  team.agents.unshift(
+    { ...team.agents[0]!, id: 'owner', userId: 'owner', role: 'Owner' },
+    { ...team.agents[0]!, id: 'owner-manager', userId: 'owner', role: 'Manager' }
+  );
+  await render((path, init) =>
+    path === '/api/auth/step-up'
+      ? reply({ verified: true })
+      : init?.method
+        ? reply({})
+        : path.endsWith('/agents')
+          ? reply(team)
+          : baseline(path)
+  );
+  await click('Transfer ownership');
+  await fill('#team-step-up-password', 'fixture-password');
+  await click('Confirm', true);
+  const options = [...detailDialog().querySelectorAll<HTMLOptionElement>('option')].map(
+    (option) => option.value
+  );
+  expect(options).toContain('member');
+  expect(options).not.toContain('owner');
+});
+it.each(['agent', 'invitation'] as const)(
+  '%s removal retains review for an invalid receipt and closes only after a verified result',
+  async (type) => {
+    let valid = false;
+    const requests = await render((path, init) => {
+      if (init?.method === 'DELETE')
+        return reply(
+          valid
+            ? type === 'agent'
+              ? { removed: true }
+              : { id: 'invitation-one', status: 'Withdrawn' }
+            : type === 'agent'
+              ? { removed: false }
+              : { id: 'wrong-target', status: 'Withdrawn' }
+        );
+      if (path.includes('/activity')) return reply(historyPage());
+      return baseline(path);
+    });
+    const row = [...host.querySelectorAll('tr')].find((row) =>
+      row.textContent?.includes(type === 'agent' ? 'm***@example.test' : 'i***@example.test')
+    )!;
+    await act(async () =>
+      [...row.querySelectorAll<HTMLButtonElement>('button')]
+        .find((button) => button.textContent === 'View details')!
+        .click()
+    );
+    await click(type === 'agent' ? 'Remove member' : 'Withdraw invitation', true);
+    expect(requests.mock.calls.filter(([, init]) => init?.method === 'DELETE')).toHaveLength(0);
+    await click('Confirm', true);
+    expect(detailDialog().textContent).toContain('The action could not be completed');
+    expect(host.textContent).not.toContain('Change saved');
+    valid = true;
+    await click('Confirm', true);
+    expect(document.querySelector('[role=dialog]')).toBeNull();
+    expect(host.textContent).toContain('Change saved');
+  }
+);

@@ -1,0 +1,2 @@
+CREATE INDEX "audit_log_member_activity_idx" ON "audit_log" USING btree ("user_id","created_at","id");--> statement-breakpoint
+CREATE INDEX "audit_log_profile_activity_idx" ON "audit_log" USING btree (((CASE WHEN "metadata" IS JSON OBJECT THEN "metadata"::jsonb ELSE '{}'::jsonb END)->>'profileId'),"created_at","id");
