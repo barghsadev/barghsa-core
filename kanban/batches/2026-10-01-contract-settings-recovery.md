@@ -28,6 +28,6 @@ Local validation passes 401 related web cases, including twenty-one new recovery
 
 ## Publication
 
-The preceding CRM batch is published directly to main as `dea09e44913fb12f8793239a1502fd5a2f6ae936`. Remote SHA and clean worktree were verified. GitHub has not registered a CI run for that SHA at the latest inspection; no CI success is claimed.
+The preceding CRM batch is published directly to main as `dea09e44913fb12f8793239a1502fd5a2f6ae936`. Remote SHA and clean worktree were verified. Its CI run `36835775110` was cancelled when the following main publication superseded it; no CI success is claimed for that cancelled run.
 
-This contract settings batch is published directly to main after review and final validation. Remote SHA and CI availability are read back after publication; no remote CI success is claimed without a registered, passing run. No PR is created. Historical supervisor state remains unchanged.
+This contract settings batch is published directly to main as `3db24c91483475bb12fcedcfafe63896c7436d65` after review and final validation. Remote SHA and clean worktree were verified. CI run `36835982680` passes all five jobs under the existing temporary fast mode. Combined-coverage success is an exemption, not measured coverage. No PR is created. Historical supervisor state remains unchanged.

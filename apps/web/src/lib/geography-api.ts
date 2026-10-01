@@ -7,7 +7,7 @@ export interface Province {
   status: 'active' | 'inactive';
 }
 export class GeographyRequestError extends Error {
-  constructor(readonly code: 'requestFailed' | 'conflict' = 'requestFailed') {
+  constructor(readonly code: 'requestFailed' | 'conflict' | 'denied' = 'requestFailed') {
     super(code);
   }
 }
@@ -30,7 +30,13 @@ function isProvince(value: unknown): value is Province {
 async function request(path: string, init?: RequestInit): Promise<unknown> {
   const response = await fetch(`/api/admin/geography/provinces${path}`, init);
   if (!response.ok)
-    throw new GeographyRequestError(response.status === 409 ? 'conflict' : 'requestFailed');
+    throw new GeographyRequestError(
+      [401, 403].includes(response.status)
+        ? 'denied'
+        : response.status === 409
+          ? 'conflict'
+          : 'requestFailed'
+    );
   try {
     return await response.json();
   } catch {
@@ -49,6 +55,7 @@ export async function listProvinces(
     !result ||
     !Array.isArray(result.provinces) ||
     !result.provinces.every(isProvince) ||
+    new Set(result.provinces.map((row) => row.id)).size !== result.provinces.length ||
     typeof result.total !== 'number' ||
     !Number.isSafeInteger(result.total) ||
     result.total < 0
@@ -105,6 +112,7 @@ export async function listCities(
     !result ||
     !Array.isArray(result.cities) ||
     !result.cities.every((c) => isCity(c) && c.provinceId === provinceId) ||
+    new Set(result.cities.map((row) => row.id)).size !== result.cities.length ||
     typeof result.total !== 'number' ||
     !Number.isSafeInteger(result.total) ||
     result.total < 0

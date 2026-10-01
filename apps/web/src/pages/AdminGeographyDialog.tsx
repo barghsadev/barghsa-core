@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   AlertDescription,
@@ -38,7 +38,13 @@ export function GeographyDialog({
   modal,
   onClose,
   onSaved,
+  readReady = true,
+  recovery,
+  onDenied,
 }: {
+  readReady?: boolean;
+  recovery?: React.ReactNode;
+  onDenied?: () => void;
   provinceId?: string;
   modal: GeographyModal;
   onClose: () => void;
@@ -67,10 +73,18 @@ export function GeographyDialog({
   const [status, setStatus] = useState<'active' | 'inactive'>(modal.province?.status ?? 'active');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<GeographyTextKey | null>(null);
+  const mounted = useRef(false),
+    inFlight = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const deactivating = modal.kind === 'deactivate';
   async function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (busy) return;
+    if (busy || inFlight.current || !readReady) return;
     setError(null);
     if (!deactivating) {
       if (!nameFa.trim() || !/^[\u0600-\u06FF\u200C\s]+$/.test(nameFa.trim())) {
@@ -82,6 +96,7 @@ export function GeographyDialog({
         return;
       }
     }
+    inFlight.current = true;
     setBusy(true);
     try {
       if (deactivating && modal.province) {
@@ -99,11 +114,17 @@ export function GeographyDialog({
           nameEn: nameEn.trim(),
           status,
         });
-      onSaved();
+      if (mounted.current) onSaved();
     } catch (cause) {
+      if (!mounted.current) return;
+      if (cause instanceof GeographyRequestError && cause.code === 'denied') {
+        onDenied?.();
+        return;
+      }
       setError(failureKey(cause));
     } finally {
-      setBusy(false);
+      inFlight.current = false;
+      if (mounted.current) setBusy(false);
     }
   }
   return (
@@ -186,6 +207,7 @@ export function GeographyDialog({
               <AlertDescription>{t(error)}</AlertDescription>
             </Alert>
           )}
+          {recovery}
           <DialogFooter>
             <Button type="button" variant="outline" disabled={busy} onClick={onClose}>
               {t('cancel')}
@@ -193,7 +215,7 @@ export function GeographyDialog({
             <Button
               type="submit"
               variant={deactivating ? 'destructive' : 'default'}
-              disabled={busy}
+              disabled={busy || !readReady}
             >
               {t(
                 busy

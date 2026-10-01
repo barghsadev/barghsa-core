@@ -1,11 +1,13 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
+import { crmShell } from './crm-shell-fixture';
+test.use({ viewport: { width: 390, height: 844 } });
 
 for (const locale of ['en', 'fa'] as const) {
   test(`province dialogs are localized and restore keyboard focus (${locale})`, async ({
     page,
   }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await page.route('**/api/admin/geography/provinces?*', (route) =>
       route.fulfill({
         json: {
@@ -17,9 +19,6 @@ for (const locale of ['en', 'fa'] as const) {
       })
     );
     await page.goto('/admin/geography');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
     const heading = locale === 'fa' ? 'مدیریت استان‌ها' : 'Province Management';
     const addName = locale === 'fa' ? 'افزودن استان' : 'Add Province';
     await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
@@ -50,7 +49,7 @@ for (const locale of ['en', 'fa'] as const) {
     const fa = locale === 'fa';
     let rows: { id: string; nameFa: string; nameEn: string; status: string }[] = [];
     let creates = 0;
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await page.route('**/api/admin/geography/provinces**', async (route) => {
       const method = route.request().method();
       if (method === 'GET') return route.fulfill({ json: { provinces: rows, total: rows.length } });
@@ -66,9 +65,6 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ json: method === 'DELETE' ? { success: true } : rows[0] });
     });
     await page.goto('/admin/geography');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
     await page
       .getByRole('button', { name: fa ? 'افزودن استان' : 'Add Province', exact: true })
       .click();
@@ -110,7 +106,7 @@ test('province list retries malformed data and applies pagination and filters', 
 }) => {
   let broken = true;
   const queries: string[] = [];
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, 'en');
   await page.route('**/api/admin/geography/provinces?*', (route) => {
     const query = new URL(route.request().url()).searchParams;
     queries.push(query.toString());
@@ -130,9 +126,6 @@ test('province list retries malformed data and applies pagination and filters', 
     });
   });
   await page.goto('/admin/geography');
-  await page.evaluate(() => {
-    document.documentElement.lang = 'en';
-  });
   await expect(page.getByRole('alert')).toContainText('The request could not be completed');
   broken = false;
   await page.getByRole('button', { name: 'Retry', exact: true }).click();
@@ -154,7 +147,7 @@ test('province list retries malformed data and applies pagination and filters', 
 
 test('city pagination resets only when the search changes', async ({ page }) => {
   const queries: string[] = [];
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, 'en');
   await page.route('**/api/admin/geography/provinces?*', (route) =>
     route.fulfill({
       json: {
@@ -182,9 +175,6 @@ test('city pagination resets only when the search changes', async ({ page }) => 
     });
   });
   await page.goto('/admin/geography');
-  await page.evaluate(() => {
-    document.documentElement.lang = 'en';
-  });
   await page.getByRole('button', { name: 'Cities', exact: true }).click();
   const panel = page.getByRole('region', { name: 'Cities — Tehran', exact: true });
   await expect(panel.getByRole('cell', { name: 'Rey', exact: true })).toBeVisible();
@@ -205,7 +195,7 @@ for (const locale of ['en', 'fa'] as const) {
     const fa = locale === 'fa';
     let rows = [{ id: 'city-1', provinceId: 'p1', nameFa: 'ری', nameEn: 'Rey', status: 'active' }];
     let imports = 0;
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await page.route('**/api/admin/geography/provinces?*', (route) =>
       route.fulfill({
         json: {
@@ -248,9 +238,6 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.goto('/admin/geography');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
     await page.getByRole('button', { name: fa ? 'شهرها' : 'Cities', exact: true }).click();
     const panel = page.getByRole('region', {
       name: fa ? 'شهرها — تهران' : 'Cities — Tehran',

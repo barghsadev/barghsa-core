@@ -1,4 +1,8 @@
 const en = {
+  denied: 'You do not have permission to manage geography.',
+  refresh: 'Refresh',
+  provinceRetry: 'Retry provinces',
+  cityRetry: 'Retry cities',
   cities: 'Cities',
   addCity: 'Add City',
   editCity: 'Edit City',
@@ -53,6 +57,10 @@ const en = {
     'The change conflicts with existing data. The province may still be in use or its name may already exist.',
 };
 const fa: Record<keyof typeof en, string> = {
+  denied: 'اجازه مدیریت اطلاعات جغرافیایی را ندارید.',
+  refresh: 'تازه‌سازی',
+  provinceRetry: 'تلاش مجدد استان‌ها',
+  cityRetry: 'تلاش مجدد شهرها',
   cities: 'شهرها',
   addCity: 'افزودن شهر',
   editCity: 'ویرایش شهر',

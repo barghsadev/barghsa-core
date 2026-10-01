@@ -57,7 +57,8 @@ describe('geography response boundaries', () => {
   });
   it.each([
     [409, 'conflict'],
-    [403, 'requestFailed'],
+    [401, 'denied'],
+    [403, 'denied'],
     [500, 'requestFailed'],
   ])('maps HTTP %s without exposing server messages', async (status, message) => {
     response({ message: 'private error' }, Number(status));
