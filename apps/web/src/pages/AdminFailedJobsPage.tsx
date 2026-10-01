@@ -7,6 +7,7 @@ import { Button, Label, ListPage, ScrollArea } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useOperationalQueue } from '../hooks/useOperationalQueue.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 interface Job {
   id: string;
   jobType: string;
@@ -58,14 +59,18 @@ const jobBasis = (row: Job) =>
   ]);
 const statuses = ['failed', 'retrying', 'dead_letter', 'resolved', 'all'];
 const pageSize = 25;
-export default function AdminFailedJobsPage() {
+export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBinding } = {}) {
   const time = useAccountTime();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`admin.jobs.${key}`, locale);
-  const [status, setStatus] = useState('failed'),
-    [jobType, setJobType] = useState('');
-  const [offset, setOffset] = useState(0);
+  const [localStatus, setStatus] = useState('failed'),
+    [localJobType, setJobType] = useState('');
+  const [localOffset, setOffset] = useState(0);
+  const status = queries ? queries.query.filters.status : localStatus;
+  const jobType = queries ? queries.query.filters.jobType || '' : localJobType;
+  const offset = queries ? (queries.query.page - 1) * pageSize : localOffset;
+  const actionGeneration = useRef(0);
   const [selected, setSelected] = useState<string[]>([]),
     [notice, setNotice] = useState<{
       kind: 'retry' | 'resolve';
@@ -84,6 +89,7 @@ export default function AdminFailedJobsPage() {
   const savedTrigger = useRef<HTMLElement | null>(null);
   const refreshButton = useRef<HTMLButtonElement>(null);
   const clearPrivate = useCallback(() => {
+    actionGeneration.current++;
     setSelected([]);
     setAction(null);
     setNotice(null);
@@ -104,6 +110,24 @@ export default function AdminFailedJobsPage() {
   const jobs = queue.data?.rows ?? [],
     hasMore = queue.data?.hasMore ?? false;
   const previousCriteria = useRef(criteria);
+  const actionScope = `${criteria}:${offset}`;
+  const previousActionScope = useRef(actionScope);
+  if (previousActionScope.current !== actionScope) {
+    previousActionScope.current = actionScope;
+    actionGeneration.current++;
+  }
+  const receiptGeneration = actionGeneration.current;
+  useEffect(
+    () => () => {
+      actionGeneration.current++;
+    },
+    []
+  );
+  useEffect(() => {
+    setAction(null);
+    setNotice(null);
+    savedTrigger.current = null;
+  }, [offset]);
   useEffect(() => {
     if (previousCriteria.current === criteria) return;
     previousCriteria.current = criteria;
@@ -235,8 +259,11 @@ export default function AdminFailedJobsPage() {
                   variant={status === value ? 'default' : 'outline'}
                   aria-pressed={status === value}
                   onClick={() => {
-                    setStatus(value);
-                    setOffset(0);
+                    if (queries) queries.setQuery({ filters: { status: value } });
+                    else {
+                      setStatus(value);
+                      setOffset(0);
+                    }
                     setNotice(null);
                   }}
                 >
@@ -250,8 +277,11 @@ export default function AdminFailedJobsPage() {
                 id="job-type"
                 value={jobType}
                 onChange={(event) => {
-                  setJobType(event.target.value);
-                  setOffset(0);
+                  if (queries) queries.setQuery({ filters: { jobType: event.target.value } });
+                  else {
+                    setJobType(event.target.value);
+                    setOffset(0);
+                  }
                   setNotice(null);
                 }}
                 className="block h-9 rounded-md border bg-card text-card-foreground px-3 text-sm"
@@ -417,7 +447,11 @@ export default function AdminFailedJobsPage() {
           <Button
             variant="outline"
             disabled={!queue.canView || loading || error || !offset}
-            onClick={() => setOffset((v) => Math.max(0, v - pageSize))}
+            onClick={() =>
+              queries
+                ? queries.setQuery({ page: Math.max(1, queries.query.page - 1) })
+                : setOffset((v) => Math.max(0, v - pageSize))
+            }
           >
             {label('previous')}
           </Button>
@@ -429,8 +463,12 @@ export default function AdminFailedJobsPage() {
           </span>
           <Button
             variant="outline"
-            disabled={!queue.canView || loading || error || !hasMore}
-            onClick={() => setOffset((v) => v + pageSize)}
+            disabled={!queue.canView || loading || error || !hasMore || offset >= 1_000_000}
+            onClick={() =>
+              queries
+                ? queries.setQuery({ page: queries.query.page + 1 })
+                : setOffset((v) => v + pageSize)
+            }
           >
             {label('next')}
           </Button>
@@ -449,6 +487,7 @@ export default function AdminFailedJobsPage() {
           }
           onClose={() => setAction(null)}
           onSuccess={async (result) => {
+            if (receiptGeneration !== actionGeneration.current) return;
             const acknowledged = Array.isArray(result) ? result : [result];
             if (
               (action.count > 1 ? !Array.isArray(result) : Array.isArray(result)) ||

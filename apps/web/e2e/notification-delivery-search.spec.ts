@@ -1,5 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
+import { crmShell } from './crm-shell-fixture';
+import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 
 for (const locale of ['en', 'fa'] as const) {
   test(`staff can search deliveries outside the dead-letter queue (${locale})`, async ({
@@ -7,7 +9,10 @@ for (const locale of ['en', 'fa'] as const) {
   }) => {
     const fa = locale === 'fa';
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
+    await page.route('**/api/admin/notifications/templates*', (route) =>
+      route.fulfill({ json: [{ ...notificationTemplate(), locale }] })
+    );
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'UTC' } })
     );

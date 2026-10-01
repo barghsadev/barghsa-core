@@ -10,6 +10,7 @@ import {
   previewQueryOptions,
   failedNotificationQueryOptions,
 } from '../../lib/notification-panel-query.js';
+import { deliveryHistoryQueryOptions } from '../../lib/operations-list-query.js';
 
 const Page = lazyRouteComponent(() => import('../../pages/AdminNotificationsPage.js'));
 function NotificationTemplatesRoute() {
@@ -34,7 +35,15 @@ function NotificationTemplatesRoute() {
   };
   const previewQueries = useListQuery(previewQueryOptions, search, navigatePanel);
   const failedQueries = useListQuery(failedNotificationQueryOptions, search, navigatePanel);
-  return <Page queries={queries} previewQueries={previewQueries} failedQueries={failedQueries} />;
+  const historyQueries = useListQuery(deliveryHistoryQueryOptions, search, navigatePanel);
+  return (
+    <Page
+      queries={queries}
+      previewQueries={previewQueries}
+      failedQueries={failedQueries}
+      historyQueries={historyQueries}
+    />
+  );
 }
 
 export const Route = createFileRoute('/admin/notifications')({

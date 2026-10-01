@@ -4,11 +4,12 @@ import { CustomerCorrectionsSection } from '../components/CustomerCorrectionsPan
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 export default function AdminFailedNotificationsPage({
   queries,
-}: { queries?: ListQueryBinding } = {}) {
+  historyQueries,
+}: { queries?: ListQueryBinding; historyQueries?: ListQueryBinding } = {}) {
   const locale = useLocale();
   return (
     <div className="space-y-8">
-      <DeadLetterPanel uiLocale={locale} queries={queries} />
+      <DeadLetterPanel uiLocale={locale} queries={queries} historyQueries={historyQueries} />
       <CustomerCorrectionsSection locale={locale} />
     </div>
   );

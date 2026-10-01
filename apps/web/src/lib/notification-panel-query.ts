@@ -4,6 +4,7 @@ import {
   parseListQuery,
   type ListQueryOptions,
 } from '../hooks/useListQuery.js';
+import { deliveryHistorySearch } from './operations-list-query.js';
 
 const base: ListQueryOptions = {
   searchLimit: 0,
@@ -49,9 +50,14 @@ export function notificationPanelSearch(raw: Record<string, unknown>): Record<st
   const preview = parseListQuery(raw, previewQueryOptions);
   const result = {
     ...failedNotificationsSearch(raw),
+    ...deliveryHistorySearch(raw),
     ...Object.fromEntries(
       Object.entries(preview.filters).map(([key, value]) => ['preview_' + key, value || undefined])
     ),
   };
   return Object.fromEntries(Object.entries(result).filter(([, value]) => value !== undefined));
 }
+export const failedNotificationPageSearch = (raw: Record<string, unknown>) => ({
+  ...failedNotificationsSearch(raw),
+  ...deliveryHistorySearch(raw),
+});

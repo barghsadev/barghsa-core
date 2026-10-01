@@ -109,10 +109,12 @@ export default function AdminNotificationsPage({
   queries,
   previewQueries,
   failedQueries,
+  historyQueries,
 }: {
   queries?: ListQueryBinding;
   previewQueries?: ListQueryBinding;
   failedQueries?: ListQueryBinding;
+  historyQueries?: ListQueryBinding;
 } = {}) {
   const uiLocale = useLocale();
   const numbers = useNumberFormatting(uiLocale);
@@ -788,7 +790,11 @@ export default function AdminNotificationsPage({
           <DeliveryWindowConfigPanel uiLocale={uiLocale} />
 
           {/* Dead-letter queue (T-05.01.06) */}
-          <DeadLetterPanel uiLocale={uiLocale} queries={failedQueries} />
+          <DeadLetterPanel
+            uiLocale={uiLocale}
+            queries={failedQueries}
+            historyQueries={historyQueries}
+          />
           <CustomerCorrectionsSection locale={uiLocale} />
         </>
       )}

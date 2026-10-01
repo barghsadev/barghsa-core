@@ -12,6 +12,7 @@ import { t } from '@barghsa/i18n/admin-ui';
 import type { Locale } from '@barghsa/i18n/app';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 
 interface DeliveryAttempt {
   id: string;
@@ -69,22 +70,38 @@ export function NotificationDeliveryHistory({
   target,
   locale,
   onClose,
+  queries,
 }: {
-  target?: Target;
+  target?: Target | undefined;
   locale: Locale;
   onClose: () => void;
+  queries?: ListQueryBinding | undefined;
 }) {
   const label = (key: string) => t(`admin.notifications.history.${key}`, locale);
   const numbers = useNumberFormatting(locale);
   const time = useAccountTime(locale);
   const [rows, setRows] = useState<DeliveryAttempt[]>([]);
-  const [offset, setOffset] = useState(0);
+  const [localOffset, setOffset] = useState(0);
+  const offset = queries ? (queries.query.page - 1) * 25 : localOffset;
   const [revision, setRevision] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [hasMore, setHasMore] = useState(false);
-  const [draft, setDraft] = useState<Filters>({ notificationId: '', channel: '', status: '' });
-  const [filters, setFilters] = useState<Filters>(draft);
+  const [localFilters, setFilters] = useState<Filters>({
+    notificationId: '',
+    channel: '',
+    status: '',
+  });
+  const notificationId =
+    target?.outboxId ??
+    (queries ? queries.query.filters.notificationId || '' : localFilters.notificationId);
+  const channel =
+    target?.channel ?? (queries ? queries.query.filters.channel || '' : localFilters.channel);
+  const status = target ? '' : queries ? queries.query.filters.status || '' : localFilters.status;
+  const [draft, setDraft] = useState<Filters>({ notificationId, channel, status });
+  useEffect(() => {
+    setDraft({ notificationId, channel, status });
+  }, [notificationId, channel, status]);
   const channelLabel = (channel: string) =>
     t(
       `admin.notifications.deadLetter.channel${channel === 'email' ? 'Email' : channel === 'sms' ? 'Sms' : 'InApp'}`,
@@ -98,9 +115,7 @@ export function NotificationDeliveryHistory({
     setHasMore(false);
     void (async () => {
       try {
-        const applied = target
-          ? { notificationId: target.outboxId, channel: target.channel, status: '' }
-          : filters;
+        const applied = { notificationId, channel, status };
         const query = new URLSearchParams({
           limit: '26',
           offset: String(offset),
@@ -129,7 +144,7 @@ export function NotificationDeliveryHistory({
       }
     })();
     return () => controller.abort();
-  }, [target, filters, offset, revision]);
+  }, [notificationId, channel, status, offset, revision]);
 
   return (
     <Dialog
@@ -159,8 +174,19 @@ export function NotificationDeliveryHistory({
             className="flex flex-wrap items-end gap-3"
             onSubmit={(event) => {
               event.preventDefault();
-              setFilters({ ...draft, notificationId: draft.notificationId.trim() });
-              setOffset(0);
+              const filters = { ...draft, notificationId: draft.notificationId.trim() };
+              if (
+                filters.notificationId === notificationId &&
+                filters.channel === channel &&
+                filters.status === status &&
+                offset === 0
+              )
+                setRevision((value) => value + 1);
+              if (queries) queries.setQuery({ filters: { ...filters }, page: 1 });
+              else {
+                setFilters(filters);
+                setOffset(0);
+              }
             }}
           >
             <label className="min-w-0 flex-1 space-y-1">
@@ -278,15 +304,25 @@ export function NotificationDeliveryHistory({
             <Button
               variant="outline"
               disabled={loading || offset === 0}
-              onClick={() => setOffset((value) => Math.max(0, value - 25))}
+              onClick={() =>
+                queries
+                  ? queries.setQuery({ page: Math.max(1, queries.query.page - 1) })
+                  : setOffset((value) => Math.max(0, value - 25))
+              }
             >
               {t('admin.jobs.previous', locale)}
             </Button>
             <span>{numbers.number(offset / 25 + 1)}</span>
             <Button
               variant="outline"
-              disabled={loading || !hasMore}
-              onClick={() => setOffset((value) => value + 25)}
+              disabled={
+                loading || !hasMore || (queries !== undefined && queries.query.page >= 1_000_000)
+              }
+              onClick={() =>
+                queries
+                  ? queries.setQuery({ page: queries.query.page + 1 })
+                  : setOffset((value) => value + 25)
+              }
             >
               {t('admin.jobs.next', locale)}
             </Button>

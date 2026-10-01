@@ -1,6 +1,6 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useCallback, useState, useEffect, useId, useRef } from 'react';
+import { useCallback, useState, useEffect, useId, useRef, useMemo } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { Button, ListPage, ScrollArea } from '@barghsa/ui';
@@ -97,9 +97,11 @@ function statusLabel(status: DeadLetterRow['status'], uiLocale: Locale): string 
 export default function DeadLetterPanel({
   uiLocale,
   queries,
+  historyQueries,
 }: {
   uiLocale: Locale;
   queries?: ListQueryBinding | undefined;
+  historyQueries?: ListQueryBinding | undefined;
 }) {
   const time = useAccountTime(uiLocale);
   const numbers = useNumberFormatting(uiLocale);
@@ -154,6 +156,26 @@ export default function DeadLetterPanel({
   const { access, loading, error } = queue;
   const rows = queue.data?.rows ?? [],
     hasMore = queue.data?.hasMore ?? false;
+  const historyMode = historyQueries?.query.filters.mode;
+  const historyId = historyQueries?.query.filters.notificationId || '';
+  const historyChannel = historyQueries?.query.filters.channel || '';
+  const historyEvent = rows.find(
+    (row) => row.outboxId === historyId && row.channel === historyChannel
+  )?.eventKey;
+  const historyTarget = useMemo(
+    () =>
+      historyMode === 'target'
+        ? { outboxId: historyId, channel: historyChannel, eventKey: historyEvent ?? historyId }
+        : undefined,
+    [historyMode, historyId, historyChannel, historyEvent]
+  );
+  const closeHistory = () => {
+    if (historyQueries) historyQueries.setQuery({ filters: { mode: '' } });
+    else {
+      setHistory(null);
+      setAllHistory(false);
+    }
+  };
   const actionScope = `${criteria}:${offset}`;
   const previousCriteria = useRef(actionScope);
   if (previousCriteria.current !== actionScope) {
@@ -246,7 +268,22 @@ export default function DeadLetterPanel({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">{label('title')}</h2>
         {queue.canView && (
-          <Button variant="outline" onClick={() => setAllHistory(true)}>
+          <Button
+            variant="outline"
+            onClick={() =>
+              historyQueries
+                ? historyQueries.setQuery({
+                    filters: {
+                      mode: 'all',
+                      ...(historyMode === 'target'
+                        ? { notificationId: '', channel: '', status: '' }
+                        : {}),
+                    },
+                    page: 1,
+                  })
+                : setAllHistory(true)
+            }
+          >
             {t('admin.notifications.history.browse', uiLocale)}
           </Button>
         )}
@@ -424,7 +461,22 @@ export default function DeadLetterPanel({
                           >
                             {JSON.stringify(row.data, null, 2)}
                           </pre>
-                          <Button variant="outline" onClick={() => setHistory(row)}>
+                          <Button
+                            variant="outline"
+                            onClick={() =>
+                              historyQueries
+                                ? historyQueries.setQuery({
+                                    filters: {
+                                      mode: 'target',
+                                      notificationId: row.outboxId,
+                                      channel: row.channel,
+                                      status: '',
+                                    },
+                                    page: 1,
+                                  })
+                                : setHistory(row)
+                            }
+                          >
                             {t('admin.notifications.history.title', uiLocale)}
                           </Button>
                         </details>
@@ -505,10 +557,18 @@ export default function DeadLetterPanel({
           </nav>
         )}
       </ListPage>
-      {allHistory && queue.canView && (
+      {historyQueries && historyMode && queue.canView && (
+        <NotificationDeliveryHistory
+          locale={uiLocale}
+          target={historyTarget}
+          queries={historyQueries}
+          onClose={closeHistory}
+        />
+      )}
+      {!historyQueries && allHistory && queue.canView && (
         <NotificationDeliveryHistory locale={uiLocale} onClose={() => setAllHistory(false)} />
       )}
-      {history && queue.canView && (
+      {!historyQueries && history && queue.canView && (
         <NotificationDeliveryHistory
           key={history.id}
           target={history}
