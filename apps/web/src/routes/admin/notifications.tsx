@@ -6,6 +6,10 @@ import {
   notificationTemplateQueryOptions,
   notificationTemplatesSearch,
 } from '../../lib/template-catalogue-query.js';
+import {
+  previewQueryOptions,
+  failedNotificationQueryOptions,
+} from '../../lib/notification-panel-query.js';
 
 const Page = lazyRouteComponent(() => import('../../pages/AdminNotificationsPage.js'));
 function NotificationTemplatesRoute() {
@@ -18,7 +22,19 @@ function NotificationTemplatesRoute() {
       resetScroll: false,
     });
   });
-  return <Page queries={queries} />;
+  const navigatePanel = (
+    update: (raw: Record<string, unknown>) => Record<string, unknown>,
+    options?: { replace?: boolean }
+  ) => {
+    void navigate({
+      search: (raw) => notificationTemplatesSearch(update(raw)),
+      replace: options?.replace ?? false,
+      resetScroll: false,
+    });
+  };
+  const previewQueries = useListQuery(previewQueryOptions, search, navigatePanel);
+  const failedQueries = useListQuery(failedNotificationQueryOptions, search, navigatePanel);
+  return <Page queries={queries} previewQueries={previewQueries} failedQueries={failedQueries} />;
 }
 
 export const Route = createFileRoute('/admin/notifications')({

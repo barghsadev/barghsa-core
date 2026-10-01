@@ -1,5 +1,6 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { t } from '@barghsa/i18n/admin-ui';
 import type { Locale } from '@barghsa/i18n/app';
 import BrandedEmailPreview from './BrandedEmailPreview.js';
@@ -75,26 +76,38 @@ interface TemplatePreviewPanelProps {
   uiLocale: Locale;
   templates: NotificationTemplateForPreview[];
   loading?: boolean;
+  ready?: boolean;
+  queries?: ListQueryBinding | undefined;
 }
 
 export default function TemplatePreviewPanel({
   uiLocale,
   templates,
   loading,
+  ready = !loading,
+  queries,
 }: TemplatePreviewPanelProps) {
   const numbers = useNumberFormatting(uiLocale);
   // Selection state (filters)
-  const [eventKey, setEventKey] = useState<string>('');
-  const [channel, setChannel] = useState<TemplateChannel | ''>('');
-  const [locale, setLocale] = useState<TemplateLocale | ''>('');
-  const [versionId, setVersionId] = useState<string>('');
+  const [localEvent, setEventKey] = useState<string>('');
+  const [localChannel, setChannel] = useState<TemplateChannel | ''>('');
+  const [localLocale, setLocale] = useState<TemplateLocale | ''>('');
+  const [localVersion, setVersionId] = useState<string>('');
+  const eventKey = queries ? queries.query.filters.event || '' : localEvent;
+  const channel = queries ? queries.query.filters.channel || '' : localChannel;
+  const locale = queries ? queries.query.filters.locale || '' : localLocale;
+  const versionId = queries ? queries.query.filters.version || '' : localVersion;
+  const update = (filters: Record<string, string>, replace = false) => {
+    if (queries) queries.setQuery({ filters }, replace);
+    else {
+      if ('event' in filters) setEventKey(filters.event);
+      if ('channel' in filters) setChannel(filters.channel as TemplateChannel | '');
+      if ('locale' in filters) setLocale(filters.locale as TemplateLocale | '');
+      if ('version' in filters) setVersionId(filters.version);
+    }
+  };
 
   const eventKeys = [...new Set(templates.map((tp) => tp.eventKey))].sort();
-
-  // Reset selections when they no longer exist among the loaded templates.
-  useEffect(() => {
-    if (eventKey && !eventKeys.includes(eventKey)) setEventKey('');
-  }, [eventKey, eventKeys]);
 
   const channels: TemplateChannel[] =
     eventKey === ''
@@ -102,10 +115,6 @@ export default function TemplatePreviewPanel({
       : ([
           ...new Set(templates.filter((tp) => tp.eventKey === eventKey).map((tp) => tp.channel)),
         ] as TemplateChannel[]);
-
-  useEffect(() => {
-    if (channel && !channels.includes(channel)) setChannel('');
-  }, [channel, channels]);
 
   const locales: TemplateLocale[] =
     eventKey === '' || channel === ''
@@ -118,10 +127,6 @@ export default function TemplatePreviewPanel({
           ),
         ] as TemplateLocale[]);
 
-  useEffect(() => {
-    if (locale && !locales.includes(locale)) setLocale('');
-  }, [locale, locales]);
-
   // Versions for the current selection.
   const versions = templates.filter(
     (tp) =>
@@ -131,18 +136,22 @@ export default function TemplatePreviewPanel({
   );
 
   useEffect(() => {
-    if (versionId && !versions.some((v) => v.id === versionId)) setVersionId('');
-  }, [versionId, versions]);
+    // Pending or failed catalogue reads cannot invalidate a restored selection.
+    if (!ready) return;
+    const invalid: Record<string, string> = {};
+    if (eventKey && !eventKeys.includes(eventKey)) invalid.event = '';
+    if (channel && !channels.includes(channel as TemplateChannel)) invalid.channel = '';
+    if (locale && !locales.includes(locale as TemplateLocale)) invalid.locale = '';
+    if (versionId && !versions.some((v) => v.id === versionId)) invalid.version = '';
+    if (Object.keys(invalid).length) update(invalid, true);
+  }, [ready, eventKey, channel, locale, versionId, templates]);
 
   const selected =
     versions.find((v) => v.id === versionId) ?? versions.find((v) => v.isActive) ?? versions[0];
 
-  const reset = useCallback(() => {
-    setEventKey('');
-    setChannel('');
-    setLocale('');
-    setVersionId('');
-  }, []);
+  const reset = () => {
+    update({ event: '', channel: '', locale: '', version: '' });
+  };
 
   const subjectPreview =
     selected?.subject != null && selected.subject.trim() !== ''
@@ -180,7 +189,7 @@ export default function TemplatePreviewPanel({
             {t('admin.notifications.preview.description', uiLocale)}
           </p>
         </div>
-        {eventKey !== '' && (
+        {(eventKey || channel || locale || versionId) && (
           <button
             onClick={reset}
             className="px-3 py-1.5 text-sm border border-input rounded hover:bg-muted"
@@ -207,8 +216,7 @@ export default function TemplatePreviewPanel({
                 id="tpl-preview-event"
                 value={eventKey}
                 onChange={(e) => {
-                  setEventKey(e.target.value);
-                  setVersionId('');
+                  update({ event: e.target.value, channel: '', locale: '', version: '' });
                 }}
                 className="w-full border border-input rounded px-3 py-2"
               >
@@ -232,8 +240,7 @@ export default function TemplatePreviewPanel({
                 id="tpl-preview-channel"
                 value={channel}
                 onChange={(e) => {
-                  setChannel(e.target.value as TemplateChannel | '');
-                  setVersionId('');
+                  update({ channel: e.target.value, locale: '', version: '' });
                 }}
                 className="w-full border border-input rounded px-3 py-2"
               >
@@ -257,8 +264,7 @@ export default function TemplatePreviewPanel({
                 id="tpl-preview-locale"
                 value={locale}
                 onChange={(e) => {
-                  setLocale(e.target.value as TemplateLocale | '');
-                  setVersionId('');
+                  update({ locale: e.target.value, version: '' });
                 }}
                 className="w-full border border-input rounded px-3 py-2"
               >
@@ -281,7 +287,7 @@ export default function TemplatePreviewPanel({
               <select
                 id="tpl-preview-version"
                 value={selected?.id ?? ''}
-                onChange={(e) => setVersionId(e.target.value)}
+                onChange={(e) => update({ version: e.target.value })}
                 className="w-full border border-input rounded px-3 py-2"
                 disabled={versions.length === 0}
               >

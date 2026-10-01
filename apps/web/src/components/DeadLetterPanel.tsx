@@ -8,6 +8,7 @@ import type { Locale } from '@barghsa/i18n/app';
 import { NotificationDeliveryHistory } from './NotificationDeliveryHistory.js';
 
 import { useOperationalQueue } from '../hooks/useOperationalQueue.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 /**
  * Admin dead-letter queue panel (E-05, T-05.01.06).
  *
@@ -93,15 +94,30 @@ function statusLabel(status: DeadLetterRow['status'], uiLocale: Locale): string 
   return t(key, uiLocale);
 }
 
-export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
+export default function DeadLetterPanel({
+  uiLocale,
+  queries,
+}: {
+  uiLocale: Locale;
+  queries?: ListQueryBinding | undefined;
+}) {
   const time = useAccountTime(uiLocale);
   const numbers = useNumberFormatting(uiLocale);
   const filterId = useId();
   const label = (key: string) => t(`admin.notifications.deadLetter.${key}`, uiLocale);
-  const [status, setStatus] = useState('open');
-  const [channel, setChannel] = useState('');
-  const [severity, setSeverity] = useState('');
-  const [offset, setOffset] = useState(0);
+  const [localStatus, setStatus] = useState('open');
+  const [localChannel, setChannel] = useState('');
+  const [localSeverity, setSeverity] = useState('');
+  const [localOffset, setOffset] = useState(0);
+  const status = queries
+    ? queries.query.filters.status === 'all'
+      ? ''
+      : queries.query.filters.status
+    : localStatus;
+  const channel = queries ? queries.query.filters.channel || '' : localChannel;
+  const severity = queries ? queries.query.filters.severity || '' : localSeverity;
+  const offset = queries ? (queries.query.page - 1) * 25 : localOffset;
+  const actionGeneration = useRef(0);
   const [history, setHistory] = useState<DeadLetterRow | null>(null);
   const [allHistory, setAllHistory] = useState(false);
   const [action, setAction] = useState<
@@ -116,6 +132,7 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
   const savedTrigger = useRef<HTMLElement | null>(null);
   const refreshButton = useRef<HTMLButtonElement>(null);
   const clearPrivate = useCallback(() => {
+    actionGeneration.current++;
     setHistory(null);
     setAllHistory(false);
     setAction(null);
@@ -137,7 +154,19 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
   const { access, loading, error } = queue;
   const rows = queue.data?.rows ?? [],
     hasMore = queue.data?.hasMore ?? false;
-  const previousCriteria = useRef(criteria);
+  const actionScope = `${criteria}:${offset}`;
+  const previousCriteria = useRef(actionScope);
+  if (previousCriteria.current !== actionScope) {
+    previousCriteria.current = actionScope;
+    actionGeneration.current++;
+  }
+  const receiptGeneration = actionGeneration.current;
+  useEffect(
+    () => () => {
+      actionGeneration.current++;
+    },
+    []
+  );
   const basis = (row: DeadLetterRow) =>
     JSON.stringify([
       row.id,
@@ -153,12 +182,10 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
       row.maxAttempts,
     ]);
   useEffect(() => {
-    if (previousCriteria.current === criteria) return;
-    previousCriteria.current = criteria;
     setAction(null);
     setNotice(null);
     savedTrigger.current = null;
-  }, [criteria]);
+  }, [criteria, offset]);
   useEffect(() => {
     if (!queue.data || loading || error) return;
     if (action && !queue.data.rows.some((row) => basis(row) === basis(action.row))) setAction(null);
@@ -243,8 +270,11 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                 className="block rounded border p-2"
                 value={status}
                 onChange={(e) => {
-                  setStatus(e.target.value);
-                  setOffset(0);
+                  if (queries) queries.setQuery({ filters: { status: e.target.value || 'all' } });
+                  else {
+                    setStatus(e.target.value);
+                    setOffset(0);
+                  }
                 }}
               >
                 <option value="">{label('all')}</option>
@@ -262,8 +292,11 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                 className="block rounded border p-2"
                 value={channel}
                 onChange={(e) => {
-                  setChannel(e.target.value);
-                  setOffset(0);
+                  if (queries) queries.setQuery({ filters: { channel: e.target.value } });
+                  else {
+                    setChannel(e.target.value);
+                    setOffset(0);
+                  }
                 }}
               >
                 <option value="">{label('all')}</option>
@@ -281,8 +314,11 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                 className="block rounded border p-2"
                 value={severity}
                 onChange={(e) => {
-                  setSeverity(e.target.value);
-                  setOffset(0);
+                  if (queries) queries.setQuery({ filters: { severity: e.target.value } });
+                  else {
+                    setSeverity(e.target.value);
+                    setOffset(0);
+                  }
                 }}
               >
                 <option value="">{label('all')}</option>
@@ -446,15 +482,23 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
             <Button
               variant="outline"
               disabled={!queue.canView || loading || error || offset === 0}
-              onClick={() => setOffset((v) => Math.max(0, v - 25))}
+              onClick={() =>
+                queries
+                  ? queries.setQuery({ page: Math.max(1, queries.query.page - 1) })
+                  : setOffset((v) => Math.max(0, v - 25))
+              }
             >
               {t('admin.jobs.previous', uiLocale)}
             </Button>
             <span>{numbers.number((queue.data?.offset ?? offset) / 25 + 1)}</span>
             <Button
               variant="outline"
-              disabled={!queue.canView || loading || error || !hasMore}
-              onClick={() => setOffset((v) => v + 25)}
+              disabled={!queue.canView || loading || error || !hasMore || offset >= 1_000_000}
+              onClick={() =>
+                queries
+                  ? queries.setQuery({ page: queries.query.page + 1 })
+                  : setOffset((v) => v + 25)
+              }
             >
               {t('admin.jobs.next', uiLocale)}
             </Button>
@@ -485,6 +529,7 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
           }
           onClose={() => setAction(null)}
           onSuccess={async (result) => {
+            if (receiptGeneration !== actionGeneration.current) return;
             const expectedStatus = { retry: 'retried', resolve: 'resolved', dismiss: 'dismissed' }[
               action.kind
             ];

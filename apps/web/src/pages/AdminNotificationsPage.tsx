@@ -105,7 +105,15 @@ function variablesToText(variables: NotificationVariable[]): string {
  * Lists all notification templates, allows creating/editing drafts,
  * publishing active templates, and unpublishing.
  */
-export default function AdminNotificationsPage({ queries }: { queries?: ListQueryBinding } = {}) {
+export default function AdminNotificationsPage({
+  queries,
+  previewQueries,
+  failedQueries,
+}: {
+  queries?: ListQueryBinding;
+  previewQueries?: ListQueryBinding;
+  failedQueries?: ListQueryBinding;
+} = {}) {
   const uiLocale = useLocale();
   const numbers = useNumberFormatting(uiLocale);
   const channelLabels: Record<TemplateChannel, string> = {
@@ -768,13 +776,19 @@ export default function AdminNotificationsPage({ queries }: { queries?: ListQuer
       {panelsReady && !scope.denied && (
         <>
           {/* Template preview (T-05.04.03) */}
-          <TemplatePreviewPanel uiLocale={uiLocale} templates={templates} loading={loading} />
+          <TemplatePreviewPanel
+            uiLocale={uiLocale}
+            templates={templates}
+            loading={loading}
+            ready={accepted && !loading && !loadFailed && previousCriteria.current === criteria}
+            queries={previewQueries}
+          />
 
           {/* Delivery-window config (T-05.03.03) */}
           <DeliveryWindowConfigPanel uiLocale={uiLocale} />
 
           {/* Dead-letter queue (T-05.01.06) */}
-          <DeadLetterPanel uiLocale={uiLocale} />
+          <DeadLetterPanel uiLocale={uiLocale} queries={failedQueries} />
           <CustomerCorrectionsSection locale={uiLocale} />
         </>
       )}

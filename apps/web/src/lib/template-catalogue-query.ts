@@ -1,4 +1,5 @@
 import { listChoice, parseListQuery, type ListQueryOptions } from '../hooks/useListQuery.js';
+import { notificationPanelSearch } from './notification-panel-query.js';
 
 const base: ListQueryOptions = {
   searchLimit: 0,
@@ -36,5 +37,7 @@ function catalogueSearch(
 }
 export const documentTemplatesSearch = (raw: Record<string, unknown>) =>
   catalogueSearch(raw, documentTemplateQueryOptions);
-export const notificationTemplatesSearch = (raw: Record<string, unknown>) =>
-  catalogueSearch(raw, notificationTemplateQueryOptions);
+export const notificationTemplatesSearch = (raw: Record<string, unknown>) => ({
+  ...catalogueSearch(raw, notificationTemplateQueryOptions),
+  ...notificationPanelSearch(raw),
+});
