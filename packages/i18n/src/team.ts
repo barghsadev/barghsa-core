@@ -2,6 +2,16 @@ import { t as appText } from './app.js';
 import { lookup } from './lookup.js';
 
 const fa: Record<string, string> = {
+  'team.refreshProfiles': 'بازخوانی پروفایل',
+  'team.refreshTransfers': 'بازخوانی درخواست‌های مالکیت',
+  'team.refreshMembers': 'بازخوانی اعضا',
+  'team.loadTransfersError': 'بارگذاری درخواست‌های مالکیت انجام نشد. دوباره تلاش کنید.',
+  'team.staleRoles':
+    'نقش‌های ذخیره‌شده تغییر کرده‌اند. انتخاب‌های محلی را پیش از ذخیره بازنشانی کنید.',
+  'team.resetRoles': 'بازنشانی با نقش‌های ذخیره‌شده',
+  'team.owner': 'مالک',
+  'team.lastOwner': 'مالک را نمی‌توان حذف کرد. ابتدا مالکیت را منتقل کنید.',
+
   'team.loading': 'در حال بارگذاری تیم…',
   'team.loadError': 'بارگذاری تیم انجام نشد. دوباره تلاش کنید.',
   'team.selectLegal': 'برای مدیریت تیم، یک پروفایل حقوقی انتخاب کنید.',
@@ -55,6 +65,15 @@ const fa: Record<string, string> = {
 };
 
 const en: Record<string, string> = {
+  'team.refreshProfiles': 'Refresh profile',
+  'team.refreshTransfers': 'Refresh ownership requests',
+  'team.refreshMembers': 'Refresh members',
+  'team.loadTransfersError': 'Could not load ownership requests. Please retry.',
+  'team.staleRoles': 'Saved roles changed. Reset your local choices before saving.',
+  'team.resetRoles': 'Reset to saved roles',
+  'team.owner': 'Owner',
+  'team.lastOwner': 'The owner cannot be removed. Transfer ownership first.',
+
   'team.loading': 'Loading team…',
   'team.loadError': 'Could not load the team. Please retry.',
   'team.selectLegal': 'Select a legal profile to manage its team.',

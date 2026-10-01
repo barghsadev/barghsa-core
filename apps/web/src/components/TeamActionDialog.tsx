@@ -63,7 +63,7 @@ export function TeamActionDialog({
   focusConfirmation?: boolean;
   summary?: ReactNode;
   confirmationDisabled?: boolean;
-  onDenied?: () => void;
+  onDenied?: (status?: 401 | 403) => void;
 }) {
   const locale = useLocale();
   const copy = action ?? verification;
@@ -163,7 +163,7 @@ export function TeamActionDialog({
         return;
       }
       if ((response.status === 401 || response.status === 403) && onDenied) {
-        onDenied();
+        onDenied(response.status);
         return;
       }
       if (rateLimited(response)) return;

@@ -34,3 +34,5 @@ Final production build, root typecheck/lint/format, contract/suppression checks 
 The preceding gift-code batch is published as `466acda9ff6eee4f6325e4181f8acba05d567098`. CI run `36846226007` passes all five jobs under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.
 
 This batch is published directly to main following validation. No PR is created; historical supervisor state remains unchanged. Remote SHA and GitHub CI registration are read back after the push; the next batch records its immutable publication and completed CI status.
+
+Published as `c8d0aee6265540bea8c764d4f9dc09d04c98de57`; remote SHA and clean worktree were verified. CI run `36849225318` passes all five jobs under the existing temporary fast mode.

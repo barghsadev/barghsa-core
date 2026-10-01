@@ -23,9 +23,11 @@ export function useCatalogueScope(onDenied: () => void) {
 export function useCatalogueResource<T>(
   scope: ReturnType<typeof useCatalogueScope>,
   path: string | null,
-  validate: (value: unknown) => value is T
+  validate: (value: unknown) => value is T,
+  options: { onUnauthorized?: () => void } = {}
 ) {
   const { live, version, denied, deny } = scope;
+  const { onUnauthorized } = options;
   const sequence = useRef(0);
   const [attempt, setAttempt] = useState(0);
   const [result, setResult] = useState<{
@@ -69,6 +71,7 @@ export function useCatalogueResource<T>(
         const response = await fetch(path, { signal: controller.signal });
         if (!current()) return;
         if (response.status === 401 || response.status === 403) {
+          if (response.status === 401) onUnauthorized?.();
           deny();
           return;
         }
@@ -88,7 +91,7 @@ export function useCatalogueResource<T>(
       }
     })();
     return () => controller.abort();
-  }, [path, denied, key, live, version, deny, attempt, validate]);
+  }, [path, denied, key, live, version, deny, attempt, validate, onUnauthorized]);
   const accepted = !denied && result?.key === key ? result : null;
   return {
     data: accepted?.data ?? null,

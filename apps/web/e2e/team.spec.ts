@@ -1,3 +1,4 @@
+import { crmShell } from './crm-shell-fixture';
 import { cookieResponse } from './cookie-response';
 import AxeBuilder from '@axe-core/playwright';
 import { formatBrowserDate } from './browser-date';
@@ -11,13 +12,18 @@ async function shell(
   canTransfer = true,
   memberName: string | null = null
 ) {
-  await page.addInitScript((value) => {
-    if (document.documentElement) document.documentElement.lang = value;
-    new MutationObserver(() => {
-      if (document.documentElement) document.documentElement.lang = value;
-    }).observe(document, { childList: true });
-  }, locale);
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, locale);
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        userId: 'member',
+        isStaff: false,
+        operatingContext: 'customer',
+        canSwitchContext: false,
+        requiresTosAcceptance: false,
+      },
+    })
+  );
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
   );
@@ -55,6 +61,7 @@ async function shell(
             role: 'Manager',
             status: 'Active',
             joinedAt: '2026-08-01T01:00:00Z',
+            createdAt: '2026-08-01T01:00:00Z',
           },
           {
             id: 'invitation-one',
@@ -65,6 +72,7 @@ async function shell(
             role: 'Finance',
             status: 'Pending',
             joinedAt: null,
+            createdAt: '2026-09-01T01:00:00Z',
           },
         ],
       },
@@ -216,9 +224,15 @@ for (const locale of ['fa', 'en'] as const) {
     }
     await send.click();
     await expect(dialog).toHaveCount(0);
-    await expect(page.locator('#dashboard-content').getByRole('status')).toContainText(
-      fa ? 'دعوت‌نامه ارسال شد' : 'Invitation sent'
-    );
+    await expect(
+      page
+        .locator('#dashboard-content')
+        .getByRole('status')
+        .filter({
+          hasText:
+            /Invitation sent|دعوت‌نامه ارسال شد|Change saved|Transfer request sent|درخواست انتقال مالکیت/,
+        })
+    ).toContainText(fa ? 'دعوت‌نامه ارسال شد' : 'Invitation sent');
     await expect(trigger).toBeFocused();
     expect(sent).toEqual([
       { username: 'new@example.test', role: 'Finance' },
@@ -358,9 +372,15 @@ for (const locale of ['fa', 'en'] as const) {
     await page
       .getByRole('button', { name: locale === 'fa' ? 'ارسال دعوت‌نامه' : 'Send invitation' })
       .click();
-    await expect(page.locator('#dashboard-content').getByRole('status')).toContainText(
-      locale === 'fa' ? 'دعوت‌نامه ارسال شد' : 'Invitation sent'
-    );
+    await expect(
+      page
+        .locator('#dashboard-content')
+        .getByRole('status')
+        .filter({
+          hasText:
+            /Invitation sent|دعوت‌نامه ارسال شد|Change saved|Transfer request sent|درخواست انتقال مالکیت/,
+        })
+    ).toContainText(locale === 'fa' ? 'دعوت‌نامه ارسال شد' : 'Invitation sent');
     const member = page
       .getByRole('row')
       .filter({ has: page.getByRole('heading', { name: 'member@example.test' }) });
@@ -535,7 +555,15 @@ for (const action of [
     await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(requests).toBe(1);
-    await expect(page.locator('#dashboard-content').getByRole('status')).toContainText(
+    await expect(
+      page
+        .locator('#dashboard-content')
+        .getByRole('status')
+        .filter({
+          hasText:
+            /Invitation sent|دعوت‌نامه ارسال شد|Change saved|Transfer request sent|درخواست انتقال مالکیت/,
+        })
+    ).toContainText(
       action.suffix === 'transfer-ownership'
         ? 'Transfer request sent to member@example.test. They must accept.'
         : 'Change saved'

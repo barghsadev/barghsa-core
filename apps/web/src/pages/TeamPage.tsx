@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { t } from '@barghsa/i18n/team';
 import {
   Badge,
+  ListPage,
   Button,
   Dialog,
   DialogContent,
@@ -17,41 +18,207 @@ import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 
-const ROLES = ['Manager', 'Finance', 'Legal'] as const;
-type Role = (typeof ROLES)[number];
-interface Entry {
-  id: string;
-  type: 'agent' | 'invitation';
-  userId: string | null;
-  username: string | null;
-  name: string | null;
-  role: string;
-  status: string;
-  joinedAt: string | null;
-}
-interface Transfer {
-  id: string;
-  profileId: string;
-  profileName: string;
-  expiresAt: string;
-  direction: 'incoming' | 'outgoing';
-}
-interface Team {
-  profileId: string;
-  agents: Entry[];
-  canTransferOwnership: boolean;
-  profileName?: string;
-}
+import { useCatalogueScope, useCatalogueResource } from '../hooks/useCatalogueResource.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import {
+  TEAM_ROLES as ROLES,
+  validTeam,
+  validTeamProfiles,
+  validTransfers,
+  teamBasis,
+  transferBasis,
+  type TeamRole as Role,
+  type TeamEntry as Entry,
+  type Team,
+} from '../lib/team-catalogue.js';
 
 export function TeamPage() {
+  const revision = useProfileContextRevision();
+  return <TeamCatalogue key={revision} />;
+}
+function TeamCatalogue() {
+  const locale = useLocale();
+  const time = useAccountTime();
+  const word = (key: string) => t(`team.${key}`, locale);
+  const [review, setReview] = useState<{ action: TeamAction; id: string; basis: string } | null>(
+    null
+  );
+  const [notice, setNotice] = useState<string | null>(null);
+  const clearPrivate = useCallback(() => {
+    setReview(null);
+    setNotice(null);
+  }, []);
+  const scope = useCatalogueScope(clearPrivate);
+  const profiles = useCatalogueResource(scope, '/api/profiles', validTeamProfiles);
+  const transfers = useCatalogueResource(
+    scope,
+    '/api/profiles/ownership-transfers',
+    validTransfers
+  );
+  const active = profiles.data?.profiles.find((p) => p.id === profiles.data?.activeProfileId);
+  const profileReady = !profiles.loading && !profiles.error && !!profiles.data;
+  const transferReady = !transfers.loading && !transfers.error && !!transfers.data;
+  const refreshTransfers = useRef<HTMLButtonElement>(null);
+  const selected = transfers.data?.transfers.find((row) => row.id === review?.id);
+  const stale = !!review && (!selected || transferBasis(selected) !== review.basis);
+  useEffect(() => {
+    if (review && transferReady && stale) {
+      setReview(null);
+      refreshTransfers.current?.focus();
+    }
+  }, [review, transferReady, stale]);
+  return (
+    <div
+      className="mx-auto min-w-0 max-w-4xl space-y-6 rounded-lg bg-background p-4 text-foreground"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {time.notice}
+      <h1 className="text-2xl font-bold">{word('title')}</h1>
+      {notice && (
+        <p role="status" className="text-success">
+          {notice}
+        </p>
+      )}
+      <section aria-labelledby="ownership-title">
+        <ListPage>
+          <ListPage.Toolbar>
+            <h2 id="ownership-title" className="text-lg font-semibold">
+              {word('transfers')}
+            </h2>
+            <Button
+              ref={refreshTransfers}
+              variant="outline"
+              onClick={() => (scope.denied ? scope.recover() : transfers.retry())}
+            >
+              {word('refreshTransfers')}
+            </Button>
+          </ListPage.Toolbar>
+          <ListPage.Content
+            loading={transfers.loading}
+            error={transfers.error || scope.denied}
+            retainContent={!!transfers.data?.transfers.length}
+            empty={!!transfers.data && !transfers.data.transfers.length}
+            loadingView={<p role="status">{word('loading')}</p>}
+            errorView={
+              <p role="alert">{word(scope.denied ? 'forbidden' : 'loadTransfersError')}</p>
+            }
+            emptyView={<p>{word('noTransfers')}</p>}
+          >
+            <div className="space-y-3">
+              {transfers.data?.transfers.map((transfer) => (
+                <article key={transfer.id} className="rounded border bg-card p-4 space-y-2">
+                  <h3 className="font-medium [overflow-wrap:anywhere]">{transfer.profileName}</h3>
+                  <p>{word(transfer.direction === 'incoming' ? 'incoming' : 'outgoing')}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {word('expires')}{' '}
+                    <time dateTime={transfer.expiresAt}>{time.format(transfer.expiresAt)}</time>
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {(transfer.direction === 'incoming'
+                      ? ['accept', 'decline']
+                      : ['cancelTransfer']
+                    ).map((decision) => (
+                      <Button
+                        key={decision}
+                        variant={decision === 'accept' ? 'default' : 'outline'}
+                        disabled={!transferReady || !!review}
+                        onClick={() => {
+                          setNotice(null);
+                          setReview({
+                            id: transfer.id,
+                            basis: transferBasis(transfer),
+                            action: {
+                              title: word(decision),
+                              description: word(
+                                decision === 'accept' ? 'acceptWarning' : 'decisionWarning'
+                              ),
+                              path: `/api/profiles/${encodeURIComponent(transfer.profileId)}/ownership-${decision === 'cancelTransfer' ? 'cancel' : decision}`,
+                              method: 'POST',
+                              body: { transferId: transfer.id },
+                              signsOut: decision === 'accept',
+                            },
+                          });
+                        }}
+                      >
+                        {word(decision)}
+                      </Button>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </ListPage.Content>
+        </ListPage>
+      </section>
+      <ListPage>
+        <ListPage.Toolbar>
+          <Button
+            variant="outline"
+            onClick={() => (scope.denied ? scope.recover() : profiles.retry())}
+          >
+            {word('refreshProfiles')}
+          </Button>
+        </ListPage.Toolbar>
+        <ListPage.Content
+          loading={profiles.loading}
+          error={profiles.error || scope.denied}
+          retainContent={!!profiles.data}
+          empty={false}
+          emptyView={null}
+          loadingView={<p role="status">{word('loading')}</p>}
+          errorView={<p role="alert">{word(scope.denied ? 'forbidden' : 'loadError')}</p>}
+        >
+          {!scope.denied &&
+            profiles.data &&
+            (active?.profileType === 'LEGAL' ? (
+              <TeamMembers
+                key={`${scope.version}:${active.id}`}
+                profile={active}
+                profileReady={profileReady}
+                onSessionDenied={scope.deny}
+              />
+            ) : (
+              <p role="status">{word('selectLegal')}</p>
+            ))}
+        </ListPage.Content>
+      </ListPage>
+      {review && (
+        <TeamActionDialog
+          action={review.action}
+          onClose={() => setReview(null)}
+          onDenied={scope.deny}
+          confirmationDisabled={!transferReady || stale}
+          finalFocus={refreshTransfers}
+          summary={
+            <Button variant="outline" disabled={transfers.loading} onClick={transfers.retry}>
+              {word('refreshTransfers')}
+            </Button>
+          }
+          onSuccess={async () => {
+            if (!transferReady || stale) return;
+            transfers.retry();
+            setNotice(word('saved'));
+          }}
+        />
+      )}
+    </div>
+  );
+}
+function TeamMembers({
+  profile,
+  profileReady,
+  onSessionDenied,
+}: {
+  profile: { id: string; title?: string | null };
+  profileReady: boolean;
+  onSessionDenied: () => void;
+}) {
   const time = useAccountTime();
   const locale = useLocale();
-  const [team, setTeam] = useState<Team | null>(null);
-  const [transfers, setTransfers] = useState<Transfer[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [teamMessage, setTeamMessage] = useState<string | null>(null);
-  const [action, setAction] = useState<(TeamAction & { successMessage?: string }) | null>(null);
+  const [action, setAction] = useState<
+    (TeamAction & { successMessage?: string; onConfirmed?: () => void }) | null
+  >(null);
   const [ownershipStep, setOwnershipStep] = useState<'verify' | 'select' | 'confirm' | null>(null);
   const [recipientId, setRecipientId] = useState('');
   const transferTrigger = useRef<HTMLButtonElement>(null);
@@ -64,82 +231,110 @@ export function TeamPage() {
   const [invitationOpen, setInvitationOpen] = useState(false);
   const inviteTrigger = useRef<HTMLButtonElement>(null);
   const restoreInviteFocus = useRef(false);
+  const focusRefreshPending = useRef(false);
   const [notice, setNotice] = useState<string | null>(null);
   const generation = useRef(0);
+  const mounted = useRef(false);
+  const reviewBasis = useRef<string | null>(null);
+  const refreshMembers = useRef<HTMLButtonElement>(null);
   const invitationPending = useRef(false);
   const word = (key: string) => t(`team.${key}`, locale);
 
-  useEffect(() => {
-    if (!ownershipStep && !loading && restoreTransferFocus.current) {
-      restoreTransferFocus.current = false;
-      (transferTrigger.current ?? teamHeading.current)?.focus();
-    }
-  }, [ownershipStep, loading]);
-  useEffect(() => {
-    if (!invitationOpen && !loading && restoreInviteFocus.current) {
-      restoreInviteFocus.current = false;
-      (inviteTrigger.current ?? teamHeading.current)?.focus();
-    }
-  }, [invitationOpen, loading]);
-
-  const load = useCallback(async () => {
-    const version = ++generation.current;
-    setLoading(true);
+  const clearPrivate = useCallback(() => {
+    generation.current++;
+    restoreInviteFocus.current = false;
+    restoreTransferFocus.current = false;
+    focusRefreshPending.current = false;
+    invitationPending.current = false;
+    setInviting(false);
+    setInvitationOpen(false);
+    setOwnershipStep(null);
+    setAction(null);
+    setUsername('');
+    setRecipientId('');
     setError(null);
-    setTeam(null);
-    setTransfers([]);
-    setTeamMessage(null);
-    try {
-      const [profilesResponse, transfersResponse] = await Promise.all([
-        fetch('/api/profiles', { credentials: 'include' }),
-        fetch('/api/profiles/ownership-transfers', { credentials: 'include' }),
-      ]);
-      if (!profilesResponse.ok || !transfersResponse.ok) throw new Error('load');
-      const [profiles, transferData] = await Promise.all([
-        profilesResponse.json(),
-        transfersResponse.json(),
-      ]);
-      if (generation.current !== version) return;
-      setTransfers(transferData.transfers);
-      const active = profiles.profiles.find(
-        (p: { id: string }) => p.id === profiles.activeProfileId
-      );
-      if (!active || active.profileType !== 'LEGAL') {
-        setTeamMessage(t('team.selectLegal', locale));
-        return;
+    setNotice(null);
+  }, []);
+  const scope = useCatalogueScope(clearPrivate);
+  const validate = useCallback(
+    (value: unknown): value is Team => validTeam(value) && value.profileId === profile.id,
+    [profile.id]
+  );
+  const resource = useCatalogueResource(
+    scope,
+    `/api/profiles/${encodeURIComponent(profile.id)}/agents`,
+    validate,
+    { onUnauthorized: onSessionDenied }
+  );
+  const team = resource.data
+    ? {
+        ...resource.data,
+        profileName: resource.data.profileName || profile.title || word('legalEntity'),
       }
-      const response = await fetch(`/api/profiles/${encodeURIComponent(active.id)}/agents`, {
-        credentials: 'include',
-      });
-      if (generation.current !== version) return;
-      if (response.status === 403) {
-        setTeamMessage(t('team.forbidden', locale));
-        return;
-      }
-      if (!response.ok) throw new Error('load');
-      const result: Team = await response.json();
-      if (generation.current === version)
-        setTeam({
-          ...result,
-          profileName: result.profileName || active.title || t('team.legalEntity', locale),
-        });
-    } catch {
-      if (generation.current === version) setError(t('team.loadError', locale));
-    } finally {
-      if (generation.current === version) setLoading(false);
-    }
-  }, [locale]);
-
+    : null;
+  const denyTeam = (status?: 401 | 403) => {
+    if (status === 401) onSessionDenied();
+    scope.deny();
+  };
+  const loading = resource.loading;
+  const ready = profileReady && !!team && !resource.loading && !resource.error && !scope.denied;
+  const basis = team ? teamBasis(team) : null;
+  const liveBasis = useRef(basis);
+  liveBasis.current = basis;
+  const staleReview = !!(action || ownershipStep) && reviewBasis.current !== basis;
   useEffect(() => {
-    void load();
+    mounted.current = true;
     return () => {
+      mounted.current = false;
       generation.current++;
     };
-  }, [load]);
+  }, []);
+  useEffect(() => {
+    if (ready && staleReview) {
+      setAction(null);
+      setOwnershipStep(null);
+      setRecipientId('');
+      refreshMembers.current?.focus();
+    }
+  }, [ready, staleReview]);
+  const load = async () => {
+    focusRefreshPending.current = true;
+    resource.retry();
+  };
+  useEffect(() => {
+    if (loading) focusRefreshPending.current = false;
+    if (
+      !ownershipStep &&
+      !loading &&
+      !focusRefreshPending.current &&
+      restoreTransferFocus.current
+    ) {
+      restoreTransferFocus.current = false;
+      (
+        (ready ? transferTrigger.current : null) ??
+        refreshMembers.current ??
+        teamHeading.current
+      )?.focus();
+    }
+  }, [ownershipStep, loading, ready]);
+  useEffect(() => {
+    if (!invitationOpen && !loading && !focusRefreshPending.current && restoreInviteFocus.current) {
+      restoreInviteFocus.current = false;
+      (
+        (ready ? inviteTrigger.current : null) ??
+        refreshMembers.current ??
+        teamHeading.current
+      )?.focus();
+    }
+  }, [invitationOpen, loading, ready]);
 
   async function invite(event: FormEvent) {
     event.preventDefault();
-    if (!team || invitationPending.current) return;
+    if (!ready || !team || invitationPending.current) return;
+    const version = generation.current,
+      epoch = scope.version;
+    const current = () =>
+      mounted.current && generation.current === version && scope.live.current === epoch;
     invitationPending.current = true;
     setInviting(true);
     setError(null);
@@ -154,6 +349,11 @@ export function TeamPage() {
           body: JSON.stringify({ username: username.trim(), role }),
         }
       );
+      if (!current()) return;
+      if (response.status === 401 || response.status === 403) {
+        denyTeam(response.status);
+        return;
+      }
       if (!response.ok) {
         setError(
           word(
@@ -162,16 +362,31 @@ export function TeamPage() {
         );
         return;
       }
+      const result: unknown = await response.json().catch(() => null);
+      if (!current()) return;
+      if (
+        response.status !== 201 ||
+        !result ||
+        typeof result !== 'object' ||
+        !('id' in result) ||
+        typeof result.id !== 'string' ||
+        !/^[a-zA-Z0-9_-]{1,100}$/.test(result.id)
+      ) {
+        setError(word('error'));
+        return;
+      }
       setUsername('');
       restoreInviteFocus.current = true;
       setInvitationOpen(false);
       await load();
       setNotice(word('invited'));
     } catch {
-      setError(word('error'));
+      if (current()) setError(word('error'));
     } finally {
-      invitationPending.current = false;
-      setInviting(false);
+      if (current()) {
+        invitationPending.current = false;
+        setInviting(false);
+      }
     }
   }
 
@@ -187,11 +402,27 @@ export function TeamPage() {
     member.roles.some((role) => ROLES.some((eligible) => eligible === role))
   );
   const base = `/api/profiles/${encodeURIComponent(team?.profileId ?? '')}`;
-  const openAction = (next: TeamAction & { successMessage?: string }) => {
+  const openAction = (next: TeamAction & { successMessage?: string; onConfirmed?: () => void }) => {
+    if (!ready) return;
+    reviewBasis.current = basis;
     setNotice(null);
     setAction(next);
   };
-  const finished = async () => {
+  const finished = async (result: unknown) => {
+    if (!mounted.current || reviewBasis.current !== liveBasis.current) return;
+    if (action?.method === 'PUT' && action.path.endsWith('/roles')) {
+      const expected = (action.body as { roles: Role[] }).roles;
+      const actual =
+        result && typeof result === 'object' && 'roles' in result ? result.roles : null;
+      if (
+        !Array.isArray(actual) ||
+        actual.length !== expected.length ||
+        new Set(actual).size !== actual.length ||
+        !actual.every((role) => expected.includes(role))
+      )
+        throw new Error();
+    }
+    action?.onConfirmed?.();
     await load();
     setNotice(action?.successMessage ?? word('saved'));
   };
@@ -202,95 +433,60 @@ export function TeamPage() {
   };
 
   return (
-    <div
-      className="mx-auto max-w-4xl space-y-6 rounded-lg bg-background p-4 text-foreground"
-      dir={locale === 'fa' ? 'rtl' : 'ltr'}
-    >
-      {time.notice}
-      <h1 ref={teamHeading} tabIndex={-1} className="text-2xl font-bold">
-        {word('title')}
-      </h1>
-      {loading && <p role="status">{word('loading')}</p>}
-      {error && !invitationOpen && (
-        <div role="alert" className="space-y-2 text-destructive">
-          <p>{error}</p>
-          <Button variant="outline" onClick={() => void load()}>
-            {word('retry')}
-          </Button>
-        </div>
-      )}
+    <section className="min-w-0 space-y-4">
+      <h2 ref={teamHeading} tabIndex={-1} className="sr-only">
+        {word('members')}
+      </h2>
       {notice && (
         <p role="status" className="text-success">
           {notice}
         </p>
       )}
-      {!loading && (
-        <>
-          <section
-            aria-labelledby="ownership-title"
-            className="rounded-lg border bg-card text-card-foreground p-4 space-y-3"
+      {error && !invitationOpen && (
+        <p role="alert" className="text-destructive">
+          {error}
+        </p>
+      )}
+      <ListPage>
+        <ListPage.Toolbar>
+          <Button
+            ref={refreshMembers}
+            variant="outline"
+            onClick={() => (scope.denied ? scope.recover() : resource.retry())}
           >
-            <h2 id="ownership-title" className="text-lg font-semibold">
-              {word('transfers')}
-            </h2>
-            {team?.canTransferOwnership && (
-              <Button
-                ref={transferTrigger}
-                variant="outline"
-                disabled={!eligibleOwners.length}
-                onClick={() => {
-                  setNotice(null);
-                  setRecipientId('');
-                  setOwnershipStep('verify');
-                }}
-              >
-                {word('transfer')}
-              </Button>
-            )}
-            {transfers.length === 0 && (
-              <p className="text-sm text-muted-foreground">{word('noTransfers')}</p>
-            )}
-            {transfers.map((transfer) => (
-              <article key={transfer.id} className="rounded border p-3 space-y-2">
-                <h3 className="font-medium">{transfer.profileName}</h3>
-                <p>{word(transfer.direction === 'incoming' ? 'incoming' : 'outgoing')}</p>
-                <p className="text-sm text-muted-foreground">
-                  {word('expires')}{' '}
-                  <time dateTime={transfer.expiresAt}>{time.format(transfer.expiresAt)}</time>
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {(transfer.direction === 'incoming'
-                    ? ['accept', 'decline']
-                    : ['cancelTransfer']
-                  ).map((decision) => (
-                    <Button
-                      key={decision}
-                      variant={decision === 'accept' ? 'default' : 'outline'}
-                      onClick={() =>
-                        openAction({
-                          title: word(decision),
-                          description: word(
-                            decision === 'accept' ? 'acceptWarning' : 'decisionWarning'
-                          ),
-                          path: `/api/profiles/${encodeURIComponent(transfer.profileId)}/ownership-${decision === 'cancelTransfer' ? 'cancel' : decision}`,
-                          method: 'POST',
-                          body: { transferId: transfer.id },
-                          signsOut: decision === 'accept',
-                        })
-                      }
-                    >
-                      {word(decision)}
-                    </Button>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </section>
-          {teamMessage && <p role="status">{teamMessage}</p>}
+            {word('refreshMembers')}
+          </Button>
+          {team?.canTransferOwnership && (
+            <Button
+              ref={transferTrigger}
+              variant="outline"
+              disabled={!ready || !eligibleOwners.length || !!action || !!ownershipStep}
+              onClick={() => {
+                reviewBasis.current = basis;
+                setNotice(null);
+                setRecipientId('');
+                setOwnershipStep('verify');
+              }}
+            >
+              {word('transfer')}
+            </Button>
+          )}
+        </ListPage.Toolbar>
+        <ListPage.Content
+          loading={loading}
+          error={resource.error || scope.denied}
+          retainContent={!!team}
+          empty={false}
+          emptyView={null}
+          loadingView={<p role="status">{word('loading')}</p>}
+          errorView={<p role="alert">{word(scope.denied ? 'forbidden' : 'loadError')}</p>}
+        >
           {team && (
             <>
+              {' '}
               <Button
                 ref={inviteTrigger}
+                disabled={!ready || !!action || !!ownershipStep}
                 onClick={() => {
                   setError(null);
                   setInvitationOpen(true);
@@ -337,16 +533,19 @@ export function TeamPage() {
                       {Array.from(members, ([userId, member]) => (
                         <Member
                           formatJoinedAt={(value) => time.format(value, { dateStyle: 'medium' })}
-                          key={`${userId}:${member.roles.join(',')}`}
+                          key={userId}
                           entry={member.entry}
+                          canCommand={ready}
+                          locked={!!action || !!ownershipStep}
                           roles={member.roles}
-                          onSave={(roles) =>
+                          onSave={(roles, onConfirmed) =>
                             openAction({
                               title: word('saveRoles'),
                               description: word('rolesWarning'),
                               path: `${base}/agents/${encodeURIComponent(userId)}/roles`,
                               method: 'PUT',
                               body: { roles },
+                              onConfirmed,
                             })
                           }
                           onRemove={() =>
@@ -366,10 +565,15 @@ export function TeamPage() {
                             <Badge variant="secondary">{word(entry.role)}</Badge>
                           </td>
                           <td className="p-3">{word('pending')}</td>
-                          <td className="p-3">—</td>
+                          <td className="p-3">
+                            <time dateTime={entry.createdAt}>
+                              {time.format(entry.createdAt, { dateStyle: 'medium' })}
+                            </time>
+                          </td>
                           <td className="p-3">
                             <Button
                               variant="outline"
+                              disabled={!ready || !!action || !!ownershipStep}
                               onClick={() =>
                                 openAction({
                                   title: word('withdraw'),
@@ -390,8 +594,8 @@ export function TeamPage() {
               </div>
             </>
           )}
-        </>
-      )}
+        </ListPage.Content>
+      </ListPage>
       {invitationOpen && (
         <Dialog
           open
@@ -428,6 +632,7 @@ export function TeamPage() {
                 <Label htmlFor="invite-role">{word('role')}</Label>
                 <select
                   id="invite-role"
+                  tabIndex={0}
                   className="block rounded border border-input bg-background text-foreground p-2"
                   value={role}
                   onChange={(event) => setRole(event.target.value as Role)}
@@ -441,7 +646,7 @@ export function TeamPage() {
                 </select>
               </div>
               {username.trim() && (
-                <p role="status">
+                <p role="status" className="[overflow-wrap:anywhere]">
                   {word('invitePreview')
                     .replace('{username}', username.trim())
                     .replace('{role}', word(role))
@@ -453,6 +658,9 @@ export function TeamPage() {
                   {error}
                 </p>
               )}
+              <Button type="button" variant="outline" disabled={loading} onClick={resource.retry}>
+                {word('refreshMembers')}
+              </Button>
               <DialogFooter>
                 <Button
                   type="button"
@@ -465,7 +673,7 @@ export function TeamPage() {
                 >
                   {word('cancel')}
                 </Button>
-                <Button type="submit" disabled={inviting || !username.trim()}>
+                <Button type="submit" disabled={!ready || inviting || !username.trim()}>
                   {word(inviting ? 'working' : 'sendInvite')}
                 </Button>
               </DialogFooter>
@@ -479,12 +687,26 @@ export function TeamPage() {
           action={action}
           onClose={() => setAction(null)}
           onSuccess={finished}
+          onDenied={denyTeam}
+          confirmationDisabled={!ready || staleReview}
+          summary={
+            <Button variant="outline" disabled={loading} onClick={resource.retry}>
+              {word('refreshMembers')}
+            </Button>
+          }
           finalFocus={action.path === `${base}/transfer-ownership` ? transferTrigger : undefined}
         />
       )}
       {ownershipStep && (
         <TeamActionDialog
           focusConfirmation
+          onDenied={denyTeam}
+          confirmationDisabled={!ready || staleReview}
+          summary={
+            <Button variant="outline" disabled={loading} onClick={resource.retry}>
+              {word('refreshMembers')}
+            </Button>
+          }
           {...(ownershipStep === 'confirm' && action
             ? { action }
             : {
@@ -496,7 +718,7 @@ export function TeamPage() {
                       onSubmit={(event) => {
                         event.preventDefault();
                         const member = eligibleOwners.find(([id]) => id === recipientId)?.[1];
-                        if (!team?.canTransferOwnership || !member) return;
+                        if (!ready || !team?.canTransferOwnership || !member) return;
                         const name = member.entry.name ?? member.entry.username ?? recipientId;
                         setOwnershipStep('confirm');
                         openAction({
@@ -517,6 +739,7 @@ export function TeamPage() {
                         <Label htmlFor="ownership-recipient">{word('newOwner')}</Label>
                         <select
                           id="ownership-recipient"
+                          tabIndex={0}
                           ref={recipientSelect}
                           // eslint-disable-next-line jsx-a11y/no-autofocus -- Focus the agent picker when the modal advances after step-up.
                           autoFocus
@@ -539,7 +762,7 @@ export function TeamPage() {
                         <Button type="button" variant="outline" onClick={closeOwnership}>
                           {word('cancel')}
                         </Button>
-                        <Button type="submit" disabled={!recipientId}>
+                        <Button type="submit" disabled={!ready || !recipientId}>
                           {word('continue')}
                         </Button>
                       </DialogFooter>
@@ -553,60 +776,94 @@ export function TeamPage() {
           finalFocus={false}
         />
       )}
-    </div>
+    </section>
   );
 }
-
 function Member({
   entry,
   roles,
   onSave,
   onRemove,
   formatJoinedAt,
+  canCommand,
+  locked,
 }: {
   entry: Entry;
+  canCommand: boolean;
+  locked: boolean;
   formatJoinedAt: (value: string) => string;
   roles: string[];
-  onSave: (roles: Role[]) => void;
+  onSave: (roles: Role[], onConfirmed: () => void) => void;
   onRemove: () => void;
 }) {
   const locale = useLocale();
-  const [selected, setSelected] = useState<Role[]>(
-    roles.filter((role): role is Role => ROLES.includes(role as Role))
-  );
+  const roleBasis = [...roles].sort().join(',');
+  const [draft, setDraft] = useState({
+    basis: roleBasis,
+    roles: roles.filter((role): role is Role => ROLES.includes(role as Role)),
+  });
+  const selected = draft.roles;
+  const stale = draft.basis !== roleBasis;
+  const owner = roles.includes('Owner');
   const word = (key: string) => t(`team.${key}`, locale);
   return (
     <tr className="border-t align-top">
       <td className="p-3">
-        <h3 className="font-medium">{entry.name ?? entry.username}</h3>
+        <h3 className="font-medium">
+          {owner && <span aria-hidden="true">♛ </span>}
+          {entry.name ?? entry.username ?? entry.userId}
+        </h3>
       </td>
       <td className="p-3">
         <div className="mb-2 flex flex-wrap gap-1">
           {roles.map((role) => (
             <Badge key={role} variant="secondary">
-              {word(role)}
+              {word(role === 'Owner' ? 'owner' : role)}
             </Badge>
           ))}
         </div>
-        <fieldset className="flex flex-wrap gap-3">
-          <legend className="sr-only">{word('roles')}</legend>
-          {ROLES.map((role) => (
-            <label key={role} className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={selected.includes(role)}
-                onChange={(event) =>
-                  setSelected((current) =>
-                    event.target.checked
-                      ? [...current, role]
-                      : current.filter((item) => item !== role)
-                  )
+        <>
+          {!owner && (
+            <fieldset disabled={locked} className="flex flex-wrap gap-3">
+              <legend className="sr-only">{word('roles')}</legend>
+              {ROLES.map((role) => (
+                <label key={role} className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    tabIndex={0}
+                    checked={selected.includes(role)}
+                    onChange={(event) =>
+                      setDraft((current) => ({
+                        ...current,
+                        roles: event.target.checked
+                          ? [...current.roles, role]
+                          : current.roles.filter((item) => item !== role),
+                      }))
+                    }
+                  />
+                  {word(role)}
+                </label>
+              ))}
+            </fieldset>
+          )}
+          {stale && (
+            <div className="space-y-2">
+              <p role="status">{word('staleRoles')}</p>
+              <Button
+                variant="outline"
+                disabled={!canCommand || locked}
+                onClick={() =>
+                  setDraft({
+                    basis: roleBasis,
+                    roles: roles.filter((role): role is Role => ROLES.includes(role as Role)),
+                  })
                 }
-              />
-              {word(role)}
-            </label>
-          ))}
-        </fieldset>
+              >
+                {word('resetRoles')}
+              </Button>
+            </div>
+          )}
+        </>
       </td>
       <td className="p-3">{word('active')}</td>
       <td className="p-3 whitespace-nowrap">
@@ -621,17 +878,26 @@ function Member({
           <Button
             variant="outline"
             disabled={
+              !canCommand ||
+              locked ||
+              stale ||
+              owner ||
               !selected.length ||
               (selected.length === roles.length && selected.every((role) => roles.includes(role)))
             }
-            onClick={() => onSave(selected)}
+            onClick={() =>
+              onSave(selected, () =>
+                setDraft({ basis: [...selected].sort().join(','), roles: selected })
+              )
+            }
           >
             {word('saveRoles')}
           </Button>
-          <Button variant="outline" onClick={onRemove}>
+          <Button variant="outline" disabled={!canCommand || locked || owner} onClick={onRemove}>
             {word('remove')}
           </Button>
         </div>
+        {owner && <p className="mt-2 text-sm text-muted-foreground">{word('lastOwner')}</p>}
       </td>
     </tr>
   );
