@@ -40,4 +40,4 @@ Accessibility, mobile overflow, horizontal keyboard scrolling and existing light
 
 The preceding payment review batch is verified on main as `46898927197c2b5337732f6f8b8b5998c14d4153`; CI run `36817128210` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage.
 
-This staff directory batch is committed and pushed directly to main after review and related checks. Its remote commit and CI registration are read back after publication. No PR is created. The all-list parent remains partial for the open work above.
+This staff directory batch is published directly to main as `0b3529eb51ca826852e72303bdd140564aadf55d`. Its remote commit is verified; CI run `36819348656` passes all five gates under the existing temporary fast mode. Combined-coverage success remains an exemption, not measured coverage. No PR is created. The all-list parent remains partial for the open work above.

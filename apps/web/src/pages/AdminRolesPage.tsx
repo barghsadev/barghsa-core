@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import type { FormEvent } from 'react';
+import { Button, ListPage, ScrollArea } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
 
@@ -130,6 +131,8 @@ export default function AdminRolesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [reload, setReload] = useState(0);
+  const [forbidden, setForbidden] = useState(false);
+  const catalogueRequest = useRef<AbortController | null>(null);
   const lookupRequest = useRef<AbortController | null>(null);
 
   const [staffUserId, setStaffUserId] = useState('');
@@ -137,13 +140,33 @@ export default function AdminRolesPage() {
   const [permLoading, setPermLoading] = useState(false);
   const [permError, setPermError] = useState<string | null>(null);
 
+  const deny = useCallback(() => {
+    catalogueRequest.current?.abort();
+    lookupRequest.current?.abort();
+    setForbidden(true);
+    setRoles(null);
+    setStaffUserId('');
+    setEffective(null);
+    setPermError(null);
+    setPermLoading(false);
+    setIsError(false);
+    setIsLoading(false);
+  }, []);
+
   useEffect(() => {
     const request = new AbortController();
+    catalogueRequest.current = request;
+    setForbidden(false);
     setIsLoading(true);
     setIsError(false);
     void (async () => {
       try {
         const res = await fetch('/api/admin/roles', { signal: request.signal });
+        if (request.signal.aborted) return;
+        if (res.status === 401 || res.status === 403) {
+          deny();
+          return;
+        }
         if (!res.ok) throw new Error('roles');
         const json: unknown = await res.json();
         if (!validRoles(json)) throw new Error('roles');
@@ -155,7 +178,7 @@ export default function AdminRolesPage() {
       }
     })();
     return () => request.abort();
-  }, [reload]);
+  }, [reload, deny]);
 
   useEffect(() => () => lookupRequest.current?.abort(), []);
 
@@ -163,7 +186,7 @@ export default function AdminRolesPage() {
     async (e: FormEvent) => {
       e.preventDefault();
       const id = staffUserId.trim();
-      if (!id) return;
+      if (!id || forbidden || isLoading || isError || !roles) return;
       lookupRequest.current?.abort();
       const request = new AbortController();
       lookupRequest.current = request;
@@ -178,6 +201,11 @@ export default function AdminRolesPage() {
             signal: request.signal,
           }
         );
+        if (request.signal.aborted) return;
+        if (res.status === 401 || res.status === 403) {
+          deny();
+          return;
+        }
         if (!res.ok) {
           if (res.status === 404) failureKey = 'admin.roles.user.notfound';
           throw new Error('permissions');
@@ -191,206 +219,217 @@ export default function AdminRolesPage() {
         if (!request.signal.aborted) setPermLoading(false);
       }
     },
-    [staffUserId]
+    [staffUserId, forbidden, isLoading, isError, roles, deny]
   );
 
-  if (isLoading) {
-    return (
-      <div role="status" className="p-6 text-muted-foreground">
-        {t('common.loading', locale)}
-      </div>
-    );
-  }
-
-  if (isError || !roles) {
-    return (
-      <div className="p-6 space-y-3">
-        <p role="alert" className="text-destructive">
-          {t('admin.roles.load.failed', locale)}
-        </p>
-        <button
-          type="button"
-          onClick={() => setReload((value) => value + 1)}
-          className="rounded-md border px-3 py-2"
-        >
-          {t('admin.roles.retry', locale)}
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-8">
+    <div className="min-w-0 space-y-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header>
         <h1 className="text-2xl font-semibold">{t('admin.roles.title', locale)}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{t('admin.roles.subtitle', locale)}</p>
       </header>
 
-      {/* Roles table */}
-      <section className="bg-card rounded-lg shadow-sm border overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-border">
-            <thead className="bg-muted">
-              <tr>
-                <th scope="col" className="px-4 py-3 text-start text-xs font-semibold">
-                  {t('admin.roles.role', locale)}
-                </th>
-                <th scope="col" className="px-4 py-3 text-start text-xs font-semibold">
-                  {t('admin.roles.permissions', locale)}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {roles.map((role) => {
-                const groups = groupPermissions(role.permissions);
-                return (
-                  <tr key={role.roleId}>
-                    <th scope="row" className="px-4 py-4 align-top text-start font-normal">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">
-                          {roleText(role.roleId, 'name', role.name)}
-                        </span>
-                        {role.predefined && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-muted">
-                            {t('admin.roles.predefined', locale)}
-                          </span>
-                        )}
-                      </div>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {roleText(role.roleId, 'description', role.description)}
-                      </p>
-                    </th>
-                    <td className="px-4 py-4">
-                      {role.permissions.length === 0 ? (
-                        <span className="text-xs text-muted-foreground">
-                          {t('admin.roles.no.permissions', locale)}
-                        </span>
-                      ) : (
-                        <div className="flex flex-wrap gap-x-6 gap-y-2">
-                          {groups.map((g) => (
-                            <fieldset key={g.group}>
-                              <legend className="text-xs font-semibold text-muted-foreground">
-                                {groupName(g.group)}
-                              </legend>
-                              <ul className="mt-1 space-y-0.5">
-                                {g.permissions.map((p) => (
-                                  <li key={p} className="text-xs">
-                                    <label className="flex items-start gap-2">
-                                      <input
-                                        type="checkbox"
-                                        checked
-                                        disabled
-                                        className="mt-0.5 shrink-0"
-                                      />
-                                      <bdi dir="ltr" className="font-mono break-all">
-                                        {p === '*' ? t('admin.roles.all.permissions', locale) : p}
-                                      </bdi>
-                                    </label>
-                                  </li>
+      <ListPage>
+        <ListPage.Toolbar>
+          <Button variant="outline" disabled={isLoading} onClick={() => setReload((v) => v + 1)}>
+            {t('admin.jobs.refresh', locale)}
+          </Button>
+        </ListPage.Toolbar>
+        {forbidden ? (
+          <p role="alert">{t('admin.roles.forbidden', locale)}</p>
+        ) : (
+          <>
+            <ListPage.Content
+              loading={isLoading}
+              error={isError}
+              empty={roles?.length === 0}
+              retainContent={roles !== null && roles.length > 0}
+              loadingView={<p role="status">{t('common.loading', locale)}</p>}
+              errorView={
+                <div role="alert" className="space-y-2">
+                  <p>{t('admin.roles.load.failed', locale)}</p>
+                  <Button onClick={() => setReload((v) => v + 1)}>
+                    {t('admin.roles.retry', locale)}
+                  </Button>
+                </div>
+              }
+              emptyView={<p>{t('admin.roles.empty', locale)}</p>}
+            >
+              <ScrollArea
+                scrollbarOrientation="horizontal"
+                role="region"
+                aria-label={t('admin.roles.title', locale)}
+                className="max-w-full min-w-0 rounded-lg border bg-card"
+              >
+                <table className="w-full min-w-[44rem] divide-y divide-border">
+                  <thead className="bg-muted">
+                    <tr>
+                      <th scope="col" className="px-4 py-3 text-start text-xs font-semibold">
+                        {t('admin.roles.role', locale)}
+                      </th>
+                      <th scope="col" className="px-4 py-3 text-start text-xs font-semibold">
+                        {t('admin.roles.permissions', locale)}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {roles?.map((role) => {
+                      const groups = groupPermissions(role.permissions);
+                      return (
+                        <tr key={role.roleId}>
+                          <th scope="row" className="px-4 py-4 align-top text-start font-normal">
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium">
+                                {roleText(role.roleId, 'name', role.name)}
+                              </span>
+                              {role.predefined && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-muted">
+                                  {t('admin.roles.predefined', locale)}
+                                </span>
+                              )}
+                            </div>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              {roleText(role.roleId, 'description', role.description)}
+                            </p>
+                          </th>
+                          <td className="px-4 py-4">
+                            {role.permissions.length === 0 ? (
+                              <span className="text-xs text-muted-foreground">
+                                {t('admin.roles.no.permissions', locale)}
+                              </span>
+                            ) : (
+                              <div className="flex flex-wrap gap-x-6 gap-y-2">
+                                {groups.map((g) => (
+                                  <fieldset key={g.group}>
+                                    <legend className="text-xs font-semibold text-muted-foreground">
+                                      {groupName(g.group)}
+                                    </legend>
+                                    <ul className="mt-1 space-y-0.5">
+                                      {g.permissions.map((p) => (
+                                        <li key={p} className="text-xs">
+                                          <label className="flex items-start gap-2">
+                                            <input
+                                              type="checkbox"
+                                              checked
+                                              disabled
+                                              className="mt-0.5 shrink-0"
+                                            />
+                                            <bdi dir="ltr" className="font-mono break-all">
+                                              {p === '*'
+                                                ? t('admin.roles.all.permissions', locale)
+                                                : p}
+                                            </bdi>
+                                          </label>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </fieldset>
                                 ))}
-                              </ul>
-                            </fieldset>
-                          ))}
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </section>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </ScrollArea>
+            </ListPage.Content>
 
-      {/* Effective permissions lookup */}
-      <section className="bg-card rounded-lg shadow-sm border p-6">
-        <h2 className="text-lg font-semibold">{t('admin.roles.effective.title', locale)}</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t('admin.roles.effective.subtitle', locale)}
-        </p>
-        <form onSubmit={lookupEffective} className="mt-4 flex flex-wrap items-end gap-3">
-          <div className="flex-1 min-w-0 max-w-md">
-            <label htmlFor="staffUserId" className="block text-sm font-medium mb-1">
-              {t('admin.roles.effective.userId', locale)}
-            </label>
-            <input
-              id="staffUserId"
-              type="text"
-              value={staffUserId}
-              onChange={(e) => {
-                lookupRequest.current?.abort();
-                setStaffUserId(e.target.value);
-                setEffective(null);
-                setPermError(null);
-                setPermLoading(false);
-              }}
-              placeholder={t('admin.roles.effective.userId.placeholder', locale)}
-              dir="ltr"
-              className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={permLoading || !staffUserId.trim()}
-            className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {permLoading ? t('common.loading', locale) : t('admin.roles.effective.lookup', locale)}
-          </button>
-        </form>
+            {/* Effective permissions lookup */}
+            <section className="bg-card rounded-lg shadow-sm border p-6">
+              <h2 className="text-lg font-semibold">{t('admin.roles.effective.title', locale)}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {t('admin.roles.effective.subtitle', locale)}
+              </p>
+              <form onSubmit={lookupEffective} className="mt-4 flex flex-wrap items-end gap-3">
+                <div className="flex-1 min-w-0 max-w-md">
+                  <label htmlFor="staffUserId" className="block text-sm font-medium mb-1">
+                    {t('admin.roles.effective.userId', locale)}
+                  </label>
+                  <input
+                    id="staffUserId"
+                    type="text"
+                    value={staffUserId}
+                    onChange={(e) => {
+                      lookupRequest.current?.abort();
+                      setStaffUserId(e.target.value);
+                      setEffective(null);
+                      setPermError(null);
+                      setPermLoading(false);
+                    }}
+                    placeholder={t('admin.roles.effective.userId.placeholder', locale)}
+                    dir="ltr"
+                    className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={permLoading || isLoading || isError || !roles || !staffUserId.trim()}
+                  className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {permLoading
+                    ? t('common.loading', locale)
+                    : t('admin.roles.effective.lookup', locale)}
+                </button>
+              </form>
 
-        {permError && (
-          <p role="alert" className="mt-3 text-sm text-destructive">
-            {t(permError, locale)}
-          </p>
-        )}
-
-        {effective && (
-          <div className="mt-5 rounded-md border p-4">
-            <div className="flex flex-wrap items-center gap-3">
-              <bdi dir="ltr" className="font-mono text-sm break-all">
-                {effective.userId}
-              </bdi>
-              {effective.isAdmin && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-muted">
-                  {t('admin.roles.effective.admin', locale)}
-                </span>
+              {permError && (
+                <p role="alert" className="mt-3 text-sm text-destructive">
+                  {t(permError, locale)}
+                </p>
               )}
-            </div>
-            {effective.roleNames.length > 0 && (
-              <p className="mt-2 text-sm text-muted-foreground">
-                {t('admin.roles.effective.roles', locale)}:{' '}
-                {effective.roleIds
-                  .map((id, index) => roleText(id, 'name', effective.roleNames[index] ?? id))
-                  .join(locale === 'fa' ? '، ' : ', ')}
-              </p>
-            )}
-            {effective.isWildcard ? (
-              <p className="mt-3 text-sm">{t('admin.roles.effective.wildcard', locale)}</p>
-            ) : effective.permissions.length === 0 ? (
-              <p className="mt-3 text-sm text-muted-foreground">
-                {t('admin.roles.effective.none', locale)}
-              </p>
-            ) : (
-              <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
-                {groupPermissions(effective.permissions.map((p) => p.permission)).map((g) => (
-                  <div key={g.group}>
-                    <div className="text-xs font-semibold text-muted-foreground">
-                      {groupName(g.group)}
-                    </div>
-                    <ul className="mt-1 space-y-0.5">
-                      {g.permissions.map((p) => (
-                        <li key={p} className="text-xs font-mono break-all">
-                          <bdi dir="ltr">{p}</bdi>
-                        </li>
-                      ))}
-                    </ul>
+
+              {effective && (
+                <div className="mt-5 rounded-md border p-4">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <bdi dir="ltr" className="font-mono text-sm break-all">
+                      {effective.userId}
+                    </bdi>
+                    {effective.isAdmin && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-muted">
+                        {t('admin.roles.effective.admin', locale)}
+                      </span>
+                    )}
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
+                  {effective.roleNames.length > 0 && (
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {t('admin.roles.effective.roles', locale)}:{' '}
+                      {effective.roleIds
+                        .map((id, index) => roleText(id, 'name', effective.roleNames[index] ?? id))
+                        .join(locale === 'fa' ? '، ' : ', ')}
+                    </p>
+                  )}
+                  {effective.isWildcard ? (
+                    <p className="mt-3 text-sm">{t('admin.roles.effective.wildcard', locale)}</p>
+                  ) : effective.permissions.length === 0 ? (
+                    <p className="mt-3 text-sm text-muted-foreground">
+                      {t('admin.roles.effective.none', locale)}
+                    </p>
+                  ) : (
+                    <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
+                      {groupPermissions(effective.permissions.map((p) => p.permission)).map((g) => (
+                        <div key={g.group}>
+                          <div className="text-xs font-semibold text-muted-foreground">
+                            {groupName(g.group)}
+                          </div>
+                          <ul className="mt-1 space-y-0.5">
+                            {g.permissions.map((p) => (
+                              <li key={p} className="text-xs font-mono break-all">
+                                <bdi dir="ltr">{p}</bdi>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </section>
+          </>
         )}
-      </section>
+      </ListPage>
     </div>
   );
 }

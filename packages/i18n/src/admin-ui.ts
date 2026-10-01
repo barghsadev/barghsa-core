@@ -1021,6 +1021,10 @@ export const fa: I18nDictionary = {
   'admin.nav.label': 'ناوبری مدیریت',
   'admin.nav.title': 'مدیریت',
   'admin.uploadPolicies.title': 'سیاست‌های بارگذاری فایل',
+  'admin.uploadPolicies.accessLoading': 'در حال بررسی دسترسی سیاست‌های بارگذاری…',
+  'admin.uploadPolicies.accessError': 'بررسی دسترسی سیاست‌های بارگذاری ناموفق بود.',
+  'admin.uploadPolicies.accessRetry': 'بررسی دوباره دسترسی',
+  'admin.uploadPolicies.empty': 'هیچ دسته بارگذاری در دسترس نیست.',
   'admin.uploadPolicies.description':
     'قالب‌ها و اندازه مجاز هر دسته را محدود کنید. محدودیت‌های استقرار همیشه اعمال می‌شوند و تاریخچه نسخه‌ها حفظ می‌شود.',
   'admin.uploadPolicies.category': 'دسته',
@@ -1232,6 +1236,8 @@ export const fa: I18nDictionary = {
   'admin.notifications.preview.warnings.undeclared': 'این متغیر در فهرست مجاز قالب تعریف نشده است.',
   'admin.notifications.preview.warnings.missing': 'این متغیر موردنیاز ارزش نمونه‌ای ندارد.',
   'admin.roles.title': 'نقش‌ها و دسترسی‌ها',
+  'admin.roles.forbidden': 'اجازه مشاهده نقش‌ها و دسترسی‌ها را ندارید.',
+  'admin.roles.empty': 'هنوز نقشی ثبت نشده است.',
   'admin.roles.subtitle':
     'نقش‌های کاربری کارکنان و مجموعه دسترسی‌های هر نقش. نقش‌های از پیش‌تعریف‌شده فقط‌خواندنی هستند.',
   'admin.roles.role': 'نقش',
@@ -2526,6 +2532,10 @@ export const en: I18nDictionary = {
   'admin.nav.label': 'Administration navigation',
   'admin.nav.title': 'Admin',
   'admin.uploadPolicies.title': 'Upload policies',
+  'admin.uploadPolicies.accessLoading': 'Checking upload-policy access…',
+  'admin.uploadPolicies.accessError': 'Could not check upload-policy access.',
+  'admin.uploadPolicies.accessRetry': 'Retry access',
+  'admin.uploadPolicies.empty': 'No upload categories available.',
   'admin.uploadPolicies.description':
     'Restrict formats and file sizes by category. Deployment limits always apply, and version history is retained.',
   'admin.uploadPolicies.category': 'Category',
@@ -2742,6 +2752,8 @@ export const en: I18nDictionary = {
     'This variable is not in the template allow-list.',
   'admin.notifications.preview.warnings.missing': 'This required variable has no sample value.',
   'admin.roles.title': 'Roles & Permissions',
+  'admin.roles.forbidden': 'You do not have permission to view roles and permissions.',
+  'admin.roles.empty': 'No roles yet.',
   'admin.roles.subtitle':
     'Staff roles and the permission set of each role. Predefined roles are read-only.',
   'admin.roles.role': 'Role',
