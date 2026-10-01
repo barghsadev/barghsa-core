@@ -163,7 +163,7 @@ for (const locale of ['en', 'fa'] as const) {
     version = 'changed-version';
     await list.getByRole('button', { name: copy('refresh'), exact: true }).click();
     await expect(page.locator('#price-reason')).toHaveValue('Tariff draft');
-    await page.locator('#electricity-price-contract').fill('other-contract');
+    await page.locator('#electricity-price-contract').fill('88888888-8888-4888-8888-888888888888');
     await main.getByRole('button', { name: copy('open'), exact: true }).click();
     await expect(page.locator('#price-reason')).toHaveValue('');
     status = 401;

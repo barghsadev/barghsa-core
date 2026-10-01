@@ -18,6 +18,8 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import { staffOrderId } from '../lib/staff-order-list-query.js';
 
 interface PriceAdjustment {
   adjustmentId: string;
@@ -63,15 +65,21 @@ function bpsToPercent(value: string, locale: 'en' | 'fa') {
   return `${signed < 0n ? '-' : ''}${whole}${decimals}%`;
 }
 
-export default function AdminElectricityPriceAdjustmentsPage() {
+export default function AdminElectricityPriceAdjustmentsPage({
+  queries,
+}: { queries?: ListQueryBinding } = {}) {
   const locale = useLocale();
   const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
   const initialContractId =
     typeof window === 'undefined'
       ? ''
-      : (new URLSearchParams(window.location.search).get('contractId') ?? '');
-  const [contractInput, setContractInput] = useState(initialContractId);
-  const [contractId, setContractId] = useState<string | null>(initialContractId || null);
+      : staffOrderId(new URLSearchParams(window.location.search).get('contractId'));
+  const [localContractId, setLocalContractId] = useState(initialContractId);
+  const contractId = queries ? queries.query.filters.contractId! : localContractId;
+  const [draft, setDraft] = useState({ basis: contractId, value: contractId });
+  if (draft.basis !== contractId) setDraft({ basis: contractId, value: contractId });
+  const contractInput = draft.basis === contractId ? draft.value : contractId;
+  const validContract = staffOrderId(contractInput.trim());
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="space-y-1">
@@ -82,7 +90,9 @@ export default function AdminElectricityPriceAdjustmentsPage() {
         className="flex flex-wrap items-end gap-3"
         onSubmit={(event) => {
           event.preventDefault();
-          setContractId(contractInput.trim());
+          if (!validContract) return;
+          if (queries) queries.setQuery({ filters: { contractId: validContract } });
+          else setLocalContractId(validContract);
         }}
       >
         <div className="min-w-64 flex-1 space-y-1">
@@ -91,11 +101,14 @@ export default function AdminElectricityPriceAdjustmentsPage() {
             id="electricity-price-contract"
             dir="ltr"
             value={contractInput}
-            onChange={(event) => setContractInput(event.target.value)}
+            onChange={(event) => setDraft({ basis: contractId, value: event.target.value })}
+            aria-invalid={!!contractInput && !validContract}
             required
           />
         </div>
-        <Button type="submit">{copy('open')}</Button>
+        <Button type="submit" disabled={!validContract}>
+          {copy('open')}
+        </Button>
       </form>
       {contractId ? <PriceWorkspace key={contractId} contractId={contractId} /> : null}
     </section>

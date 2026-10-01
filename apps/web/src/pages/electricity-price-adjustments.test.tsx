@@ -89,7 +89,9 @@ it.each(['proposed', 'finalized'] as const)(
     const root = createRoot(container);
     try {
       await act(async () =>
-        root.render(<ElectricityPriceAdjustmentsPanel contractId="contract-1" />)
+        root.render(
+          <ElectricityPriceAdjustmentsPanel contractId="11111111-1111-4111-8111-111111111111" />
+        )
       );
       expect(container.textContent).toContain('Published tariff correction');
       expect(container.textContent).toContain('Clause 7');
@@ -111,13 +113,17 @@ it.each(['proposed', 'finalized'] as const)(
 
 it('opens a disclosed proposal from the staff contract link and starts finalization', async () => {
   document.documentElement.lang = 'en';
-  window.history.replaceState({}, '', '/admin/electricity-price-adjustments?contractId=contract-1');
+  window.history.replaceState(
+    {},
+    '',
+    '/admin/electricity-price-adjustments?contractId=11111111-1111-4111-8111-111111111111'
+  );
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const fetchMock = vi.fn(
     async () =>
       new Response(
         JSON.stringify({
-          contractId: 'contract-1',
+          contractId: '11111111-1111-4111-8111-111111111111',
           profileId: 'profile-1',
           versionId: 'version-1',
           periodEnd: '2026-10-11T00:00:00Z',
@@ -137,7 +143,7 @@ it('opens a disclosed proposal from the staff contract link and starts finalizat
               calculationSha256: 'a'.repeat(64),
               adjustmentInvoiceId: null,
               calculation: {
-                contractId: 'contract-1',
+                contractId: '11111111-1111-4111-8111-111111111111',
                 versionId: 'version-1',
                 originalInvoiceId: 'invoice-1',
                 reason: 'Published tariff correction',
@@ -170,7 +176,7 @@ it('opens a disclosed proposal from the staff contract link and starts finalizat
   try {
     await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
     expect(fetchMock).toHaveBeenCalledWith(
-      '/api/staff/electricity/contracts/contract-1/price-adjustments',
+      '/api/staff/electricity/contracts/11111111-1111-4111-8111-111111111111/price-adjustments',
       expect.objectContaining({ credentials: 'include' })
     );
     expect(container.textContent).toContain('Published tariff correction');
@@ -310,7 +316,11 @@ it('reviews the server price before preparing the exact publish command', async 
 
 it('opens a finalized adjustment invoice in the staff ledger', async () => {
   document.documentElement.lang = 'en';
-  window.history.replaceState({}, '', '/admin/electricity-price-adjustments?contractId=contract-1');
+  window.history.replaceState(
+    {},
+    '',
+    '/admin/electricity-price-adjustments?contractId=11111111-1111-4111-8111-111111111111'
+  );
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   vi.stubGlobal(
     'fetch',
@@ -318,7 +328,7 @@ it('opens a finalized adjustment invoice in the staff ledger', async () => {
       async () =>
         new Response(
           JSON.stringify({
-            contractId: 'contract-1',
+            contractId: '11111111-1111-4111-8111-111111111111',
             versionId: 'version-1',
             periodEnd: '2026-10-11T00:00:00Z',
             canPropose: false,

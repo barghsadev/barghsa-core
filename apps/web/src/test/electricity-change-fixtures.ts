@@ -3,7 +3,7 @@ export const changeProfileId = '22222222-2222-4222-8222-222222222222';
 export const changeVersionId = '33333333-3333-4333-8333-333333333333';
 const invoiceId = '44444444-4444-4444-8444-444444444444';
 const orderId = '55555555-5555-4555-8555-555555555555';
-export const changeCursor = '2026-10-01T00:00:00.123456Z';
+export const changeCursor = '88888888-8888-4888-8888-888888888888';
 export const increaseRow = {
   requestId: '66666666-6666-4666-8666-666666666666',
   profileId: changeProfileId,

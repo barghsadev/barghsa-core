@@ -17,6 +17,7 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { withCsrf } from '../lib/csrf.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 
 interface IncreaseRequest {
   requestId: string;
@@ -38,14 +39,22 @@ interface IncreaseRequest {
   financialFollowUp: boolean;
 }
 
-export default function AdminElectricityIncreasesPage() {
+export default function AdminElectricityIncreasesPage({
+  queries,
+}: { queries?: ListQueryBinding } = {}) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => t(`admin.electricityIncreases.${key}`, locale);
   const [requests, setRequests] = useState<IncreaseRequest[] | null>(null);
   const [nextBefore, setNextBefore] = useState<string | null>(null);
-  const [before, setBefore] = useState<string | null>(null);
-  const [view, setView] = useState<'pending' | 'expired'>('pending');
+  const [localBefore, setLocalBefore] = useState<string | null>(null);
+  const [localView, setLocalView] = useState<'pending' | 'expired'>('pending');
+  const before = queries ? queries.query.cursor || null : localBefore;
+  const view = queries ? (queries.query.filters.status as 'pending' | 'expired') : localView;
+  const setBefore = (cursor: string | null) =>
+    queries ? queries.setQuery({ cursor: cursor ?? '' }) : setLocalBefore(cursor);
+  const expectedNext = useRef<string | null>(null);
+  const acceptedCursor = useRef<string | null>(null);
   const [acceptedView, setAcceptedView] = useState(view);
   const visibleRequests = acceptedView === view ? requests : null;
   const accessDenied = useRef(false);
@@ -62,6 +71,19 @@ export default function AdminElectricityIncreasesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [denied, setDenied] = useState(false);
+
+  const scope = JSON.stringify([view, before]);
+  const previousScope = useRef(scope);
+  useEffect(() => {
+    if (scope === previousScope.current) return;
+    previousScope.current = scope;
+    clearReview();
+    if (expectedNext.current !== scope) {
+      setReason({});
+      setEffectiveDate({});
+    }
+    expectedNext.current = null;
+  }, [scope]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -96,6 +118,7 @@ export default function AdminElectricityIncreasesPage() {
           accessDenied.current = false;
           setDenied(false);
           setAcceptedView(view);
+          acceptedCursor.current = before;
           setRequests(value.requests);
           setNextBefore(value.nextBefore);
         }
@@ -235,12 +258,12 @@ export default function AdminElectricityIncreasesPage() {
                 variant={view === status ? 'default' : 'outline'}
                 onClick={() => {
                   if (status === view) return;
-                  clearReview();
-                  setReason({});
-                  setEffectiveDate({});
                   setNextBefore(null);
-                  setView(status);
-                  setBefore(null);
+                  if (queries) queries.setQuery({ filters: { status } });
+                  else {
+                    setLocalView(status);
+                    setLocalBefore(null);
+                  }
                 }}
               >
                 {copy(`${status}Tab`)}
@@ -404,12 +427,29 @@ export default function AdminElectricityIncreasesPage() {
         {reviewError ? <p role="alert">{copy('reviewError')}</p> : null}
         <ListPage.Pagination
           kind="cursor"
-          hasMore={!!nextBefore && !error && !denied}
+          hasMore={
+            !!nextBefore &&
+            !error &&
+            !denied &&
+            (loading ||
+              (nextBefore !== acceptedCursor.current &&
+                (!queries || queries.canAdvance(nextBefore))))
+          }
           loading={loading}
           label={copy('pages')}
           nextLabel={copy('more')}
           onNext={() => {
-            if (nextBefore) setBefore(nextBefore);
+            if (
+              nextBefore &&
+              !loading &&
+              !error &&
+              !denied &&
+              nextBefore !== before &&
+              (!queries || queries.canAdvance(nextBefore))
+            ) {
+              expectedNext.current = JSON.stringify([view, nextBefore]);
+              setBefore(nextBefore);
+            }
           }}
         />
       </ListPage>

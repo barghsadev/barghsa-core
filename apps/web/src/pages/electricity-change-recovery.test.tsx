@@ -325,14 +325,16 @@ it('scope changes clear price drafts and block late previews for the old contrac
         : Promise.resolve(
             Response.json({
               ...priceState,
-              contractId: url.includes('/other-contract/') ? 'other-contract' : changeContractId,
+              contractId: url.includes('/88888888-8888-4888-8888-888888888888/')
+                ? '88888888-8888-4888-8888-888888888888'
+                : changeContractId,
             })
           )
     )
   );
   await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
   await proposal();
-  await set('electricity-price-contract', 'other-contract');
+  await set('electricity-price-contract', '88888888-8888-4888-8888-888888888888');
   await click('Open contract');
   await act(async () =>
     pending.resolve(
