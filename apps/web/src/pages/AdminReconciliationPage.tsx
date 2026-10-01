@@ -1,3 +1,5 @@
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import { reconciliationApiQuery, reconciliationLocalTime } from '../lib/decision-queue-query.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -32,18 +34,32 @@ interface Item {
 const statuses = ['open', 'investigating', 'resolved', 'closed'];
 const severities = ['low', 'medium', 'high', 'critical'];
 const pageSize = 25;
-export default function AdminReconciliationPage() {
+export default function AdminReconciliationPage({ queries }: { queries?: ListQueryBinding } = {}) {
   const time = useAccountTime();
   const locale = useLocale(),
     label = (key: string) => t(`admin.reconciliation.${key}`, locale);
-  const [status, setStatus] = useState('open'),
-    [severity, setSeverity] = useState('');
+  const initialFilters = useRef(queries?.query.filters).current;
+  const [status, setStatus] = useState(
+      initialFilters?.status === 'all' ? '' : initialFilters?.status || 'open'
+    ),
+    [severity, setSeverity] = useState(initialFilters?.severity || '');
   const [from, setFrom] = useState(''),
     [before, setBefore] = useState(''),
     [invalid, setInvalid] = useState(false);
-  const [query, setQuery] = useState('status=open'),
-    [offset, setOffset] = useState(0),
+  const [query, setQuery] = useState(
+      initialFilters ? reconciliationApiQuery(initialFilters) : 'status=open'
+    ),
+    [localOffset, setOffset] = useState(0),
     [revision, setRevision] = useState(0);
+  const offset = queries ? (queries.query.page - 1) * pageSize : localOffset;
+  const hydratedZone = useRef<string | null>(null);
+  useEffect(() => {
+    if (!initialFilters || time.status !== 'ready' || hydratedZone.current === time.timezone)
+      return;
+    hydratedZone.current = time.timezone;
+    setFrom(reconciliationLocalTime(initialFilters.createdFrom || '', time.timezone));
+    setBefore(reconciliationLocalTime(initialFilters.createdBefore || '', time.timezone));
+  }, [initialFilters, time.status, time.timezone]);
   const [items, setItems] = useState<Item[]>([]),
     [loading, setLoading] = useState(true),
     [error, setError] = useState(false);
@@ -61,6 +77,16 @@ export default function AdminReconciliationPage() {
   const accessValid = useRef(false);
   const resolveAllowed = useRef(false);
   const workGeneration = useRef(0);
+  const commandGeneration = useRef(0);
+  const previousOffset = useRef(offset);
+  if (previousOffset.current !== offset) {
+    previousOffset.current = offset;
+    ++workGeneration.current;
+  }
+  useEffect(() => {
+    clearWork();
+    setSaved(false);
+  }, [offset]);
   const reviewed = useRef<Item | null>(null);
   const visibleItems = acceptedScope === query ? items : [];
   function clearWork() {
@@ -176,8 +202,18 @@ export default function AdminReconciliationPage() {
   }
   function filter(event: FormEvent) {
     event.preventDefault();
-    const fromInstant = from ? filterInstant(from) : undefined;
-    const beforeInstant = before ? filterInstant(before) : undefined;
+    const retainedInstant = (value: string, key: string) => {
+      const applied = initialFilters?.[key];
+      if (
+        applied &&
+        time.status === 'ready' &&
+        value === reconciliationLocalTime(applied, time.timezone)
+      )
+        return new Date(applied);
+      return value ? filterInstant(value) : undefined;
+    };
+    const fromInstant = retainedInstant(from, 'createdFrom');
+    const beforeInstant = retainedInstant(before, 'createdBefore');
     if (
       (from && !fromInstant) ||
       (before && !beforeInstant) ||
@@ -188,13 +224,26 @@ export default function AdminReconciliationPage() {
     }
     setInvalid(false);
     setSaved(false);
-    setOffset(0);
     const params = new URLSearchParams();
     if (status) params.set('status', status);
     if (severity) params.set('severity', severity);
     if (fromInstant) params.set('createdFrom', fromInstant.toISOString());
     if (beforeInstant) params.set('createdBefore', beforeInstant.toISOString());
     const nextQuery = params.toString();
+    if (queries) {
+      queries.setQuery({
+        filters: {
+          status: status || 'all',
+          severity,
+          createdFrom: fromInstant?.toISOString() || '',
+          createdBefore: beforeInstant?.toISOString() || '',
+        },
+        page: 1,
+      });
+      if (nextQuery === query && offset === 0) setRevision((v) => v + 1);
+      return;
+    }
+    setOffset(0);
     if (nextQuery !== query) clearWork();
     setQuery(nextQuery);
     setRevision((v) => v + 1);
@@ -216,6 +265,7 @@ export default function AdminReconciliationPage() {
       return;
     ++workGeneration.current;
     reviewed.current = selected;
+    commandGeneration.current = workGeneration.current;
     setAction({
       title: label(verb),
       description: `${selected.description}. ${label('confirm')}${verb === 'investigate' ? '' : ` ${note.trim()}`}`,
@@ -239,7 +289,7 @@ export default function AdminReconciliationPage() {
     </div>
   );
   const date = (value: string) => time.format(value);
-  const actionGeneration = workGeneration.current;
+  const actionGeneration = commandGeneration.current;
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       {time.notice}
@@ -253,7 +303,8 @@ export default function AdminReconciliationPage() {
             variant="outline"
             disabled={loading || accessLoading}
             onClick={() => {
-              setOffset(0);
+              if (queries) queries.setQuery({ page: 1 });
+              else setOffset(0);
               refreshAccess();
             }}
           >
@@ -289,6 +340,7 @@ export default function AdminReconciliationPage() {
               <Input
                 id="rex-from"
                 type="datetime-local"
+                disabled={!!queries && time.status !== 'ready'}
                 className="min-w-0 w-full"
                 value={from}
                 onChange={(e) => setFrom(e.target.value)}
@@ -299,12 +351,15 @@ export default function AdminReconciliationPage() {
               <Input
                 id="rex-before"
                 type="datetime-local"
+                disabled={!!queries && time.status !== 'ready'}
                 className="min-w-0 w-full"
                 value={before}
                 onChange={(e) => setBefore(e.target.value)}
               />
             </div>
-            <Button type="submit">{label('apply')}</Button>
+            <Button type="submit" disabled={!!queries && time.status !== 'ready'}>
+              {label('apply')}
+            </Button>
             <p className="sm:col-span-2 xl:col-span-5 text-sm text-muted-foreground">
               {time.status === 'ready' && label('timeHint').replace('{zone}', time.timezone)}
             </p>
@@ -387,13 +442,26 @@ export default function AdminReconciliationPage() {
           kind="cursor"
           label={label('pages')}
           loading={loading || accessLoading}
-          hasMore={canView && !error && !accessError && visibleItems.length >= pageSize}
+          hasMore={
+            canView &&
+            !error &&
+            !accessError &&
+            visibleItems.length >= pageSize &&
+            (!queries || queries.query.page < 1_000_000)
+          }
           nextLabel={label('next')}
-          onNext={() => setOffset((v) => v + pageSize)}
+          onNext={() =>
+            queries
+              ? queries.setQuery({ page: queries.query.page + 1 })
+              : setOffset((v) => v + pageSize)
+          }
           previous={{
             enabled: canView && !error && !accessError && offset > 0,
             label: label('previous'),
-            onClick: () => setOffset((v) => Math.max(0, v - pageSize)),
+            onClick: () =>
+              queries
+                ? queries.setQuery({ page: Math.max(1, queries.query.page - 1) })
+                : setOffset((v) => Math.max(0, v - pageSize)),
           }}
         />
       </ListPage>

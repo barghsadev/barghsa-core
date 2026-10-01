@@ -1,3 +1,4 @@
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { tInvoiceCorrections } from '@barghsa/i18n/invoice-corrections';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -38,19 +39,46 @@ function approvalAmount(request: Request) {
 }
 const PAGE_SIZE = 25;
 
-export default function AdminApprovalRequestsPage() {
+export default function AdminApprovalRequestsPage({
+  queries,
+}: { queries?: ListQueryBinding } = {}) {
   const { requestId } = useSearch({ from: '/admin/approval-requests' });
-  return <AdminApprovalRequestsView requestId={requestId} />;
+  return (
+    <AdminApprovalRequestsView
+      {...(requestId ? { requestId } : {})}
+      {...(queries ? { queries } : {})}
+    />
+  );
 }
 
-export function AdminApprovalRequestsView({ requestId }: { requestId?: string }) {
-  return <ApprovalWorkspace key={requestId || 'queue'} {...(requestId ? { requestId } : {})} />;
+export function AdminApprovalRequestsView({
+  requestId,
+  queries,
+}: {
+  requestId?: string;
+  queries?: ListQueryBinding;
+}) {
+  return (
+    <ApprovalWorkspace
+      key={requestId || `queue:${queries?.query.filters.status || 'pending'}`}
+      {...(requestId ? { requestId } : {})}
+      {...(queries ? { queries } : {})}
+    />
+  );
 }
-function ApprovalWorkspace({ requestId }: { requestId?: string }) {
+function ApprovalWorkspace({
+  requestId,
+  queries,
+}: {
+  requestId?: string;
+  queries?: ListQueryBinding;
+}) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
-  const [status, setStatus] = useState<Status>('pending');
-  const [offset, setOffset] = useState(0);
+  const [localStatus, setStatus] = useState<Status>('pending');
+  const [localOffset, setOffset] = useState(0);
+  const status = (queries?.query.filters.status || localStatus) as Status;
+  const offset = queries ? (queries.query.page - 1) * PAGE_SIZE : localOffset;
   const [items, setItems] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -61,6 +89,16 @@ function ApprovalWorkspace({ requestId }: { requestId?: string }) {
   const [review, setReview] = useState<Request | null>(null);
   const generation = useRef(0);
   const workGeneration = useRef(0);
+  const commandGeneration = useRef(0);
+  const lastOffset = useRef(offset);
+  if (lastOffset.current !== offset) {
+    lastOffset.current = offset;
+    ++workGeneration.current;
+  }
+  useEffect(() => {
+    clearDecision();
+    setSaved(false);
+  }, [offset]);
   const activeController = useRef<AbortController | null>(null);
   const accessDenied = useRef(false);
   const selected = useRef<Request | null>(null);
@@ -151,6 +189,7 @@ function ApprovalWorkspace({ requestId }: { requestId?: string }) {
       request.actionType === 'manual_adjustment' && Boolean(request.details?.invoiceAdjustment)
     );
     ++workGeneration.current;
+    commandGeneration.current = workGeneration.current;
     selected.current = request;
     setReview(request);
     setAction({
@@ -164,7 +203,7 @@ function ApprovalWorkspace({ requestId }: { requestId?: string }) {
     });
   }
 
-  const actionGeneration = workGeneration.current;
+  const actionGeneration = commandGeneration.current;
   return (
     <section className="mx-auto max-w-4xl space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="space-y-2">
@@ -179,7 +218,7 @@ function ApprovalWorkspace({ requestId }: { requestId?: string }) {
           </p>
           <Link
             to="/admin/approval-requests"
-            search={{ requestId: undefined }}
+            search={(previous) => ({ ...previous, requestId: undefined })}
             className="inline-block text-primary underline"
           >
             {t('admin.approvals.backToQueue', locale)}
@@ -198,6 +237,10 @@ function ApprovalWorkspace({ requestId }: { requestId?: string }) {
                   value={status}
                   disabled={!!action}
                   onChange={(event) => {
+                    if (queries) {
+                      queries.setQuery({ filters: { status: event.target.value } });
+                      return;
+                    }
                     clearDecision();
                     setReasons({});
                     setStatus(event.target.value as Status);
@@ -366,13 +409,25 @@ function ApprovalWorkspace({ requestId }: { requestId?: string }) {
             kind="cursor"
             label={t('admin.approvals.pages', locale)}
             loading={loading}
-            hasMore={!error && !action && visibleItems.length > PAGE_SIZE}
+            hasMore={
+              !error &&
+              !action &&
+              visibleItems.length > PAGE_SIZE &&
+              (!queries || queries.query.page < 1_000_000)
+            }
             nextLabel={t('admin.approvals.next', locale)}
-            onNext={() => setOffset((value) => value + PAGE_SIZE)}
+            onNext={() =>
+              queries
+                ? queries.setQuery({ page: queries.query.page + 1 })
+                : setOffset((value) => value + PAGE_SIZE)
+            }
             previous={{
               enabled: offset > 0 && !error && !action,
               label: t('admin.approvals.previous', locale),
-              onClick: () => setOffset((value) => Math.max(0, value - PAGE_SIZE)),
+              onClick: () =>
+                queries
+                  ? queries.setQuery({ page: Math.max(1, queries.query.page - 1) })
+                  : setOffset((value) => Math.max(0, value - PAGE_SIZE)),
             }}
           />
         )}
