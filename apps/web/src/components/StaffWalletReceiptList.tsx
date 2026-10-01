@@ -16,6 +16,7 @@ interface WalletReceiptSummary {
   state: string;
   paymentDate: string | null;
   payerReference: string | null;
+  bankName?: string | null;
   submittedAt: string;
   dualApproval?: { invoiceId: string | null } | null;
   overpayment?: { invoiceId: string } | null;
@@ -83,6 +84,13 @@ export function StaffWalletReceiptList({
       id: 'reference',
       label: word('payerReference'),
       render: (row: WalletReceiptSummary) => id(row.payerReference),
+    },
+    {
+      id: 'bank',
+      label: invoiceText('bankName'),
+      render: (row: WalletReceiptSummary) => (
+        <span className="break-words">{row.bankName ?? '—'}</span>
+      ),
     },
     {
       id: 'state',

@@ -9,6 +9,7 @@ export * from './approval-request.js';
 export * from './wallet-topup-config.js';
 export * from './online-topup-expiry.js';
 export * from './wallet-bank-receipt-topup.js';
+export * from './bank-receipt-bank-name.js';
 export * from './wallet-bank-receipt-confirmation.js';
 export * from './invoice-bank-receipt-upload.js';
 export * from './invoice-bank-receipt-confirmation.js';

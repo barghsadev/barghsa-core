@@ -1,3 +1,4 @@
+import { parseBankReceiptBankName } from './bank-receipt-bank-name.js';
 /**
  * Bank-receipt wallet top-up submission contract (S-04.2.02, T-04.2.02.03).
  *
@@ -51,6 +52,7 @@ const MAX_PAYER_REFERENCE_LENGTH = 128;
 const MAX_CUSTOMER_NOTE_LENGTH = 2000;
 
 export interface BankReceiptTopUpDetails {
+  bankName?: string | null;
   paymentDate: string;
   payerReference: string;
   attachmentKey: string;
@@ -65,7 +67,8 @@ export interface BankReceiptTopUpParseSuccess {
 
 export interface BankReceiptTopUpParseFailure {
   ok: false;
-  field: 'amount' | 'paymentDate' | 'payerReference' | 'attachmentKey' | 'customerNote';
+  field:
+    'amount' | 'paymentDate' | 'payerReference' | 'attachmentKey' | 'customerNote' | 'bankName';
   message: string;
 }
 
@@ -197,6 +200,15 @@ export function parseBankReceiptTopUpSubmission(
     };
   }
 
+  const bankName = parseBankReceiptBankName(body.bankName);
+  if (bankName === undefined) {
+    return {
+      ok: false,
+      field: 'bankName',
+      message: 'Bank name must be at most 128 characters on one line',
+    };
+  }
+
   const customerNote = parseBankReceiptCustomerNote(body.customerNote);
   if (customerNote === undefined) {
     return {
@@ -214,6 +226,7 @@ export function parseBankReceiptTopUpSubmission(
       payerReference,
       attachmentKey,
       customerNote,
+      ...(bankName ? { bankName } : {}),
     },
   };
 }
@@ -229,6 +242,7 @@ export function bankReceiptTopUpMetadata(
       payerReference: receipt.payerReference,
       attachmentKey: receipt.attachmentKey,
       customerNote: receipt.customerNote,
+      ...(receipt.bankName ? { bankName: receipt.bankName } : {}),
     },
   };
 }
@@ -248,7 +262,8 @@ export function receiptDetailsMatch(metadata: unknown, receipt: BankReceiptTopUp
     stored.paymentDate === receipt.paymentDate &&
     stored.payerReference === receipt.payerReference &&
     stored.attachmentKey === receipt.attachmentKey &&
-    (stored.customerNote ?? null) === receipt.customerNote
+    (stored.customerNote ?? null) === receipt.customerNote &&
+    (stored.bankName ?? null) === (receipt.bankName ?? null)
   );
 }
 

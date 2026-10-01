@@ -19,6 +19,7 @@ const first = {
   state: 'Pending',
   paymentDate: '2026-09-01',
   payerReference: 'TRK-first',
+  bankName: 'بانک ملی',
   submittedAt: '2026-09-01T23:30:00.123456Z',
 };
 const second = {
@@ -26,6 +27,7 @@ const second = {
   transactionId: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
   paymentDate: null,
   payerReference: null,
+  bankName: null,
   dualApproval: { invoiceId: 'dddddddd-dddd-4ddd-8ddd-dddddddddddd' },
 };
 let host: HTMLDivElement, root: Root;
@@ -62,6 +64,7 @@ it.each(['en', 'fa'] as const)(
         first.walletId,
         first.amount,
         first.payerReference,
+        first.bankName,
         second.dualApproval.invoiceId,
         `ACCOUNT:${first.submittedAt}`,
         appText('wallet.history.state.Pending', locale),
@@ -77,7 +80,7 @@ it.each(['en', 'fa'] as const)(
         }).format(new Date('2026-09-01T00:00:00Z'))
       );
       expect(host.querySelectorAll('button[aria-current="true"]')).toHaveLength(1);
-      if (view === 'table') expect(host.querySelectorAll('th[scope="col"]')).toHaveLength(9);
+      if (view === 'table') expect(host.querySelectorAll('th[scope="col"]')).toHaveLength(10);
       await act(async () => host.querySelectorAll<HTMLButtonElement>('button')[1]!.click());
       expect(onSelect).toHaveBeenLastCalledWith(second.transactionId);
     }

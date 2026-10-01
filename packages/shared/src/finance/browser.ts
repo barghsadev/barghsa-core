@@ -13,3 +13,4 @@ export {
   invoiceBankReceiptContentTypeFromName,
   parseInvoiceBankReceiptAmountIrR,
 } from './invoice-bank-receipt-upload.js';
+export { parseBankReceiptBankName } from './bank-receipt-bank-name.js';

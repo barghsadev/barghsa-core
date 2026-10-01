@@ -52,13 +52,9 @@ export default defineConfig(({ mode }) => {
         codeSplittingOptions: {
           splitBehavior: ({ routeId }) =>
             !authEntry &&
-            [
-              '/_app',
-              '/_app/electricity/',
-              '/_app/electricity/order',
-              '/_app/savings',
-              '/_app/wallet',
-            ].includes(routeId)
+            ['/_app', '/_app/electricity/', '/_app/electricity/order', '/_app/savings'].includes(
+              routeId
+            )
               ? []
               : undefined,
         },

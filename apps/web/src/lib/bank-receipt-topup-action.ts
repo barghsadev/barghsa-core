@@ -8,6 +8,7 @@ export interface BankReceiptTopUpDetails {
   payerReference: string;
   attachmentKey: string;
   customerNote: string | null;
+  bankName?: string;
   idempotencyKey: string;
 }
 
@@ -27,6 +28,7 @@ export async function loadBankReceiptTopUpReview(
       payerReference: details.payerReference,
       attachmentKey: details.attachmentKey,
       customerNote: details.customerNote ?? undefined,
+      bankName: details.bankName,
       idempotencyKey: details.idempotencyKey,
     }),
   });
@@ -41,7 +43,8 @@ export async function loadBankReceiptTopUpReview(
     review.data.paymentDate !== details.paymentDate ||
     review.data.payerReference !== details.payerReference ||
     review.data.attachmentKey !== details.attachmentKey ||
-    review.data.customerNote !== details.customerNote
+    review.data.customerNote !== details.customerNote ||
+    (review.data.bankName ?? null) !== (details.bankName ?? null)
   )
     return { kind: 'error', status: 409 };
   return { kind: 'success', value: review };
@@ -65,6 +68,7 @@ export async function submitReviewedBankReceiptTopUp(
       payerReference: review.data.payerReference,
       attachmentKey: review.data.attachmentKey,
       customerNote: review.data.customerNote ?? undefined,
+      bankName: review.data.bankName ?? undefined,
       expectedReviewHash: review.hash,
     }),
   });

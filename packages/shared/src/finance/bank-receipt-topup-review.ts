@@ -1,3 +1,4 @@
+import { parseBankReceiptBankName } from './bank-receipt-bank-name.js';
 import { z } from 'zod';
 import type { FinancialReviewSnapshot } from './review-snapshot.js';
 
@@ -11,6 +12,11 @@ const dataSchema = z
     fileName: z.string().min(1),
     fileSizeBytes: z.string().regex(/^\d+$/).nullable(),
     customerNote: z.string().nullable(),
+    bankName: z
+      .string()
+      .refine((name) => parseBankReceiptBankName(name) === name && name.length > 0)
+      .nullable()
+      .optional(),
     stateAfterSubmission: z.literal('Pending'),
     creditRule: z.literal('after_finance_confirmation'),
   })

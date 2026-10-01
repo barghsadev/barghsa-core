@@ -1,3 +1,4 @@
+import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import {
@@ -60,6 +61,7 @@ interface BankReceiptReviewDto {
   state: string;
   paymentDate: string | null;
   payerReference: string | null;
+  bankName?: string | null;
   attachmentKey: string | null;
   attachmentUrl: string | null;
   customerNote: string | null;
@@ -236,6 +238,7 @@ export default function AdminWalletReceiptsPage() {
     financialReview.scope.resourceId === selected.transactionId &&
     financialReview.scope.profileId === selected.walletId &&
     financialReview.data.receipt.amount === selected.amount &&
+    (financialReview.data.receipt.bankName ?? null) === (selected.bankName ?? null) &&
     (financialReview.data.invoice?.invoice.id ?? '') === invoiceId.trim() &&
     !allocationLoading &&
     !allocationError &&
@@ -457,6 +460,7 @@ export default function AdminWalletReceiptsPage() {
           review.scope.resourceId !== selected.transactionId ||
           review.scope.profileId !== selected.walletId ||
           review.data.receipt.amount !== selected.amount ||
+          (review.data.receipt.bankName ?? null) !== (selected.bankName ?? null) ||
           (review.data.invoice?.invoice.id ?? '') !== trimmed
         )
           throw new Error('Invalid receipt review');
@@ -896,6 +900,14 @@ export default function AdminWalletReceiptsPage() {
                   </dt>
                   <dd className="font-mono text-sm" dir="ltr">
                     {selected.payerReference ?? t('admin.walletReceipts.none', locale)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">
+                    {adminText('admin.invoiceReceipts.bankName', locale)}
+                  </dt>
+                  <dd className="break-words">
+                    {selected.bankName ?? t('admin.walletReceipts.none', locale)}
                   </dd>
                 </div>
                 <div>

@@ -166,6 +166,39 @@ describe('BankReceiptTopUpService — real PostgreSQL (T-04.2.02.03)', () => {
     };
   }
 
+  it('seals named receipts, binds the customer review, and refuses changed-bank retries', async () => {
+    const attachmentKey = receiptKey('aabbccddeeff');
+    await insertReceipt(attachmentKey);
+    const input = payload({
+      attachmentKey,
+      idempotencyKey: 'bank-name-retry',
+      bankName: '  بانک ملی  ',
+    });
+    const before = await fetchWallet(PROFILE_A);
+    const review = await service.review(input);
+    expect(review.data.bankName).toBe('بانک ملی');
+    await expect(
+      service.submit({ ...input, bankName: 'Other bank', expectedReviewHash: review.hash })
+    ).rejects.toMatchObject({ status: 409 });
+    const result = await service.submit({ ...input, expectedReviewHash: review.hash });
+    expect(
+      await service.submit({ ...input, bankName: 'بانک ملی', expectedReviewHash: review.hash })
+    ).toEqual(result);
+    await expect(
+      service.submit({ ...input, bankName: 'Other bank', expectedReviewHash: review.hash })
+    ).rejects.toMatchObject({ status: 409 });
+    const rows = (await fetchLedger(PROFILE_A)).filter(
+      (row) => row.idempotency_key === input.idempotencyKey
+    );
+    expect(rows).toHaveLength(1);
+    expect(rows[0]!.metadata).toMatchObject({
+      receipt: { bankName: 'بانک ملی', attachmentKey: result.attachmentKey },
+      financialReview: review,
+    });
+    expect(result.attachmentKey).toBe(sealedInvoiceBankReceiptAttachmentKey(attachmentKey));
+    expect(await fetchWallet(PROFILE_A)).toEqual(before);
+  });
+
   it('creates a Pending top-up and leaves balances unchanged', async () => {
     const attachment = receiptKey('happy0000001');
     await insertReceipt(attachment);

@@ -204,6 +204,49 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     };
   }
 
+  it('binds named staff reviews and keeps legacy hashes valid', async () => {
+    const pendingId = await insertPending(uuidv7().slice(-12));
+    const input = {
+      transactionId: pendingId,
+      actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
+      ip: '10.0.0.9',
+      now: NOW,
+    };
+    const legacy = await service.review(input);
+    expect(legacy.data.receipt).not.toHaveProperty('bankName');
+    await ctx.pool.query(
+      "UPDATE wallet_transactions SET metadata=jsonb_set(metadata,'{receipt,bankName}',to_jsonb($2::text)) WHERE id=$1",
+      [pendingId, 'بانک ملی']
+    );
+    const named = await service.review(input);
+    expect(named.data.receipt.bankName).toBe('بانک ملی');
+    expect(named.hash).not.toBe(legacy.hash);
+    expect((await service.get(pendingId)).bankName).toBe('بانک ملی');
+    const before = await walletBalances();
+    await expect(
+      service.confirm({ ...input, expectedReviewHash: legacy.hash })
+    ).rejects.toMatchObject({ status: 409 });
+    expect(await walletBalances()).toEqual(before);
+    await ctx.pool.query(
+      "UPDATE wallet_transactions SET metadata=jsonb_set(metadata,'{receipt,bankName}',to_jsonb($2::text)) WHERE id=$1",
+      [pendingId, 'Other bank']
+    );
+    await expect(
+      service.confirm({ ...input, expectedReviewHash: named.hash })
+    ).rejects.toMatchObject({ status: 409 });
+    expect(await walletBalances()).toEqual(before);
+    await ctx.pool.query(
+      "UPDATE wallet_transactions SET metadata=jsonb_set(metadata,'{receipt,bankName}',to_jsonb($2::text)) WHERE id=$1",
+      [pendingId, 'بانک ملی']
+    );
+    const result = await service.confirm({ ...input, expectedReviewHash: named.hash });
+    expect(result.bankName).toBe('بانک ملی');
+    expect(result.state).toBe('Released');
+    expect(result.reviewHash).toBe(named.hash);
+    expect((await walletBalances()).posted).toBe(before.posted + AMOUNT);
+  });
+
   it.each([false, true])(
     'binds the stored receipt review and replay to the exact allocation, invoice=%s',
     async (linked) => {

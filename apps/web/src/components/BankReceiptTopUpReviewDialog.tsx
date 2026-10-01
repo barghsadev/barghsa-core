@@ -51,6 +51,15 @@ export default function BankReceiptTopUpReviewDialog({
             label: t('wallet.page.receiptFileLabel', locale),
             value: review.data.fileName,
           },
+          ...(review.data.bankName
+            ? [
+                {
+                  id: 'bank',
+                  label: t('invoices.activity.bankName', locale),
+                  value: review.data.bankName,
+                },
+              ]
+            : []),
           ...(review.data.customerNote
             ? [
                 {

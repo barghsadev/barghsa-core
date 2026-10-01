@@ -1,3 +1,4 @@
+import { parseBankReceiptBankName } from '@barghsa/shared/finance';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import {
@@ -112,6 +113,7 @@ export interface BankReceiptReviewDto {
   attachmentKey: string | null;
   attachmentUrl: string | null;
   customerNote: string | null;
+  bankName: string | null;
   submittedAt: string;
   canDecide: boolean;
   staffDecision: BankReceiptStaffDecisionSnapshot | null;
@@ -323,6 +325,7 @@ export class BankReceiptConfirmationService {
         amount: pending.amount,
         submittedAt: pending.created_at,
         receipt,
+        ...(receipt?.bankName ? { bankName: receipt.bankName } : {}),
         attachmentKey: pending.receipt_attachment_key ?? receipt?.attachmentKey ?? null,
         invoiceId: input.invoiceId ?? null,
       });
@@ -442,6 +445,7 @@ export class BankReceiptConfirmationService {
                 amount: pending.amount,
                 submittedAt: pending.created_at,
                 receipt,
+                ...(receipt?.bankName ? { bankName: receipt.bankName } : {}),
                 attachmentKey: pending.receipt_attachment_key ?? receipt?.attachmentKey ?? null,
                 invoiceId,
               });
@@ -1169,6 +1173,7 @@ export class BankReceiptConfirmationService {
       attachmentKey,
       attachmentUrl: await this.signAttachmentUrl(attachmentKey),
       customerNote: receipt?.customerNote ?? null,
+      bankName: receipt?.bankName ?? null,
       submittedAt: toIso(row.created_at),
       canDecide: row.state === 'Pending',
       staffDecision,
@@ -1209,11 +1214,13 @@ function readReceiptDetails(metadata: unknown): BankReceiptTopUpDetails | null {
   if (typeof record.paymentDate !== 'string') return null;
   if (typeof record.payerReference !== 'string') return null;
   if (typeof record.attachmentKey !== 'string') return null;
+  const bankName = parseBankReceiptBankName(record.bankName);
   return {
     paymentDate: record.paymentDate,
     payerReference: record.payerReference,
     attachmentKey: record.attachmentKey,
     customerNote: typeof record.customerNote === 'string' ? record.customerNote : null,
+    ...(bankName ? { bankName } : {}),
   };
 }
 

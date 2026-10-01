@@ -55,6 +55,7 @@ const BankReceiptFieldsSchema = z
     payerReference: z.string().min(1),
     attachmentKey: z.string().min(1),
     customerNote: z.string().optional(),
+    bankName: z.string().nullable().optional(),
   })
   .strict();
 const BankReceiptReviewBodySchema = BankReceiptFieldsSchema.extend({
@@ -336,6 +337,7 @@ export class WalletController {
       payerReference: parsed.data.payerReference,
       attachmentKey: parsed.data.attachmentKey,
       customerNote: parsed.data.customerNote,
+      bankName: parsed.data.bankName,
       idempotencyKey,
       expectedReviewHash: parsed.data.expectedReviewHash,
       actorId: req.session.userId,

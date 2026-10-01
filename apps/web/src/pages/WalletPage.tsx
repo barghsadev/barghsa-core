@@ -19,6 +19,7 @@ import type { OnlineTopUpReview } from '@barghsa/shared/finance';
 import type { BankReceiptTopUpReview } from '@barghsa/shared/finance';
 import {
   parseBankReceiptTopUpAmountIrR,
+  parseBankReceiptBankName,
   isValidWalletTopUpLimit,
 } from '@barghsa/shared/finance/browser';
 import type { OnlineTopUpActionError } from '../lib/online-topup-action.js';
@@ -60,6 +61,7 @@ type ReceiptError =
   | 'invalid-amount'
   | 'invalid-date'
   | 'invalid-payer-ref'
+  | 'invalid-bank-name'
   | 'invalid-file'
   | 'upload'
   | 'conflict'
@@ -110,6 +112,7 @@ export function WalletPage({
   const [receiptDate, setReceiptDate] = useState('');
   const [receiptPayerRef, setReceiptPayerRef] = useState('');
   const [receiptNote, setReceiptNote] = useState('');
+  const [receiptBankName, setReceiptBankName] = useState('');
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [receiptUploaded, setReceiptUploaded] = useState<{
     file: File;
@@ -269,6 +272,12 @@ export function WalletPage({
       setReceiptSuccess(false);
       return;
     }
+    const bankName = parseBankReceiptBankName(receiptBankName);
+    if (bankName === undefined) {
+      setReceiptError('invalid-bank-name');
+      setReceiptSuccess(false);
+      return;
+    }
     if (!receiptFile || !isAllowedReceiptFile(receiptFile)) {
       setReceiptError('invalid-file');
       setReceiptSuccess(false);
@@ -296,6 +305,7 @@ export function WalletPage({
         payerReference: receiptPayerRef.trim(),
         attachmentKey,
         customerNote: receiptNote.trim() || null,
+        ...(bankName ? { bankName } : {}),
         idempotencyKey: receiptIdempotencyKey,
       });
       if (result.kind === 'error') {
@@ -379,15 +389,17 @@ export function WalletPage({
           ? t('wallet.page.receiptInvalidDate', locale)
           : receiptError === 'invalid-payer-ref'
             ? t('wallet.page.receiptInvalidPayerRef', locale)
-            : receiptError === 'invalid-file'
-              ? t('wallet.page.receiptInvalidFile', locale)
-              : receiptError === 'upload'
-                ? t('wallet.page.receiptUploadError', locale)
-                : receiptError === 'conflict'
-                  ? t('wallet.page.conflict', locale)
-                  : receiptError === 'maintenance'
-                    ? tMaintenance('title', locale)
-                    : t('wallet.page.receiptGenericError', locale);
+            : receiptError === 'invalid-bank-name'
+              ? t('wallet.page.receiptInvalidBankName', locale)
+              : receiptError === 'invalid-file'
+                ? t('wallet.page.receiptInvalidFile', locale)
+                : receiptError === 'upload'
+                  ? t('wallet.page.receiptUploadError', locale)
+                  : receiptError === 'conflict'
+                    ? t('wallet.page.conflict', locale)
+                    : receiptError === 'maintenance'
+                      ? tMaintenance('title', locale)
+                      : t('wallet.page.receiptGenericError', locale);
 
   return (
     <div
@@ -542,6 +554,7 @@ export function WalletPage({
                 <div
                   role="alert"
                   data-testid="wallet-receipt-error"
+                  id={receiptError === 'invalid-bank-name' ? 'receipt-bank-name-error' : undefined}
                   className="rounded-lg border border-destructive/20 bg-danger-soft p-3 text-sm text-destructive"
                 >
                   {receiptErrorMessage}
@@ -630,6 +643,32 @@ export function WalletPage({
                 />
               </div>
 
+              <div>
+                <label
+                  htmlFor="receipt-bank-name"
+                  className="block text-sm font-medium text-foreground"
+                >
+                  {t('invoices.details.receiptBankNameLabel', locale)}
+                </label>
+                <input
+                  id="receipt-bank-name"
+                  data-testid="wallet-receipt-bank-name"
+                  type="text"
+                  maxLength={128}
+                  autoComplete="off"
+                  value={receiptBankName}
+                  disabled={receiptSubmitting}
+                  aria-invalid={receiptError === 'invalid-bank-name'}
+                  aria-describedby={
+                    receiptError === 'invalid-bank-name' ? 'receipt-bank-name-error' : undefined
+                  }
+                  onChange={(event) => {
+                    setReceiptBankName(event.target.value);
+                    if (receiptError === 'invalid-bank-name') setReceiptError(null);
+                  }}
+                  className="mt-2 w-full rounded-lg border border-border bg-background p-3 text-foreground"
+                />
+              </div>
               <div>
                 <label htmlFor="receipt-file" className="block text-sm font-medium text-foreground">
                   {t('wallet.page.receiptFileLabel', locale)}

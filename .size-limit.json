@@ -122,6 +122,11 @@
     "limitKB": 255
   },
   {
+    "name": "Wallet",
+    "entries": ["src/routes/_app/wallet.tsx?tsr-split=component"],
+    "limitKB": 300
+  },
+  {
     "name": "Admin",
     "routePrefix": "src/routes/admin/",
     "entries": [

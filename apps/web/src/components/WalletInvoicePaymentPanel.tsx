@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Alert, AlertDescription, Button, ScrollArea } from '@barghsa/ui';
 import { tWalletInvoicePayment as t } from '@barghsa/i18n/wallet-invoice-payment';
 import { useLocale } from '../hooks/useLocale.js';
@@ -69,6 +69,26 @@ export function WalletInvoicePaymentPanel({
     [open, setOpen] = useState(false);
   const [result, setResult] = useState<{ amount: string; transactionId: string } | null>(null),
     [refreshError, setRefreshError] = useState(false);
+  const dialogAmount = intent ? numbers.money(intent.remainingAmount) : '';
+  const paymentAction = useMemo(
+    () =>
+      intent
+        ? {
+            title: t('confirm', locale),
+            description: t('description', locale).replace('{amount}', dialogAmount),
+            path: `/api/invoices/${intent.invoiceId}/wallet-payment`,
+            method: 'POST' as const,
+            body: {
+              idempotencyKey: intent.idempotencyKey,
+              expectedRemainingAmount: intent.remainingAmount,
+              expectedReviewHash: intent.review.hash,
+            },
+            conflictMessage: t('conflict', locale),
+            forbiddenMessage: t('denied', locale),
+          }
+        : null,
+    [intent, locale, dialogAmount]
+  );
   useEffect(() => {
     if (!eligible) {
       setLoading(false);
@@ -192,26 +212,11 @@ export function WalletInvoicePaymentPanel({
           {time.notice}
         </>
       )}
-      {open && intent && (
+      {open && intent && paymentAction && (
         <Suspense fallback={<p role="status">{text('loading')}</p>}>
           <TeamActionDialog
             confirmationDisabled={time.status !== 'ready'}
-            action={{
-              title: text('confirm'),
-              description: text('description').replace(
-                '{amount}',
-                numbers.money(intent.remainingAmount)
-              ),
-              path: `/api/invoices/${intent.invoiceId}/wallet-payment`,
-              method: 'POST',
-              body: {
-                idempotencyKey: intent.idempotencyKey,
-                expectedRemainingAmount: intent.remainingAmount,
-                expectedReviewHash: intent.review.hash,
-              },
-              conflictMessage: text('conflict'),
-              forbiddenMessage: text('denied'),
-            }}
+            action={paymentAction}
             summary={
               <>
                 {time.notice}

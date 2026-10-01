@@ -60,6 +60,7 @@ export interface SubmitBankReceiptTopUpInput extends Omit<ReceiptSubmissionActor
   payerReference: unknown;
   attachmentKey: unknown;
   customerNote?: unknown;
+  bankName?: unknown;
   idempotencyKey: string;
   actorId: string;
   /** Required by the customer HTTP route; internal callers may submit accepted receipts. */
@@ -137,6 +138,7 @@ export class BankReceiptTopUpService {
         fileName: storageRow.file_name || receipt.attachmentKey.split('/').at(-1)!,
         fileSizeBytes: storageRow.file_size == null ? null : String(storageRow.file_size),
         customerNote: receipt.customerNote,
+        ...(receipt.bankName ? { bankName: receipt.bankName } : {}),
         stateAfterSubmission: 'Pending' as const,
         creditRule: 'after_finance_confirmation' as const,
       }
@@ -188,7 +190,8 @@ export class BankReceiptTopUpService {
             stored.data.paymentDate !== parsed.receipt.paymentDate ||
             stored.data.payerReference !== parsed.receipt.payerReference ||
             stored.data.attachmentKey !== parsed.receipt.attachmentKey ||
-            stored.data.customerNote !== parsed.receipt.customerNote
+            stored.data.customerNote !== parsed.receipt.customerNote ||
+            (stored.data.bankName ?? null) !== (parsed.receipt.bankName ?? null)
           )
             throw new ConflictException('Stored receipt review requires reconciliation');
           this.reviews.assertConfirmed(stored, stored.hash);
@@ -249,6 +252,7 @@ export class BankReceiptTopUpService {
       payerReference: input.payerReference,
       attachmentKey: input.attachmentKey,
       customerNote: input.customerNote,
+      bankName: input.bankName,
     });
     if (!parsed.ok) {
       throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, parsed.message);

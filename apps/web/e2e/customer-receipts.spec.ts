@@ -13,10 +13,16 @@ const pdf = {
 async function setup(page: Page, locale: string, kind: 'wallet' | 'invoice', loseResponse = false) {
   await page.addInitScript((value) => {
     const apply = () => {
-      if (document.documentElement) document.documentElement.lang = value;
+      if (document.documentElement && document.documentElement.lang !== value)
+        document.documentElement.lang = value;
     };
     apply();
-    new MutationObserver(apply).observe(document, { childList: true });
+    new MutationObserver(apply).observe(document, {
+      childList: true,
+      attributes: true,
+      attributeFilter: ['lang'],
+      subtree: true,
+    });
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
@@ -106,6 +112,7 @@ async function setup(page: Page, locale: string, kind: 'wallet' | 'invoice', los
             amountIrR: body.amount,
             paymentDate: body.paymentDate,
             payerReference: body.payerReference,
+            ...(body.bankName ? { bankName: body.bankName } : {}),
             attachmentKey: body.attachmentKey,
             fileName: String(body.attachmentKey).split('/').at(-1),
             fileSizeBytes: null,
@@ -198,7 +205,10 @@ for (const kind of ['wallet', 'invoice'] as const) {
       page,
     }) => {
       const { prefix, uploads, submissions, receipts } = await setup(page, locale, kind, true);
+      if (kind === 'wallet')
+        await page.getByTestId('wallet-receipt-bank-name').fill('  بانک ملی  ');
       await page.getByTestId(`${prefix}-submit`).click();
+      if (kind === 'wallet') await expect(page.getByRole('dialog')).toContainText('بانک ملی');
       await confirmReceipt(page);
       await expect(page.getByTestId(`${prefix}-error`)).toBeVisible();
       await expect(page.getByTestId(`${prefix}-success`)).toHaveCount(0);
@@ -210,6 +220,7 @@ for (const kind of ['wallet', 'invoice'] as const) {
         customerNote: 'Customer note',
         attachmentKey: 'receipts/upload-1.pdf',
         expectedReviewHash: 'a'.repeat(64),
+        ...(kind === 'wallet' ? { bankName: 'بانک ملی' } : {}),
       });
       await page.getByTestId(`${prefix}-submit`).click();
       await confirmReceipt(page);
@@ -253,6 +264,18 @@ for (const kind of ['wallet', 'invoice'] as const) {
         expect(submissions).toHaveLength(0);
       }
       await page.getByTestId(`${prefix}-amount`).fill('250000');
+      if (kind === 'wallet') {
+        const bank = page.getByTestId('wallet-receipt-bank-name');
+        await expect(bank).toHaveAttribute('maxlength', '128');
+        await bank.fill('Bank\tName');
+        await page.getByTestId(`${prefix}-submit`).click();
+        await expect(bank).toHaveAttribute('aria-invalid', 'true');
+        await expect(page.getByTestId(`${prefix}-error`)).toContainText(
+          locale === 'fa' ? '۱۲۸' : '128'
+        );
+        expect(uploads).toHaveLength(0);
+        await bank.fill('');
+      }
       await page.getByTestId(`${prefix}-file`).setInputFiles({ ...pdf, mimeType: 'text/plain' });
       await page.getByTestId(`${prefix}-submit`).click();
       await expect(page.getByTestId(`${prefix}-file`)).toHaveAttribute('aria-invalid', 'true');

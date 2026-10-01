@@ -132,6 +132,39 @@ describe('parseBankReceiptTopUpSubmission (T-04.2.02.03)', () => {
   });
 });
 
+describe('optional receipt bank names', () => {
+  it.each([undefined, null, '', '  '])('preserves the legacy metadata shape for %s', (bankName) => {
+    const parsed = parseBankReceiptTopUpSubmission(validBody({ bankName }), TODAY);
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) throw new Error('Expected receipt');
+    expect(parsed.receipt).not.toHaveProperty('bankName');
+    expect(bankReceiptTopUpMetadata(parsed.receipt)).not.toHaveProperty('receipt.bankName');
+  });
+  it.each([123, {}, 'x'.repeat(129), 'Bank\nName', 'Bank\tName', 'Bank\x7f'])(
+    'rejects invalid bank metadata %s',
+    (bankName) => {
+      expect(parseBankReceiptTopUpSubmission(validBody({ bankName }), TODAY)).toMatchObject({
+        ok: false,
+        field: 'bankName',
+      });
+    }
+  );
+  it('normalizes Persian names and rejects a changed bank on retries', () => {
+    const parsed = parseBankReceiptTopUpSubmission(validBody({ bankName: '  بانک ملی  ' }), TODAY);
+    if (!parsed.ok) throw new Error('Expected receipt');
+    expect(parsed.receipt.bankName).toBe('بانک ملی');
+    const metadata = bankReceiptTopUpMetadata(parsed.receipt);
+    expect(receiptDetailsMatch(metadata, parsed.receipt)).toBe(true);
+    expect(receiptDetailsMatch(metadata, { ...parsed.receipt, bankName: 'Other bank' })).toBe(
+      false
+    );
+    const legacy = { ...parsed.receipt };
+    delete legacy.bankName;
+    expect(receiptDetailsMatch(metadata, legacy)).toBe(false);
+    expect(receiptDetailsMatch(bankReceiptTopUpMetadata(legacy), legacy)).toBe(true);
+  });
+});
+
 describe('bank receipt metadata helpers (T-04.2.02.03)', () => {
   it('round-trips receipt details under the bank_receipt channel', () => {
     const receipt = {

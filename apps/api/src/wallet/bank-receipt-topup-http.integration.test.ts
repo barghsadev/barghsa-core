@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
-import { BANK_RECEIPT_STORAGE_PURPOSE } from '@barghsa/shared/finance';
+import { BANK_RECEIPT_STORAGE_PURPOSE, parseBankReceiptTopUpReview } from '@barghsa/shared/finance';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 beforeAll(async () => {
@@ -80,6 +80,40 @@ it('reviews the bank receipt and requires its exact hash before Pending submissi
     fileName: 'transfer.pdf',
     creditRule: 'after_finance_confirmation',
   });
+  const namedPreview = await fetch(`${input.path}/review`, {
+    method: 'POST',
+    headers: input.headers,
+    body: JSON.stringify({
+      ...input.details,
+      bankName: '  بانک ملی  ',
+      idempotencyKey: input.idempotencyKey,
+    }),
+  });
+  expect(namedPreview.status).toBe(200);
+  const named = parseBankReceiptTopUpReview(await namedPreview.json());
+  if (!named) throw new Error('Expected valid bank-name review');
+  expect(named.data.bankName).toBe('بانک ملی');
+  expect(named.hash).not.toBe(review.hash);
+  const invalidPreview = await fetch(`${input.path}/review`, {
+    method: 'POST',
+    headers: input.headers,
+    body: JSON.stringify({
+      ...input.details,
+      bankName: 'Bank\tName',
+      idempotencyKey: input.idempotencyKey,
+    }),
+  });
+  expect(invalidPreview.status).toBe(400);
+  const changedBank = await fetch(input.path, {
+    method: 'POST',
+    headers: { ...input.headers, 'Idempotency-Key': input.idempotencyKey },
+    body: JSON.stringify({
+      ...input.details,
+      bankName: 'Other bank',
+      expectedReviewHash: review.hash,
+    }),
+  });
+  expect(changedBank.status).toBe(409);
   const submit = (expectedReviewHash?: string) =>
     fetch(input.path, {
       method: 'POST',

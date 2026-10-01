@@ -17,6 +17,7 @@ const amount = '9007199254740993';
 const receipt = {
   ...paymentReceipt,
   amount,
+  bankName: 'بانک ملی',
   paymentDate: '2026-09-01',
   submittedAt: '2026-09-01T23:30:00.123456Z',
   attachmentKey: 'receipts/bank.png',
@@ -100,6 +101,7 @@ for (const locale of ['en', 'fa'] as const)
         const invoiceId = new URL(r.request().url()).searchParams.get('invoiceId');
         const review = bankReceiptReview(receiptId, invoiceId);
         review.data.receipt.amount = amount;
+        review.data.receipt.bankName = receipt.bankName;
         review.data.receipt.paymentDate = receipt.paymentDate;
         review.data.receipt.submittedAt = receipt.submittedAt;
         const credit = (BigInt(amount) - BigInt(review.data.allocation.invoiceAmount)).toString();
@@ -128,6 +130,11 @@ for (const locale of ['en', 'fa'] as const)
         { locale, amount }
       );
       await expect(queue.locator('li').first()).toContainText(`${formattedAmount} IRR`);
+      await expect(queue.locator('li').first()).toContainText(receipt.bankName);
+      await expect(panel.locator('dl').first()).toContainText(receipt.bankName);
+      await expect(
+        panel.getByRole('region', { name: word('review.title'), exact: true })
+      ).toContainText(receipt.bankName);
       await expect(queue.locator('time[datetime="2026-09-01"]')).toHaveText(
         new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
           calendar: locale === 'fa' ? 'persian' : 'gregory',
@@ -161,7 +168,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.locator('#reject-reason').fill('Retain invoice and bank investigation');
       const reads = [queueReads, detailReads, reviewReads];
       await panel.getByRole('button', { name: tableLabel, exact: true }).click();
-      await expect(queue.getByRole('columnheader')).toHaveCount(9);
+      await expect(queue.getByRole('columnheader')).toHaveCount(10);
       await expect(page.locator('#apply-invoice-id')).toHaveValue(paymentInvoiceId);
       await expect(page.locator('#reject-reason')).toHaveValue(
         'Retain invoice and bank investigation'
@@ -210,7 +217,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(confirm).toBeEnabled();
       await panel.getByRole('button', { name: tableLabel, exact: true }).click();
       await page.reload();
-      await expect(queue.getByRole('columnheader')).toHaveCount(9);
+      await expect(queue.getByRole('columnheader')).toHaveCount(10);
       await expect(panel.getByRole('button', { name: tableLabel, exact: true })).toHaveAttribute(
         'aria-pressed',
         'true'

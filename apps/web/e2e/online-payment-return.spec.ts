@@ -6,10 +6,16 @@ const orderId = '22222222-2222-4222-8222-222222222222';
 async function setup(page: Page, locale: string) {
   await page.addInitScript((value) => {
     const apply = () => {
-      if (document.documentElement) document.documentElement.lang = value;
+      if (document.documentElement && document.documentElement.lang !== value)
+        document.documentElement.lang = value;
     };
     apply();
-    new MutationObserver(apply).observe(document, { childList: true });
+    new MutationObserver(apply).observe(document, {
+      childList: true,
+      attributes: true,
+      attributeFilter: ['lang'],
+      subtree: true,
+    });
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
