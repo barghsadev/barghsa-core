@@ -6,6 +6,7 @@ import type { ValidatedSession } from '../session/session.service.js';
 import type { PoolClient } from 'pg';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { readOnboardingDraftState } from './onboarding-draft-state.js';
+import { readWizardDraftTtl } from '../common/wizard-draft-retention.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
@@ -70,16 +71,66 @@ export const onboardingDraftInputSchema = z
 
 @Injectable()
 export class OnboardingDraftsService {
-  private async lockActor(client: PoolClient, actor: Actor) {
+  private async lockActor(client: PoolClient, actor: Actor, customerOnly = false) {
     // Match session validation's user -> session lock order, including audit foreign keys.
     const account = (
-      await client.query('SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [
-        actor.userId,
-      ])
+      await client.query(
+        `SELECT disabled_at,is_staff,is_admin,
+        EXISTS(SELECT 1 FROM user_roles WHERE user_id=$1) AS has_roles
+        FROM users WHERE user_id=$1 FOR UPDATE`,
+        [actor.userId]
+      )
     ).rows[0];
     if (!account || account.disabled_at)
       throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+    if (customerOnly && (account.is_staff || account.is_admin || account.has_roles))
+      throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
     await requireCurrentSession(client, actor);
+  }
+
+  async list(actor: Actor, query: unknown) {
+    const parsed = z.object({ after: z.string().uuid().optional() }).strict().safeParse(query);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.lockActor(client, actor, true);
+      const ttl = await readWizardDraftTtl(client);
+      const result = await client.query(
+        `SELECT p.id,p.profile_type,
+          NULLIF(COALESCE(NULLIF(p.title,''),TRIM(CONCAT_WS(' ',p.first_name,p.last_name))),'') AS name,
+          p.created_at,
+          CASE WHEN d.data<>'{}'::jsonb THEN d.updated_at ELSE NULL END AS updated_at,
+          COALESCE(d.data<>'{}'::jsonb,false) AS has_draft,
+          COALESCE(d.data<>'{}'::jsonb AND d.updated_at<NOW()-($3*INTERVAL '1 day'),false) AS expired
+         FROM profiles p LEFT JOIN profile_onboarding_drafts d ON d.profile_id=p.id
+         WHERE p.user_id=$1 AND p.status='DRAFT' AND NOT p.archived
+           AND p.profile_type IN ('INDIVIDUAL','LEGAL')
+           AND ($2::uuid IS NULL OR p.id<$2::uuid)
+           AND NOT EXISTS(SELECT 1 FROM profile_onboarding_journeys j
+             WHERE j.individual_profile_id=p.id OR j.legal_profile_id=p.id)
+         ORDER BY p.id DESC LIMIT 51`,
+        [actor.userId, parsed.data.after ?? null, ttl]
+      );
+      const drafts = result.rows.slice(0, 50).map((row) => ({
+        id: row.id as string,
+        profileType: row.profile_type as 'INDIVIDUAL' | 'LEGAL',
+        name: row.name as string | null,
+        createdAt: (row.created_at as Date).toISOString(),
+        updatedAt: row.updated_at ? (row.updated_at as Date).toISOString() : null,
+        hasDraft: row.has_draft as boolean,
+        expired: row.expired as boolean,
+      }));
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return { drafts, nextAfter: result.rows.length > 50 ? drafts.at(-1)!.id : null };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   async get(actor: Actor, profileId: string) {

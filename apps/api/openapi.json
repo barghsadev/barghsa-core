@@ -23599,6 +23599,97 @@
         ]
       }
     },
+    "/api/onboarding/drafts": {
+      "get": {
+        "operationId": "OnboardingController_listDrafts",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "drafts": {
+                      "items": {
+                        "properties": {
+                          "createdAt": {
+                            "format": "date-time",
+                            "type": "string"
+                          },
+                          "expired": {
+                            "type": "boolean"
+                          },
+                          "hasDraft": {
+                            "type": "boolean"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "name": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "profileType": {
+                            "enum": [
+                              "INDIVIDUAL",
+                              "LEGAL"
+                            ],
+                            "type": "string"
+                          },
+                          "updatedAt": {
+                            "format": "date-time",
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "profileType",
+                          "name",
+                          "createdAt",
+                          "updatedAt",
+                          "hasDraft",
+                          "expired"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 50,
+                      "type": "array"
+                    },
+                    "nextAfter": {
+                      "format": "uuid",
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "drafts",
+                    "nextAfter"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "List owned unfinished profiles outside a profile setup",
+        "tags": [
+          "Onboarding"
+        ]
+      }
+    },
     "/api/onboarding/individual/{profileId}": {
       "post": {
         "operationId": "OnboardingController_saveIndividualProfile",

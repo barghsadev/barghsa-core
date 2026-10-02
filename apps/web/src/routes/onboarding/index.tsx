@@ -6,19 +6,25 @@ import {
   onboardingDestination,
   type OnboardingJourney,
 } from '../../lib/onboarding-journey.js';
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { Button } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/')({ component: OnboardingPage });
 type ProfileType = 'INDIVIDUAL' | 'LEGAL';
+const OnboardingDraftList = lazy(() => import('../../components/OnboardingDraftList.js'));
 const types = ['INDIVIDUAL', 'LEGAL'] as const;
 
 function OnboardingPage() {
-  const locale = useLocale();
   const { onboardingUserId } = Route.useRouteContext();
+  return <OnboardingContent key={onboardingUserId} accountId={onboardingUserId} />;
+}
+
+function OnboardingContent({ accountId }: { accountId: string }) {
+  const locale = useLocale();
   const router = useRouter();
+  const [draftListReady, setDraftListReady] = useState(false);
   const [selected, setSelected] = useState<ProfileType[]>([]);
   const [journey, setJourney] = useState<OnboardingJourney | null>(null);
   const [loading, setLoading] = useState(true);
@@ -53,7 +59,7 @@ function OnboardingPage() {
   }, [retry]);
 
   async function handleContinue() {
-    if (busy.current || loading || !selected.length) return;
+    if (busy.current || loading || error || !draftListReady || !selected.length) return;
     busy.current = true;
     const controller = new AbortController();
     request.current = controller;
@@ -96,7 +102,10 @@ function OnboardingPage() {
           <h1 className="text-2xl font-bold">{t('onboarding.welcome.title', locale)}</h1>
           <p className="text-muted-foreground">{t('onboarding.welcome.subtitle', locale)}</p>
         </div>
-        <InvitationBanner locale={locale} accountId={onboardingUserId} />
+        <InvitationBanner locale={locale} accountId={accountId} />
+        <Suspense fallback={null}>
+          <OnboardingDraftList locale={locale} onReady={setDraftListReady} disabled={submitting} />
+        </Suspense>
         {loading ? (
           <p role="status">{t('onboarding.journey.loading', locale)}</p>
         ) : journey ? (
@@ -173,7 +182,7 @@ function OnboardingPage() {
             <Button
               className="w-full"
               type="button"
-              disabled={!selected.length || submitting || error}
+              disabled={!selected.length || submitting || error || !draftListReady}
               onClick={handleContinue}
             >
               {submitting

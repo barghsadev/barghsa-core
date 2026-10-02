@@ -211,6 +211,11 @@
       "types": "./dist/conversation-identity.d.ts",
       "import": "./dist/conversation-identity.js",
       "default": "./dist/conversation-identity.js"
+    },
+    "./onboarding-drafts": {
+      "types": "./dist/onboarding-drafts.d.ts",
+      "import": "./dist/onboarding-drafts.js",
+      "default": "./dist/onboarding-drafts.js"
     }
   },
   "scripts": {

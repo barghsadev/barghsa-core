@@ -888,6 +888,9 @@ for (const locale of ['en', 'fa'] as const) {
         },
       })
     );
+    await page.route('**/api/onboarding/drafts', (r) =>
+      r.fulfill({ json: { drafts: [], nextAfter: null } })
+    );
     await page.route('**/api/onboarding/journeys/active', (r) =>
       r.fulfill({ json: { journey: null } })
     );

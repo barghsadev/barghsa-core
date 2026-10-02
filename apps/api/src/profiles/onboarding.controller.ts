@@ -16,6 +16,7 @@ import {
   Put,
   Body,
   Param,
+  Query,
   HttpCode,
   HttpException,
   Logger,
@@ -23,7 +24,7 @@ import {
   UseGuards,
   ParseUUIDPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { ApiResponseSchemaHost } from '@nestjs/swagger';
 import { ProfilesService } from './profiles.service.js';
 import { LegalProfilesService } from './legal-profiles.service.js';
@@ -143,6 +144,49 @@ export class OnboardingController {
     @Req() req: AuthenticatedRequest
   ) {
     return this.legalProfilesService.getDocuments(req.session.userId, profileId);
+  }
+
+  @Get('drafts')
+  @RateLimit({ namespace: 'onboarding:drafts:list:user', limit: 60, windowMs: 60000 })
+  @ApiOperation({ summary: 'List owned unfinished profiles outside a profile setup' })
+  @ApiQuery({ name: 'after', required: false, type: String, format: 'uuid' })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      required: ['drafts', 'nextAfter'],
+      properties: {
+        nextAfter: { type: 'string', format: 'uuid', nullable: true },
+        drafts: {
+          type: 'array',
+          maxItems: 50,
+          items: {
+            type: 'object',
+            required: [
+              'id',
+              'profileType',
+              'name',
+              'createdAt',
+              'updatedAt',
+              'hasDraft',
+              'expired',
+            ],
+            properties: {
+              id: { type: 'string', format: 'uuid' },
+              profileType: { type: 'string', enum: ['INDIVIDUAL', 'LEGAL'] },
+              name: { type: 'string', nullable: true },
+              createdAt: { type: 'string', format: 'date-time' },
+              updatedAt: { type: 'string', format: 'date-time', nullable: true },
+              hasDraft: { type: 'boolean' },
+              expired: { type: 'boolean' },
+            },
+          },
+        },
+      },
+    },
+  })
+  listDrafts(@Query() query: unknown, @Req() req: AuthenticatedRequest) {
+    return this.drafts.list(req.session, query);
   }
 
   @Get('draft/:profileId')

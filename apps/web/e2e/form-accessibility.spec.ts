@@ -568,6 +568,9 @@ for (const locale of ['en', 'fa']) {
   }) => {
     await shell(page, locale);
     const selectedId = '11111111-1111-4111-8111-111111111111';
+    await page.route('**/api/onboarding/drafts', (r) =>
+      r.fulfill({ json: { drafts: [], nextAfter: null } })
+    );
     await page.route('**/api/onboarding/journeys/active', (route) =>
       route.fulfill({ json: { journey: null } })
     );

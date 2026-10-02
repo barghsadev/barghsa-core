@@ -61,6 +61,9 @@ async function fixture(
   await page.route('**/api/user/settings/timezone', (r) =>
     r.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
+  await page.route('**/api/onboarding/drafts', (r) =>
+    r.fulfill({ json: { drafts: [], nextAfter: null } })
+  );
   await page.route('**/api/invitations/pending', (r) => r.fulfill({ json: { invitations: [] } }));
   await page.route('**/api/auth/user', (r) =>
     r.fulfill({
@@ -865,3 +868,137 @@ for (const locale of ['en', 'fa'] as const) {
     expect(state.starts).toHaveLength(0);
   });
 }
+
+const draftSummary = (id: string, type: 'INDIVIDUAL' | 'LEGAL', expired = false) => ({
+  id,
+  profileType: type,
+  name: null,
+  createdAt: '2026-10-01T00:00:00.000Z',
+  updatedAt: '2026-10-01T00:00:00.000Z',
+  hasDraft: true,
+  expired,
+});
+for (const locale of ['en', 'fa'] as const) {
+  for (const type of ['INDIVIDUAL', 'LEGAL'] as const) {
+    test(`unfinished ${type} resumes its saved fields without creating another profile (${locale})`, async ({
+      page,
+    }) => {
+      const state = await fixture(page, locale, type, type === 'INDIVIDUAL' ? individual : legal);
+      let starts = 0;
+      await page.route('**/api/onboarding/journeys/active', (r) =>
+        r.fulfill({ json: { journey: null } })
+      );
+      await page.route('**/api/onboarding/journeys', (r) => {
+        starts++;
+        return r.fulfill({ status: 500, json: {} });
+      });
+      await page.route('**/api/onboarding/drafts', (r) =>
+        r.fulfill({ json: { drafts: [draftSummary(profileId, type)], nextAfter: null } })
+      );
+      await page.goto('/onboarding');
+      const section = page.getByRole('region', {
+        name: locale === 'fa' ? 'پروفایل‌های ناتمام' : 'Unfinished profiles',
+      });
+      await expect(section.getByRole('link')).toHaveAttribute(
+        'href',
+        `/onboarding/${type.toLowerCase()}/${profileId}?step=1`
+      );
+      expect((await new AxeBuilder({ page }).include('.container').analyze()).violations).toEqual(
+        []
+      );
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+      ).toBe(true);
+      await section.getByRole('link').click();
+      await expect(
+        page.locator(type === 'INDIVIDUAL' ? '#firstName' : '#representativeFirstName')
+      ).toHaveValue('Person');
+      expect(starts).toBe(0);
+      expect(state.submissions).toHaveLength(0);
+    });
+  }
+}
+for (const type of ['INDIVIDUAL', 'LEGAL'] as const) {
+  test(`expired ${type} restarts the form on the same profile`, async ({ page }) => {
+    const state = await fixture(page, 'en', type);
+    state.draft.version = 5;
+    await page.route('**/api/onboarding/journeys/active', (r) =>
+      r.fulfill({ json: { journey: null } })
+    );
+    await page.route('**/api/onboarding/drafts', (r) =>
+      r.fulfill({ json: { drafts: [draftSummary(profileId, type, true)], nextAfter: null } })
+    );
+    await page.goto('/onboarding');
+    await page.getByRole('link', { name: 'Restart form' }).click();
+    await expect(page).toHaveURL(
+      new RegExp(`/onboarding/${type.toLowerCase()}/${profileId}\\?step=1$`)
+    );
+    await expect(
+      page.locator(type === 'INDIVIDUAL' ? '#firstName' : '#representativeFirstName')
+    ).toHaveValue('');
+    expect(state.draft.version).toBe(5);
+    expect(state.saveRequests).toHaveLength(0);
+  });
+}
+test('unfinished profile pages retain accepted rows and retry the same cursor', async ({
+  page,
+}) => {
+  await fixture(page, 'en', 'INDIVIDUAL');
+  await page.route('**/api/onboarding/journeys/active', (r) =>
+    r.fulfill({ json: { journey: null } })
+  );
+  const id = (n: number) => `${n.toString(16).padStart(8, '0')}-1111-4111-8111-111111111111`;
+  let later = 0;
+  const cursors: string[] = [];
+  await page.route('**/api/onboarding/drafts*', (r) => {
+    const after = new URL(r.request().url()).searchParams.get('after');
+    if (!after)
+      return r.fulfill({
+        json: {
+          drafts: Array.from({ length: 50 }, (_, n) => draftSummary(id(100 - n), 'INDIVIDUAL')),
+          nextAfter: id(51),
+        },
+      });
+    cursors.push(after);
+    return later++ === 0
+      ? r.fulfill({ status: 503, json: {} })
+      : r.fulfill({ json: { drafts: [draftSummary(id(50), 'LEGAL')], nextAfter: null } });
+  });
+  await page.goto('/onboarding');
+  const section = page.getByRole('region', { name: 'Unfinished profiles' });
+  await section.getByRole('button', { name: 'More profiles' }).click();
+  await expect(section.getByRole('alert')).toBeVisible();
+  await expect(section.getByRole('listitem')).toHaveCount(50);
+  await section.getByRole('button', { name: 'Retry' }).click();
+  await expect(section.getByRole('listitem')).toHaveCount(51);
+  expect(cursors).toEqual([id(51), id(51)]);
+});
+test('a failed draft directory read blocks new profiles until retry succeeds', async ({ page }) => {
+  const state = await combinedFixture(page, 'en');
+  let reads = 0;
+  await page.route('**/api/onboarding/drafts', (r) =>
+    reads++ === 0
+      ? r.fulfill({ status: 503, json: {} })
+      : r.fulfill({ json: { drafts: [], nextAfter: null } })
+  );
+  await page.goto('/onboarding');
+  await page.getByRole('checkbox', { name: 'Individual', exact: true }).check();
+  await expect(page.getByRole('button', { name: 'Continue', exact: true })).toBeDisabled();
+  expect(state.starts).toHaveLength(0);
+  await page
+    .getByRole('region', { name: 'Unfinished profiles' })
+    .getByRole('button', { name: 'Retry' })
+    .click();
+  await expect(page.getByRole('button', { name: 'Continue', exact: true })).toBeEnabled();
+});
+test('an existing setup remains resumable when the separate draft list is unavailable', async ({
+  page,
+}) => {
+  const state = await combinedFixture(page, 'en');
+  state.started = true;
+  await page.route('**/api/onboarding/drafts', (r) => r.fulfill({ status: 503, json: {} }));
+  await page.goto('/onboarding');
+  await page.getByRole('button', { name: 'Resume profile setup' }).click();
+  await expect(page.locator('#firstName')).toHaveValue('Person');
+  expect(state.starts).toHaveLength(0);
+});
