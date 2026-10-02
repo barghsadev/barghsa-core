@@ -10,7 +10,9 @@ import { useWizardStep } from '../hooks/useWizardStep.js';
 import { confirmedDraftReceipt, electricityOrderReceipt } from '../lib/form-receipt.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useLocale } from '../hooks/useLocale.js';
-import { FormWizard } from '../components/FormWizard.js';
+import { ValidatedFormWizard } from '../components/ValidatedFormWizard.js';
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { z } from 'zod';
 import type { ElectricityContractTermsSnapshot } from '../components/ElectricityContractTerms.js';
 import {
   ElectricityQuotePreviewError,
@@ -146,6 +148,15 @@ function estimateDate(value: string, locale: 'fa' | 'en') {
   }).format(new Date(value));
 }
 
+function quantityValid(value: string, product?: Product) {
+  return (
+    /^[1-9]\d*$/.test(value) &&
+    (!product ||
+      ((product.limits.minKwh === '0' || BigInt(value) >= BigInt(product.limits.minKwh)) &&
+        (product.limits.maxKwh === '0' || BigInt(value) <= BigInt(product.limits.maxKwh))))
+  );
+}
+
 // ─── Page Component ────────────────────────────────────────────────────
 
 export function SimpleElectricityOrderPage() {
@@ -163,15 +174,78 @@ export function SimpleElectricityOrderPage() {
 
   // Products
   const [products, setProducts] = useState<Product[]>([]);
-  const [selectedProductId, setSelectedProductId] = useState<string>('');
+  const fields = useWizardForm(
+    z
+      .object({
+        selectedProductId: z
+          .string()
+          .refine(
+            (value) => products.some((product) => product.id === value),
+            t('electricity.order.error.noProduct', locale)
+          ),
+        period: z
+          .enum(['current_month', 'next_month', 'current_week', 'next_week', 'week_after_next'])
+          .refine(
+            (value) => periodOptions.some((option) => option.key === value),
+            t('formWizard.invalidField', locale)
+          ),
+        totalKwh: z.string(),
+        selectedAddressId: z
+          .string()
+          .refine(
+            (value) => addresses.some((address) => address.id === value),
+            t('electricity.order.selectAddress', locale)
+          ),
+        giftCode: z.string(),
+        appliedGiftCode: z.string(),
+        addressTouched: z.boolean(),
+        formProvinceId: z.string(),
+        formCityId: z.string(),
+        formFullAddress: z.string(),
+        formPostalCode: z.string(),
+      })
+      .superRefine((value, context) => {
+        if (
+          !quantityValid(
+            value.totalKwh,
+            products.find((product) => product.id === value.selectedProductId)
+          )
+        )
+          context.addIssue({
+            code: 'custom',
+            path: ['totalKwh'],
+            message: t('electricity.order.quantityInvalid', locale),
+          });
+        if (value.giftCode.trim() !== value.appliedGiftCode)
+          context.addIssue({
+            code: 'custom',
+            path: ['giftCode'],
+            message: t('electricity.order.applyGiftFirst', locale),
+          });
+      }),
+    {
+      selectedProductId: '',
+      period: 'current_month',
+      totalKwh: '',
+      selectedAddressId: '',
+      giftCode: '',
+      appliedGiftCode: '',
+      addressTouched: false,
+      formProvinceId: '',
+      formCityId: '',
+      formFullAddress: '',
+      formPostalCode: '',
+    }
+  );
+  const [selectedProductId, setSelectedProductId] = fields.field('selectedProductId');
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [productError, setProductError] = useState(false);
   const productGeneration = useRef(0);
 
   // Addresses
   const [addresses, setAddresses] = useState<Address[]>([]);
-  const [selectedAddressId, setSelectedAddressId] = useState<string>('');
-  const [addressTouched, setAddressTouched] = useState(false);
+  const [selectedAddressId, setSelectedAddressId] = fields.field('selectedAddressId');
+  const [addressTouched, setAddressTouched] = fields.field('addressTouched');
   const [loadingAddresses, setLoadingAddresses] = useState(true);
   const [addressError, setAddressError] = useState(false);
   const addressGeneration = useRef(0);
@@ -180,8 +254,8 @@ export function SimpleElectricityOrderPage() {
 
   // New address form
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
-  const [formProvinceId, setFormProvinceId] = useState('');
-  const [formCityId, setFormCityId] = useState('');
+  const [formProvinceId, setFormProvinceId] = fields.field('formProvinceId');
+  const [formCityId, setFormCityId] = fields.field('formCityId');
   const provinceOptions = useGeographyOptions('/api/geography/provinces');
   const cityOptions = useGeographyOptions(
     showNewAddressForm && formProvinceId
@@ -195,8 +269,8 @@ export function SimpleElectricityOrderPage() {
   const cities = cityOptions.options;
   const cityError = cityOptions.error;
   const loadingCities = cityOptions.loading;
-  const [formFullAddress, setFormFullAddress] = useState('');
-  const [formPostalCode, setFormPostalCode] = useState('');
+  const [formFullAddress, setFormFullAddress] = fields.field('formFullAddress');
+  const [formPostalCode, setFormPostalCode] = fields.field('formPostalCode');
   const [savingAddress, setSavingAddress] = useState(false);
   const addressSaveInFlight = useRef(false);
 
@@ -210,12 +284,12 @@ export function SimpleElectricityOrderPage() {
   } | null>(null);
   const [periodOptions, setPeriodOptions] = useState<PeriodOption[]>([]);
   const [loadingPeriods, setLoadingPeriods] = useState(true);
-  const [period, setPeriod] = useState<SimplePeriod>('current_month');
-  const [totalKwh, setTotalKwh] = useState('');
+  const [period, setPeriod] = fields.field('period');
+  const [totalKwh, setTotalKwh] = fields.field('totalKwh');
   const [billSuggestion, setBillSuggestion] = useState<BillSuggestion | null>(null);
   const [billSuggestionRetry, setBillSuggestionRetry] = useState(0);
-  const [giftCode, setGiftCode] = useState('');
-  const [appliedGiftCode, setAppliedGiftCode] = useState('');
+  const [giftCode, setGiftCode] = fields.field('giftCode');
+  const [appliedGiftCode, setAppliedGiftCode] = fields.field('appliedGiftCode');
   const [quote, setQuote] = useState<PriceQuote | null>(null);
   const [quoteError, setQuoteError] = useState('');
   const [quoting, setQuoting] = useState(false);
@@ -260,13 +334,15 @@ export function SimpleElectricityOrderPage() {
       (unsavedChanges ||
         !!draftSaveInFlight.current ||
         orderSaveInFlight.current ||
-        addressSaveInFlight.current),
+        addressSaveInFlight.current ||
+        fields.isPending()),
     enableBeforeUnload: () =>
       !completed.current &&
       (unsavedChanges ||
         !!draftSaveInFlight.current ||
         orderSaveInFlight.current ||
-        addressSaveInFlight.current),
+        addressSaveInFlight.current ||
+        fields.isPending()),
     withResolver: true,
   });
 
@@ -710,14 +786,7 @@ export function SimpleElectricityOrderPage() {
 
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId);
   const selectedProduct = products.find((item) => item.id === selectedProductId);
-  const quantityError =
-    totalKwh !== '' &&
-    (!/^[1-9]\d*$/.test(totalKwh) ||
-      (!!selectedProduct &&
-        ((selectedProduct.limits.minKwh !== '0' &&
-          BigInt(totalKwh) < BigInt(selectedProduct.limits.minKwh)) ||
-          (selectedProduct.limits.maxKwh !== '0' &&
-            BigInt(totalKwh) > BigInt(selectedProduct.limits.maxKwh)))));
+  const quantityError = totalKwh !== '' && !quantityValid(totalKwh, selectedProduct);
 
   // ── Save new address ─────────────────────────────────────────────────
 
@@ -1161,7 +1230,7 @@ export function SimpleElectricityOrderPage() {
       {blocker.status === 'blocked' && (
         <Suspense>
           <LeaveDialog
-            working={savingDraft || submitting || savingAddress}
+            working={fields.pending || savingDraft || submitting || savingAddress}
             workingLabel={t(
               submitting ? 'electricity.order.submitting' : 'electricity.order.savingDraft',
               locale
@@ -1179,7 +1248,35 @@ export function SimpleElectricityOrderPage() {
       <h1 className="mb-2 text-2xl font-bold">{t('electricity.order.title', locale)}</h1>
       <p className="mb-6 text-muted-foreground">{t('electricity.order.description', locale)}</p>
       <Suspense fallback={<p role="status">{t('electricity.order.previewLoading', locale)}</p>}>
-        <FormWizard
+        <ValidatedFormWizard
+          form={fields.form}
+          errorId={fields.errorId}
+          onPendingChange={fields.setValidationPending}
+          disabled={
+            checking ||
+            blocked !== false ||
+            verificationError ||
+            draftLoading ||
+            draftError ||
+            completed.current ||
+            submitting ||
+            savingAddress ||
+            savingDraft
+          }
+          onInvalidStep={(target) => wizard.go(target, step)}
+          fields={[
+            [
+              { name: 'selectedProductId', label: t('electricity.order.selectProduct', locale) },
+              { name: 'period', label: t('electricity.order.period.selection', locale) },
+            ],
+            [{ name: 'totalKwh', label: t('electricity.order.quantity', locale) }],
+            [],
+            [
+              { name: 'selectedAddressId', label: t('electricity.order.selectAddress', locale) },
+              { name: 'giftCode', label: t('electricity.order.giftCode', locale) },
+            ],
+            [],
+          ]}
           steps={stepKeys.map((key) => t(key, locale))}
           step={step}
           ariaLabel={t('electricity.order.steps', locale)}
@@ -1230,588 +1327,615 @@ export function SimpleElectricityOrderPage() {
           }
           onBack={() => void saveDraft(false, step - 1)}
           onSave={() => void saveDraft(false)}
-          onNext={() => void saveDraft(true)}
-          onSubmit={() => void handleSubmitOrder()}
+          onNext={() => saveDraft(true)}
+          onSubmit={handleSubmitOrder}
         >
-          <fieldset
-            className="min-w-0"
-            disabled={savingDraft || submitting || savingAddress || completed.current}
-          >
-            <legend className="sr-only">{t('electricity.order.steps', locale)}</legend>
-            {/* Step 1: Select Product */}
-            {step === 1 && (
-              <Card className="mb-6">
-                <CardContent className="pt-6">
-                  <h2 className="mb-4 text-lg font-semibold flex items-center gap-2">
-                    <PackageIcon className="h-5 w-5" />
-                    {t('electricity.order.selectProduct', locale)}
-                  </h2>
+          {(pending) => (
+            <fieldset
+              className="min-w-0"
+              disabled={pending || savingDraft || submitting || savingAddress || completed.current}
+            >
+              <legend className="sr-only">{t('electricity.order.steps', locale)}</legend>
+              {/* Step 1: Select Product */}
+              {step === 1 && (
+                <Card className="mb-6">
+                  <CardContent className="pt-6">
+                    <h2 className="mb-4 text-lg font-semibold flex items-center gap-2">
+                      <PackageIcon className="h-5 w-5" />
+                      {t('electricity.order.selectProduct', locale)}
+                    </h2>
 
-                  {loadingProducts ? (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Loader2Icon className="h-4 w-4 animate-spin" />
-                      {t('electricity.order.loadingProducts', locale)}
-                    </div>
-                  ) : productError ? (
-                    <div className="space-y-3" role="alert">
-                      <p>{t('electricity.order.productLoadFailed', locale)}</p>
-                      <Button onClick={() => void fetchProducts()}>
-                        {t('electricity.order.retry', locale)}
-                      </Button>
-                    </div>
-                  ) : products.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">
-                      {t('electricity.order.noProducts', locale)}
-                    </p>
-                  ) : (
-                    <div className="space-y-2">
-                      {products.map((product) => (
-                        <label
-                          key={product.id}
-                          className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors ${
-                            selectedProductId === product.id
-                              ? 'border-primary bg-primary/5'
-                              : 'border-input hover:bg-muted'
-                          }`}
-                        >
-                          <input
-                            type="radio"
-                            name="product"
-                            value={product.id}
-                            checked={selectedProductId === product.id}
-                            disabled={submitting}
-                            onChange={() => setSelectedProductId(product.id)}
-                            className="h-4 w-4 accent-primary"
-                          />
-                          <div className="flex-1">
-                            <p className="text-sm font-medium">{productTitle(product)}</p>
-                            {product.price && (
-                              <p className="text-xs text-muted-foreground">
-                                {numbers.money(product.price)}
-                              </p>
-                            )}
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-
-            {(step === 1 || step === 2 || step === 4) && (
-              <Card className="mb-6">
-                <CardContent className="space-y-5 pt-6">
-                  <h2 className="text-lg font-semibold">
-                    {t(
-                      step === 1
-                        ? 'electricity.order.period.title'
-                        : step === 2
-                          ? 'electricity.order.quantity'
-                          : 'electricity.order.giftCode',
-                      locale
-                    )}
-                  </h2>
-                  {step === 1 && (
-                    <>
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div>
-                          <label
-                            htmlFor="electricity-period-type"
-                            className="mb-1 block text-sm font-medium"
-                          >
-                            {t('electricity.order.period.type', locale)}
-                          </label>
-                          <select
-                            id="electricity-period-type"
-                            value={period.includes('month') ? 'monthly' : 'weekly'}
-                            disabled={submitting}
-                            onChange={(event) =>
-                              setPeriod(
-                                event.target.value === 'monthly' ? 'current_month' : 'current_week'
-                              )
-                            }
-                            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                          >
-                            <option value="monthly">
-                              {t('electricity.order.period.monthly', locale)}
-                            </option>
-                            <option value="weekly">
-                              {t('electricity.order.period.weekly', locale)}
-                            </option>
-                          </select>
-                        </div>
-                        <div>
-                          <label
-                            htmlFor="electricity-period"
-                            className="mb-1 block text-sm font-medium"
-                          >
-                            {t('electricity.order.period.selection', locale)}
-                          </label>
-                          <select
-                            id="electricity-period"
-                            value={period}
-                            disabled={submitting || periodOptions.length === 0}
-                            onChange={(event) => setPeriod(event.target.value as SimplePeriod)}
-                            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                          >
-                            {periodOptions
-                              .filter((option) =>
-                                period.includes('month')
-                                  ? option.key.includes('month')
-                                  : option.key.includes('week')
-                              )
-                              .map((option) => (
-                                <option key={option.key} value={option.key}>
-                                  {t(periodLabels[option.key], locale)} ·{' '}
-                                  {periodChoiceDate(option, locale)}
-                                </option>
-                              ))}
-                          </select>
-                        </div>
+                    {loadingProducts ? (
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Loader2Icon className="h-4 w-4 animate-spin" />
+                        {t('electricity.order.loadingProducts', locale)}
                       </div>
-                      {periodOptions.find((option) => option.key === period) ? (
-                        <p className="text-sm text-muted-foreground">
-                          {periodDates(
-                            periodOptions.find((option) => option.key === period)!,
-                            locale
-                          )}
-                        </p>
-                      ) : (
-                        <p role="status" className="text-sm text-muted-foreground">
-                          {t(
-                            loadingPeriods
-                              ? 'electricity.order.period.loading'
-                              : 'electricity.order.period.unavailable',
-                            locale
-                          )}
-                        </p>
+                    ) : productError ? (
+                      <div className="space-y-3" role="alert">
+                        <p>{t('electricity.order.productLoadFailed', locale)}</p>
+                        <Button onClick={() => void fetchProducts()}>
+                          {t('electricity.order.retry', locale)}
+                        </Button>
+                      </div>
+                    ) : products.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">
+                        {t('electricity.order.noProducts', locale)}
+                      </p>
+                    ) : (
+                      <div className="space-y-2">
+                        {products.map((product) => (
+                          <label
+                            key={product.id}
+                            className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors ${
+                              selectedProductId === product.id
+                                ? 'border-primary bg-primary/5'
+                                : 'border-input hover:bg-muted'
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              {...fields.bind('selectedProductId')}
+                              value={product.id}
+                              checked={selectedProductId === product.id}
+                              disabled={submitting}
+                              onChange={() => setSelectedProductId(product.id)}
+                              className="h-4 w-4 accent-primary"
+                            />
+                            <div className="flex-1">
+                              <p className="text-sm font-medium">{productTitle(product)}</p>
+                              {product.price && (
+                                <p className="text-xs text-muted-foreground">
+                                  {numbers.money(product.price)}
+                                </p>
+                              )}
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
+              {(step === 1 || step === 2 || step === 4) && (
+                <Card className="mb-6">
+                  <CardContent className="space-y-5 pt-6">
+                    <h2 className="text-lg font-semibold">
+                      {t(
+                        step === 1
+                          ? 'electricity.order.period.title'
+                          : step === 2
+                            ? 'electricity.order.quantity'
+                            : 'electricity.order.giftCode',
+                        locale
                       )}
-                    </>
-                  )}
-                  {step === 2 && (
-                    <>
-                      <div>
-                        <label htmlFor="electricity-kwh" className="mb-1 block text-sm font-medium">
-                          {t('electricity.order.quantity', locale)}
-                        </label>
-                        <input
-                          id="electricity-kwh"
-                          type="text"
-                          inputMode="numeric"
-                          pattern="[1-9][0-9]*"
-                          value={totalKwh}
-                          disabled={submitting}
-                          onChange={(event) => setTotalKwh(event.target.value)}
-                          className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                          aria-describedby="electricity-kwh-hint"
-                          aria-invalid={quantityError}
-                        />
-                        <p id="electricity-kwh-hint" className="mt-1 text-xs text-muted-foreground">
-                          {t('electricity.order.quantityHint', locale)}{' '}
-                          {selectedProduct &&
-                            `${selectedProduct.limits.minKwh}–${selectedProduct.limits.maxKwh === '0' ? '∞' : selectedProduct.limits.maxKwh} kWh`}
-                        </p>
-                        {quantityError && (
-                          <p role="alert" className="mt-1 text-sm text-destructive">
-                            {t('electricity.order.quantityInvalid', locale)}
+                    </h2>
+                    {step === 1 && (
+                      <>
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <div>
+                            <label
+                              htmlFor="electricity-period-type"
+                              className="mb-1 block text-sm font-medium"
+                            >
+                              {t('electricity.order.period.type', locale)}
+                            </label>
+                            <select
+                              id="electricity-period-type"
+                              value={period.includes('month') ? 'monthly' : 'weekly'}
+                              disabled={submitting}
+                              onChange={(event) =>
+                                setPeriod(
+                                  event.target.value === 'monthly'
+                                    ? 'current_month'
+                                    : 'current_week'
+                                )
+                              }
+                              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                            >
+                              <option value="monthly">
+                                {t('electricity.order.period.monthly', locale)}
+                              </option>
+                              <option value="weekly">
+                                {t('electricity.order.period.weekly', locale)}
+                              </option>
+                            </select>
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="electricity-period"
+                              className="mb-1 block text-sm font-medium"
+                            >
+                              {t('electricity.order.period.selection', locale)}
+                            </label>
+                            <select
+                              id="electricity-period"
+                              {...fields.bind('period')}
+                              value={period}
+                              disabled={submitting || periodOptions.length === 0}
+                              onChange={(event) => setPeriod(event.target.value as SimplePeriod)}
+                              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                            >
+                              {periodOptions
+                                .filter((option) =>
+                                  period.includes('month')
+                                    ? option.key.includes('month')
+                                    : option.key.includes('week')
+                                )
+                                .map((option) => (
+                                  <option key={option.key} value={option.key}>
+                                    {t(periodLabels[option.key], locale)} ·{' '}
+                                    {periodChoiceDate(option, locale)}
+                                  </option>
+                                ))}
+                            </select>
+                          </div>
+                        </div>
+                        {periodOptions.find((option) => option.key === period) ? (
+                          <p className="text-sm text-muted-foreground">
+                            {periodDates(
+                              periodOptions.find((option) => option.key === period)!,
+                              locale
+                            )}
+                          </p>
+                        ) : (
+                          <p role="status" className="text-sm text-muted-foreground">
+                            {t(
+                              loadingPeriods
+                                ? 'electricity.order.period.loading'
+                                : 'electricity.order.period.unavailable',
+                              locale
+                            )}
                           </p>
                         )}
-                      </div>
-                      {billSuggestion?.available && billSuggestion.suggestedKwh ? (
-                        <div className="flex flex-wrap items-center gap-3 text-sm">
-                          <p>
-                            {t('electricity.order.estimate', locale)}:{' '}
-                            {numbers.number(BigInt(billSuggestion.suggestedKwh))} kWh
-                          </p>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setTotalKwh(billSuggestion.suggestedKwh!)}
+                      </>
+                    )}
+                    {step === 2 && (
+                      <>
+                        <div>
+                          <label
+                            htmlFor="electricity-kwh"
+                            className="mb-1 block text-sm font-medium"
                           >
-                            {t('electricity.order.useEstimate', locale)}
-                          </Button>
-                          <p className="w-full text-xs text-muted-foreground">
-                            {t('electricity.order.billDataSource', locale)} ·{' '}
-                            {billSuggestion.dataPeriod &&
-                              `${estimateDate(billSuggestion.dataPeriod.start, locale)} – ${estimateDate(billSuggestion.dataPeriod.end, locale)}`}{' '}
-                            · {t('electricity.order.dataUpdated', locale)}:{' '}
-                            {billSuggestion.dataTimestamp &&
-                              estimateDate(billSuggestion.dataTimestamp, locale)}{' '}
-                            · {Math.round((billSuggestion.coverage ?? 0) * 100)}%{' '}
-                            {t('electricity.order.coverage', locale)}.{' '}
-                            {t('electricity.order.estimateDisclaimer', locale)}
+                            {t('electricity.order.quantity', locale)}
+                          </label>
+                          <input
+                            id="electricity-kwh"
+                            {...fields.bind('totalKwh')}
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[1-9][0-9]*"
+                            value={totalKwh}
+                            disabled={submitting}
+                            onChange={(event) => setTotalKwh(event.target.value)}
+                            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                            aria-describedby={[
+                              'electricity-kwh-hint',
+                              fields.form.getFieldState('totalKwh').invalid
+                                ? fields.errorId('totalKwh')
+                                : undefined,
+                            ]
+                              .filter(Boolean)
+                              .join(' ')}
+                            aria-invalid={
+                              quantityError || fields.form.getFieldState('totalKwh').invalid
+                            }
+                          />
+                          <p
+                            id="electricity-kwh-hint"
+                            className="mt-1 text-xs text-muted-foreground"
+                          >
+                            {t('electricity.order.quantityHint', locale)}{' '}
+                            {selectedProduct &&
+                              `${selectedProduct.limits.minKwh}–${selectedProduct.limits.maxKwh === '0' ? '∞' : selectedProduct.limits.maxKwh} kWh`}
                           </p>
+                          {quantityError && (
+                            <p role="alert" className="mt-1 text-sm text-destructive">
+                              {t('electricity.order.quantityInvalid', locale)}
+                            </p>
+                          )}
                         </div>
-                      ) : (
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                          <p role="status">
-                            {billSuggestion === null
-                              ? t('electricity.order.billDataLoading', locale)
-                              : t('electricity.order.manualQuantity', locale)}
-                          </p>
-                          {billSuggestion !== null && (
+                        {billSuggestion?.available && billSuggestion.suggestedKwh ? (
+                          <div className="flex flex-wrap items-center gap-3 text-sm">
+                            <p>
+                              {t('electricity.order.estimate', locale)}:{' '}
+                              {numbers.number(BigInt(billSuggestion.suggestedKwh))} kWh
+                            </p>
                             <Button
                               type="button"
                               variant="outline"
                               size="sm"
-                              onClick={() => setBillSuggestionRetry((value) => value + 1)}
+                              onClick={() => setTotalKwh(billSuggestion.suggestedKwh!)}
                             >
-                              {t('electricity.order.retryBillData', locale)}
+                              {t('electricity.order.useEstimate', locale)}
                             </Button>
-                          )}
-                        </div>
-                      )}
-                    </>
-                  )}
-                  {step === 4 && (
-                    <>
-                      <div>
-                        <label
-                          htmlFor="electricity-gift"
-                          className="mb-1 block text-sm font-medium"
-                        >
-                          {t('electricity.order.giftCode', locale)}
-                        </label>
-                        <div className="flex gap-2">
-                          <input
-                            id="electricity-gift"
-                            type="text"
-                            value={giftCode}
-                            disabled={submitting}
-                            onChange={(event) => setGiftCode(event.target.value)}
-                            className="min-w-0 flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                          />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            disabled={submitting}
-                            onClick={() => setAppliedGiftCode(giftCode.trim())}
-                          >
-                            {t('electricity.order.applyGift', locale)}
-                          </Button>
-                        </div>
-                      </div>
-                      {appliedGiftCode && quote && (
-                        <p className="text-sm text-primary">
-                          {t('electricity.order.discount', locale)}:{' '}
-                          {numbers.money(quote.discountIrR)}
-                        </p>
-                      )}
-                    </>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Delivery address is collected before the read-only review. */}
-            {step === 4 && (
-              <Card className="mb-6">
-                <CardContent className="pt-6">
-                  <h2 className="mb-4 text-lg font-semibold flex items-center gap-2">
-                    <MapPinIcon className="h-5 w-5" />
-                    {t('electricity.order.selectAddress', locale)}
-                  </h2>
-
-                  {loadingAddresses ? (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Loader2Icon className="h-4 w-4 animate-spin" />
-                      {t('electricity.order.loadingAddresses', locale)}
-                    </div>
-                  ) : addressError ? (
-                    <div className="space-y-3" role="alert">
-                      <p>{t('electricity.order.addressLoadFailed', locale)}</p>
-                      <Button onClick={() => void fetchAddresses()}>
-                        {t('electricity.order.retry', locale)}
-                      </Button>
-                    </div>
-                  ) : addresses.length === 0 && !showNewAddressForm ? (
-                    <div className="text-center py-4">
-                      <MapPinIcon className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
-                      <p className="text-sm text-muted-foreground mb-4">
-                        {t('electricity.order.noAddresses', locale)}
-                      </p>
-                      <Button
-                        disabled={submitting}
-                        onClick={() => setShowNewAddressForm(true)}
-                        className="gap-2"
-                      >
-                        <PlusIcon className="h-4 w-4" />
-                        {t('electricity.order.addAddress', locale)}
-                      </Button>
-                    </div>
-                  ) : (
-                    <>
-                      {/* Existing addresses */}
-                      {addresses.length > 0 && !showNewAddressForm && (
-                        <div className="space-y-2 mb-4">
-                          {addresses.map((address) => (
-                            <label
-                              key={address.id}
-                              htmlFor={`order-address-${address.id}`}
-                              className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${
-                                selectedAddressId === address.id
-                                  ? 'border-primary bg-primary/5'
-                                  : 'border-input hover:bg-muted'
-                              }`}
-                            >
-                              <input
-                                type="radio"
-                                id={`order-address-${address.id}`}
-                                name="address"
-                                value={address.id}
-                                checked={selectedAddressId === address.id}
-                                disabled={submitting}
-                                onChange={() => {
-                                  setSelectedAddressId(address.id);
-                                  setAddressTouched(true);
-                                }}
-                                className="mt-1 h-4 w-4 shrink-0 accent-primary"
-                              />
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <span className="text-sm font-medium">
-                                    {getProvinceName(address.provinceId)}،{' '}
-                                    {getCityName(address.cityId)}
-                                  </span>
-                                  {address.mainAddress && (
-                                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary text-xs font-medium px-2 py-0.5">
-                                      <HomeIcon className="h-3 w-3" />
-                                      {t('electricity.order.mainAddress', locale)}
-                                    </span>
-                                  )}
-                                </div>
-                                <p className="text-sm text-muted-foreground truncate">
-                                  {address.fullAddress}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  {t('electricity.order.postalCode', locale)}: {address.postalCode}
-                                </p>
-                              </div>
-                            </label>
-                          ))}
-
-                          <Button
-                            variant="outline"
-                            disabled={submitting}
-                            onClick={() => setShowNewAddressForm(true)}
-                            className="w-full gap-2 mt-2"
-                          >
-                            <PlusIcon className="h-4 w-4" />
-                            {t('electricity.order.addNewAddress', locale)}
-                          </Button>
-                        </div>
-                      )}
-
-                      {/* New address form */}
-                      {showNewAddressForm && (
-                        <div className="space-y-3 border rounded-lg p-4 bg-muted/30">
-                          <h3 className="text-sm font-medium">
-                            {t('electricity.order.newAddressTitle', locale)}
-                          </h3>
-
-                          {provinceError && (
-                            <div role="alert" className="space-y-2">
-                              <p>{t('electricity.order.provinceLoadFailed', locale)}</p>
-                              <Button onClick={provinceOptions.retry}>
-                                {t('electricity.order.retry', locale)}
+                            <p className="w-full text-xs text-muted-foreground">
+                              {t('electricity.order.billDataSource', locale)} ·{' '}
+                              {billSuggestion.dataPeriod &&
+                                `${estimateDate(billSuggestion.dataPeriod.start, locale)} – ${estimateDate(billSuggestion.dataPeriod.end, locale)}`}{' '}
+                              · {t('electricity.order.dataUpdated', locale)}:{' '}
+                              {billSuggestion.dataTimestamp &&
+                                estimateDate(billSuggestion.dataTimestamp, locale)}{' '}
+                              · {Math.round((billSuggestion.coverage ?? 0) * 100)}%{' '}
+                              {t('electricity.order.coverage', locale)}.{' '}
+                              {t('electricity.order.estimateDisclaimer', locale)}
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                            <p role="status">
+                              {billSuggestion === null
+                                ? t('electricity.order.billDataLoading', locale)
+                                : t('electricity.order.manualQuantity', locale)}
+                            </p>
+                            {billSuggestion !== null && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setBillSuggestionRetry((value) => value + 1)}
+                              >
+                                {t('electricity.order.retryBillData', locale)}
                               </Button>
-                            </div>
-                          )}
-                          {cityError && (
-                            <div role="alert" className="space-y-2">
-                              <p>{t('electricity.order.cityLoadFailed', locale)}</p>
-                              <Button onClick={cityOptions.retry}>
-                                {t('electricity.order.retry', locale)}
-                              </Button>
-                            </div>
-                          )}
-                          {/* Province */}
-                          <div>
-                            <label
-                              htmlFor="order-address-province"
-                              className="block text-sm font-medium mb-1"
-                            >
-                              {t('settings.addresses.form.province', locale)}
-                            </label>
-                            <select
-                              id="order-address-province"
-                              disabled={loadingProvinces || provinceError || savingAddress}
-                              value={formProvinceId}
-                              onChange={(e) => {
-                                setFormProvinceId(e.target.value);
-                                setFormCityId('');
-                              }}
-                              className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                              dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                            >
-                              <option value="">
-                                {t('settings.addresses.form.provincePlaceholder', locale)}
-                              </option>
-                              {provinces.map((p) => (
-                                <option key={p.id} value={p.id}>
-                                  {locale === 'fa' ? p.nameFa : p.nameEn}
-                                </option>
-                              ))}
-                            </select>
+                            )}
                           </div>
-
-                          {/* City */}
-                          <div>
-                            <label
-                              htmlFor="order-address-city"
-                              className="block text-sm font-medium mb-1"
-                            >
-                              {t('settings.addresses.form.city', locale)}
-                            </label>
-                            <DependentSelect
-                              id="order-address-city"
-                              dependencyValue={formProvinceId}
-                              value={formCityId}
-                              ready={cityOptions.ready}
-                              loading={cityOptions.loading}
-                              options={cities.map((city) => ({
-                                value: city.id,
-                                label: locale === 'fa' ? city.nameFa : city.nameEn,
-                                dependencyValue: city.provinceId ?? '',
-                              }))}
-                              placeholder={t('settings.addresses.form.cityPlaceholder', locale)}
-                              onChange={(e) => setFormCityId(e.target.value)}
-                              disabled={savingAddress}
-                              className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                              dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                            />
-                          </div>
-
-                          {/* Full Address */}
-                          <div>
-                            <label
-                              htmlFor="order-address-fullAddress"
-                              className="block text-sm font-medium mb-1"
-                            >
-                              {t('settings.addresses.form.fullAddress', locale)}
-                            </label>
-                            <textarea
-                              id="order-address-fullAddress"
-                              disabled={savingAddress}
-                              value={formFullAddress}
-                              onChange={(e) => setFormFullAddress(e.target.value)}
-                              placeholder={t(
-                                'settings.addresses.form.fullAddressPlaceholder',
-                                locale
-                              )}
-                              className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px]"
-                              dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                              maxLength={500}
-                            />
-                          </div>
-
-                          {/* Postal Code */}
-                          <div>
-                            <label
-                              htmlFor="order-address-postalCode"
-                              className="block text-sm font-medium mb-1"
-                            >
-                              {t('settings.addresses.form.postalCode', locale)}
-                            </label>
+                        )}
+                      </>
+                    )}
+                    {step === 4 && (
+                      <>
+                        <div>
+                          <label
+                            htmlFor="electricity-gift"
+                            className="mb-1 block text-sm font-medium"
+                          >
+                            {t('electricity.order.giftCode', locale)}
+                          </label>
+                          <div className="flex gap-2">
                             <input
+                              id="electricity-gift"
+                              {...fields.bind('giftCode')}
                               type="text"
-                              id="order-address-postalCode"
-                              disabled={savingAddress}
-                              value={formPostalCode}
-                              onChange={(e) => setFormPostalCode(e.target.value)}
-                              placeholder={t(
-                                'settings.addresses.form.postalCodePlaceholder',
-                                locale
-                              )}
-                              className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                              dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                              maxLength={10}
+                              value={giftCode}
+                              disabled={submitting}
+                              onChange={(event) => setGiftCode(event.target.value)}
+                              className="min-w-0 flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm"
                             />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              disabled={submitting}
+                              onClick={() => setAppliedGiftCode(giftCode.trim())}
+                            >
+                              {t('electricity.order.applyGift', locale)}
+                            </Button>
                           </div>
+                        </div>
+                        {appliedGiftCode && quote && (
+                          <p className="text-sm text-primary">
+                            {t('electricity.order.discount', locale)}:{' '}
+                            {numbers.money(quote.discountIrR)}
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
 
-                          <div className="flex justify-end gap-2 pt-2">
+              {/* Delivery address is collected before the read-only review. */}
+              {step === 4 && (
+                <Card className="mb-6">
+                  <CardContent className="pt-6">
+                    <h2 className="mb-4 text-lg font-semibold flex items-center gap-2">
+                      <MapPinIcon className="h-5 w-5" />
+                      {t('electricity.order.selectAddress', locale)}
+                    </h2>
+
+                    {loadingAddresses ? (
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Loader2Icon className="h-4 w-4 animate-spin" />
+                        {t('electricity.order.loadingAddresses', locale)}
+                      </div>
+                    ) : addressError ? (
+                      <div className="space-y-3" role="alert">
+                        <p>{t('electricity.order.addressLoadFailed', locale)}</p>
+                        <Button onClick={() => void fetchAddresses()}>
+                          {t('electricity.order.retry', locale)}
+                        </Button>
+                      </div>
+                    ) : addresses.length === 0 && !showNewAddressForm ? (
+                      <div className="text-center py-4">
+                        <MapPinIcon className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+                        <p className="text-sm text-muted-foreground mb-4">
+                          {t('electricity.order.noAddresses', locale)}
+                        </p>
+                        <Button
+                          disabled={submitting}
+                          onClick={() => setShowNewAddressForm(true)}
+                          className="gap-2"
+                        >
+                          <PlusIcon className="h-4 w-4" />
+                          {t('electricity.order.addAddress', locale)}
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Existing addresses */}
+                        {addresses.length > 0 && !showNewAddressForm && (
+                          <div className="space-y-2 mb-4">
+                            {addresses.map((address) => (
+                              <label
+                                key={address.id}
+                                htmlFor={`order-address-${address.id}`}
+                                className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${
+                                  selectedAddressId === address.id
+                                    ? 'border-primary bg-primary/5'
+                                    : 'border-input hover:bg-muted'
+                                }`}
+                              >
+                                <input
+                                  type="radio"
+                                  id={`order-address-${address.id}`}
+                                  {...fields.bind('selectedAddressId')}
+                                  value={address.id}
+                                  checked={selectedAddressId === address.id}
+                                  disabled={submitting}
+                                  onChange={() => {
+                                    setSelectedAddressId(address.id);
+                                    setAddressTouched(true);
+                                  }}
+                                  className="mt-1 h-4 w-4 shrink-0 accent-primary"
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <span className="text-sm font-medium">
+                                      {getProvinceName(address.provinceId)}،{' '}
+                                      {getCityName(address.cityId)}
+                                    </span>
+                                    {address.mainAddress && (
+                                      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary text-xs font-medium px-2 py-0.5">
+                                        <HomeIcon className="h-3 w-3" />
+                                        {t('electricity.order.mainAddress', locale)}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-sm text-muted-foreground truncate">
+                                    {address.fullAddress}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {t('electricity.order.postalCode', locale)}:{' '}
+                                    {address.postalCode}
+                                  </p>
+                                </div>
+                              </label>
+                            ))}
+
                             <Button
                               variant="outline"
-                              disabled={savingAddress}
-                              onClick={() => {
-                                setShowNewAddressForm(false);
-                                setFormProvinceId('');
-                                setFormCityId('');
-                                setFormFullAddress('');
-                                setFormPostalCode('');
-                              }}
+                              disabled={submitting}
+                              onClick={() => setShowNewAddressForm(true)}
+                              className="w-full gap-2 mt-2"
                             >
-                              {t('electricity.order.cancel', locale)}
-                            </Button>
-                            <Button
-                              onClick={handleSaveNewAddress}
-                              disabled={
-                                savingAddress ||
-                                loadingProvinces ||
-                                provinceError ||
-                                loadingCities ||
-                                cityError
-                              }
-                              className="gap-2"
-                            >
-                              {savingAddress ? (
-                                <Loader2Icon className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <CheckIcon className="h-4 w-4" />
-                              )}
-                              {savingAddress
-                                ? t('settings.addresses.form.saving', locale)
-                                : t('electricity.order.saveAndUse', locale)}
+                              <PlusIcon className="h-4 w-4" />
+                              {t('electricity.order.addNewAddress', locale)}
                             </Button>
                           </div>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+                        )}
 
-            {(step === 3 || step === 5) && (
-              <SimpleReview
-                step={step}
-                quote={quote}
-                quoting={quoting}
-                quoteError={quoteError}
-                periodLabel={
-                  quote
-                    ? periodDates(
-                        { key: period, start: quote.periodStart, end: quote.periodEnd },
-                        locale
-                      )
-                    : ''
-                }
-                appliedGiftCode={appliedGiftCode}
-                activeProfileName={activeProfileName}
-                activeProfileId={activeProfileId}
-                productName={productTitle(selectedProduct)}
-                deliveryAddress={
-                  selectedAddress
-                    ? `${getProvinceName(selectedAddress.provinceId)}، ${getCityName(selectedAddress.cityId)} — ${selectedAddress.fullAddress}`
-                    : ''
-                }
-                postalCode={selectedAddress?.postalCode ?? ''}
-                editDisabled={
-                  savingDraft ||
-                  submitting ||
-                  savingAddress ||
-                  draftLoading ||
-                  draftError ||
-                  completed.current
-                }
-                walletBalance={walletBalance}
-                onEdit={(target) => void saveDraft(false, target)}
-              />
-            )}
-          </fieldset>
-        </FormWizard>
+                        {/* New address form */}
+                        {showNewAddressForm && (
+                          <div className="space-y-3 border rounded-lg p-4 bg-muted/30">
+                            <h3 className="text-sm font-medium">
+                              {t('electricity.order.newAddressTitle', locale)}
+                            </h3>
+
+                            {provinceError && (
+                              <div role="alert" className="space-y-2">
+                                <p>{t('electricity.order.provinceLoadFailed', locale)}</p>
+                                <Button onClick={provinceOptions.retry}>
+                                  {t('electricity.order.retry', locale)}
+                                </Button>
+                              </div>
+                            )}
+                            {cityError && (
+                              <div role="alert" className="space-y-2">
+                                <p>{t('electricity.order.cityLoadFailed', locale)}</p>
+                                <Button onClick={cityOptions.retry}>
+                                  {t('electricity.order.retry', locale)}
+                                </Button>
+                              </div>
+                            )}
+                            {/* Province */}
+                            <div>
+                              <label
+                                htmlFor="order-address-province"
+                                className="block text-sm font-medium mb-1"
+                              >
+                                {t('settings.addresses.form.province', locale)}
+                              </label>
+                              <select
+                                id="order-address-province"
+                                {...fields.bind('formProvinceId')}
+                                disabled={loadingProvinces || provinceError || savingAddress}
+                                value={formProvinceId}
+                                onChange={(e) => {
+                                  setFormProvinceId(e.target.value);
+                                  setFormCityId('');
+                                }}
+                                className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                dir={locale === 'fa' ? 'rtl' : 'ltr'}
+                              >
+                                <option value="">
+                                  {t('settings.addresses.form.provincePlaceholder', locale)}
+                                </option>
+                                {provinces.map((p) => (
+                                  <option key={p.id} value={p.id}>
+                                    {locale === 'fa' ? p.nameFa : p.nameEn}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+
+                            {/* City */}
+                            <div>
+                              <label
+                                htmlFor="order-address-city"
+                                className="block text-sm font-medium mb-1"
+                              >
+                                {t('settings.addresses.form.city', locale)}
+                              </label>
+                              <DependentSelect
+                                id="order-address-city"
+                                {...fields.bind('formCityId')}
+                                dependencyValue={formProvinceId}
+                                value={formCityId}
+                                ready={cityOptions.ready}
+                                loading={cityOptions.loading}
+                                options={cities.map((city) => ({
+                                  value: city.id,
+                                  label: locale === 'fa' ? city.nameFa : city.nameEn,
+                                  dependencyValue: city.provinceId ?? '',
+                                }))}
+                                placeholder={t('settings.addresses.form.cityPlaceholder', locale)}
+                                onChange={(e) => setFormCityId(e.target.value)}
+                                disabled={savingAddress}
+                                className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                dir={locale === 'fa' ? 'rtl' : 'ltr'}
+                              />
+                            </div>
+
+                            {/* Full Address */}
+                            <div>
+                              <label
+                                htmlFor="order-address-fullAddress"
+                                className="block text-sm font-medium mb-1"
+                              >
+                                {t('settings.addresses.form.fullAddress', locale)}
+                              </label>
+                              <textarea
+                                id="order-address-fullAddress"
+                                {...fields.bind('formFullAddress')}
+                                disabled={savingAddress}
+                                value={formFullAddress}
+                                onChange={(e) => setFormFullAddress(e.target.value)}
+                                placeholder={t(
+                                  'settings.addresses.form.fullAddressPlaceholder',
+                                  locale
+                                )}
+                                className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px]"
+                                dir={locale === 'fa' ? 'rtl' : 'ltr'}
+                                maxLength={500}
+                              />
+                            </div>
+
+                            {/* Postal Code */}
+                            <div>
+                              <label
+                                htmlFor="order-address-postalCode"
+                                className="block text-sm font-medium mb-1"
+                              >
+                                {t('settings.addresses.form.postalCode', locale)}
+                              </label>
+                              <input
+                                type="text"
+                                id="order-address-postalCode"
+                                {...fields.bind('formPostalCode')}
+                                disabled={savingAddress}
+                                value={formPostalCode}
+                                onChange={(e) => setFormPostalCode(e.target.value)}
+                                placeholder={t(
+                                  'settings.addresses.form.postalCodePlaceholder',
+                                  locale
+                                )}
+                                className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                dir={locale === 'fa' ? 'rtl' : 'ltr'}
+                                maxLength={10}
+                              />
+                            </div>
+
+                            <div className="flex justify-end gap-2 pt-2">
+                              <Button
+                                variant="outline"
+                                disabled={savingAddress}
+                                onClick={() => {
+                                  setShowNewAddressForm(false);
+                                  setFormProvinceId('');
+                                  setFormCityId('');
+                                  setFormFullAddress('');
+                                  setFormPostalCode('');
+                                }}
+                              >
+                                {t('electricity.order.cancel', locale)}
+                              </Button>
+                              <Button
+                                onClick={handleSaveNewAddress}
+                                disabled={
+                                  savingAddress ||
+                                  loadingProvinces ||
+                                  provinceError ||
+                                  loadingCities ||
+                                  cityError
+                                }
+                                className="gap-2"
+                              >
+                                {savingAddress ? (
+                                  <Loader2Icon className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <CheckIcon className="h-4 w-4" />
+                                )}
+                                {savingAddress
+                                  ? t('settings.addresses.form.saving', locale)
+                                  : t('electricity.order.saveAndUse', locale)}
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
+              {(step === 3 || step === 5) && (
+                <SimpleReview
+                  step={step}
+                  quote={quote}
+                  quoting={quoting}
+                  quoteError={quoteError}
+                  periodLabel={
+                    quote
+                      ? periodDates(
+                          { key: period, start: quote.periodStart, end: quote.periodEnd },
+                          locale
+                        )
+                      : ''
+                  }
+                  appliedGiftCode={appliedGiftCode}
+                  activeProfileName={activeProfileName}
+                  activeProfileId={activeProfileId}
+                  productName={productTitle(selectedProduct)}
+                  deliveryAddress={
+                    selectedAddress
+                      ? `${getProvinceName(selectedAddress.provinceId)}، ${getCityName(selectedAddress.cityId)} — ${selectedAddress.fullAddress}`
+                      : ''
+                  }
+                  postalCode={selectedAddress?.postalCode ?? ''}
+                  editDisabled={
+                    savingDraft ||
+                    submitting ||
+                    savingAddress ||
+                    draftLoading ||
+                    draftError ||
+                    completed.current
+                  }
+                  walletBalance={walletBalance}
+                  onEdit={(target) => void saveDraft(false, target)}
+                />
+              )}
+            </fieldset>
+          )}
+        </ValidatedFormWizard>
       </Suspense>
     </div>
   );

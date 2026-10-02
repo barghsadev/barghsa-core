@@ -1,5 +1,7 @@
 import { StepReviewPage } from '../components/StepReviewPage.js';
-import { FormWizard } from '../components/FormWizard.js';
+import { ValidatedFormWizard } from '../components/ValidatedFormWizard.js';
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { z } from 'zod';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Card, CardContent, FinancialReviewSummary, DependentSelect } from '@barghsa/ui';
@@ -101,10 +103,6 @@ export function SavingsOrderPage() {
   const [loadError, setLoadError] = useState(false);
   const wizard = useWizardStep('/savings/order', 6);
   const { step } = wizard;
-  const [planId, setPlanId] = useState('');
-  const [hardwareId, setHardwareId] = useState('');
-  const [hardwareConfirmed, setHardwareConfirmed] = useState(false);
-  const [billIdentifier, setBillIdentifier] = useState('');
   const [verification, setVerification] = useState<'idle' | 'checking' | 'verified' | 'manual'>(
     'idle'
   );
@@ -113,14 +111,85 @@ export function SavingsOrderPage() {
     preventActiveDuplicates: boolean;
     existingOrderId: string | null;
   } | null>(null);
-  const [duplicateAcknowledged, setDuplicateAcknowledged] = useState(false);
+  const invalidField = t('formWizard.invalidField', locale);
+  const fields = useWizardForm(
+    z
+      .object({
+        planId: z.string(),
+        hardwareId: z.string(),
+        hardwareConfirmed: z.boolean(),
+        billIdentifier: z.string().regex(/^[0-9]{6,13}$/, copy('invalidBill')),
+        duplicateAcknowledged: z.boolean(),
+        addressId: z
+          .string()
+          .refine((id) => addresses.some((address) => address.id === id), invalidField),
+        provinceId: z.string(),
+        cityId: z.string(),
+        fullAddress: z.string(),
+        postalCode: z.string(),
+        agreementAccepted: z.boolean().refine(Boolean, invalidField),
+        giftCode: z.string(),
+        appliedGiftCode: z.string(),
+        submitForReview: z.boolean().refine(Boolean, invalidField),
+      })
+      .superRefine((value, context) => {
+        const plan = plans.find((item) => item.id === value.planId);
+        if (!plan?.available)
+          context.addIssue({ code: 'custom', path: ['planId'], message: invalidField });
+        const hardware = plan?.hardware.find((item) => item.id === value.hardwareId);
+        if (
+          !hardware ||
+          hardware.status !== 'active' ||
+          (hardware.stock_tracking && (hardware.available_count ?? 0) < 1)
+        )
+          context.addIssue({ code: 'custom', path: ['hardwareId'], message: invalidField });
+        if (!value.hardwareConfirmed)
+          context.addIssue({ code: 'custom', path: ['hardwareConfirmed'], message: invalidField });
+        if (
+          duplicate?.duplicate &&
+          (duplicate.preventActiveDuplicates || !value.duplicateAcknowledged)
+        )
+          context.addIssue({
+            code: 'custom',
+            path: ['duplicateAcknowledged'],
+            message: invalidField,
+          });
+        if (value.giftCode.trim() !== value.appliedGiftCode)
+          context.addIssue({
+            code: 'custom',
+            path: ['giftCode'],
+            message: t('electricity.order.applyGiftFirst', locale),
+          });
+      }),
+    {
+      planId: '',
+      hardwareId: '',
+      hardwareConfirmed: false,
+      billIdentifier: '',
+      duplicateAcknowledged: false,
+      addressId: '',
+      provinceId: '',
+      cityId: '',
+      fullAddress: '',
+      postalCode: '',
+      agreementAccepted: false,
+      giftCode: '',
+      appliedGiftCode: '',
+      submitForReview: false,
+    }
+  );
+  const [planId, setPlanId] = fields.field('planId');
+  const [hardwareId, setHardwareId] = fields.field('hardwareId');
+  const [hardwareConfirmed, setHardwareConfirmed] = fields.field('hardwareConfirmed');
+  const [billIdentifier, setBillIdentifier] = fields.field('billIdentifier');
+  const [duplicateAcknowledged, setDuplicateAcknowledged] = fields.field('duplicateAcknowledged');
   const [duplicateChecking, setDuplicateChecking] = useState(false);
   const [duplicateError, setDuplicateError] = useState(false);
   const [duplicateRevision, setDuplicateRevision] = useState(0);
-  const [addressId, setAddressId] = useState('');
+  const [addressId, setAddressId] = fields.field('addressId');
   const [addingAddress, setAddingAddress] = useState(false);
-  const [provinceId, setProvinceId] = useState('');
-  const [cityId, setCityId] = useState('');
+  const [provinceId, setProvinceId] = fields.field('provinceId');
+  const [cityId, setCityId] = fields.field('cityId');
   const provinceOptions = useGeographyOptions(addingAddress ? '/api/geography/provinces' : null);
   const cityOptions = useGeographyOptions(
     addingAddress && provinceId
@@ -135,18 +204,18 @@ export function SavingsOrderPage() {
     cityOptions.ready &&
     provinces.some((province) => province.id === provinceId) &&
     cities.some((city) => city.id === cityId);
-  const [fullAddress, setFullAddress] = useState('');
-  const [postalCode, setPostalCode] = useState('');
+  const [fullAddress, setFullAddress] = fields.field('fullAddress');
+  const [postalCode, setPostalCode] = fields.field('postalCode');
   const [savingAddress, setSavingAddress] = useState(false);
-  const [agreementAccepted, setAgreementAccepted] = useState(false);
-  const [giftCode, setGiftCode] = useState('');
-  const [appliedGiftCode, setAppliedGiftCode] = useState('');
+  const [agreementAccepted, setAgreementAccepted] = fields.field('agreementAccepted');
+  const [giftCode, setGiftCode] = fields.field('giftCode');
+  const [appliedGiftCode, setAppliedGiftCode] = fields.field('appliedGiftCode');
   const [quote, setQuote] = useState<Quote | null>(null);
   const [quoteError, setQuoteError] = useState(false);
   const [quoting, setQuoting] = useState(false);
   const [quoteRevision, setQuoteRevision] = useState(0);
   const [walletBalance, setWalletBalance] = useState<string | null>(null);
-  const [submitForReview, setSubmitForReview] = useState(false);
+  const [submitForReview, setSubmitForReview] = fields.field('submitForReview');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const submissionKey = useRef<{ fingerprint: string; key: string } | null>(null);
@@ -532,7 +601,7 @@ export function SavingsOrderPage() {
         <Suspense fallback={<p role="status">{copy('loading')}</p>}>
           <LeaveDialog
             onSave={saveNow}
-            working={protection.busy}
+            working={protection.busy || fields.pending}
             workingLabel={copy('loading')}
             saveDisabled={addressDirty}
             errorMessage={
@@ -583,7 +652,38 @@ export function SavingsOrderPage() {
         </div>
       )}
       {!loading && profileId && draft && !draftLoading && !draftError && (
-        <FormWizard
+        <ValidatedFormWizard
+          form={fields.form}
+          errorId={fields.errorId}
+          onPendingChange={fields.setValidationPending}
+          disabled={
+            loading ||
+            loadError ||
+            draftLoading ||
+            !!draftError ||
+            !profileId ||
+            protection.busy ||
+            protection.completed.current ||
+            submitting
+          }
+          onInvalidStep={(target) => wizard.go(target, step)}
+          fields={[
+            [{ name: 'planId', label: copy('choosePlan') }],
+            [
+              { name: 'hardwareId', label: copy('chooseHardware') },
+              { name: 'hardwareConfirmed', label: copy('confirmHardware') },
+            ],
+            [
+              { name: 'billIdentifier', label: copy('billIdentifier') },
+              { name: 'duplicateAcknowledged', label: copy('acknowledgeDuplicate') },
+            ],
+            [{ name: 'addressId', label: copy('chooseAddress') }],
+            [
+              { name: 'agreementAccepted', label: copy('acceptAgreement') },
+              { name: 'giftCode', label: copy('giftCode') },
+            ],
+            [{ name: 'submitForReview', label: copy('submitForReview') }],
+          ]}
           steps={steps.map(copy)}
           step={step}
           ariaLabel={copy('orderTitle')}
@@ -611,504 +711,519 @@ export function SavingsOrderPage() {
           }
           onBack={() => void protection.save(step - 1)}
           onSave={() => void saveNow()}
-          onNext={() => void advanceStep()}
-          onSubmit={() => void submit()}
+          onNext={advanceStep}
+          onSubmit={submit}
         >
-          <Card>
-            <CardContent className="space-y-5 pt-6">
-              <fieldset
-                className="min-w-0 space-y-5"
-                disabled={protection.busy || protection.completed.current}
-              >
-                {step === 1 && (
-                  <section className="space-y-3">
-                    <h2 className="text-xl font-semibold">{copy('choosePlan')}</h2>
-                    {plans.map((plan) => (
-                      <label
-                        key={plan.id}
-                        className={`flex gap-3 rounded-md border p-4 ${!plan.available ? 'opacity-60' : 'cursor-pointer'}`}
-                      >
-                        <input
-                          type="radio"
-                          name="plan"
-                          value={plan.id}
-                          checked={planId === plan.id}
-                          disabled={!plan.available}
-                          onChange={() => {
-                            setPlanId(plan.id);
-                            setHardwareId('');
-                            setHardwareConfirmed(false);
-                            setAgreementAccepted(false);
-                          }}
-                        />
-                        <span className="space-y-1">
-                          <span className="block font-medium">{title(plan)}</span>
-                          <span className="block text-sm text-muted-foreground">
-                            {plan.description?.[locale]}
-                          </span>
-                          <bdi className="block text-sm">
-                            {plan.price ? numbers.money(plan.price) : copy('unpriced')}
-                          </bdi>
-                        </span>
-                      </label>
-                    ))}
-                  </section>
-                )}
-                {step === 2 && (
-                  <section className="space-y-3">
-                    <h2 className="text-xl font-semibold">{copy('chooseHardware')}</h2>
-                    {selectedPlan?.hardware.map((item) => (
-                      <label key={item.id} className="flex gap-3 rounded-md border p-4">
-                        <input
-                          type="radio"
-                          name="hardware"
-                          value={item.id}
-                          checked={hardwareId === item.id}
-                          disabled={
-                            item.status !== 'active' ||
-                            (!!item.stock_tracking && (item.available_count ?? 0) < 1)
-                          }
-                          onChange={() => {
-                            setHardwareId(item.id);
-                            setHardwareConfirmed(false);
-                          }}
-                        />
-                        <span>
-                          <span className="block font-medium">{title(item)}</span>
-                          <span className="block text-sm">{item.description?.[locale]}</span>
-                          <bdi>{item.price ? numbers.money(item.price) : copy('unpriced')}</bdi>
-                          <span className="block text-sm text-muted-foreground">
-                            {item.stock_tracking
-                              ? (item.available_count ?? 0) > 0
-                                ? copy('inStock')
-                                : copy('outOfStock')
-                              : copy('subjectToConfirmation')}
-                          </span>
-                        </span>
-                      </label>
-                    ))}
-                    <label className="flex gap-2">
-                      <input
-                        type="checkbox"
-                        checked={hardwareConfirmed}
-                        onChange={(event) => setHardwareConfirmed(event.target.checked)}
-                      />
-                      {copy('confirmHardware')}
-                    </label>
-                  </section>
-                )}
-                {step === 3 && (
-                  <section className="space-y-3">
-                    <h2 className="text-xl font-semibold">{copy('billIdentifier')}</h2>
-                    <input
-                      aria-label={copy('billIdentifier')}
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      maxLength={13}
-                      value={billIdentifier}
-                      onChange={(event) => {
-                        setBillIdentifier(
-                          normalizeProfileDigits(event.target.value).replace(/[^0-9]/g, '')
-                        );
-                        setVerification('idle');
-                      }}
-                      className="w-full rounded-md border bg-background p-3"
-                      dir="ltr"
-                    />
-                    {billIdentifier && !/^[0-9]{6,13}$/.test(billIdentifier) && (
-                      <p className="text-sm text-destructive">{copy('invalidBill')}</p>
-                    )}
-                    {duplicateError && (
-                      <div role="alert" className="space-y-2 text-sm text-destructive">
-                        <p>{copy('duplicateCheckError')}</p>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setDuplicateRevision((value) => value + 1)}
+          {(pending) => (
+            <Card>
+              <CardContent className="space-y-5 pt-6">
+                <fieldset
+                  className="min-w-0 space-y-5"
+                  disabled={pending || protection.busy || protection.completed.current}
+                >
+                  {step === 1 && (
+                    <section className="space-y-3">
+                      <h2 className="text-xl font-semibold">{copy('choosePlan')}</h2>
+                      {plans.map((plan) => (
+                        <label
+                          key={plan.id}
+                          className={`flex gap-3 rounded-md border p-4 ${!plan.available ? 'opacity-60' : 'cursor-pointer'}`}
                         >
-                          {copy('retry')}
-                        </Button>
-                      </div>
-                    )}
-                    <Button
-                      variant="outline"
-                      disabled={
-                        !/^[0-9]{6,13}$/.test(billIdentifier) || verification === 'checking'
-                      }
-                      onClick={() => void verifyBill()}
-                    >
-                      {copy('verifyBill')}
-                    </Button>
-                    {verification === 'verified' && <p role="status">{copy('verified')}</p>}
-                    {verification === 'manual' && <p role="status">{copy('manualReview')}</p>}
-                    {duplicate?.duplicate && (
-                      <div
-                        role="alert"
-                        className="rounded-md border border-destructive/30 p-3 text-sm"
-                      >
-                        <p>
-                          {copy(
-                            !duplicate.preventActiveDuplicates
-                              ? 'duplicateAllowedNotice'
-                              : duplicate.existingOrderId
-                                ? 'duplicateOrder'
-                                : 'duplicateSupport'
-                          )}
-                        </p>
-                        {duplicate.existingOrderId && (
-                          <Link
-                            to="/savings/orders/$orderId"
-                            params={{ orderId: duplicate.existingOrderId }}
-                            className="text-primary hover:underline"
-                          >
-                            {copy('openExisting')}
-                          </Link>
-                        )}
-                        {!duplicate.preventActiveDuplicates && (
-                          <label className="mt-3 flex items-start gap-2">
-                            <input
-                              type="checkbox"
-                              checked={duplicateAcknowledged}
-                              onChange={(event) => setDuplicateAcknowledged(event.target.checked)}
-                            />
-                            {copy('acknowledgeDuplicate')}
-                          </label>
-                        )}
-                      </div>
-                    )}
-                  </section>
-                )}
-                {step === 4 && (
-                  <section className="space-y-3">
-                    <h2 className="text-xl font-semibold">{copy('chooseAddress')}</h2>
-                    {addresses.map((address) => (
-                      <label key={address.id} className="flex gap-3 rounded-md border p-3">
-                        <input
-                          type="radio"
-                          name="address"
-                          value={address.id}
-                          checked={addressId === address.id}
-                          onChange={() => setAddressId(address.id)}
-                        />
-                        <span>
-                          {address.fullAddress} · <bdi>{address.postalCode}</bdi>
-                        </span>
-                      </label>
-                    ))}
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        if (addingAddress) {
-                          setProvinceId('');
-                          setCityId('');
-                          setFullAddress('');
-                          setPostalCode('');
-                          setAddressError(false);
-                        }
-                        setAddingAddress((value) => !value);
-                      }}
-                    >
-                      {addingAddress ? t('electricity.order.cancel', locale) : copy('newAddress')}
-                    </Button>
-                    {addressError && <p role="alert">{copy('error')}</p>}
-                    {addingAddress && (
-                      <div className="grid gap-3 rounded-md border p-4 md:grid-cols-2">
-                        <div>
-                          <label htmlFor="saving-address-province">{copy('province')}</label>
-                          <select
-                            id="saving-address-province"
-                            className="mt-1 w-full rounded-md border bg-background p-2"
-                            value={provinceId}
-                            disabled={savingAddress || !provinceOptions.ready}
-                            onChange={(event) => {
-                              setProvinceId(event.target.value);
-                              setCityId('');
+                          <input
+                            type="radio"
+                            {...fields.bind('planId')}
+                            value={plan.id}
+                            checked={planId === plan.id}
+                            disabled={!plan.available}
+                            onChange={() => {
+                              setPlanId(plan.id);
+                              setHardwareId('');
+                              setHardwareConfirmed(false);
+                              setAgreementAccepted(false);
                             }}
-                          >
-                            <option value="">—</option>
-                            {provinces.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {locale === 'fa' ? item.nameFa : item.nameEn}
-                              </option>
-                            ))}
-                          </select>
-                          <GeographyLoadError
-                            {...provinceOptions}
-                            message={t('settings.addresses.error.loadProvinces', locale)}
-                            locale={locale}
-                            testId="saving-address-province-retry"
                           />
-                        </div>
-                        <div>
-                          <label htmlFor="saving-address-city">{copy('city')}</label>
-                          <DependentSelect
-                            id="saving-address-city"
-                            className="mt-1 w-full rounded-md border bg-background p-2"
-                            dependencyValue={provinceId}
-                            value={cityId}
-                            ready={cityOptions.ready}
-                            loading={cityOptions.loading}
-                            disabled={savingAddress}
-                            options={cities.map((city) => ({
-                              value: city.id,
-                              label: locale === 'fa' ? city.nameFa : city.nameEn,
-                              dependencyValue: city.provinceId ?? '',
-                            }))}
-                            placeholder={t('settings.addresses.form.cityPlaceholder', locale)}
-                            onChange={(event) => setCityId(event.target.value)}
-                          />
-                          <GeographyLoadError
-                            {...cityOptions}
-                            message={t('settings.addresses.error.loadCities', locale)}
-                            locale={locale}
-                            testId="saving-address-city-retry"
-                          />
-                        </div>
-                        <label>
-                          {copy('fullAddress')}
-                          <input
-                            className="mt-1 w-full rounded-md border bg-background p-2"
-                            maxLength={500}
-                            value={fullAddress}
-                            onChange={(event) => setFullAddress(event.target.value)}
-                          />
+                          <span className="space-y-1">
+                            <span className="block font-medium">{title(plan)}</span>
+                            <span className="block text-sm text-muted-foreground">
+                              {plan.description?.[locale]}
+                            </span>
+                            <bdi className="block text-sm">
+                              {plan.price ? numbers.money(plan.price) : copy('unpriced')}
+                            </bdi>
+                          </span>
                         </label>
-                        <label>
-                          {copy('postalCode')}
+                      ))}
+                    </section>
+                  )}
+                  {step === 2 && (
+                    <section className="space-y-3">
+                      <h2 className="text-xl font-semibold">{copy('chooseHardware')}</h2>
+                      {selectedPlan?.hardware.map((item) => (
+                        <label key={item.id} className="flex gap-3 rounded-md border p-4">
                           <input
-                            className="mt-1 w-full rounded-md border bg-background p-2"
-                            inputMode="numeric"
-                            maxLength={10}
-                            value={postalCode}
-                            onChange={(event) =>
-                              setPostalCode(
-                                normalizeProfileDigits(event.target.value).replace(/[^0-9]/g, '')
-                              )
+                            type="radio"
+                            {...fields.bind('hardwareId')}
+                            value={item.id}
+                            checked={hardwareId === item.id}
+                            disabled={
+                              item.status !== 'active' ||
+                              (!!item.stock_tracking && (item.available_count ?? 0) < 1)
                             }
+                            onChange={() => {
+                              setHardwareId(item.id);
+                              setHardwareConfirmed(false);
+                            }}
                           />
+                          <span>
+                            <span className="block font-medium">{title(item)}</span>
+                            <span className="block text-sm">{item.description?.[locale]}</span>
+                            <bdi>{item.price ? numbers.money(item.price) : copy('unpriced')}</bdi>
+                            <span className="block text-sm text-muted-foreground">
+                              {item.stock_tracking
+                                ? (item.available_count ?? 0) > 0
+                                  ? copy('inStock')
+                                  : copy('outOfStock')
+                                : copy('subjectToConfirmation')}
+                            </span>
+                          </span>
                         </label>
-                        <Button
-                          disabled={
-                            savingAddress ||
-                            !addressLocationReady ||
-                            !fullAddress.trim() ||
-                            !/^[0-9]{10}$/.test(postalCode)
-                          }
-                          onClick={() => void saveAddress()}
-                        >
-                          {copy('saveAddress')}
-                        </Button>
-                      </div>
-                    )}
-                  </section>
-                )}
-                {step === 5 && (
-                  <section className="space-y-4">
-                    <h2 className="text-xl font-semibold">{selectedPlan?.agreement?.title}</h2>
-                    <div className="max-h-80 overflow-y-auto whitespace-pre-wrap rounded-md border bg-muted/30 p-4 text-sm">
-                      {selectedPlan?.agreement?.body}
-                    </div>
-                    <label className="flex gap-2">
-                      <input
-                        type="checkbox"
-                        checked={agreementAccepted}
-                        onChange={(event) => setAgreementAccepted(event.target.checked)}
-                      />
-                      {copy('acceptAgreement')}
-                    </label>
-                    <div className="flex flex-wrap items-end gap-2">
-                      <label className="flex-1">
-                        {copy('giftCode')}
+                      ))}
+                      <label className="flex gap-2">
                         <input
-                          className="mt-1 w-full rounded-md border bg-background p-2"
-                          value={giftCode}
-                          onChange={(event) => setGiftCode(event.target.value)}
+                          type="checkbox"
+                          {...fields.bind('hardwareConfirmed')}
+                          checked={hardwareConfirmed}
+                          onChange={(event) => setHardwareConfirmed(event.target.checked)}
                         />
+                        {copy('confirmHardware')}
                       </label>
+                    </section>
+                  )}
+                  {step === 3 && (
+                    <section className="space-y-3">
+                      <h2 className="text-xl font-semibold">{copy('billIdentifier')}</h2>
+                      <input
+                        aria-label={copy('billIdentifier')}
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        maxLength={13}
+                        {...fields.bind('billIdentifier')}
+                        value={billIdentifier}
+                        onChange={(event) => {
+                          setBillIdentifier(
+                            normalizeProfileDigits(event.target.value).replace(/[^0-9]/g, '')
+                          );
+                          setVerification('idle');
+                        }}
+                        className="w-full rounded-md border bg-background p-3"
+                        dir="ltr"
+                      />
+                      {billIdentifier && !/^[0-9]{6,13}$/.test(billIdentifier) && (
+                        <p className="text-sm text-destructive">{copy('invalidBill')}</p>
+                      )}
+                      {duplicateError && (
+                        <div role="alert" className="space-y-2 text-sm text-destructive">
+                          <p>{copy('duplicateCheckError')}</p>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setDuplicateRevision((value) => value + 1)}
+                          >
+                            {copy('retry')}
+                          </Button>
+                        </div>
+                      )}
+                      <Button
+                        variant="outline"
+                        disabled={
+                          !/^[0-9]{6,13}$/.test(billIdentifier) || verification === 'checking'
+                        }
+                        onClick={() => void verifyBill()}
+                      >
+                        {copy('verifyBill')}
+                      </Button>
+                      {verification === 'verified' && <p role="status">{copy('verified')}</p>}
+                      {verification === 'manual' && <p role="status">{copy('manualReview')}</p>}
+                      {duplicate?.duplicate && (
+                        <div
+                          role="alert"
+                          className="rounded-md border border-destructive/30 p-3 text-sm"
+                        >
+                          <p>
+                            {copy(
+                              !duplicate.preventActiveDuplicates
+                                ? 'duplicateAllowedNotice'
+                                : duplicate.existingOrderId
+                                  ? 'duplicateOrder'
+                                  : 'duplicateSupport'
+                            )}
+                          </p>
+                          {duplicate.existingOrderId && (
+                            <Link
+                              to="/savings/orders/$orderId"
+                              params={{ orderId: duplicate.existingOrderId }}
+                              className="text-primary hover:underline"
+                            >
+                              {copy('openExisting')}
+                            </Link>
+                          )}
+                          {!duplicate.preventActiveDuplicates && (
+                            <label className="mt-3 flex items-start gap-2">
+                              <input
+                                type="checkbox"
+                                {...fields.bind('duplicateAcknowledged')}
+                                checked={duplicateAcknowledged}
+                                onChange={(event) => setDuplicateAcknowledged(event.target.checked)}
+                              />
+                              {copy('acknowledgeDuplicate')}
+                            </label>
+                          )}
+                        </div>
+                      )}
+                    </section>
+                  )}
+                  {step === 4 && (
+                    <section className="space-y-3">
+                      <h2 className="text-xl font-semibold">{copy('chooseAddress')}</h2>
+                      {addresses.map((address) => (
+                        <label key={address.id} className="flex gap-3 rounded-md border p-3">
+                          <input
+                            type="radio"
+                            {...fields.bind('addressId')}
+                            value={address.id}
+                            checked={addressId === address.id}
+                            onChange={() => setAddressId(address.id)}
+                          />
+                          <span>
+                            {address.fullAddress} · <bdi>{address.postalCode}</bdi>
+                          </span>
+                        </label>
+                      ))}
                       <Button
                         variant="outline"
                         onClick={() => {
-                          setAppliedGiftCode(giftCode.trim());
-                          setQuoteRevision((value) => value + 1);
-                          submissionKey.current = null;
+                          if (addingAddress) {
+                            setProvinceId('');
+                            setCityId('');
+                            setFullAddress('');
+                            setPostalCode('');
+                            setAddressError(false);
+                          }
+                          setAddingAddress((value) => !value);
                         }}
                       >
-                        {copy('apply')}
+                        {addingAddress ? t('electricity.order.cancel', locale) : copy('newAddress')}
                       </Button>
-                    </div>
-                    {giftCode.trim() !== appliedGiftCode && (
-                      <p role="status" className="text-sm">
-                        {t('electricity.order.applyGiftFirst', locale)}
-                      </p>
-                    )}
-                  </section>
-                )}
-                {step === 6 && (
-                  <section className="space-y-4">
-                    <StepReviewPage
-                      title={copy('stepReview')}
-                      editLabel={t('electricity.order.edit', locale)}
-                      disabled={protection.busy || protection.completed.current}
-                      onEdit={(target) => void protection.save(target)}
-                      sections={[
-                        {
-                          id: 'plan',
-                          title: copy('stepPlan'),
-                          step: 1,
-                          rows: [
-                            { label: copy('stepPlan'), value: selectedPlan && title(selectedPlan) },
-                          ],
-                        },
-                        {
-                          id: 'hardware',
-                          title: copy('stepHardware'),
-                          step: 2,
-                          rows: [
-                            {
-                              label: copy('stepHardware'),
-                              value: selectedHardware && title(selectedHardware),
-                            },
-                          ],
-                        },
-                        {
-                          id: 'bill',
-                          title: copy('stepBill'),
-                          step: 3,
-                          rows: [{ label: copy('billIdentifier'), value: billIdentifier }],
-                        },
-                        {
-                          id: 'address',
-                          title: copy('stepAddress'),
-                          step: 4,
-                          rows: [
-                            {
-                              label: copy('stepAddress'),
-                              value: addresses.find((item) => item.id === addressId)?.fullAddress,
-                            },
-                            {
-                              label: t('electricity.order.postalCode', locale),
-                              value: addresses.find((item) => item.id === addressId)?.postalCode,
-                            },
-                          ],
-                        },
-                        {
-                          id: 'agreement',
-                          title: copy('stepAgreement'),
-                          step: 5,
-                          content: (
-                            <div className="space-y-2 text-sm">
-                              <p className="font-medium">
-                                <bdi>{selectedPlan?.agreement?.title}</bdi>
-                              </p>
-                              <p className="whitespace-pre-wrap break-words">
-                                <bdi>{selectedPlan?.agreement?.body}</bdi>
-                              </p>
-                            </div>
-                          ),
-                        },
-                        {
-                          id: 'gift',
-                          title: copy('giftCode'),
-                          step: 5,
-                          rows: [{ label: copy('giftCode'), value: appliedGiftCode || '—' }],
-                        },
-                        {
-                          id: 'price',
-                          title: t('electricity.order.step3', locale),
-                          content: (
-                            <>
-                              {quoting && <p role="status">{copy('loading')}</p>}
-                              {quoteError && (
-                                <div role="alert">
-                                  <p>{copy('quoteError')}</p>
-                                  <Button
-                                    variant="outline"
-                                    onClick={() => setQuoteRevision((value) => value + 1)}
-                                  >
-                                    {copy('retry')}
-                                  </Button>
-                                </div>
-                              )}
-                              {quote && (
-                                <FinancialReviewSummary
-                                  title={copy('total')}
-                                  rows={[
-                                    ...quote.lines.map((line) => ({
-                                      id: line.type,
-                                      label: line.title[locale],
-                                      value: (
-                                        <>
-                                          {numbers.money(line.amountIrR)}
-                                          {(line.discountIrR !== '0' || line.vatIrR !== '0') && (
-                                            <small className="block text-muted-foreground">
-                                              −{numbers.money(line.discountIrR)} · +
-                                              {numbers.money(line.vatIrR)} {copy('vat')}
-                                            </small>
-                                          )}
-                                        </>
-                                      ),
-                                    })),
-                                    {
-                                      id: 'subtotal',
-                                      label: copy('subtotal'),
-                                      value: numbers.money(quote.subtotalIrR),
-                                    },
-                                    {
-                                      id: 'discount',
-                                      label: copy('discount'),
-                                      value: numbers.money(quote.discountIrR),
-                                    },
-                                    {
-                                      id: 'vat',
-                                      label: copy('vat'),
-                                      value: numbers.money(quote.vatIrR),
-                                    },
-                                  ]}
-                                  total={{
-                                    label: copy('total'),
-                                    value: numbers.money(quote.totalIrR),
-                                  }}
-                                />
-                              )}
-                            </>
-                          ),
-                        },
-                      ]}
-                    />
-                    <p className="text-sm">
-                      {copy('walletBalance')}:{' '}
-                      {walletBalance === null ? '—' : numbers.money(walletBalance)}
-                    </p>
-                    {quote && (
-                      <WalletFundingPrompt balance={walletBalance} total={quote.totalIrR} />
-                    )}
-                    <label className="flex gap-2">
-                      <input
-                        type="checkbox"
-                        checked={submitForReview}
-                        onChange={(event) => setSubmitForReview(event.target.checked)}
+                      {addressError && <p role="alert">{copy('error')}</p>}
+                      {addingAddress && (
+                        <div className="grid gap-3 rounded-md border p-4 md:grid-cols-2">
+                          <div>
+                            <label htmlFor="saving-address-province">{copy('province')}</label>
+                            <select
+                              id="saving-address-province"
+                              className="mt-1 w-full rounded-md border bg-background p-2"
+                              {...fields.bind('provinceId')}
+                              value={provinceId}
+                              disabled={savingAddress || !provinceOptions.ready}
+                              onChange={(event) => {
+                                setProvinceId(event.target.value);
+                                setCityId('');
+                              }}
+                            >
+                              <option value="">—</option>
+                              {provinces.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {locale === 'fa' ? item.nameFa : item.nameEn}
+                                </option>
+                              ))}
+                            </select>
+                            <GeographyLoadError
+                              {...provinceOptions}
+                              message={t('settings.addresses.error.loadProvinces', locale)}
+                              locale={locale}
+                              testId="saving-address-province-retry"
+                            />
+                          </div>
+                          <div>
+                            <label htmlFor="saving-address-city">{copy('city')}</label>
+                            <DependentSelect
+                              id="saving-address-city"
+                              className="mt-1 w-full rounded-md border bg-background p-2"
+                              dependencyValue={provinceId}
+                              {...fields.bind('cityId')}
+                              value={cityId}
+                              ready={cityOptions.ready}
+                              loading={cityOptions.loading}
+                              disabled={savingAddress}
+                              options={cities.map((city) => ({
+                                value: city.id,
+                                label: locale === 'fa' ? city.nameFa : city.nameEn,
+                                dependencyValue: city.provinceId ?? '',
+                              }))}
+                              placeholder={t('settings.addresses.form.cityPlaceholder', locale)}
+                              onChange={(event) => setCityId(event.target.value)}
+                            />
+                            <GeographyLoadError
+                              {...cityOptions}
+                              message={t('settings.addresses.error.loadCities', locale)}
+                              locale={locale}
+                              testId="saving-address-city-retry"
+                            />
+                          </div>
+                          <label>
+                            {copy('fullAddress')}
+                            <input
+                              className="mt-1 w-full rounded-md border bg-background p-2"
+                              maxLength={500}
+                              {...fields.bind('fullAddress')}
+                              value={fullAddress}
+                              onChange={(event) => setFullAddress(event.target.value)}
+                            />
+                          </label>
+                          <label>
+                            {copy('postalCode')}
+                            <input
+                              className="mt-1 w-full rounded-md border bg-background p-2"
+                              inputMode="numeric"
+                              maxLength={10}
+                              {...fields.bind('postalCode')}
+                              value={postalCode}
+                              onChange={(event) =>
+                                setPostalCode(
+                                  normalizeProfileDigits(event.target.value).replace(/[^0-9]/g, '')
+                                )
+                              }
+                            />
+                          </label>
+                          <Button
+                            disabled={
+                              savingAddress ||
+                              !addressLocationReady ||
+                              !fullAddress.trim() ||
+                              !/^[0-9]{10}$/.test(postalCode)
+                            }
+                            onClick={() => void saveAddress()}
+                          >
+                            {copy('saveAddress')}
+                          </Button>
+                        </div>
+                      )}
+                    </section>
+                  )}
+                  {step === 5 && (
+                    <section className="space-y-4">
+                      <h2 className="text-xl font-semibold">{selectedPlan?.agreement?.title}</h2>
+                      <div className="max-h-80 overflow-y-auto whitespace-pre-wrap rounded-md border bg-muted/30 p-4 text-sm">
+                        {selectedPlan?.agreement?.body}
+                      </div>
+                      <label className="flex gap-2">
+                        <input
+                          type="checkbox"
+                          {...fields.bind('agreementAccepted')}
+                          checked={agreementAccepted}
+                          onChange={(event) => setAgreementAccepted(event.target.checked)}
+                        />
+                        {copy('acceptAgreement')}
+                      </label>
+                      <div className="flex flex-wrap items-end gap-2">
+                        <label className="flex-1">
+                          {copy('giftCode')}
+                          <input
+                            className="mt-1 w-full rounded-md border bg-background p-2"
+                            {...fields.bind('giftCode')}
+                            value={giftCode}
+                            onChange={(event) => setGiftCode(event.target.value)}
+                          />
+                        </label>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setAppliedGiftCode(giftCode.trim());
+                            setQuoteRevision((value) => value + 1);
+                            submissionKey.current = null;
+                          }}
+                        >
+                          {copy('apply')}
+                        </Button>
+                      </div>
+                      {giftCode.trim() !== appliedGiftCode && (
+                        <p role="status" className="text-sm">
+                          {t('electricity.order.applyGiftFirst', locale)}
+                        </p>
+                      )}
+                    </section>
+                  )}
+                  {step === 6 && (
+                    <section className="space-y-4">
+                      <StepReviewPage
+                        title={copy('stepReview')}
+                        editLabel={t('electricity.order.edit', locale)}
+                        disabled={pending || protection.busy || protection.completed.current}
+                        onEdit={(target) => void protection.save(target)}
+                        sections={[
+                          {
+                            id: 'plan',
+                            title: copy('stepPlan'),
+                            step: 1,
+                            rows: [
+                              {
+                                label: copy('stepPlan'),
+                                value: selectedPlan && title(selectedPlan),
+                              },
+                            ],
+                          },
+                          {
+                            id: 'hardware',
+                            title: copy('stepHardware'),
+                            step: 2,
+                            rows: [
+                              {
+                                label: copy('stepHardware'),
+                                value: selectedHardware && title(selectedHardware),
+                              },
+                            ],
+                          },
+                          {
+                            id: 'bill',
+                            title: copy('stepBill'),
+                            step: 3,
+                            rows: [{ label: copy('billIdentifier'), value: billIdentifier }],
+                          },
+                          {
+                            id: 'address',
+                            title: copy('stepAddress'),
+                            step: 4,
+                            rows: [
+                              {
+                                label: copy('stepAddress'),
+                                value: addresses.find((item) => item.id === addressId)?.fullAddress,
+                              },
+                              {
+                                label: t('electricity.order.postalCode', locale),
+                                value: addresses.find((item) => item.id === addressId)?.postalCode,
+                              },
+                            ],
+                          },
+                          {
+                            id: 'agreement',
+                            title: copy('stepAgreement'),
+                            step: 5,
+                            content: (
+                              <div className="space-y-2 text-sm">
+                                <p className="font-medium">
+                                  <bdi>{selectedPlan?.agreement?.title}</bdi>
+                                </p>
+                                <p className="whitespace-pre-wrap break-words">
+                                  <bdi>{selectedPlan?.agreement?.body}</bdi>
+                                </p>
+                              </div>
+                            ),
+                          },
+                          {
+                            id: 'gift',
+                            title: copy('giftCode'),
+                            step: 5,
+                            rows: [{ label: copy('giftCode'), value: appliedGiftCode || '—' }],
+                          },
+                          {
+                            id: 'price',
+                            title: t('electricity.order.step3', locale),
+                            content: (
+                              <>
+                                {quoting && <p role="status">{copy('loading')}</p>}
+                                {quoteError && (
+                                  <div role="alert">
+                                    <p>{copy('quoteError')}</p>
+                                    <Button
+                                      variant="outline"
+                                      onClick={() => setQuoteRevision((value) => value + 1)}
+                                    >
+                                      {copy('retry')}
+                                    </Button>
+                                  </div>
+                                )}
+                                {quote && (
+                                  <FinancialReviewSummary
+                                    title={copy('total')}
+                                    rows={[
+                                      ...quote.lines.map((line) => ({
+                                        id: line.type,
+                                        label: line.title[locale],
+                                        value: (
+                                          <>
+                                            {numbers.money(line.amountIrR)}
+                                            {(line.discountIrR !== '0' || line.vatIrR !== '0') && (
+                                              <small className="block text-muted-foreground">
+                                                −{numbers.money(line.discountIrR)} · +
+                                                {numbers.money(line.vatIrR)} {copy('vat')}
+                                              </small>
+                                            )}
+                                          </>
+                                        ),
+                                      })),
+                                      {
+                                        id: 'subtotal',
+                                        label: copy('subtotal'),
+                                        value: numbers.money(quote.subtotalIrR),
+                                      },
+                                      {
+                                        id: 'discount',
+                                        label: copy('discount'),
+                                        value: numbers.money(quote.discountIrR),
+                                      },
+                                      {
+                                        id: 'vat',
+                                        label: copy('vat'),
+                                        value: numbers.money(quote.vatIrR),
+                                      },
+                                    ]}
+                                    total={{
+                                      label: copy('total'),
+                                      value: numbers.money(quote.totalIrR),
+                                    }}
+                                  />
+                                )}
+                              </>
+                            ),
+                          },
+                        ]}
                       />
-                      {copy('submitForReview')}
-                    </label>
-                    {submitError && (
-                      <p role="alert" className="text-destructive">
-                        {submitError}
+                      <p className="text-sm">
+                        {copy('walletBalance')}:{' '}
+                        {walletBalance === null ? '—' : numbers.money(walletBalance)}
                       </p>
-                    )}
-                  </section>
+                      {quote && (
+                        <WalletFundingPrompt balance={walletBalance} total={quote.totalIrR} />
+                      )}
+                      <label className="flex gap-2">
+                        <input
+                          type="checkbox"
+                          {...fields.bind('submitForReview')}
+                          checked={submitForReview}
+                          onChange={(event) => setSubmitForReview(event.target.checked)}
+                        />
+                        {copy('submitForReview')}
+                      </label>
+                      {submitError && (
+                        <p role="alert" className="text-destructive">
+                          {submitError}
+                        </p>
+                      )}
+                    </section>
+                  )}
+                </fieldset>
+                {draftSaved && !protection.dirty && !draftSaveError && (
+                  <p role="status">{t('electricity.order.draftSaved', locale)}</p>
                 )}
-              </fieldset>
-              {draftSaved && !protection.dirty && !draftSaveError && (
-                <p role="status">{t('electricity.order.draftSaved', locale)}</p>
-              )}
-              {draftSaveError && (
-                <p role="alert" className="text-destructive">
-                  {copy('draftSaveError')}
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        </FormWizard>
+                {draftSaveError && (
+                  <p role="alert" className="text-destructive">
+                    {copy('draftSaveError')}
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          )}
+        </ValidatedFormWizard>
       )}
     </div>
   );

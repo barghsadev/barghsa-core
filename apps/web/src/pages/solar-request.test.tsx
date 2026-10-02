@@ -95,10 +95,19 @@ it.each(['fa', 'en'] as const)(
         (button) => button.textContent === (locale === 'fa' ? 'ادامه' : 'Continue')
       )!;
       expect(submit.disabled).toBe(true);
+      const completion = container.querySelector<HTMLInputElement>('#solar-completion')!;
+      await act(async () => {
+        completion.focus();
+        completion.blur();
+      });
+      expect(completion.getAttribute('aria-invalid')).toBe('true');
+      const completionError = completion.getAttribute('aria-describedby')!;
+      expect(document.getElementById(completionError)).not.toBeNull();
       await act(async () =>
         (container.querySelector('input[value="non_household"]') as HTMLInputElement).click()
       );
       expect(container.querySelector('#solar-units')).toBeNull();
+      expect(document.getElementById(completionError)).toBeNull();
       expect(container.querySelector('#solar-area')).not.toBeNull();
       await act(async () => {
         const input = container.querySelector('#solar-area') as HTMLInputElement;
@@ -111,10 +120,19 @@ it.each(['fa', 'en'] as const)(
       await act(async () => submit.click());
       expect(container.querySelector('#solar-area')).toBeNull();
       expect(container.querySelector('#solar-bill')).not.toBeNull();
+      const bill = container.querySelector<HTMLInputElement>('#solar-bill')!;
+      await act(async () => {
+        bill.focus();
+        bill.blur();
+      });
+      expect(bill.getAttribute('aria-invalid')).toBe('true');
+      const billError = bill.getAttribute('aria-describedby')!;
+      expect(document.getElementById(billError)).not.toBeNull();
       await act(async () =>
         (container.querySelector('input[value="off_grid"]') as HTMLInputElement).click()
       );
       expect(container.querySelector('#solar-bill')).toBeNull();
+      expect(document.getElementById(billError)).toBeNull();
       expect(container.textContent).toContain(
         locale === 'fa' ? 'تجهیزات ذخیره‌سازی' : 'storage equipment'
       );

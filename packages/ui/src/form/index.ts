@@ -15,4 +15,11 @@ export * from './text-fields';
 export * from './choice-fields';
 export * from './date-fields';
 export { useFormContext, useWatch } from 'react-hook-form';
-export type { FieldErrors, FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
+export type {
+  DefaultValues,
+  FieldErrors,
+  FieldPath,
+  FieldPathValue,
+  FieldValues,
+  UseFormReturn,
+} from 'react-hook-form';

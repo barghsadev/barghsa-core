@@ -211,6 +211,28 @@ const settlePreview = () =>
     await new Promise((resolve) => setTimeout(resolve, 350));
   });
 
+it('retains the selected native address radio across form rerenders', async () => {
+  step = 4;
+  addresses = ['address-1', 'address-2'].map((id, index) => ({
+    id,
+    provinceId: 'province-1',
+    cityId: 'city-1',
+    fullAddress: `Saved Street ${index}`,
+    postalCode: '1234567890',
+    mainAddress: index === 0,
+  }));
+  await mount();
+  const choices = Array.from(
+    container.querySelectorAll<HTMLInputElement>('input[name="addressId"]')
+  );
+  expect(choices.map((choice) => choice.value)).toEqual(['address-1', 'address-2']);
+  expect(choices[0]?.checked).toBe(true);
+  await act(async () => choices[1]!.click());
+  await mount();
+  expect(choices[0]?.checked).toBe(false);
+  expect(choices[1]?.checked).toBe(true);
+});
+
 it('ignores a restored manual green amount when the mandatory rule locks green', async () => {
   await mount();
   await settlePreview();

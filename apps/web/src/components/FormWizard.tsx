@@ -4,7 +4,7 @@ import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 
-interface FormWizardProps {
+export interface FormWizardProps {
   children: ReactNode;
   steps: readonly string[];
   step: number;

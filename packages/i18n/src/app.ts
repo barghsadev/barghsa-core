@@ -5,6 +5,7 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'formWizard.invalidField': 'این بخش را بررسی و اصلاح کنید.',
   'formWizard.current': 'مرحلهٔ فعلی',
   'formWizard.completed': 'تکمیل شده',
   'formWizard.pending': 'مرحلهٔ بعدی',
@@ -1695,6 +1696,7 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'formWizard.invalidField': 'Check and correct this field.',
   'formWizard.current': 'Current step',
   'formWizard.completed': 'Completed',
   'formWizard.pending': 'Upcoming step',

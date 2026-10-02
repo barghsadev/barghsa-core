@@ -342,6 +342,55 @@ async function review(page: Page, mode: Mode, locale: Locale) {
 
 for (const mode of ['saving', 'solar'] as const)
   for (const locale of ['en', 'fa'] as const) {
+    test(`${mode} links localized field feedback and retains a corrected partial draft (${locale})`, async ({
+      page,
+    }) => {
+      const state = await fixture(page, mode, locale);
+      await open(page, mode, locale);
+      const field = input(page, mode, locale);
+      await field.fill(mode === 'saving' ? '12' : '0');
+      await field.blur();
+      await expect(field).toHaveAttribute('aria-invalid', 'true');
+      const errorId = await field.getAttribute('aria-describedby');
+      expect(errorId).toBeTruthy();
+      const feedback =
+        mode === 'saving' ? tSaving('invalidBill', locale) : t('formWizard.invalidField', locale);
+      expect(
+        await page
+          .locator('[id]')
+          .evaluateAll(
+            (nodes, value) =>
+              nodes.some(
+                (node) => node.id === value.id && node.textContent?.includes(value.message)
+              ),
+            { id: errorId!, message: feedback }
+          )
+      ).toBe(true);
+      if (mode === 'solar') {
+        await page.locator('input[value="building_apartment"]').check();
+        await expect(field).toHaveCount(0);
+        expect(
+          await page
+            .locator('[id]')
+            .evaluateAll((nodes, id) => nodes.some((node) => node.id === id), errorId!)
+        ).toBe(false);
+        await page.locator('input[value="non_household"]').check();
+        await expect(field).toHaveValue('0');
+      }
+      await expect(button(page, 'electricity.order.next', locale)).toBeDisabled();
+      await field.fill(mode === 'saving' ? '1234567890123' : '300');
+      await expect(field).not.toHaveAttribute('aria-invalid', 'true');
+      await button(page, 'electricity.order.next', locale).click();
+      await expect(page).toHaveURL(new RegExp(`step=${mode === 'saving' ? 4 : 2}$`));
+      expect(state.saves.at(-1)?.data).toEqual(
+        expect.objectContaining(
+          mode === 'saving' ? { billIdentifier: '1234567890123' } : { usableAreaSqm: '300' }
+        )
+      );
+      await button(page, 'electricity.order.back', locale).click();
+      await expect(field).toHaveValue(mode === 'saving' ? '1234567890123' : '300');
+    });
+
     test(`${mode} keeps saved values across history and renews consent on reload (${locale})`, async ({
       page,
     }) => {

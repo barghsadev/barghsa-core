@@ -304,6 +304,45 @@ function controls(page: Page, locale: Locale) {
 
 for (const locale of ['en', 'fa'] as const)
   for (const mode of ['simple', 'advanced'] as const) {
+    test(`${mode} validates blurred quantities with linked localized feedback and preserves corrections (${locale})`, async ({
+      page,
+    }) => {
+      const state = await fixture(page, mode, locale);
+      await page.goto(`${path(mode)}?step=2`);
+      const quantity = field(page, mode);
+      await expect(quantity).toHaveValue('100');
+      await quantity.fill('0');
+      await quantity.blur();
+      await expect(quantity).toHaveAttribute('aria-invalid', 'true');
+      const errorId = await quantity.getAttribute('aria-describedby');
+      expect(errorId).toBeTruthy();
+      await expect(
+        page
+          .locator('[id]')
+          .filter({ hasText: t('electricity.order.quantityInvalid', locale) })
+          .first()
+      ).toBeVisible();
+      const feedback = page
+        .locator('[id]')
+        .filter({ hasText: t('electricity.order.quantityInvalid', locale) });
+      expect(
+        await feedback.evaluateAll(
+          (nodes, ids) => nodes.some((node) => ids.split(' ').includes(node.id)),
+          errorId!
+        )
+      ).toBe(true);
+      await expect(button(page, 'electricity.order.next', locale)).toBeDisabled();
+      await quantity.fill('120');
+      await expect(quantity).not.toHaveAttribute('aria-invalid', 'true');
+      await button(page, 'electricity.order.next', locale).click();
+      await expect(page).toHaveURL(/step=3$/);
+      expect(state.saves.at(-1)?.data[mode === 'simple' ? 'totalKwh' : 'quantities']).toEqual(
+        mode === 'simple' ? '120' : expect.objectContaining({ thermal: '120' })
+      );
+      await button(page, 'electricity.order.back', locale).click();
+      await expect(quantity).toHaveValue('120');
+    });
+
     test(`${mode} restores safe steps and browser history without dropping fields (${locale})`, async ({
       page,
     }) => {
@@ -523,9 +562,7 @@ for (const locale of ['en', 'fa'] as const)
       await button(page, 'electricity.order.next', locale).click();
       await button(page, 'electricity.order.next', locale).click();
       await expect(
-        page.locator(
-          mode === 'simple' ? `#order-address-${address.id}` : 'input[name="advanced-address"]'
-        )
+        page.locator(mode === 'simple' ? `#order-address-${address.id}` : 'input[name="addressId"]')
       ).toBeChecked();
       await button(page, 'electricity.order.next', locale).click();
       await expect(page).toHaveURL(/step=5$/);
@@ -540,9 +577,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.locator('[data-review-section=address]').getByRole('button').click();
       await expect(page).toHaveURL(/step=4$/);
       await expect(
-        page.locator(
-          mode === 'simple' ? `#order-address-${address.id}` : 'input[name="advanced-address"]'
-        )
+        page.locator(mode === 'simple' ? `#order-address-${address.id}` : 'input[name="addressId"]')
       ).toBeChecked();
     });
   }
