@@ -42,12 +42,23 @@ export function useZodForm<Input extends FieldValues, Output extends FieldValues
   const nativeSetFocus = form.setFocus;
   const isSubmitting = form.formState.isSubmitting;
   const errors = form.formState.errors;
-  const setFocus: UseFormSetFocus<Input> = useCallback(
+  const focusPath: UseFormSetFocus<Input> = useCallback(
     (name, options) => {
-      if (pending.current) pendingFocus.current = () => nativeSetFocus(name, options);
-      else nativeSetFocus(name, options);
+      const parts = name.split('.');
+      // A composite picker can register `range` while validation reports `range.to`.
+      // Public setFocus ignores unregistered prefixes. The deepest registered ref wins.
+      for (let depth = 1; depth <= parts.length; depth++) {
+        nativeSetFocus(parts.slice(0, depth).join('.') as FieldPath<Input>, options);
+      }
     },
     [nativeSetFocus]
+  );
+  const setFocus: UseFormSetFocus<Input> = useCallback(
+    (name, options) => {
+      if (pending.current) pendingFocus.current = () => focusPath(name, options);
+      else focusPath(name, options);
+    },
+    [focusPath]
   );
   useEffect(() => {
     // Validation runs while fields are disabled. Focus after their next DOM commit.
@@ -71,14 +82,14 @@ export function useZodForm<Input extends FieldValues, Output extends FieldValues
           return await nativeHandleSubmit<Result>(onValid, async (errors, invalidEvent) => {
             const field = firstErrorField(errors);
             // Resolver error paths describe schema input fields; look up the current registered ref.
-            pendingFocus.current = field ? () => nativeSetFocus(field as FieldPath<Input>) : null;
+            pendingFocus.current = field ? () => focusPath(field as FieldPath<Input>) : null;
             await onInvalid?.(errors, invalidEvent);
           })(event);
         } finally {
           pending.current = false;
         }
       },
-    [nativeHandleSubmit, nativeSetFocus]
+    [nativeHandleSubmit, focusPath]
   );
   const isSubmissionPending = useCallback(() => pending.current, []);
   return { ...form, handleSubmit, setFocus, isSubmissionPending };

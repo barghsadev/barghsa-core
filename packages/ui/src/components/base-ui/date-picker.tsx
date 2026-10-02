@@ -33,6 +33,12 @@ interface DatePickerBaseProps {
   className?: string;
   id?: string;
   label?: string;
+  /** Form binding and feedback belong to the visible trigger. */
+  triggerProps?: Pick<
+    React.ComponentProps<typeof Button>,
+    'ref' | 'name' | 'aria-describedby' | 'aria-labelledby' | 'aria-invalid'
+  >;
+  onBlur?: () => void;
 }
 
 interface DatePickerSingleProps extends DatePickerBaseProps {
@@ -44,7 +50,7 @@ interface DatePickerSingleProps extends DatePickerBaseProps {
 interface DatePickerRangeProps extends DatePickerBaseProps {
   calendarMode: 'range';
   /** Half-open interval: from is included, to is the first excluded day. */
-  value?: DateRange;
+  value?: DateRange | undefined;
   onChange?: (range: DateRange | undefined) => void;
 }
 
@@ -66,6 +72,8 @@ function DatePicker({
   onChange,
   id,
   label,
+  triggerProps,
+  onBlur,
   ...props
 }: DatePickerProps & Omit<React.ComponentProps<typeof Popover>, 'children'>) {
   const [open, setOpen] = React.useState(false);
@@ -173,15 +181,30 @@ function DatePicker({
   }, [value, calendarMode, formatDate, formatRange]);
 
   return (
-    <Popover open={open && !disabled} onOpenChange={setOpen} {...props}>
+    <Popover
+      open={open && !disabled}
+      onOpenChange={(nextOpen) => {
+        setOpen(nextOpen);
+        if (!nextOpen) onBlur?.();
+      }}
+      {...props}
+    >
       <PopoverTrigger
         render={
           <Button
+            {...triggerProps}
             id={id}
+            onBlur={() => {
+              if (!open) onBlur?.();
+            }}
             aria-label={label ?? prompt}
             aria-haspopup="dialog"
-            aria-invalid={!!error}
-            aria-describedby={error ? errorId : undefined}
+            aria-invalid={error ? true : (triggerProps?.['aria-invalid'] ?? false)}
+            aria-describedby={
+              [triggerProps?.['aria-describedby'], error ? errorId : undefined]
+                .filter(Boolean)
+                .join(' ') || undefined
+            }
             disabled={disabled}
             variant="outline"
             role="combobox"
@@ -206,7 +229,12 @@ function DatePicker({
           {error}
         </span>
       )}
-      <PopoverContent className="w-auto p-0" align="start" aria-label={label ?? prompt}>
+      <PopoverContent
+        className="w-auto p-0"
+        align="start"
+        aria-label={label ?? prompt}
+        aria-labelledby={triggerProps?.['aria-labelledby']}
+      >
         {calendarMode === 'range' ? (
           <Calendar
             mode="range"
@@ -238,6 +266,7 @@ function DatePicker({
             onSelect={(date) => {
               (onChange as (date: Date | undefined) => void)?.(date);
               setOpen(false);
+              onBlur?.();
             }}
             disabled={disabledDays}
             dateLib={calendarDateLib}

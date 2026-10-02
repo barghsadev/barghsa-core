@@ -32,6 +32,25 @@ const ItemContext = createContext<{
   setMessageId: (id: string | undefined) => void;
 } | null>(null);
 
+function firstFieldError(error: unknown): FieldError | undefined {
+  if (!error || typeof error !== 'object') return;
+  if ('type' in error && typeof error.type === 'string') {
+    return {
+      type: error.type,
+      ...('message' in error && typeof error.message === 'string'
+        ? { message: error.message }
+        : {}),
+    };
+  }
+  // Composite controls, such as date ranges, receive errors on their child paths.
+  for (const [key, value] of Object.entries(error)) {
+    if (key === 'ref') continue;
+    const nested = firstFieldError(value);
+    if (nested) return nested;
+  }
+  return undefined;
+}
+
 export function FormField<
   Values extends FieldValues,
   Name extends FieldPath<Values>,
@@ -41,7 +60,7 @@ export function FormField<
     <Controller
       {...props}
       render={(state) => (
-        <FieldContext.Provider value={{ error: state.fieldState.error }}>
+        <FieldContext.Provider value={{ error: firstFieldError(state.fieldState.error) }}>
           {render(state)}
         </FieldContext.Provider>
       )}

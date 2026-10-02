@@ -1,0 +1,32 @@
+# Bound form inputs, October 2, 2026
+
+## Scope and result
+
+This batch completes `07-ui-ux-design.md#T-07.10.01.03` with all eleven adapters exported through the existing separate `@barghsa/ui/form` entry: FormInput, FormSelect, FormTextarea, FormCheckbox, FormSwitch, FormRadioGroup, FormCombobox, FormDatePicker, FormDateRangePicker, FormSlider and FormPhoneInput. Customer address creation/editing adopts the text and textarea adapters together. Adoption across other forms, FormStep and the broader form epic remain open.
+
+Adapters bind the field name, value, change/blur handlers and focus ref through React Hook Form. They display localized schema/server feedback with the shared FormMessage, labels and mounted help/error associations. Caller props cannot replace the binding. Field names are constrained to the corresponding input types, including transformed-schema controls; an explicit control or typed FormProvider context is supported. Submission disables every adapter while retaining its complete value. Existing disabled choices and component keyboard behavior remain.
+
+Checkbox/switch labels sit beside their controls. Radio groups and sliders use fieldsets/legends. Select errors focus the trigger, combo errors focus the search input, date errors focus the visible trigger and slider errors focus the first native thumb input. Combobox supports single and multiple string identifiers with caller-localized removal actions. Multiple mode requires an array field. Sliders support scalar and range values; empty arrays retain their invalid form value while rendering focusable thumbs. Moving between radio choices or slider thumbs does not prematurely touch the whole group.
+
+Date adapters reuse the existing Persian/Gregorian calendar, timezone, bounds and half-open range behavior. Clearing a date stores null and validates when the interaction ends. Composite child errors such as `range.to` display on the shared field, and automatic focus resolves the nearest registered picker through public React Hook Form methods. Nested standalone fields still receive the most specific registered focus. Phone entry uses telephone keyboard/autofill and LTR presentation; it preserves prefixes and digits, with normalization/validation owned by the caller's schema. Text inputs retain strings; schemas can transform them to other submission types.
+
+Adapters reserve feedback space by default to avoid moving later buttons during blur; callers can opt out. Address settings preserves existing field IDs, input limits, city dependencies, safe server mapping, complete drafts and request guards. The shared controls replace repeated native text markup without changing the API or its authority checks.
+
+## Review and validation
+
+Review checks binding/type boundaries, error associations, interactive refs, disabled chips, raw values, reset/retry and composite interaction. It repairs error-space movement during pointer clicks, range-slider touch timing and a missing-end date-range failure reproduced by a focused test before the fix. Persian calendar selection uses unambiguous accessible names, and the date-clearing check fixes browser time for repeatable calendar navigation. Actual Persian mobile form/address screenshots were inspected.
+
+- `pnpm --filter @barghsa/ui test` passes all 14 files and 140 cases. Nineteen adapter cases cover all eleven controls plus multi-combo/range-slider variants, client/server focus, raw text/phone preservation, reset, nested FormProvider binding, nested range errors, group touch timing and submission/chip guards.
+- `BARGHSA_TEST_PREBUILT=1 PLAYWRIGHT_BASE_URL=http://127.0.0.1:4173 pnpm --filter @barghsa/web e2e form-fields-component.spec.ts date-picker-component.spec.ts direction-component.spec.ts customer-address-selection.spec.ts --project=chromium --project=mobile-safari --workers=2` passes all 74 scenarios in the final run. These include 16 new adapter scenarios, 16 existing address/profile scenarios and 42 existing calendar/direction scenarios. Both languages, actual light/dark themes, RTL, Axe, bounds, date clearing, partial range recovery, edited payloads and pending duplicate/chip behavior have passing evidence. The component fixture builds outside product routes and production output, with existing browser coverage registration.
+- `pnpm build` passes all seven package builds. All seven UI distribution checks pass, including ESM/CJS exports and strict declaration consumption with TypeScript 5.9 and 7. Public type checks reject wrong field types, single-combo array bindings and overridden change handlers.
+- `pnpm typecheck` passes all 11 packages. Root `pnpm lint`, `pnpm format:check`, `pnpm check:contract`, `pnpm check:suppressed-errors`, `python3 kanban/scripts/build_backlog.py --check` and `git diff --check` pass. The backlog remains 1,355 tasks and 116 traceability entries. This evidence does not claim a full repository test run.
+- `pnpm check:bundle` passes all 73 unchanged budgets. Dashboard is 290.89 KB / 300 KB gzip and electricity ordering is 245.48 KB / 255 KB.
+- The strict security gate, `python3 scripts/check-sast.py --report /tmp/barghsa-adapter-sast.json` with the established scanner on PATH, passes all five fixtures and scans 1,513 files with zero findings and zero scanner errors.
+
+One build attempt overlapped a typecheck dependency build and failed while both cleaned UI distribution files. After the processes completed, the final build and typecheck ran sequentially and passed. Product code and gates were not weakened to recover it.
+
+## Deployment and publication
+
+No dependency, migration or API change is needed; deploy the frontend with the existing API. Labels, help, option names, schema errors, empty-state and removal copy must come from the consuming form's locale dictionaries. Nullable date defaults and normal complete form defaults keep controlled values explicit.
+
+Publication uses direct main through Git/GitHub CLI, with local/remote/GitHub SHA agreement, a clean checkout and exact-commit CI registration read back. New remote checks remain pending until GitHub completes them. The preceding form-validation commit `083a685ed39770a621fe3475e599d21938ed2cdd` passes all five CI jobs in [run37050372777](https://github.com/barghsadev/barghsa-core/actions/runs/37050372777). Existing CI fast mode and its coverage exemption remain unchanged. No PR, scheduler, external supervisor state/handoff, historical `kanban/loop-state.json`, or generated completion/event history is changed.

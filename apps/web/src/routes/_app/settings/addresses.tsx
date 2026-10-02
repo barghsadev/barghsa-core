@@ -32,6 +32,8 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
+  FormInput,
+  FormTextarea,
   FormSubmit,
   useZodForm,
   useWatch,
@@ -544,13 +546,17 @@ function SettingsAddressesPage() {
               {t('settings.addresses.form.description', locale)}
             </DialogDescription>
             <Form {...form}>
-              <form noValidate onSubmit={form.handleSubmit(handleSave)} className="space-y-4">
+              <form
+                noValidate
+                onSubmit={form.handleSubmit(handleSave)}
+                className="flex flex-col gap-4"
+              >
                 {form.formState.errors.root?.server?.message && (
                   <Alert variant="destructive">
                     <AlertDescription>{form.formState.errors.root.server.message}</AlertDescription>
                   </Alert>
                 )}
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   <FormField
                     control={form.control}
                     name="provinceId"
@@ -631,50 +637,32 @@ function SettingsAddressesPage() {
                       </Button>
                     </div>
                   )}
-                  <FormField
+                  <FormTextarea
                     control={form.control}
                     name="fullAddress"
-                    render={({ field }) => (
-                      <FormItem id="addresses-field-3">
-                        <FormLabel>{t('settings.addresses.form.fullAddress', locale)}</FormLabel>
-                        <FormControl>
-                          <textarea
-                            {...field}
-                            disabled={saving}
-                            placeholder={t(
-                              'settings.addresses.form.fullAddressPlaceholder',
-                              locale
-                            )}
-                            className="flex w-full min-h-[80px] rounded-lg border border-input bg-transparent px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive"
-                            dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                            maxLength={500}
-                          />
-                        </FormControl>
-                        <FormMessage reserveSpace />
-                      </FormItem>
-                    )}
+                    id="addresses-field-3"
+                    label={t('settings.addresses.form.fullAddress', locale)}
+                    reserveMessageSpace
+                    inputProps={{
+                      placeholder: t('settings.addresses.form.fullAddressPlaceholder', locale),
+                      dir: locale === 'fa' ? 'rtl' : 'ltr',
+                      maxLength: 500,
+                      className: 'min-h-20',
+                    }}
                   />
-                  <FormField
+                  <FormInput
                     control={form.control}
                     name="postalCode"
-                    render={({ field }) => (
-                      <FormItem id="addresses-field-4">
-                        <FormLabel>{t('settings.addresses.form.postalCode', locale)}</FormLabel>
-                        <FormControl>
-                          <input
-                            {...field}
-                            type="text"
-                            inputMode="numeric"
-                            disabled={saving}
-                            placeholder={t('settings.addresses.form.postalCodePlaceholder', locale)}
-                            className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive"
-                            dir="ltr"
-                            maxLength={10}
-                          />
-                        </FormControl>
-                        <FormMessage reserveSpace />
-                      </FormItem>
-                    )}
+                    id="addresses-field-4"
+                    label={t('settings.addresses.form.postalCode', locale)}
+                    reserveMessageSpace
+                    inputProps={{
+                      type: 'text',
+                      inputMode: 'numeric',
+                      placeholder: t('settings.addresses.form.postalCodePlaceholder', locale),
+                      dir: 'ltr',
+                      maxLength: 10,
+                    }}
                   />
                 </div>
                 <div className="flex justify-end gap-2 pt-2">

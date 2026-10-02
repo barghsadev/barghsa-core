@@ -7,12 +7,15 @@ function Slider({
   defaultValue,
   value,
   thumbLabels,
+  inputRef,
   min = 0,
   max = 100,
   ...props
 }: SliderPrimitive.Root.Props & {
   /** Accessible names for individual thumbs in a range slider. */
   thumbLabels?: readonly string[];
+  /** Ref to the first interactive thumb input, for form validation focus. */
+  inputRef?: React.Ref<HTMLInputElement>;
 }) {
   const effectiveValue = value ?? defaultValue ?? min;
   const thumbCount = Array.isArray(effectiveValue) ? effectiveValue.length : 1;
@@ -45,6 +48,8 @@ function Slider({
           <SliderPrimitive.Thumb
             data-slot="slider-thumb"
             key={index}
+            inputRef={index === 0 ? inputRef : undefined}
+            aria-describedby={props['aria-describedby']}
             aria-label={thumbLabels?.[index] ?? props['aria-label']}
             aria-labelledby={thumbLabels?.[index] ? undefined : props['aria-labelledby']}
             className="relative block size-3 shrink-0 rounded-full border border-foreground bg-background transition-shadow select-none after:absolute after:-inset-2 hover:shadow-sm has-[:focus-visible]:border-foreground has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-foreground has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background has-[:focus-visible]:outline-hidden disabled:pointer-events-none disabled:opacity-50"
