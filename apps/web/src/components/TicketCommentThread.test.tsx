@@ -153,3 +153,38 @@ it('shows unavailable reply files without claiming an empty conversation attachm
     t('tickets.filesUnavailable', 'fa')
   );
 });
+
+for (const locale of ['en', 'fa'] as const) {
+  it(`${locale}: chosen public aliases replace role initials while private identities remain excluded`, async () => {
+    const rows = comments.map((item) => ({
+      ...item,
+      author: {
+        displayName:
+          item.visibility === 'internal' ? 'Private person' : '<script>Chosen alias</script>',
+        avatarUrl:
+          item.visibility === 'internal'
+            ? 'https://private.example.test/photo'
+            : 'https://storage.example.test/photo',
+      },
+    }));
+    await render(false, locale, rows);
+    expect(host.textContent).toContain('<script>Chosen alias</script>');
+    expect(host.textContent).not.toContain('Private person');
+    expect(host.innerHTML).not.toContain('private.example.test');
+    expect(host.textContent).not.toContain('agent-login@example.test');
+    expect(host.querySelector('script')).toBeNull();
+    expect(host.textContent).toContain(t('tickets.customerAuthor', locale));
+    expect(host.textContent).toContain(t('tickets.staffAuthor', locale));
+  });
+}
+it('never loads an unsafe avatar URL and retains role fallback after identity removal', async () => {
+  await render(
+    false,
+    'en',
+    comments
+      .slice(0, 2)
+      .map((item) => ({ ...item, author: { displayName: null, avatarUrl: 'javascript:alert(1)' } }))
+  );
+  expect(host.innerHTML).not.toContain('javascript:');
+  expect(host.textContent).toContain(t('tickets.customerAuthor', 'en'));
+});

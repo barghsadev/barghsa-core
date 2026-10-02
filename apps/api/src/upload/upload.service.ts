@@ -123,6 +123,15 @@ export class UploadService {
       );
     await requireUploadContext(this.profilesService, actor, req);
     const category = req.category ?? resolveCategory(req.metadata?.recordType);
+    if (
+      req.purpose === 'conversation_avatar' &&
+      (category !== 'image' ||
+        req.fileSize > 2 * 1024 * 1024 ||
+        !['image/png', 'image/jpeg', 'image/webp'].includes(req.contentType))
+    )
+      throw new BadRequestException(
+        'Conversation photos must be PNG, JPG or WebP images up to 2 MB'
+      );
 
     const policy = await this.policyResolver.resolveEffective(category);
 
@@ -620,6 +629,15 @@ export class UploadService {
     }
 
     const { purpose, profileId, ticketId } = context.data;
+    if (
+      purpose === 'conversation_avatar' &&
+      (category !== 'image' ||
+        actualFileSize > 2 * 1024 * 1024 ||
+        !['image/png', 'image/jpeg', 'image/webp'].includes(detectedContentType))
+    )
+      throw new BadRequestException(
+        'Conversation photos must be PNG, JPG or WebP images up to 2 MB'
+      );
     await requireUploadContext(this.profilesService, req, context.data);
 
     await completeUpload({

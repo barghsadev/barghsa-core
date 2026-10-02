@@ -6,6 +6,7 @@ import { hasStaffPermission } from '../session/staff-permissions.js';
 import type { UploadContext } from './upload.types.js';
 import { getDbPool } from '@barghsa/db';
 import { authorizeTicketMutation } from '../tickets/ticket-actor.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
 
 /** Upload association never grants authority to the later business operation. */
 export async function requireUploadContext(
@@ -14,6 +15,30 @@ export async function requireUploadContext(
   context: UploadContext
 ) {
   const { purpose, profileId, ticketId } = context;
+  if (purpose === 'conversation_avatar') {
+    if (profileId || ticketId)
+      throw new BadRequestException('Conversation photos belong to your account');
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const account = (
+        await client.query(
+          'SELECT disabled_at,activation_token FROM users WHERE user_id=$1 FOR SHARE',
+          [request.session.userId]
+        )
+      ).rows[0];
+      if (!account || account.disabled_at || account.activation_token)
+        throw new ForbiddenException('Account is unavailable');
+      await requireCurrentSession(client, request.session);
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+    return;
+  }
   if (purpose === 'ticket_reply_attachment') {
     if (!ticketId) throw new BadRequestException('A reply upload requires a ticket');
     const client = await getDbPool().connect();

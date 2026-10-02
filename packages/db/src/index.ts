@@ -642,6 +642,7 @@ export * from './schema/config';
 export * from './schema/storage-record';
 export * from './schema/otp-challenge';
 export * from './schema/users';
+export * from './schema/conversation-identities';
 export * from './schema/sessions';
 export * from './schema/products';
 export * from './schema/password-history';

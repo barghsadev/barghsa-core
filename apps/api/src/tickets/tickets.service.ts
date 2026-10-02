@@ -80,6 +80,7 @@ export interface TicketCommentRow {
   visibility: 'public' | 'internal';
   bodyFormat: 'plain' | 'markdown';
   authorContext: 'customer' | 'staff' | 'unknown';
+  author?: { displayName: string | null; avatarUrl: string | null } | null;
   attachments: { key: string; fileName: string; contentType: string; url: string }[];
   attachmentCount: number;
   createdAt: Date;
@@ -1316,6 +1317,41 @@ export class TicketsService {
     rows: Record<string, unknown>[],
     client: Pick<PoolClient, 'query'>
   ): Promise<TicketCommentRow[]> {
+    // These rows have already passed ticket authorization and visibility filtering.
+    // Project only explicitly shared identity, never login/contact columns.
+    const identities = rows.length
+      ? (
+          await client.query(
+            `SELECT i.user_id,i.display_name,s.storage_key AS avatar_key FROM conversation_identities i
+       JOIN users u ON u.user_id=i.user_id AND u.disabled_at IS NULL AND u.activation_token IS NULL
+       LEFT JOIN storage_records s ON s.storage_key=i.avatar_key AND s.status='immutable'
+       AND s.metadata->>'purpose'='conversation_avatar' AND s.metadata->>'uploadedBy'=i.user_id
+       WHERE i.user_id=ANY($1::text[])`,
+            [[...new Set(rows.map((row) => row.author_id))]]
+          )
+        ).rows
+      : [];
+    const avatarRows = identities.filter(
+      (identity) =>
+        typeof identity.avatar_key === 'string' &&
+        identity.avatar_key.startsWith('conversation-avatars/')
+    );
+    const avatarUrls = await this.attachmentService.downloadUrls(
+      avatarRows.map((identity) => identity.avatar_key as string),
+      'conversation_avatar'
+    );
+    const avatars = new Map(
+      avatarRows.map((identity, index) => [identity.user_id, avatarUrls[index] ?? null])
+    );
+    const authors = new Map(
+      identities.map((identity) => [
+        identity.user_id,
+        {
+          displayName: identity.display_name as string | null,
+          avatarUrl: avatars.get(identity.user_id) ?? null,
+        },
+      ])
+    );
     const keys = rows.flatMap((row) =>
       Array.isArray(row.attachments)
         ? row.attachments.filter(
@@ -1349,6 +1385,7 @@ export class TicketsService {
     );
     return rows.map((row) => ({
       ...mapCommentRow(row),
+      author: authors.get(row.author_id) ?? null,
       attachments: (Array.isArray(row.attachments) ? row.attachments : []).flatMap((key) => {
         const file = details.get(key);
         return file?.url ? [file as TicketCommentRow['attachments'][number]] : [];

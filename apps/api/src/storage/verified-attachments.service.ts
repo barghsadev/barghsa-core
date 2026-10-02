@@ -19,8 +19,13 @@ import type { DualApprovalQueryClient } from '../admin/dual-approval-resolution.
 const MAX_BYTES = 10 * 1024 * 1024;
 const MIME = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
 export type AttachmentPurpose =
-  'ticket_attachment' | 'ticket_reply_attachment' | 'legal_profile_document' | 'branding_logo';
+  | 'ticket_attachment'
+  | 'ticket_reply_attachment'
+  | 'legal_profile_document'
+  | 'branding_logo'
+  | 'conversation_avatar';
 function prefix(purpose: AttachmentPurpose) {
+  if (purpose === 'conversation_avatar') return 'conversation-avatars/';
   if (purpose === 'branding_logo') return 'branding-assets/';
   if (purpose === 'ticket_reply_attachment') return 'ticket-reply-attachments/';
   return purpose === 'ticket_attachment' ? 'ticket-attachments/' : 'legal-profile-documents/';
@@ -64,7 +69,9 @@ export class VerifiedAttachmentsService {
       const object = await this.storage.getObject(key);
       const read = await readCappedBytes(
         object.body,
-        purpose === 'branding_logo' ? 2 * 1024 * 1024 : MAX_BYTES
+        purpose === 'branding_logo' || purpose === 'conversation_avatar'
+          ? 2 * 1024 * 1024
+          : MAX_BYTES
       );
       if (read.truncated) throw new BadRequestException('Attachment file is too large');
       const bytes = Buffer.from(read.bytes),
@@ -73,7 +80,9 @@ export class VerifiedAttachmentsService {
         throw new BadRequestException('Attachment size changed after upload verification');
       const contentType = pickDetectedContentType(
         sniffContentTypes(bytes.subarray(0, SNIFF_SAMPLE_BYTES)),
-        purpose === 'branding_logo' ? ['image/png', 'image/jpeg', 'image/webp'] : MIME
+        purpose === 'branding_logo' || purpose === 'conversation_avatar'
+          ? ['image/png', 'image/jpeg', 'image/webp']
+          : MIME
       );
       if (!contentType) throw new BadRequestException('Unsupported attachment file content');
       const digest = createHash('sha256').update(bytes).digest('hex');

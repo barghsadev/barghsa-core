@@ -46,6 +46,7 @@ describe('TicketsService', () => {
   beforeEach(() => {
     service = new TicketsService();
     mockPool.query.mockReset();
+    mockPool.query.mockResolvedValue({ rows: [] });
   });
 
   // Creation covered through HTTP/PostgreSQL tests.

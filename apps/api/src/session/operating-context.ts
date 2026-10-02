@@ -9,6 +9,9 @@ const customerRoute =
 const customerAiRoute = /^\/api\/ai\/knowledge(?:\/|$)/;
 
 export function requireRouteOperatingContext(path: string, context: OperatingContext): void {
+  // This self-owned identity is shared across customer and staff conversations.
+  // Other /api/user routes retain their existing customer-context boundary.
+  if (/^\/api\/user\/settings\/conversation-identity\/?$/.test(path)) return;
   if (
     (staffRoute.test(path) && context !== 'staff') ||
     ((customerRoute.test(path) || customerAiRoute.test(path)) && context !== 'customer')

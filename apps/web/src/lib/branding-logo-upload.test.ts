@@ -1,5 +1,9 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { uploadBrandingLogo } from './branding-logo-upload.js';
+import {
+  uploadBrandingLogo,
+  uploadConversationPhoto,
+  isConversationPhoto,
+} from './branding-logo-upload.js';
 vi.mock('./csrf.js', () => ({
   withCsrf: (headers: object) => ({ ...headers, 'X-CSRF-Token': 'fixture-token' }),
 }));
@@ -70,3 +74,53 @@ it('propagates cancellation without recording the upload', async () => {
   });
   expect(request).toHaveBeenCalledTimes(1);
 });
+it('binds verified conversation photos to account purpose without a profile or ticket', async () => {
+  const request = setup();
+  await uploadConversationPhoto(file(), new AbortController().signal);
+  for (const index of [0, 3]) {
+    const body = JSON.parse(request.mock.calls[index]![1]!.body as string);
+    expect(body).toMatchObject({ purpose: 'conversation_avatar', category: 'image' });
+    expect(body).not.toHaveProperty('profileId');
+    expect(body).not.toHaveProperty('ticketId');
+  }
+});
+it.each(['png', 'jpg', 'webp'])(
+  'allows a non-empty %s photo with an inferred MIME type',
+  (extension) => {
+    expect(isConversationPhoto(new File(['image'], `photo.${extension}`))).toBe(true);
+  }
+);
+it.each([
+  new File([], 'empty.png', { type: 'image/png' }),
+  new File(['pdf'], 'photo.pdf', { type: 'application/pdf' }),
+  new File(['svg'], 'photo.svg', { type: 'image/svg+xml' }),
+  new File([new Uint8Array(2 * 1024 * 1024 + 1)], 'photo.png', { type: 'image/png' }),
+])('rejects invalid account photos before storage', async (invalid) => {
+  const request = setup();
+  await expect(uploadConversationPhoto(invalid, new AbortController().signal)).rejects.toThrow(
+    'INVALID_PHOTO'
+  );
+  expect(request).not.toHaveBeenCalled();
+});
+
+it.each([0, 2, 3])(
+  'exposes account denial at photo stage %i without continuing the upload',
+  async (stage) => {
+    const responses = [
+      reply({
+        key: 'uploads/image/verified.png',
+        presignedUrl: 'https://storage.example.test/photo',
+      }),
+      reply({}),
+      reply({ status: 'confirmed' }),
+      reply({}),
+    ];
+    responses[stage] = reply({}, 403);
+    const request = vi.fn<typeof fetch>().mockImplementation(async () => responses.shift()!);
+    vi.stubGlobal('fetch', request);
+    await expect(uploadConversationPhoto(file(), new AbortController().signal)).rejects.toThrow(
+      'denied'
+    );
+    expect(request).toHaveBeenCalledTimes(stage + 1);
+  }
+);

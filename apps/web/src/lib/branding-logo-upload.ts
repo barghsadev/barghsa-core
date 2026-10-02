@@ -1,6 +1,24 @@
 import { withCsrf } from './csrf.js';
 
-export async function uploadBrandingLogo(file: File, signal: AbortSignal): Promise<string> {
+export function isConversationPhoto(file: File): boolean {
+  return (
+    file.size > 0 &&
+    file.size <= 2 * 1024 * 1024 &&
+    /\.(png|jpe?g|webp)$/i.test(file.name) &&
+    (!file.type || ['image/png', 'image/jpeg', 'image/webp'].includes(file.type))
+  );
+}
+
+export async function uploadConversationPhoto(file: File, signal: AbortSignal): Promise<string> {
+  if (!isConversationPhoto(file)) throw new Error('INVALID_PHOTO');
+  return uploadBrandingLogo(file, signal, 'conversation_avatar');
+}
+
+export async function uploadBrandingLogo(
+  file: File,
+  signal: AbortSignal,
+  purpose: 'branding_logo' | 'conversation_avatar' = 'branding_logo'
+): Promise<string> {
   const type =
     file.type ||
     (/\.png$/i.test(file.name)
@@ -31,8 +49,10 @@ export async function uploadBrandingLogo(file: File, signal: AbortSignal): Promi
     });
   const response = await post('/api/upload/presigned-url', {
     ...details,
-    purpose: 'branding_logo',
+    purpose,
   });
+  if (purpose === 'conversation_avatar' && [401, 403].includes(response.status))
+    throw new Error('denied');
   if (!response.ok) throw new Error('UPLOAD_FAILED');
   const upload: unknown = await response.json();
   if (
@@ -53,11 +73,15 @@ export async function uploadBrandingLogo(file: File, signal: AbortSignal): Promi
   if (!put.ok) throw new Error('UPLOAD_FAILED');
   const key = encodeURIComponent(upload.key);
   const verified = await post(`/api/upload/${key}/verify`);
+  if (purpose === 'conversation_avatar' && [401, 403].includes(verified.status))
+    throw new Error('denied');
   if (!verified.ok) throw new Error('UPLOAD_FAILED');
   const check: unknown = await verified.json();
   if (!check || typeof check !== 'object' || !('status' in check) || check.status !== 'confirmed')
     throw new Error('UPLOAD_FAILED');
-  const record = await post(`/api/upload/${key}/record`, { ...details, purpose: 'branding_logo' });
+  const record = await post(`/api/upload/${key}/record`, { ...details, purpose });
+  if (purpose === 'conversation_avatar' && [401, 403].includes(record.status))
+    throw new Error('denied');
   if (!record.ok) throw new Error('UPLOAD_FAILED');
   return upload.key;
 }

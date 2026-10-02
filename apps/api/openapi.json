@@ -28850,6 +28850,103 @@
         ]
       }
     },
+    "/api/user/settings/conversation-identity": {
+      "get": {
+        "operationId": "ConversationIdentityController_read",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "avatarUploadKey": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "avatarUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "maxLength": 80,
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "revision": {
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "displayName",
+                    "avatarUrl",
+                    "avatarUploadKey",
+                    "revision"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Read your explicitly shared conversation name and photo",
+        "tags": [
+          "User Settings"
+        ]
+      },
+      "put": {
+        "operationId": "ConversationIdentityController_update",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "avatarUploadKey": {
+                    "description": "Omit to keep the current photo; null removes it. A supplied key must be your verified conversation_avatar upload.",
+                    "maxLength": 256,
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "displayName": {
+                    "maxLength": 80,
+                    "minLength": 1,
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "revision": {
+                    "maximum": 2147483646,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "displayName",
+                  "revision"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Saved identity and current revision, including a short-lived photo URL."
+          },
+          "409": {
+            "description": "The identity changed since the submitted revision."
+          }
+        },
+        "summary": "Set or remove your shared conversation name and verified photo",
+        "tags": [
+          "User Settings"
+        ]
+      }
+    },
     "/api/user/settings/marketing-consent": {
       "get": {
         "operationId": "UserSettingsController_getMarketingConsent",

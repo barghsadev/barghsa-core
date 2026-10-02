@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, Badge, cn } from '@barghsa/ui';
+import { Avatar, AvatarImage, AvatarFallback, Badge, cn } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/app';
 import TosContent from './TosContent.js';
 import { FileText } from 'lucide-react';
@@ -11,6 +11,7 @@ export interface TicketComment {
   createdAt: string;
   bodyFormat?: 'plain' | 'markdown';
   authorContext?: 'customer' | 'staff' | 'unknown';
+  author?: { displayName: string | null; avatarUrl: string | null } | null;
   attachmentCount?: number;
   attachments?: readonly { key: string; fileName: string; contentType: string; url: string }[];
 }
@@ -49,12 +50,15 @@ export function TicketCommentThread({
               !internal &&
               (item.authorContext === 'customer' ||
                 (item.authorContext !== 'staff' && item.authorId === ownerId));
-            // Login usernames may be email/phone. Only the existing staff directory may supply names.
-            const name = staff
-              ? customer
-                ? customerName
-                : assignees.find((person) => person.id === item.authorId)?.name
-              : null;
+            // Chosen support names are shared explicitly; private directory names stay staff-only.
+            const name =
+              item.author?.displayName ||
+              (staff
+                ? customer
+                  ? customerName
+                  : assignees.find((person) => person.id === item.authorId)?.name
+                : null);
+            const avatar = item.author?.avatarUrl;
             const label =
               name || t(customer ? 'tickets.customerAuthor' : 'tickets.staffAuthor', locale);
             return (
@@ -71,6 +75,9 @@ export function TicketCommentThread({
                 )}
               >
                 <Avatar aria-hidden="true">
+                  {avatar && /^https?:\/\//i.test(avatar) && (
+                    <AvatarImage src={avatar} alt="" referrerPolicy="no-referrer" />
+                  )}
                   <AvatarFallback>{Array.from(label).slice(0, 2).join('')}</AvatarFallback>
                 </Avatar>
                 <div className="flex min-w-0 flex-1 flex-col gap-2">
