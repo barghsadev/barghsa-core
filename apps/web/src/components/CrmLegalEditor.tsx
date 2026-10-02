@@ -1,5 +1,5 @@
 import { useId, useRef, useState, type FormEvent, type RefObject } from 'react';
-import { Button, Input, Label } from '@barghsa/ui';
+import { Button, Input, Label, DependentSelect } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/crm';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
 import { useLocale } from '../hooks/useLocale.js';
@@ -205,28 +205,54 @@ export function CrmLegalEditor({
               'aria-invalid': invalid,
               'aria-describedby': invalid ? fieldId + '-error' : undefined,
             };
+            const dependencyField =
+              field === 'officialCityId'
+                ? 'officialProvinceId'
+                : field === 'representativeCityId'
+                  ? 'representativeProvinceId'
+                  : null;
             return (
               <div key={field} className="space-y-1 min-w-0">
                 <Label htmlFor={fieldId}>{label(field)}</Label>
                 {list ? (
                   <>
-                    <select
-                      {...inputProps}
-                      disabled={!list.ready}
-                      className="w-full rounded border bg-background text-foreground p-2"
-                    >
-                      <option value="">{label(field)}</option>
-                      {values[field] === legalInfo[field] &&
-                        values[field] &&
-                        !list.options.some((row) => row.id === values[field]) && (
-                          <option value={values[field]}>{currentName}</option>
-                        )}
-                      {list.options.map((row) => (
-                        <option key={row.id} value={row.id}>
-                          {locale === 'fa' ? row.nameFa : row.nameEn}
-                        </option>
-                      ))}
-                    </select>
+                    {dependencyField ? (
+                      <DependentSelect
+                        {...inputProps}
+                        dependencyValue={values[dependencyField]}
+                        ready={list.ready}
+                        loading={list.loading}
+                        options={list.options.map((city) => ({
+                          value: city.id,
+                          label: locale === 'fa' ? city.nameFa : city.nameEn,
+                          dependencyValue: city.provinceId ?? '',
+                        }))}
+                        placeholder={label(field)}
+                        savedOption={{
+                          value: legalInfo[field] ?? '',
+                          label: currentName,
+                          dependencyValue: legalInfo[dependencyField] ?? '',
+                        }}
+                      />
+                    ) : (
+                      <select
+                        {...inputProps}
+                        disabled={!list.ready}
+                        className="w-full rounded border bg-background text-foreground p-2"
+                      >
+                        <option value="">{label(field)}</option>
+                        {values[field] === legalInfo[field] &&
+                          values[field] &&
+                          !list.options.some((row) => row.id === values[field]) && (
+                            <option value={values[field]}>{currentName}</option>
+                          )}
+                        {list.options.map((row) => (
+                          <option key={row.id} value={row.id}>
+                            {locale === 'fa' ? row.nameFa : row.nameEn}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                     <GeographyLoadError
                       {...list}
                       locale={locale}

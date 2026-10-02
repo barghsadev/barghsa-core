@@ -1,5 +1,6 @@
 import type { Page, Route } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
+import { fullNavigation } from './navigation-fixture';
 const profileId = '11111111-1111-4111-8111-111111111111';
 const addressId = '22222222-2222-4222-8222-222222222222';
 const p1 = '33333333-3333-4333-8333-333333333333',
@@ -9,6 +10,7 @@ const c1 = '55555555-5555-4555-8555-555555555555',
 type Locale = 'fa' | 'en';
 async function setup(page: Page, locale: Locale, allowed = true, archived = false) {
   await page.addInitScript((lang) => {
+    localStorage.setItem('barghsa.locale', lang);
     if (document.documentElement) document.documentElement.lang = lang;
     new MutationObserver(() => {
       document.documentElement.lang = lang;
@@ -64,6 +66,16 @@ async function setup(page: Page, locale: Locale, allowed = true, archived = fals
     siblingProfiles: [],
   };
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        userId: 'staff-viewer',
+        isStaff: true,
+        requiresTosAcceptance: false,
+        navigation: fullNavigation('staff'),
+      },
+    })
+  );
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'UTC' } })
   );
@@ -213,13 +225,13 @@ for (const locale of ['fa', 'en'] as const) {
     await confirm.click();
     await expect(dialog.getByRole('alert')).toBeVisible();
     await expect(full).toHaveValue('New street');
-    await dialog.locator('input[type="password"]').fill('fixture-password-only');
+    await expect(dialog.locator('input[type="password"]')).toHaveCount(0);
     await confirm.click();
     await expect(dialog.getByRole('alert')).toBeVisible();
     await expect(
       panel.getByText(locale === 'fa' ? 'آدرس ذخیره شد.' : 'Address saved.', { exact: true })
     ).toHaveCount(0);
-    await dialog.locator('input[type="password"]').fill('fixture-password-only');
+    await expect(dialog.locator('input[type="password"]')).toHaveCount(0);
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     await expect(panel.getByRole('status')).toHaveText(

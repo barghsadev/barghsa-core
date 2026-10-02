@@ -3,6 +3,64 @@ import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
 import { useGeographyOptions } from './useGeographyOptions.js';
 
+for (const invalid of [
+  { status: 503, data: [] },
+  { status: 200, data: {} },
+  { status: 200, data: [{ id: 'c', nameFa: 'شهر', nameEn: 'City', provinceId: 'wrong' }] },
+  { status: 200, data: [{ id: 'c', nameFa: '', nameEn: 'City', provinceId: 'a' }] },
+  {
+    status: 200,
+    data: Array(2).fill({ id: 'c', nameFa: 'شهر', nameEn: 'City', provinceId: 'a' }),
+  },
+]) {
+  it(`rejects invalid city catalogues and recovers with an independent retry: ${JSON.stringify(invalid)}`, async () => {
+    const host = document.createElement('div');
+    const root = createRoot(host);
+    const requests = vi
+      .fn()
+      .mockResolvedValueOnce(Response.json(invalid.data, { status: invalid.status }))
+      .mockResolvedValueOnce(
+        Response.json([{ id: 'c', nameFa: 'شهر', nameEn: 'City', provinceId: 'a' }])
+      );
+    vi.stubGlobal('fetch', requests);
+    function Consumer() {
+      const state = useGeographyOptions('/provinces/a/cities', 'a');
+      return (
+        <>
+          <input defaultValue="Unrelated address draft" />
+          <output>
+            {JSON.stringify({ options: state.options, ready: state.ready, error: state.error })}
+          </output>
+          <button onClick={state.retry}>Retry</button>
+        </>
+      );
+    }
+    try {
+      await act(async () => root.render(<Consumer />));
+      expect(JSON.parse(host.querySelector('output')!.textContent!)).toEqual({
+        options: [],
+        ready: false,
+        error: true,
+      });
+      await act(async () => host.querySelector('button')!.click());
+      expect(JSON.parse(host.querySelector('output')!.textContent!)).toEqual({
+        options: [{ id: 'c', nameFa: 'شهر', nameEn: 'City', provinceId: 'a' }],
+        ready: true,
+        error: false,
+      });
+      expect(host.querySelector('input')!.value).toBe('Unrelated address draft');
+      expect(requests).toHaveBeenCalledTimes(2);
+      expect(requests.mock.calls.map(([path]) => path)).toEqual([
+        '/provinces/a/cities',
+        '/provinces/a/cities',
+      ]);
+    } finally {
+      await act(async () => root.unmount());
+      vi.unstubAllGlobals();
+    }
+  });
+}
+
 for (const nextProvince of ['b', null]) {
   it(`ignores a late city response after the province changes to ${nextProvince}`, async () => {
     const host = document.createElement('div');

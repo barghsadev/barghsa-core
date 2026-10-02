@@ -4,6 +4,7 @@ export interface GeographyOption {
   id: string;
   nameFa: string;
   nameEn: string;
+  provinceId?: string;
 }
 interface State {
   path: string | null;

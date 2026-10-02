@@ -2,6 +2,7 @@ import type { Page, Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/crm';
 import { test, expect } from './coverage-fixture';
+import { fullNavigation } from './navigation-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const p1 = '33333333-3333-4333-8333-333333333333',
@@ -43,6 +44,7 @@ const label = (key: string, locale: Locale) =>
 async function setup(page: Page, locale: Locale, dark = false, allowed = true, archived = false) {
   await page.addInitScript(
     ({ locale, dark }) => {
+      localStorage.setItem('barghsa.locale', locale);
       localStorage.setItem('theme', dark ? 'dark' : 'light');
       const apply = () => {
         document.documentElement.lang = locale;
@@ -126,6 +128,16 @@ async function setup(page: Page, locale: Locale, dark = false, allowed = true, a
     siblingProfiles: [],
   };
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        userId: 'staff-viewer',
+        isStaff: true,
+        requiresTosAcceptance: false,
+        navigation: fullNavigation('staff'),
+      },
+    })
+  );
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'UTC' } })
   );
@@ -305,11 +317,12 @@ for (const locale of ['fa', 'en'] as const) {
         });
         await confirm.click();
         await expect(dialog.locator('input[type=password]')).toBeVisible();
+        await dialog.locator('input[type=password]').fill('fixture-password-only');
         for (let i = 0; i < 3; i++) {
-          await dialog.locator('input[type=password]').fill('fixture-password-only');
           await confirm.click();
           if (i < 2) {
             await expect(dialog.getByRole('alert')).toBeVisible();
+            await expect(dialog.locator('input[type=password]')).toHaveCount(0);
             await expect(registry).toHaveValue('REG-NEW');
             await expect(panel.getByRole('status')).toHaveCount(0);
           }

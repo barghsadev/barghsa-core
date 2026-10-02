@@ -15,7 +15,7 @@ import { t } from '@barghsa/i18n/app';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { Loader2Icon, ChevronRightIcon } from 'lucide-react';
-import { Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
+import { Input, Label, Alert, AlertTitle, AlertDescription, DependentSelect } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/individual/$profileId')({
   // Presentation-only input is bounded when the wizard component loads.
@@ -81,7 +81,6 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
   const provinces = provinceOptions.options;
   const cities = cityOptions.options;
   const loadingProvinces = provinceOptions.loading;
-  const loadingCities = cityOptions.loading;
   const geographyUnavailable =
     provinceOptions.loading || provinceOptions.error || cityOptions.loading || cityOptions.error;
 
@@ -489,7 +488,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                             setSelectedCityId('');
                           }}
                           onBlur={() => handleBlur('provinceId')}
-                          disabled={submitting}
+                          disabled={submitting || !provinceOptions.ready}
                           className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           aria-invalid={touched.provinceId && !!errors.provinceId}
                           aria-describedby={errors.provinceId ? 'provinceId-error' : undefined}
@@ -517,32 +516,26 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                         {t('onboarding.individual.city', locale)}
                         <span className="text-destructive ml-0.5">*</span>
                       </Label>
-                      {loadingCities ? (
-                        <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
-                          <Loader2Icon className="h-4 w-4 animate-spin" />
-                          {t('onboarding.individual.loading', locale)}
-                        </div>
-                      ) : (
-                        <select
-                          id="cityId"
-                          value={selectedCityId}
-                          onChange={(e) => setSelectedCityId(e.target.value)}
-                          onBlur={() => handleBlur('cityId')}
-                          disabled={submitting || !selectedProvinceId}
-                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                          aria-invalid={touched.cityId && !!errors.cityId}
-                          aria-describedby={errors.cityId ? 'cityId-error' : undefined}
-                        >
-                          <option value="">
-                            {t('onboarding.individual.city.placeholder', locale)}
-                          </option>
-                          {cities.map((c) => (
-                            <option key={c.id} value={c.id}>
-                              {isRtl ? c.nameFa : c.nameEn}
-                            </option>
-                          ))}
-                        </select>
-                      )}
+                      <DependentSelect
+                        id="cityId"
+                        dependencyValue={selectedProvinceId}
+                        value={selectedCityId}
+                        options={cities.map((city) => ({
+                          value: city.id,
+                          label: isRtl ? city.nameFa : city.nameEn,
+                          dependencyValue: city.provinceId ?? '',
+                        }))}
+                        ready={cityOptions.ready}
+                        loading={cityOptions.loading}
+                        placeholder={t('onboarding.individual.city.placeholder', locale)}
+                        onChange={(e) => setSelectedCityId(e.target.value)}
+                        onBlur={() => handleBlur('cityId')}
+                        disabled={submitting}
+                        aria-invalid={touched.cityId && !!errors.cityId}
+                        aria-describedby={
+                          touched.cityId && errors.cityId ? 'cityId-error' : undefined
+                        }
+                      />
                       <GeographyLoadError
                         {...cityOptions}
                         message={t('onboarding.individual.error.loadCities', locale)}

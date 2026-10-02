@@ -1,5 +1,5 @@
 import { useId, useState, type FormEvent } from 'react';
-import { Button, Input, Label } from '@barghsa/ui';
+import { Button, Input, Label, DependentSelect } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/crm';
 import { useLocale } from '../hooks/useLocale.js';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
@@ -161,10 +161,23 @@ export function CrmAddressEditor({
             </div>
             <div className="space-y-1">
               <Label htmlFor={fieldId + '-city'}>{t('crm.profile.field.city', locale)}</Label>
-              <select
+              <DependentSelect
                 id={fieldId + '-city'}
+                dependencyValue={fields.provinceId}
                 value={fields.cityId}
-                disabled={!cities.ready}
+                ready={cities.ready}
+                loading={cities.loading}
+                placeholder={t('crm.address.chooseCity', locale)}
+                options={cities.options.map((city) => ({
+                  value: city.id,
+                  label: label(city),
+                  dependencyValue: city.provinceId ?? '',
+                }))}
+                savedOption={{
+                  value: address.cityId,
+                  label: label(address.cityName),
+                  dependencyValue: address.provinceId,
+                }}
                 onChange={(event) =>
                   setFields((current) => ({ ...current, cityId: event.target.value }))
                 }
@@ -173,18 +186,7 @@ export function CrmAddressEditor({
                 aria-describedby={
                   attempted && errors.location ? fieldId + '-location-error' : undefined
                 }
-              >
-                <option value="">{t('crm.address.chooseCity', locale)}</option>
-                {fields.provinceId === address.provinceId &&
-                  !cities.options.some((c) => c.id === address.cityId) && (
-                    <option value={address.cityId}>{label(address.cityName)}</option>
-                  )}
-                {cities.options.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {label(c)}
-                  </option>
-                ))}
-              </select>
+              />
               <GeographyLoadError
                 {...cities}
                 message={t('crm.address.cityError', locale)}

@@ -23,6 +23,7 @@ import { Loader2Icon, ChevronRightIcon, UploadIcon } from 'lucide-react';
 import {
   Input,
   Label,
+  DependentSelect,
   Alert,
   AlertTitle,
   AlertDescription,
@@ -138,8 +139,6 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
   const representativeCities = representativeCityOptions.options;
   const companyTypes = companyTypeOptions.options;
   const loadingProvinces = provinceOptions.loading;
-  const loadingCities = cityOptions.loading;
-  const loadingRepresentativeCities = representativeCityOptions.loading;
   const loadingCompanyTypes = companyTypeOptions.loading;
   const companyTypesError = companyTypeOptions.error;
   const fetchCompanyTypes = companyTypeOptions.retry;
@@ -782,41 +781,61 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         (field) => (
                           <div key={field} className="space-y-2">
                             <Label htmlFor={field}>{t(`onboarding.legal.${field}`, locale)}</Label>
-                            <select
-                              id={field}
-                              required
-                              value={representative[field]}
-                              disabled={
-                                submitting ||
-                                (field === 'representativeProvinceId'
-                                  ? loadingProvinces
-                                  : !representative.representativeProvinceId ||
-                                    loadingRepresentativeCities)
-                              }
-                              onChange={(event) =>
-                                setRepresentative((prev) => ({
-                                  ...prev,
-                                  [field]: event.target.value,
-                                  ...(field === 'representativeProvinceId'
-                                    ? { representativeCityId: '' }
-                                    : {}),
-                                }))
-                              }
-                              onBlur={() => handleBlur(field)}
-                              aria-invalid={touched[field] && !!errors[field]}
-                              aria-describedby={errors[field] ? `${field}-error` : undefined}
-                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                            >
-                              <option value="">{t(`onboarding.legal.${field}`, locale)}</option>
-                              {(field === 'representativeProvinceId'
-                                ? provinces
-                                : representativeCities
-                              ).map((item) => (
-                                <option key={item.id} value={item.id}>
-                                  {isRtl ? item.nameFa : item.nameEn}
-                                </option>
-                              ))}
-                            </select>
+                            {field === 'representativeCityId' ? (
+                              <DependentSelect
+                                id={field}
+                                required
+                                dependencyValue={representative.representativeProvinceId}
+                                value={representative[field]}
+                                ready={representativeCityOptions.ready}
+                                loading={representativeCityOptions.loading}
+                                options={representativeCities.map((city) => ({
+                                  value: city.id,
+                                  label: isRtl ? city.nameFa : city.nameEn,
+                                  dependencyValue: city.provinceId ?? '',
+                                }))}
+                                placeholder={t(`onboarding.legal.${field}`, locale)}
+                                disabled={submitting}
+                                onChange={(event) =>
+                                  setRepresentative((prev) => ({
+                                    ...prev,
+                                    representativeCityId: event.target.value,
+                                  }))
+                                }
+                                onBlur={() => handleBlur(field)}
+                                aria-invalid={touched[field] && !!errors[field]}
+                                aria-describedby={
+                                  touched[field] && errors[field] ? `${field}-error` : undefined
+                                }
+                              />
+                            ) : (
+                              <select
+                                id={field}
+                                required
+                                value={representative[field]}
+                                disabled={submitting || !provinceOptions.ready}
+                                onChange={(event) =>
+                                  setRepresentative((prev) => ({
+                                    ...prev,
+                                    [field]: event.target.value,
+                                    ...(field === 'representativeProvinceId'
+                                      ? { representativeCityId: '' }
+                                      : {}),
+                                  }))
+                                }
+                                onBlur={() => handleBlur(field)}
+                                aria-invalid={touched[field] && !!errors[field]}
+                                aria-describedby={errors[field] ? `${field}-error` : undefined}
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                              >
+                                <option value="">{t(`onboarding.legal.${field}`, locale)}</option>
+                                {provinces.map((item) => (
+                                  <option key={item.id} value={item.id}>
+                                    {isRtl ? item.nameFa : item.nameEn}
+                                  </option>
+                                ))}
+                              </select>
+                            )}
                             {field === 'representativeCityId' && (
                               <GeographyLoadError
                                 {...representativeCityOptions}
@@ -1080,7 +1099,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                               setOfficialCityId('');
                             }}
                             onBlur={() => handleBlur('officialProvinceId')}
-                            disabled={submitting}
+                            disabled={submitting || !provinceOptions.ready}
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             <option value="">
@@ -1103,29 +1122,29 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                       {/* City */}
                       <div className="space-y-2">
                         <Label htmlFor="officialCityId">{isRtl ? 'شهر' : 'City'}</Label>
-                        {loadingCities ? (
-                          <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
-                            <Loader2Icon className="h-4 w-4 animate-spin" />
-                            {isRtl ? 'در حال بارگذاری...' : 'Loading...'}
-                          </div>
-                        ) : (
-                          <select
-                            id="officialCityId"
-                            required
-                            value={officialCityId}
-                            onChange={(e) => setOfficialCityId(e.target.value)}
-                            onBlur={() => handleBlur('officialCityId')}
-                            disabled={submitting || !officialProvinceId}
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                          >
-                            <option value="">{isRtl ? 'شهر را انتخاب کنید' : 'Select city'}</option>
-                            {cities.map((c) => (
-                              <option key={c.id} value={c.id}>
-                                {isRtl ? c.nameFa : c.nameEn}
-                              </option>
-                            ))}
-                          </select>
-                        )}
+                        <DependentSelect
+                          id="officialCityId"
+                          required
+                          dependencyValue={officialProvinceId}
+                          value={officialCityId}
+                          ready={cityOptions.ready}
+                          loading={cityOptions.loading}
+                          options={cities.map((city) => ({
+                            value: city.id,
+                            label: isRtl ? city.nameFa : city.nameEn,
+                            dependencyValue: city.provinceId ?? '',
+                          }))}
+                          placeholder={t('onboarding.individual.city.placeholder', locale)}
+                          onChange={(e) => setOfficialCityId(e.target.value)}
+                          onBlur={() => handleBlur('officialCityId')}
+                          disabled={submitting}
+                          aria-invalid={touched.officialCityId && !!errors.officialCityId}
+                          aria-describedby={
+                            touched.officialCityId && errors.officialCityId
+                              ? 'officialCityId-error'
+                              : undefined
+                          }
+                        />
                         <GeographyLoadError
                           {...cityOptions}
                           message={t('onboarding.individual.error.loadCities', locale)}
@@ -1133,7 +1152,11 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                           testId="onboarding-official-cities-retry"
                         />
                         {touched.officialCityId && errors.officialCityId && (
-                          <p className="text-sm text-destructive" role="alert">
+                          <p
+                            id="officialCityId-error"
+                            className="text-sm text-destructive"
+                            role="alert"
+                          >
                             {errors.officialCityId}
                           </p>
                         )}

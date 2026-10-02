@@ -145,6 +145,89 @@ const submit = (page: Page, locale: 'en' | 'fa') =>
     .getByRole('button', { name: locale === 'fa' ? 'ثبت پروفایل' : 'Submit profile', exact: true })
     .click();
 
+for (const locale of ['en', 'fa'] as const)
+  for (const address of ['personal', 'official', 'representative'] as const) {
+    test(`dependent ${address} city selection retains drafts through failure and ignores late replies (${locale})`, async ({
+      page,
+    }) => {
+      const type = address === 'personal' ? 'INDIVIDUAL' : 'LEGAL';
+      const state = await fixture(page, locale, type, type === 'INDIVIDUAL' ? individual : legal);
+      const nextProvince = '44444444-4444-4444-8444-444444444444';
+      let fail = true;
+      let finish!: () => void;
+      let requested!: () => void;
+      const waiting = new Promise<void>((resolve) => {
+        requested = resolve;
+      });
+      const held = new Promise<void>((resolve) => {
+        finish = resolve;
+      });
+      await page.route('**/api/geography/provinces', (route) =>
+        route.fulfill({
+          json: [
+            { id: provinceId, nameFa: 'تهران', nameEn: 'Tehran' },
+            { id: nextProvince, nameFa: 'فارس', nameEn: 'Fars' },
+          ],
+        })
+      );
+      await page.route(`**/api/geography/provinces/${provinceId}/cities`, (route) =>
+        fail ? route.fulfill({ status: 503, json: {} }) : route.fallback()
+      );
+      await page.route(`**/api/geography/provinces/${nextProvince}/cities`, async (route) => {
+        requested();
+        await held;
+        await route.fulfill({
+          json: [
+            { id: 'late-city', provinceId: nextProvince, nameFa: 'شیراز', nameEn: 'Late city' },
+          ],
+        });
+      });
+      const prefix = address === 'personal' ? '' : address;
+      const field = (suffix: string) =>
+        prefix ? prefix + suffix[0]!.toUpperCase() + suffix.slice(1) : suffix;
+      const stage = address === 'personal' ? 2 : address === 'official' ? 3 : 1;
+      await page.goto(`/onboarding/${type.toLowerCase()}/${profileId}?step=${stage}`);
+      const city = page.locator('#' + field('cityId'));
+      const province = page.locator('#' + field('provinceId'));
+      const full = page.locator('#' + field('fullAddress'));
+      const retry = page.getByTestId(
+        address === 'personal' ? 'onboarding-cities-retry' : `onboarding-${address}-cities-retry`
+      );
+      await expect(retry).toBeVisible();
+      await expect(city).toBeDisabled();
+      await full.fill('Retained address draft');
+      fail = false;
+      await retry.click();
+      await expect(city).toBeEnabled();
+      await expect(city).toHaveValue(cityId);
+      await expect(full).toHaveValue('Retained address draft');
+      await province.selectOption(nextProvince);
+      await waiting;
+      await expect(city).toBeDisabled();
+      await expect(city).toHaveAttribute('aria-busy', 'true');
+      await expect(city).toHaveValue('');
+      await province.selectOption(provinceId);
+      await expect(city).toBeEnabled();
+      await expect(city).toHaveValue('');
+      finish();
+      await city.selectOption(cityId);
+      await expect(city.locator('option[value="late-city"]')).toHaveCount(0);
+      await expect(full).toHaveValue('Retained address draft');
+      expect(state.submissions).toHaveLength(0);
+      await expect(city).toHaveAttribute('data-slot', 'dependent-select');
+      expect((await new AxeBuilder({ page }).include('.container').analyze()).violations).toEqual(
+        []
+      );
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true
+      );
+      if (address === 'official')
+        await page.locator('.container').screenshot({
+          path: `/tmp/barghsa-dependent-select-${locale}-${test.info().project.name}.png`,
+        });
+    });
+  }
+
 function leaveControls(page: Page, locale: 'en' | 'fa') {
   const dialog = page.getByRole('dialog');
   return {
@@ -866,8 +949,9 @@ for (const locale of ['en', 'fa'] as const) {
       r.fulfill({ json: { profiles: [], activeProfileId: null, hasDefault: false } })
     );
     for (const path of ['/app', '/app/unknown']) {
-      await page.goto(path, { waitUntil: 'commit' });
+      await page.goto(path);
       await expect(page).toHaveURL(/\/onboarding$/);
+      await expect(page.getByRole('checkbox').first()).toBeEnabled();
     }
     expect(state.starts).toHaveLength(0);
   });
