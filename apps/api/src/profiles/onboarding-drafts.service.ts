@@ -3,7 +3,7 @@ import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { z } from 'zod';
 
-const limits: Record<string, number> = {
+const legalLimits: Record<string, number> = {
   documentKeys: 4096,
   legalName: 200,
   nationalIdentifier: 11,
@@ -28,21 +28,37 @@ const limits: Record<string, number> = {
   representativeFullAddress: 500,
   representativePostalCode: 10,
 };
-export const legalDraftInputSchema = z
-  .object({
-    expectedVersion: z.number().int().min(0).max(2147483646),
-    // Incomplete values are intentional while editing. Full validation happens on submission.
-    data: z
-      .object(
-        Object.fromEntries(
-          Object.entries(limits).map(([key, max]) => [key, z.string().max(max).optional()])
-        )
+const individualLimits: Record<string, number> = {
+  title: 50,
+  firstName: 100,
+  lastName: 100,
+  nationalId: 10,
+  provinceId: 36,
+  cityId: 36,
+  fullAddress: 500,
+  postalCode: 10,
+};
+const draftFields = (limits: Record<string, number>) =>
+  z
+    .object(
+      Object.fromEntries(
+        Object.entries(limits).map(([key, max]) => [key, z.string().max(max).optional()])
       )
-      .strict()
-      .refine(
-        (data) => Buffer.byteLength(JSON.stringify(data), 'utf8') <= 16384,
-        'Draft is too large'
-      ),
+    )
+    .strict()
+    .refine(
+      (data) => Buffer.byteLength(JSON.stringify(data), 'utf8') <= 16384,
+      'Draft is too large'
+    );
+const legalFields = draftFields(legalLimits);
+const individualFields = draftFields(individualLimits);
+const expectedVersion = z.number().int().min(0).max(2147483646);
+export const legalDraftInputSchema = z.object({ expectedVersion, data: legalFields }).strict();
+export const onboardingDraftInputSchema = z
+  .object({
+    expectedVersion,
+    // Incomplete values are intentional; submission validates the complete profile.
+    data: z.union([individualFields, legalFields]),
   })
   .strict();
 
@@ -51,7 +67,7 @@ export class OnboardingDraftsService {
   async get(userId: string, profileId: string) {
     const result = await getDbPool().query(
       `SELECT d.version,d.data FROM profiles p LEFT JOIN profile_onboarding_drafts d ON d.profile_id=p.id
-       WHERE p.id=$1 AND p.user_id=$2 AND p.profile_type='LEGAL' AND p.status='DRAFT' AND NOT p.archived`,
+       WHERE p.id=$1 AND p.user_id=$2 AND p.profile_type IN ('INDIVIDUAL','LEGAL') AND p.status='DRAFT' AND NOT p.archived`,
       [profileId, userId]
     );
     if (!result.rows.length)
@@ -60,18 +76,21 @@ export class OnboardingDraftsService {
   }
 
   async save(userId: string, profileId: string, input: unknown) {
-    const parsed = legalDraftInputSchema.safeParse(input);
+    const parsed = onboardingDraftInputSchema.safeParse(input);
     if (!parsed.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       const profile = await client.query(
-        "SELECT id FROM profiles WHERE id=$1 AND user_id=$2 AND profile_type='LEGAL' AND status='DRAFT' AND NOT archived FOR UPDATE",
+        "SELECT id,profile_type FROM profiles WHERE id=$1 AND user_id=$2 AND profile_type IN ('INDIVIDUAL','LEGAL') AND status='DRAFT' AND NOT archived FOR UPDATE",
         [profileId, userId]
       );
       if (!profile.rows.length)
         throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+      const fields = profile.rows[0].profile_type === 'INDIVIDUAL' ? individualFields : legalFields;
+      if (!fields.safeParse(parsed.data.data).success)
+        throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
       const current = await client.query(
         'SELECT version FROM profile_onboarding_drafts WHERE profile_id=$1',
         [profileId]

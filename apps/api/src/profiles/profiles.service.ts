@@ -475,6 +475,7 @@ export class ProfilesService {
     userId: string,
     profileId: string,
     data: {
+      draftVersion?: number | undefined;
       title?: string | undefined;
       firstName: string;
       lastName: string;
@@ -562,6 +563,15 @@ export class ProfilesService {
         );
       }
 
+      // The profile update holds the same row lock used by draft writes.
+      if (data.draftVersion !== undefined) {
+        const draft = await client.query(
+          'SELECT version FROM profile_onboarding_drafts WHERE profile_id=$1',
+          [profileId]
+        );
+        if ((draft.rows[0]?.version ?? 0) !== data.draftVersion)
+          throw new HttpException({ error: ErrorCodes.CONFLICT_VERSION.code }, 409);
+      }
       await requireAddressGeography(client, data.provinceId, data.cityId);
 
       // The profile row is already locked; retain any preliminary address as history.
@@ -589,6 +599,7 @@ export class ProfilesService {
         [userId, profileId]
       );
 
+      await client.query('DELETE FROM profile_onboarding_drafts WHERE profile_id=$1', [profileId]);
       const updatedProfile = await this.getProfileById(profileId, client);
       await client.query('COMMIT');
 
@@ -1394,11 +1405,6 @@ export class ProfilesService {
       );
     }
 
-    // Idempotent — if already active/verified, just return
-    if (profile.status !== 'DRAFT') {
-      return profile;
-    }
-
     const verificationRequired = (await this.getVerificationMode()) !== 'DISABLED';
     const client = await pool.connect();
     try {
@@ -1414,75 +1420,83 @@ export class ProfilesService {
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
           404
         );
-      if (locked.status !== 'DRAFT') {
-        await client.query('COMMIT');
-        return mapRow(locked);
-      }
-      const address = (
-        await client.query(
-          'SELECT province_id,city_id,full_address,postal_code FROM addresses WHERE profile_id=$1 AND main_address FOR SHARE',
-          [profileId]
-        )
-      ).rows[0];
-      let identityComplete = false;
-      if (locked.profile_type === 'INDIVIDUAL') {
-        identityComplete =
-          !!locked.first_name?.trim() &&
-          !!locked.last_name?.trim() &&
-          typeof locked.national_id === 'string' &&
-          validateNationalId(locked.national_id);
-      } else if (locked.profile_type === 'LEGAL') {
-        const legal = (
+      const isDraft = locked.status === 'DRAFT';
+      if (!isDraft && !['ACTIVE', 'PENDING_VERIFICATION', 'VERIFIED'].includes(locked.status))
+        throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+      if (isDraft) {
+        const address = (
           await client.query(
-            'SELECT l.* FROM legal_profiles l JOIN company_types c ON c.id=l.company_type_id WHERE l.id=$1 FOR SHARE OF l,c',
+            'SELECT province_id,city_id,full_address,postal_code FROM addresses WHERE profile_id=$1 AND main_address FOR SHARE',
             [profileId]
           )
         ).rows[0];
-        identityComplete =
-          !!legal?.representative_first_name?.trim() &&
-          !!legal?.representative_last_name?.trim() &&
-          typeof legal?.representative_national_id === 'string' &&
-          validateNationalId(legal.representative_national_id) &&
-          !!legal?.representative_full_address?.trim() &&
-          typeof legal?.representative_postal_code === 'string' &&
-          validatePostalCode(legal.representative_postal_code) &&
-          !!legal?.representative_province_id &&
-          !!legal?.representative_city_id &&
-          !!legal?.official_full_address?.trim() &&
-          typeof legal?.official_postal_code === 'string' &&
-          validatePostalCode(legal.official_postal_code) &&
-          !!legal?.official_province_id &&
-          !!legal?.official_city_id &&
-          !!legal?.legal_name?.trim() &&
-          !!legal?.registration_number?.trim() &&
-          !!legal?.representative_title?.trim() &&
-          !!legal?.representative_relationship?.trim() &&
-          typeof legal?.national_identifier === 'string' &&
-          validateLegalNationalIdentifier(legal.national_identifier);
-        if (identityComplete) {
-          await requireAddressGeography(
-            client,
-            legal.representative_province_id,
-            legal.representative_city_id
-          );
-          await requireAddressGeography(client, legal.official_province_id, legal.official_city_id);
+        let identityComplete = false;
+        if (locked.profile_type === 'INDIVIDUAL') {
+          identityComplete =
+            !!locked.first_name?.trim() &&
+            !!locked.last_name?.trim() &&
+            typeof locked.national_id === 'string' &&
+            validateNationalId(locked.national_id);
+        } else if (locked.profile_type === 'LEGAL') {
+          const legal = (
+            await client.query(
+              'SELECT l.* FROM legal_profiles l JOIN company_types c ON c.id=l.company_type_id WHERE l.id=$1 FOR SHARE OF l,c',
+              [profileId]
+            )
+          ).rows[0];
+          identityComplete =
+            !!legal?.representative_first_name?.trim() &&
+            !!legal?.representative_last_name?.trim() &&
+            typeof legal?.representative_national_id === 'string' &&
+            validateNationalId(legal.representative_national_id) &&
+            !!legal?.representative_full_address?.trim() &&
+            typeof legal?.representative_postal_code === 'string' &&
+            validatePostalCode(legal.representative_postal_code) &&
+            !!legal?.representative_province_id &&
+            !!legal?.representative_city_id &&
+            !!legal?.official_full_address?.trim() &&
+            typeof legal?.official_postal_code === 'string' &&
+            validatePostalCode(legal.official_postal_code) &&
+            !!legal?.official_province_id &&
+            !!legal?.official_city_id &&
+            !!legal?.legal_name?.trim() &&
+            !!legal?.registration_number?.trim() &&
+            !!legal?.representative_title?.trim() &&
+            !!legal?.representative_relationship?.trim() &&
+            typeof legal?.national_identifier === 'string' &&
+            validateLegalNationalIdentifier(legal.national_identifier);
+          if (identityComplete) {
+            await requireAddressGeography(
+              client,
+              legal.representative_province_id,
+              legal.representative_city_id
+            );
+            await requireAddressGeography(
+              client,
+              legal.official_province_id,
+              legal.official_city_id
+            );
+          }
         }
+        if (
+          !identityComplete ||
+          !address?.full_address?.trim() ||
+          typeof address?.postal_code !== 'string' ||
+          !validatePostalCode(address.postal_code)
+        ) {
+          throw new HttpException(
+            { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code },
+            400
+          );
+        }
+        await requireAddressGeography(client, address.province_id, address.city_id);
       }
-      if (
-        !identityComplete ||
-        !address?.full_address?.trim() ||
-        typeof address?.postal_code !== 'string' ||
-        !validatePostalCode(address.postal_code)
-      ) {
-        throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code },
-          400
-        );
-      }
-      await requireAddressGeography(client, address.province_id, address.city_id);
-
-      // Determine target status based on verification settings
-      const targetStatus = verificationRequired ? 'PENDING_VERIFICATION' : 'ACTIVE';
+      // Finished forms already set their verification status; completion preserves it.
+      const targetStatus = isDraft
+        ? verificationRequired
+          ? 'PENDING_VERIFICATION'
+          : 'ACTIVE'
+        : locked.status;
 
       // Profile locks precede account locks, as in profile context/ownership changes.
       await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [userId]);
@@ -1494,18 +1508,26 @@ export class ProfilesService {
       );
       const becomesDefault = locked.is_default || existing.rows.length === 0;
 
-      await client.query(
-        `UPDATE profiles
+      if (isDraft || becomesDefault !== locked.is_default) {
+        await client.query(
+          `UPDATE profiles
          SET status = $1, is_default = $2, updated_at = NOW()
          WHERE id = $3`,
-        [targetStatus, becomesDefault, profileId]
-      );
+          [targetStatus, becomesDefault, profileId]
+        );
 
-      await client.query(
-        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-         VALUES (uuid_generate_v7(),$1,'profile_onboarding_completed',$2::jsonb,uuid_generate_v7(),NOW())`,
-        [userId, JSON.stringify({ profileId, fromStatus: 'DRAFT', toStatus: targetStatus })]
-      );
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+         VALUES (uuid_generate_v7(),$1,$2,$3::jsonb,uuid_generate_v7(),NOW())`,
+          [
+            userId,
+            isDraft ? 'profile_onboarding_completed' : 'profile_default_selected',
+            JSON.stringify(
+              isDraft ? { profileId, fromStatus: 'DRAFT', toStatus: targetStatus } : { profileId }
+            ),
+          ]
+        );
+      }
       const updated = await this.getProfileById(profileId, client);
       await client.query('COMMIT');
 

@@ -638,7 +638,7 @@ for (const mutation of ['archive', 'complete', 'transfer']) {
           Number(
             (
               await http.pool.query(
-                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%SELECT id FROM profiles WHERE id=$1 AND user_id=$2 AND profile_type=%'"
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%SELECT id,profile_type FROM profiles WHERE id=$1 AND user_id=$2 AND profile_type IN%'"
               )
             ).rows[0].count
           )
@@ -877,3 +877,104 @@ for (const change of ['verify', 'archive']) {
     }
   });
 }
+
+it('keeps personal drafts private, rejects company fields and serializes competing edits', async () => {
+  const read = () => fetch(`${http.base}/api/onboarding/draft/${profileId}`, { headers });
+  const save = (expectedVersion: number, data: unknown) =>
+    fetch(`${http.base}/api/onboarding/draft/${profileId}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ expectedVersion, data }),
+    });
+  expect(await (await read()).json()).toEqual({ version: 0, data: {} });
+  expect((await save(0, { legalName: 'Wrong profile type' })).status).toBe(400);
+  expect((await save(0, { firstName: 'x'.repeat(101) })).status).toBe(400);
+  expect((await save(0, { firstName: 'Partial', nationalId: '123' })).status).toBe(200);
+  expect(await (await read()).json()).toEqual({
+    version: 1,
+    data: { firstName: 'Partial', nationalId: '123' },
+  });
+  const competing = await Promise.all(['One', 'Two'].map((firstName) => save(1, { firstName })));
+  expect(competing.map((r) => r.status).sort()).toEqual([200, 409]);
+  expect((await snapshot()).status).toBe('DRAFT');
+  expect((await http.pool.query('SELECT id FROM addresses')).rows).toHaveLength(0);
+  const persisted = await (await read()).json();
+  await http.pool.query(
+    "CREATE FUNCTION reject_personal_draft_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test audit failure'; END $$; CREATE TRIGGER reject_personal_draft_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='onboarding_draft_saved') EXECUTE FUNCTION reject_personal_draft_audit()"
+  );
+  expect((await save(2, { firstName: 'Lost' })).status).toBe(500);
+  expect(await (await read()).json()).toEqual(persisted);
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES ('private-owner','private@example.test','test')"
+  );
+  await http.pool.query("UPDATE profiles SET user_id='private-owner' WHERE id=$1", [profileId]);
+  expect((await read()).status).toBe(404);
+  expect((await save(2, { firstName: 'Unauthorized' })).status).toBe(404);
+});
+it('binds personal submission to its latest draft, cleans up once and returns the finalized profile summary', async () => {
+  const save = () =>
+    fetch(`${http.base}/api/onboarding/draft/${profileId}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ expectedVersion: 0, data: { firstName: 'Newer' } }),
+    });
+  expect((await save()).status).toBe(200);
+  const body = {
+    firstName: 'Person',
+    lastName: 'Owner',
+    nationalId: '1234567891',
+    provinceId,
+    cityId,
+    fullAddress: 'Street',
+    postalCode: '1234567890',
+  };
+  const submit = (draftVersion: number) =>
+    fetch(`${http.base}/api/onboarding/individual/${profileId}`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ ...body, draftVersion }),
+    });
+  expect((await submit(0)).status).toBe(409);
+  expect((await snapshot()).first_name).toBe('Original');
+  expect((await snapshot()).status).toBe('DRAFT');
+  expect((await http.pool.query('SELECT id FROM addresses')).rows).toHaveLength(0);
+  expect((await submit(1)).status).toBe(200);
+  expect(
+    (await http.pool.query('SELECT profile_id FROM profile_onboarding_drafts')).rows
+  ).toHaveLength(0);
+  expect((await save()).status).toBe(404);
+  const complete = () =>
+    fetch(`${http.base}/api/onboarding/complete/${profileId}`, { method: 'POST', headers });
+  for (let n = 0; n < 2; n++)
+    expect(await (await complete()).json()).toMatchObject({
+      id: profileId,
+      profileType: 'INDIVIDUAL',
+      firstName: 'Person',
+      lastName: 'Owner',
+      status: 'ACTIVE',
+      isDefault: true,
+    });
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='individual_profile_saved'")).rows
+  ).toHaveLength(1);
+});
+
+it('rolls back a missing default assignment on audit failure and never completes suspended or archived profiles', async () => {
+  await http.pool.query("UPDATE profiles SET status='ACTIVE' WHERE id=$1", [profileId]);
+  await http.pool.query(
+    "CREATE FUNCTION reject_default_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'default audit test failure'; END $$; CREATE TRIGGER reject_default_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='profile_default_selected') EXECUTE FUNCTION reject_default_audit()"
+  );
+  const complete = () =>
+    fetch(`${http.base}/api/onboarding/complete/${profileId}`, { method: 'POST', headers });
+  expect((await complete()).status).toBe(500);
+  expect((await snapshot()).is_default).toBe(false);
+  expect((await snapshot()).status).toBe('ACTIVE');
+  await http.pool.query("UPDATE profiles SET status='SUSPENDED' WHERE id=$1", [profileId]);
+  expect((await complete()).status).toBe(400);
+  expect((await snapshot()).status).toBe('SUSPENDED');
+  await http.pool.query("UPDATE profiles SET status='ACTIVE',archived=true WHERE id=$1", [
+    profileId,
+  ]);
+  expect((await complete()).status).toBe(404);
+  expect((await snapshot()).is_default).toBe(false);
+});

@@ -1,3 +1,4 @@
+import { parseOnboardingProfile, type OnboardingProfile } from '../../lib/onboarding-profile.js';
 import { useLocale } from '../../hooks/useLocale.js';
 import { withCsrf } from '../../lib/csrf.js';
 import { useEffect, useState } from 'react';
@@ -59,6 +60,7 @@ function OnboardingCompletePage() {
   const router = useRouter();
   const { profileId } = useSearch({ from: Route.id });
   const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading');
+  const [profile, setProfile] = useState<OnboardingProfile | null>(null);
   const [retry, setRetry] = useState(0);
   useEffect(() => {
     if (!profileId) {
@@ -67,6 +69,7 @@ function OnboardingCompletePage() {
     }
     const controller = new AbortController();
     setStatus('loading');
+    setProfile(null);
     fetch(`/api/onboarding/complete/${encodeURIComponent(profileId)}`, {
       method: 'POST',
       credentials: 'include',
@@ -75,39 +78,64 @@ function OnboardingCompletePage() {
     })
       .then(async (response) => {
         if (!response.ok) throw new Error('Completion failed');
-        const body = (await response.json()) as { id?: string; status?: string };
-        if (
-          body.id !== profileId ||
-          !['ACTIVE', 'PENDING_VERIFICATION', 'VERIFIED'].includes(body.status ?? '')
-        )
-          throw new Error('Unexpected completed profile');
-        if (!controller.signal.aborted) setStatus('complete');
+        const completed = parseOnboardingProfile(await response.json(), profileId);
+        if (!controller.signal.aborted) {
+          setProfile(completed);
+          setStatus('complete');
+        }
       })
       .catch(() => {
         if (!controller.signal.aborted) setStatus('error');
       });
     return () => controller.abort();
   }, [profileId, retry]);
+  const displayStatus = status === 'complete' && profile?.id !== profileId ? 'loading' : status;
   return (
     <div
       className="container relative mx-auto flex min-h-screen items-center justify-center p-4"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      {status === 'complete' && <Confetti />}
+      {displayStatus === 'complete' && <Confetti />}
       <div className="max-w-md text-center space-y-5">
         <h1 className="text-2xl font-bold">
           {t(
-            status === 'complete'
+            displayStatus === 'complete'
               ? 'onboarding.complete.title'
-              : status === 'loading'
+              : displayStatus === 'loading'
                 ? 'onboarding.complete.finalizing'
                 : 'onboarding.complete.failedTitle',
             locale
           )}
         </h1>
-        {status === 'complete' ? (
+        {displayStatus === 'complete' && profile ? (
           <>
             <p>{t('onboarding.complete.subtitle', locale)}</p>
+            <dl
+              className="rounded-xl border bg-card p-5 text-start space-y-4"
+              aria-label={t('onboarding.wizard.review', locale)}
+            >
+              {[
+                { label: t('onboarding.wizard.profileName', locale), value: profile.name },
+                {
+                  label: t('onboarding.wizard.profileType', locale),
+                  value: t(`settings.profile.profileType.${profile.profileType}`, locale),
+                },
+                {
+                  label: t('onboarding.wizard.status', locale),
+                  value: t(`onboarding.wizard.${profile.status}`, locale),
+                },
+              ].map(({ label, value }) => (
+                <div key={label}>
+                  <dt className="text-sm text-muted-foreground">{label}</dt>
+                  <dd className="font-medium">
+                    <bdi>{value}</bdi>
+                  </dd>
+                </div>
+              ))}
+              {profile.isDefault && (
+                <div className="text-sm text-primary">{t('onboarding.wizard.default', locale)}</div>
+              )}
+            </dl>
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Button
                 type="button"
@@ -121,7 +149,7 @@ function OnboardingCompletePage() {
               </Button>
             </div>
           </>
-        ) : status === 'loading' ? (
+        ) : displayStatus === 'loading' ? (
           <p role="status">{t('onboarding.complete.finalizing', locale)}</p>
         ) : (
           <>

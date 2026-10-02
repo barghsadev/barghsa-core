@@ -17,6 +17,7 @@ interface FormWizardProps {
   saveDisabled: boolean;
   nextDisabled: boolean;
   submitDisabled: boolean;
+  backDisabled?: boolean;
   onBack: () => void;
   onSave: () => void;
   onNext: () => void;
@@ -39,6 +40,7 @@ export function FormWizard({
   saveDisabled,
   nextDisabled,
   submitDisabled,
+  backDisabled = false,
   onBack,
   onSave,
   onNext,
@@ -72,22 +74,38 @@ export function FormWizard({
       {children}
       <div className="flex flex-wrap items-center gap-3">
         {step > 1 && (
-          <Button variant="outline" disabled={saving || submitting} onClick={onBack}>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={backDisabled || saving || submitting}
+            onClick={onBack}
+          >
             {backLabel}
           </Button>
         )}
-        <Button variant="outline" disabled={saveDisabled || saving || submitting} onClick={onSave}>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={saveDisabled || saving || submitting}
+          onClick={onSave}
+        >
           {saving ? savingLabel : saveLabel}
         </Button>
         {step < steps.length ? (
-          <Button className="ms-auto" disabled={nextDisabled || saving} onClick={onNext}>
+          <Button
+            type="button"
+            className="ms-auto"
+            disabled={nextDisabled || saving || submitting}
+            onClick={onNext}
+          >
             {saving ? savingLabel : nextLabel}
           </Button>
         ) : (
           <Button
+            type="button"
             className="ms-auto"
             size="lg"
-            disabled={submitDisabled || submitting}
+            disabled={submitDisabled || submitting || saving}
             onClick={onSubmit}
           >
             {submitting ? submittingLabel : submitLabel}

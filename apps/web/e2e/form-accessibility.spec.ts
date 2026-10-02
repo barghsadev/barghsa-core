@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { dismissMessages } from './dismiss-messages';
 import { cookieResponse } from './cookie-response';
@@ -119,12 +120,23 @@ async function tosShell(page: Page, locale = 'en') {
 }
 async function shell(page: Page, locale = 'en') {
   await page.addInitScript((value) => {
+    localStorage.setItem('barghsa.locale', value);
     if (document.documentElement) document.documentElement.lang = value;
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = value;
     }).observe(document, { childList: true });
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        userId: 'viewer',
+        isStaff: false,
+        requiresTosAcceptance: false,
+        navigation: { ...fullNavigation('customer', 'LEGAL'), profileId: 'profile-one' },
+      },
+    })
+  );
   await page.route('**/api/invitations/pending', (route) =>
     route.fulfill({ json: { invitations: [] } })
   );
@@ -391,6 +403,50 @@ for (const locale of ['en', 'fa']) {
   });
 }
 
+async function wizardNext(page: Page, locale = 'en', advance = true) {
+  const current = page.locator('li[aria-current=step]');
+  const previous = await current.textContent();
+  await page
+    .getByRole('button', {
+      name: locale === 'fa' ? 'ذخیره و ادامه' : 'Save and continue',
+      exact: true,
+    })
+    .click();
+  if (advance) await expect(current).not.toHaveText(previous!);
+}
+const completeLegalDraft = {
+  representativeFirstName: 'Person',
+  representativeLastName: 'Owner',
+  representativeNationalId: '1234567891',
+  representativeProvinceId: 'province-one',
+  representativeCityId: 'city-one',
+  representativeFullAddress: 'Representative Street',
+  representativePostalCode: '1234567890',
+  representativeTitle: 'CEO',
+  representativeRelationship: 'director',
+  legalName: 'Company',
+  nationalIdentifier: '12345678901',
+  registrationNumber: '123',
+  companyTypeId: 'limited-liability',
+  officialProvinceId: 'province-one',
+  officialCityId: 'city-one',
+  officialFullAddress: 'Street',
+  officialPostalCode: '1234567890',
+};
+async function legalGeography(page: Page) {
+  await page.route('**/api/geography/provinces', (r) =>
+    r.fulfill({ json: [{ id: 'province-one', nameFa: 'استان', nameEn: 'Province' }] })
+  );
+  await page.route('**/api/geography/provinces/*/cities', (r) =>
+    r.fulfill({
+      json: [{ id: 'city-one', provinceId: 'province-one', nameFa: 'شهر', nameEn: 'City' }],
+    })
+  );
+  await page.route('**/api/geography/company-types', (r) =>
+    r.fulfill({ json: [{ id: 'limited-liability', nameFa: 'شرکت', nameEn: 'Company' }] })
+  );
+}
+
 for (const locale of ['en', 'fa']) {
   test(`legal onboarding requires official address and clears a city after province changes (${locale})`, async ({
     page,
@@ -448,10 +504,6 @@ for (const locale of ['en', 'fa']) {
       return route.fulfill({ status: 400, json: { message: 'Test response' } });
     });
     await page.goto('/onboarding/legal/profile-one');
-    await page.locator('#legalName').fill('Company');
-    await page.locator('#nationalIdentifier').fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۰۱' : '١٢٣٤٥٦٧٨٩٠١');
-    await page.locator('#registrationNumber').fill('123');
-    await page.locator('#companyTypeId').selectOption('limited-liability');
     await page.locator('#representativeFirstName').fill('Person');
     await page.locator('#representativeLastName').fill('Owner');
     await page.locator('#representativeNationalId').fill('۰۰۱۲');
@@ -467,7 +519,13 @@ for (const locale of ['en', 'fa']) {
       .fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۰' : '١٢٣٤٥٦٧٨٩٠');
     await page.locator('#representativeTitle').fill('CEO');
     await page.locator('#representativeRelationship').fill('director');
-    await page.locator('button[type="submit"]').click();
+    await wizardNext(page, locale);
+    await page.locator('#legalName').fill('Company');
+    await page.locator('#nationalIdentifier').fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۰۱' : '١٢٣٤٥٦٧٨٩٠١');
+    await page.locator('#registrationNumber').fill('123');
+    await page.locator('#companyTypeId').selectOption('limited-liability');
+    await wizardNext(page, locale);
+    await wizardNext(page, locale, false);
     expect(submissions).toBe(0);
     await expect(
       page.getByText(locale === 'fa' ? 'آدرس کامل الزامی است' : 'Full address is required', {
@@ -482,13 +540,21 @@ for (const locale of ['en', 'fa']) {
     await page.locator('#officialCityId').selectOption('city-b');
     await page.locator('#officialFullAddress').fill('Street');
     await page.locator('#officialPostalCode').fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۰' : '١٢٣٤٥٦٧٨٩٠');
+    await wizardNext(page, locale);
     await page.locator('#document-upload').setInputFiles({
       name: 'registration.pdf',
       mimeType: 'application/pdf',
       buffer: Buffer.from('%PDF-1.7 test document'),
     });
-    await expect(page.getByText('registration.pdf', { exact: true })).toBeVisible();
-    await page.locator('button[type="submit"]').click();
+    await expect(page.locator('ul').getByText('registration.pdf', { exact: true })).toBeVisible();
+    await wizardNext(page, locale);
+    expect(submissions).toBe(0);
+    await page
+      .getByRole('button', {
+        name: locale === 'fa' ? 'ثبت پروفایل' : 'Submit profile',
+        exact: true,
+      })
+      .click();
     await expect.poll(() => submissions).toBe(1);
     await expect(page.locator('[data-slot="alert-title"]')).toHaveText(
       locale === 'fa' ? 'خطا' : 'Error'
@@ -539,11 +605,19 @@ for (const locale of ['en', 'fa']) {
     await page.locator('#nationalId').fill('۰۰۱۲');
     await expect(page.locator('#nationalId')).toHaveValue('0012');
     await page.locator('#nationalId').fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۱' : '١٢٣٤٥٦٧٨٩١');
+    await wizardNext(page, locale);
     await page.locator('#provinceId').selectOption('province-one');
     await page.locator('#cityId').selectOption('city-one');
     await page.locator('#fullAddress').fill('Street');
     await page.locator('#postalCode').fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۰' : '١٢٣٤٥٦٧٨٩٠');
-    await page.locator('button[type="submit"]').click();
+    await wizardNext(page, locale);
+    expect(sent).toBeUndefined();
+    await page
+      .getByRole('button', {
+        name: locale === 'fa' ? 'ثبت پروفایل' : 'Submit profile',
+        exact: true,
+      })
+      .click();
     await expect
       .poll(() => sent)
       .toMatchObject({
@@ -611,7 +685,7 @@ for (const locale of ['en', 'fa']) {
     let stored = {
       version: 1,
       data: {
-        legalName: 'Restored',
+        representativeHonorific: 'Restored',
         officialProvinceId: 'province-one',
         officialCityId: 'city-one',
         representativeProvinceId: 'province-one',
@@ -646,22 +720,22 @@ for (const locale of ['en', 'fa']) {
     );
     await page.route('**/api/geography/company-types', (route) => route.fulfill({ json: [] }));
     await page.goto('/onboarding/legal/profile-one');
-    await expect(page.locator('#legalName')).toHaveValue('Restored');
+    await expect(page.locator('#representativeHonorific')).toHaveValue('Restored');
     await expect(page.locator('#officialCityId')).toHaveValue('city-one');
     await expect(page.locator('#representativeCityId')).toHaveValue('city-one');
-    await page.locator('#legalName').fill('First edit');
+    await page.locator('#representativeHonorific').fill('First edit');
     await expect.poll(() => !!delayed).toBe(true);
-    await page.locator('#legalName').fill('Latest edit');
+    await page.locator('#representativeHonorific').fill('Latest edit');
     hold = false;
     const input = delayed!.request().postDataJSON() as { data: Record<string, string> };
     stored = { version: stored.version + 1, data: input.data };
     await delayed!.fulfill({ json: stored });
-    await expect.poll(() => stored.data.legalName).toBe('Latest edit');
+    await expect.poll(() => stored.data.representativeHonorific).toBe('Latest edit');
     await expect(
       page.getByText(locale === 'fa' ? 'پیش‌نویس ذخیره شد' : 'Draft saved', { exact: true })
     ).toBeVisible();
     fail = true;
-    await page.locator('#legalName').fill('Retry edit');
+    await page.locator('#representativeHonorific').fill('Retry edit');
     await expect(
       page.getByText(
         locale === 'fa'
@@ -670,17 +744,17 @@ for (const locale of ['en', 'fa']) {
         { exact: true }
       )
     ).toBeVisible();
-    expect(stored.data.legalName).toBe('Latest edit');
+    expect(stored.data.representativeHonorific).toBe('Latest edit');
     fail = false;
     await page
       .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Retry', exact: true })
       .click();
-    await expect.poll(() => stored.data.legalName).toBe('Retry edit');
+    await expect.poll(() => stored.data.representativeHonorific).toBe('Retry edit');
     await expect(
       page.getByText(locale === 'fa' ? 'پیش‌نویس ذخیره شد' : 'Draft saved', { exact: true })
     ).toBeVisible();
     await page.reload();
-    await expect(page.locator('#legalName')).toHaveValue('Retry edit');
+    await expect(page.locator('#representativeHonorific')).toHaveValue('Retry edit');
     await expect(page.locator('#officialCityId')).toHaveValue('city-one');
   });
 }
@@ -692,7 +766,10 @@ test('legal autosave stops at a version conflict until the user reloads the save
   await page.route('**/api/onboarding/draft/*', (route) => {
     if (route.request().method() === 'GET')
       return route.fulfill({
-        json: { version: writes ? 2 : 1, data: { legalName: writes ? 'Other tab' : 'Initial' } },
+        json: {
+          version: writes ? 2 : 1,
+          data: { representativeHonorific: writes ? 'Other tab' : 'Initial' },
+        },
       });
     writes++;
     return route.fulfill({ status: 409, json: { error: 'CONFLICT:VERSION_CONFLICT' } });
@@ -700,16 +777,16 @@ test('legal autosave stops at a version conflict until the user reloads the save
   await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
   await page.route('**/api/geography/company-types', (route) => route.fulfill({ json: [] }));
   await page.goto('/onboarding/legal/profile-one');
-  await expect(page.locator('#legalName')).toHaveValue('Initial');
-  await page.locator('#legalName').fill('Local edit');
+  await expect(page.locator('#representativeHonorific')).toHaveValue('Initial');
+  await page.locator('#representativeHonorific').fill('Local edit');
   await expect(
     page.getByText('This draft changed in another tab. Reload the saved version.', { exact: true })
   ).toBeVisible();
-  await page.locator('#legalName').fill('Still local');
-  await page.locator('#legalName').press('Tab');
+  await page.locator('#representativeHonorific').fill('Still local');
+  await page.locator('#representativeHonorific').press('Tab');
   expect(writes).toBe(1);
   await page.getByRole('button', { name: 'Reload saved draft', exact: true }).click();
-  await expect(page.locator('#legalName')).toHaveValue('Other tab');
+  await expect(page.locator('#representativeHonorific')).toHaveValue('Other tab');
   expect(writes).toBe(1);
 });
 
@@ -721,25 +798,25 @@ test('failed draft load leaves fields untouched until retry succeeds', async ({ 
     return route.fulfill(
       fail
         ? { status: 503, json: {} }
-        : { json: { version: 2, data: { legalName: 'Recovered draft' } } }
+        : { json: { version: 2, data: { representativeHonorific: 'Recovered draft' } } }
     );
   });
   await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
   await page.route('**/api/geography/company-types', (route) => route.fulfill({ json: [] }));
   await page.goto('/onboarding/legal/profile-one');
-  await expect(page.locator('#legalName')).toBeDisabled();
+  await expect(page.locator('#representativeHonorific')).toBeDisabled();
   await expect(page.getByRole('button', { name: 'Reload saved draft', exact: true })).toBeVisible();
   fail = false;
   await page.getByRole('button', { name: 'Reload saved draft', exact: true }).click();
-  await expect(page.locator('#legalName')).toBeEnabled();
-  await expect(page.locator('#legalName')).toHaveValue('Recovered draft');
+  await expect(page.locator('#representativeHonorific')).toBeEnabled();
+  await expect(page.locator('#representativeHonorific')).toHaveValue('Recovered draft');
 });
 
 test('legal document upload reports record failures and keeps successful files across reload', async ({
   page,
 }) => {
   await shell(page);
-  let stored = { version: 0, data: {} as Record<string, string> };
+  let stored = { version: 0, data: { ...completeLegalDraft } as Record<string, string> };
   await page.route('**/api/onboarding/draft/*', (route) => {
     if (route.request().method() === 'GET') return route.fulfill({ json: stored });
     const input = route.request().postDataJSON();
@@ -760,7 +837,9 @@ test('legal document upload reports record failures and keeps successful files a
   await page.route('**/api/upload/*/record', (route) =>
     route.fulfill(fail ? { status: 503, json: {} } : { json: { status: 'recorded' } })
   );
+  await legalGeography(page);
   await page.goto('/onboarding/legal/profile-one');
+  for (let step = 0; step < 3; step++) await wizardNext(page);
   await expect(page.locator('#document-upload')).toBeEnabled();
   const file = {
     name: 'gazette.pdf',
@@ -771,14 +850,15 @@ test('legal document upload reports record failures and keeps successful files a
   await expect(
     page.getByText('Upload failed. Select a valid file and retry.', { exact: true })
   ).toBeVisible();
-  await expect(page.getByText('gazette.pdf', { exact: true })).toHaveCount(0);
+  await expect(page.locator('ul').getByText('gazette.pdf', { exact: true })).toHaveCount(0);
   fail = false;
   await page.locator('#document-upload').setInputFiles(file);
-  await expect(page.getByText('gazette.pdf', { exact: true })).toBeVisible();
+  await expect(page.locator('ul').getByText('gazette.pdf', { exact: true })).toBeVisible();
   await expect.poll(() => stored.data.documentKeys).toContain('gazette.pdf');
   await expect(page.getByText('Draft saved', { exact: true })).toBeVisible();
   await page.reload();
-  await expect(page.getByText('gazette.pdf', { exact: true })).toBeVisible();
+  for (let step = 0; step < 3; step++) await wizardNext(page);
+  await expect(page.locator('ul').getByText('gazette.pdf', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Remove gazette.pdf', exact: true }).click();
   await expect.poll(() => stored.data.documentKeys).toBe('[]');
 });
@@ -841,7 +921,15 @@ for (const locale of ['en', 'fa']) {
       return route.fulfill(
         fail
           ? { status: 503, json: {} }
-          : { json: { id: 'profile-one', status: 'PENDING_VERIFICATION' } }
+          : {
+              json: {
+                id: 'profile-one',
+                profileType: 'LEGAL',
+                title: 'Completed company',
+                isDefault: true,
+                status: 'PENDING_VERIFICATION',
+              },
+            }
       );
     });
     await page.goto('/onboarding/complete?profileId=profile-one');
@@ -3156,7 +3244,15 @@ for (const locale of ['en', 'fa'])
       await mockOppositeNumerals(page, locale);
       await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
       await page.goto(`/onboarding/${kind}/profile-one`);
-      const address = page.locator(kind === 'legal' ? '#officialFullAddress' : '#fullAddress');
+      if (kind === 'individual') {
+        await page.locator('#firstName').fill('Person');
+        await page.locator('#lastName').fill('Owner');
+        await page.locator('#nationalId').fill('1234567891');
+        await wizardNext(page, locale);
+      }
+      const address = page.locator(
+        kind === 'legal' ? '#representativeFullAddress' : '#fullAddress'
+      );
       await address.fill('Meter Street');
       await expect(
         page.getByText(locale === 'fa' ? '12/500' : '۱۲/۵۰۰', { exact: true })
@@ -3199,7 +3295,7 @@ for (const locale of ['en', 'fa'])
       await page.goto(`/onboarding/${kind}/profile-one`);
       const retry = page.getByTestId('onboarding-provinces-retry');
       await expect(retry).toBeVisible({ timeout: 2000 });
-      const name = page.locator(kind === 'legal' ? '#legalName' : '#firstName');
+      const name = page.locator(kind === 'legal' ? '#representativeFirstName' : '#firstName');
       await name.fill('Retained identity');
       for (const malformed of [{}, [{ ...province, nameFa: 1 }], [province, province]]) {
         provinceStatus = 200;
@@ -3211,12 +3307,43 @@ for (const locale of ['en', 'fa'])
       provinceResponse = [province];
       await retry.click();
       await expect(retry).toHaveCount(0);
+      if (kind === 'individual') {
+        await page.locator('#lastName').fill('Owner');
+        await page.locator('#nationalId').fill('1234567891');
+        await wizardNext(page, locale);
+      }
       if (kind === 'legal') {
+        await page.locator('#representativeLastName').fill('Owner');
+        await page.locator('#representativeNationalId').fill('1234567891');
+        await page.locator('#representativeProvinceId').selectOption(province.id);
+        await expect(page.getByTestId('onboarding-representative-cities-retry')).toBeVisible();
+        cityResponse = [
+          { id: 'city-one', provinceId: province.id, nameEn: 'City One', nameFa: 'شهر یک' },
+        ];
+        await page.getByTestId('onboarding-representative-cities-retry').click();
+        await page.locator('#representativeCityId').selectOption('city-one');
+        await page.locator('#representativeFullAddress').fill('Street');
+        await page.locator('#representativePostalCode').fill('1234567890');
+        await page.locator('#representativeTitle').fill('CEO');
+        await page.locator('#representativeRelationship').fill('director');
+        await wizardNext(page, locale);
         const companyRetry = page.getByTestId('onboarding-company-types-retry');
         await expect(companyRetry).toBeVisible();
         companyResponse = [{ id: 'limited', nameEn: 'Limited', nameFa: 'محدود' }];
         await companyRetry.click();
         await page.locator('#companyTypeId').selectOption('limited');
+        await page.locator('#legalName').fill('Company');
+        await page.locator('#nationalIdentifier').fill('12345678901');
+        await page.locator('#registrationNumber').fill('123');
+        await wizardNext(page, locale);
+        cityResponse = [
+          {
+            id: 'wrong-city',
+            provinceId: 'another-province',
+            nameEn: 'Wrong city',
+            nameFa: 'شهر نادرست',
+          },
+        ];
       }
       const provinceInput = page.locator(kind === 'legal' ? '#officialProvinceId' : '#provinceId');
       await provinceInput.selectOption(province.id);

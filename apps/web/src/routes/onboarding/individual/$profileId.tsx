@@ -1,17 +1,20 @@
+import { OnboardingWizard, OnboardingReview } from '../../../components/OnboardingWizard.js';
+import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
+import { parseOnboardingProfile } from '../../../lib/onboarding-profile.js';
 import { useGeographyOptions } from '../../../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../../../components/GeographyLoadError.js';
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { withCsrf } from '../../../lib/csrf.js';
 import { normalizeProfileDigits } from '../../../lib/profile-digits.js';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
 import { toast } from '../../../lib/toast-api.js';
 import { t } from '@barghsa/i18n/app';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { Loader2Icon, ChevronRightIcon } from 'lucide-react';
-import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
+import { Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/individual/$profileId')({
   component: IndividualProfileFormPage,
@@ -30,6 +33,17 @@ interface FormErrors {
 
 function IndividualProfileFormPage() {
   const { profileId } = useParams({ from: '/onboarding/individual/$profileId' });
+  return <IndividualProfileForm key={profileId} profileId={profileId} />;
+}
+
+function IndividualProfileForm({ profileId }: { profileId: string }) {
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const router = useRouter();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -64,6 +78,30 @@ function IndividualProfileFormPage() {
   // Submission
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const restoreDraft = useCallback((data: Record<string, string>) => {
+    setTitle(data.title ?? '');
+    setFirstName(data.firstName ?? '');
+    setLastName(data.lastName ?? '');
+    setNationalId(normalizeProfileDigits(data.nationalId ?? ''));
+    setSelectedProvinceId(data.provinceId ?? '');
+    setSelectedCityId(data.cityId ?? '');
+    setFullAddress(data.fullAddress ?? '');
+    setPostalCode(normalizeProfileDigits(data.postalCode ?? ''));
+    setErrors({});
+    setTouched({});
+  }, []);
+  const values = {
+    title,
+    firstName,
+    lastName,
+    nationalId,
+    provinceId: selectedProvinceId,
+    cityId: selectedCityId,
+    fullAddress,
+    postalCode,
+  };
+  const draft = useOnboardingDraft(profileId, values, restoreDraft);
 
   // Field-level validation
   const validateField = useCallback(
@@ -155,28 +193,81 @@ function IndividualProfileFormPage() {
     ]
   );
 
-  const validateForm = useCallback((): boolean => {
-    const newErrors: FormErrors = {
-      firstName: validateField('firstName', firstName),
-      lastName: validateField('lastName', lastName),
-      nationalId: validateField('nationalId', nationalId),
-      provinceId: validateField('provinceId', selectedProvinceId),
-      cityId: validateField('cityId', selectedCityId),
-      fullAddress: validateField('fullAddress', fullAddress),
-      postalCode: validateField('postalCode', postalCode),
-    };
-    setErrors(newErrors);
-    setTouched({
-      firstName: true,
-      lastName: true,
-      nationalId: true,
-      provinceId: true,
-      cityId: true,
-      fullAddress: true,
-      postalCode: true,
-    });
-    return !Object.values(newErrors).some(Boolean);
+  const validateForm = (fields = Object.keys(values)): boolean => {
+    const checked = Object.fromEntries(
+      fields.map((field) => [field, validateField(field, values[field as keyof typeof values])])
+    );
+    setErrors((previous) => ({ ...previous, ...checked }));
+    setTouched((previous) => ({
+      ...previous,
+      ...Object.fromEntries(fields.map((field) => [field, true])),
+    }));
+    return !Object.values(checked).some(Boolean);
+  };
+
+  const handleSubmit = useCallback(async () => {
+    setSubmitError(null);
+
+    if (!draft.ready || geographyUnavailable || !validateForm()) return;
+
+    setSubmitting(true);
+
+    try {
+      const draftVersion = await draft.flush();
+      if (draftVersion === undefined) return;
+      const response = await fetch(`/api/onboarding/individual/${profileId}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({
+          draftVersion,
+          title: title.trim() || undefined,
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          nationalId: nationalId.trim(),
+          provinceId: selectedProvinceId,
+          cityId: selectedCityId,
+          fullAddress: fullAddress.trim(),
+          postalCode: postalCode.trim(),
+        }),
+      });
+
+      const body: Record<string, unknown> = await response.json().catch(() => ({}));
+      if (!mounted.current) return;
+
+      if (!response.ok) {
+        const errorCode =
+          typeof body?.error === 'string'
+            ? body.error
+            : ((body?.error as Record<string, unknown>)?.code as string | undefined);
+
+        if (errorCode === ErrorCodes.CONFLICT_VERSION.code) {
+          draft.markConflict();
+          setSubmitError(t('onboarding.draft.conflict', locale));
+        } else if (errorCode === ErrorCodes.CONFLICT_DUPLICATE.code) {
+          setSubmitError(t('onboarding.individual.error.duplicateNationalId', locale));
+        } else {
+          setSubmitError(t('onboarding.individual.error.submit', locale));
+        }
+        return;
+      }
+
+      parseOnboardingProfile(body, profileId, 'INDIVIDUAL');
+      toast.success(t('onboarding.individual.saved', locale));
+      router.navigate({
+        to: '/onboarding/complete',
+        search: { profileId },
+        replace: true,
+      });
+    } catch {
+      setSubmitError(t('onboarding.individual.error.submit', locale));
+    } finally {
+      setSubmitting(false);
+    }
   }, [
+    draft,
+    profileId,
+    title,
     firstName,
     lastName,
     nationalId,
@@ -184,79 +275,11 @@ function IndividualProfileFormPage() {
     selectedCityId,
     fullAddress,
     postalCode,
-    validateField,
+    validateForm,
+    geographyUnavailable,
+    locale,
+    router,
   ]);
-
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      setSubmitError(null);
-
-      if (geographyUnavailable || !validateForm()) return;
-
-      setSubmitting(true);
-
-      try {
-        const response = await fetch(`/api/onboarding/individual/${profileId}`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({
-            title: title.trim() || undefined,
-            firstName: firstName.trim(),
-            lastName: lastName.trim(),
-            nationalId: nationalId.trim(),
-            provinceId: selectedProvinceId,
-            cityId: selectedCityId,
-            fullAddress: fullAddress.trim(),
-            postalCode: postalCode.trim(),
-          }),
-        });
-
-        const body: Record<string, unknown> = await response.json().catch(() => ({}));
-
-        if (!response.ok) {
-          const errorCode =
-            typeof body?.error === 'string'
-              ? body.error
-              : ((body?.error as Record<string, unknown>)?.code as string | undefined);
-
-          if (errorCode === ErrorCodes.CONFLICT_DUPLICATE.code) {
-            setSubmitError(t('onboarding.individual.error.duplicateNationalId', locale));
-          } else {
-            setSubmitError(t('onboarding.individual.error.submit', locale));
-          }
-          return;
-        }
-
-        toast.success(t('onboarding.individual.saved', locale));
-        router.navigate({
-          to: '/onboarding/complete',
-          search: { profileId },
-          replace: true,
-        });
-      } catch {
-        setSubmitError(t('onboarding.individual.error.submit', locale));
-      } finally {
-        setSubmitting(false);
-      }
-    },
-    [
-      profileId,
-      title,
-      firstName,
-      lastName,
-      nationalId,
-      selectedProvinceId,
-      selectedCityId,
-      fullAddress,
-      postalCode,
-      validateForm,
-      geographyUnavailable,
-      locale,
-      router,
-    ]
-  );
 
   return (
     <div
@@ -267,6 +290,12 @@ function IndividualProfileFormPage() {
         {/* Back link */}
         <Link
           to="/onboarding"
+          onClick={async (event) => {
+            event.preventDefault();
+            if (submitting) return;
+            if (!draft.ready || (await draft.flush()) !== undefined)
+              await router.navigate({ to: '/onboarding' });
+          }}
           className="mb-4 inline-flex items-center text-sm text-muted-foreground hover:text-primary"
         >
           <ChevronRightIcon className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
@@ -288,278 +317,320 @@ function IndividualProfileFormPage() {
           </Alert>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-          <GeographyLoadError
-            {...provinceOptions}
-            message={t('onboarding.individual.error.loadProvinces', locale)}
-            locale={locale}
-            testId="onboarding-provinces-retry"
-          />
-          {/* Title (optional) */}
-          <div className="space-y-2">
-            <Label htmlFor="title">
-              {t('onboarding.individual.title.label', locale)}
-              <span className="text-muted-foreground ml-1 text-xs">
-                ({t('onboarding.individual.title.placeholder', locale)})
-              </span>
-            </Label>
-            <Input
-              id="title"
-              type="text"
-              maxLength={50}
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              onBlur={() => handleBlur('title')}
-              disabled={submitting}
-              placeholder={t('onboarding.individual.title.placeholder', locale)}
-            />
-          </div>
+        <GeographyLoadError
+          {...provinceOptions}
+          message={t('onboarding.individual.error.loadProvinces', locale)}
+          locale={locale}
+          testId="onboarding-provinces-retry"
+        />
+        <OnboardingWizard
+          draft={draft}
+          submitting={submitting}
+          disabled={false}
+          onSubmit={handleSubmit}
+          steps={[
+            {
+              label: t('onboarding.wizard.identity', locale),
+              validate: () => validateForm(['title', 'firstName', 'lastName', 'nationalId']),
+              content: (
+                <>
+                  {' '}
+                  {/* Title (optional) */}
+                  <div className="space-y-2">
+                    <Label htmlFor="title">
+                      {t('onboarding.individual.title.label', locale)}
+                      <span className="text-muted-foreground ml-1 text-xs">
+                        ({t('onboarding.individual.title.placeholder', locale)})
+                      </span>
+                    </Label>
+                    <Input
+                      id="title"
+                      type="text"
+                      maxLength={50}
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      onBlur={() => handleBlur('title')}
+                      disabled={submitting}
+                      placeholder={t('onboarding.individual.title.placeholder', locale)}
+                    />
+                  </div>
+                  {/* Two-column layout for desktop */}
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {/* First Name */}
+                    <div className="space-y-2">
+                      <Label htmlFor="firstName">
+                        {t('onboarding.individual.firstName', locale)}
+                        <span className="text-destructive ml-0.5">*</span>
+                      </Label>
+                      <Input
+                        id="firstName"
+                        type="text"
+                        required
+                        maxLength={100}
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        onBlur={() => handleBlur('firstName')}
+                        disabled={submitting}
+                        placeholder={t('onboarding.individual.firstName.placeholder', locale)}
+                        aria-invalid={touched.firstName && !!errors.firstName}
+                        aria-describedby={errors.firstName ? 'firstName-error' : undefined}
+                      />
+                      {touched.firstName && errors.firstName && (
+                        <p id="firstName-error" className="text-sm text-destructive" role="alert">
+                          {errors.firstName}
+                        </p>
+                      )}
+                    </div>
 
-          {/* Two-column layout for desktop */}
-          <div className="grid gap-4 sm:grid-cols-2">
-            {/* First Name */}
-            <div className="space-y-2">
-              <Label htmlFor="firstName">
-                {t('onboarding.individual.firstName', locale)}
-                <span className="text-destructive ml-0.5">*</span>
-              </Label>
-              <Input
-                id="firstName"
-                type="text"
-                required
-                maxLength={100}
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                onBlur={() => handleBlur('firstName')}
-                disabled={submitting}
-                placeholder={t('onboarding.individual.firstName.placeholder', locale)}
-                aria-invalid={touched.firstName && !!errors.firstName}
-                aria-describedby={errors.firstName ? 'firstName-error' : undefined}
-              />
-              {touched.firstName && errors.firstName && (
-                <p id="firstName-error" className="text-sm text-destructive" role="alert">
-                  {errors.firstName}
-                </p>
-              )}
-            </div>
+                    {/* Last Name */}
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName">
+                        {t('onboarding.individual.lastName', locale)}
+                        <span className="text-destructive ml-0.5">*</span>
+                      </Label>
+                      <Input
+                        id="lastName"
+                        type="text"
+                        required
+                        maxLength={100}
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        onBlur={() => handleBlur('lastName')}
+                        disabled={submitting}
+                        placeholder={t('onboarding.individual.lastName.placeholder', locale)}
+                        aria-invalid={touched.lastName && !!errors.lastName}
+                        aria-describedby={errors.lastName ? 'lastName-error' : undefined}
+                      />
+                      {touched.lastName && errors.lastName && (
+                        <p id="lastName-error" className="text-sm text-destructive" role="alert">
+                          {errors.lastName}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  {/* National ID */}
+                  <div className="space-y-2">
+                    <Label htmlFor="nationalId">
+                      {t('onboarding.individual.nationalId', locale)}
+                      <span className="text-destructive ml-0.5">*</span>
+                    </Label>
+                    <Input
+                      id="nationalId"
+                      type="text"
+                      inputMode="numeric"
+                      required
+                      maxLength={10}
+                      value={nationalId}
+                      onChange={(e) => {
+                        const val = normalizeProfileDigits(e.target.value)
+                          .replace(/\D/g, '')
+                          .slice(0, 10);
+                        setNationalId(val);
+                      }}
+                      onBlur={() => handleBlur('nationalId')}
+                      disabled={submitting}
+                      placeholder={t('onboarding.individual.nationalId.placeholder', locale)}
+                      aria-invalid={touched.nationalId && !!errors.nationalId}
+                      aria-describedby={errors.nationalId ? 'nationalId-error' : undefined}
+                    />
+                    {touched.nationalId && errors.nationalId && (
+                      <p id="nationalId-error" className="text-sm text-destructive" role="alert">
+                        {errors.nationalId}
+                      </p>
+                    )}
+                  </div>
+                </>
+              ),
+            },
+            {
+              label: t('onboarding.wizard.address', locale),
+              validate: () => validateForm(['provinceId', 'cityId', 'fullAddress', 'postalCode']),
+              content: (
+                <>
+                  {' '}
+                  {/* Province / City */}
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {/* Province */}
+                    <div className="space-y-2">
+                      <Label htmlFor="provinceId">
+                        {t('onboarding.individual.province', locale)}
+                        <span className="text-destructive ml-0.5">*</span>
+                      </Label>
+                      {loadingProvinces ? (
+                        <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
+                          <Loader2Icon className="h-4 w-4 animate-spin" />
+                          {t('onboarding.individual.loading', locale)}
+                        </div>
+                      ) : (
+                        <select
+                          id="provinceId"
+                          value={selectedProvinceId}
+                          onChange={(e) => {
+                            setSelectedProvinceId(e.target.value);
+                            setSelectedCityId('');
+                          }}
+                          onBlur={() => handleBlur('provinceId')}
+                          disabled={submitting}
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          aria-invalid={touched.provinceId && !!errors.provinceId}
+                          aria-describedby={errors.provinceId ? 'provinceId-error' : undefined}
+                        >
+                          <option value="">
+                            {t('onboarding.individual.province.placeholder', locale)}
+                          </option>
+                          {provinces.map((p) => (
+                            <option key={p.id} value={p.id}>
+                              {isRtl ? p.nameFa : p.nameEn}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                      {touched.provinceId && errors.provinceId && (
+                        <p id="provinceId-error" className="text-sm text-destructive" role="alert">
+                          {errors.provinceId}
+                        </p>
+                      )}
+                    </div>
 
-            {/* Last Name */}
-            <div className="space-y-2">
-              <Label htmlFor="lastName">
-                {t('onboarding.individual.lastName', locale)}
-                <span className="text-destructive ml-0.5">*</span>
-              </Label>
-              <Input
-                id="lastName"
-                type="text"
-                required
-                maxLength={100}
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                onBlur={() => handleBlur('lastName')}
-                disabled={submitting}
-                placeholder={t('onboarding.individual.lastName.placeholder', locale)}
-                aria-invalid={touched.lastName && !!errors.lastName}
-                aria-describedby={errors.lastName ? 'lastName-error' : undefined}
-              />
-              {touched.lastName && errors.lastName && (
-                <p id="lastName-error" className="text-sm text-destructive" role="alert">
-                  {errors.lastName}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* National ID */}
-          <div className="space-y-2">
-            <Label htmlFor="nationalId">
-              {t('onboarding.individual.nationalId', locale)}
-              <span className="text-destructive ml-0.5">*</span>
-            </Label>
-            <Input
-              id="nationalId"
-              type="text"
-              inputMode="numeric"
-              required
-              maxLength={10}
-              value={nationalId}
-              onChange={(e) => {
-                const val = normalizeProfileDigits(e.target.value).replace(/\D/g, '').slice(0, 10);
-                setNationalId(val);
-              }}
-              onBlur={() => handleBlur('nationalId')}
-              disabled={submitting}
-              placeholder={t('onboarding.individual.nationalId.placeholder', locale)}
-              aria-invalid={touched.nationalId && !!errors.nationalId}
-              aria-describedby={errors.nationalId ? 'nationalId-error' : undefined}
-            />
-            {touched.nationalId && errors.nationalId && (
-              <p id="nationalId-error" className="text-sm text-destructive" role="alert">
-                {errors.nationalId}
-              </p>
-            )}
-          </div>
-
-          {/* Province / City */}
-          <div className="grid gap-4 sm:grid-cols-2">
-            {/* Province */}
-            <div className="space-y-2">
-              <Label htmlFor="provinceId">
-                {t('onboarding.individual.province', locale)}
-                <span className="text-destructive ml-0.5">*</span>
-              </Label>
-              {loadingProvinces ? (
-                <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
-                  <Loader2Icon className="h-4 w-4 animate-spin" />
-                  {t('onboarding.individual.loading', locale)}
-                </div>
-              ) : (
-                <select
-                  id="provinceId"
-                  value={selectedProvinceId}
-                  onChange={(e) => {
-                    setSelectedProvinceId(e.target.value);
-                    setSelectedCityId('');
-                  }}
-                  onBlur={() => handleBlur('provinceId')}
-                  disabled={submitting}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  aria-invalid={touched.provinceId && !!errors.provinceId}
-                  aria-describedby={errors.provinceId ? 'provinceId-error' : undefined}
-                >
-                  <option value="">
-                    {t('onboarding.individual.province.placeholder', locale)}
-                  </option>
-                  {provinces.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {isRtl ? p.nameFa : p.nameEn}
-                    </option>
-                  ))}
-                </select>
-              )}
-              {touched.provinceId && errors.provinceId && (
-                <p id="provinceId-error" className="text-sm text-destructive" role="alert">
-                  {errors.provinceId}
-                </p>
-              )}
-            </div>
-
-            {/* City */}
-            <div className="space-y-2">
-              <Label htmlFor="cityId">
-                {t('onboarding.individual.city', locale)}
-                <span className="text-destructive ml-0.5">*</span>
-              </Label>
-              {loadingCities ? (
-                <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
-                  <Loader2Icon className="h-4 w-4 animate-spin" />
-                  {t('onboarding.individual.loading', locale)}
-                </div>
-              ) : (
-                <select
-                  id="cityId"
-                  value={selectedCityId}
-                  onChange={(e) => setSelectedCityId(e.target.value)}
-                  onBlur={() => handleBlur('cityId')}
-                  disabled={submitting || !selectedProvinceId}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  aria-invalid={touched.cityId && !!errors.cityId}
-                  aria-describedby={errors.cityId ? 'cityId-error' : undefined}
-                >
-                  <option value="">{t('onboarding.individual.city.placeholder', locale)}</option>
-                  {cities.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {isRtl ? c.nameFa : c.nameEn}
-                    </option>
-                  ))}
-                </select>
-              )}
-              <GeographyLoadError
-                {...cityOptions}
-                message={t('onboarding.individual.error.loadCities', locale)}
-                locale={locale}
-                testId="onboarding-cities-retry"
-              />
-              {touched.cityId && errors.cityId && (
-                <p id="cityId-error" className="text-sm text-destructive" role="alert">
-                  {errors.cityId}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Full Address */}
-          <div className="space-y-2">
-            <Label htmlFor="fullAddress">
-              {t('onboarding.individual.address', locale)}
-              <span className="text-destructive ml-0.5">*</span>
-            </Label>
-            <textarea
-              id="fullAddress"
-              required
-              maxLength={500}
-              rows={3}
-              value={fullAddress}
-              onChange={(e) => setFullAddress(e.target.value)}
-              onBlur={() => handleBlur('fullAddress')}
-              disabled={submitting}
-              placeholder={t('onboarding.individual.address.placeholder', locale)}
-              className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              aria-invalid={touched.fullAddress && !!errors.fullAddress}
-              aria-describedby={errors.fullAddress ? 'fullAddress-error' : undefined}
-            />
-            <p className="text-xs text-muted-foreground">
-              {numbers.number(fullAddress.length)}/{numbers.number(500)}
-            </p>
-            {touched.fullAddress && errors.fullAddress && (
-              <p id="fullAddress-error" className="text-sm text-destructive" role="alert">
-                {errors.fullAddress}
-              </p>
-            )}
-          </div>
-
-          {/* Postal Code */}
-          <div className="space-y-2">
-            <Label htmlFor="postalCode">
-              {t('onboarding.individual.postalCode', locale)}
-              <span className="text-destructive ml-0.5">*</span>
-            </Label>
-            <Input
-              id="postalCode"
-              type="text"
-              inputMode="numeric"
-              required
-              maxLength={10}
-              value={postalCode}
-              onChange={(e) => {
-                const val = normalizeProfileDigits(e.target.value).replace(/\D/g, '').slice(0, 10);
-                setPostalCode(val);
-              }}
-              onBlur={() => handleBlur('postalCode')}
-              disabled={submitting}
-              placeholder={t('onboarding.individual.postalCode.placeholder', locale)}
-              aria-invalid={touched.postalCode && !!errors.postalCode}
-              aria-describedby={errors.postalCode ? 'postalCode-error' : undefined}
-            />
-            {touched.postalCode && errors.postalCode && (
-              <p id="postalCode-error" className="text-sm text-destructive" role="alert">
-                {errors.postalCode}
-              </p>
-            )}
-          </div>
-
-          {/* Submit */}
-          <Button type="submit" className="w-full" disabled={submitting || geographyUnavailable}>
-            {submitting ? (
-              <>
-                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
-                {t('onboarding.individual.saving', locale)}
-              </>
-            ) : (
-              t('onboarding.individual.save', locale)
-            )}
-          </Button>
-        </form>
+                    {/* City */}
+                    <div className="space-y-2">
+                      <Label htmlFor="cityId">
+                        {t('onboarding.individual.city', locale)}
+                        <span className="text-destructive ml-0.5">*</span>
+                      </Label>
+                      {loadingCities ? (
+                        <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
+                          <Loader2Icon className="h-4 w-4 animate-spin" />
+                          {t('onboarding.individual.loading', locale)}
+                        </div>
+                      ) : (
+                        <select
+                          id="cityId"
+                          value={selectedCityId}
+                          onChange={(e) => setSelectedCityId(e.target.value)}
+                          onBlur={() => handleBlur('cityId')}
+                          disabled={submitting || !selectedProvinceId}
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          aria-invalid={touched.cityId && !!errors.cityId}
+                          aria-describedby={errors.cityId ? 'cityId-error' : undefined}
+                        >
+                          <option value="">
+                            {t('onboarding.individual.city.placeholder', locale)}
+                          </option>
+                          {cities.map((c) => (
+                            <option key={c.id} value={c.id}>
+                              {isRtl ? c.nameFa : c.nameEn}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                      <GeographyLoadError
+                        {...cityOptions}
+                        message={t('onboarding.individual.error.loadCities', locale)}
+                        locale={locale}
+                        testId="onboarding-cities-retry"
+                      />
+                      {touched.cityId && errors.cityId && (
+                        <p id="cityId-error" className="text-sm text-destructive" role="alert">
+                          {errors.cityId}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  {/* Full Address */}
+                  <div className="space-y-2">
+                    <Label htmlFor="fullAddress">
+                      {t('onboarding.individual.address', locale)}
+                      <span className="text-destructive ml-0.5">*</span>
+                    </Label>
+                    <textarea
+                      id="fullAddress"
+                      required
+                      maxLength={500}
+                      rows={3}
+                      value={fullAddress}
+                      onChange={(e) => setFullAddress(e.target.value)}
+                      onBlur={() => handleBlur('fullAddress')}
+                      disabled={submitting}
+                      placeholder={t('onboarding.individual.address.placeholder', locale)}
+                      className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      aria-invalid={touched.fullAddress && !!errors.fullAddress}
+                      aria-describedby={errors.fullAddress ? 'fullAddress-error' : undefined}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      {numbers.number(fullAddress.length)}/{numbers.number(500)}
+                    </p>
+                    {touched.fullAddress && errors.fullAddress && (
+                      <p id="fullAddress-error" className="text-sm text-destructive" role="alert">
+                        {errors.fullAddress}
+                      </p>
+                    )}
+                  </div>
+                  {/* Postal Code */}
+                  <div className="space-y-2">
+                    <Label htmlFor="postalCode">
+                      {t('onboarding.individual.postalCode', locale)}
+                      <span className="text-destructive ml-0.5">*</span>
+                    </Label>
+                    <Input
+                      id="postalCode"
+                      type="text"
+                      inputMode="numeric"
+                      required
+                      maxLength={10}
+                      value={postalCode}
+                      onChange={(e) => {
+                        const val = normalizeProfileDigits(e.target.value)
+                          .replace(/\D/g, '')
+                          .slice(0, 10);
+                        setPostalCode(val);
+                      }}
+                      onBlur={() => handleBlur('postalCode')}
+                      disabled={submitting}
+                      placeholder={t('onboarding.individual.postalCode.placeholder', locale)}
+                      aria-invalid={touched.postalCode && !!errors.postalCode}
+                      aria-describedby={errors.postalCode ? 'postalCode-error' : undefined}
+                    />
+                    {touched.postalCode && errors.postalCode && (
+                      <p id="postalCode-error" className="text-sm text-destructive" role="alert">
+                        {errors.postalCode}
+                      </p>
+                    )}
+                  </div>
+                </>
+              ),
+            },
+            {
+              label: t('onboarding.wizard.review', locale),
+              content: (
+                <OnboardingReview
+                  rows={[
+                    { label: t('onboarding.individual.title.label', locale), value: title },
+                    { label: t('onboarding.individual.firstName', locale), value: firstName },
+                    { label: t('onboarding.individual.lastName', locale), value: lastName },
+                    { label: t('onboarding.individual.nationalId', locale), value: nationalId },
+                    {
+                      label: t('onboarding.individual.province', locale),
+                      value:
+                        (isRtl
+                          ? provinces.find((p) => p.id === selectedProvinceId)?.nameFa
+                          : provinces.find((p) => p.id === selectedProvinceId)?.nameEn) ?? '',
+                    },
+                    {
+                      label: t('onboarding.individual.city', locale),
+                      value:
+                        (isRtl
+                          ? cities.find((p) => p.id === selectedCityId)?.nameFa
+                          : cities.find((p) => p.id === selectedCityId)?.nameEn) ?? '',
+                    },
+                    { label: t('onboarding.individual.address', locale), value: fullAddress },
+                    { label: t('onboarding.individual.postalCode', locale), value: postalCode },
+                  ]}
+                />
+              ),
+            },
+          ]}
+        />
       </div>
     </div>
   );

@@ -469,14 +469,22 @@ describe('ProfilesService', () => {
       );
     });
 
-    it('is idempotent when profile is already ACTIVE', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [activeRow] });
-
+    it('is idempotent when profile is already ACTIVE and retains its default', async () => {
+      const defaultRow = { ...activeRow, is_default: true };
+      mockPool.query.mockResolvedValueOnce({ rows: [defaultRow] });
+      mockPool.connect.mockResolvedValue(transactionalClient);
+      mockClient.query.mockResolvedValueOnce({}); // BEGIN
+      mockClient.query.mockResolvedValueOnce({ rows: [defaultRow] }); // current owner/status lock
+      mockClient.query.mockResolvedValueOnce({ rows: [] }); // account lock
+      mockClient.query.mockResolvedValueOnce({ rows: [{ id: 'prof-1' }] }); // existing default
+      mockClient.query.mockResolvedValueOnce({ rows: [defaultRow] }); // readback
+      mockClient.query.mockResolvedValueOnce({}); // COMMIT
       const result = await service.completeOnboarding('user-1', 'prof-1');
-
-      // Should return without any transaction
-      expect(mockPool.connect).not.toHaveBeenCalled();
       expect(result.status).toBe('ACTIVE');
+      expect(result.isDefault).toBe(true);
+      expect(
+        mockClient.query.mock.calls.some(([sql]) => String(sql).includes('UPDATE profiles'))
+      ).toBe(false);
     });
   });
 

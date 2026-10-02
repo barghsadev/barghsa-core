@@ -1,5 +1,8 @@
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
-import { OnboardingDraftsService, legalDraftInputSchema } from './onboarding-drafts.service.js';
+import {
+  OnboardingDraftsService,
+  onboardingDraftInputSchema,
+} from './onboarding-drafts.service.js';
 import { z } from 'zod';
 import {
   Controller,
@@ -22,6 +25,18 @@ import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+
+const individualOnboardingInputSchema = z.object({
+  draftVersion: z.number().int().min(0).max(2147483647).optional(),
+  title: z.string().trim().max(50).optional(),
+  firstName: z.string().trim().min(1).max(100),
+  lastName: z.string().trim().min(1).max(100),
+  nationalId: z.string().trim(),
+  provinceId: z.string().uuid(),
+  cityId: z.string().uuid(),
+  fullAddress: z.string().trim().min(1).max(500),
+  postalCode: z.string().trim(),
+});
 
 @ApiTags('Onboarding')
 @Controller('api/onboarding')
@@ -47,7 +62,7 @@ export class OnboardingController {
 
   @Get('draft/:profileId')
   @RateLimit({ namespace: 'onboarding:draft:get:user', limit: 60, windowMs: 60000 })
-  @ApiOperation({ summary: 'Read the current owned legal onboarding draft' })
+  @ApiOperation({ summary: 'Read the current owned onboarding draft' })
   getDraft(
     @Param('profileId', new ParseUUIDPipe()) profileId: string,
     @Req() req: AuthenticatedRequest
@@ -56,9 +71,9 @@ export class OnboardingController {
   }
 
   @Put('draft/:profileId')
-  @ApiZodBody(legalDraftInputSchema)
+  @ApiZodBody(onboardingDraftInputSchema)
   @RateLimit({ namespace: 'onboarding:draft:save:user', limit: 60, windowMs: 60000 })
-  @ApiOperation({ summary: 'Save legal onboarding fields with a draft version check' })
+  @ApiOperation({ summary: 'Save onboarding fields with a draft version check' })
   saveDraft(
     @Param('profileId', new ParseUUIDPipe()) profileId: string,
     @Body() body: unknown,
@@ -138,6 +153,7 @@ export class OnboardingController {
    * individual profile form data including the main address. Transitions
    * the profile from DRAFT to ACTIVE on success.
    */
+  @ApiZodBody(individualOnboardingInputSchema)
   @Post('individual/:profileId')
   @HttpCode(200)
   @RateLimit({ namespace: 'onboarding:individual:user', limit: 20, windowMs: 60_000 })
@@ -168,18 +184,7 @@ export class OnboardingController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const parsed = z
-      .object({
-        title: z.string().trim().max(50).optional(),
-        firstName: z.string().trim().min(1).max(100),
-        lastName: z.string().trim().min(1).max(100),
-        nationalId: z.string().trim(),
-        provinceId: z.string().uuid(),
-        cityId: z.string().uuid(),
-        fullAddress: z.string().trim().min(1).max(500),
-        postalCode: z.string().trim(),
-      })
-      .safeParse(body);
+    const parsed = individualOnboardingInputSchema.safeParse(body);
     if (!parsed.success) {
       throw new HttpException(
         {
@@ -284,6 +289,9 @@ export class OnboardingController {
         profileType: { type: 'string' },
         isDefault: { type: 'boolean' },
         status: { type: 'string' },
+        title: { type: 'string', nullable: true },
+        firstName: { type: 'string', nullable: true },
+        lastName: { type: 'string', nullable: true },
         message: { type: 'string' },
       },
     },
@@ -305,6 +313,9 @@ export class OnboardingController {
       profileType: profile.profileType,
       isDefault: profile.isDefault,
       status: profile.status,
+      title: profile.title,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
       message: 'Onboarding completed successfully',
     };
   }

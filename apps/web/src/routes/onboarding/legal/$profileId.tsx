@@ -1,3 +1,5 @@
+import { OnboardingWizard, OnboardingReview } from '../../../components/OnboardingWizard.js';
+import { parseOnboardingProfile } from '../../../lib/onboarding-profile.js';
 import { useGeographyOptions } from '../../../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../../../components/GeographyLoadError.js';
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
@@ -17,7 +19,15 @@ import {
 } from '@barghsa/shared/validation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { Loader2Icon, ChevronRightIcon, UploadIcon } from 'lucide-react';
-import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
+import {
+  Input,
+  Label,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+  DatePicker,
+  datePickerCalendarDate,
+} from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/legal/$profileId')({
   component: LegalProfileFormPage,
@@ -51,6 +61,17 @@ interface FormErrors {
 
 function LegalProfileFormPage() {
   const { profileId } = useParams({ from: '/onboarding/legal/$profileId' });
+  return <LegalProfileForm key={profileId} profileId={profileId} />;
+}
+
+function LegalProfileForm({ profileId }: { profileId: string }) {
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const router = useRouter();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -153,6 +174,8 @@ function LegalProfileFormPage() {
       setDocuments([]);
     }
 
+    setErrors({});
+    setTouched({});
     setLegalName(data.legalName ?? '');
     setNationalIdentifier(normalizeProfileDigits(data.nationalIdentifier ?? ''));
     setRegistrationNumber(data.registrationNumber ?? '');
@@ -373,172 +396,147 @@ function LegalProfileFormPage() {
     ]
   );
 
-  const validateForm = useCallback((): boolean => {
-    const newErrors: FormErrors = {
-      ...Object.fromEntries(
-        Object.entries(representative).map(([key, value]) => [key, validateField(key, value)])
-      ),
-      legalName: validateField('legalName', legalName),
-      nationalIdentifier: validateField('nationalIdentifier', nationalIdentifier),
-      registrationNumber: validateField('registrationNumber', registrationNumber),
-      companyTypeId: validateField('companyTypeId', companyTypeId),
-      officialPostalCode: validateField('officialPostalCode', officialPostalCode),
-      officialProvinceId: validateField('officialProvinceId', officialProvinceId),
-      officialCityId: validateField('officialCityId', officialCityId),
-      officialFullAddress: validateField('officialFullAddress', officialFullAddress),
-      officialEmail: validateField('officialEmail', officialEmail),
-      representativeTitle: validateField('representativeTitle', representativeTitle),
-      representativeRelationship: validateField(
-        'representativeRelationship',
-        representativeRelationship
-      ),
-    };
-    setErrors(newErrors);
-    setTouched({
-      ...Object.fromEntries(Object.keys(representative).map((key) => [key, true])),
-      legalName: true,
-      nationalIdentifier: true,
-      registrationNumber: true,
-      companyTypeId: true,
-      officialPostalCode: true,
-      officialProvinceId: true,
-      officialCityId: true,
-      officialFullAddress: true,
-      officialEmail: true,
-      representativeTitle: true,
-      representativeRelationship: true,
-    });
-    return !Object.values(newErrors).some(Boolean);
+  const values = {
+    ...representative,
+    representativeTitle,
+    representativeRelationship,
+    legalName,
+    nationalIdentifier,
+    registrationNumber,
+    companyTypeId,
+    registrationDate,
+    economicCode,
+    officialPhone,
+    officialEmail,
+    officialProvinceId,
+    officialCityId,
+    officialFullAddress,
+    officialPostalCode,
+  };
+  const validateForm = (fields = Object.keys(values)): boolean => {
+    const checked = Object.fromEntries(
+      fields.map((field) => [field, validateField(field, values[field as keyof typeof values])])
+    );
+    setErrors((previous) => ({ ...previous, ...checked }));
+    setTouched((previous) => ({
+      ...previous,
+      ...Object.fromEntries(fields.map((field) => [field, true])),
+    }));
+    return !Object.values(checked).some(Boolean);
+  };
+
+  const handleSubmit = useCallback(async () => {
+    if (geographyUnavailable) return;
+    setSubmitError(null);
+
+    if (!draft.ready || uploading || !validateForm()) return;
+
+    setSubmitting(true);
+
+    try {
+      const draftVersion = await draft.flush();
+      if (draftVersion === undefined) return;
+      const response = await fetch(`/api/onboarding/legal/${profileId}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({
+          draftVersion,
+          documents: documents.map((document) => document.key),
+          ...Object.fromEntries(
+            Object.entries(representative).map(([key, value]) => [key, value.trim()])
+          ),
+          legalName: legalName.trim(),
+          nationalIdentifier: nationalIdentifier.trim(),
+          registrationNumber: registrationNumber.trim(),
+          companyTypeId: companyTypeId || undefined,
+          registrationDate: registrationDate || undefined,
+          economicCode: economicCode.trim() || undefined,
+          officialPhone: officialPhone.trim() || undefined,
+          officialEmail: officialEmail.trim() || undefined,
+          officialProvinceId: officialProvinceId || undefined,
+          officialCityId: officialCityId || undefined,
+          officialFullAddress: officialFullAddress.trim() || undefined,
+          officialPostalCode: officialPostalCode.trim() || undefined,
+          representativeTitle: representativeTitle.trim(),
+          representativeRelationship: representativeRelationship.trim(),
+        }),
+      });
+
+      const body: Record<string, unknown> = await response.json().catch(() => ({}));
+      if (!mounted.current) return;
+
+      if (!response.ok) {
+        const errorCode =
+          typeof body?.error === 'string'
+            ? body.error
+            : ((body?.error as Record<string, unknown>)?.code as string | undefined);
+
+        if (errorCode === ErrorCodes.CONFLICT_VERSION.code) {
+          draft.markConflict();
+          setSubmitError(t('onboarding.draft.conflict', locale));
+        } else if (errorCode === ErrorCodes.CONFLICT_DUPLICATE.code) {
+          setSubmitError(
+            isRtl
+              ? 'این شناسه ملی قبلاً ثبت شده است'
+              : 'This national identifier is already registered'
+          );
+        } else {
+          setSubmitError(
+            isRtl
+              ? 'ذخیره‌سازی با خطا مواجه شد. لطفاً دوباره تلاش کنید'
+              : 'Failed to save. Please try again'
+          );
+        }
+        return;
+      }
+
+      parseOnboardingProfile(body, profileId, 'LEGAL');
+      toast.success(
+        isRtl ? 'پروفایل حقوقی با موفقیت ذخیره شد' : 'Legal profile saved successfully'
+      );
+      router.navigate({
+        to: '/onboarding/complete',
+        search: { profileId },
+        replace: true,
+      });
+    } catch {
+      setSubmitError(
+        isRtl
+          ? 'ذخیره‌سازی با خطا مواجه شد. لطفاً دوباره تلاش کنید'
+          : 'Failed to save. Please try again'
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }, [
+    profileId,
+    documents,
+    uploading,
+    draft.ready,
+    draft.flush,
+    draft.markConflict,
+    locale,
     representative,
     legalName,
     nationalIdentifier,
     registrationNumber,
     companyTypeId,
-    officialPostalCode,
+    registrationDate,
+    economicCode,
+    officialPhone,
+    officialEmail,
     officialProvinceId,
     officialCityId,
     officialFullAddress,
-    officialEmail,
+    officialPostalCode,
     representativeTitle,
     representativeRelationship,
-    validateField,
+    validateForm,
+    geographyUnavailable,
+    isRtl,
+    router,
   ]);
-
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (geographyUnavailable) return;
-      setSubmitError(null);
-
-      if (!draft.ready || uploading || !validateForm()) return;
-
-      setSubmitting(true);
-
-      try {
-        const draftVersion = await draft.flush();
-        if (draftVersion === undefined) return;
-        const response = await fetch(`/api/onboarding/legal/${profileId}`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({
-            draftVersion,
-            documents: documents.map((document) => document.key),
-            ...Object.fromEntries(
-              Object.entries(representative).map(([key, value]) => [key, value.trim()])
-            ),
-            legalName: legalName.trim(),
-            nationalIdentifier: nationalIdentifier.trim(),
-            registrationNumber: registrationNumber.trim(),
-            companyTypeId: companyTypeId || undefined,
-            registrationDate: registrationDate || undefined,
-            economicCode: economicCode.trim() || undefined,
-            officialPhone: officialPhone.trim() || undefined,
-            officialEmail: officialEmail.trim() || undefined,
-            officialProvinceId: officialProvinceId || undefined,
-            officialCityId: officialCityId || undefined,
-            officialFullAddress: officialFullAddress.trim() || undefined,
-            officialPostalCode: officialPostalCode.trim() || undefined,
-            representativeTitle: representativeTitle.trim(),
-            representativeRelationship: representativeRelationship.trim(),
-          }),
-        });
-
-        const body: Record<string, unknown> = await response.json().catch(() => ({}));
-
-        if (!response.ok) {
-          const errorCode =
-            typeof body?.error === 'string'
-              ? body.error
-              : ((body?.error as Record<string, unknown>)?.code as string | undefined);
-
-          if (errorCode === ErrorCodes.CONFLICT_VERSION.code) {
-            draft.markConflict();
-            setSubmitError(t('onboarding.draft.conflict', locale));
-          } else if (errorCode === ErrorCodes.CONFLICT_DUPLICATE.code) {
-            setSubmitError(
-              isRtl
-                ? 'این شناسه ملی قبلاً ثبت شده است'
-                : 'This national identifier is already registered'
-            );
-          } else {
-            setSubmitError(
-              isRtl
-                ? 'ذخیره‌سازی با خطا مواجه شد. لطفاً دوباره تلاش کنید'
-                : 'Failed to save. Please try again'
-            );
-          }
-          return;
-        }
-
-        toast.success(
-          isRtl ? 'پروفایل حقوقی با موفقیت ذخیره شد' : 'Legal profile saved successfully'
-        );
-        router.navigate({
-          to: '/onboarding/complete',
-          search: { profileId },
-          replace: true,
-        });
-      } catch {
-        setSubmitError(
-          isRtl
-            ? 'ذخیره‌سازی با خطا مواجه شد. لطفاً دوباره تلاش کنید'
-            : 'Failed to save. Please try again'
-        );
-      } finally {
-        setSubmitting(false);
-      }
-    },
-    [
-      profileId,
-      documents,
-      uploading,
-      draft.ready,
-      draft.flush,
-      draft.markConflict,
-      locale,
-      representative,
-      legalName,
-      nationalIdentifier,
-      registrationNumber,
-      companyTypeId,
-      registrationDate,
-      economicCode,
-      officialPhone,
-      officialEmail,
-      officialProvinceId,
-      officialCityId,
-      officialFullAddress,
-      officialPostalCode,
-      representativeTitle,
-      representativeRelationship,
-      validateForm,
-      geographyUnavailable,
-      isRtl,
-      router,
-    ]
-  );
 
   async function uploadDocuments(files: File[]) {
     if (uploadInFlight.current || submitting || !draft.ready || !files.length) return;
@@ -598,18 +596,41 @@ function LegalProfileFormPage() {
           {options?.required && <span className="text-destructive ml-0.5">*</span>}
         </Label>
         {field === 'representativeFullAddress' ? (
-          <textarea
+          <>
+            {' '}
+            <textarea
+              id={field}
+              required
+              rows={3}
+              maxLength={500}
+              value={value}
+              onChange={(event) => onChange(event.target.value)}
+              onBlur={() => handleBlur(field)}
+              disabled={submitting}
+              aria-invalid={isTouched && !!error}
+              aria-describedby={error ? `${field}-error` : undefined}
+              className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            />
+            <p className="text-xs text-muted-foreground text-end">
+              {numbers.number(value.length)}/{numbers.number(500)}
+            </p>
+          </>
+        ) : field === 'registrationDate' ? (
+          <DatePicker
             id={field}
-            required
-            rows={3}
-            maxLength={500}
-            value={value}
-            onChange={(event) => onChange(event.target.value)}
-            onBlur={() => handleBlur(field)}
+            label={label}
+            locale={locale}
+            timezone="Asia/Tehran"
+            numerals={numbers.number(1) === '1' ? 'latn' : 'arabext'}
+            value={datePickerCalendarDate(value, 'Asia/Tehran')}
             disabled={submitting}
-            aria-invalid={isTouched && !!error}
-            aria-describedby={error ? `${field}-error` : undefined}
-            className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            onChange={(date) =>
+              onChange(
+                date
+                  ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+                  : ''
+              )
+            }
           />
         ) : (
           <Input
@@ -647,7 +668,7 @@ function LegalProfileFormPage() {
           to="/onboarding"
           onClick={async (event) => {
             event.preventDefault();
-            if (uploading) return;
+            if (uploading || submitting) return;
             if (!draft.ready || (await draft.flush()) !== undefined)
               await router.navigate({ to: '/onboarding' });
           }}
@@ -664,27 +685,6 @@ function LegalProfileFormPage() {
             : 'Please enter the legal entity information'}
         </p>
 
-        <div className="mb-4" role="status">
-          <span>{t(`onboarding.draft.${draft.status}`, locale)}</span>
-          {(draft.status === 'error' || draft.status === 'conflict') && (
-            <Button
-              type="button"
-              variant="outline"
-              className="ms-2"
-              onClick={() => {
-                if (draft.status === 'conflict' || !draft.ready) draft.reload();
-                else void draft.flush();
-              }}
-            >
-              {t(
-                draft.status === 'conflict' || !draft.ready
-                  ? 'onboarding.draft.reload'
-                  : 'onboarding.draft.retry',
-                locale
-              )}
-            </Button>
-          )}
-        </div>
         {/* Submit error alert */}
         {submitError && (
           <Alert variant="destructive" className="mb-6" role="alert">
@@ -695,549 +695,624 @@ function LegalProfileFormPage() {
           </Alert>
         )}
 
-        <form
-          onBlurCapture={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget as Node | null))
-              void draft.flush();
-          }}
+        <GeographyLoadError
+          {...provinceOptions}
+          message={t('onboarding.individual.error.loadProvinces', locale)}
+          locale={locale}
+          testId="onboarding-provinces-retry"
+        />
+        <OnboardingWizard
+          draft={draft}
+          submitting={submitting}
+          disabled={uploading}
           onSubmit={handleSubmit}
-          className="space-y-8"
-          noValidate
-        >
-          {/* ── Section 1: Authorized Representative ────────── */}
-          <GeographyLoadError
-            {...provinceOptions}
-            message={t('onboarding.individual.error.loadProvinces', locale)}
-            locale={locale}
-            testId="onboarding-provinces-retry"
-          />
-          <fieldset
-            disabled={!draft.ready || submitting}
-            onBlur={(event) => {
-              if (!event.currentTarget.contains(event.relatedTarget as Node | null))
-                void draft.flush();
-            }}
-          >
-            <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
-              {isRtl ? 'اطلاعات نماینده' : 'Authorized Representative'}
-            </legend>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {(
-                [
-                  'representativeHonorific',
-                  'representativeFirstName',
-                  'representativeLastName',
-                  'representativeNationalId',
-                  'representativeFullAddress',
-                  'representativePostalCode',
-                ] as const
-              ).map((field) => (
-                <div key={field}>
-                  {renderField(
-                    field,
-                    t(`onboarding.legal.${field}`, locale),
-                    representative[field],
-                    (value) =>
-                      setRepresentative((prev) => ({
-                        ...prev,
-                        [field]:
-                          field === 'representativeNationalId' ||
-                          field === 'representativePostalCode'
-                            ? normalizeProfileDigits(value)
-                            : value,
-                      })),
-                    {
-                      required: field !== 'representativeHonorific',
-                      maxLength:
-                        field === 'representativeFullAddress'
-                          ? 500
-                          : field === 'representativeHonorific'
-                            ? 50
-                            : field === 'representativeNationalId' ||
-                                field === 'representativePostalCode'
-                              ? 10
-                              : 100,
-                    }
-                  )}
-                </div>
-              ))}
-              {(['representativeProvinceId', 'representativeCityId'] as const).map((field) => (
-                <div key={field} className="space-y-2">
-                  <Label htmlFor={field}>{t(`onboarding.legal.${field}`, locale)}</Label>
-                  <select
-                    id={field}
-                    required
-                    value={representative[field]}
-                    disabled={
-                      submitting ||
-                      (field === 'representativeProvinceId'
-                        ? loadingProvinces
-                        : !representative.representativeProvinceId || loadingRepresentativeCities)
-                    }
-                    onChange={(event) =>
-                      setRepresentative((prev) => ({
-                        ...prev,
-                        [field]: event.target.value,
-                        ...(field === 'representativeProvinceId'
-                          ? { representativeCityId: '' }
-                          : {}),
-                      }))
-                    }
-                    onBlur={() => handleBlur(field)}
-                    aria-invalid={touched[field] && !!errors[field]}
-                    aria-describedby={errors[field] ? `${field}-error` : undefined}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                  >
-                    <option value="">{t(`onboarding.legal.${field}`, locale)}</option>
-                    {(field === 'representativeProvinceId' ? provinces : representativeCities).map(
-                      (item) => (
-                        <option key={item.id} value={item.id}>
-                          {isRtl ? item.nameFa : item.nameEn}
-                        </option>
-                      )
-                    )}
-                  </select>
-                  {field === 'representativeCityId' && (
-                    <GeographyLoadError
-                      {...representativeCityOptions}
-                      message={t('onboarding.individual.error.loadCities', locale)}
-                      locale={locale}
-                      testId="onboarding-representative-cities-retry"
-                    />
-                  )}
-                  {touched[field] && errors[field] && (
-                    <p id={`${field}-error`} role="alert" className="text-sm text-destructive">
-                      {errors[field]}
-                    </p>
-                  )}
-                </div>
-              ))}
-              {renderField(
-                'representativeTitle',
-                isRtl ? 'عنوان/سمت نماینده' : 'Representative Title',
-                representativeTitle,
-                setRepresentativeTitle,
-                {
-                  required: true,
-                  maxLength: 100,
-                  placeholder: isRtl ? 'مدیرعامل، رئیس هیئت مدیره، ...' : 'CEO, Board Chair, ...',
-                }
-              )}
-              {renderField(
-                'representativeRelationship',
-                isRtl ? 'نسبت/ارتباط نماینده' : 'Representative Relationship',
-                representativeRelationship,
-                setRepresentativeRelationship,
-                {
-                  required: true,
-                  maxLength: 100,
-                  placeholder: isRtl ? 'رابطه با شخص حقوقی' : 'Relationship to the entity',
-                }
-              )}
-            </div>
-          </fieldset>
-
-          {/* ── Section 2: Legal Entity ─────────────────────── */}
-          <fieldset
-            disabled={!draft.ready || submitting}
-            onBlur={(event) => {
-              if (!event.currentTarget.contains(event.relatedTarget as Node | null))
-                void draft.flush();
-            }}
-          >
-            <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
-              {isRtl ? 'اطلاعات شخص حقوقی' : 'Legal Entity'}
-            </legend>
-            <div className="space-y-4">
-              {renderField(
-                'legalName',
-                isRtl ? 'نام شخص حقوقی' : 'Legal Name',
-                legalName,
-                setLegalName,
-                {
-                  required: true,
-                  maxLength: 200,
-                  placeholder: isRtl ? 'نام شرکت را وارد کنید' : 'Enter company name',
-                }
-              )}
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                {renderField(
-                  'nationalIdentifier',
-                  isRtl ? 'شناسه ملی' : 'National Identifier',
-                  nationalIdentifier,
-                  (v) =>
-                    setNationalIdentifier(
-                      normalizeProfileDigits(v).replace(/\D/g, '').slice(0, 11)
-                    ),
-                  {
-                    required: true,
-                    inputMode: 'numeric',
-                    maxLength: 11,
-                    placeholder: isRtl ? 'شناسه ملی ۱۱ رقمی' : '11-digit national identifier',
-                  }
-                )}
-                {renderField(
-                  'registrationNumber',
-                  isRtl ? 'شماره ثبت' : 'Registration Number',
-                  registrationNumber,
-                  setRegistrationNumber,
-                  {
-                    required: true,
-                    maxLength: 50,
-                    placeholder: isRtl ? 'شماره ثبت شرکت' : 'Company registration number',
-                  }
-                )}
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                {/* Company type (select) */}
-                <div className="space-y-2">
-                  <Label htmlFor="companyTypeId">
-                    {isRtl ? 'نوع شرکت' : 'Company Type'}
-                    <span className="text-destructive ml-0.5">*</span>
-                  </Label>
-                  {loadingCompanyTypes ? (
-                    <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
-                      <Loader2Icon className="h-4 w-4 animate-spin" />
-                      {isRtl ? 'در حال بارگذاری...' : 'Loading...'}
-                    </div>
-                  ) : companyTypesError ? (
-                    <div className="flex h-10 items-center gap-2 text-sm text-destructive">
-                      <span>{isRtl ? 'خطا در بارگذاری' : 'Failed to load'}</span>
-                      <button
-                        type="button"
-                        data-testid="onboarding-company-types-retry"
-                        onClick={fetchCompanyTypes}
-                        disabled={loadingCompanyTypes}
-                        className="rounded border border-input px-2 py-1 text-xs hover:bg-muted"
-                      >
-                        {isRtl ? 'تلاش مجدد' : 'Retry'}
-                      </button>
-                    </div>
-                  ) : (
-                    <select
-                      id="companyTypeId"
-                      value={companyTypeId}
-                      onChange={(e) => setCompanyTypeId(e.target.value)}
-                      onBlur={() => handleBlur('companyTypeId')}
-                      disabled={submitting}
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                      aria-invalid={touched.companyTypeId && !!errors.companyTypeId}
-                      aria-describedby={errors.companyTypeId ? 'companyTypeId-error' : undefined}
-                    >
-                      <option value="">
-                        {isRtl ? 'نوع شرکت را انتخاب کنید' : 'Select company type'}
-                      </option>
-                      {companyTypes.map((ct) => (
-                        <option key={ct.id} value={ct.id}>
-                          {isRtl ? ct.nameFa : ct.nameEn}
-                        </option>
+          steps={[
+            {
+              label: t('onboarding.wizard.representative', locale),
+              validate: () =>
+                validateForm([
+                  ...Object.keys(representative),
+                  'representativeTitle',
+                  'representativeRelationship',
+                ]),
+              content: (
+                <>
+                  {' '}
+                  <fieldset disabled={!draft.ready || submitting}>
+                    <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
+                      {isRtl ? 'اطلاعات نماینده' : 'Authorized Representative'}
+                    </legend>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {(
+                        [
+                          'representativeHonorific',
+                          'representativeFirstName',
+                          'representativeLastName',
+                          'representativeNationalId',
+                          'representativeFullAddress',
+                          'representativePostalCode',
+                        ] as const
+                      ).map((field) => (
+                        <div key={field}>
+                          {renderField(
+                            field,
+                            t(`onboarding.legal.${field}`, locale),
+                            representative[field],
+                            (value) =>
+                              setRepresentative((prev) => ({
+                                ...prev,
+                                [field]:
+                                  field === 'representativeNationalId' ||
+                                  field === 'representativePostalCode'
+                                    ? normalizeProfileDigits(value)
+                                    : value,
+                              })),
+                            {
+                              required: field !== 'representativeHonorific',
+                              maxLength:
+                                field === 'representativeFullAddress'
+                                  ? 500
+                                  : field === 'representativeHonorific'
+                                    ? 50
+                                    : field === 'representativeNationalId' ||
+                                        field === 'representativePostalCode'
+                                      ? 10
+                                      : 100,
+                            }
+                          )}
+                        </div>
                       ))}
-                    </select>
-                  )}
-                  {touched.companyTypeId && errors.companyTypeId && (
-                    <p id="companyTypeId-error" className="text-sm text-destructive" role="alert">
-                      {errors.companyTypeId}
-                    </p>
-                  )}
-                </div>
-
-                {renderField(
+                      {(['representativeProvinceId', 'representativeCityId'] as const).map(
+                        (field) => (
+                          <div key={field} className="space-y-2">
+                            <Label htmlFor={field}>{t(`onboarding.legal.${field}`, locale)}</Label>
+                            <select
+                              id={field}
+                              required
+                              value={representative[field]}
+                              disabled={
+                                submitting ||
+                                (field === 'representativeProvinceId'
+                                  ? loadingProvinces
+                                  : !representative.representativeProvinceId ||
+                                    loadingRepresentativeCities)
+                              }
+                              onChange={(event) =>
+                                setRepresentative((prev) => ({
+                                  ...prev,
+                                  [field]: event.target.value,
+                                  ...(field === 'representativeProvinceId'
+                                    ? { representativeCityId: '' }
+                                    : {}),
+                                }))
+                              }
+                              onBlur={() => handleBlur(field)}
+                              aria-invalid={touched[field] && !!errors[field]}
+                              aria-describedby={errors[field] ? `${field}-error` : undefined}
+                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                            >
+                              <option value="">{t(`onboarding.legal.${field}`, locale)}</option>
+                              {(field === 'representativeProvinceId'
+                                ? provinces
+                                : representativeCities
+                              ).map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {isRtl ? item.nameFa : item.nameEn}
+                                </option>
+                              ))}
+                            </select>
+                            {field === 'representativeCityId' && (
+                              <GeographyLoadError
+                                {...representativeCityOptions}
+                                message={t('onboarding.individual.error.loadCities', locale)}
+                                locale={locale}
+                                testId="onboarding-representative-cities-retry"
+                              />
+                            )}
+                            {touched[field] && errors[field] && (
+                              <p
+                                id={`${field}-error`}
+                                role="alert"
+                                className="text-sm text-destructive"
+                              >
+                                {errors[field]}
+                              </p>
+                            )}
+                          </div>
+                        )
+                      )}
+                      {renderField(
+                        'representativeTitle',
+                        isRtl ? 'عنوان/سمت نماینده' : 'Representative Title',
+                        representativeTitle,
+                        setRepresentativeTitle,
+                        {
+                          required: true,
+                          maxLength: 100,
+                          placeholder: isRtl
+                            ? 'مدیرعامل، رئیس هیئت مدیره، ...'
+                            : 'CEO, Board Chair, ...',
+                        }
+                      )}
+                      {renderField(
+                        'representativeRelationship',
+                        isRtl ? 'نسبت/ارتباط نماینده' : 'Representative Relationship',
+                        representativeRelationship,
+                        setRepresentativeRelationship,
+                        {
+                          required: true,
+                          maxLength: 100,
+                          placeholder: isRtl ? 'رابطه با شخص حقوقی' : 'Relationship to the entity',
+                        }
+                      )}
+                    </div>
+                  </fieldset>
+                </>
+              ),
+            },
+            {
+              label: t('onboarding.wizard.company', locale),
+              validate: () =>
+                validateForm([
+                  'legalName',
+                  'nationalIdentifier',
+                  'registrationNumber',
+                  'companyTypeId',
                   'registrationDate',
-                  isRtl ? 'تاریخ ثبت' : 'Registration Date',
-                  registrationDate,
-                  setRegistrationDate,
-                  {
-                    type: 'date',
-                    placeholder: isRtl ? 'تاریخ ثبت شرکت' : 'Registration date',
-                  }
-                )}
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                {renderField(
                   'economicCode',
-                  isRtl ? 'کد اقتصادی' : 'Economic Code',
-                  economicCode,
-                  setEconomicCode,
-                  {
-                    placeholder: isRtl ? 'کد اقتصادی (اختیاری)' : 'Economic code (optional)',
-                  }
-                )}
-                {renderField(
                   'officialPhone',
-                  isRtl ? 'تلفن رسمی' : 'Official Phone',
-                  officialPhone,
-                  setOfficialPhone,
-                  {
-                    type: 'tel',
-                    inputMode: 'tel',
-                    placeholder: isRtl ? 'تلفن رسمی (اختیاری)' : 'Official phone (optional)',
-                  }
-                )}
-              </div>
+                  'officialEmail',
+                ]),
+              content: (
+                <>
+                  {' '}
+                  <fieldset disabled={!draft.ready || submitting}>
+                    <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
+                      {isRtl ? 'اطلاعات شخص حقوقی' : 'Legal Entity'}
+                    </legend>
+                    <div className="space-y-4">
+                      {renderField(
+                        'legalName',
+                        isRtl ? 'نام شخص حقوقی' : 'Legal Name',
+                        legalName,
+                        setLegalName,
+                        {
+                          required: true,
+                          maxLength: 200,
+                          placeholder: isRtl ? 'نام شرکت را وارد کنید' : 'Enter company name',
+                        }
+                      )}
 
-              {renderField(
-                'officialEmail',
-                isRtl ? 'ایمیل رسمی' : 'Official Email',
-                officialEmail,
-                setOfficialEmail,
-                {
-                  type: 'email',
-                  inputMode: 'email',
-                  placeholder: isRtl ? 'ایمیل رسمی (اختیاری)' : 'Official email (optional)',
-                }
-              )}
-            </div>
-          </fieldset>
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {renderField(
+                          'nationalIdentifier',
+                          isRtl ? 'شناسه ملی' : 'National Identifier',
+                          nationalIdentifier,
+                          (v) =>
+                            setNationalIdentifier(
+                              normalizeProfileDigits(v).replace(/\D/g, '').slice(0, 11)
+                            ),
+                          {
+                            required: true,
+                            inputMode: 'numeric',
+                            maxLength: 11,
+                            placeholder: isRtl
+                              ? 'شناسه ملی ۱۱ رقمی'
+                              : '11-digit national identifier',
+                          }
+                        )}
+                        {renderField(
+                          'registrationNumber',
+                          isRtl ? 'شماره ثبت' : 'Registration Number',
+                          registrationNumber,
+                          setRegistrationNumber,
+                          {
+                            required: true,
+                            maxLength: 50,
+                            placeholder: isRtl ? 'شماره ثبت شرکت' : 'Company registration number',
+                          }
+                        )}
+                      </div>
 
-          {/* ── Section 3: Official Address ────────────────── */}
-          <fieldset
-            disabled={!draft.ready || submitting}
-            onBlur={(event) => {
-              if (!event.currentTarget.contains(event.relatedTarget as Node | null))
-                void draft.flush();
-            }}
-          >
-            <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
-              {isRtl ? 'آدرس رسمی' : 'Official Address'}
-            </legend>
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {/* Company type (select) */}
+                        <div className="space-y-2">
+                          <Label htmlFor="companyTypeId">
+                            {isRtl ? 'نوع شرکت' : 'Company Type'}
+                            <span className="text-destructive ml-0.5">*</span>
+                          </Label>
+                          {loadingCompanyTypes ? (
+                            <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
+                              <Loader2Icon className="h-4 w-4 animate-spin" />
+                              {isRtl ? 'در حال بارگذاری...' : 'Loading...'}
+                            </div>
+                          ) : companyTypesError ? (
+                            <div className="flex h-10 items-center gap-2 text-sm text-destructive">
+                              <span>{isRtl ? 'خطا در بارگذاری' : 'Failed to load'}</span>
+                              <button
+                                type="button"
+                                data-testid="onboarding-company-types-retry"
+                                onClick={fetchCompanyTypes}
+                                disabled={loadingCompanyTypes}
+                                className="rounded border border-input px-2 py-1 text-xs hover:bg-muted"
+                              >
+                                {isRtl ? 'تلاش مجدد' : 'Retry'}
+                              </button>
+                            </div>
+                          ) : (
+                            <select
+                              id="companyTypeId"
+                              value={companyTypeId}
+                              onChange={(e) => setCompanyTypeId(e.target.value)}
+                              onBlur={() => handleBlur('companyTypeId')}
+                              disabled={submitting}
+                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                              aria-invalid={touched.companyTypeId && !!errors.companyTypeId}
+                              aria-describedby={
+                                errors.companyTypeId ? 'companyTypeId-error' : undefined
+                              }
+                            >
+                              <option value="">
+                                {isRtl ? 'نوع شرکت را انتخاب کنید' : 'Select company type'}
+                              </option>
+                              {companyTypes.map((ct) => (
+                                <option key={ct.id} value={ct.id}>
+                                  {isRtl ? ct.nameFa : ct.nameEn}
+                                </option>
+                              ))}
+                            </select>
+                          )}
+                          {touched.companyTypeId && errors.companyTypeId && (
+                            <p
+                              id="companyTypeId-error"
+                              className="text-sm text-destructive"
+                              role="alert"
+                            >
+                              {errors.companyTypeId}
+                            </p>
+                          )}
+                        </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              {/* Province */}
-              <div className="space-y-2">
-                <Label htmlFor="officialProvinceId">{isRtl ? 'استان' : 'Province'}</Label>
-                {loadingProvinces ? (
-                  <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
-                    <Loader2Icon className="h-4 w-4 animate-spin" />
-                    {isRtl ? 'در حال بارگذاری...' : 'Loading...'}
-                  </div>
-                ) : (
-                  <select
-                    id="officialProvinceId"
-                    required
-                    value={officialProvinceId}
-                    onChange={(e) => {
-                      setOfficialProvinceId(e.target.value);
-                      setOfficialCityId('');
-                    }}
-                    onBlur={() => handleBlur('officialProvinceId')}
-                    disabled={submitting}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    <option value="">{isRtl ? 'استان را انتخاب کنید' : 'Select province'}</option>
-                    {provinces.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {isRtl ? p.nameFa : p.nameEn}
-                      </option>
-                    ))}
-                  </select>
-                )}
-                {touched.officialProvinceId && errors.officialProvinceId && (
-                  <p className="text-sm text-destructive" role="alert">
-                    {errors.officialProvinceId}
-                  </p>
-                )}
-              </div>
+                        {renderField(
+                          'registrationDate',
+                          isRtl ? 'تاریخ ثبت' : 'Registration Date',
+                          registrationDate,
+                          setRegistrationDate,
+                          {
+                            type: 'date',
+                            placeholder: isRtl ? 'تاریخ ثبت شرکت' : 'Registration date',
+                          }
+                        )}
+                      </div>
 
-              {/* City */}
-              <div className="space-y-2">
-                <Label htmlFor="officialCityId">{isRtl ? 'شهر' : 'City'}</Label>
-                {loadingCities ? (
-                  <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
-                    <Loader2Icon className="h-4 w-4 animate-spin" />
-                    {isRtl ? 'در حال بارگذاری...' : 'Loading...'}
-                  </div>
-                ) : (
-                  <select
-                    id="officialCityId"
-                    required
-                    value={officialCityId}
-                    onChange={(e) => setOfficialCityId(e.target.value)}
-                    onBlur={() => handleBlur('officialCityId')}
-                    disabled={submitting || !officialProvinceId}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    <option value="">{isRtl ? 'شهر را انتخاب کنید' : 'Select city'}</option>
-                    {cities.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {isRtl ? c.nameFa : c.nameEn}
-                      </option>
-                    ))}
-                  </select>
-                )}
-                <GeographyLoadError
-                  {...cityOptions}
-                  message={t('onboarding.individual.error.loadCities', locale)}
-                  locale={locale}
-                  testId="onboarding-official-cities-retry"
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {renderField(
+                          'economicCode',
+                          isRtl ? 'کد اقتصادی' : 'Economic Code',
+                          economicCode,
+                          setEconomicCode,
+                          {
+                            placeholder: isRtl
+                              ? 'کد اقتصادی (اختیاری)'
+                              : 'Economic code (optional)',
+                          }
+                        )}
+                        {renderField(
+                          'officialPhone',
+                          isRtl ? 'تلفن رسمی' : 'Official Phone',
+                          officialPhone,
+                          setOfficialPhone,
+                          {
+                            type: 'tel',
+                            inputMode: 'tel',
+                            placeholder: isRtl
+                              ? 'تلفن رسمی (اختیاری)'
+                              : 'Official phone (optional)',
+                          }
+                        )}
+                      </div>
+
+                      {renderField(
+                        'officialEmail',
+                        isRtl ? 'ایمیل رسمی' : 'Official Email',
+                        officialEmail,
+                        setOfficialEmail,
+                        {
+                          type: 'email',
+                          inputMode: 'email',
+                          placeholder: isRtl ? 'ایمیل رسمی (اختیاری)' : 'Official email (optional)',
+                        }
+                      )}
+                    </div>
+                  </fieldset>
+                </>
+              ),
+            },
+            {
+              label: t('onboarding.wizard.address', locale),
+              validate: () =>
+                validateForm([
+                  'officialProvinceId',
+                  'officialCityId',
+                  'officialFullAddress',
+                  'officialPostalCode',
+                ]),
+              content: (
+                <>
+                  {' '}
+                  <fieldset disabled={!draft.ready || submitting}>
+                    <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
+                      {isRtl ? 'آدرس رسمی' : 'Official Address'}
+                    </legend>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {/* Province */}
+                      <div className="space-y-2">
+                        <Label htmlFor="officialProvinceId">{isRtl ? 'استان' : 'Province'}</Label>
+                        {loadingProvinces ? (
+                          <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
+                            <Loader2Icon className="h-4 w-4 animate-spin" />
+                            {isRtl ? 'در حال بارگذاری...' : 'Loading...'}
+                          </div>
+                        ) : (
+                          <select
+                            id="officialProvinceId"
+                            required
+                            value={officialProvinceId}
+                            onChange={(e) => {
+                              setOfficialProvinceId(e.target.value);
+                              setOfficialCityId('');
+                            }}
+                            onBlur={() => handleBlur('officialProvinceId')}
+                            disabled={submitting}
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <option value="">
+                              {isRtl ? 'استان را انتخاب کنید' : 'Select province'}
+                            </option>
+                            {provinces.map((p) => (
+                              <option key={p.id} value={p.id}>
+                                {isRtl ? p.nameFa : p.nameEn}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                        {touched.officialProvinceId && errors.officialProvinceId && (
+                          <p className="text-sm text-destructive" role="alert">
+                            {errors.officialProvinceId}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* City */}
+                      <div className="space-y-2">
+                        <Label htmlFor="officialCityId">{isRtl ? 'شهر' : 'City'}</Label>
+                        {loadingCities ? (
+                          <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
+                            <Loader2Icon className="h-4 w-4 animate-spin" />
+                            {isRtl ? 'در حال بارگذاری...' : 'Loading...'}
+                          </div>
+                        ) : (
+                          <select
+                            id="officialCityId"
+                            required
+                            value={officialCityId}
+                            onChange={(e) => setOfficialCityId(e.target.value)}
+                            onBlur={() => handleBlur('officialCityId')}
+                            disabled={submitting || !officialProvinceId}
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <option value="">{isRtl ? 'شهر را انتخاب کنید' : 'Select city'}</option>
+                            {cities.map((c) => (
+                              <option key={c.id} value={c.id}>
+                                {isRtl ? c.nameFa : c.nameEn}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                        <GeographyLoadError
+                          {...cityOptions}
+                          message={t('onboarding.individual.error.loadCities', locale)}
+                          locale={locale}
+                          testId="onboarding-official-cities-retry"
+                        />
+                        {touched.officialCityId && errors.officialCityId && (
+                          <p className="text-sm text-destructive" role="alert">
+                            {errors.officialCityId}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Full Address */}
+                    <div className="mt-4 space-y-2">
+                      <Label htmlFor="officialFullAddress">
+                        {isRtl ? 'آدرس کامل' : 'Full Address'}
+                      </Label>
+                      <textarea
+                        id="officialFullAddress"
+                        required
+                        maxLength={500}
+                        rows={3}
+                        value={officialFullAddress}
+                        onChange={(e) => setOfficialFullAddress(e.target.value)}
+                        onBlur={() => handleBlur('officialFullAddress')}
+                        disabled={submitting}
+                        placeholder={isRtl ? 'آدرس کامل محل شرکت' : 'Full company address'}
+                        className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        aria-invalid={touched.officialFullAddress && !!errors.officialFullAddress}
+                        aria-describedby={
+                          errors.officialFullAddress ? 'officialFullAddress-error' : undefined
+                        }
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        {numbers.number(officialFullAddress.length)}/{numbers.number(500)}
+                      </p>
+                      {touched.officialFullAddress && errors.officialFullAddress && (
+                        <p
+                          id="officialFullAddress-error"
+                          className="text-sm text-destructive"
+                          role="alert"
+                        >
+                          {errors.officialFullAddress}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Postal Code */}
+                    <div className="mt-4 space-y-2">
+                      <Label htmlFor="officialPostalCode">
+                        {isRtl ? 'کد پستی' : 'Postal Code'}
+                      </Label>
+                      <Input
+                        id="officialPostalCode"
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={10}
+                        value={officialPostalCode}
+                        onChange={(e) => {
+                          const val = normalizeProfileDigits(e.target.value)
+                            .replace(/\D/g, '')
+                            .slice(0, 10);
+                          setOfficialPostalCode(val);
+                        }}
+                        onBlur={() => handleBlur('officialPostalCode')}
+                        disabled={submitting}
+                        placeholder={isRtl ? 'کد پستی ۱۰ رقمی' : '10-digit postal code'}
+                        aria-invalid={touched.officialPostalCode && !!errors.officialPostalCode}
+                        aria-describedby={
+                          errors.officialPostalCode ? 'officialPostalCode-error' : undefined
+                        }
+                      />
+                      {touched.officialPostalCode && errors.officialPostalCode && (
+                        <p
+                          id="officialPostalCode-error"
+                          className="text-sm text-destructive"
+                          role="alert"
+                        >
+                          {errors.officialPostalCode}
+                        </p>
+                      )}
+                    </div>
+                  </fieldset>
+                </>
+              ),
+            },
+            {
+              label: t('onboarding.wizard.documents', locale),
+              content: (
+                <>
+                  {' '}
+                  <fieldset disabled={!draft.ready || submitting}>
+                    <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
+                      {isRtl ? 'بارگذاری مدارک' : 'Document Upload'}
+                    </legend>
+                    <p className="mb-3 text-sm text-muted-foreground">
+                      {isRtl
+                        ? 'روزنامه رسمی یا مدارک ثبت شرکت (اختیاری)'
+                        : 'Official gazette or registration documents (optional)'}
+                    </p>
+
+                    {uploading && (
+                      <p role="status">{t('onboarding.documents.uploading', locale)}</p>
+                    )}
+                    {uploadError && (
+                      <p role="alert" className="text-destructive">
+                        {t('onboarding.documents.error', locale)}
+                      </p>
+                    )}
+                    <p className="mb-2 text-sm text-muted-foreground">
+                      {t('onboarding.documents.limit', locale)}
+                    </p>
+                    <div className="flex items-center justify-center w-full">
+                      <label
+                        htmlFor="document-upload"
+                        onDragOver={(event) => event.preventDefault()}
+                        onDrop={(event) => {
+                          event.preventDefault();
+                          void uploadDocuments(Array.from(event.dataTransfer.files));
+                        }}
+                        className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-background hover:bg-muted/50 transition-colors"
+                      >
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <UploadIcon className="w-8 h-8 mb-2 text-muted-foreground" />
+                          <p className="text-sm text-muted-foreground">
+                            {isRtl
+                              ? 'برای آپلود کلیک کنید یا فایل را بکشید و رها کنید'
+                              : 'Click or drag and drop to upload'}
+                          </p>
+                        </div>
+                        <input
+                          id="document-upload"
+                          type="file"
+                          multiple
+                          accept=".pdf,.jpg,.jpeg,.png"
+                          className="sr-only"
+                          onChange={handleFileChange}
+                          disabled={submitting || uploading}
+                        />
+                      </label>
+                    </div>
+
+                    {documents.length > 0 && (
+                      <ul className="mt-3 space-y-1">
+                        {documents.map((doc, idx) => (
+                          <li
+                            key={`${doc.name}-${idx}`}
+                            className="flex items-center justify-between rounded-md bg-muted/50 px-3 py-2 text-sm"
+                          >
+                            <span className="truncate">{doc.name}</span>
+                            <button
+                              type="button"
+                              onClick={() => removeDocument(idx)}
+                              disabled={submitting || uploading}
+                              className="text-destructive hover:text-destructive/80 text-xs ml-2"
+                              aria-label={isRtl ? `حذف ${doc.name}` : `Remove ${doc.name}`}
+                            >
+                              {isRtl ? 'حذف' : 'Remove'}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </fieldset>
+                </>
+              ),
+            },
+            {
+              label: t('onboarding.wizard.review', locale),
+              content: (
+                <OnboardingReview
+                  rows={[
+                    ...Object.entries(values).map(([field, value]) => ({
+                      label: t(`onboarding.legal.${field}`, locale),
+                      value:
+                        field === 'companyTypeId'
+                          ? ((isRtl
+                              ? companyTypes.find((p) => p.id === value)?.nameFa
+                              : companyTypes.find((p) => p.id === value)?.nameEn) ?? '')
+                          : field.endsWith('ProvinceId')
+                            ? ((isRtl
+                                ? provinces.find((p) => p.id === value)?.nameFa
+                                : provinces.find((p) => p.id === value)?.nameEn) ?? '')
+                            : field.endsWith('CityId')
+                              ? ((isRtl
+                                  ? [...cities, ...representativeCities].find((p) => p.id === value)
+                                      ?.nameFa
+                                  : [...cities, ...representativeCities].find((p) => p.id === value)
+                                      ?.nameEn) ?? '')
+                              : value,
+                    })),
+                    {
+                      label: t('onboarding.wizard.documents', locale),
+                      value: documents.map((document) => document.name).join('\n'),
+                    },
+                  ]}
                 />
-                {touched.officialCityId && errors.officialCityId && (
-                  <p className="text-sm text-destructive" role="alert">
-                    {errors.officialCityId}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Full Address */}
-            <div className="mt-4 space-y-2">
-              <Label htmlFor="officialFullAddress">{isRtl ? 'آدرس کامل' : 'Full Address'}</Label>
-              <textarea
-                id="officialFullAddress"
-                required
-                maxLength={500}
-                rows={3}
-                value={officialFullAddress}
-                onChange={(e) => setOfficialFullAddress(e.target.value)}
-                onBlur={() => handleBlur('officialFullAddress')}
-                disabled={submitting}
-                placeholder={isRtl ? 'آدرس کامل محل شرکت' : 'Full company address'}
-                className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                aria-invalid={touched.officialFullAddress && !!errors.officialFullAddress}
-                aria-describedby={
-                  errors.officialFullAddress ? 'officialFullAddress-error' : undefined
-                }
-              />
-              <p className="text-xs text-muted-foreground">
-                {numbers.number(officialFullAddress.length)}/{numbers.number(500)}
-              </p>
-              {touched.officialFullAddress && errors.officialFullAddress && (
-                <p id="officialFullAddress-error" className="text-sm text-destructive" role="alert">
-                  {errors.officialFullAddress}
-                </p>
-              )}
-            </div>
-
-            {/* Postal Code */}
-            <div className="mt-4 space-y-2">
-              <Label htmlFor="officialPostalCode">{isRtl ? 'کد پستی' : 'Postal Code'}</Label>
-              <Input
-                id="officialPostalCode"
-                type="text"
-                inputMode="numeric"
-                maxLength={10}
-                value={officialPostalCode}
-                onChange={(e) => {
-                  const val = normalizeProfileDigits(e.target.value)
-                    .replace(/\D/g, '')
-                    .slice(0, 10);
-                  setOfficialPostalCode(val);
-                }}
-                onBlur={() => handleBlur('officialPostalCode')}
-                disabled={submitting}
-                placeholder={isRtl ? 'کد پستی ۱۰ رقمی' : '10-digit postal code'}
-                aria-invalid={touched.officialPostalCode && !!errors.officialPostalCode}
-                aria-describedby={
-                  errors.officialPostalCode ? 'officialPostalCode-error' : undefined
-                }
-              />
-              {touched.officialPostalCode && errors.officialPostalCode && (
-                <p id="officialPostalCode-error" className="text-sm text-destructive" role="alert">
-                  {errors.officialPostalCode}
-                </p>
-              )}
-            </div>
-          </fieldset>
-
-          {/* ── Section 4: Document Upload ─────────────────── */}
-          <fieldset
-            disabled={!draft.ready || submitting}
-            onBlur={(event) => {
-              if (!event.currentTarget.contains(event.relatedTarget as Node | null))
-                void draft.flush();
-            }}
-          >
-            <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
-              {isRtl ? 'بارگذاری مدارک' : 'Document Upload'}
-            </legend>
-            <p className="mb-3 text-sm text-muted-foreground">
-              {isRtl
-                ? 'روزنامه رسمی یا مدارک ثبت شرکت (اختیاری)'
-                : 'Official gazette or registration documents (optional)'}
-            </p>
-
-            {uploading && <p role="status">{t('onboarding.documents.uploading', locale)}</p>}
-            {uploadError && (
-              <p role="alert" className="text-destructive">
-                {t('onboarding.documents.error', locale)}
-              </p>
-            )}
-            <p className="mb-2 text-sm text-muted-foreground">
-              {t('onboarding.documents.limit', locale)}
-            </p>
-            <div className="flex items-center justify-center w-full">
-              <label
-                htmlFor="document-upload"
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  void uploadDocuments(Array.from(event.dataTransfer.files));
-                }}
-                className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-background hover:bg-muted/50 transition-colors"
-              >
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <UploadIcon className="w-8 h-8 mb-2 text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">
-                    {isRtl
-                      ? 'برای آپلود کلیک کنید یا فایل را بکشید و رها کنید'
-                      : 'Click or drag and drop to upload'}
-                  </p>
-                </div>
-                <input
-                  id="document-upload"
-                  type="file"
-                  multiple
-                  accept=".pdf,.jpg,.jpeg,.png"
-                  className="sr-only"
-                  onChange={handleFileChange}
-                  disabled={submitting || uploading}
-                />
-              </label>
-            </div>
-
-            {documents.length > 0 && (
-              <ul className="mt-3 space-y-1">
-                {documents.map((doc, idx) => (
-                  <li
-                    key={`${doc.name}-${idx}`}
-                    className="flex items-center justify-between rounded-md bg-muted/50 px-3 py-2 text-sm"
-                  >
-                    <span className="truncate">{doc.name}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeDocument(idx)}
-                      disabled={submitting || uploading}
-                      className="text-destructive hover:text-destructive/80 text-xs ml-2"
-                      aria-label={isRtl ? `حذف ${doc.name}` : `Remove ${doc.name}`}
-                    >
-                      {isRtl ? 'حذف' : 'Remove'}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </fieldset>
-
-          {/* ── Submit ──────────────────────────────────────── */}
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={submitting || uploading || !draft.ready || geographyUnavailable}
-          >
-            {submitting ? (
-              <>
-                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
-                {isRtl ? 'در حال ذخیره...' : 'Saving...'}
-              </>
-            ) : isRtl ? (
-              'ذخیره و ادامه'
-            ) : (
-              'Save & Continue'
-            )}
-          </Button>
-        </form>
+              ),
+            },
+          ]}
+        />
       </div>
     </div>
   );

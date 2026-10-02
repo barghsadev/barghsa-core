@@ -23009,11 +23009,19 @@
               "application/json": {
                 "schema": {
                   "properties": {
+                    "firstName": {
+                      "nullable": true,
+                      "type": "string"
+                    },
                     "id": {
                       "type": "string"
                     },
                     "isDefault": {
                       "type": "boolean"
+                    },
+                    "lastName": {
+                      "nullable": true,
+                      "type": "string"
                     },
                     "message": {
                       "type": "string"
@@ -23022,6 +23030,10 @@
                       "type": "string"
                     },
                     "status": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "nullable": true,
                       "type": "string"
                     }
                   },
@@ -23086,7 +23098,7 @@
             "description": ""
           }
         },
-        "summary": "Read the current owned legal onboarding draft",
+        "summary": "Read the current owned onboarding draft",
         "tags": [
           "Onboarding"
         ]
@@ -23110,102 +23122,144 @@
                 "additionalProperties": false,
                 "properties": {
                   "data": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "companyTypeId": {
-                        "maxLength": 100,
-                        "type": "string"
+                    "anyOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "cityId": {
+                            "maxLength": 36,
+                            "type": "string"
+                          },
+                          "firstName": {
+                            "maxLength": 100,
+                            "type": "string"
+                          },
+                          "fullAddress": {
+                            "maxLength": 500,
+                            "type": "string"
+                          },
+                          "lastName": {
+                            "maxLength": 100,
+                            "type": "string"
+                          },
+                          "nationalId": {
+                            "maxLength": 10,
+                            "type": "string"
+                          },
+                          "postalCode": {
+                            "maxLength": 10,
+                            "type": "string"
+                          },
+                          "provinceId": {
+                            "maxLength": 36,
+                            "type": "string"
+                          },
+                          "title": {
+                            "maxLength": 50,
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
                       },
-                      "documentKeys": {
-                        "maxLength": 4096,
-                        "type": "string"
-                      },
-                      "economicCode": {
-                        "maxLength": 50,
-                        "type": "string"
-                      },
-                      "legalName": {
-                        "maxLength": 200,
-                        "type": "string"
-                      },
-                      "nationalIdentifier": {
-                        "maxLength": 11,
-                        "type": "string"
-                      },
-                      "officialCityId": {
-                        "maxLength": 36,
-                        "type": "string"
-                      },
-                      "officialEmail": {
-                        "maxLength": 254,
-                        "type": "string"
-                      },
-                      "officialFullAddress": {
-                        "maxLength": 500,
-                        "type": "string"
-                      },
-                      "officialPhone": {
-                        "maxLength": 30,
-                        "type": "string"
-                      },
-                      "officialPostalCode": {
-                        "maxLength": 10,
-                        "type": "string"
-                      },
-                      "officialProvinceId": {
-                        "maxLength": 36,
-                        "type": "string"
-                      },
-                      "registrationDate": {
-                        "maxLength": 10,
-                        "type": "string"
-                      },
-                      "registrationNumber": {
-                        "maxLength": 50,
-                        "type": "string"
-                      },
-                      "representativeCityId": {
-                        "maxLength": 36,
-                        "type": "string"
-                      },
-                      "representativeFirstName": {
-                        "maxLength": 100,
-                        "type": "string"
-                      },
-                      "representativeFullAddress": {
-                        "maxLength": 500,
-                        "type": "string"
-                      },
-                      "representativeHonorific": {
-                        "maxLength": 50,
-                        "type": "string"
-                      },
-                      "representativeLastName": {
-                        "maxLength": 100,
-                        "type": "string"
-                      },
-                      "representativeNationalId": {
-                        "maxLength": 10,
-                        "type": "string"
-                      },
-                      "representativePostalCode": {
-                        "maxLength": 10,
-                        "type": "string"
-                      },
-                      "representativeProvinceId": {
-                        "maxLength": 36,
-                        "type": "string"
-                      },
-                      "representativeRelationship": {
-                        "maxLength": 100,
-                        "type": "string"
-                      },
-                      "representativeTitle": {
-                        "maxLength": 100,
-                        "type": "string"
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "companyTypeId": {
+                            "maxLength": 100,
+                            "type": "string"
+                          },
+                          "documentKeys": {
+                            "maxLength": 4096,
+                            "type": "string"
+                          },
+                          "economicCode": {
+                            "maxLength": 50,
+                            "type": "string"
+                          },
+                          "legalName": {
+                            "maxLength": 200,
+                            "type": "string"
+                          },
+                          "nationalIdentifier": {
+                            "maxLength": 11,
+                            "type": "string"
+                          },
+                          "officialCityId": {
+                            "maxLength": 36,
+                            "type": "string"
+                          },
+                          "officialEmail": {
+                            "maxLength": 254,
+                            "type": "string"
+                          },
+                          "officialFullAddress": {
+                            "maxLength": 500,
+                            "type": "string"
+                          },
+                          "officialPhone": {
+                            "maxLength": 30,
+                            "type": "string"
+                          },
+                          "officialPostalCode": {
+                            "maxLength": 10,
+                            "type": "string"
+                          },
+                          "officialProvinceId": {
+                            "maxLength": 36,
+                            "type": "string"
+                          },
+                          "registrationDate": {
+                            "maxLength": 10,
+                            "type": "string"
+                          },
+                          "registrationNumber": {
+                            "maxLength": 50,
+                            "type": "string"
+                          },
+                          "representativeCityId": {
+                            "maxLength": 36,
+                            "type": "string"
+                          },
+                          "representativeFirstName": {
+                            "maxLength": 100,
+                            "type": "string"
+                          },
+                          "representativeFullAddress": {
+                            "maxLength": 500,
+                            "type": "string"
+                          },
+                          "representativeHonorific": {
+                            "maxLength": 50,
+                            "type": "string"
+                          },
+                          "representativeLastName": {
+                            "maxLength": 100,
+                            "type": "string"
+                          },
+                          "representativeNationalId": {
+                            "maxLength": 10,
+                            "type": "string"
+                          },
+                          "representativePostalCode": {
+                            "maxLength": 10,
+                            "type": "string"
+                          },
+                          "representativeProvinceId": {
+                            "maxLength": 36,
+                            "type": "string"
+                          },
+                          "representativeRelationship": {
+                            "maxLength": 100,
+                            "type": "string"
+                          },
+                          "representativeTitle": {
+                            "maxLength": 100,
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
                       }
-                    },
-                    "type": "object"
+                    ]
                   },
                   "expectedVersion": {
                     "maximum": 2147483646,
@@ -23228,7 +23282,7 @@
             "description": ""
           }
         },
-        "summary": "Save legal onboarding fields with a draft version check",
+        "summary": "Save onboarding fields with a draft version check",
         "tags": [
           "Onboarding"
         ]
@@ -23247,6 +23301,67 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "cityId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "draftVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "firstName": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "fullAddress": {
+                    "maxLength": 500,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "nationalId": {
+                    "type": "string"
+                  },
+                  "postalCode": {
+                    "type": "string"
+                  },
+                  "provinceId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "title": {
+                    "maxLength": 50,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "firstName",
+                  "lastName",
+                  "nationalId",
+                  "provinceId",
+                  "cityId",
+                  "fullAddress",
+                  "postalCode"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "content": {
