@@ -1,24 +1,61 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
+import { useBlocker } from '@tanstack/react-router';
 import { Button } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import type { useOnboardingDraft } from '../hooks/useOnboardingDraft.js';
 import { FormWizard } from './FormWizard.js';
 
+const LeaveDialog = lazy(() => import('./OnboardingLeaveDialog.js'));
+
 interface Props {
   steps: { label: string; content: ReactNode; validate?: () => boolean }[];
   draft: ReturnType<typeof useOnboardingDraft>;
   submitting: boolean;
   disabled: boolean;
+  working?: boolean;
+  step: number;
+  onStepChange: (step: number) => Promise<void>;
   onSubmit: () => Promise<void>;
 }
-export function OnboardingWizard({ steps, draft, submitting, disabled, onSubmit }: Props) {
+export function OnboardingWizard({
+  steps,
+  draft,
+  submitting,
+  disabled,
+  working = false,
+  step: requestedStep,
+  onStepChange,
+  onSubmit,
+}: Props) {
   const locale = useLocale();
-  const [step, setStep] = useState(1);
+  const step = draft.ready ? requestedStep : 1;
+  const unavailable = disabled || !draft.ready || draft.isSubmitted();
   const [saving, setSaving] = useState(false);
   const busy = useRef(false);
   const region = useRef<HTMLDivElement>(null);
   const mounted = useRef(true);
+  const stepRef = useRef(step);
+  useLayoutEffect(() => {
+    stepRef.current = step;
+  }, [step]);
+  const blocker = useBlocker({
+    shouldBlockFn: ({ current, next }) =>
+      current.pathname !== next.pathname &&
+      !draft.isSubmitted() &&
+      (submitting || working || busy.current || draft.hasUnsavedChanges()),
+    enableBeforeUnload: () =>
+      !draft.isSubmitted() && (submitting || working || busy.current || draft.hasUnsavedChanges()),
+    withResolver: true,
+  });
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -28,11 +65,8 @@ export function OnboardingWizard({ steps, draft, submitting, disabled, onSubmit 
   useEffect(() => {
     if (step > 1) region.current?.focus();
   }, [step]);
-  useEffect(() => {
-    if (!draft.ready) setStep(1);
-  }, [draft.ready]);
   const move = async (target: number) => {
-    if (busy.current || submitting || !draft.ready) return;
+    if (busy.current || submitting || disabled || !draft.ready || draft.isSubmitted()) return;
     if (target > step && steps[step - 1]?.validate?.() === false) {
       requestAnimationFrame(() =>
         region.current
@@ -45,17 +79,18 @@ export function OnboardingWizard({ steps, draft, submitting, disabled, onSubmit 
     setSaving(true);
     try {
       const version = await draft.flush();
-      if (version !== undefined && mounted.current) setStep(target);
+      if (version !== undefined && mounted.current && stepRef.current === step && target !== step)
+        await onStepChange(target);
     } finally {
       busy.current = false;
       if (mounted.current) setSaving(false);
     }
   };
   const submit = async () => {
-    if (busy.current || submitting || disabled || !draft.ready) return;
+    if (busy.current || submitting || disabled || !draft.ready || draft.isSubmitted()) return;
     const invalid = steps.findIndex((item) => item.validate?.() === false);
     if (invalid >= 0) {
-      setStep(invalid + 1);
+      await onStepChange(invalid + 1);
       requestAnimationFrame(() =>
         region.current
           ?.querySelector<HTMLElement>(':scope > fieldset:not([hidden]) [aria-invalid="true"]')
@@ -81,6 +116,24 @@ export function OnboardingWizard({ steps, draft, submitting, disabled, onSubmit 
         else void submit();
       }}
     >
+      {blocker.status === 'blocked' && (
+        <Suspense>
+          <LeaveDialog
+            draft={draft}
+            working={submitting || working || saving || draft.status === 'saving'}
+            workingLabel={t(
+              submitting
+                ? 'onboarding.wizard.submitting'
+                : working
+                  ? 'onboarding.documents.uploading'
+                  : 'onboarding.draft.saving',
+              locale
+            )}
+            onStay={() => blocker.reset()}
+            onLeave={() => blocker.proceed()}
+          />
+        </Suspense>
+      )}
       <div
         role="status"
         className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground"
@@ -92,8 +145,10 @@ export function OnboardingWizard({ steps, draft, submitting, disabled, onSubmit 
             variant="outline"
             disabled={saving || submitting}
             onClick={() => {
-              if (draft.status === 'conflict' || !draft.ready) draft.reload();
-              else void move(step);
+              if (draft.status === 'conflict' || !draft.ready) {
+                void onStepChange(1);
+                draft.reload();
+              } else void move(step);
             }}
           >
             {t(
@@ -117,10 +172,10 @@ export function OnboardingWizard({ steps, draft, submitting, disabled, onSubmit 
         submittingLabel={t('onboarding.wizard.submitting', locale)}
         saving={saving || draft.status === 'saving'}
         submitting={submitting}
-        saveDisabled={!draft.ready || disabled || draft.status === 'conflict'}
-        nextDisabled={!draft.ready || disabled || draft.status === 'conflict'}
-        submitDisabled={!draft.ready || disabled || draft.status === 'conflict'}
-        backDisabled={disabled || !draft.ready || draft.status === 'conflict'}
+        saveDisabled={unavailable || draft.status === 'conflict'}
+        nextDisabled={unavailable || draft.status === 'conflict'}
+        submitDisabled={unavailable || draft.status === 'conflict'}
+        backDisabled={unavailable || draft.status === 'conflict'}
         onBack={() => void move(step - 1)}
         onSave={() => void move(step)}
         onNext={() => void move(step + 1)}
@@ -136,7 +191,7 @@ export function OnboardingWizard({ steps, draft, submitting, disabled, onSubmit 
             <fieldset
               key={item.label}
               hidden={index + 1 !== step}
-              disabled={index + 1 !== step || saving || submitting || disabled || !draft.ready}
+              disabled={index + 1 !== step || saving || submitting || unavailable}
               className="space-y-6"
             >
               <legend className="sr-only">{item.label}</legend>

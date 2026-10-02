@@ -20,13 +20,15 @@ export function useOnboardingDraft(
     saved = useRef(''),
     generation = useRef(0);
   const loaded = useRef(false),
-    conflicted = useRef(false);
+    conflicted = useRef(false),
+    submitted = useRef(false);
   const pending = useRef<Promise<number | undefined> | null>(null);
   useEffect(() => {
     const epoch = ++generation.current;
     const controller = new AbortController();
     loaded.current = false;
     conflicted.current = false;
+    submitted.current = false;
     pending.current = null;
     setReady(false);
     setStatus('loading');
@@ -72,11 +74,12 @@ export function useOnboardingDraft(
 
   const flush = useCallback(async (): Promise<number | undefined> => {
     const epoch = generation.current;
-    if (!loaded.current || conflicted.current) return;
+    if (!loaded.current || conflicted.current || submitted.current) return;
     while (pending.current) {
       if ((await pending.current) === undefined || epoch !== generation.current) return;
     }
-    if (!loaded.current || conflicted.current || epoch !== generation.current) return;
+    if (!loaded.current || conflicted.current || submitted.current || epoch !== generation.current)
+      return;
     const snapshot = JSON.stringify(current.current);
     if (snapshot === saved.current) return version.current;
     const expectedVersion = version.current;
@@ -124,21 +127,23 @@ export function useOnboardingDraft(
     }, 1000);
     return () => clearTimeout(timer);
   }, [serialized, ready, flush]);
-  useEffect(() => {
-    const warn = (event: BeforeUnloadEvent) => {
-      if (loaded.current && JSON.stringify(current.current) !== saved.current) {
-        event.preventDefault();
-        event.returnValue = '';
-      }
-    };
-    window.addEventListener('beforeunload', warn);
-    return () => window.removeEventListener('beforeunload', warn);
+  const hasUnsavedChanges = useCallback(
+    () => loaded.current && !submitted.current && JSON.stringify(current.current) !== saved.current,
+    []
+  );
+  const isSubmitted = useCallback(() => submitted.current, []);
+  // Call only after the final submission receipt has been validated.
+  const markSubmitted = useCallback(() => {
+    submitted.current = true;
   }, []);
   const markConflict = useCallback(() => {
     conflicted.current = true;
     setStatus('conflict');
   }, []);
   return {
+    hasUnsavedChanges,
+    isSubmitted,
+    markSubmitted,
     markConflict,
     status:
       status === 'saved' && ready && serialized !== saved.current ? ('editing' as const) : status,

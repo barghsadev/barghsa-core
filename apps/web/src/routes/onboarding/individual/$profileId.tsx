@@ -1,6 +1,7 @@
 import { OnboardingWizard, OnboardingReview } from '../../../components/OnboardingWizard.js';
 import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
 import { parseOnboardingProfile } from '../../../lib/onboarding-profile.js';
+import { wizardStepSearch } from '../../../lib/wizard-step.js';
 import { useGeographyOptions } from '../../../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../../../components/GeographyLoadError.js';
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
@@ -17,6 +18,8 @@ import { Loader2Icon, ChevronRightIcon } from 'lucide-react';
 import { Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/individual/$profileId')({
+  // Presentation-only input is bounded when the wizard component loads.
+  validateSearch: (search): { step?: unknown } => ({ step: search.step }),
   component: IndividualProfileFormPage,
 });
 
@@ -45,6 +48,13 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
     };
   }, []);
   const router = useRouter();
+  const { step = 1 } = wizardStepSearch(Route.useSearch(), 3);
+  const changeStep = (step: number) =>
+    router.navigate({
+      to: '/onboarding/individual/$profileId',
+      params: { profileId },
+      search: { step },
+    });
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
@@ -253,6 +263,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
       }
 
       parseOnboardingProfile(body, profileId, 'INDIVIDUAL');
+      draft.markSubmitted();
       toast.success(t('onboarding.individual.saved', locale));
       router.navigate({
         to: '/onboarding/complete',
@@ -290,12 +301,6 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
         {/* Back link */}
         <Link
           to="/onboarding"
-          onClick={async (event) => {
-            event.preventDefault();
-            if (submitting) return;
-            if (!draft.ready || (await draft.flush()) !== undefined)
-              await router.navigate({ to: '/onboarding' });
-          }}
           className="mb-4 inline-flex items-center text-sm text-muted-foreground hover:text-primary"
         >
           <ChevronRightIcon className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
@@ -324,6 +329,8 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
           testId="onboarding-provinces-retry"
         />
         <OnboardingWizard
+          step={step}
+          onStepChange={changeStep}
           draft={draft}
           submitting={submitting}
           disabled={false}

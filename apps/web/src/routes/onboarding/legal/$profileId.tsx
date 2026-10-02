@@ -1,5 +1,6 @@
 import { OnboardingWizard, OnboardingReview } from '../../../components/OnboardingWizard.js';
 import { parseOnboardingProfile } from '../../../lib/onboarding-profile.js';
+import { wizardStepSearch } from '../../../lib/wizard-step.js';
 import { useGeographyOptions } from '../../../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../../../components/GeographyLoadError.js';
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
@@ -30,6 +31,8 @@ import {
 } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/legal/$profileId')({
+  // Presentation-only input is bounded when the wizard component loads.
+  validateSearch: (search): { step?: unknown } => ({ step: search.step }),
   component: LegalProfileFormPage,
 });
 
@@ -73,6 +76,13 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
     };
   }, []);
   const router = useRouter();
+  const { step = 1 } = wizardStepSearch(Route.useSearch(), 5);
+  const changeStep = (step: number) =>
+    router.navigate({
+      to: '/onboarding/legal/$profileId',
+      params: { profileId },
+      search: { step },
+    });
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
@@ -147,15 +157,6 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
   const [documents, setDocuments] = useState<Array<{ key: string; name: string }>>([]);
   const [uploading, setUploading] = useState(false);
   const uploadInFlight = useRef(false);
-  useEffect(() => {
-    if (!uploading) return;
-    const warn = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = '';
-    };
-    window.addEventListener('beforeunload', warn);
-    return () => window.removeEventListener('beforeunload', warn);
-  }, [uploading]);
   const [uploadError, setUploadError] = useState(false);
   const restoreDraft = useCallback((data: Record<string, string>) => {
     try {
@@ -492,6 +493,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
       }
 
       parseOnboardingProfile(body, profileId, 'LEGAL');
+      draft.markSubmitted();
       toast.success(
         isRtl ? 'پروفایل حقوقی با موفقیت ذخیره شد' : 'Legal profile saved successfully'
       );
@@ -516,6 +518,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
     draft.ready,
     draft.flush,
     draft.markConflict,
+    draft.markSubmitted,
     locale,
     representative,
     legalName,
@@ -666,12 +669,6 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
         {/* Back link */}
         <Link
           to="/onboarding"
-          onClick={async (event) => {
-            event.preventDefault();
-            if (uploading || submitting) return;
-            if (!draft.ready || (await draft.flush()) !== undefined)
-              await router.navigate({ to: '/onboarding' });
-          }}
           className="mb-4 inline-flex items-center text-sm text-muted-foreground hover:text-primary"
         >
           <ChevronRightIcon className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
@@ -702,6 +699,9 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
           testId="onboarding-provinces-retry"
         />
         <OnboardingWizard
+          step={step}
+          onStepChange={changeStep}
+          working={uploading}
           draft={draft}
           submitting={submitting}
           disabled={uploading}

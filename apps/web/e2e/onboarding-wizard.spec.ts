@@ -50,6 +50,9 @@ async function fixture(
     invalidReceipt: false,
     submissions: [] as Record<string, unknown>[],
     completeRequests: 0,
+    saveRequests: [] as Record<string, unknown>[],
+    saveGate: null as Promise<void> | null,
+    submitGate: null as Promise<void> | null,
   };
   await page.addInitScript((language) => {
     localStorage.setItem('barghsa.locale', language);
@@ -91,10 +94,12 @@ async function fixture(
       json: [{ id: 'limited-liability', nameFa: 'مسئولیت محدود', nameEn: 'Limited liability' }],
     })
   );
-  await page.route(`**/api/onboarding/draft/${profileId}`, (r) => {
+  await page.route(`**/api/onboarding/draft/${profileId}`, async (r) => {
     if (r.request().method() === 'GET')
       return r.fulfill({ status: state.loadStatus, json: state.draft });
     const input = r.request().postDataJSON();
+    state.saveRequests.push(input);
+    await state.saveGate;
     if (state.saveStatus !== 200)
       return r.fulfill({ status: state.saveStatus, json: { error: 'CONFLICT:VERSION_CONFLICT' } });
     expect(input.expectedVersion).toBe(state.draft.version);
@@ -110,8 +115,9 @@ async function fixture(
       ? { firstName: state.draft.data.firstName, lastName: state.draft.data.lastName }
       : { title: state.draft.data.legalName }),
   });
-  await page.route(`**/api/onboarding/${type.toLowerCase()}/${profileId}`, (r) => {
+  await page.route(`**/api/onboarding/${type.toLowerCase()}/${profileId}`, async (r) => {
     state.submissions.push(r.request().postDataJSON());
+    await state.submitGate;
     return r.fulfill({ json: receipt() });
   });
   await page.route(`**/api/onboarding/complete/${profileId}`, (r) => {
@@ -135,6 +141,226 @@ const submit = (page: Page, locale: 'en' | 'fa') =>
   page
     .getByRole('button', { name: locale === 'fa' ? 'ثبت پروفایل' : 'Submit profile', exact: true })
     .click();
+
+function leaveControls(page: Page, locale: 'en' | 'fa') {
+  const dialog = page.getByRole('dialog');
+  return {
+    dialog,
+    save: dialog.getByRole('button', {
+      name: locale === 'fa' ? 'ذخیره و خروج' : 'Save and leave',
+      exact: true,
+    }),
+    stay: dialog.getByRole('button', { name: locale === 'fa' ? 'ماندن' : 'Stay', exact: true }),
+    leave: dialog.getByRole('button', {
+      name: locale === 'fa' ? 'خروج بدون ذخیره' : 'Leave without saving',
+      exact: true,
+    }),
+    back: page.getByRole('link', { name: locale === 'fa' ? 'بازگشت' : 'Back', exact: true }),
+  };
+}
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`wizard URL restores saved steps, supports browser history and rejects invalid steps (${locale})`, async ({
+    page,
+  }) => {
+    await fixture(page, locale, 'INDIVIDUAL', { ...individual });
+    await page.goto(`/onboarding/individual/${profileId}?step=2`);
+    await expect(page.locator('#fullAddress')).toBeVisible();
+    await expect(page.locator('#fullAddress')).toHaveValue('Saved Street');
+    await page.reload();
+    await expect(page.locator('#fullAddress')).toBeVisible();
+    await next(page, locale);
+    await expect(page).toHaveURL(/\?step=3$/);
+    await page.goBack();
+    await expect(page).toHaveURL(/\?step=2$/);
+    await expect(page.locator('#fullAddress')).toBeVisible();
+    await page.goForward();
+    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText('Saved Street');
+    await page.reload();
+    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText('Saved Street');
+    await page.goto(`/onboarding/individual/${profileId}?step=999&nationalId=private`);
+    await expect(page.locator('#firstName')).toBeVisible();
+    await expect(page.locator('#firstName')).toHaveValue('Person');
+    await fixture(page, locale, 'LEGAL', { ...legal });
+    await page.goto(`/onboarding/legal/${profileId}?step=4`);
+    await expect(page.locator('fieldset:not([hidden]) #document-upload')).toBeAttached();
+    await next(page, locale);
+    await expect(page).toHaveURL(/\?step=5$/);
+    await page.reload();
+    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText('Saved Company');
+    await page.goto(`/onboarding/legal/${profileId}?step=0`);
+    await expect(page.locator('#representativeFirstName')).toBeVisible();
+  });
+
+  test(`wizard leave dialog stays on failed saves and serializes save before leaving (${locale})`, async ({
+    page,
+    context,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    const state = await fixture(page, locale, 'INDIVIDUAL', { ...individual });
+    state.saveStatus = 503;
+    await page.goto(`/onboarding/individual/${profileId}`);
+    await expect(page.locator('#firstName')).toHaveValue('Person');
+    await page.locator('#firstName').fill('Edited person');
+    const actions = leaveControls(page, locale);
+    await actions.back.click();
+    await expect(actions.dialog).toBeVisible();
+    await expect(actions.dialog).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
+    expect(
+      (await new AxeBuilder({ page }).include('[data-slot="dialog-content"]').analyze()).violations
+    ).toEqual([]);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    await actions.stay.click();
+    await expect(actions.dialog).not.toBeVisible();
+    await expect(page.locator('#firstName')).toHaveValue('Edited person');
+    await actions.back.click();
+    await actions.save.click();
+    await expect(actions.dialog.getByRole('alert')).toBeVisible();
+    await expect(page).toHaveURL(new RegExp(`/onboarding/individual/${profileId}(?:\\?step=1)?$`));
+    expect(state.draft.data.firstName).toBe('Person');
+    let finishSave!: () => void;
+    state.saveGate = new Promise<void>((resolve) => {
+      finishSave = resolve;
+    });
+    state.saveStatus = 200;
+    await context.addCookies([
+      { name: 'barghsa_csrf', value: 'current-draft-token', url: 'http://127.0.0.1:4173' },
+    ]);
+    const savedRequests = state.saveRequests.length;
+    const request = page.waitForRequest(
+      (request) => request.method() === 'PUT' && request.url().includes('/onboarding/draft/')
+    );
+    await actions.save.click();
+    expect((await request).headers()['x-csrf-token']).toBe('current-draft-token');
+    await expect(actions.save).toBeDisabled();
+    await expect(actions.leave).toBeDisabled();
+    await page.keyboard.press('Escape');
+    await expect(actions.dialog).toBeVisible();
+    expect(state.saveRequests).toHaveLength(savedRequests + 1);
+    if (locale === 'fa')
+      await page.screenshot({
+        path: '/tmp/barghsa-wizard-navigation-fa-dialog.png',
+        fullPage: true,
+      });
+    finishSave();
+    await expect(page).toHaveURL(/\/onboarding$/);
+    expect(state.draft.data.firstName).toBe('Edited person');
+    expect(state.submissions).toHaveLength(0);
+  });
+
+  test(`browser Back and Forward retain unsaved wizard edits until an explicit leave (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, locale, 'INDIVIDUAL', { ...individual });
+    await page.goto(`/onboarding/individual/${profileId}`);
+    await expect(page.locator('#firstName')).toHaveValue('Person');
+    expect(
+      await page.evaluate(() => {
+        const event = new Event('beforeunload', { cancelable: true });
+        window.dispatchEvent(event);
+        return event.defaultPrevented;
+      })
+    ).toBe(false);
+    await next(page, locale);
+    state.saveStatus = 503;
+    await page.locator('#fullAddress').fill('Unsaved address');
+    expect(
+      await page.evaluate(() => {
+        const event = new Event('beforeunload', { cancelable: true });
+        window.dispatchEvent(event);
+        return event.defaultPrevented;
+      })
+    ).toBe(true);
+    await page.goBack();
+    await expect(page.locator('#firstName')).toBeVisible();
+    await page.goForward();
+    await expect(page.locator('#fullAddress')).toBeVisible();
+    await expect(page.locator('#fullAddress')).toHaveValue('Unsaved address');
+    const actions = leaveControls(page, locale);
+    await actions.back.click();
+    await expect(actions.dialog).toBeVisible();
+    await actions.leave.click();
+    await expect(page).toHaveURL(/\/onboarding$/);
+    expect(state.draft.data.fullAddress).toBe('Saved Street');
+    expect(state.submissions).toHaveLength(0);
+  });
+
+  test(`company upload blocks leaving until its verified document can be saved (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, locale, 'LEGAL', { ...legal });
+    state.saveStatus = 503;
+    let finishUpload!: () => void;
+    const held = new Promise<void>((resolve) => {
+      finishUpload = resolve;
+    });
+    await page.route('**/api/upload/presigned-url', async (r) => {
+      expect(r.request().postDataJSON()).toMatchObject({
+        profileId,
+        purpose: 'legal_profile_document',
+      });
+      await held;
+      return r.fulfill({
+        json: { key: 'verified/company.pdf', presignedUrl: 'http://127.0.0.1:4173/upload-fixture' },
+      });
+    });
+    await page.route('**/upload-fixture', (r) => r.fulfill({ status: 204 }));
+    await page.route('**/api/upload/*/verify', (r) => r.fulfill({ json: { status: 'confirmed' } }));
+    await page.route('**/api/upload/*/record', (r) => r.fulfill({ json: {} }));
+    await page.goto(`/onboarding/legal/${profileId}?step=4`);
+    await expect(page.locator('#document-upload')).toBeEnabled();
+    await page.locator('#document-upload').setInputFiles({
+      name: 'company.pdf',
+      mimeType: 'application/pdf',
+      buffer: Buffer.from('%PDF-1.4\ncompany document'),
+    });
+    const actions = leaveControls(page, locale);
+    await actions.back.click();
+    await expect(actions.dialog).toBeVisible();
+    await expect(actions.save).toBeDisabled();
+    await expect(actions.leave).toBeDisabled();
+    await expect(actions.dialog.getByRole('status')).toContainText(
+      locale === 'fa' ? 'در حال بارگذاری مدارک' : 'Uploading documents'
+    );
+    finishUpload();
+    await expect(actions.save).toBeEnabled();
+    state.saveStatus = 200;
+    await actions.save.click();
+    await expect(page).toHaveURL(/\/onboarding$/);
+    expect(JSON.parse(state.draft.data.documentKeys!)).toEqual([
+      { key: 'verified/company.pdf', name: 'company.pdf' },
+    ]);
+    expect(state.submissions).toHaveLength(0);
+  });
+
+  test(`final submission blocks leaving and its verified receipt opens the result (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, locale, 'INDIVIDUAL', { ...individual });
+    let finishSubmit!: () => void;
+    state.submitGate = new Promise<void>((resolve) => {
+      finishSubmit = resolve;
+    });
+    await page.goto(`/onboarding/individual/${profileId}?step=3`);
+    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText('Saved Street');
+    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText(
+      locale === 'fa' ? 'تهران' : 'Tehran'
+    );
+    await submit(page, locale);
+    await expect.poll(() => state.submissions.length).toBe(1);
+    const actions = leaveControls(page, locale);
+    await actions.back.click();
+    await expect(actions.dialog).toBeVisible();
+    await expect(actions.leave).toBeDisabled();
+    await expect(actions.save).toBeDisabled();
+    finishSubmit();
+    await expect(page).toHaveURL(new RegExp(`/onboarding/complete\\?profileId=${profileId}$`));
+    await expect(page.locator('dl')).toContainText('Person Owner');
+    expect(state.submissions).toHaveLength(1);
+  });
+}
 
 for (const locale of ['en', 'fa'] as const) {
   test(`personal wizard saves stages, reviews edits and only celebrates a valid receipt (${locale})`, async ({
@@ -191,7 +417,7 @@ for (const locale of ['en', 'fa'] as const) {
     state.invalidReceipt = true;
     await submit(page, locale);
     await expect(page.locator('[data-slot="alert-description"]')).toBeVisible();
-    await expect(page).toHaveURL(new RegExp(`/onboarding/individual/${profileId}$`));
+    await expect(page).toHaveURL(new RegExp(`/onboarding/individual/${profileId}\\?step=3$`));
     expect(state.completeRequests).toBe(0);
     state.invalidReceipt = false;
     await submit(page, locale);
@@ -431,7 +657,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page
       .getByRole('button', { name: locale === 'fa' ? 'ادامه' : 'Continue', exact: true })
       .click();
-    await expect(page).toHaveURL(new RegExp(`/onboarding/individual/${profileId}$`));
+    await expect(page).toHaveURL(new RegExp(`/onboarding/individual/${profileId}(?:\\?step=1)?$`));
     expect(state.starts[0]).toMatchObject({
       requestId: expect.stringMatching(/^[0-9a-f-]{36}$/),
       profileTypes: ['INDIVIDUAL', 'LEGAL'],
@@ -441,7 +667,7 @@ for (const locale of ['en', 'fa'] as const) {
     await next(page, locale);
     await next(page, locale);
     await submit(page, locale);
-    await expect(page).toHaveURL(new RegExp(`/onboarding/legal/${companyId}$`));
+    await expect(page).toHaveURL(new RegExp(`/onboarding/legal/${companyId}(?:\\?step=1)?$`));
     await expect(page.locator('#representativeFirstName')).toHaveValue('Person');
     expect(state.finishes).toHaveLength(0);
     await dismissMessages(page, locale);
@@ -515,7 +741,7 @@ for (const locale of ['en', 'fa'] as const) {
         exact: true,
       })
       .click();
-    await expect(page).toHaveURL(new RegExp(`/onboarding/individual/${profileId}$`));
+    await expect(page).toHaveURL(new RegExp(`/onboarding/individual/${profileId}(?:\\?step=1)?$`));
     expect(state.starts).toHaveLength(1);
     await expect(
       page.getByRole('button', {

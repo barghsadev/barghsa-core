@@ -35,4 +35,4 @@ Review addressed receipt binding, divergent persisted writes, stale account comp
 
 No new migration is needed for invitation decisions. Deploy the expanded API with or before the frontend. The preceding onboarding repair requires migration0241 after0240 and has all five exact-commit CI gates passing in [run37014404086](https://github.com/barghsadev/barghsa-core/actions/runs/37014404086).
 
-This is a direct-main manual batch, as requested. No PR, CI settings, scheduler, historical supervisor snapshot or generated completion/event ledger is changed. Exact invitation CI is read back after publication; pending CI is not claimed as passing.
+This is a direct-main manual batch, as requested. No PR, CI settings, scheduler, historical supervisor snapshot or generated completion/event ledger is changed. Published commit `452799835f04f691d8f45b37b02bf830ee39a206` has all five exact-commit CI jobs passing in [run37016947392](https://github.com/barghsadev/barghsa-core/actions/runs/37016947392).

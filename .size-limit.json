@@ -133,6 +133,12 @@
     "limitKB": 15
   },
   {
+    "name": "Onboarding leave confirmation on demand",
+    "phase": "interaction",
+    "entries": ["src/components/OnboardingLeaveDialog.tsx"],
+    "limitKB": 15
+  },
+  {
     "name": "Dashboard",
     "entries": [
       "index.html",
