@@ -10,7 +10,6 @@ import {
   Trash2Icon,
   StarIcon,
   Loader2Icon,
-  SaveIcon,
   XIcon,
 } from 'lucide-react';
 import {
@@ -22,7 +21,22 @@ import {
   DialogContent,
   DialogTitle,
   DialogDescription,
+  Alert,
+  AlertDescription,
 } from '@barghsa/ui';
+import { z } from 'zod';
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  FormSubmit,
+  useZodForm,
+  useWatch,
+  setServerFieldErrors,
+} from '@barghsa/ui/form';
 import { withCsrf } from '../../../lib/csrf.js';
 import { useGeographyOptions } from '../../../hooks/useGeographyOptions.js';
 import { useLocale } from '../../../hooks/useLocale.js';
@@ -55,6 +69,10 @@ interface Address {
   updatedAt: string;
 }
 
+const addressFormFields = ['provinceId', 'cityId', 'fullAddress', 'postalCode'] as const;
+const emptyAddress = { provinceId: '', cityId: '', fullAddress: '', postalCode: '' };
+type AddressFormValues = typeof emptyAddress;
+
 // ─── Page Component ────────────────────────────────────────────────────
 
 function SettingsAddressesPage() {
@@ -67,7 +85,6 @@ function SettingsAddressesPage() {
   const [profileId, setProfileId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
-  const [saving, setSaving] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const deletingRef = useRef(false);
@@ -75,11 +92,30 @@ function SettingsAddressesPage() {
   const cancelDeleteRef = useRef<HTMLButtonElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
 
-  // Form state
-  const [formProvinceId, setFormProvinceId] = useState('');
-  const [formCityId, setFormCityId] = useState('');
-  const [formFullAddress, setFormFullAddress] = useState('');
-  const [formPostalCode, setFormPostalCode] = useState('');
+  const validationMessages = {
+    provinceId: t('settings.addresses.validation.province', locale),
+    cityId: t('settings.addresses.validation.city', locale),
+    fullAddress: t('settings.addresses.validation.fullAddress', locale),
+    postalCode: t('settings.addresses.validation.postalCode', locale),
+  };
+  const form = useZodForm(
+    z.object({
+      provinceId: z.string().uuid(validationMessages.provinceId),
+      cityId: z.string().uuid(validationMessages.cityId),
+      fullAddress: z
+        .string()
+        .trim()
+        .min(1, validationMessages.fullAddress)
+        .max(500, validationMessages.fullAddress),
+      postalCode: z
+        .string()
+        .trim()
+        .regex(/^[1-9]\d{9}$/, validationMessages.postalCode),
+    }),
+    { defaultValues: emptyAddress }
+  );
+  const saving = form.formState.isSubmitting;
+  const formProvinceId = useWatch({ control: form.control, name: 'provinceId' });
   const provinceOptions = useGeographyOptions('/api/geography/provinces');
   const cityOptions = useGeographyOptions(
     showForm && formProvinceId
@@ -129,10 +165,7 @@ function SettingsAddressesPage() {
 
   const openAddForm = () => {
     setEditingAddress(null);
-    setFormProvinceId('');
-    setFormCityId('');
-    setFormFullAddress('');
-    setFormPostalCode('');
+    form.reset(emptyAddress);
     setShowForm(true);
   };
 
@@ -140,77 +173,83 @@ function SettingsAddressesPage() {
 
   const openEditForm = (address: Address) => {
     setEditingAddress(address);
-    setFormProvinceId(address.provinceId);
-    setFormCityId(address.cityId);
-    setFormFullAddress(address.fullAddress);
-    setFormPostalCode(address.postalCode);
+    form.reset({
+      provinceId: address.provinceId,
+      cityId: address.cityId,
+      fullAddress: address.fullAddress,
+      postalCode: address.postalCode,
+    });
     setShowForm(true);
   };
 
   // ── Close form ─────────────────────────────────────────────────────
 
   const closeForm = () => {
+    if (form.isSubmissionPending()) return;
     setShowForm(false);
     setEditingAddress(null);
   };
 
   // ── Save handler (create or update) ────────────────────────────────
 
-  const handleSave = useCallback(async () => {
+  const handleSave = async (values: AddressFormValues) => {
+    const fallbackMessage = t(
+      editingAddress ? 'settings.addresses.error.update' : 'settings.addresses.error.create',
+      locale
+    );
     if (
       !provinceOptions.ready ||
       !cityOptions.ready ||
-      !provinces.some((province) => province.id === formProvinceId) ||
-      !cities.some((city) => city.id === formCityId) ||
-      !formProvinceId ||
-      !formCityId ||
-      !formFullAddress.trim() ||
-      !formPostalCode.trim()
+      !provinces.some((province) => province.id === values.provinceId) ||
+      !cities.some((city) => city.id === values.cityId)
     ) {
-      toast.error(t('settings.addresses.error.create', locale));
+      setServerFieldErrors(
+        form,
+        {
+          provinceId: validationMessages.provinceId,
+          cityId: validationMessages.cityId,
+        },
+        addressFormFields,
+        fallbackMessage
+      );
       return;
     }
-
-    setSaving(true);
     try {
       if (!profileId) throw new Error();
-      const body = {
-        provinceId: formProvinceId,
-        cityId: formCityId,
-        fullAddress: formFullAddress.trim(),
-        postalCode: formPostalCode.trim(),
-      };
-
-      let res: Response;
-      if (editingAddress) {
-        res = await fetch(`/api/profiles/${profileId}/addresses/${editingAddress.id}`, {
-          method: 'PUT',
+      const res = await fetch(
+        editingAddress
+          ? `/api/profiles/${profileId}/addresses/${editingAddress.id}`
+          : `/api/profiles/${profileId}/addresses`,
+        {
+          method: editingAddress ? 'PUT' : 'POST',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify(body),
-        });
-      } else {
-        res = await fetch(`/api/profiles/${profileId}/addresses`, {
-          method: 'POST',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify(body),
-        });
-      }
-
+          body: JSON.stringify(values),
+        }
+      );
       if (!res.ok) {
-        const errBody = await res.json().catch(() => ({}));
-        const message = (errBody as { message?: string }).message;
-        toast.error(
-          message ||
-            t(
-              editingAddress
-                ? 'settings.addresses.error.update'
-                : 'settings.addresses.error.create',
-              locale
-            )
+        const body: unknown = await res.json().catch(() => null);
+        const error = body && typeof body === 'object' && 'error' in body ? body.error : null;
+        const fields =
+          res.status === 400 &&
+          error &&
+          typeof error === 'object' &&
+          'code' in error &&
+          error.code === 'VALIDATION:INPUT:INVALID' &&
+          'fields' in error &&
+          Array.isArray(error.fields)
+            ? error.fields
+            : [];
+        const messages = Object.fromEntries(
+          fields.map((field: unknown) => [
+            typeof field === 'string' ? field : '',
+            typeof field === 'string' && Object.hasOwn(validationMessages, field)
+              ? validationMessages[field as keyof typeof validationMessages]
+              : null,
+          ])
         );
+        setServerFieldErrors(form, messages, addressFormFields, fallbackMessage);
         return;
       }
-
       toast.success(
         t(
           editingAddress
@@ -219,32 +258,13 @@ function SettingsAddressesPage() {
           locale
         )
       );
-      closeForm();
-      fetchAddresses();
+      setShowForm(false);
+      setEditingAddress(null);
+      await fetchAddresses();
     } catch {
-      toast.error(
-        t(
-          editingAddress ? 'settings.addresses.error.update' : 'settings.addresses.error.create',
-          locale
-        )
-      );
-    } finally {
-      setSaving(false);
+      form.setError('root.server', { type: 'server', message: fallbackMessage });
     }
-  }, [
-    cities,
-    provinces,
-    provinceOptions.ready,
-    cityOptions.ready,
-    formProvinceId,
-    formCityId,
-    formFullAddress,
-    formPostalCode,
-    editingAddress,
-    profileId,
-    locale,
-    fetchAddresses,
-  ]);
+  };
 
   // ── Set as main address ────────────────────────────────────────────
 
@@ -500,7 +520,8 @@ function SettingsAddressesPage() {
         >
           <DialogContent
             showCloseButton={false}
-            className="bg-background rounded-lg shadow-lg w-full sm:max-w-md p-6 space-y-4"
+            className="bg-background rounded-lg shadow-lg w-full sm:max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto p-6"
+            dir={locale === 'fa' ? 'rtl' : 'ltr'}
           >
             <div className="flex items-center justify-between">
               <DialogTitle className="text-lg font-semibold">
@@ -511,6 +532,7 @@ function SettingsAddressesPage() {
               <button
                 type="button"
                 onClick={closeForm}
+                disabled={saving}
                 className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 aria-label={t('settings.addresses.form.cancel', locale)}
               >
@@ -518,131 +540,155 @@ function SettingsAddressesPage() {
               </button>
             </div>
 
-            <div className="space-y-3">
-              {/* Province */}
-              <div>
-                <label htmlFor="addresses-field-1" className="block text-sm font-medium mb-1">
-                  {t('settings.addresses.form.province', locale)}
-                </label>
-                <select
-                  id="addresses-field-1"
-                  value={formProvinceId}
-                  onChange={(e) => {
-                    setFormCityId('');
-                    setFormProvinceId(e.target.value);
-                  }}
-                  disabled={saving || !provinceOptions.ready}
-                  className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                  dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                >
-                  <option value="">
-                    {t('settings.addresses.form.provincePlaceholder', locale)}
-                  </option>
-                  {provinces.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {locale === 'fa' ? p.nameFa : p.nameEn}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* City */}
-              <div>
-                <label htmlFor="addresses-field-2" className="block text-sm font-medium mb-1">
-                  {t('settings.addresses.form.city', locale)}
-                </label>
-                <DependentSelect
-                  id="addresses-field-2"
-                  dependencyValue={formProvinceId}
-                  value={formCityId}
-                  ready={cityOptions.ready}
-                  loading={cityOptions.loading}
-                  options={cities.map((city) => ({
-                    value: city.id,
-                    label: locale === 'fa' ? city.nameFa : city.nameEn,
-                    dependencyValue: city.provinceId ?? '',
-                  }))}
-                  placeholder={t('settings.addresses.form.cityPlaceholder', locale)}
-                  onChange={(e) => setFormCityId(e.target.value)}
-                  disabled={saving}
-                  className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                  dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                />
-              </div>
-
-              {(provinceOptions.error || cityOptions.error) && (
-                <div>
-                  <p role="alert">
-                    {t(
-                      provinceOptions.error
-                        ? 'settings.addresses.error.loadProvinces'
-                        : 'settings.addresses.error.loadCities',
-                      locale
-                    )}
-                  </p>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={provinceOptions.error ? provinceOptions.retry : cityOptions.retry}
-                  >
-                    {t('settings.addresses.retry', locale)}
-                  </Button>
-                </div>
-              )}
-
-              {/* Full Address */}
-              <div>
-                <label htmlFor="addresses-field-3" className="block text-sm font-medium mb-1">
-                  {t('settings.addresses.form.fullAddress', locale)}
-                </label>
-                <textarea
-                  id="addresses-field-3"
-                  value={formFullAddress}
-                  onChange={(e) => setFormFullAddress(e.target.value)}
-                  placeholder={t('settings.addresses.form.fullAddressPlaceholder', locale)}
-                  className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px]"
-                  dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                  maxLength={500}
-                />
-              </div>
-
-              {/* Postal Code */}
-              <div>
-                <label htmlFor="addresses-field-4" className="block text-sm font-medium mb-1">
-                  {t('settings.addresses.form.postalCode', locale)}
-                </label>
-                <input
-                  id="addresses-field-4"
-                  type="text"
-                  value={formPostalCode}
-                  onChange={(e) => setFormPostalCode(e.target.value)}
-                  placeholder={t('settings.addresses.form.postalCodePlaceholder', locale)}
-                  className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                  dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                  maxLength={10}
-                />
-              </div>
-            </div>
-
-            <div className="flex justify-end gap-2 pt-2">
-              <Button variant="outline" onClick={closeForm}>
-                {t('settings.addresses.form.cancel', locale)}
-              </Button>
-              <Button
-                onClick={handleSave}
-                disabled={saving || !provinceOptions.ready || !cityOptions.ready}
-                className="gap-2"
-              >
-                {saving ? (
-                  <Loader2Icon className="h-4 w-4 animate-spin" />
-                ) : (
-                  <SaveIcon className="h-4 w-4" />
+            <DialogDescription>
+              {t('settings.addresses.form.description', locale)}
+            </DialogDescription>
+            <Form {...form}>
+              <form noValidate onSubmit={form.handleSubmit(handleSave)} className="space-y-4">
+                {form.formState.errors.root?.server?.message && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{form.formState.errors.root.server.message}</AlertDescription>
+                  </Alert>
                 )}
-                {saving
-                  ? t('settings.addresses.form.saving', locale)
-                  : t('settings.addresses.form.save', locale)}
-              </Button>
-            </div>
+                <div className="space-y-3">
+                  <FormField
+                    control={form.control}
+                    name="provinceId"
+                    render={({ field }) => (
+                      <FormItem id="addresses-field-1">
+                        <FormLabel>{t('settings.addresses.form.province', locale)}</FormLabel>
+                        <FormControl>
+                          <select
+                            {...field}
+                            onChange={(event) => {
+                              form.setValue('cityId', '', {
+                                shouldDirty: true,
+                                shouldValidate: Boolean(form.formState.touchedFields.cityId),
+                              });
+                              field.onChange(event);
+                            }}
+                            disabled={saving || !provinceOptions.ready}
+                            className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive"
+                            dir={locale === 'fa' ? 'rtl' : 'ltr'}
+                          >
+                            <option value="">
+                              {t('settings.addresses.form.provincePlaceholder', locale)}
+                            </option>
+                            {provinces.map((province) => (
+                              <option key={province.id} value={province.id}>
+                                {locale === 'fa' ? province.nameFa : province.nameEn}
+                              </option>
+                            ))}
+                          </select>
+                        </FormControl>
+                        <FormMessage reserveSpace />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="cityId"
+                    render={({ field }) => (
+                      <FormItem id="addresses-field-2">
+                        <FormLabel>{t('settings.addresses.form.city', locale)}</FormLabel>
+                        <FormControl>
+                          <DependentSelect
+                            {...field}
+                            dependencyValue={formProvinceId}
+                            ready={cityOptions.ready}
+                            loading={cityOptions.loading}
+                            options={cities.map((city) => ({
+                              value: city.id,
+                              label: locale === 'fa' ? city.nameFa : city.nameEn,
+                              dependencyValue: city.provinceId ?? '',
+                            }))}
+                            placeholder={t('settings.addresses.form.cityPlaceholder', locale)}
+                            disabled={saving}
+                            className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive"
+                            dir={locale === 'fa' ? 'rtl' : 'ltr'}
+                          />
+                        </FormControl>
+                        <FormMessage reserveSpace />
+                      </FormItem>
+                    )}
+                  />
+                  {(provinceOptions.error || cityOptions.error) && (
+                    <div>
+                      <p role="alert">
+                        {t(
+                          provinceOptions.error
+                            ? 'settings.addresses.error.loadProvinces'
+                            : 'settings.addresses.error.loadCities',
+                          locale
+                        )}
+                      </p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={provinceOptions.error ? provinceOptions.retry : cityOptions.retry}
+                      >
+                        {t('settings.addresses.retry', locale)}
+                      </Button>
+                    </div>
+                  )}
+                  <FormField
+                    control={form.control}
+                    name="fullAddress"
+                    render={({ field }) => (
+                      <FormItem id="addresses-field-3">
+                        <FormLabel>{t('settings.addresses.form.fullAddress', locale)}</FormLabel>
+                        <FormControl>
+                          <textarea
+                            {...field}
+                            disabled={saving}
+                            placeholder={t(
+                              'settings.addresses.form.fullAddressPlaceholder',
+                              locale
+                            )}
+                            className="flex w-full min-h-[80px] rounded-lg border border-input bg-transparent px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive"
+                            dir={locale === 'fa' ? 'rtl' : 'ltr'}
+                            maxLength={500}
+                          />
+                        </FormControl>
+                        <FormMessage reserveSpace />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="postalCode"
+                    render={({ field }) => (
+                      <FormItem id="addresses-field-4">
+                        <FormLabel>{t('settings.addresses.form.postalCode', locale)}</FormLabel>
+                        <FormControl>
+                          <input
+                            {...field}
+                            type="text"
+                            inputMode="numeric"
+                            disabled={saving}
+                            placeholder={t('settings.addresses.form.postalCodePlaceholder', locale)}
+                            className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive"
+                            dir="ltr"
+                            maxLength={10}
+                          />
+                        </FormControl>
+                        <FormMessage reserveSpace />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex justify-end gap-2 pt-2">
+                  <Button type="button" variant="outline" onClick={closeForm} disabled={saving}>
+                    {t('settings.addresses.form.cancel', locale)}
+                  </Button>
+                  <FormSubmit disabled={!provinceOptions.ready || !cityOptions.ready}>
+                    {saving
+                      ? t('settings.addresses.form.saving', locale)
+                      : t('settings.addresses.form.save', locale)}
+                  </FormSubmit>
+                </div>
+              </form>
+            </Form>
           </DialogContent>
         </Dialog>
       )}

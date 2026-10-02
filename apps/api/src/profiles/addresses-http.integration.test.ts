@@ -235,7 +235,9 @@ it('rejects cross-province and inactive selections without changing addresses or
     fullAddress: 'Invalid pair',
     postalCode: '1234567890',
   };
-  expect((await request('POST', '', 'owner', payload)).status).toBe(400);
+  const invalidPair = await request('POST', '', 'owner', payload);
+  expect(invalidPair.status).toBe(400);
+  expect(await invalidPair.json()).toMatchObject({ error: { fields: ['provinceId', 'cityId'] } });
   expect(
     (await request('PUT', `/${original.id}`, 'owner', { provinceId: otherProvince })).status
   ).toBe(400);
@@ -327,3 +329,47 @@ it('rejects malformed address fields and route IDs as client errors', async () =
     cityNameEn: 'City',
   });
 });
+
+it.each(['en', 'fa'])(
+  'returns safe field identifiers for create/edit validation with no writes (%s)',
+  async (locale) => {
+    const original = await create();
+    const before = (await http.pool.query('SELECT * FROM addresses WHERE id=$1', [original.id]))
+      .rows[0];
+    const auditBefore = (await http.pool.query('SELECT count(*)::int AS count FROM audit_log'))
+      .rows[0].count;
+    headers.owner!['Accept-Language'] = locale;
+    for (const [method, suffix] of [
+      ['POST', ''],
+      ['PUT', `/${original.id}`],
+    ]) {
+      const response = await request(method!, suffix, 'owner', {
+        provinceId: 'private-province-value',
+        cityId: 'private-city-value',
+        fullAddress: ' ',
+        postalCode: 'private-postal-value',
+      });
+      expect(response.status).toBe(400);
+      const text = await response.text();
+      expect(text).not.toContain('private-');
+      expect(text).not.toContain('issues');
+      const body = JSON.parse(text);
+      expect(body.error).toMatchObject({
+        code: 'VALIDATION:INPUT:INVALID',
+        message: locale === 'fa' ? 'مقدار ورودی نامعتبر است' : 'Invalid input value',
+        fields: ['provinceId', 'cityId', 'fullAddress', 'postalCode'],
+      });
+      expect(response.headers.get('x-correlation-id')).toBe(body.error.correlationId);
+    }
+    expect(
+      (await http.pool.query('SELECT * FROM addresses WHERE id=$1', [original.id])).rows[0]
+    ).toEqual(before);
+    expect(
+      (await http.pool.query('SELECT count(*)::int AS count FROM audit_log')).rows[0].count
+    ).toBe(auditBefore);
+    const generic = await request('PUT', `/${original.id}`, 'owner', {});
+    expect(await generic.json()).toMatchObject({
+      error: expect.not.objectContaining({ fields: expect.anything() }),
+    });
+  }
+);

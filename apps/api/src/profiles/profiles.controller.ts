@@ -23,6 +23,7 @@ import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { InputFieldException } from '../common/input-field.exception.js';
 import {
   validateNationalId,
   validatePostalCode,
@@ -498,7 +499,11 @@ export class ProfilesController {
   @RateLimit({ namespace: 'profiles:addresses:create:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Create a new address for a profile' })
   @ApiResponse({ status: 201, description: 'Address created.' })
-  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({
+    status: 400,
+    description:
+      'Validation error. error.fields may list provinceId, cityId, fullAddress or postalCode. Submitted values and validator messages are never returned.',
+  })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async createAddress(
@@ -517,9 +522,12 @@ export class ProfilesController {
 
     const parsed = createAddressInput.safeParse(body);
     if (!parsed.success)
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400
+      throw new InputFieldException(
+        parsed.error.issues.flatMap((issue) =>
+          typeof issue.path[0] === 'string' && Object.hasOwn(addressFields.shape, issue.path[0])
+            ? [issue.path[0]]
+            : []
+        )
       );
     const address = await this.profilesService.createAddress(req.session, profileId, parsed.data);
 
@@ -539,7 +547,11 @@ export class ProfilesController {
   @RateLimit({ namespace: 'profiles:addresses:update:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Update an address' })
   @ApiResponse({ status: 200, description: 'Address updated.' })
-  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({
+    status: 400,
+    description:
+      'Validation error. error.fields may list provinceId, cityId, fullAddress or postalCode. Submitted values and validator messages are never returned.',
+  })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Address or profile not found' })
   async updateAddress(
@@ -558,9 +570,12 @@ export class ProfilesController {
 
     const parsed = updateAddressInput.safeParse(body);
     if (!parsed.success)
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400
+      throw new InputFieldException(
+        parsed.error.issues.flatMap((issue) =>
+          typeof issue.path[0] === 'string' && Object.hasOwn(addressFields.shape, issue.path[0])
+            ? [issue.path[0]]
+            : []
+        )
       );
     const address = await this.profilesService.updateAddress(
       req.session,

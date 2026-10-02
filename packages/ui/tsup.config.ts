@@ -4,6 +4,7 @@ export default {
     'src/index.ts',
     'src/sonner.ts',
     'src/direction-provider.ts',
+    'src/form/index.ts',
     'src/components/**/*.tsx',
     '!src/**/*.test.tsx',
   ],

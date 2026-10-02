@@ -15,6 +15,8 @@ async function fixture(page: Page, locale: Locale) {
     provinceFailed: true,
     cityInvalid: true,
     writeFailed: true,
+    validationFields: [] as string[],
+    writeGate: null as Promise<void> | null,
     writes: [] as Record<string, string>[],
   };
   let address = {
@@ -48,9 +50,29 @@ async function fixture(page: Page, locale: Locale) {
   });
   await page.addInitScript((language) => {
     localStorage.setItem('barghsa.locale', language);
-    localStorage.setItem('theme', language === 'fa' ? 'dark' : 'light');
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/public/branding/config', (route) =>
+    route.fulfill({
+      json: {
+        appTitle: 'Barghsa',
+        appTitleFa: 'برقسا',
+        supportEmail: 'support@example.test',
+        supportPhone: '02112345678',
+        supportMobile: '09123456789',
+        slogan: '',
+        primaryColor: '#176b5b',
+        secondaryColor: '#547467',
+        accentColor: '#d6a74e',
+        backgroundColor: '#f6f7f4',
+        darkBackgroundColor: '#15201c',
+        logoUrl: null,
+        faviconUrl: null,
+        darkMode: locale === 'fa',
+        numberStyle: 'locale',
+      },
+    })
+  );
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({
       json: {
@@ -73,9 +95,23 @@ async function fixture(page: Page, locale: Locale) {
   async function write(route: import('@playwright/test').Route) {
     const body = route.request().postDataJSON();
     state.writes.push(body);
+    if (state.writeGate) await state.writeGate;
+    if (state.validationFields.length)
+      return route.fulfill({
+        status: 400,
+        json: {
+          error: {
+            code: 'VALIDATION:INPUT:INVALID',
+            fields: state.validationFields,
+            message: 'private-server-detail',
+          },
+        },
+      });
     if (state.writeFailed) return route.fulfill({ status: 503, json: {} });
     address = { ...address, ...body };
-    return route.fulfill({ json: route.request().method() === 'POST' ? address : profile() });
+    return route.fulfill({
+      json: route.request().url().includes('/addresses') ? address : profile(),
+    });
   }
   await page.route(`**/api/profiles/${profileId}`, (route) =>
     route.request().method() === 'PUT' ? write(route) : route.fulfill({ json: profile() })
@@ -85,6 +121,7 @@ async function fixture(page: Page, locale: Locale) {
       ? write(route)
       : route.fulfill({ json: { addresses: [address] } })
   );
+  await page.route(`**/api/profiles/${profileId}/addresses/${address.id}`, (route) => write(route));
   await page.route('**/api/geography/provinces', (route) =>
     route.fulfill({
       status: state.provinceFailed ? 503 : 200,
@@ -120,6 +157,9 @@ for (const locale of ['en', 'fa'] as const)
     }) => {
       const state = await fixture(page, locale);
       await page.goto(`/settings/${surface}`);
+      await expect
+        .poll(() => page.locator('html').evaluate((root) => root.classList.contains('dark')))
+        .toBe(locale === 'fa');
       if (surface === 'addresses')
         await page
           .getByRole('button', { name: t('settings.addresses.add', locale), exact: true })
@@ -199,6 +239,20 @@ for (const locale of ['en', 'fa'] as const)
           .getByRole('button', { name: crmText('settings.profile.save', locale), exact: true })
           .click();
       await expect.poll(() => state.writes.length).toBe(1);
+      if (surface === 'addresses') {
+        await expect(
+          page
+            .getByRole('dialog')
+            .getByRole('alert')
+            .filter({ hasText: t('settings.addresses.error.create', locale) })
+        ).toBeVisible();
+        expect(
+          await page.getByRole('dialog').evaluate((dialog) => {
+            const bounds = dialog.getBoundingClientRect();
+            return bounds.top >= 0 && bounds.bottom <= innerHeight;
+          })
+        ).toBe(true);
+      }
       await expect(full).toHaveValue('Retained address draft');
       state.writeFailed = false;
       await (
@@ -222,3 +276,118 @@ for (const locale of ['en', 'fa'] as const)
       else await expect(page.locator('.container').last()).toContainText('Retained address draft');
     });
   }
+
+for (const locale of ['en', 'fa'] as const)
+  for (const operation of ['create', 'edit'] as const)
+    test(`address ${operation} validates inline, retains server-rejected values and blocks busy submits (${locale})`, async ({
+      page,
+    }) => {
+      const state = await fixture(page, locale);
+      state.provinceFailed = state.cityInvalid = state.writeFailed = false;
+      await page.goto('/settings/addresses');
+      await expect
+        .poll(() => page.locator('html').evaluate((root) => root.classList.contains('dark')))
+        .toBe(locale === 'fa');
+      await page
+        .getByRole('button', {
+          name: t(
+            operation === 'create' ? 'settings.addresses.add' : 'settings.addresses.edit',
+            locale
+          ),
+          exact: true,
+        })
+        .click();
+      const dialog = page.getByRole('dialog');
+      await expect(dialog).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
+      const province = dialog.locator('#addresses-field-1');
+      const city = dialog.locator('#addresses-field-2');
+      const full = dialog.locator('#addresses-field-3');
+      const postal = dialog.locator('#addresses-field-4');
+      const save = dialog.getByRole('button', {
+        name: t('settings.addresses.form.save', locale),
+        exact: true,
+      });
+      await expect(dialog.getByRole('alert')).toHaveCount(0);
+      if (operation === 'edit') {
+        await expect(full).toHaveValue('Saved address');
+        await expect(postal).toHaveValue('1234567890');
+      }
+      await province.selectOption(p2);
+      await expect(city).toHaveValue('');
+      await expect(city).toBeEnabled();
+      await city.selectOption(c2);
+      await full.fill(' ');
+      await postal.fill('0000000000');
+      await save.click();
+      await expect(full).toBeFocused();
+      await expect(full).toHaveAttribute('aria-invalid', 'true');
+      await expect(
+        dialog
+          .getByRole('alert')
+          .filter({ hasText: t('settings.addresses.validation.fullAddress', locale) })
+      ).toBeVisible();
+      await expect(postal).toHaveAttribute('aria-describedby', 'addresses-field-4-message');
+      expect(state.writes).toHaveLength(0);
+      await full.fill('  Retained address correction  ');
+      await postal.fill('2345678901');
+      state.validationFields = ['postalCode'];
+      await save.click();
+      await expect.poll(() => state.writes.length).toBe(1);
+      await expect(postal).toBeFocused();
+      await expect(postal).toHaveAttribute('aria-invalid', 'true');
+      await expect(full).toHaveValue('  Retained address correction  ');
+      await expect(dialog).not.toContainText('private-server-detail');
+      expect(
+        (
+          await new AxeBuilder({ page })
+            .include('[role=dialog]')
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+            .analyze()
+        ).violations
+      ).toEqual([]);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true
+      );
+      await dialog.screenshot({
+        path: `/tmp/barghsa-form-${operation}-${locale}-${test.info().project.name}.png`,
+      });
+      state.validationFields = [];
+      let release!: () => void;
+      state.writeGate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      await save.click();
+      await expect.poll(() => state.writes.length).toBe(2);
+      const saving = dialog.getByRole('button', {
+        name: t('settings.addresses.form.saving', locale),
+        exact: true,
+      });
+      await expect(saving).toBeDisabled();
+      await expect(saving).toHaveAttribute('aria-busy', 'true');
+      await expect(full).toBeDisabled();
+      await expect(postal).toBeDisabled();
+      await expect(province).toBeDisabled();
+      await expect(city).toBeDisabled();
+      for (const cancel of await dialog
+        .getByRole('button', { name: t('settings.addresses.form.cancel', locale), exact: true })
+        .all())
+        await expect(cancel).toBeDisabled();
+      await dialog.locator('form').evaluate((form: HTMLFormElement) => {
+        form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+      });
+      await page.keyboard.press('Escape');
+      await expect(dialog).toBeVisible();
+      expect(state.writes).toHaveLength(2);
+      release();
+      await expect(dialog).toHaveCount(0);
+      expect(state.writes).toEqual(
+        Array(2).fill({
+          provinceId: p2,
+          cityId: c2,
+          fullAddress: 'Retained address correction',
+          postalCode: '2345678901',
+        })
+      );
+      await expect(page.locator('.container').last()).toContainText('Retained address correction');
+    });

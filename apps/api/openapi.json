@@ -25159,7 +25159,7 @@
             "description": "Address created."
           },
           "400": {
-            "description": "Validation error"
+            "description": "Validation error. error.fields may list provinceId, cityId, fullAddress or postalCode. Submitted values and validator messages are never returned."
           },
           "401": {
             "description": "Not authenticated"
@@ -25239,7 +25239,7 @@
             "description": "Address updated."
           },
           "400": {
-            "description": "Validation error"
+            "description": "Validation error. error.fields may list provinceId, cityId, fullAddress or postalCode. Submitted values and validator messages are never returned."
           },
           "401": {
             "description": "Not authenticated"

@@ -16,6 +16,7 @@ import { t } from '@barghsa/i18n';
 import { t as crmMessage } from '@barghsa/i18n/crm';
 import { readOnlineTopUpLimitFromErrorBody } from '@barghsa/shared/finance';
 import { correlationIdStorage } from './correlation-id.middleware.js';
+import { InputFieldException } from './input-field.exception.js';
 
 /**
  * Look up the ErrorCodeDef for a given error code string, or fall back to the
@@ -36,6 +37,7 @@ function resolveErrorCodeDef(errorCode: string, httpStatus: number): ErrorCodeDe
  * a stable, machine-readable error response shape.
  *
  * Response shape:  { error: { code, message, correlationId } }
+ * InputFieldException also includes safe field identifiers in error.fields.
  *
  * Over-limit online top-up 400s also include `onlineTopUpLimit` and
  * `configVersion` on `error` so the customer form can retry with a reduced
@@ -82,6 +84,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
         correlationId,
       },
     };
+
+    if (exception instanceof InputFieldException && exception.fields.length) {
+      (body.error as Record<string, unknown>).fields = exception.fields;
+    }
 
     if (
       httpStatus === HttpStatus.FORBIDDEN &&

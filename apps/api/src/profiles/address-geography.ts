@@ -1,6 +1,5 @@
-import { HttpException } from '@nestjs/common';
 import type { PoolClient } from 'pg';
-import { ErrorCodes } from '@barghsa/shared/errors';
+import { InputFieldException } from '../common/input-field.exception.js';
 
 /** Validate a newly selected address pair inside its owning transaction. */
 export async function requireAddressGeography(
@@ -15,13 +14,6 @@ export async function requireAddressGeography(
     [provinceId, cityId]
   );
   if (!result.rows.length) {
-    throw new HttpException(
-      {
-        statusCode: 400,
-        error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-        message: 'Select an active city in the selected province',
-      },
-      400
-    );
+    throw new InputFieldException(['provinceId', 'cityId']);
   }
 }

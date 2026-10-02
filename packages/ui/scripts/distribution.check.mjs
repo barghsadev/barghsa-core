@@ -9,7 +9,12 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 const require = createRequire(import.meta.url);
-for (const path of ['@barghsa/ui', '@barghsa/ui/direction-provider', '@barghsa/ui/sonner']) {
+for (const path of [
+  '@barghsa/ui',
+  '@barghsa/ui/direction-provider',
+  '@barghsa/ui/sonner',
+  '@barghsa/ui/form',
+]) {
   test(`${path} loads matching ESM and CommonJS exports`, async () => {
     assert.deepEqual(Object.keys(await import(path)).sort(), Object.keys(require(path)).sort());
   });
@@ -39,11 +44,30 @@ test('ESM and CommonJS consumers resolve strict public prop types', () => {
     const source = `
       import type { EmptyStateProps, ErrorBoundaryProps } from '@barghsa/ui';
       import { DirectionProvider } from '@barghsa/ui/direction-provider';
+      import { useZodForm, FormField } from '@barghsa/ui/form';
+      import { z } from 'zod';
+      import { createElement } from 'react';
+      function AddressForm() {
+        const form = useZodForm(z.object({ postalCode: z.string().transform(Number) }), {
+          defaultValues: { postalCode: '1234567890' },
+        });
+        form.handleSubmit((values) => { const postal: number = values.postalCode; void postal; });
+        form.setValue('postalCode', '2345678901');
+        const field: Parameters<typeof FormField<{ postalCode: string }, 'postalCode', { postalCode: number }>>[0] = {
+          control: form.control, name: 'postalCode', render: () => createElement('input'),
+        };
+        void field;
+        // @ts-expect-error Schema input types must survive both public declaration formats.
+        form.setValue('postalCode', 123);
+        // @ts-expect-error Unknown field names must be rejected.
+        form.setValue('missing', '123');
+        return form;
+      }
       const empty: EmptyStateProps = { title: 'None', description: 'Try a different filter.' };
       // @ts-expect-error Required guidance must remain typed.
       const invalid: EmptyStateProps = { title: 123 };
       const retry: ErrorBoundaryProps['onReset'] = () => {};
-      void [empty, invalid, retry, DirectionProvider];
+      void [empty, invalid, retry, DirectionProvider, AddressForm, FormField];
     `;
     for (const extension of ['mts', 'cts'])
       writeFileSync(join(scratch, `consumer.${extension}`), source);
