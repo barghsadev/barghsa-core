@@ -1169,6 +1169,29 @@ for (const staff of [false, true])
         return data;
       });
       await composer.locator('div.border-dashed').dispatchEvent('drop', { dataTransfer: dropped });
+      const retainedReply = await reply.inputValue();
+      await composer
+        .getByRole('button', {
+          name: documentText('moveFileUp', locale).replace('{name}', 'dropped.pdf'),
+          exact: true,
+        })
+        .click();
+      const selectedRows = composer.locator('[data-slot=dynamic-field-array] [role=listitem]');
+      await expect(selectedRows.first()).toContainText('dropped.pdf');
+      await expect(selectedRows.nth(1)).toContainText('reply.png');
+      await expect(reply).toHaveValue(retainedReply);
+      await expect(
+        composer.getByRole('button', {
+          name: documentText('moveFileDown', locale).replace('{name}', 'dropped.pdf'),
+          exact: true,
+        })
+      ).toBeFocused();
+      if (locale === 'fa') {
+        await selectedRows.first().scrollIntoViewIfNeeded();
+        await page.screenshot({
+          path: `/tmp/barghsa-dynamic-reply-${staff ? 'staff' : 'customer'}-${testInfo.project.name}.png`,
+        });
+      }
       await composer
         .getByRole('button', { name: `${copy('removeFile')} dropped.pdf`, exact: true })
         .click();

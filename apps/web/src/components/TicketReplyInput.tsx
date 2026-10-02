@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Bold, Italic, List, Link as LinkIcon, Paperclip, X } from 'lucide-react';
-import { Button, Input, Label } from '@barghsa/ui';
+import { Bold, Italic, List, Link as LinkIcon, Paperclip } from 'lucide-react';
+import { Button, DynamicFieldArray, Input, Label } from '@barghsa/ui';
+import { useFileSelectionKey } from '../hooks/useFileSelectionKey.js';
 import { t, type Locale } from '@barghsa/i18n/app';
 import TosContent from './TosContent.js';
 import { FilePreview } from './FilePreview.js';
@@ -42,6 +43,7 @@ export function TicketReplyInput({
   onSubmit: (prepare: () => Promise<ReplyPayload>) => Promise<boolean>;
 }) {
   const copy = (key: string) => t(`tickets.${key}`, locale);
+  const fileKey = useFileSelectionKey();
   const [files, setFiles] = useState<File[]>([]),
     [fileError, setFileError] = useState(false),
     [link, setLink] = useState('https://');
@@ -79,6 +81,7 @@ export function TicketReplyInput({
     onBodyChange(next);
   }
   function addFiles(next: File[]) {
+    if (busy) return;
     if (files.length + next.length > 5 || next.some((file) => !isAllowedInvoiceReceiptFile(file))) {
       setFileError(true);
       return;
@@ -248,44 +251,42 @@ export function TicketReplyInput({
         <p id="ticket-reply-files-help" className="mt-2 text-xs text-muted-foreground">
           {copy('fileHelp')}
         </p>
-        {!!files.length && (
-          <ul className="mt-2 flex flex-col gap-2">
-            {files.map((file, index) => (
-              <li
-                key={`${file.name}-${index}`}
-                className="flex min-w-0 flex-wrap items-center gap-2"
+        <DynamicFieldArray
+          emptyFocusRef={textarea}
+          className={files.length ? 'mt-2' : 'hidden'}
+          value={files}
+          getItemKey={fileKey}
+          disabled={busy}
+          maxItems={5}
+          removeLabel={(file) => `${copy('removeFile')} ${file.name}`}
+          moveUpLabel={(file) => documentText('moveFileUp', locale).replace('{name}', file.name)}
+          moveDownLabel={(file) =>
+            documentText('moveFileDown', locale).replace('{name}', file.name)
+          }
+          onChange={(next) => {
+            for (const file of files) if (!next.includes(file)) uploaded.current.delete(file);
+            if (previewFile && !next.includes(previewFile)) setPreviewFile(null);
+            setFileError(false);
+            setFiles(next);
+          }}
+          renderItem={(file, _index, actions) => (
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+              <span className="min-w-0 basis-full break-words sm:flex-1 sm:basis-auto">
+                <bdi>{file.name}</bdi>
+              </span>
+              <Button
+                type="button"
+                variant="ghost"
+                aria-label={`${documentText('preview', locale)}: ${file.name}`}
+                aria-expanded={previewFile === file}
+                onClick={() => setPreviewFile((current) => (current === file ? null : file))}
               >
-                <span className="min-w-0 flex-1 break-words">
-                  <bdi>{file.name}</bdi>
-                </span>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  aria-label={`${documentText('preview', locale)}: ${file.name}`}
-                  aria-expanded={previewFile === file}
-                  onClick={() => setPreviewFile((current) => (current === file ? null : file))}
-                >
-                  {documentText(previewFile === file ? 'hidePreview' : 'preview', locale)}
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  disabled={busy}
-                  aria-label={`${copy('removeFile')} ${file.name}`}
-                  onClick={() => {
-                    setFiles((current) => current.filter((_, i) => i !== index));
-                    uploaded.current.delete(file);
-                    if (previewFile === file) setPreviewFile(null);
-                    setFileError(false);
-                  }}
-                >
-                  <X aria-hidden="true" />
-                </Button>
-              </li>
-            ))}
-          </ul>
-        )}
+                {documentText(previewFile === file ? 'hidePreview' : 'preview', locale)}
+              </Button>
+              {actions}
+            </div>
+          )}
+        />
         {previewFile && files.includes(previewFile) && (
           <FilePreview
             file={previewFile}

@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { fullNavigation } from './navigation-fixture';
 
 const profileId = '11111111-1111-7111-8111-111111111111';
 const invoiceId = '22222222-2222-7222-8222-222222222222';
@@ -29,6 +30,7 @@ for (const locale of ['fa', 'en'] as const)
             operatingContext: 'staff',
             canSwitchContext: true,
             requiresTosAcceptance: false,
+            navigation: fullNavigation('staff'),
           },
         })
       );
@@ -90,10 +92,13 @@ for (const locale of ['fa', 'en'] as const)
                 profileType: 'LEGAL',
               },
               contractId: null,
-              lines: draft.lines.map((line, index) => ({
+              lines: draft.lines.map((line) => ({
                 ...line,
-                lineTotal: index === 0 ? '55055' : '200',
-                vatAmount: index === 0 ? '5506' : '0',
+                lineTotal: (BigInt(line.quantity) * BigInt(line.unitPrice)).toString(),
+                vatAmount: (
+                  (BigInt(line.quantity) * BigInt(line.unitPrice) * BigInt(line.vatRate) + 5000n) /
+                  10000n
+                ).toString(),
               })),
               totals: { subtotal: '55255', vat: '5506', discount: '0', total: '60761' },
               dueRule: {
@@ -178,6 +183,21 @@ for (const locale of ['fa', 'en'] as const)
       await description.nth(1).fill(fa ? 'خدمات بدون مالیات' : 'Untaxed service');
       await quantity.nth(1).fill(fa ? '۲' : '2');
       await price.nth(1).fill(fa ? '۱۰۰' : '100');
+      const firstDescription = fa ? 'برق مصرفی' : 'Electricity';
+      const secondDescription = fa ? 'خدمات بدون مالیات' : 'Untaxed service';
+      await panel.locator('[data-array-action=up]').nth(1).click();
+      await expect(description.first()).toHaveValue(secondDescription);
+      await expect(description.nth(1)).toHaveValue(firstDescription);
+      await expect(panel.locator('[data-array-action=down]').first()).toBeFocused();
+      await panel
+        .getByRole('button', { name: fa ? 'افزودن ردیف' : 'Add line', exact: true })
+        .click();
+      await expect(issue).toBeDisabled();
+      await panel.locator('[data-array-action=remove]').nth(2).click();
+      await expect(issue).toBeEnabled();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true
+      );
       const total = formatCurrencyIrr(60761n, locale, { numberStyle: fa ? 'persian' : 'western' });
       await expect(panel).toContainText(total);
       const scan = await new AxeBuilder({ page })
@@ -193,6 +213,8 @@ for (const locale of ['fa', 'en'] as const)
       await expect(reviewDialog).toBeVisible();
       await expect(reviewDialog).toContainText(fa ? 'شرکت نمونه' : 'Example company');
       await expect(reviewDialog).toContainText(total);
+      await expect(panel.locator('[data-array-action=up]').last()).toBeDisabled();
+      await expect(panel.locator('[data-array-action=remove]').first()).toBeDisabled();
       await reviewDialog
         .getByRole('button', {
           name: fa ? 'تأیید و صدور فاکتور' : 'Confirm and issue invoice',
@@ -232,8 +254,8 @@ for (const locale of ['fa', 'en'] as const)
         profileId,
         expectedReviewHash: reviewHash,
         lines: [
-          { quantity: 1, unitPrice: '55055', vatRate: 1000, isTaxable: true },
           { quantity: 2, unitPrice: '100', vatRate: 0, isTaxable: false },
+          { quantity: 1, unitPrice: '55055', vatRate: 1000, isTaxable: true },
         ],
       });
       expect(await panel.evaluate((element) => getComputedStyle(element).direction)).toBe(

@@ -82,6 +82,7 @@ for (const locale of ['en', 'fa'] as const)
     await act(async () => host.querySelectorAll('button')[1]!.click());
     expect(host.textContent).not.toContain('proof.pdf');
     expect(changed).toHaveBeenLastCalledWith([]);
+    expect(document.activeElement).toBe(host.querySelector('button'));
   });
 it('keeps an accepted draft when multiple dropped files violate the configured count', async () => {
   await act(async () => root.render(<Picker initial={[file]} />));
@@ -141,4 +142,31 @@ it('revalidates a retained draft when the current constraints change', async () 
   );
   expect(host.querySelector('[role=alert]')?.textContent).toContain('1 B');
   expect(changed).not.toHaveBeenCalled();
+});
+it('adds, orders and removes distinct file objects without detaching progress from duplicate names', async () => {
+  const other = new File(['second'], 'proof.pdf', { type: 'application/pdf' });
+  await act(async () =>
+    root.render(
+      <Picker
+        initial={[file]}
+        maxFiles={2}
+        progress={[{ file, loaded: 1, total: 3, phase: 'uploading' }]}
+      />
+    )
+  );
+  await drop([other]);
+  expect(changed).toHaveBeenLastCalledWith([file, other]);
+  const firstRow = host.querySelector('[role=listitem]')!;
+  await act(async () => host.querySelector<HTMLButtonElement>('[data-array-action=down]')!.click());
+  expect(changed).toHaveBeenLastCalledWith([other, file]);
+  expect(host.querySelectorAll('[role=listitem]')[1]).toBe(firstRow);
+  expect(firstRow.querySelector('[role=progressbar]')?.getAttribute('aria-valuenow')).toBe('33');
+  await drop([new File(['third'], 'third.pdf', { type: 'application/pdf' })]);
+  expect(host.querySelector('[role=alert]')?.textContent).toContain('up to 2');
+  expect(changed).toHaveBeenLastCalledWith([other, file]);
+  await act(async () =>
+    host.querySelector<HTMLButtonElement>('[data-array-action=remove]')!.click()
+  );
+  expect(changed).toHaveBeenLastCalledWith([file]);
+  expect(host.querySelector('[role=alert]')).toBeNull();
 });

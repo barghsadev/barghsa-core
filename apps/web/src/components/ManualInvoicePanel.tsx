@@ -10,6 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DynamicFieldArray,
   Field,
   FieldGroup,
   FieldLabel,
@@ -789,88 +790,84 @@ export function ManualInvoiceForm({
               </p>
             </Field>
           )}
-          {correction?.kind !== 'adjustment' &&
-            lines.map((line, index) => (
-              <FieldSet key={line.id} disabled={locked} className="rounded-md border p-4">
-                <FieldLegend>
-                  {text('line')} {numbers.number(index + 1)}
-                </FieldLegend>
-                <FieldGroup>
-                  <Field>
-                    <FieldLabel htmlFor={`manual-description-${line.id}`}>
-                      {text('lineDescription')}
-                    </FieldLabel>
-                    <Input
-                      id={`manual-description-${line.id}`}
-                      required
-                      maxLength={1000}
-                      value={line.description}
-                      onChange={(event) => updateLine(line.id, 'description', event.target.value)}
-                    />
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor={`manual-quantity-${line.id}`}>
-                      {text('quantity')}
-                    </FieldLabel>
-                    <Input
-                      id={`manual-quantity-${line.id}`}
-                      required
-                      inputMode="numeric"
-                      dir="ltr"
-                      maxLength={10}
-                      value={line.quantity}
-                      onChange={(event) => updateLine(line.id, 'quantity', event.target.value)}
-                    />
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor={`manual-price-${line.id}`}>{text('unitPrice')}</FieldLabel>
-                    <Input
-                      id={`manual-price-${line.id}`}
-                      required
-                      inputMode="numeric"
-                      dir="ltr"
-                      maxLength={19}
-                      value={line.unitPrice}
-                      onChange={(event) => updateLine(line.id, 'unitPrice', event.target.value)}
-                    />
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor={`manual-vat-${line.id}`}>{text('vat')}</FieldLabel>
-                    <Input
-                      id={`manual-vat-${line.id}`}
-                      required
-                      inputMode="decimal"
-                      dir="ltr"
-                      maxLength={6}
-                      value={line.vat}
-                      onChange={(event) => updateLine(line.id, 'vat', event.target.value)}
-                    />
-                  </Field>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={locked || lines.length === 1}
-                    onClick={() =>
-                      setLines((current) => current.filter((item) => item.id !== line.id))
-                    }
-                    aria-label={`${text('removeLine')} ${numbers.number(index + 1)}`}
-                  >
-                    {text('removeLine')}
-                  </Button>
-                </FieldGroup>
-              </FieldSet>
-            ))}
+          {correction?.kind !== 'adjustment' && (
+            <DynamicFieldArray
+              value={lines}
+              onChange={setLines}
+              getItemKey={(line) => line.id}
+              createItem={blankLine}
+              addLabel={text('addLine')}
+              removeLabel={(_, index) => `${text('removeLine')} ${numbers.number(index + 1)}`}
+              moveUpLabel={(_, index) => `${text('moveLineUp')} ${numbers.number(index + 1)}`}
+              moveDownLabel={(_, index) => `${text('moveLineDown')} ${numbers.number(index + 1)}`}
+              minItems={1}
+              maxItems={100}
+              disabled={locked}
+              renderItem={(line, index, actions) => (
+                <FieldSet disabled={locked} className="rounded-md border p-4">
+                  <FieldLegend>
+                    {text('line')} {numbers.number(index + 1)}
+                  </FieldLegend>
+                  <FieldGroup>
+                    <Field>
+                      <FieldLabel htmlFor={`manual-description-${line.id}`}>
+                        {text('lineDescription')}
+                      </FieldLabel>
+                      <Input
+                        id={`manual-description-${line.id}`}
+                        required
+                        maxLength={1000}
+                        value={line.description}
+                        onChange={(event) => updateLine(line.id, 'description', event.target.value)}
+                      />
+                    </Field>
+                    <Field>
+                      <FieldLabel htmlFor={`manual-quantity-${line.id}`}>
+                        {text('quantity')}
+                      </FieldLabel>
+                      <Input
+                        id={`manual-quantity-${line.id}`}
+                        required
+                        inputMode="numeric"
+                        dir="ltr"
+                        maxLength={10}
+                        value={line.quantity}
+                        onChange={(event) => updateLine(line.id, 'quantity', event.target.value)}
+                      />
+                    </Field>
+                    <Field>
+                      <FieldLabel htmlFor={`manual-price-${line.id}`}>
+                        {text('unitPrice')}
+                      </FieldLabel>
+                      <Input
+                        id={`manual-price-${line.id}`}
+                        required
+                        inputMode="numeric"
+                        dir="ltr"
+                        maxLength={19}
+                        value={line.unitPrice}
+                        onChange={(event) => updateLine(line.id, 'unitPrice', event.target.value)}
+                      />
+                    </Field>
+                    <Field>
+                      <FieldLabel htmlFor={`manual-vat-${line.id}`}>{text('vat')}</FieldLabel>
+                      <Input
+                        id={`manual-vat-${line.id}`}
+                        required
+                        inputMode="decimal"
+                        dir="ltr"
+                        maxLength={6}
+                        value={line.vat}
+                        onChange={(event) => updateLine(line.id, 'vat', event.target.value)}
+                      />
+                    </Field>
+                    {actions}
+                  </FieldGroup>
+                </FieldSet>
+              )}
+            />
+          )}
         </FieldGroup>
-        {correction?.kind !== 'adjustment' && (
-          <Button
-            type="button"
-            variant="outline"
-            disabled={locked || lines.length >= 100}
-            onClick={() => setLines((current) => [...current, blankLine()])}
-          >
-            {text('addLine')}
-          </Button>
-        )}
         <p aria-live="polite">
           {text('total')}{' '}
           <strong>
