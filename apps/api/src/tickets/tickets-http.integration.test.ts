@@ -1697,3 +1697,244 @@ it('rolls back reply sealing and retry identity when its audit fails', async () 
   }
   expect((await postReply(id, 'customer', input)).status).toBe(201);
 });
+
+async function linkedRecordFixture() {
+  const actor = await freshActor(false),
+    profileId = randomUUID();
+  await http.pool.query('INSERT INTO profiles(id,user_id,is_default) VALUES($1,$2,true)', [
+    profileId,
+    actor.userId,
+  ]);
+  const contractId = randomUUID(),
+    versionId = randomUUID();
+  const client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query(
+      "INSERT INTO contracts(id,profile_id,service_type,current_version_id) VALUES($1,$2,'electricity',$3)",
+      [contractId, profileId, versionId]
+    );
+    await client.query(
+      "INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by) VALUES($1,$2,1,'{\"text\":\"Published terms\"}','Initial','staff')",
+      [versionId, contractId]
+    );
+    await client.query('COMMIT');
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+  const invoiceId = randomUUID();
+  await http.pool.query('INSERT INTO invoices(id,profile_id,total_amount) VALUES($1,$2,100)', [
+    invoiceId,
+    profileId,
+  ]);
+  return { actor, profileId, contractId, versionId, invoiceId };
+}
+function linkedRequest(
+  f: Awaited<ReturnType<typeof linkedRecordFixture>>,
+  kind: string,
+  id: string,
+  profileId = f.profileId
+) {
+  return fetch(`${http.base}/api/tickets`, {
+    method: 'POST',
+    headers: f.actor.headers,
+    body: JSON.stringify({
+      subject: 'Business record question',
+      body: 'Please help',
+      profileId,
+      relatedEntityType: kind,
+      relatedEntityId: id,
+    }),
+  });
+}
+async function publishLinkedContract(f: Awaited<ReturnType<typeof linkedRecordFixture>>) {
+  await http.pool.query("UPDATE contracts SET state='AwaitingStaffReview' WHERE id=$1", [
+    f.contractId,
+  ]);
+  await http.pool.query(
+    "INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,'staff')",
+    [f.contractId, f.versionId]
+  );
+}
+it('offers only published owned contracts and validates their profile and record type during ticket creation', async () => {
+  const f = await linkedRecordFixture(),
+    other = await linkedRecordFixture();
+  const options = async (profileId = f.profileId) =>
+    fetch(`${http.base}/api/tickets/options?profileId=${profileId}`, { headers: f.actor.headers });
+  expect(((await (await options()).json()) as { records: unknown[] }).records).not.toContainEqual(
+    expect.objectContaining({ id: f.contractId })
+  );
+  expect((await linkedRequest(f, 'contract', f.contractId)).status).toBe(404);
+  await publishLinkedContract(f);
+  await publishLinkedContract(other);
+  expect(((await (await options()).json()) as { records: unknown[] }).records).toContainEqual(
+    expect.objectContaining({ id: f.contractId, type: 'contract' })
+  );
+  expect((await options(other.profileId)).status).toBe(404);
+  expect((await linkedRequest(f, 'contract', other.contractId)).status).toBe(404);
+  expect((await linkedRequest(f, 'contract', f.invoiceId)).status).toBe(404);
+  const created = await linkedRequest(f, 'contract', f.contractId.toUpperCase());
+  expect(created.status, http.logs()).toBe(201);
+  const ticket = (await created.json()) as { id: string };
+  const expected = {
+    sourceId: f.contractId.toUpperCase(),
+    destination: 'contract',
+    id: f.contractId,
+  };
+  for (const [path, auth] of [
+    [`/api/tickets/${ticket.id}`, f.actor.headers],
+    [`/api/staff/tickets/${ticket.id}`, headers.staff!],
+  ] as const) {
+    const response = await fetch(http.base + path, { headers: auth });
+    expect(response.status).toBe(200);
+    expect(((await response.json()) as { relatedRecord: unknown }).relatedRecord).toEqual(expected);
+  }
+  expect(
+    (await fetch(`${http.base}/api/staff/tickets/${ticket.id}`, { headers: headers.assigned! }))
+      .status
+  ).toBe(404);
+  expect(
+    (await fetch(`${http.base}/api/tickets/${ticket.id}`, { headers: other.actor.headers })).status
+  ).toBe(404);
+  for (const [path, auth] of [
+    ['/api/tickets', f.actor.headers],
+    ['/api/staff/tickets', headers.staff!],
+  ] as const) {
+    const response = await fetch(http.base + path, { headers: auth });
+    expect(response.status).toBe(200);
+    expect(((await response.json()) as { data: unknown[] }).data).toContainEqual(
+      expect.objectContaining({ id: ticket.id, relatedRecord: expected })
+    );
+  }
+});
+it('does not disclose draft destinations or references after profile ownership changes or archival', async () => {
+  const f = await linkedRecordFixture(),
+    id = await ticket();
+  await http.pool.query(
+    'UPDATE tickets SET user_id=$2,profile_id=$3,related_entity_type=$4,related_entity_id=$5 WHERE id=$1',
+    [id, f.actor.userId, f.profileId, 'contract', f.contractId]
+  );
+  const read = async () => {
+    const response = await fetch(`${http.base}/api/tickets/${id}`, { headers: f.actor.headers });
+    expect(response.status).toBe(200);
+    return (await response.json()) as { relatedRecord: unknown };
+  };
+  expect((await read()).relatedRecord).toBeNull();
+  await publishLinkedContract(f);
+  expect((await read()).relatedRecord).toMatchObject({ id: f.contractId });
+  await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [f.profileId]);
+  expect((await read()).relatedRecord).toBeNull();
+  await http.pool.query("UPDATE profiles SET archived=false,user_id='staff' WHERE id=$1", [
+    f.profileId,
+  ]);
+  expect((await read()).relatedRecord).toBeNull();
+});
+it('resolves electricity and saving details with distinct IDs while keeping unsupported legacy orders unavailable', async () => {
+  const f = await linkedRecordFixture();
+  const products = (
+    await http.pool.query(
+      'INSERT INTO products(type,title,price,status) VALUES(\'saving_plan\',\'{"en":"Plan","fa":"طرح"}\',100000,\'active\'),(\'hardware\',\'{"en":"Hardware","fa":"دستگاه"}\',100000,\'active\') RETURNING id,type'
+    )
+  ).rows;
+  const plan = products.find((row) => row.type === 'saving_plan')!.id,
+    hardware = products.find((row) => row.type === 'hardware')!.id;
+  const agreement = (
+    await http.pool.query(
+      "INSERT INTO saving_plan_agreement_versions(plan_id,title,body,created_by) VALUES($1,'Terms','Agreement','staff') RETURNING id",
+      [plan]
+    )
+  ).rows[0].id;
+  const province = (
+    await http.pool.query(
+      "INSERT INTO provinces(name_fa,name_en) VALUES('استان آزمایشی','Test') RETURNING id"
+    )
+  ).rows[0].id;
+  const city = (
+    await http.pool.query(
+      "INSERT INTO cities(province_id,name_fa,name_en) VALUES($1,'شهر آزمایشی','Test') RETURNING id",
+      [province]
+    )
+  ).rows[0].id;
+  const address = (
+    await http.pool.query(
+      "INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code) VALUES($1,$2,$3,'Address','1234567890') RETURNING id",
+      [f.profileId, province, city]
+    )
+  ).rows[0].id;
+  const order = async (type: string) =>
+    (
+      await http.pool.query(
+        "INSERT INTO orders(user_id,profile_id,product_id,order_type,status,snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code) VALUES($1,$2,$3,$4,'PENDING',$5,$6,'Address','1234567890') RETURNING id",
+        [f.actor.userId, f.profileId, plan, type, province, city]
+      )
+    ).rows[0].id as string;
+  const electricity = await order('electricity'),
+    savingParent = await order('savings'),
+    legacy = await order('solar'),
+    draft = await order('electricity');
+  await http.pool.query(
+    "INSERT INTO electricity_orders(id,profile_id,settings_snapshot) VALUES($1,$2,'{}')",
+    [electricity, f.profileId]
+  );
+  await http.pool.query(
+    "INSERT INTO electricity_orders(id,profile_id,settings_snapshot) VALUES($1,$2,'{}')",
+    [draft, f.profileId]
+  );
+  await http.pool.query('INSERT INTO electricity_contracts(order_id,contract_id) VALUES($1,$2)', [
+    electricity,
+    f.contractId,
+  ]);
+  await http.pool.query('UPDATE invoices SET contract_id=$2 WHERE id=$1', [
+    f.invoiceId,
+    f.contractId,
+  ]);
+  await http.pool.query(
+    'UPDATE contract_activation_requirements SET initial_invoice_id=$2 WHERE version_id=$1',
+    [f.versionId, f.invoiceId]
+  );
+  const saving = (
+    await http.pool.query(
+      "INSERT INTO saving_orders(order_id,profile_id,saving_plan_id,hardware_product_id,bill_identifier,installation_address_id,agreement_version_id,agreement_snapshot,address_snapshot,pricing_snapshot,verification_result) VALUES($1,$2,$3,$4,'1234567890123',$5,$6,'Agreement','{}','{}','{}') RETURNING id",
+      [savingParent, f.profileId, plan, hardware, address, agreement]
+    )
+  ).rows[0].id;
+  expect(saving).not.toBe(savingParent);
+  const expectations = [
+    [
+      'order',
+      electricity,
+      { sourceId: electricity, destination: 'electricity_order', id: electricity },
+    ],
+    ['order', savingParent, { sourceId: savingParent, destination: 'saving_order', id: saving }],
+    ['order', legacy, null],
+    ['order', draft, null],
+    ['invoice', f.invoiceId, { sourceId: f.invoiceId, destination: 'invoice', id: f.invoiceId }],
+  ] as const;
+  const created: { id: string; relatedRecord: unknown }[] = [];
+  for (const [kind, source, expected] of expectations) {
+    const response = await linkedRequest(f, kind, source);
+    expect(response.status, http.logs()).toBe(201);
+    const row = (await response.json()) as { id: string };
+    created.push({ id: row.id, relatedRecord: expected });
+    for (const [prefix, auth] of [
+      ['/api/tickets', f.actor.headers],
+      ['/api/staff/tickets', headers.staff!],
+    ] as const) {
+      const detail = await fetch(`${http.base}${prefix}/${row.id}`, { headers: auth });
+      expect(detail.status).toBe(200);
+      expect(((await detail.json()) as { relatedRecord: unknown }).relatedRecord).toEqual(expected);
+    }
+  }
+  for (const [prefix, auth] of [
+    ['/api/tickets', f.actor.headers],
+    ['/api/staff/tickets', headers.staff!],
+  ] as const) {
+    const list = await fetch(`${http.base}${prefix}?limit=100`, { headers: auth });
+    expect(list.status).toBe(200);
+    const rows = ((await list.json()) as { data: unknown[] }).data;
+    for (const expected of created) expect(rows).toContainEqual(expect.objectContaining(expected));
+  }
+});

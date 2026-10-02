@@ -1,3 +1,4 @@
+import { financeContract, financeVersion } from '../src/test/contract-finance-list-fixtures.js';
 import { formatBrowserDate } from './browser-date';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
@@ -206,7 +207,7 @@ async function shell(page: Page, locale = 'en', staff = false) {
   );
 }
 for (const locale of ['en', 'fa'])
-  test(`customer creates attachment ticket without losing uploads on a failed submit (${locale})`, async ({
+  test(`customer creates a contract-linked attachment ticket without losing uploads on a failed submit (${locale})`, async ({
     page,
   }) => {
     await shell(page, locale);
@@ -219,7 +220,10 @@ for (const locale of ['en', 'fa'])
     );
     await page.route('**/api/tickets/options**', (route) =>
       route.fulfill({
-        json: { profiles: [{ id: profileId, title: 'Example profile' }], records: [] },
+        json: {
+          profiles: [{ id: profileId, title: 'Example profile' }],
+          records: [{ id: profileId, type: 'contract', created_at: item.createdAt }],
+        },
       })
     );
     await page.route('**/api/upload/presigned-url', (route) =>
@@ -247,6 +251,8 @@ for (const locale of ['en', 'fa'])
         category,
         profileId,
         attachments: [key],
+        relatedEntityType: 'contract',
+        relatedEntityId: profileId,
       });
       submits++;
       if (submits === 1) return route.fulfill({ status: 500, json: {} });
@@ -276,6 +282,7 @@ for (const locale of ['en', 'fa'])
     await expect(page.locator('#ticket-category')).toHaveValue('general');
     await page.locator('#ticket-category').selectOption(category);
     await page.locator('#ticket-profile').selectOption(profileId);
+    await page.locator('#ticket-record').selectOption(`contract:${profileId}`);
     await page.locator('#ticket-files').setInputFiles({
       name: 'help.pdf',
       mimeType: 'application/pdf',
@@ -966,4 +973,271 @@ for (const staff of [false, true])
         await page.locator('[data-slot=ticket-detail]').screenshot({
           path: `/tmp/barghsa-ticket-reply-${staff ? 'staff' : 'customer'}-${testInfo.project.name}.png`,
         });
+    });
+
+for (const staff of [false, true])
+  for (const locale of ['en', 'fa'] as const)
+    test(`${staff ? 'staff' : 'customer'} ticket business links open the correct record (${locale})`, async ({
+      page,
+    }) => {
+      test.setTimeout(60000);
+      await shell(page, locale, staff);
+      const savingId = '33333333-3333-4333-8333-333333333333';
+      const records = [
+        {
+          type: 'contract',
+          destination: 'contract',
+          id: profileId,
+          href: `${staff ? '/admin/contracts' : '/contracts'}?contractId=${profileId}`,
+        },
+        {
+          type: 'invoice',
+          destination: 'invoice',
+          id: profileId,
+          href: staff ? `/admin/invoices?invoiceId=${profileId}` : `/invoices/${profileId}`,
+        },
+        {
+          type: 'order',
+          destination: 'electricity_order',
+          id: profileId,
+          href: staff
+            ? `/admin/electricity-orders?orderId=${profileId}`
+            : `/electricity/orders/${profileId}`,
+        },
+        {
+          type: 'order',
+          destination: 'saving_order',
+          id: savingId,
+          href: staff ? `/admin/saving-orders?orderId=${savingId}` : `/savings/orders/${savingId}`,
+        },
+      ];
+      const rows = records.map((record, index) => ({
+        ...item,
+        id: `${index + 4}4444444-4444-4444-8444-444444444444`,
+        subject: `Question ${record.destination}`,
+        relatedEntityType: record.type,
+        relatedEntityId: profileId,
+        relatedRecord: { sourceId: profileId, destination: record.destination, id: record.id },
+      }));
+      const prefix = staff ? '/api/staff/tickets' : '/api/tickets';
+      await page.route(
+        (url) => url.pathname === prefix,
+        (route) =>
+          route.fulfill({
+            json: {
+              data: rows,
+              totalPages: 1,
+              viewer: { userId: 'staff', canWrite: true, canAssignOthers: true },
+            },
+          })
+      );
+      for (const row of rows) {
+        await page.route(`**${prefix}/${row.id}`, (route) => route.fulfill({ json: row }));
+        await page.route(`**${prefix}/${row.id}/comments`, (route) => route.fulfill({ json: [] }));
+      }
+      await page.route('**/api/staff/tickets/assignees', (route) => route.fulfill({ json: [] }));
+      await page.route('**/api/profiles', (route) =>
+        route.fulfill({
+          json: {
+            profiles: [{ id: financeContract.profileId, title: 'Buyer', profileType: 'LEGAL' }],
+            activeProfileId: financeContract.profileId,
+            hasDefault: true,
+          },
+        })
+      );
+      const contractBase = staff ? '/api/admin/contracts' : '/api/contracts';
+      await page.route(
+        (url) => url.pathname === contractBase,
+        (route) => route.fulfill({ json: { contracts: [], nextBefore: null } })
+      );
+      await page.route(`**${contractBase}/${profileId}`, (route) =>
+        route.fulfill({
+          json: staff
+            ? financeContract
+            : { ...financeContract, version: financeVersion, canAccept: false },
+        })
+      );
+      await page.route(`**${contractBase}/${profileId}/versions*`, (route) =>
+        route.fulfill({ json: { versions: [financeVersion], nextBefore: null } })
+      );
+      await page.route(`**${contractBase}/${profileId}/activation*`, (route) =>
+        route.fulfill({
+          json: { checks: [], isCurrent: true, ready: false, evaluatedAt: item.createdAt },
+        })
+      );
+      const invoice = {
+        invoiceId: profileId,
+        profileId: financeContract.profileId,
+        orderId: null,
+        type: 'manual',
+        role: 'original',
+        state: 'Paid',
+        totalAmount: '100',
+        paidAmount: '100',
+        refundedAmount: '0',
+        accountingAmount: '100',
+        adjustmentKind: null,
+        issuedAt: item.createdAt,
+        payableFrom: item.createdAt,
+        dueAt: null,
+        createdAt: item.createdAt,
+        cancelledAt: null,
+        replacesInvoiceId: null,
+        adjustmentForInvoiceId: null,
+        explanation: null,
+        lines: [],
+      };
+      let invoiceReads = 0;
+      await page.route('**/api/admin/invoices/ledger?*', (route) => {
+        expect(new URL(route.request().url()).searchParams.get('invoiceId')).toBe(profileId);
+        invoiceReads++;
+        return route.fulfill({ json: { items: [invoice], nextCursor: null } });
+      });
+      await page.route(`**/api/admin/invoices/ledger/${profileId}`, (route) =>
+        route.fulfill({
+          json: { ...invoice, activity: { payments: [], bankReceipts: [], refunds: [] } },
+        })
+      );
+      await page.route(`**/api/invoices/${profileId}`, (route) => {
+        invoiceReads++;
+        return route.fulfill({
+          json: {
+            viewedInvoiceId: profileId,
+            originalInvoiceId: profileId,
+            invoice,
+            chain: [invoice],
+            payments: [],
+            bankReceipts: [],
+            refunds: [],
+          },
+        });
+      });
+      const electricity = {
+        orderId: profileId,
+        profileId: financeContract.profileId,
+        customerName: 'Buyer',
+        commercialStatus: 'CONFIRMED',
+        electricityStatus: 'approved',
+        financialStatus: 'unpaid',
+        nextAction: 'await_payment',
+        periodStart: item.createdAt,
+        periodEnd: '2027-08-31T00:00:00Z',
+        totalKwh: '10',
+        fullAddress: 'Resolved electricity address',
+        postalCode: '1234567890',
+        contractId: profileId,
+        invoiceId: profileId,
+        versionId: financeVersion.id,
+        contractState: null,
+        invoiceState: null,
+        totalIrR: '100',
+        paidIrR: '0',
+        refundedIrR: '0',
+        lines: [],
+        timeline: [],
+        pricingSnapshot: { lines: [] },
+        settingsSnapshot: {},
+        contractSnapshot: {},
+        submittedAt: item.createdAt,
+      };
+      const electricityBase = staff ? '/api/staff/electricity/orders' : '/api/electricity/orders';
+      await page.route(
+        (url) => url.pathname === electricityBase,
+        (route) => route.fulfill({ json: { orders: [], nextAfter: null } })
+      );
+      await page.route(`**${electricityBase}/${profileId}`, (route) =>
+        route.fulfill({
+          json: { ...electricity, commercialStatus: staff ? 'approved' : 'CONFIRMED' },
+        })
+      );
+      const saving = {
+        id: savingId,
+        orderId: profileId,
+        profileId: financeContract.profileId,
+        customerName: 'Buyer',
+        status: 'awaiting_staff_review',
+        financialStatus: 'unpaid',
+        submittedAt: item.createdAt,
+        billIdentifier: '1234567890123',
+        addressSnapshot: { full_address: 'Resolved saving address', postal_code: '1234567890' },
+        hardwareTitle: { en: 'Resolved hardware', fa: 'دستگاه مرتبط' },
+        pricingSnapshot: {
+          plan: { title: { en: 'Resolved saving plan', fa: 'طرح مرتبط' } },
+          hardware: { title: { en: 'Resolved hardware', fa: 'دستگاه مرتبط' } },
+          subtotalIrR: '100',
+          discountIrR: '0',
+          vatIrR: '0',
+          totalIrR: '100',
+        },
+        totalIrR: '100',
+        paidIrR: '0',
+        stages: [],
+        events: [],
+        revisions: [],
+        addressAmendments: [],
+        hardwareAmendments: [],
+        hardwareUpgrades: [],
+        addressOptions: [],
+        hardwareOptions: [],
+        canAmendAddress: false,
+        canAmendHardware: false,
+      };
+      const savingBase = staff ? '/api/staff/saving/orders' : '/api/saving/orders';
+      await page.route(
+        (url) => url.pathname === savingBase,
+        (route) => route.fulfill({ json: { orders: [], nextAfter: null, nextBefore: null } })
+      );
+      await page.route(`**${savingBase}/${savingId}`, (route) =>
+        route.fulfill({
+          json: staff
+            ? saving
+            : {
+                ...saving,
+                order_id: profileId,
+                profile_id: financeContract.profileId,
+                current_hardware_title: saving.hardwareTitle,
+                financial_status: 'unpaid',
+                bill_identifier: '1234567890123',
+                submitted_at: item.createdAt,
+                address_snapshot: saving.addressSnapshot,
+                pricing_snapshot: saving.pricingSnapshot,
+                agreement_snapshot: 'Accepted saving terms',
+                verification_result: { status: 'verified' },
+                can_edit: false,
+              },
+        })
+      );
+      const path = staff ? '/admin/tickets' : '/tickets';
+      const queue = page.locator('[data-slot=ticket-queue-records]');
+      const table = page.getByRole('button', { name: t('historyView.table', locale), exact: true });
+      await page.goto(path);
+      await table.click();
+      for (const record of records)
+        await expect(queue.locator(`a[href="${record.href}"]`)).toBeVisible();
+      await queue.getByRole('button', { name: rows[0]!.subject, exact: true }).click();
+      const detail = page.locator('[data-slot=ticket-detail]');
+      await expect(detail.locator('a')).toHaveAttribute('href', records[0]!.href);
+      await detail.locator('a').focus();
+      await page.keyboard.press('Enter');
+      await expect(page).toHaveURL(new RegExp(`contractId=${profileId}`));
+      await expect(page.getByText('Published electricity terms', { exact: true })).toBeVisible();
+      for (const record of records.slice(1)) {
+        await page.goto(path);
+        await expect(queue.locator(`a[href="${record.href}"]`)).toBeVisible();
+        await queue.locator(`a[href="${record.href}"]`).click();
+        await expect(page).toHaveURL(new RegExp(record.href.replace('?', '\\?') + '$'));
+        if (record.destination === 'invoice') {
+          await expect.poll(() => invoiceReads).toBeGreaterThan(0);
+          if (staff)
+            await expect(
+              page.locator('section[aria-labelledby=invoice-ledger-title]')
+            ).toContainText(profileId);
+          else await expect(page.getByTestId(`invoice-card-${profileId}`)).toBeVisible();
+        } else if (record.destination === 'electricity_order')
+          await expect(
+            page.getByText('Resolved electricity address', { exact: false })
+          ).toBeVisible();
+        else
+          await expect(page.getByText('Resolved saving address', { exact: false })).toBeVisible();
+      }
     });

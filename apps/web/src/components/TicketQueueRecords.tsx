@@ -34,6 +34,11 @@ export interface Ticket {
   updatedAt: string;
   relatedEntityId: string | null;
   relatedEntityType: string | null;
+  relatedRecord?: {
+    sourceId: string;
+    destination: 'contract' | 'invoice' | 'electricity_order' | 'saving_order';
+    id: string;
+  } | null;
   attachments: string[];
   attachmentDownloadUrls?: string[];
   customer?: {
@@ -60,15 +65,32 @@ export function RelatedTicketRecord({
       <bdi dir="ltr">{ticket.relatedEntityId}</bdi>
     </>
   );
-  if (!staff && ticket.relatedEntityType === 'invoice')
+  const record = ticket.relatedRecord;
+  let href: string | null = null;
+  if (
+    record &&
+    record.sourceId === ticket.relatedEntityId &&
+    /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(record.id)
+  ) {
+    const id = encodeURIComponent(record.id);
+    if (record.destination === 'contract' && ticket.relatedEntityType === 'contract')
+      href = `${staff ? '/admin/contracts' : '/contracts'}?contractId=${id}`;
+    if (record.destination === 'invoice' && ticket.relatedEntityType === 'invoice')
+      href = staff ? `/admin/invoices?invoiceId=${id}` : `/invoices/${id}`;
+    if (record.destination === 'electricity_order' && ticket.relatedEntityType === 'order')
+      href = staff ? `/admin/electricity-orders?orderId=${id}` : `/electricity/orders/${id}`;
+    if (record.destination === 'saving_order' && ticket.relatedEntityType === 'order')
+      href = staff ? `/admin/saving-orders?orderId=${id}` : `/savings/orders/${id}`;
+  } else if (record === undefined && !staff && ticket.relatedEntityType === 'invoice') {
+    href = `/invoices/${encodeURIComponent(ticket.relatedEntityId)}`;
+  }
+  if (href)
     return (
-      <a
-        className="text-primary underline break-all"
-        href={`/invoices/${encodeURIComponent(ticket.relatedEntityId)}`}
-      >
+      <a className="text-primary underline break-all" href={href}>
         {label}
       </a>
     );
+
   return (
     <span className="break-all">
       {label}

@@ -1,4 +1,5 @@
 import { ticketReply, ticketPagination, type TicketReplyOptions } from './ticket-input.js';
+import { withRelatedTicketRecords, type RelatedTicketRecord } from './ticket-related-records.js';
 import {
   authorizeTicketAccess,
   authorizeTicketMutation,
@@ -40,6 +41,7 @@ export interface TicketRow {
   profileId: string | null;
   relatedEntityType: string | null;
   relatedEntityId: string | null;
+  relatedRecord?: RelatedTicketRecord | null;
   priority: 'normal' | 'high';
   status: 'open' | 'in_progress' | 'waiting_customer' | 'waiting_staff' | 'resolved' | 'closed';
   attachments: string[];
@@ -314,7 +316,9 @@ export class TicketsService {
       await pool.query(
         `SELECT * FROM (
       SELECT id,'order' AS type,created_at FROM orders WHERE profile_id=$1
-      UNION ALL SELECT id,'invoice' AS type,created_at FROM invoices WHERE profile_id=$1
+        UNION ALL SELECT id,'invoice' AS type,created_at FROM invoices WHERE profile_id=$1
+        UNION ALL SELECT id,'contract' AS type,created_at FROM contracts WHERE profile_id=$1
+          AND EXISTS (SELECT 1 FROM contract_publications WHERE contract_id=contracts.id)
       ) records WHERE EXISTS (SELECT 1 FROM profiles WHERE id=$1 AND user_id=$3 AND NOT archived)
       ORDER BY created_at DESC,id DESC LIMIT 21 OFFSET $2`,
         [profileId, (recordPage - 1) * 20, userId]
@@ -962,14 +966,18 @@ export class TicketsService {
       );
       if (actor) await authorizeTicketMutation(client, actor, userId, false);
       if (data.relatedEntityId) {
-        // Contracts are not implemented in this schema. Never accept unverifiable links.
-        if (data.relatedEntityType === 'contract')
-          throw new HttpException('Contract linking is unavailable', 409);
         if (!z.uuid().safeParse(data.relatedEntityId).success)
           throw new HttpException('Invalid related record identifier', 400);
-        const table = data.relatedEntityType === 'order' ? 'orders' : 'invoices';
+        const table =
+          data.relatedEntityType === 'order'
+            ? 'orders'
+            : data.relatedEntityType === 'contract'
+              ? 'contracts'
+              : 'invoices';
         const related = await client.query(
-          `SELECT id FROM ${table} WHERE id=$1 AND profile_id=$2 FOR SHARE`,
+          `SELECT id FROM ${table} WHERE id=$1 AND profile_id=$2
+           ${table === 'contracts' ? 'AND EXISTS (SELECT 1 FROM contract_publications WHERE contract_id=contracts.id)' : ''}
+           FOR SHARE`,
           [data.relatedEntityId, data.profileId]
         );
         if (!related.rows.length)
@@ -1110,7 +1118,7 @@ export class TicketsService {
       [...params, limit, offset]
     );
 
-    const data = dataResult.rows.map(mapRow);
+    const data = await withRelatedTicketRecords(dataResult.rows.map(mapRow), pool);
 
     return {
       data,
@@ -1141,7 +1149,7 @@ export class TicketsService {
 
     const ticket = mapRow(result.rows[0]!);
     return {
-      ...ticket,
+      ...(await withRelatedTicketRecords([ticket], pool))[0]!,
       attachmentDownloadUrls: await this.attachmentService.downloadUrls(ticket.attachments),
     };
   }
@@ -1558,7 +1566,7 @@ export class TicketsService {
       [...params, limit, offset]
     );
 
-    const data = dataResult.rows.map(mapRow);
+    const data = await withRelatedTicketRecords(dataResult.rows.map(mapRow), pool);
 
     return {
       data,
@@ -1600,7 +1608,7 @@ export class TicketsService {
 
     const ticket = mapRow(result.rows[0]!);
     return {
-      ...ticket,
+      ...(await withRelatedTicketRecords([ticket], pool))[0]!,
       customer: {
         userId: ticket.userId,
         username: result.rows[0].customer_username as string,
