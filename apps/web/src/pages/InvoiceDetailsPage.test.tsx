@@ -272,6 +272,10 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     });
     const timeline = container.querySelector('section[aria-label] ol');
     expect(timeline?.querySelectorAll('li')).toHaveLength(3);
+    expect(timeline?.getAttribute('data-slot')).toBe('status-timeline');
+    expect(
+      [...timeline!.querySelectorAll('[data-tone]')].map((node) => node.getAttribute('data-tone'))
+    ).toEqual(['info', 'warning', 'destructive']);
     expect(timeline?.textContent).toContain(locale === 'en' ? 'Under review' : 'در حال بررسی');
     expect(timeline?.textContent).toContain(
       locale === 'en' ? 'Time recovered from an older receipt' : 'زمان ثبت‌شده برای رسید قدیمی'

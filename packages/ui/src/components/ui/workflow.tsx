@@ -142,7 +142,7 @@ export interface ProgressStep {
 /** Read-only progress. Navigation and validation stay with the owning workflow. */
 export function ProgressStepper({ steps, label }: { steps: ProgressStep[]; label: string }) {
   return (
-    <ol aria-label={label} className="flex flex-col sm:flex-row">
+    <ol data-slot="progress-stepper" aria-label={label} className="flex flex-col sm:flex-row">
       {steps.map((step, index) => (
         <li
           key={step.id}
@@ -166,7 +166,7 @@ export function ProgressStepper({ steps, label }: { steps: ProgressStep[]; label
               step.state === 'complete'
                 ? 'border-success/20 bg-success-soft text-success'
                 : step.state === 'current'
-                  ? 'border-primary bg-primary text-primary-foreground motion-safe:animate-pulse'
+                  ? 'border-info bg-info-soft text-info motion-safe:animate-pulse'
                   : 'border-border bg-muted text-muted-foreground'
             )}
           >
@@ -196,21 +196,38 @@ export function ProgressStepper({ steps, label }: { steps: ProgressStep[]; label
 export interface TimelineEntry {
   id: string;
   title: string;
-  description?: string;
+  description?: ReactNode;
   dateTime: string;
   dateLabel: string;
 }
-export function Timeline({ items, label }: { items: TimelineEntry[]; label: string }) {
+export interface StatusTimelineEntry extends TimelineEntry {
+  state?: string | undefined;
+  tone?: StatusTone | undefined;
+  /** Only supply an actor name or role approved for this audience; never an internal ID. */
+  actorLabel?: string | undefined;
+}
+export function StatusTimeline({ items, label }: { items: StatusTimelineEntry[]; label: string }) {
   return (
-    <ol aria-label={label} className="flex flex-col">
+    <ol data-slot="status-timeline" aria-label={label} className="flex flex-col ps-2">
       {items.map((item) => (
         <li
           key={item.id}
-          className="relative border-s border-border pb-6 ps-6 last:border-transparent last:pb-0"
+          className="relative min-w-0 border-s border-border pb-6 ps-6 break-words last:border-transparent last:pb-0"
         >
           <span
             aria-hidden="true"
-            className="absolute -start-1 top-1.5 size-2 rounded-full bg-input ring-4 ring-card"
+            data-tone={item.tone ?? statusTone(item.state)}
+            className={cn(
+              'absolute -start-1 top-1.5 size-2 rounded-full ring-4 ring-card',
+              {
+                default: 'bg-input',
+                success: 'bg-success',
+                warning: 'bg-warning',
+                destructive: 'bg-destructive',
+                info: 'bg-info',
+                purple: 'bg-purple',
+              }[item.tone ?? statusTone(item.state)]
+            )}
           />
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-sm font-medium">{item.title}</p>
@@ -218,13 +235,24 @@ export function Timeline({ items, label }: { items: TimelineEntry[]; label: stri
               {item.dateLabel}
             </time>
           </div>
+          {item.actorLabel ? (
+            <p className="mt-1 text-xs text-muted-foreground">
+              <bdi>{item.actorLabel}</bdi>
+            </p>
+          ) : null}
           {item.description ? (
-            <p className="mt-1 text-sm text-muted-foreground">{item.description}</p>
+            <div dir="auto" className="mt-1 text-sm text-muted-foreground">
+              {item.description}
+            </div>
           ) : null}
         </li>
       ))}
     </ol>
   );
+}
+/** Compatibility for display timelines without state or actor metadata. */
+export function Timeline(props: { items: TimelineEntry[]; label: string }) {
+  return <StatusTimeline {...props} />;
 }
 
 /** Display-only rows must come from an authoritative server preview, never client totals. */

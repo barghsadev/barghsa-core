@@ -209,7 +209,7 @@ export class ContractController {
   @ApiOperation({ summary: 'Read a staff contract with its current full version' })
   get(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     this.authorize(req);
-    return this.service.get(parse(contractUuid, id));
+    return this.service.getWithHistory(parse(contractUuid, id));
   }
   @Get(':id/versions')
   @ApiParam({ name: 'id', format: 'uuid' })
@@ -243,7 +243,7 @@ export class ContractController {
     @Param('versionId') versionId: string
   ) {
     this.authorize(req);
-    return this.service.version(parse(contractUuid, id), parse(contractUuid, versionId));
+    return this.service.versionWithHistory(parse(contractUuid, id), parse(contractUuid, versionId));
   }
   @Post(':id/versions/:versionId/generate-pdf')
   @RequiresStepUp()

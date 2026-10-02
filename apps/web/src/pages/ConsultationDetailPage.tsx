@@ -10,6 +10,7 @@ import {
   DialogTitle,
   FinancialReviewSummary,
   Label,
+  StatusTimeline,
 } from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import {
@@ -381,27 +382,23 @@ export function ConsultationDetailPage() {
           {infoSent && <p role="status">{copy('infoSent')}</p>}
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">{copy('history')}</h2>
-            <ol className="space-y-3 border-s-2 ps-4">
-              {detail.history.map((event, index) => (
-                <li
-                  key={`${event.created_at}-${index}`}
-                  className="space-y-1 rounded-lg border bg-card p-3"
-                >
-                  <p className="font-medium">{copy(`status_${event.status}`)}</p>
-                  <time className="block text-xs text-muted-foreground" dateTime={event.created_at}>
-                    {time.format(event.created_at)}
-                  </time>
-                  <p className="text-xs text-muted-foreground">
-                    {copy('actor')}: {copy(`actor_${event.actor_type}`)}
-                  </p>
-                  {event.reason && (
-                    <p>
-                      {copy('reason')}: <span dir="auto">{event.reason}</span>
-                    </p>
-                  )}
-                </li>
-              ))}
-            </ol>
+            <StatusTimeline
+              label={copy('history')}
+              items={detail.history.map((event, index) => ({
+                id: `${event.created_at}-${index}`,
+                title:
+                  copy(`status_${event.status}`) === `status_${event.status}`
+                    ? copy('status_unknown')
+                    : copy(`status_${event.status}`),
+                state: event.status,
+                dateTime: event.created_at,
+                dateLabel: time.format(event.created_at),
+                actorLabel: ['customer', 'staff'].includes(event.actor_type)
+                  ? `${copy('actor')}: ${copy(`actor_${event.actor_type}`)}`
+                  : undefined,
+                description: event.reason ? `${copy('reason')}: ${event.reason}` : undefined,
+              }))}
+            />
           </section>
         </>
       )}

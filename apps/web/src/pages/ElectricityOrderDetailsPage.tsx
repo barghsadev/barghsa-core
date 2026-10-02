@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DualStatusDisplay,
+  StatusTimeline,
   FinancialReviewSummary,
 } from '@barghsa/ui';
 import {
@@ -32,7 +33,7 @@ import {
   financialStatusTone,
   electricityStatusKey,
 } from '../lib/electricity-status-tone.js';
-import { electricityTimelineKeys } from '../lib/electricity-timeline.js';
+import { electricityTimelineKey, electricityTimelineState } from '../lib/electricity-timeline.js';
 
 const ElectricityOrderRevisionForm = lazy(() =>
   import('./ElectricityOrderRevisionForm.js').then((module) => ({
@@ -399,8 +400,9 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             locale={locale}
             status={t(electricityStatusKey(detail.electricityStatus, 'commercial'), locale)}
             happened={t(
-              electricityTimelineKeys[latestEvent?.event ?? ''] ??
-                electricityStatusKey(detail.electricityStatus, 'commercial'),
+              latestEvent
+                ? electricityTimelineKey(latestEvent.event)
+                : electricityStatusKey(detail.electricityStatus, 'commercial'),
               locale
             )}
             nextAction={t(
@@ -616,22 +618,17 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             <CardContent className="space-y-3 pt-6 text-sm">
               <h2 className="font-semibold">{t('electricity.order.detail.timeline', locale)}</h2>
               {detail.timeline?.length ? (
-                <ol className="space-y-3 border-s ps-4">
-                  {detail.timeline.map((event) => (
-                    <li key={event.id}>
-                      <time className="text-muted-foreground">{time.format(event.at)}</time>
-                      <p>
-                        {t(
-                          electricityTimelineKeys[event.event] ??
-                            'electricity.order.timeline.updated',
-                          locale
-                        )}
-                      </p>
-                      {event.reason ? <p>{event.reason}</p> : null}
-                      {event.comment ? <p>{event.comment}</p> : null}
-                    </li>
-                  ))}
-                </ol>
+                <StatusTimeline
+                  label={t('electricity.order.detail.timeline', locale)}
+                  items={detail.timeline.map((event) => ({
+                    id: event.id,
+                    title: t(electricityTimelineKey(event.event), locale),
+                    state: electricityTimelineState(event.event),
+                    dateTime: event.at,
+                    dateLabel: time.format(event.at),
+                    description: [event.reason, event.comment].filter(Boolean).join(' · '),
+                  }))}
+                />
               ) : (
                 <p>{t('electricity.order.detail.noTimeline', locale)}</p>
               )}

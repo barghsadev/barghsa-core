@@ -1,4 +1,5 @@
 import { contractReview } from './contract-review-fixture';
+import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect } from './upload-fixture';
 import { en, fa } from '../../../packages/i18n/src/contracts';
 import { en as documentEn, fa as documentFa } from '../../../packages/i18n/src/documents';
@@ -23,6 +24,9 @@ for (const locale of ['en', 'fa'] as const)
         }).observe(document, { childList: true });
       }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/upload/policy/contract', (route) =>
+        route.fulfill({ json: documentUploadPolicy('contract') })
+      );
       await page.route('**/api/auth/user', (route) =>
         route.fulfill({
           json: {
@@ -204,7 +208,9 @@ for (const locale of ['en', 'fa'] as const)
       if (!staff) {
         await detail.getByRole('button', { name: words.uploadSigned, exact: true }).click();
         const upload = detail.getByRole('region', { name: documentWords.upload, exact: true });
-        await upload.getByLabel(documentWords.file, { exact: true }).setInputFiles({
+        const file = upload.getByLabel(documentWords.file, { exact: true });
+        await expect(file).toBeEnabled();
+        await file.setInputFiles({
           name: 'signed.pdf',
           mimeType: 'application/pdf',
           buffer: Buffer.from('%PDF-1.7'),

@@ -1,5 +1,6 @@
 import { t } from '@barghsa/i18n/app';
 import { Link } from '@tanstack/react-router';
+import { StatusTimeline } from '@barghsa/ui';
 import { ReceiptAttachmentPreview } from '../components/ReceiptAttachmentPreview.js';
 import { useEffect, type ReactNode } from 'react';
 import { useLocale } from '../hooks/useLocale.js';
@@ -21,7 +22,11 @@ export function InvoiceActivity({
   }, [details.bankReceipts]);
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`invoices.activity.${key}`, locale);
-  const state = (value: string) => label(`state.${value}`);
+  const state = (value: string) => {
+    const key = `invoices.activity.state.${value}`;
+    const text = t(key, locale);
+    return text === key ? label('state.Unknown') : text;
+  };
   const section = (key: string, rows: ReactNode[]) => (
     <section aria-labelledby={`invoice-${key}-heading`} className="space-y-3">
       <h2 id={`invoice-${key}-heading`} className="text-lg font-semibold">
@@ -109,21 +114,18 @@ export function InvoiceActivity({
             {row.statusHistory?.length ? (
               <section aria-label={`${label('reviewTimeline')}: ${row.id}`} className="pt-2">
                 <h3 className="mb-2 font-medium">{label('reviewTimeline')}</h3>
-                <ol className="space-y-2 border-s border-border ps-4">
-                  {row.statusHistory.map((event, index) => (
-                    <li key={`${event.state}-${event.occurredAt}-${index}`} className="text-sm">
-                      <span className="font-medium">{state(event.state)}</span>{' '}
-                      <time dateTime={event.occurredAt} className="text-muted-foreground">
-                        {formatTimestamp(event.occurredAt)}
-                      </time>
-                      {event.backfilled ? (
-                        <span className="block text-xs text-muted-foreground">
-                          {label('historicalTime')}
-                        </span>
-                      ) : null}
-                    </li>
-                  ))}
-                </ol>
+                <StatusTimeline
+                  label={label('reviewTimeline')}
+                  items={row.statusHistory.map((event, index) => ({
+                    id: `${event.state}-${event.occurredAt}-${index}`,
+                    title: state(event.state),
+                    state: event.state,
+                    tone: event.state === 'Confirmed' ? 'success' : undefined,
+                    dateTime: event.occurredAt,
+                    dateLabel: formatTimestamp(event.occurredAt),
+                    description: event.backfilled ? label('historicalTime') : undefined,
+                  }))}
+                />
               </section>
             ) : (
               <>

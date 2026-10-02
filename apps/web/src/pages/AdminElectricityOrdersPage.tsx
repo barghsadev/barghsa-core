@@ -10,7 +10,7 @@ import {
   Label,
   ListPage,
   ScrollArea,
-  Timeline,
+  StatusTimeline,
 } from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
 import {
@@ -27,7 +27,7 @@ import {
   financialStatusTone,
   electricityStatusKey,
 } from '../lib/electricity-status-tone.js';
-import { electricityTimelineKeys } from '../lib/electricity-timeline.js';
+import { electricityTimelineKey, electricityTimelineState } from '../lib/electricity-timeline.js';
 import { withCsrf } from '../lib/csrf.js';
 import { staffOrderId, type StaffOrderListQuery } from '../lib/staff-order-list-query.js';
 
@@ -587,15 +587,12 @@ export default function AdminElectricityOrdersPage({
                 <section className="space-y-3">
                   <h3 className="font-medium">{copy('timeline')}</h3>
                   {detail.timeline?.length ? (
-                    <Timeline
+                    <StatusTimeline
                       label={copy('timeline')}
                       items={detail.timeline.map((event) => ({
                         id: event.id,
-                        title: appText(
-                          electricityTimelineKeys[event.event] ??
-                            'electricity.order.timeline.updated',
-                          locale
-                        ),
+                        title: appText(electricityTimelineKey(event.event), locale),
+                        state: electricityTimelineState(event.event),
                         dateTime: event.at,
                         dateLabel: time.format(event.at),
                         description: [event.reason, event.comment].filter(Boolean).join(' · '),

@@ -9,6 +9,7 @@ import {
   type ContractActor,
 } from './contract-transactions.js';
 import { customerContractAccess } from './contract-customer-access.js';
+import { contractStatusHistory } from './contract-status-history.js';
 import { activeProfileSql } from '../profiles/profile-context.js';
 import { notifyContractReview } from './contract-review-notifications.js';
 import { readContractFinancialReview } from './contract-financial-review.js';
@@ -336,7 +337,11 @@ export class ContractReviewService {
       const authorized =
         (await client.query<{ id: string }>(activeProfileSql('contracts:sign'), [actor.userId]))
           .rows[0]?.id === profileId;
-      return { ...visible, canAccept: visible.canAccept && authorized };
+      return {
+        ...visible,
+        canAccept: visible.canAccept && authorized,
+        ...(await contractStatusHistory(client, id, visible.version.id, false)),
+      };
     });
   }
   async versions(id: string, actor: ContractActor, before?: number) {

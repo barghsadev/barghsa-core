@@ -241,7 +241,13 @@ it('creates and reads exact full snapshots and immutable version metadata', asyn
   const next = (await changed.json()) as ContractDto;
   expect(next.currentVersion).toMatchObject({ versionNumber: 2, content: { price: '200' } });
   const old = await send('/' + row.id + '/versions/' + row.currentVersionId);
-  expect(await old.json()).toEqual(row.currentVersion);
+  expect(await old.json()).toEqual({
+    ...row.currentVersion,
+    history: [
+      expect.objectContaining({ event: 'contract.created', actorType: 'staff', reason: null }),
+    ],
+    historyTruncated: false,
+  });
   const list = (await (await send('/' + row.id + '/versions')).json()) as {
     versions: Array<{ versionNumber: number; content?: unknown }>;
     nextBefore: number | null;
@@ -355,7 +361,17 @@ it('rejects competing edits and preserves the winning full snapshot', async () =
   ]);
   expect(results.map((r) => r.status).sort()).toEqual([200, 409]);
   const winner = await results.find((r) => r.status === 200)!.json();
-  expect(await (await send('/' + row.id)).json()).toEqual(winner);
+  expect(await (await send('/' + row.id)).json()).toEqual({
+    ...(winner as ContractDto),
+    history: [
+      expect.objectContaining({
+        event: 'contract.version_created',
+        actorType: 'staff',
+        reason: null,
+      }),
+    ],
+    historyTruncated: false,
+  });
 });
 it('does not create a version for reordered but unchanged content', async () => {
   const row = await create();
@@ -494,7 +510,13 @@ it('rolls back the version, current pointer and idempotency result when audit fa
     await http.pool.query('DROP TRIGGER reject_contract_audit ON audit_log');
     await http.pool.query('DROP FUNCTION reject_contract_audit()');
   }
-  expect(await (await send('/' + row.id)).json()).toEqual(row);
+  expect(await (await send('/' + row.id)).json()).toEqual({
+    ...row,
+    history: [
+      expect.objectContaining({ event: 'contract.created', actorType: 'staff', reason: null }),
+    ],
+    historyTruncated: false,
+  });
   expect((await send('/' + row.id, 'PATCH', change)).status).toBe(200);
 });
 it('rejects missing profiles and unavailable orders', async () => {

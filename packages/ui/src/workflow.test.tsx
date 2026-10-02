@@ -7,6 +7,7 @@ import {
   FinancialReviewSummary,
   ProgressStepper,
   StatusBadge,
+  StatusTimeline,
 } from './components/ui/workflow';
 import { ConfirmDialog } from './components/ui/confirm-dialog';
 import { Pagination } from './components/ui/pagination';
@@ -137,6 +138,55 @@ it('connects completed, current and pending stages while preserving their detail
   expect(list?.querySelectorAll('li > span[aria-hidden="true"]')).toHaveLength(5);
   expect(list?.querySelector('li[aria-current="step"]')?.textContent).toContain('In progress');
   expect(list?.querySelector('time[datetime="2026-09-30"]')?.textContent).toBe('September 30');
+  expect(
+    list?.querySelector('li[aria-current="step"] > span[aria-hidden="true"].rounded-full')
+      ?.className
+  ).toContain('bg-info-soft');
+});
+it('renders status history with localized dates, isolated actor names and literal notes', async () => {
+  await act(async () =>
+    root.render(
+      <StatusTimeline
+        label="تاریخچه"
+        items={[
+          {
+            id: 'one',
+            state: 'Submitted',
+            title: 'ارسال شد',
+            dateTime: '2026-10-01T00:00:00Z',
+            dateLabel: '۹ مهر',
+            actorLabel: 'مریم Example',
+            description: '<script>alert(1)</script>',
+          },
+          {
+            id: 'two',
+            state: 'Rejected',
+            title: 'رد شد',
+            dateTime: '2026-10-02T00:00:00Z',
+            dateLabel: '۱۰ مهر',
+            description: <span>دلیل مشتری</span>,
+          },
+          {
+            id: 'three',
+            state: 'future_state',
+            title: 'به‌روز شد',
+            dateTime: '2026-10-03T00:00:00Z',
+            dateLabel: '۱۱ مهر',
+          },
+        ]}
+      />
+    )
+  );
+  expect(host.querySelectorAll('ol[aria-label="تاریخچه"] > li')).toHaveLength(3);
+  expect(
+    [...host.querySelectorAll('[data-tone]')].map((node) => node.getAttribute('data-tone'))
+  ).toEqual(['info', 'destructive', 'default']);
+  expect(host.querySelector('time')?.getAttribute('dateTime')).toBe('2026-10-01T00:00:00Z');
+  expect(host.querySelector('time')?.textContent).toBe('۹ مهر');
+  expect(host.querySelector('bdi')?.textContent).toBe('مریم Example');
+  expect(host.textContent).toContain('<script>alert(1)</script>');
+  expect(host.querySelector('script')).toBeNull();
+  expect(host.textContent).not.toContain('future_state');
 });
 it('names commercial and financial states independently', async () => {
   await act(async () =>

@@ -26,6 +26,7 @@ import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { ContractActivationPanel } from './ContractActivationPanel.js';
 import { ContractSignaturePanel } from './ContractSignaturePanel.js';
 import { ContractTerms } from './ContractTerms.js';
+import { ContractStatusTimeline } from './ContractStatusTimeline.js';
 import { ContractDraftEditor } from './ContractDraftEditor.js';
 import { DocumentResults, type DocumentFilters } from './DocumentsWorkspace.js';
 import { DocumentUpload, type ContractDocumentAssociation } from './DocumentUpload.js';
@@ -100,7 +101,22 @@ export function ContractDetail({
             ? contract.currentVersion
             : contract.version;
         if (!version || !version.content) throw new Error('Missing contract snapshot');
-        setData({ contract, version });
+        setData({
+          contract: chosen
+            ? {
+                ...contract,
+                history:
+                  (staff
+                    ? (chosen as ContractVersion).history
+                    : (chosen as ContractDetailData).history) ?? [],
+                historyTruncated:
+                  (staff
+                    ? (chosen as ContractVersion).historyTruncated
+                    : (chosen as ContractDetailData).historyTruncated) ?? false,
+              }
+            : contract,
+          version,
+        });
         setVersions(page.versions);
         setNext(page.nextBefore);
       })
@@ -454,6 +470,12 @@ export function ContractDetail({
               {word('amendment-publish')}
             </Button>
           ) : null}
+          <ContractStatusTimeline
+            history={data.contract.history ?? []}
+            truncated={data.contract.historyTruncated ?? false}
+            locale={locale}
+            formatTimestamp={time.format}
+          />
           <h3 className="font-semibold">{word('versions')}</h3>
           <ol className="flex flex-col gap-2">
             {versions.map((version) => (

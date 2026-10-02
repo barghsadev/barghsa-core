@@ -5,6 +5,9 @@ import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 import type { ContractService } from './contract.service.js';
 type ContractDto = Awaited<ReturnType<ContractService['get']>>;
+type HistoryDto = Awaited<
+  ReturnType<typeof import('./contract-status-history.js').contractStatusHistory>
+>;
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 beforeAll(async () => {
@@ -96,6 +99,110 @@ async function listed(f: Awaited<ReturnType<typeof fixture>>, path: string, user
   };
   return page.contracts.find((item) => item.id === f.row.id);
 }
+it('reads authorized version history without exposing draft notes, other versions or audit identities', async () => {
+  const f = await fixture('savings');
+  await http.pool.query(
+    `UPDATE contract_activation_requirements SET service_starts_at=NOW()-INTERVAL '2 days',
+       service_ends_at=NOW()-INTERVAL '1 day' WHERE version_id=$1`,
+    [f.row.currentVersionId]
+  );
+  await http.pool.query(
+    `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+     VALUES($1,'review-legal','contract.changes_requested',$2::jsonb,$3,'127.0.0.1',NOW()-INTERVAL '1 day')`,
+    [
+      randomUUID(),
+      JSON.stringify({
+        contractId: f.row.id,
+        versionId: f.row.currentVersionId,
+        reason: 'Private draft note',
+        secret: 'audit-only',
+      }),
+      randomUUID(),
+    ]
+  );
+  await publish(f);
+  await http.pool.query(
+    `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+     VALUES($1,'review-legal','contract.changes_requested',$2::jsonb,$3,'127.0.0.1')`,
+    [
+      randomUUID(),
+      JSON.stringify({
+        contractId: f.row.id,
+        versionId: randomUUID(),
+        reason: 'Other version note',
+      }),
+      randomUUID(),
+    ]
+  );
+  expect(
+    (
+      await send(
+        'contracts/' + f.row.id + '/accept',
+        'POST',
+        command(f.row.currentVersionId),
+        f.owner
+      )
+    ).status
+  ).toBe(200);
+  await http.pool.query(
+    `INSERT INTO contract_activations(contract_id,version_id,activated_at) VALUES($1,$2,NOW()+INTERVAL '1 hour')`,
+    [f.row.id, f.row.currentVersionId]
+  );
+  await http.pool.query(
+    `INSERT INTO contract_completions(contract_id,version_id,completed_at) VALUES($1,$2,NOW()+INTERVAL '2 hours')`,
+    [f.row.id, f.row.currentVersionId]
+  );
+  const response = await customer(f);
+  expect(response.status).toBe(200);
+  const body = (await response.json()) as HistoryDto;
+  expect(body.history.map((event: { event: string }) => event.event)).toEqual([
+    'contract.published',
+    'contract.accepted',
+    'contract.activated',
+    'contract.completed',
+  ]);
+  expect(body.history.map((event: { actorType: string }) => event.actorType)).toEqual([
+    'staff',
+    'customer',
+    'system',
+    'system',
+  ]);
+  expect(body.historyTruncated).toBe(false);
+  expect(JSON.stringify(body.history)).not.toMatch(
+    /Private draft note|Other version note|audit-only|review-legal|user_id|127\.0\.0\.1/
+  );
+  const staffBody = (await (await send('admin/contracts/' + f.row.id)).json()) as HistoryDto;
+  expect(staffBody.history).toContainEqual(
+    expect.objectContaining({ reason: 'Private draft note' })
+  );
+  expect(staffBody.history).not.toContainEqual(
+    expect.objectContaining({ reason: 'Other version note' })
+  );
+  const selected = (await (
+    await send('admin/contracts/' + f.row.id + '/versions/' + f.row.currentVersionId)
+  ).json()) as HistoryDto;
+  expect(selected.history).toEqual(staffBody.history);
+  const other = await fixture();
+  expect((await customer(f, '', other.owner)).status).toBe(404);
+  expect((await send('admin/contracts/' + f.row.id, 'GET', undefined, f.owner)).status).toBe(403);
+});
+it('bounds version history and reports omitted older events explicitly', async () => {
+  const f = await fixture();
+  await publish(f);
+  await http.pool.query(
+    `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+     SELECT gen_random_uuid(),'review-legal','contract.signature_requested',
+       jsonb_build_object('contractId',$1::text,'versionId',$2::text,'reason','event-'||n),
+       gen_random_uuid(),'127.0.0.1',NOW()+n*INTERVAL '1 millisecond'
+     FROM generate_series(1,201) n`,
+    [f.row.id, f.row.currentVersionId]
+  );
+  const body = (await (await customer(f)).json()) as HistoryDto;
+  expect(body.history).toHaveLength(200);
+  expect(body.historyTruncated).toBe(true);
+  expect(body.history[0]?.reason).toBe('event-2');
+  expect(body.history.at(-1)?.reason).toBe('event-201');
+});
 it('exposes the linked electricity order only after publication to its authorized customer', async () => {
   const f = await fixture('electricity', true);
   expect((await customer(f)).status).toBe(404);

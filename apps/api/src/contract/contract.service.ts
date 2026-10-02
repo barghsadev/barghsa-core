@@ -24,6 +24,7 @@ import type {
   ContractListInput,
 } from './contract-validation.js';
 import { parseContractCommercialValue } from './contract-validation.js';
+import { contractStatusHistory } from './contract-status-history.js';
 
 import {
   contractIdempotency,
@@ -156,6 +157,21 @@ export class ContractService {
           initialInvoiceAmount: row.initialInvoiceAmount?.toString() ?? null,
         })),
       nextBefore: rows.length > input.limit ? rows[input.limit - 1]!.id : null,
+    };
+  }
+
+  async getWithHistory(id: string) {
+    const contract = await this.get(id);
+    return {
+      ...contract,
+      ...(await contractStatusHistory(getDbPool(), id, contract.currentVersion.id, true)),
+    };
+  }
+
+  async versionWithHistory(id: string, versionId: string) {
+    return {
+      ...(await this.version(id, versionId)),
+      ...(await contractStatusHistory(getDbPool(), id, versionId, true)),
     };
   }
 

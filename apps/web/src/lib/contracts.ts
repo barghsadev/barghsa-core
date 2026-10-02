@@ -19,6 +19,15 @@ export interface ContractVersion {
   createdBy?: string;
   publishedAt?: string;
   acceptedAt: string | null;
+  history?: ContractHistoryEvent[];
+  historyTruncated?: boolean;
+}
+export interface ContractHistoryEvent {
+  id: string;
+  event: string;
+  at: string;
+  actorType: 'staff' | 'customer' | 'system';
+  reason: string | null;
 }
 export type ContractCommercialValue =
   { kind: 'fixed'; amountIrr: string } | { kind: 'variable'; description: string };
@@ -80,6 +89,8 @@ export interface ContractDetailData extends Omit<ContractSummary, 'versionId' | 
   currentVersion?: ContractVersion;
   version?: ContractVersion;
   canAccept?: boolean;
+  history?: ContractHistoryEvent[];
+  historyTruncated?: boolean;
   amendmentSupported?: boolean;
   pendingAmendment?: {
     versionId: string;
