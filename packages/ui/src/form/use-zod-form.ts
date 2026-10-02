@@ -13,7 +13,7 @@ import {
 } from 'react-hook-form';
 import type { ZodType } from 'zod';
 
-function firstErrorField(errors: unknown, prefix = ''): string | undefined {
+export function firstErrorField(errors: unknown, prefix = ''): string | undefined {
   if (!errors || typeof errors !== 'object') return;
   if ('type' in errors && typeof errors.type === 'string') {
     return prefix || undefined;

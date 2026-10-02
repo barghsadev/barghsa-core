@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { useBlocker } from '@tanstack/react-router';
 import { Button } from '@barghsa/ui';
+import { FormStep, type FieldErrors, type UseFormReturn } from '@barghsa/ui/form';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import type { useOnboardingDraft } from '../hooks/useOnboardingDraft.js';
@@ -23,8 +24,9 @@ interface Props {
     content:
       | ReactNode
       | ((navigation: { onEdit: (step: number) => void; disabled: boolean }) => ReactNode);
-    validate?: () => boolean;
+    fields?: readonly string[];
   }[];
+  form: UseFormReturn<Record<string, string>, unknown, Record<string, string>>;
   draft: ReturnType<typeof useOnboardingDraft>;
   submitting: boolean;
   disabled: boolean;
@@ -35,6 +37,7 @@ interface Props {
 }
 export function OnboardingWizard({
   steps,
+  form,
   draft,
   submitting,
   disabled,
@@ -48,6 +51,9 @@ export function OnboardingWizard({
   const unavailable = disabled || !draft.ready || draft.isSubmitted();
   const [saving, setSaving] = useState(false);
   const busy = useRef(false);
+  const validating = useRef(false);
+  const [validationPending, setValidationPending] = useState(false);
+  const invalidFocus = useRef(false);
   const region = useRef<HTMLDivElement>(null);
   const mounted = useRef(true);
   const stepRef = useRef(step);
@@ -58,9 +64,10 @@ export function OnboardingWizard({
     shouldBlockFn: ({ current, next }) =>
       current.pathname !== next.pathname &&
       !draft.isSubmitted() &&
-      (submitting || working || busy.current || draft.hasUnsavedChanges()),
+      (submitting || working || busy.current || validating.current || draft.hasUnsavedChanges()),
     enableBeforeUnload: () =>
-      !draft.isSubmitted() && (submitting || working || busy.current || draft.hasUnsavedChanges()),
+      !draft.isSubmitted() &&
+      (submitting || working || busy.current || validating.current || draft.hasUnsavedChanges()),
     withResolver: true,
   });
   useEffect(() => {
@@ -76,14 +83,6 @@ export function OnboardingWizard({
     if (!Number.isInteger(target) || target < 1 || target > steps.length) return;
     if (busy.current || submitting || working || disabled || !draft.ready || draft.isSubmitted())
       return;
-    if (target > step && steps[step - 1]?.validate?.() === false) {
-      requestAnimationFrame(() =>
-        region.current
-          ?.querySelector<HTMLElement>(':scope > fieldset:not([hidden]) [aria-invalid="true"]')
-          ?.focus()
-      );
-      return;
-    }
     busy.current = true;
     setSaving(true);
     try {
@@ -97,16 +96,6 @@ export function OnboardingWizard({
   };
   const submit = async () => {
     if (busy.current || submitting || disabled || !draft.ready || draft.isSubmitted()) return;
-    const invalid = steps.findIndex((item) => item.validate?.() === false);
-    if (invalid >= 0) {
-      await onStepChange(invalid + 1);
-      requestAnimationFrame(() =>
-        region.current
-          ?.querySelector<HTMLElement>(':scope > fieldset:not([hidden]) [aria-invalid="true"]')
-          ?.focus()
-      );
-      return;
-    }
     busy.current = true;
     try {
       await onSubmit();
@@ -114,114 +103,154 @@ export function OnboardingWizard({
       busy.current = false;
     }
   };
+  async function invalid(errors: FieldErrors<Record<string, string>>, action: 'next' | 'submit') {
+    invalidFocus.current = true;
+    if (action === 'submit') {
+      const index = steps.findIndex((item) => item.fields?.some((name) => errors[name]));
+      if (index >= 0 && index + 1 !== step) await onStepChange(index + 1);
+    }
+  }
+  useEffect(() => {
+    if (validationPending || saving || submitting || !invalidFocus.current) return;
+    const frame = requestAnimationFrame(() => {
+      invalidFocus.current = false;
+      region.current
+        ?.querySelector<HTMLElement>(':scope > fieldset:not([hidden]) [aria-invalid="true"]')
+        ?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [validationPending, saving, submitting, step]);
   return (
-    <form
-      className="space-y-6"
-      noValidate
-      onSubmit={(event) => {
-        event.preventDefault();
-        if (disabled) return;
-        if (step < steps.length) void move(step + 1);
-        else void submit();
+    <FormStep
+      form={form}
+      fields={steps[step - 1]?.fields ?? []}
+      stepKey={step}
+      disabled={unavailable || submitting || working}
+      onNext={() => move(step + 1)}
+      onSubmit={submit}
+      onInvalid={invalid}
+      onPendingChange={(pending) => {
+        validating.current = pending;
+        setValidationPending(pending);
       }}
     >
-      {blocker.status === 'blocked' && (
-        <Suspense>
-          <LeaveDialog
-            onSave={async () => (await draft.flush()) !== undefined && !draft.hasUnsavedChanges()}
-            saveDisabled={!draft.ready || draft.status === 'conflict'}
-            errorMessage={
-              draft.status === 'error' || draft.status === 'conflict'
-                ? t(`onboarding.draft.${draft.status}`, locale)
-                : undefined
-            }
-            working={submitting || working || saving || draft.status === 'saving'}
-            workingLabel={t(
-              submitting
-                ? 'onboarding.wizard.submitting'
-                : working
-                  ? 'onboarding.documents.uploading'
-                  : 'onboarding.draft.saving',
-              locale
-            )}
-            onStay={() => blocker.reset()}
-            onLeave={() => blocker.proceed()}
-          />
-        </Suspense>
-      )}
-      <div
-        role="status"
-        className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground"
-      >
-        <span>{t(`onboarding.draft.${draft.status}`, locale)}</span>
-        {(draft.status === 'error' || draft.status === 'conflict') && (
-          <Button
-            type="button"
-            variant="outline"
-            disabled={saving || submitting}
-            onClick={() => {
-              if (draft.status === 'conflict' || !draft.ready) {
-                void onStepChange(1);
-                draft.reload();
-              } else void move(step);
-            }}
-          >
-            {t(
-              draft.status === 'conflict' || !draft.ready
-                ? 'onboarding.draft.reload'
-                : 'onboarding.draft.retry',
-              locale
-            )}
-          </Button>
-        )}
-      </div>
-      <FormWizard
-        steps={steps.map(({ label }) => label)}
-        step={step}
-        ariaLabel={t('onboarding.wizard.progress', locale)}
-        backLabel={t('onboarding.wizard.back', locale)}
-        saveLabel={t('onboarding.wizard.save', locale)}
-        nextLabel={t('onboarding.wizard.next', locale)}
-        submitLabel={t('onboarding.wizard.submit', locale)}
-        savingLabel={t('onboarding.draft.saving', locale)}
-        submittingLabel={t('onboarding.wizard.submitting', locale)}
-        saving={saving || draft.status === 'saving'}
-        submitting={submitting}
-        saveDisabled={unavailable || draft.status === 'conflict'}
-        nextDisabled={unavailable || draft.status === 'conflict'}
-        submitDisabled={unavailable || draft.status === 'conflict'}
-        backDisabled={unavailable || draft.status === 'conflict'}
-        onBack={() => void move(step - 1)}
-        onSave={() => void move(step)}
-        onNext={() => void move(step + 1)}
-        onSubmit={() => void submit()}
-      >
-        <div
-          ref={region}
-          tabIndex={-1}
-          aria-label={steps[step - 1]?.label}
-          className="rounded-xl border bg-card p-4 sm:p-6 focus-visible:outline-primary"
+      {({ next, submit: submitForm, pending }) => (
+        <form
+          className="space-y-6"
+          noValidate
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (disabled) return;
+            if (step < steps.length) void next();
+            else void submitForm();
+          }}
         >
-          {steps.map((item, index) => (
-            <fieldset
-              key={item.label}
-              hidden={index + 1 !== step}
-              disabled={index + 1 !== step || saving || submitting || unavailable}
-              className="space-y-6"
+          {blocker.status === 'blocked' && (
+            <Suspense>
+              <LeaveDialog
+                onSave={async () =>
+                  (await draft.flush()) !== undefined && !draft.hasUnsavedChanges()
+                }
+                saveDisabled={!draft.ready || draft.status === 'conflict'}
+                errorMessage={
+                  draft.status === 'error' || draft.status === 'conflict'
+                    ? t(`onboarding.draft.${draft.status}`, locale)
+                    : undefined
+                }
+                working={pending || submitting || working || saving || draft.status === 'saving'}
+                workingLabel={t(
+                  submitting
+                    ? 'onboarding.wizard.submitting'
+                    : working
+                      ? 'onboarding.documents.uploading'
+                      : 'onboarding.draft.saving',
+                  locale
+                )}
+                onStay={() => blocker.reset()}
+                onLeave={() => blocker.proceed()}
+              />
+            </Suspense>
+          )}
+          <div
+            role="status"
+            className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground"
+          >
+            <span>{t(`onboarding.draft.${draft.status}`, locale)}</span>
+            {(draft.status === 'error' || draft.status === 'conflict') && (
+              <Button
+                type="button"
+                variant="outline"
+                disabled={pending || saving || submitting}
+                onClick={() => {
+                  if (draft.status === 'conflict' || !draft.ready) {
+                    void onStepChange(1);
+                    draft.reload();
+                  } else void move(step);
+                }}
+              >
+                {t(
+                  draft.status === 'conflict' || !draft.ready
+                    ? 'onboarding.draft.reload'
+                    : 'onboarding.draft.retry',
+                  locale
+                )}
+              </Button>
+            )}
+          </div>
+          <FormWizard
+            steps={steps.map(({ label }) => label)}
+            step={step}
+            ariaLabel={t('onboarding.wizard.progress', locale)}
+            backLabel={t('onboarding.wizard.back', locale)}
+            saveLabel={t('onboarding.wizard.save', locale)}
+            nextLabel={t('onboarding.wizard.next', locale)}
+            submitLabel={t('onboarding.wizard.submit', locale)}
+            savingLabel={t('onboarding.draft.saving', locale)}
+            submittingLabel={t('onboarding.wizard.submitting', locale)}
+            saving={pending || saving || draft.status === 'saving'}
+            submitting={submitting}
+            saveDisabled={unavailable || draft.status === 'conflict'}
+            nextDisabled={unavailable || draft.status === 'conflict'}
+            submitDisabled={unavailable || draft.status === 'conflict'}
+            backDisabled={unavailable || draft.status === 'conflict'}
+            onBack={() => void move(step - 1)}
+            onSave={() => void move(step)}
+            onNext={() => void next()}
+            onSubmit={() => void submitForm()}
+          >
+            <div
+              ref={region}
+              tabIndex={-1}
+              aria-label={steps[step - 1]?.label}
+              className="rounded-xl border bg-card p-4 sm:p-6 focus-visible:outline-primary"
             >
-              <legend className="sr-only">{item.label}</legend>
-              {typeof item.content === 'function'
-                ? item.content({
-                    onEdit: (target) => void move(target),
-                    disabled:
-                      saving || submitting || working || unavailable || draft.status === 'conflict',
-                  })
-                : item.content}
-            </fieldset>
-          ))}
-        </div>
-      </FormWizard>
-    </form>
+              {steps.map((item, index) => (
+                <fieldset
+                  key={item.label}
+                  hidden={index + 1 !== step}
+                  disabled={index + 1 !== step || pending || saving || submitting || unavailable}
+                  className="space-y-6"
+                >
+                  <legend className="sr-only">{item.label}</legend>
+                  {typeof item.content === 'function'
+                    ? item.content({
+                        onEdit: (target) => void move(target),
+                        disabled:
+                          pending ||
+                          saving ||
+                          submitting ||
+                          working ||
+                          unavailable ||
+                          draft.status === 'conflict',
+                      })
+                    : item.content}
+                </fieldset>
+              ))}
+            </div>
+          </FormWizard>
+        </form>
+      )}
+    </FormStep>
   );
 }
 

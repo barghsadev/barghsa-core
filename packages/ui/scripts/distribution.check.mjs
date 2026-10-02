@@ -45,7 +45,7 @@ test('ESM and CommonJS consumers resolve strict public prop types', () => {
       import type { EmptyStateProps, ErrorBoundaryProps } from '@barghsa/ui';
       import { DirectionProvider } from '@barghsa/ui/direction-provider';
       import { useZodForm, FormField } from '@barghsa/ui/form';
-      import type { FormInputProps, FormTextareaProps, FormPhoneInputProps, FormSelectProps, FormCheckboxProps, FormSwitchProps, FormRadioGroupProps, FormComboboxProps, FormSliderProps, FormDatePickerProps, FormDateRangePickerProps } from '@barghsa/ui/form';
+      import type { FormInputProps, FormTextareaProps, FormPhoneInputProps, FormSelectProps, FormCheckboxProps, FormSwitchProps, FormRadioGroupProps, FormComboboxProps, FormSliderProps, FormDatePickerProps, FormDateRangePickerProps, FormStepProps } from '@barghsa/ui/form';
       import { z } from 'zod';
       import { createElement } from 'react';
       function AddressForm() {
@@ -62,6 +62,15 @@ test('ESM and CommonJS consumers resolve strict public prop types', () => {
           control: form.control, name: 'postalCode', label: 'Postal code', inputProps: { inputMode: 'numeric' },
         };
         void input;
+        const step: FormStepProps<{ postalCode: string }, { postalCode: number }> = {
+          form, fields: ['postalCode'], stepKey: 1,
+          onNext: values => { const postal: string = values.postalCode; void postal; },
+          onSubmit: values => { const postal: number = values.postalCode; void postal; },
+          children: ({ next, submit, pending }) => createElement('button', { disabled: pending, onClick: next }, String(submit)),
+        };
+        // @ts-expect-error Step field names must use schema input paths.
+        step.fields = ['missing'];
+        void step;
         // @ts-expect-error Schema input types must survive both public declaration formats.
         form.setValue('postalCode', 123);
         // @ts-expect-error Unknown field names must be rejected.

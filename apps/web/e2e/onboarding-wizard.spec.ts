@@ -528,6 +528,108 @@ for (const locale of ['en', 'fa'] as const) {
 }
 
 for (const locale of ['en', 'fa'] as const) {
+  for (const type of ['INDIVIDUAL', 'LEGAL'] as const) {
+    test(`shared FormStep checks current fields and recovers every invalid final field for ${type} (${locale})`, async ({
+      page,
+    }) => {
+      const personal = type === 'INDIVIDUAL';
+      const name = personal ? 'firstName' : 'representativeFirstName';
+      const postal = personal ? 'postalCode' : 'officialPostalCode';
+      const saved = { ...(personal ? individual : legal), [name]: '', [postal]: '' };
+      const state = await fixture(page, locale, type, saved);
+      await page.goto(`/onboarding/${type.toLowerCase()}/${profileId}?step=${personal ? 3 : 5}`);
+      await submit(page, locale);
+      await expect(page.locator(`#${name}`)).toBeFocused();
+      await expect(page).toHaveURL(new RegExp('step=1$'));
+      expect(state.submissions).toHaveLength(0);
+      await page.locator(`#${name}`).fill('Recovered person');
+      await next(page, locale);
+      await expect(page).toHaveURL(new RegExp('step=2$'));
+      if (!personal) {
+        await expect(page.locator('#legalName')).toHaveValue('Saved Company');
+        await next(page, locale);
+        await expect(page).toHaveURL(new RegExp('step=3$'));
+      }
+      await next(page, locale, false);
+      await expect(page.locator(`#${postal}`)).toBeFocused();
+      expect(state.submissions).toHaveLength(0);
+      await page.locator(`#${postal}`).fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۰' : '1234567890');
+      await next(page, locale);
+      if (!personal) await next(page, locale);
+      await expect(page).toHaveURL(new RegExp(`step=${personal ? 3 : 5}$`));
+      await expect(page.locator('fieldset:not([hidden]) > section')).toContainText(
+        'Recovered person'
+      );
+      expect((await new AxeBuilder({ page }).include('form').analyze()).violations).toEqual([]);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true
+      );
+      await submit(page, locale);
+      await expect(page).toHaveURL(new RegExp(`/onboarding/complete\\?profileId=${profileId}$`));
+      expect(state.submissions).toHaveLength(1);
+      expect(state.submissions[0]).toMatchObject({
+        [name]: 'Recovered person',
+        [postal]: '1234567890',
+      });
+    });
+  }
+}
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`FormStep recovers an invalid optional personal title without losing saved identity (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, locale, 'INDIVIDUAL', {
+      ...individual,
+      title: 'x'.repeat(51),
+    });
+    await page.goto(`/onboarding/individual/${profileId}?step=3`);
+    await submit(page, locale);
+    await expect(page.locator('#title')).toBeFocused();
+    await expect(page.locator('#title')).toHaveAttribute('aria-invalid', 'true');
+    await expect(page.locator('#title-error')).toBeVisible();
+    await expect(page.locator('#firstName')).toHaveValue('Person');
+    expect(state.submissions).toHaveLength(0);
+    await page.locator('#title').fill('Recovered title');
+    await next(page, locale);
+    await next(page, locale);
+    await submit(page, locale);
+    await expect(page).toHaveURL(new RegExp(`/onboarding/complete\\?profileId=${profileId}$`));
+    expect(state.submissions[0]).toMatchObject({ title: 'Recovered title', firstName: 'Person' });
+  });
+  test(`FormStep focuses the company province and preserves its address during final validation (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, locale, 'LEGAL', {
+      ...legal,
+      officialProvinceId: '',
+      officialCityId: '',
+    });
+    await page.goto(`/onboarding/legal/${profileId}?step=5`);
+    await submit(page, locale);
+    await expect(page.locator('#officialProvinceId')).toBeFocused();
+    await expect(page.locator('#officialProvinceId')).toHaveAttribute('aria-invalid', 'true');
+    await expect(page.locator('#officialProvinceId-error')).toBeVisible();
+    await expect(page.locator('#officialFullAddress')).toHaveValue('Company Street');
+    expect(state.submissions).toHaveLength(0);
+    if (locale === 'fa')
+      await page.screenshot({ path: '/tmp/barghsa-form-step-fa-province.png', fullPage: true });
+    expect((await new AxeBuilder({ page }).include('form').analyze()).violations).toEqual([]);
+    await page.locator('#officialProvinceId').selectOption(provinceId);
+    await page.locator('#officialCityId').selectOption(cityId);
+    await next(page, locale);
+    await next(page, locale);
+    await submit(page, locale);
+    await expect(page).toHaveURL(new RegExp(`/onboarding/complete\\?profileId=${profileId}$`));
+    expect(state.submissions[0]).toMatchObject({
+      officialProvinceId: provinceId,
+      officialCityId: cityId,
+      officialFullAddress: 'Company Street',
+    });
+  });
+}
+
+for (const locale of ['en', 'fa'] as const) {
   test(`personal wizard saves stages, reviews edits and only celebrates a valid receipt (${locale})`, async ({
     page,
   }) => {

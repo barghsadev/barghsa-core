@@ -1,3 +1,4 @@
+import { useOnboardingForm } from '../../../hooks/useOnboardingForm.js';
 import { OnboardingWizard, OnboardingReview } from '../../../components/OnboardingWizard.js';
 import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
 import { parseOnboardingProfile } from '../../../lib/onboarding-profile.js';
@@ -22,17 +23,6 @@ export const Route = createFileRoute('/onboarding/individual/$profileId')({
   validateSearch: (search): { step?: unknown } => ({ step: search.step }),
   component: IndividualProfileFormPage,
 });
-
-interface FormErrors {
-  title?: string | undefined;
-  firstName?: string | undefined;
-  lastName?: string | undefined;
-  nationalId?: string | undefined;
-  provinceId?: string | undefined;
-  cityId?: string | undefined;
-  fullAddress?: string | undefined;
-  postalCode?: string | undefined;
-}
 
 function IndividualProfileFormPage() {
   const { profileId } = useParams({ from: '/onboarding/individual/$profileId' });
@@ -59,17 +49,28 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
   const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
 
-  // Form state
-  const [title, setTitle] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [nationalId, setNationalId] = useState('');
-  const [selectedProvinceId, setSelectedProvinceId] = useState('');
-  const [selectedCityId, setSelectedCityId] = useState('');
-  const [fullAddress, setFullAddress] = useState('');
-  const [postalCode, setPostalCode] = useState('');
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const fields = useOnboardingForm(
+    {
+      title: '',
+      firstName: '',
+      lastName: '',
+      nationalId: '',
+      provinceId: '',
+      cityId: '',
+      fullAddress: '',
+      postalCode: '',
+    },
+    (name, value) => validateField(name, value)
+  );
+  const { form, errors, touched } = fields;
+  const [title, setTitle] = fields.field('title');
+  const [firstName, setFirstName] = fields.field('firstName');
+  const [lastName, setLastName] = fields.field('lastName');
+  const [nationalId, setNationalId] = fields.field('nationalId');
+  const [selectedProvinceId, setSelectedProvinceId] = fields.field('provinceId');
+  const [selectedCityId, setSelectedCityId] = fields.field('cityId');
+  const [fullAddress, setFullAddress] = fields.field('fullAddress');
+  const [postalCode, setPostalCode] = fields.field('postalCode');
 
   const provinceOptions = useGeographyOptions('/api/geography/provinces');
   const cityOptions = useGeographyOptions(
@@ -99,18 +100,18 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
             replace: true,
           })
           .catch(() => {});
-      setTitle(data.title ?? '');
-      setFirstName(data.firstName ?? '');
-      setLastName(data.lastName ?? '');
-      setNationalId(normalizeProfileDigits(data.nationalId ?? ''));
-      setSelectedProvinceId(data.provinceId ?? '');
-      setSelectedCityId(data.cityId ?? '');
-      setFullAddress(data.fullAddress ?? '');
-      setPostalCode(normalizeProfileDigits(data.postalCode ?? ''));
-      setErrors({});
-      setTouched({});
+      form.reset({
+        title: data.title ?? '',
+        firstName: data.firstName ?? '',
+        lastName: data.lastName ?? '',
+        nationalId: normalizeProfileDigits(data.nationalId ?? ''),
+        provinceId: data.provinceId ?? '',
+        cityId: data.cityId ?? '',
+        fullAddress: data.fullAddress ?? '',
+        postalCode: normalizeProfileDigits(data.postalCode ?? ''),
+      });
     },
-    [router, profileId]
+    [router, profileId, form.reset]
   );
   const values = {
     title,
@@ -184,52 +185,12 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
     [locale, numbers, provinces, cities]
   );
 
-  const handleBlur = useCallback(
-    (field: string) => {
-      setTouched((prev) => ({ ...prev, [field]: true }));
-      const values: Record<string, string> = {
-        title,
-        firstName,
-        lastName,
-        nationalId,
-        provinceId: selectedProvinceId,
-        cityId: selectedCityId,
-        fullAddress,
-        postalCode,
-      };
-      const value = values[field] ?? '';
-      const error = validateField(field, value);
-      setErrors((prev) => ({ ...prev, [field]: error }));
-    },
-    [
-      title,
-      firstName,
-      lastName,
-      nationalId,
-      selectedProvinceId,
-      selectedCityId,
-      fullAddress,
-      postalCode,
-      validateField,
-    ]
-  );
-
-  const validateForm = (fields = Object.keys(values)): boolean => {
-    const checked = Object.fromEntries(
-      fields.map((field) => [field, validateField(field, values[field as keyof typeof values])])
-    );
-    setErrors((previous) => ({ ...previous, ...checked }));
-    setTouched((previous) => ({
-      ...previous,
-      ...Object.fromEntries(fields.map((field) => [field, true])),
-    }));
-    return !Object.values(checked).some(Boolean);
-  };
+  const handleBlur = fields.blur;
 
   const handleSubmit = useCallback(async () => {
     setSubmitError(null);
 
-    if (!draft.ready || geographyUnavailable || !validateForm()) return;
+    if (!draft.ready || geographyUnavailable) return;
 
     setSubmitting(true);
 
@@ -297,7 +258,6 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
     selectedCityId,
     fullAddress,
     postalCode,
-    validateForm,
     geographyUnavailable,
     locale,
     router,
@@ -340,6 +300,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
           testId="onboarding-provinces-retry"
         />
         <OnboardingWizard
+          form={form}
           step={step}
           onStepChange={changeStep}
           draft={draft}
@@ -349,7 +310,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
           steps={[
             {
               label: t('onboarding.wizard.identity', locale),
-              validate: () => validateForm(['title', 'firstName', 'lastName', 'nationalId']),
+              fields: ['title', 'firstName', 'lastName', 'nationalId'],
               content: (
                 <>
                   {' '}
@@ -363,6 +324,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                     </Label>
                     <Input
                       id="title"
+                      ref={form.register('title').ref}
                       type="text"
                       maxLength={50}
                       value={title}
@@ -370,7 +332,14 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       onBlur={() => handleBlur('title')}
                       disabled={submitting}
                       placeholder={t('onboarding.individual.title.placeholder', locale)}
+                      aria-invalid={touched.title && !!errors.title}
+                      aria-describedby={errors.title ? 'title-error' : undefined}
                     />
+                    {touched.title && errors.title && (
+                      <p id="title-error" className="text-sm text-destructive" role="alert">
+                        {errors.title}
+                      </p>
+                    )}
                   </div>
                   {/* Two-column layout for desktop */}
                   <div className="grid gap-4 sm:grid-cols-2">
@@ -382,6 +351,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       </Label>
                       <Input
                         id="firstName"
+                        ref={form.register('firstName').ref}
                         type="text"
                         required
                         maxLength={100}
@@ -408,6 +378,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       </Label>
                       <Input
                         id="lastName"
+                        ref={form.register('lastName').ref}
                         type="text"
                         required
                         maxLength={100}
@@ -434,6 +405,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                     </Label>
                     <Input
                       id="nationalId"
+                      ref={form.register('nationalId').ref}
                       type="text"
                       inputMode="numeric"
                       required
@@ -462,7 +434,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
             },
             {
               label: t('onboarding.wizard.address', locale),
-              validate: () => validateForm(['provinceId', 'cityId', 'fullAddress', 'postalCode']),
+              fields: ['provinceId', 'cityId', 'fullAddress', 'postalCode'],
               content: (
                 <>
                   {' '}
@@ -482,6 +454,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       ) : (
                         <select
                           id="provinceId"
+                          ref={form.register('provinceId').ref}
                           value={selectedProvinceId}
                           onChange={(e) => {
                             setSelectedProvinceId(e.target.value);
@@ -518,6 +491,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       </Label>
                       <DependentSelect
                         id="cityId"
+                        ref={form.register('cityId').ref}
                         dependencyValue={selectedProvinceId}
                         value={selectedCityId}
                         options={cities.map((city) => ({
@@ -557,6 +531,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                     </Label>
                     <textarea
                       id="fullAddress"
+                      ref={form.register('fullAddress').ref}
                       required
                       maxLength={500}
                       rows={3}
@@ -586,6 +561,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                     </Label>
                     <Input
                       id="postalCode"
+                      ref={form.register('postalCode').ref}
                       type="text"
                       inputMode="numeric"
                       required

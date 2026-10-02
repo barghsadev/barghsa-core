@@ -1,3 +1,4 @@
+import { useOnboardingForm } from '../../../hooks/useOnboardingForm.js';
 import { OnboardingWizard, OnboardingReview } from '../../../components/OnboardingWizard.js';
 import { parseOnboardingProfile } from '../../../lib/onboarding-profile.js';
 import { wizardStepSearch } from '../../../lib/wizard-step.js';
@@ -9,7 +10,7 @@ import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
 import { t } from '@barghsa/i18n/app';
 import { withCsrf } from '../../../lib/csrf.js';
 import { normalizeProfileDigits } from '../../../lib/profile-digits.js';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
 import { toast } from '../../../lib/toast-api.js';
 import { useLocale } from '../../../hooks/useLocale.js';
@@ -63,6 +64,22 @@ interface FormErrors {
   representativeRelationship?: string | undefined;
 }
 
+function documentList(value: string): Array<{ key: string; name: string }> {
+  try {
+    const parsed: unknown = JSON.parse(value);
+    return Array.isArray(parsed)
+      ? parsed
+          .filter(
+            (item): item is { key: string; name: string } =>
+              !!item && typeof item.key === 'string' && typeof item.name === 'string'
+          )
+          .slice(0, 5)
+      : [];
+  } catch {
+    return [];
+  }
+}
+
 function LegalProfileFormPage() {
   const { profileId } = useParams({ from: '/onboarding/legal/$profileId' });
   return <LegalProfileForm key={profileId} profileId={profileId} />;
@@ -88,37 +105,77 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
   const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
 
-  // ── Form state ──────────────────────────────────────────
-  // Representative section
-  const [representativeTitle, setRepresentativeTitle] = useState('');
-  const [representativeRelationship, setRepresentativeRelationship] = useState('');
-  // Legal entity section
-  const [representative, setRepresentative] = useState({
-    representativeHonorific: '',
-    representativeFirstName: '',
-    representativeLastName: '',
-    representativeNationalId: '',
-    representativeProvinceId: '',
-    representativeCityId: '',
-    representativeFullAddress: '',
-    representativePostalCode: '',
-  });
-  const [legalName, setLegalName] = useState('');
-  const [nationalIdentifier, setNationalIdentifier] = useState('');
-  const [registrationNumber, setRegistrationNumber] = useState('');
-  const [companyTypeId, setCompanyTypeId] = useState('');
-  const [registrationDate, setRegistrationDate] = useState('');
-  const [economicCode, setEconomicCode] = useState('');
-  const [officialPhone, setOfficialPhone] = useState('');
-  const [officialEmail, setOfficialEmail] = useState('');
-  // Official address section
-  const [officialProvinceId, setOfficialProvinceId] = useState('');
-  const [officialCityId, setOfficialCityId] = useState('');
-  const [officialFullAddress, setOfficialFullAddress] = useState('');
-  const [officialPostalCode, setOfficialPostalCode] = useState('');
-
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const fields = useOnboardingForm(
+    {
+      documentKeys: '[]',
+      representativeHonorific: '',
+      representativeFirstName: '',
+      representativeLastName: '',
+      representativeNationalId: '',
+      representativeProvinceId: '',
+      representativeCityId: '',
+      representativeFullAddress: '',
+      representativePostalCode: '',
+      representativeTitle: '',
+      representativeRelationship: '',
+      legalName: '',
+      nationalIdentifier: '',
+      registrationNumber: '',
+      companyTypeId: '',
+      registrationDate: '',
+      economicCode: '',
+      officialPhone: '',
+      officialEmail: '',
+      officialProvinceId: '',
+      officialCityId: '',
+      officialFullAddress: '',
+      officialPostalCode: '',
+    },
+    (name, value) => validateField(name, value)
+  );
+  const { form, errors, touched } = fields;
+  const representative = {
+    representativeHonorific: fields.values.representativeHonorific ?? '',
+    representativeFirstName: fields.values.representativeFirstName ?? '',
+    representativeLastName: fields.values.representativeLastName ?? '',
+    representativeNationalId: fields.values.representativeNationalId ?? '',
+    representativeProvinceId: fields.values.representativeProvinceId ?? '',
+    representativeCityId: fields.values.representativeCityId ?? '',
+    representativeFullAddress: fields.values.representativeFullAddress ?? '',
+    representativePostalCode: fields.values.representativePostalCode ?? '',
+  };
+  const setRepresentative = (
+    update: typeof representative | ((previous: typeof representative) => typeof representative)
+  ) => {
+    const previous = {
+      representativeHonorific: form.getValues('representativeHonorific') ?? '',
+      representativeFirstName: form.getValues('representativeFirstName') ?? '',
+      representativeLastName: form.getValues('representativeLastName') ?? '',
+      representativeNationalId: form.getValues('representativeNationalId') ?? '',
+      representativeProvinceId: form.getValues('representativeProvinceId') ?? '',
+      representativeCityId: form.getValues('representativeCityId') ?? '',
+      representativeFullAddress: form.getValues('representativeFullAddress') ?? '',
+      representativePostalCode: form.getValues('representativePostalCode') ?? '',
+    };
+    const next = typeof update === 'function' ? update(previous) : update;
+    for (const [name, value] of Object.entries(next)) fields.setField(name, value);
+  };
+  const [representativeTitle, setRepresentativeTitle] = fields.field('representativeTitle');
+  const [representativeRelationship, setRepresentativeRelationship] = fields.field(
+    'representativeRelationship'
+  );
+  const [legalName, setLegalName] = fields.field('legalName');
+  const [nationalIdentifier, setNationalIdentifier] = fields.field('nationalIdentifier');
+  const [registrationNumber, setRegistrationNumber] = fields.field('registrationNumber');
+  const [companyTypeId, setCompanyTypeId] = fields.field('companyTypeId');
+  const [registrationDate, setRegistrationDate] = fields.field('registrationDate');
+  const [economicCode, setEconomicCode] = fields.field('economicCode');
+  const [officialPhone, setOfficialPhone] = fields.field('officialPhone');
+  const [officialEmail, setOfficialEmail] = fields.field('officialEmail');
+  const [officialProvinceId, setOfficialProvinceId] = fields.field('officialProvinceId');
+  const [officialCityId, setOfficialCityId] = fields.field('officialCityId');
+  const [officialFullAddress, setOfficialFullAddress] = fields.field('officialFullAddress');
+  const [officialPostalCode, setOfficialPostalCode] = fields.field('officialPostalCode');
 
   const provinceOptions = useGeographyOptions('/api/geography/provinces');
   const companyTypeOptions = useGeographyOptions('/api/geography/company-types');
@@ -153,7 +210,15 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const [documents, setDocuments] = useState<Array<{ key: string; name: string }>>([]);
+  const [documentKeys] = fields.field('documentKeys');
+  const documents = useMemo(() => documentList(documentKeys), [documentKeys]);
+  const setDocuments = (
+    update: typeof documents | ((previous: typeof documents) => typeof documents)
+  ) => {
+    const previous = documentList(form.getValues('documentKeys') ?? '[]');
+    const next = typeof update === 'function' ? update(previous) : update;
+    fields.setField('documentKeys', JSON.stringify(next));
+  };
   const [uploading, setUploading] = useState(false);
   const uploadInFlight = useRef(false);
   const [uploadError, setUploadError] = useState(false);
@@ -172,39 +237,8 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
             replace: true,
           })
           .catch(() => {});
-      try {
-        const parsed: unknown = JSON.parse(data.documentKeys || '[]');
-        setDocuments(
-          Array.isArray(parsed)
-            ? parsed
-                .filter(
-                  (item): item is { key: string; name: string } =>
-                    !!item && typeof item.key === 'string' && typeof item.name === 'string'
-                )
-                .slice(0, 5)
-            : []
-        );
-      } catch {
-        setDocuments([]);
-      }
-
-      setErrors({});
-      setTouched({});
-      setLegalName(data.legalName ?? '');
-      setNationalIdentifier(normalizeProfileDigits(data.nationalIdentifier ?? ''));
-      setRegistrationNumber(data.registrationNumber ?? '');
-      setCompanyTypeId(data.companyTypeId ?? '');
-      setRegistrationDate(data.registrationDate ?? '');
-      setEconomicCode(data.economicCode ?? '');
-      setOfficialPhone(data.officialPhone ?? '');
-      setOfficialEmail(data.officialEmail ?? '');
-      setOfficialProvinceId(data.officialProvinceId ?? '');
-      setOfficialCityId(data.officialCityId ?? '');
-      setOfficialFullAddress(data.officialFullAddress ?? '');
-      setOfficialPostalCode(normalizeProfileDigits(data.officialPostalCode ?? ''));
-      setRepresentativeTitle(data.representativeTitle ?? '');
-      setRepresentativeRelationship(data.representativeRelationship ?? '');
-      setRepresentative({
+      form.reset({
+        documentKeys: JSON.stringify(documentList(data.documentKeys || '[]')),
         representativeHonorific: data.representativeHonorific ?? '',
         representativeFirstName: data.representativeFirstName ?? '',
         representativeLastName: data.representativeLastName ?? '',
@@ -213,15 +247,29 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
         representativeCityId: data.representativeCityId ?? '',
         representativeFullAddress: data.representativeFullAddress ?? '',
         representativePostalCode: normalizeProfileDigits(data.representativePostalCode ?? ''),
+        representativeTitle: data.representativeTitle ?? '',
+        representativeRelationship: data.representativeRelationship ?? '',
+        legalName: data.legalName ?? '',
+        nationalIdentifier: normalizeProfileDigits(data.nationalIdentifier ?? ''),
+        registrationNumber: data.registrationNumber ?? '',
+        companyTypeId: data.companyTypeId ?? '',
+        registrationDate: data.registrationDate ?? '',
+        economicCode: data.economicCode ?? '',
+        officialPhone: data.officialPhone ?? '',
+        officialEmail: data.officialEmail ?? '',
+        officialProvinceId: data.officialProvinceId ?? '',
+        officialCityId: data.officialCityId ?? '',
+        officialFullAddress: data.officialFullAddress ?? '',
+        officialPostalCode: normalizeProfileDigits(data.officialPostalCode ?? ''),
       });
     },
-    [router, profileId]
+    [router, profileId, form.reset]
   );
   const draft = useOnboardingDraft(
     profileId,
     {
       ...representative,
-      documentKeys: JSON.stringify(documents),
+      documentKeys,
       legalName,
       nationalIdentifier,
       registrationNumber,
@@ -368,84 +416,14 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
     [isRtl, locale, numbers, provinces, cities, representativeCities, companyTypes]
   );
 
-  const handleBlur = useCallback(
-    (field: string) => {
-      setTouched((prev) => ({ ...prev, [field]: true }));
-      const values: Record<string, string> = {
-        ...representative,
-        legalName,
-        nationalIdentifier,
-        registrationNumber,
-        companyTypeId,
-        registrationDate,
-        economicCode,
-        officialPhone,
-        officialEmail,
-        officialProvinceId: officialProvinceId,
-        officialCityId: officialCityId,
-        officialFullAddress,
-        officialPostalCode,
-        representativeTitle,
-        representativeRelationship,
-      };
-      const value = values[field] ?? '';
-      const error = validateField(field, value);
-      setErrors((prev) => ({ ...prev, [field]: error }));
-    },
-    [
-      representative,
-      legalName,
-      nationalIdentifier,
-      registrationNumber,
-      companyTypeId,
-      registrationDate,
-      economicCode,
-      officialPhone,
-      officialEmail,
-      officialProvinceId,
-      officialCityId,
-      officialFullAddress,
-      officialPostalCode,
-      representativeTitle,
-      representativeRelationship,
-      validateField,
-    ]
-  );
-
-  const values = {
-    ...representative,
-    representativeTitle,
-    representativeRelationship,
-    legalName,
-    nationalIdentifier,
-    registrationNumber,
-    companyTypeId,
-    registrationDate,
-    economicCode,
-    officialPhone,
-    officialEmail,
-    officialProvinceId,
-    officialCityId,
-    officialFullAddress,
-    officialPostalCode,
-  };
-  const validateForm = (fields = Object.keys(values)): boolean => {
-    const checked = Object.fromEntries(
-      fields.map((field) => [field, validateField(field, values[field as keyof typeof values])])
-    );
-    setErrors((previous) => ({ ...previous, ...checked }));
-    setTouched((previous) => ({
-      ...previous,
-      ...Object.fromEntries(fields.map((field) => [field, true])),
-    }));
-    return !Object.values(checked).some(Boolean);
-  };
+  const handleBlur = fields.blur;
+  const values = fields.values;
 
   const handleSubmit = useCallback(async () => {
     if (geographyUnavailable) return;
     setSubmitError(null);
 
-    if (!draft.ready || uploading || !validateForm()) return;
+    if (!draft.ready || uploading) return;
 
     setSubmitting(true);
 
@@ -550,7 +528,6 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
     officialPostalCode,
     representativeTitle,
     representativeRelationship,
-    validateForm,
     geographyUnavailable,
     isRtl,
     router,
@@ -618,6 +595,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
             {' '}
             <textarea
               id={field}
+              ref={form.register(field).ref}
               required
               rows={3}
               maxLength={500}
@@ -637,6 +615,12 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
           <DatePicker
             id={field}
             label={label}
+            triggerProps={{
+              ref: form.register(field).ref,
+              'aria-invalid': isTouched && !!error,
+              'aria-describedby': error ? `${field}-error` : undefined,
+            }}
+            onBlur={() => handleBlur(field)}
             locale={locale}
             timezone="Asia/Tehran"
             numerals={numbers.number(1) === '1' ? 'latn' : 'arabext'}
@@ -653,6 +637,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
         ) : (
           <Input
             id={field}
+            ref={form.register(field).ref}
             type={options?.type ?? 'text'}
             inputMode={options?.inputMode}
             required={options?.required}
@@ -714,6 +699,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
           testId="onboarding-provinces-retry"
         />
         <OnboardingWizard
+          form={form}
           step={step}
           onStepChange={changeStep}
           working={uploading}
@@ -724,12 +710,11 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
           steps={[
             {
               label: t('onboarding.wizard.representative', locale),
-              validate: () =>
-                validateForm([
-                  ...Object.keys(representative),
-                  'representativeTitle',
-                  'representativeRelationship',
-                ]),
+              fields: [
+                ...Object.keys(representative),
+                'representativeTitle',
+                'representativeRelationship',
+              ],
               content: (
                 <>
                   {' '}
@@ -784,6 +769,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                             {field === 'representativeCityId' ? (
                               <DependentSelect
                                 id={field}
+                                ref={form.register(field).ref}
                                 required
                                 dependencyValue={representative.representativeProvinceId}
                                 value={representative[field]}
@@ -811,6 +797,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                             ) : (
                               <select
                                 id={field}
+                                ref={form.register(field).ref}
                                 required
                                 value={representative[field]}
                                 disabled={submitting || !provinceOptions.ready}
@@ -887,17 +874,16 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
             },
             {
               label: t('onboarding.wizard.company', locale),
-              validate: () =>
-                validateForm([
-                  'legalName',
-                  'nationalIdentifier',
-                  'registrationNumber',
-                  'companyTypeId',
-                  'registrationDate',
-                  'economicCode',
-                  'officialPhone',
-                  'officialEmail',
-                ]),
+              fields: [
+                'legalName',
+                'nationalIdentifier',
+                'registrationNumber',
+                'companyTypeId',
+                'registrationDate',
+                'economicCode',
+                'officialPhone',
+                'officialEmail',
+              ],
               content: (
                 <>
                   {' '}
@@ -977,6 +963,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                           ) : (
                             <select
                               id="companyTypeId"
+                              ref={form.register('companyTypeId').ref}
                               value={companyTypeId}
                               onChange={(e) => setCompanyTypeId(e.target.value)}
                               onBlur={() => handleBlur('companyTypeId')}
@@ -1065,13 +1052,12 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
             },
             {
               label: t('onboarding.wizard.address', locale),
-              validate: () =>
-                validateForm([
-                  'officialProvinceId',
-                  'officialCityId',
-                  'officialFullAddress',
-                  'officialPostalCode',
-                ]),
+              fields: [
+                'officialProvinceId',
+                'officialCityId',
+                'officialFullAddress',
+                'officialPostalCode',
+              ],
               content: (
                 <>
                   {' '}
@@ -1092,6 +1078,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         ) : (
                           <select
                             id="officialProvinceId"
+                            ref={form.register('officialProvinceId').ref}
                             required
                             value={officialProvinceId}
                             onChange={(e) => {
@@ -1099,6 +1086,10 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                               setOfficialCityId('');
                             }}
                             onBlur={() => handleBlur('officialProvinceId')}
+                            aria-invalid={touched.officialProvinceId && !!errors.officialProvinceId}
+                            aria-describedby={
+                              errors.officialProvinceId ? 'officialProvinceId-error' : undefined
+                            }
                             disabled={submitting || !provinceOptions.ready}
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           >
@@ -1113,7 +1104,11 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                           </select>
                         )}
                         {touched.officialProvinceId && errors.officialProvinceId && (
-                          <p className="text-sm text-destructive" role="alert">
+                          <p
+                            id="officialProvinceId-error"
+                            className="text-sm text-destructive"
+                            role="alert"
+                          >
                             {errors.officialProvinceId}
                           </p>
                         )}
@@ -1124,6 +1119,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         <Label htmlFor="officialCityId">{isRtl ? 'شهر' : 'City'}</Label>
                         <DependentSelect
                           id="officialCityId"
+                          ref={form.register('officialCityId').ref}
                           required
                           dependencyValue={officialProvinceId}
                           value={officialCityId}
@@ -1170,6 +1166,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                       </Label>
                       <textarea
                         id="officialFullAddress"
+                        ref={form.register('officialFullAddress').ref}
                         required
                         maxLength={500}
                         rows={3}
@@ -1205,6 +1202,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                       </Label>
                       <Input
                         id="officialPostalCode"
+                        ref={form.register('officialPostalCode').ref}
                         type="text"
                         inputMode="numeric"
                         maxLength={10}
@@ -1328,30 +1326,34 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                     t(`onboarding.wizard.${key}`, locale)
                   )}
                   rows={[
-                    ...Object.entries(values).map(([field, value]) => ({
-                      step: /(?:ProvinceId|CityId|FullAddress|PostalCode)$/.test(field)
-                        ? 3
-                        : field.startsWith('representative')
-                          ? 1
-                          : 2,
-                      label: t(`onboarding.legal.${field}`, locale),
-                      value:
-                        field === 'companyTypeId'
-                          ? ((isRtl
-                              ? companyTypes.find((p) => p.id === value)?.nameFa
-                              : companyTypes.find((p) => p.id === value)?.nameEn) ?? '')
-                          : field.endsWith('ProvinceId')
+                    ...Object.entries(values)
+                      .filter(([field]) => field !== 'documentKeys')
+                      .map(([field, value]) => ({
+                        step: /(?:ProvinceId|CityId|FullAddress|PostalCode)$/.test(field)
+                          ? 3
+                          : field.startsWith('representative')
+                            ? 1
+                            : 2,
+                        label: t(`onboarding.legal.${field}`, locale),
+                        value:
+                          field === 'companyTypeId'
                             ? ((isRtl
-                                ? provinces.find((p) => p.id === value)?.nameFa
-                                : provinces.find((p) => p.id === value)?.nameEn) ?? '')
-                            : field.endsWith('CityId')
+                                ? companyTypes.find((p) => p.id === value)?.nameFa
+                                : companyTypes.find((p) => p.id === value)?.nameEn) ?? '')
+                            : field.endsWith('ProvinceId')
                               ? ((isRtl
-                                  ? [...cities, ...representativeCities].find((p) => p.id === value)
-                                      ?.nameFa
-                                  : [...cities, ...representativeCities].find((p) => p.id === value)
-                                      ?.nameEn) ?? '')
-                              : value,
-                    })),
+                                  ? provinces.find((p) => p.id === value)?.nameFa
+                                  : provinces.find((p) => p.id === value)?.nameEn) ?? '')
+                              : field.endsWith('CityId')
+                                ? ((isRtl
+                                    ? [...cities, ...representativeCities].find(
+                                        (p) => p.id === value
+                                      )?.nameFa
+                                    : [...cities, ...representativeCities].find(
+                                        (p) => p.id === value
+                                      )?.nameEn) ?? '')
+                                : value,
+                      })),
                     {
                       step: 4,
                       label: t('onboarding.wizard.documents', locale),
