@@ -2,20 +2,22 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Button, Dialog, DialogContent, DialogDescription, DialogTitle } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
-import type { useOnboardingDraft } from '../hooks/useOnboardingDraft.js';
 
 interface Props {
-  draft: ReturnType<typeof useOnboardingDraft>;
+  onSave: () => Promise<boolean>;
+  saveDisabled?: boolean;
+  errorMessage?: string | undefined;
   working: boolean;
   workingLabel: string;
   onStay: () => void;
   onLeave: () => void;
 }
 
-export default function OnboardingLeaveDialog(props: Props) {
-  const { draft, working, workingLabel, onStay, onLeave } = props;
+export default function WizardLeaveDialog(props: Props) {
+  const { onSave, saveDisabled, errorMessage, working, workingLabel, onStay, onLeave } = props;
   const locale = useLocale();
   const [saving, setSaving] = useState(false);
+  const [failed, setFailed] = useState(false);
   const inFlight = useRef(false);
   const mounted = useRef(true);
   const latest = useRef(props);
@@ -32,13 +34,18 @@ export default function OnboardingLeaveDialog(props: Props) {
     if (!inFlight.current) onStay();
   };
   const saveAndLeave = async () => {
-    if (inFlight.current || working || !draft.ready || draft.status === 'conflict') return;
+    if (inFlight.current || working || saveDisabled) return;
     inFlight.current = true;
     setSaving(true);
+    setFailed(false);
     try {
-      const version = await draft.flush();
-      if (mounted.current && version !== undefined && !latest.current.draft.hasUnsavedChanges())
-        latest.current.onLeave();
+      const saved = await onSave();
+      if (mounted.current) {
+        if (saved) latest.current.onLeave();
+        else setFailed(true);
+      }
+    } catch {
+      if (mounted.current) setFailed(true);
     } finally {
       inFlight.current = false;
       if (mounted.current) setSaving(false);
@@ -54,18 +61,18 @@ export default function OnboardingLeaveDialog(props: Props) {
         <DialogTitle>{t('electricity.order.unsaved.title', locale)}</DialogTitle>
         <DialogDescription>{t('electricity.order.unsaved.description', locale)}</DialogDescription>
         {(saving || working) && (
-          <p role="status">{saving ? t('onboarding.draft.saving', locale) : workingLabel}</p>
+          <p role="status">{saving ? t('electricity.order.savingDraft', locale) : workingLabel}</p>
         )}
-        {!saving && !working && (draft.status === 'error' || draft.status === 'conflict') && (
+        {!saving && !working && (failed || errorMessage) && (
           <p role="alert" className="text-sm text-destructive">
-            {t(`onboarding.draft.${draft.status}`, locale)}
+            {errorMessage || t('electricity.order.draftSaveFailed', locale)}
           </p>
         )}
         <div className="flex flex-col gap-2">
           <Button
             type="button"
             onClick={() => void saveAndLeave()}
-            disabled={saving || working || !draft.ready || draft.status === 'conflict'}
+            disabled={saving || working || saveDisabled}
           >
             {t('electricity.order.unsaved.saveAndLeave', locale)}
           </Button>

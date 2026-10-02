@@ -133,10 +133,16 @@
     "limitKB": 15
   },
   {
-    "name": "Onboarding leave confirmation on demand",
+    "name": "Wizard leave confirmation on demand",
     "phase": "interaction",
-    "entries": ["src/components/OnboardingLeaveDialog.tsx"],
+    "entries": ["src/components/WizardLeaveDialog.tsx"],
     "limitKB": 15
+  },
+  {
+    "name": "Simple electricity price and order review on demand",
+    "phase": "interaction",
+    "entries": ["src/components/SimpleElectricityReview.tsx"],
+    "limitKB": 20
   },
   {
     "name": "Dashboard",

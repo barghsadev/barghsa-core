@@ -189,7 +189,7 @@ for (const locale of ['en', 'fa'] as const) {
       submissions.push(route.request().postDataJSON());
       return route.fulfill({
         status: 201,
-        json: { orderId },
+        json: { orderId, contractId, invoiceId },
       });
     });
 
@@ -412,7 +412,7 @@ for (const locale of ['en', 'fa'] as const) {
           locale === 'fa' ? 'بازگشت به سفارش پیشرفته برق' : 'Return to advanced electricity order',
       })
       .click();
-    await expect(page).toHaveURL(/\/electricity\/advanced$/);
+    await expect(page).toHaveURL(/\/electricity\/advanced\?step=5$/);
     await expect(wizard).toContainText(addedAddress.fullAddress);
     await page.locator('input[name="advanced-address"]').nth(1).check();
     await expect(wizard.getByText('Advanced Buyer Ltd', { exact: true })).toBeVisible();

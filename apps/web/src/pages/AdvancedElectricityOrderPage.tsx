@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useBlocker, useNavigate } from '@tanstack/react-router';
 import { Button, Card, CardContent, DateTimePicker } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { toast } from '../lib/toast-api.js';
@@ -14,6 +14,11 @@ import {
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
+import { useOrderWizardStep } from '../hooks/useOrderWizardStep.js';
+import {
+  electricityDraftConfirmed,
+  electricityOrderReceipt,
+} from '../lib/electricity-draft-receipt.js';
 import { formatJalaliDateTime, parseJalaliDateTime } from '../lib/jalali-date-time.js';
 import {
   ElectricityQuotePreviewError,
@@ -79,6 +84,7 @@ const emptyQuantities: Record<Key, string> = {
   free_market: '',
   energy_saving: '',
 };
+const LeaveDialog = lazy(() => import('../components/WizardLeaveDialog.js'));
 const fieldClass = 'w-full rounded-lg border border-input bg-background px-3 py-2 text-sm';
 const iranCivil = new Intl.DateTimeFormat('en-US-u-ca-gregory', {
   timeZone: 'Asia/Tehran',
@@ -151,7 +157,27 @@ export function AdvancedElectricityOrderPage() {
   const [draftAttempt, setDraftAttempt] = useState(0);
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [step, setStep] = useState(1);
+  const wizard = useOrderWizardStep('/electricity/advanced');
+  const { step } = wizard;
+  const command = useRef<symbol | null>(null);
+  const generation = useRef(0);
+  const completed = useRef(false);
+  const savedSignature = useRef('');
+  const signature = JSON.stringify([start, end, quantities, giftCode, addressId]);
+  const liveSignature = useRef(signature);
+  useLayoutEffect(() => {
+    liveSignature.current = signature;
+  }, [signature]);
+  const unsavedChanges =
+    !loading && !loadError && !completed.current && signature !== savedSignature.current;
+  const blocker = useBlocker({
+    shouldBlockFn: ({ current, next }) =>
+      current.pathname !== next.pathname &&
+      !completed.current &&
+      (unsavedChanges || !!command.current),
+    enableBeforeUnload: () => !completed.current && (unsavedChanges || !!command.current),
+    withResolver: true,
+  });
   const submission = useRef<{ fingerprint: string; key: string } | null>(null);
   const selectedAddress = addresses.find((address) => address.id === addressId);
   const startAt = useMemo(() => parseJalaliDateTime(start), [start]);
@@ -245,7 +271,14 @@ export function AdvancedElectricityOrderPage() {
 
   useEffect(() => {
     if (!profileId) return;
+    const epoch = ++generation.current;
     const abort = new AbortController();
+    wizard.reset();
+    command.current = null;
+    completed.current = false;
+    setSaving(false);
+    setSubmitting(false);
+    setLoading(true);
     void Promise.all([
       fetch(`/api/profiles/${profileId}/addresses`, {
         credentials: 'include',
@@ -266,25 +299,57 @@ export function AdvancedElectricityOrderPage() {
           !draft ||
           !Number.isInteger(draft.currentStep) ||
           draft.currentStep < 1 ||
-          draft.currentStep > 5
+          draft.currentStep > 5 ||
+          (draft.currentStep > 1 && !draft.data) ||
+          (draft.data !== null &&
+            (!draft.data ||
+              typeof draft.data !== 'object' ||
+              Array.isArray(draft.data) ||
+              !draft.data.quantities ||
+              typeof draft.data.quantities !== 'object' ||
+              Array.isArray(draft.data.quantities) ||
+              Object.entries(draft.data.quantities).some(
+                ([key, quantity]) =>
+                  !keys.includes(key as Key) ||
+                  typeof quantity !== 'string' ||
+                  !/^\d{1,19}$/.test(quantity)
+              ) ||
+              [draft.data.startAt, draft.data.endAt].some(
+                (date) =>
+                  date !== undefined &&
+                  (typeof date !== 'string' || !Number.isFinite(Date.parse(date)))
+              ) ||
+              (draft.data.giftCode !== undefined && typeof draft.data.giftCode !== 'string') ||
+              (draft.data.addressId !== undefined && typeof draft.data.addressId !== 'string')))
         )
           throw new Error('Invalid draft');
         setAddresses(addressData.addresses);
-        setAddressId(
+        const restoredAddress =
           draft.data?.addressId ??
-            (
-              addressData.addresses.find((address) => address.mainAddress) ??
-              addressData.addresses[0]
-            )?.id ??
-            ''
-        );
-        if (draft.data) {
-          if (draft.data.startAt) setStart(formatJalaliDateTime(new Date(draft.data.startAt)));
-          if (draft.data.endAt) setEnd(formatJalaliDateTime(new Date(draft.data.endAt)));
-          setQuantities({ ...emptyQuantities, ...draft.data.quantities });
-          setGiftCode(draft.data.giftCode ?? '');
-        }
-        setStep(draft.currentStep);
+          (addressData.addresses.find((address) => address.mainAddress) ?? addressData.addresses[0])
+            ?.id ??
+          '';
+        const restoredStart = draft.data?.startAt
+          ? formatJalaliDateTime(new Date(draft.data.startAt))
+          : start;
+        const restoredEnd = draft.data?.endAt
+          ? formatJalaliDateTime(new Date(draft.data.endAt))
+          : end;
+        const restoredQuantities = { ...emptyQuantities, ...draft.data?.quantities };
+        const restoredGift = draft.data?.giftCode ?? '';
+        setAddressId(restoredAddress);
+        setStart(restoredStart);
+        setEnd(restoredEnd);
+        setQuantities(restoredQuantities);
+        setGiftCode(restoredGift);
+        savedSignature.current = JSON.stringify([
+          restoredStart,
+          restoredEnd,
+          restoredQuantities,
+          restoredGift,
+          restoredAddress,
+        ]);
+        wizard.restore(draft.currentStep);
         setLoadError(false);
         setLoading(false);
       })
@@ -294,7 +359,11 @@ export function AdvancedElectricityOrderPage() {
           setLoading(false);
         }
       });
-    return () => abort.abort();
+    return () => {
+      abort.abort();
+      command.current = null;
+      if (generation.current === epoch) generation.current++;
+    };
   }, [profileId, draftAttempt]);
 
   useEffect(() => {
@@ -341,43 +410,63 @@ export function AdvancedElectricityOrderPage() {
     quoteVersion,
   ]);
 
-  async function saveDraft(next: boolean) {
-    if (!profileId) return false;
+  async function saveDraft(next: boolean, target = next ? step + 1 : step) {
+    if (
+      command.current ||
+      completed.current ||
+      loading ||
+      loadError ||
+      blocked ||
+      !profileId ||
+      target < 1 ||
+      target > 5
+    )
+      return false;
+    if (
+      next &&
+      (step === 1 ? !validPeriod : !quote || !validPeriod || !quantitiesValid || quoteError)
+    )
+      return false;
+    const token = Symbol();
+    command.current = token;
+    const epoch = generation.current;
+    const snapshot = signature;
+    const input = {
+      profileId,
+      currentStep: target,
+      data: {
+        ...(startAt ? { startAt } : {}),
+        ...(endAt ? { endAt } : {}),
+        quantities: quantityPayload,
+        ...(giftCode.trim() ? { giftCode: giftCode.trim() } : {}),
+        ...(addressId ? { addressId } : {}),
+      },
+    };
     setSaving(true);
     try {
       const response = await fetch('/api/electricity/drafts/advanced', {
         method: 'PUT',
         credentials: 'include',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          profileId,
-          currentStep: next ? Math.min(5, step + 1) : step,
-          data: {
-            ...(startAt ? { startAt } : {}),
-            ...(endAt ? { endAt } : {}),
-            quantities: quantityPayload,
-            ...(giftCode.trim() ? { giftCode: giftCode.trim() } : {}),
-            ...(addressId ? { addressId } : {}),
-          },
-        }),
+        body: JSON.stringify(input),
       });
       if (!response.ok) throw new Error('Draft failed');
       const saved: unknown = await response.json();
-      if (
-        !saved ||
-        typeof saved !== 'object' ||
-        !('currentStep' in saved) ||
-        saved.currentStep !== (next ? Math.min(5, step + 1) : step)
-      )
-        throw new Error('Draft save was not confirmed');
-      if (next) setStep((current) => Math.min(5, current + 1));
+      if (epoch !== generation.current) return false;
+      if (!electricityDraftConfirmed(saved, input)) throw new Error('Draft save was not confirmed');
+      savedSignature.current = snapshot;
+      if (liveSignature.current !== snapshot) return false;
+      if (target !== step) await wizard.go(target, step);
       else toast.success(t('electricity.order.draftSaved', locale));
       return true;
     } catch {
-      toast.error(t('electricity.order.draftSaveFailed', locale));
+      if (epoch === generation.current) toast.error(t('electricity.order.draftSaveFailed', locale));
       return false;
     } finally {
-      setSaving(false);
+      if (command.current === token) {
+        command.current = null;
+        setSaving(false);
+      }
     }
   }
 
@@ -387,7 +476,25 @@ export function AdvancedElectricityOrderPage() {
   }
 
   async function submit() {
-    if (!profileId || !selectedAddress || !quote || !startAt || !endAt) return;
+    if (
+      command.current ||
+      completed.current ||
+      loading ||
+      loadError ||
+      blocked ||
+      !profileId ||
+      !selectedAddress ||
+      !quote ||
+      !validPeriod ||
+      !quantitiesValid ||
+      quoteError ||
+      !startAt ||
+      !endAt
+    )
+      return;
+    const token = Symbol();
+    command.current = token;
+    const epoch = generation.current;
     setSubmitting(true);
     const fingerprint = JSON.stringify({ ...previewInput, addressId, quote: quote.reviewDigest });
     if (submission.current?.fingerprint !== fingerprint) {
@@ -410,18 +517,24 @@ export function AdvancedElectricityOrderPage() {
           },
         }),
       });
+      if (epoch !== generation.current) return;
       if (response.status === 409) {
         setQuoteVersion((version) => version + 1);
         toast.error(t('electricity.order.reviewChanged', locale));
         return;
       }
       if (!response.ok) throw new Error('Order failed');
-      const result = (await response.json()) as { orderId: string };
+      const result = electricityOrderReceipt(await response.json());
+      if (epoch !== generation.current) return;
+      completed.current = true;
       await navigate({ to: '/electricity/orders/$orderId', params: { orderId: result.orderId } });
     } catch {
-      toast.error(t('electricity.order.submitFailed', locale));
+      if (epoch === generation.current) toast.error(t('electricity.order.submitFailed', locale));
     } finally {
-      setSubmitting(false);
+      if (command.current === token) {
+        command.current = null;
+        setSubmitting(false);
+      }
     }
   }
 
@@ -454,6 +567,20 @@ export function AdvancedElectricityOrderPage() {
   ];
   return (
     <main className="mx-auto max-w-4xl space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      {blocker.status === 'blocked' && (
+        <Suspense>
+          <LeaveDialog
+            working={saving || submitting}
+            workingLabel={t(
+              submitting ? 'electricity.order.submitting' : 'electricity.order.savingDraft',
+              locale
+            )}
+            onSave={() => saveDraft(false)}
+            onStay={() => blocker.reset()}
+            onLeave={() => blocker.proceed()}
+          />
+        </Suspense>
+      )}
       <header>
         <h1 className="text-2xl font-semibold">{t('electricity.advanced.title', locale)}</h1>
         <p className="text-sm text-muted-foreground">
@@ -472,271 +599,293 @@ export function AdvancedElectricityOrderPage() {
         submittingLabel={t('electricity.order.submitting', locale)}
         saving={saving}
         submitting={submitting}
-        saveDisabled={false}
-        nextDisabled={step === 1 ? !validPeriod : !quote}
-        submitDisabled={!quote || !selectedAddress || !validPeriod || submitting}
-        onBack={() => setStep((current) => Math.max(1, current - 1))}
+        saveDisabled={completed.current}
+        nextDisabled={
+          completed.current ||
+          (step === 1 ? !validPeriod : !quote || !validPeriod || !quantitiesValid || !!quoteError)
+        }
+        submitDisabled={
+          completed.current ||
+          !quote ||
+          !selectedAddress ||
+          !validPeriod ||
+          !quantitiesValid ||
+          !!quoteError ||
+          submitting
+        }
+        onBack={() => void saveDraft(false, step - 1)}
         onSave={() => void saveDraft(false)}
         onNext={() => void saveDraft(true)}
         onSubmit={() => void submit()}
       >
-        {step === 1 && (
-          <Card className="mb-6">
-            <CardContent className="space-y-4 pt-6">
-              <JalaliTimeInput
-                id="advanced-start"
-                label={t('electricity.advanced.start', locale)}
-                value={start}
-                onChange={setStart}
-              />
-              <JalaliTimeInput
-                id="advanced-end"
-                label={t('electricity.advanced.end', locale)}
-                value={end}
-                onChange={setEnd}
-              />
-              <p className="text-sm text-muted-foreground">
-                {t('electricity.advanced.limits', locale)}: {options.limits.leadTimeDays} /{' '}
-                {options.limits.maxContractDuration}
-              </p>
-              {validPeriod && (
-                <p className="text-sm">
-                  {t('electricity.advanced.duration', locale)}:{' '}
-                  {Math.floor(
-                    (new Date(endAt!).getTime() - new Date(startAt!).getTime()) / 3_600_000
-                  )}{' '}
-                  h{' '}
-                  {Math.floor(
-                    (new Date(endAt!).getTime() - new Date(startAt!).getTime()) / 60_000
-                  ) % 60}{' '}
-                  min
+        <fieldset className="min-w-0" disabled={saving || submitting || completed.current}>
+          <legend className="sr-only">{t('electricity.order.steps', locale)}</legend>
+          {step === 1 && (
+            <Card className="mb-6">
+              <CardContent className="space-y-4 pt-6">
+                <JalaliTimeInput
+                  id="advanced-start"
+                  label={t('electricity.advanced.start', locale)}
+                  value={start}
+                  onChange={setStart}
+                />
+                <JalaliTimeInput
+                  id="advanced-end"
+                  label={t('electricity.advanced.end', locale)}
+                  value={end}
+                  onChange={setEnd}
+                />
+                <p className="text-sm text-muted-foreground">
+                  {t('electricity.advanced.limits', locale)}: {options.limits.leadTimeDays} /{' '}
+                  {options.limits.maxContractDuration}
                 </p>
-              )}
-              {!validPeriod && (
-                <p role="alert" className="text-sm text-destructive">
-                  {t('electricity.advanced.invalidPeriod', locale)}
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        )}
-        {step === 2 && (
-          <Card className="mb-6">
-            <CardContent className="space-y-4 pt-6">
-              {products.map((product) => {
-                const locked = product.systemKey === 'green' && options.mandatoryGreenEnabled;
-                const unavailable =
-                  !product.orderable || product.status !== 'active' || !product.price;
-                const amount = quantities[product.systemKey];
-                return (
-                  <div key={product.systemKey} className="rounded-lg border p-4">
-                    <label htmlFor={`advanced-${product.systemKey}`} className="block font-medium">
-                      {product.title?.[locale] ??
-                        t(`electricity.catalogue.${product.systemKey}`, locale)}
-                    </label>
-                    <p className="text-xs text-muted-foreground">
-                      {product.price ? numbers.money(product.price) : '—'} / kWh ·
-                      {product.limits.minKwh}–
-                      {product.limits.maxKwh === '0' ? '∞' : product.limits.maxKwh} kWh
-                    </p>
+                {validPeriod && (
+                  <p className="text-sm">
+                    {t('electricity.advanced.duration', locale)}:{' '}
+                    {Math.floor(
+                      (new Date(endAt!).getTime() - new Date(startAt!).getTime()) / 3_600_000
+                    )}{' '}
+                    h{' '}
+                    {Math.floor(
+                      (new Date(endAt!).getTime() - new Date(startAt!).getTime()) / 60_000
+                    ) % 60}{' '}
+                    min
+                  </p>
+                )}
+                {!validPeriod && (
+                  <p role="alert" className="text-sm text-destructive">
+                    {t('electricity.advanced.invalidPeriod', locale)}
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          )}
+          {step === 2 && (
+            <Card className="mb-6">
+              <CardContent className="space-y-4 pt-6">
+                {products.map((product) => {
+                  const locked = product.systemKey === 'green' && options.mandatoryGreenEnabled;
+                  const unavailable =
+                    !product.orderable || product.status !== 'active' || !product.price;
+                  const amount = quantities[product.systemKey];
+                  return (
+                    <div key={product.systemKey} className="rounded-lg border p-4">
+                      <label
+                        htmlFor={`advanced-${product.systemKey}`}
+                        className="block font-medium"
+                      >
+                        {product.title?.[locale] ??
+                          t(`electricity.catalogue.${product.systemKey}`, locale)}
+                      </label>
+                      <p className="text-xs text-muted-foreground">
+                        {product.price ? numbers.money(product.price) : '—'} / kWh ·
+                        {product.limits.minKwh}–
+                        {product.limits.maxKwh === '0' ? '∞' : product.limits.maxKwh} kWh
+                      </p>
+                      <input
+                        id={`advanced-${product.systemKey}`}
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        className={`${fieldClass} mt-2`}
+                        value={
+                          locked
+                            ? (quote?.lines.find((line) => line.systemKey === 'green')
+                                ?.quantityKwh ?? '0')
+                            : amount
+                        }
+                        disabled={locked || unavailable}
+                        aria-readonly={locked}
+                        onChange={(event) => {
+                          if (/^\d{0,19}$/.test(event.target.value))
+                            setQuantities((current) => ({
+                              ...current,
+                              [product.systemKey]: event.target.value,
+                            }));
+                        }}
+                      />
+                      {locked && (
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {t('electricity.advanced.greenDerived', locale)}
+                        </p>
+                      )}
+                      {unavailable && (
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {t('electricity.catalogue.unavailable', locale)}
+                        </p>
+                      )}
+                      {quote?.lines.find((line) => line.systemKey === product.systemKey) && (
+                        <p className="mt-1 text-sm">
+                          {numbers.money(
+                            quote.lines.find((line) => line.systemKey === product.systemKey)!
+                              .subtotalIrR
+                          )}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+                {quoteError && <ElectricityQuoteErrorNotice message={quoteError} />}
+              </CardContent>
+            </Card>
+          )}
+          {step === 5 && (
+            <Card className="mb-6">
+              <CardContent className="space-y-3 pt-6">
+                <h2 className="font-semibold">{t('electricity.order.selectAddress', locale)}</h2>
+                {addresses.map((address) => (
+                  <label key={address.id} className="flex gap-3 rounded-lg border p-3">
                     <input
-                      id={`advanced-${product.systemKey}`}
-                      type="text"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      className={`${fieldClass} mt-2`}
-                      value={
-                        locked
-                          ? (quote?.lines.find((line) => line.systemKey === 'green')?.quantityKwh ??
-                            '0')
-                          : amount
-                      }
-                      disabled={locked || unavailable}
-                      aria-readonly={locked}
-                      onChange={(event) => {
-                        if (/^\d{0,19}$/.test(event.target.value))
-                          setQuantities((current) => ({
-                            ...current,
-                            [product.systemKey]: event.target.value,
-                          }));
-                      }}
+                      type="radio"
+                      name="advanced-address"
+                      checked={addressId === address.id}
+                      onChange={() => setAddressId(address.id)}
                     />
-                    {locked && (
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {t('electricity.advanced.greenDerived', locale)}
-                      </p>
-                    )}
-                    {unavailable && (
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {t('electricity.catalogue.unavailable', locale)}
-                      </p>
-                    )}
-                    {quote?.lines.find((line) => line.systemKey === product.systemKey) && (
-                      <p className="mt-1 text-sm">
-                        {numbers.money(
-                          quote.lines.find((line) => line.systemKey === product.systemKey)!
-                            .subtotalIrR
-                        )}
-                      </p>
-                    )}
-                  </div>
-                );
-              })}
-              {quoteError && <ElectricityQuoteErrorNotice message={quoteError} />}
-            </CardContent>
-          </Card>
-        )}
-        {step === 5 && (
-          <Card className="mb-6">
-            <CardContent className="space-y-3 pt-6">
-              <h2 className="font-semibold">{t('electricity.order.selectAddress', locale)}</h2>
-              {addresses.map((address) => (
-                <label key={address.id} className="flex gap-3 rounded-lg border p-3">
-                  <input
-                    type="radio"
-                    name="advanced-address"
-                    checked={addressId === address.id}
-                    onChange={() => setAddressId(address.id)}
-                  />
-                  <span>
-                    {address.fullAddress} · {address.postalCode}
-                  </span>
-                </label>
-              ))}
-              <Button
-                type="button"
-                variant="link"
-                className="px-0 text-sm"
-                disabled={saving}
-                onClick={() => void openAddresses()}
-              >
-                {t('electricity.order.addAddress', locale)}
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-        {(step === 3 || step === 4 || step === 5) && (
-          <Card className="mb-6">
-            <CardContent className="space-y-4 pt-6">
-              {step === 4 && (
-                <label className="block text-sm">
-                  {t('electricity.order.giftCode', locale)}
-                  <input
-                    className={fieldClass}
-                    value={giftCode}
-                    maxLength={100}
-                    onChange={(event) => setGiftCode(event.target.value)}
-                  />
-                </label>
-              )}
-              {quoteError && <ElectricityQuoteErrorNotice message={quoteError} />}
-              {!quote ? (
-                !quoteError && (
-                  <p role={validPeriod && quantitiesValid ? 'status' : 'alert'}>
-                    {validPeriod
-                      ? quantitiesValid
-                        ? t('electricity.order.previewLoading', locale)
-                        : t('electricity.order.quantityInvalid', locale)
-                      : t('electricity.advanced.invalidPeriod', locale)}
-                  </p>
-                )
-              ) : (
-                <>
-                  <p>
-                    {t('electricity.order.period.selection', locale)}: {start} – {end}
-                  </p>
-                  <p>
-                    {t('electricity.order.quantity', locale)}: {numbers.irrDigits(quote.totalKwh)}{' '}
-                    kWh ·{t('electricity.order.averagePower', locale)}: {quote.averagePowerKw} kW ·{' '}
-                    {quote.durationHours} h
-                  </p>
-                  {quote.greenRuleApplies && <p>{t('electricity.order.mandatoryGreen', locale)}</p>}
-                  {step === 5 ? (
-                    <ElectricityFinancialReviewSummary
-                      quote={quote}
-                      locale={locale}
-                      formatMoney={numbers.money}
-                      formatQuantity={numbers.irrDigits}
+                    <span>
+                      {address.fullAddress} · {address.postalCode}
+                    </span>
+                  </label>
+                ))}
+                <Button
+                  type="button"
+                  variant="link"
+                  className="px-0 text-sm"
+                  disabled={saving}
+                  onClick={() => void openAddresses()}
+                >
+                  {t('electricity.order.addAddress', locale)}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+          {(step === 3 || step === 4 || step === 5) && (
+            <Card className="mb-6">
+              <CardContent className="space-y-4 pt-6">
+                {step === 4 && (
+                  <label className="block text-sm">
+                    {t('electricity.order.giftCode', locale)}
+                    <input
+                      className={fieldClass}
+                      value={giftCode}
+                      maxLength={100}
+                      onChange={(event) => setGiftCode(event.target.value)}
                     />
-                  ) : (
-                    <>
-                      {quote.lines.map((line) => (
-                        <div key={line.systemKey} className="border-b py-2 text-sm">
-                          <div className="flex flex-wrap justify-between gap-2">
-                            <span>
-                              {t(`electricity.catalogue.${line.systemKey}`, locale)} ·{' '}
-                              {numbers.irrDigits(line.quantityKwh)} kWh ×{' '}
-                              {numbers.money(line.unitPriceIrR)}
-                            </span>
-                            <strong>
-                              {t('electricity.order.lineTotal', locale)}:{' '}
-                              {numbers.money(line.totalIrR)}
-                            </strong>
+                  </label>
+                )}
+                {quoteError && <ElectricityQuoteErrorNotice message={quoteError} />}
+                {!quote ? (
+                  !quoteError && (
+                    <p role={validPeriod && quantitiesValid ? 'status' : 'alert'}>
+                      {validPeriod
+                        ? quantitiesValid
+                          ? t('electricity.order.previewLoading', locale)
+                          : t('electricity.order.quantityInvalid', locale)
+                        : t('electricity.advanced.invalidPeriod', locale)}
+                    </p>
+                  )
+                ) : (
+                  <>
+                    <p>
+                      {t('electricity.order.period.selection', locale)}: {start} – {end}
+                    </p>
+                    <p>
+                      {t('electricity.order.quantity', locale)}: {numbers.irrDigits(quote.totalKwh)}{' '}
+                      kWh ·{t('electricity.order.averagePower', locale)}: {quote.averagePowerKw} kW
+                      · {quote.durationHours} h
+                    </p>
+                    {quote.greenRuleApplies && (
+                      <p>{t('electricity.order.mandatoryGreen', locale)}</p>
+                    )}
+                    {step === 5 ? (
+                      <ElectricityFinancialReviewSummary
+                        quote={quote}
+                        locale={locale}
+                        formatMoney={numbers.money}
+                        formatQuantity={numbers.irrDigits}
+                      />
+                    ) : (
+                      <>
+                        {quote.lines.map((line) => (
+                          <div key={line.systemKey} className="border-b py-2 text-sm">
+                            <div className="flex flex-wrap justify-between gap-2">
+                              <span>
+                                {t(`electricity.catalogue.${line.systemKey}`, locale)} ·{' '}
+                                {numbers.irrDigits(line.quantityKwh)} kWh ×{' '}
+                                {numbers.money(line.unitPriceIrR)}
+                              </span>
+                              <strong>
+                                {t('electricity.order.lineTotal', locale)}:{' '}
+                                {numbers.money(line.totalIrR)}
+                              </strong>
+                            </div>
+                            <p className="text-muted-foreground">
+                              {numbers.money(line.subtotalIrR)} · −{numbers.money(line.discountIrR)}{' '}
+                              · +{numbers.money(line.vatIrR)}
+                            </p>
                           </div>
-                          <p className="text-muted-foreground">
-                            {numbers.money(line.subtotalIrR)} · −{numbers.money(line.discountIrR)} ·
-                            +{numbers.money(line.vatIrR)}
-                          </p>
+                        ))}
+                        <p>
+                          {t('electricity.order.discount', locale)}:{' '}
+                          {numbers.money(quote.discountIrR)}
+                        </p>
+                        <p>
+                          {t('electricity.order.vat', locale)}: {numbers.money(quote.vatIrR)}
+                        </p>
+                        <p className="font-semibold">
+                          {t('electricity.order.total', locale)}: {numbers.money(quote.totalIrR)}
+                        </p>
+                      </>
+                    )}
+                    <p>
+                      {t('electricity.order.walletBalance', locale)}:{' '}
+                      {numbers.money(quote.walletBalanceIrR)}
+                    </p>
+                    {step === 5 && (
+                      <WalletFundingPrompt
+                        balance={quote.walletBalanceIrR}
+                        total={quote.totalIrR}
+                      />
+                    )}
+                    {step === 5 && (
+                      <>
+                        <p>
+                          {t('electricity.order.profile', locale)}:{' '}
+                          <strong dir="auto">{profileName || profileId}</strong>
+                          {profileName ? (
+                            <small className="ms-2 text-muted-foreground" dir="ltr">
+                              {profileId}
+                            </small>
+                          ) : null}
+                        </p>
+                        <p>
+                          {t('electricity.order.giftCode', locale)}: {giftCode.trim() || '—'}
+                        </p>
+                        <p>
+                          {t('electricity.order.deliveryAddress', locale)}:{' '}
+                          {selectedAddress?.fullAddress}
+                        </p>
+                        <p>
+                          {t('electricity.order.postalCode', locale)}: {selectedAddress?.postalCode}
+                        </p>
+                        <div className="space-y-2 border-t pt-4 text-sm text-muted-foreground">
+                          <h3 className="font-medium text-foreground">
+                            {t('electricity.order.contractPreview', locale)}
+                          </h3>
+                          <ElectricityContractTerms template={quote?.contractTemplate} />
+                          <h3 className="font-medium text-foreground">
+                            {t('electricity.order.cancellationRules', locale)}
+                          </h3>
+                          <p>{t('electricity.order.cancellationRulesText', locale)}</p>
+                          <p>{t('electricity.order.paymentAfterSubmit', locale)}</p>
                         </div>
-                      ))}
-                      <p>
-                        {t('electricity.order.discount', locale)}:{' '}
-                        {numbers.money(quote.discountIrR)}
-                      </p>
-                      <p>
-                        {t('electricity.order.vat', locale)}: {numbers.money(quote.vatIrR)}
-                      </p>
-                      <p className="font-semibold">
-                        {t('electricity.order.total', locale)}: {numbers.money(quote.totalIrR)}
-                      </p>
-                    </>
-                  )}
-                  <p>
-                    {t('electricity.order.walletBalance', locale)}:{' '}
-                    {numbers.money(quote.walletBalanceIrR)}
-                  </p>
-                  {step === 5 && (
-                    <WalletFundingPrompt balance={quote.walletBalanceIrR} total={quote.totalIrR} />
-                  )}
-                  {step === 5 && (
-                    <>
-                      <p>
-                        {t('electricity.order.profile', locale)}:{' '}
-                        <strong dir="auto">{profileName || profileId}</strong>
-                        {profileName ? (
-                          <small className="ms-2 text-muted-foreground" dir="ltr">
-                            {profileId}
-                          </small>
-                        ) : null}
-                      </p>
-                      <p>
-                        {t('electricity.order.giftCode', locale)}: {giftCode.trim() || '—'}
-                      </p>
-                      <p>
-                        {t('electricity.order.deliveryAddress', locale)}:{' '}
-                        {selectedAddress?.fullAddress}
-                      </p>
-                      <p>
-                        {t('electricity.order.postalCode', locale)}: {selectedAddress?.postalCode}
-                      </p>
-                      <div className="space-y-2 border-t pt-4 text-sm text-muted-foreground">
-                        <h3 className="font-medium text-foreground">
-                          {t('electricity.order.contractPreview', locale)}
-                        </h3>
-                        <ElectricityContractTerms template={quote?.contractTemplate} />
-                        <h3 className="font-medium text-foreground">
-                          {t('electricity.order.cancellationRules', locale)}
-                        </h3>
-                        <p>{t('electricity.order.cancellationRulesText', locale)}</p>
-                        <p>{t('electricity.order.paymentAfterSubmit', locale)}</p>
-                      </div>
-                    </>
-                  )}
-                </>
-              )}
-            </CardContent>
-          </Card>
-        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          )}
+        </fieldset>
       </FormWizard>
     </main>
   );

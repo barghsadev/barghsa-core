@@ -14,7 +14,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import type { useOnboardingDraft } from '../hooks/useOnboardingDraft.js';
 import { FormWizard } from './FormWizard.js';
 
-const LeaveDialog = lazy(() => import('./OnboardingLeaveDialog.js'));
+const LeaveDialog = lazy(() => import('./WizardLeaveDialog.js'));
 
 interface Props {
   steps: { label: string; content: ReactNode; validate?: () => boolean }[];
@@ -119,7 +119,13 @@ export function OnboardingWizard({
       {blocker.status === 'blocked' && (
         <Suspense>
           <LeaveDialog
-            draft={draft}
+            onSave={async () => (await draft.flush()) !== undefined && !draft.hasUnsavedChanges()}
+            saveDisabled={!draft.ready || draft.status === 'conflict'}
+            errorMessage={
+              draft.status === 'error' || draft.status === 'conflict'
+                ? t(`onboarding.draft.${draft.status}`, locale)
+                : undefined
+            }
             working={submitting || working || saving || draft.status === 'saving'}
             workingLabel={t(
               submitting

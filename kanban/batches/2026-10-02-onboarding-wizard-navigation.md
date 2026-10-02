@@ -25,6 +25,8 @@ The dialog reuses existing Persian/English dictionary strings and theme tokens, 
 
 ## Publication and remaining work
 
+The published onboarding commit `1fe1d60a16263ef6d8f3f5e746d96eae52fe3623` now passes all five exact-commit CI jobs in [run37020452010](https://github.com/barghsadev/barghsa-core/actions/runs/37020452010). The following [electricity batch](2026-10-02-electricity-wizard-navigation.md) completes the simple/advanced order portions and generalizes the shared leave dialog.
+
 The preceding invitation commit `452799835f04f691d8f45b37b02bf830ee39a206` has all five exact-commit CI jobs passing in [run37016947392](https://github.com/barghsadev/barghsa-core/actions/runs/37016947392).
 
 This is a manual batch committed and pushed directly to main, as requested. No PR, scheduler, historical supervisor snapshot, external state or generated completion/event ledger is changed. No migration is needed. Exact new CI is read back after publication; pending CI is reported as pending.

@@ -4,12 +4,31 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { t } from '@barghsa/i18n/app';
 import { AdvancedElectricityOrderPage } from './AdvancedElectricityOrderPage.js';
 
-const navigateMock = vi.hoisted(() => vi.fn(async () => {}));
+const navigateMock = vi.hoisted(() => vi.fn(async (_options: unknown) => {}));
+const wizardNavigate = async (options: {
+  to: string;
+  search?: { step?: number };
+  params?: unknown;
+  replace?: boolean;
+}) => {
+  if (options.to === '/electricity/advanced') {
+    window.history[options.replace ? 'replaceState' : 'pushState'](
+      {},
+      '',
+      `${options.to}?step=${options.search?.step}`
+    );
+  } else await navigateMock(options);
+};
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
     <a href={to}>{children}</a>
   ),
-  useNavigate: () => navigateMock,
+  useNavigate: () => wizardNavigate,
+  useBlocker: () => ({ status: 'idle' }),
+  useSearch: ({ select }: { select: (search: { step?: number }) => unknown }) => {
+    const step = new URLSearchParams(window.location.search).get('step');
+    return select(step === null ? {} : { step: Number(step) });
+  },
 }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: String, irrDigits: String }),
@@ -37,6 +56,8 @@ let step: number;
 let quantities: Record<string, string>;
 let bootstrapLoadFailures: number;
 let draftLoadFailures: number;
+let draftReply: (input: object) => Promise<Response>;
+let orderReply: (() => Promise<Response>) | null;
 let savedStepOverride: number | null;
 let quoteSuccess: boolean;
 let contractTemplate: { name: string; versionNumber: number; text: string } | null;
@@ -58,6 +79,7 @@ let quoteErrorDetails: Array<{
 }>;
 
 beforeEach(() => {
+  window.history.replaceState({}, '', '/electricity/advanced');
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   navigateMock.mockClear();
@@ -66,6 +88,8 @@ beforeEach(() => {
   bootstrapLoadFailures = 0;
   draftLoadFailures = 0;
   savedStepOverride = null;
+  draftReply = async (input) => reply(input);
+  orderReply = null;
   quoteSuccess = false;
   contractTemplate = null;
   orderConflict = false;
@@ -104,7 +128,7 @@ beforeEach(() => {
       const saved = JSON.parse((init?.body as string) ?? '{}') as {
         currentStep: number;
       };
-      return reply({ currentStep: savedStepOverride ?? saved.currentStep });
+      return draftReply({ ...saved, currentStep: savedStepOverride ?? saved.currentStep });
     }
     if (url === '/api/electricity/preview/advanced')
       return quoteSuccess
@@ -143,9 +167,18 @@ beforeEach(() => {
             400
           );
     if (url === '/api/electricity/orders/advanced' && init?.method === 'POST')
-      return orderConflict
-        ? reply({ message: 'Changed' }, 409)
-        : reply({ orderId: 'order-1' }, 201);
+      return orderReply
+        ? orderReply()
+        : orderConflict
+          ? reply({ message: 'Changed' }, 409)
+          : reply(
+              {
+                orderId: '11111111-1111-4111-8111-111111111111',
+                contractId: '22222222-2222-4222-8222-222222222222',
+                invoiceId: '33333333-3333-4333-8333-333333333333',
+              },
+              201
+            );
     throw new Error(`Unexpected request: ${url}`);
   });
   vi.stubGlobal('fetch', fetchMock);
@@ -336,4 +369,107 @@ it('refreshes the advanced contract terms after a submission conflict', async ()
   expect(
     fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/preview/advanced')
   ).toHaveLength(2);
+});
+
+it('does not advance when the saved bundle differs from the reviewed quantities', async () => {
+  step = 2;
+  quantities = { thermal: '100', green: '0', free_market: '0', energy_saving: '0' };
+  quoteSuccess = true;
+  draftReply = async (input) => reply({ ...input, data: { quantities: { thermal: '101' } } });
+  await mount();
+  await settlePreview();
+  const next = [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === t('electricity.order.next', 'en')
+  )!;
+  await act(async () => next.click());
+  expect(window.location.search).toBe('?step=2');
+  expect(container.querySelector<HTMLInputElement>('#advanced-thermal')?.value).toBe('100');
+});
+
+it('sends one submission and retains its key until all order references are confirmed', async () => {
+  step = 5;
+  quantities = { thermal: '100', green: '0', free_market: '0', energy_saving: '0' };
+  quoteSuccess = true;
+  addresses = [
+    {
+      id: 'address-1',
+      provinceId: 'province-1',
+      cityId: 'city-1',
+      fullAddress: 'Example Street',
+      postalCode: '1234567890',
+      mainAddress: true,
+    },
+  ];
+  let finish!: (value: Response) => void;
+  orderReply = () =>
+    new Promise((resolve) => {
+      finish = resolve;
+    });
+  await mount();
+  await settlePreview();
+  const submit = () =>
+    [...container.querySelectorAll('button')].find(
+      (button) => button.textContent === t('electricity.order.submit', 'en')
+    )!;
+  await act(async () => {
+    submit().click();
+    submit().click();
+  });
+  const orderCalls = () =>
+    fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/orders/advanced');
+  expect(orderCalls()).toHaveLength(1);
+  expect(container.querySelector('fieldset')?.disabled).toBe(true);
+  await act(async () => finish(reply({ orderId: '11111111-1111-4111-8111-111111111111' }, 201)));
+  expect(navigateMock).not.toHaveBeenCalled();
+  expect(submit().disabled).toBe(false);
+  orderReply = null;
+  await act(async () => submit().click());
+  expect(JSON.parse(orderCalls()[1]![1]!.body as string).idempotencyKey).toBe(
+    JSON.parse(orderCalls()[0]![1]!.body as string).idempotencyKey
+  );
+  expect(navigateMock).toHaveBeenCalledWith({
+    to: '/electricity/orders/$orderId',
+    params: { orderId: '11111111-1111-4111-8111-111111111111' },
+  });
+});
+
+it('ignores an order receipt after the advanced form has unmounted', async () => {
+  step = 5;
+  quantities = { thermal: '100', green: '0', free_market: '0', energy_saving: '0' };
+  quoteSuccess = true;
+  addresses = [
+    {
+      id: 'address-1',
+      provinceId: 'province-1',
+      cityId: 'city-1',
+      fullAddress: 'Example Street',
+      postalCode: '1234567890',
+      mainAddress: true,
+    },
+  ];
+  let finish!: (value: Response) => void;
+  orderReply = () =>
+    new Promise((resolve) => {
+      finish = resolve;
+    });
+  await mount();
+  await settlePreview();
+  const submit = [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === t('electricity.order.submit', 'en')
+  )!;
+  await act(async () => submit.click());
+  await act(async () => root.render(null));
+  await act(async () =>
+    finish(
+      reply(
+        {
+          orderId: '11111111-1111-4111-8111-111111111111',
+          contractId: '22222222-2222-4222-8222-222222222222',
+          invoiceId: '33333333-3333-4333-8333-333333333333',
+        },
+        201
+      )
+    )
+  );
+  expect(navigateMock).not.toHaveBeenCalled();
 });

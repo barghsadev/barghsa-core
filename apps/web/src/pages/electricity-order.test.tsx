@@ -5,12 +5,30 @@ import { t } from '@barghsa/i18n/app';
 import { Route } from '../routes/_app/electricity/order.js';
 
 const notices = vi.hoisted(() => ({ error: vi.fn(), success: vi.fn() }));
-const navigate = vi.hoisted(() => vi.fn(async () => {}));
-vi.mock('sonner', () => ({ toast: notices }));
+const navigate = vi.hoisted(() => vi.fn(async (_options: unknown) => {}));
+const wizardNavigate = async (options: {
+  to: string;
+  search?: { step?: number };
+  params?: unknown;
+  replace?: boolean;
+}) => {
+  if (options.to === '/electricity/order') {
+    window.history[options.replace ? 'replaceState' : 'pushState'](
+      {},
+      '',
+      `${options.to}?step=${options.search?.step}`
+    );
+  } else await navigate(options);
+};
+vi.mock('../lib/toast-api.js', () => ({ toast: notices }));
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (options: unknown) => ({ options }),
   useBlocker: () => ({ status: 'idle' }),
-  useNavigate: () => navigate,
+  useNavigate: () => wizardNavigate,
+  useSearch: ({ select }: { select: (search: { step?: number }) => unknown }) => {
+    const step = new URLSearchParams(window.location.search).get('step');
+    return select(step === null ? {} : { step: Number(step) });
+  },
 }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: String, number: String, irrDigits: String }),
@@ -61,7 +79,12 @@ const quote = {
   vatIrR: '0',
   totalIrR: '2500000',
 };
-const saved = { orderId: 'order-1', contractId: 'contract-1', invoiceId: 'invoice-1', ...quote };
+const saved = {
+  orderId: '11111111-1111-4111-8111-111111111111',
+  contractId: '22222222-2222-4222-8222-222222222222',
+  invoiceId: '33333333-3333-4333-8333-333333333333',
+  ...quote,
+};
 const periods = [
   { key: 'current_month', start: '2026-09-23T00:00:00.000Z', end: '2026-09-30T20:30:00.000Z' },
   { key: 'next_month', start: '2026-09-30T20:30:00.000Z', end: '2026-10-30T20:30:00.000Z' },
@@ -79,6 +102,7 @@ let container: HTMLDivElement;
 let root: Root;
 let fetchMock: ReturnType<typeof vi.fn<typeof fetch>>;
 let orderReply: () => Promise<Response>;
+let draftReply: (input: typeof draft) => Promise<Response>;
 let previewReply: () => Promise<Response>;
 let billDataReply: () => Promise<Response>;
 let catalogue: unknown;
@@ -92,6 +116,7 @@ beforeEach(() => {
   catalogue = [product];
   draft = { currentStep: 1, data: null };
   orderReply = async () => response(saved, 201);
+  draftReply = async (input) => response(input);
   previewReply = async () => response(quote);
   billDataReply = async () =>
     response({ available: false, reason: 'unconfigured', manualEntryAllowed: true });
@@ -115,7 +140,7 @@ beforeEach(() => {
     if (url === `/api/electricity/drafts/simple?profileId=${profileId}`) return response(draft);
     if (url === '/api/electricity/drafts/simple' && init?.method === 'PUT') {
       draft = JSON.parse(init.body as string);
-      return response(draft);
+      return draftReply(draft);
     }
     if (url === `/api/wallet/${profileId}`) return response({ balance: '500000', currency: 'IRR' });
     if (url.startsWith(`/api/electricity/bill-data/${profileId}`)) return billDataReply();
@@ -134,7 +159,12 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 
-const mount = () => act(async () => root.render(<Page />));
+const mount = async () => {
+  await act(async () => root.render(<Page />));
+  await act(async () => {
+    await import('../components/SimpleElectricityReview.js');
+  });
+};
 const submit = () =>
   [...container.querySelectorAll('button')].find(
     (button) => button.textContent === t('electricity.order.submit', 'en')
@@ -291,6 +321,7 @@ it('retries a failed submission with the same idempotency key', async () => {
   await act(async () => submit().click());
   const first = JSON.parse(orderCalls()[0]![1]!.body as string);
   orderReply = async () => response(saved, 201);
+  draftReply = async (input) => response(input);
   await act(async () => submit().click());
   const second = JSON.parse(orderCalls()[1]![1]!.body as string);
   expect(second.idempotencyKey).toBe(first.idempotencyKey);
@@ -333,4 +364,77 @@ it('saves an unfinished first step and restores it from a direct URL', async () 
   expect(container.querySelector<HTMLSelectElement>('#electricity-period')?.value).toBe(
     'next_week'
   );
+});
+
+it('keeps the current fields when the server confirms a different saved quantity', async () => {
+  draft = { currentStep: 2, data: { period: 'next_week', totalKwh: '10' } };
+  draftReply = async (input) => response({ ...input, data: { ...input.data, totalKwh: '11' } });
+  await mount();
+  await settlePreview();
+  expect(next().disabled).toBe(false);
+  await advance();
+  expect(
+    fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/drafts/simple')
+  ).toHaveLength(1);
+  expect(window.location.search).toBe('?step=2');
+  expect(container.querySelector<HTMLInputElement>('#electricity-kwh')?.value).toBe('10');
+  expect(notices.error).toHaveBeenCalledWith(t('electricity.order.draftSaveFailed', 'en'));
+});
+
+it('freezes the draft snapshot and sends one save until confirmation arrives', async () => {
+  draft = { currentStep: 2, data: { period: 'next_week', totalKwh: '10' } };
+  let finish!: (value: Response) => void;
+  draftReply = () =>
+    new Promise((resolve) => {
+      finish = resolve;
+    });
+  await mount();
+  await settlePreview();
+  await act(async () => {
+    next().click();
+    next().click();
+  });
+  expect(
+    fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/drafts/simple')
+  ).toHaveLength(1);
+  expect(container.querySelector('fieldset')?.disabled).toBe(true);
+  await act(async () => finish(response(draft)));
+  expect(window.location.search).toBe('?step=3');
+});
+
+it('retains the submission key when a success response has invalid order references', async () => {
+  draft = { currentStep: 5, data: { period: 'next_week', totalKwh: '10' } };
+  orderReply = async () => response({ ...saved, contractId: '' }, 201);
+  await mount();
+  await settlePreview();
+  await act(async () => submit().click());
+  expect(navigate).not.toHaveBeenCalled();
+  expect(submit().disabled).toBe(false);
+  const first = JSON.parse(orderCalls()[0]![1]!.body as string);
+  orderReply = async () => response(saved, 201);
+  await act(async () => submit().click());
+  const second = JSON.parse(orderCalls()[1]![1]!.body as string);
+  expect(second.idempotencyKey).toBe(first.idempotencyKey);
+  expect(navigate).toHaveBeenCalledWith({
+    to: '/electricity/orders/$orderId',
+    params: { orderId: saved.orderId },
+  });
+});
+
+it('ignores a draft acknowledgement after the order form has unmounted', async () => {
+  draft = { currentStep: 2, data: { period: 'next_week', totalKwh: '10' } };
+  let finish!: (value: Response) => void;
+  draftReply = () =>
+    new Promise((resolve) => {
+      finish = resolve;
+    });
+  await mount();
+  await act(async () => next().click());
+  expect(
+    fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/drafts/simple')
+  ).toHaveLength(1);
+  await act(async () => root.render(null));
+  await act(async () => finish(response(draft)));
+  expect(window.location.search).toBe('?step=2');
+  expect(navigate).not.toHaveBeenCalled();
 });

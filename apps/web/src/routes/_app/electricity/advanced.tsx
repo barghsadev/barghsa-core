@@ -3,6 +3,7 @@ import { AdvancedElectricityOrderPage } from '../../../pages/AdvancedElectricity
 import { MaintenanceBoundary } from '../../../components/MaintenanceNotice.js';
 
 export const Route = createFileRoute('/_app/electricity/advanced')({
+  validateSearch: (search): { step?: unknown } => ({ step: search.step }),
   component: () => (
     <MaintenanceBoundary capability="electricity_checkout">
       <AdvancedElectricityOrderPage />
