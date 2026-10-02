@@ -250,6 +250,73 @@ async function open(page: Page, mode: Mode, locale: Locale) {
   }
   await expect(input(page, mode, locale)).toBeVisible();
 }
+
+for (const locale of ['en', 'fa'] as const)
+  test(`saving dependent address recovery validates the saved city acknowledgement (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, 'saving', locale);
+    const provinceId = '77777777-7777-4777-8777-777777777777';
+    const cityId = '88888888-8888-4888-8888-888888888888';
+    let valid = false;
+    const writes: Record<string, unknown>[] = [];
+    await page.route('**/api/geography/provinces', (route) =>
+      route.fulfill({ json: [{ id: provinceId, nameFa: 'تهران', nameEn: 'Tehran' }] })
+    );
+    await page.route(`**/api/geography/provinces/${provinceId}/cities`, (route) =>
+      route.fulfill({
+        status: valid ? 200 : 503,
+        json: [{ id: cityId, provinceId, nameFa: 'تهران', nameEn: 'Tehran' }],
+      })
+    );
+    await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
+      if (route.request().method() !== 'POST') return route.fallback();
+      const body = route.request().postDataJSON();
+      writes.push(body);
+      return route.fulfill({
+        json: {
+          id: receiptId,
+          ...body,
+          cityId: writes.length === 1 ? 'wrong-city' : cityId,
+          mainAddress: false,
+        },
+      });
+    });
+    await open(page, 'saving', locale);
+    await button(page, 'electricity.order.next', locale).click();
+    await page.getByRole('button', { name: tSaving('newAddress', locale), exact: true }).click();
+    await page.locator('#saving-address-province').selectOption(provinceId);
+    const city = page.locator('#saving-address-city');
+    await expect(page.getByTestId('saving-address-city-retry')).toBeVisible();
+    await expect(city).toBeDisabled();
+    await page
+      .getByLabel(tSaving('fullAddress', locale), { exact: true })
+      .fill('Retained new address');
+    await page.getByLabel(tSaving('postalCode', locale), { exact: true }).fill('2345678901');
+    const save = page.getByRole('button', { name: tSaving('saveAddress', locale), exact: true });
+    await expect(save).toBeDisabled();
+    valid = true;
+    await page.getByTestId('saving-address-city-retry').click();
+    await city.selectOption(cityId);
+    await save.click();
+    await expect.poll(() => writes.length).toBe(1);
+    await expect(page.getByLabel(tSaving('fullAddress', locale), { exact: true })).toHaveValue(
+      'Retained new address'
+    );
+    await expect(button(page, 'electricity.order.next', locale)).toBeDisabled();
+    await save.click();
+    await expect(page.locator('#saving-address-city')).toHaveCount(0);
+    await expect(page.locator('main')).toContainText('Retained new address');
+    expect(writes).toEqual(
+      Array(2).fill({
+        provinceId,
+        cityId,
+        fullAddress: 'Retained new address',
+        postalCode: '2345678901',
+      })
+    );
+    expect(state.orders).toHaveLength(0);
+  });
 async function leave(page: Page, mode: Mode) {
   await page
     .locator(`main a[href="${mode === 'saving' ? '/savings' : '/solar/requests'}"]`)

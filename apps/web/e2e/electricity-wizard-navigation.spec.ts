@@ -41,6 +41,59 @@ const path = (mode: Mode) => (mode === 'simple' ? '/electricity/order' : '/elect
 const field = (page: Page, mode: Mode) =>
   page.locator(mode === 'simple' ? '#electricity-kwh' : '#advanced-thermal');
 
+for (const locale of ['en', 'fa'] as const)
+  test(`simple electricity dependent address recovery keeps the draft city (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, 'simple', locale, 4);
+    const provinceId = '99999999-9999-4999-8999-999999999999';
+    const cityId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    let valid = false;
+    const writes: Record<string, unknown>[] = [];
+    await page.route('**/api/geography/provinces', (route) =>
+      route.fulfill({ json: [{ id: provinceId, nameFa: 'فارس', nameEn: 'Fars' }] })
+    );
+    await page.route(`**/api/geography/provinces/${provinceId}/cities`, (route) =>
+      route.fulfill({
+        status: valid ? 200 : 503,
+        json: [{ id: cityId, provinceId, nameFa: 'شیراز', nameEn: 'Shiraz' }],
+      })
+    );
+    await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
+      if (route.request().method() !== 'POST') return route.fallback();
+      const body = route.request().postDataJSON();
+      writes.push(body);
+      return route.fulfill({
+        json: { id: receipt.invoiceId, profileId, ...body, mainAddress: false },
+      });
+    });
+    await page.goto('/electricity/order?step=4');
+    await page
+      .getByRole('button', { name: t('electricity.order.addNewAddress', locale), exact: true })
+      .click();
+    await page.locator('#order-address-province').selectOption(provinceId);
+    const city = page.locator('#order-address-city');
+    await expect(city).toBeDisabled();
+    const error = page
+      .getByRole('alert')
+      .filter({ hasText: t('electricity.order.cityLoadFailed', locale) });
+    await expect(error).toBeVisible();
+    await page.locator('#order-address-fullAddress').fill('Retained power address');
+    await page.locator('#order-address-postalCode').fill('2345678901');
+    valid = true;
+    await error.getByRole('button').click();
+    await city.selectOption(cityId);
+    await expect(page.locator('#order-address-fullAddress')).toHaveValue('Retained power address');
+    await page
+      .getByRole('button', { name: t('electricity.order.saveAndUse', locale), exact: true })
+      .click();
+    await expect(city).toHaveCount(0);
+    expect(writes).toEqual([
+      { provinceId, cityId, fullAddress: 'Retained power address', postalCode: '2345678901' },
+    ]);
+    expect(state.orders).toHaveLength(0);
+  });
+
 async function fixture(page: Page, mode: Mode, locale: Locale, step = 2) {
   const state = {
     draft: {

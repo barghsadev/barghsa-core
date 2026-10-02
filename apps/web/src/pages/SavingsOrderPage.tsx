@@ -2,7 +2,9 @@ import { StepReviewPage } from '../components/StepReviewPage.js';
 import { FormWizard } from '../components/FormWizard.js';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Card, CardContent, FinancialReviewSummary } from '@barghsa/ui';
+import { Button, Card, CardContent, FinancialReviewSummary, DependentSelect } from '@barghsa/ui';
+import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
+import { GeographyLoadError } from '../components/GeographyLoadError.js';
 import { t } from '@barghsa/i18n/app';
 import { useWizardStep } from '../hooks/useWizardStep.js';
 import { useWizardDraftProtection } from '../hooks/useWizardDraftProtection.js';
@@ -31,14 +33,11 @@ interface Plan extends Product {
 }
 interface Address {
   id: string;
+  provinceId: string;
+  cityId: string;
   fullAddress: string;
   postalCode: string;
   mainAddress: boolean;
-}
-interface Geography {
-  id: string;
-  nameFa: string;
-  nameEn: string;
 }
 interface Quote {
   reviewDigest: string;
@@ -120,10 +119,22 @@ export function SavingsOrderPage() {
   const [duplicateRevision, setDuplicateRevision] = useState(0);
   const [addressId, setAddressId] = useState('');
   const [addingAddress, setAddingAddress] = useState(false);
-  const [provinces, setProvinces] = useState<Geography[]>([]);
-  const [cities, setCities] = useState<Geography[]>([]);
   const [provinceId, setProvinceId] = useState('');
   const [cityId, setCityId] = useState('');
+  const provinceOptions = useGeographyOptions(addingAddress ? '/api/geography/provinces' : null);
+  const cityOptions = useGeographyOptions(
+    addingAddress && provinceId
+      ? `/api/geography/provinces/${encodeURIComponent(provinceId)}/cities`
+      : null,
+    provinceId || undefined
+  );
+  const provinces = provinceOptions.options;
+  const cities = cityOptions.options;
+  const addressLocationReady =
+    provinceOptions.ready &&
+    cityOptions.ready &&
+    provinces.some((province) => province.id === provinceId) &&
+    cities.some((city) => city.id === cityId);
   const [fullAddress, setFullAddress] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [savingAddress, setSavingAddress] = useState(false);
@@ -263,50 +274,10 @@ export function SavingsOrderPage() {
     await protection.save(step + 1);
   }
 
-  useEffect(() => {
-    if (!addingAddress) return;
-    const controller = new AbortController();
-    void fetch('/api/geography/provinces', { signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Geography unavailable');
-        const rows: unknown = await response.json();
-        if (!Array.isArray(rows)) throw new Error('Invalid geography');
-        return rows as Geography[];
-      })
-      .then((rows) => {
-        if (!controller.signal.aborted) setProvinces(rows);
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setAddressError(true);
-      });
-    return () => controller.abort();
-  }, [addingAddress]);
-  useEffect(() => {
-    setCities([]);
-    setCityId('');
-    if (!provinceId) return;
-    const controller = new AbortController();
-    void fetch(`/api/geography/provinces/${provinceId}/cities`, { signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Geography unavailable');
-        const rows: unknown = await response.json();
-        if (!Array.isArray(rows)) throw new Error('Invalid geography');
-        return rows as Geography[];
-      })
-      .then((rows) => {
-        if (!controller.signal.aborted) setCities(rows);
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setAddressError(true);
-      });
-    return () => controller.abort();
-  }, [provinceId]);
-
   async function saveAddress() {
     if (
       !profileId ||
-      !provinceId ||
-      !cityId ||
+      !addressLocationReady ||
       !fullAddress.trim() ||
       !/^[0-9]{10}$/.test(postalCode)
     )
@@ -322,7 +293,12 @@ export function SavingsOrderPage() {
           postalCode,
         });
         uuidReference(address?.id);
-        if (address.fullAddress !== fullAddress.trim() || address.postalCode !== postalCode)
+        if (
+          address.fullAddress !== fullAddress.trim() ||
+          address.postalCode !== postalCode ||
+          address.provinceId !== provinceId ||
+          address.cityId !== cityId
+        )
           throw new Error('Invalid address receipt');
         if (!current()) return;
         setAddresses((values) => [...values, address]);
@@ -837,12 +813,17 @@ export function SavingsOrderPage() {
                     {addressError && <p role="alert">{copy('error')}</p>}
                     {addingAddress && (
                       <div className="grid gap-3 rounded-md border p-4 md:grid-cols-2">
-                        <label>
-                          {copy('province')}
+                        <div>
+                          <label htmlFor="saving-address-province">{copy('province')}</label>
                           <select
+                            id="saving-address-province"
                             className="mt-1 w-full rounded-md border bg-background p-2"
                             value={provinceId}
-                            onChange={(event) => setProvinceId(event.target.value)}
+                            disabled={savingAddress || !provinceOptions.ready}
+                            onChange={(event) => {
+                              setProvinceId(event.target.value);
+                              setCityId('');
+                            }}
                           >
                             <option value="">—</option>
                             {provinces.map((item) => (
@@ -851,22 +832,38 @@ export function SavingsOrderPage() {
                               </option>
                             ))}
                           </select>
-                        </label>
-                        <label>
-                          {copy('city')}
-                          <select
+                          <GeographyLoadError
+                            {...provinceOptions}
+                            message={t('settings.addresses.error.loadProvinces', locale)}
+                            locale={locale}
+                            testId="saving-address-province-retry"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="saving-address-city">{copy('city')}</label>
+                          <DependentSelect
+                            id="saving-address-city"
                             className="mt-1 w-full rounded-md border bg-background p-2"
+                            dependencyValue={provinceId}
                             value={cityId}
+                            ready={cityOptions.ready}
+                            loading={cityOptions.loading}
+                            disabled={savingAddress}
+                            options={cities.map((city) => ({
+                              value: city.id,
+                              label: locale === 'fa' ? city.nameFa : city.nameEn,
+                              dependencyValue: city.provinceId ?? '',
+                            }))}
+                            placeholder={t('settings.addresses.form.cityPlaceholder', locale)}
                             onChange={(event) => setCityId(event.target.value)}
-                          >
-                            <option value="">—</option>
-                            {cities.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {locale === 'fa' ? item.nameFa : item.nameEn}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
+                          />
+                          <GeographyLoadError
+                            {...cityOptions}
+                            message={t('settings.addresses.error.loadCities', locale)}
+                            locale={locale}
+                            testId="saving-address-city-retry"
+                          />
+                        </div>
                         <label>
                           {copy('fullAddress')}
                           <input
@@ -893,8 +890,7 @@ export function SavingsOrderPage() {
                         <Button
                           disabled={
                             savingAddress ||
-                            !provinceId ||
-                            !cityId ||
+                            !addressLocationReady ||
                             !fullAddress.trim() ||
                             !/^[0-9]{10}$/.test(postalCode)
                           }

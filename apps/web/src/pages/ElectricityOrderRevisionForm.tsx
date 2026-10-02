@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/app';
-import { Button } from '@barghsa/ui';
+import { Button, DependentSelect } from '@barghsa/ui';
+import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
+import { GeographyLoadError } from '../components/GeographyLoadError.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -48,7 +50,6 @@ type Review = {
   vatIrR: string;
   lines: Array<{ systemKey: string; quantityKwh: string; subtotalIrR: string }>;
 };
-type Place = { id: string; nameFa: string; nameEn: string; provinceId?: string };
 
 export function ElectricityOrderRevisionForm({
   order,
@@ -80,8 +81,19 @@ export function ElectricityOrderRevisionForm({
   const [postalCode, setPostalCode] = useState(order.postalCode);
   const [provinceId, setProvinceId] = useState(order.provinceId);
   const [cityId, setCityId] = useState(order.cityId);
-  const [provinces, setProvinces] = useState<Place[]>([]);
-  const [cities, setCities] = useState<Place[]>([]);
+  const provinceOptions = useGeographyOptions('/api/geography/provinces');
+  const cityOptions = useGeographyOptions(
+    provinceId ? `/api/geography/provinces/${encodeURIComponent(provinceId)}/cities` : null,
+    provinceId || undefined
+  );
+  const provinces = provinceOptions.options;
+  const cities = cityOptions.options;
+  const locationValid =
+    (provinceId === order.provinceId && cityId === order.cityId) ||
+    (provinceOptions.ready &&
+      cityOptions.ready &&
+      provinces.some((province) => province.id === provinceId) &&
+      cities.some((city) => city.id === cityId));
   const [responseNote, setResponseNote] = useState('');
   const [review, setReview] = useState<{ fingerprint: string; quote: Review } | null>(null);
   const [key, setKey] = useState(() => crypto.randomUUID());
@@ -114,42 +126,6 @@ export function ElectricityOrderRevisionForm({
       });
     return () => abort.abort();
   }, [advanced, order.periodStart, order.periodEnd]);
-
-  useEffect(() => {
-    const abort = new AbortController();
-    void fetch('/api/geography/provinces', { credentials: 'include', signal: abort.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Provinces unavailable');
-        return response.json() as Promise<unknown>;
-      })
-      .then((value) => {
-        if (!abort.signal.aborted && Array.isArray(value)) setProvinces(value as Place[]);
-      })
-      .catch(() => {
-        if (!abort.signal.aborted) setError(true);
-      });
-    return () => abort.abort();
-  }, []);
-
-  useEffect(() => {
-    const abort = new AbortController();
-    if (!provinceId) return () => abort.abort();
-    void fetch(`/api/geography/provinces/${encodeURIComponent(provinceId)}/cities`, {
-      credentials: 'include',
-      signal: abort.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Cities unavailable');
-        return response.json() as Promise<unknown>;
-      })
-      .then((value) => {
-        if (!abort.signal.aborted && Array.isArray(value)) setCities(value as Place[]);
-      })
-      .catch(() => {
-        if (!abort.signal.aborted) setError(true);
-      });
-    return () => abort.abort();
-  }, [provinceId]);
 
   const terms = useMemo(() => {
     const common = {
@@ -191,6 +167,7 @@ export function ElectricityOrderRevisionForm({
   ]);
   const currentReview = review?.fingerprint === fingerprint ? review.quote : null;
   const canReview = Boolean(
+    locationValid &&
     provinceId &&
     cityId &&
     address.trim() &&
@@ -231,7 +208,7 @@ export function ElectricityOrderRevisionForm({
   }
 
   async function resubmit() {
-    if (!currentReview || busy) return;
+    if (!currentReview || !canReview || busy) return;
     setBusy(true);
     setError(false);
     try {
@@ -369,12 +346,13 @@ export function ElectricityOrderRevisionForm({
             <select
               className="mt-1 w-full rounded-md border bg-background p-2"
               value={provinceId}
+              disabled={!provinceOptions.ready}
               onChange={(event) => {
                 setProvinceId(event.target.value);
                 setCityId('');
-                setCities([]);
               }}
             >
+              <option value="">{t('settings.addresses.form.provincePlaceholder', locale)}</option>
               {!provinces.some((place) => place.id === provinceId) && provinceId ? (
                 <option value={provinceId}>
                   {t('electricity.order.revision.currentProvince', locale)}
@@ -389,25 +367,39 @@ export function ElectricityOrderRevisionForm({
           </label>
           <label className="text-sm">
             {t('electricity.order.revision.city', locale)}
-            <select
+            <DependentSelect
               className="mt-1 w-full rounded-md border bg-background p-2"
+              dependencyValue={provinceId}
               value={cityId}
+              ready={cityOptions.ready}
+              loading={cityOptions.loading}
+              placeholder={t('electricity.order.revision.selectCity', locale)}
+              options={cities.map((city) => ({
+                value: city.id,
+                label: locale === 'fa' ? city.nameFa : city.nameEn,
+                dependencyValue: city.provinceId ?? '',
+              }))}
+              savedOption={{
+                value: order.cityId,
+                label: t('electricity.order.revision.currentCity', locale),
+                dependencyValue: order.provinceId,
+              }}
               onChange={(event) => setCityId(event.target.value)}
-            >
-              {!cities.some((place) => place.id === cityId) && cityId ? (
-                <option value={cityId}>
-                  {t('electricity.order.revision.currentCity', locale)}
-                </option>
-              ) : null}
-              <option value="">{t('electricity.order.revision.selectCity', locale)}</option>
-              {cities.map((place) => (
-                <option key={place.id} value={place.id}>
-                  {locale === 'fa' ? place.nameFa : place.nameEn}
-                </option>
-              ))}
-            </select>
+            />
           </label>
         </div>
+        <GeographyLoadError
+          {...provinceOptions}
+          message={t('settings.addresses.error.loadProvinces', locale)}
+          locale={locale}
+          testId="electricity-revision-province-retry"
+        />
+        <GeographyLoadError
+          {...cityOptions}
+          message={t('settings.addresses.error.loadCities', locale)}
+          locale={locale}
+          testId="electricity-revision-city-retry"
+        />
         <label className="block text-sm">
           {t('electricity.order.correction.postalCode', locale)}
           <input
@@ -474,7 +466,7 @@ export function ElectricityOrderRevisionForm({
           <p className="text-sm text-muted-foreground">
             {t('electricity.order.revision.replacesInvoice', locale)}
           </p>
-          <Button type="button" disabled={busy} onClick={() => void resubmit()}>
+          <Button type="button" disabled={busy || !canReview} onClick={() => void resubmit()}>
             {t('electricity.order.correction.submit', locale)}
           </Button>
         </div>

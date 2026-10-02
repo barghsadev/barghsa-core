@@ -1,4 +1,5 @@
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
+import { useGeographyOptions } from '../../../hooks/useGeographyOptions.js';
 import { LegalProfileDocuments } from '../../../components/LegalProfileDocuments.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
@@ -18,6 +19,7 @@ import {
 } from 'lucide-react';
 import {
   Button,
+  DependentSelect,
   Input,
   Label,
   Alert,
@@ -179,63 +181,17 @@ function SettingsProfilePage() {
   const [fullAddress, setFullAddress] = useState('');
   const [postalCode, setPostalCode] = useState('');
 
-  const [provinces, setProvinces] = useState<Array<{ id: string; nameFa: string; nameEn: string }>>(
-    []
+  const provinceOptions = useGeographyOptions('/api/geography/provinces');
+  const cityOptions = useGeographyOptions(
+    provinceId ? `/api/geography/provinces/${encodeURIComponent(provinceId)}/cities` : null,
+    provinceId || undefined
   );
-  const [cities, setCities] = useState<Array<{ id: string; nameFa: string; nameEn: string }>>([]);
-  const [loadingProvinces, setLoadingProvinces] = useState(true);
-  const [loadingCities, setLoadingCities] = useState(false);
-  const [provinceError, setProvinceError] = useState(false);
-  const [cityError, setCityError] = useState(false);
-  const [geographyRetry, setGeographyRetry] = useState(0);
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoadingProvinces(true);
-    setProvinceError(false);
-    fetch('/api/geography/provinces', { credentials: 'include', signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Provinces unavailable');
-        return response.json() as Promise<Array<{ id: string; nameFa: string; nameEn: string }>>;
-      })
-      .then((data) => {
-        if (!controller.signal.aborted) setProvinces(data);
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setProvinceError(true);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoadingProvinces(false);
-      });
-    return () => controller.abort();
-  }, [geographyRetry]);
-  useEffect(() => {
-    const controller = new AbortController();
-    setCities([]);
-    setCityError(false);
-    if (!provinceId) {
-      setLoadingCities(false);
-      return;
-    }
-    setLoadingCities(true);
-    fetch(`/api/geography/provinces/${provinceId}/cities`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Cities unavailable');
-        return response.json() as Promise<Array<{ id: string; nameFa: string; nameEn: string }>>;
-      })
-      .then((data) => {
-        if (!controller.signal.aborted) setCities(data);
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setCityError(true);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoadingCities(false);
-      });
-    return () => controller.abort();
-  }, [provinceId, geographyRetry]);
+  const provinces = provinceOptions.options;
+  const cities = cityOptions.options;
+  const loadingProvinces = provinceOptions.loading;
+  const loadingCities = cityOptions.loading;
+  const provinceError = provinceOptions.error;
+  const cityError = cityOptions.error;
 
   // ── Fetch profile data ──────────────────────────────────────────────
 
@@ -374,6 +330,9 @@ function SettingsProfilePage() {
           cityError ||
           !provinceId ||
           !cityId ||
+          ((provinceId !== main?.provinceId || cityId !== main?.cityId) &&
+            (!provinces.some((province) => province.id === provinceId) ||
+              !cities.some((city) => city.id === cityId))) ||
           !fullAddress.trim() ||
           !postalCode.trim()
         ) {
@@ -421,6 +380,8 @@ function SettingsProfilePage() {
     loadingCities,
     provinceError,
     cityError,
+    provinces,
+    cities,
     title,
     firstName,
     lastName,
@@ -726,7 +687,6 @@ function SettingsProfilePage() {
                   onChange={(event) => {
                     setProvinceId(event.target.value);
                     setCityId('');
-                    setCities([]);
                   }}
                   disabled={saving || loadingProvinces || provinceError}
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
@@ -755,31 +715,33 @@ function SettingsProfilePage() {
                   {t('settings.profile.city', locale)}
                 </Label>
                 <ProfileFieldHint locale={locale} />
-                <select
+                <DependentSelect
                   id="profile-city"
+                  dependencyValue={provinceId}
                   value={cityId}
+                  ready={cityOptions.ready}
+                  loading={cityOptions.loading}
+                  options={cities.map((city) => ({
+                    value: city.id,
+                    label: locale === 'fa' ? city.nameFa : city.nameEn,
+                    dependencyValue: city.provinceId ?? '',
+                  }))}
+                  placeholder={t('settings.profile.selectCity', locale)}
+                  savedOption={{
+                    value: savedMainAddress?.cityId ?? '',
+                    dependencyValue: savedMainAddress?.provinceId ?? '',
+                    label:
+                      (locale === 'fa'
+                        ? savedMainAddress?.cityNameFa
+                        : savedMainAddress?.cityNameEn) ||
+                      t('settings.addresses.unknownCity', locale),
+                  }}
                   onChange={(event) => {
                     setCityId(event.target.value);
                   }}
-                  disabled={saving || loadingCities || cityError || !provinceId}
+                  disabled={saving}
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                >
-                  <option value="">{t('settings.profile.selectCity', locale)}</option>
-                  {cityId && !cities.some((item) => item.id === cityId) && (
-                    <option value={cityId}>
-                      {(savedMainAddress?.cityId === cityId &&
-                        (locale === 'fa'
-                          ? savedMainAddress.cityNameFa
-                          : savedMainAddress.cityNameEn)) ||
-                        t('settings.addresses.unknownCity', locale)}
-                    </option>
-                  )}
-                  {cities.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {locale === 'fa' ? item.nameFa : item.nameEn}
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
             </div>
 
@@ -796,7 +758,7 @@ function SettingsProfilePage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setGeographyRetry((value) => value + 1)}
+                  onClick={provinceError ? provinceOptions.retry : cityOptions.retry}
                 >
                   {t('settings.addresses.retry', locale)}
                 </Button>

@@ -1,8 +1,8 @@
-import { act, type ComponentType } from 'react';
+import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { t } from '@barghsa/i18n/app';
-import { Route } from '../routes/_app/electricity/order.js';
+import { SimpleElectricityOrderPage as Page } from './SimpleElectricityOrderPage.js';
 
 const notices = vi.hoisted(() => ({ error: vi.fn(), success: vi.fn() }));
 const navigate = vi.hoisted(() => vi.fn(async (_options: unknown) => {}));
@@ -34,7 +34,6 @@ vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: String, number: String, irrDigits: String }),
 }));
 
-const Page = Route.options.component as ComponentType;
 const profileId = 'profile-1';
 const product = {
   id: 'product-1',

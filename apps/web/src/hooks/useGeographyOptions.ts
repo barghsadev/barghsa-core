@@ -14,6 +14,29 @@ interface State {
 }
 const empty: GeographyOption[] = [];
 
+/** Shared validated read for selectors and display-only address name lookups. */
+export async function loadGeographyOptions(path: string, signal: AbortSignal, provinceId?: string) {
+  const response = await fetch(path, { credentials: 'include', signal });
+  if (!response.ok) throw new Error('Geography unavailable');
+  const data: unknown = await response.json();
+  if (
+    !Array.isArray(data) ||
+    data.some(
+      (row) =>
+        !row ||
+        typeof row !== 'object' ||
+        Array.isArray(row) ||
+        ['id', 'nameFa', 'nameEn'].some(
+          (key) => typeof row[key] !== 'string' || !row[key].trim()
+        ) ||
+        (provinceId !== undefined && row.provinceId !== provinceId)
+    ) ||
+    new Set(data.map((row) => row.id)).size !== data.length
+  )
+    throw new Error('Invalid geography options');
+  return data as GeographyOption[];
+}
+
 /** Validate option lists and bind city results to their requested province. */
 export function useGeographyOptions(path: string | null, provinceId?: string) {
   const [revision, setRevision] = useState(0);
@@ -28,24 +51,7 @@ export function useGeographyOptions(path: string | null, provinceId?: string) {
     setState({ path, provinceId, status: 'loading', options: empty });
     void (async () => {
       try {
-        const response = await fetch(path, { credentials: 'include', signal: controller.signal });
-        if (!response.ok) throw new Error('Geography unavailable');
-        const data: unknown = await response.json();
-        if (
-          !Array.isArray(data) ||
-          data.some(
-            (row) =>
-              !row ||
-              typeof row !== 'object' ||
-              Array.isArray(row) ||
-              ['id', 'nameFa', 'nameEn'].some(
-                (key) => typeof row[key] !== 'string' || !row[key].trim()
-              ) ||
-              (provinceId !== undefined && row.provinceId !== provinceId)
-          ) ||
-          new Set(data.map((row) => row.id)).size !== data.length
-        )
-          throw new Error('Invalid geography options');
+        const data = await loadGeographyOptions(path, controller.signal, provinceId);
         if (!controller.signal.aborted)
           setState({ path, provinceId, status: 'ready', options: data as GeographyOption[] });
       } catch {

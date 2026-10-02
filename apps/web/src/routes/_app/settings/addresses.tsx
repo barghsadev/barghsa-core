@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import {
   Button,
+  DependentSelect,
   Card,
   CardContent,
   Dialog,
@@ -23,6 +24,7 @@ import {
   DialogDescription,
 } from '@barghsa/ui';
 import { withCsrf } from '../../../lib/csrf.js';
+import { useGeographyOptions } from '../../../hooks/useGeographyOptions.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 
 export const Route = createFileRoute('/_app/settings/addresses')({
@@ -53,19 +55,6 @@ interface Address {
   updatedAt: string;
 }
 
-interface Province {
-  id: string;
-  nameFa: string;
-  nameEn: string;
-}
-
-interface City {
-  id: string;
-  provinceId: string;
-  nameFa: string;
-  nameEn: string;
-}
-
 // ─── Page Component ────────────────────────────────────────────────────
 
 function SettingsAddressesPage() {
@@ -73,11 +62,6 @@ function SettingsAddressesPage() {
   const { returnTo } = Route.useSearch();
 
   const [addresses, setAddresses] = useState<Address[]>([]);
-  const [provinces, setProvinces] = useState<Province[]>([]);
-  const [cities, setCities] = useState<City[]>([]);
-  const [citiesLoading, setCitiesLoading] = useState(false);
-  const [citiesError, setCitiesError] = useState(false);
-  const [citiesRetry, setCitiesRetry] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [profileId, setProfileId] = useState<string | null>(null);
@@ -96,6 +80,15 @@ function SettingsAddressesPage() {
   const [formCityId, setFormCityId] = useState('');
   const [formFullAddress, setFormFullAddress] = useState('');
   const [formPostalCode, setFormPostalCode] = useState('');
+  const provinceOptions = useGeographyOptions('/api/geography/provinces');
+  const cityOptions = useGeographyOptions(
+    showForm && formProvinceId
+      ? `/api/geography/provinces/${encodeURIComponent(formProvinceId)}/cities`
+      : null,
+    formProvinceId || undefined
+  );
+  const provinces = provinceOptions.options;
+  const cities = cityOptions.options;
 
   // ── Fetch addresses ────────────────────────────────────────────────
 
@@ -128,50 +121,9 @@ function SettingsAddressesPage() {
     }
   }, []);
 
-  // ── Fetch provinces ────────────────────────────────────────────────
-
-  const fetchProvinces = useCallback(async () => {
-    try {
-      const res = await fetch('/api/geography/provinces');
-      if (res.ok) {
-        const data: Province[] = await res.json();
-        setProvinces(data);
-      }
-    } catch {
-      // Silently fail — provinces are cosmetic for the form
-    }
-  }, []);
-
   useEffect(() => {
     fetchAddresses();
-    fetchProvinces();
-  }, [fetchAddresses, fetchProvinces]);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    setCities([]);
-    setCitiesError(false);
-    if (!formProvinceId) {
-      setCitiesLoading(false);
-      return () => controller.abort();
-    }
-    setCitiesLoading(true);
-    void (async () => {
-      try {
-        const response = await fetch(`/api/geography/provinces/${formProvinceId}/cities`, {
-          signal: controller.signal,
-        });
-        if (!response.ok) throw new Error('City request failed');
-        const data: City[] = await response.json();
-        if (!controller.signal.aborted) setCities(data);
-      } catch {
-        if (!controller.signal.aborted) setCitiesError(true);
-      } finally {
-        if (!controller.signal.aborted) setCitiesLoading(false);
-      }
-    })();
-    return () => controller.abort();
-  }, [formProvinceId, citiesRetry]);
+  }, [fetchAddresses]);
 
   // ── Open form for add ──────────────────────────────────────────────
 
@@ -206,7 +158,9 @@ function SettingsAddressesPage() {
 
   const handleSave = useCallback(async () => {
     if (
-      citiesLoading ||
+      !provinceOptions.ready ||
+      !cityOptions.ready ||
+      !provinces.some((province) => province.id === formProvinceId) ||
       !cities.some((city) => city.id === formCityId) ||
       !formProvinceId ||
       !formCityId ||
@@ -279,7 +233,9 @@ function SettingsAddressesPage() {
     }
   }, [
     cities,
-    citiesLoading,
+    provinces,
+    provinceOptions.ready,
+    cityOptions.ready,
     formProvinceId,
     formCityId,
     formFullAddress,
@@ -573,9 +529,9 @@ function SettingsAddressesPage() {
                   value={formProvinceId}
                   onChange={(e) => {
                     setFormCityId('');
-                    setCities([]);
                     setFormProvinceId(e.target.value);
                   }}
+                  disabled={saving || !provinceOptions.ready}
                   className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                   dir={locale === 'fa' ? 'rtl' : 'ltr'}
                 >
@@ -595,27 +551,40 @@ function SettingsAddressesPage() {
                 <label htmlFor="addresses-field-2" className="block text-sm font-medium mb-1">
                   {t('settings.addresses.form.city', locale)}
                 </label>
-                <select
+                <DependentSelect
                   id="addresses-field-2"
+                  dependencyValue={formProvinceId}
                   value={formCityId}
+                  ready={cityOptions.ready}
+                  loading={cityOptions.loading}
+                  options={cities.map((city) => ({
+                    value: city.id,
+                    label: locale === 'fa' ? city.nameFa : city.nameEn,
+                    dependencyValue: city.provinceId ?? '',
+                  }))}
+                  placeholder={t('settings.addresses.form.cityPlaceholder', locale)}
                   onChange={(e) => setFormCityId(e.target.value)}
-                  disabled={!formProvinceId || citiesLoading || citiesError}
+                  disabled={saving}
                   className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                   dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                >
-                  <option value="">{t('settings.addresses.form.cityPlaceholder', locale)}</option>
-                  {cities.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {locale === 'fa' ? c.nameFa : c.nameEn}
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
 
-              {citiesError && (
+              {(provinceOptions.error || cityOptions.error) && (
                 <div>
-                  <p role="alert">{t('settings.addresses.error.loadCities', locale)}</p>
-                  <Button variant="outline" onClick={() => setCitiesRetry((value) => value + 1)}>
+                  <p role="alert">
+                    {t(
+                      provinceOptions.error
+                        ? 'settings.addresses.error.loadProvinces'
+                        : 'settings.addresses.error.loadCities',
+                      locale
+                    )}
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={provinceOptions.error ? provinceOptions.retry : cityOptions.retry}
+                  >
                     {t('settings.addresses.retry', locale)}
                   </Button>
                 </div>
@@ -661,7 +630,7 @@ function SettingsAddressesPage() {
               </Button>
               <Button
                 onClick={handleSave}
-                disabled={saving || citiesLoading || citiesError}
+                disabled={saving || !provinceOptions.ready || !cityOptions.ready}
                 className="gap-2"
               >
                 {saving ? (
