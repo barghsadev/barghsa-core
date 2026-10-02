@@ -610,3 +610,48 @@ it('shows retained history, a safe image preview and replacement navigation', as
   await click('Replace document');
   expect(replace).toHaveBeenCalledWith(expect.objectContaining({ id: DOCUMENT }));
 });
+
+it.each(['Quarantined', 'Superseded'] as const)(
+  'keeps customer %s scanner details and historical reasons private',
+  async (state) => {
+    harness.locale = 'fa';
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        response({
+          ...row({
+            state,
+            scanState: 'Quarantined',
+            rejectionReason: 'private scanner signature',
+            reviewComment: 'private scanner note',
+          }),
+          history: [
+            {
+              id: 'event',
+              state: 'Quarantined',
+              createdAt: row().createdAt,
+              reason: 'private scanner event',
+            },
+          ],
+        })
+      )
+    );
+    await render(
+      <DocumentDetail
+        id={DOCUMENT}
+        staff={false}
+        onClose={vi.fn()}
+        onChanged={vi.fn()}
+        onReplace={vi.fn()}
+        onPrevious={vi.fn()}
+      />
+    );
+    expect(container.textContent).toContain(
+      'این فایل قابل پذیرش نیست. لطفاً فایل جایگزین بارگذاری کنید.'
+    );
+    expect(container.textContent).not.toContain('private scanner');
+    expect(
+      [...container.querySelectorAll('button')].map((element) => element.textContent)
+    ).not.toContain('پیش‌نمایش');
+  }
+);

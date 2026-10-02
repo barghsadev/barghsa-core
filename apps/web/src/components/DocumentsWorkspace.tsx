@@ -12,7 +12,7 @@ import {
   NativeSelect,
   PageHeader,
   PageLoading,
-  StatusBadge,
+  ListViewToggle,
 } from '@barghsa/ui';
 import { documentText } from '@barghsa/i18n/documents';
 import { t as appText } from '@barghsa/i18n/app';
@@ -21,6 +21,9 @@ import { staffOrderId } from '../lib/staff-order-list-query.js';
 import type { RecordListQuery } from '../lib/record-list-query.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
+import { DocumentRecords } from './DocumentRecords.js';
+import { useListView } from '../hooks/useListView.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from './DocumentDetail.js';
 import { DocumentRetentionPolicies } from './DocumentRetentionPolicies.js';
 import { DocumentDestructionQueue } from './DocumentDestructionQueue.js';
@@ -290,6 +293,8 @@ function Results({
 }) {
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
+  const { view, setView } = useListView(staff ? 'staff-documents' : 'customer-documents');
+  const time = useAccountTime(locale);
   const [localItems, setItems] = useState<BusinessDocument[] | null>(null);
   const [localNext, setNext] = useState<string | null>(null);
   const [localCursor, setCursor] = useState<string | null>(null);
@@ -408,7 +413,19 @@ function Results({
   }
   return (
     <ListPage role="region" aria-label={word('listTitle')}>
-      <ListPage.Toolbar>
+      <ListPage.Toolbar
+        actions={
+          <ListViewToggle
+            value={view}
+            onChange={setView}
+            labels={{
+              group: appText('historyView.group', locale),
+              table: appText('historyView.table', locale),
+              card: appText('historyView.card', locale),
+            }}
+          />
+        }
+      >
         <Button variant="outline" onClick={reload} disabled={loading}>
           {word('refresh')}
         </Button>
@@ -425,6 +442,7 @@ function Results({
           </Button>
         ) : null}
       </ListPage.Toolbar>
+      {time.notice}
       {uploaded && uploaded === selected ? <p role="status">{word('uploadComplete')}</p> : null}
       {staff && filters.kind === 'standalone' && !profileId ? (
         <p className="text-sm text-muted-foreground">{word('selectProfile')}</p>
@@ -496,31 +514,19 @@ function Results({
         emptyView={<EmptyState title={word('empty')} description={word('emptyHint')} />}
       >
         {items?.length ? (
-          <ul className="divide-y rounded-xl border bg-card">
-            {items.map((document) => (
-              <li
-                key={document.id}
-                className="flex flex-wrap items-center justify-between gap-3 p-4"
-              >
-                <div className="flex min-w-0 flex-col gap-1">
-                  <Button
-                    variant="link"
-                    className="justify-start whitespace-normal text-start"
-                    onClick={() => {
-                      setSelected(document.id);
-                      setUpload(null);
-                    }}
-                  >
-                    {document.originalName}
-                  </Button>
-                  <p className="text-sm text-muted-foreground">
-                    {word(document.category)} · {word(document.uploadedByType)}
-                  </p>
-                </div>
-                <StatusBadge label={word(document.state)} />
-              </li>
-            ))}
-          </ul>
+          <DocumentRecords
+            items={items}
+            staff={staff}
+            locale={locale}
+            view={view}
+            selectedId={selected}
+            formatDate={time.format}
+            onSelect={(id) => {
+              if (accessDenied.current) return;
+              setSelected(id);
+              setUpload(null);
+            }}
+          />
         ) : null}
       </ListPage.Content>
       <ListPage.Pagination

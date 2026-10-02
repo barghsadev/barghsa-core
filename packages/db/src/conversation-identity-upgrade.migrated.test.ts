@@ -36,7 +36,7 @@ it('adds opt-in identities to an existing production database without publishing
     const before = (await pool.query('SELECT * FROM users')).rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0234_conversation_identities'],
+      applied: ['0234_conversation_identities', '0235_conversation_identity_timestamps'],
     });
     expect((await pool.query('SELECT * FROM users')).rows).toEqual(before);
     expect((await pool.query('SELECT * FROM conversation_identities')).rows).toEqual([]);
@@ -64,6 +64,21 @@ it('adds opt-in identities to an existing production database without publishing
     await pool.query(
       "INSERT INTO conversation_identities(user_id,display_name) VALUES ('legacy','نام‌نمایشی')"
     );
+    const explicit = new Date('2025-01-02T03:04:05.000Z');
+    await pool.query('UPDATE conversation_identities SET updated_at=$1 WHERE user_id=$2', [
+      explicit,
+      'legacy',
+    ]);
+    expect(
+      (await pool.query("SELECT updated_at FROM conversation_identities WHERE user_id='legacy'"))
+        .rows[0].updated_at
+    ).toEqual(explicit);
+    const stamped = (
+      await pool.query(
+        "UPDATE conversation_identities SET display_name='Changed' WHERE user_id='legacy' RETURNING updated_at"
+      )
+    ).rows[0].updated_at;
+    expect(stamped.getTime()).toBeGreaterThan(explicit.getTime());
     await expect(
       pool.query(
         "INSERT INTO conversation_identities(user_id,display_name) VALUES ('legacy','Duplicate')"

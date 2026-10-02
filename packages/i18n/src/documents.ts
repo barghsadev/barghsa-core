@@ -1,6 +1,18 @@
 import { lookup } from './lookup.js';
 
 export const en = {
+  statusUnavailable: 'Status unavailable',
+  quarantinedNotice: 'This file cannot be accepted. Please upload a replacement.',
+  metadataUnavailable: 'Not recorded',
+  sizeBytes: 'B',
+  sizeKb: 'KB',
+  sizeMb: 'MB',
+  fileActions: 'File actions',
+  previewLoading: 'Loading preview…',
+  downloadLoading: 'Preparing link…',
+  hidePreview: 'Hide preview',
+  fileUnavailable: 'This file is no longer available with your current access.',
+  fileAccessError: 'Could not open this file. Please retry.',
   title: 'Documents',
   staffTitle: 'Document review',
   description: 'Upload evidence, follow reviews and keep previous versions.',
@@ -135,6 +147,18 @@ export const en = {
 } satisfies Record<string, string>;
 
 export const fa: Record<keyof typeof en, string> = {
+  statusUnavailable: 'وضعیت نامشخص',
+  quarantinedNotice: 'این فایل قابل پذیرش نیست. لطفاً فایل جایگزین بارگذاری کنید.',
+  metadataUnavailable: 'ثبت نشده',
+  sizeBytes: 'بایت',
+  sizeKb: 'کیلوبایت',
+  sizeMb: 'مگابایت',
+  fileActions: 'اقدامات فایل',
+  previewLoading: 'در حال دریافت پیش\u200cنمایش…',
+  downloadLoading: 'در حال آماده\u200cسازی پیوند…',
+  hidePreview: 'بستن پیش\u200cنمایش',
+  fileUnavailable: 'این فایل با دسترسی فعلی شما دیگر در دسترس نیست.',
+  fileAccessError: 'دریافت فایل ناموفق بود. دوباره تلاش کنید.',
   title: 'مدارک',
   staffTitle: 'بررسی مدارک',
   description: 'مدارک را بارگذاری کنید، نتیجه بررسی را ببینید و نسخه‌های قبلی را نگه دارید.',

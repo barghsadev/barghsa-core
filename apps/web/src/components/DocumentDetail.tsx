@@ -6,7 +6,6 @@ import {
   Field,
   FieldLabel,
   PageLoading,
-  StatusBadge,
   Textarea,
   Timeline,
 } from '@barghsa/ui';
@@ -16,8 +15,10 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { DocumentLegalHolds } from './DocumentLegalHolds.js';
+import { DocumentStatusBadge } from './DocumentStatusBadge.js';
 import {
   documentBase,
+  isQuarantinedDocument,
   documentRequest,
   documentUrl,
   type BusinessDocument,
@@ -142,7 +143,9 @@ export function DocumentDetail({
     });
   }
   const readable =
-    document && !['Uploading', 'PendingScan', 'Quarantined'].includes(document.state);
+    document &&
+    !isQuarantinedDocument(document) &&
+    !['Uploading', 'PendingScan'].includes(document.state);
   const customerCanChange =
     document?.businessRecordType !== 'contract' || document.contractRole === 'signed';
   const canChange = staff || customerCanChange;
@@ -199,7 +202,11 @@ export function DocumentDetail({
       ) : (
         <>
           {time.notice}
-          <StatusBadge label={word(document.state)} />
+          <DocumentStatusBadge
+            state={document.state}
+            locale={locale}
+            reason={isQuarantinedDocument(document) ? null : document.rejectionReason}
+          />
           <dl className="grid gap-3 text-sm sm:grid-cols-2">
             <div>
               <dt className="text-muted-foreground">{word('kind')}</dt>
@@ -226,7 +233,9 @@ export function DocumentDetail({
               </div>
             ) : null}
           </dl>
-          {document.rejectionReason || document.reviewComment ? (
+          {isQuarantinedDocument(document) ? (
+            <p className="text-sm text-muted-foreground">{word('quarantinedNotice')}</p>
+          ) : document.rejectionReason || document.reviewComment ? (
             <Alert>
               <AlertDescription>
                 {document.rejectionReason ?? document.reviewComment}
@@ -350,7 +359,9 @@ export function DocumentDetail({
             items={document.history.map((event) => ({
               id: event.id,
               title: word(event.state),
-              ...(event.reason ? { description: event.reason } : {}),
+              ...(event.reason && (staff || event.state !== 'Quarantined')
+                ? { description: event.reason }
+                : {}),
               dateTime: event.createdAt,
               dateLabel: time.format(event.createdAt),
             }))}

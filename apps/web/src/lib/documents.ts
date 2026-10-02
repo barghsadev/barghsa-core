@@ -31,6 +31,7 @@ export interface BusinessDocument {
   contractRole: 'original' | 'signed' | 'amendment' | 'superseded' | null;
   category: 'document' | 'image' | 'video' | 'contract';
   state: DocumentState;
+  scanState?: 'Uploading' | 'Pending' | 'Available' | 'Quarantined';
   originalName: string;
   detectedMime: string | null;
   sizeBytes: number;
@@ -43,6 +44,9 @@ export interface BusinessDocument {
   revision: number;
   createdAt: string;
   updatedAt: string;
+}
+export function isQuarantinedDocument(document: Pick<BusinessDocument, 'state' | 'scanState'>) {
+  return document.state === 'Quarantined' || document.scanState === 'Quarantined';
 }
 export interface DocumentDetail extends BusinessDocument {
   history: Array<{

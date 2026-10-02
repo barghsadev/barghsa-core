@@ -64,6 +64,7 @@ function visible(staff: boolean) {
 }
 function dto(row: LinkedDocument) {
   const d = row.document;
+  const quarantined = d.state === 'Quarantined' || d.scanState === 'Quarantined';
   return {
     id: d.id,
     profileId: d.profileId,
@@ -82,8 +83,8 @@ function dto(row: LinkedDocument) {
     uploadedBy: d.uploadedBy,
     uploadedByType: d.uploadedByType,
     supersedesDocumentId: d.supersedesDocumentId,
-    rejectionReason: d.rejectionReason,
-    reviewComment: d.state === 'Quarantined' ? null : d.reviewComment,
+    rejectionReason: quarantined ? null : d.rejectionReason,
+    reviewComment: quarantined ? null : d.reviewComment,
     revision: d.revision,
     createdAt: d.createdAt,
     updatedAt: d.updatedAt,
@@ -496,6 +497,7 @@ export class DocumentService {
         const row = await load(client, id, profileId, staff);
         if (
           !row.document.storageKey ||
+          row.document.scanState === 'Quarantined' ||
           ['Uploading', 'PendingScan', 'Quarantined'].includes(row.document.state)
         )
           throw new ConflictException('Document is not available for download');
@@ -517,6 +519,7 @@ export class DocumentService {
         const row = await load(client, id, profileId, staff);
         if (
           !row.document.storageKey ||
+          row.document.scanState === 'Quarantined' ||
           ['Uploading', 'PendingScan', 'Quarantined', 'Removed'].includes(row.document.state)
         )
           throw new ConflictException('Document is not available for preview');

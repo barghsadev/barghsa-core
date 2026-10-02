@@ -787,6 +787,32 @@ it('isolates profiles, enforces staff capabilities and blocks quarantined downlo
   );
   const visible = (await (await send(`documents/${document.id}`, f.user)).json()) as DocumentDetail;
   expect(visible.reviewComment).toBeNull();
+  expect(visible.rejectionReason).toBeNull();
+  const legacy = await confirm(await create(f.user), f.user);
+  const client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    const changed = (
+      await client.query(
+        "UPDATE documents SET state='Quarantined', scan_state='Quarantined', rejection_reason='private scanner signature', review_comment='private scanner note' WHERE id=$1 RETURNING revision",
+        [legacy.id]
+      )
+    ).rows[0];
+    await client.query(
+      "INSERT INTO document_events(document_id,revision,previous_state,state,actor_id,reason) VALUES ($1,$2,'Available','Quarantined',$3,'private scanner signature')",
+      [legacy.id, changed.revision, f.user]
+    );
+    await client.query('COMMIT');
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+  const legacyVisible = await (await send(`documents/${legacy.id}`, f.user)).json();
+  expect(legacyVisible).toMatchObject({ rejectionReason: null, reviewComment: null });
+  const listing = await (await send('documents?businessRecordType=standalone', f.user)).json();
+  expect(JSON.stringify(listing)).not.toContain('private scanner');
   expect(visible.history.at(-1)!.reason).toBeNull();
 });
 
@@ -892,15 +918,33 @@ it('serializes original contract uploads and requires replacements to keep the d
   original = await act(original, 'submit', 'document-legal', true);
   original = await act(original, 'reject', 'document-legal', true, 'Replace this copy');
   expect(original.state).toBe('Rejected');
+  original = await act(original, 'quarantine', 'document-legal', true, 'private scanner signature');
   const replacement = await send('admin/documents', 'document-legal', 'POST', {
     ...input,
     idempotencyKey: randomUUID(),
     supersedesDocumentId: nextRoot.document.id,
   });
   expect(replacement.status, await replacement.clone().text()).toBe(201);
-  expect(((await replacement.json()) as Created).document.supersedesDocumentId).toBe(
-    nextRoot.document.id
+  const replacementCreated = (await replacement.json()) as Created;
+  expect(replacementCreated.document.supersedesDocumentId).toBe(nextRoot.document.id);
+  const confirmedReplacement = await confirm(replacementCreated, 'document-legal', true);
+  expect(confirmedReplacement.state).toBe('Available');
+  const superseded = (await (
+    await send(`admin/documents/${original.id}`, 'document-legal')
+  ).json()) as DocumentDetail;
+  expect(superseded).toMatchObject({
+    state: 'Superseded',
+    scanState: 'Quarantined',
+    rejectionReason: null,
+    reviewComment: null,
+  });
+  expect((await send(`admin/documents/${original.id}/download`, 'document-legal')).status).toBe(
+    409
   );
+  expect((await send(`admin/documents/${original.id}/preview`, 'document-legal')).status).toBe(409);
+  expect(
+    (await send(`admin/documents/${confirmedReplacement.id}/download`, 'document-legal')).status
+  ).toBe(200);
 });
 
 it('keeps internal contract documents private through reads, downloads and notifications', async () => {
