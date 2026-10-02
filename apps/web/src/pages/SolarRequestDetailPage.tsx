@@ -6,6 +6,8 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { withCsrf } from '../lib/csrf.js';
 import { DocumentResults, type DocumentFilters } from '../components/DocumentsWorkspace.js';
 import { SolarPostalPanel } from '../components/SolarPostalPanel.js';
+import { SolarStageProgress } from '../components/SolarStageProgress.js';
+import type { SolarProgress } from '../lib/solar-progress.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 import { solarNextAction } from '../lib/solar-next-action.js';
 
@@ -45,6 +47,7 @@ export function SolarRequestDetailPage() {
   const copy = (key: string) => tSolar(key, locale);
   const [request, setRequest] = useState<SolarRequest | null>(null);
   const [history, setHistory] = useState<Array<{ event: string; at: string }>>([]);
+  const [progress, setProgress] = useState<SolarProgress | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [documentsInfo, setDocumentsInfo] = useState<{
@@ -69,6 +72,7 @@ export function SolarRequestDetailPage() {
   useEffect(() => {
     const controller = new AbortController();
     setRequest(null);
+    setProgress(null);
     setHistory([]);
     setDocumentsInfo(null);
     setLoading(true);
@@ -81,12 +85,14 @@ export function SolarRequestDetailPage() {
         if (!response.ok) throw new Error('request');
         return response.json() as Promise<{
           request: SolarRequest;
+          progress?: SolarProgress;
           history?: Array<{ event: string; at: string }>;
         }>;
       })
       .then((result) => {
         if (!controller.signal.aborted) {
           setRequest(result.request);
+          setProgress(result.progress ?? null);
           setHistory(result.history ?? []);
         }
       })
@@ -153,7 +159,7 @@ export function SolarRequestDetailPage() {
     : 1;
   const action = request ? solarNextAction(request, locale) : null;
   return (
-    <main className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <Link className="text-sm underline" to="/solar/requests">
         {copy('back')}
       </Link>
@@ -220,6 +226,9 @@ export function SolarRequestDetailPage() {
               ))}
             </ol>
           </section>
+          {progress && progress.requestId === requestId && (
+            <SolarStageProgress progress={progress} />
+          )}
           <section className="space-y-3 rounded-xl border p-5" aria-label={copy('historyTitle')}>
             <h2 className="text-xl font-semibold">{copy('historyTitle')}</h2>
             <ol className="space-y-3">
@@ -407,6 +416,6 @@ export function SolarRequestDetailPage() {
           </dl>
         </>
       )}
-    </main>
+    </div>
   );
 }

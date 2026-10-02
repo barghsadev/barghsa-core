@@ -64,6 +64,7 @@ import { Route as AdminReconciliationRouteImport } from './routes/admin/reconcil
 import { Route as AdminRolesRouteImport } from './routes/admin/roles'
 import { Route as AdminSavingOrdersRouteImport } from './routes/admin/saving-orders'
 import { Route as AdminServiceTargetsRouteImport } from './routes/admin/service-targets'
+import { Route as AdminSolarConstructionRouteImport } from './routes/admin/solar-construction'
 import { Route as AdminSolarPostalRouteImport } from './routes/admin/solar-postal'
 import { Route as AdminSolarRequestsRouteImport } from './routes/admin/solar-requests'
 import { Route as AdminStaffTeamsRouteImport } from './routes/admin/staff-teams'
@@ -392,6 +393,11 @@ const AdminServiceTargetsRoute = AdminServiceTargetsRouteImport.update({
   path: '/service-targets',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSolarConstructionRoute = AdminSolarConstructionRouteImport.update({
+  id: '/solar-construction',
+  path: '/solar-construction',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSolarPostalRoute = AdminSolarPostalRouteImport.update({
   id: '/solar-postal',
   path: '/solar-postal',
@@ -704,6 +710,7 @@ export interface FileRoutesByFullPath {
   '/admin/roles': typeof AdminRolesRoute
   '/admin/saving-orders': typeof AdminSavingOrdersRoute
   '/admin/service-targets': typeof AdminServiceTargetsRoute
+  '/admin/solar-construction': typeof AdminSolarConstructionRoute
   '/admin/solar-postal': typeof AdminSolarPostalRoute
   '/admin/solar-requests': typeof AdminSolarRequestsRoute
   '/admin/staff-teams': typeof AdminStaffTeamsRoute
@@ -804,6 +811,7 @@ export interface FileRoutesByTo {
   '/admin/roles': typeof AdminRolesRoute
   '/admin/saving-orders': typeof AdminSavingOrdersRoute
   '/admin/service-targets': typeof AdminServiceTargetsRoute
+  '/admin/solar-construction': typeof AdminSolarConstructionRoute
   '/admin/solar-postal': typeof AdminSolarPostalRoute
   '/admin/solar-requests': typeof AdminSolarRequestsRoute
   '/admin/staff-teams': typeof AdminStaffTeamsRoute
@@ -909,6 +917,7 @@ export interface FileRoutesById {
   '/admin/roles': typeof AdminRolesRoute
   '/admin/saving-orders': typeof AdminSavingOrdersRoute
   '/admin/service-targets': typeof AdminServiceTargetsRoute
+  '/admin/solar-construction': typeof AdminSolarConstructionRoute
   '/admin/solar-postal': typeof AdminSolarPostalRoute
   '/admin/solar-requests': typeof AdminSolarRequestsRoute
   '/admin/staff-teams': typeof AdminStaffTeamsRoute
@@ -1017,6 +1026,7 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/saving-orders'
     | '/admin/service-targets'
+    | '/admin/solar-construction'
     | '/admin/solar-postal'
     | '/admin/solar-requests'
     | '/admin/staff-teams'
@@ -1117,6 +1127,7 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/saving-orders'
     | '/admin/service-targets'
+    | '/admin/solar-construction'
     | '/admin/solar-postal'
     | '/admin/solar-requests'
     | '/admin/staff-teams'
@@ -1221,6 +1232,7 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/saving-orders'
     | '/admin/service-targets'
+    | '/admin/solar-construction'
     | '/admin/solar-postal'
     | '/admin/solar-requests'
     | '/admin/staff-teams'
@@ -1674,6 +1686,13 @@ declare module '@tanstack/react-router' {
       path: '/service-targets'
       fullPath: '/admin/service-targets'
       preLoaderRoute: typeof AdminServiceTargetsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/solar-construction': {
+      id: '/admin/solar-construction'
+      path: '/solar-construction'
+      fullPath: '/admin/solar-construction'
+      preLoaderRoute: typeof AdminSolarConstructionRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/solar-postal': {
@@ -2212,6 +2231,7 @@ interface AdminRouteChildren {
   AdminRolesRoute: typeof AdminRolesRoute
   AdminSavingOrdersRoute: typeof AdminSavingOrdersRoute
   AdminServiceTargetsRoute: typeof AdminServiceTargetsRoute
+  AdminSolarConstructionRoute: typeof AdminSolarConstructionRoute
   AdminSolarPostalRoute: typeof AdminSolarPostalRoute
   AdminSolarRequestsRoute: typeof AdminSolarRequestsRoute
   AdminStaffTeamsRoute: typeof AdminStaffTeamsRoute
@@ -2259,6 +2279,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminRolesRoute: AdminRolesRoute,
   AdminSavingOrdersRoute: AdminSavingOrdersRoute,
   AdminServiceTargetsRoute: AdminServiceTargetsRoute,
+  AdminSolarConstructionRoute: AdminSolarConstructionRoute,
   AdminSolarPostalRoute: AdminSolarPostalRoute,
   AdminSolarRequestsRoute: AdminSolarRequestsRoute,
   AdminStaffTeamsRoute: AdminStaffTeamsRoute,

@@ -94,6 +94,11 @@ export default function AdminLayout() {
         },
         { to: '/admin/solar-postal', label: tSolar('postalStaffTitle', locale), icon: Package },
         {
+          to: '/admin/solar-construction',
+          label: tSolar('constructionStaffTitle', locale),
+          icon: Sun,
+        },
+        {
           to: '/admin/electricity-increases',
           label: t('admin.electricityIncreases.title', locale),
           icon: Zap,

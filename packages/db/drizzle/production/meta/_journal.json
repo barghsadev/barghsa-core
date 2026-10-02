@@ -1107,6 +1107,13 @@
       "when": 1791331202248,
       "tag": "0237_receipt_activity_actors",
       "breakpoints": true
+    },
+    {
+      "idx": 238,
+      "version": "7",
+      "when": 1791331202249,
+      "tag": "0238_solar_construction_progress",
+      "breakpoints": true
     }
   ]
 }

@@ -57,6 +57,8 @@ import {
 import { SolarPostalService } from '../solar/solar-postal.service.js';
 import { StaffSolarFinalController } from '../solar/solar-final.controller.js';
 import { SolarFinalService } from '../solar/solar-final.service.js';
+import { SolarProgressService } from '../solar/solar-progress.service.js';
+import { SolarProgressController } from '../solar/solar-progress.controller.js';
 import { ConsultationRequestController } from '../consultation/consultation-request.controller.js';
 import { ConsultationRequestService } from '../consultation/consultation-request.service.js';
 import {
@@ -97,6 +99,7 @@ import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
     SolarPostalController,
     StaffSolarPostalController,
     StaffSolarFinalController,
+    SolarProgressController,
     ConsultationRequestController,
     StaffConsultationWorkflowController,
     CustomerConsultationWorkflowController,
@@ -122,6 +125,7 @@ import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
     SolarDocumentsService,
     SolarPostalService,
     SolarFinalService,
+    SolarProgressService,
     ConsultationRequestService,
     ConsultationWorkflowService,
   ],

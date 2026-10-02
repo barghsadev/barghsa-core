@@ -1,6 +1,47 @@
 import { lookup } from './lookup.js';
 
 const en: Record<string, string> = {
+  previous: 'Previous page',
+  constructionTitle: 'Construction progress',
+  constructionStaffTitle: 'Solar construction',
+  constructionDescription:
+    'Follow document approval, contract signing, and recorded construction milestones.',
+  constructionStaffDescription:
+    'Record verified construction milestones for signed, activated solar contracts.',
+  construction_document_review: 'Document review',
+  construction_postal_submission: 'Postal originals received',
+  construction_contract_signing: 'Contract signing',
+  construction_in_progress: 'Work started',
+  construction_delivered: 'Equipment delivered',
+  construction_installed: 'Installation recorded',
+  construction_complete: 'Recorded',
+  construction_current: 'Next stage',
+  construction_pending: 'Pending',
+  constructionDate: 'Recorded on',
+  constructionNoDate: 'No date recorded',
+  constructionHistory: 'Construction updates',
+  constructionActor: 'Staff',
+  constructionStopped:
+    'This request or contract is closed. Previously recorded milestones remain visible.',
+  constructionNoUpdates: 'No construction milestones have been recorded yet.',
+  constructionEmpty: 'No solar requests with linked contracts match this search.',
+  constructionSearch: 'Search by request or contract number',
+  constructionSelect: 'Select a request to view its progress.',
+  constructionNote: 'Customer-visible update',
+  constructionNoteHelp:
+    'Describe the verified work. The customer will see this note and receive a notification.',
+  constructionReview: 'Review milestone',
+  constructionReviewTitle: 'Confirm construction milestone',
+  constructionReviewDescription:
+    'Save this milestone and notify the customer. This does not activate or complete the contract, or collect payment.',
+  constructionConflict:
+    'Construction facts changed or another update is in progress. Close this review and reload the request before continuing.',
+  constructionBlocked:
+    'Recording requires write permission, confirmed postal originals, a signed activated contract, and an active profile.',
+  constructionDone: 'All construction milestones have been recorded.',
+  constructionReload: 'Reload progress',
+  constructionDetailError: 'Could not load this request’s construction progress.',
+  constructionSaveError: 'Could not prepare the review. Your update is still here.',
   title: 'Solar power station construction request',
   instruction: 'Choose the type of solar power station you want.',
   building: 'Building and apartment',
@@ -229,6 +270,47 @@ const en: Record<string, string> = {
 };
 
 const fa: Record<string, string> = {
+  previous: 'صفحه قبل',
+  constructionTitle: 'پیشرفت اجرای نیروگاه',
+  constructionStaffTitle: 'اجرای نیروگاه‌های خورشیدی',
+  constructionDescription:
+    'تأیید مدارک، امضای قرارداد و مراحل ثبت‌شده اجرای نیروگاه را پیگیری کنید.',
+  constructionStaffDescription:
+    'مراحل تأییدشده اجرا را برای قراردادهای امضاشده و فعال نیروگاه خورشیدی ثبت کنید.',
+  construction_document_review: 'بررسی مدارک',
+  construction_postal_submission: 'دریافت اصل مدارک پستی',
+  construction_contract_signing: 'امضای قرارداد',
+  construction_in_progress: 'شروع اجرا',
+  construction_delivered: 'تحویل تجهیزات',
+  construction_installed: 'ثبت نصب',
+  construction_complete: 'ثبت‌شده',
+  construction_current: 'مرحله بعد',
+  construction_pending: 'در انتظار',
+  constructionDate: 'تاریخ ثبت',
+  constructionNoDate: 'تاریخی ثبت نشده است',
+  constructionHistory: 'گزارش‌های اجرای نیروگاه',
+  constructionActor: 'کارشناس',
+  constructionStopped:
+    'این درخواست یا قرارداد بسته شده است. مراحل ثبت‌شده قبلی همچنان نمایش داده می‌شوند.',
+  constructionNoUpdates: 'هنوز مرحله‌ای از اجرای نیروگاه ثبت نشده است.',
+  constructionEmpty: 'درخواستی با قرارداد نیروگاه خورشیدی مطابق این جست‌وجو یافت نشد.',
+  constructionSearch: 'جست‌وجو با شماره درخواست یا قرارداد',
+  constructionSelect: 'برای مشاهده پیشرفت، یک درخواست را انتخاب کنید.',
+  constructionNote: 'گزارش قابل مشاهده برای مشتری',
+  constructionNoteHelp:
+    'کار انجام‌شده و تأییدشده را شرح دهید. مشتری این گزارش را می‌بیند و اعلان دریافت می‌کند.',
+  constructionReview: 'بررسی مرحله اجرا',
+  constructionReviewTitle: 'تأیید مرحله اجرای نیروگاه',
+  constructionReviewDescription:
+    'این مرحله ثبت و به مشتری اطلاع داده می‌شود. این اقدام قرارداد را فعال یا تکمیل نمی‌کند و وجهی دریافت نمی‌کند.',
+  constructionConflict:
+    'شرایط اجرا تغییر کرده است یا گزارش دیگری در حال ثبت است. این بررسی را ببندید و پیش از ادامه، درخواست را دوباره بارگیری کنید.',
+  constructionBlocked:
+    'ثبت مرحله به مجوز ویرایش، تأیید اصل مدارک پستی، قرارداد امضاشده و فعال و پروفایل فعال نیاز دارد.',
+  constructionDone: 'تمام مراحل اجرای نیروگاه ثبت شده‌اند.',
+  constructionReload: 'بارگیری دوباره پیشرفت',
+  constructionDetailError: 'پیشرفت اجرای این درخواست بارگیری نشد.',
+  constructionSaveError: 'بررسی آماده نشد. متن گزارش شما حفظ شده است.',
   title: 'درخواست ساخت نیروگاه خورشیدی',
   instruction: 'نوع نیروگاه خورشیدی مورد نظر خودتان را انتخاب کنید.',
   building: 'ساختمان و آپارتمان',

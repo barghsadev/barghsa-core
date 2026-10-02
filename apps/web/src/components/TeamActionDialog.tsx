@@ -134,6 +134,7 @@ export function TeamActionDialog({
           setError(t('team.passwordError', locale));
           return;
         }
+        setNeedsPassword(false);
       }
       if (!action) {
         setNeedsPassword(false);

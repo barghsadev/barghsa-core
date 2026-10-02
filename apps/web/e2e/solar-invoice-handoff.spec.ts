@@ -60,24 +60,28 @@ test('solar customer sees invoice payment, review, then published contract hando
     })
   );
 
+  await page.addInitScript(() => {
+    if (!localStorage.getItem('barghsa.locale')) localStorage.setItem('barghsa.locale', 'en');
+  });
   await page.goto('/solar/requests');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
-  const row = page.getByRole('link', { name: /Contract created/ });
+  const row = page.getByRole('main').last();
   await expect(row.locator('time')).toHaveText('09/24/2026');
   await expect(row).toContainText('Review and pay the issued invoice.');
   await expect(row).toContainText('Who acts next: You');
-  await row.click();
+  await row.locator(`a[href="/solar/requests/${requestId}"]`).click();
 
   const summary = page.getByRole('region', { name: 'Status and next action' });
   const history = page.getByRole('region', { name: 'Request history' });
   await expect(history.getByRole('listitem')).toHaveCount(3);
   await expect(history.locator('time').first()).toContainText('Sep 24, 2026');
   await expect(history).toContainText('Contract and invoice created');
-  await page.getByRole('button', { name: 'Switch language to Persian' }).click();
+  await page.evaluate(() => localStorage.setItem('barghsa.locale', 'fa'));
+  await page.reload();
   await expect(page.getByRole('region', { name: 'تاریخچه درخواست' })).toContainText(
     'قرارداد و فاکتور ایجاد شد'
   );
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+  await page.evaluate(() => localStorage.setItem('barghsa.locale', 'en'));
+  await page.reload();
   await expect(
     summary.getByRole('link', { name: 'Review and pay the issued invoice.' })
   ).toHaveAttribute('href', `/invoices/${invoiceId}`);

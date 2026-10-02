@@ -60,3 +60,70 @@ it('submits a captured multipart action with CSRF and a browser-generated bounda
   expect(headers.get('x-csrf-token')).toBe('test-token');
   expect(onSuccess).toHaveBeenCalled();
 });
+
+it('keeps successful step-up verification across a failed save and retries the identical captured command', async () => {
+  const enteredPassword = crypto.randomUUID();
+  const body = {
+    operationId: 'reviewed-operation',
+    expectedReviewHash: 'a'.repeat(64),
+    note: 'Reviewed note',
+  };
+  let attempts = 0;
+  const fetcher = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+    if (String(input) === '/api/auth/step-up') {
+      expect(JSON.parse(String(init?.body))).toEqual({ password: enteredPassword });
+      return new Response(JSON.stringify({ verified: true }), { status: 200 });
+    }
+    attempts++;
+    return new Response(JSON.stringify(attempts === 1 ? {} : { saved: true }), {
+      status: attempts === 1 ? 503 : 200,
+    });
+  });
+  vi.stubGlobal('fetch', fetcher);
+  const onSuccess = vi.fn(async () => {});
+  await act(async () =>
+    root.render(
+      <TeamActionDialog
+        action={{
+          title: 'Record milestone',
+          description: 'Customer-visible update',
+          path: '/api/admin/solar/construction/example',
+          method: 'POST',
+          body,
+          requiresPassword: true,
+        }}
+        onClose={vi.fn()}
+        onSuccess={onSuccess}
+      />
+    )
+  );
+  const password = document.body.querySelector<HTMLInputElement>('input[type=password]')!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+      password,
+      enteredPassword
+    );
+    password.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  const form = document.body.querySelector('form')!;
+  await act(async () =>
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  );
+  expect(document.body.querySelector('input[type=password]')).toBeNull();
+  expect(document.body.querySelector('[role=alert]')?.textContent).toContain(
+    'could not be completed'
+  );
+  const confirm = [...document.body.querySelectorAll<HTMLButtonElement>('button')].find(
+    (button) => button.textContent === 'Confirm'
+  )!;
+  expect(confirm.disabled).toBe(false);
+  await act(async () => confirm.click());
+  expect(fetcher.mock.calls.map((call) => String(call[0]))).toEqual([
+    '/api/auth/step-up',
+    '/api/admin/solar/construction/example',
+    '/api/admin/solar/construction/example',
+  ]);
+  expect(fetcher.mock.calls[1]![1]?.body).toBe(JSON.stringify(body));
+  expect(fetcher.mock.calls[2]![1]?.body).toBe(JSON.stringify(body));
+  expect(onSuccess).toHaveBeenCalledOnce();
+});

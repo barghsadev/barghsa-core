@@ -23,6 +23,7 @@ import type {
   SolarSubmissionReviewInput,
 } from './solar-request.validation.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
+import { readSolarProgress } from './solar-progress-projection.js';
 
 export const SOLAR_AGREEMENT_VERSION = 'solar-construction-request-v1';
 export const SOLAR_AGREEMENT_TEXT = 'شرایط ثبت قرارداد را می‌پذیرم.';
@@ -422,8 +423,10 @@ export class SolarRequestService {
           [id]
         )
       ).rows.map((row) => ({ event: row.event, at: row.created_at.toISOString() }));
+      const progress = await readSolarProgress(client, id);
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return { request, history };
+      return { request, history, progress };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

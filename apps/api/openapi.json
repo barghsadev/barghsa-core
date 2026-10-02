@@ -11872,6 +11872,217 @@
         ]
       }
     },
+    "/api/admin/solar/construction": {
+      "get": {
+        "operationId": "SolarProgressController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List solar requests with linked construction contracts",
+        "tags": [
+          "Admin · Solar construction progress"
+        ]
+      }
+    },
+    "/api/admin/solar/construction/{id}": {
+      "get": {
+        "operationId": "SolarProgressController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read recorded construction progress without internal author identities",
+        "tags": [
+          "Admin · Solar construction progress"
+        ]
+      },
+      "post": {
+        "operationId": "SolarProgressController_record",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
+                  "expectedRevision": {
+                    "maximum": 2,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "note": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "operationId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "stage": {
+                    "enum": [
+                      "in_progress",
+                      "delivered",
+                      "installed"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "stage",
+                  "note",
+                  "operationId",
+                  "expectedRevision",
+                  "expectedReviewHash"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Record the reviewed milestone atomically with audit and customer notification",
+        "tags": [
+          "Admin · Solar construction progress"
+        ]
+      }
+    },
+    "/api/admin/solar/construction/{id}/review": {
+      "post": {
+        "operationId": "SolarProgressController_review",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedRevision": {
+                    "maximum": 2,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "note": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "operationId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "stage": {
+                    "enum": [
+                      "in_progress",
+                      "delivered",
+                      "installed"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "stage",
+                  "note",
+                  "operationId",
+                  "expectedRevision"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review the next customer-visible construction milestone",
+        "tags": [
+          "Admin · Solar construction progress"
+        ]
+      }
+    },
     "/api/admin/solar/document-guidance": {
       "get": {
         "operationId": "StaffSolarDocumentsController_guidance",

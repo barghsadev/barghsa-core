@@ -192,6 +192,11 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Install PDF preview renderer
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends poppler-utils
+          pdftoppm -v
       - run: pnpm build
       # Every workspace coverage script runs the same test suite with coverage enabled.
       # Run it once, with at most two packages starting database/server fixtures together.

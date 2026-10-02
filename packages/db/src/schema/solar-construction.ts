@@ -21,6 +21,48 @@ import { documents } from './documents';
 import { profiles } from './profiles';
 import { users } from './users';
 
+export const SOLAR_CONSTRUCTION_MILESTONES = ['in_progress', 'delivered', 'installed'] as const;
+
+/** Staff-recorded physical milestones; paperwork/contract states never fabricate these records. */
+export const solarConstructionProgressEvents = pgTable(
+  'solar_construction_progress_events',
+  {
+    id: uuidv7('id').primaryKey().notNull(),
+    requestId: uuid('request_id')
+      .notNull()
+      .references(() => solarConstructionRequests.id, { onDelete: 'restrict' }),
+    contractId: uuid('contract_id')
+      .notNull()
+      .references(() => contracts.id, { onDelete: 'restrict' }),
+    stage: text('stage', { enum: SOLAR_CONSTRUCTION_MILESTONES }).notNull(),
+    revision: integer('revision').notNull(),
+    operationId: uuid('operation_id').notNull(),
+    actorUserId: text('actor_user_id').references(() => users.userId, { onDelete: 'set null' }),
+    note: text('note').notNull(),
+    review: jsonb('review').$type<Record<string, unknown>>().notNull(),
+    recordedAt: timestamp('recorded_at', { withTimezone: true })
+      .notNull()
+      .default(sql`clock_timestamp()`),
+  },
+  (t) => [
+    uniqueIndex('solar_progress_operation_key').on(t.operationId),
+    uniqueIndex('solar_progress_stage_key').on(t.requestId, t.stage),
+    uniqueIndex('solar_progress_revision_key').on(t.requestId, t.revision),
+    check(
+      'solar_progress_stage_revision',
+      sql`(${t.stage}='in_progress' AND ${t.revision}=1) OR (${t.stage}='delivered' AND ${t.revision}=2) OR (${t.stage}='installed' AND ${t.revision}=3)`
+    ),
+    check(
+      'solar_progress_note',
+      sql`char_length(btrim(${t.note})) BETWEEN 1 AND 1000 AND ${t.note}=btrim(${t.note})`
+    ),
+    check(
+      'solar_progress_review',
+      sql`jsonb_typeof(${t.review})='object' AND octet_length(${t.review}::text)<=32768`
+    ),
+  ]
+);
+
 /** Profile-scoped, short-lived solar intake progress; removed on submission. */
 export const solarCustomerDrafts = pgTable(
   'solar_customer_drafts',
