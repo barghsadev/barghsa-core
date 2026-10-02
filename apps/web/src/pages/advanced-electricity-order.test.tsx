@@ -43,7 +43,7 @@ vi.mock('@tanstack/react-router', () => ({
   },
 }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ money: String, irrDigits: String }),
+  useNumberFormatting: () => ({ money: String, number: String, irrDigits: String }),
 }));
 
 const profileId = 'profile-1';
@@ -261,7 +261,9 @@ it('keeps an unavailable draft closed until a retry restores the saved step', as
     (button) => button.textContent === t('electricity.order.retry', 'en')
   );
   await act(async () => retry?.click());
-  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain('2.');
+  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
+    t('electricity.advanced.stepProducts', 'en')
+  );
 });
 
 it('retries initial order context before opening the wizard', async () => {
@@ -272,7 +274,9 @@ it('retries initial order context before opening the wizard', async () => {
     (button) => button.textContent === t('electricity.order.retry', 'en')
   );
   await act(async () => retry?.click());
-  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain('2.');
+  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
+    t('electricity.advanced.stepProducts', 'en')
+  );
 });
 
 it('does not advance until the server confirms the saved step', async () => {
@@ -286,14 +290,18 @@ it('does not advance until the server confirms the saved step', async () => {
       (button) => button.textContent === t('electricity.order.next', 'en')
     );
   await act(async () => next()?.click());
-  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain('1.');
+  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
+    t('electricity.advanced.stepDates', 'en')
+  );
   expect(fetchMock.mock.calls.some(([url]) => url === '/api/electricity/drafts/advanced')).toBe(
     true
   );
 
   savedStepOverride = null;
   await act(async () => next()?.click());
-  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain('2.');
+  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
+    t('electricity.advanced.stepProducts', 'en')
+  );
 });
 
 it('saves the address step before opening address settings', async () => {

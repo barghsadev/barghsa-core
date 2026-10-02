@@ -265,7 +265,9 @@ for (const locale of ['en', 'fa'] as const)
       await page.goForward();
       await expect(page).toHaveURL(/\?step=3$/);
       await page.reload();
-      await expect(page.locator('li[aria-current="step"]')).toContainText('3.');
+      await expect(page.locator('li[aria-current="step"]')).toContainText(
+        t(mode === 'simple' ? 'electricity.order.step3' : 'electricity.advanced.stepPrice', locale)
+      );
       await page.goto(`${path(mode)}?step=5`);
       await expect(page).toHaveURL(/\?step=3$/);
       state.saveStatus = 503;
@@ -276,7 +278,9 @@ for (const locale of ['en', 'fa'] as const)
       ).toBeVisible();
       await page.goto(`${path(mode)}?step=garbage`);
       await expect(page).toHaveURL(/\?step=1$/);
-      await expect(page.locator('li[aria-current="step"]')).toContainText('1.');
+      await expect(page.locator('li[aria-current="step"]')).toContainText(
+        t(mode === 'simple' ? 'electricity.order.step1' : 'electricity.advanced.stepDates', locale)
+      );
       await page.goto(`${path(mode)}?step=2`);
       await expect(field(page, mode)).toHaveValue('120');
     });

@@ -138,6 +138,8 @@ export interface ProgressStep {
   state: 'complete' | 'current' | 'pending' | 'skipped';
   /** Localized state text for assistive technology. */
   stateLabel: string;
+  /** Optional localized ordinal for form wizards; other workflows retain their icons. */
+  number?: string;
 }
 /** Read-only progress. Navigation and validation stay with the owning workflow. */
 export function ProgressStepper({ steps, label }: { steps: ProgressStep[]; label: string }) {
@@ -166,11 +168,14 @@ export function ProgressStepper({ steps, label }: { steps: ProgressStep[]; label
               step.state === 'complete'
                 ? 'border-success/20 bg-success-soft text-success'
                 : step.state === 'current'
-                  ? 'border-info bg-info-soft text-info motion-safe:animate-pulse'
-                  : 'border-border bg-muted text-muted-foreground'
+                  ? 'border-info bg-info-soft text-info'
+                  : 'border-border bg-muted text-muted-foreground',
+              step.state === 'current' && step.number === undefined && 'motion-safe:animate-pulse'
             )}
           >
-            {step.state === 'complete' ? (
+            {step.number !== undefined ? (
+              step.number
+            ) : step.state === 'complete' ? (
               <Check className="size-4" />
             ) : step.state === 'skipped' ? (
               <Minus className="size-4" />

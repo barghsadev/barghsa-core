@@ -1,5 +1,8 @@
 import type { ReactNode } from 'react';
-import { Button } from '@barghsa/ui';
+import { Button, ProgressStepper } from '@barghsa/ui';
+import { t } from '@barghsa/i18n/app';
+import { useLocale } from '../hooks/useLocale.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 
 interface FormWizardProps {
   children: ReactNode;
@@ -46,30 +49,28 @@ export function FormWizard({
   onNext,
   onSubmit,
 }: FormWizardProps) {
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   return (
     <>
       <nav aria-label={ariaLabel} className="mb-8">
-        <ol className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
-          {steps.map((label, index) => {
-            const number = index + 1;
-            return (
-              <li
-                key={label}
-                aria-current={step === number ? 'step' : undefined}
-                className={`flex items-center gap-2 rounded-full px-3 py-1.5 ${
-                  step === number
-                    ? 'bg-primary text-primary-foreground font-semibold'
-                    : number < step
-                      ? 'bg-primary/10 text-primary'
-                      : 'bg-muted text-muted-foreground'
-                }`}
-              >
-                <span className="font-semibold">{number}.</span>
-                {label}
-              </li>
-            );
-          })}
-        </ol>
+        <ProgressStepper
+          label={ariaLabel}
+          steps={steps.map((label, index) => ({
+            id: String(index + 1),
+            label,
+            number: numbers.number(index + 1),
+            state: index + 1 === step ? 'current' : index + 1 < step ? 'complete' : 'pending',
+            stateLabel: t(
+              index + 1 === step
+                ? 'formWizard.current'
+                : index + 1 < step
+                  ? 'formWizard.completed'
+                  : 'formWizard.pending',
+              locale
+            ),
+          }))}
+        />
       </nav>
       {children}
       <div className="flex flex-wrap items-center gap-3">

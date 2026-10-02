@@ -359,7 +359,7 @@ for (const mode of ['saving', 'solar'] as const)
       const state = await fixture(page, mode, locale);
       await review(page, mode, locale);
       await expect(page.locator('li[aria-current="step"]')).toContainText(
-        mode === 'saving' ? (locale === 'fa' ? '۶.' : '6.') : '4.'
+        mode === 'saving' ? tSaving('stepReview', locale) : tSolar('reviewTitle', locale)
       );
       const submit = page.getByRole('button', {
         name: mode === 'saving' ? tSaving('submit', locale) : tSolar('submit', locale),
@@ -556,10 +556,14 @@ for (const locale of ['en', 'fa'] as const)
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
       ).toBe(true);
-      if (mode === 'saving' && locale === 'fa')
+      if (mode === 'saving' && locale === 'fa') {
+        await page
+          .getByRole('navigation', { name: tSaving('orderTitle', locale), exact: true })
+          .scrollIntoViewIfNeeded();
         await page.screenshot({
-          path: `/tmp/barghsa-wizard-review-saving-fa-${test.info().project.name}.png`,
+          path: `/tmp/barghsa-wizard-framework-saving-fa-${test.info().project.name}.png`,
           fullPage: true,
         });
+      }
     });
   }

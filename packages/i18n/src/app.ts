@@ -5,6 +5,9 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'formWizard.current': 'مرحلهٔ فعلی',
+  'formWizard.completed': 'تکمیل شده',
+  'formWizard.pending': 'مرحلهٔ بعدی',
   'invoices.activity.actor.customer': 'مشتری',
   'invoices.activity.actor.staff': 'کارکنان',
   'invoices.activity.actor.unknown': 'عامل ثبت نشده است',
@@ -1686,6 +1689,9 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'formWizard.current': 'Current step',
+  'formWizard.completed': 'Completed',
+  'formWizard.pending': 'Upcoming step',
   'invoices.activity.actor.customer': 'Customer',
   'invoices.activity.actor.staff': 'Staff',
   'invoices.activity.actor.unknown': 'Actor not recorded',

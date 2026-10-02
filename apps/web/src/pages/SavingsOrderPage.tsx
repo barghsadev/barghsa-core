@@ -1,4 +1,5 @@
 import { StepReviewPage } from '../components/StepReviewPage.js';
+import { FormWizard } from '../components/FormWizard.js';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Card, CardContent, FinancialReviewSummary } from '@barghsa/ui';
@@ -606,20 +607,37 @@ export function SavingsOrderPage() {
         </div>
       )}
       {!loading && profileId && draft && !draftLoading && !draftError && (
-        <>
-          <nav aria-label={copy('orderTitle')}>
-            <ol className="grid grid-cols-3 gap-2 text-xs md:grid-cols-6">
-              {steps.map((key, index) => (
-                <li
-                  key={key}
-                  aria-current={step === index + 1 ? 'step' : undefined}
-                  className={`rounded-md px-2 py-3 text-center ${step === index + 1 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}
-                >
-                  {numbers.number(index + 1)}. {copy(key)}
-                </li>
-              ))}
-            </ol>
-          </nav>
+        <FormWizard
+          steps={steps.map(copy)}
+          step={step}
+          ariaLabel={copy('orderTitle')}
+          backLabel={copy('back')}
+          saveLabel={t('electricity.order.saveDraft', locale)}
+          nextLabel={copy('next')}
+          submitLabel={copy('submit')}
+          savingLabel={t('electricity.order.savingDraft', locale)}
+          submittingLabel={copy('submitting')}
+          saving={savingDraft}
+          submitting={submitting}
+          backDisabled={protection.busy || protection.completed.current || addressDirty}
+          saveDisabled={protection.busy || protection.completed.current || addressDirty}
+          nextDisabled={!canNext || protection.busy || protection.completed.current}
+          submitDisabled={
+            !quote ||
+            quoting ||
+            quoteError ||
+            !hardwareConfirmed ||
+            !agreementAccepted ||
+            !submitForReview ||
+            addressDirty ||
+            protection.busy ||
+            protection.completed.current
+          }
+          onBack={() => void protection.save(step - 1)}
+          onSave={() => void saveNow()}
+          onNext={() => void advanceStep()}
+          onSubmit={() => void submit()}
+        >
           <Card>
             <CardContent className="space-y-5 pt-6">
               <fieldset
@@ -1087,64 +1105,14 @@ export function SavingsOrderPage() {
               {draftSaved && !protection.dirty && !draftSaveError && (
                 <p role="status">{t('electricity.order.draftSaved', locale)}</p>
               )}
-              <div className="flex flex-wrap justify-between gap-3 border-t pt-4">
-                {draftSaveError && (
-                  <p role="alert" className="text-destructive">
-                    {copy('draftSaveError')}
-                  </p>
-                )}
-                <Button
-                  variant="outline"
-                  disabled={
-                    step === 1 || protection.busy || protection.completed.current || addressDirty
-                  }
-                  onClick={() => {
-                    void protection.save(step - 1);
-                  }}
-                >
-                  {copy('back')}
-                </Button>
-                <Button
-                  variant="outline"
-                  disabled={protection.busy || protection.completed.current || addressDirty}
-                  onClick={() => {
-                    void saveNow();
-                  }}
-                >
-                  {t(
-                    savingDraft ? 'electricity.order.savingDraft' : 'electricity.order.saveDraft',
-                    locale
-                  )}
-                </Button>
-                {step < 6 ? (
-                  <Button
-                    disabled={!canNext || protection.busy || protection.completed.current}
-                    onClick={() => void advanceStep()}
-                  >
-                    {copy('next')}
-                  </Button>
-                ) : (
-                  <Button
-                    disabled={
-                      !quote ||
-                      quoting ||
-                      quoteError ||
-                      !hardwareConfirmed ||
-                      !agreementAccepted ||
-                      !submitForReview ||
-                      addressDirty ||
-                      protection.busy ||
-                      protection.completed.current
-                    }
-                    onClick={() => void submit()}
-                  >
-                    {copy(submitting ? 'submitting' : 'submit')}
-                  </Button>
-                )}
-              </div>
+              {draftSaveError && (
+                <p role="alert" className="text-destructive">
+                  {copy('draftSaveError')}
+                </p>
+              )}
             </CardContent>
           </Card>
-        </>
+        </FormWizard>
       )}
     </div>
   );
