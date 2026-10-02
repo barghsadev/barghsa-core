@@ -21,7 +21,15 @@ import { z } from 'zod';
 import { TicketAttachmentsService } from './ticket-attachments.service.js';
 import { createHash, randomUUID } from 'node:crypto';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
-import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  HttpException,
+  Inject,
+  BadRequestException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
+import { ensureDocumentPreview, readPreviewObject } from '../documents/document-preview.js';
 import { getDbPool, loadStoredStorageConfiguration } from '@barghsa/db';
 import { runtimeStorageProvider, type StorageProvider } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
@@ -46,6 +54,13 @@ export interface TicketRow {
   status: 'open' | 'in_progress' | 'waiting_customer' | 'waiting_staff' | 'resolved' | 'closed';
   attachments: string[];
   attachmentDownloadUrls?: string[];
+  attachmentFiles?: {
+    key: string;
+    fileName: string;
+    contentType: string;
+    url: string;
+    fileIndex: number;
+  }[];
   assignedTeamId: string | null;
   assignedTo: string | null;
   createdAt: Date;
@@ -81,7 +96,13 @@ export interface TicketCommentRow {
   bodyFormat: 'plain' | 'markdown';
   authorContext: 'customer' | 'staff' | 'unknown';
   author?: { displayName: string | null; avatarUrl: string | null } | null;
-  attachments: { key: string; fileName: string; contentType: string; url: string }[];
+  attachments: {
+    key: string;
+    fileName: string;
+    contentType: string;
+    url: string;
+    fileIndex: number;
+  }[];
   attachmentCount: number;
   createdAt: Date;
   updatedAt: Date;
@@ -1151,7 +1172,7 @@ export class TicketsService {
     const ticket = mapRow(result.rows[0]!);
     return {
       ...(await withRelatedTicketRecords([ticket], pool))[0]!,
-      attachmentDownloadUrls: await this.attachmentService.downloadUrls(ticket.attachments),
+      ...(await this.initialAttachmentFiles(ticket, pool)),
     };
   }
 
@@ -1313,6 +1334,94 @@ export class TicketsService {
     );
   }
 
+  async ticketAttachmentPreview(
+    ticketId: string,
+    commentId: string | null,
+    fileIndex: number,
+    userId: string,
+    staff: boolean,
+    assignedTo: string | undefined,
+    client: PoolClient
+  ): Promise<Buffer> {
+    if (!Number.isSafeInteger(fileIndex) || fileIndex < 0 || fileIndex > 4)
+      throw new BadRequestException('Invalid attachment index');
+    const ticket = staff
+      ? await this.staffGetTicket(ticketId, assignedTo, client)
+      : await this.getTicket(ticketId, userId, client);
+    const comment = commentId
+      ? (
+          await client.query(
+            `SELECT attachments FROM ticket_comments WHERE id=$1 AND ticket_id=$2
+       AND ($3::boolean OR visibility='public') FOR SHARE`,
+            [commentId, ticketId, staff]
+          )
+        ).rows[0]
+      : ticket;
+    const purpose = commentId ? 'ticket_reply_attachment' : 'ticket_attachment';
+    const prefix = commentId ? 'ticket-reply-attachments/' : 'ticket-attachments/';
+    const key: unknown = Array.isArray(comment?.attachments)
+      ? comment.attachments[fileIndex]
+      : null;
+    if (typeof key !== 'string' || !key.startsWith(prefix))
+      throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+    const record = (
+      await client.query(
+        `SELECT content_type FROM storage_records WHERE storage_key=$1 AND status='immutable'
+       AND metadata->>'purpose'=$3 AND ($3='ticket_attachment' OR metadata->>'ticketId'=$2) FOR SHARE`,
+        [key, ticketId, purpose]
+      )
+    ).rows[0];
+    if (!record) throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+    try {
+      const previewKey = await ensureDocumentPreview(
+        this.exportStorage,
+        `${commentId ? 'ticket-comment' : 'ticket-root'}-${commentId ?? ticketId}-${fileIndex}`,
+        key,
+        record.content_type as string
+      );
+      return await readPreviewObject(this.exportStorage, previewKey, 5 * 1024 * 1024);
+    } catch {
+      throw new ServiceUnavailableException('Attachment preview is unavailable');
+    }
+  }
+
+  private async initialAttachmentFiles(ticket: TicketRow, client: Pick<PoolClient, 'query'>) {
+    const keys = ticket.attachments.filter(
+      (key) => typeof key === 'string' && key.startsWith('ticket-attachments/')
+    );
+    const records = keys.length
+      ? (
+          await client.query(
+            `SELECT storage_key,file_name,content_type FROM storage_records WHERE storage_key=ANY($1::text[])
+       AND status='immutable' AND metadata->>'purpose'='ticket_attachment'`,
+            [keys]
+          )
+        ).rows
+      : [];
+    const details = new Map(records.map((row) => [row.storage_key, row]));
+    const available = keys.filter((key) => details.has(key));
+    const urls = await this.attachmentService.downloadUrls(available);
+    const links = new Map(available.map((key, index) => [key, urls[index]]));
+    return {
+      attachmentDownloadUrls: urls,
+      attachmentFiles: ticket.attachments.flatMap((key, fileIndex) => {
+        const record = details.get(key),
+          url = links.get(key);
+        return record && url
+          ? [
+              {
+                key,
+                fileName: record.file_name as string,
+                contentType: record.content_type as string,
+                url,
+                fileIndex,
+              },
+            ]
+          : [];
+      }),
+    };
+  }
+
   private async commentRecords(
     rows: Record<string, unknown>[],
     client: Pick<PoolClient, 'query'>
@@ -1386,10 +1495,14 @@ export class TicketsService {
     return rows.map((row) => ({
       ...mapCommentRow(row),
       author: authors.get(row.author_id) ?? null,
-      attachments: (Array.isArray(row.attachments) ? row.attachments : []).flatMap((key) => {
-        const file = details.get(key);
-        return file?.url ? [file as TicketCommentRow['attachments'][number]] : [];
-      }),
+      attachments: (Array.isArray(row.attachments) ? row.attachments : []).flatMap(
+        (key, fileIndex) => {
+          const file = details.get(key);
+          return file?.url
+            ? [{ ...file, fileIndex } as TicketCommentRow['attachments'][number]]
+            : [];
+        }
+      ),
     }));
   }
 
@@ -1658,7 +1771,7 @@ export class TicketsService {
             }
           : null,
       },
-      attachmentDownloadUrls: await this.attachmentService.downloadUrls(ticket.attachments),
+      ...(await this.initialAttachmentFiles(ticket, pool)),
     };
   }
 

@@ -217,3 +217,19 @@ it('uses the policy MIME for a browser file without a declared type and binds st
   await act(async () => UploadXHR.instances[0]!.complete());
   expect(uploaded).toHaveBeenCalledOnce();
 });
+
+for (const status of [401, 403]) {
+  it(`clears private selected work when PDF preview reports account denial (${status})`, async () => {
+    await render();
+    const input = host.querySelector('input[type=file]')!;
+    Object.defineProperty(input, 'files', { value: [file], configurable: true });
+    await act(async () => input.dispatchEvent(new Event('change', { bubbles: true })));
+    fetcher.mockResolvedValue(new Response(null, { status }));
+    await click('Preview');
+    expect(host.textContent).not.toContain('proof.pdf');
+    expect(host.querySelector('input[type=file]')).toBeNull();
+    expect(host.querySelector('[data-slot=file-preview]')).toBeNull();
+    expect(harness.action).toBeNull();
+    expect(UploadXHR.instances).toHaveLength(0);
+  });
+}

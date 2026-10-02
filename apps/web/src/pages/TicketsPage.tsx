@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link, useSearch } from '@tanstack/react-router';
 import { Button, Input, Label, ListPage, ListViewToggle } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
+import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import type { SupportListQuery } from '../lib/support-list-query.js';
@@ -17,11 +18,21 @@ import {
   type TicketStatus,
 } from '../components/TicketQueueRecords.js';
 import { TicketCommentThread, type TicketComment } from '../components/TicketCommentThread.js';
+import { FilePreview } from '../components/FilePreview.js';
+import { documentUrl } from '../lib/documents.js';
 import { ProfileClosureReview } from '../components/ProfileClosureReview.js';
 import {
   isAllowedInvoiceReceiptFile,
   uploadTicketAttachment,
 } from '../lib/invoice-bank-receipt-upload.js';
+
+function safeAttachmentUrl(value: string) {
+  try {
+    return documentUrl(value);
+  } catch {
+    return null;
+  }
+}
 
 interface Queue {
   responseTargetHours?: number | null;
@@ -135,6 +146,15 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
     [category, setCategory] = useState('general'),
     [priority, setPriority] = useState('normal');
   const [recordPage, setRecordPage] = useState(1);
+  const [previewFile, setPreviewFile] = useState<File | null>(null);
+  const denyDraftPreview = useCallback(() => {
+    setPreviewFile(null);
+    setFiles([]);
+    setSubject('');
+    setBody('');
+    uploads.current.clear();
+    setFileVersion((value) => value + 1);
+  }, []);
   const [profileId, setProfileId] = useState(''),
     [record, setRecord] = useState(''),
     [files, setFiles] = useState<File[]>([]),
@@ -659,9 +679,40 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
                 type="file"
                 multiple
                 accept="application/pdf,image/jpeg,image/png"
-                onChange={(event) => setFiles(Array.from(event.target.files ?? []))}
+                onChange={(event) => {
+                  setPreviewFile(null);
+                  setFiles(Array.from(event.target.files ?? []));
+                }}
               />
               <p className="text-sm">{text('fileHelp')}</p>
+              <ul className="mt-2 space-y-2">
+                {files.filter(isAllowedInvoiceReceiptFile).map((file, index) => (
+                  <li
+                    key={`${file.name}-${index}`}
+                    className="flex min-w-0 flex-wrap items-center gap-2"
+                  >
+                    <bdi className="min-w-0 flex-1 break-words">{file.name}</bdi>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      aria-label={`${documentText('preview', locale)}: ${file.name}`}
+                      aria-expanded={previewFile === file}
+                      onClick={() => setPreviewFile((current) => (current === file ? null : file))}
+                    >
+                      {documentText(previewFile === file ? 'hidePreview' : 'preview', locale)}
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+              {previewFile && files.includes(previewFile) && (
+                <FilePreview
+                  file={previewFile}
+                  name={previewFile.name}
+                  locale={locale}
+                  onAccessDenied={denyDraftPreview}
+                />
+              )}
+
               {(files.length > 5 || files.some((file) => !isAllowedInvoiceReceiptFile(file))) && (
                 <p role="alert">{text('invalidFiles')}</p>
               )}
@@ -918,19 +969,55 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
               </dl>
             </section>
           )}
-          {(detail.attachmentDownloadUrls ?? [])
-            .filter((url) => /^https?:\/\//.test(url))
-            .map((url, index) => (
-              <a
-                key={url}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-blue-700 dark:text-blue-300 underline"
-              >
-                {text('attachment')} {index + 1}
-              </a>
-            ))}
+          {detail.attachmentFiles?.length ? (
+            <ul aria-label={text('files')} className="flex flex-wrap gap-3">
+              {detail.attachmentFiles
+                .filter((file) => safeAttachmentUrl(file.url))
+                .map((file) => (
+                  <li key={file.key} className="min-w-0 max-w-full">
+                    <a
+                      href={file.url}
+                      aria-label={file.fileName}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      referrerPolicy="no-referrer"
+                      className="flex max-w-full flex-col gap-2 rounded-md border p-2 text-sm text-primary underline"
+                    >
+                      <FilePreview
+                        name={file.fileName}
+                        locale={locale}
+                        imageUrl={
+                          Number.isSafeInteger(file.fileIndex) &&
+                          file.fileIndex >= 0 &&
+                          file.fileIndex < 5
+                            ? new URL(
+                                `${prefix}/${encodeURIComponent(detail.id)}/attachments/${file.fileIndex}/preview`,
+                                window.location.origin
+                              ).href
+                            : undefined
+                        }
+                      />
+                      <bdi className="break-words">{file.fileName}</bdi>
+                    </a>
+                  </li>
+                ))}
+            </ul>
+          ) : (
+            (detail.attachmentDownloadUrls ?? [])
+              .filter((url) => safeAttachmentUrl(url))
+              .map((url, index) => (
+                <a
+                  key={url}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  referrerPolicy="no-referrer"
+                  className="block text-blue-700 dark:text-blue-300 underline"
+                >
+                  {text('attachment')} {index + 1}
+                </a>
+              ))
+          )}
           {!!detail.attachments?.length && !detail.attachmentDownloadUrls?.length && (
             <p role="status">{text('filesUnavailable')}</p>
           )}
@@ -1133,6 +1220,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
             </Button>
           )}
           <TicketCommentThread
+            ticketId={detail.id}
             comments={comments}
             ownerId={detail.userId}
             staff={staff}

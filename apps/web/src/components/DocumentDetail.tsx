@@ -16,6 +16,7 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { DocumentLegalHolds } from './DocumentLegalHolds.js';
 import { DocumentStatusBadge } from './DocumentStatusBadge.js';
+import { FilePreview } from './FilePreview.js';
 import {
   documentBase,
   isQuarantinedDocument,
@@ -289,12 +290,7 @@ export function DocumentDetail({
           {downloadError ? <p role="alert">{word('error')}</p> : null}
           {previewError ? <p role="alert">{word('previewUnavailable')}</p> : null}
           {preview ? (
-            <img
-              src={preview}
-              alt={document.originalName}
-              referrerPolicy="no-referrer"
-              className="max-h-[32rem] max-w-full object-contain"
-            />
+            <FilePreview imageUrl={preview} name={document.originalName} locale={locale} />
           ) : null}
           {download ? (
             <div className="flex flex-col gap-3">

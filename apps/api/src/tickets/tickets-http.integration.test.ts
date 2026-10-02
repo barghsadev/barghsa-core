@@ -1,6 +1,7 @@
 import type { TicketCommentRow } from './tickets.service.js';
 import { createServer, type Server } from 'node:http';
 import { randomUUID } from 'node:crypto';
+import PDFDocument from 'pdfkit';
 import { afterAll, afterEach, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 
@@ -11,10 +12,23 @@ const headers: Record<string, Record<string, string>> = {};
 const transientActors: string[] = [];
 beforeAll(async () => {
   storageServer = createServer(async (req, res) => {
-    const key = decodeURIComponent(new URL(req.url!, 'http://localhost').pathname).replace(
-      '/test-evidence/',
-      ''
-    );
+    const address = new URL(req.url!, 'http://localhost');
+    if (address.searchParams.get('list-type') === '2') {
+      const prefix = address.searchParams.get('prefix') ?? '';
+      res.setHeader('Content-Type', 'application/xml');
+      res.end(
+        `<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><IsTruncated>false</IsTruncated>${[
+          ...objects.entries(),
+        ]
+          .filter(([key]) => key.startsWith(prefix))
+          .map(
+            ([key, bytes]) => `<Contents><Key>${key}</Key><Size>${bytes.length}</Size></Contents>`
+          )
+          .join('')}</ListBucketResult>`
+      );
+      return;
+    }
+    const key = decodeURIComponent(address.pathname).replace('/test-evidence/', '');
     if (req.method === 'PUT') {
       const chunks: Buffer[] = [];
       for await (const chunk of req) chunks.push(Buffer.from(chunk));
@@ -1477,8 +1491,12 @@ it('validates list pagination and filters before SQL on customer and staff paths
   }
 });
 
-async function replyUpload(id: string, user = 'customer', extra: Record<string, unknown> = {}) {
-  const bytes = Buffer.from('%PDF-1.7\nReply evidence');
+async function replyUpload(
+  id: string,
+  user = 'customer',
+  extra: Record<string, unknown> = {},
+  bytes: Buffer = Buffer.from('%PDF-1.7\nReply evidence')
+) {
   const context = { purpose: 'ticket_reply_attachment', ticketId: id, ...extra };
   const meta = {
     fileName: 'reply.pdf',
@@ -1513,6 +1531,283 @@ async function postReply(id: string, user: string, input: Record<string, unknown
     { method: 'POST', headers: headers[user]!, body: JSON.stringify(input) }
   );
 }
+
+async function previewPdfBytes() {
+  const pdf = new PDFDocument();
+  const chunks: Buffer[] = [];
+  pdf.on('data', (chunk: Buffer) => chunks.push(chunk));
+  const complete = new Promise<Buffer>((resolve) =>
+    pdf.on('end', () => resolve(Buffer.concat(chunks)))
+  );
+  pdf.text('First page of verified support evidence');
+  pdf.addPage().text('Second page is not in the thumbnail');
+  pdf.end();
+  return complete;
+}
+async function previewReplyFixture(internal = false) {
+  const bytes = await previewPdfBytes();
+  const id = await ticket(),
+    upload = await replyUpload(id, internal ? 'staff' : 'customer', {}, bytes);
+  expect(upload.response.status, http.logs()).toBe(200);
+  const result = await postReply(id, internal ? 'staff' : 'customer', {
+    body: 'Verified evidence',
+    visibility: internal ? 'internal' : 'public',
+    attachments: [upload.key],
+  });
+  expect(result.status, http.logs()).toBe(201);
+  return { id, reply: (await result.json()) as TicketCommentRow };
+}
+function previewReply(id: string, commentId: string, index: number | string, user = 'customer') {
+  const base = user === 'customer' ? 'tickets' : 'staff/tickets';
+  return fetch(
+    `${http.base}/api/${base}/${id}/comments/${commentId}/attachments/${index}/preview`,
+    { headers: headers[user]! }
+  );
+}
+
+it('projects and previews original ticket files with stable indices and current ticket/storage authority', async () => {
+  const bytes = await previewPdfBytes(),
+    sourceKey = `uploads/document/${randomUUID()}.pdf`;
+  objects.set(sourceKey, bytes);
+  await http.pool.query(
+    `INSERT INTO storage_records(storage_key,status,metadata,file_size,content_type,category,file_name)
+    VALUES ($1,'active',$2::jsonb,$3,'application/pdf','document','original.pdf')`,
+    [
+      sourceKey,
+      JSON.stringify({ verified: true, uploadedBy: 'customer', purpose: 'ticket_attachment' }),
+      bytes.length,
+    ]
+  );
+  const created = await createTicket({
+    subject: 'Original evidence',
+    body: 'Details',
+    attachments: [sourceKey],
+  });
+  expect(created.status, http.logs()).toBe(201);
+  const row = (await created.json()) as { id: string; attachments: string[] };
+  const read = (user = 'customer', index = 0) =>
+    fetch(
+      `${http.base}/api/${user === 'customer' ? 'tickets' : 'staff/tickets'}/${row.id}/attachments/${index}/preview`,
+      { headers: headers[user]! }
+    );
+  for (const user of ['customer', 'staff']) {
+    const detail = await fetch(
+      `${http.base}/api/${user === 'customer' ? 'tickets' : 'staff/tickets'}/${row.id}`,
+      { headers: headers[user]! }
+    );
+    expect(await detail.json()).toMatchObject({
+      attachmentFiles: [{ fileName: 'original.pdf', contentType: 'application/pdf', fileIndex: 0 }],
+    });
+    expect((await read(user)).status, http.logs()).toBe(200);
+  }
+  expect((await read('assigned')).status).toBe(404);
+  await http.pool.query(
+    "UPDATE tickets SET assigned_to='assigned',attachments=$2::jsonb WHERE id=$1",
+    [row.id, JSON.stringify(['ticket-attachments/missing', row.attachments[0]])]
+  );
+  const detail = await fetch(`${http.base}/api/tickets/${row.id}`, { headers: headers.customer! });
+  const projected = (await detail.json()) as { attachmentDownloadUrls: string[] };
+  expect(projected).toMatchObject({ attachmentFiles: [{ fileIndex: 1 }] });
+  expect(projected.attachmentDownloadUrls).toHaveLength(1);
+  expect((await read('assigned', 0)).status).toBe(404);
+  expect((await read('assigned', 1)).status).toBe(200);
+  const stranger = await freshActor(false);
+  expect(
+    (
+      await fetch(`${http.base}/api/tickets/${row.id}/attachments/1/preview`, {
+        headers: stranger.headers,
+      })
+    ).status
+  ).toBe(404);
+  await http.pool.query("UPDATE storage_records SET status='removed' WHERE storage_key=$1", [
+    row.attachments[0],
+  ]);
+  expect((await read('customer', 1)).status).toBe(404);
+  const removedDetail = await fetch(`${http.base}/api/tickets/${row.id}`, {
+    headers: headers.customer!,
+  });
+  expect(await removedDetail.json()).toMatchObject({
+    attachmentFiles: [],
+    attachmentDownloadUrls: [],
+  });
+});
+
+it('generates transient PDF review images in both contexts without reserving or persisting any bytes', async () => {
+  const bytes = await previewPdfBytes();
+  const storageRows = (await http.pool.query('SELECT COUNT(*) AS count FROM storage_records'))
+    .rows[0]!.count;
+  const storedObjects = objects.size;
+  for (const user of ['customer', 'staff']) {
+    const response = await fetch(`${http.base}/api/upload/preview`, {
+      method: 'POST',
+      headers: { ...headers[user], 'Content-Type': 'application/pdf' },
+      body: new Uint8Array(bytes),
+    });
+    expect(response.status, http.logs()).toBe(200);
+    expect(response.headers.get('content-type')).toContain('image/png');
+    expect(response.headers.get('cache-control')).toContain('no-store');
+    const image = Buffer.from(await response.arrayBuffer());
+    expect(image.subarray(0, 8).toString('hex')).toBe('89504e470d0a1a0a');
+    expect(image.length).toBeLessThan(5 * 1024 * 1024);
+  }
+  expect(
+    (await http.pool.query('SELECT COUNT(*) AS count FROM storage_records')).rows[0]!.count
+  ).toBe(storageRows);
+  expect(objects.size).toBe(storedObjects);
+});
+
+it('rejects unauthenticated, CSRF-invalid, non-PDF, oversized and malformed transient preview input', async () => {
+  const bytes = await previewPdfBytes();
+  const send = (headers: Record<string, string>, body = bytes) =>
+    fetch(`${http.base}/api/upload/preview`, {
+      method: 'POST',
+      headers,
+      body: new Uint8Array(body),
+    });
+  expect((await send({ 'Content-Type': 'application/pdf' })).status).toBe(401);
+  expect(
+    (
+      await send({
+        ...headers.customer!,
+        'Content-Type': 'application/pdf',
+        'X-CSRF-Token': 'incorrect',
+      })
+    ).status
+  ).toBe(403);
+  expect((await send({ ...headers.customer!, 'Content-Type': 'text/plain' })).status).toBe(400);
+  expect(
+    (
+      await send(
+        { ...headers.customer!, 'Content-Type': 'application/pdf' },
+        Buffer.from('<script>not PDF</script>')
+      )
+    ).status
+  ).toBe(400);
+  expect(
+    (
+      await send(
+        { ...headers.customer!, 'Content-Type': 'application/pdf' },
+        Buffer.alloc(10 * 1024 * 1024 + 1)
+      )
+    ).status
+  ).toBe(413);
+  expect(
+    (
+      await send(
+        { ...headers.customer!, 'Content-Type': 'application/pdf' },
+        Buffer.from('%PDF-malformed')
+      )
+    ).status
+  ).toBe(503);
+});
+
+it('renders bounded first-page PNGs for current customer/staff/assigned scopes and rechecks cached authorization', async () => {
+  const { id, reply } = await previewReplyFixture();
+  expect(reply.attachments[0]!.fileIndex).toBe(0);
+  for (const user of ['customer', 'staff']) {
+    const response = await previewReply(id, reply.id, 0, user);
+    expect(response.status, http.logs()).toBe(200);
+    expect(response.headers.get('content-type')).toContain('image/png');
+    expect(response.headers.get('cache-control')).toBe(
+      'private, no-cache, no-store, must-revalidate'
+    );
+    expect(response.headers.get('vary')).toContain('Cookie');
+    const bytes = Buffer.from(await response.arrayBuffer());
+    expect(bytes.subarray(0, 8).toString('hex')).toBe('89504e470d0a1a0a');
+    expect(bytes.length).toBeLessThan(5 * 1024 * 1024);
+  }
+  expect((await previewReply(id, reply.id, 0, 'assigned')).status).toBe(404);
+  await http.pool.query("UPDATE tickets SET assigned_to='assigned' WHERE id=$1", [id]);
+  expect((await previewReply(id, reply.id, 0, 'assigned')).status).toBe(200);
+  await http.pool.query("UPDATE tickets SET assigned_to='staff' WHERE id=$1", [id]);
+  expect((await previewReply(id, reply.id, 0, 'assigned')).status).toBe(404);
+  const stranger = await freshActor(false);
+  expect(
+    (
+      await fetch(`${http.base}/api/tickets/${id}/comments/${reply.id}/attachments/0/preview`, {
+        headers: stranger.headers,
+      })
+    ).status
+  ).toBe(404);
+  expect(
+    (await fetch(`${http.base}/api/tickets/${id}/comments/${reply.id}/attachments/0/preview`))
+      .status
+  ).toBe(401);
+});
+
+it('never serves internal, cross-ticket, unavailable or unbound reply bytes, even after preview caching', async () => {
+  const { id, reply } = await previewReplyFixture(true);
+  expect((await previewReply(id, reply.id, 0)).status).toBe(404);
+  expect((await previewReply(id, reply.id, 0, 'staff')).status).toBe(200);
+  const other = await ticket();
+  expect((await previewReply(other, reply.id, 0, 'staff')).status).toBe(404);
+  for (const index of [-1, 5, '1.5', 'NaN'])
+    expect((await previewReply(id, reply.id, index, 'staff')).status).toBe(400);
+  expect((await previewReply(id, randomUUID(), 0, 'staff')).status).toBe(404);
+  expect((await previewReply(id, reply.id, 1, 'staff')).status).toBe(404);
+  const key = reply.attachments[0]!.key;
+  await http.pool.query(
+    "UPDATE storage_records SET metadata=jsonb_set(metadata,'{ticketId}',to_jsonb($2::text)) WHERE storage_key=$1",
+    [key, other]
+  );
+  expect((await previewReply(id, reply.id, 0, 'staff')).status).toBe(404);
+  await http.pool.query(
+    "UPDATE storage_records SET metadata=jsonb_set(metadata,'{ticketId}',to_jsonb($2::text)),status='removed' WHERE storage_key=$1",
+    [key, id]
+  );
+  expect((await previewReply(id, reply.id, 0, 'staff')).status).toBe(404);
+});
+
+it('retains original attachment indices when unavailable files are omitted from the projection', async () => {
+  const { id, reply } = await previewReplyFixture();
+  const key = reply.attachments[0]!.key;
+  await http.pool.query('UPDATE ticket_comments SET attachments=$2 WHERE id=$1', [
+    reply.id,
+    JSON.stringify(['ticket-reply-attachments/missing', key]),
+  ]);
+  const read = await fetch(`${http.base}/api/tickets/${id}/comments`, {
+    headers: headers.customer!,
+  });
+  const rows = (await read.json()) as TicketCommentRow[];
+  expect(rows[0]!.attachments).toHaveLength(1);
+  expect(rows[0]!.attachments[0]!.fileIndex).toBe(1);
+  expect((await previewReply(id, reply.id, 0)).status).toBe(404);
+  expect((await previewReply(id, reply.id, 1)).status).toBe(200);
+});
+
+it('rejects revoked permissions and expired sessions before reading a cached ticket derivative', async () => {
+  const { id, reply } = await previewReplyFixture(true);
+  const actor = await freshActor(false);
+  await grantStaffRole(actor.userId, 'test-assigned');
+  await http.pool.query('UPDATE tickets SET assigned_to=$2 WHERE id=$1', [id, actor.userId]);
+  const read = () =>
+    fetch(`${http.base}/api/staff/tickets/${id}/comments/${reply.id}/attachments/0/preview`, {
+      headers: actor.headers,
+    });
+  expect((await read()).status).toBe(200);
+  await http.pool.query('DELETE FROM user_roles WHERE user_id=$1', [actor.userId]);
+  expect((await read()).status).toBe(403);
+  await grantStaffRole(actor.userId, 'test-assigned');
+  await http.pool.query(
+    "UPDATE sessions SET expires_at=NOW()-INTERVAL '1 second' WHERE session_id=$1",
+    [actor.sessionId]
+  );
+  expect((await read()).status).toBe(401);
+});
+
+it('reports renderer failures safely without returning original PDF bytes or storage details', async () => {
+  const id = await ticket(),
+    upload = await replyUpload(id);
+  expect(upload.response.status).toBe(200);
+  const reply = (await (
+    await postReply(id, 'customer', { body: 'Malformed PDF', attachments: [upload.key] })
+  ).json()) as TicketCommentRow;
+  const response = await previewReply(id, reply.id, 0);
+  expect(response.status).toBe(503);
+  const body = await response.text();
+  expect(body).not.toContain(reply.attachments[0]!.key);
+  expect(body).not.toContain('Reply evidence');
+});
 it('uploads and seals customer/staff reply files, keeps internal evidence private and preserves legacy text', async () => {
   const id = await ticket('waiting_customer');
   const upload = await replyUpload(id);

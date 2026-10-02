@@ -1,11 +1,13 @@
 import { useId, useRef, useState, type DragEvent } from 'react';
 import { Button, cn } from '@barghsa/ui';
 import { FileText, Upload, X } from 'lucide-react';
+import { FilePreview } from './FilePreview.js';
 import { documentText } from '@barghsa/i18n/documents';
 import type { Locale } from '@barghsa/i18n/app';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import {
   validateUploadFiles,
+  uploadContentType,
   type FileUploadPolicy,
   type FileValidationError,
 } from '../lib/file-upload.js';
@@ -23,6 +25,7 @@ export function FileUpload({
   maxFiles = 1,
   disabled = false,
   progress,
+  onAccessDenied,
 }: {
   value: readonly File[];
   onChange: (files: File[]) => void;
@@ -31,6 +34,7 @@ export function FileUpload({
   maxFiles?: number;
   disabled?: boolean;
   progress?: readonly (FileUploadProgress & { file: File })[];
+  onAccessDenied?: (() => void) | undefined;
 }) {
   const word = (key: string) => documentText(key, locale),
     numbers = useNumberFormatting(locale);
@@ -38,6 +42,7 @@ export function FileUpload({
     input = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<FileValidationError | null>(null),
     [dragging, setDragging] = useState(false);
+  const [previews, setPreviews] = useState<readonly File[]>([]);
   const blocked = disabled || !policy || !policy.formats.length;
   const interpolate = (key: string, values: Record<string, string>) =>
     word(key).replace(/\{([a-zA-Z]+)\}/g, (whole, name: string) => values[name] ?? whole);
@@ -72,7 +77,10 @@ export function FileUpload({
     if (blocked || !policy) return;
     const issue = validateUploadFiles(files, policy, maxFiles);
     setError(issue);
-    if (!issue) onChange(files);
+    if (!issue) {
+      setPreviews([]);
+      onChange(files);
+    }
   }
   function drop(event: DragEvent<HTMLButtonElement>) {
     event.preventDefault();
@@ -161,6 +169,7 @@ export function FileUpload({
                     aria-label={interpolate('removeFile', { name: file.name })}
                     onClick={() => {
                       setError(null);
+                      setPreviews((current) => current.filter((item) => item !== file));
                       onChange(value.filter((_, position) => position !== index));
                       if (input.current) input.current.value = '';
                     }}
@@ -169,6 +178,30 @@ export function FileUpload({
                   </Button>
                 )}
               </div>
+              <Button
+                type="button"
+                variant="ghost"
+                aria-label={`${word('preview')}: ${file.name}`}
+                aria-expanded={previews.includes(file)}
+                onClick={() =>
+                  setPreviews((current) =>
+                    current.includes(file)
+                      ? current.filter((item) => item !== file)
+                      : [...current, file]
+                  )
+                }
+              >
+                {word(previews.includes(file) ? 'hidePreview' : 'preview')}
+              </Button>
+              {previews.includes(file) && (
+                <FilePreview
+                  file={file}
+                  name={file.name}
+                  locale={locale}
+                  contentType={(policy && uploadContentType(file, policy)) || file.type}
+                  onAccessDenied={onAccessDenied}
+                />
+              )}
               {transfer && (
                 <>
                   <div

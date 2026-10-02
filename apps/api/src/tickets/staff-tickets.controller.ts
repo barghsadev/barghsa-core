@@ -10,6 +10,9 @@ import {
   Put,
   Param,
   ParseUUIDPipe,
+  ParseIntPipe,
+  Header,
+  StreamableFile,
   Query,
   HttpCode,
   HttpException,
@@ -361,6 +364,73 @@ export class StaffTicketsController {
     return this.ticketsService.readAs(req.session, 'read', (client, access) =>
       this.ticketsService.staffListComments(id, access.scope, client)
     );
+  }
+
+  @Get(':id/comments/:commentId/attachments/:fileIndex/preview')
+  @Header('Cache-Control', 'private, no-store')
+  @Header('Vary', 'Cookie')
+  @RateLimit({ namespace: 'staff-tickets:attachment-preview:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview a verified attachment within current staff ticket scope' })
+  @ApiResponse({
+    status: 200,
+    content: { 'image/png': { schema: { type: 'string', format: 'binary' } } },
+  })
+  async attachmentPreview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('commentId', new ParseUUIDPipe()) commentId: string,
+    @Param('fileIndex', new ParseIntPipe()) fileIndex: number,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const bytes = await this.ticketsService.readAs(req.session, 'read', (client, access) =>
+      this.ticketsService.ticketAttachmentPreview(
+        id,
+        commentId,
+        fileIndex,
+        req.session.userId,
+        true,
+        access.scope,
+        client
+      )
+    );
+    return new StreamableFile(bytes, {
+      type: 'image/png',
+      disposition: 'inline',
+      length: bytes.length,
+    });
+  }
+
+  @Get(':id/attachments/:fileIndex/preview')
+  @Header('Cache-Control', 'private, no-store')
+  @Header('Vary', 'Cookie')
+  @RateLimit({ namespace: 'staff-tickets:attachment-preview:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({
+    summary: 'Preview an initial verified attachment within current staff ticket scope',
+  })
+  @ApiResponse({
+    status: 200,
+    content: { 'image/png': { schema: { type: 'string', format: 'binary' } } },
+  })
+  async initialAttachmentPreview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('fileIndex', new ParseIntPipe()) fileIndex: number,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const bytes = await this.ticketsService.readAs(req.session, 'read', (client, access) =>
+      this.ticketsService.ticketAttachmentPreview(
+        id,
+        null,
+        fileIndex,
+        req.session.userId,
+        true,
+        access.scope,
+        client
+      )
+    );
+    return new StreamableFile(bytes, {
+      type: 'image/png',
+      disposition: 'inline',
+      length: bytes.length,
+    });
   }
 
   /**

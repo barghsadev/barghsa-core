@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   Alert,
   AlertDescription,
@@ -105,6 +105,15 @@ function UploadForm({
   const controller = useRef<AbortController | null>(null),
     mounted = useRef(false),
     busy = useRef(false);
+  const denyPreview = useCallback(() => {
+    controller.current?.abort();
+    setFile(null);
+    setAttempt(null);
+    setAction(null);
+    setVerification(false);
+    setDenied(true);
+    setPolicyError(true);
+  }, []);
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -318,6 +327,7 @@ function UploadForm({
             policy={policy}
             locale={locale}
             disabled={!!attempt || !!action}
+            onAccessDenied={denyPreview}
             {...(attempt && phase !== 'idle'
               ? { progress: [{ file: attempt.file, loaded, total: attempt.file.size, phase }] }
               : {})}

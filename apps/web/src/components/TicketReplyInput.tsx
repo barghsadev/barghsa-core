@@ -1,8 +1,10 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Bold, Italic, List, Link as LinkIcon, Paperclip, X } from 'lucide-react';
 import { Button, Input, Label } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/app';
 import TosContent from './TosContent.js';
+import { FilePreview } from './FilePreview.js';
+import { documentText } from '@barghsa/i18n/documents';
 import {
   isAllowedInvoiceReceiptFile,
   uploadTicketReplyAttachment,
@@ -48,6 +50,14 @@ export function TicketReplyInput({
   const selection = useRef<[number, number] | null>(null),
     alive = useRef(true);
   const attempt = useRef<{ signature: string; id: string } | null>(null);
+  const [previewFile, setPreviewFile] = useState<File | null>(null);
+  const denyPreview = useCallback(() => {
+    setFiles([]);
+    setPreviewFile(null);
+    uploaded.current.clear();
+    attempt.current = null;
+    onBodyChange('');
+  }, [onBodyChange]);
   useEffect(() => {
     alive.current = true;
     return () => {
@@ -102,6 +112,7 @@ export function TicketReplyInput({
     });
     if (accepted && alive.current) {
       setFiles([]);
+      setPreviewFile(null);
       setFileError(false);
       uploaded.current.clear();
       attempt.current = null;
@@ -240,10 +251,22 @@ export function TicketReplyInput({
         {!!files.length && (
           <ul className="mt-2 flex flex-col gap-2">
             {files.map((file, index) => (
-              <li key={`${file.name}-${index}`} className="flex min-w-0 items-center gap-2">
+              <li
+                key={`${file.name}-${index}`}
+                className="flex min-w-0 flex-wrap items-center gap-2"
+              >
                 <span className="min-w-0 flex-1 break-words">
                   <bdi>{file.name}</bdi>
                 </span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  aria-label={`${documentText('preview', locale)}: ${file.name}`}
+                  aria-expanded={previewFile === file}
+                  onClick={() => setPreviewFile((current) => (current === file ? null : file))}
+                >
+                  {documentText(previewFile === file ? 'hidePreview' : 'preview', locale)}
+                </Button>
                 <Button
                   type="button"
                   variant="ghost"
@@ -253,6 +276,7 @@ export function TicketReplyInput({
                   onClick={() => {
                     setFiles((current) => current.filter((_, i) => i !== index));
                     uploaded.current.delete(file);
+                    if (previewFile === file) setPreviewFile(null);
                     setFileError(false);
                   }}
                 >
@@ -261,6 +285,14 @@ export function TicketReplyInput({
               </li>
             ))}
           </ul>
+        )}
+        {previewFile && files.includes(previewFile) && (
+          <FilePreview
+            file={previewFile}
+            name={previewFile.name}
+            locale={locale}
+            onAccessDenied={denyPreview}
+          />
         )}
       </div>
       {fileError && (

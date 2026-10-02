@@ -41,6 +41,13 @@ export interface Ticket {
   } | null;
   attachments: string[];
   attachmentDownloadUrls?: string[];
+  attachmentFiles?: {
+    key: string;
+    fileName: string;
+    contentType: string;
+    url: string;
+    fileIndex: number;
+  }[];
   customer?: {
     userId: string;
     username: string;

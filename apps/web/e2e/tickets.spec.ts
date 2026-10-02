@@ -3,6 +3,8 @@ import { formatBrowserDate } from './browser-date';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
+import { documentText } from '@barghsa/i18n/documents';
+import { pdfPreviewImage, pdfPreviewFixture } from './upload-fixture';
 const profileId = '11111111-1111-4111-8111-111111111111',
   ticketId = '22222222-2222-4222-8222-222222222222';
 const key = 'uploads/document/33333333-3333-4333-8333-333333333333.pdf';
@@ -21,6 +23,236 @@ const item = {
   relatedEntityType: null,
   relatedEntityId: null,
 };
+
+for (const staff of [false, true])
+  for (const locale of ['en', 'fa'] as const) {
+    test(`${staff ? 'staff' : 'customer'} previews verified ticket PDF first pages and keeps downloads on derivative failure (${locale})`, async ({
+      page,
+    }, testInfo) => {
+      await shell(page, locale, staff);
+      await page.route('**/api/user/settings/theme', (route) =>
+        route.fulfill({ json: { mode: locale === 'fa' ? 'dark' : 'light' } })
+      );
+      const prefix = staff ? '/api/staff/tickets' : '/api/tickets';
+      const commentId = '44444444-4444-4444-8444-444444444444',
+        privateId = '55555555-5555-4555-8555-555555555555';
+      const comments = [
+        {
+          id: commentId,
+          authorId: 'customer',
+          authorContext: 'customer',
+          body: 'Verified PDF evidence',
+          visibility: 'public',
+          createdAt: item.createdAt,
+          attachmentCount: 2,
+          attachments: [
+            {
+              key: 'ticket-reply-attachments/pdf',
+              fileIndex: 1,
+              fileName: 'proof.pdf',
+              contentType: 'application/pdf',
+              url: 'https://storage.example.test/proof.pdf',
+            },
+          ],
+        },
+        {
+          id: privateId,
+          authorId: 'staff',
+          authorContext: 'staff',
+          body: 'Internal evidence',
+          visibility: 'internal',
+          createdAt: item.createdAt,
+          attachments: [
+            {
+              key: 'ticket-reply-attachments/private',
+              fileIndex: 0,
+              fileName: 'private.pdf',
+              contentType: 'application/pdf',
+              url: 'https://storage.example.test/private.pdf',
+            },
+          ],
+        },
+      ];
+      await page.route(
+        (url) => url.pathname === prefix,
+        (route) =>
+          route.fulfill({
+            json: {
+              data: [item],
+              totalPages: 1,
+              viewer: { userId: 'staff', canWrite: true, canAssignOthers: true },
+            },
+          })
+      );
+      await page.route(`**${prefix}/${ticketId}`, (route) =>
+        route.fulfill({
+          json: {
+            ...item,
+            attachments: ['ticket-attachments/missing', 'ticket-attachments/initial'],
+            attachmentDownloadUrls: ['https://storage.example.test/initial.pdf'],
+            attachmentFiles: [
+              {
+                key: 'ticket-attachments/initial',
+                fileIndex: 1,
+                fileName: 'initial.pdf',
+                contentType: 'application/pdf',
+                url: 'https://storage.example.test/initial.pdf',
+              },
+            ],
+          },
+        })
+      );
+      let denied = false,
+        privateReads = 0;
+      await page.route(`**${prefix}/${ticketId}/comments`, (route) =>
+        route.fulfill({ json: comments })
+      );
+      await page.route(`**${prefix}/${ticketId}/comments/*/attachments/*/preview`, (route) => {
+        const url = route.request().url();
+        if (url.includes(privateId)) privateReads++;
+        if (denied) return route.fulfill({ status: 403, json: {} });
+        expect(url).toContain(
+          url.includes(privateId) ? '/attachments/0/preview' : '/attachments/1/preview'
+        );
+        return route.fulfill({
+          contentType: 'image/png',
+          headers: { 'Cache-Control': 'private, no-store' },
+          body: pdfPreviewImage,
+        });
+      });
+      await page.route(`**${prefix}/${ticketId}/attachments/*/preview`, (route) => {
+        expect(route.request().url()).toContain('/attachments/1/preview');
+        return denied
+          ? route.fulfill({ status: 403, json: {} })
+          : route.fulfill({ contentType: 'image/png', body: pdfPreviewImage });
+      });
+      let transientReads = 0,
+        reservations = 0;
+      await page.route('**/api/upload/preview', (route) => {
+        transientReads++;
+        expect(route.request().headers()['content-type']).toBe('application/pdf');
+        return route.fulfill({ contentType: 'image/png', body: pdfPreviewImage });
+      });
+      await page.route('**/api/upload/presign*', (route) => {
+        reservations++;
+        return route.fulfill({ status: 500 });
+      });
+      await page.goto(staff ? '/admin/tickets' : '/tickets');
+      await page.getByRole('button', { name: item.subject, exact: true }).click();
+      const initial = page.getByRole('img', {
+        name: `${documentText('preview', locale)}: initial.pdf`,
+        exact: true,
+      });
+      await expect
+        .poll(() => initial.evaluate((node) => (node as HTMLImageElement).naturalWidth))
+        .toBe(640);
+      await expect(page.getByRole('link', { name: 'initial.pdf', exact: true })).toHaveAttribute(
+        'href',
+        'https://storage.example.test/initial.pdf'
+      );
+      const composer = page.locator('[data-slot=ticket-reply-input]');
+      await composer.locator('input[type=file]').setInputFiles({
+        name: 'draft.pdf',
+        mimeType: 'application/pdf',
+        buffer: pdfPreviewFixture(),
+      });
+      const toggle = composer.getByRole('button', {
+        name: `${documentText('preview', locale)}: draft.pdf`,
+        exact: true,
+      });
+      await toggle.click();
+      await expect
+        .poll(() =>
+          composer.getByRole('img').evaluate((node) => (node as HTMLImageElement).naturalWidth)
+        )
+        .toBe(640);
+      await toggle.click();
+      await expect(composer.getByRole('img')).toHaveCount(0);
+      expect(transientReads).toBe(1);
+      expect(reservations).toBe(0);
+      const thread = page.locator('[aria-labelledby=ticket-conversation-heading]');
+      const image = thread.getByRole('img', {
+        name: `${documentText('preview', locale)}: proof.pdf`,
+        exact: true,
+      });
+      await expect
+        .poll(() => image.evaluate((node) => (node as HTMLImageElement).naturalWidth))
+        .toBe(640);
+      await expect(image).toHaveAttribute('referrerpolicy', 'no-referrer');
+      const link = thread.getByRole('link', { name: /proof.pdf/ });
+      await expect(link).toHaveAttribute('href', 'https://storage.example.test/proof.pdf');
+      await expect(link).toHaveAttribute('referrerpolicy', 'no-referrer');
+      if (!staff) {
+        await expect(thread).not.toContainText('Internal evidence');
+        expect(privateReads).toBe(0);
+        await expect(thread.getByRole('link', { name: /private.pdf/ })).toHaveCount(0);
+      } else
+        await expect(
+          thread.getByRole('img', {
+            name: `${documentText('preview', locale)}: private.pdf`,
+            exact: true,
+          })
+        ).toBeVisible();
+      expect(
+        (
+          await new AxeBuilder({ page })
+            .include('[aria-labelledby=ticket-conversation-heading]')
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+            .analyze()
+        ).violations
+      ).toEqual([]);
+      await thread.scrollIntoViewIfNeeded();
+      await page.screenshot({
+        path: `/tmp/barghsa-ticket-pdf-${staff ? 'staff' : 'customer'}-${locale}-${testInfo.project.name}.png`,
+      });
+      if (!staff) {
+        await page.route('**/api/tickets/options*', (route) =>
+          route.fulfill({ json: { profiles: [], records: [] } })
+        );
+        await page.getByRole('button', { name: t('tickets.create', locale), exact: true }).click();
+        await page.locator('#ticket-files').setInputFiles({
+          name: 'new-ticket.pdf',
+          mimeType: 'application/pdf',
+          buffer: pdfPreviewFixture(),
+        });
+        const createToggle = page.getByRole('button', {
+          name: `${documentText('preview', locale)}: new-ticket.pdf`,
+          exact: true,
+        });
+        await createToggle.click();
+        const draftImage = page.getByRole('img', {
+          name: `${documentText('preview', locale)}: new-ticket.pdf`,
+          exact: true,
+        });
+        await expect
+          .poll(() => draftImage.evaluate((node) => (node as HTMLImageElement).naturalWidth))
+          .toBe(640);
+        await createToggle.click();
+        expect(transientReads).toBe(2);
+        expect(reservations).toBe(0);
+      }
+      denied = true;
+      await page.reload();
+      // URL-selected detail is restored; a failed derivative retains its original file action.
+      const recovered = page.locator('[aria-labelledby=ticket-conversation-heading]');
+      await expect(
+        recovered
+          .getByRole('img', { name: `${documentText('previewUnavailable', locale)}`, exact: true })
+          .first()
+      ).toBeVisible();
+      await expect(recovered.getByRole('link', { name: /proof.pdf/ })).toHaveAttribute(
+        'href',
+        'https://storage.example.test/proof.pdf'
+      );
+      await expect(page.getByRole('link', { name: 'initial.pdf', exact: true })).toHaveAttribute(
+        'href',
+        'https://storage.example.test/initial.pdf'
+      );
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true
+      );
+    });
+  }
 for (const staff of [false, true])
   for (const locale of ['en', 'fa'] as const)
     test(`${staff ? 'staff' : 'customer'} ticket queue views keep disclosure, conversation and failed-page recovery (${locale})`, async ({

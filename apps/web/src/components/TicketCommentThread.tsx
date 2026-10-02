@@ -1,7 +1,16 @@
 import { Avatar, AvatarImage, AvatarFallback, Badge, cn } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/app';
 import TosContent from './TosContent.js';
-import { FileText } from 'lucide-react';
+import { FilePreview } from './FilePreview.js';
+import { documentUrl } from '../lib/documents.js';
+
+function safeUrl(value: string) {
+  try {
+    return documentUrl(value);
+  } catch {
+    return null;
+  }
+}
 
 export interface TicketComment {
   id: string;
@@ -13,12 +22,19 @@ export interface TicketComment {
   authorContext?: 'customer' | 'staff' | 'unknown';
   author?: { displayName: string | null; avatarUrl: string | null } | null;
   attachmentCount?: number;
-  attachments?: readonly { key: string; fileName: string; contentType: string; url: string }[];
+  attachments?: readonly {
+    key: string;
+    fileName: string;
+    contentType: string;
+    url: string;
+    fileIndex?: number;
+  }[];
 }
 
 /** Only public messages enter a customer thread, regardless of the server response. */
 export function TicketCommentThread({
   comments,
+  ticketId,
   ownerId,
   staff,
   locale,
@@ -27,6 +43,7 @@ export function TicketCommentThread({
   formatDate,
 }: {
   comments: readonly TicketComment[];
+  ticketId?: string;
   ownerId: string;
   staff: boolean;
   locale: Locale;
@@ -116,27 +133,37 @@ export function TicketCommentThread({
                   {!!item.attachments?.length && (
                     <ul aria-label={t('tickets.files', locale)} className="flex flex-wrap gap-2">
                       {item.attachments
-                        .filter((file) => /^https?:\/\//i.test(file.url))
+                        .filter((file) => safeUrl(file.url))
                         .map((file) => (
                           <li key={file.key} className="max-w-full">
                             <a
                               href={file.url}
+                              aria-label={file.fileName}
                               target="_blank"
                               rel="noopener noreferrer"
+                              referrerPolicy="no-referrer"
                               className="flex max-w-full flex-col gap-2 rounded-md border bg-background p-2 text-sm text-primary underline underline-offset-4"
                             >
-                              {['image/png', 'image/jpeg', 'image/webp'].includes(
-                                file.contentType
-                              ) ? (
-                                <img
-                                  src={file.url}
-                                  alt=""
-                                  loading="lazy"
-                                  className="h-24 w-32 rounded object-contain"
-                                />
-                              ) : (
-                                <FileText aria-hidden="true" className="size-6" />
-                              )}
+                              <FilePreview
+                                name={file.fileName}
+                                locale={locale}
+                                imageUrl={
+                                  ['image/png', 'image/jpeg', 'image/webp'].includes(
+                                    file.contentType
+                                  )
+                                    ? file.url
+                                    : file.contentType === 'application/pdf' &&
+                                        ticketId &&
+                                        Number.isSafeInteger(file.fileIndex) &&
+                                        file.fileIndex! >= 0 &&
+                                        file.fileIndex! < 5
+                                      ? new URL(
+                                          `${staff ? '/api/staff/tickets' : '/api/tickets'}/${encodeURIComponent(ticketId)}/comments/${encodeURIComponent(item.id)}/attachments/${file.fileIndex}/preview`,
+                                          window.location.origin
+                                        ).href
+                                      : undefined
+                                }
+                              />
                               <span className="break-words">
                                 <bdi>{file.fileName}</bdi>
                               </span>
@@ -146,8 +173,7 @@ export function TicketCommentThread({
                     </ul>
                   )}
                   {(item.attachmentCount ?? 0) >
-                    (item.attachments?.filter((file) => /^https?:\/\//i.test(file.url)).length ??
-                      0) && (
+                    (item.attachments?.filter((file) => safeUrl(file.url)).length ?? 0) && (
                     <p role="status" className="text-sm text-muted-foreground">
                       {t('tickets.filesUnavailable', locale)}
                     </p>

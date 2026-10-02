@@ -8,6 +8,7 @@ import ContractsPage from '../pages/ContractsPage.js';
 import AdminContractsPage from '../pages/AdminContractsPage.js';
 import { refreshProfileContext } from '../lib/profile-context.js';
 import type { TeamAction } from './TeamActionDialog.js';
+import { documentUploadPolicy } from '../test/document-list-fixtures.js';
 import type { ContractDetailData, ContractVersion } from '../lib/contracts.js';
 import { en, fa } from '@barghsa/i18n/contracts';
 vi.mock('@tanstack/react-router', () => ({
@@ -813,7 +814,10 @@ it('submits drafts and hides mutations for historical and signed contracts', asy
   expect(container.textContent).not.toContain(en.uploadSigned);
 });
 it('derives signed upload context from the accepted customer contract', async () => {
-  const fetcher = api(detail({ state: 'Accepted', canAccept: false }));
+  const base = api(detail({ state: 'Accepted', canAccept: false }));
+  const fetcher = vi.fn((raw: string) =>
+    raw === '/api/upload/policy/contract' ? response(documentUploadPolicy('contract')) : base(raw)
+  );
   vi.stubGlobal('fetch', fetcher);
   await render(<ContractDetail id={ID} staff={false} onClose={() => {}} onChanged={() => {}} />);
   await click(en.uploadSigned);

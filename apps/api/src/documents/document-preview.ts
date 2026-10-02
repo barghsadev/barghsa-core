@@ -53,7 +53,7 @@ export async function readPreviewObject(
   return Buffer.from(read.bytes);
 }
 
-function renderPdfFirstPage(bytes: Buffer): Promise<Buffer> {
+export function renderPdfFirstPage(bytes: Buffer): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const process = spawn(
       'pdftoppm',

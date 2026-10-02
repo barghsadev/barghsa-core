@@ -16,6 +16,8 @@ import {
 import { randomUUID } from 'node:crypto';
 import { getDbPool } from '@barghsa/db';
 import type { PoolClient } from 'pg';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import { renderPdfFirstPage } from '../documents/document-preview.js';
 import { ProfilesService } from '../profiles/profiles.service.js';
 import { requireUploadContext } from './upload-access.js';
 import { detectDocumentContentType } from './document-content-type.js';
@@ -84,6 +86,43 @@ export class UploadService {
       }))
       .filter((format) => format.mimeTypes.length > 0);
     return { category, formats, maxSizeBytes: policy.maxSizeBytes };
+  }
+
+  /** Transient preview only: no reservation, original object, or derivative is stored. */
+  async pdfPreview(bytes: Buffer, actor: AuthenticatedRequest) {
+    if (
+      !bytes.length ||
+      bytes.length > 10 * 1024 * 1024 ||
+      !bytes.subarray(0, 5).equals(Buffer.from('%PDF-'))
+    )
+      throw new BadRequestException('Invalid PDF preview input');
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const account = (
+        await client.query(
+          'SELECT disabled_at,activation_token FROM users WHERE user_id=$1 FOR NO KEY UPDATE',
+          [actor.session.userId]
+        )
+      ).rows[0];
+      if (!account || account.disabled_at || account.activation_token)
+        throw new ForbiddenException('Preview is unavailable');
+      await requireCurrentSession(client, actor.session);
+      let image: Buffer;
+      try {
+        image = await renderPdfFirstPage(bytes);
+      } catch {
+        throw new ServiceUnavailableException('Preview is unavailable');
+      }
+      await requireCurrentSession(client, actor.session);
+      await client.query('COMMIT');
+      return image;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   /**

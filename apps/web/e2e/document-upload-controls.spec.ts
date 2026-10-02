@@ -1,4 +1,4 @@
-import { test, expect } from './upload-fixture';
+import { test, expect, pdfPreviewFixture, pdfPreviewImage } from './upload-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page, Route } from '@playwright/test';
 import { documentText } from '@barghsa/i18n/documents';
@@ -57,6 +57,117 @@ async function shell(page: Page, locale: 'en' | 'fa', staff: boolean) {
     route.fulfill({ json: { transfers: [] } })
   );
 }
+
+for (const staff of [false, true])
+  for (const locale of ['en', 'fa'] as const) {
+    test(`${staff ? 'staff' : 'customer'} previews selected PDF first pages and local images before reserving an upload (${locale})`, async ({
+      page,
+    }, testInfo) => {
+      await shell(page, locale, staff);
+      const base = staff ? '/api/admin/documents' : '/api/documents';
+      let reservations = 0;
+      await page.route(`**${base}`, (route) => {
+        if (route.request().method() === 'POST') reservations++;
+        return route.fulfill({ json: { items: [], nextCursor: null } });
+      });
+      await page.route('**/api/upload/policy/*', (route) =>
+        route.fulfill({ json: documentUploadPolicy(route.request().url().split('/').at(-1)!) })
+      );
+      const revoked: string[] = [];
+      let renders = 0;
+      await page.route('**/api/upload/preview', (route) => {
+        renders++;
+        expect(route.request().headers()['content-type']).toBe('application/pdf');
+        if (testInfo.project.name === 'chromium')
+          expect(route.request().postDataBuffer()).toEqual(pdfPreviewFixture());
+        return route.fulfill({
+          contentType: 'image/png',
+          headers: { 'Cache-Control': 'private, no-store' },
+          body: pdfPreviewImage,
+        });
+      });
+      await page.exposeFunction('recordRevoked', (url: string) => revoked.push(url));
+      await page.addInitScript(() => {
+        const native = URL.revokeObjectURL.bind(URL);
+        URL.revokeObjectURL = (url: string) => {
+          void (
+            window as unknown as { recordRevoked: (value: string) => Promise<void> }
+          ).recordRevoked(url);
+          native(url);
+        };
+      });
+      await page.goto(staff ? `/admin/documents?profileId=${documentProfileId}` : '/documents');
+      const word = (key: string) => documentText(key, locale);
+      await page.getByRole('button', { name: word('upload'), exact: true }).click();
+      const picker = page.locator('[data-slot=file-upload]');
+      await expect(picker.getByRole('button', { name: word('dropFiles') })).toBeEnabled();
+      await picker.locator('input[type=file]').setInputFiles({
+        name: 'proof.pdf',
+        mimeType: 'application/pdf',
+        buffer: pdfPreviewFixture(),
+      });
+      const preview = picker.getByRole('button', {
+        name: `${word('preview')}: proof.pdf`,
+        exact: true,
+      });
+      await preview.focus();
+      await page.keyboard.press('Enter');
+      await expect(preview).toHaveAttribute('aria-expanded', 'true');
+      const firstPage = picker.getByRole('img', {
+        name: `${word('preview')}: proof.pdf`,
+        exact: true,
+      });
+      await expect(firstPage).toHaveAttribute('src', /^blob:/);
+      await expect(firstPage).toHaveAttribute('referrerpolicy', 'no-referrer');
+      await expect
+        .poll(() => firstPage.evaluate((node) => (node as HTMLImageElement).naturalWidth))
+        .toBe(640);
+      expect(renders).toBe(1);
+      const url = (await firstPage.getAttribute('src'))!;
+      await firstPage.scrollIntoViewIfNeeded();
+      await page.screenshot({
+        path: `/tmp/barghsa-local-pdf-${staff ? 'staff' : 'customer'}-${locale}-${testInfo.project.name}.png`,
+      });
+      await preview.click();
+      await expect(firstPage).toHaveCount(0);
+      await expect.poll(() => revoked.includes(url)).toBe(true);
+      await page.locator('#document-category').selectOption('image');
+      await expect(picker.getByRole('button', { name: word('dropFiles') })).toBeEnabled();
+      const png = Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aZIUAAAAASUVORK5CYII=',
+        'base64'
+      );
+      await picker
+        .locator('input[type=file]')
+        .setInputFiles({ name: 'proof.png', mimeType: 'image/png', buffer: png });
+      await picker
+        .getByRole('button', { name: `${word('preview')}: proof.png`, exact: true })
+        .click();
+      const image = picker.getByRole('img', { name: `${word('preview')}: proof.png`, exact: true });
+      await expect(image).toHaveAttribute('src', /^blob:/);
+      await expect
+        .poll(() => image.evaluate((node) => (node as HTMLImageElement).naturalWidth))
+        .toBe(1);
+      const imageUrl = await image.getAttribute('src');
+      await picker
+        .getByRole('button', { name: word('removeFile').replace('{name}', 'proof.png') })
+        .click();
+      await expect(image).toHaveCount(0);
+      await expect.poll(() => revoked.includes(imageUrl!)).toBe(true);
+      expect(reservations).toBe(0);
+      expect(
+        (
+          await new AxeBuilder({ page })
+            .include('[data-slot=file-upload]')
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+            .analyze()
+        ).violations
+      ).toEqual([]);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true
+      );
+    });
+  }
 for (const staff of [false, true])
   for (const locale of ['en', 'fa'] as const)
     for (const mode of ['transfer', 'confirmation'] as const)

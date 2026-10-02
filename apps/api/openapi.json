@@ -27792,6 +27792,46 @@
         ]
       }
     },
+    "/api/staff/tickets/{id}/attachments/{fileIndex}/preview": {
+      "get": {
+        "operationId": "StaffTicketsController_initialAttachmentPreview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "fileIndex",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Preview an initial verified attachment within current staff ticket scope",
+        "tags": [
+          "Staff Tickets"
+        ]
+      }
+    },
     "/api/staff/tickets/{id}/closure-preview": {
       "get": {
         "operationId": "StaffTicketsController_closurePreview",
@@ -27918,6 +27958,54 @@
           }
         },
         "summary": "Staff add a comment to a ticket",
+        "tags": [
+          "Staff Tickets"
+        ]
+      }
+    },
+    "/api/staff/tickets/{id}/comments/{commentId}/attachments/{fileIndex}/preview": {
+      "get": {
+        "operationId": "StaffTicketsController_attachmentPreview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "fileIndex",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Preview a verified attachment within current staff ticket scope",
         "tags": [
           "Staff Tickets"
         ]
@@ -28404,6 +28492,46 @@
         ]
       }
     },
+    "/api/tickets/{id}/attachments/{fileIndex}/preview": {
+      "get": {
+        "operationId": "TicketsController_initialAttachmentPreview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "fileIndex",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Preview an initial verified ticket attachment",
+        "tags": [
+          "Tickets"
+        ]
+      }
+    },
     "/api/tickets/{id}/comments": {
       "get": {
         "operationId": "TicketsController_listComments",
@@ -28506,6 +28634,54 @@
           }
         },
         "summary": "Add a comment to a ticket",
+        "tags": [
+          "Tickets"
+        ]
+      }
+    },
+    "/api/tickets/{id}/comments/{commentId}/attachments/{fileIndex}/preview": {
+      "get": {
+        "operationId": "TicketsController_attachmentPreview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "fileIndex",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Preview a visible verified ticket reply attachment",
         "tags": [
           "Tickets"
         ]
@@ -28795,6 +28971,41 @@
             "description": ""
           }
         },
+        "tags": [
+          "Upload"
+        ]
+      }
+    },
+    "/api/upload/preview": {
+      "post": {
+        "operationId": "UploadController_preview",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/pdf": {
+              "schema": {
+                "format": "binary",
+                "maxLength": 10485760,
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Generate a transient first-page image without reserving or storing the selected PDF",
         "tags": [
           "Upload"
         ]

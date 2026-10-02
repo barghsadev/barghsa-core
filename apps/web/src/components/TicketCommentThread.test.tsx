@@ -50,6 +50,7 @@ async function render(staff: boolean, locale: 'en' | 'fa', rows = comments, owne
   await act(async () =>
     root.render(
       <TicketCommentThread
+        ticketId="00000000-0000-4000-8000-000000000010"
         comments={rows}
         staff={staff}
         locale={locale}
@@ -144,6 +145,78 @@ it('renders explicit markdown safely, preserves plain text, uses stored author c
   expect(host.querySelector('img')?.getAttribute('src')).toBe('https://storage.example.test/image');
   expect(host.querySelector('[data-slot="ticket-comment"]')?.className).toContain(
     'border-primary/40'
+  );
+});
+
+for (const staff of [false, true])
+  for (const locale of ['en', 'fa'] as const) {
+    it(`${locale}: ${staff ? 'staff' : 'customer'} PDF first pages use the authorized original attachment index`, async () => {
+      await render(staff, locale, [
+        {
+          ...comments[0]!,
+          id: '00000000-0000-4000-8000-000000000020',
+          attachmentCount: 2,
+          attachments: [
+            {
+              key: 'pdf',
+              fileIndex: 1,
+              fileName: 'proof.pdf',
+              contentType: 'application/pdf',
+              url: 'https://storage.example.test/proof',
+            },
+          ],
+        },
+      ]);
+      const image = host.querySelector('img')!;
+      expect(image.src).toContain(
+        `${staff ? '/api/staff/tickets' : '/api/tickets'}/00000000-0000-4000-8000-000000000010/comments/00000000-0000-4000-8000-000000000020/attachments/1/preview`
+      );
+      expect(image.getAttribute('referrerpolicy')).toBe('no-referrer');
+      expect(host.querySelector('a')?.getAttribute('href')).toBe(
+        'https://storage.example.test/proof'
+      );
+      await act(async () => image.dispatchEvent(new Event('error')));
+      expect(host.querySelector('img')).toBeNull();
+      expect(host.querySelector('a')?.getAttribute('href')).toBe(
+        'https://storage.example.test/proof'
+      );
+    });
+  }
+
+it('keeps invalid or legacy attachment indices as icons and omits credential-bearing links', async () => {
+  await render(false, 'en', [
+    {
+      ...comments[0]!,
+      attachmentCount: 3,
+      attachments: [
+        {
+          key: 'legacy',
+          fileName: 'legacy.pdf',
+          contentType: 'application/pdf',
+          url: 'https://storage.example.test/legacy',
+        },
+        {
+          key: 'invalid',
+          fileIndex: 5,
+          fileName: 'bad.pdf',
+          contentType: 'application/pdf',
+          url: 'https://storage.example.test/bad',
+        },
+        {
+          key: 'unsafe',
+          fileIndex: 0,
+          fileName: 'unsafe.pdf',
+          contentType: 'application/pdf',
+          url: 'https://private:secret@storage.example.test/file',
+        },
+      ],
+    },
+  ]);
+  expect(host.querySelector('img,iframe')).toBeNull();
+  expect(host.querySelectorAll('a')).toHaveLength(2);
+  expect(host.innerHTML).not.toContain('private:secret');
+  expect(host.querySelector('[role=status]')?.textContent).toBe(
+    t('tickets.filesUnavailable', 'en')
   );
 });
 

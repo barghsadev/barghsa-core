@@ -13,6 +13,7 @@ import {
   type BusinessDocument,
 } from '../lib/documents.js';
 import { DocumentStatusBadge } from './DocumentStatusBadge.js';
+import { FilePreview } from './FilePreview.js';
 import { HistoryTable, type HistoryColumn } from './HistoryTable.js';
 
 const readable = new Set(['Available', 'SubmittedForReview', 'Approved', 'Rejected', 'Superseded']);
@@ -248,11 +249,10 @@ export function DocumentRecords({
           </p>
         )}
         {canPreview && entry.preview?.url && entry.preview.visible && (
-          <img
-            src={entry.preview.url}
-            alt={`${word('preview')}: ${item.originalName}`}
-            referrerPolicy="no-referrer"
-            className="max-h-48 max-w-full rounded-md border object-contain"
+          <FilePreview
+            imageUrl={entry.preview.url}
+            name={item.originalName}
+            locale={locale}
             onError={() => {
               if (!alive.current || !keys.current.has(key)) return;
               setReceipts((previous) => ({

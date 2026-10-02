@@ -7,6 +7,9 @@ import {
   Patch,
   Param,
   ParseUUIDPipe,
+  ParseIntPipe,
+  Header,
+  StreamableFile,
   Query,
   HttpCode,
   HttpException,
@@ -324,6 +327,71 @@ export class TicketsController {
     return this.ticketsService.readAs(req.session, false, (client) =>
       this.ticketsService.listComments(id, req.session.userId, false, client)
     );
+  }
+
+  @Get(':id/comments/:commentId/attachments/:fileIndex/preview')
+  @Header('Cache-Control', 'private, no-store')
+  @Header('Vary', 'Cookie')
+  @RateLimit({ namespace: 'tickets:attachment-preview:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview a visible verified ticket reply attachment' })
+  @ApiResponse({
+    status: 200,
+    content: { 'image/png': { schema: { type: 'string', format: 'binary' } } },
+  })
+  async attachmentPreview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('commentId', new ParseUUIDPipe()) commentId: string,
+    @Param('fileIndex', new ParseIntPipe()) fileIndex: number,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const bytes = await this.ticketsService.readAs(req.session, false, (client) =>
+      this.ticketsService.ticketAttachmentPreview(
+        id,
+        commentId,
+        fileIndex,
+        req.session.userId,
+        false,
+        undefined,
+        client
+      )
+    );
+    return new StreamableFile(bytes, {
+      type: 'image/png',
+      disposition: 'inline',
+      length: bytes.length,
+    });
+  }
+
+  @Get(':id/attachments/:fileIndex/preview')
+  @Header('Cache-Control', 'private, no-store')
+  @Header('Vary', 'Cookie')
+  @RateLimit({ namespace: 'tickets:attachment-preview:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Preview an initial verified ticket attachment' })
+  @ApiResponse({
+    status: 200,
+    content: { 'image/png': { schema: { type: 'string', format: 'binary' } } },
+  })
+  async initialAttachmentPreview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('fileIndex', new ParseIntPipe()) fileIndex: number,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const bytes = await this.ticketsService.readAs(req.session, false, (client) =>
+      this.ticketsService.ticketAttachmentPreview(
+        id,
+        null,
+        fileIndex,
+        req.session.userId,
+        false,
+        undefined,
+        client
+      )
+    );
+    return new StreamableFile(bytes, {
+      type: 'image/png',
+      disposition: 'inline',
+      length: bytes.length,
+    });
   }
 
   /**
