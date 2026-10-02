@@ -72,6 +72,20 @@ export class UploadService {
     @Inject(ProfilesService) private readonly profilesService: ProfilesService
   ) {}
 
+  /** Public constraints only; this read neither reserves a file nor grants record access. */
+  async filePolicy(category: string) {
+    if (!['document', 'image', 'video', 'contract'].includes(category))
+      throw new BadRequestException('Unknown file category');
+    const policy = await this.policyResolver.resolveEffective(category);
+    const formats = (policy.allowedExtensions ?? [])
+      .map((extension) => ({
+        extension,
+        mimeTypes: effectiveMimeTypesForFile(policy, 'file' + extension),
+      }))
+      .filter((format) => format.mimeTypes.length > 0);
+    return { category, formats, maxSizeBytes: policy.maxSizeBytes };
+  }
+
   /**
    * Generate a presigned PUT URL for direct browser-to-S3 upload.
    *

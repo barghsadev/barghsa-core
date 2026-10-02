@@ -1,3 +1,4 @@
+import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect, type Page } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { documentText } from '@barghsa/i18n/documents';
@@ -59,6 +60,11 @@ async function shell(page: Page, locale: 'en' | 'fa', staff: boolean) {
         'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+cA1cAAAAASUVORK5CYII=',
         'base64'
       ),
+    })
+  );
+  await page.route('**/api/upload/policy/*', (route) =>
+    route.fulfill({
+      json: documentUploadPolicy(new URL(route.request().url()).pathname.split('/').at(-1)),
     })
   );
 }

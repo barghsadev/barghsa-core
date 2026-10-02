@@ -28704,6 +28704,88 @@
         ]
       }
     },
+    "/api/upload/policy/{category}": {
+      "get": {
+        "description": "Authenticated customer and staff contexts can read category formats and size bounds. This creates no reservation and grants no record access. Upload and byte verification recheck current policy.",
+        "operationId": "UploadController_filePolicy",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "category",
+            "required": true,
+            "schema": {
+              "enum": [
+                "document",
+                "image",
+                "video",
+                "contract"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "document",
+                        "image",
+                        "video",
+                        "contract"
+                      ],
+                      "type": "string"
+                    },
+                    "formats": {
+                      "items": {
+                        "properties": {
+                          "extension": {
+                            "pattern": "^\\.[a-z0-9]{1,10}$",
+                            "type": "string"
+                          },
+                          "mimeTypes": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "extension",
+                          "mimeTypes"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 50,
+                      "type": "array"
+                    },
+                    "maxSizeBytes": {
+                      "maximum": 104857600,
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "category",
+                    "formats",
+                    "maxSizeBytes"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Read effective upload constraints",
+        "tags": [
+          "Upload"
+        ]
+      }
+    },
     "/api/upload/presigned-url": {
       "post": {
         "operationId": "UploadController_getPresignedUrl",

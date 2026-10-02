@@ -11,6 +11,7 @@ import { GenericContainer, Wait, type StartedTestContainer } from 'testcontainer
 import { startHttpFixture } from '../test/http-fixture.js';
 import type { ContractService } from '../contract/contract.service.js';
 import type { DocumentService } from './document.service.js';
+import type { UploadService } from '../upload/upload.service.js';
 
 const requireShared = createRequire(resolve(__dirname, '../../../../packages/shared/package.json'));
 const requireWorker = createRequire(resolve(__dirname, '../../../worker/package.json'));
@@ -1843,4 +1844,51 @@ it('serves private bank receipt previews with current profile authorization and 
   ).toBe(401);
   await http.pool.query("UPDATE invoices SET state='Draft' WHERE id=$1", [invoiceId]);
   expect((await preview(f.user, receiptIds[0]!)).status).toBe(404);
+});
+
+it('exposes effective file constraints in both authenticated contexts without granting upload authority', async () => {
+  const f = await owner();
+  for (const user of [f.user, 'document-legal']) {
+    const result = await send('upload/policy/document', user);
+    expect(result.status).toBe(200);
+    const policy = (await result.json()) as Awaited<ReturnType<UploadService['filePolicy']>>;
+    expect(policy).toMatchObject({
+      category: 'document',
+      maxSizeBytes: 10 * 1024 * 1024,
+      formats: expect.arrayContaining([{ extension: '.pdf', mimeTypes: ['application/pdf'] }]),
+    });
+    expect(Object.keys(policy).sort()).toEqual(['category', 'formats', 'maxSizeBytes']);
+    expect((await send('upload/policy/general', user)).status).toBe(400);
+  }
+  const policyId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO upload_policies(id,category,allowed_extensions,max_size_bytes,effective_from,created_by) VALUES ($1,'document',ARRAY['.pdf'],1048576,NOW()-INTERVAL '1 second','document-legal')",
+    [policyId]
+  );
+  try {
+    for (const user of [f.user, 'document-legal']) {
+      const current = await (await send('upload/policy/document', user)).json();
+      expect(current).toEqual({
+        category: 'document',
+        maxSizeBytes: 1048576,
+        formats: [{ extension: '.pdf', mimeTypes: ['application/pdf'] }],
+      });
+    }
+    const rejected = await send('documents', f.user, 'POST', {
+      profileId: f.profile,
+      businessRecordType: 'standalone',
+      category: 'document',
+      fileName: 'large.pdf',
+      contentType: 'application/pdf',
+      fileSize: 1048577,
+      idempotencyKey: randomUUID(),
+    });
+    expect(rejected.status).toBe(400);
+  } finally {
+    await http.pool.query('UPDATE upload_policies SET effective_until=NOW() WHERE id=$1', [
+      policyId,
+    ]);
+  }
+  expect((await fetch(`${http.base}/api/upload/policy/document`)).status).toBe(401);
+  expect((await send('upload/policy/document', f.user, 'POST', {})).status).toBe(404);
 });

@@ -1,3 +1,4 @@
+import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect, type Page } from './coverage-fixture';
 import type { Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
@@ -60,6 +61,11 @@ async function shell(page: Page, locale: 'en' | 'fa', staff: boolean) {
   );
   await page.route('**/api/admin/document-retention/destruction', (route) =>
     route.fulfill({ json: { items: [], counts: [], canManage: false } })
+  );
+  await page.route('**/api/upload/policy/*', (route) =>
+    route.fulfill({
+      json: documentUploadPolicy(new URL(route.request().url()).pathname.split('/').at(-1)),
+    })
   );
 }
 for (const staff of [false, true])
@@ -157,12 +163,12 @@ for (const staff of [false, true])
       if (staff)
         await expect(detail.locator('#document-review-reason')).toHaveValue('Review draft');
       await list.getByRole('button', { name: word('upload'), exact: true }).click();
-      await page.locator('#document-file').setInputFiles({
+      await page.locator('[data-slot="file-upload"] input[type="file"]').setInputFiles({
         name: 'Draft.pdf',
         mimeType: 'application/pdf',
         buffer: Buffer.from('%PDF-draft'),
       });
-      const uploadFile = page.locator('#document-file');
+      const uploadFile = page.locator('[data-slot="file-upload"] input[type="file"]');
       status = 503;
       await list.getByRole('button', { name: word('refresh'), exact: true }).click();
       await expect(content.getByRole('alert')).toBeVisible();

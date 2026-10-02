@@ -1,3 +1,4 @@
+import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect } from './upload-fixture';
 import { en, fa } from '../../../packages/i18n/src/documents';
 
@@ -14,6 +15,11 @@ for (const locale of ['en', 'fa'] as const) {
       locale
     );
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/upload/policy/*', (route) =>
+      route.fulfill({
+        json: documentUploadPolicy(new URL(route.request().url()).pathname.split('/').at(-1)),
+      })
+    );
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({
         json: {
@@ -106,6 +112,11 @@ for (const locale of ['en', 'fa'] as const) {
       locale
     );
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/upload/policy/*', (route) =>
+      route.fulfill({
+        json: documentUploadPolicy(new URL(route.request().url()).pathname.split('/').at(-1)),
+      })
+    );
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({
         json: {

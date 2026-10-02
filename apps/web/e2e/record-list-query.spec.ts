@@ -1,3 +1,4 @@
+import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -70,6 +71,11 @@ async function shell(page: Page, locale: 'en' | 'fa', dark: boolean, customer = 
         faviconUrl: null,
         darkMode: dark,
       },
+    })
+  );
+  await page.route('**/api/upload/policy/*', (route) =>
+    route.fulfill({
+      json: documentUploadPolicy(new URL(route.request().url()).pathname.split('/').at(-1)),
     })
   );
 }
@@ -231,7 +237,7 @@ for (const locale of ['en', 'fa'] as const)
           ).toBeVisible();
           await expect.poll(() => params(page).get('cursor')).toBe(documentRow.id);
           await list.getByRole('button', { name: word('upload'), exact: true }).click();
-          await page.locator('#document-file').setInputFiles({
+          await page.locator('[data-slot="file-upload"] input[type="file"]').setInputFiles({
             name: 'Private.pdf',
             mimeType: 'application/pdf',
             buffer: Buffer.from('%PDF-draft'),
@@ -245,7 +251,7 @@ for (const locale of ['en', 'fa'] as const)
           await expect(
             content.getByRole('button', { name: 'New profile.pdf', exact: true })
           ).toBeVisible();
-          await expect(page.locator('#document-file')).toHaveCount(0);
+          await expect(page.locator('[data-slot="file-upload"] input[type="file"]')).toHaveCount(0);
           await expect.poll(() => reads.at(-1)?.searchParams.get('profileId')).toBe(newProfile);
           expect(params(page).has('profileId')).toBe(false);
           await expect.poll(() => params(page).has('cursor')).toBe(false);

@@ -103,48 +103,132 @@ export function documentUrl(value: unknown): string {
     throw new DocumentRequestError(502, null);
   return url.href;
 }
+class StorageUploadError extends Error {
+  constructor(readonly status: number) {
+    super('Storage upload failed');
+  }
+}
+
+export type UploadProgress = (loaded: number, total: number) => void;
+
+/** XHR reports actual cross-origin transfer progress; same-origin fetch omits session cookies. */
+async function putStorageBytes(
+  url: string,
+  body: Blob,
+  headers: Record<string, string>,
+  signal: AbortSignal,
+  onProgress?: UploadProgress,
+  writeOnce = false
+) {
+  const target = documentUrl(url);
+  if (signal.aborted) throw new DOMException('Upload aborted', 'AbortError');
+  onProgress?.(0, body.size);
+  if (
+    !onProgress ||
+    typeof XMLHttpRequest === 'undefined' ||
+    new URL(target).origin === window.location.origin
+  ) {
+    const result = await fetch(target, {
+      method: 'PUT',
+      credentials: 'omit',
+      body,
+      headers,
+      signal,
+    });
+    if (!result.ok && !(writeOnce && result.status === 412))
+      throw new StorageUploadError(result.status);
+    onProgress?.(body.size, body.size);
+    return;
+  }
+  await new Promise<void>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    const abort = () => xhr.abort();
+    const finish = (error?: unknown) => {
+      signal.removeEventListener('abort', abort);
+      xhr.onload = xhr.onerror = xhr.onabort = xhr.ontimeout = null;
+      xhr.upload.onprogress = null;
+      if (error) reject(error);
+      else resolve();
+    };
+    xhr.open('PUT', target);
+    xhr.withCredentials = false;
+    for (const [name, value] of Object.entries(headers)) xhr.setRequestHeader(name, value);
+    xhr.upload.onprogress = (event) => {
+      if (!signal.aborted) onProgress(Math.min(body.size, Math.max(0, event.loaded)), body.size);
+    };
+    xhr.onload = () => {
+      if (signal.aborted) return finish(new DOMException('Upload aborted', 'AbortError'));
+      if ((xhr.status >= 200 && xhr.status < 300) || (writeOnce && xhr.status === 412)) {
+        onProgress(body.size, body.size);
+        finish();
+      } else finish(new StorageUploadError(xhr.status));
+    };
+    xhr.onerror = xhr.ontimeout = () => finish(new StorageUploadError(0));
+    xhr.onabort = () => finish(new DOMException('Upload aborted', 'AbortError'));
+    signal.addEventListener('abort', abort, { once: true });
+    try {
+      xhr.send(body);
+    } catch (error) {
+      finish(error);
+    }
+  });
+}
 export async function putDocumentFile(
   upload: DocumentUpload['upload'],
   file: File,
-  signal: AbortSignal
+  signal: AbortSignal,
+  onProgress?: UploadProgress
 ) {
   if ('uploadId' in upload) {
+    if (
+      !Number.isSafeInteger(upload.partSize) ||
+      upload.partSize < 1 ||
+      !Number.isSafeInteger(upload.partCount) ||
+      upload.partCount !== Math.ceil(file.size / upload.partSize)
+    )
+      throw new DocumentRequestError(502, null);
     const path = `/api/v1/files/upload/${encodeURIComponent(upload.uploadId)}`;
     const state = await documentRequest<{
       status: string;
       parts: Array<{ partNumber: number; size: number }>;
     }>(`${path}/parts`, { signal });
-    if (state.status === 'completed') return;
+    if (state.status === 'completed') {
+      onProgress?.(file.size, file.size);
+      return;
+    }
     if (state.status !== 'in_progress') throw new DocumentRequestError(409, null);
+    if (!Array.isArray(state.parts)) throw new DocumentRequestError(502, null);
+    const completed = new Set<number>();
+    let loaded = 0;
     for (let number = 1; number <= upload.partCount; number++) {
-      const start = (number - 1) * upload.partSize;
-      const end = Math.min(file.size, start + upload.partSize);
-      if (state.parts.some((part) => part.partNumber === number && part.size === end - start))
-        continue;
+      const size = Math.min(file.size, number * upload.partSize) - (number - 1) * upload.partSize;
+      if (state.parts.some((part) => part.partNumber === number && part.size === size)) {
+        completed.add(number);
+        loaded += size;
+      }
+    }
+    onProgress?.(loaded, file.size);
+    for (let number = 1; number <= upload.partCount; number++) {
+      if (completed.has(number)) continue;
+      const start = (number - 1) * upload.partSize,
+        end = Math.min(file.size, start + upload.partSize);
       const signed = await documentRequest<{ url: string }>(`${path}/part?partNumber=${number}`, {
         method: 'PUT',
         signal,
       });
-      const part = await fetch(documentUrl(signed.url), {
-        method: 'PUT',
-        credentials: 'omit',
-        body: file.slice(start, end),
+      await putStorageBytes(
+        signed.url,
+        file.slice(start, end),
+        {},
         signal,
-      });
-      if (!part.ok) throw new DocumentRequestError(part.status, null);
+        onProgress
+          ? (partLoaded) => onProgress(Math.min(file.size, loaded + partLoaded), file.size)
+          : undefined
+      );
+      loaded += end - start;
     }
     await documentRequest(`${path}/complete`, { method: 'POST', signal });
     return;
   }
-  const response = await fetch(documentUrl(upload.presignedUrl), {
-    method: 'PUT',
-    credentials: 'omit',
-    headers: upload.headers,
-    body: file,
-    signal,
-  });
-  // The write-once upload may already have succeeded before its response was lost.
-  // Confirmation still performs server-side inspection of the owned stored bytes.
-  if (!response.ok && response.status !== 412)
-    throw new DocumentRequestError(response.status, null);
+  await putStorageBytes(upload.presignedUrl, file, upload.headers, signal, onProgress, true);
 }

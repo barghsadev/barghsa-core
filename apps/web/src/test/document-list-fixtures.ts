@@ -76,3 +76,24 @@ export const destructionQueue = {
   counts: [{ status: 'pending_approval', count: 1 }],
   canManage: true,
 };
+
+/** Explicit effective-policy fixture for document controls; unrelated routes stay unmapped. */
+export function documentUploadPolicy(category = 'document') {
+  const formats =
+    category === 'image'
+      ? [
+          { extension: '.png', mimeTypes: ['image/png'] },
+          { extension: '.jpg', mimeTypes: ['image/jpeg'] },
+        ]
+      : category === 'video'
+        ? [{ extension: '.mp4', mimeTypes: ['video/mp4'] }]
+        : [{ extension: '.pdf', mimeTypes: ['application/pdf'] }];
+  return {
+    category,
+    formats,
+    maxSizeBytes:
+      (category === 'contract' ? 25 : category === 'image' ? 20 : category === 'video' ? 100 : 10) *
+      1024 *
+      1024,
+  };
+}

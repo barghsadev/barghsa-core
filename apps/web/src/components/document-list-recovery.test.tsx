@@ -5,6 +5,7 @@ import { DocumentResults, type DocumentFilters } from './DocumentsWorkspace.js';
 import { DocumentDestructionQueue } from './DocumentDestructionQueue.js';
 import AdminDocumentTemplatesPage from '../pages/AdminDocumentTemplatesPage.js';
 import {
+  documentUploadPolicy,
   documentProfileId,
   documentRow,
   documentMore,
@@ -140,10 +141,12 @@ it('document refresh and retry keep an upload file input mounted, while permissi
   let status = 200;
   vi.stubGlobal(
     'fetch',
-    vi.fn(async () =>
-      status === 200
-        ? Response.json({ documents: [documentRow], nextBefore: null })
-        : new Response('{}', { status })
+    vi.fn(async (url: string) =>
+      url.startsWith('/api/upload/policy/')
+        ? Response.json(documentUploadPolicy(url.split('/').at(-1)))
+        : status === 200
+          ? Response.json({ documents: [documentRow], nextBefore: null })
+          : new Response('{}', { status })
     )
   );
   const { host, close } = await mount(
@@ -151,16 +154,16 @@ it('document refresh and retry keep an upload file input mounted, while permissi
   );
   try {
     await act(async () => button(host, 'Upload document').click());
-    const input = await selectFile(host, '#document-file');
+    const input = await selectFile(host, '[data-slot="file-upload"] input[type="file"]');
     status = 503;
     await act(async () => button(host, 'Refresh').click());
     status = 200;
     await act(async () => button(host, 'Try again').click());
-    expect(host.querySelector('#document-file')).toBe(input);
+    expect(host.querySelector('[data-slot="file-upload"] input[type="file"]')).toBe(input);
     expect(input.files?.[0]?.name).toBe('Draft.pdf');
     status = 403;
     await act(async () => button(host, 'Refresh').click());
-    expect(host.querySelector('#document-file')).toBeNull();
+    expect(host.querySelector('[data-slot="file-upload"] input[type="file"]')).toBeNull();
     expect(host.querySelector('[data-slot="list-content"] li')).toBeNull();
     expect(host.querySelector('[role="alert"] button')).toBeNull();
   } finally {
@@ -173,6 +176,8 @@ it('changing document scope discards old work and ignores an abandoned response'
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string) => {
+      if (url.startsWith('/api/upload/policy/'))
+        return Response.json(documentUploadPolicy(url.split('/').at(-1)));
       if (url.includes(documentProfileId) && hold)
         return new Promise<Response>((resolve) => {
           finish = resolve;
@@ -187,11 +192,11 @@ it('changing document scope discards old work and ignores an abandoned response'
   );
   try {
     await act(async () => button(host, 'Upload document').click());
-    await selectFile(host, '#document-file');
+    await selectFile(host, '[data-slot="file-upload"] input[type="file"]');
     hold = true;
     await act(async () => button(host, 'Refresh').click());
     await render(<DocumentResults staff={false} profileId={documentCursor} filters={filters} />);
-    expect(host.querySelector('#document-file')).toBeNull();
+    expect(host.querySelector('[data-slot="file-upload"] input[type="file"]')).toBeNull();
     await act(async () =>
       finish!(
         Response.json({
@@ -207,20 +212,26 @@ it('changing document scope discards old work and ignores an abandoned response'
 });
 
 it('equivalent document filter props preserve upload work without another request', async () => {
-  const fetcher = vi.fn(async () => Response.json({ documents: [documentRow], nextBefore: null }));
+  const fetcher = vi.fn(async (url: string) =>
+    Response.json(
+      url.startsWith('/api/upload/policy/')
+        ? documentUploadPolicy(url.split('/').at(-1))
+        : { documents: [documentRow], nextBefore: null }
+    )
+  );
   vi.stubGlobal('fetch', fetcher);
   const { host, render, close } = await mount(
     <DocumentResults staff={false} profileId={documentProfileId} filters={filters} />
   );
   try {
     await act(async () => button(host, 'Upload document').click());
-    const input = await selectFile(host, '#document-file');
+    const input = await selectFile(host, '[data-slot="file-upload"] input[type="file"]');
     const count = fetcher.mock.calls.length;
     await render(
       <DocumentResults staff={false} profileId={documentProfileId} filters={{ ...filters }} />
     );
     expect(fetcher.mock.calls).toHaveLength(count);
-    expect(host.querySelector('#document-file')).toBe(input);
+    expect(host.querySelector('[data-slot="file-upload"] input[type="file"]')).toBe(input);
   } finally {
     await close();
   }

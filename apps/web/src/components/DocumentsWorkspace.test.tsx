@@ -1,6 +1,7 @@
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { documentUploadPolicy } from '../test/document-list-fixtures.js';
 import { DocumentsWorkspace } from './DocumentsWorkspace.js';
 import { DocumentDetail } from './DocumentDetail.js';
 import { DocumentUpload } from './DocumentUpload.js';
@@ -449,9 +450,12 @@ it('retries a lost storage response and step-up with the same file and confirmat
   let puts = 0,
     confirmations = 0;
   const bodies: string[] = [];
+  vi.stubGlobal('XMLHttpRequest', undefined);
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string, options: RequestInit) => {
+      if (url.startsWith('/api/upload/policy/'))
+        return response(documentUploadPolicy(url.split('/').at(-1)));
       if (url.startsWith('https://storage.test')) {
         expect(options.body).toBe(file);
         if (++puts === 1) throw new Error('Lost response');
@@ -526,6 +530,10 @@ it('lets staff recover a denied queue and restricts upload context to a valid se
 });
 
 it('preserves exact contract version and role when opening a replacement upload', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () => response(documentUploadPolicy('contract')))
+  );
   const replacement = row({
     businessRecordType: 'contract',
     businessRecordId: 'contract-id',

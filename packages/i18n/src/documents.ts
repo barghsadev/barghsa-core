@@ -1,6 +1,23 @@
 import { lookup } from './lookup.js';
 
 export const en = {
+  dropFiles: 'Drag files here or click to browse',
+  fileRequirements: 'Accepted: {formats}. Maximum size: {size}. Up to {count} file(s).',
+  fileErrorCount: 'Select up to {count} file(s).',
+  fileErrorEmpty: 'The file “{name}” is empty. Choose a file with content.',
+  fileErrorType: 'The file type “{type}” or its declared content type is not supported.',
+  fileErrorSize: 'The file “{name}” exceeds the {size} limit.',
+  fileErrorName: 'Choose a file with a name of up to 255 characters.',
+  removeFile: 'Remove {name}',
+  fileProgress: 'Upload progress: {name}',
+  policyLoading: 'Loading allowed file formats and limits…',
+  policyError: 'Could not load upload limits. Retry before selecting a file.',
+  noFileFormats: 'Uploads are unavailable for this category under the current policy.',
+  paused: 'Upload paused. Your selected file and completed parts are kept.',
+  failed: 'Upload did not finish. Retry with the same selected file.',
+  pauseUpload: 'Pause upload',
+  resumeUpload: 'Resume upload',
+  closeUpload: 'Close upload',
   statusUnavailable: 'Status unavailable',
   quarantinedNotice: 'This file cannot be accepted. Please upload a replacement.',
   metadataUnavailable: 'Not recorded',
@@ -147,6 +164,24 @@ export const en = {
 } satisfies Record<string, string>;
 
 export const fa: Record<keyof typeof en, string> = {
+  dropFiles: 'فایل\u200cها را اینجا رها کنید یا برای انتخاب کلیک کنید',
+  fileRequirements:
+    'فرمت\u200cهای مجاز: {formats}. حداکثر اندازه: {size}. حداکثر تعداد فایل: {count}.',
+  fileErrorCount: 'حداکثر {count} فایل انتخاب کنید.',
+  fileErrorEmpty: 'فایل «{name}» خالی است. فایلی دارای محتوا انتخاب کنید.',
+  fileErrorType: 'فرمت «{type}» یا نوع محتوای اعلام\u200cشده آن پشتیبانی نمی\u200cشود.',
+  fileErrorSize: 'اندازه فایل «{name}» بیشتر از حد مجاز {size} است.',
+  fileErrorName: 'نام فایل باید دارای محتوا و حداکثر ۲۵۵ نویسه باشد.',
+  removeFile: 'حذف {name}',
+  fileProgress: 'پیشرفت بارگذاری: {name}',
+  policyLoading: 'در حال دریافت فرمت\u200cها و محدودیت\u200cهای فایل…',
+  policyError: 'دریافت محدودیت\u200cهای بارگذاری ناموفق بود. پیش از انتخاب فایل دوباره تلاش کنید.',
+  noFileFormats: 'بارگذاری این دسته فایل طبق سیاست فعلی امکان\u200cپذیر نیست.',
+  paused: 'بارگذاری متوقف شد. فایل انتخاب\u200cشده و بخش\u200cهای کامل\u200cشده حفظ شده\u200cاند.',
+  failed: 'بارگذاری کامل نشد. با همان فایل انتخاب\u200cشده دوباره تلاش کنید.',
+  pauseUpload: 'توقف بارگذاری',
+  resumeUpload: 'ادامه بارگذاری',
+  closeUpload: 'بستن بارگذاری',
   statusUnavailable: 'وضعیت نامشخص',
   quarantinedNotice: 'این فایل قابل پذیرش نیست. لطفاً فایل جایگزین بارگذاری کنید.',
   metadataUnavailable: 'ثبت نشده',
