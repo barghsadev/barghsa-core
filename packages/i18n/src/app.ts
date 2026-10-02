@@ -485,7 +485,7 @@ export const fa: I18nDictionary = {
   'onboarding.draft.saving': 'در حال ذخیره پیش‌نویس…',
   'onboarding.draft.error': 'پیش‌نویس ذخیره نشده است. دوباره تلاش کنید.',
   'onboarding.draft.conflict':
-    'این پیش‌نویس در صفحه دیگری تغییر کرده است. نسخه ذخیره‌شده را دوباره دریافت کنید.',
+    'این پیش‌نویس تغییر کرده یا منقضی شده است. نسخه ذخیره‌شده را دوباره دریافت کنید.',
   'onboarding.draft.reload': 'دریافت نسخه ذخیره‌شده',
   'onboarding.draft.retry': 'تلاش دوباره',
   'onboarding.legal.representativeHonorific': 'عنوان اختیاری',
@@ -2180,7 +2180,7 @@ export const en: I18nDictionary = {
   'onboarding.draft.saved': 'Draft saved',
   'onboarding.draft.saving': 'Saving draft…',
   'onboarding.draft.error': 'Draft is not saved. Please retry.',
-  'onboarding.draft.conflict': 'This draft changed in another tab. Reload the saved version.',
+  'onboarding.draft.conflict': 'This draft changed or expired. Reload the saved version.',
   'onboarding.draft.reload': 'Reload saved draft',
   'onboarding.draft.retry': 'Retry',
   'onboarding.legal.representativeHonorific': 'Honorific',

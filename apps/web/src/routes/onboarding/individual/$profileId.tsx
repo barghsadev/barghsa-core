@@ -89,18 +89,30 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const restoreDraft = useCallback((data: Record<string, string>) => {
-    setTitle(data.title ?? '');
-    setFirstName(data.firstName ?? '');
-    setLastName(data.lastName ?? '');
-    setNationalId(normalizeProfileDigits(data.nationalId ?? ''));
-    setSelectedProvinceId(data.provinceId ?? '');
-    setSelectedCityId(data.cityId ?? '');
-    setFullAddress(data.fullAddress ?? '');
-    setPostalCode(normalizeProfileDigits(data.postalCode ?? ''));
-    setErrors({});
-    setTouched({});
-  }, []);
+  const restoreDraft = useCallback(
+    (data: Record<string, string>) => {
+      if (Object.values(data).every((value) => !value))
+        void router
+          .navigate({
+            to: '/onboarding/individual/$profileId',
+            params: { profileId },
+            search: { step: 1 },
+            replace: true,
+          })
+          .catch(() => {});
+      setTitle(data.title ?? '');
+      setFirstName(data.firstName ?? '');
+      setLastName(data.lastName ?? '');
+      setNationalId(normalizeProfileDigits(data.nationalId ?? ''));
+      setSelectedProvinceId(data.provinceId ?? '');
+      setSelectedCityId(data.cityId ?? '');
+      setFullAddress(data.fullAddress ?? '');
+      setPostalCode(normalizeProfileDigits(data.postalCode ?? ''));
+      setErrors({});
+      setTouched({});
+    },
+    [router, profileId]
+  );
   const values = {
     title,
     firstName,

@@ -11,6 +11,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
+import { readWizardDraftTtl } from '../common/wizard-draft-retention.js';
 import type { FinancialReviewSnapshot } from '@barghsa/shared/finance';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
@@ -125,9 +126,10 @@ export class SolarRequestService {
       await this.orders.lockOrderActor(client, actor);
       if (!(await this.orders.mayManageOrders(client, actor.userId, profileId, true)))
         throw new NotFoundException('Profile not found');
+      const ttlDays = await readWizardDraftTtl(client);
       await client.query(
-        "DELETE FROM solar_customer_drafts WHERE user_id=$1 AND profile_id=$2 AND updated_at < NOW()-INTERVAL '7 days'",
-        [actor.userId, profileId]
+        "DELETE FROM solar_customer_drafts WHERE user_id=$1 AND profile_id=$2 AND updated_at < NOW() - ($3::integer * INTERVAL '1 day')",
+        [actor.userId, profileId, ttlDays]
       );
       const row = (
         await client.query<{

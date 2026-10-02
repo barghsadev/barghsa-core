@@ -7,9 +7,15 @@ let root: Root, container: HTMLDivElement;
 let draft: ReturnType<typeof useOnboardingDraft>;
 let edit: (data: Record<string, string>) => void;
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status });
-function Harness({ profile = 'one' }: { profile?: string }) {
-  const [values, setValues] = useState({ name: '' });
-  edit = (data) => setValues({ name: data.name ?? '' });
+function Harness({ profile = 'one', legal = false }: { profile?: string; legal?: boolean }) {
+  const [values, setValues] = useState<Record<string, string>>(
+    legal ? { name: '', documentKeys: '[]' } : { name: '' }
+  );
+  edit = (data) =>
+    setValues({
+      name: data.name ?? '',
+      ...(legal ? { documentKeys: data.documentKeys ?? '[]' } : {}),
+    });
   draft = useOnboardingDraft(profile, values, edit);
   return <span>{draft.status}</span>;
 }
@@ -24,10 +30,34 @@ afterEach(async () => {
   vi.useRealTimers();
   vi.unstubAllGlobals();
 });
-async function mount(profile = 'one') {
-  await act(async () => root.render(<Harness profile={profile} />));
+async function mount(profile = 'one', legal = false) {
+  await act(async () => root.render(<Harness profile={profile} legal={legal} />));
 }
 const change = async (name: string) => act(async () => edit({ name }));
+
+it('keeps an expired company draft empty without autosaving and uses its retained version for new edits', async () => {
+  vi.useFakeTimers();
+  const fetcher = vi.fn(async (_path: string, init?: RequestInit) =>
+    init?.method === 'PUT' ? json({ version: 7 }) : json({ version: 6, data: {} })
+  );
+  vi.stubGlobal('fetch', fetcher);
+  await mount('one', true);
+  expect(draft.ready).toBe(true);
+  expect(draft.hasUnsavedChanges()).toBe(false);
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(1500);
+  });
+  expect(fetcher).toHaveBeenCalledTimes(1);
+  await change('Fresh');
+  await act(async () => {
+    expect(await draft.flush()).toBe(7);
+  });
+  expect(JSON.parse(fetcher.mock.calls.at(-1)![1]!.body as string)).toEqual({
+    expectedVersion: 6,
+    data: { name: 'Fresh', documentKeys: '[]' },
+  });
+  expect(draft.hasUnsavedChanges()).toBe(false);
+});
 
 it('keeps edits dirty until a valid next-version acknowledgement arrives', async () => {
   const fetcher = vi.fn(async (_path: string, init?: RequestInit) =>

@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
+import { readWizardDraftTtl } from '../common/wizard-draft-retention.js';
 import { OrdersService } from '../orders/orders.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -34,9 +35,10 @@ export class SavingCustomerDraftService {
       );
       if (profile.rows[0]?.profile_type !== 'INDIVIDUAL')
         throw new NotFoundException('Individual profile not found');
+      const ttlDays = await readWizardDraftTtl(client);
       await client.query(
-        "DELETE FROM saving_customer_drafts WHERE user_id=$1 AND profile_id=$2 AND updated_at < NOW() - INTERVAL '7 days'",
-        [actor.userId, profileId]
+        "DELETE FROM saving_customer_drafts WHERE user_id=$1 AND profile_id=$2 AND updated_at < NOW() - ($3::integer * INTERVAL '1 day')",
+        [actor.userId, profileId, ttlDays]
       );
       const draft = await client.query<{
         current_step: number;

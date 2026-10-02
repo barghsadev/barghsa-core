@@ -813,12 +813,12 @@ export const fa: I18nDictionary = {
   'admin.green.activationFailed':
     'مقادیر و محصول برق سبز را بررسی کنید. قاعده فعال به محصول فعال با قیمت مثبت و معتبر نیاز دارد. قاعده را غیرفعال یا محصول را اصلاح و سپس تازه‌سازی کنید.',
   'admin.green.corrupt': 'قواعد ذخیره‌شده پیش از خواندن به اصلاح نیاز دارند.',
-  'admin.green.draftTtlTitle': 'مدت نگهداری پیش‌نویس سفارش برق',
+  'admin.green.draftTtlTitle': 'مدت نگهداری پیش‌نویس فرم‌ها',
   'admin.green.draftTtlDescription':
-    'پیش‌نویس‌هایی که در این مدت به‌روز نشده‌اند هنگام مراجعه بعدی حذف می‌شوند.',
+    'پیش‌نویس ثبت پروفایل، سفارش برق، صرفه‌جویی و درخواست خورشیدی پس از این مدت از آخرین ذخیره، هنگام مراجعه بعدی پاک می‌شود. پروفایل و سفارش ثبت‌شده حفظ می‌شوند.',
   'admin.green.draftTtlDays': 'روز (۱ تا ۳۶۵)',
   'admin.green.draftTtlSave': 'ذخیره مدت نگهداری',
-  'admin.green.draftTtlConfirm': 'مدت نگهداری پیش‌نویس سفارش‌های ساده برق تغییر می‌کند.',
+  'admin.green.draftTtlConfirm': 'مدت نگهداری پیش‌نویس همه فرم‌های مشتری تغییر می‌کند.',
   'admin.green.templateTitle': 'قالب قرارداد اولیه برق',
   'admin.green.templateDescription':
     'نسخه انتخاب‌شده در قراردادهای اولیه سفارش‌های جدید ثبت می‌شود.',
@@ -2484,12 +2484,12 @@ export const en: I18nDictionary = {
   'admin.green.activationFailed':
     'Check the values and the green product. An enabled rule requires an active product with a positive effective price. Disable the rule or correct the product, then refresh.',
   'admin.green.corrupt': 'Stored rules need repair before they can be read.',
-  'admin.green.draftTtlTitle': 'Electricity order draft retention',
+  'admin.green.draftTtlTitle': 'Customer form draft retention',
   'admin.green.draftTtlDescription':
-    'Drafts not updated within this period expire when they are next opened.',
+    'Profile setup, electricity, saving and solar drafts expire on their next visit after this period since the last save. Submitted profiles and orders are kept.',
   'admin.green.draftTtlDays': 'Days (1–365)',
   'admin.green.draftTtlSave': 'Save retention period',
-  'admin.green.draftTtlConfirm': 'Change how long simple electricity order drafts are retained.',
+  'admin.green.draftTtlConfirm': 'Change how long all customer form drafts are retained.',
   'admin.green.templateTitle': 'Preliminary electricity contract template',
   'admin.green.templateDescription':
     'The selected version is saved in new order contract snapshots.',

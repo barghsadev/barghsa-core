@@ -160,6 +160,81 @@ function leaveControls(page: Page, locale: 'en' | 'fa') {
 }
 
 for (const locale of ['en', 'fa'] as const) {
+  for (const type of ['INDIVIDUAL', 'LEGAL'] as const) {
+    test(`expired ${type} conflict reload clears old fields and returns to the first stage (${locale})`, async ({
+      page,
+    }) => {
+      const state = await fixture(
+        page,
+        locale,
+        type,
+        type === 'INDIVIDUAL' ? { ...individual } : { ...legal }
+      );
+      state.draft.version = 5;
+      await page.goto(
+        `/onboarding/${type.toLowerCase()}/${profileId}?step=${type === 'INDIVIDUAL' ? 2 : 3}`
+      );
+      const address = page.locator(type === 'INDIVIDUAL' ? '#fullAddress' : '#officialFullAddress');
+      await expect(address).toHaveValue(type === 'INDIVIDUAL' ? 'Saved Street' : 'Company Street');
+      state.saveStatus = 409;
+      await address.fill('Local edit before expiry');
+      await page
+        .getByRole('button', {
+          name: locale === 'fa' ? 'ذخیره پیش‌نویس' : 'Save draft',
+          exact: true,
+        })
+        .click();
+      const reload = page.getByRole('button', {
+        name: locale === 'fa' ? 'دریافت نسخه ذخیره‌شده' : 'Reload saved draft',
+        exact: true,
+      });
+      await expect(reload).toBeVisible();
+      state.draft = { version: 6, data: {} };
+      state.saveStatus = 200;
+      await reload.click();
+      await expect(page).toHaveURL(/step=1$/);
+      const field = page.locator(type === 'INDIVIDUAL' ? '#firstName' : '#representativeFirstName');
+      await expect(field).toBeVisible();
+      await expect(field).toHaveValue('');
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+      await field.fill('Restarted');
+      await page
+        .getByRole('button', {
+          name: locale === 'fa' ? 'ذخیره پیش‌نویس' : 'Save draft',
+          exact: true,
+        })
+        .click();
+      await expect.poll(() => state.draft.version).toBe(7);
+      expect(state.saveRequests.at(-1)).toMatchObject({ expectedVersion: 6 });
+      expect(state.submissions).toEqual([]);
+    });
+    test(`expired ${type} draft restarts safely and saves with its retained version (${locale})`, async ({
+      page,
+    }) => {
+      const state = await fixture(page, locale, type);
+      state.draft.version = 6;
+      await page.goto(`/onboarding/${type.toLowerCase()}/${profileId}?step=4`);
+      await dismissMessages(page, locale);
+      await expect(page).toHaveURL(/step=1$/);
+      const field = page.locator(type === 'INDIVIDUAL' ? '#firstName' : '#representativeFirstName');
+      await expect(field).toHaveValue('');
+      await field.fill('Fresh draft');
+      const controls = leaveControls(page, locale);
+      await controls.back.click();
+      await expect(controls.dialog).toBeVisible();
+      await controls.save.click();
+      await expect(page).toHaveURL(/\/onboarding$/);
+      expect(state.saveRequests).toHaveLength(1);
+      expect(state.saveRequests[0]).toMatchObject({
+        expectedVersion: 6,
+        data: { [type === 'INDIVIDUAL' ? 'firstName' : 'representativeFirstName']: 'Fresh draft' },
+      });
+      expect(state.submissions).toEqual([]);
+    });
+  }
+}
+
+for (const locale of ['en', 'fa'] as const) {
   test(`wizard URL restores saved steps, supports browser history and rejects invalid steps (${locale})`, async ({
     page,
   }) => {
@@ -503,8 +578,8 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       page.getByText(
         locale === 'fa'
-          ? 'این پیش‌نویس در صفحه دیگری تغییر کرده است. نسخه ذخیره‌شده را دوباره دریافت کنید.'
-          : 'This draft changed in another tab. Reload the saved version.',
+          ? 'این پیش‌نویس تغییر کرده یا منقضی شده است. نسخه ذخیره‌شده را دوباره دریافت کنید.'
+          : 'This draft changed or expired. Reload the saved version.',
         { exact: true }
       )
     ).toBeVisible();

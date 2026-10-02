@@ -2171,8 +2171,30 @@ export class AdminController {
     }
   }
 
+  @Get('config/wizard-draft-ttl')
+  @ApiOperation({ summary: 'Get customer wizard draft retention in days' })
+  @ApiResponse({ status: 200, description: 'Draft retention period (default 7 days).' })
+  getWizardDraftTtl(@Req() req: AuthenticatedRequest) {
+    return this.getElectricityOrderDraftTtl(req);
+  }
+
+  @Put('config/wizard-draft-ttl')
+  @ApiOperation({ summary: 'Set retention for onboarding, electricity, saving and solar drafts' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['days'],
+      additionalProperties: false,
+      properties: { days: { type: 'integer', minimum: 1, maximum: 365 } },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Updated draft retention period.' })
+  setWizardDraftTtl(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    return this.setElectricityOrderDraftTtl(body, req);
+  }
+
   @Get('config/electricity-order-draft-ttl')
-  @ApiOperation({ summary: 'Get simple electricity order draft retention in days' })
+  @ApiOperation({ summary: 'Get customer wizard draft retention (legacy electricity alias)' })
   @ApiResponse({ status: 200, description: 'Draft retention period (default 7 days).' })
   async getElectricityOrderDraftTtl(@Req() req: AuthenticatedRequest) {
     this.assertElectricitySettingsPermission(req);
@@ -2180,7 +2202,7 @@ export class AdminController {
   }
 
   @Put('config/electricity-order-draft-ttl')
-  @ApiOperation({ summary: 'Set simple electricity order draft retention in days' })
+  @ApiOperation({ summary: 'Set customer wizard draft retention (legacy electricity alias)' })
   @ApiBody({
     schema: {
       type: 'object',

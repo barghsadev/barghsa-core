@@ -138,6 +138,60 @@ it('allows authorized staff to configure audited electricity draft retention', a
   expect(audit).toHaveLength(1);
   expect(audit[0].metadata).toMatchObject({ previousVersion: 0, newValue: 14, version: 1 });
 });
+it('shares wizard retention with the legacy endpoint while enforcing permission, CSRF and step-up', async () => {
+  const current = `${http.base}/api/admin/config/wizard-draft-ttl`;
+  const legacy = `${http.base}/api/admin/config/electricity-order-draft-ttl`;
+  const put = (url: string, body: unknown, user = 'operator', csrf = true) => {
+    const requestHeaders = { ...headers[user]! };
+    if (!csrf) delete requestHeaders['X-CSRF-Token'];
+    return fetch(url, { method: 'PUT', headers: requestHeaders, body: JSON.stringify(body) });
+  };
+  expect((await fetch(current, { headers: headers.other! })).status).toBe(403);
+  expect((await put(current, { days: 14 }, 'other')).status).toBe(403);
+  expect((await put(current, { days: 14 }, 'operator', false)).status).toBe(403);
+  for (const body of [
+    null,
+    [],
+    {},
+    { days: '14' },
+    { days: 0 },
+    { days: 366 },
+    { days: 1.5 },
+    { days: 7, extra: true },
+  ])
+    expect((await put(current, body)).status).toBe(400);
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='operator'");
+  try {
+    expect((await put(current, { days: 14 })).status).toBe(403);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT key FROM app_config WHERE key='electricity.order_draft_ttl_days'"
+        )
+      ).rows
+    ).toEqual([]);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event='config_change'")).rows
+    ).toEqual([]);
+  } finally {
+    await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='operator'");
+  }
+  expect(await (await put(current, { days: 14 })).json()).toEqual({ days: 14 });
+  expect(await (await fetch(legacy, { headers: headers.operator! })).json()).toEqual({ days: 14 });
+  expect(await (await put(legacy, { days: 30 })).json()).toEqual({ days: 30 });
+  expect(await (await fetch(current, { headers: headers.operator! })).json()).toEqual({ days: 30 });
+  const audits = (
+    await http.pool.query(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='config_change' ORDER BY created_at"
+    )
+  ).rows;
+  expect(
+    audits.map((row) => [row.metadata.previousVersion, row.metadata.newValue, row.metadata.version])
+  ).toEqual([
+    [0, 14, 1],
+    [1, 30, 2],
+  ]);
+});
 function save(body: unknown = input, user = 'operator') {
   return fetch(`${http.base}/api/admin/config/green-electricity-rules`, {
     method: 'PUT',

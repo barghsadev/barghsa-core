@@ -152,7 +152,7 @@ export class OnboardingController {
     @Param('profileId', new ParseUUIDPipe()) profileId: string,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.drafts.get(req.session.userId, profileId);
+    return this.drafts.get(req.session, profileId);
   }
 
   @Put('draft/:profileId')
@@ -164,7 +164,7 @@ export class OnboardingController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.drafts.save(req.session.userId, profileId, body);
+    return this.drafts.save(req.session, profileId, body);
   }
 
   /**

@@ -2266,7 +2266,7 @@
             "description": "Draft retention period (default 7 days)."
           }
         },
-        "summary": "Get simple electricity order draft retention in days",
+        "summary": "Get customer wizard draft retention (legacy electricity alias)",
         "tags": [
           "Admin"
         ]
@@ -2300,7 +2300,7 @@
             "description": "Updated draft retention period."
           }
         },
-        "summary": "Set simple electricity order draft retention in days",
+        "summary": "Set customer wizard draft retention (legacy electricity alias)",
         "tags": [
           "Admin"
         ]
@@ -3455,6 +3455,55 @@
           }
         },
         "summary": "Update the online wallet top-up limit configuration (admin)",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/wizard-draft-ttl": {
+      "get": {
+        "operationId": "AdminController_getWizardDraftTtl",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Draft retention period (default 7 days)."
+          }
+        },
+        "summary": "Get customer wizard draft retention in days",
+        "tags": [
+          "Admin"
+        ]
+      },
+      "put": {
+        "operationId": "AdminController_setWizardDraftTtl",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "days": {
+                    "maximum": 365,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "days"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Updated draft retention period."
+          }
+        },
+        "summary": "Set retention for onboarding, electricity, saving and solar drafts",
         "tags": [
           "Admin"
         ]

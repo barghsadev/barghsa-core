@@ -51,7 +51,7 @@ export default function AdminElectricityRulesPage() {
           fetch('/api/admin/config/green-electricity-rules/safety-status', {
             signal: controller.signal,
           }),
-          fetch('/api/admin/config/electricity-order-draft-ttl', { signal: controller.signal }),
+          fetch('/api/admin/config/wizard-draft-ttl', { signal: controller.signal }),
           fetch('/api/admin/config/electricity-contract-template', { signal: controller.signal }),
         ]);
         if (controller.signal.aborted) return;
@@ -214,7 +214,7 @@ export default function AdminElectricityRulesPage() {
                 setAction({
                   title: label('draftTtlTitle'),
                   description: label('draftTtlConfirm'),
-                  path: '/api/admin/config/electricity-order-draft-ttl',
+                  path: '/api/admin/config/wizard-draft-ttl',
                   method: 'PUT',
                   body: { days: draftTtlDays },
                   forbiddenMessage: label('forbidden'),

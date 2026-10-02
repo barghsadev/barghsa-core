@@ -789,7 +789,7 @@ test('legal autosave stops at a version conflict until the user reloads the save
   await expect(page.locator('#representativeHonorific')).toHaveValue('Initial');
   await page.locator('#representativeHonorific').fill('Local edit');
   await expect(
-    page.getByText('This draft changed in another tab. Reload the saved version.', { exact: true })
+    page.getByText('This draft changed or expired. Reload the saved version.', { exact: true })
   ).toBeVisible();
   await page.locator('#representativeHonorific').fill('Still local');
   await page.locator('#representativeHonorific').press('Tab');

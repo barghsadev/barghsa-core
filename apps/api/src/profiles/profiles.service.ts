@@ -1,4 +1,5 @@
 import { requireAddressGeography } from './address-geography.js';
+import { readOnboardingDraftState } from './onboarding-draft-state.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import type { PoolClient } from 'pg';
 import { getDbPool } from '@barghsa/db';
@@ -570,11 +571,8 @@ export class ProfilesService {
 
       // The profile update holds the same row lock used by draft writes.
       if (data.draftVersion !== undefined) {
-        const draft = await client.query(
-          'SELECT version FROM profile_onboarding_drafts WHERE profile_id=$1',
-          [profileId]
-        );
-        if ((draft.rows[0]?.version ?? 0) !== data.draftVersion)
+        const draft = await readOnboardingDraftState(client, profileId);
+        if (draft.expired || draft.version !== data.draftVersion)
           throw new HttpException({ error: ErrorCodes.CONFLICT_VERSION.code }, 409);
       }
       await requireAddressGeography(client, data.provinceId, data.cityId);

@@ -1,6 +1,7 @@
 import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
 import { z } from 'zod';
 import { requireAddressGeography } from './address-geography.js';
+import { readOnboardingDraftState } from './onboarding-draft-state.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import {
@@ -222,11 +223,8 @@ export class LegalProfilesService {
       }
 
       if (data.draftVersion !== undefined) {
-        const draft = await client.query(
-          'SELECT version FROM profile_onboarding_drafts WHERE profile_id=$1',
-          [profileId]
-        );
-        if ((draft.rows[0]?.version ?? 0) !== data.draftVersion)
+        const draft = await readOnboardingDraftState(client, profileId);
+        if (draft.expired || draft.version !== data.draftVersion)
           throw new HttpException({ error: ErrorCodes.CONFLICT_VERSION.code }, 409);
       }
       await requireAddressGeography(client, data.officialProvinceId, data.officialCityId);

@@ -2,6 +2,12 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { z } from 'zod';
+import type { ValidatedSession } from '../session/session.service.js';
+import type { PoolClient } from 'pg';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import { readOnboardingDraftState } from './onboarding-draft-state.js';
+
+type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 const legalLimits: Record<string, number> = {
   documentKeys: 4096,
@@ -64,38 +70,74 @@ export const onboardingDraftInputSchema = z
 
 @Injectable()
 export class OnboardingDraftsService {
-  async get(userId: string, profileId: string) {
-    const result = await getDbPool().query(
-      `SELECT d.version,d.data FROM profiles p LEFT JOIN profile_onboarding_drafts d ON d.profile_id=p.id
-       WHERE p.id=$1 AND p.user_id=$2 AND p.profile_type IN ('INDIVIDUAL','LEGAL') AND p.status='DRAFT' AND NOT p.archived`,
-      [profileId, userId]
-    );
-    if (!result.rows.length)
-      throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    return { version: result.rows[0].version ?? 0, data: result.rows[0].data ?? {} };
+  private async lockActor(client: PoolClient, actor: Actor) {
+    // Match session validation's user -> session lock order, including audit foreign keys.
+    const account = (
+      await client.query('SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [
+        actor.userId,
+      ])
+    ).rows[0];
+    if (!account || account.disabled_at)
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+    await requireCurrentSession(client, actor);
   }
 
-  async save(userId: string, profileId: string, input: unknown) {
+  async get(actor: Actor, profileId: string) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.lockActor(client, actor);
+      const profile = await client.query(
+        "SELECT id FROM profiles WHERE id=$1 AND user_id=$2 AND profile_type IN ('INDIVIDUAL','LEGAL') AND status='DRAFT' AND NOT archived FOR UPDATE",
+        [profileId, actor.userId]
+      );
+      if (!profile.rows.length)
+        throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+      const draft = await readOnboardingDraftState(client, profileId);
+      if (draft.expired) {
+        // Retain a monotonically increasing version so stale tabs cannot reuse a deleted version.
+        draft.version += 1;
+        draft.data = {};
+        await client.query(
+          "UPDATE profile_onboarding_drafts SET version=$2,data='{}'::jsonb,updated_at=NOW() WHERE profile_id=$1",
+          [profileId, draft.version]
+        );
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id)
+           VALUES(uuid_generate_v7(),$1,'onboarding_draft_expired',jsonb_build_object('profileId',$2::text,'version',$3::integer),uuid_generate_v7())`,
+          [actor.userId, profileId, draft.version]
+        );
+      }
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return { version: draft.version, data: draft.data };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async save(actor: Actor, profileId: string, input: unknown) {
     const parsed = onboardingDraftInputSchema.safeParse(input);
     if (!parsed.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
+      await this.lockActor(client, actor);
       const profile = await client.query(
         "SELECT id,profile_type FROM profiles WHERE id=$1 AND user_id=$2 AND profile_type IN ('INDIVIDUAL','LEGAL') AND status='DRAFT' AND NOT archived FOR UPDATE",
-        [profileId, userId]
+        [profileId, actor.userId]
       );
       if (!profile.rows.length)
         throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
       const fields = profile.rows[0].profile_type === 'INDIVIDUAL' ? individualFields : legalFields;
       if (!fields.safeParse(parsed.data.data).success)
         throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
-      const current = await client.query(
-        'SELECT version FROM profile_onboarding_drafts WHERE profile_id=$1',
-        [profileId]
-      );
-      if ((current.rows[0]?.version ?? 0) !== parsed.data.expectedVersion)
+      const current = await readOnboardingDraftState(client, profileId);
+      if (current.expired || current.version !== parsed.data.expectedVersion)
         throw new HttpException({ error: ErrorCodes.CONFLICT_VERSION.code }, 409);
       const version = parsed.data.expectedVersion + 1;
       await client.query(
@@ -106,8 +148,9 @@ export class OnboardingDraftsService {
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
          VALUES(uuid_generate_v7(),$1,'onboarding_draft_saved',jsonb_build_object('profileId',$2::text,'version',$3::integer),uuid_generate_v7(),NOW())`,
-        [userId, profileId, version]
+        [actor.userId, profileId, version]
       );
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return { version, data: parsed.data.data };
     } catch (error) {

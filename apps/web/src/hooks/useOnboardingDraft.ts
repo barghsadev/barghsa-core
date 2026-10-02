@@ -51,7 +51,10 @@ export function useOnboardingDraft(
         )
           throw new Error('Invalid draft');
         const data = Object.fromEntries(
-          Object.keys(current.current).map((key) => [key, body.data[key] ?? ''])
+          Object.keys(current.current).map((key) => [
+            key,
+            body.data[key] ?? (key === 'documentKeys' ? '[]' : ''),
+          ])
         );
         if (Object.values(data).some((value) => typeof value !== 'string'))
           throw new Error('Invalid draft fields');

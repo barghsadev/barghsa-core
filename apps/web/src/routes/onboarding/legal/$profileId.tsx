@@ -158,50 +158,66 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
   const [uploading, setUploading] = useState(false);
   const uploadInFlight = useRef(false);
   const [uploadError, setUploadError] = useState(false);
-  const restoreDraft = useCallback((data: Record<string, string>) => {
-    try {
-      const parsed: unknown = JSON.parse(data.documentKeys || '[]');
-      setDocuments(
-        Array.isArray(parsed)
-          ? parsed
-              .filter(
-                (item): item is { key: string; name: string } =>
-                  !!item && typeof item.key === 'string' && typeof item.name === 'string'
-              )
-              .slice(0, 5)
-          : []
-      );
-    } catch {
-      setDocuments([]);
-    }
+  const restoreDraft = useCallback(
+    (data: Record<string, string>) => {
+      if (
+        Object.entries(data).every(
+          ([key, value]) => !value || (key === 'documentKeys' && value === '[]')
+        )
+      )
+        void router
+          .navigate({
+            to: '/onboarding/legal/$profileId',
+            params: { profileId },
+            search: { step: 1 },
+            replace: true,
+          })
+          .catch(() => {});
+      try {
+        const parsed: unknown = JSON.parse(data.documentKeys || '[]');
+        setDocuments(
+          Array.isArray(parsed)
+            ? parsed
+                .filter(
+                  (item): item is { key: string; name: string } =>
+                    !!item && typeof item.key === 'string' && typeof item.name === 'string'
+                )
+                .slice(0, 5)
+            : []
+        );
+      } catch {
+        setDocuments([]);
+      }
 
-    setErrors({});
-    setTouched({});
-    setLegalName(data.legalName ?? '');
-    setNationalIdentifier(normalizeProfileDigits(data.nationalIdentifier ?? ''));
-    setRegistrationNumber(data.registrationNumber ?? '');
-    setCompanyTypeId(data.companyTypeId ?? '');
-    setRegistrationDate(data.registrationDate ?? '');
-    setEconomicCode(data.economicCode ?? '');
-    setOfficialPhone(data.officialPhone ?? '');
-    setOfficialEmail(data.officialEmail ?? '');
-    setOfficialProvinceId(data.officialProvinceId ?? '');
-    setOfficialCityId(data.officialCityId ?? '');
-    setOfficialFullAddress(data.officialFullAddress ?? '');
-    setOfficialPostalCode(normalizeProfileDigits(data.officialPostalCode ?? ''));
-    setRepresentativeTitle(data.representativeTitle ?? '');
-    setRepresentativeRelationship(data.representativeRelationship ?? '');
-    setRepresentative({
-      representativeHonorific: data.representativeHonorific ?? '',
-      representativeFirstName: data.representativeFirstName ?? '',
-      representativeLastName: data.representativeLastName ?? '',
-      representativeNationalId: normalizeProfileDigits(data.representativeNationalId ?? ''),
-      representativeProvinceId: data.representativeProvinceId ?? '',
-      representativeCityId: data.representativeCityId ?? '',
-      representativeFullAddress: data.representativeFullAddress ?? '',
-      representativePostalCode: normalizeProfileDigits(data.representativePostalCode ?? ''),
-    });
-  }, []);
+      setErrors({});
+      setTouched({});
+      setLegalName(data.legalName ?? '');
+      setNationalIdentifier(normalizeProfileDigits(data.nationalIdentifier ?? ''));
+      setRegistrationNumber(data.registrationNumber ?? '');
+      setCompanyTypeId(data.companyTypeId ?? '');
+      setRegistrationDate(data.registrationDate ?? '');
+      setEconomicCode(data.economicCode ?? '');
+      setOfficialPhone(data.officialPhone ?? '');
+      setOfficialEmail(data.officialEmail ?? '');
+      setOfficialProvinceId(data.officialProvinceId ?? '');
+      setOfficialCityId(data.officialCityId ?? '');
+      setOfficialFullAddress(data.officialFullAddress ?? '');
+      setOfficialPostalCode(normalizeProfileDigits(data.officialPostalCode ?? ''));
+      setRepresentativeTitle(data.representativeTitle ?? '');
+      setRepresentativeRelationship(data.representativeRelationship ?? '');
+      setRepresentative({
+        representativeHonorific: data.representativeHonorific ?? '',
+        representativeFirstName: data.representativeFirstName ?? '',
+        representativeLastName: data.representativeLastName ?? '',
+        representativeNationalId: normalizeProfileDigits(data.representativeNationalId ?? ''),
+        representativeProvinceId: data.representativeProvinceId ?? '',
+        representativeCityId: data.representativeCityId ?? '',
+        representativeFullAddress: data.representativeFullAddress ?? '',
+        representativePostalCode: normalizeProfileDigits(data.representativePostalCode ?? ''),
+      });
+    },
+    [router, profileId]
+  );
   const draft = useOnboardingDraft(
     profileId,
     {

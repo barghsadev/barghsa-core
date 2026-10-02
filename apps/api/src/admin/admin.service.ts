@@ -1,4 +1,5 @@
 import { lockDualApprovalThreshold } from './dual-approval-threshold-lock.js';
+import { readWizardDraftTtl } from '../common/wizard-draft-retention.js';
 import {
   changeVerificationMode,
   readVerificationModeConfig,
@@ -1564,17 +1565,7 @@ export class AdminService {
   }
 
   async getElectricityOrderDraftTtl(): Promise<{ days: number }> {
-    const row = (
-      await getDbPool().query<{ value: unknown }>(
-        "SELECT value FROM app_config WHERE key='electricity.order_draft_ttl_days'"
-      )
-    ).rows[0];
-    if (!row) return { days: 7 };
-    const days = row.value;
-    if (typeof days !== 'number' || !Number.isInteger(days) || days < 1 || days > 365) {
-      throw new HttpException({ error: 'CONFIG:STORED_VALUE_INVALID' }, 503);
-    }
-    return { days };
+    return { days: await readWizardDraftTtl(getDbPool()) };
   }
 
   async getElectricityContractTemplate() {

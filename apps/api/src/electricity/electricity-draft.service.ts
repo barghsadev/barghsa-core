@@ -1,4 +1,5 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { readWizardDraftTtl } from '../common/wizard-draft-retention.js';
 import { getDbPool } from '@barghsa/db';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
@@ -51,21 +52,7 @@ export class ElectricityDraftService {
         )
       ).rows[0];
       if (profile?.profile_type !== 'LEGAL') throw new NotFoundException('Legal profile not found');
-      const configured = (
-        await client.query<{ value: unknown }>(
-          "SELECT value FROM app_config WHERE key='electricity.order_draft_ttl_days'"
-        )
-      ).rows[0]?.value;
-      if (
-        configured !== undefined &&
-        (typeof configured !== 'number' ||
-          !Number.isInteger(configured) ||
-          configured < 1 ||
-          configured > 365)
-      ) {
-        throw new HttpException({ error: 'CONFIG:STORED_VALUE_INVALID' }, 503);
-      }
-      const ttlDays = configured ?? 7;
+      const ttlDays = await readWizardDraftTtl(client);
       await client.query(
         `DELETE FROM electricity_customer_drafts
           WHERE user_id=$1 AND profile_id=$2 AND mode=$4
