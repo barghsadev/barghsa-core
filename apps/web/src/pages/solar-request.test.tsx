@@ -3,24 +3,51 @@ import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { SolarRequestPage } from './SolarRequestPage.js';
 
-vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => () => Promise.resolve(),
-  Link: ({
-    children,
-    to,
-    onClick,
-  }: {
-    children: React.ReactNode;
-    to: string;
-    onClick?: React.MouseEventHandler<HTMLAnchorElement>;
-  }) => (
-    <a href={to} onClick={onClick}>
-      {children}
-    </a>
-  ),
+const router = vi.hoisted(() => ({
+  step: undefined as unknown,
+  listeners: new Set<() => void>(),
+  navigate: vi.fn(async ({ search }: { search?: { step?: unknown } }) => {
+    if (!search) return;
+    router.step = search.step;
+    for (const listener of router.listeners) listener();
+  }),
 }));
+vi.mock('@tanstack/react-router', async () => {
+  const { useSyncExternalStore } = await import('react');
+  return {
+    useNavigate: () => router.navigate,
+    useSearch: () =>
+      useSyncExternalStore(
+        (listener) => {
+          router.listeners.add(listener);
+          return () => {
+            router.listeners.delete(listener);
+          };
+        },
+        () => router.step
+      ),
+    useBlocker: () => ({ status: 'idle' }),
+    Link: ({
+      children,
+      to,
+      onClick,
+    }: {
+      children: React.ReactNode;
+      to: string;
+      onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+    }) => (
+      <a href={to} onClick={onClick}>
+        {children}
+      </a>
+    ),
+  };
+});
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.unstubAllGlobals();
+  router.step = undefined;
+  router.listeners.clear();
+});
 
 it.each(['fa', 'en'] as const)(
   'shows conditional solar intake fields and stages in %s',
@@ -29,9 +56,15 @@ it.each(['fa', 'en'] as const)(
     vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
     vi.stubGlobal(
       'fetch',
-      vi.fn(async (url: string) => {
+      vi.fn(async (url: string, options?: RequestInit) => {
         if (url === '/api/solar/requests/draft?profileId=profile-1')
-          return new Response(JSON.stringify({ currentStep: 1, data: null, updatedAt: null }));
+          return new Response(
+            JSON.stringify(
+              options?.method === 'PUT'
+                ? { ...JSON.parse(options.body as string), updatedAt: null }
+                : { currentStep: 1, data: null, updatedAt: null }
+            )
+          );
         if (url === '/api/profiles')
           return new Response(
             JSON.stringify({ activeProfileId: 'profile-1', profiles: [{ id: 'profile-1' }] })
@@ -55,16 +88,29 @@ it.each(['fa', 'en'] as const)(
           ? 'نوع نیروگاه خورشیدی مورد نظر خودتان را انتخاب کنید.'
           : 'Choose the type of solar power station you want.'
       );
-      expect(container.querySelector('#solar-bill')).not.toBeNull();
+      expect(container.querySelector('#solar-bill')).toBeNull();
       expect(container.querySelector('#solar-units')).not.toBeNull();
-      expect(container.querySelector('ol')?.children).toHaveLength(5);
-      const submit = container.querySelector('button[type="submit"]') as HTMLButtonElement;
+      expect(container.querySelector('ol')?.children).toHaveLength(4);
+      const submit = Array.from(container.querySelectorAll('button')).find(
+        (button) => button.textContent === (locale === 'fa' ? 'ادامه' : 'Continue')
+      )!;
       expect(submit.disabled).toBe(true);
       await act(async () =>
         (container.querySelector('input[value="non_household"]') as HTMLInputElement).click()
       );
       expect(container.querySelector('#solar-units')).toBeNull();
       expect(container.querySelector('#solar-area')).not.toBeNull();
+      await act(async () => {
+        const input = container.querySelector('#solar-area') as HTMLInputElement;
+        Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+          input,
+          '250'
+        );
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      await act(async () => submit.click());
+      expect(container.querySelector('#solar-area')).toBeNull();
+      expect(container.querySelector('#solar-bill')).not.toBeNull();
       await act(async () =>
         (container.querySelector('input[value="off_grid"]') as HTMLInputElement).click()
       );
@@ -126,7 +172,7 @@ it('restores a solar draft before showing the form', async () => {
     expect((container.querySelector('#solar-area') as HTMLInputElement).value).toBe('250');
     expect(container.textContent).toContain('Roof survey pending');
     expect(container.querySelector('#solar-bill')).toBeNull();
-    expect(container.querySelector('input[type="checkbox"]')?.hasAttribute('checked')).toBe(false);
+    expect(container.querySelector('input[type="checkbox"]')).toBeNull();
   } finally {
     await act(async () => root.unmount());
     container.remove();

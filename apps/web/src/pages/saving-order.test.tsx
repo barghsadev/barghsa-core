@@ -3,19 +3,44 @@ import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { SavingsOrderPage } from './SavingsOrderPage.js';
 
-vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => () => ({}),
-  Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
-    <a href={to}>{children}</a>
-  ),
-  useNavigate: () => () => Promise.resolve(),
+const router = vi.hoisted(() => ({
+  step: undefined as unknown,
+  listeners: new Set<() => void>(),
+  navigate: vi.fn(async ({ search }: { search?: { step?: unknown } }) => {
+    if (!search) return;
+    router.step = search.step;
+    for (const listener of router.listeners) listener();
+  }),
 }));
+vi.mock('@tanstack/react-router', async () => {
+  const { useSyncExternalStore } = await import('react');
+  return {
+    createFileRoute: () => () => ({}),
+    Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
+      <a href={to}>{children}</a>
+    ),
+    useNavigate: () => router.navigate,
+    useSearch: () =>
+      useSyncExternalStore(
+        (listener) => {
+          router.listeners.add(listener);
+          return () => {
+            router.listeners.delete(listener);
+          };
+        },
+        () => router.step
+      ),
+    useBlocker: () => ({ status: 'idle' }),
+  };
+});
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: (value: string) => `${value} IRR`, number: String }),
 }));
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  router.step = undefined;
+  router.listeners.clear();
   sessionStorage.clear();
 });
 
@@ -34,7 +59,7 @@ it.each(['en', 'fa'] as const)(
             JSON.stringify(
               options?.method === 'PUT'
                 ? {
-                    currentStep: 2,
+                    currentStep: JSON.parse(options.body as string).currentStep,
                     data: JSON.parse(options.body as string).data,
                     updatedAt: new Date().toISOString(),
                   }

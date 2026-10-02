@@ -1,6 +1,7 @@
 import { lookup } from './lookup.js';
 
 const en: Record<string, string> = {
+  wizardProperty: 'Property details',
   postalArrivalEstimate: 'Estimated arrival date',
   postalNoEstimate: 'No arrival estimate recorded.',
   postalEstimateHelp:
@@ -301,6 +302,7 @@ const en: Record<string, string> = {
 };
 
 const fa: Record<string, string> = {
+  wizardProperty: 'مشخصات ملک',
   postalArrivalEstimate: 'تاریخ تقریبی رسیدن مدارک',
   postalNoEstimate: 'تاریخ تقریبی رسیدن مدارک ثبت نشده است.',
   postalEstimateHelp:

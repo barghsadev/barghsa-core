@@ -1,6 +1,11 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { Button, Card, CardContent, ConfirmDialog, Input, Label } from '@barghsa/ui';
+import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
+import { t } from '@barghsa/i18n/app';
+import { FormWizard } from '../components/FormWizard.js';
+import { useWizardStep } from '../hooks/useWizardStep.js';
+import { useWizardDraftProtection } from '../hooks/useWizardDraftProtection.js';
+import { sameFormData, uuidReference } from '../lib/form-receipt.js';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -67,10 +72,14 @@ const solarDraftSchema: DraftSchema<SolarDraft> = {
   },
 };
 
+const LeaveDialog = lazy(() => import('../components/WizardLeaveDialog.js'));
+
 export function SolarRequestPage() {
   const navigate = useNavigate();
   const locale = useLocale();
   const copy = (key: string) => tSolar(key, locale);
+  const wizard = useWizardStep('/solar/requests/new', 4);
+  const { step } = wizard;
   const [profileId, setProfileId] = useState('');
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
@@ -99,12 +108,11 @@ export function SolarRequestPage() {
   const [submitError, setSubmitError] = useState(false);
   const [review, setReview] = useState<SolarReview | null>(null);
   const [reviewInput, setReviewInput] = useState<Record<string, unknown> | null>(null);
-  const submissionKey = useRef<string | null>(null);
+  const submissionKey = useRef<{ fingerprint: string; key: string } | null>(null);
+  const reviewFingerprint = useRef('');
   const [draftHydrated, setDraftHydrated] = useState(false);
   const [draftSaveError, setDraftSaveError] = useState(false);
   const [draftSaved, setDraftSaved] = useState(false);
-  const draftTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pendingDraftSave = useRef<Promise<void> | null>(null);
   const draftKey = profileId
     ? `/api/solar/requests/draft?profileId=${encodeURIComponent(profileId)}`
     : null;
@@ -114,7 +122,7 @@ export function SolarRequestPage() {
     error: draftError,
     save: saveDraft,
     retry: retryDraft,
-  } = useFormDraft(draftKey, solarDraftSchema);
+  } = useFormDraft(draftKey, solarDraftSchema, 4);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -153,27 +161,6 @@ export function SolarRequestPage() {
     return () => controller.abort();
   }, []);
 
-  useEffect(() => {
-    if (!draft || draftHydrated) return;
-    if (draft.data) {
-      const saved = draft.data;
-      setBuildingType(saved.buildingType);
-      setPropertyForm(saved.propertyForm);
-      setStructuralFrame(saved.structuralFrame);
-      setBuildingCompletionDate(saved.buildingCompletionDate);
-      setTotalUnits(saved.totalUnits);
-      setSiteCategory(saved.siteCategory);
-      setInstallationSurface(saved.installationSurface);
-      setUsableAreaSqm(saved.usableAreaSqm);
-      if (saved.siteAddressId) setSiteAddressId(saved.siteAddressId);
-      setSiteRelationship(saved.siteRelationship);
-      setSiteDescription(saved.siteDescription);
-      setGridType(saved.gridType);
-      setBillIdentifier(saved.billIdentifier);
-    }
-    setDraftHydrated(true);
-  }, [draft, draftHydrated]);
-
   const currentDraft = useMemo<SolarDraft>(
     () => ({
       buildingType,
@@ -207,110 +194,236 @@ export function SolarRequestPage() {
     ]
   );
 
+  const protection = useWizardDraftProtection({
+    profileId,
+    data: currentDraft,
+    step,
+    ready: draftHydrated && !loading && !draftLoading && !draftError,
+    saveDraft,
+    go: wizard.go,
+  });
+  const fingerprint = JSON.stringify([profileId, currentDraft, agreementAccepted]);
+  const propertyValid = (value: SolarDraft) =>
+    value.buildingType === 'non_household'
+      ? Number(value.usableAreaSqm) > 0 &&
+        Number(value.usableAreaSqm) <= 1000000 &&
+        Number.isInteger(Math.round(Number(value.usableAreaSqm) * 10000) / 100) &&
+        addresses.some((address) => address.id === value.siteAddressId)
+      : /^\d{4}-\d{2}-\d{2}$/.test(value.buildingCompletionDate) &&
+        !Number.isNaN(Date.parse(value.buildingCompletionDate)) &&
+        new Date(value.buildingCompletionDate).toISOString().slice(0, 10) ===
+          value.buildingCompletionDate &&
+        value.buildingCompletionDate <= new Date().toISOString().slice(0, 10) &&
+        (value.propertyForm === 'villa' ||
+          (Number.isInteger(Number(value.totalUnits)) &&
+            Number(value.totalUnits) >= 1 &&
+            Number(value.totalUnits) <= 100000));
+  const gridValid = (value: SolarDraft) =>
+    value.gridType === 'off_grid' ||
+    /^[0-9]{6,13}$/.test(normalizeProfileDigits(value.billIdentifier));
   useEffect(() => {
-    if (!draftHydrated || !profileId || submitting) return;
-    setDraftSaved(false);
-    const data = currentDraft;
+    if (!draft || draftHydrated || loading) return;
+    const saved = draft.data;
+    if (saved) {
+      setBuildingType(saved.buildingType);
+      setPropertyForm(saved.propertyForm);
+      setStructuralFrame(saved.structuralFrame);
+      setBuildingCompletionDate(saved.buildingCompletionDate);
+      setTotalUnits(saved.totalUnits);
+      setSiteCategory(saved.siteCategory);
+      setInstallationSurface(saved.installationSurface);
+      setUsableAreaSqm(saved.usableAreaSqm);
+      setSiteAddressId(saved.siteAddressId || addresses[0]?.id || '');
+      setSiteRelationship(saved.siteRelationship);
+      setSiteDescription(saved.siteDescription);
+      setGridType(saved.gridType);
+      setBillIdentifier(saved.billIdentifier);
+    }
+    // Consent and the server review are renewed in every resumed session.
+    const restored = saved
+      ? Math.min(draft.currentStep, !propertyValid(saved) ? 1 : !gridValid(saved) ? 2 : 3)
+      : 1;
+    wizard.restore(restored);
+    protection.markSaved(saved ?? currentDraft, restored);
+    setDraftHydrated(true);
+  }, [
+    draft,
+    draftHydrated,
+    loading,
+    currentDraft,
+    wizard.restore,
+    protection.markSaved,
+    addresses,
+  ]);
+
+  useEffect(() => {
+    if (review && reviewFingerprint.current !== fingerprint) {
+      setReview(null);
+      setReviewInput(null);
+      wizard.restore(Math.min(step, 3));
+    }
+  }, [fingerprint, review, step, wizard.restore]);
+
+  useEffect(() => {
+    if (
+      !draftHydrated ||
+      !protection.dirty ||
+      protection.busy ||
+      protection.blocker.status === 'blocked' ||
+      protection.saveError ||
+      submitting
+    )
+      return;
     const timer = setTimeout(() => {
-      const previous = pendingDraftSave.current;
-      const saving = (previous ?? Promise.resolve()).catch(() => {}).then(() => saveDraft(1, data));
-      pendingDraftSave.current = saving;
-      void saving.then(() => setDraftSaveError(false)).catch(() => setDraftSaveError(true));
+      void protection.save();
     }, 1200);
-    draftTimer.current = timer;
     return () => clearTimeout(timer);
-  }, [draftHydrated, profileId, submitting, saveDraft, currentDraft]);
+  }, [
+    draftHydrated,
+    protection.dirty,
+    protection.busy,
+    protection.blocker.status,
+    protection.saveError,
+    protection.save,
+    submitting,
+  ]);
 
   async function saveNow(): Promise<boolean> {
-    if (draftTimer.current) clearTimeout(draftTimer.current);
-    try {
-      await pendingDraftSave.current?.catch(() => {});
-      await saveDraft(1, currentDraft);
-      setDraftSaveError(false);
-      setDraftSaved(true);
-      return true;
-    } catch {
-      setDraftSaveError(true);
-      return false;
-    }
+    const saved = await protection.save();
+    if (saved) setDraftSaved(true);
+    return saved;
   }
-
   async function leaveForAddress() {
     if (await saveNow())
-      void navigate({ to: '/settings/addresses', search: { returnTo: '/solar/requests/new' } });
+      await navigate({ to: '/settings/addresses', search: { returnTo: '/solar/requests/new' } });
   }
-
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!profileId || !agreementAccepted || submitting) return;
-    if (draftTimer.current) clearTimeout(draftTimer.current);
-    setSubmitting(true);
-    setSubmitError(false);
-    await pendingDraftSave.current?.catch(() => {});
-    const base = {
-      profileId,
-      submissionKey: (submissionKey.current ??= crypto.randomUUID()),
-      gridType,
-      ...(gridType === 'on_grid' ? { billIdentifier: normalizeProfileDigits(billIdentifier) } : {}),
-      agreementAccepted: true,
-    };
-    const details =
-      buildingType === 'building_apartment'
-        ? {
-            buildingType,
-            propertyForm,
-            structuralFrame,
-            buildingCompletionDate,
-            ...(propertyForm === 'apartment' ? { totalUnits: Number(totalUnits) } : {}),
-          }
-        : {
-            buildingType,
-            siteCategory,
-            installationSurface,
-            usableAreaSqm: Number(usableAreaSqm),
-            siteAddressId,
-            siteRelationship,
-            ...(siteDescription.trim() ? { siteDescription: siteDescription.trim() } : {}),
-          };
-    try {
-      const input = { ...base, ...details };
-      const response = await fetch('/api/solar/requests/review', {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(input),
-      });
-      if (!response.ok) throw new Error('review');
-      setReview((await response.json()) as SolarReview);
-      setReviewInput(input);
-      setSubmitting(false);
-    } catch {
-      setSubmitError(true);
-      setSubmitting(false);
+  const canNext =
+    step === 1
+      ? propertyValid(currentDraft)
+      : step === 2
+        ? gridValid(currentDraft)
+        : step === 3 && propertyValid(currentDraft) && gridValid(currentDraft) && agreementAccepted;
+  async function advanceStep() {
+    if (!canNext) return;
+    if (step < 3) {
+      await protection.save(step + 1);
+      return;
     }
+    await protection.run(async (current, alive) => {
+      setSubmitting(true);
+      setSubmitError(false);
+      setDraftSaveError(false);
+      const base = {
+        profileId,
+        gridType,
+        ...(gridType === 'on_grid'
+          ? { billIdentifier: normalizeProfileDigits(billIdentifier) }
+          : {}),
+        agreementAccepted: true,
+      };
+      const details =
+        buildingType === 'building_apartment'
+          ? {
+              buildingType,
+              propertyForm,
+              structuralFrame,
+              buildingCompletionDate,
+              ...(propertyForm === 'apartment' ? { totalUnits: Number(totalUnits) } : {}),
+            }
+          : {
+              buildingType,
+              siteCategory,
+              installationSurface,
+              usableAreaSqm: Number(usableAreaSqm),
+              siteAddressId,
+              siteRelationship,
+              ...(siteDescription.trim() ? { siteDescription: siteDescription.trim() } : {}),
+            };
+      const keyFingerprint = JSON.stringify([base, details]);
+      if (submissionKey.current?.fingerprint !== keyFingerprint)
+        submissionKey.current = { fingerprint: keyFingerprint, key: crypto.randomUUID() };
+      const input = { ...base, ...details, submissionKey: submissionKey.current.key };
+      try {
+        const response = await fetch('/api/solar/requests/review', {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify(input),
+        });
+        if (!response.ok) throw new Error('review');
+        const receipt = (await response.json()) as SolarReview;
+        if (
+          !receipt ||
+          !/^[a-f0-9]{64}$/.test(receipt.hash) ||
+          !receipt.data ||
+          !sameFormData(receipt.data.submission, input) ||
+          receipt.data.createsContract !== false ||
+          receipt.data.createsInvoice !== false ||
+          typeof receipt.data.agreementVersion !== 'string' ||
+          !receipt.data.agreementVersion ||
+          typeof receipt.data.agreementText !== 'string' ||
+          !receipt.data.agreementText ||
+          (receipt.data.siteAddress !== null && typeof receipt.data.siteAddress !== 'string')
+        )
+          throw new Error('Invalid review');
+        try {
+          await saveDraft(4, currentDraft);
+        } catch (error) {
+          if (current()) setDraftSaveError(true);
+          throw error;
+        }
+        if (!current()) return;
+        protection.markSaved(currentDraft, 4);
+        reviewFingerprint.current = fingerprint;
+        setReview(receipt);
+        setReviewInput(input);
+        await protection.move(4, step);
+      } catch {
+        if (current()) {
+          protection.completed.current = false;
+          setSubmitError(true);
+        }
+      } finally {
+        if (alive()) setSubmitting(false);
+      }
+    });
   }
-
   async function confirmSubmission() {
-    if (!review || !reviewInput || submitting) return;
-    setSubmitting(true);
-    setSubmitError(false);
-    try {
-      const response = await fetch('/api/solar/requests', {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ ...reviewInput, expectedReviewHash: review.hash }),
-      });
-      if (!response.ok) throw new Error('submit');
-      const result = (await response.json()) as { requestId: string };
-      void navigate({
-        to: '/solar/requests/$requestId',
-        params: { requestId: result.requestId },
-      });
-    } catch {
-      setSubmitError(true);
-      setSubmitting(false);
-    }
+    if (
+      !review ||
+      !reviewInput ||
+      reviewFingerprint.current !== fingerprint ||
+      !agreementAccepted ||
+      !propertyValid(currentDraft) ||
+      !gridValid(currentDraft)
+    )
+      return;
+    await protection.run(async (current, alive) => {
+      setSubmitting(true);
+      setSubmitError(false);
+      try {
+        const response = await fetch('/api/solar/requests', {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ ...reviewInput, expectedReviewHash: review.hash }),
+        });
+        if (!response.ok) throw new Error('submit');
+        const result = (await response.json()) as { requestId?: unknown };
+        const requestId = uuidReference(result?.requestId);
+        if (!current()) return;
+        protection.completed.current = true;
+        protection.blocker.reset?.();
+        await navigate({ to: '/solar/requests/$requestId', params: { requestId } });
+      } catch {
+        if (current()) {
+          protection.completed.current = false;
+          setSubmitError(true);
+        }
+      } finally {
+        if (alive()) setSubmitting(false);
+      }
+    });
   }
 
   const age = buildingCompletionDate
@@ -320,119 +433,24 @@ export function SolarRequestPage() {
 
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <ConfirmDialog
-        open={Boolean(review)}
-        onCancel={() => {
-          setReview(null);
-          setReviewInput(null);
-        }}
-        onConfirm={() => void confirmSubmission()}
-        title={copy('reviewTitle')}
-        description={copy('reviewDescription')}
-        confirmLabel={copy('submit')}
-        cancelLabel={copy('reviewCancel')}
-        loading={submitting}
-      >
-        {review && (
-          <div className="space-y-3 text-sm" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-            <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-2 [&>dd]:min-w-0 [&>dd]:break-words">
-              <dt>{copy('building')}</dt>
-              <dd>
-                {copy(
-                  review.data.submission.buildingType === 'non_household'
-                    ? 'nonHousehold'
-                    : 'building'
-                )}
-              </dd>
-              <dt>{copy('gridType')}</dt>
-              <dd>{copy(review.data.submission.gridType === 'off_grid' ? 'offGrid' : 'onGrid')}</dd>
-              {review.data.submission.billIdentifier && (
-                <>
-                  <dt>{copy('billIdentifier')}</dt>
-                  <dd dir="ltr">{review.data.submission.billIdentifier}</dd>
-                </>
-              )}
-              {review.data.submission.propertyForm && (
-                <>
-                  <dt>{copy('propertyForm')}</dt>
-                  <dd>{copy(String(review.data.submission.propertyForm))}</dd>
-                </>
-              )}
-              {review.data.submission.structuralFrame && (
-                <>
-                  <dt>{copy('structuralFrame')}</dt>
-                  <dd>{copy(String(review.data.submission.structuralFrame))}</dd>
-                </>
-              )}
-              {review.data.submission.buildingCompletionDate && (
-                <>
-                  <dt>{copy('completionDate')}</dt>
-                  <dd>{review.data.submission.buildingCompletionDate}</dd>
-                </>
-              )}
-              {review.data.submission.totalUnits && (
-                <>
-                  <dt>{copy('totalUnits')}</dt>
-                  <dd>{review.data.submission.totalUnits}</dd>
-                </>
-              )}
-              {review.data.submission.siteCategory && (
-                <>
-                  <dt>{copy('siteCategory')}</dt>
-                  <dd>{copy(String(review.data.submission.siteCategory))}</dd>
-                </>
-              )}
-              {review.data.submission.installationSurface && (
-                <>
-                  <dt>{copy('installationSurface')}</dt>
-                  <dd>{copy(String(review.data.submission.installationSurface))}</dd>
-                </>
-              )}
-              {review.data.submission.usableAreaSqm && (
-                <>
-                  <dt>{copy('usableArea')}</dt>
-                  <dd>{review.data.submission.usableAreaSqm}</dd>
-                </>
-              )}
-              {review.data.siteAddress && (
-                <>
-                  <dt>{copy('address')}</dt>
-                  <dd>{review.data.siteAddress}</dd>
-                </>
-              )}
-              {review.data.submission.siteRelationship && (
-                <>
-                  <dt>{copy('relationship')}</dt>
-                  <dd>
-                    {copy(
-                      review.data.submission.siteRelationship === 'authorized_operator'
-                        ? 'authorizedOperator'
-                        : String(review.data.submission.siteRelationship)
-                    )}
-                  </dd>
-                </>
-              )}
-              {review.data.submission.siteDescription && (
-                <>
-                  <dt>{copy('description')}</dt>
-                  <dd>{review.data.submission.siteDescription}</dd>
-                </>
-              )}
-              <dt>{copy('reviewTermsVersion')}</dt>
-              <dd dir="ltr">{review.data.agreementVersion}</dd>
-            </dl>
-            <p>{copy('agreement')}</p>
-            {locale === 'en' && (
-              <p lang="fa" dir="rtl">
-                {review.data.agreementText}
-              </p>
-            )}
-            <p className="rounded-md bg-muted p-3">{copy('reviewNoContractInvoice')}</p>
-            {submitError && <p role="alert">{copy('submitError')}</p>}
-          </div>
-        )}
-      </ConfirmDialog>
+      {protection.blocker.status === 'blocked' && (
+        <Suspense fallback={<p role="status">{copy('loading')}</p>}>
+          <LeaveDialog
+            onSave={saveNow}
+            working={protection.busy}
+            workingLabel={copy('submitting')}
+            errorMessage={
+              draftSaveError || protection.saveError ? copy('draftSaveError') : undefined
+            }
+            onStay={() => protection.blocker.reset?.()}
+            onLeave={() => protection.blocker.proceed?.()}
+          />
+        </Suspense>
+      )}
       <div className="space-y-2">
+        <Link to="/solar/requests" className="text-sm text-primary underline">
+          {copy('myRequests')}
+        </Link>
         <h1 className="text-3xl font-semibold">{copy('title')}</h1>
         <p className="text-muted-foreground">{copy('instruction')}</p>
       </div>
@@ -448,266 +466,428 @@ export function SolarRequestPage() {
           </Button>
         </div>
       )}
-      {draftSaveError && <p role="alert">{copy('draftSaveError')}</p>}
-      {draftSaved && !draftSaveError && <p role="status">{copy('draftSaved')}</p>}
+      {(draftSaveError || protection.saveError) && <p role="alert">{copy('draftSaveError')}</p>}
+      {draftSaved && !protection.dirty && !draftSaveError && !protection.saveError && (
+        <p role="status">{copy('draftSaved')}</p>
+      )}
       {!loading && profileId && draftHydrated && !draftError && (
-        <form onSubmit={submit} className="space-y-6">
-          <fieldset className="grid gap-3 sm:grid-cols-2">
-            <legend className="mb-3 font-semibold">{copy('instruction')}</legend>
-            {(['building_apartment', 'non_household'] as const).map((type) => (
-              <label
-                key={type}
-                className={`cursor-pointer rounded-xl border p-4 ${buildingType === type ? 'border-primary bg-primary/5' : ''}`}
-              >
-                <input
-                  type="radio"
-                  name="buildingType"
-                  value={type}
-                  checked={buildingType === type}
-                  onChange={() => setBuildingType(type)}
-                  className="me-2"
-                />
-                <span className="font-medium">
-                  {copy(type === 'building_apartment' ? 'building' : 'nonHousehold')}
-                </span>
-                <span className="mt-1 block text-sm text-muted-foreground">
-                  {copy(type === 'building_apartment' ? 'buildingHelp' : 'nonHouseholdHelp')}
-                </span>
-              </label>
-            ))}
-          </fieldset>
-          <Card>
-            <CardContent className="space-y-4 pt-6">
-              {buildingType === 'building_apartment' ? (
-                <>
-                  <label className="block space-y-1">
-                    <span>{copy('propertyForm')}</span>
-                    <select
-                      className="w-full rounded-md border bg-background p-2"
-                      value={propertyForm}
-                      onChange={(e) => setPropertyForm(e.target.value as typeof propertyForm)}
+        <FormWizard
+          step={step}
+          steps={['wizardProperty', 'gridType', 'stages', 'reviewTitle'].map(copy)}
+          ariaLabel={copy('title')}
+          backLabel={t('electricity.order.back', locale)}
+          saveLabel={copy('saveDraft')}
+          savingLabel={t('electricity.order.savingDraft', locale)}
+          nextLabel={t('electricity.order.next', locale)}
+          submitLabel={copy('submit')}
+          submittingLabel={copy('submitting')}
+          saving={protection.busy && !submitting}
+          submitting={submitting}
+          saveDisabled={protection.completed.current}
+          backDisabled={protection.completed.current}
+          nextDisabled={!canNext}
+          submitDisabled={!review || !agreementAccepted || protection.completed.current}
+          onBack={() => {
+            void protection.save(step - 1);
+          }}
+          onSave={() => {
+            void saveNow();
+          }}
+          onNext={() => {
+            void advanceStep();
+          }}
+          onSubmit={() => {
+            void confirmSubmission();
+          }}
+        >
+          <fieldset
+            className="space-y-6 min-w-0"
+            disabled={protection.busy || protection.completed.current}
+          >
+            {step === 1 && (
+              <>
+                <fieldset className="grid gap-3 sm:grid-cols-2">
+                  <legend className="mb-3 font-semibold">{copy('instruction')}</legend>
+                  {(['building_apartment', 'non_household'] as const).map((type) => (
+                    <label
+                      key={type}
+                      className={`cursor-pointer rounded-xl border p-4 ${buildingType === type ? 'border-primary bg-primary/5' : ''}`}
                     >
-                      <option value="apartment">{copy('apartment')}</option>
-                      <option value="villa">{copy('villa')}</option>
-                    </select>
-                  </label>
-                  <label className="block space-y-1">
-                    <span>{copy('structuralFrame')}</span>
-                    <select
-                      className="w-full rounded-md border bg-background p-2"
-                      value={structuralFrame}
-                      onChange={(e) => setStructuralFrame(e.target.value as typeof structuralFrame)}
-                    >
-                      {(['concrete', 'steel', 'other'] as const).map((item) => (
-                        <option key={item} value={item}>
-                          {copy(item)}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
+                      <input
+                        type="radio"
+                        name="buildingType"
+                        value={type}
+                        checked={buildingType === type}
+                        onChange={() => setBuildingType(type)}
+                        className="me-2"
+                      />
+                      <span className="font-medium">
+                        {copy(type === 'building_apartment' ? 'building' : 'nonHousehold')}
+                      </span>
+                      <span className="mt-1 block text-sm text-muted-foreground">
+                        {copy(type === 'building_apartment' ? 'buildingHelp' : 'nonHouseholdHelp')}
+                      </span>
+                    </label>
+                  ))}
+                </fieldset>
+                <Card>
+                  <CardContent className="space-y-4 pt-6">
+                    {buildingType === 'building_apartment' ? (
+                      <>
+                        <label className="block space-y-1">
+                          <span>{copy('propertyForm')}</span>
+                          <select
+                            className="w-full rounded-md border bg-background p-2"
+                            value={propertyForm}
+                            onChange={(e) => setPropertyForm(e.target.value as typeof propertyForm)}
+                          >
+                            <option value="apartment">{copy('apartment')}</option>
+                            <option value="villa">{copy('villa')}</option>
+                          </select>
+                        </label>
+                        <label className="block space-y-1">
+                          <span>{copy('structuralFrame')}</span>
+                          <select
+                            className="w-full rounded-md border bg-background p-2"
+                            value={structuralFrame}
+                            onChange={(e) =>
+                              setStructuralFrame(e.target.value as typeof structuralFrame)
+                            }
+                          >
+                            {(['concrete', 'steel', 'other'] as const).map((item) => (
+                              <option key={item} value={item}>
+                                {copy(item)}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <div>
+                          <Label htmlFor="solar-completion">{copy('completionDate')}</Label>
+                          <Input
+                            id="solar-completion"
+                            type="date"
+                            value={buildingCompletionDate}
+                            max={new Date().toISOString().slice(0, 10)}
+                            onChange={(e) => setBuildingCompletionDate(e.target.value)}
+                            required
+                          />
+                        </div>
+                        {age !== null && (
+                          <p className="text-sm text-muted-foreground">
+                            {locale === 'fa'
+                              ? `عمر تقریبی ساختمان: ${age} سال`
+                              : `Approximate building age: ${age} years`}
+                          </p>
+                        )}
+                        {propertyForm === 'apartment' && (
+                          <div>
+                            <Label htmlFor="solar-units">{copy('totalUnits')}</Label>
+                            <Input
+                              id="solar-units"
+                              type="number"
+                              min={1}
+                              max={100000}
+                              value={totalUnits}
+                              onChange={(e) => setTotalUnits(e.target.value)}
+                              required
+                            />
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <label className="block space-y-1">
+                          <span>{copy('siteCategory')}</span>
+                          <select
+                            className="w-full rounded-md border bg-background p-2"
+                            value={siteCategory}
+                            onChange={(e) => setSiteCategory(e.target.value as typeof siteCategory)}
+                          >
+                            {(['agricultural', 'industrial'] as const).map((item) => (
+                              <option key={item} value={item}>
+                                {copy(item)}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <label className="block space-y-1">
+                          <span>{copy('installationSurface')}</span>
+                          <select
+                            className="w-full rounded-md border bg-background p-2"
+                            value={installationSurface}
+                            onChange={(e) =>
+                              setInstallationSurface(e.target.value as typeof installationSurface)
+                            }
+                          >
+                            {(['land', 'rooftop', 'both'] as const).map((item) => (
+                              <option key={item} value={item}>
+                                {copy(item)}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <div>
+                          <Label htmlFor="solar-area">{copy('usableArea')}</Label>
+                          <Input
+                            id="solar-area"
+                            type="number"
+                            min="0.01"
+                            step="0.01"
+                            max={1000000}
+                            value={usableAreaSqm}
+                            onChange={(e) => setUsableAreaSqm(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <label className="block space-y-1">
+                          <span>{copy('address')}</span>
+                          <select
+                            className="w-full rounded-md border bg-background p-2"
+                            value={siteAddressId}
+                            onChange={(e) => setSiteAddressId(e.target.value)}
+                            required
+                          >
+                            <option value="">—</option>
+                            {addresses.map((address) => (
+                              <option key={address.id} value={address.id}>
+                                {address.fullAddress}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        {!addresses.length && (
+                          <Link
+                            className="text-sm underline"
+                            to="/settings/addresses"
+                            aria-disabled={protection.busy}
+                            onClick={(event) => {
+                              event.preventDefault();
+                              if (!protection.busy) void leaveForAddress();
+                            }}
+                          >
+                            {copy('noAddresses')}
+                          </Link>
+                        )}
+                        <label className="block space-y-1">
+                          <span>{copy('relationship')}</span>
+                          <select
+                            className="w-full rounded-md border bg-background p-2"
+                            value={siteRelationship}
+                            onChange={(e) =>
+                              setSiteRelationship(e.target.value as typeof siteRelationship)
+                            }
+                          >
+                            {(['owner', 'tenant', 'authorized_operator'] as const).map((item) => (
+                              <option key={item} value={item}>
+                                {copy(item === 'authorized_operator' ? 'authorizedOperator' : item)}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <label className="block space-y-1">
+                          <span>{copy('description')}</span>
+                          <textarea
+                            className="min-h-24 w-full rounded-md border bg-background p-2"
+                            maxLength={2000}
+                            value={siteDescription}
+                            onChange={(e) => setSiteDescription(e.target.value)}
+                          />
+                        </label>
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+              </>
+            )}
+            {step === 2 && (
+              <>
+                <fieldset className="space-y-3">
+                  <legend className="font-semibold">{copy('gridType')}</legend>
+                  {(['on_grid', 'off_grid'] as const).map((type) => (
+                    <label key={type} className="block rounded-xl border p-4">
+                      <input
+                        type="radio"
+                        name="gridType"
+                        value={type}
+                        checked={gridType === type}
+                        onChange={() => setGridType(type)}
+                        className="me-2"
+                      />
+                      <span className="font-medium">
+                        {copy(type === 'on_grid' ? 'onGrid' : 'offGrid')}
+                      </span>
+                      <span className="mt-1 block text-sm text-muted-foreground">
+                        {copy(type === 'on_grid' ? 'onGridHelp' : 'offGridHelp')}
+                      </span>
+                    </label>
+                  ))}
+                </fieldset>
+                {gridType === 'on_grid' && (
                   <div>
-                    <Label htmlFor="solar-completion">{copy('completionDate')}</Label>
+                    <Label htmlFor="solar-bill">{copy('billIdentifier')}</Label>
                     <Input
-                      id="solar-completion"
-                      type="date"
-                      value={buildingCompletionDate}
-                      max={new Date().toISOString().slice(0, 10)}
-                      onChange={(e) => setBuildingCompletionDate(e.target.value)}
+                      id="solar-bill"
+                      inputMode="numeric"
+                      pattern="[0-9۰-۹٠-٩]{6,13}"
+                      minLength={6}
+                      maxLength={13}
+                      value={billIdentifier}
+                      onChange={(e) => setBillIdentifier(e.target.value)}
                       required
                     />
                   </div>
-                  {age !== null && (
-                    <p className="text-sm text-muted-foreground">
-                      {locale === 'fa'
-                        ? `عمر تقریبی ساختمان: ${age} سال`
-                        : `Approximate building age: ${age} years`}
-                    </p>
-                  )}
-                  {propertyForm === 'apartment' && (
-                    <div>
-                      <Label htmlFor="solar-units">{copy('totalUnits')}</Label>
-                      <Input
-                        id="solar-units"
-                        type="number"
-                        min={1}
-                        max={100000}
-                        value={totalUnits}
-                        onChange={(e) => setTotalUnits(e.target.value)}
-                        required
-                      />
+                )}
+              </>
+            )}
+            {step === 3 && (
+              <>
+                <section aria-label={copy('stages')} className="rounded-xl border p-5">
+                  <h2 className="mb-3 font-semibold">{copy('stages')}</h2>
+                  <ol className="list-inside list-decimal space-y-2">
+                    {stages.map((stage) => (
+                      <li key={stage}>{copy(stage)}</li>
+                    ))}
+                  </ol>
+                </section>
+                <label className="flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    className="mt-1"
+                    checked={agreementAccepted}
+                    onChange={(e) => setAgreementAccepted(e.target.checked)}
+                    required
+                  />
+                  {copy('agreement')}
+                </label>
+              </>
+            )}
+            {step === 4 && (
+              <Card>
+                <CardContent className="space-y-4 pt-6">
+                  <h2 className="text-xl font-semibold">{copy('reviewTitle')}</h2>
+                  <p>{copy('reviewDescription')}</p>
+                  {review && (
+                    <div className="space-y-3 text-sm" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+                      <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-2 [&>dd]:min-w-0 [&>dd]:break-words">
+                        <dt>{copy('building')}</dt>
+                        <dd>
+                          {copy(
+                            review.data.submission.buildingType === 'non_household'
+                              ? 'nonHousehold'
+                              : 'building'
+                          )}
+                        </dd>
+                        <dt>{copy('gridType')}</dt>
+                        <dd>
+                          {copy(
+                            review.data.submission.gridType === 'off_grid' ? 'offGrid' : 'onGrid'
+                          )}
+                        </dd>
+                        {review.data.submission.billIdentifier && (
+                          <>
+                            <dt>{copy('billIdentifier')}</dt>
+                            <dd dir="ltr">{review.data.submission.billIdentifier}</dd>
+                          </>
+                        )}
+                        {review.data.submission.propertyForm && (
+                          <>
+                            <dt>{copy('propertyForm')}</dt>
+                            <dd>{copy(String(review.data.submission.propertyForm))}</dd>
+                          </>
+                        )}
+                        {review.data.submission.structuralFrame && (
+                          <>
+                            <dt>{copy('structuralFrame')}</dt>
+                            <dd>{copy(String(review.data.submission.structuralFrame))}</dd>
+                          </>
+                        )}
+                        {review.data.submission.buildingCompletionDate && (
+                          <>
+                            <dt>{copy('completionDate')}</dt>
+                            <dd>{review.data.submission.buildingCompletionDate}</dd>
+                          </>
+                        )}
+                        {review.data.submission.totalUnits && (
+                          <>
+                            <dt>{copy('totalUnits')}</dt>
+                            <dd>{review.data.submission.totalUnits}</dd>
+                          </>
+                        )}
+                        {review.data.submission.siteCategory && (
+                          <>
+                            <dt>{copy('siteCategory')}</dt>
+                            <dd>{copy(String(review.data.submission.siteCategory))}</dd>
+                          </>
+                        )}
+                        {review.data.submission.installationSurface && (
+                          <>
+                            <dt>{copy('installationSurface')}</dt>
+                            <dd>{copy(String(review.data.submission.installationSurface))}</dd>
+                          </>
+                        )}
+                        {review.data.submission.usableAreaSqm && (
+                          <>
+                            <dt>{copy('usableArea')}</dt>
+                            <dd>{review.data.submission.usableAreaSqm}</dd>
+                          </>
+                        )}
+                        {review.data.siteAddress && (
+                          <>
+                            <dt>{copy('address')}</dt>
+                            <dd>{review.data.siteAddress}</dd>
+                          </>
+                        )}
+                        {review.data.submission.siteRelationship && (
+                          <>
+                            <dt>{copy('relationship')}</dt>
+                            <dd>
+                              {copy(
+                                review.data.submission.siteRelationship === 'authorized_operator'
+                                  ? 'authorizedOperator'
+                                  : String(review.data.submission.siteRelationship)
+                              )}
+                            </dd>
+                          </>
+                        )}
+                        {review.data.submission.siteDescription && (
+                          <>
+                            <dt>{copy('description')}</dt>
+                            <dd>{review.data.submission.siteDescription}</dd>
+                          </>
+                        )}
+                        <dt>{copy('reviewTermsVersion')}</dt>
+                        <dd dir="ltr">{review.data.agreementVersion}</dd>
+                      </dl>
+                      <p>{copy('agreement')}</p>
+                      <p lang="fa" dir="rtl">
+                        {review.data.agreementText}
+                      </p>
+                      <p className="rounded-md bg-muted p-3">{copy('reviewNoContractInvoice')}</p>
+                      {submitError && <p role="alert">{copy('submitError')}</p>}
                     </div>
                   )}
-                </>
-              ) : (
-                <>
-                  <label className="block space-y-1">
-                    <span>{copy('siteCategory')}</span>
-                    <select
-                      className="w-full rounded-md border bg-background p-2"
-                      value={siteCategory}
-                      onChange={(e) => setSiteCategory(e.target.value as typeof siteCategory)}
-                    >
-                      {(['agricultural', 'industrial'] as const).map((item) => (
-                        <option key={item} value={item}>
-                          {copy(item)}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <label className="block space-y-1">
-                    <span>{copy('installationSurface')}</span>
-                    <select
-                      className="w-full rounded-md border bg-background p-2"
-                      value={installationSurface}
-                      onChange={(e) =>
-                        setInstallationSurface(e.target.value as typeof installationSurface)
-                      }
-                    >
-                      {(['land', 'rooftop', 'both'] as const).map((item) => (
-                        <option key={item} value={item}>
-                          {copy(item)}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <div>
-                    <Label htmlFor="solar-area">{copy('usableArea')}</Label>
-                    <Input
-                      id="solar-area"
-                      type="number"
-                      min="0.01"
-                      step="0.01"
-                      max={1000000}
-                      value={usableAreaSqm}
-                      onChange={(e) => setUsableAreaSqm(e.target.value)}
-                      required
-                    />
+
+                  <div className="flex flex-wrap gap-2">
+                    {[1, 2, 3].map((target) => (
+                      <Button
+                        key={target}
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          void protection.save(target);
+                        }}
+                      >
+                        {copy('reviewCancel')} ·{' '}
+                        {copy(['wizardProperty', 'gridType', 'stages'][target - 1]!)}
+                      </Button>
+                    ))}
                   </div>
-                  <label className="block space-y-1">
-                    <span>{copy('address')}</span>
-                    <select
-                      className="w-full rounded-md border bg-background p-2"
-                      value={siteAddressId}
-                      onChange={(e) => setSiteAddressId(e.target.value)}
-                      required
-                    >
-                      {addresses.map((address) => (
-                        <option key={address.id} value={address.id}>
-                          {address.fullAddress}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  {!addresses.length && (
-                    <Link
-                      className="text-sm underline"
-                      to="/settings/addresses"
-                      onClick={(event) => {
-                        event.preventDefault();
-                        void leaveForAddress();
-                      }}
-                    >
-                      {copy('noAddresses')}
-                    </Link>
-                  )}
-                  <label className="block space-y-1">
-                    <span>{copy('relationship')}</span>
-                    <select
-                      className="w-full rounded-md border bg-background p-2"
-                      value={siteRelationship}
-                      onChange={(e) =>
-                        setSiteRelationship(e.target.value as typeof siteRelationship)
-                      }
-                    >
-                      {(['owner', 'tenant', 'authorized_operator'] as const).map((item) => (
-                        <option key={item} value={item}>
-                          {copy(item === 'authorized_operator' ? 'authorizedOperator' : item)}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <label className="block space-y-1">
-                    <span>{copy('description')}</span>
-                    <textarea
-                      className="min-h-24 w-full rounded-md border bg-background p-2"
-                      maxLength={2000}
-                      value={siteDescription}
-                      onChange={(e) => setSiteDescription(e.target.value)}
-                    />
-                  </label>
-                </>
-              )}
-            </CardContent>
-          </Card>
-          <fieldset className="space-y-3">
-            <legend className="font-semibold">{copy('gridType')}</legend>
-            {(['on_grid', 'off_grid'] as const).map((type) => (
-              <label key={type} className="block rounded-xl border p-4">
-                <input
-                  type="radio"
-                  name="gridType"
-                  value={type}
-                  checked={gridType === type}
-                  onChange={() => setGridType(type)}
-                  className="me-2"
-                />
-                <span className="font-medium">
-                  {copy(type === 'on_grid' ? 'onGrid' : 'offGrid')}
-                </span>
-                <span className="mt-1 block text-sm text-muted-foreground">
-                  {copy(type === 'on_grid' ? 'onGridHelp' : 'offGridHelp')}
-                </span>
-              </label>
-            ))}
+                </CardContent>
+              </Card>
+            )}
+            {submitError && step !== 4 && <p role="alert">{copy('submitError')}</p>}
           </fieldset>
-          {gridType === 'on_grid' && (
-            <div>
-              <Label htmlFor="solar-bill">{copy('billIdentifier')}</Label>
-              <Input
-                id="solar-bill"
-                inputMode="numeric"
-                pattern="[0-9۰-۹٠-٩]{6,13}"
-                minLength={6}
-                maxLength={13}
-                value={billIdentifier}
-                onChange={(e) => setBillIdentifier(e.target.value)}
-                required
-              />
-            </div>
-          )}
-          <section aria-label={copy('stages')} className="rounded-xl border p-5">
-            <h2 className="mb-3 font-semibold">{copy('stages')}</h2>
-            <ol className="list-inside list-decimal space-y-2">
-              {stages.map((stage) => (
-                <li key={stage}>{copy(stage)}</li>
-              ))}
-            </ol>
-          </section>
-          <label className="flex items-start gap-2">
-            <input
-              type="checkbox"
-              className="mt-1"
-              checked={agreementAccepted}
-              onChange={(e) => setAgreementAccepted(e.target.checked)}
-              required
-            />
-            {copy('agreement')}
-          </label>
-          {submitError && <p role="alert">{copy('submitError')}</p>}
-          <Button type="button" variant="outline" onClick={() => void saveNow()}>
-            {copy('saveDraft')}
-          </Button>
-          <Button
-            type="submit"
-            disabled={
-              !agreementAccepted ||
-              submitting ||
-              (buildingType === 'non_household' && !siteAddressId)
-            }
-          >
-            {copy(submitting ? 'submitting' : 'submit')}
-          </Button>
-        </form>
+        </FormWizard>
       )}
     </main>
   );

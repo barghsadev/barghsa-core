@@ -26627,10 +26627,9 @@
                 "additionalProperties": false,
                 "properties": {
                   "currentStep": {
-                    "enum": [
-                      1
-                    ],
-                    "type": "number"
+                    "maximum": 4,
+                    "minimum": 1,
+                    "type": "integer"
                   },
                   "data": {
                     "additionalProperties": false,

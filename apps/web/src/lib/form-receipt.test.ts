@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { electricityDraftConfirmed, electricityOrderReceipt } from './electricity-draft-receipt.js';
+import { confirmedDraftReceipt, electricityOrderReceipt } from './form-receipt.js';
 
 const input = {
   profileId: 'buyer',
@@ -13,7 +13,7 @@ const input = {
 describe('electricity save confirmation', () => {
   it('accepts persisted JSONB regardless of key ordering and without an echoed profile', () => {
     expect(
-      electricityDraftConfirmed(
+      confirmedDraftReceipt(
         {
           currentStep: 3,
           data: {
@@ -38,7 +38,7 @@ describe('electricity save confirmation', () => {
     { ...input, data: { ...input.data, quantities: { thermal: '100', green: 0 } } },
     { ...input, data: { ...input.data, giftCode: 'unexpected' } },
   ])('rejects an incomplete or different save receipt (%j)', (receipt) => {
-    expect(electricityDraftConfirmed(receipt, input)).toBe(false);
+    expect(confirmedDraftReceipt(receipt, input)).toBe(false);
   });
 });
 

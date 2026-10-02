@@ -74,12 +74,14 @@ export const solarCustomerDrafts = pgTable(
     profileId: uuid('profile_id')
       .notNull()
       .references(() => profiles.id, { onDelete: 'restrict' }),
+    currentStep: integer('current_step').notNull().default(1),
     data: jsonb('data').$type<Record<string, unknown>>().notNull().default({}),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
     uniqueIndex('solar_customer_drafts_owner_key').on(t.userId, t.profileId),
+    check('solar_customer_drafts_step', sql`${t.currentStep} BETWEEN 1 AND 4`),
     check(
       'solar_customer_drafts_data',
       sql`jsonb_typeof(${t.data})='object' AND octet_length(${t.data}::text)<=8192`

@@ -3,7 +3,10 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 import { wizardStepSearch } from '../lib/wizard-step.js';
 
 /** Financial wizards can revisit completed stages, but cannot skip unsaved stages. */
-export function useOrderWizardStep(to: '/electricity/order' | '/electricity/advanced') {
+export function useWizardStep(
+  to: '/electricity/order' | '/electricity/advanced' | '/savings/order' | '/solar/requests/new',
+  maxStep = 5
+) {
   const navigate = useNavigate();
   const rawStep = useSearch({ strict: false, select: (search) => search.step });
   const [restored, setRestored] = useState<number | null>(null);
@@ -14,7 +17,7 @@ export function useOrderWizardStep(to: '/electricity/order' | '/electricity/adva
       ? 1
       : rawStep === undefined
         ? restored
-        : Math.min(wizardStepSearch({ step: rawStep }, 5).step ?? 1, ceiling);
+        : Math.min(wizardStepSearch({ step: rawStep }, maxStep).step ?? 1, ceiling);
   const currentStep = useRef(step);
   useLayoutEffect(() => {
     currentStep.current = step;
@@ -36,13 +39,13 @@ export function useOrderWizardStep(to: '/electricity/order' | '/electricity/adva
         currentStep.current !== expectedStep ||
         !Number.isInteger(target) ||
         target < 1 ||
-        target > 5
+        target > maxStep
       )
         return;
       setCeiling((current) => Math.max(current, target));
       await navigate({ to, search: { step: target } });
     },
-    [navigate, to]
+    [navigate, to, maxStep]
   );
   useEffect(() => {
     if (restored !== null && rawStep !== step)

@@ -130,15 +130,19 @@ export class SolarRequestService {
         [actor.userId, profileId]
       );
       const row = (
-        await client.query<{ data: SolarDraftInput['data']; updated_at: Date }>(
-          'SELECT data,updated_at FROM solar_customer_drafts WHERE user_id=$1 AND profile_id=$2',
+        await client.query<{
+          current_step: number;
+          data: SolarDraftInput['data'];
+          updated_at: Date;
+        }>(
+          'SELECT current_step,data,updated_at FROM solar_customer_drafts WHERE user_id=$1 AND profile_id=$2',
           [actor.userId, profileId]
         )
       ).rows[0];
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return row
-        ? { currentStep: 1, data: row.data, updatedAt: row.updated_at.toISOString() }
+        ? { currentStep: row.current_step, data: row.data, updatedAt: row.updated_at.toISOString() }
         : { currentStep: 1, data: null, updatedAt: null };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -155,32 +159,44 @@ export class SolarRequestService {
       await this.orders.lockOrderActor(client, actor);
       if (!(await this.orders.mayManageOrders(client, actor.userId, input.profileId, true)))
         throw new NotFoundException('Profile not found');
-      const saved = await client.query<{ data: SolarDraftInput['data']; updated_at: Date }>(
-        `INSERT INTO solar_customer_drafts(user_id,profile_id,data)
-           VALUES($1,$2,$3::jsonb)
-           ON CONFLICT(user_id,profile_id) DO UPDATE SET data=EXCLUDED.data,updated_at=NOW()
-             WHERE solar_customer_drafts.data IS DISTINCT FROM EXCLUDED.data
-           RETURNING data,updated_at`,
-        [actor.userId, input.profileId, JSON.stringify(input.data)]
+      const saved = await client.query<{
+        current_step: number;
+        data: SolarDraftInput['data'];
+        updated_at: Date;
+      }>(
+        `INSERT INTO solar_customer_drafts(user_id,profile_id,current_step,data)
+           VALUES($1,$2,$3,$4::jsonb)
+           ON CONFLICT(user_id,profile_id) DO UPDATE SET current_step=EXCLUDED.current_step,data=EXCLUDED.data,updated_at=NOW()
+             WHERE solar_customer_drafts.data IS DISTINCT FROM EXCLUDED.data OR solar_customer_drafts.current_step IS DISTINCT FROM EXCLUDED.current_step
+           RETURNING current_step,data,updated_at`,
+        [actor.userId, input.profileId, input.currentStep, JSON.stringify(input.data)]
       );
       if (saved.rows.length) {
         await client.query(
           `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id)
-           VALUES(uuid_generate_v7(),$1,'solar.request.draft_saved',jsonb_build_object('profileId',$2::text),uuid_generate_v7())`,
-          [actor.userId, input.profileId]
+           VALUES(uuid_generate_v7(),$1,'solar.request.draft_saved',jsonb_build_object('profileId',$2::text,'step',$3::integer),uuid_generate_v7())`,
+          [actor.userId, input.profileId, input.currentStep]
         );
       }
       const row =
         saved.rows[0] ??
         (
-          await client.query<{ data: SolarDraftInput['data']; updated_at: Date }>(
-            'SELECT data,updated_at FROM solar_customer_drafts WHERE user_id=$1 AND profile_id=$2',
+          await client.query<{
+            current_step: number;
+            data: SolarDraftInput['data'];
+            updated_at: Date;
+          }>(
+            'SELECT current_step,data,updated_at FROM solar_customer_drafts WHERE user_id=$1 AND profile_id=$2',
             [actor.userId, input.profileId]
           )
         ).rows[0]!;
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return { currentStep: 1, data: row.data, updatedAt: row.updated_at.toISOString() };
+      return {
+        currentStep: row.current_step,
+        data: row.data,
+        updatedAt: row.updated_at.toISOString(),
+      };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

@@ -88,7 +88,11 @@ test('solar request moves from customer upload through staff review and postal r
       return route.fulfill({ json: { ...draft, updatedAt: submittedAt } });
     }
     return route.fulfill({
-      json: { currentStep: 1, data: draft?.data ?? null, updatedAt: draft ? submittedAt : null },
+      json: {
+        currentStep: draft?.currentStep ?? 1,
+        data: draft?.data ?? null,
+        updatedAt: draft ? submittedAt : null,
+      },
     });
   });
   await page.route('**/api/solar/requests/review', (route) =>
@@ -401,20 +405,29 @@ test('solar request moves from customer upload through staff review and postal r
   ).toBeVisible();
   await page.getByLabel('Property form').selectOption('villa');
   await page.getByLabel('Building completion date').fill('2020-01-01');
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await page.getByLabel('Off-grid').check();
   await page.getByRole('button', { name: 'Save progress' }).click();
   await expect(page.getByRole('status').filter({ hasText: 'Progress saved.' })).toBeVisible();
   expect(draft?.data).toMatchObject({ propertyForm: 'villa', gridType: 'off_grid' });
 
   await page.reload();
+  await expect(page).toHaveURL(/step=2$/);
+  await expect(page.getByLabel('Off-grid')).toBeChecked();
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
   await expect(page.getByLabel('Property form')).toHaveValue('villa');
   await expect(page.getByLabel('Building completion date')).toHaveValue('2020-01-01');
-  await expect(page.getByLabel('Off-grid')).toBeChecked();
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await page.getByLabel('I accept the contract registration terms.').check();
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Review your solar request' })).toBeVisible();
+  await expect(
+    page.getByText(
+      'Submitting this request creates no contract or invoice. Staff will review it first.'
+    )
+  ).toBeVisible();
   await page.getByRole('button', { name: 'Submit request' }).click();
-  await expect(page.getByRole('dialog', { name: 'Review your solar request' })).toBeVisible();
-  await expect(page.getByRole('dialog')).toContainText('creates no contract or invoice');
-  await page.getByRole('dialog').getByRole('button', { name: 'Submit request' }).click();
   await expect(page).toHaveURL(new RegExp(`/solar/requests/${requestId}$`));
   expect(submissions).toHaveLength(1);
   expect(submissions[0]).toMatchObject({
@@ -554,7 +567,11 @@ test('solar intake returns from address setup with its saved site details', asyn
       return route.fulfill({ json: { ...draft, updatedAt: submittedAt } });
     }
     return route.fulfill({
-      json: { currentStep: 1, data: draft?.data ?? null, updatedAt: draft ? submittedAt : null },
+      json: {
+        currentStep: draft?.currentStep ?? 1,
+        data: draft?.data ?? null,
+        updatedAt: draft ? submittedAt : null,
+      },
     });
   });
   await page.route('**/api/solar/requests/review', (route) =>
@@ -582,7 +599,6 @@ test('solar intake returns from address setup with its saved site details', asyn
 
   await page.locator('input[value="non_household"]').check();
   await page.locator('#solar-area').fill('250');
-  await page.getByLabel('Off-grid').check();
   await page
     .getByRole('link', { name: 'Add a site address in profile settings before submitting.' })
     .click();
@@ -597,15 +613,17 @@ test('solar intake returns from address setup with its saved site details', asyn
   await page.getByRole('button', { name: 'Save', exact: true }).click();
   await expect(page.getByText(siteAddress.fullAddress)).toBeVisible();
   await page.getByRole('link', { name: 'Return to solar construction request' }).click();
-  await expect(page).toHaveURL(/\/solar\/requests\/new$/);
+  await expect(page).toHaveURL(/\/solar\/requests\/new\?step=1$/);
   await expect(page.locator('#solar-area')).toHaveValue('250');
   await expect(page.getByLabel('Site address')).toHaveValue(siteAddress.id);
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
+  await page.getByLabel('Off-grid').check();
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await page.getByLabel('I accept the contract registration terms.').check();
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Review your solar request' })).toBeVisible();
+  await expect(page.getByText(siteAddress.fullAddress)).toBeVisible();
   await page.getByRole('button', { name: 'Submit request' }).click();
-  await expect(page.getByRole('dialog', { name: 'Review your solar request' })).toContainText(
-    siteAddress.fullAddress
-  );
-  await page.getByRole('dialog').getByRole('button', { name: 'Submit request' }).click();
   await expect(page).toHaveURL(new RegExp(`/solar/requests/${requestId}$`));
   expect(submission).toMatchObject({
     buildingType: 'non_household',

@@ -5,11 +5,8 @@ import { toast } from '../../../lib/toast-api.js';
 import { t } from '@barghsa/i18n/app';
 import { MapPinIcon, PlusIcon, Loader2Icon, CheckIcon, HomeIcon, PackageIcon } from 'lucide-react';
 import { Button, Card, CardContent } from '@barghsa/ui';
-import { useOrderWizardStep } from '../../../hooks/useOrderWizardStep.js';
-import {
-  electricityDraftConfirmed,
-  electricityOrderReceipt,
-} from '../../../lib/electricity-draft-receipt.js';
+import { useWizardStep } from '../../../hooks/useWizardStep.js';
+import { confirmedDraftReceipt, electricityOrderReceipt } from '../../../lib/form-receipt.js';
 import { withCsrf } from '../../../lib/csrf.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { FormWizard } from '../../../components/FormWizard.js';
@@ -240,7 +237,7 @@ function ElectricityOrderPage() {
   const [quoting, setQuoting] = useState(false);
   const [quoteVersion, setQuoteVersion] = useState(0);
   const submissionKey = useRef<{ fingerprint: string; key: string } | null>(null);
-  const wizard = useOrderWizardStep('/electricity/order');
+  const wizard = useWizardStep('/electricity/order');
   const { step } = wizard;
   const [draftLoading, setDraftLoading] = useState(true);
   const [draftError, setDraftError] = useState(false);
@@ -961,7 +958,7 @@ function ElectricityOrderPage() {
       if (!response.ok) throw new Error('Draft save failed');
       const saved: unknown = await response.json();
       if (epoch !== draftGeneration.current) return false;
-      if (!electricityDraftConfirmed(saved, input)) throw new Error('Invalid saved draft');
+      if (!confirmedDraftReceipt(saved, input)) throw new Error('Invalid saved draft');
       savedDraftSignature.current = signature;
       if (liveSignature.current !== signature) return false;
       if (target !== step) await wizard.go(target, step);

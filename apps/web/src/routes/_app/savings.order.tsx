@@ -7,6 +7,7 @@ const SavingOrderForm = lazyRouteComponent(
 );
 
 export const Route = createFileRoute('/_app/savings/order')({
+  validateSearch: (search: Record<string, unknown>) => ({ step: search.step }),
   component: () => (
     <MaintenanceBoundary capability="saving_orders">
       <SavingOrderForm />

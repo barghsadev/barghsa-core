@@ -29,6 +29,8 @@ The shared leave dialog replaces the onboarding-specific implementation and keep
 
 ## Publication and remaining work
 
+Electricity commit `395c95280b19ea219767ef3d643c4eb0225707cc` passes all five exact-commit CI jobs in [run37024585564](https://github.com/barghsadev/barghsa-core/actions/runs/37024585564). The following [saving/solar batch](2026-10-02-saving-solar-wizards.md) implements the remaining departure and URL-state portions.
+
 The preceding onboarding commit `1fe1d60a16263ef6d8f3f5e746d96eae52fe3623` passes all five exact-commit CI jobs in [run37020452010](https://github.com/barghsadev/barghsa-core/actions/runs/37020452010).
 
 This manual batch uses direct-main publication as requested. Its pushed SHA and exact new CI are read back after the push; pending CI is reported as pending. No PR, scheduler, historical supervisor snapshot, external loop state or generated completion/event ledger is changed. No migration is required. Existing CI settings remain unchanged.

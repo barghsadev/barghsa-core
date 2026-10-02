@@ -134,7 +134,28 @@ it('saves and resumes a scoped solar draft without losing incomplete fields', as
       )
     ).rows[0]?.count
   ).toBe(1);
-  expect(await (await request(path, 'GET')).json()).toMatchObject({ data });
+  for (const currentStep of [0, 5, 1.5])
+    expect(
+      (await request('/api/solar/requests/draft', 'PUT', { profileId, currentStep, data })).status
+    ).toBe(400);
+  const advanced = await request('/api/solar/requests/draft', 'PUT', {
+    profileId,
+    currentStep: 4,
+    data,
+  });
+  expect(advanced.status, http.logs()).toBe(200);
+  expect(await advanced.json()).toMatchObject({ currentStep: 4, data });
+  expect(await (await request(path, 'GET')).json()).toMatchObject({ currentStep: 4, data });
+  expect(
+    (await request('/api/solar/requests/draft', 'PUT', { profileId, currentStep: 4, data })).status
+  ).toBe(200);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT metadata FROM audit_log WHERE event='solar.request.draft_saved' ORDER BY created_at"
+      )
+    ).rows.map((row) => JSON.parse(row.metadata).step)
+  ).toEqual([1, 4]);
   await http.pool.query(
     "UPDATE solar_customer_drafts SET updated_at=NOW()-INTERVAL '8 days' WHERE profile_id=$1",
     [profileId]

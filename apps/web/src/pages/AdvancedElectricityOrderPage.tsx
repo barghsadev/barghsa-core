@@ -14,11 +14,8 @@ import {
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
-import { useOrderWizardStep } from '../hooks/useOrderWizardStep.js';
-import {
-  electricityDraftConfirmed,
-  electricityOrderReceipt,
-} from '../lib/electricity-draft-receipt.js';
+import { useWizardStep } from '../hooks/useWizardStep.js';
+import { confirmedDraftReceipt, electricityOrderReceipt } from '../lib/form-receipt.js';
 import { formatJalaliDateTime, parseJalaliDateTime } from '../lib/jalali-date-time.js';
 import {
   ElectricityQuotePreviewError,
@@ -157,7 +154,7 @@ export function AdvancedElectricityOrderPage() {
   const [draftAttempt, setDraftAttempt] = useState(0);
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const wizard = useOrderWizardStep('/electricity/advanced');
+  const wizard = useWizardStep('/electricity/advanced');
   const { step } = wizard;
   const command = useRef<symbol | null>(null);
   const generation = useRef(0);
@@ -453,7 +450,7 @@ export function AdvancedElectricityOrderPage() {
       if (!response.ok) throw new Error('Draft failed');
       const saved: unknown = await response.json();
       if (epoch !== generation.current) return false;
-      if (!electricityDraftConfirmed(saved, input)) throw new Error('Draft save was not confirmed');
+      if (!confirmedDraftReceipt(saved, input)) throw new Error('Draft save was not confirmed');
       savedSignature.current = snapshot;
       if (liveSignature.current !== snapshot) return false;
       if (target !== step) await wizard.go(target, step);

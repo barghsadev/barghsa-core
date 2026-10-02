@@ -1,0 +1,2 @@
+ALTER TABLE "solar_customer_drafts" ADD COLUMN "current_step" integer DEFAULT 1 NOT NULL;--> statement-breakpoint
+ALTER TABLE "solar_customer_drafts" ADD CONSTRAINT "solar_customer_drafts_step" CHECK ("solar_customer_drafts"."current_step" BETWEEN 1 AND 4);

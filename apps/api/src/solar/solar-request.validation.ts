@@ -98,7 +98,7 @@ export const solarDraftData = z
 export const solarDraftInput = z
   .object({
     profileId: z.string().uuid(),
-    currentStep: z.literal(1),
+    currentStep: z.number().int().min(1).max(4),
     data: solarDraftData,
   })
   .strict();
