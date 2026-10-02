@@ -5,6 +5,12 @@ import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@barghsa/ui';
 import { Link } from '@tanstack/react-router';
 import { withCsrf } from '../lib/csrf.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
+import {
+  knowledgeSuggestions,
+  readKnowledgeMetadata,
+  type KnowledgePolicyCheck,
+} from '../lib/knowledge-assistant.js';
 
 type Source = {
   kbId: string;
@@ -17,6 +23,8 @@ type Answer = {
   sources: Source[];
   attribution: 'retrieved_context';
   remainingQuota: number;
+  policyChecks: KnowledgePolicyCheck[] | null;
+  answeredAt: string | null;
 };
 type AccountSnapshot = {
   profileName: string;
@@ -32,12 +40,6 @@ type Turn = {
 };
 type PendingRequest = { requestId: string; message: string };
 
-const suggestions = [
-  'assistant.suggestion.documents',
-  'assistant.suggestion.payment',
-  'assistant.suggestion.support',
-];
-
 export default function KnowledgeAssistantPanel({
   locale,
   slotKey,
@@ -46,6 +48,7 @@ export default function KnowledgeAssistantPanel({
   open,
   onOpenChange,
   embedded = false,
+  pathname = '/ai',
 }: {
   locale: Locale;
   slotKey: 'individual_chatbot' | 'legal_entity_chatbot';
@@ -54,6 +57,7 @@ export default function KnowledgeAssistantPanel({
   open: boolean;
   onOpenChange: (open: boolean) => void;
   embedded?: boolean;
+  pathname?: string;
 }) {
   const [draft, setDraft] = useState('');
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -62,9 +66,14 @@ export default function KnowledgeAssistantPanel({
   const [error, setError] = useState<string | null>(null);
   const [retry, setRetry] = useState<PendingRequest | null>(null);
   const input = useRef<HTMLTextAreaElement>(null);
+  const promptDisclosure = useRef<HTMLDetailsElement>(null);
   const end = useRef<HTMLDivElement>(null);
   const controller = useRef<AbortController | null>(null);
   const label = (key: string) => t(`assistant.${key}`, locale);
+  const accountTime = useAccountTime(locale);
+  const suggestions = knowledgeSuggestions(pathname, slotKey);
+  const timestamp = (value: string | number) =>
+    accountTime.format(value, { dateStyle: 'short', timeStyle: 'short' });
 
   useEffect(() => () => controller.current?.abort(), []);
   useEffect(() => {
@@ -77,10 +86,11 @@ export default function KnowledgeAssistantPanel({
   }, [draft, open]);
 
   async function send(request?: PendingRequest) {
-    if (busy) return;
+    if (busy || controller.current) return;
     const message = request?.message ?? draft.trim();
     if (!message || message.length > 1000) return;
     const payload = request ?? { requestId: crypto.randomUUID(), message };
+    if (promptDisclosure.current) promptDisclosure.current.open = false;
     if (!request) {
       setTurns((current) => [
         ...current,
@@ -106,19 +116,22 @@ export default function KnowledgeAssistantPanel({
         const body = (await response.json().catch(() => null)) as {
           error?: { code?: string };
         } | null;
+        if (abort.signal.aborted) return;
         const code = body?.error?.code;
         setError(
           code === 'AI_KNOWLEDGE_NO_SOURCE'
             ? label('noSource')
-            : code === 'AI_MODEL_BUDGET_EXHAUSTED'
-              ? label('budget')
-              : code === 'AI_KNOWLEDGE_BUSY'
-                ? label('busy')
-                : response.status === 429
-                  ? label('limit')
-                  : response.status === 409
-                    ? label('changed')
-                    : label('error')
+            : code === 'AI_KNOWLEDGE_POLICY_BLOCKED'
+              ? label('policyBlocked')
+              : code === 'AI_MODEL_BUDGET_EXHAUSTED'
+                ? label('budget')
+                : code === 'AI_KNOWLEDGE_BUSY'
+                  ? label('busy')
+                  : response.status === 429
+                    ? label('limit')
+                    : response.status === 409
+                      ? label('changed')
+                      : label('error')
         );
         if (
           response.status >= 500 ||
@@ -127,7 +140,9 @@ export default function KnowledgeAssistantPanel({
           setRetry(payload);
         return;
       }
-      const answer = (await response.json()) as Answer;
+      const result = (await response.json()) as Answer;
+      if (abort.signal.aborted) return;
+      const answer = { ...result, ...readKnowledgeMetadata(result) };
       setTurns((current) =>
         current.map((turn) => (turn.id === payload.requestId ? { ...turn, answer } : turn))
       );
@@ -136,14 +151,17 @@ export default function KnowledgeAssistantPanel({
       setError(label('error'));
       setRetry(payload);
     } finally {
-      if (controller.current === abort) controller.current = null;
-      setBusy(false);
+      if (controller.current === abort) {
+        controller.current = null;
+        if (!abort.signal.aborted) setBusy(false);
+      }
     }
   }
 
   async function showAccountStatus() {
-    if (busy) return;
+    if (busy || controller.current) return;
     const id = crypto.randomUUID();
+    if (promptDisclosure.current) promptDisclosure.current.open = false;
     setTurns((current) => [...current, { id, question: label('account.action'), at: Date.now() }]);
     setBusy(true);
     setAccountLoading(true);
@@ -159,6 +177,7 @@ export default function KnowledgeAssistantPanel({
       });
       if (!response.ok) throw new Error('Dashboard unavailable');
       const result: unknown = await response.json();
+      if (abort.signal.aborted) return;
       if (!result || typeof result !== 'object') throw new Error('Invalid dashboard response');
       const dashboard = result as {
         profile?: { id?: unknown; name?: unknown };
@@ -206,10 +225,14 @@ export default function KnowledgeAssistantPanel({
     } catch {
       if (!abort.signal.aborted) setError(label('account.error'));
     } finally {
-      setTurns((current) => current.filter((turn) => turn.id !== id || turn.account));
-      if (controller.current === abort) controller.current = null;
-      setAccountLoading(false);
-      setBusy(false);
+      if (controller.current === abort) {
+        controller.current = null;
+        if (!abort.signal.aborted) {
+          setTurns((current) => current.filter((turn) => turn.id !== id || turn.account));
+          setAccountLoading(false);
+          setBusy(false);
+        }
+      }
     }
   }
 
@@ -236,35 +259,22 @@ export default function KnowledgeAssistantPanel({
                 )}
               </p>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {suggestions.map((key) => (
-                <button
-                  key={key}
-                  type="button"
-                  className="rounded-full border bg-card px-3 py-2 text-start text-sm text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                  onClick={() => {
-                    setDraft(t(key, locale));
-                    input.current?.focus();
-                  }}
-                >
-                  {t(key, locale)}
-                </button>
-              ))}
-            </div>
           </div>
         )}
         {turns.map((turn) => (
           <div key={turn.id} className="space-y-3">
-            <div className="ms-auto w-fit max-w-[88%] rounded-2xl rounded-ee-sm bg-primary px-4 py-3 text-primary-foreground">
+            <div className="ms-auto w-fit max-w-[88%] rounded-2xl rounded-ee-sm bg-primary px-4 py-3 text-primary-foreground [overflow-wrap:anywhere]">
               <p className="whitespace-pre-wrap leading-6">{turn.question}</p>
-              <time className="mt-1 block text-end text-xs opacity-75">
-                {new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(
-                  turn.at
-                )}
+              <time
+                dateTime={new Date(turn.at).toISOString()}
+                aria-label={label('sentAt')}
+                className="mt-1 block text-end text-xs"
+              >
+                {timestamp(turn.at)}
               </time>
             </div>
             {turn.answer && (
-              <div className="max-w-[92%] space-y-3 rounded-2xl rounded-es-sm bg-muted px-4 py-3 text-foreground">
+              <div className="max-w-[92%] space-y-3 rounded-2xl rounded-es-sm bg-muted px-4 py-3 text-foreground [overflow-wrap:anywhere]">
                 <p className="text-xs font-semibold text-muted-foreground">{label('answer')}</p>
                 <p className="whitespace-pre-wrap leading-7">{turn.answer.reply}</p>
                 <details className="border-t pt-3 text-sm">
@@ -284,6 +294,38 @@ export default function KnowledgeAssistantPanel({
                     ))}
                   </ul>
                 </details>
+                <div className="space-y-2 border-t pt-3 text-xs text-muted-foreground">
+                  {turn.answer.policyChecks === null ? (
+                    <p>{label('policies.unrecorded')}</p>
+                  ) : turn.answer.policyChecks.length === 0 ? (
+                    <p>{label('policies.none')}</p>
+                  ) : (
+                    <>
+                      <p>{label('policies.checked')}</p>
+                      <ul aria-label={label('policies.checked')} className="flex flex-wrap gap-2">
+                        {turn.answer.policyChecks.map((check) => (
+                          <li
+                            key={check.type}
+                            className="rounded-full border bg-card px-2.5 py-1.5 text-foreground"
+                          >
+                            {label(`policies.${check.type}`)} ·{' '}
+                            {new Intl.NumberFormat(locale).format(check.count)}
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                  {turn.answer.answeredAt ? (
+                    <p>
+                      {label('answeredAt')}{' '}
+                      <time dateTime={turn.answer.answeredAt}>
+                        {timestamp(turn.answer.answeredAt)}
+                      </time>
+                    </p>
+                  ) : (
+                    <p>{label('timeUnrecorded')}</p>
+                  )}
+                </div>
               </div>
             )}
             {turn.account && (
@@ -357,6 +399,30 @@ export default function KnowledgeAssistantPanel({
           void send();
         }}
       >
+        {accountTime.notice}
+        <details ref={promptDisclosure}>
+          <summary className="min-h-9 cursor-pointer py-2 text-sm font-medium text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+            {label('suggestions')}
+          </summary>
+          <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label={label('suggestions')}>
+            {suggestions.map((key) => (
+              <button
+                key={key}
+                type="button"
+                disabled={busy}
+                className="min-h-9 rounded-full border bg-background px-3 py-1.5 text-start text-xs text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50"
+                onClick={() => {
+                  setDraft(t(key, locale));
+                  setRetry(null);
+                  setError(null);
+                  input.current?.focus();
+                }}
+              >
+                {t(key, locale)}
+              </button>
+            ))}
+          </div>
+        </details>
         <button
           type="button"
           disabled={busy}

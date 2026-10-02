@@ -48,7 +48,7 @@ export default function AIChat() {
   }, [profileRevision, retry]);
 
   return (
-    <main
+    <div
       className="mx-auto w-full max-w-4xl space-y-5 px-4 py-6"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
@@ -90,6 +90,6 @@ export default function AIChat() {
             embedded
           />
         )}
-    </main>
+    </div>
   );
 }

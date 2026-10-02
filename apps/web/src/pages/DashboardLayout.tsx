@@ -28,7 +28,7 @@ import { KnowledgeAssistantLauncher } from '../components/KnowledgeAssistantLaun
 export function DashboardLayout({ locale: localeOverride }: { locale?: Locale }) {
   const currentLocale = useLocale();
   const locale = localeOverride ?? currentLocale;
-  const onAssistantPage = useLocation({ select: (location) => location.pathname === '/ai' });
+  const pathname = useLocation({ select: (location) => location.pathname });
   const groups: NavigationGroup[] = [
     {
       label: shellText('overview', locale),
@@ -78,7 +78,7 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
       }
     >
       <Outlet />
-      {!onAssistantPage && <KnowledgeAssistantLauncher locale={locale} />}
+      {pathname !== '/ai' && <KnowledgeAssistantLauncher locale={locale} pathname={pathname} />}
     </AppShell>
   );
 }

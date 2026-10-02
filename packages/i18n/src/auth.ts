@@ -15,6 +15,8 @@ export const fa: I18nDictionary = {
   'error.ai.knowledge_busy': 'دستیار دانش در حال پاسخ‌گویی است. کمی بعد دوباره تلاش کنید.',
   'error.ai.knowledge_unavailable': 'برای پروفایل فعال شما دستیار دانش تنظیم نشده است.',
   'error.ai.knowledge_no_source': 'منبع منتشرشده‌ای برای این پرسش پیدا نشد.',
+  'error.ai.knowledge_policy_blocked':
+    'این پرسش با سیاست‌های راهنما قابل پاسخ نیست. پرسش را تغییر دهید یا با پشتیبانی تماس بگیرید.',
   'error.ai.knowledge_source_unavailable':
     'یکی از منابع این پاسخ دیگر در دسترس نیست. پرسش را دوباره بفرستید.',
   'error.maintenance.active': 'این خدمت موقتاً در دسترس نیست',
@@ -206,6 +208,8 @@ export const en: I18nDictionary = {
   'error.ai.knowledge_busy': 'The knowledge assistant is busy. Please try again shortly.',
   'error.ai.knowledge_unavailable': 'No knowledge assistant is assigned to your active profile.',
   'error.ai.knowledge_no_source': 'No published source matched this question.',
+  'error.ai.knowledge_policy_blocked':
+    'This question could not be answered under the guide policies. Rephrase it or contact support.',
   'error.ai.knowledge_source_unavailable':
     'A source for this answer is no longer available. Please ask again.',
   'error.maintenance.active': 'This service is temporarily paused',

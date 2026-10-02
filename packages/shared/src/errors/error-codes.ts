@@ -83,6 +83,14 @@ export const ErrorCodes = {
     messageKey: 'error.ai.knowledge_no_source',
     severity: 'info' as ErrorSeverity,
   },
+  AI_KNOWLEDGE_POLICY_BLOCKED: {
+    code: 'AI_KNOWLEDGE_POLICY_BLOCKED',
+    httpStatus: 422,
+    title: 'The question cannot be answered under the knowledge guide policies',
+    retryable: false,
+    messageKey: 'error.ai.knowledge_policy_blocked',
+    severity: 'info' as ErrorSeverity,
+  },
   AI_KNOWLEDGE_SOURCE_UNAVAILABLE: {
     code: 'AI_KNOWLEDGE_SOURCE_UNAVAILABLE',
     httpStatus: 409,

@@ -3,10 +3,14 @@ import { test, expect } from './coverage-fixture';
 
 for (const locale of ['fa', 'en'] as const) {
   test(`customer asks a sourced knowledge question (${locale})`, async ({ page, baseURL }) => {
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page
       .context()
       .addCookies([{ name: 'barghsa_csrf', value: 'knowledge-fixture', url: baseURL! }]);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+    );
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({ json: { userId: 'viewer', isStaff: false, requiresTosAcceptance: false } })
     );
@@ -70,7 +74,6 @@ for (const locale of ['fa', 'en'] as const) {
       });
     });
     await page.goto('/app');
-    if (locale === 'en') await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
     await page
       .getByRole('button', {
         name: locale === 'fa' ? 'پرسش از راهنمای برقسا' : 'Ask Barghsa guide',
@@ -123,6 +126,9 @@ test('customer launcher stays hidden when the active profile has no assigned gui
   page,
 }) => {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({ json: { userId: 'viewer', isStaff: false, requiresTosAcceptance: false } })
   );
@@ -148,6 +154,9 @@ test('account status hides denied fields and refuses a switched profile response
     pendingInvoices: 777,
   };
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({ json: { userId: 'viewer', isStaff: false, requiresTosAcceptance: false } })
   );
@@ -216,6 +225,9 @@ test('the full-page guide answers with sources and handles an unassigned profile
   let available = true;
   let activeProfileId = 'profile-1';
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({ json: { userId: 'viewer', isStaff: false, requiresTosAcceptance: false } })
   );
@@ -282,7 +294,12 @@ test('the full-page guide answers with sources and handles an unassigned profile
   await page.goto('/ai');
   await expect(page.getByRole('heading', { name: 'Barghsa knowledge guide' })).toBeVisible();
   await expect(page.getByText("You're asking as Ari Buyer.")).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Ask Barghsa guide' })).toBeVisible();
+  const guideLink = page.getByRole('link', { name: 'Ask Barghsa guide' });
+  const guideNavigationToggle = page.locator('[aria-controls="dashboard-navigation"]');
+  const expandedGuideNavigation = !(await guideLink.isVisible());
+  if (expandedGuideNavigation) await guideNavigationToggle.click();
+  await expect(guideLink).toBeVisible();
+  if (expandedGuideNavigation) await guideNavigationToggle.click();
   await expect(page.getByRole('button', { name: 'Ask Barghsa guide' })).toHaveCount(0);
   const input = page.getByLabel('Write your question');
   const initialHeight = await input.evaluate((element) => element.getBoundingClientRect().height);
@@ -296,7 +313,12 @@ test('the full-page guide answers with sources and handles an unassigned profile
   await page.getByText('Answer sources').click();
   await expect(page.getByText('invoice-guide.pdf')).toBeVisible();
 
-  await page.getByLabel('Switch active profile').selectOption('profile-2');
+  const profilePicker = page.getByLabel('Switch active profile');
+  const navigationToggle = page.locator('[aria-controls="dashboard-navigation"]');
+  const openedNavigation = !(await profilePicker.isVisible());
+  if (openedNavigation) await navigationToggle.click();
+  await profilePicker.selectOption('profile-2');
+  if (openedNavigation) await navigationToggle.click();
   await expect(page.getByText("You're asking as Nova Energy.")).toBeVisible();
   await expect(page.getByText('Pay an issued invoice from its detail page.')).toHaveCount(0);
 

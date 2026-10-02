@@ -4,6 +4,7 @@ import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { ProfilesService } from '../profiles/profiles.service.js';
 import { AiTestChatService, type TestChatResponse } from './ai-test-chat.service.js';
+import type { PolicyType } from '../ai-policies/ai-policies.service.js';
 
 type CustomerSlot = 'individual_chatbot' | 'legal_entity_chatbot';
 type Session = { sessionId: string; userId: string };
@@ -13,6 +14,9 @@ export interface KnowledgeAnswer {
   sources: TestChatResponse['sources'];
   attribution: 'retrieved_context';
   remainingQuota: number;
+  /** Checks performed for this answer, without private policy identifiers or rules. */
+  policyChecks: Array<{ type: PolicyType; count: number }> | null;
+  answeredAt: string | null;
 }
 
 interface Scope {
@@ -92,8 +96,9 @@ export class AiKnowledgeChatService {
         request_hash: string;
         state: string;
         response: KnowledgeAnswer | null;
+        completed_at: Date | null;
       }>(
-        `SELECT request_hash,state,response FROM ai_knowledge_questions
+        `SELECT request_hash,state,response,completed_at FROM ai_knowledge_questions
          WHERE session_id=$1 AND request_id=$2 AND expires_at>now()`,
         [session.sessionId, input.requestId]
       );
@@ -104,7 +109,13 @@ export class AiKnowledgeChatService {
         if (row.state !== 'completed' || !row.response) fail(409, 'AI_KNOWLEDGE_IN_PROGRESS');
         await this.assertSourcesAvailable(row.response.sources, scope.agentId);
         return {
-          answer: row.response,
+          answer: {
+            ...row.response,
+            // Older cached answers have no policy record. Never infer checks from
+            // today's configuration or fabricate a new answer time on replay.
+            policyChecks: row.response.policyChecks ?? null,
+            answeredAt: row.response.answeredAt ?? row.completed_at?.toISOString() ?? null,
+          },
           profileId: scope.profileId,
           slotKey: scope.slotKey,
           tokenUsage: null,
@@ -164,16 +175,30 @@ export class AiKnowledgeChatService {
         sources: generated.sources,
         attribution: 'retrieved_context',
         remainingQuota,
+        policyChecks: [...new Set(generated.policyResults.map((policy) => policy.type))]
+          .map((type) => ({
+            type,
+            count: generated.policyResults.filter(
+              (policy) => policy.type === type && policy.result === 'applied'
+            ).length,
+          }))
+          .filter((check) => check.count > 0),
+        answeredAt: null,
       };
-      const saved = await pool.query(
-        `UPDATE ai_knowledge_questions
-         SET state='completed',response=$3::jsonb,completed_at=now()
-         WHERE session_id=$1 AND request_id=$2 AND state='processing'`,
+      const saved = await pool.query<{ response: KnowledgeAnswer }>(
+        `WITH stamp AS (SELECT statement_timestamp() AS at)
+           UPDATE ai_knowledge_questions q
+           SET state='completed',
+               response=$3::jsonb || jsonb_build_object('answeredAt',stamp.at),
+               completed_at=stamp.at
+           FROM stamp
+           WHERE q.session_id=$1 AND q.request_id=$2 AND q.state='processing'
+           RETURNING q.response`,
         [session.sessionId, input.requestId, JSON.stringify(answer)]
       );
       if (saved.rowCount !== 1) fail(409, 'AI_KNOWLEDGE_SESSION_CHANGED');
       return {
-        answer,
+        answer: saved.rows[0]!.response,
         profileId: scope.profileId,
         slotKey: scope.slotKey,
         tokenUsage: generated.tokenUsage,
@@ -188,7 +213,14 @@ export class AiKnowledgeChatService {
             [session.sessionId, input.requestId]
           )
           .catch(() => undefined);
-      if (error instanceof HttpException) throw error;
+      if (error instanceof HttpException) {
+        const detail = error.getResponse() as { error?: string; retryAfterMs?: number };
+        if (detail.error === 'AI_TEST_CHAT_POLICY_BLOCKED')
+          fail(422, 'AI_KNOWLEDGE_POLICY_BLOCKED');
+        if (detail.error === ErrorCodes.RATE_LIMIT_EXCEEDED.code)
+          fail(429, detail.error, detail.retryAfterMs);
+        throw error;
+      }
       return fail(503, ErrorCodes.PROVIDER_UNAVAILABLE.code);
     } finally {
       let unlockFailed = false;

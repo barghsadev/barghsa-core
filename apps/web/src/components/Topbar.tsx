@@ -43,6 +43,7 @@ export function Topbar({
     <header className="flex min-h-(--topbar-height) shrink-0 items-center gap-1 border-b bg-card px-2 sm:gap-3 sm:px-4 md:px-6">
       <Link
         to="/app"
+        aria-label={shellText('workspace', locale)}
         className="flex min-h-11 min-w-11 items-center text-foreground no-underline md:w-[calc(var(--sidebar-width)-3rem)]"
       >
         <BrandMark />

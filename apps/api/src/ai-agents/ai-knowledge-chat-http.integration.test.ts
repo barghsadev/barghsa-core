@@ -152,6 +152,8 @@ it('answers from customer/public sources, audits the profile, and replays one re
     reply: 'Use the published guide.',
     attribution: 'retrieved_context',
     remainingQuota: 4,
+    policyChecks: [],
+    answeredAt: expect.any(String),
   });
   expect(answer.sources.map((source) => source.kbId).sort()).toEqual(
     [customerKbId, publicKbId].sort()
@@ -175,6 +177,109 @@ it('answers from customer/public sources, audits the profile, and replays one re
     agent_slot: 'individual_chatbot',
     input: { requestId, message: body.message, redactionCategories: [] },
   });
+}, 30_000);
+
+it('records public policy categories and one stable answer time without exposing rules', async () => {
+  await http.pool.query('SELECT rate_limit_rolling_reset(true,$1)', [
+    `ai:knowledge:user:knowledge-user:profile:${individualId}`,
+  ]);
+  const policies = [
+    ['allowed_topics', { topics: ['guide'] }],
+    ['disallowed_actions', { actions: ['private-blocked-action'] }],
+    ['content_filter', { blockedTerms: ['private-filter-term'] }],
+    ['content_filter', { blockedTerms: ['second-private-term'] }],
+    ['data_access_scope', { scopes: [`kb:${customerKbId}`, `kb:${publicKbId}`] }],
+    ['response_style', { tone: 'brief', requireSources: true }],
+    ['output_format', { format: 'plain_text' }],
+    ['rate_limit', { maxRequests: 1, windowSeconds: 60 }],
+  ] as const;
+  const ids: string[] = [];
+  try {
+    for (const [type, rules] of policies) {
+      const id = (
+        await http.pool.query<{ id: string }>(
+          `INSERT INTO ai_policies(title,policy_type,rules,created_by)
+             VALUES ('Private customer policy',$1,$2::jsonb,'knowledge-admin') RETURNING id`,
+          [type, JSON.stringify(rules)]
+        )
+      ).rows[0]!.id;
+      ids.push(id);
+      await http.pool.query('INSERT INTO ai_agent_policies(agent_id,policy_id) VALUES ($1,$2)', [
+        agentId,
+        id,
+      ]);
+    }
+    const body = { requestId: randomUUID(), message: 'What does the guide say?' };
+    const response = await ask(body);
+    expect(response.status).toBe(200);
+    const answer = (await response.json()) as KnowledgeAnswer;
+    expect([...(answer.policyChecks ?? [])].sort((a, b) => a.type.localeCompare(b.type))).toEqual(
+      [...new Set(policies.map(([type]) => type))].sort().map((type) => ({
+        type,
+        count: type === 'content_filter' ? 2 : 1,
+      }))
+    );
+    const record = (
+      await http.pool.query<{ response: KnowledgeAnswer; completed_at: Date }>(
+        'SELECT response,completed_at FROM ai_knowledge_questions WHERE request_id=$1',
+        [body.requestId]
+      )
+    ).rows[0]!;
+    expect(answer.answeredAt).not.toBeNull();
+    expect(new Date(answer.answeredAt!).toISOString()).toBe(record.completed_at.toISOString());
+    expect(record.response).toEqual(answer);
+    const serialized = JSON.stringify(answer);
+    for (const value of [
+      'Private customer policy',
+      'private-filter-term',
+      'private-blocked-action',
+      ...ids,
+    ])
+      expect(serialized).not.toContain(value);
+    for (const check of answer.policyChecks!)
+      expect(Object.keys(check).sort()).toEqual(['count', 'type']);
+    const before = completions;
+    expect(await (await ask(body)).json()).toEqual(answer);
+    expect(completions).toBe(before);
+
+    const blocked = await ask({ requestId: randomUUID(), message: 'guide private-blocked-action' });
+    expect(blocked.status).toBe(422);
+    const blockedBody = await blocked.json();
+    expect(blockedBody).toMatchObject({ error: { code: 'AI_KNOWLEDGE_POLICY_BLOCKED' } });
+    expect(JSON.stringify(blockedBody)).not.toContain('policyRef');
+    for (const id of ids) expect(JSON.stringify(blockedBody)).not.toContain(id);
+    expect(completions).toBe(before);
+    const limited = await ask({ requestId: randomUUID(), message: 'another guide question' });
+    expect(limited.status).toBe(429);
+    const limitedBody = JSON.stringify(await limited.json());
+    expect(limitedBody).not.toContain('policyRef');
+    for (const id of ids) expect(limitedBody).not.toContain(id);
+
+    await http.pool.query('UPDATE ai_policies SET enabled=false WHERE id=ANY($1::uuid[])', [ids]);
+    expect(await (await ask(body)).json()).toEqual(answer);
+    const newAnswer = await ask({
+      requestId: randomUUID(),
+      message: 'guide after configuration changed',
+    });
+    expect(newAnswer.status).toBe(200);
+    expect(((await newAnswer.json()) as KnowledgeAnswer).policyChecks).toEqual([]);
+
+    await http.pool.query(
+      "UPDATE ai_knowledge_questions SET response=response-'policyChecks'-'answeredAt' WHERE request_id=$1",
+      [body.requestId]
+    );
+    expect(await (await ask(body)).json()).toEqual({
+      ...answer,
+      policyChecks: null,
+      answeredAt: record.completed_at.toISOString(),
+    });
+  } finally {
+    await http.pool.query('DELETE FROM ai_agent_policies WHERE policy_id=ANY($1::uuid[])', [ids]);
+    await http.pool.query('DELETE FROM ai_policies WHERE id=ANY($1::uuid[])', [ids]);
+    await http.pool.query('SELECT rate_limit_rolling_reset(true,$1)', [
+      `ai:knowledge:user:knowledge-user:profile:${individualId}`,
+    ]);
+  }
 }, 30_000);
 
 it('denies revoked sources and never replays an answer under another active profile', async () => {

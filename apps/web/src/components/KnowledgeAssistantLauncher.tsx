@@ -12,7 +12,13 @@ type Availability = {
   slotKey: 'individual_chatbot' | 'legal_entity_chatbot' | null;
 };
 
-export function KnowledgeAssistantLauncher({ locale }: { locale: Locale }) {
+export function KnowledgeAssistantLauncher({
+  locale,
+  pathname,
+}: {
+  locale: Locale;
+  pathname?: string;
+}) {
   const revision = useProfileContextRevision();
   const trigger = useRef<HTMLButtonElement>(null);
   const [availability, setAvailability] = useState<(Availability & { revision: number }) | null>(
@@ -65,6 +71,7 @@ export function KnowledgeAssistantLauncher({ locale }: { locale: Locale }) {
         <Suspense fallback={null}>
           <KnowledgeAssistantPanel
             locale={locale}
+            pathname={pathname ?? '/ai'}
             slotKey={availability.slotKey}
             profileId={availability.profileId}
             profileName={availability.profileName}
