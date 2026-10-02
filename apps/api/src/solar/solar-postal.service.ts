@@ -112,7 +112,9 @@ export class SolarPostalService {
       const postal =
         (
           await client.query(
-            'SELECT status,courier,tracking_number,send_date,receipt_image_id,staff_notes,staff_confirmed_at FROM solar_construction_postal WHERE request_id=$1',
+            `SELECT status,courier,tracking_number,(send_date AT TIME ZONE 'UTC')::date::text AS send_date,
+                receipt_image_id,staff_notes,staff_confirmed_at,estimated_arrival_date::text,
+                tracking_url,tracking_note,tracking_recorded_at FROM solar_construction_postal WHERE request_id=$1`,
             [requestId]
           )
         ).rows[0] ?? null;
@@ -123,6 +125,9 @@ export class SolarPostalService {
             [GUIDANCE_KEY]
           )
         ).rows[0]?.value ?? defaultGuidance;
+      await requireCurrentSession(client, actor);
+      if (!(await this.orders.mayManageOrders(client, actor.userId, request.profile_id)))
+        throw new NotFoundException('Solar request not found');
       await client.query('COMMIT');
       return { requestStatus: request.status, postal, guidance };
     } catch (error) {
@@ -244,7 +249,8 @@ export class SolarPostalService {
         await client.query(
           `SELECT r.id,r.profile_id,r.status AS request_status,p.status AS postal_status,
           COALESCE(NULLIF(lp.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',profile.first_name,profile.last_name)),''),u.username) AS profile_name,
-          p.courier,p.tracking_number,p.send_date,p.receipt_image_id,p.staff_notes,r.created_at
+            p.courier,p.tracking_number,p.send_date,p.receipt_image_id,p.staff_notes,r.created_at,
+            p.estimated_arrival_date::text,p.tracking_url,p.tracking_note,p.tracking_revision,p.tracking_recorded_at
          FROM solar_construction_requests r JOIN solar_construction_postal p ON p.request_id=r.id
          JOIN profiles profile ON profile.id=r.profile_id
          JOIN users u ON u.user_id=profile.user_id

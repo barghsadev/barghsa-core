@@ -1,6 +1,37 @@
 import { lookup } from './lookup.js';
 
 const en: Record<string, string> = {
+  postalArrivalEstimate: 'Estimated arrival date',
+  postalNoEstimate: 'No arrival estimate recorded.',
+  postalEstimateHelp:
+    'This estimate does not confirm receipt of the originals. Staff must check the delivered documents.',
+  postalTrackingUpdate: 'Shipment tracking update',
+  postalTrackingLink: 'Open courier tracking',
+  postalTrackingUrl: 'Courier tracking URL (optional)',
+  postalCopyTracking: 'Copy tracking number',
+  postalCopied: 'Tracking number copied.',
+  postalCopyError: 'Could not copy. Select and copy the tracking number.',
+  postalTrackingNote: 'Customer-visible tracking note',
+  postalTrackingNoteHelp: 'The customer will see this note and receive a notification.',
+  postalTrackingRecorded: 'Tracking updated on',
+  postalTrackingReview: 'Review tracking update',
+  postalTrackingReviewTitle: 'Confirm tracking update',
+  postalTrackingReviewDescription:
+    'Save the tracking update and notify the customer. This does not confirm receipt, create a contract, or collect payment.',
+  postalTrackingLoadError: 'Could not load shipment tracking. Reload to try again.',
+  postalTrackingSaveError: 'Could not prepare the review. Your update is still here.',
+  postalTrackingChanged:
+    'Shipment tracking changed or is busy. Close this review and reload before continuing.',
+  postalTrackingBlocked:
+    'Tracking updates require write permission and a shipped parcel awaiting staff confirmation.',
+  postalTrackingReload: 'Reload shipment tracking',
+  postalClearEstimate: 'Clear arrival estimate',
+  postalTrackingPrevious: 'Previously recorded estimate',
+  postalTrackingPreviousUrl: 'Previously recorded tracking URL',
+  postalTrackingPreviousNote: 'Previously recorded tracking note',
+  postalNotRecorded: 'Not recorded',
+  postalLoadError: 'Could not load postal details. Reload to try again.',
+
   previous: 'Previous page',
   constructionTitle: 'Construction progress',
   constructionStaffTitle: 'Solar construction',
@@ -270,6 +301,37 @@ const en: Record<string, string> = {
 };
 
 const fa: Record<string, string> = {
+  postalArrivalEstimate: 'تاریخ تقریبی رسیدن مدارک',
+  postalNoEstimate: 'تاریخ تقریبی رسیدن مدارک ثبت نشده است.',
+  postalEstimateHelp:
+    'این تاریخ تقریبی به معنی دریافت مدارک اصلی نیست. کارشناس باید مدارک تحویل\u200cشده را بررسی کند.',
+  postalTrackingUpdate: 'به\u200cروزرسانی پیگیری مرسوله',
+  postalTrackingLink: 'مشاهده پیگیری مرسوله',
+  postalTrackingUrl: 'نشانی پیگیری مرسوله (اختیاری)',
+  postalCopyTracking: 'کپی کد رهگیری',
+  postalCopied: 'کد رهگیری کپی شد.',
+  postalCopyError: 'کپی انجام نشد. کد رهگیری را انتخاب و کپی کنید.',
+  postalTrackingNote: 'توضیح پیگیری قابل مشاهده برای مشتری',
+  postalTrackingNoteHelp: 'مشتری این توضیح را می\u200cبیند و اعلان دریافت می\u200cکند.',
+  postalTrackingRecorded: 'زمان به\u200cروزرسانی پیگیری',
+  postalTrackingReview: 'بازبینی اطلاعات پیگیری',
+  postalTrackingReviewTitle: 'تأیید اطلاعات پیگیری',
+  postalTrackingReviewDescription:
+    'اطلاعات پیگیری ذخیره و به مشتری اطلاع داده می\u200cشود. این اقدام دریافت مدارک را تأیید نمی\u200cکند و قرارداد یا پرداختی ایجاد نمی\u200cکند.',
+  postalTrackingLoadError: 'اطلاعات پیگیری بارگذاری نشد. دوباره بارگذاری کنید.',
+  postalTrackingSaveError: 'بازبینی آماده نشد. توضیح شما حفظ شده است.',
+  postalTrackingChanged:
+    'اطلاعات مرسوله تغییر کرده یا در حال به\u200cروزرسانی است. بازبینی را ببندید و دوباره بارگذاری کنید.',
+  postalTrackingBlocked:
+    'به\u200cروزرسانی پیگیری به دسترسی نوشتن و مرسوله ارسال\u200cشده در انتظار تأیید کارشناس نیاز دارد.',
+  postalTrackingReload: 'بارگذاری دوباره اطلاعات پیگیری',
+  postalClearEstimate: 'پاک کردن تاریخ تقریبی',
+  postalTrackingPrevious: 'تاریخ تقریبی ثبت\u200cشده قبلی',
+  postalTrackingPreviousUrl: 'نشانی پیگیری ثبت\u200cشده قبلی',
+  postalTrackingPreviousNote: 'توضیح پیگیری ثبت\u200cشده قبلی',
+  postalNotRecorded: 'ثبت نشده',
+  postalLoadError: 'اطلاعات ارسال پستی بارگذاری نشد. دوباره بارگذاری کنید.',
+
   previous: 'صفحه قبل',
   constructionTitle: 'پیشرفت اجرای نیروگاه',
   constructionStaffTitle: 'اجرای نیروگاه‌های خورشیدی',

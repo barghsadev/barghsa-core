@@ -1114,6 +1114,13 @@
       "when": 1791331202249,
       "tag": "0238_solar_construction_progress",
       "breakpoints": true
+    },
+    {
+      "idx": 239,
+      "version": "7",
+      "when": 1791331202250,
+      "tag": "0239_solar_postal_tracking",
+      "breakpoints": true
     }
   ]
 }

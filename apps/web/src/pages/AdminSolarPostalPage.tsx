@@ -5,6 +5,8 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { SolarPostalTrackingEditor } from '../components/SolarPostalTrackingEditor.js';
+import { postalCalendarDate } from '../lib/solar-postal-tracking.js';
 import { SolarContractForm } from '../components/SolarContractForm.js';
 import { withCsrf } from '../lib/csrf.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
@@ -28,6 +30,7 @@ interface Row {
   receipt_image_id: string | null;
   staff_notes: string | null;
   created_at: string;
+  tracking_revision?: number;
 }
 
 type PostalLane = 'needs_staff' | 'waiting_customer' | 'all';
@@ -84,6 +87,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
   const [guidanceRevision, setGuidanceRevision] = useState(0);
   const [queueError, setQueueError] = useState(false);
   const [queueDenied, setQueueDenied] = useState(false);
+  const trackingAccessDenied = useRef(false);
   const [guidanceError, setGuidanceError] = useState(false);
   const reviewRequest = useRef(0);
   const commandGeneration = useRef(0);
@@ -138,6 +142,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
   };
   useEffect(() => {
     const controller = new AbortController();
+    trackingAccessDenied.current = false;
     setQueueLoading(true);
     setQueueError(false);
     setQueueDenied(false);
@@ -152,7 +157,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
         return response.json() as Promise<{ requests: Row[]; nextBefore: string | null }>;
       })
       .then((value) => {
-        if (controller.signal.aborted) return;
+        if (controller.signal.aborted || trackingAccessDenied.current) return;
         const extending =
           !!before &&
           nextBefore === before &&
@@ -477,7 +482,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
           )}
           {row.send_date && (
             <p>
-              {copy('postalSendDate')}: {row.send_date.slice(0, 10)}
+              {copy('postalSendDate')}: {postalCalendarDate(row.send_date, locale)}
             </p>
           )}
           {row.staff_notes && (
@@ -503,6 +508,22 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
               onPrevious={setPreview}
               onReplace={() => {}}
               allowReplacement={false}
+            />
+          )}
+          {row.tracking_revision !== undefined && (
+            <SolarPostalTrackingEditor
+              key={`${row.id}:${row.tracking_revision}`}
+              requestId={row.id}
+              onSaved={refresh}
+              onDenied={() => {
+                trackingAccessDenied.current = true;
+                invalidateReview();
+                setRows([]);
+                setNextBefore(null);
+                setSelected(null);
+                setPreview(null);
+                setQueueDenied(true);
+              }}
             />
           )}
           {row.postal_status === 'shipped' && (

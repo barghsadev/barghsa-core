@@ -18,6 +18,11 @@ import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { SolarPostalService, type SolarPostalStaffLane } from './solar-postal.service.js';
+import { SolarPostalTrackingService } from './solar-postal-tracking.service.js';
+import {
+  solarPostalTrackingCommand,
+  confirmedSolarPostalTrackingCommand,
+} from './solar-postal-tracking.validation.js';
 
 const guidance = z
   .object({
@@ -98,7 +103,59 @@ export class SolarPostalController {
 @Controller('api/admin/solar')
 @UseGuards(SessionAuthGuard)
 export class StaffSolarPostalController {
-  constructor(private readonly service: SolarPostalService) {}
+  constructor(
+    private readonly service: SolarPostalService,
+    private readonly tracking: SolarPostalTrackingService
+  ) {}
+
+  @Get('requests/:id/postal/tracking')
+  @ApiOperation({ summary: 'Read staff shipment arrival estimate and tracking page' })
+  trackingState(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
+    return this.tracking.read(req.session, id);
+  }
+
+  @Post('requests/:id/postal/tracking/review')
+  @HttpCode(200)
+  @RateLimit({
+    namespace: 'solar:postal:tracking-review',
+    limit: 30,
+    windowMs: 60_000,
+    scope: 'user',
+  })
+  @ApiOperation({ summary: 'Review a customer-visible arrival estimate and tracking page update' })
+  @ApiZodBody(solarPostalTrackingCommand)
+  trackingReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest,
+    @Body() body: unknown
+  ) {
+    return this.tracking.review(req.session, id, parse(solarPostalTrackingCommand, body));
+  }
+
+  @Post('requests/:id/postal/tracking')
+  @HttpCode(200)
+  @RateLimit({
+    namespace: 'solar:postal:tracking-record',
+    limit: 15,
+    windowMs: 60_000,
+    scope: 'user',
+  })
+  @ApiOperation({
+    summary: 'Record a reviewed arrival estimate and tracking page without confirming receipt',
+  })
+  @ApiZodBody(confirmedSolarPostalTrackingCommand)
+  trackingRecord(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest,
+    @Body() body: unknown
+  ) {
+    return this.tracking.record(
+      req.session,
+      id,
+      parse(confirmedSolarPostalTrackingCommand, body),
+      req.ip ?? '127.0.0.1'
+    );
+  }
 
   @Get('postal-guidance')
   @ApiOperation({ summary: 'Read editable postal guidance' })

@@ -1,3 +1,4 @@
+import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect } from './upload-fixture';
 import { en as documentWords } from '../../../packages/i18n/src/documents';
 
@@ -46,6 +47,11 @@ test('solar request moves from customer upload through staff review and postal r
   };
 
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/upload/policy/*', (route) =>
+    route.fulfill({
+      json: documentUploadPolicy(new URL(route.request().url()).pathname.split('/').at(-1)),
+    })
+  );
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({
       json: { isStaff, operatingContext, userId: 'buyer', requiresTosAcceptance: false },
@@ -423,6 +429,7 @@ test('solar request moves from customer upload through staff review and postal r
   const documents = page.getByRole('region', { name: 'Document guidance' });
   await documents.getByRole('button', { name: documentWords.upload, exact: true }).click();
   const upload = page.getByRole('region', { name: documentWords.upload });
+  await expect(upload.getByLabel(documentWords.file, { exact: true })).toBeEnabled();
   await upload.getByLabel(documentWords.file, { exact: true }).setInputFiles({
     name: 'site-plan.pdf',
     mimeType: 'application/pdf',
@@ -499,6 +506,11 @@ test('solar intake returns from address setup with its saved site details', asyn
   let submission: Record<string, unknown> | null = null;
 
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/upload/policy/*', (route) =>
+    route.fulfill({
+      json: documentUploadPolicy(new URL(route.request().url()).pathname.split('/').at(-1)),
+    })
+  );
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({ json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false } })
   );
@@ -611,6 +623,11 @@ test('staff confirms the reviewed solar contract and exact initial invoice', asy
   const invoiceId = '77777777-7777-4777-8777-777777777777';
   const templateVersionId = '55555555-5555-4555-8555-555555555555';
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/upload/policy/*', (route) =>
+    route.fulfill({
+      json: documentUploadPolicy(new URL(route.request().url()).pathname.split('/').at(-1)),
+    })
+  );
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({
       json: {
@@ -718,6 +735,8 @@ test('staff confirms the reviewed solar contract and exact initial invoice', asy
   await expect(dialog).toContainText('7 days after issue');
   expect(reviewed).toMatchObject({ profileId, invoiceLines: [{ unitPrice: '100000' }] });
   await dialog.getByRole('button', { name: 'Confirm' }).click();
-  await expect(page.getByRole('status')).toContainText('Solar contract created');
+  await expect(
+    page.getByRole('status').filter({ hasText: 'Solar contract created' })
+  ).toBeVisible();
   expect(issued).toMatchObject({ ...reviewed, expectedReviewHash: 'c'.repeat(64) });
 });

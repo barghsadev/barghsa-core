@@ -238,12 +238,34 @@ export const solarConstructionPostal = pgTable(
     }),
     staffConfirmedAt: timestamp('staff_confirmed_at', { withTimezone: true }),
     staffNotes: text('staff_notes'),
+    estimatedArrivalDate: date('estimated_arrival_date'),
+    trackingUrl: text('tracking_url'),
+    trackingNote: text('tracking_note'),
+    trackingRevision: integer('tracking_revision').notNull().default(0),
+    trackingRecordedAt: timestamp('tracking_recorded_at', { withTimezone: true }),
   },
   (t) => [
     uniqueIndex('solar_postal_request_key').on(t.requestId),
     check(
       'solar_postal_status',
       sql`${t.status} IN ('waiting_for_shipment','shipped','received','incomplete','not_received')`
+    ),
+    check('solar_postal_tracking_revision', sql`${t.trackingRevision}>=0`),
+    check(
+      'solar_postal_tracking_note',
+      sql`${t.trackingNote} IS NULL OR (char_length(btrim(${t.trackingNote})) BETWEEN 1 AND 1000 AND ${t.trackingNote}=btrim(${t.trackingNote}))`
+    ),
+    check(
+      'solar_postal_tracking_url',
+      sql`${t.trackingUrl} IS NULL OR (char_length(${t.trackingUrl})<=2000 AND ${t.trackingUrl} ~ '^https://' AND ${t.trackingUrl} !~ '[[:space:]]')`
+    ),
+    check(
+      'solar_postal_arrival_estimate',
+      sql`${t.estimatedArrivalDate} IS NULL OR (${t.status}='shipped' AND ${t.sendDate} IS NOT NULL AND ${t.estimatedArrivalDate}>=(${t.sendDate} AT TIME ZONE 'UTC')::date AND ${t.trackingNote} IS NOT NULL AND ${t.trackingRecordedAt} IS NOT NULL)`
+    ),
+    check(
+      'solar_postal_tracking_record',
+      sql`(${t.trackingNote} IS NULL) = (${t.trackingRecordedAt} IS NULL)`
     ),
   ]
 );

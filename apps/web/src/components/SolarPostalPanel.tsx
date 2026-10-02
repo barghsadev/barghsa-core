@@ -1,9 +1,10 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { documentRequest, type BusinessDocument, type DocumentPage } from '../lib/documents.js';
 import { DocumentUpload } from './DocumentUpload.js';
+import { SolarPostalTrackingSummary } from './SolarPostalTrackingSummary.js';
 
 interface Guidance {
   fa: string;
@@ -19,6 +20,10 @@ interface Postal {
   send_date: string | null;
   receipt_image_id: string | null;
   staff_notes: string | null;
+  estimated_arrival_date?: string | null;
+  tracking_url?: string | null;
+  tracking_note?: string | null;
+  tracking_recorded_at?: string | null;
 }
 interface State {
   requestStatus: string;
@@ -46,8 +51,17 @@ export function SolarPostalPanel({
   const [imageRevision, setImageRevision] = useState(0);
   const [error, setError] = useState(false);
   const [sending, setSending] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const [acceptedRequest, setAcceptedRequest] = useState(requestId);
+  const currentRequest = useRef(requestId);
+  currentRequest.current = requestId;
   useEffect(() => {
     const controller = new AbortController();
+    setState(null);
+    setError(false);
+    setLoadError(false);
+    setSending(false);
+    setUpload(false);
     void fetch(`/api/solar/requests/${encodeURIComponent(requestId)}/postal`, {
       credentials: 'include',
       signal: controller.signal,
@@ -59,18 +73,23 @@ export function SolarPostalPanel({
       .then((value) => {
         if (controller.signal.aborted) return;
         setState(value);
+        setAcceptedRequest(requestId);
         setCourier(value.postal?.courier ?? '');
         setTrackingNumber(value.postal?.tracking_number ?? '');
         setSendDate(value.postal?.send_date?.slice(0, 10) ?? '');
         setReceiptImageId(value.postal?.receipt_image_id ?? '');
       })
       .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+        if (!controller.signal.aborted) {
+          setState(null);
+          setLoadError(true);
+        }
       });
     return () => controller.abort();
   }, [requestId, revision]);
   useEffect(() => {
     const controller = new AbortController();
+    setImages([]);
     const params = new URLSearchParams({
       businessRecordType: 'solar_request',
       businessRecordId: requestId,
@@ -111,39 +130,41 @@ export function SolarPostalPanel({
           }),
         }
       );
+      if (currentRequest.current !== requestId) return;
       if (!response.ok) throw new Error('shipment');
       setRevision((value) => value + 1);
     } catch {
-      setError(true);
+      if (currentRequest.current === requestId) setError(true);
     } finally {
-      setSending(false);
+      if (currentRequest.current === requestId) setSending(false);
     }
   }
+  const visible = acceptedRequest === requestId ? state : null;
   const editable =
-    state?.requestStatus === 'waiting_for_postal_submission' &&
-    ['waiting_for_shipment', 'incomplete', 'not_received'].includes(state.postal?.status ?? '');
+    visible?.requestStatus === 'waiting_for_postal_submission' &&
+    ['waiting_for_shipment', 'incomplete', 'not_received'].includes(visible.postal?.status ?? '');
   return (
     <section className="space-y-4 rounded-xl border p-5" aria-label={copy('postalStage')}>
       <h2 className="text-xl font-semibold">{copy('postalStage')}</h2>
-      {!state && !error && <p role="status">{copy('loading')}</p>}
-      {state && (
+      {!visible && !loadError && <p role="status">{copy('loading')}</p>}
+      {visible && (
         <>
-          <p>{state.guidance[locale]}</p>
-          {state.guidance.destinationAddress && (
+          <p>{visible.guidance[locale]}</p>
+          {visible.guidance.destinationAddress && (
             <p>
-              <strong>{copy('postalDestination')}:</strong> {state.guidance.destinationAddress}
+              <strong>{copy('postalDestination')}:</strong> {visible.guidance.destinationAddress}
             </p>
           )}
-          {state.guidance.contactDetails && (
+          {visible.guidance.contactDetails && (
             <p>
-              <strong>{copy('postalContact')}:</strong> {state.guidance.contactDetails}
+              <strong>{copy('postalContact')}:</strong> {visible.guidance.contactDetails}
             </p>
           )}
-          {!!state.guidance.originals.length && (
+          {!!visible.guidance.originals.length && (
             <>
               <h3 className="font-medium">{copy('postalOriginals')}</h3>
               <ul className="list-inside list-disc">
-                {state.guidance.originals.map((item, index) => (
+                {visible.guidance.originals.map((item, index) => (
                   <li key={index}>{item[locale]}</li>
                 ))}
               </ul>
@@ -151,18 +172,33 @@ export function SolarPostalPanel({
           )}
           <p role="status">
             {copy('postalStatus')}:{' '}
-            {copy(`postal_${state.postal?.status ?? 'waiting_for_shipment'}`)}
+            {copy(`postal_${visible.postal?.status ?? 'waiting_for_shipment'}`)}
           </p>
-          {state.postal?.staff_notes && (
+          {visible.postal?.staff_notes && (
             <p role="alert">
-              {copy('postalStaffNotes')}: {state.postal.staff_notes}
+              {copy('postalStaffNotes')}: {visible.postal.staff_notes}
             </p>
           )}
-          {!editable && state.postal?.courier && (
-            <p>
-              {copy('postalCourier')}: {state.postal.courier} · {copy('postalTracking')}:{' '}
-              <span dir="ltr">{state.postal.tracking_number}</span>
-            </p>
+          {!editable && visible.postal && (
+            <>
+              {visible.postal.courier && (
+                <p>
+                  {copy('postalCourier')}: <bdi>{visible.postal.courier}</bdi>
+                </p>
+              )}
+              <SolarPostalTrackingSummary
+                key={`${requestId}:${revision}`}
+                tracking={{
+                  postalStatus: visible.postal.status,
+                  trackingNumber: visible.postal.tracking_number,
+                  sendDate: visible.postal.send_date,
+                  estimatedArrivalDate: visible.postal.estimated_arrival_date ?? null,
+                  trackingUrl: visible.postal.tracking_url ?? null,
+                  note: visible.postal.tracking_note ?? null,
+                  recordedAt: visible.postal.tracking_recorded_at ?? null,
+                }}
+              />
+            </>
           )}
         </>
       )}
@@ -245,6 +281,15 @@ export function SolarPostalPanel({
         </form>
       )}
       {error && <p role="alert">{copy('postalError')}</p>}
+      {loadError && <p role="alert">{copy('postalLoadError')}</p>}
+      <button
+        type="button"
+        className="underline"
+        disabled={sending}
+        onClick={() => setRevision((value) => value + 1)}
+      >
+        {copy('postalTrackingReload')}
+      </button>
     </section>
   );
 }
