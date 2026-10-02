@@ -1,3 +1,5 @@
+import { ReceiptStatusTimeline } from './ReceiptStatusTimeline.js';
+import type { InvoiceReceiptActivity } from '../lib/customer-invoices.js';
 import { useReceiptQueueQuery, receiptQueueParams } from '../hooks/useReceiptQueueQuery.js';
 import { ReceiptQueueControls, ReceiptQueuePagination } from './ReceiptQueueControls.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
@@ -54,11 +56,7 @@ interface Receipt {
   confirmedAt: string | null;
   requiresDualApproval: boolean;
   dualApprovalPending: boolean;
-  statusHistory?: Array<{
-    state: 'Submitted' | 'UnderReview' | 'Confirmed' | 'Rejected';
-    occurredAt: string;
-    backfilled: boolean;
-  }>;
+  statusHistory?: InvoiceReceiptActivity['statusHistory'];
 }
 
 interface Allocation {
@@ -475,23 +473,12 @@ export function InvoiceBankReceiptQueue({
               {detail.statusHistory?.length ? (
                 <section aria-label={word('reviewTimeline')} className="space-y-2 text-sm">
                   <h4 className="font-medium">{word('reviewTimeline')}</h4>
-                  <ol className="space-y-2 border-s border-border ps-4">
-                    {detail.statusHistory.map((event, index) => (
-                      <li key={`${event.state}-${event.occurredAt}-${index}`}>
-                        <span className="font-medium">
-                          {appText(`invoices.activity.state.${event.state}`, locale)}
-                        </span>{' '}
-                        <time dateTime={event.occurredAt} className="text-muted-foreground">
-                          {time.format(event.occurredAt)}
-                        </time>
-                        {event.backfilled ? (
-                          <span className="block text-xs text-muted-foreground">
-                            {word('historicalTime')}
-                          </span>
-                        ) : null}
-                      </li>
-                    ))}
-                  </ol>
+                  <ReceiptStatusTimeline
+                    history={detail.statusHistory}
+                    label={word('reviewTimeline')}
+                    locale={locale}
+                    formatTimestamp={time.format}
+                  />
                 </section>
               ) : null}
               {allocation ? (

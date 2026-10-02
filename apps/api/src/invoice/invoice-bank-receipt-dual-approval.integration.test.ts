@@ -621,6 +621,14 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
       message: INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS.APPROVAL_REJECTED(),
     });
     expect(await receiptState(receiptId)).toBe('Rejected');
+    expect(
+      (
+        await ctx.pool.query(
+          "SELECT actor_user_id,actor_type FROM bank_receipt_status_events WHERE receipt_id=$1 AND state='Rejected'",
+          [receiptId]
+        )
+      ).rows
+    ).toEqual([{ actor_user_id: SECOND_STAFF, actor_type: 'staff' }]);
     expect((await invoicePaid(invoiceId)).paid).toBe(0n);
     expect(await walletPosted()).toBe(beforeWallet);
 

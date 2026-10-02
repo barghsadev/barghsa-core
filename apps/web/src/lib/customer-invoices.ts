@@ -67,6 +67,9 @@ export interface InvoiceReceiptActivity {
     state: 'Submitted' | 'UnderReview' | 'Confirmed' | 'Rejected';
     occurredAt: string;
     backfilled: boolean;
+    actorType?: 'customer' | 'staff' | 'unknown';
+    actorName?: string | null;
+    reason?: string | null;
   }>;
 }
 export interface InvoiceRefundActivity {

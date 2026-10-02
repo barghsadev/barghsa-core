@@ -1,4 +1,4 @@
-import { useState, useRef, type ReactNode } from 'react';
+import { lazy, Suspense, useState, useRef, type ReactNode } from 'react';
 import { Link } from '@tanstack/react-router';
 import { LogOut, Settings, UserRound } from 'lucide-react';
 import { Button, Popover, PopoverContent, PopoverTitle, PopoverTrigger } from '@barghsa/ui';
@@ -7,7 +7,11 @@ import { useAsyncData } from '../hooks/useAsyncData.js';
 import { parseSessionContext } from '../lib/session-role.js';
 import { withCsrf } from '../lib/csrf.js';
 import { OperatingContextSwitch } from './OperatingContextSwitch.js';
-import { ConversationIdentityDialog } from './ConversationIdentityDialog.js';
+const ConversationIdentityDialog = lazy(() =>
+  import('./ConversationIdentityDialog.js').then((module) => ({
+    default: module.ConversationIdentityDialog,
+  }))
+);
 import { t } from '@barghsa/i18n/app';
 
 async function readAccount(response: Response) {
@@ -167,7 +171,9 @@ export function ProfileMenu({
         </PopoverContent>
       </Popover>
       {identityOpen && (
-        <ConversationIdentityDialog locale={locale} onClose={() => setIdentityOpen(false)} />
+        <Suspense fallback={<p role="status">{shellText('accountLoading', locale)}</p>}>
+          <ConversationIdentityDialog locale={locale} onClose={() => setIdentityOpen(false)} />
+        </Suspense>
       )}
     </>
   );

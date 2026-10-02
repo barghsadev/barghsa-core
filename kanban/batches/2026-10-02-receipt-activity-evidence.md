@@ -1,0 +1,39 @@
+# Recorded receipt actors and payment-history consent — October 2, 2026
+
+## Task coverage
+
+- `07-ui-ux-design.md#T-07.27.01.02` — invoice receipt timelines now carry recorded actor roles, separately opted-in chosen names, and customer-visible submission/rejection notes. Customer and staff detail reuse the same timeline. Legacy actors are explicitly unrecorded; private login/directory names and internal actor IDs never become history labels. Other order kinds keep the parent task partial.
+- `07-ui-ux-design.md#T-07.23.01.03` — the existing support identity editor gains independent payment-history consent. Support photos retain their original audience.
+- `07-ui-ux-design.md#T-07.27.01.07` — Persian/English receipt roles, unknown actors and consent explanations are delivered. Other domain localization remains open.
+
+## Build and review
+
+Migration `0237_receipt_activity_actors` expands immutable receipt state events with nullable actor evidence and notes, and identities with payment-history consent defaulting to false. Existing events retain their original timestamps/states and gain unknown/null evidence. No historical author or note is reconstructed from mutable receipt/audit data. Existing identity values, revisions, timestamps and earlier migration checksums remain unchanged. The generated snapshot matches the schema; rerunning the journal applies nothing.
+
+Authorized receipt submission, review, confirmation and rejection bind the actor to the exact receipt within the existing database transaction. The state-history trigger captures that evidence and the already customer-visible submission/rejection note when the state changes. Context cannot carry into another receipt or a later transaction. Same-state retries add no events and cannot overwrite historical notes; rollback removes the event. Deleting an actor removes their identity link while preserving the recorded role. A rejection synchronized from dual approval uses its recorded reviewer, rather than the person who later attempts confirmation; absent reviewers stay unrecorded.
+
+One shared history projection receives only already authorized receipt IDs, batches identity lookups and emits state/date/backfill/role/chosen-name/note. Name display requires a chosen identity, explicit payment-history consent and an active account. Business-history consent alone is insufficient. Revocation affects later reads of past events. No photos, login names, audit metadata or actor IDs are added to customer/staff history. Both views render names with bidi isolation and notes as literal text, retaining localized legacy/future-event fallbacks and recorded role labels without consent.
+
+The self-owned settings endpoint preserves authentication, CSRF, live account/session authority, revision checks, exact retries and atomic audits. Omitted consent preserves its current value for older clients; clearing the chosen name clears both consents. Failed saves/conflicts preserve explicit drafts. The editor explains both audiences independently. Its translations now have a dedicated dictionary, and the account menu loads the editor on demand with visible loading feedback. The existing global menu title remains available. This resolves the initial bundle regression without raising existing limits; the editor adds its own 15 KB interaction budget (measured 11.77 KB). Electricity ordering measures 249.64 KB under its unchanged 255 KB limit.
+
+Review also fixes the preceding CI failure: `ticket-reply-upgrade.migrated.test.ts` expected an obsolete list of migrations. Upgrade tests now verify the journal tail from their established baseline, while keeping populated-data, constraints and rerun assertions. The preceding CI run `36985545570` had 972 database cases pass and this single expectation fail; its integrity/security/secret-history jobs passed. No checks were disabled or bypassed.
+
+## Validation
+
+- Root `pnpm build`, `pnpm typecheck` and `pnpm lint` — pass on reviewed code.
+- With `BARGHSA_TEST_PREBUILT=1`, `pnpm --filter @barghsa/api test src/user-settings/conversation-identity-http.integration.test.ts src/invoice/customer-invoice-read-http.integration.test.ts src/invoice/invoice-bank-receipt-upload.service.test.ts src/invoice/invoice-bank-receipt-upload.integration.test.ts src/invoice/invoice-bank-receipt-confirmation.service.test.ts src/invoice/invoice-bank-receipt-confirmation.integration.test.ts src/invoice/invoice-bank-receipt-rejection.integration.test.ts src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts` — **132 passed**, including real HTTP/PostgreSQL and existing payment/rollback/idempotency checks.
+- With the same environment, `pnpm --filter @barghsa/api test src/invoice/invoice-bank-receipt-confirmation.integration.test.ts src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts src/admin/receipt-queue-http.integration.test.ts` — **35 passed** after review, including staff projection, independent consent/revocation and actual dual-reviewer attribution. This overlaps the preceding run and is not added to it as a distinct total.
+- `pnpm --filter @barghsa/db test src/ticket-reply-upgrade.migrated.test.ts src/conversation-identity-upgrade.migrated.test.ts src/conversation-identity-timestamps-upgrade.migrated.test.ts src/receipt-activity-upgrade.migrated.test.ts` — **4 passed**. The receipt upgrade passes again after final null-actor/journal assertions. Covers populated upgrades, defaults, constraints, rollback, unchanged-state retries, receipt/transaction isolation, legacy preservation and actor deletion.
+- `pnpm --filter @barghsa/web test src/components/ConversationIdentityDialog.test.tsx src/components/ReceiptStatusTimeline.test.tsx src/components/InvoiceBankReceiptQueue.test.tsx src/pages/InvoiceDetailsPage.test.tsx` — **56 passed** after the dedicated dictionary change.
+- `pnpm --filter @barghsa/i18n test src/messages.test.ts src/conversation-identity.test.ts` — **26 passed**, including both dictionaries and the shared menu title.
+- With `BARGHSA_TEST_PREBUILT=1 PLAYWRIGHT_BASE_URL=http://127.0.0.1:4173`, `pnpm --filter @barghsa/web e2e e2e/conversation-identity.spec.ts e2e/customer-receipt-detail.spec.ts e2e/staff-invoice-receipt-views.spec.ts --project=chromium --project=mobile-safari --workers=2 --max-failures=1` — **28 distinct scenarios passed**. Covers customer/staff names and roles, literal notes, name revocation, exact retry/conflict/removal, private previews, paged-history drafts, Persian/English, scoped Axe and mobile bounds.
+- With the same environment, all **16 editor scenarios pass again** on the final lazy-loaded production build. Repeated attempts are not counted as new scenarios. The Persian dark mobile editor was visually inspected.
+- Root format, OpenAPI contract, suppressed-errors, database snapshot, backlog and whitespace checks — pass before publication.
+- Bundle checks — **67 budgets pass**: all existing limits remain unchanged, with one added editor interaction limit.
+- Strict security scanner — all five fixtures pass; **1,437 files**, **0 findings**, **0 scanner errors**.
+
+## Publication and limits
+
+Publish directly to main after validation, then verify local/origin/GitHub SHA, clean worktree and exact-commit CI registration. New remote CI remains pending at publication. CI coverage success under the existing temporary fast mode remains an exemption, not a measured coverage claim.
+
+Deploy migration 0237 before the API. Names are current display identities, not immutable legal attribution; absence of consent never erases the recorded role. Legacy authors/notes remain unavailable. Wallet top-up receipt history is a separate domain. Solar construction delivery/installation records and broader order timelines remain open. No dependencies or new endpoints are introduced. Historical supervisor state, scheduler, handoffs and CI settings remain unchanged.

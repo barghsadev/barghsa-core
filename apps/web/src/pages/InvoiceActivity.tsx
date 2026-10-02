@@ -1,6 +1,6 @@
+import { ReceiptStatusTimeline } from '../components/ReceiptStatusTimeline.js';
 import { t } from '@barghsa/i18n/app';
 import { Link } from '@tanstack/react-router';
-import { StatusTimeline } from '@barghsa/ui';
 import { ReceiptAttachmentPreview } from '../components/ReceiptAttachmentPreview.js';
 import { useEffect, type ReactNode } from 'react';
 import { useLocale } from '../hooks/useLocale.js';
@@ -114,17 +114,11 @@ export function InvoiceActivity({
             {row.statusHistory?.length ? (
               <section aria-label={`${label('reviewTimeline')}: ${row.id}`} className="pt-2">
                 <h3 className="mb-2 font-medium">{label('reviewTimeline')}</h3>
-                <StatusTimeline
+                <ReceiptStatusTimeline
+                  history={row.statusHistory}
                   label={label('reviewTimeline')}
-                  items={row.statusHistory.map((event, index) => ({
-                    id: `${event.state}-${event.occurredAt}-${index}`,
-                    title: state(event.state),
-                    state: event.state,
-                    tone: event.state === 'Confirmed' ? 'success' : undefined,
-                    dateTime: event.occurredAt,
-                    dateLabel: formatTimestamp(event.occurredAt),
-                    description: event.backfilled ? label('historicalTime') : undefined,
-                  }))}
+                  locale={locale}
+                  formatTimestamp={formatTimestamp}
                 />
               </section>
             ) : (

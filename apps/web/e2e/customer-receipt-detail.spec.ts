@@ -87,6 +87,7 @@ for (const locale of ['en', 'fa'] as const) {
       explanation: null,
       lines: [],
     };
+    let sharePaymentNames = true;
     const row = (id: string) => ({
       id,
       amount,
@@ -99,9 +100,23 @@ for (const locale of ['en', 'fa'] as const) {
       confirmedAt: null,
       createdAt: '2026-09-01T12:00:00Z',
       statusHistory: [
-        { state: 'Submitted', occurredAt: '2026-09-01T12:00:00Z', backfilled: false },
-        { state: 'UnderReview', occurredAt: '2026-09-02T12:00:00Z', backfilled: false },
-        { state: 'Rejected', occurredAt: '2026-09-03T12:00:00Z', backfilled: true },
+        {
+          state: 'Submitted',
+          occurredAt: '2026-09-01T12:00:00Z',
+          backfilled: false,
+          actorType: 'customer',
+          actorName: sharePaymentNames ? 'آرش Customer' : null,
+          reason: 'Customer note <script>',
+        },
+        { state: 'UnderReview', occurredAt: '2026-09-02T12:00:00Z', backfilled: true },
+        {
+          state: 'Rejected',
+          occurredAt: '2026-09-03T12:00:00Z',
+          backfilled: false,
+          actorType: 'staff',
+          actorName: sharePaymentNames ? 'Reviewer <img src=x>' : null,
+          reason: 'Recorded mismatch <img src=x>',
+        },
       ],
     });
     await page.route(`**/api/invoices/${invoice}`, (route) =>
@@ -140,7 +155,7 @@ for (const locale of ['en', 'fa'] as const) {
       detail.getByText(formatCurrencyIrr(amount, locale), { exact: true })
     ).toBeVisible();
     await expect(detail.getByText('Bank Mellat', { exact: false })).toBeVisible();
-    await expect(detail.getByText('<img src=x>', { exact: false })).toBeVisible();
+    await expect(detail.getByText('<img src=x>', { exact: true })).toBeVisible();
     expect(await page.locator('img[src="x"]').count()).toBe(0);
     await expect(detail.getByRole('link', { name: invoice, exact: true })).toHaveAttribute(
       'href',
@@ -161,6 +176,16 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await expect(timeline.getByRole('listitem')).toHaveCount(3);
     await expect(timeline.getByText(copy('historicalTime'), { exact: true })).toBeVisible();
+    await expect(timeline.locator('bdi').nth(0)).toHaveText(
+      `آرش Customer · ${copy('actor.customer')}`
+    );
+    await expect(timeline.locator('bdi').nth(1)).toHaveText(copy('actor.unknown'));
+    await expect(timeline.locator('bdi').nth(2)).toHaveText(
+      `Reviewer <img src=x> · ${copy('actor.staff')}`
+    );
+    await expect(timeline).toContainText('Customer note <script>');
+    await expect(timeline).toContainText('Recorded mismatch <img src=x>');
+    expect(await timeline.locator('img,script').count()).toBe(0);
     await detail.getByRole('button', { name: copy('retry'), exact: true }).click();
     const preview = detail.getByRole('img', {
       name: copy('receiptPreviewAlt').replace('{receipt}', receipt),
@@ -186,5 +211,11 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.locator(`#bank-receipt-${other} summary`).click();
     await expect.poll(() => otherRequests).toBe(1);
+    sharePaymentNames = false;
+    await page.reload();
+    await expect(timeline.locator('bdi').nth(0)).toHaveText(copy('actor.customer'));
+    await expect(timeline.locator('bdi').nth(2)).toHaveText(copy('actor.staff'));
+    await expect(timeline).not.toContainText('Reviewer <img src=x>');
+    await expect(timeline).toContainText('Recorded mismatch <img src=x>');
   });
 }

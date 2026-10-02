@@ -41,10 +41,12 @@ it('adds the standard timestamp trigger to populated identity tables without cha
       .rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0235_conversation_identity_timestamps', '0236_activity_identity_consent'],
+      applied: journal.entries
+        .filter((entry: { idx: number }) => entry.idx >= 235)
+        .map((entry: { tag: string }) => entry.tag),
     });
     expect((await pool.query('SELECT * FROM conversation_identities')).rows).toEqual(
-      before.map((row) => ({ ...row, share_in_activity: false }))
+      before.map((row) => ({ ...row, share_in_activity: false, share_in_payment_activity: false }))
     );
     await expect(
       pool.query(

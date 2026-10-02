@@ -14,7 +14,7 @@ import {
   Input,
   Label,
 } from '@barghsa/ui';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/conversation-identity';
 import { withCsrf } from '../lib/csrf.js';
 import { isConversationPhoto, uploadConversationPhoto } from '../lib/branding-logo-upload.js';
 
@@ -24,6 +24,7 @@ type Identity = {
   avatarUploadKey: string | null;
   revision: number;
   shareInActivity: boolean;
+  shareInPaymentActivity: boolean;
 };
 const endpoint = '/api/user/settings/conversation-identity';
 async function readIdentity(response: Response): Promise<Identity> {
@@ -37,12 +38,18 @@ async function readIdentity(response: Response): Promise<Identity> {
     (value.avatarUrl !== null && typeof value.avatarUrl !== 'string') ||
     (value.avatarUploadKey !== null && typeof value.avatarUploadKey !== 'string') ||
     (value.shareInActivity !== undefined && typeof value.shareInActivity !== 'boolean') ||
+    (value.shareInPaymentActivity !== undefined &&
+      typeof value.shareInPaymentActivity !== 'boolean') ||
     typeof value.revision !== 'number' ||
     !Number.isInteger(value.revision) ||
     value.revision < 0
   )
     throw new Error('load');
-  return { ...value, shareInActivity: value.shareInActivity ?? false } as Identity;
+  return {
+    ...value,
+    shareInActivity: value.shareInActivity ?? false,
+    shareInPaymentActivity: value.shareInPaymentActivity ?? false,
+  } as Identity;
 }
 
 export function ConversationIdentityDialog({
@@ -57,6 +64,7 @@ export function ConversationIdentityDialog({
   const [identity, setIdentity] = useState<Identity | null>(null);
   const [name, setName] = useState('');
   const [shareInActivity, setShareInActivity] = useState(false);
+  const [shareInPaymentActivity, setShareInPaymentActivity] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [removePhoto, setRemovePhoto] = useState(false);
   const [pending, setPending] = useState(false);
@@ -76,6 +84,7 @@ export function ConversationIdentityDialog({
           setIdentity(value);
           setName(value.displayName ?? '');
           setShareInActivity(value.shareInActivity);
+          setShareInPaymentActivity(value.shareInPaymentActivity);
         }
       })
       .catch((reason: unknown) => {
@@ -115,6 +124,7 @@ export function ConversationIdentityDialog({
           displayName,
           revision: identity.revision,
           shareInActivity: displayName !== null && shareInActivity,
+          shareInPaymentActivity: displayName !== null && shareInPaymentActivity,
           ...(avatarUploadKey !== undefined ? { avatarUploadKey } : {}),
         }),
       });
@@ -137,6 +147,7 @@ export function ConversationIdentityDialog({
         if (message === 'denied') {
           setName('');
           setShareInActivity(false);
+          setShareInPaymentActivity(false);
           setFile(null);
           uploaded.current = null;
           setIdentity(null);
@@ -197,7 +208,10 @@ export function ConversationIdentityDialog({
                 disabled={pending}
                 onChange={(event) => {
                   setName(event.target.value);
-                  if (!event.target.value.trim()) setShareInActivity(false);
+                  if (!event.target.value.trim()) {
+                    setShareInActivity(false);
+                    setShareInPaymentActivity(false);
+                  }
                 }}
               />
               <p className="text-xs text-muted-foreground">{text('nameHelp')}</p>
@@ -217,6 +231,23 @@ export function ConversationIdentityDialog({
               </div>
               <p id={`${id}-activity-help`} className="text-xs text-muted-foreground">
                 {text('activityHelp')}
+              </p>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-start gap-2">
+                <Checkbox
+                  id={`${id}-payment-activity`}
+                  checked={shareInPaymentActivity}
+                  disabled={pending || !name.trim()}
+                  aria-describedby={`${id}-payment-activity-help`}
+                  onCheckedChange={(checked) => setShareInPaymentActivity(checked === true)}
+                />
+                <Label htmlFor={`${id}-payment-activity`} className="leading-5">
+                  {text('paymentActivity')}
+                </Label>
+              </div>
+              <p id={`${id}-payment-activity-help`} className="text-xs text-muted-foreground">
+                {text('paymentActivityHelp')}
               </p>
             </div>
             <div className="space-y-2">

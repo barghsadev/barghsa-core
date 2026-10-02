@@ -1,7 +1,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/conversation-identity';
 import { ConversationIdentityDialog } from './ConversationIdentityDialog.js';
 const { upload } = vi.hoisted(() => ({ upload: vi.fn() }));
 vi.mock('../lib/branding-logo-upload.js', async (original) => ({
@@ -15,6 +15,7 @@ const initial = {
   avatarUploadKey: null,
   revision: 2,
   shareInActivity: false,
+  shareInPaymentActivity: false,
 };
 const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status });
 beforeEach(() => {
@@ -85,6 +86,7 @@ for (const locale of ['en', 'fa'] as const) {
       displayName: 'Chosen name',
       revision: 2,
       shareInActivity: false,
+      shareInPaymentActivity: false,
     });
     expect((options.headers as Headers).get('X-CSRF-Token')).toBe('identity-token');
     expect(close).toHaveBeenCalledTimes(1);
@@ -125,12 +127,14 @@ it('retains name/file and the verified upload across a failed save retry', async
       avatarUploadKey: 'uploads/image/verified.png',
       revision: 2,
       shareInActivity: false,
+      shareInPaymentActivity: false,
     },
     {
       displayName: 'Retry name',
       avatarUploadKey: 'uploads/image/verified.png',
       revision: 2,
       shareInActivity: false,
+      shareInPaymentActivity: false,
     },
   ]);
 });
@@ -141,7 +145,13 @@ it('refreshes the revision after conflict without replacing the unsaved draft', 
     .mockResolvedValueOnce(response({}, 409))
     .mockResolvedValueOnce(response({ ...initial, displayName: 'Other edit', revision: 3 }))
     .mockResolvedValueOnce(
-      response({ ...initial, displayName: 'My edit', revision: 4, shareInActivity: true })
+      response({
+        ...initial,
+        displayName: 'My edit',
+        revision: 4,
+        shareInActivity: true,
+        shareInPaymentActivity: false,
+      })
     );
   vi.stubGlobal('fetch', request);
   const close = await render();
@@ -156,6 +166,7 @@ it('refreshes the revision after conflict without replacing the unsaved draft', 
     displayName: 'My edit',
     revision: 3,
     shareInActivity: true,
+    shareInPaymentActivity: false,
   });
   expect(close).toHaveBeenCalled();
 });
@@ -177,6 +188,7 @@ it('clears the shared name/photo only when explicitly removed', async () => {
     avatarUploadKey: null,
     revision: 2,
     shareInActivity: false,
+    shareInPaymentActivity: false,
   });
   expect(upload).not.toHaveBeenCalled();
 });
@@ -262,7 +274,9 @@ for (const locale of ['en', 'fa'] as const) {
       .fn<typeof fetch>()
       .mockResolvedValueOnce(response(initial))
       .mockResolvedValueOnce(response({}, 503))
-      .mockResolvedValueOnce(response({ ...initial, shareInActivity: true, revision: 3 }));
+      .mockResolvedValueOnce(
+        response({ ...initial, shareInActivity: true, shareInPaymentActivity: false, revision: 3 })
+      );
     vi.stubGlobal('fetch', request);
     await render(locale);
     const checkbox = document.body.querySelector<HTMLButtonElement>('[role=checkbox]')!;
@@ -276,23 +290,81 @@ for (const locale of ['en', 'fa'] as const) {
       .slice(1)
       .map(([, options]) => JSON.parse(options!.body as string));
     expect(proposals).toEqual([
-      { displayName: 'Existing name', revision: 2, shareInActivity: true },
-      { displayName: 'Existing name', revision: 2, shareInActivity: true },
+      {
+        displayName: 'Existing name',
+        revision: 2,
+        shareInActivity: true,
+        shareInPaymentActivity: false,
+      },
+      {
+        displayName: 'Existing name',
+        revision: 2,
+        shareInActivity: true,
+        shareInPaymentActivity: false,
+      },
     ]);
   });
 }
-it('clears activity consent with an empty name and requires a new choice after retyping it', async () => {
+it('clears both activity consents with an empty name and requires new choices after retyping it', async () => {
   vi.stubGlobal(
     'fetch',
-    vi.fn<typeof fetch>().mockResolvedValue(response({ ...initial, shareInActivity: true }))
+    vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(
+        response({ ...initial, shareInActivity: true, shareInPaymentActivity: true })
+      )
   );
   await render();
   const checkbox = document.body.querySelector<HTMLButtonElement>('[role=checkbox]')!;
+  const payment = document.body.querySelectorAll('[role=checkbox]')[1]!;
+  expect(payment.getAttribute('aria-checked')).toBe('true');
   expect(checkbox.getAttribute('aria-checked')).toBe('true');
   await name('');
   expect(checkbox.getAttribute('aria-checked')).toBe('false');
   expect(checkbox.getAttribute('aria-disabled')).toBe('true');
+  expect(payment.getAttribute('aria-checked')).toBe('false');
+  expect(payment.getAttribute('aria-disabled')).toBe('true');
   await name('New name');
   expect(checkbox.getAttribute('aria-disabled')).not.toBe('true');
   expect(checkbox.getAttribute('aria-checked')).toBe('false');
+  expect(payment.getAttribute('aria-disabled')).not.toBe('true');
+  expect(payment.getAttribute('aria-checked')).toBe('false');
 });
+
+for (const locale of ['en', 'fa'] as const) {
+  it(`${locale}: requests payment consent separately and retains it across a failed save`, async () => {
+    const request = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(response(initial))
+      .mockResolvedValueOnce(response({}, 503))
+      .mockResolvedValueOnce(response({ ...initial, shareInPaymentActivity: true, revision: 3 }));
+    vi.stubGlobal('fetch', request);
+    await render(locale);
+    const [business, payment] = [...document.body.querySelectorAll<HTMLElement>('[role=checkbox]')];
+    expect(payment!.getAttribute('aria-checked')).toBe('false');
+    expect(document.body.textContent).toContain(
+      t('conversationIdentity.paymentActivityHelp', locale)
+    );
+    await act(async () => payment!.click());
+    expect(business!.getAttribute('aria-checked')).toBe('false');
+    await submit();
+    expect(payment!.getAttribute('aria-checked')).toBe('true');
+    await submit();
+    expect(
+      request.mock.calls.slice(1).map(([, options]) => JSON.parse(options!.body as string))
+    ).toEqual([
+      {
+        displayName: 'Existing name',
+        revision: 2,
+        shareInActivity: false,
+        shareInPaymentActivity: true,
+      },
+      {
+        displayName: 'Existing name',
+        revision: 2,
+        shareInActivity: false,
+        shareInPaymentActivity: true,
+      },
+    ]);
+  });
+}

@@ -1,3 +1,4 @@
+import { receiptStatusHistory, type ReceiptStatusHistoryEntry } from './receipt-status-history.js';
 import type { Pool, PoolClient } from 'pg';
 
 export interface CustomerInvoicePayment {
@@ -18,11 +19,7 @@ export interface CustomerInvoiceBankReceipt {
   rejectionReason: string | null;
   confirmedAt: string | null;
   createdAt: string;
-  statusHistory: Array<{
-    state: 'Submitted' | 'UnderReview' | 'Confirmed' | 'Rejected';
-    occurredAt: string;
-    backfilled: boolean;
-  }>;
+  statusHistory: ReceiptStatusHistoryEntry[];
 }
 export interface CustomerInvoiceRefund {
   id: string;
@@ -81,29 +78,10 @@ export async function loadCustomerInvoiceActivity(
      ORDER BY created_at, id`,
     [invoiceId, profileId]
   );
-  const receiptEvents = await client.query<{
-    receiptId: string;
-    state: CustomerInvoiceBankReceipt['statusHistory'][number]['state'];
-    occurredAt: Date;
-    backfilled: boolean;
-  }>(
-    `SELECT e.receipt_id AS "receiptId", e.state, e.occurred_at AS "occurredAt", e.backfilled
-       FROM bank_receipt_status_events e
-       JOIN bank_receipts r ON r.id=e.receipt_id
-      WHERE r.invoice_id=$1::uuid AND r.profile_id=$2::uuid
-      ORDER BY e.occurred_at, e.id`,
-    [invoiceId, profileId]
+  const historyByReceipt = await receiptStatusHistory(
+    client,
+    bankReceipts.rows.map((receipt) => receipt.id)
   );
-  const historyByReceipt = new Map<string, CustomerInvoiceBankReceipt['statusHistory']>();
-  for (const event of receiptEvents.rows) {
-    const history = historyByReceipt.get(event.receiptId) ?? [];
-    history.push({
-      state: event.state,
-      occurredAt: event.occurredAt.toISOString(),
-      backfilled: event.backfilled,
-    });
-    historyByReceipt.set(event.receiptId, history);
-  }
   const refunds = await client.query<
     Omit<CustomerInvoiceRefund, 'createdAt' | 'updatedAt'> & { createdAt: Date; updatedAt: Date }
   >(

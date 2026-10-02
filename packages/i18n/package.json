@@ -206,6 +206,11 @@
       "types": "./dist/contracts.d.ts",
       "import": "./dist/contracts.js",
       "default": "./dist/contracts.js"
+    },
+    "./conversation-identity": {
+      "types": "./dist/conversation-identity.d.ts",
+      "import": "./dist/conversation-identity.js",
+      "default": "./dist/conversation-identity.js"
     }
   },
   "scripts": {

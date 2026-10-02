@@ -1,3 +1,5 @@
+import { receiptActivityActor } from '../finance/receipt-activity-actor.js';
+import { receiptStatusHistory, type ReceiptStatusHistoryEntry } from './receipt-status-history.js';
 import type { ReceiptQueueQuery, ReceiptQueuePage } from '../common/receipt-queue-query.js';
 import { literalSearchPattern, type HistorySort } from '@barghsa/shared/validation';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
@@ -115,11 +117,7 @@ export interface InvoiceBankReceiptConfirmDto {
   paymentDate: string;
   payerReference: string;
   bankName: string | null;
-  statusHistory?: Array<{
-    state: 'Submitted' | 'UnderReview' | 'Confirmed' | 'Rejected';
-    occurredAt: string;
-    backfilled: boolean;
-  }>;
+  statusHistory?: ReceiptStatusHistoryEntry[];
   attachmentKey: string;
   attachmentUrl: string | null;
   customerNote: string | null;
@@ -391,23 +389,10 @@ export class InvoiceBankReceiptConfirmationService {
     }
     const extra = await this.loadCurrentAllocation(pool, row);
     const dual = await this.loadDualApprovalDtoExtras(pool, row);
-    const events = await pool.query<{
-      state: NonNullable<InvoiceBankReceiptConfirmDto['statusHistory']>[number]['state'];
-      occurredAt: Date;
-      backfilled: boolean;
-    }>(
-      `SELECT state, occurred_at AS "occurredAt", backfilled
-         FROM bank_receipt_status_events
-        WHERE receipt_id=$1 ORDER BY occurred_at,id`,
-      [receiptId]
-    );
+    const histories = await receiptStatusHistory(pool, [receiptId]);
     return {
       ...(await this.toDto(row, { ...extra, ...dual })),
-      statusHistory: events.rows.map((event) => ({
-        state: event.state,
-        occurredAt: event.occurredAt.toISOString(),
-        backfilled: event.backfilled,
-      })),
+      statusHistory: histories.get(receiptId) ?? [],
     };
   }
 
@@ -657,7 +642,7 @@ export class InvoiceBankReceiptConfirmationService {
           input.emergencyOverrideReason === undefined &&
           latestRequest.initiatorId === input.actorUserId
         ) {
-          const parked = await this.ensureUnderReview(client, receipt.id);
+          const parked = await this.ensureUnderReview(client, receipt.id, input.actorUserId);
           await requireSessionStepUp(client, actor);
           await client.query('COMMIT');
           return this.toDto(parked, {
@@ -957,7 +942,12 @@ export class InvoiceBankReceiptConfirmationService {
           now,
           ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
         });
-        const updated = await this.markRejected(client, receipt.id, parsed.reason);
+        const updated = await this.markRejected(
+          client,
+          receipt.id,
+          parsed.reason,
+          input.actorUserId
+        );
         const notify = await this.enqueueCustomerRejectionNotice(client, {
           receiptId: receipt.id,
           invoiceId: receipt.invoiceId,
@@ -1043,7 +1033,7 @@ export class InvoiceBankReceiptConfirmationService {
         input.now,
       ]
     );
-    const parked = await this.ensureUnderReview(client, input.receipt.id);
+    const parked = await this.ensureUnderReview(client, input.receipt.id, input.actorUserId);
     await this.recordAudit(client, {
       event: INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REQUESTED_EVENT,
       actorUserId: input.actorUserId,
@@ -1116,8 +1106,10 @@ export class InvoiceBankReceiptConfirmationService {
 
   private async ensureUnderReview(
     client: WalletQueryClient,
-    receiptId: string
+    receiptId: string,
+    actorUserId: string
   ): Promise<BankReceiptRow> {
+    await receiptActivityActor(client, receiptId, actorUserId, 'staff');
     const result = await client.query(
       `UPDATE bank_receipts
           SET state = 'UnderReview'
@@ -1227,7 +1219,12 @@ export class InvoiceBankReceiptConfirmationService {
     const reason = invoiceBankReceiptReasonFromDualApprovalRejection(
       input.latestRequest.reviewReason
     );
-    await this.markRejected(client, input.receipt.id, reason);
+    await this.markRejected(
+      client,
+      input.receipt.id,
+      reason,
+      input.latestRequest.reviewerId ?? null
+    );
 
     const ownerUserId = await this.loadProfileOwnerUserId(client, input.receipt.profileId);
     let notificationOutboxId: string | null = null;
@@ -1500,6 +1497,7 @@ export class InvoiceBankReceiptConfirmationService {
     actorUserId: string,
     confirmedAt: Date
   ): Promise<BankReceiptRow> {
+    await receiptActivityActor(client, receiptId, actorUserId, 'staff');
     const result = await client.query(
       `UPDATE bank_receipts
           SET state = 'Confirmed',
@@ -1520,8 +1518,10 @@ export class InvoiceBankReceiptConfirmationService {
   private async markRejected(
     client: WalletQueryClient,
     receiptId: string,
-    reason: string
+    reason: string,
+    actorUserId: string | null
   ): Promise<BankReceiptRow> {
+    await receiptActivityActor(client, receiptId, actorUserId, 'staff');
     const result = await client.query(
       `UPDATE bank_receipts
           SET state = 'Rejected',

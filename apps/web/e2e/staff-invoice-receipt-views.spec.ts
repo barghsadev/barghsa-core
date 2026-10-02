@@ -99,7 +99,30 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.route(`**/api/admin/invoices/bank-receipts/${receiptId}`, (r) => {
         detailReads++;
-        return r.fulfill({ json: receipt });
+        return r.fulfill({
+          json: {
+            ...receipt,
+            state: 'UnderReview',
+            statusHistory: [
+              {
+                state: 'Submitted',
+                occurredAt: stamp,
+                backfilled: false,
+                actorType: 'customer',
+                actorName: 'آرش Customer',
+                reason: 'Customer note <script>',
+              },
+              {
+                state: 'UnderReview',
+                occurredAt: '2026-09-02T12:00:00Z',
+                backfilled: false,
+                actorType: 'staff',
+                actorName: 'Finance reviewer',
+                reason: null,
+              },
+            ],
+          },
+        });
       });
       await page.route(`**/api/admin/invoices/bank-receipts/${receiptId}/allocation`, (r) => {
         allocationReads++;
@@ -182,6 +205,16 @@ for (const locale of ['en', 'fa'] as const)
       await expect.poll(() => viewport.evaluate((node) => node.scrollLeft)).not.toBe(position);
       await pending.getByRole('button', { name: word('open'), exact: true }).click();
       const detail = queue.getByRole('region', { name: word('detail'), exact: true });
+      const timeline = detail.locator('[data-slot=status-timeline]');
+      await expect(timeline.getByRole('listitem')).toHaveCount(2);
+      await expect(timeline.locator('bdi').nth(0)).toHaveText(
+        `آرش Customer · ${appText('invoices.activity.actor.customer', locale)}`
+      );
+      await expect(timeline.locator('bdi').nth(1)).toHaveText(
+        `Finance reviewer · ${appText('invoices.activity.actor.staff', locale)}`
+      );
+      await expect(timeline).toContainText('Customer note <script>');
+      expect(await timeline.locator('img,script').count()).toBe(0);
       const image = detail.getByRole('img', { name: word('attachment'), exact: true });
       await expect(image).toBeVisible();
       await expect

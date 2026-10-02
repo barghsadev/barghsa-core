@@ -150,6 +150,7 @@ for (const staff of [false, true]) {
       avatarUploadKey: null,
       revision: 0,
       shareInActivity: false,
+      shareInPaymentActivity: false,
     });
     const file = await upload(user);
     expect(file.response.status, http.logs()).toBe(200);
@@ -191,6 +192,7 @@ for (const staff of [false, true]) {
       avatarUploadKey: null,
       revision: 2,
       shareInActivity: false,
+      shareInPaymentActivity: false,
     });
   });
 }
@@ -488,6 +490,7 @@ for (const staff of [false, true]) {
     expect(await (await save(user, { displayName: null, revision: 5 })).json()).toMatchObject({
       displayName: null,
       shareInActivity: false,
+      shareInPaymentActivity: false,
       revision: 6,
     });
     expect(await activityNames(http.pool, [user.id])).toEqual(new Map());
@@ -500,3 +503,40 @@ for (const staff of [false, true]) {
     expect(await activityNames(http.pool, [other.id])).toEqual(new Map());
   });
 }
+
+it('separates receipt-history name consent from business history and preserves both for older clients', async () => {
+  const user = await actor();
+  expect(
+    (await save(user, { displayName: 'Chosen payer', shareInActivity: true, revision: 0 })).status
+  ).toBe(200);
+  expect(await activityNames(http.pool, [user.id], 'payment')).toEqual(new Map());
+  const proposal = { displayName: 'Chosen payer', shareInPaymentActivity: true, revision: 1 };
+  expect((await save(user, proposal)).status).toBe(200);
+  expect((await save(user, proposal)).status).toBe(200);
+  expect(await activityNames(http.pool, [user.id], 'payment')).toEqual(
+    new Map([[user.id, 'Chosen payer']])
+  );
+  expect(await activityNames(http.pool, [user.id])).toEqual(new Map([[user.id, 'Chosen payer']]));
+  expect(
+    await (await save(user, { displayName: 'Renamed payer', revision: 2 })).json()
+  ).toMatchObject({ revision: 3, shareInActivity: true, shareInPaymentActivity: true });
+  expect(
+    (await save(user, { displayName: 'Renamed payer', shareInPaymentActivity: false, revision: 3 }))
+      .status
+  ).toBe(200);
+  expect(await activityNames(http.pool, [user.id], 'payment')).toEqual(new Map());
+  expect(await activityNames(http.pool, [user.id])).toEqual(new Map([[user.id, 'Renamed payer']]));
+  expect(
+    (
+      await save(user, {
+        displayName: 'Renamed payer',
+        shareInPaymentActivity: 'true',
+        revision: 4,
+      })
+    ).status
+  ).toBe(400);
+  expect(await (await save(user, { displayName: null, revision: 4 })).json()).toMatchObject({
+    shareInActivity: false,
+    shareInPaymentActivity: false,
+  });
+});

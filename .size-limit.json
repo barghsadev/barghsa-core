@@ -109,6 +109,12 @@
     "limitKB": 60
   },
   {
+    "name": "Conversation identity editor on demand",
+    "phase": "interaction",
+    "entries": ["src/components/ConversationIdentityDialog.tsx"],
+    "limitKB": 15
+  },
+  {
     "name": "Dashboard",
     "entries": [
       "index.html",

@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
+import { t as identityText } from '@barghsa/i18n/conversation-identity';
 import { shellText } from '@barghsa/i18n/shell';
 const ticketId = '22222222-2222-4222-8222-222222222222';
 const uploadKey = 'uploads/image/33333333-3333-4333-8333-333333333333.png';
@@ -46,13 +47,14 @@ for (const staff of [false, true])
       page,
     }) => {
       await shell(page, locale, staff);
-      const copy = (key: string) => t(`conversationIdentity.${key}`, locale);
+      const copy = (key: string) => identityText(`conversationIdentity.${key}`, locale);
       let identity = {
         displayName: null as string | null,
         avatarUrl: null as string | null,
         avatarUploadKey: null as string | null,
         revision: 0,
         shareInActivity: false,
+        shareInPaymentActivity: false,
       };
       let writes = 0,
         uploads = 0;
@@ -66,6 +68,7 @@ for (const staff of [false, true])
           identity = {
             displayName: body.displayName,
             shareInActivity: body.shareInActivity,
+            shareInPaymentActivity: body.shareInPaymentActivity,
             avatarUploadKey:
               body.avatarUploadKey === undefined ? identity.avatarUploadKey : body.avatarUploadKey,
             avatarUrl:
@@ -186,10 +189,18 @@ for (const staff of [false, true])
         editor.getByRole('checkbox', { name: copy('activity'), exact: true })
       ).not.toBeChecked();
       await expect(editor).toContainText(copy('activityHelp'));
+      await expect(
+        editor.getByRole('checkbox', { name: copy('paymentActivity'), exact: true })
+      ).not.toBeChecked();
+      await expect(editor).toContainText(copy('paymentActivityHelp'));
       await editor
         .getByLabel(copy('name'), { exact: true })
         .fill(locale === 'fa' ? 'آرش پشتیبانی' : 'Chosen support name');
       await editor.getByRole('checkbox', { name: copy('activity'), exact: true }).check();
+      await expect(
+        editor.getByRole('checkbox', { name: copy('paymentActivity'), exact: true })
+      ).not.toBeChecked();
+      await editor.getByRole('checkbox', { name: copy('paymentActivity'), exact: true }).check();
       const picker = page.waitForEvent('filechooser');
       await editor.getByRole('button', { name: copy('choosePhoto'), exact: true }).focus();
       await page.keyboard.press('Enter');
@@ -199,6 +210,9 @@ for (const staff of [false, true])
       await expect(editor).toContainText('portrait.png');
       await expect(
         editor.getByRole('checkbox', { name: copy('activity'), exact: true })
+      ).toBeChecked();
+      await expect(
+        editor.getByRole('checkbox', { name: copy('paymentActivity'), exact: true })
       ).toBeChecked();
       await editor.getByRole('button', { name: copy('saveAction'), exact: true }).click();
       await expect(editor).toHaveCount(0);
@@ -230,7 +244,13 @@ for (const staff of [false, true])
       await expect(
         again.getByRole('checkbox', { name: copy('activity'), exact: true })
       ).toBeChecked();
+      await expect(
+        again.getByRole('checkbox', { name: copy('paymentActivity'), exact: true })
+      ).toBeChecked();
       await again.getByLabel(copy('name'), { exact: true }).fill('');
+      await expect(
+        again.getByRole('checkbox', { name: copy('paymentActivity'), exact: true })
+      ).not.toBeChecked();
       await expect(
         again.getByRole('checkbox', { name: copy('activity'), exact: true })
       ).not.toBeChecked();
@@ -243,6 +263,7 @@ for (const staff of [false, true])
         avatarUploadKey: null,
         revision: 2,
         shareInActivity: false,
+        shareInPaymentActivity: false,
       });
       await page.reload();
       await page
@@ -262,7 +283,7 @@ for (const staff of [false, true])
       await shell(page, locale, staff);
       let reads = 0,
         writes = 0;
-      const copy = (key: string) => t(`conversationIdentity.${key}`, locale);
+      const copy = (key: string) => identityText(`conversationIdentity.${key}`, locale);
       await page.route('**/api/user/settings/conversation-identity', (route) => {
         if (route.request().method() === 'PUT') {
           writes++;
@@ -271,7 +292,12 @@ for (const staff of [false, true])
             expect(body.revision).toBe(1);
             return route.fulfill({ status: 409, json: {} });
           }
-          expect(body).toEqual({ displayName: 'My draft', revision: 2, shareInActivity: true });
+          expect(body).toEqual({
+            displayName: 'My draft',
+            revision: 2,
+            shareInActivity: true,
+            shareInPaymentActivity: true,
+          });
           return route.fulfill({
             json: { displayName: 'My draft', avatarUrl: null, avatarUploadKey: null, revision: 3 },
           });
@@ -299,6 +325,10 @@ for (const staff of [false, true])
       await expect(editor.getByLabel(copy('name'), { exact: true })).toHaveValue('Old alias');
       await editor.getByLabel(copy('name'), { exact: true }).fill('My draft');
       await editor.getByRole('checkbox', { name: copy('activity'), exact: true }).check();
+      await expect(
+        editor.getByRole('checkbox', { name: copy('paymentActivity'), exact: true })
+      ).not.toBeChecked();
+      await editor.getByRole('checkbox', { name: copy('paymentActivity'), exact: true }).check();
       await editor.getByLabel(copy('photo'), { exact: true }).setInputFiles({
         name: 'unsafe.svg',
         mimeType: 'image/svg+xml',
@@ -309,6 +339,9 @@ for (const staff of [false, true])
       await expect(editor.getByRole('alert')).toHaveText(copy('conflict'));
       await expect(
         editor.getByRole('checkbox', { name: copy('activity'), exact: true })
+      ).toBeChecked();
+      await expect(
+        editor.getByRole('checkbox', { name: copy('paymentActivity'), exact: true })
       ).toBeChecked();
       await expect(editor.getByLabel(copy('name'), { exact: true })).toHaveValue('My draft');
       const violations = (

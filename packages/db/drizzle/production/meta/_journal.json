@@ -1100,6 +1100,13 @@
       "when": 1791331202247,
       "tag": "0236_activity_identity_consent",
       "breakpoints": true
+    },
+    {
+      "idx": 237,
+      "version": "7",
+      "when": 1791331202248,
+      "tag": "0237_receipt_activity_actors",
+      "breakpoints": true
     }
   ]
 }

@@ -279,6 +279,41 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     });
 
     expect(result.state).toBe('Confirmed');
+    expect(
+      (
+        await ctx.pool.query(
+          "SELECT actor_user_id,actor_type FROM bank_receipt_status_events WHERE receipt_id=$1 AND state='Confirmed'",
+          [receiptId]
+        )
+      ).rows
+    ).toEqual([{ actor_user_id: ACTOR_USER_ID, actor_type: 'staff' }]);
+    const defaultHistory = (await service.get(receiptId)).statusHistory!;
+    expect(defaultHistory.map((event) => [event.actorType, event.actorName])).toEqual([
+      ['unknown', null],
+      ['staff', null],
+    ]);
+    await ctx.pool.query(
+      "INSERT INTO conversation_identities(user_id,display_name,share_in_activity,share_in_payment_activity) VALUES($1,'Chosen finance <name>',true,false)",
+      [ACTOR_USER_ID]
+    );
+    expect((await service.get(receiptId)).statusHistory!.at(-1)?.actorName).toBeNull();
+    await ctx.pool.query(
+      'UPDATE conversation_identities SET share_in_payment_activity=true WHERE user_id=$1',
+      [ACTOR_USER_ID]
+    );
+    const namedHistory = (await service.get(receiptId)).statusHistory!;
+    expect(namedHistory.at(-1)).toMatchObject({
+      actorType: 'staff',
+      actorName: 'Chosen finance <name>',
+      reason: null,
+    });
+    expect(JSON.stringify(namedHistory)).not.toMatch(/actor_user_id|actorUserId|staff@example/);
+    expect(JSON.stringify(namedHistory)).not.toContain(ACTOR_USER_ID);
+    await ctx.pool.query(
+      'UPDATE conversation_identities SET share_in_payment_activity=false WHERE user_id=$1',
+      [ACTOR_USER_ID]
+    );
+    expect((await service.get(receiptId)).statusHistory!.at(-1)?.actorName).toBeNull();
     expect(result.canConfirm).toBe(false);
     expect(result.confirmedBy).toBe(ACTOR_USER_ID);
     expect(result.overpayment).toMatchObject({

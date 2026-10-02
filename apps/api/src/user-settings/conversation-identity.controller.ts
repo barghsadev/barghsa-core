@@ -17,11 +17,23 @@ export class ConversationIdentityController {
     status: 200,
     schema: {
       type: 'object',
-      required: ['displayName', 'avatarUrl', 'avatarUploadKey', 'revision', 'shareInActivity'],
+      required: [
+        'displayName',
+        'avatarUrl',
+        'avatarUploadKey',
+        'revision',
+        'shareInActivity',
+        'shareInPaymentActivity',
+      ],
       properties: {
         displayName: { type: 'string', nullable: true, maxLength: 80 },
         avatarUrl: { type: 'string', nullable: true },
         avatarUploadKey: { type: 'string', nullable: true },
+        shareInPaymentActivity: {
+          type: 'boolean',
+          description:
+            'Separate opt-in to show this name in receipt review history to authorized customers and staff.',
+        },
         shareInActivity: {
           type: 'boolean',
           description:
@@ -53,6 +65,11 @@ export class ConversationIdentityController {
             'Omit to keep the current photo; null removes it. A supplied key must be your verified conversation_avatar upload.',
         },
         revision: { type: 'integer', minimum: 0, maximum: 2147483646 },
+        shareInPaymentActivity: {
+          type: 'boolean',
+          description:
+            'Omit to preserve payment-history consent. False or clearing the name removes it from later receipt-history reads.',
+        },
         shareInActivity: {
           type: 'boolean',
           description:

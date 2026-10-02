@@ -1,3 +1,4 @@
+import { receiptActivityActor } from '../finance/receipt-activity-actor.js';
 import type { CustomerInvoiceDetailsDto } from './customer-invoice-details.service.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
@@ -285,6 +286,57 @@ it('returns the durable receipt review sequence without staff metadata', async (
   ).toBe(true);
   expect(JSON.stringify(history)).not.toContain('actorUserId');
   expect(JSON.stringify(history)).not.toContain('metadata');
+  expect(history?.every((event) => event.actorType === 'unknown' && event.actorName === null)).toBe(
+    true
+  );
+  expect(history?.at(-1)?.reason).toBe('Unreadable');
+  const namedReceipt = randomUUID(),
+    staff = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES($1,'private-receipt-staff','test',true)",
+    [staff]
+  );
+  await http.pool.query(
+    "INSERT INTO conversation_identities(user_id,display_name,share_in_activity,share_in_payment_activity) VALUES($1,'Chosen payer',true,false),($2,'Chosen finance نام <name>',true,true)",
+    [f.user, staff]
+  );
+  const client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await receiptActivityActor(client, namedReceipt, f.user, 'customer');
+    await client.query(
+      "INSERT INTO bank_receipts(id,invoice_id,profile_id,amount,payment_date,payer_reference,attachment_key,customer_note) VALUES($1,$2,$3,50,'2026-09-01','reference',$4,'Customer note <script>')",
+      [namedReceipt, f.invoice, f.profile, randomUUID()]
+    );
+    await receiptActivityActor(client, namedReceipt, staff, 'staff');
+    await client.query(
+      "UPDATE bank_receipts SET state='Rejected',rejection_reason='Recorded mismatch' WHERE id=$1",
+      [namedReceipt]
+    );
+    await client.query('COMMIT');
+  } finally {
+    client.release();
+  }
+  const namedBody = (await (await read(f)).json()) as CustomerInvoiceDetailsDto;
+  const events = namedBody.bankReceipts.find((row) => row.id === namedReceipt)!.statusHistory;
+  expect(events.map((event) => [event.actorType, event.actorName, event.reason])).toEqual([
+    ['customer', null, 'Customer note <script>'],
+    ['staff', 'Chosen finance نام <name>', 'Recorded mismatch'],
+  ]);
+  expect(JSON.stringify(events)).not.toMatch(/actor_user_id|actorUserId|private-receipt-staff/);
+  expect(JSON.stringify(events)).not.toContain(staff);
+  await http.pool.query(
+    'UPDATE conversation_identities SET share_in_payment_activity=false WHERE user_id=$1',
+    [staff]
+  );
+  const cleared = (await (await read(f)).json()) as CustomerInvoiceDetailsDto;
+  expect(
+    cleared.bankReceipts
+      .find((row) => row.id === namedReceipt)!
+      .statusHistory.every((event) => event.actorName === null)
+  ).toBe(true);
+  const foreign = await fixture();
+  expect((await read(foreign, true, f.invoice)).status).toBe(404);
 });
 
 it('returns the same invoice for a valid uppercase UUID', async () => {

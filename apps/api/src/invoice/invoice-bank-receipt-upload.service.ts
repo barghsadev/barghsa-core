@@ -1,3 +1,5 @@
+import { v7 as uuidv7 } from 'uuid';
+import { receiptActivityActor } from '../finance/receipt-activity-actor.js';
 import {
   sealBankReceiptAttachment,
   persistSealedBankReceipt,
@@ -339,11 +341,13 @@ export class InvoiceBankReceiptUploadService {
         sealed
       );
 
+      const receiptId = uuidv7();
+      await receiptActivityActor(client, receiptId, actor.userId, 'customer');
       const inserted = await client.query(
         `INSERT INTO bank_receipts
            (invoice_id, profile_id, amount, payment_date, payer_reference,
-            bank_name, attachment_key, customer_note, submission_review, state)
-         VALUES ($1, $2, $3::bigint, $4::date, $5, $6, $7, $8, $9::jsonb, 'Submitted')
+            bank_name, attachment_key, customer_note, submission_review, state, id)
+         VALUES ($1, $2, $3::bigint, $4::date, $5, $6, $7, $8, $9::jsonb, 'Submitted', $10::uuid)
          RETURNING id, invoice_id, profile_id, amount,
                    to_char(payment_date, 'YYYY-MM-DD') AS payment_date, payer_reference, bank_name,
                    attachment_key, customer_note, submission_review, state`,
@@ -357,6 +361,7 @@ export class InvoiceBankReceiptUploadService {
           sealed.sealedKey,
           receipt.customerNote,
           expectedReviewHash ? JSON.stringify(review) : null,
+          receiptId,
         ]
       );
 

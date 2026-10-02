@@ -285,6 +285,14 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
     }>(`SELECT state, confirmed_by, attachment_key, bank_name FROM bank_receipts WHERE id = $1`, [
       result.receiptId,
     ]);
+    expect(
+      (
+        await ctx.pool.query(
+          'SELECT actor_user_id,actor_type,reason FROM bank_receipt_status_events WHERE receipt_id=$1',
+          [result.receiptId]
+        )
+      ).rows
+    ).toEqual([{ actor_user_id: ACTOR_ID, actor_type: 'customer', reason: result.customerNote }]);
     expect(stored.rows[0]).toMatchObject({
       state: 'Submitted',
       confirmed_by: null,

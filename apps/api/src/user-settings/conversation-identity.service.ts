@@ -24,6 +24,7 @@ const input = z
       .nullable(),
     avatarUploadKey: z.string().min(1).max(256).nullable().optional(),
     shareInActivity: z.boolean().optional(),
+    shareInPaymentActivity: z.boolean().optional(),
     revision: z.number().int().min(0).max(2147483646),
   })
   .strict();
@@ -32,6 +33,7 @@ type IdentityRow = {
   avatar_key: string | null;
   source_key: string | null;
   share_in_activity: boolean;
+  share_in_payment_activity: boolean;
   revision: number;
 };
 
@@ -41,7 +43,7 @@ export class ConversationIdentityService {
 
   private async row(client: Pick<PoolClient, 'query'>, userId: string): Promise<IdentityRow> {
     const result = await client.query(
-      `SELECT i.display_name,i.avatar_key,i.revision,i.share_in_activity,s.metadata->>'sourceKey' AS source_key
+      `SELECT i.display_name,i.avatar_key,i.revision,i.share_in_activity,i.share_in_payment_activity,s.metadata->>'sourceKey' AS source_key
        FROM conversation_identities i LEFT JOIN storage_records s ON s.storage_key=i.avatar_key
        AND s.status='immutable' AND s.metadata->>'purpose'='conversation_avatar'
        AND s.metadata->>'uploadedBy'=i.user_id WHERE i.user_id=$1`,
@@ -54,6 +56,7 @@ export class ConversationIdentityService {
         source_key: null,
         revision: 0,
         share_in_activity: false,
+        share_in_payment_activity: false,
       }
     );
   }
@@ -69,6 +72,7 @@ export class ConversationIdentityService {
       avatarUploadKey: row.source_key,
       revision: row.revision,
       shareInActivity: row.share_in_activity,
+      shareInPaymentActivity: row.share_in_payment_activity,
     };
   }
 
@@ -116,9 +120,13 @@ export class ConversationIdentityService {
       const previous = await this.row(client, req.session.userId);
       const shareInActivity =
         displayName !== null && (parsed.data.shareInActivity ?? previous.share_in_activity);
+      const shareInPaymentActivity =
+        displayName !== null &&
+        (parsed.data.shareInPaymentActivity ?? previous.share_in_payment_activity);
       const same =
         previous.display_name === displayName &&
         previous.share_in_activity === shareInActivity &&
+        previous.share_in_payment_activity === shareInPaymentActivity &&
         (avatarUploadKey === undefined ||
           (avatarUploadKey === null
             ? previous.avatar_key === null
@@ -143,10 +151,18 @@ export class ConversationIdentityService {
                   )
                 )[0]!;
         await client.query(
-          `INSERT INTO conversation_identities(user_id,display_name,avatar_key,revision,share_in_activity)
-          VALUES ($1,$2,$3,$4,$5) ON CONFLICT(user_id) DO UPDATE SET display_name=EXCLUDED.display_name,
-          avatar_key=EXCLUDED.avatar_key,revision=EXCLUDED.revision,share_in_activity=EXCLUDED.share_in_activity,updated_at=NOW()`,
-          [req.session.userId, displayName, avatarKey, previous.revision + 1, shareInActivity]
+          `INSERT INTO conversation_identities(user_id,display_name,avatar_key,revision,share_in_activity,share_in_payment_activity)
+          VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT(user_id) DO UPDATE SET display_name=EXCLUDED.display_name,
+          avatar_key=EXCLUDED.avatar_key,revision=EXCLUDED.revision,share_in_activity=EXCLUDED.share_in_activity,
+          share_in_payment_activity=EXCLUDED.share_in_payment_activity,updated_at=NOW()`,
+          [
+            req.session.userId,
+            displayName,
+            avatarKey,
+            previous.revision + 1,
+            shareInActivity,
+            shareInPaymentActivity,
+          ]
         );
         await client.query(
           `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
@@ -159,8 +175,14 @@ export class ConversationIdentityService {
                 displayName: previous.display_name,
                 hasPhoto: !!previous.avatar_key,
                 shareInActivity: previous.share_in_activity,
+                shareInPaymentActivity: previous.share_in_payment_activity,
               },
-              after: { displayName, hasPhoto: !!avatarKey, shareInActivity },
+              after: {
+                displayName,
+                hasPhoto: !!avatarKey,
+                shareInActivity,
+                shareInPaymentActivity,
+              },
               revision: previous.revision + 1,
             }),
             correlationIdStorage.getStore() ?? uuidv7(),

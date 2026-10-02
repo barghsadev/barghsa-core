@@ -44,11 +44,9 @@ it('upgrades legacy plain replies, reruns safely and enforces formats, file limi
     );
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: [
-        '0233_ticket_reply_evidence',
-        '0234_conversation_identities',
-        '0235_conversation_identity_timestamps',
-      ],
+      applied: journal.entries
+        .filter((entry: { idx: number }) => entry.idx >= 233)
+        .map((entry: { tag: string }) => entry.tag),
     });
     expect(
       (await pool.query('SELECT * FROM ticket_comments WHERE id=$1', [comment])).rows[0]

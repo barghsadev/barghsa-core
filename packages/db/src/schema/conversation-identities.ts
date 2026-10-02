@@ -12,6 +12,7 @@ export const conversationIdentities = pgTable(
     displayName: text('display_name'),
     /** Separate consent for business activity; existing support identities remain private there. */
     shareInActivity: boolean('share_in_activity').notNull().default(false),
+    shareInPaymentActivity: boolean('share_in_payment_activity').notNull().default(false),
     avatarKey: text('avatar_key'),
     revision: integer('revision').notNull().default(1),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
@@ -29,6 +30,10 @@ export const conversationIdentities = pgTable(
     check(
       'conversation_identity_activity_name',
       sql`NOT ${table.shareInActivity} OR ${table.displayName} IS NOT NULL`
+    ),
+    check(
+      'conversation_identity_payment_name',
+      sql`NOT ${table.shareInPaymentActivity} OR ${table.displayName} IS NOT NULL`
     ),
   ]
 );

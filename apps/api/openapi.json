@@ -29173,6 +29173,10 @@
                     "shareInActivity": {
                       "description": "Separate opt-in to show this name in authorized order, contract and consultation activity. Photos remain limited to support conversations.",
                       "type": "boolean"
+                    },
+                    "shareInPaymentActivity": {
+                      "description": "Separate opt-in to show this name in receipt review history to authorized customers and staff.",
+                      "type": "boolean"
                     }
                   },
                   "required": [
@@ -29180,7 +29184,8 @@
                     "avatarUrl",
                     "avatarUploadKey",
                     "revision",
-                    "shareInActivity"
+                    "shareInActivity",
+                    "shareInPaymentActivity"
                   ],
                   "type": "object"
                 }
@@ -29222,6 +29227,10 @@
                   },
                   "shareInActivity": {
                     "description": "Omit to keep the current activity consent; false removes the name from later history reads. Clearing the name also clears consent.",
+                    "type": "boolean"
+                  },
+                  "shareInPaymentActivity": {
+                    "description": "Omit to preserve payment-history consent. False or clearing the name removes it from later receipt-history reads.",
                     "type": "boolean"
                   }
                 },
