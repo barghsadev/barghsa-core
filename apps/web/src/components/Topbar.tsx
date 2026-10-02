@@ -1,4 +1,4 @@
-import { useSyncExternalStore, type RefObject } from 'react';
+import type { ReactNode, RefObject } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Button } from '@barghsa/ui';
 import { Menu, X, ChevronRight } from 'lucide-react';
@@ -7,18 +7,11 @@ import { BrandMark } from './BrandMark.js';
 import { LanguageSwitcher } from './LanguageSwitcher.js';
 import { ThemeSwitcher } from './ThemeSwitcher.js';
 import { ProfileMenu } from './ProfileMenu.js';
-import type { ReactNode } from 'react';
-
-function subscribeWideHeader(listener: () => void) {
-  const media = window.matchMedia('(min-width: 1024px)');
-  media.addEventListener('change', listener);
-  return () => media.removeEventListener('change', listener);
-}
-const wideHeader = () => window.matchMedia('(min-width: 1024px)').matches;
 
 export function Topbar({
   area,
   locale,
+  isWide,
   currentLabel,
   actions,
   menuOpen,
@@ -29,6 +22,7 @@ export function Topbar({
 }: {
   area: 'dashboard' | 'admin';
   locale: 'fa' | 'en';
+  isWide: boolean;
   currentLabel: string | undefined;
   actions: ReactNode;
   menuOpen: boolean;
@@ -37,7 +31,6 @@ export function Topbar({
   onAccountOpen: () => void;
   navigationId: string;
 }) {
-  const isWide = useSyncExternalStore(subscribeWideHeader, wideHeader, () => true);
   const title = shellText(area === 'admin' ? 'administration' : 'workspace', locale);
   return (
     <header className="flex min-h-(--topbar-height) shrink-0 items-center gap-1 border-b bg-card px-2 sm:gap-3 sm:px-4 md:px-6">
@@ -85,7 +78,7 @@ export function Topbar({
           ref={menuButton}
           variant="ghost"
           size="icon"
-          className="md:hidden"
+          className="lg:hidden"
           aria-label={shellText('menu', locale)}
           aria-expanded={menuOpen}
           aria-controls={navigationId}

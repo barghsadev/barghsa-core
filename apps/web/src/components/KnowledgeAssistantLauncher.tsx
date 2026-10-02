@@ -56,7 +56,7 @@ export function KnowledgeAssistantLauncher({
       <button
         ref={trigger}
         type="button"
-        className="fixed bottom-5 end-5 z-40 flex min-h-12 items-center gap-2 rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transform-none"
+        className="fixed bottom-[calc(var(--mobile-navigation-height,0px)+1.25rem)] end-5 z-40 flex min-h-12 items-center gap-2 rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transform-none"
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => {
