@@ -1128,6 +1128,13 @@
       "when": 1791331202251,
       "tag": "0240_onboarding_journeys",
       "breakpoints": true
+    },
+    {
+      "idx": 241,
+      "version": "7",
+      "when": 1791331202252,
+      "tag": "0241_onboarding_journey_timestamps",
+      "breakpoints": true
     }
   ]
 }
