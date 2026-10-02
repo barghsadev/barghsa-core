@@ -1,5 +1,6 @@
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
-import { WalletTransactionList } from '../components/WalletTransactionList.js';
+import { TransactionList } from '../components/WalletTransactionList.js';
+import { Currency } from '../components/Currency.js';
 import {
   OnlinePaymentReturnPanel,
   type WalletPaymentReturn,
@@ -449,9 +450,11 @@ export function WalletPage({
                 {t('wallet.page.currentBalance', locale)}
               </p>
               <p className="mt-1 text-3xl font-bold text-foreground" data-testid="wallet-balance">
-                {wallet.currency === 'IRR'
-                  ? numbers.money(wallet.balance)
-                  : `${numbers.irrDigits(wallet.balance)} ${wallet.currency}`}
+                {wallet.currency === 'IRR' ? (
+                  <Currency amount={wallet.balance} showToman variant="large" locale={locale} />
+                ) : (
+                  `${numbers.irrDigits(wallet.balance)} ${wallet.currency}`
+                )}
               </p>
             </section>
           )}
@@ -735,7 +738,7 @@ export function WalletPage({
           )}
 
           {profileId && (
-            <WalletTransactionList
+            <TransactionList
               key={`${profileId}-${receiptSuccess}`}
               profileId={profileId}
               locale={locale}

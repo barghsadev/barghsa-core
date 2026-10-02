@@ -4,6 +4,7 @@ import { exactIrr } from '@barghsa/i18n/numbers';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/app';
+import { Currency } from './Currency.js';
 
 export interface WalletBalanceCardProps {
   /** Wallet balance in IRR (Rial). */
@@ -41,18 +42,6 @@ export function WalletBalanceCard({
 }: WalletBalanceCardProps) {
   const isRtl = locale === 'fa';
   const numbers = useNumberFormatting(locale);
-  let exactBalance: bigint | null;
-  try {
-    exactBalance = exactIrr(balance);
-  } catch {
-    exactBalance = null;
-  }
-  const tomanAmount =
-    exactBalance === null
-      ? null
-      : exactBalance >= 0n
-        ? (exactBalance + 5n) / 10n
-        : -((-exactBalance + 4n) / 10n);
   let hasReservation = false;
   try {
     hasReservation = reservedBalance !== undefined && exactIrr(reservedBalance) > 0n;
@@ -61,11 +50,13 @@ export function WalletBalanceCard({
   }
 
   return (
-    <div
+    <Link
+      to="/wallet"
+      aria-label={t('dashboard.overview.chargeWallet', locale)}
       className={
         embedded
-          ? 'flex h-full flex-col'
-          : 'flex h-full flex-col rounded-xl border bg-card p-6 text-card-foreground shadow-sm'
+          ? 'flex h-full flex-col rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring'
+          : 'flex h-full flex-col rounded-xl border bg-card p-6 text-card-foreground shadow-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring'
       }
       dir={isRtl ? 'rtl' : 'ltr'}
     >
@@ -84,14 +75,10 @@ export function WalletBalanceCard({
           </p>
         )}
         <p className="break-words text-[clamp(1.5rem,2.5vw,2rem)] font-semibold text-foreground leading-relaxed tabular-nums">
-          {currency === 'IRR'
-            ? numbers.money(balance)
-            : `${numbers.irrDigits(balance)} ${currency}`}
-        </p>
-        <p className="text-base text-muted-foreground mt-1">
-          {t('dashboard.overview.balanceInToman', locale).replace(
-            '{amount}',
-            tomanAmount === null ? '—' : numbers.irrDigits(tomanAmount)
+          {currency === 'IRR' ? (
+            <Currency amount={balance} showToman variant="large" locale={locale} />
+          ) : (
+            `${numbers.irrDigits(balance)} ${currency}`
           )}
         </p>
         {postedBalance !== undefined || hasReservation ? (
@@ -99,13 +86,17 @@ export function WalletBalanceCard({
             {postedBalance !== undefined ? (
               <div className="flex justify-between gap-3">
                 <dt>{t('dashboard.overview.postedBalance', locale)}</dt>
-                <dd className="tabular-nums">{numbers.money(postedBalance)}</dd>
+                <dd className="tabular-nums">
+                  <Currency amount={postedBalance} variant="small" locale={locale} />
+                </dd>
               </div>
             ) : null}
             {hasReservation ? (
               <div className="flex justify-between gap-3">
                 <dt>{t('dashboard.overview.reservedBalance', locale)}</dt>
-                <dd className="tabular-nums">{numbers.money(reservedBalance!)}</dd>
+                <dd className="tabular-nums">
+                  <Currency amount={reservedBalance!} variant="small" locale={locale} />
+                </dd>
               </div>
             ) : null}
           </dl>
@@ -114,16 +105,16 @@ export function WalletBalanceCard({
 
       {/* Low-balance warning */}
       {lowBalanceWarning && pendingInvoices > 0 && (
-        <Alert variant="warning" className="mb-4">
+        <Alert variant="destructive" className="mb-4">
           <AlertDescription>{t('dashboard.overview.lowBalanceWarning', locale)}</AlertDescription>
         </Alert>
       )}
 
       {/* Action button */}
-      <Link to="/wallet" className={cn(buttonVariants({ variant: 'default' }), 'mt-auto w-full')}>
+      <span className={cn(buttonVariants({ variant: 'default' }), 'mt-auto w-full')}>
         <Plus data-icon="inline-start" aria-hidden="true" />
         {t('dashboard.overview.chargeWallet', locale)}
-      </Link>
-    </div>
+      </span>
+    </Link>
   );
 }

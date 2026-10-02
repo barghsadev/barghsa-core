@@ -14,7 +14,7 @@ interface Page {
 }
 
 /** Profile/query ownership prevents obsolete financial history from returning. */
-export function WalletTransactionList({
+export function TransactionList({
   profileId,
   locale,
   binding,
@@ -34,6 +34,7 @@ export function WalletTransactionList({
   }, [profileId]);
   return <History key={profileId} profileId={profileId} locale={locale} binding={query} />;
 }
+export { TransactionList as WalletTransactionList };
 function History({
   profileId,
   locale,

@@ -1461,6 +1461,7 @@ export const fa: I18nDictionary = {
   'dashboard.overview.balanceInToman': '≈ {amount} تومان',
   'dashboard.overview.lowBalanceWarning':
     'موجودی کیف پول شما برای پرداخت صورتحساب‌های جاری کافی نیست',
+  'currency.toman': 'تومان',
   'wallet.page.title': 'کیف پول',
   'wallet.page.returnToInvoice': 'بازگشت به فاکتور',
   'wallet.funding.shortfall': 'مبلغ موردنیاز برای شارژ کیف پول',
@@ -3086,6 +3087,7 @@ export const en: I18nDictionary = {
   'dashboard.overview.viewDashboard': 'View Dashboard',
   'dashboard.overview.supportTicket': 'Support Ticket',
   'dashboard.overview.profileBadge': 'Profile: {name}',
+  'currency.toman': 'Toman',
   'wallet.page.title': 'Wallet',
   'wallet.page.returnToInvoice': 'Return to invoice',
   'wallet.funding.shortfall': 'Wallet top-up needed',

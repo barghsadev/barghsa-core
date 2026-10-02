@@ -23,7 +23,7 @@ import {
   Wallet,
   type LucideIcon,
 } from 'lucide-react';
-import { formatIrr } from '../lib/customer-invoices.js';
+import { Currency } from './Currency.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
 import type { useAccountTime } from '../hooks/useAccountTime.js';
 import { HistoryTable } from './HistoryTable.js';
@@ -107,7 +107,13 @@ export function WalletTransactionRecords({
         )}
       >
         {value > 0n ? '+' : ''}
-        {formatIrr(item.amount, locale)} {word('irr')}
+        <Currency
+          amount={item.amount}
+          showCurrencyCode={false}
+          variant="small"
+          locale={locale}
+        />{' '}
+        {word('irr')}
       </bdi>
     );
   };

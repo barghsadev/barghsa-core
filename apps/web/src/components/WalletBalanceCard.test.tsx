@@ -1,11 +1,11 @@
 import { renderToStaticMarkup } from 'react-dom/server';
-import type { ReactNode } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 import { expect, it, vi } from 'vitest';
 import { WalletBalanceCard } from './WalletBalanceCard.js';
 
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, children, className }: { to: string; children: ReactNode; className?: string }) => (
-    <a href={to} className={className}>
+  Link: ({ to, children, ...props }: { to: string; children: ReactNode } & ComponentProps<'a'>) => (
+    <a href={to} {...props}>
       {children}
     </a>
   ),
@@ -43,6 +43,14 @@ it.each(['en', 'fa'] as const)(
     expect(card.textContent).toContain(locale === 'en' ? 'Posted balance' : 'موجودی ثبت‌شده');
     expect(card.textContent).toContain(locale === 'en' ? 'Reserved funds' : 'مبلغ رزروشده');
     expect(card.querySelector('a[href="/wallet"]')).not.toBeNull();
+    expect(card.querySelectorAll('a')).toHaveLength(1);
+    expect(card.querySelector('a [data-slot="currency"]')).not.toBeNull();
+    expect(card.querySelector('a')?.getAttribute('aria-label')).toBe(
+      locale === 'en' ? 'Charge Wallet' : 'شارژ کیف پول'
+    );
+    expect(card.textContent).toContain(
+      locale === 'en' ? '900,719,925,474,099.3 Toman' : '۹۰۰٬۷۱۹٬۹۲۵٬۴۷۴٬۰۹۹٫۳ تومان'
+    );
     expect(card.querySelector('[role="alert"]')).not.toBeNull();
   }
 );

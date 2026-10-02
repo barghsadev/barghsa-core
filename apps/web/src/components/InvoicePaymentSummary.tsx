@@ -3,6 +3,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { stateI18nKey, type CustomerInvoiceNode } from '../lib/customer-invoices.js';
 import { WalletInvoicePaymentPanel } from './WalletInvoicePaymentPanel.js';
+import { Currency } from './Currency.js';
 
 const payableStates = new Set(['Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Overdue']);
 const walletStates = new Set(['Unpaid', 'PartiallyFunded', 'Overdue']);
@@ -52,11 +53,15 @@ export function InvoicePaymentSummary({
         <dl className="mt-3 grid grid-cols-1 gap-3 text-sm sm:grid-cols-3">
           <div>
             <dt className="text-muted-foreground">{t('invoices.details.total', locale)}</dt>
-            <dd className="font-semibold">{numbers.money(invoice.totalAmount)}</dd>
+            <dd className="font-semibold">
+              <Currency amount={invoice.totalAmount} variant="small" locale={locale} />
+            </dd>
           </div>
           <div>
             <dt className="text-muted-foreground">{t('invoices.details.paid', locale)}</dt>
-            <dd className="font-semibold text-success">{numbers.money(invoice.paidAmount)}</dd>
+            <dd className="font-semibold text-success">
+              <Currency amount={invoice.paidAmount} variant="small" locale={locale} />
+            </dd>
           </div>
           {payable || invoice.state === 'Paid' ? (
             <div>
@@ -68,7 +73,7 @@ export function InvoicePaymentSummary({
                     : 'font-semibold text-success'
                 }
               >
-                {numbers.money(progress.remainingAmount)}
+                <Currency amount={progress.remainingAmount} variant="small" locale={locale} />
               </dd>
             </div>
           ) : null}

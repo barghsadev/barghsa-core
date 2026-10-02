@@ -67,6 +67,23 @@ export function exactIrr(value: string | number | bigint): bigint {
   return BigInt(checked);
 }
 
+/** Exact toman digits: one rial is 0.1 toman, including negative sub-toman amounts. */
+export function formatToman(
+  value: string | number | bigint,
+  locale: Locale = 'fa',
+  input: Pick<NumberOptions, 'numberStyle'> = {}
+): string {
+  const rials = exactIrr(value);
+  const whole = rials / 10n;
+  const remainder = rials < 0n ? -(rials % 10n) : rials % 10n;
+  const digits = formatNumber(rials < 0n && whole === 0n ? -0 : whole, locale, input);
+  if (remainder === 0n) return digits;
+  const decimal = new Intl.NumberFormat(locale, options(locale, input))
+    .formatToParts(0.1)
+    .find((part) => part.type === 'decimal')!.value;
+  return `${digits}${decimal}${formatNumber(remainder, locale, input)}`;
+}
+
 /** Format whole rials with an explicit localized currency label, preserving arbitrary precision. */
 export function formatCurrencyIrr(
   value: string | number | bigint,

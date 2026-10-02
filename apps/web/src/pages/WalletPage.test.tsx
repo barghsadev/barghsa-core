@@ -143,7 +143,8 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     await renderPage();
     await flushFetches();
     expect(container.textContent).toContain('Wallet');
-    const balance = container.querySelector('[data-testid="wallet-balance"]')?.textContent ?? '';
+    const balance =
+      container.querySelector('[data-testid="wallet-balance"] bdi')?.textContent ?? '';
     expect(balance.replace(/[^\d]/g, '')).toBe('1500000');
     expect(balance).toContain('IRR');
     expect(container.querySelector('[data-testid="wallet-page"]')?.getAttribute('dir')).toBe('ltr');
@@ -656,7 +657,8 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
       expect(
         container.querySelector('[data-testid="wallet-receipt-success"]')?.textContent
       ).toContain('pending finance confirmation');
-      const balance = container.querySelector('[data-testid="wallet-balance"]')?.textContent ?? '';
+      const balance =
+        container.querySelector('[data-testid="wallet-balance"] bdi')?.textContent ?? '';
       expect(balance.replace(/[^\d]/g, '')).toBe('1500000');
     }
   );

@@ -4,6 +4,7 @@ import {
   formatCurrencyIrr,
   formatNumber,
   formatPercent,
+  formatToman,
   type NumberStyle,
 } from './numbers.js';
 
@@ -45,3 +46,26 @@ it('rejects invalid numeric values and unrecognized preferences', () => {
     RangeError
   );
 });
+
+it.each([
+  ['0', '0'],
+  ['1', '0.1'],
+  ['9', '0.9'],
+  ['10', '1'],
+  ['-1', '-0.1'],
+  ['-19', '-1.9'],
+  ['9007199254740993', '900,719,925,474,099.3'],
+  ['-9223372036854775808', '-922,337,203,685,477,580.8'],
+])('preserves exact toman equivalence for %s rials', (rials, expected) => {
+  expect(plain(formatToman(rials, 'en'))).toBe(expected);
+});
+it('localizes exact toman digits without changing the UI language', () => {
+  expect(plain(formatToman('1234567', 'fa'))).toBe('۱۲۳٬۴۵۶٫۷');
+  expect(plain(formatToman('-1', 'fa'))).toBe('−۰٫۱');
+  expect(plain(formatToman('1234567', 'fa', { numberStyle: 'western' }))).toBe('123,456.7');
+  expect(plain(formatToman('1234567', 'en', { numberStyle: 'persian' }))).toBe('۱۲۳٬۴۵۶٫۷');
+});
+it.each(['1.5', '1e6', Number.MAX_SAFE_INTEGER + 1, NaN])(
+  'rejects lossy toman conversion for %s',
+  (amount) => expect(() => formatToman(amount, 'en')).toThrow(RangeError)
+);
