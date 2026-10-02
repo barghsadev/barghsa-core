@@ -22,7 +22,11 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
-import { commercialStatusTone, financialStatusTone } from '../lib/electricity-status-tone.js';
+import {
+  commercialStatusTone,
+  financialStatusTone,
+  electricityStatusKey,
+} from '../lib/electricity-status-tone.js';
 import { electricityTimelineKeys } from '../lib/electricity-timeline.js';
 import { withCsrf } from '../lib/csrf.js';
 import { staffOrderId, type StaffOrderListQuery } from '../lib/staff-order-list-query.js';
@@ -126,6 +130,13 @@ export default function AdminElectricityOrdersPage({
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => t(`admin.electricityOrders.${key}`, locale);
+  const statusLabel = (status: string, kind: 'commercial' | 'financial') => {
+    const key = `${kind}.${status}`;
+    const label = copy(key);
+    return label === `admin.electricityOrders.${key}`
+      ? appText(electricityStatusKey(status, kind), locale)
+      : label;
+  };
   const periodText = (start: string, end: string) => {
     const day = { year: 'numeric', month: '2-digit', day: '2-digit' } as const;
     return `${time.format(start, day)} – ${time.format(new Date(new Date(end).getTime() - 1), day)}`;
@@ -513,10 +524,10 @@ export default function AdminElectricityOrdersPage({
                 <h2 className="text-lg font-semibold">{copy('detail')}</h2>
                 <DualStatusDisplay
                   commercialLabel={copy('commercial')}
-                  commercialStatus={copy(`commercial.${detail.commercialStatus}`)}
+                  commercialStatus={statusLabel(detail.commercialStatus, 'commercial')}
                   commercialTone={commercialStatusTone(detail.commercialStatus)}
                   financialLabel={copy('financial')}
-                  financialStatus={copy(`financial.${detail.financialStatus}`)}
+                  financialStatus={statusLabel(detail.financialStatus, 'financial')}
                   financialTone={financialStatusTone(detail.financialStatus)}
                 />
                 <dl className="grid gap-3 text-sm sm:grid-cols-2">

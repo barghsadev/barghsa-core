@@ -15,7 +15,23 @@ describe('NotificationStatusBadge', () => {
     expect(html).toContain(color);
     expect(html).toContain(label);
     expect(html).toContain(icon);
+    expect(html).toContain(`title="${label}"`);
   });
+
+  it.each(['security', 'payment', 'contract', 'order', 'document', 'system'])(
+    'keeps the %s category labeled and described in Persian',
+    (type) => {
+      const host = document.createElement('div');
+      host.innerHTML = renderToStaticMarkup(
+        <NotificationStatusBadge type={`${type}.event`} locale="fa" />
+      );
+      const badge = host.querySelector('[data-slot="notification-status-badge"]')!;
+      expect(badge.getAttribute('title')).toBe(badge.textContent);
+      expect(badge.textContent).toMatch(/[\u0600-\u06ff]/);
+      expect(badge.querySelector('svg')?.getAttribute('aria-hidden')).toBe('true');
+      expect(badge.textContent).not.toContain(type);
+    }
+  );
 
   it('localizes document notices in Persian', () => {
     const html = renderToStaticMarkup(

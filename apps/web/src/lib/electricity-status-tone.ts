@@ -1,13 +1,42 @@
-import type { StatusTone } from '@barghsa/ui';
+import { statusTone, type StatusTone } from '@barghsa/ui';
 
 export function commercialStatusTone(status: string): StatusTone {
-  if (['active', 'completed', 'approved'].includes(status)) return 'success';
-  if (['rejected', 'cancelled'].includes(status)) return 'destructive';
-  return 'warning';
+  return commercialStates.has(typeof status === 'string' ? status.toLowerCase() : '')
+    ? statusTone(status)
+    : 'default';
 }
 
 export function financialStatusTone(status: string): StatusTone {
-  if (status === 'paid' || status === 'refunded') return 'success';
-  if (status === 'refund_pending' || status === 'partially_refunded') return 'warning';
-  return 'default';
+  return financialStates.has(typeof status === 'string' ? status.toLowerCase() : '')
+    ? statusTone(status)
+    : 'default';
+}
+
+const commercialStates = new Set([
+  'draft',
+  'submitted',
+  'awaiting_staff_review',
+  'changes_requested',
+  'approved',
+  'active',
+  'completed',
+  'rejected',
+  'cancelled',
+]);
+const financialStates = new Set([
+  'unpaid',
+  'payment_under_review',
+  'partially_funded',
+  'paid',
+  'refund_pending',
+  'partially_refunded',
+  'refunded',
+]);
+
+/** Never expose machine identifiers or missing translation keys in a customer/staff status. */
+export function electricityStatusKey(status: string, kind: 'commercial' | 'financial'): string {
+  const value = typeof status === 'string' ? status.toLowerCase() : '';
+  if (!(kind === 'commercial' ? commercialStates : financialStates).has(value))
+    return 'electricity.order.status.unknown';
+  return `electricity.order.${kind === 'commercial' ? 'status' : 'financial'}.${value}`;
 }

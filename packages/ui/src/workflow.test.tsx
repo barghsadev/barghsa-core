@@ -159,6 +159,70 @@ it('names commercial and financial states independently', async () => {
     'Active',
     'Unpaid',
   ]);
+  expect(
+    [...host.querySelectorAll('[data-slot="badge"]')].map((item) => item.getAttribute('title'))
+  ).toEqual(['Service: Active', 'Payment: Unpaid']);
+});
+
+it.each([
+  ['Pending', 'warning'],
+  ['waiting_for_review', 'warning'],
+  ['awaiting_staff_review', 'warning'],
+  ['Active', 'success'],
+  ['approved', 'success'],
+  ['PAID', 'success'],
+  ['signed', 'success'],
+  ['Rejected', 'destructive'],
+  ['cancelled', 'destructive'],
+  ['FAILED', 'destructive'],
+  ['Draft', 'info'],
+  ['submitted', 'info'],
+  ['Completed', 'default'],
+  ['Resolved', 'default'],
+  ['unpaid', 'warning'],
+  ['payment_under_review', 'warning'],
+  ['partially_funded', 'warning'],
+  ['refund_pending', 'warning'],
+  ['partially_refunded', 'warning'],
+  ['future_paid_state', 'default'],
+] as const)('renders %s with its intended color and a readable title', async (state, tone) => {
+  await act(async () => root.render(<StatusBadge state={state} label="Localized status" />));
+  const badge = host.querySelector('[data-slot="badge"]')!;
+  expect(badge.getAttribute('data-variant')).toBe(tone);
+  expect(badge.getAttribute('title')).toBe('Localized status');
+  expect(badge.textContent).toBe('Localized status');
+  expect(badge.textContent).not.toContain(state);
+});
+it.each(['default', 'dot'] as const)(
+  'keeps the localized meaning in the %s display',
+  async (variant) => {
+    await act(async () =>
+      root.render(
+        <StatusBadge state="Pending" label="در انتظار بررسی" variant={variant} dot={false} />
+      )
+    );
+    const badge = host.querySelector('[data-slot="badge"]')!;
+    expect(badge.getAttribute('title')).toBe('در انتظار بررسی');
+    expect(badge.textContent).toBe('در انتظار بررسی');
+    expect(badge.querySelector('.sr-only') !== null).toBe(variant === 'dot');
+    expect(badge.querySelector('[aria-hidden="true"]') !== null).toBe(variant === 'dot');
+  }
+);
+it('retains explicit domain tones and title text instead of overriding them with a generic state', async () => {
+  await act(async () =>
+    root.render(
+      <StatusBadge
+        state="Completed"
+        label="Receipt confirmed"
+        tone="success"
+        title="Verified bank deposit"
+      />
+    )
+  );
+  expect(host.querySelector('[data-slot="badge"]')?.getAttribute('data-variant')).toBe('success');
+  expect(host.querySelector('[data-slot="badge"]')?.getAttribute('title')).toBe(
+    'Verified bank deposit'
+  );
 });
 it('requires exact phrase and resets on reopen', async () => {
   const confirm = vi.fn(),

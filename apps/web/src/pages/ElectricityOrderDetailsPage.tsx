@@ -27,7 +27,11 @@ import { ElectricityIncreasePanel } from './ElectricityIncreasePanel.js';
 import { ElectricityPriceAdjustmentsPanel } from './ElectricityPriceAdjustmentsPanel.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
-import { commercialStatusTone, financialStatusTone } from '../lib/electricity-status-tone.js';
+import {
+  commercialStatusTone,
+  financialStatusTone,
+  electricityStatusKey,
+} from '../lib/electricity-status-tone.js';
 import { electricityTimelineKeys } from '../lib/electricity-timeline.js';
 
 const ElectricityOrderRevisionForm = lazy(() =>
@@ -153,26 +157,6 @@ function cancellationPricingLines(snapshot: Record<string, unknown>) {
     : [];
 }
 
-const statusKeys: Record<string, string> = {
-  draft: 'electricity.order.status.draft',
-  submitted: 'electricity.order.status.submitted',
-  awaiting_staff_review: 'electricity.order.status.awaiting_staff_review',
-  changes_requested: 'electricity.order.status.changes_requested',
-  approved: 'electricity.order.status.approved',
-  active: 'electricity.order.status.active',
-  completed: 'electricity.order.status.completed',
-  rejected: 'electricity.order.status.rejected',
-  cancelled: 'electricity.order.status.cancelled',
-};
-const financialKeys: Record<string, string> = {
-  unpaid: 'electricity.order.financial.unpaid',
-  payment_under_review: 'electricity.order.financial.payment_under_review',
-  partially_funded: 'electricity.order.financial.partially_funded',
-  paid: 'electricity.order.financial.paid',
-  refund_pending: 'electricity.order.financial.refund_pending',
-  partially_refunded: 'electricity.order.financial.partially_refunded',
-  refunded: 'electricity.order.financial.refunded',
-};
 const actionKeys: Record<string, string> = {
   await_review: 'electricity.order.nextAction.await_review',
   await_payment_review: 'electricity.order.nextAction.await_payment_review',
@@ -413,14 +397,10 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
         <>
           <WorkflowStatusBanner
             locale={locale}
-            status={t(
-              statusKeys[detail.electricityStatus] ?? 'electricity.order.status.unknown',
-              locale
-            )}
+            status={t(electricityStatusKey(detail.electricityStatus, 'commercial'), locale)}
             happened={t(
               electricityTimelineKeys[latestEvent?.event ?? ''] ??
-                statusKeys[detail.electricityStatus] ??
-                'electricity.order.timeline.updated',
+                electricityStatusKey(detail.electricityStatus, 'commercial'),
               locale
             )}
             nextAction={t(
@@ -433,15 +413,12 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           <DualStatusDisplay
             commercialLabel={t('electricity.order.commercialStatus', locale)}
             commercialStatus={t(
-              statusKeys[detail.electricityStatus] ?? 'electricity.order.status.unknown',
+              electricityStatusKey(detail.electricityStatus, 'commercial'),
               locale
             )}
             commercialTone={commercialStatusTone(detail.electricityStatus)}
             financialLabel={t('electricity.order.financialStatus', locale)}
-            financialStatus={t(
-              financialKeys[detail.financialStatus] ?? 'electricity.order.status.unknown',
-              locale
-            )}
+            financialStatus={t(electricityStatusKey(detail.financialStatus, 'financial'), locale)}
             financialTone={financialStatusTone(detail.financialStatus)}
           />
           <Card>

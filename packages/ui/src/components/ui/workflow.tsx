@@ -7,23 +7,57 @@ import { Skeleton } from './skeleton';
 
 export type StatusTone = 'default' | 'success' | 'warning' | 'destructive' | 'info' | 'purple';
 
+/** Unknown states stay neutral; a color is never an authorization or lifecycle decision. */
+export function statusTone(state?: string): StatusTone {
+  const value = typeof state === 'string' ? state.toLowerCase().replace(/[\s_-]+/g, '') : '';
+  if (
+    /^(pending|waiting|awaiting)/.test(value) ||
+    [
+      'underreview',
+      'paymentunderreview',
+      'partiallyfunded',
+      'partiallypaid',
+      'unpaid',
+      'refundpending',
+      'partiallyrefunded',
+      'changesrequested',
+    ].includes(value)
+  )
+    return 'warning';
+  if (['active', 'approved', 'paid', 'signed', 'refunded'].includes(value)) return 'success';
+  if (['rejected', 'cancelled', 'canceled', 'failed'].includes(value)) return 'destructive';
+  if (['draft', 'submitted'].includes(value)) return 'info';
+  return 'default';
+}
+
 /** Labels are mandatory: color never carries the only meaning. */
 export function StatusBadge({
   label,
-  tone = 'default',
+  tone,
+  state,
   dot = true,
+  variant = 'default',
+  title,
+  className,
   ...props
 }: {
   label: string;
   tone?: StatusTone;
+  state?: string;
   dot?: boolean;
+  variant?: 'default' | 'dot';
 } & Omit<ComponentProps<typeof Badge>, 'variant' | 'children'>) {
   return (
-    <Badge variant={tone} {...props}>
-      {dot ? (
+    <Badge
+      variant={tone ?? statusTone(state)}
+      title={title || label}
+      className={cn(variant === 'dot' && 'min-h-0 size-3 rounded-full p-0', className)}
+      {...props}
+    >
+      {dot || variant === 'dot' ? (
         <span className="size-1.5 shrink-0 rounded-full bg-current" aria-hidden="true" />
       ) : null}
-      {label}
+      {variant === 'dot' ? <span className="sr-only">{label}</span> : label}
     </Badge>
   );
 }
@@ -45,17 +79,25 @@ export function DualStatusDisplay({
   financialTone?: StatusTone;
 }) {
   return (
-    <dl className="flex flex-wrap gap-x-6 gap-y-3 text-sm">
+    <dl data-slot="dual-status-display" className="flex flex-wrap gap-x-6 gap-y-3 text-sm">
       <div className="flex items-center gap-2">
         <dt className="text-muted-foreground">{commercialLabel}</dt>
         <dd>
-          <StatusBadge label={commercialStatus} tone={commercialTone} />
+          <StatusBadge
+            label={commercialStatus}
+            tone={commercialTone}
+            title={`${commercialLabel}: ${commercialStatus}`}
+          />
         </dd>
       </div>
       <div className="flex items-center gap-2">
         <dt className="text-muted-foreground">{financialLabel}</dt>
         <dd>
-          <StatusBadge label={financialStatus} tone={financialTone} />
+          <StatusBadge
+            label={financialStatus}
+            tone={financialTone}
+            title={`${financialLabel}: ${financialStatus}`}
+          />
         </dd>
       </div>
     </dl>

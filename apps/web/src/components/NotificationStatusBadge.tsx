@@ -25,13 +25,16 @@ const CATEGORY_STYLE: Record<
 export function NotificationStatusBadge({ type, locale }: { type: string; locale: Locale }) {
   const category = notificationDisplayType(type);
   const { icon: Icon, className } = CATEGORY_STYLE[category];
+  const label = t(`notifications.type.${category}`, locale);
 
   return (
     <span
+      data-slot="notification-status-badge"
+      title={label}
       className={`flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-xs ${className}`}
     >
       <Icon className="size-3.5" aria-hidden="true" />
-      {t(`notifications.type.${category}`, locale)}
+      {label}
     </span>
   );
 }

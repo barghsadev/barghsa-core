@@ -10,7 +10,14 @@ import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
-import { Button, Card, CardContent, StatusFilter, StatusBadge, ListViewToggle } from '@barghsa/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  StatusFilter,
+  DualStatusDisplay,
+  ListViewToggle,
+} from '@barghsa/ui';
 import {
   ELECTRICITY_ORDER_STATUSES,
   DEFAULT_HISTORY_SORT,
@@ -25,6 +32,11 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
+import {
+  commercialStatusTone,
+  financialStatusTone,
+  electricityStatusKey,
+} from '../lib/electricity-status-tone.js';
 
 interface ListedOrder {
   orderId: string;
@@ -200,6 +212,16 @@ export function ElectricityOrdersPage({
 
   const formatPeriod = (order: ListedOrder) =>
     `${time.format(order.periodStart, { year: 'numeric', month: '2-digit', day: '2-digit' })} – ${time.format(new Date(new Date(order.periodEnd).getTime() - 1), { year: 'numeric', month: '2-digit', day: '2-digit' })}`;
+  const status = (order: ListedOrder) => (
+    <DualStatusDisplay
+      commercialLabel={t('electricity.order.commercialStatus', locale)}
+      commercialStatus={t(electricityStatusKey(order.electricityStatus, 'commercial'), locale)}
+      commercialTone={commercialStatusTone(order.electricityStatus)}
+      financialLabel={t('electricity.order.financialStatus', locale)}
+      financialStatus={t(electricityStatusKey(order.financialStatus, 'financial'), locale)}
+      financialTone={financialStatusTone(order.financialStatus)}
+    />
+  );
   const columns: HistoryColumn<ListedOrder>[] = [
     {
       id: 'reference',
@@ -217,15 +239,7 @@ export function ElectricityOrdersPage({
     {
       id: 'status',
       label: t('historyView.status', locale),
-      render: (order) => (
-        <div className="flex flex-wrap gap-2">
-          <StatusBadge
-            label={t(`electricity.order.status.${order.electricityStatus}`, locale)}
-            tone={statusFilterTone(order.electricityStatus)}
-          />
-          <StatusBadge label={t(`electricity.order.financial.${order.financialStatus}`, locale)} />
-        </div>
-      ),
+      render: status,
     },
     {
       id: 'amount',
@@ -443,14 +457,7 @@ export function ElectricityOrdersPage({
                         {formatPeriod(order)} · {numbers.irrDigits(order.totalKwh)} kWh ·{' '}
                         {numbers.money(order.totalIrR)}
                       </p>
-                      <div className="flex flex-wrap gap-2 text-sm">
-                        <span className="rounded-full border px-3 py-1">
-                          {t(`electricity.order.status.${order.electricityStatus}`, locale)}
-                        </span>
-                        <span className="rounded-full border px-3 py-1">
-                          {t(`electricity.order.financial.${order.financialStatus}`, locale)}
-                        </span>
-                      </div>
+                      {status(order)}
                       <div className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-muted/50 p-3 text-sm">
                         <p className="text-muted-foreground">
                           {t(`electricity.order.nextAction.${order.nextAction}`, locale)}
