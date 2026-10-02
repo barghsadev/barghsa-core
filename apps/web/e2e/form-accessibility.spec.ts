@@ -567,8 +567,23 @@ for (const locale of ['en', 'fa']) {
     page,
   }) => {
     await shell(page, locale);
-    await page.route('**/api/onboarding/start', (route) =>
-      route.fulfill({ status: 201, json: { profileId: 'profile-one' } })
+    const selectedId = '11111111-1111-4111-8111-111111111111';
+    await page.route('**/api/onboarding/journeys/active', (route) =>
+      route.fulfill({ json: { journey: null } })
+    );
+    await page.route('**/api/onboarding/journeys', (route) =>
+      route.fulfill({
+        status: 201,
+        json: {
+          id: '44444444-4444-4444-8444-444444444444',
+          completed: false,
+          selectedProfileId: null,
+          activeProfileId: selectedId,
+          profiles: [
+            { id: selectedId, profileType: 'INDIVIDUAL', status: 'DRAFT', isDefault: true },
+          ],
+        },
+      })
     );
     await page.route('**/api/geography/provinces', (route) =>
       route.fulfill({ json: [{ id: 'province-one', nameFa: 'استان', nameEn: 'Province' }] })
@@ -585,18 +600,12 @@ for (const locale of ['en', 'fa']) {
     });
     await page.goto('/onboarding');
     await page
-      .getByRole('button')
-      .filter({
-        has: page.getByRole('heading', {
-          name: locale === 'fa' ? 'حقیقی' : 'Individual',
-          exact: true,
-        }),
-      })
-      .click();
+      .getByRole('checkbox', { name: locale === 'fa' ? 'حقیقی' : 'Individual', exact: true })
+      .check();
     await page
       .getByRole('button', { name: locale === 'fa' ? 'ادامه' : 'Continue', exact: true })
       .click();
-    await expect(page).toHaveURL(/\/onboarding\/individual\/profile-one$/);
+    await expect(page).toHaveURL(new RegExp(`/onboarding/individual/${selectedId}$`));
     await expect(page.locator('#firstName')).toHaveAccessibleName(
       locale === 'fa' ? /نام/ : /First Name/i
     );

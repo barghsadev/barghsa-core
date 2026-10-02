@@ -23019,6 +23019,90 @@
                     "isDefault": {
                       "type": "boolean"
                     },
+                    "journey": {
+                      "nullable": true,
+                      "properties": {
+                        "activeProfileId": {
+                          "format": "uuid",
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "completed": {
+                          "type": "boolean"
+                        },
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "profiles": {
+                          "items": {
+                            "properties": {
+                              "firstName": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "id": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "isDefault": {
+                                "type": "boolean"
+                              },
+                              "lastName": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "profileType": {
+                                "enum": [
+                                  "INDIVIDUAL",
+                                  "LEGAL"
+                                ],
+                                "type": "string"
+                              },
+                              "status": {
+                                "enum": [
+                                  "DRAFT",
+                                  "ACTIVE",
+                                  "PENDING_VERIFICATION",
+                                  "VERIFIED"
+                                ],
+                                "type": "string"
+                              },
+                              "title": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "profileType",
+                              "status",
+                              "isDefault",
+                              "title",
+                              "firstName",
+                              "lastName"
+                            ],
+                            "type": "object"
+                          },
+                          "maxItems": 2,
+                          "minItems": 1,
+                          "type": "array"
+                        },
+                        "selectedProfileId": {
+                          "format": "uuid",
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "profiles",
+                        "completed",
+                        "selectedProfileId",
+                        "activeProfileId"
+                      ],
+                      "type": "object"
+                    },
                     "lastName": {
                       "nullable": true,
                       "type": "string"
@@ -23413,6 +23497,496 @@
           }
         },
         "summary": "Save individual profile data",
+        "tags": [
+          "Onboarding"
+        ]
+      }
+    },
+    "/api/onboarding/journeys": {
+      "post": {
+        "operationId": "OnboardingController_startJourney",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "profileTypes": {
+                    "items": {
+                      "enum": [
+                        "INDIVIDUAL",
+                        "LEGAL"
+                      ],
+                      "type": "string"
+                    },
+                    "maxItems": 2,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "requestId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "requestId",
+                  "profileTypes"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "activeProfileId": {
+                      "format": "uuid",
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "completed": {
+                      "type": "boolean"
+                    },
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "profiles": {
+                      "items": {
+                        "properties": {
+                          "firstName": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "isDefault": {
+                            "type": "boolean"
+                          },
+                          "lastName": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "profileType": {
+                            "enum": [
+                              "INDIVIDUAL",
+                              "LEGAL"
+                            ],
+                            "type": "string"
+                          },
+                          "status": {
+                            "enum": [
+                              "DRAFT",
+                              "ACTIVE",
+                              "PENDING_VERIFICATION",
+                              "VERIFIED"
+                            ],
+                            "type": "string"
+                          },
+                          "title": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "profileType",
+                          "status",
+                          "isDefault",
+                          "title",
+                          "firstName",
+                          "lastName"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 2,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "selectedProfileId": {
+                      "format": "uuid",
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "profiles",
+                    "completed",
+                    "selectedProfileId",
+                    "activeProfileId"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Start or resume personal, company, or combined profile setup",
+        "tags": [
+          "Onboarding"
+        ]
+      }
+    },
+    "/api/onboarding/journeys/active": {
+      "get": {
+        "operationId": "OnboardingController_activeJourney",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "journey": {
+                      "nullable": true,
+                      "properties": {
+                        "activeProfileId": {
+                          "format": "uuid",
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "completed": {
+                          "type": "boolean"
+                        },
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "profiles": {
+                          "items": {
+                            "properties": {
+                              "firstName": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "id": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "isDefault": {
+                                "type": "boolean"
+                              },
+                              "lastName": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "profileType": {
+                                "enum": [
+                                  "INDIVIDUAL",
+                                  "LEGAL"
+                                ],
+                                "type": "string"
+                              },
+                              "status": {
+                                "enum": [
+                                  "DRAFT",
+                                  "ACTIVE",
+                                  "PENDING_VERIFICATION",
+                                  "VERIFIED"
+                                ],
+                                "type": "string"
+                              },
+                              "title": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "profileType",
+                              "status",
+                              "isDefault",
+                              "title",
+                              "firstName",
+                              "lastName"
+                            ],
+                            "type": "object"
+                          },
+                          "maxItems": 2,
+                          "minItems": 1,
+                          "type": "array"
+                        },
+                        "selectedProfileId": {
+                          "format": "uuid",
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "profiles",
+                        "completed",
+                        "selectedProfileId",
+                        "activeProfileId"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "journey"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Read the unfinished profile setup",
+        "tags": [
+          "Onboarding"
+        ]
+      }
+    },
+    "/api/onboarding/journeys/{journeyId}": {
+      "get": {
+        "operationId": "OnboardingController_getJourney",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "journeyId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "activeProfileId": {
+                      "format": "uuid",
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "completed": {
+                      "type": "boolean"
+                    },
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "profiles": {
+                      "items": {
+                        "properties": {
+                          "firstName": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "isDefault": {
+                            "type": "boolean"
+                          },
+                          "lastName": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "profileType": {
+                            "enum": [
+                              "INDIVIDUAL",
+                              "LEGAL"
+                            ],
+                            "type": "string"
+                          },
+                          "status": {
+                            "enum": [
+                              "DRAFT",
+                              "ACTIVE",
+                              "PENDING_VERIFICATION",
+                              "VERIFIED"
+                            ],
+                            "type": "string"
+                          },
+                          "title": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "profileType",
+                          "status",
+                          "isDefault",
+                          "title",
+                          "firstName",
+                          "lastName"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 2,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "selectedProfileId": {
+                      "format": "uuid",
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "profiles",
+                    "completed",
+                    "selectedProfileId",
+                    "activeProfileId"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Read an owned profile setup and its profiles",
+        "tags": [
+          "Onboarding"
+        ]
+      }
+    },
+    "/api/onboarding/journeys/{journeyId}/finish": {
+      "post": {
+        "operationId": "OnboardingController_finishJourney",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "journeyId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "selectedProfileId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "selectedProfileId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "activeProfileId": {
+                      "format": "uuid",
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "completed": {
+                      "type": "boolean"
+                    },
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "profiles": {
+                      "items": {
+                        "properties": {
+                          "firstName": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "isDefault": {
+                            "type": "boolean"
+                          },
+                          "lastName": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "profileType": {
+                            "enum": [
+                              "INDIVIDUAL",
+                              "LEGAL"
+                            ],
+                            "type": "string"
+                          },
+                          "status": {
+                            "enum": [
+                              "DRAFT",
+                              "ACTIVE",
+                              "PENDING_VERIFICATION",
+                              "VERIFIED"
+                            ],
+                            "type": "string"
+                          },
+                          "title": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "profileType",
+                          "status",
+                          "isDefault",
+                          "title",
+                          "firstName",
+                          "lastName"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 2,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "selectedProfileId": {
+                      "format": "uuid",
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "profiles",
+                    "completed",
+                    "selectedProfileId",
+                    "activeProfileId"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Finish profile setup and select the dashboard profile",
         "tags": [
           "Onboarding"
         ]

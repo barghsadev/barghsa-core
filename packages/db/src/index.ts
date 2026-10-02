@@ -766,3 +766,5 @@ export * from './schema/contract-signatures';
 export * from './schema/contract-activation';
 export * from './schema/contract-cancellation';
 export * from './schema/contract-cancellation-requests';
+
+export * from './schema/onboarding-journeys';

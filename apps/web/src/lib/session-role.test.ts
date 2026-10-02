@@ -94,3 +94,44 @@ it('preserves only validated account identity without confusing it with the acti
     canSwitchContext: false,
   });
 });
+
+it('distinguishes no profiles from a revoked active context or an unselected existing draft', async () => {
+  const { readProfileAvailability } = await import('./session-role.js');
+  const request = vi
+    .fn()
+    .mockResolvedValueOnce(Response.json({ profiles: [], activeProfileId: null }))
+    .mockResolvedValueOnce(
+      Response.json({ profiles: [{ id: 'draft', status: 'DRAFT' }], activeProfileId: null })
+    );
+  vi.stubGlobal('fetch', request);
+  const signal = new AbortController().signal;
+  expect(await readProfileAvailability(signal)).toBe(false);
+  expect(await readProfileAvailability(signal)).toBe(true);
+});
+it('does not permit an app route from a failed or malformed availability response', async () => {
+  const { readProfileAvailability } = await import('./session-role.js');
+  const request = vi
+    .fn()
+    .mockResolvedValueOnce(new Response(null, { status: 503 }))
+    .mockResolvedValueOnce(Response.json({ profiles: [{}] }))
+    .mockResolvedValueOnce(new Response(null, { status: 401 }));
+  vi.stubGlobal('fetch', request);
+  const signal = new AbortController().signal;
+  await expect(readProfileAvailability(signal)).rejects.toThrow();
+  await expect(readProfileAvailability(signal)).rejects.toThrow();
+  expect(await readProfileAvailability(signal)).toBeNull();
+});
+it('ignores an availability response from an abandoned navigation', async () => {
+  const { readProfileAvailability } = await import('./session-role.js');
+  const controller = new AbortController();
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockImplementation(async () => {
+      controller.abort();
+      return Response.json({ profiles: [] });
+    })
+  );
+  await expect(readProfileAvailability(controller.signal)).rejects.toThrow(
+    'Profile check cancelled'
+  );
+});

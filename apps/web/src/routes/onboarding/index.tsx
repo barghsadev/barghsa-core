@@ -1,162 +1,199 @@
 import { useLocale } from '../../hooks/useLocale.js';
 import { withCsrf } from '../../lib/csrf.js';
-import { useState } from 'react';
+import {
+  parseOnboardingJourney,
+  onboardingDestination,
+  type OnboardingJourney,
+} from '../../lib/onboarding-journey.js';
+import { useEffect, useRef, useState } from 'react';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
+import { Button } from '@barghsa/ui';
 
-export const Route = createFileRoute('/onboarding/')({
-  component: OnboardingPage,
-});
-
+export const Route = createFileRoute('/onboarding/')({ component: OnboardingPage });
 type ProfileType = 'INDIVIDUAL' | 'LEGAL';
+const types = ['INDIVIDUAL', 'LEGAL'] as const;
 
 function OnboardingPage() {
   const locale = useLocale();
-  const isRtl = locale === 'fa';
   const router = useRouter();
-
-  const [selectedType, setSelectedType] = useState<ProfileType | null>(null);
+  const [selected, setSelected] = useState<ProfileType[]>([]);
+  const [journey, setJourney] = useState<OnboardingJourney | null>(null);
+  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(false);
+  const [retry, setRetry] = useState(0);
+  const requestId = useRef<string | null>(null);
+  const busy = useRef(false);
+  const request = useRef<AbortController | null>(null);
+  useEffect(() => () => request.current?.abort(), []);
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true);
+    setError(false);
+    fetch('/api/onboarding/journeys/active', { credentials: 'include', signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Unable to read setup');
+        const body: unknown = await response.json();
+        if (!body || typeof body !== 'object' || !('journey' in body))
+          throw new Error('Invalid setup response');
+        const current = body.journey === null ? null : parseOnboardingJourney(body.journey);
+        if (current?.completed) throw new Error('Unexpected completed setup');
+        if (!controller.signal.aborted) setJourney(current);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setError(true);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [retry]);
 
   async function handleContinue() {
-    if (!selectedType) {
-      setError(
-        isRtl
-          ? (t('onboarding.type.error.required', 'fa') ?? 'لطفاً نوع پروفایل را انتخاب کنید')
-          : (t('onboarding.type.error.required', 'en') ?? 'Please select a profile type')
-      );
-      return;
-    }
-
+    if (busy.current || loading || !selected.length) return;
+    busy.current = true;
+    const controller = new AbortController();
+    request.current = controller;
+    requestId.current ??= crypto.randomUUID();
     setSubmitting(true);
-    setError(null);
-
+    setError(false);
     try {
-      const response = await fetch('/api/onboarding/start', {
+      const response = await fetch('/api/onboarding/journeys', {
         method: 'POST',
         credentials: 'include',
+        signal: controller.signal,
         headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ profileType: selectedType }),
+        body: JSON.stringify({ requestId: requestId.current, profileTypes: selected }),
       });
-
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        throw new Error(body.message ?? `HTTP ${response.status}`);
-      }
-
-      const body = (await response.json()) as { profileId: string };
-
-      // Navigate to the appropriate profile form
-      if (selectedType === 'INDIVIDUAL') {
-        router.navigate({
-          to: '/onboarding/individual/$profileId',
-          params: { profileId: body.profileId },
-          replace: true,
-        });
-      } else {
-        router.navigate({
-          to: '/onboarding/legal/$profileId',
-          params: { profileId: body.profileId },
-          replace: true,
-        });
-      }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'An unexpected error occurred';
-      setError(message);
+      if (!response.ok) throw new Error('Unable to start setup');
+      const current = parseOnboardingJourney(await response.json());
+      if (
+        current.profiles.length !== selected.length ||
+        current.profiles.some((p) => !selected.includes(p.profileType))
+      )
+        throw new Error('Unexpected selection');
+      if (!controller.signal.aborted) await router.navigate(onboardingDestination(current));
+    } catch {
+      if (!controller.signal.aborted) setError(true);
     } finally {
-      setSubmitting(false);
+      if (!controller.signal.aborted) {
+        busy.current = false;
+        setSubmitting(false);
+      }
     }
   }
 
   return (
     <div
       className="container mx-auto flex min-h-screen items-center justify-center p-4"
-      dir={isRtl ? 'rtl' : 'ltr'}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <div className="max-w-lg">
-        <h1 className="mb-2 text-center text-2xl font-bold">
-          {t('onboarding.welcome.title', locale)}
-        </h1>
-        <p className="mb-2 text-center text-muted-foreground">
-          {t('onboarding.welcome.subtitle', locale)}
-        </p>
-        <p className="mb-6 text-center text-sm text-muted-foreground" lang="en">
-          {t('onboarding.welcome.subtitleEn', locale)}
-        </p>
-
-        <p className="mb-4 text-base font-medium">{t('onboarding.type.prompt', locale)}</p>
-
-        <div className="flex flex-col gap-4 sm:flex-row">
-          {/* Individual card */}
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedType('INDIVIDUAL');
-              setError(null);
-            }}
-            className={`flex flex-1 flex-col items-center rounded-lg border-2 p-6 text-center transition-colors ${
-              selectedType === 'INDIVIDUAL'
-                ? 'border-primary bg-primary/5 shadow-sm'
-                : 'border-border hover:border-muted-foreground/40'
-            }`}
-            aria-pressed={selectedType === 'INDIVIDUAL'}
-          >
-            <span className="mb-2 text-3xl" aria-hidden="true">
-              👤
-            </span>
-            <h2 className="mb-1 text-lg font-semibold">
-              {t('onboarding.profile.individual', locale)}
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              {t('onboarding.profile.individualDesc', locale)}
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground" lang="en">
-              {t('onboarding.type.individualHintEn', locale)}
-            </p>
-          </button>
-
-          {/* Legal card */}
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedType('LEGAL');
-              setError(null);
-            }}
-            className={`flex flex-1 flex-col items-center rounded-lg border-2 p-6 text-center transition-colors ${
-              selectedType === 'LEGAL'
-                ? 'border-primary bg-primary/5 shadow-sm'
-                : 'border-border hover:border-muted-foreground/40'
-            }`}
-            aria-pressed={selectedType === 'LEGAL'}
-          >
-            <span className="mb-2 text-3xl" aria-hidden="true">
-              🏢
-            </span>
-            <h2 className="mb-1 text-lg font-semibold">{t('onboarding.profile.legal', locale)}</h2>
-            <p className="text-sm text-muted-foreground">
-              {t('onboarding.profile.legalDesc', locale)}
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground" lang="en">
-              {t('onboarding.type.legalHintEn', locale)}
-            </p>
-          </button>
+      <div className="w-full max-w-lg space-y-6">
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl font-bold">{t('onboarding.welcome.title', locale)}</h1>
+          <p className="text-muted-foreground">{t('onboarding.welcome.subtitle', locale)}</p>
         </div>
-
-        {error && (
-          <p className="mt-4 text-center text-sm text-destructive" role="alert">
-            {error}
-          </p>
+        {loading ? (
+          <p role="status">{t('onboarding.journey.loading', locale)}</p>
+        ) : journey ? (
+          <>
+            <div className="rounded-xl border bg-card p-5 space-y-3">
+              <h2 className="font-semibold">{t('onboarding.journey.resumeTitle', locale)}</h2>
+              <p className="text-sm text-muted-foreground">
+                {t('onboarding.journey.resumeHelp', locale)}
+              </p>
+              <ul className="space-y-2">
+                {journey.profiles.map((p) => (
+                  <li key={p.id} className="flex justify-between gap-4">
+                    <span>{t(`settings.profile.profileType.${p.profileType}`, locale)}</span>
+                    <span className="text-sm text-muted-foreground">
+                      {t(`onboarding.wizard.${p.status}`, locale)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <Button
+              className="w-full"
+              type="button"
+              onClick={() => router.navigate(onboardingDestination(journey))}
+            >
+              {t('onboarding.journey.resume', locale)}
+            </Button>
+          </>
+        ) : (
+          <>
+            <fieldset disabled={submitting || error} className="space-y-4">
+              <legend className="font-medium">{t('onboarding.type.prompt', locale)}</legend>
+              <p className="text-sm text-muted-foreground">
+                {t('onboarding.journey.chooseHelp', locale)}
+              </p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {types.map((type) => {
+                  const key = type === 'INDIVIDUAL' ? 'individual' : 'legal';
+                  return (
+                    <label
+                      key={type}
+                      className={`relative flex cursor-pointer flex-col items-center rounded-xl border-2 p-6 text-center transition-colors focus-within:ring-2 focus-within:ring-ring ${selected.includes(type) ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/40'}`}
+                    >
+                      <input
+                        type="checkbox"
+                        className="absolute top-4 start-4 h-4 w-4 accent-primary"
+                        aria-label={t(`onboarding.profile.${key}`, locale)}
+                        checked={selected.includes(type)}
+                        onChange={() => {
+                          requestId.current = null;
+                          setSelected((previous) =>
+                            types.filter((candidate) =>
+                              candidate === type
+                                ? !previous.includes(type)
+                                : previous.includes(candidate)
+                            )
+                          );
+                        }}
+                      />
+                      <span className="mb-3 text-3xl" aria-hidden="true">
+                        {type === 'INDIVIDUAL' ? '👤' : '🏢'}
+                      </span>
+                      <span className="font-semibold">
+                        {t(`onboarding.profile.${key}`, locale)}
+                      </span>
+                      <span className="mt-2 text-sm text-muted-foreground">
+                        {t(`onboarding.profile.${key}Desc`, locale)}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
+            <Button
+              className="w-full"
+              type="button"
+              disabled={!selected.length || submitting || error}
+              onClick={handleContinue}
+            >
+              {submitting
+                ? t('onboarding.journey.creating', locale)
+                : t('onboarding.type.continue', locale)}
+            </Button>
+          </>
         )}
-
-        <button
-          type="button"
-          onClick={handleContinue}
-          disabled={!selectedType || submitting}
-          className="mt-6 w-full rounded-md bg-primary px-4 py-2 text-primary-foreground font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {submitting ? '…' : t('onboarding.type.continue', locale)}
-        </button>
+        {error && (
+          <div className="space-y-3">
+            <p role="alert" className="text-sm text-destructive">
+              {t('onboarding.journey.error', locale)}
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={loading || submitting}
+              onClick={() => setRetry((value) => value + 1)}
+            >
+              {t('onboarding.draft.retry', locale)}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -69,6 +69,31 @@ export async function readSessionRole(signal?: AbortSignal): Promise<boolean | n
   return (await readSessionContext(signal))?.isStaff ?? null;
 }
 
+/** Read availability without assuming that an empty or revoked active context means no profiles. */
+export async function readProfileAvailability(signal: AbortSignal): Promise<boolean | null> {
+  const response = await fetch('/api/profiles', {
+    credentials: 'include',
+    signal,
+    headers: { Accept: 'application/json' },
+  });
+  if (response.status === 401) return null;
+  if (!response.ok) throw new Error('Unable to check profiles');
+  const body: unknown = await response.json();
+  if (signal.aborted) throw new DOMException('Profile check cancelled', 'AbortError');
+  if (
+    !body ||
+    typeof body !== 'object' ||
+    !('profiles' in body) ||
+    !Array.isArray(body.profiles) ||
+    body.profiles.some(
+      (profile) =>
+        !profile || typeof profile !== 'object' || typeof profile.id !== 'string' || !profile.id
+    )
+  )
+    throw new Error('Invalid profiles response');
+  return body.profiles.length > 0;
+}
+
 /** Personal settings available in either workspace; business profiles stay customer-only. */
 export function isAccountSettingsPath(pathname: string): boolean {
   return [

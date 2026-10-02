@@ -27,3 +27,7 @@ Review catches and fixes the company form's duplicate blur-save trigger: moving 
 - All 69 unchanged route/interaction budgets pass. Strict Semgrep 1.176.1 scans 1,469 files with zero findings/errors; all five rule fixtures pass. Logs use `/tmp/barghsa-onboarding-wizard-*`.
 
 No database migration is needed. Deploy the expanded draft API and completion receipt with or before the frontend. Draft data restores on the existing profile-specific URL; this batch does not add a draft directory or combined profile transaction. Exact-commit CI is read back after publication; fast-mode combined coverage remains an exemption rather than a measured coverage result. Historical supervisor state, generated completion/event ledgers, scheduling and CI settings remain unchanged.
+
+## Follow-up
+
+[Combined profile onboarding](2026-10-02-onboarding-journeys.md) completes the previously open combined type chooser, aggregate summary and dashboard entry guard. A general directory for older standalone drafts remains separate. The original published wizard commit's CI run `37007987673` was cancelled during tests; its dependent coverage-exemption job failed because tests were cancelled. Its local validation above remains recorded separately.

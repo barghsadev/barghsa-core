@@ -1121,6 +1121,13 @@
       "when": 1791331202250,
       "tag": "0239_solar_postal_tracking",
       "breakpoints": true
+    },
+    {
+      "idx": 240,
+      "version": "7",
+      "when": 1791331202251,
+      "tag": "0240_onboarding_journeys",
+      "breakpoints": true
     }
   ]
 }

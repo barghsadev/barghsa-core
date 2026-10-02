@@ -397,12 +397,16 @@ export class ProfilesService {
    * the newly created profile is set as default so the app-level
    * profile check (T-03.01.01) proceeds past onboarding.
    */
-  async createProfile(userId: string, profileType: 'INDIVIDUAL' | 'LEGAL'): Promise<ProfileRow> {
+  async createProfile(
+    userId: string,
+    profileType: 'INDIVIDUAL' | 'LEGAL',
+    transaction?: PoolClient
+  ): Promise<ProfileRow> {
     const pool = getDbPool();
-    const client = await pool.connect();
+    const client = transaction ?? (await pool.connect());
 
     try {
-      await client.query('BEGIN');
+      if (!transaction) await client.query('BEGIN');
 
       // Serialize the absence check with other creation/completion transactions.
       const account = (
@@ -444,18 +448,19 @@ export class ProfilesService {
         [userId, row.id, profileType, becomesDefault]
       );
 
-      await client.query('COMMIT');
+      if (!transaction) await client.query('COMMIT');
       this.logger.log(
         `Profile ${row.id} (${profileType}) created for user ${userId}${becomesDefault ? ' as default' : ''}`
       );
       return row;
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {
-        // Rollback failure is non-critical
-      });
+      if (!transaction)
+        await client.query('ROLLBACK').catch(() => {
+          // Rollback failure is non-critical
+        });
       throw error;
     } finally {
-      client.release();
+      if (!transaction) client.release();
     }
   }
 

@@ -1,5 +1,10 @@
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import {
+  OnboardingJourneysService,
+  onboardingJourneyInputSchema,
+  onboardingJourneyFinishSchema,
+} from './onboarding-journeys.service.js';
+import {
   OnboardingDraftsService,
   onboardingDraftInputSchema,
 } from './onboarding-drafts.service.js';
@@ -19,6 +24,7 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import type { ApiResponseSchemaHost } from '@nestjs/swagger';
 import { ProfilesService } from './profiles.service.js';
 import { LegalProfilesService } from './legal-profiles.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
@@ -38,6 +44,35 @@ const individualOnboardingInputSchema = z.object({
   postalCode: z.string().trim(),
 });
 
+const journeyResponseSchema: ApiResponseSchemaHost['schema'] = {
+  type: 'object',
+  required: ['id', 'profiles', 'completed', 'selectedProfileId', 'activeProfileId'],
+  properties: {
+    id: { type: 'string', format: 'uuid' },
+    completed: { type: 'boolean' },
+    selectedProfileId: { type: 'string', format: 'uuid', nullable: true },
+    activeProfileId: { type: 'string', format: 'uuid', nullable: true },
+    profiles: {
+      type: 'array',
+      minItems: 1,
+      maxItems: 2,
+      items: {
+        type: 'object',
+        required: ['id', 'profileType', 'status', 'isDefault', 'title', 'firstName', 'lastName'],
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          profileType: { type: 'string', enum: ['INDIVIDUAL', 'LEGAL'] },
+          status: { type: 'string', enum: ['DRAFT', 'ACTIVE', 'PENDING_VERIFICATION', 'VERIFIED'] },
+          isDefault: { type: 'boolean' },
+          title: { type: 'string', nullable: true },
+          firstName: { type: 'string', nullable: true },
+          lastName: { type: 'string', nullable: true },
+        },
+      },
+    },
+  },
+};
+
 @ApiTags('Onboarding')
 @Controller('api/onboarding')
 @UseGuards(SessionAuthGuard)
@@ -47,8 +82,58 @@ export class OnboardingController {
   constructor(
     private readonly profilesService: ProfilesService,
     private readonly legalProfilesService: LegalProfilesService,
-    private readonly drafts: OnboardingDraftsService
+    private readonly drafts: OnboardingDraftsService,
+    private readonly journeys: OnboardingJourneysService
   ) {}
+
+  @Get('journeys/active')
+  @RateLimit({ namespace: 'onboarding:journey:get:user', limit: 60, windowMs: 60000 })
+  @ApiOperation({ summary: 'Read the unfinished profile setup' })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      required: ['journey'],
+      properties: { journey: { ...journeyResponseSchema, nullable: true } },
+    },
+  })
+  activeJourney(@Req() req: AuthenticatedRequest) {
+    return this.journeys.active(req.session.userId);
+  }
+
+  @Get('journeys/:journeyId')
+  @RateLimit({ namespace: 'onboarding:journey:get:user', limit: 60, windowMs: 60000 })
+  @ApiOperation({ summary: 'Read an owned profile setup and its profiles' })
+  @ApiResponse({ status: 200, schema: journeyResponseSchema })
+  getJourney(
+    @Param('journeyId', new ParseUUIDPipe()) journeyId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.journeys.get(req.session.userId, journeyId);
+  }
+
+  @Post('journeys')
+  @ApiZodBody(onboardingJourneyInputSchema)
+  @RateLimit({ namespace: 'onboarding:journey:start:user', limit: 10, windowMs: 60000 })
+  @ApiOperation({ summary: 'Start or resume personal, company, or combined profile setup' })
+  @ApiResponse({ status: 201, schema: journeyResponseSchema })
+  startJourney(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    return this.journeys.start(req.session, body);
+  }
+
+  @Post('journeys/:journeyId/finish')
+  @HttpCode(200)
+  @ApiZodBody(onboardingJourneyFinishSchema)
+  @RateLimit({ namespace: 'onboarding:journey:finish:user', limit: 20, windowMs: 60000 })
+  @ApiOperation({ summary: 'Finish profile setup and select the dashboard profile' })
+  @ApiResponse({ status: 200, schema: journeyResponseSchema })
+  finishJourney(
+    @Param('journeyId', new ParseUUIDPipe()) journeyId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.journeys.finish(req.session, journeyId, body);
+  }
 
   @Get('documents/:profileId')
   @RateLimit({ namespace: 'onboarding:documents:user', limit: 30, windowMs: 60000 })
@@ -293,6 +378,7 @@ export class OnboardingController {
         firstName: { type: 'string', nullable: true },
         lastName: { type: 'string', nullable: true },
         message: { type: 'string' },
+        journey: { ...journeyResponseSchema, nullable: true },
       },
     },
   })
@@ -317,6 +403,7 @@ export class OnboardingController {
       firstName: profile.firstName,
       lastName: profile.lastName,
       message: 'Onboarding completed successfully',
+      journey: await this.journeys.forProfile(req.session.userId, profileId),
     };
   }
 }

@@ -1,4 +1,5 @@
 import { useProfileContextRevision } from '../lib/profile-context.js';
+import { readSessionContext, readProfileAvailability } from '../lib/session-role.js';
 import {
   createRootRoute,
   Outlet,
@@ -26,11 +27,23 @@ import { BrandThemeProvider } from '../providers/BrandThemeProvider.js';
 import { ApplicationToaster } from '../components/ApplicationToaster.js';
 
 export const Route = createRootRoute({
-  beforeLoad: ({ location, preload }) => {
+  beforeLoad: async ({ location, preload, abortController }) => {
     if (import.meta.env.PROD && isAuthEntryPath(location.pathname) !== __BARGHSA_AUTH_ENTRY__) {
       if (!preload) rememberEntryLocale();
       throw redirect({ href: location.href, reloadDocument: true });
     }
+    if (location.pathname === '/app' || location.pathname.startsWith('/app/')) {
+      const session = await readSessionContext(abortController.signal);
+      if (session === null) throw redirect({ to: '/login', replace: true });
+      const isStaff = session.operatingContext === 'staff';
+      if (!isStaff) {
+        const available = await readProfileAvailability(abortController.signal);
+        if (available === null) throw redirect({ to: '/login', replace: true });
+        if (!available) throw redirect({ to: '/onboarding', replace: true });
+      }
+      return { appSession: session, isStaff };
+    }
+    return { appSession: null, isStaff: false };
   },
   component: RootComponent,
 });
@@ -49,6 +62,7 @@ function needsProfile(pathname: string, isStaff: boolean): boolean {
     !isStaff &&
     !AUTH_ROUTE_PREFIXES.some((prefix) => pathname.startsWith(prefix)) &&
     !EXCLUDED_ROUTES.has(pathname) &&
+    !pathname.startsWith('/onboarding/') &&
     pathname !== '/admin' &&
     !pathname.startsWith('/admin/')
   );
@@ -75,6 +89,8 @@ async function runProfileCheck(
 ): Promise<void> {
   // Skip auth routes and onboarding
   if (!needsProfile(pathname, isStaff)) return;
+  // App routes block rendering in their beforeLoad guard; do not repeat that request here.
+  if (pathname === '/app' || pathname.startsWith('/app/')) return;
 
   try {
     const response = await fetch('/api/profiles', {

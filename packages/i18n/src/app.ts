@@ -441,6 +441,23 @@ export const fa: I18nDictionary = {
   'onboarding.legal.officialProvinceId': 'استان شرکت',
   'onboarding.legal.officialCityId': 'شهر شرکت',
   'onboarding.legal.officialFullAddress': 'نشانی شرکت',
+  'onboarding.journey.loading': 'در حال بررسی مراحل تنظیم پروفایل…',
+  'onboarding.journey.resumeTitle': 'تنظیم پروفایل ناتمام',
+  'onboarding.journey.resumeHelp':
+    'اطلاعات ذخیره\u200cشده شما حفظ شده است. تنظیم پروفایل را ادامه دهید.',
+  'onboarding.journey.resume': 'ادامه تنظیم پروفایل',
+  'onboarding.journey.chooseHelp': 'پروفایل شخصی، شرکتی یا هر دو را انتخاب کنید.',
+  'onboarding.journey.creating': 'در حال ساخت پروفایل\u200cها…',
+  'onboarding.journey.error':
+    'تنظیم پروفایل بارگذاری یا ذخیره نشد. دوباره تلاش کنید تا وضعیت ذخیره\u200cشده بررسی شود.',
+  'onboarding.journey.summaryHelp':
+    'پروفایل\u200cهای زیر ساخته شدند. پروفایلی را که می\u200cخواهید داشبورد با آن باز شود انتخاب کنید.',
+  'onboarding.journey.defaultHelp': 'داشبورد با کدام پروفایل باز شود؟',
+  'onboarding.journey.finishError':
+    'انتخاب پروفایل ذخیره نشد یا وضعیت آن تغییر کرده است. دوباره تلاش کنید یا به تنظیم پروفایل برگردید.',
+  'onboarding.journey.finishing': 'در حال ذخیره انتخاب…',
+  'onboarding.journey.done': 'پایان و ورود به داشبورد',
+  'onboarding.wizard.DRAFT': 'پیش\u200cنویس',
   'onboarding.wizard.progress': 'مراحل ساخت پروفایل',
   'onboarding.wizard.identity': 'اطلاعات هویتی',
   'onboarding.wizard.address': 'نشانی',
@@ -2112,6 +2129,23 @@ export const en: I18nDictionary = {
   'onboarding.legal.officialCityId': 'Company city',
   'onboarding.legal.officialFullAddress': 'Company address',
   'onboarding.wizard.progress': 'Profile setup progress',
+  'onboarding.journey.loading': 'Checking your profile setup…',
+  'onboarding.journey.resumeTitle': 'Unfinished profile setup',
+  'onboarding.journey.resumeHelp':
+    'Your saved details are ready. Continue setting up your profiles.',
+  'onboarding.journey.resume': 'Resume profile setup',
+  'onboarding.journey.chooseHelp': 'Choose a personal profile, a company profile, or both.',
+  'onboarding.journey.creating': 'Creating profiles…',
+  'onboarding.journey.error':
+    'We could not load or save your setup. Retry to check the saved progress.',
+  'onboarding.journey.summaryHelp':
+    'These profiles have been created. Choose the profile you want to open in the dashboard.',
+  'onboarding.journey.defaultHelp': 'Which profile should open in the dashboard?',
+  'onboarding.journey.finishError':
+    'Your profile choice was not saved or its status changed. Retry or return to profile setup.',
+  'onboarding.journey.finishing': 'Saving your choice…',
+  'onboarding.journey.done': 'Done and open dashboard',
+  'onboarding.wizard.DRAFT': 'Draft',
   'onboarding.wizard.identity': 'Identity',
   'onboarding.wizard.address': 'Address',
   'onboarding.wizard.representative': 'Representative',

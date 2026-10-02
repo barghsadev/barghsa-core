@@ -1,5 +1,6 @@
 import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
 import { OnboardingDraftsService } from './onboarding-drafts.service.js';
+import { OnboardingJourneysService } from './onboarding-journeys.service.js';
 import { Module } from '@nestjs/common';
 import { ProfilesController } from './profiles.controller.js';
 import { OnboardingController } from './onboarding.controller.js';
@@ -19,6 +20,7 @@ import { NotificationsModule } from '../notifications/index.js';
   providers: [
     VerifiedAttachmentsService,
     OnboardingDraftsService,
+    OnboardingJourneysService,
     ProfilesService,
     LegalProfilesService,
     AgentsService,

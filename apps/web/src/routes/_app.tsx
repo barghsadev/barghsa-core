@@ -27,8 +27,8 @@ function AppLayout() {
 }
 
 export const Route = createFileRoute('/_app')({
-  beforeLoad: async ({ abortController, location }) => {
-    const session = await readSessionContext(abortController.signal);
+  beforeLoad: async ({ abortController, location, context }) => {
+    const session = context.appSession ?? (await readSessionContext(abortController.signal));
     if (session === null) throw redirect({ to: '/login', replace: true });
     const isStaff = session.operatingContext === 'staff';
     if (isStaff && location.pathname !== '/app' && !isAccountSettingsPath(location.pathname))
