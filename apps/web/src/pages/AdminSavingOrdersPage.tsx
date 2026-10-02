@@ -1,3 +1,5 @@
+import { SavingFulfillmentHistory } from '../components/SavingFulfillmentProgress.js';
+import type { SavingFulfillmentEvent } from '../lib/saving-fulfillment.js';
 import { ListPage } from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { useEffect, useRef, useState } from 'react';
@@ -76,18 +78,10 @@ interface Stage {
   explanation: string | null;
   handover_description: string | null;
 }
-interface StageEvent {
-  id: string;
-  stage: StageName;
-  from_status: string;
-  to_status: string;
-  actor_user_id: string;
-  explanation: string;
-  created_at: string;
-}
 interface Detail extends Order {
   stages: Stage[];
-  events: StageEvent[];
+  events: SavingFulfillmentEvent[];
+  eventsTruncated?: boolean;
   revisions: SavingOrderRevision[];
   addressAmendments: SavingAddressAmendment[];
   hardwareAmendments: SavingHardwareAmendment[];
@@ -912,10 +906,20 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                   <Label htmlFor="saving-staff-note">{copy('staffReason')}</Label>
                   <Input
                     id="saving-staff-note"
+                    aria-describedby={
+                      detail.status === 'awaiting_staff_review'
+                        ? undefined
+                        : 'saving-staff-note-audience'
+                    }
                     value={note}
                     maxLength={1000}
                     onChange={(event) => setNote(event.target.value)}
                   />
+                  {detail.status !== 'awaiting_staff_review' && (
+                    <p id="saving-staff-note-audience" className="text-sm text-muted-foreground">
+                      {copy('stagePublicNote')}
+                    </p>
+                  )}
                 </div>
                 {detail.stages.some(
                   (stage) => stage.stage === 'equipment_handover' && stage.status === 'in_progress'
@@ -965,7 +969,15 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                             </span>
                           )}
                         </div>
-                        {stage.explanation && <p className="mt-2 text-sm">{stage.explanation}</p>}
+                        {stage.explanation && (
+                          <p className="mt-2 text-sm">
+                            {stage.stage === 'request_confirmation' &&
+                            stage.status === 'completed' &&
+                            stage.explanation === 'Staff approved request'
+                              ? copy('stageConfirmedNote')
+                              : stage.explanation}
+                          </p>
+                        )}
                         {stage.status === 'in_progress' && prerequisites.length > 0 && (
                           <p className="mt-2 text-sm text-muted-foreground">
                             {prerequisites.map((reason) => copy(reason)).join(' ')}
@@ -980,26 +992,12 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                 </ol>
                 {stageReviewLoading ? <p role="status">{copy('staffStageReviewLoading')}</p> : null}
                 {stageReviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
-                <div>
-                  <h3 className="font-semibold">{copy('staffHistory')}</h3>
-                  {detail.events.length === 0 ? (
-                    <p className="text-sm">{copy('staffNoHistory')}</p>
-                  ) : (
-                    <ol className="space-y-2 text-sm">
-                      {detail.events.map((event) => (
-                        <li key={event.id} className="border-s-2 ps-3">
-                          <strong>{copy(event.stage)}</strong> · {copy(event.from_status)} →{' '}
-                          {copy(event.to_status)}
-                          <span className="block text-muted-foreground">
-                            {event.actor_user_id} ·{' '}
-                            <time dateTime={event.created_at}>{time.format(event.created_at)}</time>
-                          </span>
-                          <span className="block">{event.explanation}</span>
-                        </li>
-                      ))}
-                    </ol>
-                  )}
-                </div>
+                <SavingFulfillmentHistory
+                  events={detail.events}
+                  truncated={detail.eventsTruncated}
+                  locale={locale}
+                  formatTimestamp={time.format}
+                />
                 <SavingOrderDocuments orderId={detail.orderId} profileId={detail.profileId} staff />
                 <SavingOrderComments
                   key={detail.id}

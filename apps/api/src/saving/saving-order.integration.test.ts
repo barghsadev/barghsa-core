@@ -1642,7 +1642,112 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     staffHeaders
   );
   expect(history.status, http.logs()).toBe(200);
-  expect(((await history.json()) as { events: unknown[] }).events).toHaveLength(9);
+  const staffHistory = (await history.json()) as {
+    events: Array<Record<string, unknown>>;
+    eventsTruncated: boolean;
+  };
+  expect(staffHistory.events).toHaveLength(9);
+  expect(staffHistory.eventsTruncated).toBe(false);
+  expect(
+    staffHistory.events.every((event) => event.actorName === null && !('actor_user_id' in event))
+  ).toBe(true);
+  const readProgress = async () => {
+    const response = await request(`/api/saving/orders/${result.savingOrderId}`, 'GET');
+    expect(response.status, http.logs()).toBe(200);
+    return (await response.json()) as {
+      events: Array<Record<string, unknown>>;
+      eventsTruncated: boolean;
+    };
+  };
+  const publicHistory = await readProgress();
+  expect(publicHistory.events).toEqual(staffHistory.events);
+  expect(publicHistory.eventsTruncated).toBe(false);
+  expect(publicHistory.events[0]).toMatchObject({
+    stage: 'request_confirmation',
+    noteKind: 'confirmed',
+  });
+  expect(publicHistory.events[1]).toMatchObject({ stage: 'product_delivery', noteKind: 'started' });
+  expect(publicHistory.events).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        stage: 'equipment_handover',
+        to_status: 'skipped',
+        noteKind: 'recorded',
+      }),
+    ])
+  );
+  const displayName = 'کارشناس <img src=x>';
+  await http.pool.query(
+    "INSERT INTO conversation_identities(user_id,display_name) VALUES('saving-order-staff',$1)",
+    [displayName]
+  );
+  expect((await readProgress()).events.every((event) => event.actorName === null)).toBe(true);
+  await http.pool.query(
+    "UPDATE conversation_identities SET share_in_activity=true WHERE user_id='saving-order-staff'"
+  );
+  const sharedHistory = await readProgress();
+  expect(sharedHistory.events.every((event) => event.actorName === displayName)).toBe(true);
+  expect(JSON.stringify(sharedHistory.events)).not.toContain('saving-order-staff');
+  expect(JSON.stringify(sharedHistory.events)).not.toContain('username');
+  expect(JSON.stringify(sharedHistory.events)).not.toContain('photo_document_id');
+  await http.pool.query(
+    "UPDATE conversation_identities SET share_in_activity=false WHERE user_id='saving-order-staff'"
+  );
+  expect((await readProgress()).events.every((event) => event.actorName === null)).toBe(true);
+  await http.pool.query(
+    "UPDATE conversation_identities SET share_in_activity=true WHERE user_id='saving-order-staff'"
+  );
+  await http.pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id='saving-order-staff'");
+  expect((await readProgress()).events.every((event) => event.actorName === null)).toBe(true);
+  await http.pool.query("UPDATE users SET disabled_at=NULL WHERE user_id='saving-order-staff'");
+  await http.pool.query("DELETE FROM conversation_identities WHERE user_id='saving-order-staff'");
+  await http.pool.query(
+    `INSERT INTO saving_fulfillment_events(order_id,stage,from_status,to_status,actor_user_id,explanation,created_at)
+     SELECT $1,'product_delivery','in_progress','completed','saving-order-staff','Historical fixture ' || n,
+       NOW()+n*INTERVAL '1 minute' FROM generate_series(1,201) n`,
+    [result.savingOrderId]
+  );
+  const stranger = randomUUID(),
+    strangerSession = randomUUID(),
+    strangerCsrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES($1,$2,'test-only')",
+    [stranger, `${stranger}@example.test`]
+  );
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context) VALUES($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes','customer')",
+    [strangerSession, stranger, strangerCsrf, randomUUID()]
+  );
+  const unauthorizedHistory = await request(
+    `/api/saving/orders/${result.savingOrderId}`,
+    'GET',
+    undefined,
+    { Cookie: `barghsa_session=${strangerSession}`, 'X-CSRF-Token': strangerCsrf }
+  );
+  expect(unauthorizedHistory.status).toBe(404);
+  expect(await unauthorizedHistory.text()).not.toContain('Historical fixture');
+  await http.pool.query("DELETE FROM user_roles WHERE user_id='saving-order-staff'");
+  expect(
+    (
+      await request(
+        `/api/staff/saving/orders/${result.savingOrderId}`,
+        'GET',
+        undefined,
+        staffHeaders
+      )
+    ).status
+  ).toBe(403);
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES('saving-order-staff','saving-order-admin')"
+  );
+  const boundedHistory = await readProgress();
+  expect(boundedHistory.eventsTruncated).toBe(true);
+  expect(boundedHistory.events).toHaveLength(200);
+  expect(boundedHistory.events[0]).toMatchObject({ explanation: 'Historical fixture 2' });
+  expect(boundedHistory.events.at(-1)).toMatchObject({ explanation: 'Historical fixture 201' });
+  expect(boundedHistory.events.some((event) => event.explanation === 'Historical fixture 1')).toBe(
+    false
+  );
 
   const rejectedDetail = await request(
     `/api/staff/saving/orders/${discountedOrder.savingOrderId}`,

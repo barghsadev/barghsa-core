@@ -1,5 +1,5 @@
 import type { ComponentProps, ReactNode } from 'react';
-import { Check, Circle, Clock3, AlertCircle } from 'lucide-react';
+import { Check, Circle, Clock3, AlertCircle, Minus } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Badge } from './badge';
 import { Alert, AlertDescription, AlertTitle } from './alert';
@@ -135,7 +135,7 @@ export interface ProgressStep {
   id: string;
   label: string;
   description?: ReactNode;
-  state: 'complete' | 'current' | 'pending';
+  state: 'complete' | 'current' | 'pending' | 'skipped';
   /** Localized state text for assistive technology. */
   stateLabel: string;
 }
@@ -172,6 +172,8 @@ export function ProgressStepper({ steps, label }: { steps: ProgressStep[]; label
           >
             {step.state === 'complete' ? (
               <Check className="size-4" />
+            ) : step.state === 'skipped' ? (
+              <Minus className="size-4" />
             ) : (
               <Circle className="size-3" />
             )}

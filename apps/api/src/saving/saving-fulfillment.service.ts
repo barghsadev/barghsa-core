@@ -23,6 +23,7 @@ import { savingOrderRevisions } from './saving-order-revisions.js';
 import { savingAddressAmendments } from './saving-address-amendments.js';
 import { savingHardwareAmendments } from './saving-hardware-amendments.js';
 import { savingHardwareUpgrades } from './saving-hardware-upgrades.js';
+import { savingFulfillmentHistory } from './saving-fulfillment-history.js';
 import { calculateSavingTotals } from './saving-calculation.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
@@ -211,13 +212,7 @@ export class SavingFulfillmentService {
           [id]
         )
       ).rows;
-      const events = (
-        await client.query(
-          `SELECT id,stage,from_status,to_status,actor_user_id,explanation,handover_description,created_at
-         FROM saving_fulfillment_events WHERE order_id=$1 ORDER BY created_at,id`,
-          [id]
-        )
-      ).rows;
+      const history = await savingFulfillmentHistory(client, id);
       const revisions = await savingOrderRevisions(client, id);
       const addressAmendments = await savingAddressAmendments(client, id);
       const hardwareAmendments = await savingHardwareAmendments(client, id);
@@ -279,7 +274,7 @@ export class SavingFulfillmentService {
       return {
         ...this.present(row),
         stages,
-        events,
+        ...history,
         revisions,
         addressAmendments,
         hardwareAmendments,

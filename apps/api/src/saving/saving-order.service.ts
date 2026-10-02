@@ -27,6 +27,7 @@ import { savingOrderRevisions } from './saving-order-revisions.js';
 import { savingAddressAmendments } from './saving-address-amendments.js';
 import { savingHardwareAmendments } from './saving-hardware-amendments.js';
 import { savingHardwareUpgrades } from './saving-hardware-upgrades.js';
+import { savingFulfillmentHistory } from './saving-fulfillment-history.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 export interface SavingOrderInput {
@@ -600,13 +601,22 @@ export class SavingOrderService {
           [savingOrderId]
         )
       ).rows;
+      const history = await savingFulfillmentHistory(client, savingOrderId);
       const revisions = await savingOrderRevisions(client, savingOrderId);
       const addressAmendments = await savingAddressAmendments(client, savingOrderId);
       const hardwareAmendments = await savingHardwareAmendments(client, savingOrderId);
       const hardwareUpgrades = await savingHardwareUpgrades(client, savingOrderId);
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return { ...row, stages, revisions, addressAmendments, hardwareAmendments, hardwareUpgrades };
+      return {
+        ...row,
+        stages,
+        ...history,
+        revisions,
+        addressAmendments,
+        hardwareAmendments,
+        hardwareUpgrades,
+      };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

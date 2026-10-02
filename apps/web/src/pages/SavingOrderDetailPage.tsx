@@ -1,6 +1,6 @@
 import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { Card, CardContent, ProgressStepper } from '@barghsa/ui';
+import { Button, Card, CardContent } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -28,6 +28,8 @@ import {
 import { savingNextAction, type SavingActionContext } from '../lib/saving-next-action.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 import { AcceptedSavingAgreement } from '../components/AcceptedSavingAgreement.js';
+import { SavingFulfillmentProgress } from '../components/SavingFulfillmentProgress.js';
+import type { SavingFulfillmentEvent, SavingFulfillmentStage } from '../lib/saving-fulfillment.js';
 
 interface Detail extends SavingActionContext {
   order_id: string;
@@ -52,13 +54,9 @@ interface Detail extends SavingActionContext {
   agreement_snapshot: string;
   agreement_updated: boolean;
   contract_version_id: string;
-  stages: Array<{
-    stage: string;
-    status: string;
-    completed_at: string | null;
-    explanation: string | null;
-    handover_description: string | null;
-  }>;
+  stages: SavingFulfillmentStage[];
+  events?: SavingFulfillmentEvent[];
+  eventsTruncated?: boolean;
   revisions: SavingOrderRevision[];
   addressAmendments: SavingAddressAmendment[];
   hardwareAmendments: SavingHardwareAmendment[];
@@ -71,11 +69,14 @@ export function SavingOrderDetailPage() {
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
-  const [detail, setDetail] = useState<Detail | null>(null);
+  const [loadedDetail, setDetail] = useState<Detail | null>(null);
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
   const [revision, setRevision] = useState(0);
+  const detail = loadedDetail?.id === orderId ? loadedDetail : null;
   useEffect(() => {
     const controller = new AbortController();
+    setDetail(null);
+    setState('loading');
     void fetch(`/api/saving/orders/${orderId}`, {
       credentials: 'include',
       signal: controller.signal,
@@ -91,7 +92,10 @@ export function SavingOrderDetailPage() {
         }
       })
       .catch(() => {
-        if (!controller.signal.aborted) setState('error');
+        if (!controller.signal.aborted) {
+          setDetail(null);
+          setState('error');
+        }
       });
     return () => controller.abort();
   }, [orderId, revision]);
@@ -104,7 +108,7 @@ export function SavingOrderDetailPage() {
         ? 'customer'
         : 'staff';
   return (
-    <main
+    <div
       className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
@@ -116,7 +120,14 @@ export function SavingOrderDetailPage() {
       </header>
       {time.notice}
       {state === 'loading' && <p role="status">{copy('loading')}</p>}
-      {state === 'error' && <p role="alert">{copy('error')}</p>}
+      {state === 'error' && (
+        <div className="space-y-2">
+          <p role="alert">{copy('error')}</p>
+          <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
+            {copy('retry')}
+          </Button>
+        </div>
+      )}
       {detail && (
         <>
           <WorkflowStatusBanner
@@ -259,39 +270,13 @@ export function SavingOrderDetailPage() {
           )}
           <Card>
             <CardContent className="space-y-3 pt-6">
-              <h2 className="text-xl font-semibold">{copy('fulfillment')}</h2>
-              <ProgressStepper
-                label={copy('fulfillment')}
-                steps={detail.stages.map((stage) => ({
-                  id: stage.stage,
-                  label: copy(stage.stage),
-                  state:
-                    stage.status === 'completed'
-                      ? ('complete' as const)
-                      : stage.status === 'in_progress'
-                        ? ('current' as const)
-                        : ('pending' as const),
-                  stateLabel: copy(stage.status),
-                  description:
-                    stage.completed_at || stage.handover_description ? (
-                      <>
-                        {stage.completed_at && (
-                          <time className="block" dateTime={stage.completed_at}>
-                            {time.format(stage.completed_at, {
-                              year: 'numeric',
-                              month: '2-digit',
-                              day: '2-digit',
-                            })}
-                          </time>
-                        )}
-                        {stage.handover_description && (
-                          <span className="mt-1 block break-words">
-                            {stage.handover_description}
-                          </span>
-                        )}
-                      </>
-                    ) : undefined,
-                }))}
+              <SavingFulfillmentProgress
+                stages={detail.stages}
+                events={detail.events ?? []}
+                truncated={detail.eventsTruncated}
+                status={detail.status}
+                locale={locale}
+                formatTimestamp={time.format}
               />
             </CardContent>
           </Card>
@@ -312,6 +297,6 @@ export function SavingOrderDetailPage() {
           />
         </>
       )}
-    </main>
+    </div>
   );
 }
