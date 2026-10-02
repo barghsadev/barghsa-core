@@ -13,6 +13,30 @@ vi.mock('../hooks/useNumberFormatting.js', () => ({
       new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US', options).format(value),
   }),
 }));
+const actionHarness = vi.hoisted(() => ({
+  action: null as import('./TeamActionDialog.js').TeamAction | null,
+}));
+vi.mock('./TeamActionDialog.js', () => ({
+  TeamActionDialog: ({
+    action,
+    onSuccess,
+    onClose,
+  }: {
+    action: import('./TeamActionDialog.js').TeamAction;
+    onSuccess: () => Promise<void>;
+    onClose: () => void;
+  }) => {
+    actionHarness.action = action;
+    return (
+      <div role="dialog">
+        <button onClick={() => void onSuccess()}>Confirm removal</button>
+        <button onClick={onClose}>Cancel removal</button>
+      </div>
+    );
+  },
+}));
+const onReplace = vi.fn(),
+  onChanged = vi.fn();
 let container: HTMLDivElement, root: Root;
 const fetcher = vi.fn<typeof fetch>();
 const onSelect = vi.fn();
@@ -23,6 +47,9 @@ beforeEach(() => {
   root = createRoot(container);
   fetcher.mockReset();
   onSelect.mockReset();
+  onReplace.mockReset();
+  onChanged.mockReset();
+  actionHarness.action = null;
   vi.stubGlobal('fetch', fetcher);
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
 });
@@ -47,6 +74,8 @@ async function render(
         locale={locale}
         selectedId={documentRow.id}
         onSelect={onSelect}
+        onReplace={onReplace}
+        onChanged={onChanged}
         formatDate={(value) => `account time: ${value}`}
       />
     )
@@ -292,3 +321,90 @@ for (const view of ['table', 'card'] as const)
     expect(container.textContent).not.toContain('Preview');
     expect(fetcher).not.toHaveBeenCalled();
   });
+
+for (const view of ['table', 'card'] as const)
+  for (const locale of ['en', 'fa'] as const)
+    it(`binds inline remove and replace to the accepted ${locale} ${view} record without fetching detail`, async () => {
+      const item = {
+        ...documentRow,
+        state: 'Superseded' as const,
+        permissions: { download: true, write: true, remove: true, replace: true },
+      };
+      await render([item], view, false, locale);
+      await click(documentText('replace', locale));
+      expect(onReplace).toHaveBeenCalledWith(item);
+      await click(documentText('remove', locale));
+      const proposal = actionHarness.action;
+      expect(proposal).toMatchObject({
+        path: `/api/documents/${item.id}/remove`,
+        method: 'POST',
+        body: { expectedRevision: item.revision, idempotencyKey: expect.any(String) },
+      });
+      expect(fetcher).not.toHaveBeenCalled();
+      await render([item], view === 'table' ? 'card' : 'table', false, locale);
+      expect(container.querySelector('[role=dialog]')).not.toBeNull();
+      expect(actionHarness.action).toBe(proposal);
+      await click('Confirm removal');
+      expect(onChanged).toHaveBeenCalledOnce();
+      expect(container.querySelector('[role=dialog]')).toBeNull();
+    });
+it.each(['revoked', 'revised', 'removed'] as const)(
+  'invalidates a removal proposal when its row is %s',
+  async (change) => {
+    const item = {
+      ...documentRow,
+      permissions: { download: true, write: true, remove: true, replace: true },
+    };
+    await render([item]);
+    await click(documentText('remove', 'en'));
+    await render(
+      change === 'removed'
+        ? []
+        : [
+            change === 'revoked'
+              ? { ...item, permissions: { ...item.permissions, remove: false } }
+              : { ...item, revision: item.revision + 1 },
+          ]
+    );
+    expect(container.querySelector('[role=dialog]')).toBeNull();
+    expect(onChanged).not.toHaveBeenCalled();
+    await render([item]);
+    expect(container.querySelector('[role=dialog]')).toBeNull();
+  }
+);
+it('hides unknown or denied mutation permissions and does not reuse file receipts after permission revocation', async () => {
+  await render([documentRow]);
+  expect(container.textContent).not.toContain(documentText('remove', 'en'));
+  expect(container.textContent).not.toContain(documentText('replace', 'en'));
+  const item = {
+    ...documentRow,
+    permissions: { download: true, write: false, remove: false, replace: false },
+  };
+  fetcher.mockResolvedValue(response({ url: 'https://storage.test/proof.pdf' }));
+  await render([item]);
+  await click(documentText('download', 'en'));
+  expect(container.querySelector('a')).not.toBeNull();
+  await render([{ ...item, permissions: { ...item.permissions, download: false } }]);
+  expect(container.querySelector('a')).toBeNull();
+  expect(container.textContent).not.toContain(documentText('download', 'en'));
+  expect(container.textContent).not.toContain(documentText('preview', 'en'));
+});
+
+it('aborts pending file access when removal succeeds and ignores its late receipt', async () => {
+  const pending = deferred();
+  fetcher.mockReturnValue(pending.promise);
+  const item = {
+    ...documentRow,
+    state: 'Superseded' as const,
+    permissions: { download: true, write: true, remove: true, replace: false },
+  };
+  await render([item]);
+  await click(documentText('download', 'en'));
+  const signal = fetcher.mock.calls[0]![1]!.signal as AbortSignal;
+  await click(documentText('remove', 'en'));
+  await click('Confirm removal');
+  expect(signal.aborted).toBe(true);
+  await act(async () => pending.resolve(response({ url: 'https://storage.test/removed.pdf' })));
+  expect(container.querySelector('a')).toBeNull();
+  expect(onChanged).toHaveBeenCalledWith(item.id);
+});

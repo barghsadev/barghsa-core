@@ -158,3 +158,33 @@ export async function documentAccess<T>(
     client.release();
   }
 }
+
+/** Read-time hints only; commands still recheck authority and require step-up. */
+export async function documentWriteGranted(
+  client: PoolClient,
+  actor: DocumentActor,
+  kind: BusinessType,
+  staff: boolean,
+  profileId: string,
+  businessRecordId?: string
+) {
+  const profile = (await client.query('SELECT archived FROM profiles WHERE id=$1', [profileId]))
+    .rows[0];
+  if (!profile || profile.archived) return false;
+  if (!staff)
+    return (
+      (
+        await client.query<{ id: string }>(
+          activeProfileSql(customerDocumentPermission(kind, true)),
+          [actor.userId]
+        )
+      ).rows[0]?.id === profileId
+    );
+  try {
+    await requireStaffDocumentPermission(client, actor, kind, true, businessRecordId);
+    return true;
+  } catch (error) {
+    if (error instanceof HttpException && error.getStatus() === 403) return false;
+    throw error;
+  }
+}

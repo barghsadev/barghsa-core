@@ -41,6 +41,7 @@ export interface BusinessDocument {
   supersedesDocumentId: string | null;
   rejectionReason: string | null;
   reviewComment: string | null;
+  permissions?: { download: boolean; write: boolean; remove: boolean; replace: boolean };
   revision: number;
   createdAt: string;
   updatedAt: string;

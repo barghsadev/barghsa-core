@@ -572,6 +572,9 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
   });
   expect(wrongCategory.status).toBe(409);
   const receiptImageId = await uploadReceipt();
+  expect(await (await send('postal-buyer', `documents/${receiptImageId}`)).json()).toMatchObject({
+    permissions: { download: true, write: true, remove: true, replace: false },
+  });
   expect(
     (
       await send('postal-buyer', 'documents', 'POST', {

@@ -3,6 +3,7 @@ import {
   ConflictException,
   Inject,
   Injectable,
+  HttpException,
   NotFoundException,
 } from '@nestjs/common';
 import {
@@ -24,7 +25,12 @@ import { v7 as uuidv7 } from 'uuid';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { UploadService } from '../upload/upload.service.js';
 import { idempotentMutation } from '../database/idempotency.js';
-import { documentAccess, staffDocumentRead, type DocumentActor } from './document-access.js';
+import {
+  documentAccess,
+  staffDocumentRead,
+  documentWriteGranted,
+  type DocumentActor,
+} from './document-access.js';
 import { DocumentStorageService } from './document-storage.service.js';
 import type { DocumentCommand, DocumentCreate, DocumentListSchema } from './document-validation.js';
 import type { z } from 'zod';
@@ -413,6 +419,113 @@ export class DocumentService {
     );
   }
 
+  private async permissions(
+    client: PoolClient,
+    row: LinkedDocument,
+    actor: DocumentActor,
+    staff: boolean,
+    grants = new Map<string, Promise<boolean>>()
+  ) {
+    const d = row.document;
+    const key = JSON.stringify([d.profileId, d.businessRecordType, d.businessRecordId]);
+    if (!grants.has(key))
+      grants.set(
+        key,
+        documentWriteGranted(
+          client,
+          actor,
+          d.businessRecordType,
+          staff,
+          d.profileId,
+          d.businessRecordId ?? undefined
+        )
+      );
+    const write = await grants.get(key)!;
+    const permissions = {
+      download:
+        !!d.storageKey &&
+        d.scanState !== 'Quarantined' &&
+        !['Uploading', 'PendingScan', 'Quarantined'].includes(d.state),
+      write,
+      remove: false,
+      replace: false,
+    };
+    if (!write || (!staff && d.businessRecordType === 'contract' && row.contractRole !== 'signed'))
+      return permissions;
+    try {
+      await this.mutableContract(client, row, staff);
+    } catch (error) {
+      if (error instanceof HttpException && [404, 409].includes(error.getStatus()))
+        return permissions;
+      throw error;
+    }
+    const saving =
+      d.businessRecordType === 'order' && d.businessRecordId
+        ? (
+            await client.query<{ status: string }>(
+              'SELECT status FROM saving_orders WHERE order_id=$1',
+              [d.businessRecordId]
+            )
+          ).rows[0]
+        : null;
+    const solar =
+      d.businessRecordType === 'solar_request'
+        ? (
+            await client.query<{ status: string }>(
+              'SELECT status FROM solar_construction_requests WHERE id=$1',
+              [d.businessRecordId]
+            )
+          ).rows[0]
+        : null;
+    const own = d.uploadedBy === actor.userId && d.uploadedByType === 'customer';
+    const solarStage =
+      !!solar &&
+      ['submitted', 'uploading_documents', 'documents_under_review', 'changes_requested'].includes(
+        solar.status
+      );
+    const postal =
+      solar?.status === 'waiting_for_postal_submission' &&
+      d.category === 'image' &&
+      !staff &&
+      !!(
+        await client.query(
+          "SELECT 1 FROM solar_construction_postal WHERE request_id=$1 AND status IN ('waiting_for_shipment','incomplete','not_received')",
+          [d.businessRecordId]
+        )
+      ).rows.length;
+    permissions.remove =
+      d.businessRecordType === 'solar_request'
+        ? (solarStage || !!postal) &&
+          (staff
+            ? ['Uploading', 'PendingScan', 'Superseded', 'Quarantined'].includes(d.state)
+            : own &&
+              (postal
+                ? ['Uploading', 'PendingScan', 'Available']
+                : [
+                    'Uploading',
+                    'PendingScan',
+                    'Available',
+                    'SubmittedForReview',
+                    'Approved',
+                    'Rejected',
+                  ]
+              ).includes(d.state))
+        : saving && !staff
+          ? own && ['Uploading', 'PendingScan', 'Available'].includes(d.state)
+          : ['Uploading', 'PendingScan', 'Superseded', 'Quarantined'].includes(d.state);
+    permissions.replace =
+      (!saving || !['completed', 'cancelled', 'rejected'].includes(saving.status)) &&
+      (d.businessRecordType !== 'solar_request' || (solarStage && (staff || own))) &&
+      (!saving || staff || (own && d.state === 'Available')) &&
+      (['Available', 'Approved', 'Rejected'].includes(d.state) ||
+        (d.businessRecordType === 'solar_request' && d.state === 'SubmittedForReview') ||
+        (staff &&
+          d.businessRecordType === 'contract' &&
+          row.contractRole === 'original' &&
+          d.state === 'Quarantined'));
+    return permissions;
+  }
+
   async list(input: z.infer<typeof DocumentListSchema>, actor: DocumentActor, staff: boolean) {
     const read = async (client: PoolClient, profileId?: string) => {
       const rows = await createDbClient(client)
@@ -444,8 +557,15 @@ export class DocumentService {
         )
         .orderBy(desc(documents.id))
         .limit(input.limit + 1);
+      const grants = new Map<string, Promise<boolean>>();
+      const records = [];
+      for (const row of rows.slice(0, input.limit))
+        records.push({
+          ...dto(row),
+          permissions: await this.permissions(client, row, actor, staff, grants),
+        });
       return {
-        documents: rows.slice(0, input.limit).map(dto),
+        documents: records,
         nextBefore: rows.length > input.limit ? rows[input.limit - 1]!.document.id : null,
       };
     };
@@ -476,6 +596,7 @@ export class DocumentService {
           .orderBy(documentEvents.revision);
         return {
           ...dto(row),
+          permissions: await this.permissions(client, row, actor, staff),
           history: history.map((event) =>
             !staff && event.state === 'Quarantined' ? { ...event, reason: null } : event
           ),

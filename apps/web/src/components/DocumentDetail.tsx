@@ -146,10 +146,11 @@ export function DocumentDetail({
   const readable =
     document &&
     !isQuarantinedDocument(document) &&
+    document.permissions?.download !== false &&
     !['Uploading', 'PendingScan'].includes(document.state);
   const customerCanChange =
     document?.businessRecordType !== 'contract' || document.contractRole === 'signed';
-  const canChange = staff || customerCanChange;
+  const canChange = document?.permissions?.write !== false && (staff || customerCanChange);
   const actions: DocumentAction[] = [];
   if (document && canChange) {
     if (document.state === 'Available') actions.push('submit');
@@ -174,8 +175,9 @@ export function DocumentDetail({
           ? document.uploadedByType === 'customer' &&
             ['Uploading', 'PendingScan', 'Available'].includes(document.state)
           : ['Uploading', 'PendingScan', 'Superseded', 'Quarantined'].includes(document.state)
-    )
-      actions.push('remove');
+    ) {
+      if (document.permissions?.remove !== false) actions.push('remove');
+    }
     if (staff && !['Removed', 'Quarantined'].includes(document.state)) actions.push('quarantine');
   }
   return (
@@ -271,6 +273,7 @@ export function DocumentDetail({
               </Button>
             ) : null}
             {allowReplacement &&
+            document.permissions?.replace !== false &&
             canChange &&
             (solarCustomer
               ? document.uploadedByType === 'customer' &&

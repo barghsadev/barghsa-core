@@ -219,6 +219,84 @@ it('resumes a large document upload and confirms the sealed document', async () 
   expect(await confirmed.json()).toMatchObject({ state: 'Available' });
 });
 
+async function permissions(id: string, user: string, staff = false) {
+  const result = await send(`${staff ? 'admin/' : ''}documents/${id}`, user);
+  expect(result.status, (await result.clone().text()) + http.logs()).toBe(200);
+  return ((await result.json()) as DocumentDetail).permissions;
+}
+
+it('projects read-only staff grants and revokes mutation hints without granting write or requiring step-up for reads', async () => {
+  const f = await owner();
+  const ready = await confirm(await create(f.user), f.user);
+  const pending = await create(f.user);
+  const role = randomUUID();
+  await http.pool.query(
+    "INSERT INTO staff_roles(role_id,name,description,permissions) VALUES($1,$1,'Document reader','[\"legal:read\"]')",
+    [role]
+  );
+  const reader = await login(undefined, role);
+  for (const [id, download] of [
+    [ready.id, true],
+    [pending.document.id, false],
+  ] as const)
+    expect(await permissions(id, reader, true)).toEqual({
+      download,
+      write: false,
+      remove: false,
+      replace: false,
+    });
+  expect(
+    (await send(`admin/documents/${pending.document.id}/remove`, reader, 'POST', command(1))).status
+  ).toBe(403);
+  const queue = (await (
+    await send(`admin/documents?businessRecordType=standalone&profileId=${f.profile}`, reader)
+  ).json()) as DocumentList;
+  expect(queue.documents).toHaveLength(2);
+  expect(
+    queue.documents.every(
+      (d) =>
+        d.permissions.write === false &&
+        d.permissions.remove === false &&
+        d.permissions.replace === false
+    )
+  ).toBe(true);
+  await http.pool.query(
+    'UPDATE staff_roles SET permissions=\'["legal:read","legal:write"]\' WHERE role_id=$1',
+    [role]
+  );
+  expect(await permissions(ready.id, reader, true)).toEqual({
+    download: true,
+    write: true,
+    remove: false,
+    replace: true,
+  });
+  expect(await permissions(pending.document.id, reader, true)).toEqual({
+    download: false,
+    write: true,
+    remove: true,
+    replace: false,
+  });
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 day' WHERE user_id=$1",
+    [reader]
+  );
+  expect((await permissions(ready.id, reader, true)).replace).toBe(true);
+  expect(
+    (await send(`admin/documents/${pending.document.id}/remove`, reader, 'POST', command(1))).status
+  ).toBe(403);
+  await http.pool.query('UPDATE staff_roles SET permissions=\'["legal:read"]\' WHERE role_id=$1', [
+    role,
+  ]);
+  expect((await permissions(ready.id, reader, true)).replace).toBe(false);
+  await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [f.profile]);
+  expect(await permissions(ready.id, 'document-legal', true)).toEqual({
+    download: true,
+    write: false,
+    remove: false,
+    replace: false,
+  });
+});
+
 it('uploads real bytes, reviews a document, preserves replacement history and retains removed evidence', async () => {
   const f = await owner(),
     created = await create(f.user);
@@ -235,6 +313,12 @@ it('uploads real bytes, reviews a document, preserves replacement history and re
     scanState: 'Available',
     scanSkippedReason: 'not_configured',
     checksum: createHash('sha256').update(pdf).digest('hex'),
+  });
+  expect(await permissions(document.id, f.user)).toEqual({
+    download: true,
+    write: true,
+    remove: false,
+    replace: true,
   });
   const download = (await (
     await send(`documents/${document.id}/download`, f.user)
@@ -256,6 +340,7 @@ it('uploads real bytes, reviews a document, preserves replacement history and re
     ).status
   ).toBe(412);
   document = await act(document, 'submit', f.user);
+  expect((await permissions(document.id, f.user)).replace).toBe(false);
   document = await act(document, 'approve', 'document-legal', true);
   expect(document.state).toBe('Approved');
   const replacement = await create(f.user, { supersedesDocumentId: document.id });
@@ -265,6 +350,12 @@ it('uploads real bytes, reviews a document, preserves replacement history and re
     await send(`documents/${document.id}`, f.user)
   ).json()) as DocumentDetail;
   expect(superseded.state).toBe('Superseded');
+  expect(superseded.permissions).toEqual({
+    download: true,
+    write: true,
+    remove: true,
+    replace: false,
+  });
   expect(superseded.history.map((event: { state: string }) => event.state)).toEqual([
     'Uploading',
     'PendingScan',
@@ -279,6 +370,12 @@ it('uploads real bytes, reviews a document, preserves replacement history and re
     await send(`admin/documents/${document.id}`, 'document-legal')
   ).json()) as DocumentDetail;
   expect(retained.state).toBe('Removed');
+  expect(retained.permissions).toEqual({
+    download: true,
+    write: true,
+    remove: false,
+    replace: false,
+  });
   const archive = (await (
     await send(`admin/documents/${document.id}/download`, 'document-legal')
   ).json()) as DocumentDownload;
@@ -705,6 +802,14 @@ it('lets a saving customer replace or soft-delete only their available order fil
   );
   const staffUpload = await create('document-legal', context, true);
   expect((await confirm(staffUpload, 'document-legal', true)).state).toBe('Available');
+  expect(await permissions(first.id, f.user)).toEqual({
+    download: true,
+    write: true,
+    remove: true,
+    replace: true,
+  });
+  expect((await permissions(staffUpload.document.id, f.user)).remove).toBe(false);
+  expect((await permissions(staffUpload.document.id, f.user)).replace).toBe(false);
   expect(first.state).toBe('Available');
   expect(other.state).toBe('Available');
   const replacement = await confirm(
@@ -721,6 +826,12 @@ it('lets a saving customer replace or soft-delete only their available order fil
   expect((await send(`documents/${other.id}`, f.user)).status).toBe(404);
   expect((await send(`admin/documents/${other.id}`, 'document-operations')).status).toBe(200);
   const submitted = await act(replacement, 'submit', f.user);
+  expect(await permissions(submitted.id, f.user)).toEqual({
+    download: true,
+    write: true,
+    remove: false,
+    replace: false,
+  });
   expect(
     (await send(`documents/${submitted.id}/remove`, f.user, 'POST', command(submitted.revision)))
       .status
@@ -1015,6 +1126,18 @@ it('keeps internal contract documents private through reads, downloads and notif
     ).status
   ).toBe(200);
   expect((await send(`documents/${original.id}`, f.user)).status).toBe(200);
+  expect(await permissions(original.id, f.user)).toMatchObject({
+    download: true,
+    remove: false,
+    replace: false,
+  });
+  const delegate = await manager(f.profile);
+  expect(await permissions(original.id, delegate.user)).toEqual({
+    download: true,
+    write: false,
+    remove: false,
+    replace: false,
+  });
   const input = {
     profileId: f.profile,
     businessRecordType: 'contract',

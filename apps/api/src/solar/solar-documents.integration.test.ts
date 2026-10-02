@@ -321,11 +321,20 @@ it('supports empty submission, editable guidance, per-file decisions, replacemen
       ])
     ).rows[0]!.status
   ).toBe('documents_under_review');
+  expect(await (await send('solar-buyer', `documents/${first.id}`)).json()).toMatchObject({
+    permissions: { download: true, write: true, remove: true, replace: true },
+  });
   const replacement = await documentCreate(first.id);
+  expect(await (await send('solar-buyer', `documents/${first.id}`)).json()).toMatchObject({
+    permissions: { remove: false, replace: false },
+  });
   expect(replacement.state).toBe('Available');
   expect(
     (await http.pool.query('SELECT state FROM documents WHERE id=$1', [first.id])).rows[0]!.state
   ).toBe('Superseded');
+  expect(await (await send('solar-buyer', `documents/${replacement.id}`)).json()).toMatchObject({
+    permissions: { remove: true, replace: true },
+  });
   const removable = await documentCreate();
   await send('solar-buyer', `solar/requests/${requestId}/documents/complete`, 'POST', {
     allDocumentsUploaded: true,
@@ -398,6 +407,9 @@ it('supports empty submission, editable guidance, per-file decisions, replacemen
       ])
     ).rows[0]!.status
   ).toBe('waiting_for_shipment');
+  expect(await (await send('solar-buyer', `documents/${replacement.id}`)).json()).toMatchObject({
+    permissions: { download: true, remove: false, replace: false },
+  });
   expect(
     (
       await http.pool.query<{ count: number }>(

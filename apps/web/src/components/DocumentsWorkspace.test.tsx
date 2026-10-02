@@ -37,8 +37,10 @@ vi.mock('./TeamActionDialog.js', () => ({
     action,
     onSuccess,
     onClose,
+    onDenied,
   }: {
     action?: TeamAction;
+    onDenied?: () => void;
     onSuccess: (result: unknown) => Promise<void>;
     onClose: () => void;
   }) => {
@@ -47,6 +49,7 @@ vi.mock('./TeamActionDialog.js', () => ({
       <div role="dialog">
         <button onClick={() => void onSuccess(harness.result)}>Confirm action</button>
         <button onClick={onClose}>Close confirmation</button>
+        {onDenied && <button onClick={onDenied}>Deny action</button>}
       </div>
     );
   },
@@ -80,6 +83,7 @@ const response = (data: unknown, status = 200) => new Response(JSON.stringify(da
 let container: HTMLDivElement;
 let root: Root;
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   harness.locale = 'en';
   harness.action = null;
   harness.result = null;
@@ -663,3 +667,153 @@ it.each(['Quarantined', 'Superseded'] as const)(
     ).not.toContain('پیش‌نمایش');
   }
 );
+
+it('replaces an inline staff document using its profile when the queue spans all profiles', async () => {
+  const item = row({ permissions: { download: true, write: true, remove: false, replace: true } });
+  const fetcher = vi.fn(async (url: string) =>
+    url.startsWith('/api/upload/policy/')
+      ? response(documentUploadPolicy())
+      : url.startsWith('/api/admin/document-retention/')
+        ? response({ policies: [], items: [], counts: [], canManage: false })
+        : response({ documents: [item], nextBefore: null })
+  );
+  vi.stubGlobal('fetch', fetcher);
+  await render(<DocumentsWorkspace staff />);
+  await click('Replace document');
+  const input = container.querySelector<HTMLInputElement>('input[type=file]')!;
+  await act(async () => {
+    Object.defineProperty(input, 'files', {
+      value: [new File(['%PDF-1.7'], 'replacement.pdf', { type: 'application/pdf' })],
+    });
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  await act(async () =>
+    input.closest('form')!.querySelector<HTMLButtonElement>('button[type=submit]')!.click()
+  );
+  expect(harness.action).toMatchObject({
+    path: '/api/admin/documents',
+    body: { profileId: PROFILE, supersedesDocumentId: DOCUMENT, businessRecordType: 'standalone' },
+  });
+  expect(fetcher.mock.calls.every(([url]) => url !== `/api/admin/documents/${DOCUMENT}`)).toBe(
+    true
+  );
+});
+it('suppresses detail file and mutation actions when the current server projection denies them', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockResolvedValue(
+      response({
+        ...row({
+          state: 'PendingScan',
+          permissions: { download: false, write: false, remove: false, replace: false },
+        }),
+        history: [],
+      })
+    )
+  );
+  await render(
+    <DocumentDetail
+      id={DOCUMENT}
+      staff
+      onClose={vi.fn()}
+      onChanged={vi.fn()}
+      onReplace={vi.fn()}
+      onPrevious={vi.fn()}
+    />
+  );
+  for (const text of [
+    'Remove',
+    'Replace document',
+    'Quarantine',
+    'Submit for review',
+    'Get download link',
+  ])
+    expect(
+      [...container.querySelectorAll('button')].some((button) => button.textContent === text)
+    ).toBe(false);
+});
+
+it.each(['PendingScan', 'Available'] as const)(
+  'honors explicit mutation denial in a writable %s detail',
+  async (state) => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        response({
+          ...row({
+            state,
+            permissions: { download: true, write: true, remove: false, replace: false },
+          }),
+          history: [],
+        })
+      )
+    );
+    await render(
+      <DocumentDetail
+        id={DOCUMENT}
+        staff
+        onClose={vi.fn()}
+        onChanged={vi.fn()}
+        onReplace={vi.fn()}
+        onPrevious={vi.fn()}
+      />
+    );
+    expect(
+      [...container.querySelectorAll('button')].map((button) => button.textContent)
+    ).not.toContain('Remove');
+    expect(
+      [...container.querySelectorAll('button')].map((button) => button.textContent)
+    ).not.toContain('Replace document');
+  }
+);
+
+it('aborts a pending list refresh after mutation denial and refuses a late private response', async () => {
+  let finish: (result: Response) => void = () => {};
+  let signal: AbortSignal | undefined;
+  let reads = 0;
+  const item = row({
+    state: 'Superseded',
+    permissions: { download: true, write: true, remove: true, replace: false },
+  });
+  const fetcher = vi.fn(async (url: string, options: RequestInit) => {
+    if (url === '/api/profiles') return response({ activeProfileId: PROFILE });
+    if (url === '/api/auth/user')
+      return response({ userId: 'owner', operatingContext: 'customer' });
+    if (url.endsWith('/download')) return response({ url: 'https://storage.test/private.pdf' });
+    if (!url.startsWith('/api/documents?')) throw new Error(`Unexpected route: ${url}`);
+    if (++reads === 2) {
+      signal = options.signal as AbortSignal;
+      return new Promise<Response>((resolve) => {
+        finish = resolve;
+      });
+    }
+    return response({
+      documents: [
+        {
+          ...item,
+          permissions: reads > 2 ? { ...item.permissions!, remove: false } : item.permissions,
+        },
+      ],
+      nextBefore: null,
+    });
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await render(<DocumentsWorkspace />);
+  await click('Get download link');
+  expect(container.querySelector('a')).not.toBeNull();
+  await click('Remove');
+  await click('Refresh');
+  await click('Deny action');
+  expect(signal?.aborted).toBe(true);
+  expect(container.querySelector('[data-slot=document-records]')).toBeNull();
+  expect(container.querySelector('a')).toBeNull();
+  expect(container.textContent).toContain('These documents are unavailable');
+  await act(async () => finish(response({ documents: [item], nextBefore: null })));
+  expect(container.querySelector('[data-slot=document-records]')).toBeNull();
+  await click('Refresh');
+  expect(container.querySelector('[data-slot=document-records]')).not.toBeNull();
+  expect(container.querySelector('[role=dialog]')).toBeNull();
+  expect(
+    [...container.querySelectorAll('button')].map((button) => button.textContent)
+  ).not.toContain('Remove');
+});

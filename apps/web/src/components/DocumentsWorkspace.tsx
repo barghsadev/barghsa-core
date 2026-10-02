@@ -21,7 +21,7 @@ import { staffOrderId } from '../lib/staff-order-list-query.js';
 import type { RecordListQuery } from '../lib/record-list-query.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { DocumentRecords } from './DocumentRecords.js';
+import { DocumentList } from './DocumentRecords.js';
 import { useListView } from '../hooks/useListView.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from './DocumentDetail.js';
@@ -318,6 +318,7 @@ function Results({
   const [error, setError] = useState(false);
   const [denied, setDenied] = useState(false);
   const accessDenied = useRef(false);
+  const listRequest = useRef<AbortController | null>(null);
   const mounted = useRef(false);
   useEffect(() => {
     mounted.current = true;
@@ -343,6 +344,19 @@ function Results({
   useEffect(() => {
     if (upload && queries && upload.selection !== queries.selected) setUpload(null);
   }, [selected]);
+  function denyAccess() {
+    listRequest.current?.abort();
+    accessDenied.current = true;
+    setDenied(true);
+    setError(true);
+    setLoading(false);
+    setItems(null);
+    urlRows.discard();
+    setNext(null);
+    setSelected(null, true);
+    setUpload(null);
+    setUploaded(null);
+  }
   const params = new URLSearchParams({ businessRecordType: filters.kind });
   if (profileId) params.set('profileId', profileId);
   if (filters.contractVersionId) params.set('contractVersionId', filters.contractVersionId);
@@ -354,6 +368,7 @@ function Results({
   const path = `${documentBase(staff)}?${params}`;
   useEffect(() => {
     const controller = new AbortController();
+    listRequest.current = controller;
     setLoading(true);
     setError(false);
     void documentRequest<DocumentPage>(path, {
@@ -389,21 +404,15 @@ function Results({
         const forbidden =
           reason instanceof DocumentRequestError && [401, 403].includes(reason.status);
         setError(true);
-        if (forbidden) {
-          accessDenied.current = true;
-          setDenied(true);
-          setItems(null);
-          urlRows.discard();
-          setNext(null);
-          setSelected(null, true);
-          setUpload(null);
-          setUploaded(null);
-        }
+        if (forbidden) denyAccess();
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
       });
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+      if (listRequest.current === controller) listRequest.current = null;
+    };
   }, [path, refresh, urlRows.acceptPage]);
   function reload() {
     if (queryRef.current) queryRef.current.queue.setQuery({ cursor: '' });
@@ -450,7 +459,7 @@ function Results({
       {visibleUpload ? (
         <DocumentUpload
           staff={staff}
-          profileId={profileId}
+          profileId={visibleUpload.replacement?.profileId ?? profileId}
           replacement={visibleUpload.replacement}
           {...(association ? { association } : {})}
           onClose={() => setUpload(null)}
@@ -514,13 +523,26 @@ function Results({
         emptyView={<EmptyState title={word('empty')} description={word('emptyHint')} />}
       >
         {items?.length ? (
-          <DocumentRecords
+          <DocumentList
             items={items}
             staff={staff}
             locale={locale}
             view={view}
             selectedId={selected}
             formatDate={time.format}
+            onChanged={(id) => {
+              if (accessDenied.current) return;
+              if (selected === id) setSelected(null);
+              if (upload?.replacement?.id === id) setUpload(null);
+              reload();
+            }}
+            onReplace={(document) => {
+              if (accessDenied.current) return;
+              setSelected(null);
+              setUpload({ replacement: document, selection: null });
+              setUploaded(null);
+            }}
+            onDenied={denyAccess}
             onSelect={(id) => {
               if (accessDenied.current) return;
               setSelected(id);

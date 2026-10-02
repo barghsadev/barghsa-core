@@ -14,6 +14,7 @@ import {
 } from '../lib/documents.js';
 import { DocumentStatusBadge } from './DocumentStatusBadge.js';
 import { FilePreview } from './FilePreview.js';
+import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { HistoryTable, type HistoryColumn } from './HistoryTable.js';
 
 const readable = new Set(['Available', 'SubmittedForReview', 'Approved', 'Rejected', 'Superseded']);
@@ -36,10 +37,11 @@ const identity = (item: BusinessDocument) =>
     item.scanState,
     item.detectedMime,
     item.updatedAt,
+    item.permissions,
   ]);
 
 /** File access is lazy and stays bound to the accepted document revision in either layout. */
-export function DocumentRecords({
+export function DocumentList({
   items,
   staff,
   locale,
@@ -47,6 +49,9 @@ export function DocumentRecords({
   selectedId,
   onSelect,
   formatDate,
+  onReplace,
+  onChanged,
+  onDenied,
 }: {
   items: readonly BusinessDocument[];
   staff: boolean;
@@ -55,10 +60,23 @@ export function DocumentRecords({
   selectedId: string | null;
   onSelect: (id: string) => void;
   formatDate: (value: string) => string;
+  onReplace?: (document: BusinessDocument) => void;
+  onChanged?: (documentId: string) => void;
+  onDenied?: () => void;
 }) {
   const word = (key: string) => documentText(key, locale),
     numbers = useNumberFormatting(locale);
   const rows = items.filter((item) => staff || item.state !== 'Removed');
+  const [removal, setRemoval] = useState<{
+    key: string;
+    documentId: string;
+    action: TeamAction;
+  } | null>(null);
+  const activeRemoval =
+    removal &&
+    rows.some((item) => identity(item) === removal.key && item.permissions?.remove === true)
+      ? removal
+      : null;
   const [receipts, setReceipts] = useState<Record<string, Entry>>({});
   const controllers = useRef(new Map<string, AbortController>());
   const alive = useRef(false);
@@ -80,6 +98,7 @@ export function DocumentRecords({
         abort.abort();
         controllers.current.delete(operation);
       }
+    setRemoval((current) => (current && !valid.has(current.key) ? null : current));
     setReceipts((previous) =>
       Object.fromEntries(Object.entries(previous).filter(([key]) => valid.has(key)))
     );
@@ -137,6 +156,7 @@ export function DocumentRecords({
           error instanceof DocumentRequestError && [401, 403, 404, 409].includes(error.status);
         const accountDenied =
           error instanceof DocumentRequestError && [401, 403].includes(error.status);
+        if (accountDenied) onDenied?.();
         if (denied) {
           for (const [siblingOperation, controller] of controllers.current) {
             if ((accountDenied || siblingOperation.startsWith(`${key}:`)) && controller !== abort) {
@@ -209,8 +229,12 @@ export function DocumentRecords({
     const canPreview =
       !isQuarantinedDocument(item) &&
       readable.has(item.state) &&
+      item.permissions?.download !== false &&
       previewMime.has(item.detectedMime ?? '');
-    if (!canRead) return null;
+    const canDownload = canRead && item.permissions?.download !== false;
+    const canRemove = item.permissions?.remove === true && !!onChanged;
+    const canReplace = item.permissions?.replace === true && !!onReplace;
+    if (!canDownload && !canRemove && !canReplace) return null;
     const key = identity(item),
       entry = receipts[key] ?? {};
     return (
@@ -231,13 +255,42 @@ export function DocumentRecords({
               )}
             </Button>
           )}
-          <Button
-            variant="outline"
-            disabled={entry.download?.pending}
-            onClick={() => void access(item, 'download')}
-          >
-            {word(entry.download?.pending ? 'downloadLoading' : 'download')}
-          </Button>
+          {canDownload && (
+            <Button
+              variant="outline"
+              disabled={entry.download?.pending}
+              onClick={() => void access(item, 'download')}
+            >
+              {word(entry.download?.pending ? 'downloadLoading' : 'download')}
+            </Button>
+          )}
+          {canReplace && (
+            <Button variant="outline" onClick={() => onReplace?.(item)}>
+              {word('replace')}
+            </Button>
+          )}
+          {canRemove && (
+            <Button
+              variant="outline"
+              onClick={() =>
+                setRemoval({
+                  key,
+                  documentId: item.id,
+                  action: {
+                    title: word('remove'),
+                    description: item.originalName,
+                    path: `${documentBase(staff)}/${encodeURIComponent(item.id)}/remove`,
+                    method: 'POST',
+                    body: { expectedRevision: item.revision, idempotencyKey: crypto.randomUUID() },
+                    conflictMessage: word('conflict'),
+                    forbiddenMessage: word('denied'),
+                  },
+                })
+              }
+            >
+              {word('remove')}
+            </Button>
+          )}
         </div>
         {(entry.preview?.error || entry.download?.error) && (
           <p role="alert" className="max-w-sm text-sm text-destructive">
@@ -262,7 +315,7 @@ export function DocumentRecords({
             }}
           />
         )}
-        {entry.download?.url && entry.download.visible && (
+        {canDownload && entry.download?.url && entry.download.visible && (
           <a
             href={entry.download.url}
             target="_blank"
@@ -359,6 +412,32 @@ export function DocumentRecords({
           ))}
         </ul>
       )}
+      {activeRemoval && (
+        <TeamActionDialog
+          action={activeRemoval.action}
+          onClose={() => setRemoval(null)}
+          onDenied={() => {
+            setRemoval(null);
+            for (const controller of controllers.current.values()) controller.abort();
+            controllers.current.clear();
+            setReceipts({});
+            onDenied?.();
+          }}
+          onSuccess={async () => {
+            if (!alive.current || !keys.current.has(activeRemoval.key)) return;
+            for (const [operation, controller] of controllers.current)
+              if (operation.startsWith(`${activeRemoval.key}:`)) {
+                controller.abort();
+                controllers.current.delete(operation);
+              }
+            setRemoval(null);
+            setReceipts({});
+            onChanged?.(activeRemoval.documentId);
+          }}
+        />
+      )}
     </div>
   );
 }
+
+export { DocumentList as DocumentRecords };
