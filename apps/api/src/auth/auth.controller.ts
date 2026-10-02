@@ -5,6 +5,7 @@ import {
   Post,
   Get,
   HttpCode,
+  Header,
   HttpStatus,
   HttpException,
   Logger,
@@ -49,6 +50,7 @@ import {
 import type { AddContactSendOtpResponse, AddContactVerifyResponse } from './dto/add-contact.dto.js';
 import { AddContactSendOtpSchema, AddContactVerifySchema } from './dto/add-contact.dto.js';
 import { SessionService } from '../session/session.service.js';
+import { resolveNavigation, type NavigationConfiguration } from './navigation.js';
 import {
   SESSION_COOKIE_NAME,
   REFRESH_COOKIE_NAME,
@@ -870,9 +872,56 @@ export class AuthController {
    */
   @UseGuards(SessionAuthGuard)
   @Get('user')
+  @Header('Cache-Control', 'private, no-store')
   @HttpCode(200)
   @ApiOperation({ summary: 'Get current user info' })
-  @ApiResponse({ status: 200, description: 'User info returned.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Current account, selected workspace and backend-resolved navigation.',
+    schema: {
+      type: 'object',
+      required: [
+        'userId',
+        'username',
+        'email',
+        'mobile',
+        'emailVerified',
+        'mobileVerified',
+        'isStaff',
+        'operatingContext',
+        'canSwitchContext',
+        'navigation',
+      ],
+      properties: {
+        userId: { type: 'string' },
+        username: { type: 'string' },
+        email: { type: 'string', nullable: true },
+        mobile: { type: 'string', nullable: true },
+        emailVerified: { type: 'boolean' },
+        mobileVerified: { type: 'boolean' },
+        isStaff: { type: 'boolean' },
+        canSwitchContext: { type: 'boolean' },
+        operatingContext: { type: 'string', enum: ['staff', 'customer'] },
+        navigation: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['version', 'area', 'profileId', 'profileType', 'paths'],
+          properties: {
+            version: { type: 'integer', enum: [1] },
+            area: { type: 'string', enum: ['staff', 'customer'] },
+            profileId: { type: 'string', format: 'uuid', nullable: true },
+            profileType: { type: 'string', enum: ['INDIVIDUAL', 'LEGAL'], nullable: true },
+            paths: {
+              type: 'array',
+              maxItems: 128,
+              uniqueItems: true,
+              items: { type: 'string', pattern: '^/[a-zA-Z0-9/_-]*$' },
+            },
+          },
+        },
+      },
+    },
+  })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async getUser(@Req() req: AuthenticatedRequest): Promise<{
     userId: string;
@@ -884,12 +933,14 @@ export class AuthController {
     isStaff: boolean;
     operatingContext: 'staff' | 'customer';
     canSwitchContext: boolean;
+    navigation: NavigationConfiguration;
   }> {
     return {
       ...(await this.authService.getUser(req.session.userId)),
       isStaff: req.session.staffAvailable,
       operatingContext: req.session.operatingContext,
       canSwitchContext: req.session.staffAvailable,
+      navigation: await resolveNavigation(req),
     };
   }
 

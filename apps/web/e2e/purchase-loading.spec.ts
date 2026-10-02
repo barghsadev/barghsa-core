@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { test, expect } from './coverage-fixture';
@@ -32,12 +33,13 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page.locator('script[type="module"][src^="/assets/"]')).toHaveCount(1);
   });
-  test(`purchase navigation needs no lazy code and heavy pages show stable loading (${locale})`, async ({
+  test(`electricity routes avoid downloads and lazy service pages retain stable loading (${locale})`, async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1280, height: 720 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.addInitScript((language) => {
+      localStorage.setItem('barghsa.locale', language);
       const apply = () => {
         if (document.documentElement) document.documentElement.lang = language;
       };
@@ -47,7 +49,12 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({
-        json: { isStaff: false, userId: 'loading-user', requiresTosAcceptance: false },
+        json: {
+          isStaff: false,
+          navigation: fullNavigation('customer'),
+          userId: 'loading-user',
+          requiresTosAcceptance: false,
+        },
       })
     );
     await page.route('**/api/profiles/verification-status', (route) =>
@@ -55,7 +62,13 @@ for (const locale of ['en', 'fa'] as const) {
         json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
       })
     );
-    await page.route('**/api/products', (route) => route.fulfill({ json: [] }));
+    await page.route('**/api/products/electricity', (route) => route.fulfill({ json: [] }));
+    await page.route('**/api/saving/orders/draft?*', (route) =>
+      route.fulfill({ json: { currentStep: 1, data: null, updatedAt: null } })
+    );
+    await page.route('**/api/electricity/drafts/simple?*', (route) =>
+      route.fulfill({ json: { currentStep: 1, data: null, updatedAt: null } })
+    );
     await page.route('**/api/profiles/profile-one/addresses', (route) =>
       route.fulfill({ json: { addresses: [] } })
     );
@@ -64,16 +77,17 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       main.getByRole('heading', { name: t('electricity.order.title', locale), exact: true })
     ).toBeVisible();
-    for (const path of ['electricity/index', 'electricity/order', 'savings', 'wallet'])
+    for (const path of ['electricity/index', 'electricity/order'])
       expect(manifest[`src/routes/_app/${path}.tsx?tsr-split=component`]).toBeUndefined();
     expect(manifest['src/routes/_app.tsx?tsr-split=component']).toBeUndefined();
-    for (const path of ['ai', 'documents', 'charts', 'videos'])
+    expect(manifest['src/routes/_app/savings.index.tsx?tsr-split=component']).toBeTruthy();
+    for (const path of ['wallet', 'ai', 'documents', 'charts', 'videos'])
       expect(manifest[`src/routes/_app/${path}.tsx?tsr-split=component`]).toBeTruthy();
-    expect(manifest['src/routes/admin/index.tsx?tsr-split=component']).toBeTruthy();
+    expect(manifest['src/pages/AdminDashboard.tsx']).toBeTruthy();
 
     const scripts: string[] = [];
     let release!: () => void;
-    const held = new Promise<void>((resolve) => {
+    let held = new Promise<void>((resolve) => {
       release = resolve;
     });
     await page.route('**/*.js', async (route) => {
@@ -85,7 +99,7 @@ for (const locale of ['en', 'fa'] as const) {
       await page.evaluate(() => {
         document.documentElement.dataset['entryCheck'] = 'same';
       });
-      for (const path of ['/electricity', '/savings', '/wallet']) {
+      for (const path of ['/electricity']) {
         await page.locator(`#dashboard-navigation a[href="${path}"]`).click();
         await expect(page).toHaveURL(new RegExp(path + '$'));
         await expect(main.getByRole('heading').first()).toBeVisible();
@@ -94,23 +108,29 @@ for (const locale of ['en', 'fa'] as const) {
       }
       const header = page.getByRole('banner');
       const before = await header.boundingBox();
-      await page.locator('#dashboard-navigation a[href="/invoices"]').click();
-      await expect.poll(() => scripts.length).toBeGreaterThan(0);
-      const pending = main.getByRole('status', {
-        name: feedbackText('loading', locale),
-        exact: true,
-      });
-      await expect(pending).toBeVisible();
-      expect(await header.boundingBox()).toEqual(before);
-      const blocks = pending.locator('[data-slot="skeleton"]');
-      await expect(blocks).toHaveCount(3);
-      expect(
-        await blocks.first().evaluate((e) => getComputedStyle(e, '::after').animationName)
-      ).toBe('none');
-      release();
-      await expect(page).toHaveURL(/\/invoices$/);
-      await expect(main.getByRole('heading').first()).toBeVisible();
-      expect(await header.boundingBox()).toEqual(before);
+      for (const path of ['/savings', '/wallet', '/invoices']) {
+        const previousDownloads = scripts.length;
+        held = new Promise<void>((resolve) => {
+          release = resolve;
+        });
+        await page.locator(`#dashboard-navigation a[href="${path}"]`).click();
+        await expect.poll(() => scripts.length).toBeGreaterThan(previousDownloads);
+        const pending = main.getByRole('status', {
+          name: feedbackText('loading', locale),
+          exact: true,
+        });
+        await expect(pending).toBeVisible();
+        expect(await header.boundingBox()).toEqual(before);
+        const blocks = pending.locator('[data-slot="skeleton"]');
+        await expect(blocks).toHaveCount(3);
+        expect(
+          await blocks.first().evaluate((e) => getComputedStyle(e, '::after').animationName)
+        ).toBe('none');
+        release();
+        await expect(page).toHaveURL(new RegExp(path + '$'));
+        await expect(main.getByRole('heading').first()).toBeVisible();
+        expect(await header.boundingBox()).toEqual(before);
+      }
     } finally {
       release();
     }

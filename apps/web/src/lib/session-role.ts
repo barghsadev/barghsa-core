@@ -1,3 +1,6 @@
+import { getProfileContextRevision } from './profile-context.js';
+import { parseNavigation, type NavigationConfiguration } from './navigation-config.js';
+
 export interface SessionContext {
   userId?: string;
   username?: string;
@@ -6,9 +9,12 @@ export interface SessionContext {
   isStaff: boolean;
   operatingContext: 'staff' | 'customer';
   canSwitchContext: boolean;
+  navigation?: NavigationConfiguration;
+  navigationRevision?: number;
 }
 
 export async function readSessionContext(signal?: AbortSignal): Promise<SessionContext | null> {
+  const navigationRevision = getProfileContextRevision();
   const response = await fetch('/api/auth/user', {
     credentials: 'include',
     signal: signal ?? null,
@@ -17,7 +23,7 @@ export async function readSessionContext(signal?: AbortSignal): Promise<SessionC
   if (response.status === 401) return null;
   if (!response.ok) throw new Error('Unable to check session');
   const user: unknown = await response.json();
-  return parseSessionContext(user);
+  return { ...parseSessionContext(user), navigationRevision };
 }
 
 export function parseSessionContext(user: unknown): SessionContext {
@@ -35,7 +41,15 @@ export function parseSessionContext(user: unknown): SessionContext {
     mobile?: unknown;
     operatingContext?: unknown;
     canSwitchContext?: unknown;
+    navigation?: unknown;
   };
+  const operatingContext =
+    value.operatingContext === 'staff' || value.operatingContext === 'customer'
+      ? value.operatingContext
+      : value.isStaff
+        ? 'staff'
+        : 'customer';
+  const navigation = parseNavigation(value.navigation, operatingContext);
   return {
     ...(typeof value.userId === 'string' && value.userId ? { userId: value.userId } : {}),
     ...(typeof value.username === 'string' && value.username.trim()
@@ -44,12 +58,8 @@ export function parseSessionContext(user: unknown): SessionContext {
     ...(value.email === null || typeof value.email === 'string' ? { email: value.email } : {}),
     ...(value.mobile === null || typeof value.mobile === 'string' ? { mobile: value.mobile } : {}),
     isStaff: value.isStaff,
-    operatingContext:
-      value.operatingContext === 'staff' || value.operatingContext === 'customer'
-        ? value.operatingContext
-        : value.isStaff
-          ? 'staff'
-          : 'customer',
+    operatingContext,
+    ...(navigation ? { navigation } : {}),
     canSwitchContext:
       typeof value.canSwitchContext === 'boolean' ? value.canSwitchContext : value.isStaff,
   };

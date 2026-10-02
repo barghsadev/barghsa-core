@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { fulfillDashboard } from './dashboard-fixture';
 import { cookieResponse } from './cookie-response';
 import { test, expect, type Page } from './coverage-fixture';
@@ -19,6 +20,7 @@ async function shell(page: Page) {
       json: {
         userId: 'switch-viewer',
         isStaff: false,
+        navigation: fullNavigation('customer', 'LEGAL'),
         operatingContext: 'customer',
         requiresTosAcceptance: false,
       },
@@ -28,7 +30,7 @@ async function shell(page: Page) {
     route.fulfill({ json: { invitations: [] } })
   );
   await page.route('**/api/v1/notifications**', (route) =>
-    route.fulfill({ json: { data: [], unread_count: 0 } })
+    route.fulfill({ json: { data: [], next_cursor: null, unread_count: 0 } })
   );
 }
 async function openProfileMenu(page: Page) {
@@ -451,7 +453,7 @@ test('late old-profile responses cannot overwrite the switched page or notificat
       await oldReleased;
     }
     await route.fulfill({
-      json: { data: [], unread_count: requestedProfile === 'first' ? 19 : 3 },
+      json: { data: [], next_cursor: null, unread_count: requestedProfile === 'first' ? 19 : 3 },
     });
   });
   await page.route('**/api/profiles/switch/second', (route) => {

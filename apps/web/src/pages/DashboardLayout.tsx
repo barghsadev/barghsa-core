@@ -24,12 +24,15 @@ import { OwnershipBanner } from '../components/OwnershipBanner.js';
 import { NotificationBell } from '../components/NotificationBell.js';
 import { AppShell, type NavigationGroup } from '../components/AppShell.js';
 import { KnowledgeAssistantLauncher } from '../components/KnowledgeAssistantLauncher.js';
+import { useNavigation } from '../hooks/useNavigation.js';
+import { permittedNavigation } from '../lib/navigation-config.js';
 
 export function DashboardLayout({ locale: localeOverride }: { locale?: Locale }) {
   const currentLocale = useLocale();
   const locale = localeOverride ?? currentLocale;
   const pathname = useLocation({ select: (location) => location.pathname });
-  const groups: NavigationGroup[] = [
+  const navigation = useNavigation();
+  const candidates: NavigationGroup[] = [
     {
       label: shellText('overview', locale),
       items: [{ to: '/app', label: t('dashboard.nav.overview', locale), icon: LayoutDashboard }],
@@ -56,17 +59,30 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
     {
       label: shellText('account', locale),
       items: [
+        {
+          to: '/settings/profile',
+          label: shellText(
+            navigation?.profileType === 'LEGAL' ? 'legalProfile' : 'personalProfile',
+            locale
+          ),
+          icon: Users,
+        },
+        { to: '/settings/addresses', label: shellText('addresses', locale), icon: Settings },
         { to: '/notifications', label: t('notifications.nav', locale), icon: Bell },
         { to: '/settings/team', label: t('team.title', locale), icon: Users },
         { to: '/settings', label: t('dashboard.nav.settings', locale), icon: Settings },
       ],
     },
   ];
+  const groups = permittedNavigation(candidates, navigation, 'customer');
   return (
     <AppShell
       area="dashboard"
       locale={locale}
       groups={groups}
+      navigationUnavailable={
+        !navigation || navigation.area !== 'customer' || !navigation.paths.length
+      }
       profile={<ProfileSwitcher locale={locale} />}
       actions={<NotificationBell />}
       banners={

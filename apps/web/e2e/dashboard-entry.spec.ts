@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { test, expect } from './coverage-fixture';
 
 test('root sends a signed-out visitor to login', async ({ page }) => {
@@ -10,10 +11,18 @@ for (const isStaff of [false, true]) {
   test(`root opens the correct dashboard for ${isStaff ? 'staff' : 'customers'}`, async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
     let profileReads = 0;
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
-      route.fulfill({ json: { userId: 'viewer', isStaff, requiresTosAcceptance: false } })
+      route.fulfill({
+        json: {
+          userId: 'viewer',
+          isStaff,
+          navigation: fullNavigation(isStaff ? 'staff' : 'customer'),
+          requiresTosAcceptance: false,
+        },
+      })
     );
     await page.route('**/api/profiles', (route) => {
       profileReads++;
@@ -43,7 +52,14 @@ for (const isStaff of [false, true]) {
 test('staff work cards open the matching pending queues', async ({ page }) => {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { userId: 'staff', isStaff: true, requiresTosAcceptance: false } })
+    route.fulfill({
+      json: {
+        userId: 'staff',
+        isStaff: true,
+        navigation: fullNavigation('staff'),
+        requiresTosAcceptance: false,
+      },
+    })
   );
   await page.route('**/api/admin/dashboard/widgets/*', (route) =>
     route.fulfill({

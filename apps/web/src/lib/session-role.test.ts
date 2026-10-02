@@ -1,5 +1,6 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import { readSessionContext, readSessionRole } from './session-role.js';
+import { getProfileContextRevision } from './profile-context.js';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -37,6 +38,7 @@ it('uses the selected context instead of staff eligibility for routing', async (
       )
   );
   expect(await readSessionContext()).toEqual({
+    navigationRevision: getProfileContextRevision(),
     isStaff: true,
     operatingContext: 'customer',
     canSwitchContext: true,
@@ -49,6 +51,7 @@ it('retains the authenticated account ID for scoped preferences without another 
     .mockResolvedValue(Response.json({ userId: 'customer-one', isStaff: false }));
   vi.stubGlobal('fetch', request);
   expect(await readSessionContext()).toEqual({
+    navigationRevision: getProfileContextRevision(),
     userId: 'customer-one',
     isStaff: false,
     operatingContext: 'customer',
@@ -85,6 +88,7 @@ it('preserves only validated account identity without confusing it with the acti
       .mockResolvedValue(Response.json({ isStaff: false, username: {}, email: [], mobile: 123 }))
   );
   expect(await readSessionContext()).toEqual({
+    navigationRevision: getProfileContextRevision(),
     isStaff: false,
     operatingContext: 'customer',
     canSwitchContext: false,

@@ -51,19 +51,24 @@ import { AppShell, type NavigationGroup } from '../components/AppShell.js';
 import { NotificationBell } from '../components/NotificationBell.js';
 import { AdminSettingsLayout } from '../components/AdminSettingsLayout.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
+import { NavigationProvider, useNavigation } from '../hooks/useNavigation.js';
+import { permittedNavigation } from '../lib/navigation-config.js';
 
 export function AdminContextLayout() {
-  const { userId } = useRouteContext({ from: '/admin' });
+  const { userId, navigation, navigationRevision } = useRouteContext({ from: '/admin' });
   return (
     <AccountUserProvider value={userId}>
-      <AdminLayout />
+      <NavigationProvider configuration={navigation} revision={navigationRevision}>
+        <AdminLayout />
+      </NavigationProvider>
     </AccountUserProvider>
   );
 }
 
 export default function AdminLayout() {
   const locale = useLocale();
-  const groups: NavigationGroup[] = [
+  const navigation = useNavigation();
+  const candidates: NavigationGroup[] = [
     {
       label: shellText('overview', locale),
       items: [
@@ -209,11 +214,13 @@ export default function AdminLayout() {
       ],
     },
   ];
+  const groups = permittedNavigation(candidates, navigation, 'staff');
   return (
     <AppShell
       area="admin"
       locale={locale}
       groups={groups}
+      navigationUnavailable={!navigation || navigation.area !== 'staff' || !navigation.paths.length}
       actions={<NotificationBell operatingContext="staff" />}
       banners={<TosBanner locale={locale} />}
     >

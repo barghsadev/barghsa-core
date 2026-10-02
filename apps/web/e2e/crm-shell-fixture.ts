@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import type { Page } from './coverage-fixture';
 export async function crmShell(page: Page, locale: string = 'en') {
   await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
@@ -7,6 +8,7 @@ export async function crmShell(page: Page, locale: string = 'en') {
       json: {
         userId: 'reviewer',
         isStaff: true,
+        navigation: fullNavigation('staff'),
         operatingContext: 'staff',
         canSwitchContext: false,
         requiresTosAcceptance: false,

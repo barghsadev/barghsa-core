@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { financeContract, financeVersion } from '../src/test/contract-finance-list-fixtures.js';
 import { formatBrowserDate } from './browser-date';
 import AxeBuilder from '@axe-core/playwright';
@@ -415,6 +416,7 @@ async function shell(page: Page, locale = 'en', staff = false) {
       json: {
         userId: staff ? 'staff' : 'customer',
         isStaff: staff,
+        navigation: fullNavigation(staff ? 'staff' : 'customer'),
         operatingContext: staff ? 'staff' : 'customer',
         canSwitchContext: false,
         requiresTosAcceptance: false,

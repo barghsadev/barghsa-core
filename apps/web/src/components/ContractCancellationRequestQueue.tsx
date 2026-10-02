@@ -3,7 +3,7 @@ import { Alert, AlertDescription, Button, ListPage, PageLoading } from '@barghsa
 import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
 import { documentRequest, DocumentRequestError } from '../lib/documents.js';
-import { ContractDetail } from './ContractDetail.js';
+import { ContractDetailLoader } from './ContractDetailLoader.js';
 import type { CancellationRequest } from './ContractCancellationRequestPanel.js';
 
 type QueueProps = { service?: 'savings'; onOpenSavingOrder?: (id: string) => void };
@@ -98,7 +98,7 @@ function CancellationQueue({ service, onOpenSavingOrder }: QueueProps) {
           </div>
         </ListPage.Toolbar>
         {selected ? (
-          <ContractDetail
+          <ContractDetailLoader
             key={selected}
             id={selected}
             staff

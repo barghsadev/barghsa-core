@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { fulfillDashboard } from './dashboard-fixture';
 import { test, expect } from './coverage-fixture';
 
@@ -12,7 +13,14 @@ for (const locale of ['fa', 'en'] as const) {
       route.fulfill({ json: { timezone: 'Asia/Tehran' } })
     );
     await page.route('**/api/auth/user', (route) =>
-      route.fulfill({ json: { userId: 'viewer', isStaff: false, requiresTosAcceptance: false } })
+      route.fulfill({
+        json: {
+          userId: 'viewer',
+          isStaff: false,
+          navigation: fullNavigation('customer'),
+          requiresTosAcceptance: false,
+        },
+      })
     );
     await page.route('**/api/profiles', (route) =>
       route.fulfill({
@@ -130,7 +138,14 @@ test('customer launcher stays hidden when the active profile has no assigned gui
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { userId: 'viewer', isStaff: false, requiresTosAcceptance: false } })
+    route.fulfill({
+      json: {
+        userId: 'viewer',
+        isStaff: false,
+        navigation: fullNavigation('customer'),
+        requiresTosAcceptance: false,
+      },
+    })
   );
   await page.route('**/api/profiles', (route) =>
     route.fulfill({ json: { profiles: [{ id: 'profile-1' }], hasDefault: true } })
@@ -158,7 +173,14 @@ test('account status hides denied fields and refuses a switched profile response
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { userId: 'viewer', isStaff: false, requiresTosAcceptance: false } })
+    route.fulfill({
+      json: {
+        userId: 'viewer',
+        isStaff: false,
+        navigation: fullNavigation('customer'),
+        requiresTosAcceptance: false,
+      },
+    })
   );
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
@@ -229,7 +251,14 @@ test('the full-page guide answers with sources and handles an unassigned profile
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { userId: 'viewer', isStaff: false, requiresTosAcceptance: false } })
+    route.fulfill({
+      json: {
+        userId: 'viewer',
+        isStaff: false,
+        navigation: fullNavigation('customer'),
+        requiresTosAcceptance: false,
+      },
+    })
   );
   await page.route('**/api/profiles', (route) =>
     route.fulfill({

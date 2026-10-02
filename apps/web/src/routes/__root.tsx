@@ -115,6 +115,9 @@ async function runProfileCheck(
 function RootComponent() {
   const profileRevision = useProfileContextRevision();
   const router = useRouter();
+  useEffect(() => {
+    if (profileRevision > 0) void router.invalidate();
+  }, [profileRevision, router]);
   const { pathname } = useLocation();
   const matches = useMatches();
   const isStaff = matches.some(

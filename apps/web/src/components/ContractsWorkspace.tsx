@@ -30,7 +30,7 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { documentRequest, DocumentRequestError } from '../lib/documents.js';
 import { contractBase, contractStates, type ContractSummary } from '../lib/contracts.js';
 import { ContractActivationRules } from './ContractActivationRules.js';
-import { ContractDetail } from './ContractDetail.js';
+import { ContractDetailLoader } from './ContractDetailLoader.js';
 import { ContractDraftEditor } from './ContractDraftEditor.js';
 import { ContractCommercialValueText } from './ContractCommercialValueText.js';
 import {
@@ -575,7 +575,7 @@ function ContractResults({
         }
       />
       {selected ? (
-        <ContractDetail
+        <ContractDetailLoader
           key={`${selected}:${reload}`}
           id={selected}
           staff={staff}

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
-import { Link, useLocation } from '@tanstack/react-router';
+import { Link, useLocation, useRouter } from '@tanstack/react-router';
 import { cn } from '@barghsa/ui';
 import { ArrowUpRight, type LucideIcon } from 'lucide-react';
 import { Topbar } from './Topbar.js';
@@ -33,6 +33,7 @@ export function AppShell({
   banners,
   profile,
   actions,
+  navigationUnavailable = false,
 }: {
   area: 'dashboard' | 'admin';
   locale: 'fa' | 'en';
@@ -41,10 +42,12 @@ export function AppShell({
   banners?: ReactNode;
   profile?: ReactNode;
   actions?: ReactNode;
+  navigationUnavailable?: boolean;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
   const { pathname } = useLocation();
+  const router = useRouter();
   const compact = useSyncExternalStore(subscribeCompactNavigation, compactNavigation, () => false);
   const [CompactBar, setCompactBar] = useState<CompactBarComponent | null>(null);
   const [compactError, setCompactError] = useState(false);
@@ -77,7 +80,10 @@ export function AppShell({
   const current = currentNavigation(groups, pathname);
   const shell = (
     <div
-      className="flex h-dvh flex-col bg-background text-foreground [--mobile-navigation-height:calc(4rem+env(safe-area-inset-bottom))] lg:[--mobile-navigation-height:0px]"
+      className={cn(
+        'flex h-dvh flex-col bg-background text-foreground [--mobile-navigation-height:calc(4rem+env(safe-area-inset-bottom))] lg:[--mobile-navigation-height:0px]',
+        !groups.length && '[--mobile-navigation-height:0px]'
+      )}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <a href={`#${area}-content`} className="sr-only focus:not-sr-only focus:bg-card focus:p-3">
@@ -108,6 +114,18 @@ export function AppShell({
         >
           {profile ? <div className="mb-5 border-b pb-4">{profile}</div> : null}
           <nav aria-label={shellText('navigation', locale)} className="flex flex-col gap-5">
+            {navigationUnavailable && (
+              <div className="rounded-lg border p-3 text-sm">
+                <p role="status">{shellText('navigationUnavailable', locale)}</p>
+                <button
+                  type="button"
+                  className="mt-2 min-h-11 font-semibold text-primary"
+                  onClick={() => void router.invalidate()}
+                >
+                  {shellText('refreshNavigation', locale)}
+                </button>
+              </div>
+            )}
             {groups.map((group) => (
               <div key={group.label}>
                 <p className="mb-2 px-3 text-xs font-medium text-muted-foreground">{group.label}</p>
@@ -152,6 +170,7 @@ export function AppShell({
         </main>
       </div>
       {compact &&
+        groups.length > 0 &&
         (CompactBar ? (
           <CompactBar
             area={area}

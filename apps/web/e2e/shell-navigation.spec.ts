@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { test, expect } from './coverage-fixture';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -14,7 +15,13 @@ for (const locale of ['en', 'fa'])
       }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
       await page.route('**/api/auth/user', (route) =>
-        route.fulfill({ json: { isStaff: area === 'admin', requiresTosAcceptance: false } })
+        route.fulfill({
+          json: {
+            isStaff: area === 'admin',
+            navigation: fullNavigation(area === 'admin' ? 'staff' : 'customer'),
+            requiresTosAcceptance: false,
+          },
+        })
       );
       await page.route('**/api/admin/failed-notifications/access', (route) =>
         route.fulfill({ json: { canView: true, canRetry: false } })
@@ -84,7 +91,13 @@ for (const locale of ['en', 'fa'])
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({
-        json: { isStaff: true, requiresTosAcceptance: true, userId: 'test-user', username: 'Test' },
+        json: {
+          isStaff: true,
+          navigation: fullNavigation('staff'),
+          requiresTosAcceptance: true,
+          userId: 'test-user',
+          username: 'Test',
+        },
       })
     );
     await page.route('**/api/tos/current?*', (route) => {
@@ -123,7 +136,13 @@ test('terms acceptance waits for the document renderer to load', async ({ page }
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({
-      json: { isStaff: true, requiresTosAcceptance: true, userId: 'test-user', username: 'Test' },
+      json: {
+        isStaff: true,
+        navigation: fullNavigation('staff'),
+        requiresTosAcceptance: true,
+        userId: 'test-user',
+        username: 'Test',
+      },
     })
   );
   await page.route('**/api/tos/current?*', (route) =>
@@ -183,6 +202,7 @@ for (const path of ['/tickets', '/invoices', '/invoices/record-one', '/admin/tic
       route.fulfill({
         json: {
           isStaff: path.startsWith('/admin/'),
+          navigation: fullNavigation(path.startsWith('/admin/') ? 'staff' : 'customer'),
           requiresTosAcceptance: true,
           userId: 'test-user',
           username: 'Test',
@@ -226,7 +246,13 @@ test('malformed terms never enable consent', async ({ page }) => {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({
-      json: { isStaff: true, requiresTosAcceptance: true, userId: 'test-user', username: 'Test' },
+      json: {
+        isStaff: true,
+        navigation: fullNavigation('staff'),
+        requiresTosAcceptance: true,
+        userId: 'test-user',
+        username: 'Test',
+      },
     })
   );
   await page.route('**/api/tos/current?*', (route) =>
@@ -256,11 +282,25 @@ for (const locale of ['en', 'fa']) {
       await page.route('**/api/auth/user', (route) =>
         ++sessionReads === 1 || recovered
           ? route.fulfill({
-              json: { isStaff: false, userId: 'retry-user', requiresTosAcceptance: true },
+              json: {
+                isStaff: false,
+                navigation: fullNavigation('customer'),
+                userId: 'retry-user',
+                requiresTosAcceptance: true,
+              },
             })
           : failure === 'unavailable'
-            ? route.fulfill({ status: 503, json: { isStaff: false } })
-            : route.fulfill({ json: { isStaff: false, userId: 'retry-user' } })
+            ? route.fulfill({
+                status: 503,
+                json: { isStaff: false, navigation: fullNavigation('customer') },
+              })
+            : route.fulfill({
+                json: {
+                  isStaff: false,
+                  navigation: fullNavigation('customer'),
+                  userId: 'retry-user',
+                },
+              })
       );
       await page.route('**/api/tos/current?*', (route) =>
         route.fulfill({

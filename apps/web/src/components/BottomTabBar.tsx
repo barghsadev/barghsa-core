@@ -68,7 +68,10 @@ export function BottomTabBar({
     <>
       <nav
         aria-label={shellText('quickNavigation', locale)}
-        className="grid shrink-0 grid-cols-5 border-t bg-card pb-[env(safe-area-inset-bottom)] lg:hidden"
+        className="grid shrink-0 border-t bg-card pb-[env(safe-area-inset-bottom)] lg:hidden"
+        style={{
+          gridTemplateColumns: `repeat(${primary.length + (remaining.length ? 1 : 0)}, minmax(0, 1fr))`,
+        }}
       >
         {primary.map(({ to, label, icon: Icon }) => (
           <Link

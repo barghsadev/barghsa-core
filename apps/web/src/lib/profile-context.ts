@@ -2,6 +2,7 @@ import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { toast } from './toast-api.js';
 
 let revision = 0;
+export const getProfileContextRevision = () => revision;
 const listeners = new Set<() => void>();
 const resets = new Set<() => void>();
 let channel: BroadcastChannel | undefined;

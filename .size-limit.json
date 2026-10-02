@@ -115,6 +115,12 @@
     "limitKB": 15
   },
   {
+    "name": "Contract detail on demand",
+    "phase": "interaction",
+    "entries": ["src/components/ContractDetail.tsx"],
+    "limitKB": 250
+  },
+  {
     "name": "Dashboard",
     "entries": [
       "index.html",

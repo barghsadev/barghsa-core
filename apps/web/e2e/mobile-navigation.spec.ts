@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import AxeBuilder from '@axe-core/playwright';
@@ -14,6 +15,7 @@ async function setup(page: Page, locale: 'en' | 'fa', area: 'customer' | 'admin'
       json: {
         userId: 'viewer',
         isStaff: area === 'admin',
+        navigation: fullNavigation(area === 'admin' ? 'staff' : 'customer'),
         operatingContext: area === 'admin' ? 'staff' : 'profile',
         requiresTosAcceptance: false,
       },

@@ -1,3 +1,5 @@
+import { NavigationProvider } from '../hooks/useNavigation.js';
+import { getProfileContextRevision } from '../lib/profile-context.js';
 import { Route as CustomerRoute } from '../routes/_app/documents.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -72,11 +74,41 @@ it('makes the implemented document workspaces reachable from both existing shell
     const CustomerPending = CustomerRoute.options.pendingComponent;
     await act(async () => root.render(CustomerPending ? <CustomerPending /> : null));
     expect(container.querySelector('[role=status]')).not.toBeNull();
-    await act(async () => root.render(<AdminLayout />));
+    await act(async () =>
+      root.render(
+        <NavigationProvider
+          configuration={{
+            version: 1,
+            area: 'staff',
+            profileId: null,
+            profileType: null,
+            paths: ['/admin/contracts', '/admin/documents'],
+          }}
+          revision={getProfileContextRevision()}
+        >
+          <AdminLayout />
+        </NavigationProvider>
+      )
+    );
     expect(container.querySelector('a[href="/admin/documents"]')?.textContent).toBe(
       'Document review'
     );
-    await act(async () => root.render(<DashboardLayout />));
+    await act(async () =>
+      root.render(
+        <NavigationProvider
+          configuration={{
+            version: 1,
+            area: 'customer',
+            profileId: 'profile',
+            profileType: 'INDIVIDUAL',
+            paths: ['/contracts', '/documents'],
+          }}
+          revision={getProfileContextRevision()}
+        >
+          <DashboardLayout />
+        </NavigationProvider>
+      )
+    );
     expect(container.querySelector('a[href="/documents"]')?.textContent).toBe('Documents');
   } finally {
     await act(async () => root.unmount());

@@ -1,3 +1,5 @@
+import { RouteSkeleton } from '../../components/RouteSkeleton.js';
+import { RouteErrorBoundary } from '../../components/RouteErrorBoundary.js';
 import { createFileRoute, useSearch } from '@tanstack/react-router';
 import { useListQuery } from '../../hooks/useListQuery.js';
 import { walletHistoryQueryOptions, walletHistorySearch } from '../../lib/wallet-history-query.js';
@@ -8,6 +10,8 @@ import { walletInvoiceReturnFor } from '../../lib/wallet-invoice-return.js';
 
 export const Route = createFileRoute('/_app/wallet')({
   component: WalletRoute,
+  pendingComponent: () => <RouteSkeleton />,
+  errorComponent: RouteErrorBoundary,
   validateSearch: walletHistorySearch,
 });
 

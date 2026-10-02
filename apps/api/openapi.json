@@ -17518,7 +17518,109 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "User info returned."
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "canSwitchContext": {
+                      "type": "boolean"
+                    },
+                    "email": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "emailVerified": {
+                      "type": "boolean"
+                    },
+                    "isStaff": {
+                      "type": "boolean"
+                    },
+                    "mobile": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "mobileVerified": {
+                      "type": "boolean"
+                    },
+                    "navigation": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "area": {
+                          "enum": [
+                            "staff",
+                            "customer"
+                          ],
+                          "type": "string"
+                        },
+                        "paths": {
+                          "items": {
+                            "pattern": "^/[a-zA-Z0-9/_-]*$",
+                            "type": "string"
+                          },
+                          "maxItems": 128,
+                          "type": "array",
+                          "uniqueItems": true
+                        },
+                        "profileId": {
+                          "format": "uuid",
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "profileType": {
+                          "enum": [
+                            "INDIVIDUAL",
+                            "LEGAL"
+                          ],
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "version": {
+                          "enum": [
+                            1
+                          ],
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "version",
+                        "area",
+                        "profileId",
+                        "profileType",
+                        "paths"
+                      ],
+                      "type": "object"
+                    },
+                    "operatingContext": {
+                      "enum": [
+                        "staff",
+                        "customer"
+                      ],
+                      "type": "string"
+                    },
+                    "userId": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "userId",
+                    "username",
+                    "email",
+                    "mobile",
+                    "emailVerified",
+                    "mobileVerified",
+                    "isStaff",
+                    "operatingContext",
+                    "canSwitchContext",
+                    "navigation"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Current account, selected workspace and backend-resolved navigation."
           },
           "401": {
             "description": "Not authenticated"

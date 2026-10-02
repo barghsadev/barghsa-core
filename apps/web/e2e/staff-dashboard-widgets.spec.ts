@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/app';
@@ -11,7 +12,14 @@ for (const locale of ['en', 'fa'] as const) {
     await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
-      route.fulfill({ json: { userId: 'staff', isStaff: true, requiresTosAcceptance: false } })
+      route.fulfill({
+        json: {
+          userId: 'staff',
+          isStaff: true,
+          navigation: fullNavigation('staff'),
+          requiresTosAcceptance: false,
+        },
+      })
     );
     await page.route('**/api/maintenance', (route) =>
       route.fulfill({ json: { capabilities: [] } })

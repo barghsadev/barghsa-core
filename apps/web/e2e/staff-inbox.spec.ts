@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { test, expect } from './coverage-fixture';
 import { shellText } from '@barghsa/i18n/shell';
 import { t } from '@barghsa/i18n/app';
@@ -13,6 +14,7 @@ for (const locale of ['fa', 'en'] as const) {
           userId: 'dual-role-user',
           isStaff: true,
           operatingContext,
+          navigation: fullNavigation(operatingContext),
           canSwitchContext: true,
           requiresTosAcceptance: false,
         },
@@ -25,7 +27,7 @@ for (const locale of ['fa', 'en'] as const) {
     });
     const notices = [
       {
-        id: 'staff-notice',
+        id: '01900000-0000-7000-8000-000000000001',
         operatingContext: 'staff',
         type: 'finance.chargeback_unresolved',
         titleI18nKey: 'notifications.legacy.title',
@@ -42,7 +44,7 @@ for (const locale of ['fa', 'en'] as const) {
         createdAt: new Date().toISOString(),
       },
       {
-        id: 'account-notice',
+        id: '01900000-0000-7000-8000-000000000002',
         operatingContext: 'account',
         type: 'auth.refresh_token_reused',
         titleI18nKey: 'notifications.legacy.title',
@@ -59,7 +61,7 @@ for (const locale of ['fa', 'en'] as const) {
         createdAt: new Date().toISOString(),
       },
       {
-        id: 'customer-notice',
+        id: '01900000-0000-7000-8000-000000000003',
         operatingContext: 'customer',
         type: 'payment.invoice_paid',
         titleI18nKey: 'notifications.legacy.title',

@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { shellText } from '@barghsa/i18n/shell';
@@ -25,6 +26,7 @@ for (const locale of ['en', 'fa'] as const) {
                 email: 'ari@example.test',
                 mobile: '+989121234567',
                 isStaff: area === 'staff',
+                navigation: fullNavigation(area === 'staff' ? 'staff' : 'customer'),
                 operatingContext: area === 'staff' ? 'staff' : 'customer',
                 canSwitchContext: area === 'staff',
                 requiresTosAcceptance: false,
@@ -186,8 +188,13 @@ for (const locale of ['en', 'fa'] as const) {
       await popup.getByRole('button', { name: shellText('logout', locale), exact: true }).click();
       await expect(page).toHaveURL(/\/login$/);
       expect(logoutReads).toBe(2);
-      await page.goto('/app');
+      // Settle the logout document before starting the next protected navigation.
+      await expect(page.locator('script[type="module"][src^="/auth/assets/"]')).toHaveCount(1);
+      await page.waitForLoadState('load');
+      // The guard redirects this document to the separate authentication entry.
+      await page.goto('/app', { waitUntil: 'commit' });
       await expect(page).toHaveURL(/\/login$/);
+      await expect(page.locator('script[type="module"][src^="/auth/assets/"]')).toHaveCount(1);
     });
   }
 }
