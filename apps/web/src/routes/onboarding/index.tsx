@@ -1,3 +1,4 @@
+import { InvitationBanner } from '../../components/InvitationBanner.js';
 import { useLocale } from '../../hooks/useLocale.js';
 import { withCsrf } from '../../lib/csrf.js';
 import {
@@ -16,6 +17,7 @@ const types = ['INDIVIDUAL', 'LEGAL'] as const;
 
 function OnboardingPage() {
   const locale = useLocale();
+  const { onboardingUserId } = Route.useRouteContext();
   const router = useRouter();
   const [selected, setSelected] = useState<ProfileType[]>([]);
   const [journey, setJourney] = useState<OnboardingJourney | null>(null);
@@ -94,6 +96,7 @@ function OnboardingPage() {
           <h1 className="text-2xl font-bold">{t('onboarding.welcome.title', locale)}</h1>
           <p className="text-muted-foreground">{t('onboarding.welcome.subtitle', locale)}</p>
         </div>
+        <InvitationBanner locale={locale} accountId={onboardingUserId} />
         {loading ? (
           <p role="status">{t('onboarding.journey.loading', locale)}</p>
         ) : journey ? (

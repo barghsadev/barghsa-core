@@ -219,6 +219,16 @@
         "types": "./dist/cjs/team-activity/index.d.ts",
         "default": "./dist/cjs/team-activity/index.js"
       }
+    },
+    "./invitations": {
+      "import": {
+        "types": "./dist/invitations/index.d.ts",
+        "default": "./dist/invitations/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/invitations/index.d.ts",
+        "default": "./dist/cjs/invitations/index.js"
+      }
     }
   },
   "scripts": {

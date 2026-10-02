@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { cookieResponse } from './cookie-response';
 import AxeBuilder from '@axe-core/playwright';
@@ -126,10 +127,20 @@ for (const locale of ['fa', 'en'] as const) {
     const decision = locale === 'fa' ? 'decline' : 'accept';
     await page.route(`**/api/invitations/${id}/${decision}`, async (route) => {
       decisions++;
+      expect(route.request().postDataJSON()).toEqual({
+        expectedProfileId: profileId,
+        expectedRole: 'Finance',
+      });
       await pending;
       return route.fulfill({
         json: {
           message: `Invitation ${decision === 'accept' ? 'accepted' : 'declined'} successfully.`,
+          invitation: {
+            id,
+            profileId,
+            role: 'Finance',
+            status: decision === 'accept' ? 'Accepted' : 'Declined',
+          },
         },
       });
     });
@@ -159,6 +170,9 @@ for (const locale of ['fa', 'en'] as const) {
     }
     await expect(banner).toHaveCount(0);
     expect(decisions).toBe(1);
+    await expect(page.getByRole('status').filter({ hasText: 'Dashboard company' })).toBeVisible();
+    if (decision === 'accept')
+      await expect(page.getByRole('button', { name: 'Open profile', exact: true })).toBeVisible();
   });
 
   test(`invitation modal previews the entity, cancels safely and retries without losing input (${locale})`, async ({
@@ -835,4 +849,133 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(page).toHaveURL(/\/login$/);
     });
   }
+}
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`onboarding invitations recover, accept without creating a profile and open explicitly (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const fa = locale === 'fa';
+    const id = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    let accepted = false,
+      selected = false,
+      decisions = 0,
+      switches = 0,
+      creations = 0;
+    await page.route('**/api/auth/user', (r) =>
+      r.fulfill({
+        json: {
+          userId: 'invited-customer',
+          isStaff: false,
+          operatingContext: 'customer',
+          requiresTosAcceptance: false,
+          navigation: {
+            ...fullNavigation('customer', 'LEGAL'),
+            profileId: selected ? profileId : null,
+          },
+        },
+      })
+    );
+    await page.route('**/api/profiles', (r) =>
+      r.fulfill({
+        json: {
+          profiles: accepted
+            ? [{ id: profileId, profileType: 'LEGAL', title: 'Invited company', status: 'ACTIVE' }]
+            : [],
+          activeProfileId: accepted ? profileId : null,
+          hasDefault: accepted,
+        },
+      })
+    );
+    await page.route('**/api/onboarding/journeys/active', (r) =>
+      r.fulfill({ json: { journey: null } })
+    );
+    await page.route('**/api/onboarding/journeys', (r) => {
+      creations++;
+      return r.fulfill({ status: 500, json: {} });
+    });
+    await page.route('**/api/invitations/pending', (r) =>
+      r.fulfill({
+        json: {
+          invitations: accepted
+            ? []
+            : [
+                {
+                  id,
+                  profileId,
+                  profileName: 'Invited company',
+                  role: 'Finance',
+                  invitedBy: 'hidden-owner',
+                  inviterName: 'Actual Inviter',
+                  createdAt: '2026-09-01T00:00:00Z',
+                  expiresAt: null,
+                  message: 'Please join our finance team.',
+                },
+              ],
+        },
+      })
+    );
+    await page.route(`**/api/invitations/${id}/accept`, async (r) => {
+      expect(r.request().postDataJSON()).toEqual({
+        expectedProfileId: profileId,
+        expectedRole: 'Finance',
+      });
+      decisions++;
+      if (decisions === 1) return r.fulfill({ status: 503, json: {} });
+      accepted = true;
+      await page
+        .context()
+        .addCookies([{ name: 'barghsa_csrf', value: 'after-accept', url: page.url() }]);
+      return r.fulfill({
+        json: { invitation: { id, profileId, role: 'Finance', status: 'Accepted' } },
+      });
+    });
+    await page.route(`**/api/profiles/switch/${profileId}`, (r) => {
+      switches++;
+      expect(r.request().headers()['x-csrf-token']).toBe('after-accept');
+      selected = true;
+      return r.fulfill({ json: { activeProfileId: profileId } });
+    });
+    await page.goto('/onboarding');
+    const region = page.getByRole('region', {
+      name: fa ? 'دعوت‌نامه‌های شرکت' : 'Company invitations',
+    });
+    await expect(region).toContainText('Actual Inviter');
+    await expect(region).not.toContainText('hidden-owner');
+    await page.keyboard.press('Escape');
+    await expect(region).toBeVisible();
+    await region.getByText(fa ? 'مشاهده جزئیات' : 'View details', { exact: true }).click();
+    await expect(region).toContainText('Please join our finance team.');
+    const axe = await new AxeBuilder({ page }).include('section[aria-label]').analyze();
+    expect(axe.violations).toEqual([]);
+    await page.evaluate(() => document.documentElement.classList.add('dark'));
+    expect(
+      (await new AxeBuilder({ page }).include('section[aria-label]').analyze()).violations
+    ).toEqual([]);
+    if (fa && test.info().project.name === 'mobile-safari')
+      await page.screenshot({ path: '/tmp/barghsa-invitation-widget-fa-dark.png', fullPage: true });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    await region.getByRole('button', { name: fa ? 'پذیرفتن' : 'Accept', exact: true }).click();
+    await expect(
+      region.getByRole('button', { name: fa ? 'پذیرفتن' : 'Accept', exact: true })
+    ).toBeDisabled();
+    await expect(region).toContainText('Invited company');
+    await region.getByRole('button', { name: fa ? 'تلاش دوباره' : 'Retry', exact: true }).click();
+    await region.getByRole('button', { name: fa ? 'پذیرفتن' : 'Accept', exact: true }).click();
+    const open = region.getByRole('button', {
+      name: fa ? 'باز کردن پروفایل' : 'Open profile',
+      exact: true,
+    });
+    await expect(open).toBeVisible();
+    expect(switches).toBe(0);
+    expect(creations).toBe(0);
+    await expect(page).toHaveURL(/\/onboarding\/?$/);
+    await open.click();
+    await expect(page).toHaveURL(/\/app\/?$/);
+    expect(switches).toBe(1);
+    expect(creations).toBe(0);
+  });
 }

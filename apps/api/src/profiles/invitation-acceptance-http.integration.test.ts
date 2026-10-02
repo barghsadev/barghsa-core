@@ -78,6 +78,9 @@ it('rotates the accepting session, invalidates other credentials and keeps new p
   ).rows[0].expires_at;
   const response = await accept();
   expect(response.status, await response.clone().text()).toBe(200);
+  expect(await response.clone().json()).toMatchObject({
+    invitation: { id: inviteId, profileId, role: 'Finance', status: 'Accepted' },
+  });
   const cookies = Object.fromEntries(
     response.headers
       .getSetCookie()
@@ -341,4 +344,93 @@ it('audit failure rolls back membership, invitation and rotated credentials with
     { revoked_at: null },
     { revoked_at: null },
   ]);
+});
+
+for (const decision of ['accept', 'decline'] as const) {
+  for (const changed of ['company', 'role'] as const) {
+    it(`${decision} rejects a changed displayed ${changed} before writing or rotating sessions`, async () => {
+      const response = await fetch(`${http.base}/api/invitations/${inviteId}/${decision}`, {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify({
+          expectedProfileId: changed === 'company' ? randomUUID() : profileId,
+          expectedRole: changed === 'role' ? 'Legal' : 'Finance',
+        }),
+      });
+      expect(response.status, await response.clone().text()).toBe(409);
+      expect(response.headers.getSetCookie()).toEqual([]);
+      await unchanged();
+      expect(
+        (await http.pool.query("SELECT id FROM audit_log WHERE event='invitation_declined'")).rows
+      ).toEqual([]);
+    });
+  }
+  it(`${decision} rejects incomplete, extra or invalid proposals`, async () => {
+    for (const proposal of [
+      { expectedProfileId: profileId },
+      { expectedRole: 'Finance' },
+      { expectedProfileId: profileId, expectedRole: 'Owner' },
+      { extra: true },
+    ]) {
+      const response = await fetch(`${http.base}/api/invitations/${inviteId}/${decision}`, {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify(proposal),
+      });
+      expect(response.status, await response.clone().text()).toBe(400);
+      await unchanged();
+    }
+  });
+}
+it('decline returns the persisted company and authority receipt without selecting a profile', async () => {
+  const response = await fetch(`${http.base}/api/invitations/${inviteId}/decline`, {
+    method: 'POST',
+    headers: headers(),
+    body: JSON.stringify({ expectedProfileId: profileId, expectedRole: 'Finance' }),
+  });
+  expect(response.status, await response.clone().text()).toBe(200);
+  expect(await response.json()).toMatchObject({
+    invitation: { id: inviteId, profileId, role: 'Finance', status: 'Declined' },
+  });
+  expect(
+    (await http.pool.query('SELECT status FROM profile_invitations WHERE id=$1', [inviteId])).rows
+  ).toEqual([{ status: 'Declined' }]);
+  expect((await http.pool.query('SELECT * FROM user_profile_contexts')).rows).toEqual([]);
+  expect((await http.pool.query('SELECT revoked_at FROM sessions')).rows).toEqual([
+    { revoked_at: null },
+    { revoked_at: null },
+  ]);
+});
+it('pending invitations identify the company and finalized inviter without disclosing draft names', async () => {
+  await http.pool.query("UPDATE profiles SET title='Displayed company' WHERE id=$1", [profileId]);
+  await http.pool.query(
+    "INSERT INTO profiles(user_id,profile_type,status,first_name,last_name,is_default) VALUES ('owner','INDIVIDUAL','DRAFT','Private','Draft',true)"
+  );
+  const read = () => fetch(`${http.base}/api/invitations/pending`, { headers: headers() });
+  let response = await read();
+  expect(response.status).toBe(200);
+  expect(await response.json()).toMatchObject({
+    invitations: [
+      { profileId, profileName: 'Displayed company', inviterName: 'owner@example.test' },
+    ],
+  });
+  await http.pool.query(
+    "INSERT INTO profiles(user_id,profile_type,status,first_name,last_name) VALUES ('owner','INDIVIDUAL','ACTIVE','Actual','Inviter')"
+  );
+  response = await read();
+  expect(await response.json()).toMatchObject({ invitations: [{ inviterName: 'Actual Inviter' }] });
+  await http.pool.query(
+    "UPDATE users SET username='different@example.test' WHERE user_id='invitee'"
+  );
+  response = await read();
+  expect(await response.json()).toEqual({ invitations: [] });
+});
+it('acceptance rejects a divergent persisted result and rolls back the entire decision', async () => {
+  await http.pool
+    .query(`CREATE FUNCTION alter_invitation_result() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.status='Accepted' THEN NEW.status='Declined'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER alter_invitation_result BEFORE UPDATE ON profile_invitations FOR EACH ROW EXECUTE FUNCTION alter_invitation_result()`);
+  const response = await accept();
+  expect(response.status).toBe(409);
+  expect(response.headers.getSetCookie()).toEqual([]);
+  await unchanged();
 });

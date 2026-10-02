@@ -1,16 +1,17 @@
-import { useAccountTime } from '../hooks/useAccountTime.js';
+import type { useAccountTime } from '../hooks/useAccountTime.js';
 import { t, type Locale } from '@barghsa/i18n/app';
 
-import type { PendingInvitation } from './InvitationBanner.js';
+import type { PendingInvitation } from '../lib/invitation-api.js';
 
 export function InvitationDetails({
   details,
   locale,
+  time,
 }: {
   details: PendingInvitation;
   locale: Locale;
+  time: Pick<ReturnType<typeof useAccountTime>, 'format'>;
 }) {
-  const time = useAccountTime(locale);
   const isRtl = locale === 'fa';
   return (
     <details
@@ -21,7 +22,7 @@ export function InvitationDetails({
         {t('invitation.details.view', locale)}
       </summary>
       <p className="my-3">{t(`invitation.details.${details.role}`, locale)}</p>
-      <dl className="space-y-3 text-sm">
+      <dl className="flex flex-col gap-3 text-sm">
         {details.message && (
           <div>
             <dt className="font-medium">{t('invitation.details.message', locale)}</dt>

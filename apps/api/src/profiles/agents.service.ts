@@ -3,6 +3,11 @@ import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { rateLimitKey } from '@barghsa/shared/rate-limit';
 import { normalizeUsername } from '@barghsa/shared/validation';
+import type {
+  InvitationDecisionInput,
+  InvitationDecisionReceipt,
+  InvitationRole,
+} from '@barghsa/shared/invitations';
 import type { AgentRole } from '@barghsa/shared/agent-permissions';
 import { v7 as uuidv7 } from 'uuid';
 import { RateLimitService } from '../rate-limit/rate-limit.service.js';
@@ -507,27 +512,28 @@ export class AgentsService {
   }> {
     const pool = getDbPool();
 
-    // Look up the user's username
-    const userResult = await pool.query(`SELECT username FROM users WHERE user_id = $1`, [userId]);
-    if (userResult.rows.length === 0) {
-      return { invitations: [] };
-    }
-    const username = userResult.rows[0].username as string;
-
-    // Query pending invitations matching this username, joined with profile and inviter info
+    // Resolve the current recipient and pending rows in one snapshot.
     const result = await pool.query(
       `SELECT pi.id, pi.profile_id,
-              COALESCE(lp.legal_name, NULLIF(concat_ws(' ', p.first_name, p.last_name), ''), p.id::text) AS profile_name,
+              COALESCE(NULLIF(lp.legal_name,''),NULLIF(p.title,''), NULLIF(concat_ws(' ', p.first_name, p.last_name), ''), p.id::text) AS profile_name,
               pi.role, pi.invited_by,
-              u.username AS inviter_name,
+              COALESCE(inviter.name, u.username) AS inviter_name,
               pi.created_at, pi.expires_at, pi.message, lp.national_identifier, lp.registration_number
        FROM profile_invitations pi
        JOIN profiles p ON p.id = pi.profile_id
        LEFT JOIN legal_profiles lp ON lp.id = p.id
        LEFT JOIN users u ON u.user_id = pi.invited_by
-       WHERE pi.username = $1 AND pi.status = 'Pending' AND (pi.expires_at IS NULL OR pi.expires_at > NOW()) AND NOT p.archived
+       JOIN users recipient ON recipient.user_id=$1 AND recipient.username=pi.username
+       LEFT JOIN LATERAL (
+         SELECT NULLIF(btrim(concat_ws(' ', personal.first_name,personal.last_name)),'') AS name
+         FROM profiles personal WHERE personal.user_id=pi.invited_by
+         AND personal.profile_type='INDIVIDUAL' AND NOT personal.archived
+         AND personal.status IN ('ACTIVE','PENDING_VERIFICATION','VERIFIED')
+         ORDER BY personal.is_default DESC,personal.created_at,personal.id LIMIT 1
+       ) inviter ON true
+       WHERE pi.status = 'Pending' AND pi.role IN ('Manager','Finance','Legal') AND (pi.expires_at IS NULL OR pi.expires_at > NOW()) AND NOT p.archived AND p.profile_type='LEGAL'
        ORDER BY pi.created_at DESC`,
-      [username]
+      [userId]
     );
 
     const invitations = result.rows.map((row: Record<string, unknown>) => ({
@@ -561,8 +567,9 @@ export class AgentsService {
    */
   async acceptInvitation(
     inviteId: string,
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
-  ): Promise<CreatedSession> {
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    proposal: InvitationDecisionInput = {}
+  ): Promise<CreatedSession & { invitation: InvitationDecisionReceipt }> {
     const pool = getDbPool();
     // This unlocked lookup selects only the lock scope. Recheck the full invitation below.
     const hint = await pool.query('SELECT profile_id FROM profile_invitations WHERE id=$1', [
@@ -625,6 +632,11 @@ export class AgentsService {
           { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
           400
         );
+      if (
+        'expectedProfileId' in proposal &&
+        (proposal.expectedProfileId !== profileId || proposal.expectedRole !== invite.role)
+      )
+        throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);
       const checkDeadlines = async () => {
         const deadlines = (
           await client.query(
@@ -700,10 +712,33 @@ export class AgentsService {
           correlationIdStorage.getStore() ?? uuidv7(),
         ]
       );
-      // Keep original deadlines: intentional rotation must not extend acceptance authority.
+      const saved = (
+        await client.query(
+          `SELECT pi.profile_id,pi.role,pi.status FROM profile_invitations pi
+        JOIN profile_agents pa ON pa.profile_id=pi.profile_id AND pa.user_id=$2 AND pa.role=pi.role
+        WHERE pi.id=$1`,
+          [inviteId, actor.userId]
+        )
+      ).rows[0];
+      if (
+        !saved ||
+        saved.profile_id !== profileId ||
+        saved.role !== invite.role ||
+        saved.status !== 'Accepted'
+      )
+        throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);
+      // Keep original deadlines through the receipt read; rotation does not extend authority.
       await checkDeadlines();
       await client.query('COMMIT');
-      return rotated;
+      return {
+        ...rotated,
+        invitation: {
+          id: inviteId,
+          profileId,
+          role: invite.role as InvitationRole,
+          status: 'Accepted',
+        },
+      };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
@@ -724,8 +759,9 @@ export class AgentsService {
    */
   async declineInvitation(
     inviteId: string,
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
-  ): Promise<void> {
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    proposal: InvitationDecisionInput = {}
+  ): Promise<InvitationDecisionReceipt> {
     const pool = getDbPool();
     // Locate only the lock scope; ownership and state are checked under locks below.
     const scope = (
@@ -753,13 +789,19 @@ export class AgentsService {
       await requireCurrentSession(client, actor);
       const invitation = (
         await client.query(
-          'SELECT username FROM profile_invitations WHERE id=$1 AND profile_id=$2 FOR UPDATE',
+          'SELECT username,role FROM profile_invitations WHERE id=$1 AND profile_id=$2 FOR UPDATE',
           [inviteId, profileId]
         )
       ).rows[0];
       if (!invitation || invitation.username !== user.username)
         throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
       if (!profile || profile.profile_type !== 'LEGAL' || profile.archived)
+        throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);
+      if (
+        !AgentsService.VALID_INVITE_ROLES.has(invitation.role) ||
+        ('expectedProfileId' in proposal &&
+          (proposal.expectedProfileId !== profileId || proposal.expectedRole !== invitation.role))
+      )
         throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);
       const changed = await client.query(
         `UPDATE profile_invitations SET status='Declined',updated_at=clock_timestamp()
@@ -780,13 +822,24 @@ export class AgentsService {
         ]
       );
       const live = await client.query(
-        'SELECT id FROM profile_invitations WHERE id=$1 AND (expires_at IS NULL OR expires_at>clock_timestamp())',
+        'SELECT id,profile_id,role,status FROM profile_invitations WHERE id=$1 AND (expires_at IS NULL OR expires_at>clock_timestamp())',
         [inviteId]
       );
-      if (!live.rows.length)
+      if (
+        !live.rows[0] ||
+        live.rows[0].profile_id !== profileId ||
+        live.rows[0].role !== invitation.role ||
+        live.rows[0].status !== 'Declined'
+      )
         throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
+      return {
+        id: inviteId,
+        profileId,
+        role: invitation.role as InvitationRole,
+        status: 'Declined',
+      };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

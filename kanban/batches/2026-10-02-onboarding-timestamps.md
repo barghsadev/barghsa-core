@@ -14,3 +14,5 @@ Validation before publication:
 - `pnpm check:contract`, all69 unchanged bundle budgets, backlog validation and `git diff --check`: pass.
 
 Direct main publication follows the user's manual batch workflow. No CI gates, scheduler, supervisor state or generated task history are changed. Deploy migration0241 after0240. Exact-commit CI is read back after publication; the prior failed run is not green.
+
+Published as `99174275fffbc63216b4e3dbf57d98560f3877a6`, verified on GitHub main. All five exact-commit CI jobs pass in [run37014404086](https://github.com/barghsadev/barghsa-core/actions/runs/37014404086).

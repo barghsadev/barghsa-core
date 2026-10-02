@@ -1,4 +1,7 @@
+import { invitationDecisionInput } from '@barghsa/shared/invitations';
+import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -14,11 +17,30 @@ import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import type { Response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import type { ApiResponseSchemaHost } from '@nestjs/swagger';
 import { AgentsService } from './agents.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { setSessionCookie, setRefreshCookie, setCsrfCookie } from '../session/cookie.helper.js';
+
+const decisionReceiptSchema: ApiResponseSchemaHost['schema'] = {
+  type: 'object',
+  required: ['message', 'invitation'],
+  properties: {
+    message: { type: 'string' },
+    invitation: {
+      type: 'object',
+      required: ['id', 'profileId', 'role', 'status'],
+      properties: {
+        id: { type: 'string', format: 'uuid' },
+        profileId: { type: 'string', format: 'uuid' },
+        role: { type: 'string', enum: ['Manager', 'Finance', 'Legal'] },
+        status: { type: 'string', enum: ['Accepted', 'Declined'] },
+      },
+    },
+  },
+};
 
 @ApiTags('Invitations')
 @Controller('api/invitations')
@@ -58,22 +80,27 @@ export class InvitationsController {
   @HttpCode(200)
   @RateLimit({ namespace: 'invitations:accept', limit: 10, windowMs: 60_000 })
   @ApiOperation({ summary: 'Accept a pending invitation' })
-  @ApiResponse({ status: 200, description: 'Invitation accepted.' })
+  @ApiZodBody(invitationDecisionInput)
+  @ApiResponse({ status: 200, description: 'Invitation accepted.', schema: decisionReceiptSchema })
   @ApiResponse({ status: 400, description: 'Invitation not in Pending status or expired.' })
   @ApiResponse({ status: 404, description: 'Invitation not found.' })
   @ApiResponse({ status: 409, description: 'Already an agent of this profile.' })
   async acceptInvitation(
     @Param('inviteId') inviteId: string,
     @Req() req: AuthenticatedRequest,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: Response,
+    @Body() body: unknown
   ) {
     const userId = req.session.userId;
-    const rotated = await this.agentsService.acceptInvitation(inviteId, req.session);
+    const proposal = invitationDecisionInput.safeParse(body ?? {});
+    if (!z.uuid().safeParse(inviteId).success || !proposal.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    const rotated = await this.agentsService.acceptInvitation(inviteId, req.session, proposal.data);
     setSessionCookie(res, rotated.sessionId, rotated.expiresAt);
     setRefreshCookie(res, rotated.refreshToken, rotated.expiresAt);
     setCsrfCookie(res, rotated.csrfToken);
     this.logger.log(`Invitation ${inviteId} accepted by user ${userId}`);
-    return { message: 'Invitation accepted successfully.' };
+    return { message: 'Invitation accepted successfully.', invitation: rotated.invitation };
   }
 
   /**
@@ -86,16 +113,26 @@ export class InvitationsController {
   @HttpCode(200)
   @RateLimit({ namespace: 'invitations:decline', limit: 10, windowMs: 60_000 })
   @ApiOperation({ summary: 'Decline a pending invitation' })
-  @ApiResponse({ status: 200, description: 'Invitation declined.' })
+  @ApiZodBody(invitationDecisionInput)
+  @ApiResponse({ status: 200, description: 'Invitation declined.', schema: decisionReceiptSchema })
   @ApiResponse({ status: 400, description: 'Invalid invitation ID.' })
   @ApiResponse({ status: 409, description: 'Invitation changed or expired.' })
   @ApiResponse({ status: 404, description: 'Invitation not found.' })
-  async declineInvitation(@Param('inviteId') inviteId: string, @Req() req: AuthenticatedRequest) {
+  async declineInvitation(
+    @Param('inviteId') inviteId: string,
+    @Req() req: AuthenticatedRequest,
+    @Body() body: unknown
+  ) {
     const userId = req.session.userId;
-    if (!z.uuid().safeParse(inviteId).success)
+    const proposal = invitationDecisionInput.safeParse(body ?? {});
+    if (!z.uuid().safeParse(inviteId).success || !proposal.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
-    await this.agentsService.declineInvitation(inviteId, req.session);
+    const invitation = await this.agentsService.declineInvitation(
+      inviteId,
+      req.session,
+      proposal.data
+    );
     this.logger.log(`Invitation ${inviteId} declined by user ${userId}`);
-    return { message: 'Invitation declined successfully.' };
+    return { message: 'Invitation declined successfully.', invitation };
   }
 }

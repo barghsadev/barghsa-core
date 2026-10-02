@@ -6,6 +6,7 @@ export const Route = createFileRoute('/onboarding')({
     const session = await readSessionContext(abortController.signal);
     if (session === null) throw redirect({ to: '/login', replace: true });
     if (session.operatingContext === 'staff') throw redirect({ to: '/app', replace: true });
+    return { onboardingUserId: session.userId };
   },
   component: Outlet,
 });

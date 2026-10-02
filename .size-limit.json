@@ -121,6 +121,18 @@
     "limitKB": 250
   },
   {
+    "name": "Company invitation cards when present",
+    "phase": "interaction",
+    "entries": ["src/components/InvitationCards.tsx"],
+    "limitKB": 15
+  },
+  {
+    "name": "Company invitation decisions on demand",
+    "phase": "interaction",
+    "entries": ["src/lib/invitation-action.ts"],
+    "limitKB": 15
+  },
+  {
     "name": "Dashboard",
     "entries": [
       "index.html",

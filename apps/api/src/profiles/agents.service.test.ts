@@ -178,7 +178,6 @@ describe('AgentsService', () => {
 
   describe('listPendingInvitations', () => {
     const userId = 'user-1';
-    const username = 'test@example.com';
 
     beforeEach(() => {
       mockPool.query.mockReset();
@@ -188,7 +187,6 @@ describe('AgentsService', () => {
     });
 
     it('returns pending invitations for the current user', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] });
       mockPool.query.mockResolvedValueOnce({
         rows: [
           {
@@ -224,7 +222,6 @@ describe('AgentsService', () => {
     });
 
     it('returns empty when no pending invitations', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] });
       mockPool.query.mockResolvedValueOnce({ rows: [] });
 
       const result = await service.listPendingInvitations(userId);

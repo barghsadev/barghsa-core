@@ -22052,8 +22052,97 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {},
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "expectedProfileId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "expectedRole": {
+                        "enum": [
+                          "Manager",
+                          "Finance",
+                          "Legal"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "expectedProfileId",
+                      "expectedRole"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "invitation": {
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "profileId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "role": {
+                          "enum": [
+                            "Manager",
+                            "Finance",
+                            "Legal"
+                          ],
+                          "type": "string"
+                        },
+                        "status": {
+                          "enum": [
+                            "Accepted",
+                            "Declined"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "profileId",
+                        "role",
+                        "status"
+                      ],
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "invitation"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
             "description": "Invitation accepted."
           },
           "400": {
@@ -22085,8 +22174,97 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {},
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "expectedProfileId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "expectedRole": {
+                        "enum": [
+                          "Manager",
+                          "Finance",
+                          "Legal"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "expectedProfileId",
+                      "expectedRole"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "invitation": {
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "profileId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "role": {
+                          "enum": [
+                            "Manager",
+                            "Finance",
+                            "Legal"
+                          ],
+                          "type": "string"
+                        },
+                        "status": {
+                          "enum": [
+                            "Accepted",
+                            "Declined"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "profileId",
+                        "role",
+                        "status"
+                      ],
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "invitation"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
             "description": "Invitation declined."
           },
           "400": {

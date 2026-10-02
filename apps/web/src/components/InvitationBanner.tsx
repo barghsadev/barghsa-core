@@ -1,245 +1,176 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useState, useEffect, useCallback } from 'react';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
+import { lazy, Suspense, useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { Button } from '@barghsa/ui';
-import { InvitationDetails } from './InvitationDetails.js';
-import { withCsrf } from '../lib/csrf.js';
+import { refreshProfileContext } from '../lib/profile-context.js';
+import {
+  isPendingInvitations,
+  type PendingInvitation,
+  type PendingInvitationsResponse,
+} from '../lib/invitation-api.js';
 
-// ─── Types ────────────────────────────────────────────────────────────
-
-export interface PendingInvitation {
-  id: string;
-  profileId: string;
-  profileName: string;
-  role: string;
-  invitedBy: string;
-  inviterName: string | null;
-  createdAt: string;
-  expiresAt: string | null;
-  message?: string | null;
-  entity?: { nationalIdentifier: string | null; registrationNumber: string | null };
-}
-
-interface PendingInvitationsResponse {
-  invitations: PendingInvitation[];
-}
-
-interface ActionState {
-  accepting: boolean;
-  declining: boolean;
-  done: boolean;
-  doneAction: 'accept' | 'decline' | null;
-}
-
-const defaultActionState = (): ActionState => ({
-  accepting: false,
-  declining: false,
-  done: false,
-  doneAction: null,
-});
-
-// ─── Props ────────────────────────────────────────────────────────────
+const InvitationCards = lazy(() =>
+  import('./InvitationCards.js').then((module) => ({ default: module.InvitationCards }))
+);
 
 interface InvitationBannerProps {
   locale?: Locale;
+  accountId?: string;
+}
+interface CompletedDecision {
+  target: PendingInvitation;
+  decision: 'accept' | 'decline';
 }
 
-// ─── Component ────────────────────────────────────────────────────────
+export function InvitationBanner({ locale = 'fa', accountId }: InvitationBannerProps) {
+  const currentAccount = useAccountUser();
+  const account = accountId ?? currentAccount;
+  return account ? <AccountInvitations key={account} locale={locale} /> : null;
+}
 
-/**
- * InvitationBanner (T-05.04.03).
- *
- * Fetches pending invitations for the current user and shows a banner
- * at the top of dashboard pages when there are pending invitations.
- * Each invitation shows the legal entity name, role, and inviter info,
- * with Accept and Decline buttons.
- */
-export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
+function AccountInvitations({ locale }: { locale: Locale }) {
   const time = useAccountTime(locale);
-  const [invitations, setInvitations] = useState<PendingInvitation[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [actionStates, setActionStates] = useState<Record<string, ActionState>>({});
-  const [error, setError] = useState<string | null>(null);
-  const [loadError, setLoadError] = useState(false);
   const router = useRouter();
+  const [completed, setCompleted] = useState<CompletedDecision[]>([]);
+  const [operation, setOperation] = useState<string | null>(null);
+  const [failure, setFailure] = useState<{
+    data: PendingInvitationsResponse | null;
+    kind: 'decision' | 'open';
+  } | null>(null);
+  const busy = useRef(false);
+  const request = useRef<AbortController | null>(null);
+  useEffect(() => () => request.current?.abort(), []);
+  const clear = useCallback(() => {
+    request.current?.abort();
+    busy.current = false;
+    setOperation(null);
+    setCompleted([]);
+    setFailure(null);
+  }, []);
+  const scope = useCatalogueScope(clear);
+  const resource = useCatalogueResource(scope, '/api/invitations/pending', isPendingInvitations);
+  const failed = !!failure && failure.data === resource.data;
+  const paused = operation !== null || resource.loading || resource.error || failed || scope.denied;
+  const completedIds = new Set(completed.map((c) => c.target.id));
+  const invitations = resource.data?.invitations.filter((i) => !completedIds.has(i.id)) ?? [];
 
-  const isRtl = locale === 'fa';
-
-  // ── Fetch pending invitations ─────────────────────────────────
-
-  const fetchInvitations = useCallback(async () => {
-    setLoading(true);
-    setLoadError(false);
+  async function run(target: PendingInvitation, action: 'accept' | 'decline' | 'open') {
+    if (busy.current || paused) return;
+    busy.current = true;
+    const controller = new AbortController();
+    request.current = controller;
+    const epoch = scope.live.current;
+    const current = () => !controller.signal.aborted && scope.live.current === epoch;
+    setOperation(`${target.id}:${action}`);
+    setFailure(null);
     try {
-      const response = await fetch('/api/invitations/pending', {
-        method: 'GET',
-        credentials: 'include',
-        headers: { Accept: 'application/json' },
-      });
-
-      if (response.status === 401) {
-        setInvitations([]);
-        setLoading(false);
+      const { invitationAction } = await import('../lib/invitation-action.js');
+      if (!current()) return;
+      const result = await invitationAction(target, action, controller.signal);
+      if (!current()) return;
+      if (result.denied) {
+        scope.deny();
         return;
       }
-
-      if (!response.ok) throw new Error('Invitation list unavailable');
-
-      const data: PendingInvitationsResponse = await response.json();
-      setInvitations(data.invitations);
-    } catch {
-      setLoadError(true);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchInvitations();
-  }, [fetchInvitations]);
-
-  const handleDecision = useCallback(
-    async (inviteId: string, decision: 'accept' | 'decline') => {
-      setActionStates((previous) => ({
-        ...previous,
-        [inviteId]: {
-          ...(previous[inviteId] ?? defaultActionState()),
-          accepting: decision === 'accept',
-          declining: decision === 'decline',
-        },
-      }));
-      setError(null);
-      try {
-        const response = await fetch(`/api/invitations/${inviteId}/${decision}`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-        });
-        if (!response.ok) throw new Error('Invitation decision failed');
-        setActionStates((previous) => ({
-          ...previous,
-          [inviteId]: { accepting: false, declining: false, done: true, doneAction: decision },
-        }));
-        window.dispatchEvent(new Event('barghsa:profiles-changed'));
-        void router.invalidate();
-      } catch {
-        setError(t('invitation.banner.error', locale));
-        setActionStates((previous) => ({
-          ...previous,
-          [inviteId]: {
-            ...(previous[inviteId] ?? defaultActionState()),
-            accepting: false,
-            declining: false,
-          },
-        }));
+      if (action === 'open') {
+        refreshProfileContext();
+        await router.navigate({ to: '/app' });
+      } else {
+        setCompleted((previous) => [...previous, { target, decision: action }]);
+        if (action === 'accept') {
+          window.dispatchEvent(new Event('barghsa:profiles-changed'));
+          void router.invalidate();
+        }
       }
-    },
-    [locale, router]
-  );
-
-  // ── Render ────────────────────────────────────────────────────
-
-  if (loading) return null;
-  if (loadError)
-    return (
-      <div
-        role="alert"
-        dir={isRtl ? 'rtl' : 'ltr'}
-        className="rounded-lg border bg-card p-3 text-card-foreground"
-      >
-        <p>{t('invitation.banner.loadError', locale)}</p>
-        <Button variant="outline" onClick={() => void fetchInvitations()}>
-          {t('team.retry', locale)}
-        </Button>
-      </div>
-    );
-  if (invitations.length === 0) {
-    return null;
+    } catch {
+      if (current())
+        setFailure({ data: resource.data, kind: action === 'open' ? 'open' : 'decision' });
+    } finally {
+      if (current()) {
+        busy.current = false;
+        setOperation(null);
+      }
+    }
   }
 
+  if (
+    !scope.denied &&
+    !resource.loading &&
+    !resource.error &&
+    !failed &&
+    !invitations.length &&
+    !completed.length
+  )
+    return null;
   return (
-    <div dir={isRtl ? 'rtl' : 'ltr'}>
+    <section
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+      className="flex flex-col gap-3"
+      aria-label={t('invitation.banner.heading', locale)}
+    >
       {time.notice}
-      {error && (
+      {(scope.denied || resource.error || failed) && (
         <div
-          className="bg-danger-soft border border-destructive/20 shadow-sm rounded-lg px-4 py-2 text-sm text-destructive mb-2"
           role="alert"
+          className="rounded-lg border bg-card p-4 text-card-foreground flex flex-col items-start gap-3"
         >
-          {error}
+          <p className="text-sm">
+            {t(
+              scope.denied
+                ? 'invitation.banner.denied'
+                : resource.error
+                  ? 'invitation.banner.loadError'
+                  : failure?.kind === 'open'
+                    ? 'invitation.banner.openError'
+                    : 'invitation.banner.error',
+              locale
+            )}
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={operation !== null || resource.loading}
+            onClick={() => (scope.denied ? scope.recover() : resource.retry())}
+          >
+            {t('team.retry', locale)}
+          </Button>
         </div>
       )}
-
-      {invitations.map((inv) => {
-        const state = actionStates[inv.id] ?? defaultActionState();
-
-        if (state.done) {
-          return (
-            <div
-              key={inv.id}
-              className="bg-success-soft border border-success/20 shadow-sm rounded-lg px-4 py-3 text-sm text-success"
-              role="alert"
-            >
-              {state.doneAction === 'accept'
-                ? t('invitation.banner.accepted', locale)
-                : t('invitation.banner.declined', locale)}
-            </div>
-          );
-        }
-
-        const displayDate = time.format(inv.createdAt, { dateStyle: 'medium' });
-
-        return (
-          <div
-            key={inv.id}
-            className="bg-blue-50 border border-blue-200 shadow-sm rounded-lg px-4 py-3 text-sm"
-            role="alert"
+      {resource.loading && (
+        <p role="status" className="text-sm text-muted-foreground">
+          {t('invitation.banner.loading', locale)}
+        </p>
+      )}
+      {(!!invitations.length || !!completed.length) && (
+        <Suspense fallback={<p role="status">{t('invitation.banner.loading', locale)}</p>}>
+          <InvitationCards
+            invitations={invitations}
+            completed={completed}
+            locale={locale}
+            time={time}
+            paused={paused}
+            operation={operation}
+            run={run}
+          />
+        </Suspense>
+      )}
+      {!!resource.data && (!!invitations.length || !!completed.length) && (
+        <div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            disabled={operation !== null || resource.loading}
+            onClick={resource.retry}
           >
-            <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
-              <div className="flex flex-col gap-1">
-                <span className="font-medium text-blue-900">
-                  {t('invitation.banner.title', locale)
-                    .replace('{entity}', inv.profileName)
-                    .replace('{role}', t(`team.${inv.role}`, locale))}
-                </span>
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-blue-700">
-                  <span>
-                    {t('invitation.banner.invitedBy', locale).replace(
-                      '{name}',
-                      inv.inviterName ?? inv.invitedBy
-                    )}
-                  </span>
-                  <span>{t('invitation.banner.date', locale).replace('{date}', displayDate)}</span>
-                </div>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={() => handleDecision(inv.id, 'accept')}
-                  disabled={state.accepting || state.declining}
-                >
-                  {state.accepting
-                    ? t('invitation.banner.accepting', locale)
-                    : t('invitation.banner.accept', locale)}
-                </Button>
-                <Button
-                  variant="outline"
-                  className="bg-background text-foreground"
-                  size="sm"
-                  onClick={() => handleDecision(inv.id, 'decline')}
-                  disabled={state.accepting || state.declining}
-                >
-                  {state.declining
-                    ? t('invitation.banner.declining', locale)
-                    : t('invitation.banner.decline', locale)}
-                </Button>
-              </div>
-            </div>
-            <InvitationDetails details={inv} locale={locale} />
-          </div>
-        );
-      })}
-    </div>
+            {t('invitation.banner.refresh', locale)}
+          </Button>
+        </div>
+      )}
+    </section>
   );
 }

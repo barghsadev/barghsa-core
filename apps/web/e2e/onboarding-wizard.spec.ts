@@ -55,6 +55,10 @@ async function fixture(
     localStorage.setItem('barghsa.locale', language);
   }, locale);
   await page.route('**/api/**', (r) => r.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/user/settings/timezone', (r) =>
+    r.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
+  await page.route('**/api/invitations/pending', (r) => r.fulfill({ json: { invitations: [] } }));
   await page.route('**/api/auth/user', (r) =>
     r.fulfill({
       json: {
@@ -513,6 +517,12 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     await expect(page).toHaveURL(new RegExp(`/onboarding/individual/${profileId}$`));
     expect(state.starts).toHaveLength(1);
+    await expect(
+      page.getByRole('button', {
+        name: locale === 'fa' ? 'ذخیره و ادامه' : 'Save and continue',
+        exact: true,
+      })
+    ).toBeVisible();
     await page.goto('/onboarding');
     state.personalDone = true;
     state.companyDone = true;
