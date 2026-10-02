@@ -36,7 +36,11 @@ it('adds opt-in identities to an existing production database without publishing
     const before = (await pool.query('SELECT * FROM users')).rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0234_conversation_identities', '0235_conversation_identity_timestamps'],
+      applied: [
+        '0234_conversation_identities',
+        '0235_conversation_identity_timestamps',
+        '0236_activity_identity_consent',
+      ],
     });
     expect((await pool.query('SELECT * FROM users')).rows).toEqual(before);
     expect((await pool.query('SELECT * FROM conversation_identities')).rows).toEqual([]);

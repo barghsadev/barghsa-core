@@ -321,6 +321,12 @@ test('customer consultation moves through staff offer, payment handoff, and comp
   await page.getByRole('button', { name: 'Mark completed' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
   await expect.poll(() => status).toBe('completed');
+  // Wait for the committed detail and pending route update before switching fixture context.
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(
+    page.locator('ol').getByText('Consultation delivered', { exact: true })
+  ).toBeVisible();
+  await expect(page).toHaveURL(new RegExp(`/admin/consultations\\?requestId=${requestId}$`));
 
   operatingContext = 'customer';
   await page.goto(`/consultations/${requestId}`);

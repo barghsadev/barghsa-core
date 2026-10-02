@@ -1,3 +1,4 @@
+import { activityNames } from '../common/activity-identity.js';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import type { PoolClient } from 'pg';
@@ -361,6 +362,10 @@ export class ElectricityStaffReviewService {
           [row.contract_id]
         )
       ).rows;
+      const names = await activityNames(
+        client,
+        activity.map((item) => item.user_id)
+      );
       await client.query('COMMIT');
       const content = row.contract_snapshot;
       const beforePricing = previous?.content.pricing;
@@ -404,6 +409,7 @@ export class ElectricityStaffReviewService {
             event: item.event,
             at: item.created_at.toISOString(),
             actor: item.user_id,
+            actorName: item.user_id ? (names.get(item.user_id) ?? null) : null,
             reason: typeof item.metadata.reason === 'string' ? item.metadata.reason : null,
             comment:
               typeof item.metadata.responseNote === 'string' ? item.metadata.responseNote : null,
@@ -413,6 +419,7 @@ export class ElectricityStaffReviewService {
             event: item.event,
             at: item.at.toISOString(),
             actor: null,
+            actorName: null,
             reason: null,
             comment: null,
           })),

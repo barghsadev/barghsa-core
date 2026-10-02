@@ -41,9 +41,19 @@ it('adds the standard timestamp trigger to populated identity tables without cha
       .rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0235_conversation_identity_timestamps'],
+      applied: ['0235_conversation_identity_timestamps', '0236_activity_identity_consent'],
     });
-    expect((await pool.query('SELECT * FROM conversation_identities')).rows).toEqual(before);
+    expect((await pool.query('SELECT * FROM conversation_identities')).rows).toEqual(
+      before.map((row) => ({ ...row, share_in_activity: false }))
+    );
+    await expect(
+      pool.query(
+        "UPDATE conversation_identities SET display_name=NULL,share_in_activity=true WHERE user_id='chosen'"
+      )
+    ).rejects.toMatchObject({ code: '23514', constraint: 'conversation_identity_activity_name' });
+    await pool.query(
+      "UPDATE conversation_identities SET share_in_activity=true WHERE user_id='chosen'"
+    );
     expect(
       (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id')).rows.slice(
         0,

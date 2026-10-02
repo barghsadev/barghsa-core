@@ -1,3 +1,4 @@
+import { activityNames } from '../common/activity-identity.js';
 import { createHash } from 'node:crypto';
 import {
   literalSearchPattern,
@@ -474,6 +475,10 @@ export class ElectricityOrderService {
         )
       ).rows;
       await requireCurrentSession(client, actor);
+      const names = await activityNames(
+        client,
+        activity.map((item) => item.user_id)
+      );
       await client.query('COMMIT');
       const financialStatus = electricityFinancialStatus({
         invoiceState: detail.invoice_state,
@@ -521,6 +526,7 @@ export class ElectricityOrderService {
             event: item.event,
             at: item.created_at.toISOString(),
             actor: item.user_id,
+            actorName: item.user_id ? (names.get(item.user_id) ?? null) : null,
             reason: typeof item.metadata.reason === 'string' ? item.metadata.reason : null,
             comment:
               typeof item.metadata.responseNote === 'string' ? item.metadata.responseNote : null,
@@ -530,6 +536,7 @@ export class ElectricityOrderService {
             event: item.event,
             at: item.at.toISOString(),
             actor: null,
+            actorName: null,
             reason: null,
             comment: null,
           })),

@@ -4,6 +4,7 @@ import {
   AvatarFallback,
   AvatarImage,
   Button,
+  Checkbox,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -22,6 +23,7 @@ type Identity = {
   avatarUrl: string | null;
   avatarUploadKey: string | null;
   revision: number;
+  shareInActivity: boolean;
 };
 const endpoint = '/api/user/settings/conversation-identity';
 async function readIdentity(response: Response): Promise<Identity> {
@@ -34,12 +36,13 @@ async function readIdentity(response: Response): Promise<Identity> {
     (value.displayName !== null && typeof value.displayName !== 'string') ||
     (value.avatarUrl !== null && typeof value.avatarUrl !== 'string') ||
     (value.avatarUploadKey !== null && typeof value.avatarUploadKey !== 'string') ||
+    (value.shareInActivity !== undefined && typeof value.shareInActivity !== 'boolean') ||
     typeof value.revision !== 'number' ||
     !Number.isInteger(value.revision) ||
     value.revision < 0
   )
     throw new Error('load');
-  return value as Identity;
+  return { ...value, shareInActivity: value.shareInActivity ?? false } as Identity;
 }
 
 export function ConversationIdentityDialog({
@@ -53,6 +56,7 @@ export function ConversationIdentityDialog({
   const photoInput = useRef<HTMLInputElement | null>(null);
   const [identity, setIdentity] = useState<Identity | null>(null);
   const [name, setName] = useState('');
+  const [shareInActivity, setShareInActivity] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [removePhoto, setRemovePhoto] = useState(false);
   const [pending, setPending] = useState(false);
@@ -71,6 +75,7 @@ export function ConversationIdentityDialog({
         if (!abort.signal.aborted) {
           setIdentity(value);
           setName(value.displayName ?? '');
+          setShareInActivity(value.shareInActivity);
         }
       })
       .catch((reason: unknown) => {
@@ -109,6 +114,7 @@ export function ConversationIdentityDialog({
         body: JSON.stringify({
           displayName,
           revision: identity.revision,
+          shareInActivity: displayName !== null && shareInActivity,
           ...(avatarUploadKey !== undefined ? { avatarUploadKey } : {}),
         }),
       });
@@ -130,6 +136,7 @@ export function ConversationIdentityDialog({
         setError(['denied', 'conflict'].includes(message) ? message : 'save');
         if (message === 'denied') {
           setName('');
+          setShareInActivity(false);
           setFile(null);
           uploaded.current = null;
           setIdentity(null);
@@ -188,9 +195,29 @@ export function ConversationIdentityDialog({
                 value={name}
                 maxLength={80}
                 disabled={pending}
-                onChange={(event) => setName(event.target.value)}
+                onChange={(event) => {
+                  setName(event.target.value);
+                  if (!event.target.value.trim()) setShareInActivity(false);
+                }}
               />
               <p className="text-xs text-muted-foreground">{text('nameHelp')}</p>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-start gap-2">
+                <Checkbox
+                  id={`${id}-activity`}
+                  checked={shareInActivity}
+                  disabled={pending || !name.trim()}
+                  aria-describedby={`${id}-activity-help`}
+                  onCheckedChange={(checked) => setShareInActivity(checked === true)}
+                />
+                <Label htmlFor={`${id}-activity`} className="leading-5">
+                  {text('activity')}
+                </Label>
+              </div>
+              <p id={`${id}-activity-help`} className="text-xs text-muted-foreground">
+                {text('activityHelp')}
+              </p>
             </div>
             <div className="space-y-2">
               <Label htmlFor={`${id}-photo`}>{text('photo')}</Label>

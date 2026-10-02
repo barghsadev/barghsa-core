@@ -1,4 +1,5 @@
 import type { PoolClient, Pool } from 'pg';
+import { activityNames } from '../common/activity-identity.js';
 
 const visibleEvents = [
   'contract.created',
@@ -27,6 +28,7 @@ export async function contractStatusHistory(
       event: string;
       created_at: Date;
       actor_type: 'staff' | 'customer' | 'system';
+      user_id: string | null;
       reason: string | null;
     }>(
       `WITH events AS (
@@ -36,22 +38,22 @@ export async function contractStatusHistory(
              OR (a.event='contract.signed_copy_recorded' AND a.metadata::jsonb->>'recordedByType'='customer')
              THEN 'customer' ELSE 'staff' END AS actor_type,
          CASE WHEN jsonb_typeof(a.metadata::jsonb->'reason')='string'
-           THEN left(a.metadata::jsonb->>'reason',1000) ELSE NULL END AS reason
+           THEN left(a.metadata::jsonb->>'reason',1000) ELSE NULL END AS reason,a.user_id
        FROM audit_log a
        WHERE a.metadata::jsonb->>'contractId'=$1::text AND a.metadata::jsonb->>'versionId'=$2::text
          AND a.event=ANY($3::text[])
        UNION ALL
        SELECT p.version_id::text||':published',
          CASE WHEN amendment.version_id IS NULL THEN 'contract.published'
-           ELSE 'contract.amendment_published' END,p.published_at,'staff',NULL
+           ELSE 'contract.amendment_published' END,p.published_at,'staff',NULL,p.published_by
        FROM contract_publications p
        LEFT JOIN contract_amendments amendment ON amendment.contract_id=p.contract_id AND amendment.version_id=p.version_id
        WHERE p.contract_id=$1::uuid AND p.version_id=$2::uuid
        UNION ALL
-       SELECT version_id::text||':activated','contract.activated',activated_at,'system',NULL
+       SELECT version_id::text||':activated','contract.activated',activated_at,'system',NULL,NULL
        FROM contract_activations WHERE contract_id=$1::uuid AND version_id=$2::uuid
        UNION ALL
-       SELECT version_id::text||':completed','contract.completed',completed_at,'system',NULL
+       SELECT version_id::text||':completed','contract.completed',completed_at,'system',NULL,NULL
        FROM contract_completions WHERE contract_id=$1::uuid AND version_id=$2::uuid
      ) SELECT * FROM events a
      WHERE ($4 OR EXISTS (
@@ -62,17 +64,20 @@ export async function contractStatusHistory(
       [contractId, versionId, visibleEvents, staff]
     )
   ).rows;
+  const visible = rows.slice(0, 200).reverse();
+  const names = await activityNames(
+    client,
+    visible.map((row) => row.user_id)
+  );
   return {
-    history: rows
-      .slice(0, 200)
-      .reverse()
-      .map((row) => ({
-        id: row.id,
-        event: row.event,
-        at: row.created_at.toISOString(),
-        actorType: row.actor_type,
-        reason: row.reason,
-      })),
+    history: visible.map((row) => ({
+      id: row.id,
+      event: row.event,
+      at: row.created_at.toISOString(),
+      actorType: row.actor_type,
+      actorName: row.user_id ? (names.get(row.user_id) ?? null) : null,
+      reason: row.reason,
+    })),
     historyTruncated: rows.length > 200,
   };
 }

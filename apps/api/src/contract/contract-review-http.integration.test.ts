@@ -152,6 +152,10 @@ it('reads authorized version history without exposing draft notes, other version
     `INSERT INTO contract_completions(contract_id,version_id,completed_at) VALUES($1,$2,NOW()+INTERVAL '2 hours')`,
     [f.row.id, f.row.currentVersionId]
   );
+  await http.pool.query(
+    "INSERT INTO conversation_identities(user_id,display_name,share_in_activity) VALUES ('review-legal','Chosen legal team',true),($1,'Chosen contract customer',true)",
+    [f.owner]
+  );
   const response = await customer(f);
   expect(response.status).toBe(200);
   const body = (await response.json()) as HistoryDto;
@@ -166,6 +170,12 @@ it('reads authorized version history without exposing draft notes, other version
     'customer',
     'system',
     'system',
+  ]);
+  expect(body.history.map((event) => event.actorName)).toEqual([
+    'Chosen legal team',
+    'Chosen contract customer',
+    null,
+    null,
   ]);
   expect(body.historyTruncated).toBe(false);
   expect(JSON.stringify(body.history)).not.toMatch(
@@ -182,6 +192,12 @@ it('reads authorized version history without exposing draft notes, other version
     await send('admin/contracts/' + f.row.id + '/versions/' + f.row.currentVersionId)
   ).json()) as HistoryDto;
   expect(selected.history).toEqual(staffBody.history);
+  await http.pool.query(
+    "UPDATE conversation_identities SET share_in_activity=false WHERE user_id='review-legal' OR user_id=$1",
+    [f.owner]
+  );
+  const anonymous = (await (await customer(f)).json()) as HistoryDto;
+  expect(anonymous.history.map((event) => event.actorName)).toEqual([null, null, null, null]);
   const other = await fixture();
   expect((await customer(f, '', other.owner)).status).toBe(404);
   expect((await send('admin/contracts/' + f.row.id, 'GET', undefined, f.owner)).status).toBe(403);

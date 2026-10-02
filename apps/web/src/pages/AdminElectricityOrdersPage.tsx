@@ -61,6 +61,7 @@ interface ReviewOrder {
     event: string;
     at: string;
     actor: string | null;
+    actorName?: string | null;
     reason: string | null;
     comment: string | null;
   }>;
@@ -595,6 +596,7 @@ export default function AdminElectricityOrdersPage({
                         state: electricityTimelineState(event.event),
                         dateTime: event.at,
                         dateLabel: time.format(event.at),
+                        actorLabel: event.actorName ?? undefined,
                         description: [event.reason, event.comment].filter(Boolean).join(' · '),
                       }))}
                     />

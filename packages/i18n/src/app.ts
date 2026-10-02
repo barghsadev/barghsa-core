@@ -5,6 +5,9 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'conversationIdentity.activity': 'نمایش این نام در سوابق سفارش، قرارداد و مشاوره',
+  'conversationIdentity.activityHelp':
+    'مشتریان و کارکنانی که به این پرونده‌ها دسترسی دارند، نام انتخابی شما را می‌بینند. تصویر فقط در گفتگوهای پشتیبانی نمایش داده می‌شود. با غیرفعال کردن این گزینه، نام از نمایش بعدی سوابق گذشته نیز حذف می‌شود.',
   'conversationIdentity.choosePhoto': 'انتخاب تصویر',
   'conversationIdentity.title': 'نام و تصویر گفتگو',
   'conversationIdentity.description':
@@ -1625,6 +1628,9 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'conversationIdentity.activity': 'Show this name in order, contract and consultation history',
+  'conversationIdentity.activityHelp':
+    'Customers and staff with access to these records can see your chosen name. Photos stay in support conversations. Turning this off also removes the name from later reads of past activity.',
   'conversationIdentity.choosePhoto': 'Choose photo',
   'conversationIdentity.title': 'Conversation name and photo',
   'conversationIdentity.description':

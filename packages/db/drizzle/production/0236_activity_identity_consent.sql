@@ -1,0 +1,2 @@
+ALTER TABLE "conversation_identities" ADD COLUMN "share_in_activity" boolean DEFAULT false NOT NULL;--> statement-breakpoint
+ALTER TABLE "conversation_identities" ADD CONSTRAINT "conversation_identity_activity_name" CHECK (NOT "conversation_identities"."share_in_activity" OR "conversation_identities"."display_name" IS NOT NULL);

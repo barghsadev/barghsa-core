@@ -1,3 +1,4 @@
+import { activityNames } from '../common/activity-identity.js';
 import {
   literalSearchPattern,
   DEFAULT_HISTORY_SORT,
@@ -275,7 +276,7 @@ export class ConsultationRequestService {
         throw new NotFoundException('Consultation request not found');
       const history = (
         await client.query(
-          `SELECT e.status,
+          `SELECT e.status,e.actor_user_id,
              CASE WHEN u.is_staff THEN 'staff' ELSE 'customer' END AS actor_type,
              e.reason,e.created_at
            FROM consultation_request_events e JOIN users u ON u.user_id=e.actor_user_id
@@ -299,8 +300,20 @@ export class ConsultationRequestService {
           [id]
         )
       ).rows;
+      const names = await activityNames(
+        client,
+        history.map((event) => event.actor_user_id as string)
+      );
       await client.query('COMMIT');
-      return { request, history, adjustments, refunds };
+      return {
+        request,
+        history: history.map(({ actor_user_id, ...event }) => ({
+          ...event,
+          actor_name: names.get(actor_user_id as string) ?? null,
+        })),
+        adjustments,
+        refunds,
+      };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

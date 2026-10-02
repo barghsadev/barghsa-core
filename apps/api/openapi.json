@@ -29169,13 +29169,18 @@
                     "revision": {
                       "minimum": 0,
                       "type": "integer"
+                    },
+                    "shareInActivity": {
+                      "description": "Separate opt-in to show this name in authorized order, contract and consultation activity. Photos remain limited to support conversations.",
+                      "type": "boolean"
                     }
                   },
                   "required": [
                     "displayName",
                     "avatarUrl",
                     "avatarUploadKey",
-                    "revision"
+                    "revision",
+                    "shareInActivity"
                   ],
                   "type": "object"
                 }
@@ -29214,6 +29219,10 @@
                     "maximum": 2147483646,
                     "minimum": 0,
                     "type": "integer"
+                  },
+                  "shareInActivity": {
+                    "description": "Omit to keep the current activity consent; false removes the name from later history reads. Clearing the name also clears consent.",
+                    "type": "boolean"
                   }
                 },
                 "required": [

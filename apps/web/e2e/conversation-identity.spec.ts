@@ -52,6 +52,7 @@ for (const staff of [false, true])
         avatarUrl: null as string | null,
         avatarUploadKey: null as string | null,
         revision: 0,
+        shareInActivity: false,
       };
       let writes = 0,
         uploads = 0;
@@ -64,6 +65,7 @@ for (const staff of [false, true])
           expect(body.revision).toBe(identity.revision);
           identity = {
             displayName: body.displayName,
+            shareInActivity: body.shareInActivity,
             avatarUploadKey:
               body.avatarUploadKey === undefined ? identity.avatarUploadKey : body.avatarUploadKey,
             avatarUrl:
@@ -180,9 +182,14 @@ for (const staff of [false, true])
       const editor = await openEditor();
       await expect(editor.getByLabel(copy('name'), { exact: true })).toHaveValue('');
       await expect(editor).toContainText(copy('description'));
+      await expect(
+        editor.getByRole('checkbox', { name: copy('activity'), exact: true })
+      ).not.toBeChecked();
+      await expect(editor).toContainText(copy('activityHelp'));
       await editor
         .getByLabel(copy('name'), { exact: true })
         .fill(locale === 'fa' ? 'آرش پشتیبانی' : 'Chosen support name');
+      await editor.getByRole('checkbox', { name: copy('activity'), exact: true }).check();
       const picker = page.waitForEvent('filechooser');
       await editor.getByRole('button', { name: copy('choosePhoto'), exact: true }).focus();
       await page.keyboard.press('Enter');
@@ -190,6 +197,9 @@ for (const staff of [false, true])
       await editor.getByRole('button', { name: copy('saveAction'), exact: true }).click();
       await expect(editor.getByRole('alert')).toHaveText(copy('save'));
       await expect(editor).toContainText('portrait.png');
+      await expect(
+        editor.getByRole('checkbox', { name: copy('activity'), exact: true })
+      ).toBeChecked();
       await editor.getByRole('button', { name: copy('saveAction'), exact: true }).click();
       await expect(editor).toHaveCount(0);
       expect(uploads).toBe(1);
@@ -217,7 +227,13 @@ for (const staff of [false, true])
       await expect(again.getByLabel(copy('name'), { exact: true })).toHaveValue(
         identity.displayName!
       );
+      await expect(
+        again.getByRole('checkbox', { name: copy('activity'), exact: true })
+      ).toBeChecked();
       await again.getByLabel(copy('name'), { exact: true }).fill('');
+      await expect(
+        again.getByRole('checkbox', { name: copy('activity'), exact: true })
+      ).not.toBeChecked();
       await again.getByRole('button', { name: copy('remove'), exact: true }).click();
       await again.getByRole('button', { name: copy('saveAction'), exact: true }).click();
       await expect(again).toHaveCount(0);
@@ -226,6 +242,7 @@ for (const staff of [false, true])
         avatarUrl: null,
         avatarUploadKey: null,
         revision: 2,
+        shareInActivity: false,
       });
       await page.reload();
       await page
@@ -254,7 +271,7 @@ for (const staff of [false, true])
             expect(body.revision).toBe(1);
             return route.fulfill({ status: 409, json: {} });
           }
-          expect(body).toEqual({ displayName: 'My draft', revision: 2 });
+          expect(body).toEqual({ displayName: 'My draft', revision: 2, shareInActivity: true });
           return route.fulfill({
             json: { displayName: 'My draft', avatarUrl: null, avatarUploadKey: null, revision: 3 },
           });
@@ -281,6 +298,7 @@ for (const staff of [false, true])
       await editor.getByRole('button', { name: copy('retry'), exact: true }).click();
       await expect(editor.getByLabel(copy('name'), { exact: true })).toHaveValue('Old alias');
       await editor.getByLabel(copy('name'), { exact: true }).fill('My draft');
+      await editor.getByRole('checkbox', { name: copy('activity'), exact: true }).check();
       await editor.getByLabel(copy('photo'), { exact: true }).setInputFiles({
         name: 'unsafe.svg',
         mimeType: 'image/svg+xml',
@@ -289,6 +307,9 @@ for (const staff of [false, true])
       await expect(editor.getByRole('alert')).toHaveText(copy('photoError'));
       await editor.getByRole('button', { name: copy('saveAction'), exact: true }).click();
       await expect(editor.getByRole('alert')).toHaveText(copy('conflict'));
+      await expect(
+        editor.getByRole('checkbox', { name: copy('activity'), exact: true })
+      ).toBeChecked();
       await expect(editor.getByLabel(copy('name'), { exact: true })).toHaveValue('My draft');
       const violations = (
         await new AxeBuilder({ page }).include('[data-slot=dialog-content]').analyze()

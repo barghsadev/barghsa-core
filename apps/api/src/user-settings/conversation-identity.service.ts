@@ -23,6 +23,7 @@ const input = z
       .refine((name) => !/[\p{Cc}\u202a-\u202e\u2066-\u2069]/u.test(name))
       .nullable(),
     avatarUploadKey: z.string().min(1).max(256).nullable().optional(),
+    shareInActivity: z.boolean().optional(),
     revision: z.number().int().min(0).max(2147483646),
   })
   .strict();
@@ -30,6 +31,7 @@ type IdentityRow = {
   display_name: string | null;
   avatar_key: string | null;
   source_key: string | null;
+  share_in_activity: boolean;
   revision: number;
 };
 
@@ -39,14 +41,20 @@ export class ConversationIdentityService {
 
   private async row(client: Pick<PoolClient, 'query'>, userId: string): Promise<IdentityRow> {
     const result = await client.query(
-      `SELECT i.display_name,i.avatar_key,i.revision,s.metadata->>'sourceKey' AS source_key
+      `SELECT i.display_name,i.avatar_key,i.revision,i.share_in_activity,s.metadata->>'sourceKey' AS source_key
        FROM conversation_identities i LEFT JOIN storage_records s ON s.storage_key=i.avatar_key
        AND s.status='immutable' AND s.metadata->>'purpose'='conversation_avatar'
        AND s.metadata->>'uploadedBy'=i.user_id WHERE i.user_id=$1`,
       [userId]
     );
     return (
-      result.rows[0] ?? { display_name: null, avatar_key: null, source_key: null, revision: 0 }
+      result.rows[0] ?? {
+        display_name: null,
+        avatar_key: null,
+        source_key: null,
+        revision: 0,
+        share_in_activity: false,
+      }
     );
   }
 
@@ -60,6 +68,7 @@ export class ConversationIdentityService {
       avatarUrl: urls[0] ?? null,
       avatarUploadKey: row.source_key,
       revision: row.revision,
+      shareInActivity: row.share_in_activity,
     };
   }
 
@@ -105,8 +114,11 @@ export class ConversationIdentityService {
         throw new UnauthorizedException();
       await requireCurrentSession(client, req.session);
       const previous = await this.row(client, req.session.userId);
+      const shareInActivity =
+        displayName !== null && (parsed.data.shareInActivity ?? previous.share_in_activity);
       const same =
         previous.display_name === displayName &&
+        previous.share_in_activity === shareInActivity &&
         (avatarUploadKey === undefined ||
           (avatarUploadKey === null
             ? previous.avatar_key === null
@@ -131,10 +143,10 @@ export class ConversationIdentityService {
                   )
                 )[0]!;
         await client.query(
-          `INSERT INTO conversation_identities(user_id,display_name,avatar_key,revision)
-          VALUES ($1,$2,$3,$4) ON CONFLICT(user_id) DO UPDATE SET display_name=EXCLUDED.display_name,
-          avatar_key=EXCLUDED.avatar_key,revision=EXCLUDED.revision,updated_at=NOW()`,
-          [req.session.userId, displayName, avatarKey, previous.revision + 1]
+          `INSERT INTO conversation_identities(user_id,display_name,avatar_key,revision,share_in_activity)
+          VALUES ($1,$2,$3,$4,$5) ON CONFLICT(user_id) DO UPDATE SET display_name=EXCLUDED.display_name,
+          avatar_key=EXCLUDED.avatar_key,revision=EXCLUDED.revision,share_in_activity=EXCLUDED.share_in_activity,updated_at=NOW()`,
+          [req.session.userId, displayName, avatarKey, previous.revision + 1, shareInActivity]
         );
         await client.query(
           `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
@@ -143,8 +155,12 @@ export class ConversationIdentityService {
             uuidv7(),
             req.session.userId,
             JSON.stringify({
-              before: { displayName: previous.display_name, hasPhoto: !!previous.avatar_key },
-              after: { displayName, hasPhoto: !!avatarKey },
+              before: {
+                displayName: previous.display_name,
+                hasPhoto: !!previous.avatar_key,
+                shareInActivity: previous.share_in_activity,
+              },
+              after: { displayName, hasPhoto: !!avatarKey, shareInActivity },
               revision: previous.revision + 1,
             }),
             correlationIdStorage.getStore() ?? uuidv7(),

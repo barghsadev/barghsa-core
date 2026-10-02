@@ -1093,6 +1093,13 @@
       "when": 1791331202246,
       "tag": "0235_conversation_identity_timestamps",
       "breakpoints": true
+    },
+    {
+      "idx": 236,
+      "version": "7",
+      "when": 1791331202247,
+      "tag": "0236_activity_identity_consent",
+      "breakpoints": true
     }
   ]
 }

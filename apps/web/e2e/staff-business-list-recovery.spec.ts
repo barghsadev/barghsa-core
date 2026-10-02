@@ -105,7 +105,21 @@ for (const locale of ['en', 'fa'] as const) {
         return detailFail
           ? route.fulfill({ status: 503, json: {} })
           : route.fulfill({
-              json: name === 'consultation' ? { request: row(), history: [] } : row(),
+              json:
+                name === 'consultation'
+                  ? {
+                      request: row(),
+                      history: [
+                        {
+                          status: 'under_review',
+                          actor_type: 'staff',
+                          actor_name: 'Chosen consultation staff نام <name>',
+                          reason: 'Recorded staff note',
+                          created_at: '2026-10-01T00:00:00Z',
+                        },
+                      ],
+                    }
+                  : row(),
             });
       });
       await page.goto(path);
@@ -133,6 +147,12 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(input).toBeVisible();
       expect(queries).toHaveLength(initialQueueReads);
       expect(detailReads).toBe(2);
+      if (name === 'consultation') {
+        await expect(
+          list.locator('bdi').filter({ hasText: 'Chosen consultation staff نام <name>' })
+        ).toBeVisible();
+        await expect(list.locator('script')).toHaveCount(0);
+      }
       await input.fill('Preserve this staff draft');
       const moreWord =
         name === 'electricity'
@@ -182,6 +202,8 @@ for (const locale of ['en', 'fa'] as const) {
       denied = true;
       await more.click();
       await expect(content.getByRole('alert')).toBeVisible();
+      if (name === 'consultation')
+        await expect(list).not.toContainText('Chosen consultation staff نام <name>');
       await expect(content.getByRole('button')).toHaveCount(0);
       await expect(input).toHaveCount(0);
     });

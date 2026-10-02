@@ -1,3 +1,4 @@
+import { activityNames } from '../common/activity-identity.js';
 import {
   BadRequestException,
   ConflictException,
@@ -205,8 +206,18 @@ export class ConsultationWorkflowService {
           [id]
         )
       ).rows;
+      const names = await activityNames(
+        client,
+        history.map((event) => event.actor_user_id as string)
+      );
       await client.query('COMMIT');
-      return { request, history };
+      return {
+        request,
+        history: history.map((event) => ({
+          ...event,
+          actor_name: names.get(event.actor_user_id as string) ?? null,
+        })),
+      };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

@@ -132,6 +132,61 @@ async function submittedOrder() {
   };
 }
 
+it('projects only opted-in activity names into authorized customer and staff order history', async () => {
+  const order = await submittedOrder();
+  const paths = [
+    [`${http.base}/api/electricity/orders/${order.orderId}`, headers],
+    [`${http.base}/api/staff/electricity/orders/${order.orderId}`, staffHeaders],
+  ] as const;
+  await http.pool.query(
+    "INSERT INTO conversation_identities(user_id,display_name) VALUES('buyer','Support-only buyer'),('reviewer','Support-only reviewer')"
+  );
+  const eventId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip) VALUES($1,'reviewer','electricity.changes_requested',$2::jsonb,$3,'127.0.0.1')",
+    [eventId, JSON.stringify({ orderId: order.orderId, reason: 'Recorded change' }), randomUUID()]
+  );
+  for (const [path, auth] of paths) {
+    const response = await fetch(path, { headers: auth });
+    expect(response.status, http.logs()).toBe(200);
+    const body = (await response.json()) as { timeline: Array<{ actorName: string | null }> };
+    expect(body.timeline.every((event) => event.actorName === null)).toBe(true);
+  }
+  await http.pool.query(
+    "UPDATE conversation_identities SET share_in_activity=true WHERE user_id='reviewer'"
+  );
+  for (const [path, auth] of paths) {
+    const response = await fetch(path, { headers: auth });
+    expect(response.status).toBe(200);
+    const body = (await response.json()) as {
+      timeline: Array<{ id: string; actorName: string | null }>;
+    };
+    expect(body.timeline.find((event) => event.id === eventId)?.actorName).toBe(
+      'Support-only reviewer'
+    );
+    expect(JSON.stringify(body.timeline)).not.toMatch(/@electricity.test|Support-only buyer/);
+  }
+  await http.pool.query(
+    "UPDATE conversation_identities SET share_in_activity=false WHERE user_id='reviewer'"
+  );
+  const cleared = (await (await fetch(paths[0][0], { headers })).json()) as {
+    timeline: Array<{ actorName: string | null }>;
+  };
+  expect(cleared.timeline.every((event) => event.actorName === null)).toBe(true);
+  const outsider = randomUUID(),
+    session = randomUUID();
+  await http.pool.query("INSERT INTO users(user_id,username,password_hash) VALUES($1,$1,'test')", [
+    outsider,
+  ]);
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')",
+    [session, outsider, randomUUID(), randomUUID()]
+  );
+  expect(
+    (await fetch(paths[0][0], { headers: { Cookie: `barghsa_session=${session}` } })).status
+  ).toBe(404);
+});
+
 it('keeps electricity order conversations public or staff-only and reachable after review', async () => {
   const order = await submittedOrder();
   const customerPath = `${http.base}/api/electricity/orders/${order.orderId}/comments`;

@@ -96,6 +96,7 @@ interface ElectricityOrderDetail {
     event: string;
     at: string;
     actor: string | null;
+    actorName?: string | null;
     reason: string | null;
     comment: string | null;
   }>;
@@ -626,6 +627,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                     state: electricityTimelineState(event.event),
                     dateTime: event.at,
                     dateLabel: time.format(event.at),
+                    actorLabel: event.actorName ?? undefined,
                     description: [event.reason, event.comment].filter(Boolean).join(' · '),
                   }))}
                 />

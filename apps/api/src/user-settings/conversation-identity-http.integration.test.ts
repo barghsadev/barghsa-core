@@ -2,6 +2,7 @@ import { createServer, type Server } from 'node:http';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { activityNames } from '../common/activity-identity.js';
 import { runMigrations } from '../../../../packages/db/src/migrate.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>, server: Server;
@@ -148,6 +149,7 @@ for (const staff of [false, true]) {
       avatarUrl: null,
       avatarUploadKey: null,
       revision: 0,
+      shareInActivity: false,
     });
     const file = await upload(user);
     expect(file.response.status, http.logs()).toBe(200);
@@ -188,6 +190,7 @@ for (const staff of [false, true]) {
       avatarUrl: null,
       avatarUploadKey: null,
       revision: 2,
+      shareInActivity: false,
     });
   });
 }
@@ -440,3 +443,60 @@ it('clears the stored photo reference even when a removed storage record no long
     ).rows[0]
   ).toEqual({ avatar_key: null });
 });
+
+for (const staff of [false, true]) {
+  it(`keeps activity names separately opted in, revision-bound and revocable (${staff ? 'staff' : 'customer'})`, async () => {
+    const user = await actor(staff),
+      other = await actor();
+    const support = await save(user, { displayName: 'Support only', revision: 0 });
+    expect(await support.json()).toMatchObject({ revision: 1, shareInActivity: false });
+    expect(await activityNames(http.pool, [user.id, null, user.id])).toEqual(new Map());
+    expect(
+      (await save(user, { displayName: 'Support only', shareInActivity: 'true', revision: 1 }))
+        .status
+    ).toBe(400);
+    const opted = { displayName: 'Chosen <name> نام', shareInActivity: true, revision: 1 };
+    expect((await save(user, opted)).status).toBe(200);
+    expect((await save(user, opted)).status).toBe(200);
+    expect((await save(user, { ...opted, shareInActivity: false })).status).toBe(409);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT id FROM audit_log WHERE user_id=$1 AND event='conversation_identity_changed'",
+          [user.id]
+        )
+      ).rows
+    ).toHaveLength(2);
+    expect(
+      (await save(other, { displayName: 'Other opted name', shareInActivity: true, revision: 0 }))
+        .status
+    ).toBe(200);
+    expect(await activityNames(http.pool, [user.id, null, user.id])).toEqual(
+      new Map([[user.id, opted.displayName]])
+    );
+    // Older clients editing a support name must not silently change the separate consent.
+    const renamed = await save(user, { displayName: 'Renamed', revision: 2 });
+    expect(await renamed.json()).toMatchObject({ revision: 3, shareInActivity: true });
+    expect(await activityNames(http.pool, [user.id])).toEqual(new Map([[user.id, 'Renamed']]));
+    expect(
+      (await save(user, { displayName: 'Renamed', shareInActivity: false, revision: 3 })).status
+    ).toBe(200);
+    expect(await activityNames(http.pool, [user.id])).toEqual(new Map());
+    expect(
+      (await save(user, { displayName: 'Renamed', shareInActivity: true, revision: 4 })).status
+    ).toBe(200);
+    expect(await (await save(user, { displayName: null, revision: 5 })).json()).toMatchObject({
+      displayName: null,
+      shareInActivity: false,
+      revision: 6,
+    });
+    expect(await activityNames(http.pool, [user.id])).toEqual(new Map());
+    await http.pool.query('UPDATE users SET disabled_at=NOW() WHERE user_id=$1', [other.id]);
+    expect(await activityNames(http.pool, [other.id])).toEqual(new Map());
+    await http.pool.query(
+      "UPDATE users SET disabled_at=NULL,activation_token='pending' WHERE user_id=$1",
+      [other.id]
+    );
+    expect(await activityNames(http.pool, [other.id])).toEqual(new Map());
+  });
+}

@@ -51,7 +51,7 @@ export function ContractStatusTimeline({
             dateTime: event.at,
             dateLabel: formatTimestamp(event.at),
             actorLabel: ['staff', 'customer', 'system'].includes(event.actorType)
-              ? `${word('changedBy')}: ${word(event.actorType)}`
+              ? `${word('changedBy')}: ${[event.actorName, word(event.actorType)].filter(Boolean).join(' · ')}`
               : undefined,
             description: event.reason ?? undefined,
           }))}

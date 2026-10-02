@@ -17,11 +17,16 @@ export class ConversationIdentityController {
     status: 200,
     schema: {
       type: 'object',
-      required: ['displayName', 'avatarUrl', 'avatarUploadKey', 'revision'],
+      required: ['displayName', 'avatarUrl', 'avatarUploadKey', 'revision', 'shareInActivity'],
       properties: {
         displayName: { type: 'string', nullable: true, maxLength: 80 },
         avatarUrl: { type: 'string', nullable: true },
         avatarUploadKey: { type: 'string', nullable: true },
+        shareInActivity: {
+          type: 'boolean',
+          description:
+            'Separate opt-in to show this name in authorized order, contract and consultation activity. Photos remain limited to support conversations.',
+        },
         revision: { type: 'integer', minimum: 0 },
       },
     },
@@ -48,6 +53,11 @@ export class ConversationIdentityController {
             'Omit to keep the current photo; null removes it. A supplied key must be your verified conversation_avatar upload.',
         },
         revision: { type: 'integer', minimum: 0, maximum: 2147483646 },
+        shareInActivity: {
+          type: 'boolean',
+          description:
+            'Omit to keep the current activity consent; false removes the name from later history reads. Clearing the name also clears consent.',
+        },
       },
     },
   })

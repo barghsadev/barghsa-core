@@ -27,6 +27,7 @@ export interface ContractHistoryEvent {
   event: string;
   at: string;
   actorType: 'staff' | 'customer' | 'system';
+  actorName?: string | null;
   reason: string | null;
 }
 export type ContractCommercialValue =

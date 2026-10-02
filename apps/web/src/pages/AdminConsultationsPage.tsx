@@ -45,6 +45,7 @@ interface Detail {
   history: Array<{
     status: string;
     actor_type: 'staff' | 'customer';
+    actor_name?: string | null;
     reason: string | null;
     created_at: string;
   }>;
@@ -969,7 +970,11 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                         className="rounded border p-2 text-sm"
                       >
                         <span className="font-medium">{copy(`status_${event.status}`)}</span> ·{' '}
-                        {copy(`actor_${event.actor_type}`)}
+                        <bdi className="break-words">
+                          {[event.actor_name, copy(`actor_${event.actor_type}`)]
+                            .filter(Boolean)
+                            .join(' · ')}
+                        </bdi>
                         <time
                           className="block text-xs text-muted-foreground"
                           dateTime={event.created_at}

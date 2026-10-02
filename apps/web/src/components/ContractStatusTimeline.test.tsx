@@ -10,6 +10,7 @@ const history: ContractHistoryEvent[] = [
     event: 'contract.published',
     at: '2026-10-01T00:00:00Z',
     actorType: 'staff',
+    actorName: 'نام Staff <script>',
     reason: null,
   },
   {
@@ -53,6 +54,8 @@ it.each(['en', 'fa'] as const)(
     expect(host.textContent).toContain(contractText('statusHistoryTruncated', locale));
     expect(host.querySelector('time')?.textContent).toBe('localized 2026-10-01T00:00:00Z');
     expect(host.textContent).toContain(contractText('staff', locale));
+    expect(host.querySelector('bdi')?.textContent).toContain('نام Staff <script>');
+    expect(host.querySelector('script')).toBeNull();
     expect(host.textContent).toContain(contractText('customer', locale));
     expect(host.textContent).toContain(contractText('system', locale));
     expect(host.textContent).toContain(contractText('statusHistoryUnknown', locale));

@@ -87,6 +87,7 @@ for (const locale of ['en', 'fa'] as const) {
           event: 'contract.published',
           at: firstAt,
           actorType: 'staff',
+          actorName: 'نام Legal <script>',
           reason: null,
         },
         {
@@ -160,6 +161,7 @@ for (const locale of ['en', 'fa'] as const) {
       const timeline = await inspect(page, ['warning', 'success']);
       await expect(timeline).toContainText(word('timeline.contract.published'));
       await expect(timeline).toContainText(word('staff'));
+      await expect(timeline.locator('bdi').first()).toContainText('نام Legal <script>');
       await expect(timeline).toContainText(word('customer'));
       await expect(timeline).toContainText('<script>private-note-is-literal</script>');
       await expect(timeline.locator('script')).toHaveCount(0);
@@ -173,6 +175,7 @@ for (const locale of ['en', 'fa'] as const) {
       const oldTimeline = await inspect(page, ['default']);
       await expect(oldTimeline).toContainText('Older version recorded note');
       await expect(oldTimeline).not.toContainText('private-note-is-literal');
+      await expect(oldTimeline).not.toContainText('نام Legal <script>');
       await expect(page.getByText(word('statusHistoryTruncated'), { exact: true })).toHaveCount(0);
       if (locale === 'fa' && staff && info.project.name === 'mobile-safari')
         await oldTimeline.screenshot({
@@ -228,6 +231,7 @@ for (const locale of ['en', 'fa'] as const) {
               event: 'electricity.order_review.reject',
               at: lastAt,
               actor: 'internal-staff-id',
+              actorName: 'Chosen electricity staff <name>',
               reason: 'Recorded rejection reason',
               comment: 'Recorded customer comment',
             },
@@ -248,6 +252,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(timeline).toContainText(t('electricity.order.timeline.submitted', locale));
     await expect(timeline).toContainText(t('electricity.order.timeline.updated', locale));
     await expect(timeline).toContainText('Recorded rejection reason');
+    await expect(timeline.locator('bdi')).toContainText('Chosen electricity staff <name>');
     await expect(timeline).toContainText('Recorded customer comment');
     await expect(page.locator('body')).not.toContainText('internal-staff-id');
     await expect(page.locator('body')).not.toContainText('__proto__');
@@ -283,6 +288,7 @@ for (const locale of ['en', 'fa'] as const) {
               status: 'completed',
               created_at: lastAt,
               actor_type: 'staff',
+              actor_name: 'Chosen consultation staff نام',
               reason: 'Recorded completion note',
             },
             {
@@ -301,6 +307,7 @@ for (const locale of ['en', 'fa'] as const) {
     timeline = await inspect(page, ['info', 'default', 'default']);
     await expect(timeline).toContainText(tConsultation('status_submitted', locale));
     await expect(timeline).toContainText(tConsultation('actor_staff', locale));
+    await expect(timeline).toContainText('Chosen consultation staff نام');
     await expect(timeline).toContainText(tConsultation('status_unknown', locale));
     await expect(timeline).toContainText('Recorded completion note');
     await expect(timeline).not.toContainText('private_future');

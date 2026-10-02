@@ -14,6 +14,7 @@ const initial = {
   avatarUrl: null,
   avatarUploadKey: null,
   revision: 2,
+  shareInActivity: false,
 };
 const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status });
 beforeEach(() => {
@@ -80,7 +81,11 @@ for (const locale of ['en', 'fa'] as const) {
     await name('Chosen name');
     await submit();
     const options = request.mock.calls[1]![1]!;
-    expect(JSON.parse(options.body as string)).toEqual({ displayName: 'Chosen name', revision: 2 });
+    expect(JSON.parse(options.body as string)).toEqual({
+      displayName: 'Chosen name',
+      revision: 2,
+      shareInActivity: false,
+    });
     expect((options.headers as Headers).get('X-CSRF-Token')).toBe('identity-token');
     expect(close).toHaveBeenCalledTimes(1);
   });
@@ -115,8 +120,18 @@ it('retains name/file and the verified upload across a failed save retry', async
   expect(
     request.mock.calls.slice(1).map(([, options]) => JSON.parse(options!.body as string))
   ).toEqual([
-    { displayName: 'Retry name', avatarUploadKey: 'uploads/image/verified.png', revision: 2 },
-    { displayName: 'Retry name', avatarUploadKey: 'uploads/image/verified.png', revision: 2 },
+    {
+      displayName: 'Retry name',
+      avatarUploadKey: 'uploads/image/verified.png',
+      revision: 2,
+      shareInActivity: false,
+    },
+    {
+      displayName: 'Retry name',
+      avatarUploadKey: 'uploads/image/verified.png',
+      revision: 2,
+      shareInActivity: false,
+    },
   ]);
 });
 it('refreshes the revision after conflict without replacing the unsaved draft', async () => {
@@ -125,10 +140,13 @@ it('refreshes the revision after conflict without replacing the unsaved draft', 
     .mockResolvedValueOnce(response(initial))
     .mockResolvedValueOnce(response({}, 409))
     .mockResolvedValueOnce(response({ ...initial, displayName: 'Other edit', revision: 3 }))
-    .mockResolvedValueOnce(response({ ...initial, displayName: 'My edit', revision: 4 }));
+    .mockResolvedValueOnce(
+      response({ ...initial, displayName: 'My edit', revision: 4, shareInActivity: true })
+    );
   vi.stubGlobal('fetch', request);
   const close = await render();
   await name('My edit');
+  await act(async () => document.body.querySelector<HTMLButtonElement>('[role=checkbox]')!.click());
   await submit();
   expect(nameInput().value).toBe('My edit');
   expect(close).not.toHaveBeenCalled();
@@ -137,6 +155,7 @@ it('refreshes the revision after conflict without replacing the unsaved draft', 
   expect(JSON.parse(request.mock.calls[3]![1]!.body as string)).toEqual({
     displayName: 'My edit',
     revision: 3,
+    shareInActivity: true,
   });
   expect(close).toHaveBeenCalled();
 });
@@ -157,6 +176,7 @@ it('clears the shared name/photo only when explicitly removed', async () => {
     displayName: null,
     avatarUploadKey: null,
     revision: 2,
+    shareInActivity: false,
   });
   expect(upload).not.toHaveBeenCalled();
 });
@@ -234,4 +254,45 @@ it('clears the draft immediately when photo verification rejects current account
   expect(document.body.textContent).not.toContain('personal.png');
   expect(request).toHaveBeenCalledTimes(1);
   expect(document.body.textContent).toContain(t('conversationIdentity.denied', 'en'));
+});
+
+for (const locale of ['en', 'fa'] as const) {
+  it(`${locale}: starts activity sharing off and preserves an explicit opt-in across save failure`, async () => {
+    const request = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(response(initial))
+      .mockResolvedValueOnce(response({}, 503))
+      .mockResolvedValueOnce(response({ ...initial, shareInActivity: true, revision: 3 }));
+    vi.stubGlobal('fetch', request);
+    await render(locale);
+    const checkbox = document.body.querySelector<HTMLButtonElement>('[role=checkbox]')!;
+    expect(checkbox.getAttribute('aria-checked')).toBe('false');
+    expect(document.body.textContent).toContain(t('conversationIdentity.activityHelp', locale));
+    await act(async () => checkbox.click());
+    await submit();
+    expect(checkbox.getAttribute('aria-checked')).toBe('true');
+    await submit();
+    const proposals = request.mock.calls
+      .slice(1)
+      .map(([, options]) => JSON.parse(options!.body as string));
+    expect(proposals).toEqual([
+      { displayName: 'Existing name', revision: 2, shareInActivity: true },
+      { displayName: 'Existing name', revision: 2, shareInActivity: true },
+    ]);
+  });
+}
+it('clears activity consent with an empty name and requires a new choice after retyping it', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn<typeof fetch>().mockResolvedValue(response({ ...initial, shareInActivity: true }))
+  );
+  await render();
+  const checkbox = document.body.querySelector<HTMLButtonElement>('[role=checkbox]')!;
+  expect(checkbox.getAttribute('aria-checked')).toBe('true');
+  await name('');
+  expect(checkbox.getAttribute('aria-checked')).toBe('false');
+  expect(checkbox.getAttribute('aria-disabled')).toBe('true');
+  await name('New name');
+  expect(checkbox.getAttribute('aria-disabled')).not.toBe('true');
+  expect(checkbox.getAttribute('aria-checked')).toBe('false');
 });

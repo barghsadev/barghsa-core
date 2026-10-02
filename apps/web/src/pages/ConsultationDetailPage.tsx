@@ -45,6 +45,7 @@ interface Detail {
   history: Array<{
     status: string;
     actor_type: 'staff' | 'customer';
+    actor_name?: string | null;
     reason: string | null;
     created_at: string;
   }>;
@@ -394,7 +395,7 @@ export function ConsultationDetailPage() {
                 dateTime: event.created_at,
                 dateLabel: time.format(event.created_at),
                 actorLabel: ['customer', 'staff'].includes(event.actor_type)
-                  ? `${copy('actor')}: ${copy(`actor_${event.actor_type}`)}`
+                  ? `${copy('actor')}: ${[event.actor_name, copy(`actor_${event.actor_type}`)].filter(Boolean).join(' · ')}`
                   : undefined,
                 description: event.reason ? `${copy('reason')}: ${event.reason}` : undefined,
               }))}

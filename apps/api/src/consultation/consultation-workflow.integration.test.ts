@@ -156,13 +156,21 @@ it('moves a consultation through staff assignment, customer information, and a r
   });
   expect(rejected.status, http.logs()).toBe(200);
   expect((await post(`${root}/cancel`, 'reviewer', { reason: 'Too late' })).status).toBe(409);
+  await http.pool.query(
+    "INSERT INTO conversation_identities(user_id,display_name,share_in_activity) VALUES('customer','Support-only customer',false),('reviewer','Chosen consultation staff',true)"
+  );
   const detail = await fetch(`${http.base}/api/consultations/requests/${requestId}`, {
     headers: headers.customer!,
   });
   expect(detail.status, http.logs()).toBe(200);
   const body = (await detail.json()) as {
     request: { status: string };
-    history: Array<{ status: string; actor_type: string; reason: string | null }>;
+    history: Array<{
+      status: string;
+      actor_type: string;
+      actor_name: string | null;
+      reason: string | null;
+    }>;
   };
   expect(body.request).toMatchObject({
     status: 'rejected',
@@ -179,6 +187,32 @@ it('moves a consultation through staff assignment, customer information, and a r
     actor_type: 'staff',
     reason: 'Site is outside the service area.',
   });
+  expect(body.history.map((event) => event.actor_name)).toEqual([
+    null,
+    'Chosen consultation staff',
+    'Chosen consultation staff',
+    null,
+    'Chosen consultation staff',
+  ]);
+  expect(JSON.stringify(body.history)).not.toMatch(
+    /actor_user_id|@consultation-flow.test|Support-only customer/
+  );
+  const staffDetail = await fetch(`${http.base}${root}`, { headers: headers.reviewer! });
+  expect(staffDetail.status).toBe(200);
+  expect(await staffDetail.json()).toMatchObject({
+    history: expect.arrayContaining([
+      expect.objectContaining({ actor_name: 'Chosen consultation staff' }),
+    ]),
+  });
+  await http.pool.query(
+    "UPDATE conversation_identities SET share_in_activity=false WHERE user_id='reviewer'"
+  );
+  const cleared = (await (
+    await fetch(`${http.base}/api/consultations/requests/${requestId}`, {
+      headers: headers.customer!,
+    })
+  ).json()) as { history: Array<{ actor_name: string | null }> };
+  expect(cleared.history.every((event) => event.actor_name === null)).toBe(true);
   const notifications = (
     await http.pool.query<{ count: number }>(
       "SELECT count(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='customer' AND profile_id=$1",

@@ -220,7 +220,17 @@ for (const locale of ['en', 'fa'] as const) {
           settingsSnapshot: {},
           contractSnapshot: {},
           revisionReview: null,
-          timeline: [],
+          timeline: [
+            {
+              id: 'visible-activity',
+              event: 'electricity.order_submitted',
+              at: '2026-09-30T09:00:00Z',
+              actor: 'opaque-id',
+              actorName: unknown ? null : 'Chosen order staff نام <name>',
+              reason: null,
+              comment: null,
+            },
+          ],
         },
       })
     );
@@ -245,8 +255,13 @@ for (const locale of ['en', 'fa'] as const) {
       'data-variant',
       'success'
     );
+    await expect(page.locator('[data-slot=status-timeline] bdi')).toContainText(
+      'Chosen order staff نام <name>'
+    );
+    await expect(page.locator('[data-slot=status-timeline]')).not.toContainText('opaque-id');
     unknown = true;
     await page.reload();
+    await expect(page.locator('[data-slot=status-timeline] bdi')).toHaveCount(0);
     await expect(status.locator('dd')).toHaveText([
       t('electricity.order.status.unknown', locale),
       t('electricity.order.status.unknown', locale),
