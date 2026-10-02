@@ -621,14 +621,36 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
             },
             {
               label: t('onboarding.wizard.review', locale),
-              content: (
+              content: ({ onEdit, disabled }) => (
                 <OnboardingReview
+                  onEdit={onEdit}
+                  disabled={disabled}
+                  sectionTitles={['identity', 'address'].map((key) =>
+                    t(`onboarding.wizard.${key}`, locale)
+                  )}
                   rows={[
-                    { label: t('onboarding.individual.title.label', locale), value: title },
-                    { label: t('onboarding.individual.firstName', locale), value: firstName },
-                    { label: t('onboarding.individual.lastName', locale), value: lastName },
-                    { label: t('onboarding.individual.nationalId', locale), value: nationalId },
                     {
+                      step: 1,
+                      label: t('onboarding.individual.title.label', locale),
+                      value: title,
+                    },
+                    {
+                      step: 1,
+                      label: t('onboarding.individual.firstName', locale),
+                      value: firstName,
+                    },
+                    {
+                      step: 1,
+                      label: t('onboarding.individual.lastName', locale),
+                      value: lastName,
+                    },
+                    {
+                      step: 1,
+                      label: t('onboarding.individual.nationalId', locale),
+                      value: nationalId,
+                    },
+                    {
+                      step: 2,
                       label: t('onboarding.individual.province', locale),
                       value:
                         (isRtl
@@ -636,14 +658,23 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                           : provinces.find((p) => p.id === selectedProvinceId)?.nameEn) ?? '',
                     },
                     {
+                      step: 2,
                       label: t('onboarding.individual.city', locale),
                       value:
                         (isRtl
                           ? cities.find((p) => p.id === selectedCityId)?.nameFa
                           : cities.find((p) => p.id === selectedCityId)?.nameEn) ?? '',
                     },
-                    { label: t('onboarding.individual.address', locale), value: fullAddress },
-                    { label: t('onboarding.individual.postalCode', locale), value: postalCode },
+                    {
+                      step: 2,
+                      label: t('onboarding.individual.address', locale),
+                      value: fullAddress,
+                    },
+                    {
+                      step: 2,
+                      label: t('onboarding.individual.postalCode', locale),
+                      value: postalCode,
+                    },
                   ]}
                 />
               ),

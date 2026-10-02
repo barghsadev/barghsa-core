@@ -383,7 +383,7 @@ for (const mode of ['saving', 'solar'] as const)
     }, testInfo) => {
       await fixture(page, mode, locale);
       await open(page, mode, locale);
-      await expect(page.locator('main').last()).toHaveAttribute(
+      await expect(page.locator('main [dir]').first()).toHaveAttribute(
         'dir',
         locale === 'fa' ? 'rtl' : 'ltr'
       );
@@ -492,3 +492,74 @@ test('solar keeps departure blocked while its authoritative review is pending', 
   ).toBeEnabled();
   expect(state.orders).toHaveLength(0);
 });
+
+for (const locale of ['en', 'fa'] as const)
+  for (const mode of ['saving', 'solar'] as const) {
+    test(`${mode} final sections save before editing and refresh the reviewed input (${locale})`, async ({
+      page,
+    }) => {
+      const state = await fixture(page, mode, locale);
+      await review(page, mode, locale);
+      const final = mode === 'saving' ? 6 : 4;
+      const sections = page.locator('[data-review-section]');
+      await expect(sections).toHaveCount(mode === 'saving' ? 7 : 3);
+      await expect(sections.locator('input,select,textarea')).toHaveCount(0);
+      const section = page.locator(
+        `[data-review-section=${mode === 'saving' ? 'bill' : 'property'}]`
+      );
+      state.saveStatus = 503;
+      await section.getByRole('button').click();
+      await expect(page).toHaveURL(new RegExp(`step=${final}$`));
+      await expect(
+        page
+          .getByRole('alert')
+          .filter({
+            hasText:
+              mode === 'saving'
+                ? tSaving('draftSaveError', locale)
+                : tSolar('draftSaveError', locale),
+          })
+          .first()
+      ).toBeVisible();
+      state.saveStatus = 200;
+      await section.getByRole('button').click();
+      if (mode === 'saving') {
+        await expect(page).toHaveURL(/step=3$/);
+        await input(page, mode, locale).fill('1234567890999');
+        await button(page, 'electricity.order.next', locale).click();
+        await button(page, 'electricity.order.next', locale).click();
+        const gift = page.getByLabel(tSaving('giftCode', locale), { exact: true });
+        await gift.fill('SAVED');
+        await expect(button(page, 'electricity.order.next', locale)).toBeDisabled();
+        await page.getByRole('button', { name: tSaving('apply', locale), exact: true }).click();
+        await button(page, 'electricity.order.next', locale).click();
+        await expect(page.locator('[data-review-section=bill]')).toContainText('1234567890999');
+        await expect(page.locator('[data-review-section=gift]')).toContainText('SAVED');
+        await expect(
+          page.getByRole('textbox', { name: tSaving('giftCode', locale), exact: true })
+        ).not.toBeVisible();
+      } else {
+        await expect(page).toHaveURL(/step=1$/);
+        await page
+          .getByRole('textbox', { name: tSolar('description', locale), exact: true })
+          .fill('Updated survey');
+        await button(page, 'electricity.order.next', locale).click();
+        await button(page, 'electricity.order.next', locale).click();
+        await button(page, 'electricity.order.next', locale).click();
+        await expect(page.locator('[data-review-section=property]')).toContainText(
+          'Updated survey'
+        );
+        expect(state.reviews).toHaveLength(2);
+      }
+      expect(state.orders).toHaveLength(0);
+      expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+      ).toBe(true);
+      if (mode === 'saving' && locale === 'fa')
+        await page.screenshot({
+          path: `/tmp/barghsa-wizard-review-saving-fa-${test.info().project.name}.png`,
+          fullPage: true,
+        });
+    });
+  }

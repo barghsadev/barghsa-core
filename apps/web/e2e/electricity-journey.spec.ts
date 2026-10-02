@@ -365,7 +365,7 @@ for (const locale of ['en', 'fa'] as const) {
         name: locale === 'fa' ? 'سفارش پیشرفته برق' : 'Advanced electricity order',
       })
     ).toBeVisible();
-    const wizard = page.locator('main[dir]');
+    const wizard = page.locator('main [dir]').first();
     await expect(wizard).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
     const next = page.getByRole('button', {
       name: locale === 'fa' ? 'ادامه' : 'Continue',
@@ -387,7 +387,6 @@ for (const locale of ['en', 'fa'] as const) {
       })
       .fill('POWER');
     await expect.poll(() => previews.at(-1)?.giftCode).toBe('POWER');
-    await next.click();
     await expect(wizard).toContainText(address.fullAddress);
     await page
       .getByRole('button', {
@@ -412,9 +411,10 @@ for (const locale of ['en', 'fa'] as const) {
           locale === 'fa' ? 'بازگشت به سفارش پیشرفته برق' : 'Return to advanced electricity order',
       })
       .click();
-    await expect(page).toHaveURL(/\/electricity\/advanced\?step=5$/);
+    await expect(page).toHaveURL(/\/electricity\/advanced\?step=4$/);
     await expect(wizard).toContainText(addedAddress.fullAddress);
     await page.locator('input[name="advanced-address"]').nth(1).check();
+    await next.click();
     await expect(wizard.getByText('Advanced Buyer Ltd', { exact: true })).toBeVisible();
     await expect(
       wizard.getByText(locale === 'fa' ? /جمع قلم/ : /Line total/).first()

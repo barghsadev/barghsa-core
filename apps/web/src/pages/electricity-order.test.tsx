@@ -216,7 +216,9 @@ it('shows manual entry, period dates and the server price before one submission'
   expect(container.textContent).toContain(t('electricity.order.giftCode', 'en'));
   await advance();
   expect(submit().disabled).toBe(false);
-  expect(container.querySelector('[aria-label="Review Order"]')).not.toBeNull();
+  expect(
+    container.querySelector(`[aria-label="${t('electricity.order.total', 'en')}"]`)
+  ).not.toBeNull();
   expect(container.textContent).toContain('Electricity agreement · Template version 2');
   expect(container.textContent).toContain('Agreement for Buyer: 2500000 IRR.');
   let complete!: (value: Response) => void;

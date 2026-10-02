@@ -253,9 +253,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page).toHaveURL(/\?step=2$/);
     await expect(page.locator('#fullAddress')).toBeVisible();
     await page.goForward();
-    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText('Saved Street');
+    await expect(page.locator('fieldset:not([hidden]) > section')).toContainText('Saved Street');
     await page.reload();
-    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText('Saved Street');
+    await expect(page.locator('fieldset:not([hidden]) > section')).toContainText('Saved Street');
     await page.goto(`/onboarding/individual/${profileId}?step=999&nationalId=private`);
     await expect(page.locator('#firstName')).toBeVisible();
     await expect(page.locator('#firstName')).toHaveValue('Person');
@@ -265,7 +265,7 @@ for (const locale of ['en', 'fa'] as const) {
     await next(page, locale);
     await expect(page).toHaveURL(/\?step=5$/);
     await page.reload();
-    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText('Saved Company');
+    await expect(page.locator('fieldset:not([hidden]) > section')).toContainText('Saved Company');
     await page.goto(`/onboarding/legal/${profileId}?step=0`);
     await expect(page.locator('#representativeFirstName')).toBeVisible();
   });
@@ -274,6 +274,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
     context,
   }) => {
+    await page.clock.install();
     await page.setViewportSize({ width: 390, height: 844 });
     const state = await fixture(page, locale, 'INDIVIDUAL', { ...individual });
     state.saveStatus = 503;
@@ -298,6 +299,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(actions.dialog.getByRole('alert')).toBeVisible();
     await expect(page).toHaveURL(new RegExp(`/onboarding/individual/${profileId}(?:\\?step=1)?$`));
     expect(state.draft.data.firstName).toBe('Person');
+    // Let the independently scheduled autosave fail before gating the explicit retry.
+    await page.clock.fastForward(1100);
+    await expect(actions.save).toBeEnabled();
     let finishSave!: () => void;
     state.saveGate = new Promise<void>((resolve) => {
       finishSave = resolve;
@@ -422,8 +426,8 @@ for (const locale of ['en', 'fa'] as const) {
       finishSubmit = resolve;
     });
     await page.goto(`/onboarding/individual/${profileId}?step=3`);
-    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText('Saved Street');
-    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText(
+    await expect(page.locator('fieldset:not([hidden]) > section')).toContainText('Saved Street');
+    await expect(page.locator('fieldset:not([hidden]) > section')).toContainText(
       locale === 'fa' ? 'تهران' : 'Tehran'
     );
     await submit(page, locale);
@@ -435,7 +439,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(actions.save).toBeDisabled();
     finishSubmit();
     await expect(page).toHaveURL(new RegExp(`/onboarding/complete\\?profileId=${profileId}$`));
-    await expect(page.locator('dl')).toContainText('Person Owner');
+    await expect(page.locator('dl[aria-label]')).toContainText('Person Owner');
     expect(state.submissions).toHaveLength(1);
   });
 }
@@ -474,15 +478,15 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#fullAddress').fill(individual.fullAddress);
     await page.locator('#postalCode').fill('۱۲۳۴۵۶۷۸۹۰');
     await next(page, locale);
-    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText('Saved Street');
-    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText('1234567890');
+    await expect(page.locator('fieldset:not([hidden]) > section')).toContainText('Saved Street');
+    await expect(page.locator('fieldset:not([hidden]) > section')).toContainText('1234567890');
     expect(state.submissions).toHaveLength(0);
     await page
       .getByRole('button', { name: locale === 'fa' ? 'مرحله قبل' : 'Back', exact: true })
       .click();
     await page.locator('#fullAddress').fill('Reviewed Street');
     await next(page, locale);
-    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText('Reviewed Street');
+    await expect(page.locator('fieldset:not([hidden]) > section')).toContainText('Reviewed Street');
     expect((await new AxeBuilder({ page }).include('form').analyze()).violations).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true
@@ -500,8 +504,8 @@ for (const locale of ['en', 'fa'] as const) {
     state.invalidReceipt = false;
     await submit(page, locale);
     await expect(page).toHaveURL(new RegExp(`/onboarding/complete\\?profileId=${profileId}$`));
-    await expect(page.locator('dl')).toContainText('Person Owner');
-    await expect(page.locator('dl')).toContainText(
+    await expect(page.locator('dl[aria-label]')).toContainText('Person Owner');
+    await expect(page.locator('dl[aria-label]')).toContainText(
       locale === 'fa' ? 'در انتظار تأیید' : 'Pending verification'
     );
     expect(state.submissions).toHaveLength(2);
@@ -545,14 +549,14 @@ for (const locale of ['en', 'fa'] as const) {
     await next(page, locale);
     await next(page, locale);
     expect(state.submissions).toHaveLength(0);
-    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText('Saved Company');
-    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText(
+    await expect(page.locator('fieldset:not([hidden]) > section')).toContainText('Saved Company');
+    await expect(page.locator('fieldset:not([hidden]) > section')).toContainText(
       locale === 'fa' ? 'مسئولیت محدود' : 'Limited liability'
     );
-    await expect(page.locator('fieldset:not([hidden]) dl')).toContainText('2026-03-22');
+    await expect(page.locator('fieldset:not([hidden]) > section')).toContainText('2026-03-22');
     await submit(page, locale);
     await expect(page).toHaveURL(new RegExp(`/onboarding/complete\\?profileId=${profileId}$`));
-    await expect(page.locator('dl')).toContainText('Saved Company');
+    await expect(page.locator('dl[aria-label]')).toContainText('Saved Company');
     expect(state.submissions[0]).toMatchObject({
       registrationDate: '2026-03-22',
       draftVersion: state.draft.version,
@@ -754,10 +758,10 @@ for (const locale of ['en', 'fa'] as const) {
     await next(page, locale);
     await next(page, locale);
     await submit(page, locale);
-    await expect(page.locator('dl')).toHaveCount(2);
-    await expect(page.locator('dl').first()).toContainText('Person Owner');
-    await expect(page.locator('dl').last()).toContainText('Saved Company');
-    await expect(page.locator('dl').last()).toContainText(
+    await expect(page.locator('dl[aria-label]')).toHaveCount(2);
+    await expect(page.locator('dl[aria-label]').first()).toContainText('Person Owner');
+    await expect(page.locator('dl[aria-label]').last()).toContainText('Saved Company');
+    await expect(page.locator('dl[aria-label]').last()).toContainText(
       locale === 'fa' ? 'تأیید شده' : 'Verified'
     );
     await dismissMessages(page, locale);
@@ -838,7 +842,7 @@ for (const locale of ['en', 'fa'] as const) {
       })
       .click();
     await expect(page).toHaveURL(new RegExp(`/onboarding/complete\\?journeyId=${journeyId}$`));
-    await expect(page.locator('dl')).toHaveCount(2);
+    await expect(page.locator('dl[aria-label]')).toHaveCount(2);
     expect(state.finishes).toHaveLength(0);
   });
   test(`setup read failure blocks creation and app routes require at least one profile (${locale})`, async ({
@@ -862,7 +866,7 @@ for (const locale of ['en', 'fa'] as const) {
       r.fulfill({ json: { profiles: [], activeProfileId: null, hasDefault: false } })
     );
     for (const path of ['/app', '/app/unknown']) {
-      await page.goto(path);
+      await page.goto(path, { waitUntil: 'commit' });
       await expect(page).toHaveURL(/\/onboarding$/);
     }
     expect(state.starts).toHaveLength(0);
@@ -1002,3 +1006,39 @@ test('an existing setup remains resumable when the separate draft list is unavai
   await expect(page.locator('#firstName')).toHaveValue('Person');
   expect(state.starts).toHaveLength(0);
 });
+
+for (const locale of ['en', 'fa'] as const)
+  for (const type of ['INDIVIDUAL', 'LEGAL'] as const) {
+    test(`${type} review sections return to the matching form without losing fields (${locale})`, async ({
+      page,
+    }) => {
+      const state = await fixture(page, locale, type, type === 'INDIVIDUAL' ? individual : legal);
+      const last = type === 'INDIVIDUAL' ? 3 : 5;
+      await page.goto(`/onboarding/${type.toLowerCase()}/${profileId}?step=${last}`);
+      const sections = page.locator('[data-review-section]');
+      await expect(sections).toHaveCount(last - 1);
+      await expect(sections.locator('input,select,textarea')).toHaveCount(0);
+      await sections.first().getByRole('button').click();
+      await expect(page).toHaveURL(/step=1$/);
+      const field = page.locator(type === 'INDIVIDUAL' ? '#firstName' : '#representativeFirstName');
+      await expect(field).toHaveValue('Person');
+      await field.fill('Edited person');
+      for (let stage = 1; stage < last; stage++) await next(page, locale);
+      await expect(page.locator('[data-review-section="1"]')).toContainText('Edited person');
+      expect(state.submissions).toHaveLength(0);
+      expect((await new AxeBuilder({ page }).include('.container').analyze()).violations).toEqual(
+        []
+      );
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+      ).toBe(true);
+      const addressSection = page.locator(
+        `[data-review-section="${type === 'INDIVIDUAL' ? 2 : 3}"]`
+      );
+      await addressSection.getByRole('button').click();
+      await expect(page).toHaveURL(new RegExp(`step=${type === 'INDIVIDUAL' ? 2 : 3}$`));
+      await expect(
+        page.locator(type === 'INDIVIDUAL' ? '#fullAddress' : '#officialFullAddress')
+      ).toHaveValue(type === 'INDIVIDUAL' ? 'Saved Street' : 'Company Street');
+    });
+  }

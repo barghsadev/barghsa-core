@@ -1,4 +1,4 @@
-import { Button, Card, CardContent } from '@barghsa/ui';
+import { Card, CardContent } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -7,6 +7,7 @@ import { ElectricityQuoteErrorNotice } from './ElectricityQuoteErrorNotice.js';
 import { ElectricityFinancialReviewSummary } from './ElectricityFinancialReviewSummary.js';
 import { ElectricityContractTerms } from './ElectricityContractTerms.js';
 import { WalletFundingPrompt } from './WalletFundingPrompt.js';
+import { StepReviewPage } from './StepReviewPage.js';
 
 interface Props {
   step: 3 | 5;
@@ -19,10 +20,11 @@ interface Props {
   activeProfileId: string | null;
   productName: string;
   deliveryAddress: string;
+  postalCode: string;
   walletBalance: string | null;
   onEdit: (step: number) => void;
+  editDisabled: boolean;
 }
-
 export default function SimpleElectricityReview({
   step,
   quote,
@@ -34,185 +36,120 @@ export default function SimpleElectricityReview({
   activeProfileId,
   productName,
   deliveryAddress,
+  postalCode,
   walletBalance,
   onEdit,
+  editDisabled,
 }: Props) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
+  const copy = (key: string) => t(`electricity.order.${key}`, locale);
+  const price = quoting ? (
+    <p role="status">{copy('previewLoading')}</p>
+  ) : quoteError ? (
+    <ElectricityQuoteErrorNotice message={quoteError} />
+  ) : quote ? (
+    <>
+      {quote.greenRuleApplies && <p>{copy('mandatoryGreen')}</p>}
+      <ElectricityFinancialReviewSummary
+        title={step === 5 ? copy('total') : copy('step3')}
+        quote={quote}
+        locale={locale}
+        formatMoney={numbers.money}
+        formatQuantity={numbers.irrDigits}
+      />
+    </>
+  ) : null;
   return (
     <Card className="mb-6">
-      <CardContent className="pt-6">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold">
-            {t(step === 3 ? 'electricity.order.step3' : 'electricity.order.review', locale)}
-          </h2>
-          {step === 5 && (
-            <Button variant="link" size="sm" onClick={() => onEdit(3)}>
-              {t('electricity.order.edit', locale)}
-            </Button>
-          )}
-        </div>
-
-        <div className="space-y-3 text-sm">
-          {quoting ? (
-            <p role="status">{t('electricity.order.previewLoading', locale)}</p>
-          ) : quoteError ? (
-            <ElectricityQuoteErrorNotice message={quoteError} />
-          ) : quote ? (
-            <div className="space-y-2 border-b pb-4">
-              <p className="flex flex-wrap items-center gap-2">
-                {t('electricity.order.period.selection', locale)}: {periodLabel}
-                {step === 5 && (
-                  <Button variant="link" size="sm" onClick={() => onEdit(1)}>
-                    {t('electricity.order.edit', locale)}
-                  </Button>
-                )}
+      <CardContent className="space-y-4 pt-6">
+        {step === 3 ? (
+          <>
+            <h2 className="text-lg font-semibold">{copy('step3')}</h2>
+            <p className="text-sm">
+              {copy('period.selection')}: {periodLabel}
+            </p>
+            {quote && (
+              <p className="text-sm">
+                {copy('averagePower')}: {numbers.irrDigits(quote.averagePowerKw)} kW
               </p>
-              {step === 5 && (
-                <p className="flex items-center gap-2">
-                  {t('electricity.order.quantity', locale)}: {quote.totalKwh} kWh
-                  <Button variant="link" size="sm" onClick={() => onEdit(2)}>
-                    {t('electricity.order.edit', locale)}
-                  </Button>
-                </p>
-              )}
-              <p>
-                {t('electricity.order.averagePower', locale)}: {quote.averagePowerKw} kW
-              </p>
-              {quote.greenRuleApplies && (
-                <p className="font-medium text-amber-800">
-                  {t('electricity.order.mandatoryGreen', locale)}
-                </p>
-              )}
-              {step === 5 ? (
-                <ElectricityFinancialReviewSummary
-                  quote={quote}
-                  locale={locale}
-                  formatMoney={numbers.money}
-                  formatQuantity={numbers.irrDigits}
-                />
-              ) : (
-                <>
-                  {quote.lines.map((line) => (
-                    <div key={line.systemKey} className="flex flex-wrap justify-between gap-2">
-                      <span>
-                        {line.systemKey === 'thermal'
-                          ? t('electricity.order.thermal', locale)
-                          : t('electricity.order.green', locale)}{' '}
-                        · {line.quantityKwh} kWh × {numbers.money(line.unitPriceIrR)}
-                      </span>
-                      <span className="text-end">
-                        <strong>
-                          {t('electricity.order.lineTotal', locale)}: {numbers.money(line.totalIrR)}
-                        </strong>
-                        {(line.discountIrR !== '0' || line.vatIrR !== '0') && (
-                          <small className="block text-muted-foreground">
-                            {numbers.money(line.subtotalIrR)} · −{numbers.money(line.discountIrR)} ·
-                            +{numbers.money(line.vatIrR)} {t('electricity.order.vat', locale)}
-                          </small>
-                        )}
-                      </span>
-                    </div>
-                  ))}
-                  <div className="flex justify-between">
-                    <span>{t('electricity.order.discount', locale)}</span>
-                    <span>{numbers.money(quote.discountIrR)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>{t('electricity.order.vat', locale)}</span>
-                    <span>{numbers.money(quote.vatIrR)}</span>
-                  </div>
-                  <div className="flex justify-between text-base font-semibold">
-                    <span>{t('electricity.order.total', locale)}</span>
-                    <span>{numbers.money(quote.totalIrR)}</span>
-                  </div>
-                </>
-              )}
-              {step === 5 && (
-                <div className="flex items-center justify-between gap-2">
-                  <span>
-                    {t('electricity.order.giftCode', locale)}: {appliedGiftCode || '—'}
-                  </span>
-                  <Button variant="link" size="sm" onClick={() => onEdit(4)}>
-                    {t('electricity.order.edit', locale)}
-                  </Button>
-                </div>
-              )}
-            </div>
-          ) : null}
-          {step === 5 && (
-            <>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">
-                  {t('electricity.order.profile', locale)}:
-                </span>
-                <span className="max-w-[60%] text-end">
-                  <strong className="block font-medium" dir="auto">
-                    {activeProfileName || activeProfileId}
-                  </strong>
-                  {activeProfileName ? (
-                    <small className="block break-all text-muted-foreground" dir="ltr">
-                      {activeProfileId}
-                    </small>
-                  ) : null}
-                </span>
-              </div>
-              {/* Selected product */}
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-muted-foreground">
-                  {t('electricity.order.product', locale)}:
-                </span>
-                <span className="font-medium">{productName || '—'}</span>
-                <Button variant="link" size="sm" onClick={() => onEdit(1)}>
-                  {t('electricity.order.edit', locale)}
-                </Button>
-              </div>
-
-              {/* Selected address */}
-              <div className="flex justify-between items-start">
-                <span className="text-muted-foreground">
-                  {t('electricity.order.deliveryAddress', locale)}:
-                </span>
-                <span className="font-medium text-right max-w-[60%]">{deliveryAddress || '—'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">
-                  {t('electricity.order.walletBalance', locale)}:
-                </span>
-                <span>
-                  {walletBalance === null
-                    ? t('electricity.order.walletUnavailable', locale)
-                    : numbers.money(walletBalance)}
-                </span>
-              </div>
-              {quote && <WalletFundingPrompt balance={walletBalance} total={quote.totalIrR} />}
-              <div className="space-y-2 border-t pt-4 text-muted-foreground">
-                <h3 className="font-medium text-foreground">
-                  {t('electricity.order.contractPreview', locale)}
-                </h3>
-                {quote && (
-                  <div className="rounded-lg border bg-muted/30 p-3 text-foreground">
-                    <p>
-                      {t('electricity.order.quantity', locale)}: {quote.totalKwh} kWh
-                    </p>
-                    <p>
-                      {t('electricity.order.period.selection', locale)}: {periodLabel}
-                    </p>
-                    <p>
-                      {t('electricity.order.total', locale)}: {numbers.money(quote.totalIrR)}
-                    </p>
-                  </div>
-                )}
-                <ElectricityContractTerms template={quote?.contractTemplate} />
-                <h3 className="font-medium text-foreground">
-                  {t('electricity.order.cancellationRules', locale)}
-                </h3>
-                <p>{t('electricity.order.cancellationRulesText', locale)}</p>
-                <p>{t('electricity.order.paymentAfterSubmit', locale)}</p>
-              </div>
-            </>
-          )}
-        </div>
+            )}
+            {price}
+          </>
+        ) : (
+          <>
+            <StepReviewPage
+              title={copy('review')}
+              editLabel={copy('edit')}
+              onEdit={onEdit}
+              disabled={editDisabled}
+              sections={[
+                {
+                  id: 'period',
+                  title: copy('period.selection'),
+                  step: 1,
+                  rows: [
+                    { label: copy('period.selection'), value: periodLabel },
+                    { label: copy('product'), value: productName },
+                  ],
+                },
+                {
+                  id: 'quantity',
+                  title: copy('quantity'),
+                  step: 2,
+                  rows: [
+                    {
+                      label: copy('quantity'),
+                      value: quote ? `${numbers.irrDigits(quote.totalKwh)} kWh` : '—',
+                    },
+                    {
+                      label: copy('averagePower'),
+                      value: quote ? `${numbers.irrDigits(quote.averagePowerKw)} kW` : '—',
+                    },
+                  ],
+                },
+                { id: 'price', title: copy('step3'), step: 3, content: price },
+                {
+                  id: 'gift',
+                  title: copy('giftCode'),
+                  step: 4,
+                  rows: [{ label: copy('giftCode'), value: appliedGiftCode || '—' }],
+                },
+                {
+                  id: 'address',
+                  title: copy('deliveryAddress'),
+                  step: 4,
+                  rows: [
+                    { label: copy('deliveryAddress'), value: deliveryAddress || '—' },
+                    { label: copy('postalCode'), value: postalCode || '—' },
+                  ],
+                },
+                {
+                  id: 'profile',
+                  title: copy('profile'),
+                  rows: [{ label: copy('profile'), value: activeProfileName || activeProfileId }],
+                },
+                {
+                  id: 'terms',
+                  title: copy('contractPreview'),
+                  content: (
+                    <>
+                      <ElectricityContractTerms template={quote?.contractTemplate} />
+                      <h4 className="font-medium">{copy('cancellationRules')}</h4>
+                      <p className="text-sm">{copy('cancellationRulesText')}</p>
+                      <p className="text-sm">{copy('paymentAfterSubmit')}</p>
+                    </>
+                  ),
+                },
+              ]}
+            />
+            <p className="text-sm">
+              {copy('walletBalance')}:{' '}
+              {walletBalance === null ? copy('walletUnavailable') : numbers.money(walletBalance)}
+            </p>
+            {quote && <WalletFundingPrompt balance={walletBalance} total={quote.totalIrR} />}
+          </>
+        )}
       </CardContent>
     </Card>
   );

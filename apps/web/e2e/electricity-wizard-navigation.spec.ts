@@ -385,8 +385,8 @@ for (const locale of ['en', 'fa'] as const)
 
 for (const locale of ['en', 'fa'] as const)
   test(`simple ordering protects an unfinished new address (${locale})`, async ({ page }) => {
-    const state = await fixture(page, 'simple', locale, 5);
-    await page.goto('/electricity/order?step=5');
+    const state = await fixture(page, 'simple', locale, 4);
+    await page.goto('/electricity/order?step=4');
     await button(page, 'electricity.order.addAddress', locale).click();
     await page.locator('#order-address-fullAddress').fill('Unfinished address');
     await leave(page, locale);
@@ -431,6 +431,61 @@ test('simple order submission waits for the financial review code to load', asyn
   } finally {
     release();
   }
-  await expect(page.locator('[aria-label="Review Order"]')).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Review Order', exact: true })).toBeVisible();
   await expect(button(page, 'electricity.order.submit', 'en')).toBeEnabled();
 });
+
+for (const locale of ['en', 'fa'] as const)
+  for (const mode of ['simple', 'advanced'] as const) {
+    test(`${mode} final review keeps inputs read-only and preserves review on failed edits (${locale})`, async ({
+      page,
+    }) => {
+      const state = await fixture(page, mode, locale, 5);
+      await page.goto(`${path(mode)}?step=5`);
+      const sections = page.locator('[data-review-section]');
+      await expect(sections).toHaveCount(7);
+      await expect(sections.locator('input,select,textarea')).toHaveCount(0);
+      await expect(page.locator('[data-review-section=address]')).toContainText(
+        address.fullAddress
+      );
+      const quantity = page.locator(
+        `[data-review-section=${mode === 'simple' ? 'quantity' : 'products'}]`
+      );
+      state.saveStatus = 503;
+      await quantity.getByRole('button').click();
+      await expect(
+        page.getByText(t('electricity.order.draftSaveFailed', locale), { exact: true })
+      ).toBeVisible();
+      await expect(page).toHaveURL(/step=5$/);
+      await expect(quantity).toBeVisible();
+      state.saveStatus = 200;
+      await quantity.getByRole('button').click();
+      await expect(page).toHaveURL(/step=2$/);
+      await expect(field(page, mode)).toHaveValue('100');
+      await field(page, mode).fill('120');
+      await button(page, 'electricity.order.next', locale).click();
+      await button(page, 'electricity.order.next', locale).click();
+      await expect(
+        page.locator(
+          mode === 'simple' ? `#order-address-${address.id}` : 'input[name="advanced-address"]'
+        )
+      ).toBeChecked();
+      await button(page, 'electricity.order.next', locale).click();
+      await expect(page).toHaveURL(/step=5$/);
+      await expect(
+        page.locator(`[data-review-section=${mode === 'simple' ? 'quantity' : 'products'}]`)
+      ).toContainText(locale === 'fa' ? '۱۲۰' : '120');
+      expect(state.orders).toHaveLength(0);
+      expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+      ).toBe(true);
+      await page.locator('[data-review-section=address]').getByRole('button').click();
+      await expect(page).toHaveURL(/step=4$/);
+      await expect(
+        page.locator(
+          mode === 'simple' ? `#order-address-${address.id}` : 'input[name="advanced-address"]'
+        )
+      ).toBeChecked();
+    });
+  }

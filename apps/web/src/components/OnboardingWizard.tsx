@@ -13,11 +13,18 @@ import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import type { useOnboardingDraft } from '../hooks/useOnboardingDraft.js';
 import { FormWizard } from './FormWizard.js';
+import { StepReviewPage } from './StepReviewPage.js';
 
 const LeaveDialog = lazy(() => import('./WizardLeaveDialog.js'));
 
 interface Props {
-  steps: { label: string; content: ReactNode; validate?: () => boolean }[];
+  steps: {
+    label: string;
+    content:
+      | ReactNode
+      | ((navigation: { onEdit: (step: number) => void; disabled: boolean }) => ReactNode);
+    validate?: () => boolean;
+  }[];
   draft: ReturnType<typeof useOnboardingDraft>;
   submitting: boolean;
   disabled: boolean;
@@ -63,10 +70,12 @@ export function OnboardingWizard({
     };
   }, []);
   useEffect(() => {
-    if (step > 1) region.current?.focus();
+    region.current?.focus();
   }, [step]);
   const move = async (target: number) => {
-    if (busy.current || submitting || disabled || !draft.ready || draft.isSubmitted()) return;
+    if (!Number.isInteger(target) || target < 1 || target > steps.length) return;
+    if (busy.current || submitting || working || disabled || !draft.ready || draft.isSubmitted())
+      return;
     if (target > step && steps[step - 1]?.validate?.() === false) {
       requestAnimationFrame(() =>
         region.current
@@ -201,7 +210,13 @@ export function OnboardingWizard({
               className="space-y-6"
             >
               <legend className="sr-only">{item.label}</legend>
-              {item.content}
+              {typeof item.content === 'function'
+                ? item.content({
+                    onEdit: (target) => void move(target),
+                    disabled:
+                      saving || submitting || working || unavailable || draft.status === 'conflict',
+                  })
+                : item.content}
             </fieldset>
           ))}
         </div>
@@ -210,26 +225,31 @@ export function OnboardingWizard({
   );
 }
 
-export function OnboardingReview({ rows }: { rows: { label: string; value: string }[] }) {
+export function OnboardingReview({
+  rows,
+  onEdit,
+  disabled,
+  sectionTitles,
+}: {
+  rows: { label: string; value: string; step: number }[];
+  sectionTitles: string[];
+  onEdit: (step: number) => void;
+  disabled: boolean;
+}) {
   const locale = useLocale();
   return (
-    <section>
-      <h2 className="mb-2 text-lg font-semibold">{t('onboarding.wizard.review', locale)}</h2>
-      <p className="mb-4 text-sm text-muted-foreground">
-        {t('onboarding.wizard.reviewHelp', locale)}
-      </p>
-      <dl className="grid gap-4 sm:grid-cols-2">
-        {rows
-          .filter(({ value }) => value.trim())
-          .map(({ label, value }) => (
-            <div key={label} className="min-w-0">
-              <dt className="text-sm text-muted-foreground">{label}</dt>
-              <dd className="mt-1 whitespace-pre-wrap break-words font-medium">
-                <bdi>{value}</bdi>
-              </dd>
-            </div>
-          ))}
-      </dl>
-    </section>
+    <StepReviewPage
+      title={t('onboarding.wizard.review', locale)}
+      description={t('onboarding.wizard.reviewHelp', locale)}
+      editLabel={t('electricity.order.edit', locale)}
+      onEdit={onEdit}
+      disabled={disabled}
+      sections={sectionTitles.map((title, index) => ({
+        id: String(index + 1),
+        title,
+        step: index + 1,
+        rows: rows.filter((row) => row.step === index + 1 && row.value.trim()),
+      }))}
+    />
   );
 }

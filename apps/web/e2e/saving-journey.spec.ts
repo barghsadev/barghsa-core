@@ -429,7 +429,7 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   await page.getByRole('checkbox', { name: 'I accept this agreement' }).check();
   await next.click();
   await expect(page.getByText(/Wallet balance:/)).toContainText('500,000');
-  const financialReview = page.getByRole('region', { name: 'Review' });
+  const financialReview = page.getByRole('region', { name: 'Review', exact: true });
   await expect(financialReview).toContainText('Subtotal');
   await expect(financialReview).toContainText('300,000');
   await page.getByRole('checkbox', { name: 'Submit for staff review' }).check();

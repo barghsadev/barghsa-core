@@ -4,6 +4,15 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { t } from '@barghsa/i18n/app';
 import { AdvancedElectricityOrderPage } from './AdvancedElectricityOrderPage.js';
 
+const blockerConfig = vi.hoisted(() => ({
+  current: null as null | {
+    shouldBlockFn: (locations: {
+      current: { pathname: string };
+      next: { pathname: string };
+    }) => boolean;
+    enableBeforeUnload: () => boolean;
+  },
+}));
 const navigateMock = vi.hoisted(() => vi.fn(async (_options: unknown) => {}));
 const wizardNavigate = async (options: {
   to: string;
@@ -24,7 +33,10 @@ vi.mock('@tanstack/react-router', () => ({
     <a href={to}>{children}</a>
   ),
   useNavigate: () => wizardNavigate,
-  useBlocker: () => ({ status: 'idle' }),
+  useBlocker: (options: NonNullable<typeof blockerConfig.current>) => {
+    blockerConfig.current = options;
+    return { status: 'idle' };
+  },
   useSearch: ({ select }: { select: (search: { step?: number }) => unknown }) => {
     const step = new URLSearchParams(window.location.search).get('step');
     return select(step === null ? {} : { step: Number(step) });
@@ -82,7 +94,7 @@ beforeEach(() => {
   window.history.replaceState({}, '', '/electricity/advanced');
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
-  navigateMock.mockClear();
+  navigateMock.mockReset();
   step = 2;
   quantities = { thermal: '0', green: '10', free_market: '0', energy_saving: '0' };
   bootstrapLoadFailures = 0;
@@ -284,11 +296,27 @@ it('does not advance until the server confirms the saved step', async () => {
   expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain('2.');
 });
 
-it('saves the review step before opening address settings', async () => {
-  step = 5;
-  savedStepOverride = 4;
+it('saves the address step before opening address settings', async () => {
+  step = 4;
+  savedStepOverride = 3;
   await mount();
 
+  const gift = [...container.querySelectorAll('label')]
+    .find((label) => label.textContent?.includes(t('electricity.order.giftCode', 'en')))!
+    .querySelector('input')!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(gift, 'POWER');
+    gift.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  const locations = {
+    current: { pathname: '/electricity/advanced' },
+    next: { pathname: '/settings/addresses' },
+  };
+  expect(blockerConfig.current!.shouldBlockFn(locations)).toBe(true);
+  navigateMock.mockImplementation(async () => {
+    expect(blockerConfig.current!.shouldBlockFn(locations)).toBe(false);
+    expect(blockerConfig.current!.enableBeforeUnload()).toBe(false);
+  });
   const addAddress = () =>
     [...container.querySelectorAll('button')].find(
       (button) => button.textContent === t('electricity.order.addAddress', 'en')
@@ -325,9 +353,12 @@ it.each(['en', 'fa'] as const)(
     await mount();
     await settlePreview();
 
-    expect(container.textContent).toContain(
-      `${t('electricity.order.profile', locale)}: ${profileId}`
+    expect(container.querySelector('[data-review-section=profile] dd')?.textContent).toBe(
+      profileId
     );
+    expect(
+      container.querySelectorAll('[data-review-section] input, [data-review-section] select')
+    ).toHaveLength(0);
     expect(container.textContent).toContain('SAVE10');
     expect(container.textContent).toContain('Example Street 4');
     expect(container.textContent).toContain('1234567890');
@@ -356,7 +387,9 @@ it('refreshes the advanced contract terms after a submission conflict', async ()
   await mount();
   await settlePreview();
   expect(container.textContent).toContain('Original terms');
-  expect(container.querySelector('[aria-label="Review Order"]')).not.toBeNull();
+  expect(
+    container.querySelector(`[aria-label="${t('electricity.order.total', 'en')}"]`)
+  ).not.toBeNull();
   contractTemplate = { name: 'Electricity agreement', versionNumber: 2, text: 'Updated terms' };
   const submit = [...container.querySelectorAll('button')].find(
     (button) => button.textContent === t('electricity.order.submit', 'en')

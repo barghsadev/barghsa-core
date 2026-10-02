@@ -1,3 +1,4 @@
+import { StepReviewPage } from '../components/StepReviewPage.js';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Card, CardContent, FinancialReviewSummary } from '@barghsa/ui';
@@ -483,7 +484,7 @@ export function SavingsOrderPage() {
           : step === 4
             ? !addressDirty && addresses.some((address) => address.id === addressId)
             : step === 5
-              ? agreementAccepted
+              ? agreementAccepted && giftCode.trim() === appliedGiftCode
               : false;
   async function submit() {
     if (
@@ -546,7 +547,7 @@ export function SavingsOrderPage() {
   }
 
   return (
-    <main
+    <div
       className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
@@ -901,42 +902,6 @@ export function SavingsOrderPage() {
                       />
                       {copy('acceptAgreement')}
                     </label>
-                  </section>
-                )}
-                {step === 6 && (
-                  <section className="space-y-4">
-                    <h2 className="text-xl font-semibold">{copy('stepReview')}</h2>
-                    <dl className="grid gap-2 text-sm md:grid-cols-2">
-                      <div>
-                        <dt className="text-muted-foreground">{copy('stepPlan')}</dt>
-                        <dd>{selectedPlan && title(selectedPlan)}</dd>
-                      </div>
-                      <div>
-                        <dt className="text-muted-foreground">{copy('stepHardware')}</dt>
-                        <dd>{selectedHardware && title(selectedHardware)}</dd>
-                      </div>
-                      <div>
-                        <dt className="text-muted-foreground">{copy('billIdentifier')}</dt>
-                        <dd dir="ltr">{billIdentifier}</dd>
-                      </div>
-                      <div>
-                        <dt className="text-muted-foreground">{copy('stepAddress')}</dt>
-                        <dd>{addresses.find((item) => item.id === addressId)?.fullAddress}</dd>
-                      </div>
-                    </dl>
-                    <div className="flex flex-wrap gap-2">
-                      {[1, 2, 3, 4, 5].map((target) => (
-                        <Button
-                          key={target}
-                          variant="outline"
-                          onClick={() => {
-                            void protection.save(target);
-                          }}
-                        >
-                          {t('electricity.order.edit', locale)} · {copy(steps[target - 1]!)}
-                        </Button>
-                      ))}
-                    </div>
                     <div className="flex flex-wrap items-end gap-2">
                       <label className="flex-1">
                         {copy('giftCode')}
@@ -957,52 +922,145 @@ export function SavingsOrderPage() {
                         {copy('apply')}
                       </Button>
                     </div>
-                    {quoting && <p role="status">{copy('loading')}</p>}
-                    {quoteError && (
-                      <div role="alert">
-                        <p>{copy('quoteError')}</p>
-                        <Button
-                          variant="outline"
-                          onClick={() => setQuoteRevision((value) => value + 1)}
-                        >
-                          {copy('retry')}
-                        </Button>
-                      </div>
+                    {giftCode.trim() !== appliedGiftCode && (
+                      <p role="status" className="text-sm">
+                        {t('electricity.order.applyGiftFirst', locale)}
+                      </p>
                     )}
-                    {quote && (
-                      <FinancialReviewSummary
-                        title={copy('stepReview')}
-                        rows={[
-                          ...quote.lines.map((line) => ({
-                            id: line.type,
-                            label: line.title[locale],
-                            value: (
-                              <>
-                                {numbers.money(line.amountIrR)}
-                                {(line.discountIrR !== '0' || line.vatIrR !== '0') && (
-                                  <small className="block text-muted-foreground">
-                                    −{numbers.money(line.discountIrR)} · +
-                                    {numbers.money(line.vatIrR)} {copy('vat')}
-                                  </small>
-                                )}
-                              </>
-                            ),
-                          })),
-                          {
-                            id: 'subtotal',
-                            label: copy('subtotal'),
-                            value: numbers.money(quote.subtotalIrR),
-                          },
-                          {
-                            id: 'discount',
-                            label: copy('discount'),
-                            value: numbers.money(quote.discountIrR),
-                          },
-                          { id: 'vat', label: copy('vat'), value: numbers.money(quote.vatIrR) },
-                        ]}
-                        total={{ label: copy('total'), value: numbers.money(quote.totalIrR) }}
-                      />
-                    )}
+                  </section>
+                )}
+                {step === 6 && (
+                  <section className="space-y-4">
+                    <StepReviewPage
+                      title={copy('stepReview')}
+                      editLabel={t('electricity.order.edit', locale)}
+                      disabled={protection.busy || protection.completed.current}
+                      onEdit={(target) => void protection.save(target)}
+                      sections={[
+                        {
+                          id: 'plan',
+                          title: copy('stepPlan'),
+                          step: 1,
+                          rows: [
+                            { label: copy('stepPlan'), value: selectedPlan && title(selectedPlan) },
+                          ],
+                        },
+                        {
+                          id: 'hardware',
+                          title: copy('stepHardware'),
+                          step: 2,
+                          rows: [
+                            {
+                              label: copy('stepHardware'),
+                              value: selectedHardware && title(selectedHardware),
+                            },
+                          ],
+                        },
+                        {
+                          id: 'bill',
+                          title: copy('stepBill'),
+                          step: 3,
+                          rows: [{ label: copy('billIdentifier'), value: billIdentifier }],
+                        },
+                        {
+                          id: 'address',
+                          title: copy('stepAddress'),
+                          step: 4,
+                          rows: [
+                            {
+                              label: copy('stepAddress'),
+                              value: addresses.find((item) => item.id === addressId)?.fullAddress,
+                            },
+                            {
+                              label: t('electricity.order.postalCode', locale),
+                              value: addresses.find((item) => item.id === addressId)?.postalCode,
+                            },
+                          ],
+                        },
+                        {
+                          id: 'agreement',
+                          title: copy('stepAgreement'),
+                          step: 5,
+                          content: (
+                            <div className="space-y-2 text-sm">
+                              <p className="font-medium">
+                                <bdi>{selectedPlan?.agreement?.title}</bdi>
+                              </p>
+                              <p className="whitespace-pre-wrap break-words">
+                                <bdi>{selectedPlan?.agreement?.body}</bdi>
+                              </p>
+                            </div>
+                          ),
+                        },
+                        {
+                          id: 'gift',
+                          title: copy('giftCode'),
+                          step: 5,
+                          rows: [{ label: copy('giftCode'), value: appliedGiftCode || '—' }],
+                        },
+                        {
+                          id: 'price',
+                          title: t('electricity.order.step3', locale),
+                          content: (
+                            <>
+                              {quoting && <p role="status">{copy('loading')}</p>}
+                              {quoteError && (
+                                <div role="alert">
+                                  <p>{copy('quoteError')}</p>
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => setQuoteRevision((value) => value + 1)}
+                                  >
+                                    {copy('retry')}
+                                  </Button>
+                                </div>
+                              )}
+                              {quote && (
+                                <FinancialReviewSummary
+                                  title={copy('total')}
+                                  rows={[
+                                    ...quote.lines.map((line) => ({
+                                      id: line.type,
+                                      label: line.title[locale],
+                                      value: (
+                                        <>
+                                          {numbers.money(line.amountIrR)}
+                                          {(line.discountIrR !== '0' || line.vatIrR !== '0') && (
+                                            <small className="block text-muted-foreground">
+                                              −{numbers.money(line.discountIrR)} · +
+                                              {numbers.money(line.vatIrR)} {copy('vat')}
+                                            </small>
+                                          )}
+                                        </>
+                                      ),
+                                    })),
+                                    {
+                                      id: 'subtotal',
+                                      label: copy('subtotal'),
+                                      value: numbers.money(quote.subtotalIrR),
+                                    },
+                                    {
+                                      id: 'discount',
+                                      label: copy('discount'),
+                                      value: numbers.money(quote.discountIrR),
+                                    },
+                                    {
+                                      id: 'vat',
+                                      label: copy('vat'),
+                                      value: numbers.money(quote.vatIrR),
+                                    },
+                                  ]}
+                                  total={{
+                                    label: copy('total'),
+                                    value: numbers.money(quote.totalIrR),
+                                  }}
+                                />
+                              )}
+                            </>
+                          ),
+                        },
+                      ]}
+                    />
                     <p className="text-sm">
                       {copy('walletBalance')}:{' '}
                       {walletBalance === null ? '—' : numbers.money(walletBalance)}
@@ -1088,6 +1146,6 @@ export function SavingsOrderPage() {
           </Card>
         </>
       )}
-    </main>
+    </div>
   );
 }

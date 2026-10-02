@@ -1297,10 +1297,20 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
             },
             {
               label: t('onboarding.wizard.review', locale),
-              content: (
+              content: ({ onEdit, disabled }) => (
                 <OnboardingReview
+                  onEdit={onEdit}
+                  disabled={disabled}
+                  sectionTitles={['representative', 'company', 'address', 'documents'].map((key) =>
+                    t(`onboarding.wizard.${key}`, locale)
+                  )}
                   rows={[
                     ...Object.entries(values).map(([field, value]) => ({
+                      step: /(?:ProvinceId|CityId|FullAddress|PostalCode)$/.test(field)
+                        ? 3
+                        : field.startsWith('representative')
+                          ? 1
+                          : 2,
                       label: t(`onboarding.legal.${field}`, locale),
                       value:
                         field === 'companyTypeId'
@@ -1320,6 +1330,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                               : value,
                     })),
                     {
+                      step: 4,
                       label: t('onboarding.wizard.documents', locale),
                       value: documents.map((document) => document.name).join('\n'),
                     },

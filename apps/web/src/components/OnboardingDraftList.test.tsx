@@ -11,13 +11,16 @@ vi.mock('@tanstack/react-router', () => ({
     to,
     params,
     search,
+    children,
     ...props
   }: PropsWithChildren<{
     to: string;
     params: { profileId: string };
     search: { step: number };
   }>) => (
-    <a {...props} href={to.replace('$profileId', params.profileId) + `?step=${search.step}`} />
+    <a {...props} href={to.replace('$profileId', params.profileId) + `?step=${search.step}`}>
+      {children}
+    </a>
   ),
 }));
 const id = (n: number) => `${n.toString(16).padStart(8, '0')}-1111-4111-8111-111111111111`;

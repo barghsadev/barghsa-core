@@ -1,3 +1,4 @@
+import { StepReviewPage } from '../components/StepReviewPage.js';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
@@ -432,7 +433,7 @@ export function SolarRequestPage() {
   const stages = ['requestStage', 'uploadStage', 'verifyStage', 'postalStage', 'finalStage'];
 
   return (
-    <main className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       {protection.blocker.status === 'blocked' && (
         <Suspense fallback={<p role="status">{copy('loading')}</p>}>
           <LeaveDialog
@@ -764,124 +765,124 @@ export function SolarRequestPage() {
             {step === 4 && (
               <Card>
                 <CardContent className="space-y-4 pt-6">
-                  <h2 className="text-xl font-semibold">{copy('reviewTitle')}</h2>
-                  <p>{copy('reviewDescription')}</p>
                   {review && (
-                    <div className="space-y-3 text-sm" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-                      <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-2 [&>dd]:min-w-0 [&>dd]:break-words">
-                        <dt>{copy('building')}</dt>
-                        <dd>
-                          {copy(
-                            review.data.submission.buildingType === 'non_household'
-                              ? 'nonHousehold'
-                              : 'building'
-                          )}
-                        </dd>
-                        <dt>{copy('gridType')}</dt>
-                        <dd>
-                          {copy(
-                            review.data.submission.gridType === 'off_grid' ? 'offGrid' : 'onGrid'
-                          )}
-                        </dd>
-                        {review.data.submission.billIdentifier && (
-                          <>
-                            <dt>{copy('billIdentifier')}</dt>
-                            <dd dir="ltr">{review.data.submission.billIdentifier}</dd>
-                          </>
-                        )}
-                        {review.data.submission.propertyForm && (
-                          <>
-                            <dt>{copy('propertyForm')}</dt>
-                            <dd>{copy(String(review.data.submission.propertyForm))}</dd>
-                          </>
-                        )}
-                        {review.data.submission.structuralFrame && (
-                          <>
-                            <dt>{copy('structuralFrame')}</dt>
-                            <dd>{copy(String(review.data.submission.structuralFrame))}</dd>
-                          </>
-                        )}
-                        {review.data.submission.buildingCompletionDate && (
-                          <>
-                            <dt>{copy('completionDate')}</dt>
-                            <dd>{review.data.submission.buildingCompletionDate}</dd>
-                          </>
-                        )}
-                        {review.data.submission.totalUnits && (
-                          <>
-                            <dt>{copy('totalUnits')}</dt>
-                            <dd>{review.data.submission.totalUnits}</dd>
-                          </>
-                        )}
-                        {review.data.submission.siteCategory && (
-                          <>
-                            <dt>{copy('siteCategory')}</dt>
-                            <dd>{copy(String(review.data.submission.siteCategory))}</dd>
-                          </>
-                        )}
-                        {review.data.submission.installationSurface && (
-                          <>
-                            <dt>{copy('installationSurface')}</dt>
-                            <dd>{copy(String(review.data.submission.installationSurface))}</dd>
-                          </>
-                        )}
-                        {review.data.submission.usableAreaSqm && (
-                          <>
-                            <dt>{copy('usableArea')}</dt>
-                            <dd>{review.data.submission.usableAreaSqm}</dd>
-                          </>
-                        )}
-                        {review.data.siteAddress && (
-                          <>
-                            <dt>{copy('address')}</dt>
-                            <dd>{review.data.siteAddress}</dd>
-                          </>
-                        )}
-                        {review.data.submission.siteRelationship && (
-                          <>
-                            <dt>{copy('relationship')}</dt>
-                            <dd>
-                              {copy(
-                                review.data.submission.siteRelationship === 'authorized_operator'
-                                  ? 'authorizedOperator'
-                                  : String(review.data.submission.siteRelationship)
-                              )}
-                            </dd>
-                          </>
-                        )}
-                        {review.data.submission.siteDescription && (
-                          <>
-                            <dt>{copy('description')}</dt>
-                            <dd>{review.data.submission.siteDescription}</dd>
-                          </>
-                        )}
-                        <dt>{copy('reviewTermsVersion')}</dt>
-                        <dd dir="ltr">{review.data.agreementVersion}</dd>
-                      </dl>
-                      <p>{copy('agreement')}</p>
-                      <p lang="fa" dir="rtl">
-                        {review.data.agreementText}
-                      </p>
-                      <p className="rounded-md bg-muted p-3">{copy('reviewNoContractInvoice')}</p>
-                      {submitError && <p role="alert">{copy('submitError')}</p>}
-                    </div>
+                    <StepReviewPage
+                      title={copy('reviewTitle')}
+                      description={copy('reviewDescription')}
+                      editLabel={t('electricity.order.edit', locale)}
+                      disabled={protection.busy || protection.completed.current}
+                      onEdit={(target) => void protection.save(target)}
+                      sections={[
+                        {
+                          id: 'property',
+                          title: copy('wizardProperty'),
+                          step: 1,
+                          rows: [
+                            {
+                              label: copy('building'),
+                              value: copy(
+                                review.data.submission.buildingType === 'non_household'
+                                  ? 'nonHousehold'
+                                  : 'building'
+                              ),
+                            },
+                            ...[
+                              ['propertyForm', 'propertyForm'],
+                              ['structuralFrame', 'structuralFrame'],
+                              ['siteCategory', 'siteCategory'],
+                              ['installationSurface', 'installationSurface'],
+                            ].flatMap(([field, label]) =>
+                              review.data.submission[field!]
+                                ? [
+                                    {
+                                      label: copy(label!),
+                                      value: copy(String(review.data.submission[field!])),
+                                    },
+                                  ]
+                                : []
+                            ),
+                            ...[
+                              ['buildingCompletionDate', 'completionDate'],
+                              ['totalUnits', 'totalUnits'],
+                              ['usableAreaSqm', 'usableArea'],
+                              ['siteDescription', 'description'],
+                            ].flatMap(([field, label]) =>
+                              review.data.submission[field!]
+                                ? [
+                                    {
+                                      label: copy(label!),
+                                      value: String(review.data.submission[field!]),
+                                    },
+                                  ]
+                                : []
+                            ),
+                            ...(review.data.siteAddress
+                              ? [{ label: copy('address'), value: review.data.siteAddress }]
+                              : []),
+                            ...(review.data.submission.siteRelationship
+                              ? [
+                                  {
+                                    label: copy('relationship'),
+                                    value: copy(
+                                      review.data.submission.siteRelationship ===
+                                        'authorized_operator'
+                                        ? 'authorizedOperator'
+                                        : String(review.data.submission.siteRelationship)
+                                    ),
+                                  },
+                                ]
+                              : []),
+                          ],
+                        },
+                        {
+                          id: 'grid',
+                          title: copy('gridType'),
+                          step: 2,
+                          rows: [
+                            {
+                              label: copy('gridType'),
+                              value: copy(
+                                review.data.submission.gridType === 'off_grid'
+                                  ? 'offGrid'
+                                  : 'onGrid'
+                              ),
+                            },
+                            ...(review.data.submission.billIdentifier
+                              ? [
+                                  {
+                                    label: copy('billIdentifier'),
+                                    value: String(review.data.submission.billIdentifier),
+                                  },
+                                ]
+                              : []),
+                          ],
+                        },
+                        {
+                          id: 'agreement',
+                          title: copy('stages'),
+                          step: 3,
+                          rows: [
+                            {
+                              label: copy('reviewTermsVersion'),
+                              value: review.data.agreementVersion,
+                            },
+                          ],
+                          content: (
+                            <div className="space-y-2 text-sm">
+                              <p>{copy('agreement')}</p>
+                              <p lang="fa" dir="rtl" className="whitespace-pre-wrap break-words">
+                                {review.data.agreementText}
+                              </p>
+                            </div>
+                          ),
+                        },
+                      ]}
+                    />
                   )}
-
-                  <div className="flex flex-wrap gap-2">
-                    {[1, 2, 3].map((target) => (
-                      <Button
-                        key={target}
-                        type="button"
-                        variant="outline"
-                        onClick={() => {
-                          void protection.save(target);
-                        }}
-                      >
-                        {copy('reviewCancel')} ·{' '}
-                        {copy(['wizardProperty', 'gridType', 'stages'][target - 1]!)}
-                      </Button>
-                    ))}
-                  </div>
+                  <p className="rounded-md bg-muted p-3 text-sm">
+                    {copy('reviewNoContractInvoice')}
+                  </p>
+                  {submitError && <p role="alert">{copy('submitError')}</p>}
                 </CardContent>
               </Card>
             )}
@@ -889,6 +890,6 @@ export function SolarRequestPage() {
           </fieldset>
         </FormWizard>
       )}
-    </main>
+    </div>
   );
 }

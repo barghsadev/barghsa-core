@@ -17,7 +17,9 @@ export function ElectricityFinancialReviewSummary({
   locale,
   formatMoney,
   formatQuantity,
+  title,
 }: {
+  title?: string;
   quote: {
     lines: ElectricityLine[];
     discountIrR: string;
@@ -30,7 +32,7 @@ export function ElectricityFinancialReviewSummary({
 }) {
   return (
     <FinancialReviewSummary
-      title={t('electricity.order.review', locale)}
+      title={title ?? t('electricity.order.review', locale)}
       rows={[
         ...quote.lines.map((line) => ({
           id: line.systemKey,

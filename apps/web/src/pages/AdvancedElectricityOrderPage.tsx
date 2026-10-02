@@ -3,6 +3,7 @@ import { useBlocker, useNavigate } from '@tanstack/react-router';
 import { Button, Card, CardContent, DateTimePicker } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { toast } from '../lib/toast-api.js';
+import { StepReviewPage } from '../components/StepReviewPage.js';
 import { FormWizard } from '../components/FormWizard.js';
 import { WalletFundingPrompt } from '../components/WalletFundingPrompt.js';
 import { ElectricityQuoteErrorNotice } from '../components/ElectricityQuoteErrorNotice.js';
@@ -165,14 +166,14 @@ export function AdvancedElectricityOrderPage() {
   useLayoutEffect(() => {
     liveSignature.current = signature;
   }, [signature]);
-  const unsavedChanges =
-    !loading && !loadError && !completed.current && signature !== savedSignature.current;
+  const hasUnsavedChanges = () =>
+    !loading && !loadError && liveSignature.current !== savedSignature.current;
   const blocker = useBlocker({
     shouldBlockFn: ({ current, next }) =>
       current.pathname !== next.pathname &&
       !completed.current &&
-      (unsavedChanges || !!command.current),
-    enableBeforeUnload: () => !completed.current && (unsavedChanges || !!command.current),
+      (hasUnsavedChanges() || !!command.current),
+    enableBeforeUnload: () => !completed.current && (hasUnsavedChanges() || !!command.current),
     withResolver: true,
   });
   const submission = useRef<{ fingerprint: string; key: string } | null>(null);
@@ -408,6 +409,7 @@ export function AdvancedElectricityOrderPage() {
   ]);
 
   async function saveDraft(next: boolean, target = next ? step + 1 : step) {
+    if (next && step === 4 && !selectedAddress) return false;
     if (
       command.current ||
       completed.current ||
@@ -559,11 +561,11 @@ export function AdvancedElectricityOrderPage() {
     t('electricity.advanced.stepDates', locale),
     t('electricity.advanced.stepProducts', locale),
     t('electricity.advanced.stepPrice', locale),
-    t('electricity.order.giftCode', locale),
+    t('electricity.order.step4', locale),
     t('electricity.advanced.stepConfirm', locale),
   ];
   return (
-    <main className="mx-auto max-w-4xl space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div className="mx-auto max-w-4xl space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       {blocker.status === 'blocked' && (
         <Suspense>
           <LeaveDialog
@@ -599,7 +601,10 @@ export function AdvancedElectricityOrderPage() {
         saveDisabled={completed.current}
         nextDisabled={
           completed.current ||
-          (step === 1 ? !validPeriod : !quote || !validPeriod || !quantitiesValid || !!quoteError)
+          (step === 1
+            ? !validPeriod
+            : !quote || !validPeriod || !quantitiesValid || !!quoteError) ||
+          (step === 4 && !selectedAddress)
         }
         submitDisabled={
           completed.current ||
@@ -726,7 +731,7 @@ export function AdvancedElectricityOrderPage() {
               </CardContent>
             </Card>
           )}
-          {step === 5 && (
+          {step === 4 && (
             <Card className="mb-6">
               <CardContent className="space-y-3 pt-6">
                 <h2 className="font-semibold">{t('electricity.order.selectAddress', locale)}</h2>
@@ -782,55 +787,139 @@ export function AdvancedElectricityOrderPage() {
                   )
                 ) : (
                   <>
-                    <p>
-                      {t('electricity.order.period.selection', locale)}: {start} – {end}
-                    </p>
-                    <p>
-                      {t('electricity.order.quantity', locale)}: {numbers.irrDigits(quote.totalKwh)}{' '}
-                      kWh ·{t('electricity.order.averagePower', locale)}: {quote.averagePowerKw} kW
-                      · {quote.durationHours} h
-                    </p>
-                    {quote.greenRuleApplies && (
-                      <p>{t('electricity.order.mandatoryGreen', locale)}</p>
-                    )}
                     {step === 5 ? (
-                      <ElectricityFinancialReviewSummary
-                        quote={quote}
-                        locale={locale}
-                        formatMoney={numbers.money}
-                        formatQuantity={numbers.irrDigits}
+                      <StepReviewPage
+                        title={t('electricity.order.review', locale)}
+                        editLabel={t('electricity.order.edit', locale)}
+                        disabled={saving || submitting || completed.current}
+                        onEdit={(target) => void saveDraft(false, target)}
+                        sections={[
+                          {
+                            id: 'period',
+                            title: steps[0]!,
+                            step: 1,
+                            rows: [
+                              {
+                                label: t('electricity.order.period.selection', locale),
+                                value: `${start} – ${end}`,
+                              },
+                            ],
+                          },
+                          {
+                            id: 'products',
+                            title: steps[1]!,
+                            step: 2,
+                            rows: [
+                              ...quote.lines.map((line) => ({
+                                label: t(`electricity.catalogue.${line.systemKey}`, locale),
+                                value: `${numbers.irrDigits(line.quantityKwh)} kWh`,
+                              })),
+                              {
+                                label: t('electricity.order.quantity', locale),
+                                value: `${numbers.irrDigits(quote.totalKwh)} kWh`,
+                              },
+                              {
+                                label: t('electricity.order.averagePower', locale),
+                                value: `${numbers.irrDigits(quote.averagePowerKw)} kW`,
+                              },
+                            ],
+                            content: quote.greenRuleApplies ? (
+                              <p className="text-sm">
+                                {t('electricity.order.mandatoryGreen', locale)}
+                              </p>
+                            ) : null,
+                          },
+                          {
+                            id: 'price',
+                            title: steps[2]!,
+                            step: 3,
+                            content: (
+                              <ElectricityFinancialReviewSummary
+                                title={t('electricity.order.total', locale)}
+                                quote={quote}
+                                locale={locale}
+                                formatMoney={numbers.money}
+                                formatQuantity={numbers.irrDigits}
+                              />
+                            ),
+                          },
+                          {
+                            id: 'gift',
+                            title: t('electricity.order.giftCode', locale),
+                            step: 4,
+                            rows: [
+                              {
+                                label: t('electricity.order.giftCode', locale),
+                                value: giftCode.trim() || '—',
+                              },
+                            ],
+                          },
+                          {
+                            id: 'address',
+                            title: t('electricity.order.deliveryAddress', locale),
+                            step: 4,
+                            rows: [
+                              {
+                                label: t('electricity.order.deliveryAddress', locale),
+                                value: selectedAddress?.fullAddress,
+                              },
+                              {
+                                label: t('electricity.order.postalCode', locale),
+                                value: selectedAddress?.postalCode,
+                              },
+                            ],
+                          },
+                          {
+                            id: 'profile',
+                            title: t('electricity.order.profile', locale),
+                            rows: [
+                              {
+                                label: t('electricity.order.profile', locale),
+                                value: profileName || profileId,
+                              },
+                            ],
+                          },
+                          {
+                            id: 'terms',
+                            title: t('electricity.order.contractPreview', locale),
+                            content: (
+                              <>
+                                <ElectricityContractTerms template={quote.contractTemplate} />
+                                <h4 className="font-medium">
+                                  {t('electricity.order.cancellationRules', locale)}
+                                </h4>
+                                <p className="text-sm">
+                                  {t('electricity.order.cancellationRulesText', locale)}
+                                </p>
+                                <p className="text-sm">
+                                  {t('electricity.order.paymentAfterSubmit', locale)}
+                                </p>
+                              </>
+                            ),
+                          },
+                        ]}
                       />
                     ) : (
                       <>
-                        {quote.lines.map((line) => (
-                          <div key={line.systemKey} className="border-b py-2 text-sm">
-                            <div className="flex flex-wrap justify-between gap-2">
-                              <span>
-                                {t(`electricity.catalogue.${line.systemKey}`, locale)} ·{' '}
-                                {numbers.irrDigits(line.quantityKwh)} kWh ×{' '}
-                                {numbers.money(line.unitPriceIrR)}
-                              </span>
-                              <strong>
-                                {t('electricity.order.lineTotal', locale)}:{' '}
-                                {numbers.money(line.totalIrR)}
-                              </strong>
-                            </div>
-                            <p className="text-muted-foreground">
-                              {numbers.money(line.subtotalIrR)} · −{numbers.money(line.discountIrR)}{' '}
-                              · +{numbers.money(line.vatIrR)}
-                            </p>
-                          </div>
-                        ))}
                         <p>
-                          {t('electricity.order.discount', locale)}:{' '}
-                          {numbers.money(quote.discountIrR)}
+                          {t('electricity.order.period.selection', locale)}: {start} – {end}
                         </p>
                         <p>
-                          {t('electricity.order.vat', locale)}: {numbers.money(quote.vatIrR)}
+                          {t('electricity.order.quantity', locale)}:{' '}
+                          {numbers.irrDigits(quote.totalKwh)} kWh ·{' '}
+                          {t('electricity.order.averagePower', locale)}:{' '}
+                          {numbers.irrDigits(quote.averagePowerKw)} kW · {quote.durationHours} h
                         </p>
-                        <p className="font-semibold">
-                          {t('electricity.order.total', locale)}: {numbers.money(quote.totalIrR)}
-                        </p>
+                        {quote.greenRuleApplies && (
+                          <p>{t('electricity.order.mandatoryGreen', locale)}</p>
+                        )}
+                        <ElectricityFinancialReviewSummary
+                          title={t('electricity.order.total', locale)}
+                          quote={quote}
+                          locale={locale}
+                          formatMoney={numbers.money}
+                          formatQuantity={numbers.irrDigits}
+                        />
                       </>
                     )}
                     <p>
@@ -843,40 +932,6 @@ export function AdvancedElectricityOrderPage() {
                         total={quote.totalIrR}
                       />
                     )}
-                    {step === 5 && (
-                      <>
-                        <p>
-                          {t('electricity.order.profile', locale)}:{' '}
-                          <strong dir="auto">{profileName || profileId}</strong>
-                          {profileName ? (
-                            <small className="ms-2 text-muted-foreground" dir="ltr">
-                              {profileId}
-                            </small>
-                          ) : null}
-                        </p>
-                        <p>
-                          {t('electricity.order.giftCode', locale)}: {giftCode.trim() || '—'}
-                        </p>
-                        <p>
-                          {t('electricity.order.deliveryAddress', locale)}:{' '}
-                          {selectedAddress?.fullAddress}
-                        </p>
-                        <p>
-                          {t('electricity.order.postalCode', locale)}: {selectedAddress?.postalCode}
-                        </p>
-                        <div className="space-y-2 border-t pt-4 text-sm text-muted-foreground">
-                          <h3 className="font-medium text-foreground">
-                            {t('electricity.order.contractPreview', locale)}
-                          </h3>
-                          <ElectricityContractTerms template={quote?.contractTemplate} />
-                          <h3 className="font-medium text-foreground">
-                            {t('electricity.order.cancellationRules', locale)}
-                          </h3>
-                          <p>{t('electricity.order.cancellationRulesText', locale)}</p>
-                          <p>{t('electricity.order.paymentAfterSubmit', locale)}</p>
-                        </div>
-                      </>
-                    )}
                   </>
                 )}
               </CardContent>
@@ -884,6 +939,6 @@ export function AdvancedElectricityOrderPage() {
           )}
         </fieldset>
       </FormWizard>
-    </main>
+    </div>
   );
 }

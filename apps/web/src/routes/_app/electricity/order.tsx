@@ -928,6 +928,16 @@ function ElectricityOrderPage() {
       toast.error(t('electricity.order.previewUnavailable', locale));
       return false;
     }
+    if (
+      advance &&
+      step === 4 &&
+      (loadingAddresses ||
+        addressError ||
+        !addresses.some((address) => address.id === selectedAddressId))
+    ) {
+      toast.error(t('electricity.order.selectAddress', locale));
+      return false;
+    }
     if (advance && step === 4 && giftCode.trim() !== appliedGiftCode) {
       toast.error(t('electricity.order.applyGiftFirst', locale));
       return false;
@@ -945,7 +955,9 @@ function ElectricityOrderPage() {
         ...(totalKwh ? { totalKwh } : {}),
         ...(appliedGiftCode ? { giftCode: appliedGiftCode } : {}),
         ...(giftCode ? { giftCodeInput: giftCode } : {}),
-        ...(addressTouched && selectedAddressId ? { addressId: selectedAddressId } : {}),
+        ...((addressTouched || (advance && step === 4)) && selectedAddressId
+          ? { addressId: selectedAddressId }
+          : {}),
       },
     };
     try {
@@ -1275,7 +1287,11 @@ function ElectricityOrderPage() {
             (step === 1 && (!selectedProduct || periodOptions.length === 0)) ||
             (step === 2 && (!totalKwh || quantityError)) ||
             (step >= 3 && (!quote || quoting || !!quoteError)) ||
-            (step === 4 && giftCode.trim() !== appliedGiftCode)
+            (step === 4 &&
+              (giftCode.trim() !== appliedGiftCode ||
+                loadingAddresses ||
+                addressError ||
+                !addresses.some((address) => address.id === selectedAddressId)))
           }
           submitDisabled={
             draftLoading ||
@@ -1568,8 +1584,8 @@ function ElectricityOrderPage() {
               </Card>
             )}
 
-            {/* Step 2: Select Address */}
-            {step === 5 && (
+            {/* Delivery address is collected before the read-only review. */}
+            {step === 4 && (
               <Card className="mb-6">
                 <CardContent className="pt-6">
                   <h2 className="mb-4 text-lg font-semibold flex items-center gap-2">
@@ -1862,6 +1878,15 @@ function ElectricityOrderPage() {
                   selectedAddress
                     ? `${getProvinceName(selectedAddress.provinceId)}، ${getCityName(selectedAddress.cityId)} — ${selectedAddress.fullAddress}`
                     : ''
+                }
+                postalCode={selectedAddress?.postalCode ?? ''}
+                editDisabled={
+                  savingDraft ||
+                  submitting ||
+                  savingAddress ||
+                  draftLoading ||
+                  draftError ||
+                  completed.current
                 }
                 walletBalance={walletBalance}
                 onEdit={(target) => void saveDraft(false, target)}
