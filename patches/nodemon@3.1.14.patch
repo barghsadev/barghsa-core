@@ -1,0 +1,45 @@
+diff --git a/lib/monitor/watch.js b/lib/monitor/watch.js
+index d0ac7fe14f65bcafebe0ae971834fa4d6beb28e4..ca5cea356d3a75e39d8716a53d2d498cca6cd6ca 100644
+--- a/lib/monitor/watch.js
++++ b/lib/monitor/watch.js
+@@ -7,6 +7,7 @@ var chokidar = require('chokidar');
+ var undefsafe = require('undefsafe');
+ var config = require('../config');
+ var path = require('path');
++var Minimatch = require('minimatch').Minimatch;
+ var utils = require('../utils');
+ var bus = utils.bus;
+ var match = require('./match');
+@@ -52,9 +53,30 @@ function watch() {
+       ignored.push(dotFilePattern);
+     }
+-
++
++    // Chokidar 4 accepts predicates rather than glob ignore strings.
++    // Nodemon already resolves watched globs to directories in rulesToMonitor.
++    const ignoredMatchers = ignored.map(pattern =>
++      typeof pattern === 'string'
++        ? new Minimatch(pattern, {
++            dot: true,
++            nocase: utils.isWindows,
++            windowsPathsNoEscape: utils.isWindows,
++          })
++        : pattern
++    );
++    const ignorePath = (file, stats) => {
++      const normalized = file.replace(/\\/g, '/');
++      return ignoredMatchers.some(matcher =>
++        matcher instanceof RegExp
++          ? matcher.test(normalized)
++          : matcher.match(normalized) ||
++            (stats && stats.isDirectory() && matcher.match(normalized + '/'))
++      );
++    };
++
+     var watchOptions = {
+       ignorePermissionErrors: true,
+-      ignored: ignored,
++      ignored: ignorePath,
+       persistent: true,
+       usePolling: config.options.legacyWatch || false,
+       interval: config.options.pollingInterval,

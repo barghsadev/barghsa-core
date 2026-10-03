@@ -31,4 +31,4 @@ Deploy the API before the frontend to enable inline server field metadata. The e
 
 Publication uses direct main through Git/GitHub CLI, with commit agreement and exact-commit CI registration read back. No PR is created. No scheduler, external supervisor state/handoff, historical `kanban/loop-state.json` or generated completion/event history is changed.
 
-The preceding order-form commit `4a1d247609975af901ec58c592f96c711a5dac44` passes all five CI jobs in [run37059536954](https://github.com/barghsadev/barghsa-core/actions/runs/37059536954). The new batch's CI result remains pending until separately verified.
+The preceding order-form commit `4a1d247609975af901ec58c592f96c711a5dac44` passes all five CI jobs in [run37059536954](https://github.com/barghsadev/barghsa-core/actions/runs/37059536954). The CRM commit's CI integrity job in [run37118145725](https://github.com/barghsadev/barghsa-core/actions/runs/37118145725) fails the dependency audit; the two security jobs pass and tests are still running when read. The [dependency repair batch](2026-10-03-dependency-ci-repair.md) addresses those advisories without relaxing the gate.

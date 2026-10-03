@@ -1,0 +1,12 @@
+diff --git a/package.json b/package.json
+index 3df36e2464913ee759009b21e27a59c4e20080dd..406c866e8a32acc8ea498ae582b8a1354d5a2b53 100644
+--- a/package.json
++++ b/package.json
+@@ -28,7 +28,6 @@
+   },
+   "bin": {
+     "swc": "./bin/swc.js",
+-    "swcx": "./bin/swcx.js",
+     "spack": "./bin/spack.js"
+   },
+   "dependencies": {

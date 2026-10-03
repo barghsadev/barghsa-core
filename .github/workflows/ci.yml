@@ -81,6 +81,8 @@ jobs:
       - name: Verify loop state and dispatch protocol
         run: python3 -m unittest discover -s kanban/scripts -p 'test_*.py'
       - run: pnpm install --frozen-lockfile
+      - name: Verify development watcher compatibility
+        run: node --test scripts/nodemon-watch.test.mjs
       - name: Scan dependencies for high and critical advisories
         run: |
           pnpm audit --audit-level=high --json > "$RUNNER_TEMP/dependency-audit.json" || true
