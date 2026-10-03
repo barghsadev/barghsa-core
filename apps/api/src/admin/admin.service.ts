@@ -77,6 +77,7 @@ import {
   type EscalationPolicies,
 } from '@barghsa/shared/admin';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { InputFieldException } from '../common/input-field.exception.js';
 import { ConfigCacheService } from '../config-cache/config-cache.service.js';
 import { z } from 'zod';
 
@@ -1219,6 +1220,14 @@ export class AdminService {
     const actorUserId = actor.userId;
     const validation = validateDualApprovalConfig(input);
     if (!validation.ok) {
+      if (
+        input !== null &&
+        typeof input === 'object' &&
+        !Array.isArray(input) &&
+        Object.keys(input).every((key) => key === 'threshold_irr' || key === 'thresholdIrR')
+      ) {
+        throw new InputFieldException(['thresholdIrR']);
+      }
       throw new HttpException(
         {
           statusCode: 400,

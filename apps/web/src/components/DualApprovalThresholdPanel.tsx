@@ -1,65 +1,117 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { isValidDualApprovalThreshold } from '@barghsa/shared/finance';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
+import { Button } from '@barghsa/ui';
+import { z } from 'zod/mini';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { normalizeIrrAmountDigits } from '../lib/invoice-bank-receipt-upload.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
 const path = '/api/admin/config/dual-approval-threshold';
+function thresholdValue(raw: string): number {
+  const digits = normalizeIrrAmountDigits(raw);
+  return /^\d+$/.test(digits) ? Number(digits) : NaN;
+}
+interface PendingThreshold {
+  command: TeamAction;
+  value: number;
+  generation: number;
+}
 export default function DualApprovalThresholdPanel() {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const [current, setCurrent] = useState<number | null>(null);
-  const [draft, setDraft] = useState('');
+  const message = t('admin.receiptThreshold.invalid', locale);
+  const draft = useDraftForm<{ thresholdIrR: string }>(
+    z.object({
+      thresholdIrR: z
+        .string()
+        .check(z.refine((raw) => isValidDualApprovalThreshold(thresholdValue(raw)), message)),
+    }),
+    { thresholdIrR: '' }
+  );
+  const [raw, setRaw] = draft.field('thresholdIrR');
+  const { reset } = draft.form;
+  const applyServerErrors = useActionFieldErrors(draft.form, { thresholdIrR: message }, message);
   const [loading, setLoading] = useState(true);
   const [forbidden, setForbidden] = useState(false);
   const [error, setError] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [action, setAction] = useState<TeamAction | null>(null);
+  const [action, setAction] = useState<PendingThreshold | null>(null);
+  const owner = useRef<PendingThreshold | null>(null);
   const generation = useRef(0);
   const load = useCallback(async () => {
     const request = ++generation.current;
     setLoading(true);
     setError(false);
     setCurrent(null);
+    owner.current = null;
+    setAction(null);
+    setSaved(false);
+    reset({ thresholdIrR: '' });
     try {
       const response = await fetch(path, { credentials: 'include' });
       const data: unknown = await response.json().catch(() => null);
       if (request !== generation.current) return;
-      setForbidden(response.status === 403);
-      if (response.status === 403) return;
+      const denied = response.status === 401 || response.status === 403;
+      setForbidden(denied);
+      if (denied) return;
       const value = (data as { thresholdIrR?: unknown } | null)?.thresholdIrR;
       if (!response.ok || !isValidDualApprovalThreshold(value)) throw new Error('Unavailable');
       setCurrent(value);
-      setDraft(String(value));
+      reset({ thresholdIrR: String(value) });
     } catch {
       if (request === generation.current) setError(true);
     } finally {
       if (request === generation.current) setLoading(false);
     }
-  }, []);
+  }, [reset]);
   useEffect(() => {
     void load();
     return () => {
       ++generation.current;
+      owner.current = null;
     };
   }, [load]);
-  const digits = normalizeIrrAmountDigits(draft);
-  const value = /^\d+$/.test(digits) ? Number(digits) : NaN;
+  const value = thresholdValue(raw);
   const valid = isValidDualApprovalThreshold(value);
-  function submit(event: FormEvent) {
+  const available = useRef(false);
+  available.current = !loading && !error && !forbidden && current !== null && !action;
+  const busy = draft.form.formState.isSubmitting || !!action;
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!valid || loading || current === null || action) return;
+    if (!available.current || owner.current || draft.form.isSubmissionPending()) return;
     setSaved(false);
-    setAction({
-      title: t('admin.receiptThreshold.save', locale),
-      description: `${numbers.money(value)}. ${t(value === 0 ? 'admin.receiptThreshold.disabled' : 'admin.receiptThreshold.description', locale)}`,
-      path,
-      method: 'PUT',
-      body: { threshold_irr: value },
-      requiresOtp: true,
-    });
+    const request = generation.current;
+    await draft.form.handleSubmit(({ thresholdIrR }) => {
+      if (!available.current || owner.current || request !== generation.current) return;
+      const value = thresholdValue(thresholdIrR);
+      const pending: PendingThreshold = {
+        value,
+        generation: request,
+        command: {
+          title: t('admin.receiptThreshold.save', locale),
+          description: `${numbers.money(value)}. ${t(value === 0 ? 'admin.receiptThreshold.disabled' : 'admin.receiptThreshold.description', locale)}`,
+          path,
+          method: 'PUT',
+          body: { threshold_irr: value },
+          requiresOtp: true,
+        },
+      };
+      owner.current = pending;
+      setAction(pending);
+    })(event);
+  }
+  function owns(pending: PendingThreshold): boolean {
+    return owner.current === pending && generation.current === pending.generation;
+  }
+  function close(pending: PendingThreshold) {
+    if (!owns(pending)) return;
+    owner.current = null;
+    setAction(null);
   }
   if (forbidden) return null;
   return (
@@ -85,56 +137,70 @@ export default function DualApprovalThresholdPanel() {
           </button>
         </div>
       ) : (
-        <form onSubmit={submit} className="space-y-3">
+        <form onSubmit={submit} noValidate className="space-y-3" aria-busy={busy || undefined}>
           <label htmlFor="receipt-threshold" className="block text-sm font-medium">
             {t('admin.receiptThreshold.label', locale)}
           </label>
           <input
             id="receipt-threshold"
+            {...draft.bind('thresholdIrR')}
             inputMode="numeric"
             dir="ltr"
-            value={draft}
+            value={raw}
             onChange={(event) => {
-              setDraft(event.target.value);
+              setRaw(event.target.value);
               setSaved(false);
             }}
-            disabled={!!action}
-            aria-invalid={!valid}
-            aria-describedby="receipt-threshold-hint receipt-threshold-value"
+            disabled={busy}
+            aria-describedby={`receipt-threshold-hint receipt-threshold-value${draft.errors.thresholdIrR ? ` ${draft.errorId('thresholdIrR')}` : ''}`}
             className="w-full rounded border bg-background px-3 py-2 text-foreground"
           />
           <p id="receipt-threshold-value" className="text-xl font-semibold">
-            {valid ? numbers.money(value) : t('admin.receiptThreshold.invalid', locale)}
+            {valid ? numbers.money(value) : '—'}
+          </p>
+          <p
+            id={draft.errorId('thresholdIrR')}
+            role={draft.errors.thresholdIrR ? 'alert' : undefined}
+            aria-hidden={!draft.errors.thresholdIrR || undefined}
+            className={`text-sm text-destructive${draft.errors.thresholdIrR ? '' : ' invisible'}`}
+          >
+            {draft.errors.thresholdIrR?.message ?? message}
           </p>
           {value === 0 && <p>{t('admin.receiptThreshold.disabled', locale)}</p>}
-          <button
-            type="submit"
-            disabled={!valid || !!action}
-            className="rounded bg-primary px-4 py-2 text-primary-foreground disabled:opacity-50"
-          >
+          <Button type="submit" disabled={busy} aria-busy={busy || undefined}>
+            {busy && (
+              <span
+                aria-hidden="true"
+                className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+              />
+            )}
             {t('admin.receiptThreshold.save', locale)}
-          </button>
+          </Button>
         </form>
       )}
       {saved && <p role="status">{t('admin.receiptThreshold.saved', locale)}</p>}
       {action && (
         <TeamActionDialog
-          action={action}
-          onClose={() => setAction(null)}
+          action={action.command}
+          onClose={() => close(action)}
+          onValidationError={(fields) => owns(action) && applyServerErrors(fields)}
           onDenied={() => {
+            if (!owns(action)) return;
             generation.current++;
+            owner.current = null;
             setCurrent(null);
-            setDraft('');
+            reset({ thresholdIrR: '' });
             setAction(null);
             setSaved(false);
             setForbidden(true);
           }}
           onSuccess={async (result) => {
+            if (!owns(action)) return;
             const value = (result as { thresholdIrR?: unknown } | null)?.thresholdIrR;
-            if (!isValidDualApprovalThreshold(value))
+            if (!isValidDualApprovalThreshold(value) || value !== action.value)
               throw new Error('Invalid configuration response');
             setCurrent(value);
-            setDraft(String(value));
+            reset({ thresholdIrR: String(value) });
             setSaved(true);
           }}
         />

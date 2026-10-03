@@ -101,6 +101,46 @@ describe('AdminService.getDualApprovalThresholdConfig (T-09.07.01)', () => {
 // ─── Tests — setDualApprovalThresholdConfig ──────────────────────────
 
 describe('AdminService.setDualApprovalThresholdConfig (T-09.07.01)', () => {
+  it.each([
+    {},
+    { threshold_irr: -1 },
+    { threshold_irr: 1.5 },
+    { threshold_irr: '250000' },
+    { threshold_irr: null },
+    { threshold_irr: Number.MAX_SAFE_INTEGER + 1 },
+    { thresholdIrR: false },
+  ])(
+    'reports only the editable threshold identifier for invalid input %j before locking',
+    async (input) => {
+      const { pool } = await loadService();
+      await expect(
+        service.setDualApprovalThresholdConfig(input, thresholdActor, '127.0.0.1')
+      ).rejects.toMatchObject({
+        status: 400,
+        fields: ['thresholdIrR'],
+      });
+      expect(pool.connect).not.toHaveBeenCalled();
+      expect(pool.query).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each([null, [], '250000', { threshold_irr: -1, actorUserId: 'private-diagnostic' }])(
+    'keeps root and mixed invalid input %j generic before locking',
+    async (input) => {
+      const { pool } = await loadService();
+      const error = await service
+        .setDualApprovalThresholdConfig(input, thresholdActor, '127.0.0.1')
+        .catch((error: unknown) => error);
+      expect(error).toBeInstanceOf(HttpException);
+      expect(error).toMatchObject({ status: 400 });
+      expect(error).not.toHaveProperty('fields');
+      expect(JSON.stringify((error as HttpException).getResponse())).not.toContain(
+        'private-diagnostic'
+      );
+      expect(pool.connect).not.toHaveBeenCalled();
+    }
+  );
+
   it('rejects a negative threshold with a 400', async () => {
     const { pool } = await loadService();
     await expect(
