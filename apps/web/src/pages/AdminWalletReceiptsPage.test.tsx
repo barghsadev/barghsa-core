@@ -400,10 +400,159 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       form!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
 
-    expect(container.textContent).toContain('A customer-visible reason is required');
+    expect(container.textContent).toContain(
+      'Enter a customer-visible reason of 1–2000 characters without control characters.'
+    );
     expect(container.querySelector('#reject-reason')?.getAttribute('aria-invalid')).toBe('true');
     const fetchMock = vi.mocked(fetch);
     expect(fetchMock.mock.calls.some(([url]) => String(url).endsWith('/reject'))).toBe(false);
+  });
+
+  async function editReason(value: string) {
+    const input = container.querySelector<HTMLTextAreaElement>('#reject-reason')!;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
+        input,
+        value
+      );
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    return input;
+  }
+  async function submitReason() {
+    await act(async () => {
+      container
+        .querySelector('#reject-reason')!
+        .closest('form')!
+        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+  }
+
+  it.each(['   ', 'bad\u0000reason', 'x'.repeat(2001)])(
+    'validates rejection on blur and retains invalid text: %j',
+    async (reason) => {
+      await act(async () => root.render(<AdminWalletReceiptsPage />));
+      await flush();
+      const input = await editReason(reason);
+      await act(async () => input.dispatchEvent(new FocusEvent('focusout', { bubbles: true })));
+      expect(input.getAttribute('aria-invalid')).toBe('true');
+      expect(input.value).toBe(reason);
+      expect(vi.mocked(fetch).mock.calls.some(([url]) => String(url).endsWith('/reject'))).toBe(
+        false
+      );
+      await editReason('Corrected bank investigation');
+      await vi.waitFor(() => expect(input.getAttribute('aria-invalid')).not.toBe('true'));
+    }
+  );
+
+  it.each([{ fields: ['reason'] }, { fields: ['reason', 'transactionId'] }, { fields: [] }])(
+    'retains draft and localizes server validation fields $fields',
+    async ({ fields }) => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+          if (String(input).endsWith('/reject'))
+            return new Response(
+              JSON.stringify({
+                error: {
+                  code: 'VALIDATION:INPUT:INVALID',
+                  fields,
+                  message: 'Private server diagnostic',
+                },
+              }),
+              { status: 400 }
+            );
+          return defaultFetch(input, init);
+        })
+      );
+      await act(async () => root.render(<AdminWalletReceiptsPage />));
+      await flush();
+      const invoice = container.querySelector<HTMLInputElement>('#apply-invoice-id')!;
+      await act(async () => {
+        Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+          invoice,
+          INVOICE_ID
+        );
+        invoice.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      await flush();
+      const input = await editReason('  Preserve this bank investigation  ');
+      await submitReason();
+      expect(input.value).toBe('  Preserve this bank investigation  ');
+      expect(invoice.value).toBe(INVOICE_ID);
+      expect(container.textContent).not.toContain('Private server diagnostic');
+      if (fields.length === 1) {
+        await act(
+          async () =>
+            new Promise<void>((resolve) =>
+              requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+            )
+        );
+        await vi.waitFor(() => expect(document.activeElement).toBe(input));
+        expect(input.getAttribute('aria-invalid')).toBe('true');
+        const errorId = input.getAttribute('aria-describedby')!.split(' ')[0]!;
+        expect(document.getElementById(errorId)?.textContent).toContain('1–2000');
+      } else {
+        expect(input.getAttribute('aria-invalid')).not.toBe('true');
+        expect(container.querySelector('[role="alert"]')?.textContent).toContain(
+          'Failed to save the decision'
+        );
+      }
+    }
+  );
+
+  it('clears private rejection work after an explicit permission denial', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+        if (String(input).endsWith('/reject'))
+          return new Response(
+            JSON.stringify({ error: { code: ErrorCodes.AUTHZ_FORBIDDEN.code } }),
+            { status: 403 }
+          );
+        return defaultFetch(input, init);
+      })
+    );
+    await act(async () => root.render(<AdminWalletReceiptsPage />));
+    await flush();
+    await editReason('Clear this private investigation');
+    await submitReason();
+    expect(container.querySelector('#reject-reason')).toBeNull();
+    expect(container.textContent).not.toContain('TRK-aaaa');
+    expect(container.textContent).toContain('You cannot view these receipts.');
+  });
+
+  it('locks validation and a pending rejection before duplicate submits and retains the draft after network failure', async () => {
+    let fail!: () => void;
+    const fetcher = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input).endsWith('/reject'))
+        return new Promise<Response>((_, reject) => {
+          fail = () => reject(new Error('network'));
+        });
+      return defaultFetch(input, init);
+    });
+    vi.stubGlobal('fetch', fetcher);
+    await act(async () => root.render(<AdminWalletReceiptsPage />));
+    await flush();
+    const input = await editReason('Keep this investigation');
+    await act(async () => {
+      const form = input.closest('form')!;
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+    expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith('/reject'))).toHaveLength(1);
+    expect(input.disabled).toBe(true);
+    const button = container.querySelector<HTMLButtonElement>(
+      '[data-testid="wallet-receipt-reject"]'
+    )!;
+    expect(button.getAttribute('aria-busy')).toBe('true');
+    expect(button.querySelector('.animate-spin')).not.toBeNull();
+    await act(async () => fail());
+    expect(input.disabled).toBe(false);
+    expect(input.value).toBe('Keep this investigation');
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain(
+      'Failed to save the decision'
+    );
   });
 
   it('rejects with a customer-visible reason and never posts confirm', async () => {

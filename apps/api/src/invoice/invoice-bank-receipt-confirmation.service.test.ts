@@ -1,3 +1,4 @@
+import { InputFieldException } from '../common/input-field.exception.js';
 import { receiptDecisionSession } from '../test/receipt-decision-session.js';
 import { invoiceReceiptFingerprint } from './invoice-bank-receipt-confirmation.service.js';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -672,24 +673,27 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
     expect(audit?.[1]?.[2]).toBe(INVOICE_BANK_RECEIPT_REJECTED_EVENT);
   });
 
-  it('requires a customer-visible reject reason before locking', async () => {
-    const rejection = await service
-      .reject({
-        receiptId: RECEIPT_ID,
-        raw: { reason: '   ' },
-        actorUserId: ACTOR_ID,
-        ...receiptDecisionSession(ACTOR_ID),
-        ip: '10.0.0.9',
-      })
-      .catch((error: unknown) => error);
-    expect(rejection).toBeInstanceOf(HttpException);
-    expect((rejection as HttpException).getResponse()).toMatchObject({
-      error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-      message: INVOICE_BANK_RECEIPT_REJECT_ERRORS.BAD_REASON(),
-    });
-    expect(mockPool.connect).not.toHaveBeenCalled();
-    expect(walletService.credit).not.toHaveBeenCalled();
-  });
+  it.each(['   ', '', 'x'.repeat(2001), 'bad\u0000reason', null])(
+    'returns only the reason field for invalid rejection input before locking: %j',
+    async (reason) => {
+      const rejection = await service
+        .reject({
+          receiptId: RECEIPT_ID,
+          raw: { reason },
+          actorUserId: ACTOR_ID,
+          ...receiptDecisionSession(ACTOR_ID),
+          ip: '10.0.0.9',
+        })
+        .catch((error: unknown) => error);
+      expect(rejection).toBeInstanceOf(HttpException);
+      expect((rejection as HttpException).getResponse()).toMatchObject({
+        error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+      });
+      expect((rejection as InputFieldException).fields).toEqual(['reason']);
+      expect(mockPool.connect).not.toHaveBeenCalled();
+      expect(walletService.credit).not.toHaveBeenCalled();
+    }
+  );
 
   it('conflicts when rejecting an already confirmed receipt', async () => {
     script({

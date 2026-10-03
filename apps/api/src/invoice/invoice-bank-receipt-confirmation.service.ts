@@ -1,3 +1,4 @@
+import { InputFieldException } from '../common/input-field.exception.js';
 import { receiptActivityActor } from '../finance/receipt-activity-actor.js';
 import { receiptStatusHistory, type ReceiptStatusHistoryEntry } from './receipt-status-history.js';
 import type { ReceiptQueueQuery, ReceiptQueuePage } from '../common/receipt-queue-query.js';
@@ -863,9 +864,7 @@ export class InvoiceBankReceiptConfirmationService {
 
   async reject(input: RejectInvoiceBankReceiptInput): Promise<InvoiceBankReceiptConfirmDto> {
     const parsed = parseInvoiceBankReceiptRejectReason(input.raw);
-    if (!parsed.ok) {
-      httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, parsed.message, 400);
-    }
+    if (!parsed.ok) throw new InputFieldException(['reason']);
 
     const actor = {
       userId: input.actorUserId,

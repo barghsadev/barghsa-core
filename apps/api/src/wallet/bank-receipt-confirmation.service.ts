@@ -1,3 +1,4 @@
+import { InputFieldException } from '../common/input-field.exception.js';
 import type { ReceiptQueueQuery, ReceiptQueuePage } from '../common/receipt-queue-query.js';
 import { literalSearchPattern } from '@barghsa/shared/validation';
 import { parseBankReceiptBankName } from '@barghsa/shared/finance';
@@ -630,9 +631,7 @@ export class BankReceiptConfirmationService {
 
   async reject(input: RejectBankReceiptInput): Promise<BankReceiptReviewDto> {
     const parsed = parseBankReceiptRejectReason(input.raw);
-    if (!parsed.ok) {
-      httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, parsed.message, 400);
-    }
+    if (!parsed.ok) throw new InputFieldException(['reason']);
 
     const actor = {
       userId: input.actorUserId,

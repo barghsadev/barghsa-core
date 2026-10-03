@@ -1,3 +1,5 @@
+import { useReceiptRejectionForm } from '../hooks/useReceiptRejectionForm.js';
+import type { FormEvent } from 'react';
 import { ReceiptStatusTimeline } from './ReceiptStatusTimeline.js';
 import type { InvoiceReceiptActivity } from '../lib/customer-invoices.js';
 import { useReceiptQueueQuery, receiptQueueParams } from '../hooks/useReceiptQueueQuery.js';
@@ -120,7 +122,9 @@ export function InvoiceBankReceiptQueue({
   const [allocation, setAllocation] = useState<Allocation | null>(null);
   const [detailState, setDetailState] = useState<'loading' | 'ready' | 'error'>('loading');
   const [allocationError, setAllocationError] = useState(false);
-  const [reason, setReason] = useState('');
+  const rejection = useReceiptRejectionForm('invoice');
+  const [reason, setReason] = rejection.field('reason');
+  const rejectionBusy = rejection.form.formState.isSubmitting;
   const [action, setAction] = useState<TeamAction | null>(null);
   const [financialReview, setFinancialReview] = useState<BankReceiptConfirmationReview | null>(
     null
@@ -145,7 +149,7 @@ export function InvoiceBankReceiptQueue({
       setSelectedId(null);
       setDetail(null);
       setAllocation(null);
-      setReason('');
+      rejection.form.reset({ reason: '' });
       actionRef.current = null;
       setAction(null);
       setFinancialReview(null);
@@ -190,6 +194,8 @@ export function InvoiceBankReceiptQueue({
             setSelectedId(null);
             setDetail(null);
             setAllocation(null);
+            rejection.form.reset({ reason: '' });
+            actionRef.current = null;
             setAction(null);
             setFinancialReview(null);
           }
@@ -236,15 +242,20 @@ export function InvoiceBankReceiptQueue({
     setRevision((value) => value + 1);
   }
 
-  async function review(kind: 'confirm' | 'reject') {
-    if (!detail) return;
+  async function review(kind: 'confirm' | 'reject', rejectionReason = reason.trim()) {
+    if (
+      !detail ||
+      actionRef.current ||
+      (kind === 'confirm' && rejection.form.isSubmissionPending())
+    )
+      return;
     if (
       kind === 'confirm' &&
       (!detail.canConfirm || detail.dualApprovalPending || !allocation || !detail.attachmentUrl)
     )
       return;
-    const rejection = reason.trim();
-    if (kind === 'reject' && (!detail.canReject || !rejection)) return;
+    const reasonText = rejectionReason;
+    if (kind === 'reject' && (!detail.canReject || !reasonText)) return;
     const generation = reviewGeneration.current;
     let confirmation: BankReceiptConfirmationReview | null = null;
     if (kind === 'confirm') {
@@ -281,17 +292,43 @@ export function InvoiceBankReceiptQueue({
         return;
       }
     }
-    setAction({
+    const proposal: TeamAction = {
       title: word(kind),
       description: kind === 'confirm' ? word('confirmNotice') : word('rejectNotice'),
       path: `${base}/${encodeURIComponent(detail.receiptId)}/${kind}`,
       method: 'POST',
       ...(kind === 'reject'
-        ? { body: { reason: rejection } }
+        ? { body: { reason: reasonText } }
         : { body: { expectedReviewHash: confirmation!.hash } }),
       conflictMessage: word('conflict'),
       forbiddenMessage: word('forbidden'),
-    });
+    };
+    actionRef.current = proposal;
+    setAction(proposal);
+  }
+
+  const canRejectNow = useRef(false);
+  canRejectNow.current = Boolean(
+    detail?.canReject &&
+    detailState === 'ready' &&
+    listState === 'ready' &&
+    reviewState !== 'loading' &&
+    !action
+  );
+  function rejectReceipt(event: FormEvent) {
+    event.preventDefault();
+    if (!canRejectNow.current || !detail) return;
+    const generation = reviewGeneration.current;
+    const receiptId = detail.receiptId;
+    void rejection.form.handleSubmit(async (values) => {
+      if (
+        !canRejectNow.current ||
+        generation !== reviewGeneration.current ||
+        selectedIdRef.current !== receiptId
+      )
+        return;
+      await review('reject', values.reason.trim());
+    })(event);
   }
 
   return (
@@ -349,7 +386,7 @@ export function InvoiceBankReceiptQueue({
               view={view}
               caption={word('title')}
               onOpen={(receiptId) => {
-                setReason('');
+                rejection.form.reset({ reason: '' });
                 setSelectedSource('pending');
                 setSelectedId(receiptId);
               }}
@@ -376,7 +413,7 @@ export function InvoiceBankReceiptQueue({
           {...(historyQuery ? { binding: historyQuery.query } : {})}
           revision={revision}
           onOpen={(receiptId) => {
-            setReason('');
+            rejection.form.reset({ reason: '' });
             setSelectedSource('history');
             setSelectedId(receiptId);
           }}
@@ -538,29 +575,63 @@ export function InvoiceBankReceiptQueue({
                 {detail.canConfirm && !detail.dualApprovalPending ? (
                   <Button
                     onClick={() => void review('confirm')}
-                    disabled={!allocation || !detail.attachmentUrl || reviewState === 'loading'}
+                    disabled={
+                      !allocation ||
+                      !detail.attachmentUrl ||
+                      reviewState === 'loading' ||
+                      rejectionBusy ||
+                      !!action
+                    }
                   >
                     {word('confirm')}
                   </Button>
                 ) : null}
                 {detail.canReject ? (
-                  <div className="flex flex-col gap-2">
+                  <form onSubmit={rejectReceipt} noValidate className="flex min-w-0 flex-col gap-2">
                     <label htmlFor="invoice-receipt-reason">{word('reason')}</label>
                     <textarea
+                      {...rejection.bind('reason')}
                       id="invoice-receipt-reason"
                       value={reason}
                       onChange={(event) => setReason(event.target.value)}
+                      disabled={rejectionBusy || !!action}
+                      required
+                      aria-required="true"
+                      aria-describedby={
+                        rejection.errors.reason
+                          ? `${rejection.errorId('reason')} invoice-receipt-reason-hint`
+                          : 'invoice-receipt-reason-hint'
+                      }
                       maxLength={BANK_RECEIPT_REJECT_REASON_MAX_LENGTH}
                       className="min-h-20 rounded-md border bg-background p-2"
                     />
+                    <p id="invoice-receipt-reason-hint" className="text-xs text-muted-foreground">
+                      {word('reasonHint')}
+                    </p>
+                    {rejection.errors.reason && (
+                      <p
+                        id={rejection.errorId('reason')}
+                        role="alert"
+                        className="text-sm text-destructive"
+                      >
+                        {rejection.errors.reason.message}
+                      </p>
+                    )}
                     <Button
+                      type="submit"
                       variant="outline"
-                      disabled={!reason.trim()}
-                      onClick={() => void review('reject')}
+                      disabled={!canRejectNow.current || rejectionBusy}
+                      aria-busy={rejectionBusy || undefined}
                     >
+                      {rejectionBusy && (
+                        <span
+                          aria-hidden="true"
+                          className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                        />
+                      )}
                       {word('reject')}
                     </Button>
-                  </div>
+                  </form>
                 ) : null}
               </div>
               {reviewState === 'loading' ? <p role="status">{word('reviewLoading')}</p> : null}
@@ -581,16 +652,38 @@ export function InvoiceBankReceiptQueue({
               />
             ) : null
           }
+          onValidationError={(fields) =>
+            actionRef.current === action &&
+            action.path.endsWith('/reject') &&
+            rejection.applyServerErrors(fields)
+          }
+          onDenied={() => {
+            if (actionRef.current !== action) return;
+            reviewGeneration.current++;
+            selectedIdRef.current = null;
+            actionRef.current = null;
+            setAction(null);
+            setSelectedId(null);
+            setDetail(null);
+            setAllocation(null);
+            setFinancialReview(null);
+            setItems([]);
+            setNextCursor(null);
+            rejection.form.reset({ reason: '' });
+            setListState('forbidden');
+          }}
           onClose={() => {
             if (actionRef.current !== action) return;
+            actionRef.current = null;
             setAction(null);
             setFinancialReview(null);
           }}
           onSuccess={async () => {
             if (actionRef.current !== action) return;
+            actionRef.current = null;
             setAction(null);
             setFinancialReview(null);
-            setReason('');
+            rejection.form.reset({ reason: '' });
             refresh();
           }}
         />

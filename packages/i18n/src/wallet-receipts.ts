@@ -93,7 +93,8 @@ const fa: Record<string, string> = {
   'admin.walletReceipts.none': '—',
   'admin.walletReceipts.error.load': 'بارگذاری رسیدها ناموفق بود',
   'admin.walletReceipts.error.save': 'ثبت تصمیم ناموفق بود',
-  'admin.walletReceipts.error.reason': 'دلیل الزامی است و برای مشتری نمایش داده می‌شود',
+  'admin.walletReceipts.error.reason':
+    'دلیل قابل نمایش برای مشتری باید ۱ تا ۲۰۰۰ نویسه و بدون نویسه‌های کنترلی باشد.',
   'admin.walletReceipts.stepUp.title': 'تأیید هویت لازم است',
   'admin.walletReceipts.stepUp.description':
     'تأیید یا رد رسید بانکی نیاز به تأیید مجدد هویت دارد. رمز عبور خود را وارد کنید.',
@@ -212,7 +213,8 @@ const en: Record<string, string> = {
   'admin.walletReceipts.none': '—',
   'admin.walletReceipts.error.load': 'Failed to load receipts',
   'admin.walletReceipts.error.save': 'Failed to save the decision',
-  'admin.walletReceipts.error.reason': 'A customer-visible reason is required',
+  'admin.walletReceipts.error.reason':
+    'Enter a customer-visible reason of 1–2000 characters without control characters.',
   'admin.walletReceipts.stepUp.title': 'Verification required',
   'admin.walletReceipts.stepUp.description':
     'Confirming or rejecting a bank receipt requires a fresh identity check. Enter your password to continue.',

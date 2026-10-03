@@ -36,3 +36,7 @@ Deploy the additive API metadata with or before the frontend. Older APIs continu
 Publication is directly to `main` using Git/GitHub CLI, after related validation and review. Read back local/origin/advertised/GitHub SHA agreement, clean checkout and exact-commit CI registration. No PR, scheduler, external supervisor state/handoff, historical `kanban/loop-state.json` or generated completion/event history is changed. Other product forms and global criteria remain open.
 
 The preceding team batch's [CI run37120046242](https://github.com/barghsadev/barghsa-core/actions/runs/37120046242) passes all five jobs, including tests and combined source coverage, at the final readback. The new remote CI is pending at publication.
+
+## October 3 CI follow-up
+
+[CI run37121830769](https://github.com/barghsadev/barghsa-core/actions/runs/37121830769) finishes with security, secrets and integrity passing, and tests/downstream combined coverage failing. Two legacy invoice-parent amount tests still expect the former global error banner. The [staff receipt rejection batch](2026-10-03-staff-receipt-rejection-forms.md) updates them to verify linked inline feedback, focus, retained amounts/date/reference and no upload/submission. All 24 parent-page cases pass locally; remote confirmation of the repaired commit remains pending.

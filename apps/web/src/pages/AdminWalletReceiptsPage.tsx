@@ -1,3 +1,5 @@
+import { useReceiptRejectionForm } from '../hooks/useReceiptRejectionForm.js';
+import { inputErrorFields } from '../lib/input-error-fields.js';
 import { useReceiptQueueQuery, receiptQueueParams } from '../hooks/useReceiptQueueQuery.js';
 import {
   ReceiptQueueControls,
@@ -23,14 +25,13 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
   APPROVAL_REVIEW_REASON_MAX_LENGTH,
-  parseBankReceiptRejectReason,
   parseBankReceiptConfirmationReview,
   type BankReceiptConfirmationReview,
   type WalletBankReceiptTimeline,
 } from '@barghsa/shared/finance';
 import { WalletReceiptTimeline } from '../components/WalletReceiptTimeline.js';
 import { BankReceiptFinancialReview } from '../components/BankReceiptFinancialReview.js';
-import { Button, ListPage, ListViewToggle, ScrollArea } from '@barghsa/ui';
+import { Alert, Button, ListPage, ListViewToggle, ScrollArea } from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { useListView } from '../hooks/useListView.js';
 import { StaffWalletReceiptList } from '../components/StaffWalletReceiptList.js';
@@ -227,7 +228,9 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const [items, setItems] = useState<BankReceiptReviewDto[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selected, setSelected] = useState<BankReceiptReviewDto | null>(null);
-  const [reason, setReason] = useState('');
+  const rejection = useReceiptRejectionForm('wallet');
+  const [reason, setReason] = rejection.field('reason');
+  const rejectionBusy = rejection.form.formState.isSubmitting;
   const [emergencyReason, setEmergencyReason] = useState('');
   const [loading, setLoading] = useState(true);
   const [acting, setActing] = useState(false);
@@ -264,7 +267,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const [stepUpError, setStepUpError] = useState<string | null>(null);
   const [stepUpSubmitting, setStepUpSubmitting] = useState(false);
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
-  const [reasonInvalid, setReasonInvalid] = useState(false);
+  const writeOwner = useRef<PendingAction | null>(null);
   const stepUpDialogRef = useRef<HTMLDivElement | null>(null);
   const stepUpPasswordRef = useRef<HTMLInputElement | null>(null);
   const confirmButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -285,6 +288,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const reviewScopeRef = useRef('');
   function invalidateDecision() {
     ++workGeneration.current;
+    writeOwner.current = null;
     setStepUpOpen(false);
     setPendingAction(null);
     setStepUpPassword('');
@@ -301,13 +305,12 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     selectedRef.current = row;
     setSelected(row);
     setSelectedId(id);
-    setReason('');
+    rejection.form.reset({ reason: '' });
     setEmergencyReason('');
     setInvoiceId(row?.dualApproval?.invoiceId ?? '');
     setAllocation(null);
     setAllocationError(null);
     setClientIssue(null);
-    setReasonInvalid(false);
     setDetailError(false);
     setStatus(null);
   }
@@ -572,16 +575,30 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     const data: unknown = await res.json().catch(() => null);
     if (action.generation !== workGeneration.current || accessDenied.current) return 'obsolete';
     if (isStepUpRequired(res, data)) return 'step_up';
+    if (
+      res.status === 401 ||
+      (res.status === 403 && readErrorCode(data) === ErrorCodes.AUTHZ_FORBIDDEN.code)
+    ) {
+      denyAccess();
+      setError(t('admin.walletReceipts.queue.forbidden', locale));
+      return 'obsolete';
+    }
     if (!res.ok) {
       if (res.status === 409 && action.kind === 'confirm') {
         financialReviewRef.current = null;
         setFinancialReview(null);
       }
-      setError(
-        res.status === 409 && action.kind === 'confirm'
-          ? t('admin.walletReceipts.review.changed', locale)
-          : errorMessage(data, t('admin.walletReceipts.error.save', locale))
-      );
+      const fields = inputErrorFields(data, res.status).fields;
+      if (action.kind === 'reject' && fields && rejection.applyServerErrors(fields)) {
+        restoreTriggerRef.current = false;
+        setError(null);
+      } else {
+        setError(
+          res.status === 409 && action.kind === 'confirm'
+            ? t('admin.walletReceipts.review.changed', locale)
+            : t('admin.walletReceipts.error.save', locale)
+        );
+      }
       return 'error';
     }
     const dto = data as BankReceiptReviewDto;
@@ -623,6 +640,8 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   }
 
   async function runAction(action: PendingAction) {
+    if (writeOwner.current) return;
+    writeOwner.current = action;
     setActing(true);
     setError(null);
     setStatus(null);
@@ -646,14 +665,19 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       if (action.generation === workGeneration.current)
         setError(t('admin.walletReceipts.error.save', locale));
     } finally {
-      if (action.generation === workGeneration.current) setActing(false);
+      if (writeOwner.current === action) {
+        writeOwner.current = null;
+        if (action.generation === workGeneration.current) setActing(false);
+      }
     }
   }
 
   function handleConfirm(emergencyOverrideReason?: string) {
     if (
       !selected ||
+      rejection.form.isSubmissionPending() ||
       acting ||
+      rejectionBusy ||
       stepUpOpen ||
       loading ||
       queueError ||
@@ -674,7 +698,6 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       return;
     const trimmed = invoiceId.trim();
     if (trimmed && !isTransactionUuid(trimmed)) {
-      setReasonInvalid(false);
       setClientIssue(t('admin.walletReceipts.error.invoiceId', locale));
       return;
     }
@@ -683,11 +706,9 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       isTransactionUuid(trimmed) &&
       (allocationLoading || allocationError || !allocation)
     ) {
-      setReasonInvalid(false);
       setClientIssue(allocationError ?? t('admin.walletReceipts.error.allocationPending', locale));
       return;
     }
-    setReasonInvalid(false);
     setClientIssue(null);
     void runAction({
       transactionId: selected.transactionId,
@@ -701,34 +722,33 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     });
   }
 
+  const canRejectNow = useRef(false);
+  canRejectNow.current = Boolean(
+    selected?.canDecide &&
+    !acting &&
+    !stepUpOpen &&
+    !loading &&
+    !queueError &&
+    !allocationLoading &&
+    !detailLoading &&
+    !detailError &&
+    !accessDenied.current
+  );
   function handleReject(e: FormEvent) {
     e.preventDefault();
-    if (
-      !selected ||
-      acting ||
-      stepUpOpen ||
-      loading ||
-      queueError ||
-      allocationLoading ||
-      detailLoading ||
-      detailError ||
-      accessDenied.current
-    )
-      return;
-    const parsed = parseBankReceiptRejectReason({ reason });
-    if (!parsed.ok) {
-      setReasonInvalid(true);
-      setClientIssue(t('admin.walletReceipts.error.reason', locale));
-      return;
-    }
-    setReasonInvalid(false);
-    setClientIssue(null);
-    void runAction({
-      transactionId: selected.transactionId,
-      generation: workGeneration.current,
-      kind: 'reject',
-      reason: parsed.reason,
-    });
+    if (!canRejectNow.current) return;
+    const generation = workGeneration.current;
+    const transactionId = selected!.transactionId;
+    void rejection.form.handleSubmit(async ({ reason }) => {
+      if (
+        !canRejectNow.current ||
+        generation !== workGeneration.current ||
+        selectedIdRef.current !== transactionId
+      )
+        return;
+      setClientIssue(null);
+      await runAction({ transactionId, generation, kind: 'reject', reason: reason.trim() });
+    })(e);
   }
 
   function cancelStepUp() {
@@ -808,14 +828,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
 
       <WalletTopUpLimitConfigPanel />
 
-      {error && (
-        <div
-          className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded"
-          role="alert"
-        >
-          {error}
-        </div>
-      )}
+      {error && <Alert variant="destructive">{error}</Alert>}
 
       {status && (
         <p ref={statusRef} className="text-sm text-success" role="status" tabIndex={-1}>
@@ -881,7 +894,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                 items={items}
                 view={view}
                 selectedId={selectedId}
-                disabled={acting || stepUpOpen}
+                disabled={acting || stepUpOpen || rejectionBusy}
                 onSelect={(id) => {
                   if (id !== selectedIdRef.current) selectReceipt(id);
                 }}
@@ -1009,7 +1022,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                       id="apply-invoice-id"
                       name="invoiceId"
                       readOnly={Boolean(selected.dualApproval)}
-                      disabled={acting || stepUpOpen}
+                      disabled={acting || stepUpOpen || rejectionBusy}
                       type="text"
                       dir="ltr"
                       inputMode="text"
@@ -1053,7 +1066,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
 
                   {clientIssue && (
                     <p
-                      id={reasonInvalid ? 'reject-reason-error' : 'wallet-receipt-client-issue'}
+                      id="wallet-receipt-client-issue"
                       className="text-sm text-destructive"
                       role="alert"
                     >
@@ -1068,6 +1081,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                     onClick={() => handleConfirm()}
                     disabled={
                       acting ||
+                      rejectionBusy ||
                       loading ||
                       !!queueError ||
                       detailLoading ||
@@ -1109,7 +1123,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                         maxLength={APPROVAL_REVIEW_REASON_MAX_LENGTH}
                         value={emergencyReason}
                         onChange={(event) => setEmergencyReason(event.target.value)}
-                        disabled={acting || stepUpOpen}
+                        disabled={acting || stepUpOpen || rejectionBusy}
                         className="w-full rounded border border-input px-3 py-2"
                       />
                       <button
@@ -1118,6 +1132,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                         data-testid="wallet-receipt-emergency-confirm"
                         disabled={
                           acting ||
+                          rejectionBusy ||
                           loading ||
                           !!queueError ||
                           detailLoading ||
@@ -1149,28 +1164,30 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                       </label>
                       <textarea
                         id="reject-reason"
-                        name="reason"
+                        {...rejection.bind('reason')}
                         required
                         aria-required="true"
-                        aria-invalid={reasonInvalid}
                         aria-describedby={
-                          reasonInvalid
-                            ? 'reject-reason-error reject-reason-hint'
+                          rejection.errors.reason
+                            ? `${rejection.errorId('reason')} reject-reason-hint`
                             : 'reject-reason-hint'
                         }
                         maxLength={BANK_RECEIPT_REJECT_REASON_MAX_LENGTH}
                         rows={3}
                         value={reason}
-                        disabled={acting || stepUpOpen}
-                        onChange={(e) => {
-                          setReason(e.target.value);
-                          if (reasonInvalid) {
-                            setReasonInvalid(false);
-                            setClientIssue(null);
-                          }
-                        }}
+                        disabled={acting || stepUpOpen || rejectionBusy}
+                        onChange={(e) => setReason(e.target.value)}
                         className="w-full border border-input rounded px-3 py-2"
                       />
+                      {rejection.errors.reason && (
+                        <p
+                          id={rejection.errorId('reason')}
+                          className="text-sm text-destructive"
+                          role="alert"
+                        >
+                          {rejection.errors.reason.message}
+                        </p>
+                      )}
                       <p id="reject-reason-hint" className="text-xs text-muted-foreground mt-1">
                         {t('admin.walletReceipts.reasonHint', locale)}
                       </p>
@@ -1181,6 +1198,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                       data-testid="wallet-receipt-reject"
                       disabled={
                         acting ||
+                        rejectionBusy ||
                         stepUpOpen ||
                         loading ||
                         !!queueError ||
@@ -1188,10 +1206,16 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                         detailLoading ||
                         detailError
                       }
-                      aria-busy={acting}
+                      aria-busy={acting || rejectionBusy}
                       className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800 disabled:opacity-50"
                     >
-                      {acting
+                      {(acting || rejectionBusy) && (
+                        <span
+                          aria-hidden="true"
+                          className="me-2 inline-block size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                        />
+                      )}
+                      {acting || rejectionBusy
                         ? t('admin.walletReceipts.saving', locale)
                         : t('admin.walletReceipts.reject', locale)}
                     </button>

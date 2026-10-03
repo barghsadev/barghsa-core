@@ -598,117 +598,73 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     expect(container.querySelector('[data-testid="invoice-receipt-form"]')).toBeNull();
   });
 
-  it('does not submit a receipt when the amount is zero', async () => {
-    const payload = replacementPayload();
-    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
-      const url = String(input);
-      if (url.endsWith(`/api/invoices/${REPLACEMENT_ID}`) && (init?.method ?? 'GET') === 'GET') {
-        return { ok: true, status: 200, json: async () => payload };
-      }
-      if (url.endsWith('/api/profiles')) {
-        return { ok: true, status: 200, json: async () => ({ activeProfileId: ORIGINAL_ID }) };
-      }
-      return { ok: false, status: 404, json: async () => ({}) };
-    });
-    vi.stubGlobal('fetch', fetchMock);
-
-    await act(async () => {
-      root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />);
-    });
-
-    const amount = container.querySelector(
-      '[data-testid="invoice-receipt-amount"]'
-    ) as HTMLInputElement;
-    const date = container.querySelector(
-      '[data-testid="invoice-receipt-date"]'
-    ) as HTMLInputElement;
-    const payer = container.querySelector(
-      '[data-testid="invoice-receipt-payer-ref"]'
-    ) as HTMLInputElement;
-    const form = container.querySelector('[data-testid="invoice-receipt-form"]') as HTMLFormElement;
-
-    await act(async () => {
-      amount.value = '0';
-      amount.dispatchEvent(new Event('input', { bubbles: true }));
-      amount.dispatchEvent(new Event('change', { bubbles: true }));
-      date.value = '2026-08-15';
-      date.dispatchEvent(new Event('input', { bubbles: true }));
-      date.dispatchEvent(new Event('change', { bubbles: true }));
-      payer.value = 'TRK-1';
-      payer.dispatchEvent(new Event('input', { bubbles: true }));
-      payer.dispatchEvent(new Event('change', { bubbles: true }));
-    });
-    await act(async () => {
-      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-    });
-
-    expect(
-      fetchMock.mock.calls.some(
-        ([url, init]) =>
-          String(url).includes('/bank-receipts') &&
-          (init as RequestInit | undefined)?.method === 'POST'
-      )
-    ).toBe(false);
-    expect(container.querySelector('[data-testid="invoice-receipt-error"]')?.textContent).toContain(
-      'positive integer'
-    );
-  });
-
-  it('does not submit a receipt when a decimal amount would otherwise concatenate to a valid integer', async () => {
-    const payload = replacementPayload();
-    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
-      const url = String(input);
-      if (url.endsWith(`/api/invoices/${REPLACEMENT_ID}`) && (init?.method ?? 'GET') === 'GET') {
-        return { ok: true, status: 200, json: async () => payload };
-      }
-      if (url.endsWith('/api/profiles')) {
-        return { ok: true, status: 200, json: async () => ({ activeProfileId: ORIGINAL_ID }) };
-      }
-      return { ok: false, status: 404, json: async () => ({}) };
-    });
-    vi.stubGlobal('fetch', fetchMock);
-
-    await act(async () => {
-      root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />);
-    });
-
-    const amount = container.querySelector(
-      '[data-testid="invoice-receipt-amount"]'
-    ) as HTMLInputElement;
-    const date = container.querySelector(
-      '[data-testid="invoice-receipt-date"]'
-    ) as HTMLInputElement;
-    const payer = container.querySelector(
-      '[data-testid="invoice-receipt-payer-ref"]'
-    ) as HTMLInputElement;
-    const form = container.querySelector('[data-testid="invoice-receipt-form"]') as HTMLFormElement;
-    const nativeInput = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
-
-    await act(async () => {
-      nativeInput?.call(amount, '12.5');
-      amount.dispatchEvent(new Event('input', { bubbles: true }));
-      amount.dispatchEvent(new Event('change', { bubbles: true }));
-      nativeInput?.call(date, '2026-08-15');
-      date.dispatchEvent(new Event('input', { bubbles: true }));
-      nativeInput?.call(payer, 'TRK-1');
-      payer.dispatchEvent(new Event('input', { bubbles: true }));
-    });
-    expect(amount.value).toBe('12.5');
-    await act(async () => {
-      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-    });
-
-    expect(
-      fetchMock.mock.calls.some(
-        ([url, init]) =>
-          String(url).includes('/bank-receipts') &&
-          (init as RequestInit | undefined)?.method === 'POST'
-      )
-    ).toBe(false);
-    expect(container.querySelector('[data-testid="invoice-receipt-error"]')?.textContent).toContain(
-      'positive integer'
-    );
-  });
+  it.each(['0', '12.5'])(
+    'retains invalid exact receipt amount %s and blocks submission with linked feedback',
+    async (value) => {
+      const payload = replacementPayload();
+      const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input);
+        if (url.endsWith(`/api/invoices/${REPLACEMENT_ID}`) && (init?.method ?? 'GET') === 'GET') {
+          return { ok: true, status: 200, json: async () => payload };
+        }
+        if (url.endsWith('/api/profiles')) {
+          return { ok: true, status: 200, json: async () => ({ activeProfileId: ORIGINAL_ID }) };
+        }
+        return { ok: false, status: 404, json: async () => ({}) };
+      });
+      vi.stubGlobal('fetch', fetchMock);
+      await act(async () => root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />));
+      const amount = container.querySelector<HTMLInputElement>(
+        '[data-testid="invoice-receipt-amount"]'
+      )!;
+      const date = container.querySelector<HTMLInputElement>(
+        '[data-testid="invoice-receipt-date"]'
+      )!;
+      const payer = container.querySelector<HTMLInputElement>(
+        '[data-testid="invoice-receipt-payer-ref"]'
+      )!;
+      const form = container.querySelector<HTMLFormElement>(
+        '[data-testid="invoice-receipt-form"]'
+      )!;
+      const nativeInput = Object.getOwnPropertyDescriptor(
+        HTMLInputElement.prototype,
+        'value'
+      )!.set!;
+      await act(async () => {
+        for (const [input, text] of [
+          [amount, value],
+          [date, '2026-08-15'],
+          [payer, 'TRK-1'],
+        ] as const) {
+          nativeInput.call(input, text);
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      });
+      await act(async () =>
+        form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+      );
+      await vi.waitFor(() => expect(amount.getAttribute('aria-invalid')).toBe('true'));
+      await act(
+        async () =>
+          new Promise<void>((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+          )
+      );
+      expect(amount.value).toBe(value);
+      expect(date.value).toBe('2026-08-15');
+      expect(payer.value).toBe('TRK-1');
+      const errorId = amount.getAttribute('aria-describedby')!;
+      expect(document.getElementById(errorId)?.textContent).toContain('positive integer');
+      expect(document.activeElement).toBe(amount);
+      expect(
+        fetchMock.mock.calls.some(
+          ([url, init]) =>
+            (String(url).includes('/bank-receipts') || String(url).includes('/api/upload/')) &&
+            (init?.method ?? 'GET') === 'POST'
+        )
+      ).toBe(false);
+    }
+  );
 
   it.each([false, true])(
     'preserves a saved receipt and retries a failed history refresh (fail=%s)',

@@ -144,6 +144,9 @@ export const fa: I18nDictionary = {
   'admin.invoiceReceipts.openApprovals': 'مشاهده درخواست‌های تأیید',
   'admin.invoiceReceipts.confirm': 'تأیید رسید',
   'admin.invoiceReceipts.reject': 'رد رسید',
+  'admin.invoiceReceipts.invalidReason':
+    'دلیل قابل نمایش برای مشتری باید ۱ تا ۲۰۰۰ نویسه و بدون نویسه‌های کنترلی باشد.',
+  'admin.invoiceReceipts.reasonHint': 'این دلیل برای مشتری نمایش داده می‌شود. حداکثر ۲۰۰۰ نویسه.',
   'admin.invoiceReceipts.reason': 'دلیل رد برای مشتری',
   'admin.invoiceReceipts.confirmNotice':
     'سهم صورتحساب و اعتبار مازاد کیف پول را پیش از تأیید بررسی کنید. تأیید ممکن است به بررسی شخص دوم نیاز داشته باشد.',
@@ -1808,6 +1811,10 @@ export const en: I18nDictionary = {
   'admin.invoiceReceipts.openApprovals': 'Open approval requests',
   'admin.invoiceReceipts.confirm': 'Confirm receipt',
   'admin.invoiceReceipts.reject': 'Reject receipt',
+  'admin.invoiceReceipts.invalidReason':
+    'Enter a customer-visible reason of 1–2000 characters without control characters.',
+  'admin.invoiceReceipts.reasonHint':
+    'This reason is shown to the customer. Maximum 2000 characters.',
   'admin.invoiceReceipts.reason': 'Reason shown to customer',
   'admin.invoiceReceipts.confirmNotice':
     'Review the invoice allocation and excess wallet credit before confirming. A second reviewer may be required.',

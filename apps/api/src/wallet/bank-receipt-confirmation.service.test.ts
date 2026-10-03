@@ -1,3 +1,4 @@
+import { InputFieldException } from '../common/input-field.exception.js';
 import { receiptDecisionSession } from '../test/receipt-decision-session.js';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { HttpException } from '@nestjs/common';
@@ -350,24 +351,27 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     expect(result.notificationOutboxId).toBe('outbox-1');
   });
 
-  it('requires a customer-visible reject reason before locking', async () => {
-    const rejection = await service
-      .reject({
-        transactionId: TX_ID,
-        raw: { reason: '   ' },
-        actorUserId: ACTOR_ID,
-        ...receiptDecisionSession(ACTOR_ID),
-        ip: '10.0.0.9',
-      })
-      .catch((error: unknown) => error);
-    expect(rejection).toBeInstanceOf(HttpException);
-    expect((rejection as HttpException).getResponse()).toMatchObject({
-      error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-      message: BANK_RECEIPT_CONFIRM_ERRORS.BAD_REASON(),
-    });
-    expect(mockPool.connect).not.toHaveBeenCalled();
-    expect(walletService.credit).not.toHaveBeenCalled();
-  });
+  it.each(['   ', '', 'x'.repeat(2001), 'bad\u0000reason', null])(
+    'returns only the reason field for invalid rejection input before locking: %j',
+    async (reason) => {
+      const rejection = await service
+        .reject({
+          transactionId: TX_ID,
+          raw: { reason },
+          actorUserId: ACTOR_ID,
+          ...receiptDecisionSession(ACTOR_ID),
+          ip: '10.0.0.9',
+        })
+        .catch((error: unknown) => error);
+      expect(rejection).toBeInstanceOf(HttpException);
+      expect((rejection as HttpException).getResponse()).toMatchObject({
+        error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+      });
+      expect((rejection as InputFieldException).fields).toEqual(['reason']);
+      expect(mockPool.connect).not.toHaveBeenCalled();
+      expect(walletService.credit).not.toHaveBeenCalled();
+    }
+  );
 
   it('conflicts when confirming an already rejected receipt', async () => {
     script({ locked: makePendingRow({ state: 'Rejected' }) });

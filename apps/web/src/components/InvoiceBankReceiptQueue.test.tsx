@@ -40,6 +40,9 @@ const harness = vi.hoisted(() => ({
   locale: 'en' as 'en' | 'fa',
   action: null as TeamAction | null,
   finish: null as (() => Promise<void>) | null,
+  validation: null as ((fields: unknown[]) => boolean) | null,
+  close: null as (() => void) | null,
+  deny: null as (() => void) | null,
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => harness.locale }));
 vi.mock('../hooks/useAccountTime.js', () => ({
@@ -56,13 +59,22 @@ vi.mock('./TeamActionDialog.js', () => ({
     action,
     summary,
     onSuccess,
+    onValidationError,
+    onClose,
+    onDenied,
   }: {
     action: TeamAction;
     summary: ReactNode;
     onSuccess: () => Promise<void>;
+    onValidationError?: (fields: unknown[]) => boolean;
+    onClose: () => void;
+    onDenied?: () => void;
   }) => {
     harness.action = action;
     harness.finish = onSuccess;
+    harness.validation = onValidationError ?? null;
+    harness.close = onClose;
+    harness.deny = onDenied ?? null;
     return (
       <div>
         {summary}
@@ -79,6 +91,9 @@ beforeEach(() => {
   harness.locale = 'en';
   harness.action = null;
   harness.finish = null;
+  harness.validation = null;
+  harness.close = null;
+  harness.deny = null;
   container = document.createElement('div');
   document.body.append(container);
   root = createRoot(container);
@@ -500,4 +515,85 @@ it('invalidates an approval dialog and its late success callback when pending qu
   const reads = fetcher.mock.calls.length;
   await act(async () => oldFinish());
   expect(fetcher).toHaveBeenCalledTimes(reads);
+});
+
+async function editRejection(value: string) {
+  const input = container.querySelector<HTMLTextAreaElement>('#invoice-receipt-reason')!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
+      input,
+      value
+    );
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  return input;
+}
+it.each(['', 'bad\u0000reason', 'x'.repeat(2001)])(
+  'blocks invalid invoice receipt rejection and focuses the retained reason: %j',
+  async (value) => {
+    vi.stubGlobal('fetch', api());
+    await render();
+    await click('Review receipt');
+    const input = await editRejection(value);
+    await click('Reject receipt');
+    await vi.waitFor(() => expect(document.activeElement).toBe(input));
+    expect(input.value).toBe(value);
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+    expect(harness.action).toBeNull();
+    await editRejection('Corrected rejection');
+    await vi.waitFor(() => expect(input.getAttribute('aria-invalid')).not.toBe('true'));
+  }
+);
+it.each(['en', 'fa'] as const)(
+  'returns a server reason error to the retained invoice editor in %s',
+  async (locale) => {
+    harness.locale = locale;
+    vi.stubGlobal('fetch', api());
+    await render();
+    await click(locale === 'en' ? 'Review receipt' : 'بررسی رسید');
+    const input = await editRejection('  Preserve this investigation  ');
+    await click(locale === 'en' ? 'Reject receipt' : 'رد رسید');
+    expect(input.disabled).toBe(true);
+    expect(harness.action?.body).toEqual({ reason: 'Preserve this investigation' });
+    await act(async () => {
+      expect(harness.validation?.(['reason'])).toBe(true);
+      harness.close?.();
+    });
+    await vi.waitFor(() => expect(document.activeElement).toBe(input));
+    expect(input.disabled).toBe(false);
+    expect(input.value).toBe('  Preserve this investigation  ');
+    const errorId = input.getAttribute('aria-describedby')!.split(' ')[0]!;
+    expect(document.getElementById(errorId)?.textContent).toContain(
+      locale === 'en' ? '1–2000' : '۲۰۰۰'
+    );
+  }
+);
+it('keeps mixed protected metadata generic and clears retained work on decision permission denial', async () => {
+  vi.stubGlobal('fetch', api());
+  await render();
+  await click('Review receipt');
+  const input = await editRejection('Retain until access changes');
+  await click('Reject receipt');
+  await act(async () => expect(harness.validation?.(['reason', 'receiptId'])).toBe(false));
+  expect(input.getAttribute('aria-invalid')).not.toBe('true');
+  expect(input.value).toBe('Retain until access changes');
+  await act(async () => harness.deny?.());
+  expect(container.querySelector('#invoice-receipt-reason')).toBeNull();
+  expect(container.textContent).toContain('You do not have access to review invoice receipts.');
+  expect(container.textContent).not.toContain(RECEIPT);
+});
+it('does not open a rejection when the selected receipt closes during validation', async () => {
+  vi.stubGlobal('fetch', api());
+  await render();
+  await click('Review receipt');
+  const input = await editRejection('Obsolete rejection');
+  await act(async () => {
+    input.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    [...container.querySelectorAll('button')]
+      .find((button) => button.textContent === 'Close')!
+      .click();
+  });
+  expect(container.querySelector('#invoice-receipt-reason')).toBeNull();
+  expect(container.querySelector('button')?.textContent).not.toBe('Finish action');
+  expect(harness.action).toBeNull();
 });
