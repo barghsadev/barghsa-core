@@ -1,3 +1,4 @@
+import { t } from '@barghsa/i18n/admin-ui';
 import { crmShell } from './crm-shell-fixture';
 import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { test, expect } from './coverage-fixture';
@@ -77,6 +78,15 @@ for (const locale of ['en', 'fa'] as const) {
         .getByRole('alert')
         .filter({ hasText: locale === 'fa' ? 'خطا در ذخیره قالب' : 'Failed to save template' })
     ).toBeVisible();
+    await expect(editor.locator('button[type=submit]')).toBeDisabled();
+    await page
+      .getByRole('button', { name: t('admin.notifications.refresh', locale), exact: true })
+      .click();
+    await page
+      .getByRole('button', { name: t('admin.notifications.reset', locale), exact: true })
+      .click();
+    await editor.locator('#notification-template-subject').fill(template.subject);
+    await editor.locator('#notification-template-bodyTemplate').fill(template.bodyTemplate);
     await editor.locator('button[type=submit]').click();
     await page.locator('#team-step-up-password').fill('Local-test-password!');
     await page.getByRole('dialog').locator('button[type=submit]').click();

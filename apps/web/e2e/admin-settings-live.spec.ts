@@ -1,3 +1,4 @@
+import { t as adminText } from '@barghsa/i18n/admin-ui';
 import type { APIRequestContext, Route } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { fork, type ChildProcess } from 'node:child_process';
@@ -2640,4 +2641,84 @@ for (const locale of ['en', 'fa'])
     if (!fa) await expect(document.locator('strong')).toHaveText('Published terms');
     await expect(document.locator('[lang]').last()).toHaveAttribute('dir', fa ? 'rtl' : 'ltr');
     await page.screenshot({ path: testInfo.outputPath('public-terms.png'), fullPage: true });
+  });
+
+for (const locale of ['en', 'fa'] as const)
+  test(`notification template and minute window persist through the real API (${locale})`, async ({
+    page,
+  }, info) => {
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      await forwardLiveRequest(route, {
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+    });
+    const text = (key: string) => adminText(`admin.notifications.${key}`, locale);
+    const eventKey = `forms.live.${locale}.${info.project.name}.${Date.now()}`;
+    await page.goto('/admin/notifications');
+    await page.getByRole('button', { name: text('newTemplate'), exact: true }).click();
+    const editor = page
+      .locator('form')
+      .filter({ has: page.locator('#notification-template-eventKey') });
+    await editor.locator('#notification-template-eventKey').fill(eventKey);
+    await editor.locator('#notification-template-locale').selectOption(locale);
+    await editor.locator('#notification-template-variablesLabel').fill('name: Recipient');
+    await editor.locator('#notification-template-subject').fill('For {{name}}');
+    await editor.locator('#notification-template-bodyTemplate').fill('Hello {{name}}');
+    await editor.locator('button[type=submit]').click();
+    await expect(editor).toHaveCount(0);
+    const apiHeaders = { cookie: `barghsa_session=${http.session}` };
+    let templates = await (
+      await page.request.get(`${http.base}/api/admin/notifications/templates`, {
+        headers: apiHeaders,
+      })
+    ).json();
+    let saved = templates.find((item: { eventKey: string }) => item.eventKey === eventKey);
+    expect(saved).toMatchObject({
+      eventKey,
+      locale,
+      subject: 'For {{name}}',
+      bodyTemplate: 'Hello {{name}}',
+      variables: [{ name: 'name', description: 'Recipient' }],
+      status: 'draft',
+      version: 1,
+    });
+    const row = page.getByRole('row').filter({ hasText: eventKey });
+    await row.getByRole('button', { name: text('edit'), exact: true }).click();
+    await editor.locator('#notification-template-bodyTemplate').fill('Updated {{name}}');
+    await editor.locator('button[type=submit]').click();
+    await expect(editor).toHaveCount(0);
+    templates = await (
+      await page.request.get(`${http.base}/api/admin/notifications/templates`, {
+        headers: apiHeaders,
+      })
+    ).json();
+    saved = templates.find((item: { eventKey: string }) => item.eventKey === eventKey);
+    expect(saved.bodyTemplate).toBe('Updated {{name}}');
+    expect(saved.version).toBe(1);
+    const windowForm = page.locator('form').filter({ has: page.locator('#delivery-window-start') });
+    await page.locator('#delivery-window-timezone').selectOption('UTC');
+    await page.locator('#delivery-window-start').fill('10:15');
+    await page.locator('#delivery-window-end').fill('14:15');
+    await windowForm.locator('button[type=submit]').click();
+    await expect(windowForm).toContainText(text('window.saved'));
+    expect(
+      await (
+        await page.request.get(`${http.base}/api/admin/config/delivery-window`, {
+          headers: apiHeaders,
+        })
+      ).json()
+    ).toEqual({ timezone: 'UTC', startHour: 10.25, endHour: 14.25 });
+    await settleLiveRequests();
+    await page.reload();
+    await expect(page.locator('#delivery-window-start')).toHaveValue('10:15');
   });

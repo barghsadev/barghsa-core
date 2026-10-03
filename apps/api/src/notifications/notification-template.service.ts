@@ -1,3 +1,4 @@
+import { InputFieldException } from '../common/input-field.exception.js';
 import {
   createEmailSender,
   createSmsSender,
@@ -247,22 +248,15 @@ export class NotificationTemplateService {
    * variables and unclosed placeholders with a 400. Delegates to the shared
    * template engine (T-05.04.02).
    */
-  validateVariables(bodyTemplate: string, variables: TemplateVariableInput[]): void {
+  validateVariables(
+    bodyTemplate: string,
+    variables: TemplateVariableInput[],
+    field = 'bodyTemplate'
+  ): void {
     const allowed = NotificationTemplateService.normalizeVariables(variables).map((v) => v.name);
     const problems = validateTemplate(bodyTemplate, allowed);
 
-    // A well-formed, allow-listed body yields no problems.
-    for (const p of problems) {
-      const err = p.variable ? `Variable "${p.variable}" in template: ${p.message}` : p.message;
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: 'NOTIFICATION_TEMPLATE_INVALID_VARIABLES',
-          message: err,
-        },
-        400
-      );
-    }
+    if (problems.length) throw new InputFieldException([field]);
   }
 
   /**
@@ -367,7 +361,7 @@ export class NotificationTemplateService {
   ): Promise<NotificationTemplateResult> {
     return this.mutate(actor, async (client) => {
       this.validateVariables(input.bodyTemplate, input.variables ?? []);
-      this.validateVariables(input.subject ?? '', input.variables ?? []);
+      this.validateVariables(input.subject ?? '', input.variables ?? [], 'subject');
       const variables = NotificationTemplateService.normalizeVariables(input.variables);
       await this.lockFamily(client, input.eventKey, input.channel, input.locale);
       const existing = await client.query(
@@ -425,7 +419,8 @@ export class NotificationTemplateService {
         input.subject !== undefined
           ? (input.subject ?? '')
           : ((template.subject as string | null) ?? ''),
-        variables
+        variables,
+        'subject'
       );
       const normalized = NotificationTemplateService.normalizeVariables(variables);
       const fields: string[] = [];

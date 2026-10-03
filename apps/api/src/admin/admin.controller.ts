@@ -1505,6 +1505,15 @@ export class AdminController {
 
     const parsed = schema.safeParse(rawBody);
     if (!parsed.success) {
+      const names = ['eventKey', 'channel', 'locale', 'subject', 'bodyTemplate', 'variables'];
+      const fields = [
+        ...new Set(
+          parsed.error.issues
+            .map((issue) => issue.path[0])
+            .filter((name): name is string => typeof name === 'string' && names.includes(name))
+        ),
+      ];
+      if (fields.length) throw new InputFieldException(fields);
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400
@@ -1591,6 +1600,15 @@ export class AdminController {
 
     const parsed = schema.safeParse(rawBody);
     if (!parsed.success) {
+      const names = ['eventKey', 'channel', 'locale', 'subject', 'bodyTemplate', 'variables'];
+      const fields = [
+        ...new Set(
+          parsed.error.issues
+            .map((issue) => issue.path[0])
+            .filter((name): name is string => typeof name === 'string' && names.includes(name))
+        ),
+      ];
+      if (fields.length) throw new InputFieldException(fields);
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400

@@ -3,7 +3,20 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Button, ListPage } from '@barghsa/ui';
+import { Alert, Button, ListPage } from '@barghsa/ui';
+import { notificationFormText } from '@barghsa/i18n/notification-forms';
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import {
+  catalogueRootMessage,
+  CatalogueSaveButton,
+} from '../components/CatalogueEditorFeedback.js';
+import {
+  emptyNotificationDraft,
+  parseVariablesText,
+  notificationInvalidFields,
+  type NotificationDraft,
+} from '../lib/notification-form.js';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import type { FormEvent } from 'react';
@@ -72,28 +85,6 @@ const KNOWN_EVENT_KEYS = [
 const CHANNEL_OPTIONS: TemplateChannel[] = ['email', 'sms', 'in_app'];
 const LOCALE_OPTIONS: TemplateLocale[] = ['fa', 'en'];
 
-/**
- * Parse the editor's variable textarea/lines into structured variable
- * definitions. Each comma-or-newline-separated entry is either `name` or
- * `name: description`; empty entries and duplicates are dropped and the
- * description defaults to null (legacy template strings round-trip cleanly).
- */
-function parseVariablesText(text: string): NotificationVariable[] {
-  const out: NotificationVariable[] = [];
-  const seen = new Set<string>();
-  for (const raw of text.split(/[,\n]/)) {
-    const entry = raw.trim();
-    if (!entry) continue;
-    const colon = entry.indexOf(':');
-    const name = (colon === -1 ? entry : entry.slice(0, colon)).trim();
-    if (!name || seen.has(name)) continue;
-    seen.add(name);
-    const description = colon === -1 ? null : entry.slice(colon + 1).trim();
-    out.push({ name, description: description || null });
-  }
-  return out;
-}
-
 /** Serialize variable definitions back to the comma-separated text format. */
 function variablesToText(variables: NotificationVariable[]): string {
   return variables.map((v) => (v.description ? `${v.name}: ${v.description}` : v.name)).join(', ');
@@ -140,6 +131,7 @@ export default function AdminNotificationsPage({
     action: TeamAction;
     onSuccess: (result: unknown) => Promise<void>;
     current: () => boolean;
+    onValidationError?: (fields: unknown[]) => boolean;
   } | null>(null);
 
   // Filters
@@ -156,12 +148,38 @@ export default function AdminNotificationsPage({
   const [showEditor, setShowEditor] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [viewOnly, setViewOnly] = useState(false);
-  const [eventKey, setEventKey] = useState('');
-  const [channel, setChannel] = useState<TemplateChannel>('email');
-  const [locale, setLocale] = useState<TemplateLocale>('en');
-  const [subject, setSubject] = useState('');
-  const [bodyTemplate, setBodyTemplate] = useState('');
-  const [variablesStr, setVariablesStr] = useState('');
+  const messages = Object.fromEntries(
+    Object.keys(emptyNotificationDraft).map((key) => [
+      key,
+      notificationFormText(key as keyof NotificationDraft, uiLocale),
+    ])
+  ) as Record<keyof NotificationDraft, string>;
+  const editorForm = useWizardForm<NotificationDraft>(
+    async () => {
+      const { notificationFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return notificationFormSchema(messages, notificationInvalidFields);
+    },
+    emptyNotificationDraft,
+    notificationFormText('validationUnavailable', uiLocale)
+  );
+  const applyEditorErrors = useActionFieldErrors(editorForm.form, messages, messages.bodyTemplate);
+  const [eventKey, setEventKey] = editorForm.field('eventKey');
+  const [channel, setChannel] = editorForm.field('channel');
+  const [locale, setLocale] = editorForm.field('locale');
+  const [subject, setSubject] = editorForm.field('subject');
+  const [bodyTemplate, setBodyTemplate] = editorForm.field('bodyTemplate');
+  const [variablesStr, setVariablesStr] = editorForm.field('variables');
+  const [editorUncertain, setEditorUncertain] = useState(false);
+  const [editorRecovered, setEditorRecovered] = useState(false);
+  const feedback = (name: keyof NotificationDraft) => (
+    <p
+      id={editorForm.errorId(name)}
+      role={editorForm.errors[name] ? 'alert' : undefined}
+      className={`min-h-5 text-sm text-destructive ${editorForm.errors[name] ? '' : 'invisible'}`}
+    >
+      {editorForm.errors[name]?.message ?? ' '}
+    </p>
+  );
   const [saving, setSaving] = useState(false);
 
   // Publish confirm state
@@ -189,6 +207,7 @@ export default function AdminNotificationsPage({
     busyTokens.current.test++;
     testSendInFlight.current = false;
     setSaving(false);
+    editorForm.setValidationPending(false);
     setTestSending(false);
   }, []);
   const resetCatalogueBusy = useCallback(() => {
@@ -214,9 +233,8 @@ export default function AdminNotificationsPage({
     setEditBasis(null);
     setPublishId(null);
     setProtectedAction(null);
-    setSubject('');
-    setBodyTemplate('');
-    setVariablesStr('');
+    editorForm.form.reset(emptyNotificationDraft);
+    setEditorUncertain(false);
     setSavedContent('');
     setTestDestination('');
     setTestSendMsg(null);
@@ -226,6 +244,8 @@ export default function AdminNotificationsPage({
   const selectedTemplate = editId ? templates.find((r) => r.id === editId) : null;
   const stale =
     !!editId && (selectedTemplate ? templateBasis(selectedTemplate) : null) !== editBasis;
+  const editorLive = useRef({ ready, stale, viewOnly, editorUncertain });
+  editorLive.current = { ready, stale, viewOnly, editorUncertain };
   const selectedRef = useRef({ editId, editBasis, publishId });
   selectedRef.current = { editId, editBasis, publishId };
   useEffect(() => {
@@ -314,6 +334,7 @@ export default function AdminNotificationsPage({
           setProtectedAction(null);
           refreshButton.current?.focus();
         }
+        if (editorLive.current.editorUncertain) setEditorRecovered(true);
         setTemplates(data);
         setAccepted(true);
         setPanelsReady(true);
@@ -356,7 +377,8 @@ export default function AdminNotificationsPage({
     titleKey: string,
     errorKey: string,
     onSuccess: (result: unknown) => Promise<void>,
-    isCurrent: () => boolean = () => true
+    isCurrent: () => boolean = () => true,
+    onValidationError?: (fields: unknown[]) => boolean
   ) {
     const epoch = scope.version;
     const id = action.path.split('/templates/')[1]?.split('/')[0];
@@ -396,6 +418,7 @@ export default function AdminNotificationsPage({
             requiresPassword: true,
           },
           current,
+          ...(onValidationError ? { onValidationError } : {}),
           onSuccess: async (result) => {
             if (!current()) return;
             await onSuccess(result);
@@ -407,6 +430,8 @@ export default function AdminNotificationsPage({
         scope.deny();
         return;
       }
+      const fields = responseRecord(record?.error)?.fields;
+      if (res.status === 400 && Array.isArray(fields) && onValidationError?.(fields)) return;
       if (!res.ok) throw new Error(t(errorKey, uiLocale));
       if (action.method === 'DELETE' && res.status !== 204) throw new Error(t(errorKey, uiLocale));
       try {
@@ -420,27 +445,26 @@ export default function AdminNotificationsPage({
   }
 
   function openCreate() {
-    if (!ready || protectedAction) return;
+    if (!ready || protectedAction || editorForm.isPending()) return;
     setEditBasis(null);
+    editorForm.form.reset({ ...emptyNotificationDraft, eventKey: KNOWN_EVENT_KEYS[0]! });
+    setEditorUncertain(false);
     editorGeneration.current++;
     resetEditorBusy();
     setSavedContent('');
     setViewOnly(false);
     setEditId(null);
-    setEventKey(KNOWN_EVENT_KEYS[0]!);
-    setChannel('email');
-    setLocale('en');
-    setSubject('');
-    setBodyTemplate('');
-    setVariablesStr('');
+
     setTestSendMsg(null);
     setTestDestination('');
     setShowEditor(true);
   }
 
   function openEdit(template: NotificationTemplate, copy = false) {
-    if (!ready || protectedAction) return;
+    if (!ready || protectedAction || editorForm.isPending()) return;
     setEditBasis(copy ? null : templateBasis(template));
+    editorForm.form.reset(emptyNotificationDraft);
+    setEditorUncertain(false);
     editorGeneration.current++;
     resetEditorBusy();
     setSavedContent(
@@ -494,6 +518,7 @@ export default function AdminNotificationsPage({
   }
 
   async function handleTestSend() {
+    if (editorForm.isPending() || editorUncertain) return;
     if (
       !ready ||
       stale ||
@@ -562,73 +587,119 @@ export default function AdminNotificationsPage({
 
   async function handleSave(e: FormEvent) {
     e.preventDefault();
-    if (!ready || stale || protectedAction || viewOnly || saving) return;
-    const token = ++busyTokens.current.save;
-    setSaving(true);
-    setError(null);
-    const generation = editorGeneration.current;
-    const variables = parseVariablesText(variablesStr);
-    const expected = {
-      eventKey,
-      channel,
-      locale,
-      bodyTemplate,
-      variables,
-      subject: subject || null,
-    };
-    const id = editId;
+    if (
+      !ready ||
+      stale ||
+      protectedAction ||
+      viewOnly ||
+      saving ||
+      editorUncertain ||
+      editorForm.isPending()
+    )
+      return;
+    const validationGeneration = editorGeneration.current;
+    editorForm.setValidationPending(true);
     try {
-      await mutateTemplate(
-        {
-          path: id
-            ? `/api/admin/notifications/templates/${id}`
-            : '/api/admin/notifications/templates',
-          method: id ? 'PUT' : 'POST',
-          body: id
-            ? { subject: expected.subject, bodyTemplate, variables }
-            : {
-                eventKey,
-                channel,
-                locale,
-                bodyTemplate,
-                variables,
-                ...(subject ? { subject } : {}),
-              },
-        },
-        id ? 'admin.notifications.update' : 'admin.notifications.create',
-        'admin.notifications.error.save',
-        async (result) => {
-          const saved = savedTemplate(result, 'draft', id ?? undefined);
-          if (
-            saved.eventKey !== expected.eventKey ||
-            saved.channel !== expected.channel ||
-            saved.locale !== expected.locale ||
-            saved.bodyTemplate !== expected.bodyTemplate ||
-            (saved.subject ?? null) !== expected.subject ||
-            saved.variables.length !== expected.variables.length ||
-            saved.variables.some(
-              (variable, index) =>
-                variable.name !== expected.variables[index]?.name ||
-                variable.description !== expected.variables[index]?.description
-            )
-          )
-            throw new Error();
-          acceptReceipt(saved);
-          if (generation === editorGeneration.current) closeEditor();
-          await refreshTemplates.current();
-        },
-        () => generation === editorGeneration.current
-      );
-    } catch {
-      if (generation === editorGeneration.current)
-        setError(t('admin.notifications.error.save', uiLocale));
+      const captured: { value?: NotificationDraft } = {};
+      await editorForm.form.handleSubmit((value) => {
+        captured.value = value;
+      })();
+      if (captured.value) {
+        const {
+          eventKey,
+          channel,
+          locale,
+          subject,
+          bodyTemplate,
+          variables: variablesStr,
+        } = captured.value;
+        if (
+          validationGeneration !== editorGeneration.current ||
+          !editorLive.current.ready ||
+          editorLive.current.stale ||
+          editorLive.current.viewOnly ||
+          editorLive.current.editorUncertain
+        )
+          return;
+        const token = ++busyTokens.current.save;
+        setSaving(true);
+        setError(null);
+        const generation = editorGeneration.current;
+        const variables = parseVariablesText(variablesStr);
+        const expected = {
+          eventKey,
+          channel,
+          locale,
+          bodyTemplate,
+          variables,
+          subject: subject || null,
+        };
+        const id = editId;
+        try {
+          await mutateTemplate(
+            {
+              path: id
+                ? `/api/admin/notifications/templates/${id}`
+                : '/api/admin/notifications/templates',
+              method: id ? 'PUT' : 'POST',
+              body: id
+                ? { subject: expected.subject, bodyTemplate, variables }
+                : {
+                    eventKey,
+                    channel,
+                    locale,
+                    bodyTemplate,
+                    variables,
+                    ...(subject ? { subject } : {}),
+                  },
+            },
+            id ? 'admin.notifications.update' : 'admin.notifications.create',
+            'admin.notifications.error.save',
+            async (result) => {
+              try {
+                const saved = savedTemplate(result, 'draft', id ?? undefined);
+                if (
+                  saved.eventKey !== expected.eventKey ||
+                  saved.channel !== expected.channel ||
+                  saved.locale !== expected.locale ||
+                  saved.bodyTemplate !== expected.bodyTemplate ||
+                  (saved.subject ?? null) !== expected.subject ||
+                  saved.variables.length !== expected.variables.length ||
+                  saved.variables.some(
+                    (variable, index) =>
+                      variable.name !== expected.variables[index]?.name ||
+                      variable.description !== expected.variables[index]?.description
+                  )
+                )
+                  throw new Error();
+                acceptReceipt(saved);
+                if (generation === editorGeneration.current) closeEditor();
+                await refreshTemplates.current();
+              } catch (error) {
+                if (generation === editorGeneration.current) {
+                  setEditorRecovered(false);
+                  setEditorUncertain(true);
+                }
+                throw error;
+              }
+            },
+            () => generation === editorGeneration.current,
+            applyEditorErrors
+          );
+        } catch {
+          if (generation === editorGeneration.current)
+            setError(t('admin.notifications.error.save', uiLocale));
+        } finally {
+          if (token === busyTokens.current.save) setSaving(false);
+        }
+      }
     } finally {
-      if (token === busyTokens.current.save) setSaving(false);
+      if (validationGeneration === editorGeneration.current) editorForm.setValidationPending(false);
     }
   }
 
   async function handlePublish() {
-    if (!ready || protectedAction || !publishId || publishing) return;
+    if (!ready || protectedAction || !publishId || publishing || editorForm.isPending()) return;
     const token = ++busyTokens.current.publish;
     setPublishing(true);
     const epoch = scope.version;
@@ -747,7 +818,7 @@ export default function AdminNotificationsPage({
         {!showEditor && (
           <Button
             onClick={openCreate}
-            disabled={!ready || !!protectedAction}
+            disabled={!ready || !!protectedAction || editorForm.pending}
             className="px-4 py-2 bg-primary text-primary-foreground rounded"
           >
             {t('admin.notifications.newTemplate', uiLocale)}
@@ -761,7 +832,15 @@ export default function AdminNotificationsPage({
           onSuccess={protectedAction.onSuccess}
           onClose={() => setProtectedAction(null)}
           onDenied={scope.deny}
-          confirmationDisabled={!ready || stale || !protectedAction.current()}
+          {...(protectedAction.onValidationError
+            ? { onValidationError: protectedAction.onValidationError }
+            : {})}
+          confirmationDisabled={
+            !ready ||
+            stale ||
+            (editorUncertain && !!protectedAction.onValidationError) ||
+            !protectedAction.current()
+          }
           finalFocus={() => refreshButton.current}
           summary={
             <Button
@@ -911,9 +990,23 @@ export default function AdminNotificationsPage({
               {showEditor && (
                 <form
                   onSubmit={handleSave}
+                  noValidate
                   className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
                 >
-                  <fieldset disabled={saving || !!protectedAction} className="contents">
+                  {catalogueRootMessage(editorForm.errors) && (
+                    <Alert variant="destructive">{catalogueRootMessage(editorForm.errors)}</Alert>
+                  )}
+                  {editorUncertain && (
+                    <Alert variant="destructive">
+                      {notificationFormText('uncertain', uiLocale)}
+                    </Alert>
+                  )}
+                  <fieldset
+                    disabled={
+                      saving || editorForm.pending || editorUncertain || stale || !!protectedAction
+                    }
+                    className="contents"
+                  >
                     <h2 className="text-lg font-semibold">
                       {viewOnly
                         ? t('admin.notifications.view', uiLocale)
@@ -941,6 +1034,7 @@ export default function AdminNotificationsPage({
                       ) : (
                         <input
                           id="notification-template-eventKey"
+                          {...editorForm.bind('eventKey')}
                           list="notification-event-suggestions"
                           value={eventKey}
                           onChange={(e) => setEventKey(e.target.value)}
@@ -950,6 +1044,7 @@ export default function AdminNotificationsPage({
                           pattern="\S+"
                         />
                       )}
+                      {feedback('eventKey')}
                       <datalist id="notification-event-suggestions">
                         {[
                           ...new Set([
@@ -984,6 +1079,7 @@ export default function AdminNotificationsPage({
                         ) : (
                           <select
                             id="notification-template-channel"
+                            {...editorForm.bind('channel')}
                             value={channel}
                             onChange={(e) => setChannel(e.target.value as TemplateChannel)}
                             className="w-full border border-input rounded px-3 py-2"
@@ -996,6 +1092,7 @@ export default function AdminNotificationsPage({
                             ))}
                           </select>
                         )}
+                        {feedback('channel')}
                       </div>
                       <div>
                         <label
@@ -1015,6 +1112,7 @@ export default function AdminNotificationsPage({
                         ) : (
                           <select
                             id="notification-template-locale"
+                            {...editorForm.bind('locale')}
                             value={locale}
                             onChange={(e) => setLocale(e.target.value as TemplateLocale)}
                             className="w-full border border-input rounded px-3 py-2"
@@ -1027,11 +1125,12 @@ export default function AdminNotificationsPage({
                             ))}
                           </select>
                         )}
+                        {feedback('locale')}
                       </div>
                     </div>
 
                     {/* Subject (email only) */}
-                    {channel === 'email' && (
+                    {(channel === 'email' || subject !== '') && (
                       <div>
                         <label
                           htmlFor="notification-template-subject"
@@ -1042,6 +1141,7 @@ export default function AdminNotificationsPage({
                         <input
                           type="text"
                           id="notification-template-subject"
+                          {...editorForm.bind('subject')}
                           readOnly={viewOnly || testSending}
                           value={subject}
                           onChange={(e) => setSubject(e.target.value)}
@@ -1049,6 +1149,7 @@ export default function AdminNotificationsPage({
                           placeholder="e.g. Your profile has been verified"
                           maxLength={200}
                         />
+                        {feedback('subject')}
                       </div>
                     )}
 
@@ -1064,12 +1165,16 @@ export default function AdminNotificationsPage({
                       <p id="notification-body-hint" className="text-xs text-muted-foreground mb-1">
                         {t('admin.notifications.bodyHint', uiLocale)}
                       </p>
-                      <div className="flex gap-4">
-                        <div className="flex-1">
+                      <div className="flex flex-col gap-4 sm:flex-row">
+                        <div className="min-w-0 flex-1">
                           <textarea
-                            aria-describedby="notification-body-hint"
-                            ref={bodyRef}
                             id="notification-template-bodyTemplate"
+                            {...editorForm.bind('bodyTemplate')}
+                            ref={(element) => {
+                              bodyRef.current = element;
+                              editorForm.bind('bodyTemplate').ref(element);
+                            }}
+                            aria-describedby={`notification-body-hint ${editorForm.errorId('bodyTemplate')}`}
                             readOnly={viewOnly || testSending}
                             value={bodyTemplate}
                             onChange={(e) => setBodyTemplate(e.target.value)}
@@ -1080,7 +1185,7 @@ export default function AdminNotificationsPage({
                           />
                         </div>
                         {parsedVariables.length > 0 && (
-                          <aside className="w-48 shrink-0 border border-border rounded-lg p-3 bg-muted/40">
+                          <aside className="w-full sm:w-48 shrink-0 border border-border rounded-lg p-3 bg-muted/40">
                             <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
                               {t('admin.notifications.variables', uiLocale)}
                             </h3>
@@ -1117,6 +1222,7 @@ export default function AdminNotificationsPage({
                           </aside>
                         )}
                       </div>
+                      {feedback('bodyTemplate')}
                       {/* Live preview pane */}
                       <div className="mt-3 border border-border rounded-lg p-4 bg-muted/40">
                         <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
@@ -1169,6 +1275,7 @@ export default function AdminNotificationsPage({
                       </p>
                       <textarea
                         id="notification-template-variablesLabel"
+                        {...editorForm.bind('variables')}
                         readOnly={viewOnly || testSending}
                         value={variablesStr}
                         onChange={(e) => setVariablesStr(e.target.value)}
@@ -1179,19 +1286,31 @@ export default function AdminNotificationsPage({
                       />
                     </div>
 
-                    {stale && (
-                      <div className="space-y-2">
-                        <p role="alert">{t('admin.notifications.stale', uiLocale)}</p>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          disabled={!ready || !selectedTemplate}
-                          onClick={() => selectedTemplate && openEdit(selectedTemplate)}
-                        >
-                          {t('admin.notifications.reset', uiLocale)}
-                        </Button>
-                      </div>
-                    )}
+                    {feedback('variables')}
+                  </fieldset>
+                  {(stale || editorUncertain) && (
+                    <div className="space-y-2">
+                      {stale && <p role="alert">{t('admin.notifications.stale', uiLocale)}</p>}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={
+                          !ready ||
+                          (!!editId && !selectedTemplate) ||
+                          (editorUncertain && !editorRecovered)
+                        }
+                        onClick={() =>
+                          selectedTemplate ? openEdit(selectedTemplate) : openCreate()
+                        }
+                      >
+                        {t('admin.notifications.reset', uiLocale)}
+                      </Button>
+                    </div>
+                  )}
+                  <fieldset
+                    disabled={saving || editorForm.pending || !!protectedAction}
+                    className="contents"
+                  >
                     {/* Save / Cancel */}
                     <div className="flex flex-wrap gap-3 items-center">
                       {editId && (
@@ -1232,6 +1351,8 @@ export default function AdminNotificationsPage({
                               !!protectedAction ||
                               testSending ||
                               saving ||
+                              editorForm.pending ||
+                              editorUncertain ||
                               unsavedContent
                             }
                             className="px-4 py-2 bg-primary text-primary-foreground rounded disabled:opacity-50"
@@ -1250,19 +1371,26 @@ export default function AdminNotificationsPage({
                           )}
                         </>
                       )}
-                      <Button
-                        type="submit"
+                      <CatalogueSaveButton
+                        pending={saving || editorForm.pending}
                         disabled={
-                          !ready || stale || saving || viewOnly || testSending || !!protectedAction
+                          !ready ||
+                          stale ||
+                          saving ||
+                          editorForm.pending ||
+                          editorUncertain ||
+                          viewOnly ||
+                          testSending ||
+                          !!protectedAction
                         }
-                        className="px-4 py-2 bg-primary text-primary-foreground rounded disabled:opacity-50"
-                      >
-                        {saving
-                          ? t('admin.notifications.saving', uiLocale)
-                          : editId
-                            ? t('admin.notifications.update', uiLocale)
-                            : t('admin.notifications.create', uiLocale)}
-                      </Button>
+                        label={
+                          saving || editorForm.pending
+                            ? t('admin.notifications.saving', uiLocale)
+                            : editId
+                              ? t('admin.notifications.update', uiLocale)
+                              : t('admin.notifications.create', uiLocale)
+                        }
+                      />
                       <Button
                         type="button"
                         onClick={closeEditor}
@@ -1402,7 +1530,7 @@ export default function AdminNotificationsPage({
                           {template.status === 'draft' && template.publishedAt == null && (
                             <>
                               <Button
-                                disabled={!ready || !!protectedAction}
+                                disabled={!ready || !!protectedAction || editorForm.pending}
                                 onClick={() => openEdit(template)}
                                 variant="outline"
                                 className="text-foreground hover:underline"
@@ -1410,9 +1538,9 @@ export default function AdminNotificationsPage({
                                 {t('admin.notifications.edit', uiLocale)}
                               </Button>
                               <Button
-                                disabled={!ready || !!protectedAction}
+                                disabled={!ready || !!protectedAction || editorForm.pending}
                                 onClick={() => {
-                                  if (!ready || protectedAction) return;
+                                  if (!ready || protectedAction || editorForm.isPending()) return;
                                   publishBasis.current = templateBasis(template);
                                   setPublishId(template.id);
                                 }}
@@ -1422,7 +1550,7 @@ export default function AdminNotificationsPage({
                                 {t('admin.notifications.publish', uiLocale)}
                               </Button>
                               <Button
-                                disabled={!ready || !!protectedAction}
+                                disabled={!ready || !!protectedAction || editorForm.pending}
                                 onClick={() => handleDelete(template.id)}
                                 variant="outline"
                                 className="text-destructive hover:underline"
@@ -1434,7 +1562,7 @@ export default function AdminNotificationsPage({
                           {(template.status !== 'draft' || template.publishedAt != null) && (
                             <>
                               <Button
-                                disabled={!ready || !!protectedAction}
+                                disabled={!ready || !!protectedAction || editorForm.pending}
                                 onClick={() => openEdit(template)}
                                 variant="outline"
                                 className="text-foreground hover:underline"
@@ -1442,7 +1570,7 @@ export default function AdminNotificationsPage({
                                 {t('admin.notifications.view', uiLocale)}
                               </Button>
                               <Button
-                                disabled={!ready || !!protectedAction}
+                                disabled={!ready || !!protectedAction || editorForm.pending}
                                 onClick={() => openEdit(template, true)}
                                 variant="outline"
                                 className="text-foreground hover:underline"
@@ -1451,7 +1579,7 @@ export default function AdminNotificationsPage({
                               </Button>
                               {template.status === 'active' && (
                                 <Button
-                                  disabled={!ready || !!protectedAction}
+                                  disabled={!ready || !!protectedAction || editorForm.pending}
                                   onClick={() => handleUnpublish(template.id)}
                                   variant="outline"
                                   className="text-foreground hover:underline"

@@ -28,6 +28,8 @@ import {
   DEFAULT_DELIVERY_WINDOW,
   toDeliveryWindowConfig,
   validateWindowConfig,
+  isWindowHour,
+  isValidTimeZone,
   type DeliveryWindowConfig,
 } from '@barghsa/shared/notifications';
 import {
@@ -1077,6 +1079,16 @@ export class AdminService {
     const actorUserId = actor.userId;
     const validation = validateWindowConfig(input);
     if (!validation.ok) {
+      const value = input && typeof input === 'object' ? (input as Record<string, unknown>) : null;
+      if (value) {
+        const fields: string[] = [];
+        if (typeof value.timezone !== 'string' || !isValidTimeZone(value.timezone))
+          fields.push('timezone');
+        if (!isWindowHour(value.start_hour ?? value.startHour)) fields.push('startHour');
+        if (!isWindowHour(value.end_hour ?? value.endHour)) fields.push('endHour');
+        if (!fields.length) fields.push('endHour');
+        throw new InputFieldException(fields);
+      }
       throw new HttpException(
         {
           statusCode: 400,

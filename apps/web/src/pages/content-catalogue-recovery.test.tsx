@@ -51,6 +51,7 @@ const item = (domain: Domain) => (domain === 'templates' ? notificationTemplate(
 const Page = ({ domain }: { domain: Domain }) =>
   domain === 'templates' ? <Notifications /> : <Terms />;
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   host = document.createElement('div');
   document.body.append(host);
   root = createRoot(host);
@@ -224,6 +225,7 @@ it.each(domains)('%s late successful command cannot restore denied content', asy
   await click(edit(domain));
   await fill(input(domain), 'Local text');
   await submit();
+  if (domain === 'templates') await vi.waitFor(() => expect(resolve).toBeTypeOf('function'));
   denied = true;
   await click(refresh(domain));
   await act(async () =>
@@ -400,6 +402,7 @@ it.each(domains)('%s old command cannot block or unlock recovered editor work', 
   await click('Edit');
   await fill(input(domain), 'Old text');
   await submit();
+  if (domain === 'templates') await vi.waitFor(() => expect(pending).toHaveLength(1));
   denied = true;
   await click(refresh(domain));
   denied = false;
@@ -407,7 +410,7 @@ it.each(domains)('%s old command cannot block or unlock recovered editor work', 
   await click('Edit');
   await fill(input(domain), 'New text');
   await submit();
-  expect(pending).toHaveLength(2);
+  await vi.waitFor(() => expect(pending).toHaveLength(2));
   const receipt = (content: string) =>
     reply(
       domain === 'templates'

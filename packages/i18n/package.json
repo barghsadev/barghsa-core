@@ -231,6 +231,11 @@
       "types": "./dist/staff-team-forms.d.ts",
       "import": "./dist/staff-team-forms.js",
       "default": "./dist/staff-team-forms.js"
+    },
+    "./notification-forms": {
+      "types": "./dist/notification-forms.d.ts",
+      "import": "./dist/notification-forms.js",
+      "default": "./dist/notification-forms.js"
     }
   },
   "scripts": {

@@ -1,41 +1,29 @@
-import { adminControlsText } from '@barghsa/i18n/admin-controls';
+import { notificationFormText } from '@barghsa/i18n/notification-forms';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
-import { validateWindowConfig, formatWindowTime } from '@barghsa/shared/notifications';
+import {
+  DEFAULT_DELIVERY_WINDOW,
+  formatWindowTime,
+  type DeliveryWindowConfig,
+} from '@barghsa/shared/notifications';
 import { withCsrf } from '../lib/csrf.js';
-import { useState, useEffect, useRef } from 'react';
-import type { FormEvent } from 'react';
+import { useState, useEffect, useRef, useCallback, type FormEvent } from 'react';
+import { Alert, Button } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import type { Locale } from '@barghsa/i18n/app';
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import { useCatalogueScope, useCatalogueResource } from '../hooks/useCatalogueResource.js';
+import { catalogueRootMessage, CatalogueSaveButton } from './CatalogueEditorFeedback.js';
+import {
+  windowValues,
+  windowBody,
+  windowBasis,
+  validWindow,
+  windowInvalidFields,
+  type WindowDraft,
+} from '../lib/notification-form.js';
+import { responseRecord } from '../lib/content-catalogues.js';
 
-/**
- * Delivery-window configuration panel (E-05, T-05.03.03).
- *
- * Admin section under Notifications settings that lets an admin configure the
- * daily daytime delivery window: a start-time input, an end-time input,
- * and a timezone selector. Rules enforced both client-side and server-side:
- *  - start < end
- *  - window length >= 4 hours
- *  - a valid IANA timezone
- *
- * The worker (T-05.03.02) reads this from `app_config` via
- * `loadDeliveryWindowConfig`, gating external-channel daytime messages outside
- * the window. Changes take effect for newly-scheduled messages; already
- * scheduled messages keep their original timing (per story T-05.03.03).
- */
-
-interface DeliveryWindowConfig {
-  timezone: string;
-  startHour: number;
-  endHour: number;
-}
-
-interface DeliveryWindowConfigPanelProps {
-  uiLocale: Locale;
-}
-
-const DEFAULT_WINDOW: DeliveryWindowConfig = { timezone: 'Asia/Tehran', startHour: 9, endHour: 21 };
-
-/** Common IANA timezones relevant to the platform's Iranian user base. */
 const TIMEZONE_OPTIONS = [
   'Asia/Tehran',
   'UTC',
@@ -44,327 +32,356 @@ const TIMEZONE_OPTIONS = [
   'Europe/London',
   'America/New_York',
 ];
-
-function readWindow(body: unknown, message = 'Invalid delivery window'): DeliveryWindowConfig {
-  const value = body as Partial<DeliveryWindowConfig> | null;
-  if (
-    !value ||
-    typeof value.startHour !== 'number' ||
-    typeof value.endHour !== 'number' ||
-    !validateWindowConfig(value).ok
-  )
-    throw new Error(message);
-  return value as DeliveryWindowConfig;
-}
-
-export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowConfigPanelProps) {
-  const [config, setConfig] = useState<DeliveryWindowConfig | null>(null);
-  const [timezone, setTimezone] = useState(DEFAULT_WINDOW.timezone);
-  const [startHour, setStartHour] = useState(DEFAULT_WINDOW.startHour);
-  const [endHour, setEndHour] = useState(DEFAULT_WINDOW.endHour);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [protectedAction, setProtectedAction] = useState<{
+/** Newly scheduled daytime messages use this minute-precision window; existing schedules retain theirs. */
+export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Locale }) {
+  const label = (key: string) => t(`admin.notifications.window.${key}`, uiLocale);
+  const messages = {
+    timezone: notificationFormText('timezone', uiLocale),
+    startHour: notificationFormText('startHour', uiLocale),
+    endHour: notificationFormText('endHour', uiLocale),
+  };
+  const editor = useWizardForm<WindowDraft>(
+    async () => {
+      const { notificationFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return notificationFormSchema(messages, windowInvalidFields);
+    },
+    () => windowValues(DEFAULT_DELIVERY_WINDOW),
+    notificationFormText('validationUnavailable', uiLocale)
+  );
+  const applyErrors = useActionFieldErrors(editor.form, messages, messages.endHour);
+  const [stale, setStale] = useState(false),
+    [uncertain, setUncertain] = useState(false),
+    [recovered, setRecovered] = useState(false),
+    [saving, setSaving] = useState(false),
+    [saved, setSaved] = useState(false),
+    [error, setError] = useState<string | null>(null);
+  const [command, setCommand] = useState<{
     action: TeamAction;
     expected: DeliveryWindowConfig;
+    generation: number;
   } | null>(null);
-  const savingRef = useRef(false);
-  const [loadFailed, setLoadFailed] = useState(false);
-  const [reload, setReload] = useState(0);
-  const [saved, setSaved] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [clientIssue, setClientIssue] = useState<string | null>(null);
-
+  const networkOwner = useRef(0);
+  const generation = useRef(0),
+    commandRef = useRef(command),
+    basis = useRef<string | null>(null),
+    refreshButton = useRef<HTMLButtonElement>(null),
+    mounted = useRef(false),
+    observed = useRef<DeliveryWindowConfig | null>(null);
+  commandRef.current = command;
+  const clearPrivate = useCallback(() => {
+    generation.current++;
+    editor.setValidationPending(false);
+    networkOwner.current++;
+    basis.current = null;
+    commandRef.current = null;
+    setCommand(null);
+    editor.form.reset(windowValues(DEFAULT_DELIVERY_WINDOW));
+    setStale(false);
+    setUncertain(false);
+    setSaved(false);
+    setSaving(false);
+    setError(null);
+  }, [editor.form.reset]);
+  const scope = useCatalogueScope(clearPrivate);
+  const resource = useCatalogueResource(scope, '/api/admin/config/delivery-window', validWindow);
+  const config = resource.data;
+  const ready =
+    !!config && !resource.loading && !resource.error && !scope.denied && !stale && !uncertain;
+  const live = useRef({ ready, epoch: scope.version });
+  live.current = { ready, epoch: scope.version };
   useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setLoadFailed(false);
-    void (async () => {
-      try {
-        const res = await fetch('/api/admin/config/delivery-window', { signal: controller.signal });
-        if (!res.ok) throw new Error('Read failed');
-        const data = readWindow(await res.json());
-        if (controller.signal.aborted) return;
-        setConfig(data);
-        setTimezone(data.timezone);
-        setStartHour(data.startHour);
-        setEndHour(data.endHour);
-      } catch {
-        if (!controller.signal.aborted) {
-          setConfig(null);
-          setLoadFailed(true);
-        }
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
-      }
-    })();
-    return () => controller.abort();
-  }, [reload]);
-
-  /** Client-side validation mirroring the shared rules (T-05.03.03). */
-  function validate(start: number, end: number): string | null {
-    if (!Number.isFinite(start) || !Number.isFinite(end))
-      return t('admin.notifications.window.errBeforeEnd', uiLocale);
-    if (start >= end) return t('admin.notifications.window.errBeforeEnd', uiLocale);
-    if (Math.round(end * 60) - Math.round(start * 60) < 240)
-      return t('admin.notifications.window.errTooShort', uiLocale);
-    return null;
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      generation.current++;
+    };
+  }, []);
+  useEffect(() => {
+    if (!config) return;
+    if (config !== observed.current) {
+      if (uncertain) setRecovered(true);
+      observed.current = config;
+    }
+    const next = windowBasis(config);
+    if (basis.current !== next) {
+      generation.current++;
+      commandRef.current = null;
+      setCommand(null);
+      if (basis.current !== null && editor.form.formState.isDirty) setStale(true);
+      else if (!uncertain) editor.form.reset(windowValues(config));
+      basis.current = next;
+    }
+  }, [config, editor.form.reset, editor.form.formState.isDirty, uncertain]);
+  const current = (version: number, epoch: number) =>
+    mounted.current && generation.current === version && scope.live.current === epoch;
+  function refresh() {
+    generation.current++;
+    if (saving) {
+      setUncertain(true);
+      setRecovered(false);
+    } else editor.setValidationPending(false);
+    commandRef.current = null;
+    setCommand(null);
+    setSaved(false);
+    setError(null);
+    resource.retry();
   }
-
   function acceptSaved(result: unknown, expected: DeliveryWindowConfig) {
-    const data = readWindow(result, t('admin.notifications.window.saveFailed', uiLocale));
-    if (
-      data.timezone !== expected.timezone ||
-      data.startHour !== expected.startHour ||
-      data.endHour !== expected.endHour
-    )
-      throw new Error(t('admin.notifications.window.saveFailed', uiLocale));
-    setConfig(data);
+    if (!validWindow(result) || windowBasis(result) !== windowBasis(expected)) {
+      setRecovered(false);
+      setUncertain(true);
+      throw new Error(label('saveFailed'));
+    }
+    resource.accept(result);
+    basis.current = windowBasis(result);
+    editor.form.reset(windowValues(result));
+    setStale(false);
+    setUncertain(false);
     setSaved(true);
   }
-
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    if (!config || loading || loadFailed || savingRef.current || protectedAction) return;
-    const issue = validate(startHour, endHour);
-    if (issue) {
-      setClientIssue(issue);
-      return;
-    }
-    setClientIssue(null);
-    savingRef.current = true;
-    setSaving(true);
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    if (!live.current.ready || editor.isPending() || commandRef.current) return;
+    const version = generation.current,
+      epoch = scope.version;
+    editor.setValidationPending(true);
     setSaved(false);
     setError(null);
     try {
-      const res = await fetch('/api/admin/config/delivery-window', {
-        method: 'PUT',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          timezone,
-          start_hour: startHour,
-          end_hour: endHour,
-        }),
-      });
-      const result: unknown = await res.json().catch(() => null);
-      const record =
-        result && typeof result === 'object' ? (result as Record<string, unknown>) : null;
-      const code =
-        typeof record?.error === 'string'
-          ? record.error
-          : (record?.error as { code?: unknown } | null)?.code;
-      if (
-        res.status === 403 &&
-        (code === 'AUTHZ:STEP_UP_REQUIRED' || record?.requiresStepUp === true)
-      ) {
-        setProtectedAction({
-          action: {
-            title: t('admin.notifications.window.title', uiLocale),
-            description: t('admin.notifications.confirmAction', uiLocale),
-            path: '/api/admin/config/delivery-window',
+      const captured: { value?: WindowDraft } = {};
+      await editor.form.handleSubmit((value) => {
+        captured.value = value;
+      })();
+      if (captured.value) {
+        const value = captured.value;
+        if (!current(version, epoch) || !live.current.ready || commandRef.current) return;
+        const expected = windowBody(value),
+          body = {
+            timezone: expected.timezone,
+            start_hour: expected.startHour,
+            end_hour: expected.endHour,
+          };
+        const owner = ++networkOwner.current;
+        setSaving(true);
+        try {
+          const res = await fetch('/api/admin/config/delivery-window', {
             method: 'PUT',
-            body: { timezone, start_hour: startHour, end_hour: endHour },
-            requiresPassword: true,
-          },
-          expected: { timezone, startHour, endHour },
-        });
-        return;
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify(body),
+          });
+          const result: unknown = await res.json().catch(() => null);
+          if (!current(version, epoch)) return;
+          const record = responseRecord(result),
+            nested = responseRecord(record?.error),
+            code = typeof record?.error === 'string' ? record.error : nested?.code;
+          if (
+            res.status === 403 &&
+            (code === 'AUTHZ:STEP_UP_REQUIRED' || record?.requiresStepUp === true)
+          ) {
+            const next = {
+              action: {
+                title: label('title'),
+                description: t('admin.notifications.confirmAction', uiLocale),
+                path: '/api/admin/config/delivery-window',
+                method: 'PUT' as const,
+                body,
+                requiresPassword: true,
+              },
+              expected,
+              generation: version,
+            };
+            commandRef.current = next;
+            setCommand(next);
+            return;
+          }
+          if (res.status === 401 || res.status === 403) {
+            scope.deny();
+            return;
+          }
+          if (res.status === 400 && Array.isArray(nested?.fields) && applyErrors(nested.fields))
+            return;
+          if (!res.ok) throw new Error(label('saveFailed'));
+          acceptSaved(result, expected);
+        } catch {
+          if (current(version, epoch)) setError(label('saveFailed'));
+        } finally {
+          if (owner === networkOwner.current) {
+            setSaving(false);
+            editor.setValidationPending(false);
+            if (generation.current !== version) {
+              setUncertain(true);
+              setRecovered(false);
+            }
+          }
+        }
       }
-      if (!res.ok) throw new Error(t('admin.notifications.window.saveFailed', uiLocale));
-      acceptSaved(result, { timezone, startHour, endHour });
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : t('admin.notifications.window.saveFailed', uiLocale)
-      );
     } finally {
-      savingRef.current = false;
-      setSaving(false);
+      if (generation.current === version) editor.setValidationPending(false);
     }
   }
-
-  if (loading && !config) {
-    return (
-      <div className="bg-card text-card-foreground rounded-lg border border-border p-6 text-muted-foreground">
-        {t('admin.notifications.window.loading', uiLocale)}
-      </div>
-    );
-  }
-
+  const feedback = (name: keyof WindowDraft) => (
+    <p
+      id={editor.errorId(name)}
+      role={editor.errors[name] ? 'alert' : undefined}
+      className={`min-h-5 text-sm text-destructive ${editor.errors[name] ? '' : 'invisible'}`}
+    >
+      {editor.errors[name]?.message ?? '\u00a0'}
+    </p>
+  );
+  const busy = saving || editor.pending || !!command;
   return (
     <section
       aria-labelledby="delivery-window-title"
       className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
     >
-      {protectedAction && (
-        <TeamActionDialog
-          action={protectedAction.action}
-          onClose={() => setProtectedAction(null)}
-          onSuccess={async (result) => acceptSaved(result, protectedAction.expected)}
-        />
-      )}
-      <div>
-        <h2 id="delivery-window-title" className="text-lg font-semibold">
-          {t('admin.notifications.window.title', uiLocale)}
-        </h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          {t('admin.notifications.window.description', uiLocale)}
-        </p>
-      </div>
-
-      {loadFailed && (
-        <div role="alert">
-          <p>{t('admin.notifications.window.loadFailed', uiLocale)}</p>
-          <button
-            type="button"
-            disabled={loading}
-            onClick={() => setReload((value) => value + 1)}
-            className="underline"
-          >
-            {adminControlsText('retry', uiLocale)}
-          </button>
-        </div>
-      )}
-
-      {error && (
-        <div
-          role="alert"
-          className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded relative"
-        >
-          {error}
-          <button
-            type="button"
-            aria-label={t('admin.notifications.dismissError', uiLocale)}
-            onClick={() => setError(null)}
-            className="absolute top-2 end-2 text-destructive hover:text-red-700"
-          >
-            ✕
-          </button>
-        </div>
-      )}
-
-      <form
-        onSubmit={handleSubmit}
-        onChange={() => {
-          setSaved(false);
-          setClientIssue(null);
-        }}
-        noValidate
+      <h2 id="delivery-window-title" className="text-lg font-semibold">
+        {label('title')}
+      </h2>
+      <p className="text-sm text-muted-foreground">{label('description')}</p>
+      <Button
+        type="button"
+        variant="outline"
+        ref={refreshButton}
+        disabled={resource.loading}
+        onClick={() => (scope.denied ? scope.recover() : refresh())}
       >
-        <fieldset
-          disabled={!config || loading || saving || !!protectedAction}
-          className="space-y-4"
+        {notificationFormText('refresh', uiLocale)}
+      </Button>
+      {resource.loading && <p role="status">{label('loading')}</p>}
+      {resource.error && <Alert variant="destructive">{label('loadFailed')}</Alert>}
+      {scope.denied && (
+        <Alert variant="destructive">{notificationFormText('denied', uiLocale)}</Alert>
+      )}
+      {uncertain && (
+        <Alert variant="destructive">{notificationFormText('uncertain', uiLocale)}</Alert>
+      )}
+      {stale && <Alert variant="destructive">{notificationFormText('stale', uiLocale)}</Alert>}
+      {(stale || uncertain) && (
+        <Button
+          type="button"
+          variant="outline"
+          disabled={
+            !config || resource.loading || resource.error || busy || (uncertain && !recovered)
+          }
+          onClick={() => {
+            if (config) {
+              generation.current++;
+              editor.form.reset(windowValues(config));
+              setStale(false);
+              setUncertain(false);
+              setError(null);
+            }
+          }}
         >
-          <legend className="sr-only">{t('admin.notifications.window.title', uiLocale)}</legend>
-          {/* Timezone */}
-          <div>
-            <label
-              htmlFor="delivery-window-timezone"
-              className="block text-sm font-medium text-foreground mb-1"
-            >
-              {t('admin.notifications.window.timezone', uiLocale)}{' '}
-              <span className="text-destructive">*</span>
-            </label>
-            <select
-              id="delivery-window-timezone"
-              value={timezone}
-              onChange={(e) => setTimezone(e.target.value)}
-              className="w-full border border-input rounded px-3 py-2"
-            >
-              {!TIMEZONE_OPTIONS.includes(timezone) && <option value={timezone}>{timezone}</option>}
-              {TIMEZONE_OPTIONS.map((tz) => (
-                <option key={tz} value={tz}>
-                  {tz}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Start / End hour */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label
-                htmlFor="delivery-window-start"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                {t('admin.notifications.window.start', uiLocale)}{' '}
-                <span className="text-destructive">*</span>
-              </label>
-              <input
-                type="time"
-                step="60"
-                required
-                id="delivery-window-start"
-                value={formatWindowTime(startHour)}
-                onChange={(e) =>
-                  setStartHour(
-                    e.target.value
-                      ? Number(e.target.value.slice(0, 2)) + Number(e.target.value.slice(3, 5)) / 60
-                      : NaN
-                  )
-                }
-                className="w-full border border-input rounded px-3 py-2"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="delivery-window-end"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                {t('admin.notifications.window.end', uiLocale)}{' '}
-                <span className="text-destructive">*</span>
-              </label>
-              <input
-                type="time"
-                step="60"
-                required
-                id="delivery-window-end"
-                value={formatWindowTime(endHour)}
-                onChange={(e) =>
-                  setEndHour(
-                    e.target.value
-                      ? Number(e.target.value.slice(0, 2)) + Number(e.target.value.slice(3, 5)) / 60
-                      : NaN
-                  )
-                }
-                className="w-full border border-input rounded px-3 py-2"
-              />
-            </div>
-          </div>
-
-          {clientIssue && (
-            <p role="alert" className="text-sm text-destructive">
-              {clientIssue}
-            </p>
+          {notificationFormText('reset', uiLocale)}
+        </Button>
+      )}
+      {!scope.denied && (
+        <form onSubmit={submit} noValidate>
+          {error && <Alert variant="destructive">{error}</Alert>}
+          {catalogueRootMessage(editor.errors) && (
+            <Alert variant="destructive">{catalogueRootMessage(editor.errors)}</Alert>
           )}
-
+          <fieldset disabled={!config || busy || stale || uncertain} className="space-y-4">
+            <legend className="sr-only">{label('title')}</legend>
+            <div>
+              <label htmlFor="delivery-window-timezone" className="block text-sm font-medium mb-1">
+                {label('timezone')}
+              </label>
+              <select
+                id="delivery-window-timezone"
+                {...editor.bind('timezone')}
+                value={editor.values.timezone}
+                onChange={(e) => {
+                  setSaved(false);
+                  editor.field('timezone')[1](e.target.value);
+                }}
+                className="w-full border border-input rounded px-3 py-2 bg-background"
+              >
+                {!TIMEZONE_OPTIONS.includes(editor.values.timezone) && (
+                  <option value={editor.values.timezone}>{editor.values.timezone}</option>
+                )}
+                {TIMEZONE_OPTIONS.map((tz) => (
+                  <option key={tz} value={tz}>
+                    {tz}
+                  </option>
+                ))}
+              </select>
+              {feedback('timezone')}
+            </div>
+            <div className="grid min-w-0 grid-cols-1 sm:grid-cols-2 gap-4">
+              {(['startHour', 'endHour'] as const).map((name) => (
+                <div key={name} className="min-w-0">
+                  <label
+                    htmlFor={`delivery-window-${name === 'startHour' ? 'start' : 'end'}`}
+                    className="block text-sm font-medium mb-1"
+                  >
+                    {label(name === 'startHour' ? 'start' : 'end')}
+                  </label>
+                  <input
+                    id={`delivery-window-${name === 'startHour' ? 'start' : 'end'}`}
+                    type="time"
+                    dir="ltr"
+                    step="60"
+                    {...editor.bind(name)}
+                    value={editor.values[name]}
+                    onChange={(e) => {
+                      setSaved(false);
+                      editor.field(name)[1](e.target.value);
+                    }}
+                    className="w-full min-w-0 border border-input rounded px-3 py-2 bg-background"
+                  />
+                  {feedback(name)}
+                </div>
+              ))}
+            </div>
+          </fieldset>
           {config && (
-            <p className="text-xs text-muted-foreground">
-              {t('admin.notifications.window.current', uiLocale)}:{' '}
+            <p className="text-xs text-muted-foreground my-3">
+              {label('current')}:{' '}
               <span className="font-mono">
                 {config.timezone} {formatWindowTime(config.startHour)}–
                 {formatWindowTime(config.endHour)}
               </span>
             </p>
           )}
-
-          <div className="flex items-center gap-3">
-            <button
-              type="submit"
-              disabled={saving}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-            >
-              {saving
-                ? t('admin.notifications.window.saving', uiLocale)
-                : t('admin.notifications.window.save', uiLocale)}
-            </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <CatalogueSaveButton
+              pending={saving || editor.pending}
+              disabled={!ready || busy}
+              label={label(saving || editor.pending ? 'saving' : 'save')}
+            />
             {saved && (
               <span role="status" className="text-sm text-success">
-                {t('admin.notifications.window.saved', uiLocale)}
+                {label('saved')}
               </span>
             )}
           </div>
-        </fieldset>
-      </form>
+        </form>
+      )}
+      {command && (
+        <TeamActionDialog
+          action={command.action}
+          finalFocus={() => refreshButton.current}
+          confirmationDisabled={!ready || command.generation !== generation.current}
+          onDenied={scope.deny}
+          onValidationError={applyErrors}
+          summary={
+            <Button type="button" variant="outline" disabled={resource.loading} onClick={refresh}>
+              {notificationFormText('refresh', uiLocale)}
+            </Button>
+          }
+          onClose={() => {
+            if (commandRef.current === command) {
+              commandRef.current = null;
+              setCommand(null);
+            }
+          }}
+          onSuccess={async (result) => {
+            if (current(command.generation, scope.version)) acceptSaved(result, command.expected);
+          }}
+        />
+      )}
     </section>
   );
 }

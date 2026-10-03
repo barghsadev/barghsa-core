@@ -516,6 +516,7 @@ for (const field of ['bodyTemplate', 'subject'])
         }),
       });
       expect(response.status).toBe(400);
+      expect(await response.json()).toMatchObject({ error: { fields: [field] } });
       expect((await snapshot()).templates).toEqual([]);
       expect((await snapshot()).audits).toEqual([]);
     });

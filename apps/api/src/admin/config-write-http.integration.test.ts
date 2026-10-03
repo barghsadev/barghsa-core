@@ -313,6 +313,7 @@ it.each([9.001, null, false, '9', 24])(
       body: JSON.stringify({ ...daytimeWindow.body, start_hour: start }),
     });
     expect(response.status).toBe(400);
+    expect(await response.json()).toMatchObject({ error: { fields: ['startHour'] } });
     expect(await snapshot()).toEqual(before);
   }
 );

@@ -190,3 +190,18 @@ describe('notification template input boundaries', () => {
     expect(call).toHaveBeenCalledWith('template', request().session, undefined);
   });
 });
+
+it('returns owned template field names without raw schema messages or nested identifiers', async () => {
+  const { controller, call } = fixture();
+  try {
+    await controller.createNotificationTemplate(
+      { ...template, channel: 'private', variables: [{ name: '', description: 'sensitive' }] },
+      request()
+    );
+    throw new Error('Expected rejection');
+  } catch (error) {
+    expect(error).toMatchObject({ status: 400, fields: ['channel', 'variables'] });
+    expect(JSON.stringify(error)).not.toContain('sensitive');
+  }
+  expect(call).not.toHaveBeenCalled();
+});

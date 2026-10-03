@@ -1,3 +1,4 @@
+import { InputFieldException } from '../common/input-field.exception.js';
 import { describe, it, expect } from 'vitest';
 import { NotificationTemplateService } from './notification-template.service.js';
 
@@ -38,17 +39,19 @@ describe('validateVariables', () => {
 
   it('rejects a placeholder not in the allow-list', () => {
     expect(() => service.validateVariables('Hello {{userName}}', ['otherVar'])).toThrow(
-      /not in the allow-list/i
+      InputFieldException
     );
   });
 
   it('rejects an unclosed placeholder', () => {
-    expect(() => service.validateVariables('Hello {{userName', ['userName'])).toThrow(/unclosed/iu);
+    expect(() => service.validateVariables('Hello {{userName', ['userName'])).toThrow(
+      InputFieldException
+    );
   });
 
   it('rejects an invalid variable name (spaces / special chars)', () => {
     expect(() => service.validateVariables('Hello {{bad name!}}', ['bad name!'])).toThrow(
-      /invalid variable name/i
+      InputFieldException
     );
   });
 });
@@ -212,3 +215,19 @@ describe('isDestinationAllowed (T-05.04.04)', () => {
     ).toBe(true);
   });
 });
+
+it.each(['bodyTemplate', 'subject'])(
+  'exposes only the owned %s identifier for malformed placeholders',
+  (field) => {
+    try {
+      service.validateVariables('{{secret_private_value}}', [], field);
+      throw new Error('Expected rejection');
+    } catch (error) {
+      expect(error).toBeInstanceOf(InputFieldException);
+      expect((error as InputFieldException).fields).toEqual([field]);
+      expect(JSON.stringify((error as InputFieldException).getResponse())).not.toContain(
+        'secret_private_value'
+      );
+    }
+  }
+);
