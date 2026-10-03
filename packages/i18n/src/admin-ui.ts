@@ -1589,7 +1589,10 @@ export const fa: I18nDictionary = {
   'admin.invoices.error.load': 'بارگذاری فاکتور ناموفق بود',
   'admin.invoices.error.save': 'تغییر سررسید ناموفق بود',
   'admin.invoices.error.reason': 'دلیل الزامی است و برای مشتری نمایش داده می‌شود',
-  'admin.invoices.error.dueAt': 'تاریخ سررسید نامعتبر است',
+  'admin.invoices.error.dueAt': 'سررسیدی متفاوت و برابر یا پس از تاریخ صدور انتخاب کنید.',
+  'admin.invoices.validationUnavailable':
+    'اعتبارسنجی بارگذاری نشد. پیش‌نویس شما حفظ شده است. دوباره تلاش کنید.',
+  'admin.invoices.denied': 'برای ادامه با حساب دارای دسترسی سررسید فاکتور وارد شوید.',
   'admin.invoices.error.invoiceId': 'شناسه فاکتور باید یک UUID معتبر باشد',
   'admin.invoices.none': '—',
   'admin.invoices.reminders.title': 'یادآوری پرداخت بر اساس نوع خدمت',
@@ -3273,7 +3276,10 @@ export const en: I18nDictionary = {
   'admin.invoices.error.load': 'Failed to load invoice',
   'admin.invoices.error.save': 'Failed to override due date',
   'admin.invoices.error.reason': 'A customer-visible reason is required',
-  'admin.invoices.error.dueAt': 'Due date is invalid',
+  'admin.invoices.error.dueAt': 'Choose a changed deadline on or after the issue date.',
+  'admin.invoices.validationUnavailable':
+    'Validation could not load. Your draft is kept. Try again.',
+  'admin.invoices.denied': 'Sign in with invoice deadline permission to continue.',
   'admin.invoices.error.invoiceId': 'Invoice ID must be a valid UUID',
   'admin.invoices.none': '—',
   'admin.invoices.reminders.title': 'Payment reminders by service type',

@@ -80,8 +80,10 @@ describe('AdminInvoicesPage lookup binding (T-04.1.03.03)', () => {
       loadForm!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
 
-    expect(container.querySelector('[data-testid="loaded-invoice-id"]')?.textContent).toBe(
-      INVOICE_A
+    await vi.waitFor(() =>
+      expect(container.querySelector('[data-testid="loaded-invoice-id"]')?.textContent).toBe(
+        INVOICE_A
+      )
     );
     expect((container.querySelector('#due-at') as HTMLInputElement).value).toBe('2026-09-15T01:00');
     expect(container.textContent).toContain('Jul 31, 2026, 5:00 PM');
@@ -127,6 +129,7 @@ describe('AdminInvoicesPage lookup binding (T-04.1.03.03)', () => {
         .closest('form')!
         .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
+    await vi.waitFor(() => expect(container.querySelector('#due-at')).toBeTruthy());
     const due = container.querySelector('#due-at') as HTMLInputElement;
     await act(async () => {
       setInputValue(due, '2026-09-20T01:00');
@@ -138,8 +141,10 @@ describe('AdminInvoicesPage lookup binding (T-04.1.03.03)', () => {
     await act(async () => {
       due.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
-    expect(container.querySelector('[data-testid="loaded-invoice-id"]')?.textContent).toBe(
-      INVOICE_A
+    await vi.waitFor(() =>
+      expect(container.querySelector('[data-testid="loaded-invoice-id"]')?.textContent).toBe(
+        INVOICE_A
+      )
     );
     expect(container.textContent).not.toContain('Due date overridden');
     expect(container.querySelector('#invoice-deadline-panel [role="alert"]')).toBeTruthy();
@@ -170,6 +175,7 @@ describe('AdminInvoicesPage lookup binding (T-04.1.03.03)', () => {
         .closest('form')!
         .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
+    await vi.waitFor(() => expect(resolveLookup).toBeTypeOf('function'));
     await act(async () => {
       setInputValue(lookup, INVOICE_B);
     });

@@ -213,3 +213,23 @@ it.each(['invoice', 'audit', 'read'] as const)(
     }
   }
 );
+
+it.each([
+  [{ dueAt: 'private-invalid', reason: 'private draft' }, ['dueAt']],
+  [{ ...body, reason: '   ' }, ['reason']],
+  [{ dueAt: 'bad', reason: '' }, ['dueAt', 'reason']],
+  [{ ...body, dueAt: '2026-08-01T00:00:00.000Z' }, ['dueAt']],
+  [{ ...body, dueAt: oldDue }, ['dueAt']],
+])('returns only owned deadline fields without writing invalid input %#', async (raw, fields) => {
+  const f = await fixture();
+  const response = await fetch(f.url, {
+    method: 'POST',
+    headers: f.headers,
+    body: JSON.stringify(raw),
+  });
+  expect(response.status).toBe(400);
+  const value = (await response.json()) as { error: { code: string; fields?: string[] } };
+  expect(value.error).toMatchObject({ code: ErrorCodes.VALIDATION_INPUT_INVALID.code, fields });
+  expect(JSON.stringify(value)).not.toContain('private');
+  expect(await stored(f.invoiceId)).toMatchObject({ dueAt: oldDue, audits: 0 });
+});

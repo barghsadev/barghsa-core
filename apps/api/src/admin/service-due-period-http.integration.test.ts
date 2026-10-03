@@ -299,3 +299,30 @@ it.each(['pair', 'audit', 'read'] as const)(
     }
   }
 );
+
+it.each([
+  [{ ...initial, defaultDays: 0 }, ['defaultDays']],
+  [{ ...initial, serviceType: 'private-unknown' }, ['serviceType']],
+  [
+    { ...initial, defaultDays: 1.5, serviceType: 'private-unknown' },
+    ['serviceType', 'defaultDays'],
+  ],
+  [{ ...initial, expectedPeriodId: 'private-invalid', defaultDays: 0 }, undefined],
+  [{ ...initial, privateExtra: 'private-value', defaultDays: 0 }, undefined],
+])(
+  'returns only owned setting fields; protected and mixed errors stay generic %#',
+  async (raw, fields) => {
+    const response = await request(raw);
+    expect(response.status).toBe(400);
+    const value = (await response.json()) as { error: { code: string; fields?: string[] } };
+    expect(value.error.code).toBe('VALIDATION:INPUT:INVALID');
+    expect(value.error.fields).toEqual(fields);
+    expect(JSON.stringify(value)).not.toContain('private');
+    expect(await counts()).toEqual({ periods: 0, audits: 0 });
+    const forbidden = await request(raw, 'due-other');
+    expect(forbidden.status).toBe(403);
+    expect(
+      ((await forbidden.json()) as { error: { fields?: string[] } }).error.fields
+    ).toBeUndefined();
+  }
+);

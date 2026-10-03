@@ -9,7 +9,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { HttpException } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import { DUE_AT_OVERRIDE_ERRORS, DUE_AT_OVERRIDE_EVENT } from '@barghsa/shared/finance';
+import { DUE_AT_OVERRIDE_EVENT } from '@barghsa/shared/finance';
 import { DueAtOverrideService } from './due-at-override.service.js';
 import { InvoiceAuditRepository } from './invoice-audit.repository.js';
 
@@ -162,9 +162,7 @@ describe('DueAtOverrideService (T-04.1.03.03)', () => {
       expect(rejectionBody(rejection)).toMatchObject({
         error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
       });
-      expect(String(rejectionBody(rejection).message)).toContain(
-        DUE_AT_OVERRIDE_ERRORS.BAD_REASON()
-      );
+      expect(rejection).toMatchObject({ fields: ['reason'] });
       expect(mockPool.connect).not.toHaveBeenCalled();
     });
 
@@ -197,9 +195,7 @@ describe('DueAtOverrideService (T-04.1.03.03)', () => {
         )
         .catch((e: unknown) => e);
       expect(rejection).toMatchObject({ status: 400 });
-      expect(String(rejectionBody(rejection).message)).toBe(
-        DUE_AT_OVERRIDE_ERRORS.BEFORE_ISSUED_AT()
-      );
+      expect(rejection).toMatchObject({ fields: ['dueAt'] });
     });
 
     it('rejects an unchanged dueAt', async () => {
@@ -217,7 +213,7 @@ describe('DueAtOverrideService (T-04.1.03.03)', () => {
         )
         .catch((e: unknown) => e);
       expect(rejection).toMatchObject({ status: 400 });
-      expect(String(rejectionBody(rejection).message)).toBe(DUE_AT_OVERRIDE_ERRORS.UNCHANGED());
+      expect(rejection).toMatchObject({ fields: ['dueAt'] });
     });
 
     it('404s when the locked row is missing', async () => {

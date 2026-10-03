@@ -47,6 +47,14 @@ describe('dueAt staff override contract (T-04.1.03.03)', () => {
       expect(parsed.value.dueAt.toISOString()).toBe('2026-09-01T00:00:00.000Z');
     });
 
+    it.each([
+      [{ dueAt: 'bad', reason: 'Valid reason' }, ['dueAt']],
+      [{ due_at: '2026-09-01T00:00:00Z', reason: '' }, ['reason']],
+      [{ dueAt: 'bad', reason: '' }, ['dueAt', 'reason']],
+    ])('names the public editable fields for invalid input %#', (body, fields) => {
+      const result = parseDueAtOverrideBody(body);
+      expect(result).toMatchObject({ ok: false, fields });
+    });
     it('rejects a missing/blank reason (customer-visible, required)', () => {
       const parsed = parseDueAtOverrideBody({
         dueAt: '2026-09-15T08:00:00.000Z',

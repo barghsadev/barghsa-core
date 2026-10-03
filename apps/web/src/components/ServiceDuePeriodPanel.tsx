@@ -21,6 +21,12 @@ import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { authErrorCode } from '../lib/auth-errors.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
+import { useDuePeriodForm } from '../hooks/useDeadlineForms.js';
+import { normalizeProfileDigits } from '../lib/profile-digits.js';
+import {
+  RefundFieldFeedback as FieldFeedback,
+  RefundFormAlert as FormAlert,
+} from './RefundFormFeedback.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
 const path = '/api/admin/config/invoice-due-periods';
@@ -50,41 +56,85 @@ function isSettings(value: unknown): value is ServiceDuePeriodSetting[] {
 }
 
 export default function ServiceDuePeriodPanel() {
-  const locale = useLocale();
+  const locale = useLocale(),
+    draft = useDuePeriodForm();
   const [settings, setSettings] = useState<ServiceDuePeriodSetting[] | null>(null);
-  const [serviceType, setServiceType] = useState<ServiceDuePeriodType>('electricity');
-  const [days, setDays] = useState('7');
+  const [serviceType] = draft.field('serviceType'),
+    [days, setDays] = draft.field('defaultDays');
   const [loading, setLoading] = useState(true),
     [saving, setSaving] = useState(false),
     [saved, setSaved] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [reload, setReload] = useState(0);
-  const [pending, setPending] = useState<{ action: TeamAction; change: Change } | null>(null);
+  const [error, setError] = useState<string | null>(null),
+    [unavailable, setUnavailable] = useState(true),
+    [reload, setReload] = useState(0);
+  const [pending, setPending] = useState<{
+    action: TeamAction;
+    change: Change;
+    owner: number;
+  } | null>(null);
   const inFlight = useRef(false),
-    submitButton = useRef<HTMLButtonElement>(null);
-  const selected = useRef(serviceType);
+    submitButton = useRef<HTMLButtonElement>(null),
+    generation = useRef(0),
+    live = useRef(false);
+  const invalidFocus = useRef<'serviceType' | 'defaultDays' | null>(null);
+  useEffect(() => {
+    if (!saving && invalidFocus.current) {
+      draft.form.setFocus(invalidFocus.current);
+      invalidFocus.current = null;
+    }
+  }, [saving, draft.form]);
+  const selected = useRef(serviceType),
+    settingsRef = useRef(settings);
   selected.current = serviceType;
+  settingsRef.current = settings;
   const locked = loading || saving || Boolean(pending);
+  useEffect(() => {
+    live.current = true;
+    return () => {
+      live.current = false;
+      generation.current++;
+    };
+  }, []);
+  function denied() {
+    invalidFocus.current = null;
+    generation.current++;
+    setSettings(null);
+    settingsRef.current = null;
+    setPending(null);
+    draft.form.reset({ serviceType: 'electricity', defaultDays: '7' });
+    setUnavailable(true);
+    setSaved(false);
+    setError(t('denied', locale));
+  }
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
-    setSettings(null);
+    setUnavailable(true);
     setError(null);
     setSaved(false);
     void fetch(path, { credentials: 'include', signal: controller.signal })
       .then(async (response) => {
         if (controller.signal.aborted) return;
         if (!response.ok) {
-          setError(
-            t(response.status === 401 || response.status === 403 ? 'denied' : 'error', locale)
-          );
+          if (response.status === 401 || response.status === 403) denied();
+          else setError(t('error', locale));
           return;
         }
         const value: unknown = await response.json();
-        if (!isSettings(value)) throw new Error(t('error', locale));
+        if (!isSettings(value)) throw new Error('read');
         if (controller.signal.aborted) return;
+        const previous = settingsRef.current?.find((row) => row.serviceType === selected.current);
+        const next = value.find((row) => row.serviceType === selected.current)!;
+        if (JSON.stringify(previous) !== JSON.stringify(next)) {
+          generation.current++;
+          setPending(null);
+          draft.form.reset({
+            serviceType: selected.current,
+            defaultDays: String(next.defaultDays),
+          });
+        }
         setSettings(value);
-        setDays(String(value.find((row) => row.serviceType === selected.current)!.defaultDays));
+        setUnavailable(false);
       })
       .catch(() => {
         if (!controller.signal.aborted) setError(t('error', locale));
@@ -93,85 +143,103 @@ export default function ServiceDuePeriodPanel() {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
+    // The resource owns reloads; form changes must not restart its request.
   }, [reload, locale]);
-
-  function accepted(value: unknown, change: Change) {
+  const current = (owner: number) => live.current && owner === generation.current;
+  function accepted(value: unknown, change: Change, owner: number) {
+    if (!current(owner)) return;
     if (
       !isSettings(value) ||
       value.find((row) => row.serviceType === change.serviceType)?.defaultDays !==
         change.defaultDays
     )
-      throw new Error(t('error', locale));
-    const current = value.find((row) => row.serviceType === change.serviceType)!;
-    if (!current.periodId || !current.effectiveFrom) throw new Error(t('error', locale));
+      throw new Error('receipt');
+    const row = value.find((row) => row.serviceType === change.serviceType)!;
+    if (
+      !row.periodId ||
+      !row.effectiveFrom ||
+      (row.periodId === change.expectedPeriodId &&
+        settingsRef.current?.find((item) => item.serviceType === change.serviceType)
+          ?.defaultDays !== change.defaultDays)
+    )
+      throw new Error('receipt');
     setSettings(value);
-    setDays(String(change.defaultDays));
+    draft.form.reset({ serviceType: change.serviceType, defaultDays: String(change.defaultDays) });
     setSaved(true);
     setError(null);
   }
   async function save(event: FormEvent) {
     event.preventDefault();
-    if (locked || inFlight.current || !settings) return;
-    const normalized = days
-      .trim()
-      .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 1776))
-      .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 1632));
-    const defaultDays = /^\d+$/.test(normalized) ? Number(normalized) : NaN;
-    setSaved(false);
-    setError(null);
-    if (!validDays(defaultDays)) {
-      setError(t('invalid', locale));
-      return;
-    }
-    const change: Change = {
-      serviceType,
-      defaultDays,
-      expectedPeriodId: settings.find((row) => row.serviceType === serviceType)!.periodId,
-    };
+    if (locked || unavailable || inFlight.current || !settings) return;
+    const owner = generation.current;
     inFlight.current = true;
     setSaving(true);
+    setSaved(false);
+    setError(null);
     try {
-      const response = await fetch(path, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(change),
-      });
-      const value: unknown = await response.json().catch(() => null);
-      if (
-        response.status === 403 &&
-        authErrorCode(value) === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code
-      ) {
-        setPending({
-          change,
-          action: {
-            path,
+      await draft.form.handleSubmit(
+        async (values) => {
+          if (!current(owner)) return;
+          const change: Change = {
+            serviceType: values.serviceType as ServiceDuePeriodType,
+            defaultDays: Number(normalizeProfileDigits(values.defaultDays).trim()),
+            expectedPeriodId: settings.find((row) => row.serviceType === values.serviceType)!
+              .periodId,
+          };
+          const response = await fetch(path, {
             method: 'PUT',
-            body: change,
-            title: t('verifyTitle', locale),
-            description: t('verifyDescription', locale),
-            requiresPassword: true,
-            conflictMessage: t('conflict', locale),
-            forbiddenMessage: t('denied', locale),
-          },
-        });
-      } else if (!response.ok)
-        setError(
-          t(
-            response.status === 409
-              ? 'conflict'
-              : response.status === 401 || response.status === 403
-                ? 'denied'
-                : 'error',
-            locale
-          )
-        );
-      else accepted(value, change);
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify(change),
+          });
+          const value: unknown = await response.json().catch(() => null);
+          if (!current(owner)) return;
+          if (
+            response.status === 403 &&
+            authErrorCode(value) === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code
+          ) {
+            setPending({
+              change,
+              owner,
+              action: {
+                path,
+                method: 'PUT',
+                body: change,
+                title: t('verifyTitle', locale),
+                description: t('verifyDescription', locale),
+                requiresPassword: true,
+                conflictMessage: t('conflict', locale),
+                forbiddenMessage: t('denied', locale),
+              },
+            });
+          } else if (!response.ok) {
+            if (response.status === 401 || response.status === 403) {
+              denied();
+              return;
+            }
+            const fields = (value as { error?: { fields?: unknown[] } } | null)?.error?.fields;
+            if (
+              response.status === 400 &&
+              authErrorCode(value) === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+              Array.isArray(fields) &&
+              draft.applyServerErrors(fields)
+            )
+              return;
+            if (response.status === 409) setUnavailable(true);
+            setError(t(response.status === 409 ? 'conflict' : 'error', locale));
+          } else accepted(value, change, owner);
+        },
+        (errors) => {
+          if (current(owner))
+            invalidFocus.current =
+              (['serviceType', 'defaultDays'] as const).find((name) => errors[name]) ?? null;
+        }
+      )(event);
     } catch {
-      setError(t('error', locale));
+      if (current(owner)) setError(t('error', locale));
     } finally {
       inFlight.current = false;
-      setSaving(false);
+      if (live.current) setSaving(false);
     }
   }
   return (
@@ -185,12 +253,8 @@ export default function ServiceDuePeriodPanel() {
         {t('title', locale)}
       </h2>
       <p className="text-sm text-muted-foreground">{t('description', locale)}</p>
-      {loading ? <p role="status">{t('loading', locale)}</p> : null}
-      {error ? (
-        <p role="alert" className="text-sm text-destructive">
-          {error}
-        </p>
-      ) : null}
+      {loading && <p role="status">{t('loading', locale)}</p>}
+      <FormAlert message={error ?? undefined} />
       <Button
         type="button"
         variant="outline"
@@ -199,19 +263,27 @@ export default function ServiceDuePeriodPanel() {
       >
         {t('load', locale)}
       </Button>
-      {settings ? (
-        <form onSubmit={save}>
-          <FieldSet disabled={locked}>
+      {settings && (
+        <form onSubmit={save} noValidate>
+          <FieldSet disabled={locked || unavailable}>
             <FieldGroup className="gap-4 sm:grid sm:grid-cols-2">
               <Field>
                 <FieldLabel htmlFor="due-period-service">{t('service', locale)}</FieldLabel>
                 <NativeSelect
                   id="due-period-service"
+                  {...draft.bind('serviceType')}
                   value={serviceType}
                   onChange={(event) => {
-                    const next = event.target.value as ServiceDuePeriodType;
-                    setServiceType(next);
-                    setDays(String(settings.find((row) => row.serviceType === next)!.defaultDays));
+                    if (inFlight.current || locked || unavailable) return;
+                    const next = event.target.value;
+                    if (!SERVICE_DUE_PERIOD_TYPES.some((type) => type === next)) return;
+                    generation.current++;
+                    draft.form.reset({
+                      serviceType: next,
+                      defaultDays: String(
+                        settings.find((row) => row.serviceType === next)!.defaultDays
+                      ),
+                    });
                     setSaved(false);
                     setError(null);
                   }}
@@ -222,11 +294,17 @@ export default function ServiceDuePeriodPanel() {
                     </NativeSelectOption>
                   ))}
                 </NativeSelect>
+                <FieldFeedback
+                  id={draft.errorId('serviceType')}
+                  error={draft.errors.serviceType}
+                  message={t('invalidService', locale)}
+                />
               </Field>
               <Field>
                 <FieldLabel htmlFor="due-period-days">{t('days', locale)}</FieldLabel>
                 <Input
                   id="due-period-days"
+                  {...draft.bind('defaultDays')}
                   inputMode="numeric"
                   value={days}
                   maxLength={3}
@@ -234,32 +312,47 @@ export default function ServiceDuePeriodPanel() {
                     setDays(event.target.value);
                     setSaved(false);
                   }}
-                  aria-invalid={Boolean(error)}
+                />
+                <FieldFeedback
+                  id={draft.errorId('defaultDays')}
+                  error={draft.errors.defaultDays}
+                  message={t('invalid', locale)}
                 />
               </Field>
             </FieldGroup>
-            <Button ref={submitButton} type="submit" disabled={locked} className="hover:bg-primary">
+            <FormAlert message={draft.errors.root?.validation?.message} />
+            <Button
+              ref={submitButton}
+              type="submit"
+              disabled={locked || unavailable}
+              aria-busy={saving || undefined}
+            >
+              {saving && (
+                <span
+                  aria-hidden="true"
+                  className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                />
+              )}
               {t(saving ? 'saving' : 'save', locale)}
             </Button>
           </FieldSet>
         </form>
-      ) : null}
-      {saved ? (
+      )}
+      {saved && (
         <p role="status" className="text-sm">
           {t('saved', locale)}
         </p>
-      ) : null}
-      {pending ? (
+      )}
+      {pending && (
         <TeamActionDialog
           action={pending.action}
           finalFocus={submitButton}
           onClose={() => setPending(null)}
-          onSuccess={async (value) => {
-            accepted(value, pending.change);
-            setPending(null);
-          }}
+          onDenied={denied}
+          onValidationError={(fields) => current(pending.owner) && draft.applyServerErrors(fields)}
+          onSuccess={async (value) => accepted(value, pending.change, pending.owner)}
         />
-      ) : null}
+      )}
     </section>
   );
 }

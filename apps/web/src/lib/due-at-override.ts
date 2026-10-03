@@ -53,3 +53,13 @@ export function datetimeLocalToIso(value: string, timezone: string): string | nu
     return null;
   }
 }
+
+export function deadlineInstant(
+  value: string,
+  source: { dueAt: string | null; timezone: string }
+): string | null {
+  // Preserve seconds and the original offset during DST folds when the displayed minute is unchanged.
+  return value === isoToDatetimeLocal(source.dueAt, source.timezone)
+    ? source.dueAt
+    : datetimeLocalToIso(value, source.timezone);
+}

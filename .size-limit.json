@@ -1,5 +1,11 @@
 [
   {
+    "name": "Invoice deadline validation on interaction",
+    "phase": "interaction",
+    "entries": ["src/lib/deadline-form-schemas.ts"],
+    "limitKB": 20
+  },
+  {
     "name": "Customer finance validation on interaction",
     "phase": "interaction",
     "entries": ["src/lib/customer-finance-form-schemas.ts"],

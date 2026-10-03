@@ -1,3 +1,4 @@
+import { InputFieldException } from '../common/input-field.exception.js';
 /**
  * Staff dueAt override service (T-04.1.03.03).
  *
@@ -154,7 +155,7 @@ export class DueAtOverrideService {
   async override(input: OverrideInvoiceDueAtInput): Promise<InvoiceDueAtDto> {
     const parsed = parseDueAtOverrideBody(input.raw);
     if (!parsed.ok) {
-      httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, parsed.issues.join('; '), 400);
+      throw new InputFieldException(parsed.fields);
     }
 
     const now = input.now ?? new Date();
@@ -196,20 +197,12 @@ export class DueAtOverrideService {
 
       if (row.issued_at && parsed.value.dueAt.getTime() < row.issued_at.getTime()) {
         await client.query('ROLLBACK');
-        httpError(
-          ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          DUE_AT_OVERRIDE_ERRORS.BEFORE_ISSUED_AT(),
-          400
-        );
+        throw new InputFieldException(['dueAt']);
       }
 
       if (row.due_at && parsed.value.dueAt.getTime() === row.due_at.getTime()) {
         await client.query('ROLLBACK');
-        httpError(
-          ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          DUE_AT_OVERRIDE_ERRORS.UNCHANGED(),
-          400
-        );
+        throw new InputFieldException(['dueAt']);
       }
 
       const snapshot = buildDueAtOverrideSnapshot({

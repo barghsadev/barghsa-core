@@ -1,3 +1,4 @@
+import { InputFieldException } from '../common/input-field.exception.js';
 import { HttpException, Injectable } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import {
@@ -76,8 +77,16 @@ export class ServiceDuePeriodService {
     correlationId: string
   ): Promise<ServiceDuePeriodSetting[]> {
     const parsed = settingBody.safeParse(raw);
-    if (!parsed.success)
+    if (!parsed.success) {
+      const fields = parsed.error.issues.map(({ path }) =>
+        path.length === 1 && ['serviceType', 'defaultDays'].includes(String(path[0]))
+          ? String(path[0])
+          : null
+      );
+      if (fields.length && fields.every((field): field is string => field !== null))
+        throw new InputFieldException(fields);
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    }
     const input = parsed.data;
     const client = await getDbPool().connect();
     try {

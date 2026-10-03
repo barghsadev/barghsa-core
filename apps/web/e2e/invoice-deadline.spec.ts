@@ -21,6 +21,7 @@ for (const locale of ['fa', 'en'] as const)
     }) => {
       const fa = locale === 'fa';
       await page.addInitScript((locale) => {
+        localStorage.setItem('barghsa.locale', locale);
         const apply = () => {
           document.documentElement.lang = locale;
           document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
@@ -38,6 +39,15 @@ for (const locale of ['fa', 'en'] as const)
         route.fulfill({
           json: {
             appTitle: 'Finance',
+            appTitleFa: 'امور مالی',
+            supportEmail: 'support@example.test',
+            supportPhone: '+982112345678',
+            supportMobile: '+989121234567',
+            backgroundColor: '#f6f7f4',
+            darkBackgroundColor: '#15201c',
+            fontFamily: 'vazirmatn',
+            borderRadiusRem: 0.75,
+            spacingScale: 1,
             slogan: '',
             primaryColor: '#2563eb',
             secondaryColor: '#64748b',
@@ -87,6 +97,7 @@ for (const locale of ['fa', 'en'] as const)
         .addCookies([
           { name: 'barghsa_csrf', value: 'deadline-csrf', url: new URL(page.url()).origin },
         ]);
+      await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*dark)/);
       const panel = page.locator('#invoice-deadline-panel');
       await panel.locator('#invoice-id').fill(invoiceId);
       await panel.getByRole('button', { name: fa ? 'بارگذاری' : 'Load', exact: true }).click();

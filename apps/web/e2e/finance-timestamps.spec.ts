@@ -1,17 +1,31 @@
+import { fullNavigation } from './navigation-fixture';
+import { t } from '../../../packages/i18n/src/admin-ui';
 import { formatBrowserDate } from './browser-date';
 import { test, expect, type Page } from './coverage-fixture';
 
 const id = '11111111-1111-4111-8111-111111111111';
 const stamp = '2026-09-01T01:00:00Z';
 const zone = 'America/Los_Angeles';
-async function shell(page: Page, locale: string) {
+async function shell(page: Page, locale: string, staff = false) {
   await page.addInitScript((value) => {
+    localStorage.setItem('barghsa.locale', value);
     if (document.documentElement) document.documentElement.lang = value;
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = value;
     }).observe(document, { childList: true });
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        isStaff: staff,
+        operatingContext: staff ? 'staff' : 'customer',
+        canSwitchContext: staff,
+        requiresTosAcceptance: false,
+        navigation: fullNavigation(staff ? 'staff' : 'customer'),
+      },
+    })
+  );
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: zone } })
   );
@@ -82,7 +96,7 @@ for (const locale of ['en', 'fa']) {
   test(`receipt submission uses account time while payment day stays fixed (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
+    await shell(page, locale, true);
     const receipt = {
       transactionId: id,
       walletId: id,
@@ -128,7 +142,7 @@ for (const locale of ['en', 'fa']) {
   test(`due override uses account wall clock, rejects gaps and binds edits to their timezone (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
+    await shell(page, locale, true);
     let accountZone = zone;
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: accountZone } })
@@ -137,12 +151,14 @@ for (const locale of ['en', 'fa']) {
       route.fulfill({ json: [] })
     );
     let dueAt = '2026-11-01T08:30:45.000Z';
+    let dueAtOverride: { dueAt: string; reason: string } | null = null;
     const writes: { dueAt: string; reason: string }[] = [];
     await page.route(`**/api/admin/invoices/${id}/due-at`, (route) => {
       if (route.request().method() === 'POST') {
         const body = route.request().postDataJSON();
         writes.push(body);
         dueAt = body.dueAt;
+        dueAtOverride = body;
       }
       return route.fulfill({
         json: {
@@ -152,7 +168,7 @@ for (const locale of ['en', 'fa']) {
           dueAt,
           state: 'Unpaid',
           canOverride: true,
-          dueAtOverride: null,
+          dueAtOverride,
         },
       });
     });
@@ -166,7 +182,7 @@ for (const locale of ['en', 'fa']) {
         name: locale === 'fa' ? 'بارگذاری' : 'Load',
         exact: true,
       });
-    await expect(page.getByRole('table')).toBeVisible();
+
     await expect
       .poll(() =>
         page.evaluate(
@@ -181,20 +197,18 @@ for (const locale of ['en', 'fa']) {
     await expect(input).toHaveValue('2026-11-01T01:30');
     await page.locator('#override-reason').fill('Customer requested corrected deadline');
     await save.click();
-    await expect.poll(() => writes.length).toBe(1);
-    expect(writes[0]!.dueAt).toBe('2026-11-01T08:30:45.000Z');
+    await expect(input).toBeFocused();
+    expect(writes).toHaveLength(0);
     await input.fill('2026-03-08T02:30');
     await save.click();
     await expect(
-      page
-        .getByRole('alert')
-        .filter({ hasText: locale === 'fa' ? 'تاریخ سررسید نامعتبر است' : 'Due date is invalid' })
+      page.getByRole('alert').filter({ hasText: t('admin.invoices.error.dueAt', locale) })
     ).toBeVisible();
-    expect(writes).toHaveLength(1);
+    expect(writes).toHaveLength(0);
     await input.fill('2026-11-02T10:15');
     await save.click();
-    await expect.poll(() => writes.length).toBe(2);
-    expect(writes[1]!.dueAt).toBe('2026-11-02T18:15:00.000Z');
+    await expect.poll(() => writes.length).toBe(1);
+    expect(writes[0]!.dueAt).toBe('2026-11-02T18:15:00.000Z');
     accountZone = 'Asia/Tokyo';
     await page.evaluate(() => window.dispatchEvent(new Event('barghsa:timezone-changed')));
     await expect(input).toBeDisabled();
@@ -203,6 +217,6 @@ for (const locale of ['en', 'fa']) {
     await load.click();
     await expect(input).toBeEnabled();
     await expect(input).toHaveValue('2026-11-03T03:15');
-    expect(writes).toHaveLength(2);
+    expect(writes).toHaveLength(1);
   });
 }

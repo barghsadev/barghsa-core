@@ -27,6 +27,15 @@ for (const locale of ['fa', 'en'] as const)
         route.fulfill({
           json: {
             appTitle: 'Finance',
+            appTitleFa: 'امور مالی',
+            supportEmail: 'support@example.test',
+            supportPhone: '+982112345678',
+            supportMobile: '+989121234567',
+            backgroundColor: '#f6f7f4',
+            darkBackgroundColor: '#15201c',
+            fontFamily: 'vazirmatn',
+            borderRadiusRem: 0.75,
+            spacingScale: 1,
             slogan: '',
             primaryColor: '#2563eb',
             secondaryColor: '#64748b',
@@ -76,6 +85,11 @@ for (const locale of ['fa', 'en'] as const)
           return route.fulfill({ json: defaults });
         }
         if (attempts.length === 3) return route.fulfill({ json: defaults });
+        defaults = defaults.map((row) =>
+          row.serviceType === 'manual'
+            ? { ...row, periodId: '22222222-2222-4222-8222-222222222222' }
+            : row
+        );
         return route.fulfill({ status: 409, json: { error: { code: 'CONFLICT:STATE' } } });
       });
       await page.route('**/api/auth/step-up', (route) => {
@@ -88,6 +102,7 @@ for (const locale of ['fa', 'en'] as const)
         .addCookies([
           { name: 'barghsa_csrf', value: 'period-csrf', url: new URL(page.url()).origin },
         ]);
+      await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*dark)/);
       const panel = page.locator('#invoice-due-periods');
       const service = panel.getByLabel(fa ? 'نوع خدمت' : 'Service type');
       const days = panel.getByLabel(fa ? 'تعداد روز پس از صدور' : 'Days after issue');

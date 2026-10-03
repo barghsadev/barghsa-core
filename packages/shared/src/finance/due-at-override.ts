@@ -102,11 +102,14 @@ function parseReason(raw: unknown): string | null {
  */
 export function parseDueAtOverrideBody(
   raw: unknown
-): { ok: true; value: ParsedDueAtOverride } | { ok: false; issues: string[] } {
+):
+  | { ok: true; value: ParsedDueAtOverride }
+  | { ok: false; issues: string[]; fields: ('dueAt' | 'reason')[] } {
   if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) {
     return {
       ok: false,
       issues: [DUE_AT_OVERRIDE_ERRORS.BAD_DUE_AT(), DUE_AT_OVERRIDE_ERRORS.BAD_REASON()],
+      fields: ['dueAt', 'reason'],
     };
   }
   const body = raw as Record<string, unknown>;
@@ -119,7 +122,14 @@ export function parseDueAtOverrideBody(
   if (reason === null) issues.push(DUE_AT_OVERRIDE_ERRORS.BAD_REASON());
 
   if (issues.length > 0 || dueAt === null || reason === null) {
-    return { ok: false, issues };
+    return {
+      ok: false,
+      issues,
+      fields: [
+        ...(dueAt === null ? ['dueAt' as const] : []),
+        ...(reason === null ? ['reason' as const] : []),
+      ],
+    };
   }
   return { ok: true, value: { dueAt, reason } };
 }
