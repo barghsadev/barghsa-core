@@ -21,6 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { parseRefundInput } from './refund-input-fields.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
@@ -81,10 +82,8 @@ export class ExternalRefundController {
   @ApiResponse({ status: 200, description: 'Authoritative refund review with confirmation hash' })
   async review(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
     this.authorize(req);
-    const parsed = refundReviewSchema.safeParse(body);
-    if (!parsed.success)
-      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
-    return this.refunds.reviewRequest(parsed.data, req.session, 'external_bank');
+    const input = parseRefundInput(refundReviewSchema, body, ['amount', 'reason']);
+    return this.refunds.reviewRequest(input, req.session, 'external_bank');
   }
   @Post()
   @RequiresStepUp()
@@ -113,10 +112,8 @@ export class ExternalRefundController {
   })
   async request(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
     this.authorize(req);
-    const parsed = refundRequestSchema.safeParse(body);
-    if (!parsed.success)
-      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
-    return this.refunds.request(parsed.data, req.session, req.ip ?? '127.0.0.1', 'external_bank');
+    const input = parseRefundInput(refundRequestSchema, body, ['amount', 'reason']);
+    return this.refunds.request(input, req.session, req.ip ?? '127.0.0.1', 'external_bank');
   }
   @Post(':id/:action/review')
   @HttpCode(200)
@@ -147,17 +144,26 @@ export class ExternalRefundController {
     const parsedId = refundUuid.safeParse(id),
       parsedAction = z
         .enum(['approve', 'reject', 'cancel', 'record-transfer', 'reconcile'])
-        .safeParse(action),
-      parsedBody = decisionSchema.safeParse(body ?? {});
-    if (!parsedId.success || !parsedAction.success || !parsedBody.success)
+        .safeParse(action);
+    if (!parsedId.success || !parsedAction.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    const input = parseRefundInput(
+      decisionSchema,
+      body ?? {},
+      ['reason', 'bankReference'],
+      ['reject', 'cancel'].includes(parsedAction.data)
+        ? ['reason']
+        : ['record-transfer', 'reconcile'].includes(parsedAction.data)
+          ? ['bankReference']
+          : []
+    );
     return this.refunds.reviewDecision(
       parsedId.data,
       parsedAction.data,
-      parsedBody.data.reason,
+      input.reason,
       req.session,
       'external_bank',
-      parsedBody.data.bankReference
+      input.bankReference
     );
   }
   @Post(':id/:action')
@@ -209,19 +215,28 @@ export class ExternalRefundController {
     const parsedId = refundUuid.safeParse(id),
       parsedAction = z
         .enum(['approve', 'reject', 'cancel', 'record-transfer', 'reconcile'])
-        .safeParse(action),
-      parsedBody = decisionConfirmSchema.safeParse(body ?? {});
-    if (!parsedId.success || !parsedAction.success || !parsedBody.success)
+        .safeParse(action);
+    if (!parsedId.success || !parsedAction.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    const input = parseRefundInput(
+      decisionConfirmSchema,
+      body ?? {},
+      ['reason', 'bankReference'],
+      ['reject', 'cancel'].includes(parsedAction.data)
+        ? ['reason']
+        : ['record-transfer', 'reconcile'].includes(parsedAction.data)
+          ? ['bankReference']
+          : []
+    );
     return this.refunds.decide(
       parsedId.data,
       parsedAction.data,
-      parsedBody.data.reason,
+      input.reason,
       req.session,
       req.ip ?? '127.0.0.1',
       'external_bank',
-      parsedBody.data.bankReference,
-      parsedBody.data.expectedReviewHash
+      input.bankReference,
+      input.expectedReviewHash
     );
   }
 }

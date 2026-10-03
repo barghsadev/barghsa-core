@@ -6,6 +6,7 @@ import { ContractRefundQueue } from './ContractRefundQueue.js';
 import { AdminApprovalRequestsView } from '../pages/AdminApprovalRequestsPage.js';
 import type { TeamAction } from './TeamActionDialog.js';
 import { en } from '@barghsa/i18n/contracts';
+import { refundDecisionReviewFixture } from '../test/refund-review-fixtures.js';
 import {
   cancellationRow,
   obligationRow,
@@ -79,6 +80,8 @@ async function click(label: string) {
   );
   expect(button, label).toBeDefined();
   await act(async () => button!.click());
+  if (label === en['cancellation.queue.record-transfer'])
+    await vi.waitFor(() => expect(container.querySelector('[role=dialog]')).not.toBeNull());
 }
 async function set(id: string, value: string) {
   const input = container.querySelector<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(
@@ -204,6 +207,27 @@ it('refund cursor retry and first-page refresh preserve bank references and conf
       : Response.json({}, { status })
   );
   vi.stubGlobal('fetch', fetcher);
+  const reads = globalThis.fetch;
+  vi.stubGlobal('fetch', (url: string, options?: RequestInit) => {
+    if (url.endsWith('/record-transfer/review')) {
+      const body = JSON.parse(options?.body as string);
+      return Promise.resolve(
+        Response.json(
+          refundDecisionReviewFixture(
+            obligationRow.invoiceId,
+            obligationRow.id,
+            'external_bank',
+            'Approved',
+            'record-transfer',
+            body.bankReference,
+            null,
+            obligationRow.amount
+          )
+        )
+      );
+    }
+    return reads(url, options);
+  });
   await act(async () => root.render(<ContractRefundQueue />));
   await set('bank-return-' + obligationRow.id, 'BANK-DRAFT');
   await click(en['cancellation.queue.record-transfer']);
@@ -233,6 +257,27 @@ it('refund denial clears references and invalidates a late successful write', as
       : Response.json({}, { status })
   );
   vi.stubGlobal('fetch', fetcher);
+  const reads = globalThis.fetch;
+  vi.stubGlobal('fetch', (url: string, options?: RequestInit) => {
+    if (url.endsWith('/record-transfer/review')) {
+      const body = JSON.parse(options?.body as string);
+      return Promise.resolve(
+        Response.json(
+          refundDecisionReviewFixture(
+            obligationRow.invoiceId,
+            obligationRow.id,
+            'external_bank',
+            'Approved',
+            'record-transfer',
+            body.bankReference,
+            null,
+            obligationRow.amount
+          )
+        )
+      );
+    }
+    return reads(url, options);
+  });
   await act(async () => root.render(<ContractRefundQueue />));
   await set('bank-return-' + obligationRow.id, 'BANK-DRAFT');
   await click(en['cancellation.queue.record-transfer']);
@@ -255,6 +300,27 @@ it('duplicate refund pages update fresh eligibility once and clear stale confirm
       })
     )
   );
+  const reads = globalThis.fetch;
+  vi.stubGlobal('fetch', (url: string, options?: RequestInit) => {
+    if (url.endsWith('/record-transfer/review')) {
+      const body = JSON.parse(options?.body as string);
+      return Promise.resolve(
+        Response.json(
+          refundDecisionReviewFixture(
+            obligationRow.invoiceId,
+            obligationRow.id,
+            'external_bank',
+            'Approved',
+            'record-transfer',
+            body.bankReference,
+            null,
+            obligationRow.amount
+          )
+        )
+      );
+    }
+    return reads(url, options);
+  });
   await act(async () => root.render(<ContractRefundQueue />));
   await set('bank-return-' + obligationRow.id, 'BANK-DRAFT');
   await click(en['cancellation.queue.record-transfer']);
@@ -276,6 +342,27 @@ it('malformed refund pages recover locally while accepted rows and references re
       )
     )
   );
+  const reads = globalThis.fetch;
+  vi.stubGlobal('fetch', (url: string, options?: RequestInit) => {
+    if (url.endsWith('/record-transfer/review')) {
+      const body = JSON.parse(options?.body as string);
+      return Promise.resolve(
+        Response.json(
+          refundDecisionReviewFixture(
+            obligationRow.invoiceId,
+            obligationRow.id,
+            'external_bank',
+            'Approved',
+            'record-transfer',
+            body.bankReference,
+            null,
+            obligationRow.amount
+          )
+        )
+      );
+    }
+    return reads(url, options);
+  });
   await act(async () => root.render(<ContractRefundQueue />));
   await set('bank-return-' + obligationRow.id, 'BANK-DRAFT');
   malformed = true;

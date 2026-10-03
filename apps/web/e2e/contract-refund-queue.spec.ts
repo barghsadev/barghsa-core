@@ -1,6 +1,9 @@
 import { test, expect } from './coverage-fixture';
 import { en, fa } from '../../../packages/i18n/src/contracts';
 import { t } from '../../../packages/i18n/src/app';
+import { refundDecisionReviewFixture } from './refund-review-fixture';
+const walletId = '55555555-5555-4555-8555-555555555555';
+const bankId = '66666666-6666-4666-8666-666666666666';
 for (const locale of ['en', 'fa'] as const)
   test(
     locale + ': finance retries failed returns and records then reconciles bank transfers',
@@ -38,7 +41,7 @@ for (const locale of ['en', 'fa'] as const)
                 ? [
                     {
                       ...base,
-                      id: 'wallet-return',
+                      id: walletId,
                       amount: '9007199254740993',
                       destination: 'wallet',
                       state: 'Failed',
@@ -51,7 +54,7 @@ for (const locale of ['en', 'fa'] as const)
                 ? [
                     {
                       ...base,
-                      id: 'bank-return',
+                      id: bankId,
                       amount: '400',
                       destination: 'external_bank',
                       state: bankState,
@@ -65,21 +68,87 @@ for (const locale of ['en', 'fa'] as const)
           },
         })
       );
-      await page.route('**/api/admin/wallet-refunds/wallet-return/process', (route) => {
+      await page.route(`**/api/admin/wallet-refunds/${walletId}/process`, (route) => {
         attempts++;
         walletComplete = attempts === 2;
-        return route.fulfill({ json: { state: walletComplete ? 'Completed' : 'Failed' } });
+        return route.fulfill({
+          json: {
+            id: walletId,
+            invoiceId: base.invoiceId,
+            amount: '9007199254740993',
+            destination: 'wallet',
+            state: walletComplete ? 'Completed' : 'Failed',
+            bankReference: null,
+            reconciliationStatus: null,
+          },
+        });
       });
-      await page.route('**/api/admin/external-refunds/bank-return/record-transfer', (route) => {
-        expect(route.request().postDataJSON()).toEqual({ bankReference: 'BANK-123' });
+      await page.route(`**/api/admin/external-refunds/${bankId}/record-transfer`, (route) => {
+        expect(route.request().postDataJSON()).toEqual({
+          bankReference: 'BANK-123',
+          expectedReviewHash: 'b'.repeat(64),
+        });
         bankState = 'Processing';
-        return route.fulfill({ json: { state: bankState } });
+        return route.fulfill({
+          json: {
+            id: bankId,
+            invoiceId: base.invoiceId,
+            amount: '400',
+            destination: 'external_bank',
+            state: bankState,
+            bankReference: 'BANK-123',
+            reconciliationStatus: bankState === 'Processing' ? 'Pending' : 'Confirmed',
+          },
+        });
       });
-      await page.route('**/api/admin/external-refunds/bank-return/reconcile', (route) => {
-        expect(route.request().postDataJSON()).toEqual({ bankReference: 'BANK-123' });
+      await page.route(`**/api/admin/external-refunds/${bankId}/reconcile`, (route) => {
+        expect(route.request().postDataJSON()).toEqual({
+          bankReference: 'BANK-123',
+          expectedReviewHash: 'b'.repeat(64),
+        });
         bankState = 'Completed';
-        return route.fulfill({ json: { state: bankState } });
+        return route.fulfill({
+          json: {
+            id: bankId,
+            invoiceId: base.invoiceId,
+            amount: '400',
+            destination: 'external_bank',
+            state: bankState,
+            bankReference: 'BANK-123',
+            reconciliationStatus: bankState === 'Processing' ? 'Pending' : 'Confirmed',
+          },
+        });
       });
+      await page.route(`**/api/admin/wallet-refunds/${walletId}/process/review`, (route) =>
+        route.fulfill({
+          json: refundDecisionReviewFixture(
+            base.invoiceId,
+            walletId,
+            'wallet',
+            'Failed',
+            'process',
+            null,
+            null,
+            '9007199254740993'
+          ),
+        })
+      );
+      for (const operation of ['record-transfer', 'reconcile'] as const)
+        await page.route(`**/api/admin/external-refunds/${bankId}/${operation}/review`, (route) => {
+          expect(route.request().postDataJSON()).toEqual({ bankReference: 'BANK-123' });
+          return route.fulfill({
+            json: refundDecisionReviewFixture(
+              base.invoiceId,
+              bankId,
+              'external_bank',
+              bankState,
+              operation,
+              'BANK-123',
+              null,
+              '400'
+            ),
+          });
+        });
       await page.goto('/admin/contracts');
       const queue = page.getByRole('region', { name: w.cancellationQueue, exact: true });
       await expect(queue.getByText(w.cancellationQueueExhausted, { exact: true })).toBeVisible();
@@ -106,9 +175,7 @@ for (const locale of ['en', 'fa'] as const)
       await queue
         .getByRole('button', { name: w['cancellation.queue.record-transfer'], exact: true })
         .click();
-      await expect(
-        queue.getByText(w.cancellationBankReferenceRequired, { exact: true })
-      ).toBeVisible();
+      await expect(queue.getByText(w.refundBankReferenceInvalid, { exact: true })).toBeVisible();
       await queue.getByLabel(w.cancellationBankReference, { exact: true }).fill('BANK-123');
       await queue
         .getByRole('button', { name: w['cancellation.queue.record-transfer'], exact: true })

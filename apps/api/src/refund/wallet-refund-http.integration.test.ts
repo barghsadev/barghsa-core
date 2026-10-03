@@ -952,3 +952,53 @@ it('cannot commit a processing grant after the requesting session expires while 
     await pending;
   }
 });
+
+it('returns owned refund fields only after finance and step-up checks without reserving money', async () => {
+  const f = await invoice();
+  const body = { invoiceId: f.id, amount: '0', reason: ' ' };
+  for (const [path, input] of [
+    ['wallet-refunds/review', body],
+    [
+      'wallet-refunds',
+      { ...body, idempotencyKey: randomUUID(), expectedReviewHash: 'a'.repeat(64) },
+    ],
+  ] as const) {
+    const invalid = await fetch(`${http.base}/api/admin/${path}`, {
+      method: 'POST',
+      headers: headers['refund-finance']!,
+      body: JSON.stringify(input),
+    });
+    expect(invalid.status).toBe(400);
+    expect(await invalid.json()).toMatchObject({
+      error: { code: 'VALIDATION:INPUT:INVALID', fields: ['amount', 'reason'] },
+    });
+    const denied = await fetch(`${http.base}/api/admin/${path}`, {
+      method: 'POST',
+      headers: headers['refund-support']!,
+      body: JSON.stringify(input),
+    });
+    expect(denied.status).toBe(403);
+    expect(JSON.stringify(await denied.json())).not.toContain('fields');
+  }
+  const mixed = await post('wallet-refunds', {
+    ...body,
+    invoiceId: 'bad',
+    idempotencyKey: randomUUID(),
+    expectedReviewHash: 'a'.repeat(64),
+  });
+  expect(await mixed.json()).toMatchObject({ error: { code: 'VALIDATION:PARSE:ZOD_ERROR' } });
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='refund-finance'"
+  );
+  const expired = await post('wallet-refunds', {
+    ...body,
+    idempotencyKey: randomUUID(),
+    expectedReviewHash: 'a'.repeat(64),
+  });
+  expect(expired.status).toBe(403);
+  expect(JSON.stringify(await expired.json())).not.toContain('fields');
+  expect(
+    (await http.pool.query('SELECT count(*)::int AS n FROM refunds WHERE invoice_id=$1', [f.id]))
+      .rows[0].n
+  ).toBe(0);
+});

@@ -1,24 +1,26 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
-import { parseRefundDecisionReview, parseRefundRequestReview } from '@barghsa/shared/finance';
-import {
-  Button,
-  Card,
-  CardContent,
-  FinancialReviewSummary,
-  Input,
-  Label,
-  StatusBadge,
-} from '@barghsa/ui';
+import { contractText } from '@barghsa/i18n/contracts';
+import { Button, Card, CardContent, Input, Field, FieldLabel, StatusBadge } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { isInvoiceUuid } from '../lib/due-at-override.js';
+import { isInvoiceUuid } from '../lib/invoice-uuid.js';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
-import { withCsrf } from '../lib/csrf.js';
-import { invoiceFinancialReviewRows } from './InvoiceFinancialReviewRows.js';
+import { documentRequest, DocumentRequestError } from '../lib/documents.js';
+import { requestRefundReview, RefundReviewError } from '../lib/refund-review.js';
+import { validRefundReceipt } from '../lib/refund-receipt.js';
+import {
+  useRefundLookupForm,
+  useRefundRequestForm,
+  type RefundDecisionValues,
+  type RefundOperation,
+} from '../hooks/useRefundForm.js';
+import { RefundDecisionControls, type RefundDecisionDraft } from './RefundDecisionControls.js';
+import { RefundFieldFeedback, RefundFormAlert } from './RefundFormFeedback.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
+const loadRefundSummary = () => import('./RefundFinancialReviewSummary.js');
 interface InvoiceBalance {
   invoiceId: string;
   profileId: string;
@@ -44,12 +46,6 @@ interface RefundPage {
   invoice: InvoiceBalance;
   refunds: WalletRefund[];
   nextBefore: string | null;
-}
-
-function validAmount(value: string, available: string): boolean {
-  if (!/^\d{1,19}$/.test(value) || !/^\d{1,19}$/.test(available)) return false;
-  const amount = BigInt(value);
-  return amount > 0n && amount <= BigInt(available) && amount <= 9223372036854775807n;
 }
 
 function validPage(
@@ -98,15 +94,15 @@ const externalKeys = new Set([
   'secondReviewer',
 ]);
 
-export function RefundPanel({
-  destination,
-  selectedInvoiceId = '',
-}: {
-  destination: 'wallet' | 'external_bank';
-  selectedInvoiceId?: string;
-}) {
-  const locale = useLocale();
-  const numbers = useNumberFormatting(locale);
+type PanelProps = { destination: 'wallet' | 'external_bank'; selectedInvoiceId?: string };
+export function RefundPanel(props: PanelProps) {
+  return (
+    <RefundWorkspace key={props.destination + ':' + (props.selectedInvoiceId ?? '')} {...props} />
+  );
+}
+function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
+  const locale = useLocale(),
+    numbers = useNumberFormatting(locale);
   const word = (key: string) =>
     t(
       `admin.invoices.${destination === 'external_bank' && externalKeys.has(key) ? 'externalRefunds' : 'walletRefunds'}.${key}`,
@@ -114,331 +110,329 @@ export function RefundPanel({
     );
   const path = destination === 'wallet' ? 'wallet-refunds' : 'external-refunds';
   const fieldPrefix = destination === 'wallet' ? 'wallet-refund' : 'external-refund';
-  const [input, setInput] = useState(selectedInvoiceId);
+  const lookup = useRefundLookupForm(selectedInvoiceId, word('invalidInvoiceId'));
+  const [input, setInput] = lookup.field('invoiceId');
   const [invoiceId, setInvoiceId] = useState(
-    isInvoiceUuid(selectedInvoiceId) ? selectedInvoiceId : ''
+    isInvoiceUuid(selectedInvoiceId.trim()) ? selectedInvoiceId.trim().toLowerCase() : ''
   );
   const [invoice, setInvoice] = useState<InvoiceBalance | null>(null);
   const [refunds, setRefunds] = useState<WalletRefund[]>([]);
-  const [before, setBefore] = useState<string | null>(null);
-  const [nextBefore, setNextBefore] = useState<string | null>(null);
-  const [revision, setRevision] = useState(0);
+  const [before, setBefore] = useState<string | null>(null),
+    [nextBefore, setNextBefore] = useState<string | null>(null),
+    [revision, setRevision] = useState(0);
   const [status, setStatus] = useState<'idle' | 'loading' | 'ready' | 'error' | 'denied'>('idle');
-  const [invalidId, setInvalidId] = useState(false);
-  const [amount, setAmount] = useState('');
-  const [reason, setReason] = useState('');
-  const [reasons, setReasons] = useState<Record<string, string>>({});
-  const [references, setReferences] = useState<Record<string, string>>({});
-  const [action, setAction] = useState<TeamAction | null>(null);
-  const [actionSummary, setActionSummary] = useState<React.ReactNode>(null);
-  const [reviewBusy, setReviewBusy] = useState(false);
-  const [reviewError, setReviewError] = useState<'conflict' | 'forbidden' | 'error' | null>(null);
-  const [decisionReviewError, setDecisionReviewError] = useState<
-    'conflict' | 'forbidden' | 'error' | null
-  >(null);
-
+  const draft = useRefundRequestForm(invoice?.availableAmount ?? '0');
+  const [amount, setAmount] = draft.field('amount'),
+    [reason, setReason] = draft.field('reason');
+  const cachedDrafts = useRef<Record<string, RefundDecisionValues>>({});
+  const [action, setAction] = useState<TeamAction | null>(null),
+    [summary, setSummary] = useState<React.ReactNode>(null),
+    [reviewBusy, setReviewBusy] = useState(false);
+  const [reviewError, setReviewError] = useState<'conflict' | 'forbidden' | 'error' | null>(null),
+    [decisionError, setDecisionError] = useState<'conflict' | 'forbidden' | 'error' | null>(null);
+  const live = useRef(false),
+    generation = useRef(0),
+    current = useRef<TeamAction | null>(null),
+    pending = useRef<number | null>(null),
+    reviewController = useRef<AbortController | null>(null),
+    readController = useRef<AbortController | null>(null);
+  const accepted = useRef<{ invoice: InvoiceBalance | null; refunds: WalletRefund[] }>({
+    invoice: null,
+    refunds: [],
+  });
+  const selection = useRef<{ invoice: InvoiceBalance; refund?: WalletRefund } | null>(null);
+  const statusRef = useRef(status);
+  statusRef.current = status;
+  const busy = reviewBusy || !!action;
   useEffect(() => {
-    if (!isInvoiceUuid(selectedInvoiceId)) return;
-    setInput(selectedInvoiceId);
-    setInvoiceId(selectedInvoiceId);
+    live.current = true;
+    return () => {
+      live.current = false;
+      generation.current++;
+      reviewController.current?.abort();
+    };
+  }, []);
+  function close() {
+    generation.current++;
+    current.current = null;
+    pending.current = null;
+    selection.current = null;
+    reviewController.current?.abort();
+    setReviewBusy(false);
+    setAction(null);
+    setSummary(null);
+  }
+  function deny() {
+    close();
+    readController.current?.abort();
+    accepted.current = { invoice: null, refunds: [] };
+    cachedDrafts.current = {};
     setInvoice(null);
     setRefunds([]);
-    setBefore(null);
-    setRevision((value) => value + 1);
-  }, [selectedInvoiceId]);
-
+    setNextBefore(null);
+    setStatus('denied');
+    lookup.form.reset({ invoiceId: '' });
+    draft.form.reset({ amount: '', reason: '' });
+  }
   useEffect(() => {
     if (!invoiceId) return;
     const controller = new AbortController();
+    readController.current = controller;
     setStatus('loading');
-    const url = `/api/admin/${path}?invoiceId=${encodeURIComponent(invoiceId)}${before ? `&before=${encodeURIComponent(before)}` : ''}`;
-    void fetch(url, { credentials: 'include', signal: controller.signal })
-      .then(async (response) => {
-        if (controller.signal.aborted) return null;
-        if (response.status === 403) {
-          setStatus('denied');
-          return null;
-        }
-        if (!response.ok) throw new Error('Refunds unavailable');
-        const data: unknown = await response.json();
-        if (!validPage(data, invoiceId, destination)) throw new Error('Invalid refund page');
-        return data;
-      })
+    void documentRequest<RefundPage>(
+      `/api/admin/${path}?invoiceId=${encodeURIComponent(invoiceId)}${before ? '&before=' + encodeURIComponent(before) : ''}`,
+      { signal: controller.signal }
+    )
       .then((page) => {
-        if (controller.signal.aborted || !page) return;
+        if (controller.signal.aborted) return;
+        if (!validPage(page, invoiceId, destination)) throw new Error('Invalid refund page');
+        const rows = before
+          ? [
+              ...accepted.current.refunds.map(
+                (row) => page.refunds.find((item) => item.id === row.id) ?? row
+              ),
+              ...page.refunds.filter(
+                (row) => !accepted.current.refunds.some((old) => old.id === row.id)
+              ),
+            ]
+          : page.refunds;
+        const selected = selection.current;
+        if (
+          selected &&
+          (JSON.stringify(page.invoice) !== JSON.stringify(selected.invoice) ||
+            (selected.refund &&
+              !rows.some((row) => JSON.stringify(row) === JSON.stringify(selected.refund))))
+        )
+          close();
+        accepted.current = { invoice: page.invoice, refunds: rows };
         setInvoice(page.invoice);
-        setRefunds((current) => {
-          if (!before) return page.refunds;
-          const shown = new Set(current.map((refund) => refund.id));
-          return [...current, ...page.refunds.filter((refund) => !shown.has(refund.id))];
-        });
+        setRefunds(rows);
         setNextBefore(page.nextBefore);
         setStatus('ready');
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setStatus('error');
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) return;
+        if (error instanceof DocumentRequestError && [401, 403, 404].includes(error.status)) deny();
+        else setStatus('error');
       });
     return () => controller.abort();
   }, [invoiceId, before, revision, destination, path]);
-
-  function load(event: FormEvent) {
-    event.preventDefault();
-    const id = input.trim();
-    if (!isInvoiceUuid(id)) {
-      setInvalidId(true);
-      return;
-    }
-    setInvalidId(false);
-    setInvoiceId(id);
-    setInvoice(null);
-    setRefunds([]);
-    setBefore(null);
-    setRevision((value) => value + 1);
-  }
-
   function refresh() {
     setBefore(null);
     setRevision((value) => value + 1);
   }
-
-  async function request() {
+  function load(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (pending.current !== null || current.current || lookup.form.isSubmissionPending()) return;
+    void lookup.form.handleSubmit((values) => {
+      if (!live.current || pending.current !== null || current.current) return;
+      const id = values.invoiceId.trim().toLowerCase();
+      if (id !== invoiceId) {
+        close();
+        accepted.current = { invoice: null, refunds: [] };
+        cachedDrafts.current = {};
+        setInvoice(null);
+        setRefunds([]);
+        draft.form.reset({ amount: '', reason: '' });
+      }
+      setInvoiceId(id);
+      setBefore(null);
+      setRevision((value) => value + 1);
+    })(event);
+  }
+  function claim(refund?: WalletRefund) {
     if (
-      !invoice?.requestable ||
-      !validAmount(amount, invoice.availableAmount) ||
-      !reason.trim() ||
-      reason.trim().length > 1000
+      pending.current !== null ||
+      current.current ||
+      statusRef.current !== 'ready' ||
+      !accepted.current.invoice ||
+      lookup.form.getValues('invoiceId').trim().toLowerCase() !== invoiceId
     )
-      return;
-    const requestedAmount = BigInt(amount).toString();
-    const requestedReason = reason.trim();
+      return null;
+    const owner = ++generation.current;
+    pending.current = owner;
+    selection.current = { invoice: accepted.current.invoice, ...(refund ? { refund } : {}) };
     setReviewBusy(true);
-    setReviewError(null);
-    try {
-      const response = await fetch(`/api/admin/${path}/review`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          invoiceId: invoice.invoiceId,
-          amount: requestedAmount,
-          reason: requestedReason,
-        }),
-      });
-      if (response.status === 403) {
-        setReviewError('forbidden');
-        return;
-      }
-      if (response.status === 409) {
-        setReviewError('conflict');
-        refresh();
-        return;
-      }
-      if (!response.ok) throw new Error('Refund review unavailable');
-      const review = parseRefundRequestReview(await response.json());
-      if (
-        !review ||
-        review.scope.resourceId !== invoice.invoiceId ||
-        review.data.refund.destination !== destination ||
-        review.data.refund.amount !== requestedAmount ||
-        review.data.refund.reason !== requestedReason
-      )
-        throw new Error('Invalid refund review');
-      setAction({
-        title: word('request'),
-        description: word('confirmRequest'),
-        path: `/api/admin/${path}`,
-        method: 'POST',
-        body: {
-          invoiceId: invoice.invoiceId,
-          amount: requestedAmount,
-          reason: requestedReason,
-          idempotencyKey: crypto.randomUUID(),
-          expectedReviewHash: review.hash,
-        },
-        conflictMessage: word('conflict'),
-        forbiddenMessage: word('forbidden'),
-      });
-      setActionSummary(
-        <FinancialReviewSummary
-          title={word('review')}
-          rows={[
-            ...invoiceFinancialReviewRows(review.data, locale, numbers, (value) =>
-              new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
-                dateStyle: 'medium',
-                timeStyle: 'short',
-              }).format(new Date(value))
-            ),
-            {
-              id: 'refunded',
-              label: word('refunded'),
-              value: numbers.money(review.data.refund.refundedBefore),
-            },
-            {
-              id: 'reserved',
-              label: word('reserved'),
-              value: numbers.money(review.data.refund.reservedBefore),
-            },
-            {
-              id: 'available',
-              label: word('available'),
-              value: numbers.money(review.data.refund.availableBefore),
-            },
-            {
-              id: 'availableAfter',
-              label: word('availableAfter'),
-              value: numbers.money(review.data.refund.availableAfter),
-            },
-            {
-              id: 'approval',
-              label: word('approvalRule'),
-              value: word(
-                review.data.refund.approvalRequired ? 'approvalRequired' : 'approvalNotRequired'
-              ),
-            },
-            { id: 'reason', label: word('reason'), value: review.data.refund.reason },
-          ]}
-          total={{ label: word('requestAmount'), value: numbers.money(review.data.refund.amount) }}
-        />
-      );
-    } catch {
-      setReviewError('error');
-    } finally {
-      setReviewBusy(false);
-    }
+    return owner;
   }
-
-  async function decide(
-    refund: WalletRefund,
-    operation: 'approve' | 'reject' | 'cancel' | 'process' | 'record-transfer' | 'reconcile'
+  function owns(owner: number) {
+    return live.current && owner === generation.current && pending.current === owner;
+  }
+  function failure(
+    error: unknown,
+    owner: number,
+    apply: (fields: unknown[]) => boolean,
+    decision: boolean
   ) {
-    if (reviewBusy) return;
-    const decisionReason = reasons[refund.id]?.trim();
-    const bankReference = references[refund.id]?.trim();
-    const submittedReason =
-      operation === 'reject' || operation === 'cancel' ? decisionReason : undefined;
-    if ((operation === 'reject' || operation === 'cancel') && !decisionReason) return;
-    if ((operation === 'record-transfer' || operation === 'reconcile') && !bankReference) return;
-    const body =
-      operation === 'record-transfer' || operation === 'reconcile'
-        ? { bankReference }
-        : submittedReason
-          ? { reason: submittedReason }
-          : {};
-    setReviewBusy(true);
-    setDecisionReviewError(null);
-    try {
-      const actionPath = `/api/admin/${path}/${encodeURIComponent(refund.id)}/${operation}`;
-      const response = await fetch(`${actionPath}/review`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(body),
-      });
-      if (response.status === 403) {
-        setDecisionReviewError('forbidden');
-        return;
-      }
-      if (response.status === 409) {
-        setDecisionReviewError('conflict');
-        refresh();
-        return;
-      }
-      if (!response.ok) throw new Error('Refund decision review unavailable');
-      const review = parseRefundDecisionReview(await response.json());
-      if (
-        !review ||
-        review.scope.resourceId !== refund.id ||
-        review.data.invoice.id !== refund.invoiceId ||
-        review.data.refund.destination !== destination ||
-        review.data.decision.action !== operation ||
-        review.data.decision.reason !== (submittedReason ?? null) ||
-        review.data.decision.bankReference !==
-          (operation === 'record-transfer' || operation === 'reconcile' ? bankReference : null)
-      )
-        throw new Error('Invalid refund decision review');
-      setAction({
-        title: word(operation),
-        description: word('confirmDecision'),
-        path: actionPath,
-        method: 'POST',
-        body: { ...body, expectedReviewHash: review.hash },
-        conflictMessage: word('conflict'),
-        forbiddenMessage: word('forbidden'),
-      });
-      setActionSummary(
-        <FinancialReviewSummary
-          title={word('review')}
-          rows={[
-            ...invoiceFinancialReviewRows(review.data, locale, numbers, (value) =>
-              new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
-                dateStyle: 'medium',
-                timeStyle: 'short',
-              }).format(new Date(value))
-            ),
-            {
-              id: 'state',
-              label: word('state'),
-              value: word(`state.${review.data.refund.state}`),
-            },
-            {
-              id: 'target',
-              label: word('targetState'),
-              value: word(`state.${review.data.decision.targetState}`),
-            },
-            {
-              id: 'refunded',
-              label: word('refunded'),
-              value: numbers.money(review.data.refund.refundedBefore),
-            },
-            {
-              id: 'reserved',
-              label: word('reserved'),
-              value: numbers.money(review.data.refund.reservedBefore),
-            },
-            {
-              id: 'available',
-              label: word('available'),
-              value: numbers.money(review.data.refund.availableBefore),
-            },
-            {
-              id: 'availableAfter',
-              label: word('availableAfter'),
-              value: numbers.money(review.data.refund.availableAfter),
-            },
-            {
-              id: 'approval',
-              label: word('approvalRule'),
-              value: word(
-                review.data.refund.approvalRequired === null
-                  ? 'approvalNotApplicable'
-                  : review.data.refund.approvalRequired
-                    ? 'approvalRequired'
-                    : 'approvalNotRequired'
-              ),
-            },
-            ...(review.data.decision.reason
-              ? [{ id: 'reason', label: word('reason'), value: review.data.decision.reason }]
-              : []),
-            ...(review.data.decision.bankReference
-              ? [
-                  {
-                    id: 'bank',
-                    label: word('bankReference'),
-                    value: review.data.decision.bankReference,
-                  },
-                ]
-              : []),
-          ]}
-          total={{ label: word('requestAmount'), value: numbers.money(review.data.refund.amount) }}
-        />
-      );
-    } catch {
-      setDecisionReviewError('error');
-    } finally {
+    if (!owns(owner)) return;
+    if (error instanceof DocumentRequestError && [401, 403, 404].includes(error.status)) {
+      deny();
+      return;
+    }
+    if (error instanceof RefundReviewError && error.fields && apply(error.fields)) return;
+    (decision ? setDecisionError : setReviewError)(
+      error instanceof DocumentRequestError && error.status === 409 ? 'conflict' : 'error'
+    );
+    if (error instanceof DocumentRequestError && error.status === 409) refresh();
+  }
+  function finish(owner: number) {
+    if (owns(owner)) {
+      pending.current = null;
       setReviewBusy(false);
+      if (!current.current) selection.current = null;
     }
   }
-
+  function request(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!invoice?.requestable || draft.form.isSubmissionPending()) return;
+    const owner = claim();
+    if (owner === null) return;
+    setReviewError(null);
+    void draft.form
+      .handleSubmit(async (values) => {
+        if (!owns(owner) || statusRef.current !== 'ready') return;
+        const selected = selection.current!.invoice;
+        const command = {
+          invoiceId: selected.invoiceId,
+          amount: BigInt(normalizeProfileDigits(values.amount)).toString(),
+          reason: values.reason.trim(),
+        };
+        const controller = new AbortController();
+        reviewController.current = controller;
+        try {
+          const value = await requestRefundReview(
+            `/api/admin/${path}/review`,
+            command,
+            controller.signal
+          );
+          const { parseRefundRequestReview } = await import('@barghsa/shared/finance/refunds');
+          if (!owns(owner)) return;
+          const review = parseRefundRequestReview(value);
+          if (
+            !review ||
+            review.scope.resourceId !== command.invoiceId ||
+            review.data.refund.destination !== destination ||
+            review.data.refund.amount !== command.amount ||
+            review.data.refund.reason !== command.reason
+          )
+            throw new Error('Invalid refund review');
+          const { default: RefundFinancialReviewSummary } = await loadRefundSummary();
+          if (!owns(owner)) return;
+          const chosen: TeamAction = {
+            title: word('request'),
+            description: word('confirmRequest'),
+            path: `/api/admin/${path}`,
+            method: 'POST',
+            body: {
+              ...command,
+              idempotencyKey: crypto.randomUUID(),
+              expectedReviewHash: review.hash,
+            },
+            conflictMessage: word('conflict'),
+            forbiddenMessage: word('forbidden'),
+          };
+          current.current = chosen;
+          setAction(chosen);
+          setSummary(<RefundFinancialReviewSummary review={review} word={word} />);
+          actionTools.current = {
+            apply: draft.applyServerErrors,
+            reset: () => draft.form.reset({ amount: '', reason: '' }),
+            receipt: (result) =>
+              validRefundReceipt(
+                result,
+                { invoiceId: command.invoiceId, destination, amount: command.amount },
+                ['Requested', 'Approved']
+              ),
+          };
+        } catch (error) {
+          failure(error, owner, draft.applyServerErrors, false);
+        }
+      })(event)
+      .finally(() => finish(owner));
+  }
+  const actionTools = useRef<{
+    apply: (fields: unknown[]) => boolean;
+    reset: () => void;
+    receipt: (result: unknown) => boolean;
+  } | null>(null);
+  function decide(refund: WalletRefund, operation: RefundOperation, form: RefundDecisionDraft) {
+    const owner = claim(refund);
+    if (owner === null) return;
+    form.operation.current = operation;
+    setDecisionError(null);
+    const apply = (fields: unknown[]) =>
+      fields.every((field) =>
+        ['reject', 'cancel'].includes(operation)
+          ? field === 'reason'
+          : ['record-transfer', 'reconcile'].includes(operation) && field === 'bankReference'
+      ) && form.applyServerErrors(fields);
+    void form.form
+      .handleSubmit(async (values) => {
+        if (!owns(owner) || statusRef.current !== 'ready') return;
+        const body = ['record-transfer', 'reconcile'].includes(operation)
+          ? { bankReference: values.bankReference.trim() }
+          : ['reject', 'cancel'].includes(operation)
+            ? { reason: values.reason.trim() }
+            : {};
+        const actionPath = `/api/admin/${path}/${encodeURIComponent(refund.id)}/${operation}`;
+        const controller = new AbortController();
+        reviewController.current = controller;
+        try {
+          const value = await requestRefundReview(actionPath + '/review', body, controller.signal);
+          const { parseRefundDecisionReview } = await import('@barghsa/shared/finance/refunds');
+          if (!owns(owner)) return;
+          const review = parseRefundDecisionReview(value);
+          if (
+            !review ||
+            review.scope.resourceId !== refund.id ||
+            review.data.invoice.id !== refund.invoiceId ||
+            review.data.refund.destination !== destination ||
+            review.data.refund.amount !== refund.amount ||
+            review.data.refund.state !== refund.state ||
+            review.data.decision.action !== operation ||
+            review.data.decision.reason !== (body.reason ?? null) ||
+            review.data.decision.bankReference !== (body.bankReference ?? null)
+          )
+            throw new Error('Invalid refund decision review');
+          const { default: RefundFinancialReviewSummary } = await loadRefundSummary();
+          if (!owns(owner)) return;
+          const chosen: TeamAction = {
+            title: word(operation),
+            description: word('confirmDecision'),
+            path: actionPath,
+            method: 'POST',
+            body: { ...body, expectedReviewHash: review.hash },
+            conflictMessage: word('conflict'),
+            forbiddenMessage: word('forbidden'),
+          };
+          current.current = chosen;
+          setAction(chosen);
+          setSummary(<RefundFinancialReviewSummary review={review} word={word} />);
+          actionTools.current = {
+            apply,
+            reset: () => {
+              delete cachedDrafts.current[refund.id];
+              form.form.reset({ reason: '', bankReference: '' });
+            },
+            receipt: (result) =>
+              validRefundReceipt(
+                result,
+                refund,
+                operation === 'process'
+                  ? ['Processing', 'Completed', 'Failed']
+                  : [review.data.decision.targetState],
+                body.bankReference,
+                operation
+              ),
+          };
+        } catch (error) {
+          failure(error, owner, apply, true);
+        }
+      })()
+      .finally(() => finish(owner));
+  }
+  const matches = input.trim().toLowerCase() === invoiceId;
+  const unavailable = status !== 'ready' || busy || !matches;
   return (
     <section
       id={destination === 'wallet' ? 'wallet-refunds-panel' : 'external-refunds-panel'}
@@ -447,89 +441,140 @@ export function RefundPanel({
     >
       <h2 className="text-lg font-semibold">{word('title')}</h2>
       <p className="text-sm text-muted-foreground">{word('description')}</p>
-      <form onSubmit={load} className="flex flex-wrap items-end gap-3">
-        <div className="min-w-64 flex-1 space-y-2">
-          <Label htmlFor={`${fieldPrefix}-invoice`}>{word('invoiceId')}</Label>
+      <form
+        onSubmit={load}
+        noValidate
+        aria-busy={lookup.form.formState.isSubmitting || undefined}
+        className="flex flex-wrap items-end gap-3"
+      >
+        <Field className="min-w-0 flex-1">
+          <FieldLabel htmlFor={fieldPrefix + '-invoice'}>{word('invoiceId')}</FieldLabel>
           <Input
-            id={`${fieldPrefix}-invoice`}
+            id={fieldPrefix + '-invoice'}
             dir="ltr"
             value={input}
-            aria-invalid={invalidId}
-            onChange={(event) => {
-              setInput(event.target.value);
-              setInvalidId(false);
-            }}
+            {...lookup.bind('invoiceId')}
+            disabled={busy || lookup.form.formState.isSubmitting}
+            onChange={(event) => setInput(event.target.value)}
           />
-        </div>
-        <Button type="submit">{word('load')}</Button>
+          <RefundFieldFeedback
+            id={lookup.errorId('invoiceId')}
+            error={lookup.errors.invoiceId}
+            message={word('invalidInvoiceId')}
+          />
+        </Field>
+        <Button type="submit" disabled={busy || lookup.form.formState.isSubmitting}>
+          {lookup.form.formState.isSubmitting && (
+            <span
+              aria-hidden="true"
+              className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+            />
+          )}
+          {word('load')}
+        </Button>
+        <RefundFormAlert message={lookup.errors.root?.validation?.message} />
       </form>
-      {invalidId && <p role="alert">{word('invalidInvoiceId')}</p>}
       {status === 'loading' && <p role="status">{word('loading')}</p>}
-      {status === 'error' && <p role="alert">{word('error')}</p>}
-      {status === 'denied' && <p role="alert">{word('forbidden')}</p>}
-      {invoice && status === 'ready' && (
+      <RefundFormAlert
+        message={
+          status === 'error' ? word('error') : status === 'denied' ? word('forbidden') : undefined
+        }
+      />
+      {invoice && !matches && (
+        <RefundFormAlert message={contractText('refundLoadInvoice', locale)} />
+      )}
+      {invoice && (
         <>
           <Card>
             <CardContent className="space-y-2 pt-6 text-sm">
               <p>
                 {word('state')}: {appText(`invoices.state.${invoice.state}`, locale)}
               </p>
-              <p>
-                {word('paid')}: {numbers.money(invoice.paidAmount)}
-              </p>
-              <p>
-                {word('refunded')}: {numbers.money(invoice.refundedAmount)}
-              </p>
-              <p>
-                {word('reserved')}: {numbers.money(invoice.reservedAmount)}
-              </p>
-              <p className="font-semibold">
-                {word('available')}: {numbers.money(invoice.availableAmount)}
-              </p>
+              {(['paid', 'refunded', 'reserved', 'available'] as const).map((key) => (
+                <p key={key} className={key === 'available' ? 'font-semibold' : undefined}>
+                  {word(key)}:{' '}
+                  {numbers.money(
+                    invoice[
+                      key === 'paid'
+                        ? 'paidAmount'
+                        : key === 'refunded'
+                          ? 'refundedAmount'
+                          : key === 'reserved'
+                            ? 'reservedAmount'
+                            : 'availableAmount'
+                    ]
+                  )}
+                </p>
+              ))}
             </CardContent>
           </Card>
-          {invoice.requestable && (
-            <div className="space-y-3">
-              <div className="space-y-2">
-                <Label htmlFor={`${fieldPrefix}-amount`}>{word('requestAmount')}</Label>
+          {invoice.requestable ? (
+            <form
+              noValidate
+              onSubmit={request}
+              aria-busy={reviewBusy || draft.form.formState.isSubmitting || undefined}
+              className="space-y-3"
+            >
+              <Field>
+                <FieldLabel htmlFor={fieldPrefix + '-amount'}>{word('requestAmount')}</FieldLabel>
                 <Input
-                  id={`${fieldPrefix}-amount`}
+                  id={fieldPrefix + '-amount'}
                   dir="ltr"
                   inputMode="numeric"
                   value={amount}
-                  onChange={(event) => setAmount(normalizeProfileDigits(event.target.value))}
+                  {...draft.bind('amount')}
+                  disabled={unavailable}
+                  onChange={(event) => setAmount(event.target.value)}
                 />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor={`${fieldPrefix}-reason`}>{word('reason')}</Label>
+                <RefundFieldFeedback
+                  id={draft.errorId('amount')}
+                  error={draft.errors.amount}
+                  message={contractText('refundAmountInvalid', locale)}
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor={fieldPrefix + '-reason'}>{word('reason')}</FieldLabel>
                 <Input
-                  id={`${fieldPrefix}-reason`}
+                  id={fieldPrefix + '-reason'}
                   maxLength={1000}
                   value={reason}
+                  {...draft.bind('reason')}
+                  disabled={unavailable}
                   onChange={(event) => setReason(event.target.value)}
                 />
-              </div>
-              <Button
-                disabled={
-                  reviewBusy || !validAmount(amount, invoice.availableAmount) || !reason.trim()
+                <RefundFieldFeedback
+                  id={draft.errorId('reason')}
+                  error={draft.errors.reason}
+                  message={contractText('cancellationReasonInvalid', locale)}
+                />
+              </Field>
+              <RefundFormAlert
+                message={
+                  draft.errors.root?.validation?.message ??
+                  (reviewError ? word(reviewError) : undefined)
                 }
-                onClick={() => void request()}
-              >
+              />
+              <Button type="submit" disabled={unavailable}>
+                {draft.form.formState.isSubmitting && (
+                  <span
+                    aria-hidden="true"
+                    className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                  />
+                )}
                 {word('request')}
               </Button>
-              {reviewBusy && <p role="status">{word('loading')}</p>}
-              {reviewError && <p role="alert">{word(reviewError)}</p>}
-            </div>
+            </form>
+          ) : (
+            <p role="status">{word('notRequestable')}</p>
           )}
-          {!invoice.requestable && <p role="status">{word('notRequestable')}</p>}
           <div className="flex items-center justify-between gap-2">
             <h3 className="font-medium">{word('requests')}</h3>
-            <Button variant="outline" onClick={refresh}>
+            <Button variant="outline" disabled={status === 'loading'} onClick={refresh}>
               {word('refresh')}
             </Button>
           </div>
-          {decisionReviewError && <p role="alert">{word(decisionReviewError)}</p>}
-          {refunds.length === 0 && status === 'ready' && <p>{word('empty')}</p>}
+          <RefundFormAlert message={decisionError ? word(decisionError) : undefined} />
+          {!refunds.length && status === 'ready' && <p>{word('empty')}</p>}
           <ul className="space-y-3">
             {refunds.map((refund) => (
               <li key={refund.id} className="space-y-3 rounded-lg border p-4">
@@ -546,107 +591,25 @@ export function RefundPanel({
                 {refund.approvalRequestId && (
                   <a
                     className="text-primary underline"
-                    href={`/admin/approval-requests?requestId=${encodeURIComponent(refund.approvalRequestId)}`}
+                    href={
+                      '/admin/approval-requests?requestId=' +
+                      encodeURIComponent(refund.approvalRequestId)
+                    }
                   >
                     {word('approval')}
                   </a>
                 )}
-                {(refund.state === 'Requested' || refund.state === 'Approved') && (
-                  <div className="space-y-2">
-                    <Label htmlFor={`${fieldPrefix}-reason-${refund.id}`}>
-                      {word('decisionReason')}
-                    </Label>
-                    <Input
-                      id={`${fieldPrefix}-reason-${refund.id}`}
-                      maxLength={1000}
-                      value={reasons[refund.id] ?? ''}
-                      onChange={(event) =>
-                        setReasons((current) => ({ ...current, [refund.id]: event.target.value }))
-                      }
-                    />
-                  </div>
-                )}
-                {destination === 'external_bank' &&
-                  (refund.state === 'Approved' || refund.state === 'Processing') && (
-                    <div className="space-y-2">
-                      <Label htmlFor={`refund-bank-reference-${refund.id}`}>
-                        {word('bankReference')}
-                      </Label>
-                      <Input
-                        id={`refund-bank-reference-${refund.id}`}
-                        dir="ltr"
-                        maxLength={200}
-                        value={references[refund.id] ?? ''}
-                        onChange={(event) =>
-                          setReferences((current) => ({
-                            ...current,
-                            [refund.id]: event.target.value,
-                          }))
-                        }
-                      />
-                      {refund.state === 'Processing' && (
-                        <p className="text-sm text-muted-foreground">{word('secondReviewer')}</p>
-                      )}
-                    </div>
-                  )}
-                <div className="flex flex-wrap gap-2">
-                  {refund.state === 'Requested' && (
-                    <Button
-                      variant="outline"
-                      disabled={reviewBusy}
-                      onClick={() => void decide(refund, 'approve')}
-                    >
-                      {word('approve')}
-                    </Button>
-                  )}
-                  {refund.state === 'Requested' && (
-                    <Button
-                      variant="outline"
-                      disabled={reviewBusy || !reasons[refund.id]?.trim()}
-                      onClick={() => void decide(refund, 'reject')}
-                    >
-                      {word('reject')}
-                    </Button>
-                  )}
-                  {(refund.state === 'Requested' || refund.state === 'Approved') && (
-                    <Button
-                      variant="outline"
-                      disabled={reviewBusy || !reasons[refund.id]?.trim()}
-                      onClick={() => void decide(refund, 'cancel')}
-                    >
-                      {word('cancel')}
-                    </Button>
-                  )}
-                  {destination === 'wallet' && ['Approved', 'Failed'].includes(refund.state) && (
-                    <Button
-                      variant="outline"
-                      disabled={reviewBusy}
-                      onClick={() => void decide(refund, 'process')}
-                    >
-                      {word('process')}
-                    </Button>
-                  )}
-                  {destination === 'external_bank' && refund.state === 'Approved' && (
-                    <Button
-                      variant="outline"
-                      disabled={reviewBusy || !references[refund.id]?.trim()}
-                      onClick={() => void decide(refund, 'record-transfer')}
-                    >
-                      {word('record-transfer')}
-                    </Button>
-                  )}
-                  {destination === 'external_bank' && refund.state === 'Processing' && (
-                    <Button
-                      variant="outline"
-                      disabled={
-                        reviewBusy || references[refund.id]?.trim() !== refund.bankReference
-                      }
-                      onClick={() => void decide(refund, 'reconcile')}
-                    >
-                      {word('reconcile')}
-                    </Button>
-                  )}
-                </div>
+                <RefundDecisionControls
+                  row={refund}
+                  prefix={fieldPrefix}
+                  word={word}
+                  disabled={unavailable}
+                  initial={cachedDrafts.current[refund.id] ?? { reason: '', bankReference: '' }}
+                  saveDraft={(values) => {
+                    cachedDrafts.current[refund.id] = values;
+                  }}
+                  onChoose={(operation, form) => decide(refund, operation, form)}
+                />
                 {destination === 'wallet' && refund.state === 'Failed' && (
                   <p role="status">
                     {refund.retry?.exhausted ? word('retryExhausted') : word('retryScheduled')}
@@ -656,7 +619,11 @@ export function RefundPanel({
             ))}
           </ul>
           {nextBefore && (
-            <Button variant="outline" onClick={() => setBefore(nextBefore)}>
+            <Button
+              variant="outline"
+              disabled={status === 'loading' || status === 'error'}
+              onClick={() => setBefore(nextBefore)}
+            >
               {word('more')}
             </Button>
           )}
@@ -665,15 +632,24 @@ export function RefundPanel({
       {action && (
         <TeamActionDialog
           action={action}
-          summary={actionSummary}
+          summary={summary}
+          confirmationDisabled={status !== 'ready'}
+          finalFocus={() => document.getElementById(fieldPrefix + '-amount')}
           onClose={() => {
-            setAction(null);
-            setActionSummary(null);
+            if (current.current === action) close();
           }}
-          onSuccess={async () => {
-            setAmount('');
-            setReason('');
-            setReferences({});
+          onDenied={() => {
+            if (live.current && current.current === action) deny();
+          }}
+          onValidationError={(fields) =>
+            live.current && current.current === action && !!actionTools.current?.apply(fields)
+          }
+          onSuccess={async (result) => {
+            if (!live.current || current.current !== action) return;
+            const tools = actionTools.current;
+            if (!tools?.receipt(result)) throw new Error('Refund acknowledgement mismatch');
+            tools.reset();
+            close();
             refresh();
           }}
         />

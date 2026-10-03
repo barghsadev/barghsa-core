@@ -142,6 +142,11 @@ export const en = {
   cancellationValidationUnavailable:
     'Validation is unavailable. Refresh the page before submitting.',
   cancellationReasonInvalid: 'Enter a reason of 1–1,000 characters.',
+  refundAmountInvalid: 'Enter a positive whole IRR amount within the available balance.',
+  refundBankReferenceInvalid: 'Enter a bank reference of 1–200 characters.',
+  refundBankReferenceMismatch: 'Enter the exact recorded bank reference.',
+  refundLoadInvoice: 'Load the entered invoice before making a refund decision.',
+  refundOpen: 'Manage invoice refunds',
   cancellationAmountInvalid:
     'Enter a whole IRR amount from zero to this invoice’s available balance.',
   cancellationDestinationInvalid: 'Choose a return destination.',
@@ -485,6 +490,11 @@ export const fa: Record<keyof typeof en, string> = {
   cancellationValidationUnavailable:
     'اعتبارسنجی در دسترس نیست. پیش از ارسال صفحه را تازه‌سازی کنید.',
   cancellationReasonInvalid: 'دلیل را با ۱ تا ۱٬۰۰۰ نویسه وارد کنید.',
+  refundAmountInvalid: 'مبلغ صحیح و مثبت ریالی در محدوده مانده قابل بازگشت وارد کنید.',
+  refundBankReferenceInvalid: 'شناسه بانکی را با ۱ تا ۲۰۰ نویسه وارد کنید.',
+  refundBankReferenceMismatch: 'شناسه بانکی ثبت‌شده را دقیق وارد کنید.',
+  refundLoadInvoice: 'پیش از تصمیم بازپرداخت، صورتحساب واردشده را بارگذاری کنید.',
+  refundOpen: 'مدیریت بازپرداخت صورتحساب',
   cancellationAmountInvalid: 'مبلغ صحیح ریالی از صفر تا مانده قابل بازگشت این صورتحساب وارد کنید.',
   cancellationDestinationInvalid: 'مقصد بازگشت وجه را انتخاب کنید.',
   cancellationInvalid: 'دلیل لغو و مبلغ صحیح ریالی در محدوده مانده هر صورتحساب را وارد کنید.',

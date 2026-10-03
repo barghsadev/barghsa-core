@@ -572,3 +572,15 @@ it('rolls wallet completion back if its customer notice cannot be persisted', as
   expect(notices).toHaveLength(1);
   expect(notices[0].localized_content.en.body).toContain('returned to your wallet');
 });
+
+it('returns only public bank-reference metadata before a failed external decision can write', async () => {
+  const path = `external-refunds/${randomUUID()}/record-transfer`;
+  const body = { bankReference: ' ', expectedReviewHash: 'a'.repeat(64) };
+  const invalid = await post(path, body);
+  expect(invalid.status).toBe(400);
+  expect(await invalid.json()).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['bankReference'] },
+  });
+  const mixed = await post(path, { ...body, expectedReviewHash: 'bad' });
+  expect(await mixed.json()).toMatchObject({ error: { code: 'VALIDATION:PARSE:ZOD_ERROR' } });
+});

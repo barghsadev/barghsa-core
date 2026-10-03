@@ -92,19 +92,50 @@ for (const locale of ['en', 'fa'] as const)
       });
       state = 'Requested';
       actions.push('request');
-      return route.fulfill({ status: 201, json: { id: refundId, state } });
+      return route.fulfill({
+        status: 201,
+        json: {
+          id: refundId,
+          invoiceId,
+          amount: '40',
+          destination: 'wallet',
+          state,
+          bankReference: null,
+          reconciliationStatus: null,
+        },
+      });
     });
     await page.route(`**/api/admin/wallet-refunds/${refundId}/approve`, (route) => {
       expect(route.request().postDataJSON()).toEqual({ expectedReviewHash: 'b'.repeat(64) });
       state = 'Approved';
       actions.push('approve');
-      return route.fulfill({ json: { id: refundId, state } });
+      return route.fulfill({
+        json: {
+          id: refundId,
+          invoiceId,
+          amount: '40',
+          destination: 'wallet',
+          state,
+          bankReference: null,
+          reconciliationStatus: null,
+        },
+      });
     });
     await page.route(`**/api/admin/wallet-refunds/${refundId}/process`, (route) => {
       expect(route.request().postDataJSON()).toEqual({ expectedReviewHash: 'b'.repeat(64) });
       state = 'Completed';
       actions.push('process');
-      return route.fulfill({ json: { id: refundId, state } });
+      return route.fulfill({
+        json: {
+          id: refundId,
+          invoiceId,
+          amount: '40',
+          destination: 'wallet',
+          state,
+          bankReference: null,
+          reconciliationStatus: null,
+        },
+      });
     });
     for (const operation of ['approve', 'process'] as const)
       await page.route(`**/api/admin/wallet-refunds/${refundId}/${operation}/review`, (route) => {

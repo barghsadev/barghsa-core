@@ -95,7 +95,19 @@ for (const locale of ['en', 'fa'] as const)
       });
       state = 'Requested';
       actions.push('request');
-      return route.fulfill({ status: 201, json: { id: refundId, state } });
+      return route.fulfill({
+        status: 201,
+        json: {
+          id: refundId,
+          invoiceId,
+          amount: '40',
+          destination: 'external_bank',
+          state,
+          bankReference: state === 'Processing' || state === 'Completed' ? bankReference : null,
+          reconciliationStatus:
+            state === 'Processing' ? 'Pending' : state === 'Completed' ? 'Confirmed' : null,
+        },
+      });
     });
     for (const [operation, next] of [
       ['approve', 'Approved'],
@@ -110,7 +122,18 @@ for (const locale of ['en', 'fa'] as const)
         );
         state = next;
         actions.push(operation);
-        return route.fulfill({ json: { id: refundId, state } });
+        return route.fulfill({
+          json: {
+            id: refundId,
+            invoiceId,
+            amount: '40',
+            destination: 'external_bank',
+            state,
+            bankReference: state === 'Processing' || state === 'Completed' ? bankReference : null,
+            reconciliationStatus:
+              state === 'Processing' ? 'Pending' : state === 'Completed' ? 'Confirmed' : null,
+          },
+        });
       });
     for (const operation of ['approve', 'record-transfer', 'reconcile'] as const)
       await page.route(`**/api/admin/external-refunds/${refundId}/${operation}/review`, (route) => {

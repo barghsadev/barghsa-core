@@ -1,26 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
-import {
-  Alert,
-  AlertDescription,
-  Button,
-  Field,
-  FieldLabel,
-  Input,
-  ListPage,
-  PageLoading,
-  StatusBadge,
-} from '@barghsa/ui';
+import { Alert, AlertDescription, Button, ListPage, PageLoading, StatusBadge } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
+import { t as adminText } from '@barghsa/i18n/admin-ui';
+import { RefundDecisionControls, type RefundDecisionDraft } from './RefundDecisionControls.js';
+import { RefundFormAlert } from './RefundFormFeedback.js';
+import { requestRefundReview, RefundReviewError } from '../lib/refund-review.js';
+import { validRefundReceipt } from '../lib/refund-receipt.js';
+import type { RefundDecisionValues, RefundOperation } from '../hooks/useRefundForm.js';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { documentRequest, DocumentRequestError } from '../lib/documents.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+const loadRefundSummary = () => import('./RefundFinancialReviewSummary.js');
 interface Obligation {
   id: string;
   contractId: string;
   invoiceId: string;
   amount: string;
-  destination: string;
+  destination: 'wallet' | 'external_bank';
   state: string;
   bankReference: string | null;
   nextAttemptAt: string | null;
@@ -41,21 +38,41 @@ export function ContractRefundQueue() {
   const [loading, setLoading] = useState(true),
     [error, setError] = useState(false),
     [denied, setDenied] = useState(false);
-  const acceptedRows = useRef<Obligation[]>([]);
-  const selected = useRef<Obligation | null>(null);
-  const accessDenied = useRef(false);
-  const generation = useRef(0);
+  const acceptedRows = useRef<Obligation[]>([]),
+    selected = useRef<Obligation | null>(null),
+    accessDenied = useRef(false),
+    generation = useRef(0);
+  const drafts = useRef<Record<string, RefundDecisionValues>>({});
+  const [action, setAction] = useState<TeamAction | null>(null),
+    [reviewBusy, setReviewBusy] = useState(false),
+    [reviewError, setReviewError] = useState<string | null>(null),
+    [summary, setSummary] = useState<React.ReactNode>(null);
+  const pending = useRef<number | null>(null),
+    current = useRef<TeamAction | null>(null),
+    reviewController = useRef<AbortController | null>(null),
+    readController = useRef<AbortController | null>(null);
+  const actionTools = useRef<{
+    apply: (fields: unknown[]) => boolean;
+    receipt: (result: unknown) => boolean;
+    reset: () => void;
+  } | null>(null);
+  const financialWord = (key: string) =>
+    adminText(
+      `admin.invoices.${key === 'bankReference' ? 'externalRefunds' : 'walletRefunds'}.${key}`,
+      locale
+    );
+  const formWord = (key: string) =>
+    key === 'bankReference' ? word('cancellationBankReference') : word('cancellation.queue.' + key);
   useEffect(
     () => () => {
       ++generation.current;
+      reviewController.current?.abort();
     },
     []
   );
-  const [references, setReferences] = useState<Record<string, string>>({}),
-    [invalid, setInvalid] = useState<string | null>(null),
-    [action, setAction] = useState<TeamAction | null>(null);
   useEffect(() => {
     const controller = new AbortController();
+    readController.current = controller;
     setLoading(true);
     setError(false);
     void documentRequest<{ obligations: Obligation[]; nextBefore: string | null }>(
@@ -87,18 +104,11 @@ export function ContractRefundQueue() {
         setRows(items);
         setNext(page.nextBefore);
       })
-      .catch((e) => {
+      .catch((failure) => {
         if (controller.signal.aborted) return;
-        if (e instanceof DocumentRequestError && [401, 403].includes(e.status)) {
-          accessDenied.current = true;
-          acceptedRows.current = [];
-          clearAction();
-          setRows([]);
-          setNext(null);
-          setReferences({});
-          setInvalid(null);
-          setDenied(true);
-        } else setError(true);
+        if (failure instanceof DocumentRequestError && [401, 403, 404].includes(failure.status))
+          deny();
+        else setError(true);
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
@@ -108,47 +118,158 @@ export function ContractRefundQueue() {
   function refresh() {
     setCursor(null);
     setNext(null);
-    setReload((n) => n + 1);
+    setReload((value) => value + 1);
   }
   function clearAction() {
     ++generation.current;
     selected.current = null;
+    current.current = null;
+    pending.current = null;
+    reviewController.current?.abort();
+    setReviewBusy(false);
     setAction(null);
+    setSummary(null);
   }
-  function choose(row: Obligation, command: 'process' | 'record-transfer' | 'reconcile') {
+  function deny() {
+    accessDenied.current = true;
+    readController.current?.abort();
+    acceptedRows.current = [];
+    clearAction();
+    drafts.current = {};
+    setRows([]);
+    setNext(null);
+    setDenied(true);
+    setLoading(false);
+  }
+  function choose(row: Obligation, command: RefundOperation, form: RefundDecisionDraft) {
     if (
       loading ||
       error ||
       accessDenied.current ||
+      pending.current !== null ||
+      current.current ||
       !(command === 'process'
         ? row.destination === 'wallet' && row.state === 'Failed' && row.exhausted
         : row.destination === 'external_bank' &&
           row.state === (command === 'record-transfer' ? 'Approved' : 'Processing'))
     )
       return;
-    const bankReference = command === 'reconcile' ? row.bankReference : references[row.id]?.trim();
-    if (command !== 'process' && (!bankReference || bankReference.length > 200)) {
-      setInvalid(row.id);
-      return;
-    }
-    setInvalid(null);
-    ++generation.current;
+    const owner = ++generation.current;
+    pending.current = owner;
     selected.current = row;
-    setAction({
-      title: word('cancellation.queue.' + command),
-      description: word(
-        command === 'reconcile'
-          ? 'cancellationQueueReconcileNotice'
-          : 'cancellationQueueRetryNotice'
-      ),
-      path: `/api/admin/${row.destination === 'wallet' ? 'wallet-refunds' : 'external-refunds'}/${row.id}/${command}`,
-      method: 'POST',
-      body: command === 'process' ? {} : { bankReference },
-      conflictMessage: word('cancellationConflict'),
-      forbiddenMessage: word('denied'),
-    });
+    setReviewBusy(true);
+    setReviewError(null);
+    form.operation.current = command;
+    if (command === 'reconcile') form.form.setValue('bankReference', row.bankReference ?? '');
+    const owns = () =>
+      !accessDenied.current && owner === generation.current && pending.current === owner;
+    const apply = (fields: unknown[]) =>
+      command === 'record-transfer' && form.applyServerErrors(fields);
+    void form.form
+      .handleSubmit(async (values) => {
+        if (!owns()) return;
+        const body = command === 'process' ? {} : { bankReference: values.bankReference.trim() };
+        const actionPath = `/api/admin/${row.destination === 'wallet' ? 'wallet-refunds' : 'external-refunds'}/${row.id}/${command}`;
+        const controller = new AbortController();
+        reviewController.current = controller;
+        try {
+          const value = await requestRefundReview(actionPath + '/review', body, controller.signal);
+          const { parseRefundDecisionReview } = await import('@barghsa/shared/finance/refunds');
+          if (!owns()) return;
+          const review = parseRefundDecisionReview(value);
+          if (
+            !review ||
+            review.scope.resourceId !== row.id ||
+            review.data.invoice.id !== row.invoiceId ||
+            review.data.refund.destination !== row.destination ||
+            review.data.refund.amount !== row.amount ||
+            review.data.refund.state !== row.state ||
+            review.data.decision.action !== command ||
+            review.data.decision.bankReference !== (body.bankReference ?? null) ||
+            review.data.decision.reason !== null
+          )
+            throw new Error('Invalid obligation review');
+          const { default: RefundFinancialReviewSummary } = await loadRefundSummary();
+          if (!owns()) return;
+          const chosen: TeamAction = {
+            title: word('cancellation.queue.' + command),
+            description: word(
+              command === 'reconcile'
+                ? 'cancellationQueueReconcileNotice'
+                : 'cancellationQueueRetryNotice'
+            ),
+            path: actionPath,
+            method: 'POST',
+            body: { ...body, expectedReviewHash: review.hash },
+            conflictMessage: word('cancellationConflict'),
+            forbiddenMessage: word('denied'),
+          };
+          current.current = chosen;
+          setAction(chosen);
+          setSummary(<RefundFinancialReviewSummary review={review} word={financialWord} />);
+          actionTools.current = {
+            apply,
+            reset: () => {
+              delete drafts.current[row.id];
+              form.form.reset({ reason: '', bankReference: '' });
+            },
+            receipt: (result) =>
+              validRefundReceipt(
+                result,
+                row,
+                command === 'process'
+                  ? ['Processing', 'Completed', 'Failed']
+                  : [review.data.decision.targetState],
+                body.bankReference,
+                command
+              ),
+          };
+        } catch (failure) {
+          if (!owns()) return;
+          if (failure instanceof DocumentRequestError && [401, 403, 404].includes(failure.status)) {
+            deny();
+            return;
+          }
+          if (failure instanceof RefundReviewError && failure.fields && apply(failure.fields))
+            return;
+          setReviewError(
+            word(
+              failure instanceof DocumentRequestError && failure.status === 409
+                ? 'cancellationConflict'
+                : 'cancellationQueueError'
+            )
+          );
+          if (failure instanceof DocumentRequestError && failure.status === 409) refresh();
+        }
+      })()
+      .finally(() => {
+        if (owns()) {
+          pending.current = null;
+          setReviewBusy(false);
+          if (!current.current) selected.current = null;
+        }
+      });
   }
   const actionGeneration = generation.current;
+  const controls = (row: Obligation) => (
+    <RefundDecisionControls
+      row={row}
+      referenceOnly
+      prefix="contract-refund"
+      word={formWord}
+      disabled={loading || error || reviewBusy || !!action}
+      initial={
+        drafts.current[row.id] ?? {
+          reason: '',
+          bankReference: row.state === 'Processing' ? (row.bankReference ?? '') : '',
+        }
+      }
+      saveDraft={(values) => {
+        drafts.current[row.id] = values;
+      }}
+      onChoose={(operation, form) => choose(row, operation, form)}
+    />
+  );
   if (denied) return null;
   return (
     <section
@@ -166,6 +287,7 @@ export function ContractRefundQueue() {
           </div>
         </ListPage.Toolbar>
         <p className="text-sm text-muted-foreground">{word('cancellationQueueNotice')}</p>
+        <RefundFormAlert message={reviewError ?? undefined} />
         <ListPage.Content
           loading={loading}
           error={error}
@@ -175,7 +297,11 @@ export function ContractRefundQueue() {
           errorView={
             <Alert variant="destructive">
               <AlertDescription>{word('cancellationQueueError')}</AlertDescription>
-              <Button type="button" variant="outline" onClick={() => setReload((n) => n + 1)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setReload((value) => value + 1)}
+              >
                 {word('retry')}
               </Button>
             </Alert>
@@ -195,75 +321,35 @@ export function ContractRefundQueue() {
                 <p className="break-all text-xs text-muted-foreground">
                   {word('cancellationQueueContract')}: <bdi>{row.contractId}</bdi>
                 </p>
-                {row.orderId ? (
+                {row.orderId && (
                   <p className="break-all text-xs text-muted-foreground">
                     {t('electricity.order.success.order', locale)}: <bdi>{row.orderId}</bdi>
                   </p>
-                ) : null}
+                )}
                 <p className="break-all text-xs text-muted-foreground">
                   {word('cancellationInvoice')}: <bdi>{row.invoiceId}</bdi>
                 </p>
-                {row.destination === 'wallet' && row.state === 'Failed' ? (
-                  row.exhausted ? (
+                {row.destination === 'wallet' &&
+                  row.state === 'Failed' &&
+                  (row.exhausted ? (
                     <>
                       <p className="text-sm">{word('cancellationQueueExhausted')}</p>
-                      <Button
-                        variant="outline"
-                        className="self-start"
-                        disabled={loading || error}
-                        onClick={() => choose(row, 'process')}
-                      >
-                        {word('cancellation.queue.process')}
-                      </Button>
+                      {controls(row)}
                     </>
                   ) : (
                     <p className="text-sm">{word('cancellationQueueScheduled')}</p>
-                  )
-                ) : null}
-                {row.destination === 'external_bank' && row.state === 'Approved' ? (
-                  <>
-                    <Field>
-                      <FieldLabel htmlFor={'bank-return-' + row.id}>
-                        {word('cancellationBankReference')}
-                      </FieldLabel>
-                      <Input
-                        id={'bank-return-' + row.id}
-                        dir="ltr"
-                        maxLength={200}
-                        value={references[row.id] ?? ''}
-                        onChange={(e) =>
-                          setReferences((old) => ({ ...old, [row.id]: e.target.value }))
-                        }
-                      />
-                    </Field>
-                    <Button
-                      variant="outline"
-                      className="self-start"
-                      disabled={loading || error}
-                      onClick={() => choose(row, 'record-transfer')}
-                    >
-                      {word('cancellation.queue.record-transfer')}
-                    </Button>
-                  </>
-                ) : null}
-                {row.destination === 'external_bank' && row.state === 'Processing' ? (
-                  <>
-                    <p className="text-sm">
-                      {word('cancellationBankReference')}: <bdi>{row.bankReference}</bdi>
-                    </p>
-                    <Button
-                      variant="outline"
-                      className="self-start"
-                      disabled={loading || error}
-                      onClick={() => choose(row, 'reconcile')}
-                    >
-                      {word('cancellation.queue.reconcile')}
-                    </Button>
-                  </>
-                ) : null}
-                {invalid === row.id ? (
-                  <p role="alert">{word('cancellationBankReferenceRequired')}</p>
-                ) : null}
+                  ))}
+                {row.destination === 'external_bank' &&
+                  ['Approved', 'Processing'].includes(row.state) && (
+                    <>
+                      {row.state === 'Processing' && (
+                        <p className="text-sm">
+                          {word('cancellationBankReference')}: <bdi>{row.bankReference}</bdi>
+                        </p>
+                      )}
+                      {controls(row)}
+                    </>
+                  )}
               </li>
             ))}
           </ul>
@@ -279,27 +365,39 @@ export function ContractRefundQueue() {
           }}
         />
       </ListPage>
-      {action ? (
+      {action && (
         <TeamActionDialog
           action={action}
+          summary={summary}
+          confirmationDisabled={loading || error || accessDenied.current}
           onClose={() => {
-            if (actionGeneration === generation.current) clearAction();
+            if (actionGeneration === generation.current && current.current === action)
+              clearAction();
           }}
-          onSuccess={async () => {
-            if (accessDenied.current || actionGeneration !== generation.current) return;
-            const id = selected.current?.id;
+          onDenied={() => {
+            if (actionGeneration === generation.current && current.current === action) deny();
+          }}
+          onValidationError={(fields) =>
+            actionGeneration === generation.current &&
+            current.current === action &&
+            !!actionTools.current?.apply(fields)
+          }
+          onSuccess={async (result) => {
+            if (
+              accessDenied.current ||
+              actionGeneration !== generation.current ||
+              current.current !== action
+            )
+              return;
+            const tools = actionTools.current;
+            if (!tools?.receipt(result))
+              throw new Error('Refund obligation acknowledgement mismatch');
+            tools.reset();
             clearAction();
-            if (id)
-              setReferences((old) => {
-                const next = { ...old };
-                delete next[id];
-                return next;
-              });
-            setInvalid(null);
             refresh();
           }}
         />
-      ) : null}
+      )}
     </section>
   );
 }

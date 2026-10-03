@@ -1,9 +1,11 @@
 import InvoiceCorrectionsPanel from '../components/InvoiceCorrectionsPanel.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
+import { contractText } from '@barghsa/i18n/contracts';
+import { Button } from '@barghsa/ui';
 import {
   DUE_AT_OVERRIDE_REASON_MAX_LENGTH,
   parseDueAtOverrideBody,
@@ -25,7 +27,9 @@ import ManualInvoicePanel from '../components/ManualInvoicePanel.js';
 import ServiceDuePeriodPanel from '../components/ServiceDuePeriodPanel.js';
 import { InvoiceBankReceiptQueue } from '../components/InvoiceBankReceiptQueue.js';
 import { InvoiceLedger } from '../components/InvoiceLedger.js';
-import { RefundPanel } from '../components/RefundPanel.js';
+const RefundPanel = lazy(() =>
+  import('../components/RefundPanel.js').then((module) => ({ default: module.RefundPanel }))
+);
 
 /**
  * Staff dueAt override page (T-04.1.03.03).
@@ -83,6 +87,7 @@ export default function AdminInvoicesPage({ queries }: { queries?: InvoiceListQu
         ? ''
         : new URLSearchParams(window.location.search).get('invoiceId')) ?? ''
   );
+  const [showRefunds, setShowRefunds] = useState(() => !!refundInvoiceId);
   const [localReceiptQueue, setLocalReceiptQueue] = useState(false);
   const showReceiptQueue = queries?.receiptsOpen ?? localReceiptQueue;
   const setShowReceiptQueue = (value: boolean, history?: boolean) =>
@@ -270,7 +275,8 @@ export default function AdminInvoicesPage({ queries }: { queries?: InvoiceListQu
         }}
         onSelectForRefund={(id) => {
           setRefundInvoiceId(id);
-          document.getElementById('wallet-refunds-panel')?.scrollIntoView?.({ block: 'start' });
+          setShowRefunds(true);
+          document.getElementById('invoice-refunds-panel')?.scrollIntoView?.({ block: 'start' });
         }}
         onOpenReceipt={(receiptId, state) => {
           setReceiptSelection((current) => ({
@@ -284,8 +290,20 @@ export default function AdminInvoicesPage({ queries }: { queries?: InvoiceListQu
       />
       <ManualInvoicePanel />
       <InvoiceCorrectionsPanel />
-      <RefundPanel destination="wallet" selectedInvoiceId={refundInvoiceId} />
-      <RefundPanel destination="external_bank" selectedInvoiceId={refundInvoiceId} />
+      <section id="invoice-refunds-panel" className="space-y-4">
+        {showRefunds ? (
+          <Suspense
+            fallback={<p role="status">{t('admin.invoices.walletRefunds.loading', locale)}</p>}
+          >
+            <RefundPanel destination="wallet" selectedInvoiceId={refundInvoiceId} />
+            <RefundPanel destination="external_bank" selectedInvoiceId={refundInvoiceId} />
+          </Suspense>
+        ) : (
+          <Button type="button" variant="outline" onClick={() => setShowRefunds(true)}>
+            {contractText('refundOpen', locale)}
+          </Button>
+        )}
+      </section>
       {pendingAction && (
         <TeamActionDialog
           action={pendingAction}

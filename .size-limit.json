@@ -121,6 +121,24 @@
     "limitKB": 15
   },
   {
+    "name": "Refund workspace on demand",
+    "phase": "interaction",
+    "entries": ["src/components/RefundPanel.tsx"],
+    "limitKB": 160
+  },
+  {
+    "name": "Refund financial summary on demand",
+    "phase": "interaction",
+    "entries": ["src/components/RefundFinancialReviewSummary.tsx"],
+    "limitKB": 60
+  },
+  {
+    "name": "Refund form validation on demand",
+    "phase": "interaction",
+    "entries": ["src/lib/refund-form-schemas.ts"],
+    "limitKB": 20
+  },
+  {
     "name": "Cancellation form validation on demand",
     "phase": "interaction",
     "entries": ["src/lib/cancellation-form-schemas.ts"],
