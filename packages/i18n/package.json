@@ -226,6 +226,11 @@
       "types": "./dist/invoice-financial-review.d.ts",
       "import": "./dist/invoice-financial-review.js",
       "default": "./dist/invoice-financial-review.js"
+    },
+    "./staff-team-forms": {
+      "types": "./dist/staff-team-forms.d.ts",
+      "import": "./dist/staff-team-forms.js",
+      "default": "./dist/staff-team-forms.js"
     }
   },
   "scripts": {

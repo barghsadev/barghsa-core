@@ -38,6 +38,7 @@ vi.mock('../components/TeamActionDialog.js', () => ({
 }));
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   vi.useFakeTimers();
   document.documentElement.lang = 'en';
   host = document.createElement('div');
@@ -67,6 +68,10 @@ async function click(label: string) {
   );
   expect(button, label).toBeDefined();
   await act(async () => button!.click());
+  if (label === 'Save team' || label === 'Save assignment rules') {
+    await vi.dynamicImportSettled();
+    await act(async () => {});
+  }
 }
 async function fill(selector: string, value: string) {
   const el = host.querySelector<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(
@@ -407,7 +412,7 @@ it('a successful team edit does not discard an unrelated unsaved routing draft',
   await tick();
   await fill('#staff-team-name', 'Edited finance');
   await click('Save team');
-  await act(async () => captured.success!({ ok: true }));
+  await act(async () => captured.success!({ ...staffTeam, ...(captured.action!.body as object) }));
   expect(host.querySelector<HTMLSelectElement>('#team-ticket')!.value).toBe(staffTeamId);
   expect(
     fetcher.mock.calls.filter(([url]) => String(url).endsWith('/assignment-rules'))
@@ -488,7 +493,7 @@ it('deleting a listed team preserves an unrelated new-team draft', async () => {
   await fill('#staff-team-description', 'Keep this unsaved description');
   await click('Delete team');
   deleted = true;
-  await act(async () => captured.success!({ ok: true }));
+  await act(async () => captured.success!({ deleted: true }));
   expect(host.querySelector<HTMLInputElement>('#staff-team-name')!.value).toBe(
     'Unrelated new team'
   );

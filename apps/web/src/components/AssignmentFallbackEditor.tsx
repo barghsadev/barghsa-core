@@ -13,12 +13,14 @@ export function AssignmentFallbackEditor({
   teams,
   label,
   onChange,
+  feedback,
 }: {
   workType: string;
   rule: StaffAssignmentRule;
   teams: Array<{ id: string; name: string; isActive: boolean }>;
   label: (key: string) => string;
   onChange: (rule: StaffAssignmentRule) => void;
+  feedback?: { 'aria-invalid': boolean | undefined; 'aria-describedby': string };
 }) {
   const choices: StaffAssignmentChoice[] = rule.teamId
     ? [{ teamId: rule.teamId, strategy: rule.strategy }, ...(rule.fallbacks ?? [])]
@@ -61,6 +63,7 @@ export function AssignmentFallbackEditor({
                 {label('team')} {number}
               </Label>
               <select
+                {...feedback}
                 id={teamId}
                 className="block rounded border p-2"
                 value={choice.teamId}
@@ -95,6 +98,7 @@ export function AssignmentFallbackEditor({
                 {label('strategy')} {number}
               </Label>
               <select
+                {...feedback}
                 id={strategyId}
                 className="block rounded border p-2"
                 value={choice.strategy}

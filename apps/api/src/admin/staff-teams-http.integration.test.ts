@@ -56,6 +56,36 @@ async function team() {
   expect(response.status, http.logs()).toBe(201);
   return (await response.json()) as { id: string; name: string };
 }
+it('returns owned field errors over HTTP without reflecting submitted values', async () => {
+  const created = await team();
+  for (const [path, method, body, fields] of [
+    ['staff-teams', 'POST', { name: '', skillTags: ['PRIVATE', 'PRIVATE'] }, ['name', 'tags']],
+    [
+      `staff-teams/${created.id}`,
+      'PUT',
+      { memberUserIds: ['member'], leadUserId: 'PRIVATE' },
+      ['leadUserId'],
+    ],
+    ['config/assignment-rules', 'PUT', { ticket: { strategy: 'PRIVATE' } }, ['ticketRule']],
+  ] as const) {
+    const response = await call(path, method, body),
+      result = (await response.json()) as { error: { code: string; fields: string[] } };
+    expect(response.status).toBe(400);
+    expect(result.error).toMatchObject({ code: 'VALIDATION:INPUT:INVALID', fields });
+    expect(JSON.stringify(result)).not.toContain('PRIVATE');
+  }
+});
+it('validates a partial lead update against persisted members within the transaction', async () => {
+  const created = await team();
+  const response = await call(`staff-teams/${created.id}`, 'PUT', { leadUserId: 'PRIVATE' });
+  expect(response.status).toBe(400);
+  const body = (await response.json()) as { error: { fields: string[] } };
+  expect(body.error.fields).toEqual(['leadUserId']);
+  expect(JSON.stringify(body)).not.toContain('PRIVATE');
+  const accepted = await call(`staff-teams/${created.id}`, 'PUT', { leadUserId: 'member' });
+  expect(accepted.status).toBe(200);
+  expect((await accepted.json()) as { leadUserId: string }).toMatchObject({ leadUserId: 'member' });
+});
 it('requires current capability and password confirmation for every team/rule mutation', async () => {
   const created = await team();
   await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='admin'");

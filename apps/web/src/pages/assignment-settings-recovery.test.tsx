@@ -11,6 +11,7 @@ import {
 import { isAgentSlots, isAssignmentAgents, isResponseTargets } from '../lib/assignment-settings.js';
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   document.documentElement.lang = 'en';
   host = document.createElement('div');
   document.body.append(host);
@@ -50,6 +51,8 @@ async function submit(selector = 'form') {
       .querySelector(selector)!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
+  await vi.dynamicImportSettled();
+  await act(async () => {});
 }
 const confirm = () =>
   document.querySelector<HTMLButtonElement>('[role=dialog] button[type=submit]')!;
@@ -309,7 +312,7 @@ it('changed saved targets retain local edits and invalidate confirmation until r
   await click('Reset to current targets');
   expect(target().value).toBe('48');
 });
-it('targets reject mismatched acknowledgement and retain the exact proposal for retry', async () => {
+it('targets reject mismatched acknowledgement and require authoritative recovery before another write', async () => {
   let valid = false,
     persisted = { ticket: 24, verification_case: null as number | null };
   const requests = targetReads({
@@ -326,7 +329,13 @@ it('targets reject mismatched acknowledgement and retain the exact proposal for 
   expect(document.querySelector('[role=dialog] [role=alert]')).not.toBeNull();
   expect(target().value).toBe('72');
   expect(host.textContent).not.toContain('Changes saved.');
+  expect(confirm().disabled).toBe(true);
+  await submit('[role=dialog] form');
+  expect(requests.mock.calls.filter(([, init]) => init?.method === 'PUT')).toHaveLength(1);
+  await click('Cancel', true);
   valid = true;
+  await click('Refresh response targets');
+  await submit();
   await submit('[role=dialog] form');
   expect(document.querySelector('[role=dialog]')).toBeNull();
   expect(target().value).toBe('72');

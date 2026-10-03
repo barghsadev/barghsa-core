@@ -9,7 +9,7 @@ import {
 /** Only public field identifiers are accepted; messages always come from the owning form. */
 export function useActionFieldErrors<Values extends FieldValues>(
   form: UseFormReturn<Values>,
-  messages: Record<FieldPath<Values>, string>,
+  messages: Partial<Record<FieldPath<Values>, string>>,
   fallback: string
 ) {
   const pendingFocus = useRef<FieldPath<Values> | null>(null);
@@ -35,7 +35,9 @@ export function useActionFieldErrors<Values extends FieldValues>(
           pendingFocus.current = field;
         },
       },
-      Object.fromEntries(names.map((name) => [name, messages[name as FieldPath<Values>]])),
+      Object.fromEntries(
+        names.map((name) => [name, messages[name as FieldPath<Values>] ?? fallback])
+      ),
       fields,
       fallback
     );

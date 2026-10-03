@@ -7,8 +7,24 @@ import type {
 } from './electricity-settings-form.js';
 import { custom } from 'zod/mini';
 import type { ServiceDraft, ServiceField } from './service-settings-form.js';
+import type { TeamDraft, RoutingDraft } from './staff-team-form.js';
 import type { Draft, PriceDraft, ProductType } from './catalogue-form.js';
 import type { AgreementDraft, InventoryDraft } from './saving-catalogue-form.js';
+
+export function staffTeamSchema<Draft extends TeamDraft | RoutingDraft>(
+  messages: Record<keyof Draft, string>,
+  invalidFields: (draft: Draft) => (keyof Draft)[]
+) {
+  return custom<Draft>().check((ctx) => {
+    for (const field of invalidFields(ctx.value))
+      ctx.issues.push({
+        code: 'custom',
+        input: ctx.value,
+        path: [String(field)],
+        message: messages[field],
+      });
+  });
+}
 
 export function integerSettingsSchema<Draft extends Record<string, string>>(
   messages: Record<keyof Draft, string>,

@@ -121,12 +121,7 @@ test.afterAll(async ({}, testInfo) => {
 
 for (const locale of ['en', 'fa'])
   test(`team UI persists through the migrated API (${locale})`, async ({ page }) => {
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     // Forward to the isolated API without mocking any application response.
     await page.route('**/api/**', async (route) => {
       const request = route.request(),

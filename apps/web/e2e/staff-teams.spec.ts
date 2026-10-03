@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { test, expect } from './coverage-fixture';
 const id = '11111111-1111-4111-8111-111111111111';
 for (const locale of ['en', 'fa'])
@@ -11,6 +12,7 @@ for (const locale of ['en', 'fa'])
         json: {
           userId: 'admin',
           isStaff: true,
+          navigation: fullNavigation('staff'),
           operatingContext: 'staff',
           canSwitchContext: false,
           requiresTosAcceptance: false,
@@ -67,7 +69,9 @@ for (const locale of ['en', 'fa'])
       if (fail) return route.fulfill({ status: 500, json: {} });
       if (route.request().method() === 'DELETE') teams = [];
       else teams = [{ ...teams[0], ...route.request().postDataJSON() }];
-      return route.fulfill({ json: { ok: true } });
+      return route.fulfill({
+        json: route.request().method() === 'DELETE' ? { deleted: true } : teams[0],
+      });
     });
     await page.route('**/api/admin/config/assignment-rules', (route) => {
       if (route.request().method() === 'PUT') rules = route.request().postDataJSON();
@@ -124,6 +128,7 @@ test('denied team settings show a retry without mutation controls', async ({ pag
       json: {
         userId: 'admin',
         isStaff: true,
+        navigation: fullNavigation('staff'),
         operatingContext: 'staff',
         canSwitchContext: false,
         requiresTosAcceptance: false,
@@ -146,6 +151,7 @@ for (const locale of ['en', 'fa']) {
         json: {
           userId: 'admin',
           isStaff: true,
+          navigation: fullNavigation('staff'),
           operatingContext: 'staff',
           canSwitchContext: false,
           requiresTosAcceptance: false,
@@ -158,6 +164,7 @@ for (const locale of ['en', 'fa']) {
     const teams = [first, second, third].map((teamId, index) => ({
       id: teamId,
       name: ['Alpha', 'Beta', 'Gamma'][index],
+      description: null,
       memberUserIds: [],
       skillTags: [],
       isActive: true,
@@ -215,7 +222,7 @@ for (const locale of ['en', 'fa']) {
       .click();
     await expect(page.locator('#fallback-team-ticket-2')).toHaveValue(second);
     await expect(page.locator('#fallback-strategy-ticket-2')).toHaveValue('expertise');
-    for (const select of await page.locator('#admin-content select').all())
+    for (const select of await page.locator('form select').all())
       await expect(select).toHaveAccessibleName(/.+/);
     const save = page.getByRole('button', {
       name: locale === 'fa' ? 'ذخیره قوانین تخصیص' : 'Save assignment rules',

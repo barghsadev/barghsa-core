@@ -1,3 +1,4 @@
+import { assertStaffTeamFields } from './staff-team-fields.js';
 import { lockDualApprovalThreshold } from './dual-approval-threshold-lock.js';
 import { readWizardDraftTtl } from '../common/wizard-draft-retention.js';
 import {
@@ -2748,6 +2749,7 @@ export class AdminService {
             : previousMemberUserIds,
       };
 
+      assertStaffTeamFields(merged);
       const validation = validateStaffTeamInput(merged);
       if (!validation.ok) {
         throw new HttpException(

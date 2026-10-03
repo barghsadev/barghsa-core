@@ -1,3 +1,4 @@
+import { assertStaffTeamFields, assertStaffRoutingFields } from './staff-team-fields.js';
 import { assertServiceSettingsFields } from './service-settings-fields.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import type { VerificationModeConfig } from './verification-mode-config.js';
@@ -2824,6 +2825,7 @@ export class AdminController {
   @HttpCode(201)
   async createStaffTeam(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertStaffTeamsEditPermission(req);
+    assertStaffTeamFields(rawBody);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.adminService.createStaffTeam(rawBody, req.session, ip);
   }
@@ -2889,6 +2891,7 @@ export class AdminController {
     @Req() req: AuthenticatedRequest
   ) {
     this.assertStaffTeamsEditPermission(req);
+    assertStaffTeamFields(rawBody, true);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.adminService.updateStaffTeam(id, rawBody, req.session, ip);
   }
@@ -3021,6 +3024,7 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async setStaffAssignmentRules(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertStaffTeamsEditPermission(req);
+    assertStaffRoutingFields(rawBody);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.adminService.setStaffAssignmentRules(rawBody, req.session, ip);
   }
