@@ -207,13 +207,15 @@ it('validates blank submission and focuses the first owned field', async () => {
 it('preserves typed localized amounts and captures only canonical reviewed values', async () => {
   await requestDraft();
   await click(word('request'));
-  expect(h.action?.body).toMatchObject({
-    invoiceId,
-    amount: '40',
-    reason: 'Raw request reason',
-    expectedReviewHash: 'a'.repeat(64),
-    idempotencyKey: expect.any(String),
-  });
+  await vi.waitFor(() =>
+    expect(h.action?.body).toMatchObject({
+      invoiceId,
+      amount: '40',
+      reason: 'Raw request reason',
+      expectedReviewHash: 'a'.repeat(64),
+      idempotencyKey: expect.any(String),
+    })
+  );
   await click('Dismiss');
   expect(host.querySelector<HTMLInputElement>('#wallet-refund-amount')?.value).toBe('۴۰');
   expect(host.querySelector<HTMLInputElement>('#wallet-refund-reason')?.value).toBe(
