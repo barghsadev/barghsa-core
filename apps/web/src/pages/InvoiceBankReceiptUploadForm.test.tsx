@@ -1,4 +1,5 @@
 import { act } from 'react';
+import { refreshProfileContext } from '../lib/profile-context.js';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { InvoiceBankReceiptUploadForm } from './InvoiceBankReceiptUploadForm.js';
@@ -9,13 +10,15 @@ import {
 } from '../lib/invoice-bank-receipt-upload.js';
 import { loadInvoiceBankReceiptSubmissionReview } from '../lib/invoice-bank-receipt-review-action.js';
 const upload = vi.hoisted(() => vi.fn());
-vi.mock('../hooks/useReceiptAttachmentUpload.js', () => ({
-  useReceiptAttachmentUpload: () => upload,
-}));
 type ReceiptUploadModule = typeof import('../lib/invoice-bank-receipt-upload.js');
 vi.mock('../lib/invoice-bank-receipt-upload.js', async (importOriginal) => {
   const actual = (await importOriginal()) as ReceiptUploadModule;
-  return { ...actual, fetchActiveProfileId: vi.fn(), submitInvoiceBankReceipt: vi.fn() };
+  return {
+    ...actual,
+    uploadInvoiceReceiptAttachment: upload,
+    fetchActiveProfileId: vi.fn(),
+    submitInvoiceBankReceipt: vi.fn(),
+  };
 });
 vi.mock('../lib/invoice-bank-receipt-review-action.js', () => ({
   loadInvoiceBankReceiptSubmissionReview: vi.fn(),
@@ -133,27 +136,38 @@ async function valid() {
 }
 const alert = () => container.querySelector('[role="alert"]');
 
-it('validates fields in sequence and clears each error when corrected', async () => {
+it('links all invalid fields and clears each corrected field without uploading', async () => {
   await render();
   await submit();
-  expect(field('amount').getAttribute('aria-invalid')).toBe('true');
+  await vi.waitFor(() => expect(field('amount').getAttribute('aria-invalid')).toBe('true'));
+  for (const name of ['amount', 'date', 'payer-ref', 'file']) {
+    const input = field(name);
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+    expect(
+      input
+        .getAttribute('aria-describedby')!
+        .split(' ')
+        .map((id) => document.getElementById(id))
+        .find((node) => node?.getAttribute('role') === 'alert')
+        ?.getAttribute('role')
+    ).toBe('alert');
+  }
+  await act(
+    async () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+      )
+  );
+  expect(document.activeElement).toBe(field('amount'));
   await change('amount', '۱۰۰');
-  expect(alert()).toBeNull();
-  await submit();
-  expect(field('date').getAttribute('aria-invalid')).toBe('true');
+  expect(field('amount').getAttribute('aria-invalid')).toBeNull();
   await change('date', '2999-01-01');
-  await submit();
   expect(field('date').getAttribute('aria-invalid')).toBe('true');
   await change('date', utcTodayIso());
-  expect(alert()).toBeNull();
-  await submit();
-  expect(field('payer-ref').getAttribute('aria-invalid')).toBe('true');
+  expect(field('date').getAttribute('aria-invalid')).toBeNull();
   await change('payer-ref', 'reference');
-  expect(alert()).toBeNull();
-  await submit();
-  expect(field('file').getAttribute('aria-invalid')).toBe('true');
+  expect(field('payer-ref').getAttribute('aria-invalid')).toBeNull();
   await file(new File(['no'], 'receipt.exe', { type: 'application/octet-stream' }));
-  await submit();
   expect(field('file').getAttribute('aria-invalid')).toBe('true');
   await file();
   expect(alert()).toBeNull();
@@ -255,3 +269,102 @@ it('ignores a profile lookup that finishes after the form unmounts', async () =>
   await act(async () => finish('profile-late'));
   expect(container.textContent).toBe('');
 });
+
+it.each(['review', 'confirm'] as const)(
+  'retains a draft and uploaded file after an owned %s field error',
+  async (stage) => {
+    await render();
+    await valid();
+    await change('note', 'private note');
+    if (stage === 'review')
+      vi.mocked(loadInvoiceBankReceiptSubmissionReview).mockResolvedValueOnce({
+        kind: 'error',
+        status: 400,
+        fields: ['payerReference'],
+      });
+    else
+      vi.mocked(submitInvoiceBankReceipt).mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        fields: ['payerReference'],
+      });
+    await submit();
+    if (stage === 'confirm') await confirm();
+    await act(
+      async () =>
+        new Promise<void>((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+        )
+    );
+    expect(field('payer-ref').getAttribute('aria-invalid')).toBe('true');
+    expect(document.activeElement).toBe(field('payer-ref'));
+    expect(field('amount').value).toBe('100');
+    expect(field('note').value).toBe('private note');
+    expect(field('file').files?.[0]?.name).toBe('receipt.pdf');
+    expect(field('submit').disabled).toBe(false);
+    await change('payer-ref', 'corrected');
+    await submit();
+    await confirm();
+    expect(upload).toHaveBeenCalledTimes(1);
+    expect(container.querySelector('[data-testid="invoice-receipt-success"]')).not.toBeNull();
+  },
+  15_000
+);
+
+it('reuploads only after the server rejects the cached attachment', async () => {
+  await render();
+  await valid();
+  vi.mocked(loadInvoiceBankReceiptSubmissionReview).mockResolvedValueOnce({
+    kind: 'error',
+    status: 400,
+    fields: ['attachmentKey'],
+  });
+  await submit();
+  await act(
+    async () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+      )
+  );
+  expect(document.activeElement).toBe(field('file'));
+  expect(field('file').files?.[0]?.name).toBe('receipt.pdf');
+  await submit();
+  await confirm();
+  expect(upload).toHaveBeenCalledTimes(2);
+}, 15_000);
+
+it('uses a generic error for protected or unknown server fields', async () => {
+  await render();
+  await valid();
+  vi.mocked(loadInvoiceBankReceiptSubmissionReview).mockResolvedValueOnce({
+    kind: 'error',
+    status: 400,
+    fields: ['payerReference', 'expectedReviewHash'],
+  });
+  await submit();
+  expect(container.querySelector('[data-testid="invoice-receipt-error"]')).not.toBeNull();
+  expect(field('payer-ref').getAttribute('aria-invalid')).toBeNull();
+});
+
+it.each(['invoice', 'profile'] as const)(
+  'clears the previous draft and ignores its late upload when %s changes',
+  async (scope) => {
+    let finish!: (key: string) => void;
+    upload.mockReturnValueOnce(
+      new Promise<string>((resolve) => {
+        finish = resolve;
+      })
+    );
+    await render();
+    await valid();
+    await submit();
+    await act(async () => {
+      if (scope === 'invoice') root.render(<InvoiceBankReceiptUploadForm invoiceId="invoice-2" />);
+      else refreshProfileContext();
+    });
+    expect(field('amount').value).toBe('');
+    await act(async () => finish('old-profile-key'));
+    expect(loadInvoiceBankReceiptSubmissionReview).not.toHaveBeenCalled();
+    expect(submitInvoiceBankReceipt).not.toHaveBeenCalled();
+  }
+);

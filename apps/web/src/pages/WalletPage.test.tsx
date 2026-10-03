@@ -286,9 +286,8 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
           String(url).includes('/top-ups') && (init as RequestInit | undefined)?.method === 'POST'
       )
     ).toBe(false);
-    expect(container.querySelector('[data-testid="wallet-error"]')?.textContent).toContain(
-      'Amount exceeds the online top-up limit'
-    );
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+    expect(input.closest('form')?.textContent).toContain('Amount exceeds the online top-up limit');
     expect(assign).not.toHaveBeenCalled();
   });
 
@@ -321,9 +320,8 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
           String(url).includes('/top-ups') && (init as RequestInit | undefined)?.method === 'POST'
       )
     ).toBe(false);
-    expect(container.querySelector('[data-testid="wallet-error"]')?.textContent).toContain(
-      'Amount exceeds the online top-up limit'
-    );
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+    expect(input.closest('form')?.textContent).toContain('Amount exceeds the online top-up limit');
     expect(container.querySelector('[data-testid="wallet-submit"]')).toHaveProperty(
       'disabled',
       true
@@ -402,9 +400,8 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     });
     await flushFetches();
 
-    expect(container.querySelector('[data-testid="wallet-error"]')?.textContent).toContain(
-      'Amount exceeds the online top-up limit'
-    );
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+    expect(input.closest('form')?.textContent).toContain('Amount exceeds the online top-up limit');
     expect(container.querySelector('#top-up-amount-hint')?.textContent).toContain('50,000');
     expect(assign).not.toHaveBeenCalled();
   });
@@ -692,7 +689,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
         );
       })
     ).toBe(false);
-    expect(container.querySelector('[data-testid="wallet-receipt-error"]')?.textContent).toContain(
+    expect(container.querySelector('[data-testid="wallet-receipt-form"]')?.textContent).toContain(
       'valid receipt file'
     );
   });

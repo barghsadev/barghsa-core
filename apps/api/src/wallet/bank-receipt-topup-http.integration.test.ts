@@ -135,3 +135,108 @@ it('reviews the bank receipt and requires its exact hash before Pending submissi
     ).rows
   ).toEqual([]);
 });
+
+for (const flow of ['wallet', 'invoice'] as const) {
+  async function receiptFixture() {
+    const input = await seed();
+    const invoiceId = randomUUID();
+    if (flow === 'invoice')
+      await http.pool.query(
+        "INSERT INTO invoices(id,profile_id,state,total_amount) VALUES ($1,$2,'Unpaid',1000)",
+        [invoiceId, input.profileId]
+      );
+    return {
+      ...input,
+      path: flow === 'wallet' ? input.path : `${http.base}/api/invoices/${invoiceId}/bank-receipts`,
+    };
+  }
+  it.each([
+    ['amount', '0'],
+    ['amount', false],
+    ['paymentDate', '2026-02-30'],
+    ['payerReference', 'private\u0001reference'],
+    ['bankName', 'Bank\tName'],
+    ['customerNote', 'x'.repeat(2001)],
+    ['attachmentKey', 'invalid-key'],
+  ])(
+    `${flow} identifies an invalid %s without claiming an attachment or writing money`,
+    async (field, value) => {
+      const input = await receiptFixture();
+      for (const review of [true, false]) {
+        const response = await fetch(`${input.path}${review ? '/review' : ''}`, {
+          method: 'POST',
+          headers: { ...input.headers, 'Idempotency-Key': input.idempotencyKey },
+          body: JSON.stringify({
+            ...input.details,
+            ...(review
+              ? flow === 'wallet'
+                ? { idempotencyKey: input.idempotencyKey }
+                : {}
+              : { expectedReviewHash: 'a'.repeat(64) }),
+            [field]: value,
+          }),
+        });
+        expect(response.status, await response.clone().text()).toBe(400);
+        const payload = await response.json();
+        expect(payload).toMatchObject({
+          error: { code: 'VALIDATION:INPUT:INVALID', fields: [field] },
+        });
+        expect(JSON.stringify(payload)).not.toContain('private');
+        expect(JSON.stringify(payload)).not.toContain('Bank\tName');
+      }
+      expect(
+        (
+          await http.pool.query('SELECT id FROM wallet_transactions WHERE wallet_id=$1', [
+            input.profileId,
+          ])
+        ).rows
+      ).toEqual([]);
+      expect(
+        (
+          await http.pool.query('SELECT id FROM bank_receipts WHERE profile_id=$1', [
+            input.profileId,
+          ])
+        ).rows
+      ).toEqual([]);
+      expect(
+        (
+          await http.pool.query(
+            'SELECT storage_key FROM bank_receipt_attachment_claims WHERE storage_key=$1',
+            [input.attachmentKey]
+          )
+        ).rows
+      ).toEqual([]);
+      expect(
+        (
+          await http.pool.query('SELECT status FROM storage_records WHERE storage_key=$1', [
+            input.attachmentKey,
+          ])
+        ).rows
+      ).toEqual([{ status: 'active' }]);
+    }
+  );
+  it.each(['missing hash', 'invalid hash', 'unknown key'])(
+    `${flow} retains a generic parse error for %s`,
+    async (kind) => {
+      const input = await receiptFixture();
+      const body = {
+        ...input.details,
+        amount: '0',
+        ...(kind === 'missing hash'
+          ? {}
+          : { expectedReviewHash: kind === 'invalid hash' ? 'bad' : 'a'.repeat(64) }),
+        ...(kind === 'unknown key' ? { private: 'must not be echoed' } : {}),
+      };
+      const response = await fetch(input.path, {
+        method: 'POST',
+        headers: { ...input.headers, 'Idempotency-Key': input.idempotencyKey },
+        body: JSON.stringify(body),
+      });
+      expect(response.status).toBe(400);
+      const payload = (await response.json()) as { error: { code: string; fields?: unknown } };
+      expect(payload.error.code).toBe('VALIDATION:PARSE:ZOD_ERROR');
+      expect(payload.error.fields).toBeUndefined();
+      expect(JSON.stringify(payload)).not.toContain('must not be echoed');
+    }
+  );
+}

@@ -1,3 +1,4 @@
+import { inputErrorFields } from './input-error-fields.js';
 /**
  * Customer invoice bank-receipt upload helpers (T-04.3.01.02).
  *
@@ -211,7 +212,10 @@ export async function submitInvoiceBankReceipt(input: {
   attachmentKey: string;
   customerNote?: string;
   expectedReviewHash: string;
-}): Promise<{ ok: true; state: 'Submitted'; amount: bigint } | { ok: false; status: number }> {
+}): Promise<
+  | { ok: true; state: 'Submitted'; amount: bigint }
+  | { ok: false; status: number; fields?: unknown[] }
+> {
   const res = await fetch(`/api/invoices/${input.invoiceId}/bank-receipts`, {
     method: 'POST',
     credentials: 'include',
@@ -232,7 +236,7 @@ export async function submitInvoiceBankReceipt(input: {
   const payload = await readResponseObject(res);
   const confirmedAmount = parseInvoiceBankReceiptAmountIrR(payload.amount);
   if (!res.ok || payload.state !== 'Submitted' || confirmedAmount !== input.amountIrR) {
-    return { ok: false, status: res.status };
+    return { ok: false, status: res.status, ...inputErrorFields(payload, res.status) };
   }
   return { ok: true, state: 'Submitted', amount: confirmedAmount };
 }

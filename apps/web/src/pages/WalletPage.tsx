@@ -1,3 +1,10 @@
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { Alert, AlertDescription } from '@barghsa/ui';
+import { FormField } from '@barghsa/ui/form';
+import { Loader2 } from 'lucide-react';
+import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
+import { useReceiptForm } from '../hooks/useReceiptForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { TransactionList } from '../components/WalletTransactionList.js';
 import { Currency } from '../components/Currency.js';
@@ -6,16 +13,7 @@ import {
   type WalletPaymentReturn,
 } from '../components/OnlinePaymentReturnPanel.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import {
-  lazy,
-  Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type FormEvent,
-} from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
 import type { OnlineTopUpReview } from '@barghsa/shared/finance';
 import type { BankReceiptTopUpReview } from '@barghsa/shared/finance';
@@ -26,9 +24,8 @@ import {
 } from '@barghsa/shared/finance/browser';
 import type { OnlineTopUpActionError } from '../lib/online-topup-action.js';
 import { useLocale } from '../hooks/useLocale.js';
-import { useReceiptAttachmentUpload } from '../hooks/useReceiptAttachmentUpload.js';
 import {
-  isAllowedInvoiceReceiptFile as isAllowedReceiptFile,
+  uploadInvoiceReceiptAttachment as uploadReceiptAttachment,
   normalizeIrrAmountDigits,
   utcTodayIso,
 } from '../lib/invoice-bank-receipt-upload.js';
@@ -90,16 +87,16 @@ function mapReceiptSubmitError(status: number): ReceiptError {
  * uploads the file, then creates a Pending top-up. The wallet is credited
  * only after provider callback or finance confirmation.
  */
-export function WalletPage({
-  paymentReturn,
-  returnInvoiceId,
-  historyQuery,
-}: {
+interface WalletPageProps {
   paymentReturn?: WalletPaymentReturn | undefined;
   returnInvoiceId?: string | undefined;
   historyQuery?: ListQueryBinding;
-} = {}) {
-  const uploadReceiptAttachment = useReceiptAttachmentUpload();
+}
+export function WalletPage(props: WalletPageProps = {}) {
+  const revision = useProfileContextRevision();
+  return <CustomerWalletPage key={revision} {...props} />;
+}
+function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: WalletPageProps) {
   const receiptFileInput = useRef<HTMLInputElement>(null);
   const locale = useLocale();
   const maintenance = useMaintenance('wallet_topup');
@@ -110,17 +107,50 @@ export function WalletPage({
   const [wallet, setWallet] = useState<WalletBalance | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<PageError | null>(null);
-  const [amountInput, setAmountInput] = useState('');
+  const online = useDraftForm<{ amount: string }>(
+    async () => {
+      const { createOnlineTopUpSchema } = await import('../lib/customer-finance-form-schemas.js');
+      return createOnlineTopUpSchema(advertisedOnlineTopUpLimit(wallet), {
+        invalid: t('wallet.page.invalidAmount', locale),
+        limit: t('wallet.page.limitExceeded', locale),
+      });
+    },
+    { amount: '' },
+    t('wallet.page.loadError', locale)
+  );
+  const [amountInput, setAmountInput] = online.field('amount');
+  const invalidOnlineAmount = useActionFieldErrors(
+    online.form,
+    { amount: t('wallet.page.invalidAmount', locale) },
+    t('wallet.page.loadError', locale)
+  );
+  const exceededOnlineAmount = useActionFieldErrors(
+    online.form,
+    { amount: t('wallet.page.limitExceeded', locale) },
+    t('wallet.page.loadError', locale)
+  );
+  const onlinePending = useRef(false),
+    receiptPending = useRef(false),
+    mounted = useRef(false);
+  const liveProfile = useRef(profileId);
+  liveProfile.current = profileId;
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const [submitting, setSubmitting] = useState(false);
   const [onlineReview, setOnlineReview] = useState<OnlineTopUpReview | null>(null);
   const [idempotencyKey, setIdempotencyKey] = useState(newIdempotencyKey);
 
-  const [receiptAmountInput, setReceiptAmountInput] = useState('');
-  const [receiptDate, setReceiptDate] = useState('');
-  const [receiptPayerRef, setReceiptPayerRef] = useState('');
-  const [receiptNote, setReceiptNote] = useState('');
-  const [receiptBankName, setReceiptBankName] = useState('');
-  const [receiptFile, setReceiptFile] = useState<File | null>(null);
+  const receipt = useReceiptForm('wallet', parseBankReceiptTopUpAmountIrR);
+  const [receiptAmountInput, setReceiptAmountInput] = receipt.field('amount');
+  const [receiptDate, setReceiptDate] = receipt.field('paymentDate');
+  const [receiptPayerRef, setReceiptPayerRef] = receipt.field('payerReference');
+  const [receiptNote, setReceiptNote] = receipt.field('customerNote');
+  const [receiptBankName, setReceiptBankName] = receipt.field('bankName');
+  const [, setReceiptFile] = receipt.field('file');
   const [receiptUploaded, setReceiptUploaded] = useState<{
     file: File;
     profileId: string;
@@ -154,11 +184,13 @@ export function WalletPage({
     setError(null);
     try {
       const profileRes = await fetch('/api/profiles', { credentials: 'include' });
+      if (!mounted.current) return;
       if (!profileRes.ok) {
         setError('load');
         return;
       }
       const profileData: { activeProfileId: string | null } = await profileRes.json();
+      if (!mounted.current) return;
       if (!profileData.activeProfileId) {
         setError('no-profile');
         setProfileId(null);
@@ -169,16 +201,17 @@ export function WalletPage({
       const walletRes = await fetch(`/api/wallet/${profileData.activeProfileId}`, {
         credentials: 'include',
       });
+      if (!mounted.current) return;
       if (!walletRes.ok) {
         setError('load');
         return;
       }
       const walletData: WalletBalance = await walletRes.json();
-      setWallet(walletData);
+      if (mounted.current) setWallet(walletData);
     } catch {
-      setError('load');
+      if (mounted.current) setError('load');
     } finally {
-      setLoading(false);
+      if (mounted.current) setLoading(false);
     }
   }, []);
 
@@ -186,34 +219,35 @@ export function WalletPage({
     void load();
   }, [load]);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!profileId || submitting || maintenance?.active) return;
-
-    if (amountValue === null || !Number.isSafeInteger(amountValue) || amountValue <= 0) {
-      setError('invalid-amount');
+  const handleSubmit = online.form.handleSubmit(async (values) => {
+    if (
+      !profileId ||
+      onlineReview ||
+      onlinePending.current ||
+      maintenance?.active ||
+      !mounted.current
+    )
       return;
-    }
-
-    const limitIrR = advertisedOnlineTopUpLimit(wallet);
-    if (limitIrR === null || limitIrR === 0 || amountValue > limitIrR) {
-      setError('limit-exceeded');
-      return;
-    }
-
+    const current = () => mounted.current && liveProfile.current === profileId;
+    onlinePending.current = true;
     setSubmitting(true);
     setError(null);
     try {
       const { loadOnlineTopUpReview } = await import('../lib/online-topup-action.js');
-      const result = await loadOnlineTopUpReview(profileId, amountValue, idempotencyKey);
+      if (!current()) return;
+      const result = await loadOnlineTopUpReview(profileId, Number(values.amount), idempotencyKey);
+      if (!current()) return;
       if (result.kind === 'error') handleOnlineTopUpError(result);
       else setOnlineReview(result.review);
     } catch {
-      setError('gateway');
+      if (current()) setError('gateway');
     } finally {
-      setSubmitting(false);
+      if (current()) {
+        onlinePending.current = false;
+        setSubmitting(false);
+      }
     }
-  }
+  });
 
   function handleOnlineTopUpError(result: {
     error: OnlineTopUpActionError;
@@ -234,16 +268,27 @@ export function WalletPage({
       );
     }
     setOnlineReview(null);
-    setError(result.error);
+    if (result.error === 'invalid-amount') {
+      invalidOnlineAmount(['amount']);
+      setError(null);
+    } else if (result.error === 'limit-exceeded') {
+      exceededOnlineAmount(['amount']);
+      setError(null);
+    } else setError(result.error);
   }
 
   async function confirmOnlineTopUp() {
-    if (!onlineReview || submitting) return;
+    if (!onlineReview || onlinePending.current || !mounted.current) return;
+    const current = () => mounted.current && liveProfile.current === onlineReview.data.profileId;
+    if (!current()) return;
+    onlinePending.current = true;
     setSubmitting(true);
     setError(null);
     try {
       const { startReviewedOnlineTopUp } = await import('../lib/online-topup-action.js');
+      if (!current()) return;
       const result = await startReviewedOnlineTopUp(onlineReview, idempotencyKey);
+      if (!current()) return;
       if (result.kind === 'error') {
         handleOnlineTopUpError(result);
         return;
@@ -253,121 +298,141 @@ export function WalletPage({
       setOnlineReview(null);
       window.location.assign(result.redirectUrl);
     } catch {
-      setOnlineReview(null);
-      setError('gateway');
+      if (current()) {
+        setOnlineReview(null);
+        setError('gateway');
+      }
     } finally {
-      setSubmitting(false);
+      if (current()) {
+        onlinePending.current = false;
+        setSubmitting(false);
+      }
     }
   }
 
-  async function handleReceiptSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!profileId || receiptSubmitting || maintenance?.active) return;
-
-    if (receiptAmountIrR === null) {
-      setReceiptError('invalid-amount');
-      setReceiptSuccess(false);
+  const handleReceiptSubmit = receipt.form.handleSubmit(async (values) => {
+    if (
+      !profileId ||
+      receiptReview ||
+      receiptPending.current ||
+      maintenance?.active ||
+      !mounted.current
+    )
       return;
-    }
-    if (!receiptDate || receiptDate > utcTodayIso()) {
-      setReceiptError('invalid-date');
-      setReceiptSuccess(false);
-      return;
-    }
-    if (receiptPayerRef.trim().length === 0) {
-      setReceiptError('invalid-payer-ref');
-      setReceiptSuccess(false);
-      return;
-    }
-    const bankName = parseBankReceiptBankName(receiptBankName);
-    if (bankName === undefined) {
-      setReceiptError('invalid-bank-name');
-      setReceiptSuccess(false);
-      return;
-    }
-    if (!receiptFile || !isAllowedReceiptFile(receiptFile)) {
-      setReceiptError('invalid-file');
-      setReceiptSuccess(false);
-      return;
-    }
-
+    const selectedFile = values.file;
+    if (!selectedFile) return;
+    const current = () => mounted.current && liveProfile.current === profileId;
+    receiptPending.current = true;
     setReceiptSubmitting(true);
     setReceiptError(null);
     setReceiptSuccess(false);
     try {
       const attachmentKey =
-        receiptUploaded?.file === receiptFile && receiptUploaded.profileId === profileId
+        receiptUploaded?.file === selectedFile && receiptUploaded.profileId === profileId
           ? receiptUploaded.key
-          : await uploadReceiptAttachment(receiptFile, profileId);
+          : await uploadReceiptAttachment(selectedFile, profileId);
+      if (!current()) return;
       if (!attachmentKey) {
         setReceiptError('upload');
         return;
       }
-      setReceiptUploaded({ file: receiptFile, profileId, key: attachmentKey });
+      setReceiptUploaded({ file: selectedFile, profileId, key: attachmentKey });
       const { loadBankReceiptTopUpReview } = await import('../lib/bank-receipt-topup-action.js');
+      if (!current()) return;
+      const bankName = parseBankReceiptBankName(values.bankName);
       const result = await loadBankReceiptTopUpReview({
         profileId,
-        amountIrR: receiptAmountIrR.toString(),
-        paymentDate: receiptDate,
-        payerReference: receiptPayerRef.trim(),
+        amountIrR: parseBankReceiptTopUpAmountIrR(
+          normalizeIrrAmountDigits(values.amount)
+        )!.toString(),
+        paymentDate: values.paymentDate,
+        payerReference: values.payerReference.trim(),
         attachmentKey,
-        customerNote: receiptNote.trim() || null,
+        customerNote: values.customerNote.trim() || null,
         ...(bankName ? { bankName } : {}),
         idempotencyKey: receiptIdempotencyKey,
       });
+      if (!current()) return;
       if (result.kind === 'error') {
         const next = mapReceiptSubmitError(result.status);
         if (next === 'conflict') setReceiptIdempotencyKey(newIdempotencyKey());
-        setReceiptError(next);
+        if (receipt.applyServerErrors(result.fields)) {
+          if (result.fields?.includes('attachmentKey')) setReceiptUploaded(null);
+        } else setReceiptError(next);
         return;
       }
       setReceiptReview(result.value);
     } catch {
-      setReceiptError('upload');
+      if (current()) setReceiptError('upload');
     } finally {
-      setReceiptSubmitting(false);
+      if (current()) {
+        receiptPending.current = false;
+        setReceiptSubmitting(false);
+      }
     }
-  }
+  });
 
   async function confirmReceiptTopUp() {
-    if (!receiptReview || receiptSubmitting) return;
+    if (!receiptReview || receiptPending.current || !mounted.current) return;
+    const current = () => mounted.current && liveProfile.current === receiptReview.data.profileId;
+    if (!current()) return;
+    receiptPending.current = true;
     setReceiptSubmitting(true);
     setReceiptError(null);
     try {
       const { submitReviewedBankReceiptTopUp } =
         await import('../lib/bank-receipt-topup-action.js');
+      if (!current()) return;
       const result = await submitReviewedBankReceiptTopUp(receiptReview, receiptIdempotencyKey);
+      if (!current()) return;
       if (result.kind === 'error') {
         setReceiptReview(null);
         const next = mapReceiptSubmitError(result.status);
         if (next === 'conflict') setReceiptIdempotencyKey(newIdempotencyKey());
-        setReceiptError(next);
+        if (receipt.applyServerErrors(result.fields)) {
+          if (result.fields?.includes('attachmentKey')) setReceiptUploaded(null);
+        } else setReceiptError(next);
         return;
       }
       setReceiptReview(null);
       setReceiptSuccess(true);
       setReceiptIdempotencyKey(newIdempotencyKey());
-      setReceiptFile(null);
+      receipt.form.reset({ ...receipt.form.getValues(), file: null });
       setReceiptUploaded(null);
       if (receiptFileInput.current) receiptFileInput.current.value = '';
       const walletRes = await fetch(`/api/wallet/${receiptReview.data.profileId}`, {
         credentials: 'include',
       });
-      if (walletRes.ok) {
-        setWallet((await walletRes.json()) as WalletBalance);
+      if (current() && walletRes.ok) {
+        const nextWallet = (await walletRes.json()) as WalletBalance;
+        if (current()) setWallet(nextWallet);
       }
     } catch {
-      setReceiptReview(null);
-      setReceiptError('generic');
+      if (current()) {
+        setReceiptReview(null);
+        setReceiptError('generic');
+      }
     } finally {
-      setReceiptSubmitting(false);
+      if (current()) {
+        receiptPending.current = false;
+        setReceiptSubmitting(false);
+      }
     }
   }
 
+  const onlineBusy = submitting || online.form.formState.isSubmitting;
+  const receiptBusy = receiptSubmitting || receipt.form.formState.isSubmitting;
+  const onlineLocked = onlineBusy || !!onlineReview;
+  const receiptLocked = receiptBusy || !!receiptReview;
   const advertisedLimit = advertisedOnlineTopUpLimit(wallet);
   const onlineSubmitDisabled =
-    submitting || maintenance?.active === true || advertisedLimit === null || advertisedLimit === 0;
+    onlineLocked ||
+    maintenance?.active === true ||
+    advertisedLimit === null ||
+    advertisedLimit === 0;
 
+  const validationError = online.errors.root?.validation?.message;
+  const receiptValidationError = receipt.errors.root?.validation?.message;
   const errorMessage =
     error === null
       ? null
@@ -459,7 +524,7 @@ export function WalletPage({
             </section>
           )}
 
-          {errorMessage && (
+          {errorMessage && (error === 'load' || error === 'no-profile') && (
             <div
               role="alert"
               data-testid="wallet-error"
@@ -473,9 +538,16 @@ export function WalletPage({
 
           {profileId && !maintenance?.active && (
             <form
+              noValidate
               onSubmit={handleSubmit}
               className="space-y-4 rounded-lg bg-card text-card-foreground p-6 shadow-sm"
             >
+              {(validationError ||
+                (errorMessage && error !== 'load' && error !== 'no-profile')) && (
+                <Alert variant="destructive" data-testid="wallet-error">
+                  <AlertDescription>{errorMessage || validationError}</AlertDescription>
+                </Alert>
+              )}
               <h2 className="text-lg font-semibold text-foreground">
                 {t('wallet.page.onlineTitle', locale)}
               </h2>
@@ -487,6 +559,7 @@ export function WalletPage({
                   {t('wallet.page.amountLabel', locale)}
                 </label>
                 <input
+                  {...online.bind('amount')}
                   id="top-up-amount"
                   data-testid="wallet-amount"
                   name="amount"
@@ -495,9 +568,13 @@ export function WalletPage({
                   autoComplete="off"
                   dir="ltr"
                   value={amountInput}
-                  disabled={submitting}
-                  aria-invalid={error === 'invalid-amount' || error === 'limit-exceeded'}
-                  aria-describedby="top-up-amount-hint"
+                  disabled={onlineLocked}
+                  aria-describedby={[
+                    'top-up-amount-hint',
+                    online.errors.amount ? online.errorId('amount') : null,
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
                   onChange={(event) => {
                     setAmountInput(normalizeIrrAmountDigits(event.target.value));
                     if (error === 'invalid-amount' || error === 'limit-exceeded') setError(null);
@@ -512,6 +589,15 @@ export function WalletPage({
                         advertisedLimit !== null ? numbers.irrDigits(advertisedLimit) : '—'
                       )}
                 </p>
+                {online.errors.amount && (
+                  <p
+                    id={online.errorId('amount')}
+                    role="alert"
+                    className="text-sm text-destructive"
+                  >
+                    {online.errors.amount.message}
+                  </p>
+                )}
                 {tomanPreview !== null && (
                   <p className="mt-1 text-sm text-muted-foreground" data-testid="wallet-toman">
                     {t('wallet.page.tomanPreview', locale).replace(
@@ -525,9 +611,16 @@ export function WalletPage({
                 type="submit"
                 data-testid="wallet-submit"
                 disabled={onlineSubmitDisabled}
+                aria-busy={onlineBusy || undefined}
                 className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-dark disabled:opacity-60"
               >
-                {submitting
+                {onlineBusy && (
+                  <Loader2
+                    aria-hidden="true"
+                    className="me-2 inline size-4 animate-spin motion-reduce:animate-none"
+                  />
+                )}
+                {onlineBusy
                   ? t(onlineReview ? 'wallet.page.submitting' : 'wallet.page.reviewLoading', locale)
                   : t('wallet.page.submit', locale)}
               </button>
@@ -536,6 +629,7 @@ export function WalletPage({
 
           {profileId && !maintenance?.active && (
             <form
+              noValidate
               onSubmit={handleReceiptSubmit}
               className="space-y-4 rounded-lg bg-card text-card-foreground p-6 shadow-sm"
               data-testid="wallet-receipt-form"
@@ -559,15 +653,12 @@ export function WalletPage({
                 </div>
               )}
 
-              {receiptErrorMessage && (
-                <div
-                  role="alert"
-                  data-testid="wallet-receipt-error"
-                  id={receiptError === 'invalid-bank-name' ? 'receipt-bank-name-error' : undefined}
-                  className="rounded-lg border border-destructive/20 bg-danger-soft p-3 text-sm text-destructive"
-                >
-                  {receiptErrorMessage}
-                </div>
+              {(receiptErrorMessage || receiptValidationError) && (
+                <Alert variant="destructive" data-testid="wallet-receipt-error">
+                  <AlertDescription>
+                    {receiptErrorMessage || receiptValidationError}
+                  </AlertDescription>
+                </Alert>
               )}
 
               <div>
@@ -578,6 +669,7 @@ export function WalletPage({
                   {t('wallet.page.receiptAmountLabel', locale)}
                 </label>
                 <input
+                  {...receipt.bind('amount')}
                   id="receipt-amount"
                   data-testid="wallet-receipt-amount"
                   name="receiptAmount"
@@ -585,14 +677,22 @@ export function WalletPage({
                   inputMode="numeric"
                   autoComplete="off"
                   value={receiptAmountInput}
-                  disabled={receiptSubmitting}
-                  aria-invalid={receiptError === 'invalid-amount'}
+                  disabled={receiptLocked}
                   onChange={(event) => {
                     setReceiptAmountInput(normalizeIrrAmountDigits(event.target.value));
                     if (receiptError === 'invalid-amount') setReceiptError(null);
                   }}
                   className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
+                {receipt.errors.amount && (
+                  <p
+                    id={receipt.errorId('amount')}
+                    role="alert"
+                    className="text-sm text-destructive"
+                  >
+                    {receipt.errors.amount.message}
+                  </p>
+                )}
                 {receiptTomanPreview !== null && (
                   <p
                     className="mt-1 text-sm text-muted-foreground"
@@ -611,20 +711,29 @@ export function WalletPage({
                   {t('wallet.page.receiptDateLabel', locale)}
                 </label>
                 <input
+                  {...receipt.bind('paymentDate')}
                   id="receipt-date"
                   data-testid="wallet-receipt-date"
                   name="paymentDate"
                   type="date"
                   max={utcTodayIso()}
                   value={receiptDate}
-                  disabled={receiptSubmitting}
-                  aria-invalid={receiptError === 'invalid-date'}
+                  disabled={receiptLocked}
                   onChange={(event) => {
                     setReceiptDate(event.target.value);
                     if (receiptError === 'invalid-date') setReceiptError(null);
                   }}
                   className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
+                {receipt.errors.paymentDate && (
+                  <p
+                    id={receipt.errorId('paymentDate')}
+                    role="alert"
+                    className="text-sm text-destructive"
+                  >
+                    {receipt.errors.paymentDate.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -635,6 +744,7 @@ export function WalletPage({
                   {t('wallet.page.receiptPayerRefLabel', locale)}
                 </label>
                 <input
+                  {...receipt.bind('payerReference')}
                   id="receipt-payer-ref"
                   data-testid="wallet-receipt-payer-ref"
                   name="payerReference"
@@ -642,14 +752,22 @@ export function WalletPage({
                   autoComplete="off"
                   maxLength={128}
                   value={receiptPayerRef}
-                  disabled={receiptSubmitting}
-                  aria-invalid={receiptError === 'invalid-payer-ref'}
+                  disabled={receiptLocked}
                   onChange={(event) => {
                     setReceiptPayerRef(event.target.value);
                     if (receiptError === 'invalid-payer-ref') setReceiptError(null);
                   }}
                   className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
+                {receipt.errors.payerReference && (
+                  <p
+                    id={receipt.errorId('payerReference')}
+                    role="alert"
+                    className="text-sm text-destructive"
+                  >
+                    {receipt.errors.payerReference.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -660,51 +778,77 @@ export function WalletPage({
                   {t('invoices.details.receiptBankNameLabel', locale)}
                 </label>
                 <input
+                  {...receipt.bind('bankName')}
                   id="receipt-bank-name"
                   data-testid="wallet-receipt-bank-name"
                   type="text"
                   maxLength={128}
                   autoComplete="off"
                   value={receiptBankName}
-                  disabled={receiptSubmitting}
-                  aria-invalid={receiptError === 'invalid-bank-name'}
-                  aria-describedby={
-                    receiptError === 'invalid-bank-name' ? 'receipt-bank-name-error' : undefined
-                  }
+                  disabled={receiptLocked}
                   onChange={(event) => {
                     setReceiptBankName(event.target.value);
                     if (receiptError === 'invalid-bank-name') setReceiptError(null);
                   }}
                   className="mt-2 w-full rounded-lg border border-border bg-background p-3 text-foreground"
                 />
+                {receipt.errors.bankName && (
+                  <p
+                    id={receipt.errorId('bankName')}
+                    role="alert"
+                    className="text-sm text-destructive"
+                  >
+                    {receipt.errors.bankName.message}
+                  </p>
+                )}
               </div>
               <div>
                 <label htmlFor="receipt-file" className="block text-sm font-medium text-foreground">
                   {t('wallet.page.receiptFileLabel', locale)}
                 </label>
-                <input
-                  ref={receiptFileInput}
-                  id="receipt-file"
-                  data-testid="wallet-receipt-file"
-                  name="receiptFile"
-                  type="file"
-                  accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp"
-                  disabled={receiptSubmitting}
-                  aria-invalid={receiptError === 'invalid-file'}
-                  aria-describedby="receipt-file-hint"
-                  onChange={(event) => {
-                    const file = event.target.files?.[0] ?? null;
-                    setReceiptFile(file);
-                    setReceiptUploaded(null);
-                    if (receiptError === 'invalid-file' || receiptError === 'upload') {
-                      setReceiptError(null);
-                    }
-                  }}
-                  className="mt-1 block w-full text-sm text-muted-foreground file:me-4 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-foreground"
+                <FormField
+                  control={receipt.form.control}
+                  name="file"
+                  render={({ field }) => (
+                    <input
+                      ref={(element) => {
+                        field.ref(element);
+                        receiptFileInput.current = element;
+                      }}
+                      onBlur={field.onBlur}
+                      aria-invalid={!!receipt.errors.file || undefined}
+                      id="receipt-file"
+                      data-testid="wallet-receipt-file"
+                      name="receiptFile"
+                      type="file"
+                      accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp"
+                      disabled={receiptLocked}
+                      aria-describedby={[
+                        'receipt-file-hint',
+                        receipt.errors.file ? receipt.errorId('file') : null,
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
+                      onChange={(event) => {
+                        const file = event.target.files?.[0] ?? null;
+                        setReceiptFile(file);
+                        setReceiptUploaded(null);
+                        if (receiptError === 'invalid-file' || receiptError === 'upload') {
+                          setReceiptError(null);
+                        }
+                      }}
+                      className="mt-1 block w-full text-sm text-muted-foreground file:me-4 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-foreground"
+                    />
+                  )}
                 />
                 <p id="receipt-file-hint" className="mt-2 text-sm text-muted-foreground">
                   {t('wallet.page.receiptFileHint', locale)}
                 </p>
+                {receipt.errors.file && (
+                  <p id={receipt.errorId('file')} role="alert" className="text-sm text-destructive">
+                    {receipt.errors.file.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -712,25 +856,42 @@ export function WalletPage({
                   {t('wallet.page.receiptNoteLabel', locale)}
                 </label>
                 <textarea
+                  {...receipt.bind('customerNote')}
                   id="receipt-note"
                   data-testid="wallet-receipt-note"
                   name="customerNote"
                   rows={3}
                   maxLength={2000}
                   value={receiptNote}
-                  disabled={receiptSubmitting}
+                  disabled={receiptLocked}
                   onChange={(event) => setReceiptNote(event.target.value)}
                   className="mt-1 w-full rounded-lg border border-input px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
+                {receipt.errors.customerNote && (
+                  <p
+                    id={receipt.errorId('customerNote')}
+                    role="alert"
+                    className="text-sm text-destructive"
+                  >
+                    {receipt.errors.customerNote.message}
+                  </p>
+                )}
               </div>
 
               <button
                 type="submit"
                 data-testid="wallet-receipt-submit"
-                disabled={receiptSubmitting}
+                disabled={receiptLocked}
+                aria-busy={receiptBusy || undefined}
                 className="w-full rounded-lg border border-primary bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-60"
               >
-                {receiptSubmitting
+                {receiptBusy && (
+                  <Loader2
+                    aria-hidden="true"
+                    className="me-2 inline size-4 animate-spin motion-reduce:animate-none"
+                  />
+                )}
+                {receiptBusy
                   ? t('wallet.page.receiptSubmitting', locale)
                   : t('wallet.page.receiptSubmit', locale)}
               </button>
@@ -751,7 +912,7 @@ export function WalletPage({
               <OnlineTopUpReviewDialog
                 review={onlineReview}
                 locale={locale}
-                loading={submitting}
+                loading={onlineBusy}
                 onCancel={() => setOnlineReview(null)}
                 onConfirm={() => void confirmOnlineTopUp()}
               />
@@ -763,7 +924,7 @@ export function WalletPage({
               <BankReceiptTopUpReviewDialog
                 review={receiptReview}
                 locale={locale}
-                loading={receiptSubmitting}
+                loading={receiptBusy}
                 onCancel={() => setReceiptReview(null)}
                 onConfirm={() => void confirmReceiptTopUp()}
               />

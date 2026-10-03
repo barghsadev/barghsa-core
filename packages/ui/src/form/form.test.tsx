@@ -2,6 +2,7 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { z } from 'zod';
+import * as mini from 'zod/mini';
 import {
   Form,
   FormField,
@@ -325,4 +326,61 @@ it('focuses an already touched invalid field using its current registered ref', 
   await vi.waitFor(() => expect(document.activeElement).toBe(host.querySelector('input')));
   expect(save).not.toHaveBeenCalled();
   expect(form.getValues('note')).toBe('Retained draft');
+});
+
+it('supports the tree-shakable Zod schema with the same retained values and focus', async () => {
+  function MiniForm() {
+    form = useZodForm(
+      mini.object({
+        name: mini.string().check(mini.minLength(1, 'Enter a name')),
+        note: mini.string(),
+      }),
+      { defaultValues: { name: '', note: 'Retained draft' } }
+    );
+    return (
+      <form noValidate onSubmit={form.handleSubmit(save)}>
+        <input {...form.register('name')} />
+        <p role="alert">{form.formState.errors.name?.message}</p>
+      </form>
+    );
+  }
+  await act(async () => root.render(<MiniForm />));
+  await act(async () => form.handleSubmit(save)());
+  await vi.waitFor(() => expect(document.activeElement).toBe(host.querySelector('input')));
+  expect(host.querySelector('[role=alert]')?.textContent).toBe('Enter a name');
+  expect(form.getValues('note')).toBe('Retained draft');
+  expect(save).not.toHaveBeenCalled();
+  await typeName('Sara');
+  await act(async () => form.handleSubmit(save)());
+  expect(save).toHaveBeenCalledWith({ name: 'Sara', note: 'Retained draft' }, undefined);
+});
+
+it('loads a schema only on validation and retains the draft after a failed load', async () => {
+  const loader = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValue(schema);
+  function LazyForm() {
+    form = useZodForm(loader, {
+      defaultValues: { name: '', note: 'Retained draft' },
+      validationUnavailableMessage: 'Validation could not load. Try again.',
+    });
+    return (
+      <form noValidate onSubmit={form.handleSubmit(save)}>
+        <input {...form.register('name')} />
+        <p role="alert">{form.formState.errors.root?.validation?.message}</p>
+      </form>
+    );
+  }
+  await act(async () => root.render(<LazyForm />));
+  expect(loader).not.toHaveBeenCalled();
+  await typeName('Sara');
+  await act(async () => form.handleSubmit(save)());
+  expect(host.querySelector('[role=alert]')?.textContent).toBe(
+    'Validation could not load. Try again.'
+  );
+  expect(form.formState.isSubmitting).toBe(false);
+  expect(form.isSubmissionPending()).toBe(false);
+  expect(form.getValues()).toEqual({ name: 'Sara', note: 'Retained draft' });
+  expect(save).not.toHaveBeenCalled();
+  await act(async () => form.handleSubmit(save)());
+  expect(save).toHaveBeenCalledTimes(1);
+  expect(form.formState.errors.root).toBeUndefined();
 });

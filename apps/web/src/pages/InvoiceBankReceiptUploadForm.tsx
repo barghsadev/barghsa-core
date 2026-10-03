@@ -1,4 +1,9 @@
-import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { Alert, AlertDescription } from '@barghsa/ui';
+import { FormField } from '@barghsa/ui/form';
+import { Loader2 } from 'lucide-react';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useReceiptForm } from '../hooks/useReceiptForm.js';
 import { t } from '@barghsa/i18n/app';
 import type { InvoiceBankReceiptSubmissionReview } from '@barghsa/shared/finance';
 import {
@@ -6,10 +11,9 @@ import {
   parseInvoiceBankReceiptAmountIrR,
 } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
-import { useReceiptAttachmentUpload } from '../hooks/useReceiptAttachmentUpload.js';
 import {
+  uploadInvoiceReceiptAttachment,
   fetchActiveProfileId,
-  isAllowedInvoiceReceiptFile,
   mapInvoiceReceiptSubmitError,
   normalizeIrrAmountDigits,
   submitInvoiceBankReceipt,
@@ -44,20 +48,29 @@ const ERROR_I18N: Record<InvoiceReceiptError, string> = {
  * uploads the scan, then creates a Submitted receipt. Settlement waits
  * for finance confirmation.
  */
-export function InvoiceBankReceiptUploadForm({
-  invoiceId,
-  onSubmitted,
-}: InvoiceBankReceiptUploadFormProps) {
+export function InvoiceBankReceiptUploadForm(props: InvoiceBankReceiptUploadFormProps) {
+  const revision = useProfileContextRevision();
+  return <InvoiceReceiptForm key={`${props.invoiceId}:${revision}`} {...props} />;
+}
+function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUploadFormProps) {
   const locale = useLocale();
-  const uploadInvoiceReceiptAttachment = useReceiptAttachmentUpload();
   const fileInput = useRef<HTMLInputElement>(null);
   const [profileId, setProfileId] = useState<string | null>(null);
-  const [amountInput, setAmountInput] = useState('');
-  const [paymentDate, setPaymentDate] = useState('');
-  const [payerReference, setPayerReference] = useState('');
-  const [bankName, setBankName] = useState('');
-  const [customerNote, setCustomerNote] = useState('');
-  const [file, setFile] = useState<File | null>(null);
+  const draft = useReceiptForm('invoice', parseInvoiceBankReceiptAmountIrR);
+  const [amountInput, setAmountInput] = draft.field('amount');
+  const [paymentDate, setPaymentDate] = draft.field('paymentDate');
+  const [payerReference, setPayerReference] = draft.field('payerReference');
+  const [bankName, setBankName] = draft.field('bankName');
+  const [customerNote, setCustomerNote] = draft.field('customerNote');
+  const [, setFile] = draft.field('file');
+  const mounted = useRef(false);
+  const pending = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const [uploaded, setUploaded] = useState<{ file: File; profileId: string; key: string } | null>(
     null
   );
@@ -76,76 +89,63 @@ export function InvoiceBankReceiptUploadForm({
     };
   }, []);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (submitting) return;
-
-    const amountIrR = parseInvoiceBankReceiptAmountIrR(normalizeIrrAmountDigits(amountInput));
-    if (amountIrR === null) {
-      setError('invalid-amount');
-      setSuccess(false);
-      return;
-    }
-    const today = utcTodayIso();
-    if (!paymentDate || paymentDate > today) {
-      setError('invalid-date');
-      setSuccess(false);
-      return;
-    }
-    if (payerReference.trim().length === 0) {
-      setError('invalid-payer-ref');
-      setSuccess(false);
-      return;
-    }
-    if (!file || !isAllowedInvoiceReceiptFile(file)) {
-      setError('invalid-file');
-      setSuccess(false);
-      return;
-    }
+  const handleSubmit = draft.form.handleSubmit(async (values) => {
+    if (pending.current || review || !mounted.current) return;
     if (!profileId) {
       setError('no-profile');
-      setSuccess(false);
       return;
     }
-
+    const selectedFile = values.file;
+    if (!selectedFile) return;
+    pending.current = true;
     setSubmitting(true);
     setError(null);
     setSuccess(false);
     try {
       const attachmentKey =
-        uploaded?.file === file && uploaded.profileId === profileId
+        uploaded?.file === selectedFile && uploaded.profileId === profileId
           ? uploaded.key
-          : await uploadInvoiceReceiptAttachment(file, profileId);
+          : await uploadInvoiceReceiptAttachment(selectedFile, profileId);
+      if (!mounted.current) return;
       if (!attachmentKey) {
         setError('upload');
         return;
       }
-      setUploaded({ file, profileId, key: attachmentKey });
+      setUploaded({ file: selectedFile, profileId, key: attachmentKey });
       const { loadInvoiceBankReceiptSubmissionReview } =
         await import('../lib/invoice-bank-receipt-review-action.js');
       const result = await loadInvoiceBankReceiptSubmissionReview({
         invoiceId,
-        amountIrR: amountIrR.toString(),
-        paymentDate,
-        payerReference: payerReference.trim(),
-        bankName: bankName.trim() || null,
+        amountIrR: parseInvoiceBankReceiptAmountIrR(
+          normalizeIrrAmountDigits(values.amount)
+        )!.toString(),
+        paymentDate: values.paymentDate,
+        payerReference: values.payerReference.trim(),
+        bankName: values.bankName.trim() || null,
         attachmentKey,
-        customerNote: customerNote.trim() || null,
+        customerNote: values.customerNote.trim() || null,
       });
+      if (!mounted.current) return;
       if (result.kind === 'error') {
-        setError(mapInvoiceReceiptSubmitError(result.status));
+        if (draft.applyServerErrors(result.fields)) {
+          if (result.fields?.includes('attachmentKey')) setUploaded(null);
+        } else setError(mapInvoiceReceiptSubmitError(result.status));
         return;
       }
       setReview(result.review);
     } catch {
-      setError('upload');
+      if (mounted.current) setError('upload');
     } finally {
-      setSubmitting(false);
+      if (mounted.current) {
+        pending.current = false;
+        setSubmitting(false);
+      }
     }
-  }
+  });
 
   async function confirmSubmission() {
-    if (!review || submitting) return;
+    if (!review || pending.current || !mounted.current) return;
+    pending.current = true;
     setSubmitting(true);
     setError(null);
     try {
@@ -159,34 +159,50 @@ export function InvoiceBankReceiptUploadForm({
         ...(review.data.customerNote ? { customerNote: review.data.customerNote } : {}),
         expectedReviewHash: review.hash,
       });
+      if (!mounted.current) return;
       if (!result.ok) {
         setReview(null);
-        setError(mapInvoiceReceiptSubmitError(result.status));
+        if (draft.applyServerErrors(result.fields)) {
+          if (result.fields?.includes('attachmentKey')) setUploaded(null);
+        } else setError(mapInvoiceReceiptSubmitError(result.status));
         return;
       }
       setReview(null);
       setSuccess(true);
-      setFile(null);
+      draft.form.reset({
+        amount: '',
+        paymentDate: review.data.paymentDate,
+        payerReference: '',
+        bankName: '',
+        customerNote: '',
+        file: null,
+      });
       setUploaded(null);
       if (fileInput.current) fileInput.current.value = '';
-      setAmountInput('');
-      setPayerReference('');
-      setBankName('');
-      setCustomerNote('');
       await onSubmitted?.();
     } catch {
-      setReview(null);
-      setError('generic');
+      if (mounted.current) {
+        setReview(null);
+        setError('generic');
+      }
     } finally {
-      setSubmitting(false);
+      if (mounted.current) {
+        pending.current = false;
+        setSubmitting(false);
+      }
     }
   }
 
-  const errorMessage = error === null ? null : t(ERROR_I18N[error], locale);
+  const busy = submitting || draft.form.formState.isSubmitting;
+  const locked = busy || !!review;
+  const errorMessage =
+    (error === null ? null : t(ERROR_I18N[error], locale)) ||
+    draft.errors.root?.validation?.message;
 
   return (
     <>
       <form
+        noValidate
         onSubmit={handleSubmit}
         className="space-y-4 rounded-lg bg-card text-card-foreground p-6 shadow-sm"
         data-testid="invoice-receipt-form"
@@ -211,13 +227,9 @@ export function InvoiceBankReceiptUploadForm({
         )}
 
         {errorMessage && (
-          <div
-            role="alert"
-            data-testid="invoice-receipt-error"
-            className="rounded-lg border border-destructive/20 bg-danger-soft p-3 text-sm text-destructive"
-          >
-            {errorMessage}
-          </div>
+          <Alert variant="destructive" data-testid="invoice-receipt-error">
+            <AlertDescription>{errorMessage}</AlertDescription>
+          </Alert>
         )}
 
         <div>
@@ -228,6 +240,7 @@ export function InvoiceBankReceiptUploadForm({
             {t('invoices.details.receiptAmountLabel', locale)}
           </label>
           <input
+            {...draft.bind('amount')}
             id="invoice-receipt-amount"
             data-testid="invoice-receipt-amount"
             name="amount"
@@ -236,14 +249,18 @@ export function InvoiceBankReceiptUploadForm({
             autoComplete="off"
             dir="ltr"
             value={amountInput}
-            disabled={submitting}
-            aria-invalid={error === 'invalid-amount'}
+            disabled={locked}
             onChange={(event) => {
               setAmountInput(normalizeIrrAmountDigits(event.target.value));
               if (error === 'invalid-amount') setError(null);
             }}
             className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
           />
+          {draft.errors.amount && (
+            <p id={draft.errorId('amount')} role="alert" className="text-sm text-destructive">
+              {draft.errors.amount.message}
+            </p>
+          )}
         </div>
 
         <div>
@@ -254,20 +271,25 @@ export function InvoiceBankReceiptUploadForm({
             {t('invoices.details.receiptDateLabel', locale)}
           </label>
           <input
+            {...draft.bind('paymentDate')}
             id="invoice-receipt-date"
             data-testid="invoice-receipt-date"
             name="paymentDate"
             type="date"
             max={utcTodayIso()}
             value={paymentDate}
-            disabled={submitting}
-            aria-invalid={error === 'invalid-date'}
+            disabled={locked}
             onChange={(event) => {
               setPaymentDate(event.target.value);
               if (error === 'invalid-date') setError(null);
             }}
             className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
           />
+          {draft.errors.paymentDate && (
+            <p id={draft.errorId('paymentDate')} role="alert" className="text-sm text-destructive">
+              {draft.errors.paymentDate.message}
+            </p>
+          )}
         </div>
 
         <div>
@@ -278,6 +300,7 @@ export function InvoiceBankReceiptUploadForm({
             {t('invoices.details.receiptPayerRefLabel', locale)}
           </label>
           <input
+            {...draft.bind('payerReference')}
             id="invoice-receipt-payer-ref"
             data-testid="invoice-receipt-payer-ref"
             name="payerReference"
@@ -285,14 +308,22 @@ export function InvoiceBankReceiptUploadForm({
             autoComplete="off"
             maxLength={128}
             value={payerReference}
-            disabled={submitting}
-            aria-invalid={error === 'invalid-payer-ref'}
+            disabled={locked}
             onChange={(event) => {
               setPayerReference(event.target.value);
               if (error === 'invalid-payer-ref') setError(null);
             }}
             className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
           />
+          {draft.errors.payerReference && (
+            <p
+              id={draft.errorId('payerReference')}
+              role="alert"
+              className="text-sm text-destructive"
+            >
+              {draft.errors.payerReference.message}
+            </p>
+          )}
         </div>
 
         <div>
@@ -303,6 +334,7 @@ export function InvoiceBankReceiptUploadForm({
             {t('invoices.details.receiptBankNameLabel', locale)}
           </label>
           <input
+            {...draft.bind('bankName')}
             id="invoice-receipt-bank-name"
             data-testid="invoice-receipt-bank-name"
             name="bankName"
@@ -310,10 +342,15 @@ export function InvoiceBankReceiptUploadForm({
             autoComplete="off"
             maxLength={128}
             value={bankName}
-            disabled={submitting}
+            disabled={locked}
             onChange={(event) => setBankName(event.target.value)}
             className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
           />
+          {draft.errors.bankName && (
+            <p id={draft.errorId('bankName')} role="alert" className="text-sm text-destructive">
+              {draft.errors.bankName.message}
+            </p>
+          )}
         </div>
 
         <div>
@@ -323,27 +360,47 @@ export function InvoiceBankReceiptUploadForm({
           >
             {t('invoices.details.receiptFileLabel', locale)}
           </label>
-          <input
-            ref={fileInput}
-            id="invoice-receipt-file"
-            data-testid="invoice-receipt-file"
-            name="receiptFile"
-            type="file"
-            accept={INVOICE_BANK_RECEIPT_FILE_ACCEPT}
-            disabled={submitting}
-            aria-invalid={error === 'invalid-file'}
-            aria-describedby="invoice-receipt-file-hint"
-            onChange={(event) => {
-              const next = event.target.files?.[0] ?? null;
-              setFile(next);
-              setUploaded(null);
-              if (error === 'invalid-file' || error === 'upload') setError(null);
-            }}
-            className="mt-1 block w-full text-sm text-muted-foreground file:me-4 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-foreground"
+          <FormField
+            control={draft.form.control}
+            name="file"
+            render={({ field }) => (
+              <input
+                ref={(element) => {
+                  field.ref(element);
+                  fileInput.current = element;
+                }}
+                onBlur={field.onBlur}
+                aria-invalid={!!draft.errors.file || undefined}
+                id="invoice-receipt-file"
+                data-testid="invoice-receipt-file"
+                name="receiptFile"
+                type="file"
+                accept={INVOICE_BANK_RECEIPT_FILE_ACCEPT}
+                disabled={locked}
+                aria-describedby={[
+                  'invoice-receipt-file-hint',
+                  draft.errors.file ? draft.errorId('file') : null,
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                onChange={(event) => {
+                  const next = event.target.files?.[0] ?? null;
+                  setFile(next);
+                  setUploaded(null);
+                  if (error === 'invalid-file' || error === 'upload') setError(null);
+                }}
+                className="mt-1 block w-full text-sm text-muted-foreground file:me-4 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-foreground"
+              />
+            )}
           />
           <p id="invoice-receipt-file-hint" className="mt-2 text-sm text-muted-foreground">
             {t('invoices.details.receiptFileHint', locale)}
           </p>
+          {draft.errors.file && (
+            <p id={draft.errorId('file')} role="alert" className="text-sm text-destructive">
+              {draft.errors.file.message}
+            </p>
+          )}
         </div>
 
         <div>
@@ -354,25 +411,38 @@ export function InvoiceBankReceiptUploadForm({
             {t('invoices.details.receiptNoteLabel', locale)}
           </label>
           <textarea
+            {...draft.bind('customerNote')}
             id="invoice-receipt-note"
             data-testid="invoice-receipt-note"
             name="customerNote"
             rows={3}
             maxLength={2000}
             value={customerNote}
-            disabled={submitting}
+            disabled={locked}
             onChange={(event) => setCustomerNote(event.target.value)}
             className="mt-1 w-full rounded-lg border border-input px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
           />
+          {draft.errors.customerNote && (
+            <p id={draft.errorId('customerNote')} role="alert" className="text-sm text-destructive">
+              {draft.errors.customerNote.message}
+            </p>
+          )}
         </div>
 
         <button
           type="submit"
           data-testid="invoice-receipt-submit"
-          disabled={submitting}
+          disabled={locked}
+          aria-busy={busy || undefined}
           className="w-full rounded-lg border border-primary bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-60"
         >
-          {submitting
+          {busy && (
+            <Loader2
+              aria-hidden="true"
+              className="me-2 inline size-4 animate-spin motion-reduce:animate-none"
+            />
+          )}
+          {busy
             ? t('invoices.details.receiptSubmitting', locale)
             : t('invoices.details.receiptSubmit', locale)}
         </button>
@@ -384,7 +454,7 @@ export function InvoiceBankReceiptUploadForm({
           <InvoiceBankReceiptSubmissionReviewDialog
             review={review}
             locale={locale}
-            loading={submitting}
+            loading={busy}
             onCancel={() => setReview(null)}
             onConfirm={() => void confirmSubmission()}
           />

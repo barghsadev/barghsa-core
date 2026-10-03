@@ -6,6 +6,9 @@ export {
 export {
   BANK_RECEIPT_STORAGE_PURPOSE,
   parseBankReceiptTopUpAmountIrR,
+  parseBankReceiptPaymentDate,
+  parseBankReceiptPayerReference,
+  parseBankReceiptCustomerNote,
 } from './wallet-bank-receipt-topup.js';
 export {
   INVOICE_BANK_RECEIPT_FILE_ACCEPT,

@@ -1,11 +1,14 @@
 import { act } from 'react';
+import { refreshProfileContext } from '../lib/profile-context.js';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi, type Mock } from 'vitest';
 import { WalletPage } from './WalletPage.js';
 
 const { upload } = vi.hoisted(() => ({ upload: vi.fn() }));
-vi.mock('../hooks/useReceiptAttachmentUpload.js', () => ({
-  useReceiptAttachmentUpload: () => upload,
+type ReceiptUploadModule = typeof import('../lib/invoice-bank-receipt-upload.js');
+vi.mock('../lib/invoice-bank-receipt-upload.js', async (importOriginal) => ({
+  ...(await importOriginal<ReceiptUploadModule>()),
+  uploadInvoiceReceiptAttachment: upload,
 }));
 const json = (body: unknown, status = 200) => ({
   ok: status >= 200 && status < 300,
@@ -116,7 +119,8 @@ async function submit(receipt = false) {
     let attempt = 0;
     attempt < 30 &&
     !element(receipt ? 'wallet-receipt-error' : 'wallet-error') &&
-    !document.querySelector('[role="dialog"]');
+    !document.querySelector('[role="dialog"]') &&
+    !host.querySelector('[aria-invalid=true]');
     attempt++
   ) {
     await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
@@ -160,13 +164,14 @@ it.each(['profiles', 'wallet', 'network'])(
   }
 );
 
-it.each(['', '0', '9007199254740993'])(
+it.each(['', '0', '9007199254740993', '1e3', '0x10', '1.5'])(
   'rejects invalid online amount %s before posting',
   async (amount) => {
     await render();
     await input('wallet-amount', amount);
     await submit();
-    expect(element('wallet-error').textContent).toContain('positive whole-rial');
+    expect(element<HTMLInputElement>('wallet-amount').getAttribute('aria-invalid')).toBe('true');
+    expect(element('wallet-amount').closest('form')?.textContent).toContain('positive whole-rial');
     expect(post).not.toHaveBeenCalled();
   }
 );
@@ -185,7 +190,7 @@ it.each([
   await render();
   await input('wallet-amount', '250');
   await submit();
-  expect(element('wallet-error').textContent).toBeTruthy();
+  expect(host.querySelector('[role=alert]')?.textContent).toBeTruthy();
   expect(assign).not.toHaveBeenCalled();
   expect(element<HTMLButtonElement>('wallet-submit').disabled).toBe(false);
 });
@@ -224,7 +229,7 @@ it.each(['network', 'json'])('recovers from online %s failure', async (failure) 
   await render();
   await input('wallet-amount', '250');
   await submit();
-  expect(element('wallet-error').textContent).toBeTruthy();
+  expect(host.querySelector('[role=alert]')?.textContent).toBeTruthy();
   expect(assign).not.toHaveBeenCalled();
 });
 
@@ -238,7 +243,7 @@ it.each([
   await render();
   await receiptFields(fields);
   await submit(true);
-  expect(element('wallet-receipt-error').textContent).toBeTruthy();
+  expect(element('wallet-receipt-form').querySelector('[role=alert]')?.textContent).toBeTruthy();
   expect(upload).not.toHaveBeenCalled();
   expect(post).not.toHaveBeenCalled();
 });
@@ -295,4 +300,127 @@ it('renders an explicitly returned non-IRR currency without relabeling it', asyn
   wallet.mockResolvedValue(json({ balance: '100', currency: 'USD', onlineTopUpLimit: 1000 }));
   await render();
   expect(element('wallet-balance').textContent).toContain('USD');
+});
+
+it.each(['review', 'confirm'] as const)(
+  'recovers an owned receipt field error during %s using the existing upload',
+  async (stage) => {
+    const failure = json(
+      {
+        error: {
+          code: 'VALIDATION:INPUT:INVALID',
+          fields: ['payerReference'],
+          message: 'private server text',
+        },
+      },
+      400
+    );
+    if (stage === 'review') receiptReviewPost.mockResolvedValueOnce(failure);
+    else post.mockResolvedValueOnce(failure);
+    post.mockResolvedValue(json({ transactionId: 'tx-1', state: 'Pending', amount: '250' }, 201));
+    await render();
+    await receiptFields();
+    await submit(true);
+    if (stage === 'confirm') await confirmReceipt();
+    await act(
+      async () =>
+        new Promise<void>((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+        )
+    );
+    const payer = element<HTMLInputElement>('wallet-receipt-payer-ref');
+    expect(payer.getAttribute('aria-invalid')).toBe('true');
+    expect(document.activeElement).toBe(payer);
+    expect(host.textContent).not.toContain('private server text');
+    expect(element<HTMLInputElement>('wallet-receipt-file').files?.[0]?.name).toBe('receipt.pdf');
+    await input('wallet-receipt-payer-ref', 'BANK-2');
+    receiptReviewPost.mockResolvedValue(
+      json({ ...receiptReview, data: { ...receiptReview.data, payerReference: 'BANK-2' } })
+    );
+    await submit(true);
+    await confirmReceipt();
+    expect(element('wallet-receipt-success')).not.toBeNull();
+    expect(upload).toHaveBeenCalledTimes(1);
+  }
+);
+it('ignores receipt metadata with unknown protected fields', async () => {
+  receiptReviewPost.mockResolvedValue(
+    json(
+      {
+        error: {
+          code: 'VALIDATION:INPUT:INVALID',
+          fields: ['payerReference', 'idempotencyKey'],
+          message: 'private server text',
+        },
+      },
+      400
+    )
+  );
+  await render();
+  await receiptFields();
+  await submit(true);
+  expect(element('wallet-receipt-error')).not.toBeNull();
+  expect(element('wallet-receipt-payer-ref').getAttribute('aria-invalid')).toBeNull();
+  expect(host.textContent).not.toContain('private server text');
+});
+it('ignores an upload belonging to the previous active profile', async () => {
+  let finish!: (key: string) => void;
+  upload.mockReturnValueOnce(
+    new Promise<string>((resolve) => {
+      finish = resolve;
+    })
+  );
+  await render();
+  await receiptFields();
+  await act(async () =>
+    element<HTMLFormElement>('wallet-receipt-form').dispatchEvent(
+      new Event('submit', { bubbles: true, cancelable: true })
+    )
+  );
+  await act(async () => refreshProfileContext());
+  expect(element<HTMLInputElement>('wallet-receipt-amount').value).toBe('');
+  await act(async () => finish('old-scope-key'));
+  expect(receiptReviewPost).not.toHaveBeenCalled();
+  expect(post).not.toHaveBeenCalled();
+});
+
+it('locks repeated online submits before validation and review finish', async () => {
+  let finish!: (response: ReturnType<typeof json>) => void;
+  reviewPost = vi.fn().mockReturnValueOnce(
+    new Promise((resolve) => {
+      finish = resolve;
+    })
+  );
+  await render();
+  await input('wallet-amount', '250');
+  await act(async () => {
+    const form = element('wallet-amount').closest('form')!;
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  });
+  expect(element<HTMLButtonElement>('wallet-submit').disabled).toBe(true);
+  expect(element<HTMLButtonElement>('wallet-submit').getAttribute('aria-busy')).toBe('true');
+  expect(reviewPost).toHaveBeenCalledTimes(1);
+  await act(async () => finish(json(review)));
+  expect(post).not.toHaveBeenCalled();
+});
+it('does not open an obsolete online review after the active profile changes', async () => {
+  let finish!: (response: ReturnType<typeof json>) => void;
+  reviewPost = vi.fn().mockReturnValueOnce(
+    new Promise((resolve) => {
+      finish = resolve;
+    })
+  );
+  await render();
+  await input('wallet-amount', '250');
+  await act(async () =>
+    element('wallet-amount')
+      .closest('form')!
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  );
+  await act(async () => refreshProfileContext());
+  await act(async () => finish(json(review)));
+  expect(document.querySelector('[role=dialog]')).toBeNull();
+  expect(element<HTMLInputElement>('wallet-amount').value).toBe('');
+  expect(post).not.toHaveBeenCalled();
 });

@@ -1,3 +1,4 @@
+import { inputErrorFields } from './input-error-fields.js';
 import type { BankReceiptTopUpReview } from '@barghsa/shared/finance';
 import { withCsrf } from './csrf.js';
 
@@ -13,7 +14,7 @@ export interface BankReceiptTopUpDetails {
 }
 
 export type BankReceiptTopUpActionResult<T> =
-  { kind: 'success'; value: T } | { kind: 'error'; status: number };
+  { kind: 'success'; value: T } | { kind: 'error'; status: number; fields?: unknown[] };
 
 export async function loadBankReceiptTopUpReview(
   details: BankReceiptTopUpDetails
@@ -33,7 +34,12 @@ export async function loadBankReceiptTopUpReview(
     }),
   });
   const payload: unknown = await response.json().catch(() => ({}));
-  if (!response.ok) return { kind: 'error', status: response.status };
+  if (!response.ok)
+    return {
+      kind: 'error',
+      status: response.status,
+      ...inputErrorFields(payload, response.status),
+    };
   const { parseBankReceiptTopUpReview } = await import('@barghsa/shared/finance');
   const review = parseBankReceiptTopUpReview(payload);
   if (
@@ -77,7 +83,12 @@ export async function submitReviewedBankReceiptTopUp(
     state?: unknown;
     amount?: unknown;
   };
-  if (!response.ok) return { kind: 'error', status: response.status };
+  if (!response.ok)
+    return {
+      kind: 'error',
+      status: response.status,
+      ...inputErrorFields(payload, response.status),
+    };
   if (
     payload.state !== 'Pending' ||
     payload.amount !== review.data.amountIrR ||

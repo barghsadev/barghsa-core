@@ -1,3 +1,4 @@
+import { throwReceiptFieldErrors } from '../finance/receipt-input-fields.js';
 import type { AgentPermission } from '@barghsa/shared/agent-permissions';
 import {
   Body,
@@ -98,8 +99,10 @@ export class WalletController {
     assertUuid(profileId, 'profileId');
     await this.assertProfileAccess(req, profileId, 'bank-receipts:submit');
     const parsed = BankReceiptReviewBodySchema.safeParse(rawBody ?? {});
-    if (!parsed.success)
+    if (!parsed.success) {
+      throwReceiptFieldErrors(parsed.error.issues);
       httpError(ErrorCodes.VALIDATION_PARSE_ZOD, 'Bank receipt review fields are required');
+    }
     return this.bankReceiptTopUpService.review({
       ...parsed.data,
       profileId,
@@ -316,6 +319,7 @@ export class WalletController {
 
     const parsed = BankReceiptBodySchema.safeParse(rawBody ?? {});
     if (!parsed.success) {
+      throwReceiptFieldErrors(parsed.error.issues);
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD,
         'Bank receipt top-up body must include amount, paymentDate, payerReference, and attachmentKey'

@@ -1465,7 +1465,9 @@ export const fa: I18nDictionary = {
   'invoices.details.receiptSuccess': 'رسید ثبت شد و در انتظار تأیید مالی است.',
   'invoices.details.receiptInvalidAmount': 'مبلغ باید یک عدد صحیح مثبت به ریال باشد.',
   'invoices.details.receiptInvalidDate': 'تاریخ واریز باید یک روز تقویمی معتبر و نه در آینده باشد.',
-  'invoices.details.receiptInvalidPayerRef': 'شماره پیگیری را وارد کنید.',
+  'invoices.details.receiptInvalidPayerRef': 'شماره پیگیری: یک خط، ۱ تا ۱۲۸ نویسه.',
+  'invoices.details.receiptInvalidNote':
+    'یادداشت باید حداکثر ۲۰۰۰ نویسه داشته باشد و شامل نویسه نامعتبر نباشد.',
   'invoices.details.receiptInvalidFile':
     'یک فایل رسید معتبر (PDF یا تصویر) در سقف حجم مجاز انتخاب کنید.',
   'invoices.details.receiptUploadError': 'بارگذاری فایل رسید انجام نشد. دوباره تلاش کنید.',
@@ -1582,7 +1584,7 @@ export const fa: I18nDictionary = {
   'wallet.page.receiptSuccess':
     'رسید ثبت شد و در انتظار تأیید مالی است. موجودی هنوز افزایش نیافته است.',
   'wallet.page.receiptInvalidDate': 'تاریخ واریز باید یک روز تقویمی معتبر و نه در آینده باشد.',
-  'wallet.page.receiptInvalidPayerRef': 'شماره پیگیری را وارد کنید.',
+  'wallet.page.receiptInvalidPayerRef': 'شماره پیگیری: یک خط، ۱ تا ۱۲۸ نویسه.',
   'wallet.page.receiptInvalidBankName': 'نام بانک: یک خط، حداکثر ۱۲۸ نویسه.',
   'wallet.page.receiptInvalidFile': 'یک فایل رسید معتبر (PDF یا تصویر) انتخاب کنید.',
   'wallet.page.receiptUploadError': 'بارگذاری فایل رسید انجام نشد. دوباره تلاش کنید.',
@@ -3164,7 +3166,10 @@ export const en: I18nDictionary = {
   'invoices.details.receiptSuccess': 'Receipt submitted and pending finance confirmation.',
   'invoices.details.receiptInvalidAmount': 'Amount must be a positive integer IRR value.',
   'invoices.details.receiptInvalidDate': 'Enter a real calendar date that is not in the future.',
-  'invoices.details.receiptInvalidPayerRef': 'Enter the payer or tracking reference from the slip.',
+  'invoices.details.receiptInvalidPayerRef':
+    'Payer or tracking reference: one line, 1–128 characters.',
+  'invoices.details.receiptInvalidNote':
+    'Use up to 2000 characters and no invalid control characters.',
   'invoices.details.receiptInvalidFile':
     'Choose a valid receipt file (PDF or image) within the size limit.',
   'invoices.details.receiptUploadError': 'Could not upload the receipt file. Please try again.',
@@ -3286,7 +3291,7 @@ export const en: I18nDictionary = {
   'wallet.page.receiptSuccess':
     'Receipt submitted and pending finance confirmation. The balance has not increased yet.',
   'wallet.page.receiptInvalidDate': 'Enter a real calendar date that is not in the future.',
-  'wallet.page.receiptInvalidPayerRef': 'Enter the payer or tracking reference from the slip.',
+  'wallet.page.receiptInvalidPayerRef': 'Payer or tracking reference: one line, 1–128 characters.',
   'wallet.page.receiptInvalidBankName': 'Bank name: one line, up to 128 characters.',
   'wallet.page.receiptInvalidFile': 'Choose a valid receipt file (PDF or image).',
   'wallet.page.receiptUploadError': 'Could not upload the receipt file. Please try again.',

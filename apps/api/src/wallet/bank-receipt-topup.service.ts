@@ -1,3 +1,4 @@
+import { InputFieldException } from '../common/input-field.exception.js';
 import {
   sealBankReceiptAttachment,
   persistSealedBankReceipt,
@@ -149,7 +150,7 @@ export class BankReceiptTopUpService {
     const key = input.idempotencyKey.trim();
     if (!key) throw httpError(ErrorCodes.VALIDATION_INPUT_MISSING, 'Idempotency key is required');
     const parsed = parseBankReceiptTopUpSubmission(input);
-    if (!parsed.ok) throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, parsed.message);
+    if (!parsed.ok) throw new InputFieldException([parsed.field]);
     const pool = getDbPool({ session: true });
     const client = await pool.connect();
     const actor: ReceiptSubmissionActor = {
@@ -255,7 +256,7 @@ export class BankReceiptTopUpService {
       bankName: input.bankName,
     });
     if (!parsed.ok) {
-      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, parsed.message);
+      throw new InputFieldException([parsed.field]);
     }
 
     const pool = getDbPool({ session: true });

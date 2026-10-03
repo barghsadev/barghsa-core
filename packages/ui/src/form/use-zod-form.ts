@@ -10,8 +10,10 @@ import {
   type UseFormSetFocus,
   type SubmitHandler,
   type SubmitErrorHandler,
+  type Resolver,
+  type FieldErrors,
 } from 'react-hook-form';
-import type { ZodType } from 'zod';
+import type { $ZodType } from 'zod/v4/core';
 
 export function firstErrorField(errors: unknown, prefix = ''): string | undefined {
   if (!errors || typeof errors !== 'object') return;
@@ -27,12 +29,34 @@ export function firstErrorField(errors: unknown, prefix = ''): string | undefine
 }
 
 export function useZodForm<Input extends FieldValues, Output extends FieldValues = Input>(
-  schema: ZodType<Output, Input>,
-  options: Omit<UseFormProps<Input, unknown, Output>, 'resolver' | 'mode' | 'shouldFocusError'> = {}
+  schema: $ZodType<Output, Input> | (() => Promise<$ZodType<Output, Input>>),
+  options: Omit<UseFormProps<Input, unknown, Output>, 'resolver' | 'mode' | 'shouldFocusError'> & {
+    validationUnavailableMessage?: string;
+  } = {}
 ): UseFormReturn<Input, unknown, Output> & { isSubmissionPending: () => boolean } {
+  const {
+    validationUnavailableMessage = 'Validation is unavailable. Please retry.',
+    ...formOptions
+  } = options;
+  const resolver: Resolver<Input, unknown, Output> =
+    typeof schema === 'function'
+      ? async (values, context, options) => {
+          let loaded: $ZodType<Output, Input>;
+          try {
+            loaded = await schema();
+          } catch {
+            const errors: FieldErrors<Input> = {};
+            errors.root = {
+              validation: { type: 'validate', message: validationUnavailableMessage },
+            };
+            return { values: {}, errors };
+          }
+          return zodResolver(loaded)(values, context, options);
+        }
+      : zodResolver(schema);
   const form = useForm<Input, unknown, Output>({
-    ...options,
-    resolver: zodResolver(schema),
+    ...formOptions,
+    resolver,
     mode: 'onTouched',
     // Native focus happens before isSubmitting clears and cannot focus disabled controls.
     shouldFocusError: false,

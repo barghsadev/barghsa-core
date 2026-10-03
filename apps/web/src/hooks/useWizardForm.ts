@@ -8,7 +8,7 @@ import {
   type FieldValues,
 } from '@barghsa/ui/form';
 import type { RefCallback } from 'react';
-import type { ZodType } from 'zod';
+import type { $ZodType } from 'zod/v4/core';
 
 export interface WizardFieldBinding {
   name: string;
@@ -19,11 +19,15 @@ export interface WizardFieldBinding {
 }
 
 export function useWizardForm<Input extends FieldValues>(
-  schema: ZodType<Input, Input>,
-  initial: NoInfer<Input> | (() => NoInfer<Input>)
+  schema: $ZodType<Input, Input> | (() => Promise<$ZodType<Input, Input>>),
+  initial: NoInfer<Input> | (() => NoInfer<Input>),
+  validationUnavailableMessage?: string
 ) {
   const [defaults] = useState(initial);
-  const form = useZodForm(schema, { defaultValues: defaults as DefaultValues<Input> });
+  const form = useZodForm(schema, {
+    defaultValues: defaults as DefaultValues<Input>,
+    ...(validationUnavailableMessage ? { validationUnavailableMessage } : {}),
+  });
   useWatch({ control: form.control });
   const errors = form.formState.errors;
   const [pending, setPending] = useState(false);

@@ -1,3 +1,4 @@
+import { throwReceiptFieldErrors } from '../finance/receipt-input-fields.js';
 /**
  * Customer invoice API (T-04.1.05.04 / T-04.3.01.02).
  *
@@ -372,8 +373,10 @@ export class CustomerInvoiceController {
   ) {
     assertUuid(invoiceId);
     const parsed = InvoiceBankReceiptReviewBodySchema.safeParse(rawBody ?? {});
-    if (!parsed.success)
+    if (!parsed.success) {
+      throwReceiptFieldErrors(parsed.error.issues);
       httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Bank receipt review fields are required');
+    }
     return this.bankReceiptUpload.review({
       userId: req.session.userId,
       sessionId: req.session.sessionId,
@@ -422,6 +425,7 @@ export class CustomerInvoiceController {
     assertUuid(invoiceId);
     const parsed = InvoiceBankReceiptBodySchema.safeParse(rawBody ?? {});
     if (!parsed.success) {
+      throwReceiptFieldErrors(parsed.error.issues);
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Bank receipt body must include receipt details and expectedReviewHash',

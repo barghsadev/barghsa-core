@@ -1,3 +1,4 @@
+import { inputErrorFields } from './input-error-fields.js';
 import type { InvoiceBankReceiptSubmissionReview } from '@barghsa/shared/finance';
 import { withCsrf } from './csrf.js';
 
@@ -11,7 +12,7 @@ export async function loadInvoiceBankReceiptSubmissionReview(input: {
   customerNote: string | null;
 }): Promise<
   | { kind: 'success'; review: InvoiceBankReceiptSubmissionReview }
-  | { kind: 'error'; status: number }
+  | { kind: 'error'; status: number; fields?: unknown[] }
 > {
   const response = await fetch(`/api/invoices/${input.invoiceId}/bank-receipts/review`, {
     method: 'POST',
@@ -26,8 +27,13 @@ export async function loadInvoiceBankReceiptSubmissionReview(input: {
       customerNote: input.customerNote ?? undefined,
     }),
   });
-  if (!response.ok) return { kind: 'error', status: response.status };
   const payload: unknown = await response.json().catch(() => null);
+  if (!response.ok)
+    return {
+      kind: 'error',
+      status: response.status,
+      ...inputErrorFields(payload, response.status),
+    };
   const { parseInvoiceBankReceiptSubmissionReview } = await import('@barghsa/shared/finance');
   const review = parseInvoiceBankReceiptSubmissionReview(payload);
   if (

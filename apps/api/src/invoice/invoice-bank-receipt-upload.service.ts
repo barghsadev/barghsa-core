@@ -1,3 +1,4 @@
+import { InputFieldException } from '../common/input-field.exception.js';
 import { v7 as uuidv7 } from 'uuid';
 import { receiptActivityActor } from '../finance/receipt-activity-actor.js';
 import {
@@ -199,7 +200,7 @@ export class InvoiceBankReceiptUploadService {
 
   async review(input: SubmitInvoiceBankReceiptInput): Promise<InvoiceBankReceiptSubmissionReview> {
     const parsed = parseInvoiceBankReceiptSubmission(input);
-    if (!parsed.ok) throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, parsed.message);
+    if (!parsed.ok) throw new InputFieldException([parsed.field]);
     const profileId = await this.customerInvoices.resolveActiveProfileId(
       input.userId,
       'bank-receipts:submit'
@@ -254,7 +255,7 @@ export class InvoiceBankReceiptUploadService {
       customerNote: input.customerNote,
     });
     if (!parsed.ok) {
-      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, parsed.message);
+      throw new InputFieldException([parsed.field]);
     }
 
     const profileId = await this.customerInvoices.resolveActiveProfileId(
