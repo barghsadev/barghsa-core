@@ -209,7 +209,8 @@ export default function AdminCataloguePage({
     categories: categoryOptions[type],
     hardwareIds: hardwareOptions.filter((row) => row.status !== 'archived').map((row) => row.id),
   };
-  const blocked = pending || action !== null;
+  const [savingBusy, setSavingBusy] = useState(false);
+  const blocked = pending || action !== null || savingBusy;
   const live = useRef({
     type,
     editor,
@@ -489,7 +490,7 @@ export default function AdminCataloguePage({
     description: string,
     body?: unknown
   ) {
-    if (accessDenied.current || action || uncertainCreate) return;
+    if (accessDenied.current || action || uncertainCreate || savingBusy) return;
     commandVersion.current = generation.current;
     if (heading !== label('save') && heading !== label('savePrice')) commandKind.current = 'other';
     setSaved(false);
@@ -523,6 +524,7 @@ export default function AdminCataloguePage({
       !ready() ||
       productForm.isPending() ||
       priceForm.isPending() ||
+      savingBusy ||
       action ||
       uncertainCreate
     )
@@ -596,6 +598,7 @@ export default function AdminCataloguePage({
       preference.status !== 'ready' ||
       productForm.isPending() ||
       priceForm.isPending() ||
+      savingBusy ||
       action
     )
       return;
@@ -1063,10 +1066,20 @@ export default function AdminCataloguePage({
                       <SavingAgreementEditor
                         planId={detail.id}
                         onChanged={() => choose(detail.id)}
+                        disabled={pending || action !== null || !ready()}
+                        refreshVersion={revision + detailRevision}
+                        onBusyChange={setSavingBusy}
+                        onDenied={denyAccess}
                       />
                     )}
                     {detail && type === 'hardware' && (
-                      <SavingInventoryPanel hardwareId={detail.id} />
+                      <SavingInventoryPanel
+                        hardwareId={detail.id}
+                        disabled={pending || action !== null || !ready()}
+                        refreshVersion={revision + detailRevision}
+                        onBusyChange={setSavingBusy}
+                        onDenied={denyAccess}
+                      />
                     )}
                     {detail && preference.status === 'ready' && (
                       <section

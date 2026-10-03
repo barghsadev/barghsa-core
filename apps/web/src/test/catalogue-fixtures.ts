@@ -25,6 +25,7 @@ export function catalogueDetail(type: CatalogueType = 'consultation', id = catal
 }
 export const catalogueReferences = { greenModes: [], vatOverride: false };
 export const catalogueConfig = {
+  planId: catalogueId,
   hardwareIds: [hardwareId],
   preventActiveDuplicates: true,
   agreements: [],

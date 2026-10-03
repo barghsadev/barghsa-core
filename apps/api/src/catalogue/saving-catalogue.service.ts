@@ -131,6 +131,7 @@ export class SavingCatalogueService {
         )
       ).rows.map((row) => row.hardware_id);
       return {
+        planId,
         hardwareIds: hardware,
         preventActiveDuplicates: plan.prevent_active_saving_duplicates,
         agreements: await this.agreements(client, planId),
@@ -197,18 +198,27 @@ export class SavingCatalogueService {
   saveDraft(planId: string, input: { title: string; body: string }, actor: Actor, ip: string) {
     return this.mutate(actor, async (client) => {
       await this.plan(client, planId, true);
+      const existing = (
+        await client.query<AgreementRow>(
+          "SELECT id,plan_id,title,body,status,effective_from,created_at,created_by FROM saving_plan_agreement_versions WHERE plan_id=$1 AND status='draft'",
+          [planId]
+        )
+      ).rows[0];
+      if (existing?.title === input.title && existing.body === input.body) return existing;
       await client.query(
         "DELETE FROM saving_plan_agreement_versions WHERE plan_id=$1 AND status='draft'",
         [planId]
       );
       const id = uuidv7();
-      await client.query(
-        `INSERT INTO saving_plan_agreement_versions(id,plan_id,title,body,created_by)
-         VALUES($1,$2,$3,$4,$5)`,
-        [id, planId, input.title, input.body, actor.userId]
-      );
+      const saved = (
+        await client.query<AgreementRow>(
+          `INSERT INTO saving_plan_agreement_versions(id,plan_id,title,body,created_by)
+         VALUES($1,$2,$3,$4,$5) RETURNING id,plan_id,title,body,status,effective_from,created_at,created_by`,
+          [id, planId, input.title, input.body, actor.userId]
+        )
+      ).rows[0]!;
       await this.audit(client, actor, ip, 'saving_plan_agreement_drafted', planId);
-      return { id, status: 'draft' as const };
+      return saved;
     });
   }
 
@@ -228,13 +238,15 @@ export class SavingCatalogueService {
          WHERE plan_id=$1 AND status='active'`,
         [planId]
       );
-      await client.query(
-        `UPDATE saving_plan_agreement_versions SET status='active',effective_from=NOW(),updated_at=NOW()
-         WHERE id=$1`,
-        [versionId]
-      );
+      const activated = (
+        await client.query<AgreementRow>(
+          `UPDATE saving_plan_agreement_versions SET status='active',effective_from=NOW(),updated_at=NOW()
+         WHERE id=$1 RETURNING id,plan_id,title,body,status,effective_from,created_at,created_by`,
+          [versionId]
+        )
+      ).rows[0]!;
       await this.audit(client, actor, ip, 'saving_plan_agreement_activated', planId);
-      return { id: versionId, status: 'active' as const };
+      return activated;
     });
   }
 }

@@ -1,5 +1,39 @@
 import { custom } from 'zod/mini';
 import type { Draft, PriceDraft, ProductType } from './catalogue-form.js';
+import type { AgreementDraft, InventoryDraft } from './saving-catalogue-form.js';
+
+export function agreementFormSchema(messages: Record<keyof AgreementDraft, string>) {
+  return custom<AgreementDraft>().check((ctx) => {
+    for (const field of ['title', 'body'] as const) {
+      const value = ctx.value[field].trim();
+      if (!value || value.length > (field === 'title' ? 300 : 50_000))
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value,
+          path: [field],
+          message: messages[field],
+        });
+    }
+  });
+}
+export function inventoryFormSchema(
+  reserved: number,
+  messages: Record<keyof InventoryDraft, string>,
+  integer: (raw: string, min: number, max: number) => number | null
+) {
+  return custom<InventoryDraft>().check((ctx) => {
+    const issue = (field: keyof InventoryDraft) =>
+      ctx.issues.push({
+        code: 'custom',
+        input: ctx.value,
+        path: [field],
+        message: messages[field],
+      });
+    if (!ctx.value.stockTracking && reserved > 0) issue('stockTracking');
+    if (integer(ctx.value.stockCount, reserved, 1_000_000) === null) issue('stockCount');
+    if (integer(ctx.value.reservationMinutes, 5, 10080) === null) issue('reservationMinutes');
+  });
+}
 export function productFormSchema(
   context: { type: ProductType; isNew: boolean; categories: string[]; hardwareIds: string[] },
   messages: Record<keyof Draft, string>,

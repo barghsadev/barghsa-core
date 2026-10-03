@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
-import { fullNavigation } from './navigation-fixture';
+import { setupCatalogueForms as setup } from './catalogue-form-fixture';
 import { tCatalogue } from '../../../packages/i18n/src/catalogue';
 import {
   catalogueBase as base,
@@ -11,48 +11,6 @@ import {
   catalogueDetail,
   catalogueReferences,
 } from '../src/test/catalogue-fixtures';
-async function setup(page: Page, locale: 'fa' | 'en', darkMode: boolean) {
-  await page.addInitScript((locale) => localStorage.setItem('barghsa.locale', locale), locale);
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
-  await page.route('**/api/auth/user', (route) =>
-    route.fulfill({
-      json: {
-        isStaff: true,
-        operatingContext: 'staff',
-        canSwitchContext: true,
-        requiresTosAcceptance: false,
-        navigation: fullNavigation('staff'),
-      },
-    })
-  );
-  await page.route('**/api/public/branding/config', (route) =>
-    route.fulfill({
-      json: {
-        appTitle: 'Catalogue',
-        appTitleFa: 'محصولات',
-        supportEmail: 'support@example.test',
-        supportPhone: '+982112345678',
-        supportMobile: '+989121234567',
-        backgroundColor: '#f6f7f4',
-        darkBackgroundColor: '#15201c',
-        fontFamily: 'vazirmatn',
-        borderRadiusRem: 0.75,
-        spacingScale: 1,
-        slogan: '',
-        primaryColor: '#2563eb',
-        secondaryColor: '#64748b',
-        accentColor: '#f59e0b',
-        logoUrl: null,
-        faviconUrl: null,
-        darkMode,
-        numberStyle: locale === 'fa' ? 'persian' : 'western',
-      },
-    })
-  );
-  await page.route('**/api/user/settings/timezone', (route) =>
-    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
-  );
-}
 async function reads(page: Page) {
   await page.route('**/api/admin/catalogue/**', (route) => {
     const url = new URL(route.request().url());

@@ -1,5 +1,18 @@
 import { lookup } from './lookup.js';
 const en: Record<string, string> = {
+  invalidAgreementTitle: 'Enter an agreement title of 1 to 300 characters.',
+  invalidAgreementBody: 'Enter agreement text of 1 to 50,000 characters.',
+  invalidStockTracking: 'Keep stock tracking enabled while units are reserved.',
+  invalidStockCount: 'Enter a whole count from the reserved units to 1,000,000.',
+  invalidReservationMinutes: 'Enter a whole reservation period from 5 to 10,080 minutes.',
+  agreementLoadError: 'Could not load agreement versions. Your draft is retained; try again.',
+  inventoryLoadError: 'Could not load inventory settings. Your draft is retained; try again.',
+  agreementConflict: 'The agreement changed. Cancel and refresh before trying again.',
+  saveAgreementFirst: 'Save your edited text before activating the draft.',
+  unverifiedSaving:
+    'The save could not be verified. Cancel confirmation and refresh before another write.',
+  enabled: 'Enabled',
+  disabled: 'Disabled',
   invalidTitleFa: 'Enter a Persian title of 1 to 300 characters.',
   invalidTitleEn: 'Enter an English title of 1 to 300 characters.',
   invalidDescription: 'Use at most 4,000 characters.',
@@ -129,6 +142,18 @@ const en: Record<string, string> = {
   inventoryConflict: 'Stock cannot be lower than open reservations. Refresh and try again.',
 };
 const fa: Record<string, string> = {
+  invalidAgreementTitle: 'عنوان توافق‌نامه را با ۱ تا ۳۰۰ نویسه وارد کنید.',
+  invalidAgreementBody: 'متن توافق‌نامه را با ۱ تا ۵۰٬۰۰۰ نویسه وارد کنید.',
+  invalidStockTracking: 'تا زمانی که واحدی رزرو شده، پیگیری موجودی را فعال نگه دارید.',
+  invalidStockCount: 'تعداد صحیح را از تعداد رزروشده تا ۱٬۰۰۰٬۰۰۰ وارد کنید.',
+  invalidReservationMinutes: 'مدت رزرو صحیح را از ۵ تا ۱۰٬۰۸۰ دقیقه وارد کنید.',
+  agreementLoadError: 'دریافت نسخه‌های توافق‌نامه انجام نشد. پیش‌نویس حفظ شده؛ دوباره تلاش کنید.',
+  inventoryLoadError: 'دریافت تنظیمات موجودی انجام نشد. پیش‌نویس حفظ شده؛ دوباره تلاش کنید.',
+  agreementConflict: 'توافق‌نامه تغییر کرده است. تأیید را لغو و پیش از تلاش دوباره تازه‌سازی کنید.',
+  saveAgreementFirst: 'پیش از فعال‌سازی پیش‌نویس، متن ویرایش‌شده را ذخیره کنید.',
+  unverifiedSaving: 'ذخیره تأیید نشد. تأیید را لغو و پیش از نوشتن دوباره تازه‌سازی کنید.',
+  enabled: 'فعال',
+  disabled: 'غیرفعال',
   invalidTitleFa: 'عنوان فارسی را با ۱ تا ۳۰۰ نویسه وارد کنید.',
   invalidTitleEn: 'عنوان انگلیسی را با ۱ تا ۳۰۰ نویسه وارد کنید.',
   invalidDescription: 'حداکثر ۴۰۰۰ نویسه وارد کنید.',

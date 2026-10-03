@@ -1,80 +1,99 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useCallback } from 'react';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
-import { Button, Label, Input, Textarea } from '@barghsa/ui';
+import { Button, Label, Input, Textarea, Alert } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
-
-interface Agreement {
-  id: string;
-  title: string;
-  body: string;
-  status: 'draft' | 'active' | 'superseded';
-  effective_from: string | null;
-}
+import {
+  useSavingCatalogueEditor,
+  type SavingEditorProps,
+} from '../hooks/useSavingCatalogueEditor.js';
+import {
+  agreementDefaults,
+  agreementValues,
+  agreementBasis,
+  validAgreementConfig,
+  matchesAgreementReceipt,
+  type AgreementConfig,
+  type AgreementDraft,
+} from '../lib/saving-catalogue-form.js';
+import { record } from '../lib/catalogue-form.js';
 
 export function SavingAgreementEditor({
   planId,
   onChanged,
-}: {
-  planId: string;
-  onChanged: () => void;
-}) {
+  ...props
+}: SavingEditorProps & { planId: string; onChanged: () => void }) {
   const locale = useLocale();
   const label = (key: string) => tCatalogue(key, locale);
-  const [agreements, setAgreements] = useState<Agreement[]>([]);
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
-  const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
-  const [action, setAction] = useState<TeamAction | null>(null);
-  const [revision, setRevision] = useState(0);
   const base = `/api/admin/catalogue/saving-plans/${encodeURIComponent(planId)}`;
-
-  useEffect(() => {
-    const controller = new AbortController();
-    setState('loading');
-    void fetch(`${base}/configuration`, { credentials: 'include', signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Load failed');
-        return response.json() as Promise<{ agreements: Agreement[] }>;
-      })
-      .then(({ agreements: versions }) => {
-        if (controller.signal.aborted) return;
-        setAgreements(versions);
-        const editable =
-          versions.find((version) => version.status === 'draft') ??
-          versions.find((version) => version.status === 'active');
-        setTitle(editable?.title ?? '');
-        setBody(editable?.body ?? '');
-        setState('ready');
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setState('error');
-      });
-    return () => controller.abort();
-  }, [base, revision]);
-
-  function save(event: FormEvent) {
-    event.preventDefault();
-    if (!title.trim() || !body.trim()) return;
-    setAction({
-      path: `${base}/agreements/draft`,
-      method: 'POST',
-      title: label('saveAgreement'),
-      description: label('confirmAgreementDraft'),
-      body: { title: title.trim(), body: body.trim() },
-      forbiddenMessage: label('denied'),
-      conflictMessage: label('conflict'),
-    });
-  }
-
-  const draft = agreements.find((agreement) => agreement.status === 'draft');
-  const active = agreements.find((agreement) => agreement.status === 'active');
+  const validate = useCallback(
+    (value: unknown): value is AgreementConfig =>
+      validAgreementConfig(value) && value.planId === planId,
+    [planId]
+  );
+  const messages = { title: label('invalidAgreementTitle'), body: label('invalidAgreementBody') };
+  const editor = useSavingCatalogueEditor<AgreementConfig, AgreementDraft>({
+    ...props,
+    identity: planId,
+    path: `${base}/configuration`,
+    validate,
+    basis: agreementBasis,
+    defaults: agreementDefaults,
+    values: agreementValues,
+    messages,
+    label,
+    schema: async () => {
+      const { agreementFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return agreementFormSchema(messages);
+    },
+  });
+  const rootError = editor.errors.root?.validation?.message ?? editor.errors.root?.message;
+  const config = editor.resource.data;
+  const agreements = config?.agreements ?? [];
+  const draft = agreements.find((row) => row.status === 'draft');
+  const active = agreements.find((row) => row.status === 'active');
+  const [title, setTitle] = editor.field('title'),
+    [body, setBody] = editor.field('body');
+  const action = (
+    path: string,
+    title: string,
+    description: string,
+    body?: unknown
+  ): TeamAction => ({
+    path,
+    method: 'POST',
+    title: label(title),
+    description: label(description),
+    ...(body === undefined ? {} : { body }),
+    forbiddenMessage: label('denied'),
+    conflictMessage: label('agreementConflict'),
+  });
+  const activation = editor.action?.path.endsWith('/activate');
+  const unsaved = !!draft && (title.trim() !== draft.title || body.trim() !== draft.body);
+  const summary = activation
+    ? draft
+    : editor.action && record(editor.action.body)
+      ? editor.action.body
+      : null;
   return (
     <section className="space-y-4 border-y py-5" aria-label={label('agreement')}>
-      <h2 className="text-xl font-semibold">{label('agreement')}</h2>
-      {state === 'loading' && <p role="status">{label('loading')}</p>}
-      {state === 'error' && <p role="alert">{label('error')}</p>}
-      {state === 'ready' && (
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-xl font-semibold">{label('agreement')}</h2>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={editor.busy || props.disabled}
+          onClick={editor.refresh}
+        >
+          {label(editor.resource.error || editor.denied ? 'retry' : 'refresh')}
+        </Button>
+      </div>
+      {editor.denied && <Alert variant="destructive">{label('denied')}</Alert>}
+      {editor.resource.loading && <p role="status">{label('loading')}</p>}
+      {editor.resource.error && <Alert variant="destructive">{label('agreementLoadError')}</Alert>}
+      {editor.saved && <p role="status">{label('saved')}</p>}
+      {editor.uncertain && <Alert variant="destructive">{label('unverifiedSaving')}</Alert>}
+      {config && (
         <>
           <p className="text-sm text-muted-foreground">{label('agreementHelp')}</p>
           {active && (
@@ -82,65 +101,93 @@ export function SavingAgreementEditor({
               <summary className="cursor-pointer font-medium">
                 {label('activeAgreement')}: {active.title}
               </summary>
-              <p className="mt-2 whitespace-pre-wrap">{active.body}</p>
+              <p className="mt-2 whitespace-pre-wrap break-words">{active.body}</p>
             </details>
           )}
-          <form className="space-y-3" onSubmit={save}>
-            <div>
-              <Label htmlFor="saving-agreement-title">{label('agreementTitle')}</Label>
-              <Input
-                id="saving-agreement-title"
-                value={title}
-                maxLength={300}
-                required
-                onChange={(event) => setTitle(event.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="saving-agreement-body">{label('agreementBody')}</Label>
-              <Textarea
-                id="saving-agreement-body"
-                value={body}
-                maxLength={50_000}
-                required
-                rows={8}
-                onChange={(event) => setBody(event.target.value)}
-              />
-            </div>
-            <Button type="submit">{label('saveAgreement')}</Button>
+          <form
+            aria-label={label('agreement')}
+            noValidate
+            aria-busy={editor.pending || undefined}
+            onSubmit={(event) =>
+              void editor.submit(event, (values) =>
+                action(`${base}/agreements/draft`, 'saveAgreement', 'confirmAgreementDraft', {
+                  title: values.title.trim(),
+                  body: values.body.trim(),
+                })
+              )
+            }
+            className="space-y-3"
+          >
+            {rootError && <Alert variant="destructive">{rootError}</Alert>}
+            <fieldset disabled={editor.disabled} className="min-w-0 space-y-3 border-0 p-0">
+              <div>
+                <Label htmlFor="saving-agreement-title">{label('agreementTitle')}</Label>
+                <Input
+                  id="saving-agreement-title"
+                  {...editor.bind('title')}
+                  value={title}
+                  onChange={(event) => setTitle(event.target.value)}
+                />
+                {editor.feedback('title')}
+              </div>
+              <div>
+                <Label htmlFor="saving-agreement-body">{label('agreementBody')}</Label>
+                <Textarea
+                  id="saving-agreement-body"
+                  {...editor.bind('body')}
+                  value={body}
+                  rows={8}
+                  onChange={(event) => setBody(event.target.value)}
+                />
+                {editor.feedback('body')}
+              </div>
+              <Button type="submit" aria-busy={editor.pending || undefined}>
+                {editor.pending && (
+                  <span
+                    aria-hidden="true"
+                    className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                  />
+                )}
+                {label(editor.pending ? 'working' : 'saveAgreement')}
+              </Button>
+            </fieldset>
           </form>
           {draft && (
             <div className="rounded-md border p-3">
-              <p className="font-medium">
+              <p className="font-medium break-words">
                 {label('draftAgreement')}: {draft.title}
               </p>
+              {unsaved && (
+                <p className="mt-2 text-sm text-muted-foreground">{label('saveAgreementFirst')}</p>
+              )}
               <Button
                 className="mt-3"
-                onClick={() =>
-                  setAction({
-                    path: `${base}/agreements/${encodeURIComponent(draft.id)}/activate`,
-                    method: 'POST',
-                    title: label('activateAgreement'),
-                    description: label('confirmAgreementActivation'),
-                    forbiddenMessage: label('denied'),
-                    conflictMessage: label('conflict'),
-                  })
-                }
+                disabled={editor.disabled || unsaved}
+                onClick={() => {
+                  if (!unsaved && !editor.disabled)
+                    editor.propose(
+                      action(
+                        `${base}/agreements/${encodeURIComponent(draft.id)}/activate`,
+                        'activateAgreement',
+                        'confirmAgreementActivation'
+                      )
+                    );
+                }}
               >
                 {label('activateAgreement')}
               </Button>
             </div>
           )}
-          {agreements.filter((agreement) => agreement.status === 'superseded').length > 0 && (
+          {agreements.some((row) => row.status === 'superseded') && (
             <details>
               <summary className="cursor-pointer">{label('agreementHistory')}</summary>
               <ol className="space-y-2">
                 {agreements
-                  .filter((agreement) => agreement.status === 'superseded')
-                  .map((agreement) => (
-                    <li key={agreement.id} className="border-b py-2">
-                      <p className="font-medium">{agreement.title}</p>
-                      <p className="whitespace-pre-wrap">{agreement.body}</p>
+                  .filter((row) => row.status === 'superseded')
+                  .map((row) => (
+                    <li key={row.id} className="border-b py-2">
+                      <p className="font-medium break-words">{row.title}</p>
+                      <p className="whitespace-pre-wrap break-words">{row.body}</p>
                     </li>
                   ))}
               </ol>
@@ -148,14 +195,50 @@ export function SavingAgreementEditor({
           )}
         </>
       )}
-      {action && (
+      {editor.action && (
         <TeamActionDialog
-          action={action}
-          onClose={() => setAction(null)}
-          onSuccess={async () => {
-            setAction(null);
-            setRevision((value) => value + 1);
-            onChanged();
+          action={editor.action}
+          confirmationDisabled={!editor.ready || editor.uncertain}
+          onClose={editor.close}
+          onDenied={editor.onDenied}
+          {...(activation ? {} : { onValidationError: editor.onValidationError })}
+          summary={
+            <div className="space-y-2 rounded-md border p-3">
+              <p className="font-medium break-words">{String(summary?.title ?? '')}</p>
+              <p className="max-h-48 overflow-y-auto whitespace-pre-wrap break-words">
+                {String(summary?.body ?? '')}
+              </p>
+              {editor.uncertain && <Alert variant="destructive">{label('unverifiedSaving')}</Alert>}
+            </div>
+          }
+          onSuccess={async (result) => {
+            const expected = activation ? draft : editor.action?.body;
+            if (
+              !record(expected) ||
+              typeof expected.title !== 'string' ||
+              typeof expected.body !== 'string' ||
+              !editor.verifyReceipt(
+                matchesAgreementReceipt(
+                  result,
+                  planId,
+                  { title: expected.title, body: expected.body },
+                  activation ? draft?.id : undefined
+                )
+              )
+            )
+              return;
+            const received = result as NonNullable<typeof draft>;
+            const next = agreements
+              .filter((row) => row.status !== 'draft')
+              .map((row) =>
+                activation && row.status === 'active'
+                  ? { ...row, status: 'superseded' as const }
+                  : row
+              );
+            editor.resource.accept({ planId, agreements: [received, ...next] });
+            editor.complete();
+            if (activation) onChanged();
+            else editor.resource.retry();
           }}
         />
       )}

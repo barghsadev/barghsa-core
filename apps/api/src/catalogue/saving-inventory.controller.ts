@@ -1,3 +1,5 @@
+import { InputFieldException } from '../common/input-field.exception.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   Body,
   Controller,
@@ -36,6 +38,7 @@ interface HardwareInventory {
 }
 function present(row: HardwareInventory) {
   return {
+    hardwareId: row.id,
     stockTracking: row.stock_tracking,
     stockCount: row.stock_count,
     reservedCount: row.reserved_count,
@@ -82,13 +85,26 @@ export class SavingInventoryController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const parsed = config.safeParse(body);
-    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, req.session.userId, 'admin:catalogue:edit');
       await requireSessionStepUp(client, req.session);
+      const parsed = config.safeParse(body);
+      if (!parsed.success) {
+        const owned = ['stockTracking', 'stockCount', 'reservationMinutes'];
+        if (
+          parsed.error.issues.length &&
+          parsed.error.issues.every(
+            (issue) =>
+              issue.code !== 'unrecognized_keys' &&
+              issue.path.length === 1 &&
+              owned.includes(String(issue.path[0]))
+          )
+        )
+          throw new InputFieldException(parsed.error.issues.map((issue) => String(issue.path[0])));
+        throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+      }
       const before = (
         await client.query<HardwareInventory>(
           "SELECT id,stock_tracking,stock_count,reserved_count,reservation_minutes FROM products WHERE id=$1 AND type='hardware' FOR UPDATE",
@@ -126,6 +142,7 @@ export class SavingInventoryController {
         await client.query('COMMIT');
         return present(after);
       }
+      await requireSessionStepUp(client, req.session);
       await client.query('COMMIT');
       return present(before);
     } catch (error) {

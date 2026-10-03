@@ -12,6 +12,8 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
+import { InputFieldException } from '../common/input-field.exception.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
@@ -26,9 +28,21 @@ export const draftSavingAgreementSchema = z
     body: z.string().trim().min(1).max(50_000),
   })
   .strict();
-function parse<T>(schema: z.ZodType<T>, value: unknown): T {
+function parse<T>(schema: z.ZodType<T>, value: unknown, fields: string[] = []): T {
   const result = schema.safeParse(value);
-  if (!result.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+  if (!result.success) {
+    if (
+      result.error.issues.length &&
+      result.error.issues.every(
+        (issue) =>
+          issue.code !== 'unrecognized_keys' &&
+          issue.path.length === 1 &&
+          fields.includes(String(issue.path[0]))
+      )
+    )
+      throw new InputFieldException(result.error.issues.map((issue) => String(issue.path[0])));
+    throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+  }
   return result.data;
 }
 
@@ -95,7 +109,7 @@ export class AdminSavingCatalogueController {
     this.authorize(req);
     return this.service.saveDraft(
       parse(idSchema, id),
-      parse(draftSavingAgreementSchema, body),
+      parse(draftSavingAgreementSchema, body, ['title', 'body']),
       req.session,
       req.ip ?? '127.0.0.1'
     );

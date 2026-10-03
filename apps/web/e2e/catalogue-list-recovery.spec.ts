@@ -83,6 +83,7 @@ for (const type of catalogueTypes)
         if (url.pathname.endsWith('/inventory'))
           return route.fulfill({
             json: {
+              hardwareId: id,
               stockTracking: false,
               stockCount: 0,
               reservedCount: 0,
@@ -139,7 +140,10 @@ for (const type of catalogueTypes)
         expect(listReads).toHaveLength(initialLists);
       }
       holdList = true;
-      await page.getByRole('button', { name: label('refresh'), exact: true }).click();
+      await page
+        .getByRole('button', { name: label('refresh'), exact: true })
+        .first()
+        .click();
       await expect.poll(() => !!held).toBe(true);
       await expect(titleInput).toHaveValue('Keep product draft');
       await expect(content).toHaveAttribute('aria-busy', 'true');
@@ -181,7 +185,10 @@ for (const type of catalogueTypes)
           fullPage: true,
         });
       holdList = true;
-      await page.getByRole('button', { name: label('refresh'), exact: true }).click();
+      await page
+        .getByRole('button', { name: label('refresh'), exact: true })
+        .first()
+        .click();
       await expect.poll(() => !!held).toBe(true);
       await expect(titleInput).toHaveValue('Keep refreshed product draft');
       if (type === 'saving_plan')
