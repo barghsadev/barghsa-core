@@ -58,6 +58,8 @@ const fa: Record<string, string> = {
   'admin.walletReceipts.emergencyHint':
     'فقط همین رسید بدون تأیید کارشناس دوم تسویه می\u200cشود. دلیل ثبت می\u200cشود و کارشناسان مالی فوراً در برنامه مطلع می\u200cشوند.',
   'admin.walletReceipts.emergencyReason': 'دلیل تأیید اضطراری (الزامی)',
+  'admin.walletReceipts.error.emergencyReason':
+    'دلیل تأیید اضطراری باید بین ۱ تا ۲۰۰۰ نویسه داشته باشد.',
   'admin.walletReceipts.emergencyConfirm': 'تأیید اضطراری و تسویه رسید',
   'admin.walletReceipts.emergencyConfirmed':
     'رسید با تأیید اضطراری تسویه شد. کارشناسان مالی مطلع شدند.',
@@ -178,6 +180,8 @@ const en: Record<string, string> = {
   'admin.walletReceipts.emergencyHint':
     'Settle only this receipt without a second reviewer. The reason is recorded and finance staff are alerted immediately in the app.',
   'admin.walletReceipts.emergencyReason': 'Emergency override reason (required)',
+  'admin.walletReceipts.error.emergencyReason':
+    'Enter an emergency override reason of 1–2000 characters.',
   'admin.walletReceipts.emergencyConfirm': 'Confirm emergency override and settle receipt',
   'admin.walletReceipts.emergencyConfirmed':
     'Receipt settled with emergency override. Finance staff alerted.',

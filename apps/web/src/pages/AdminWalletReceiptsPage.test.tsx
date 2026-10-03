@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import AdminWalletReceiptsPage from './AdminWalletReceiptsPage.js';
 import type { BankReceiptConfirmationReview } from '@barghsa/shared/finance';
+import { tWalletReceipts as text } from '@barghsa/i18n/wallet-receipts';
 
 const TX_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const TX_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
@@ -164,6 +165,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
   let root: Root;
 
   beforeEach(() => {
+    vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
     document.documentElement.lang = 'en';
     container = document.createElement('div');
     document.body.appendChild(container);
@@ -331,8 +333,12 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         '[data-testid="wallet-receipt-emergency-confirm"]'
       ) as HTMLButtonElement;
       expect(button).toBeTruthy();
-      expect(button.disabled).toBe(true);
+      expect(button.disabled).toBe(false);
       const reason = container.querySelector('#receipt-emergency-reason') as HTMLTextAreaElement;
+      await act(async () => button.click());
+      await vi.waitFor(() => expect(document.activeElement).toBe(reason));
+      expect(reason.getAttribute('aria-invalid')).toBe('true');
+      expect(bodies).toEqual([]);
       await act(async () => {
         Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
           reason,
@@ -676,7 +682,11 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     await flush();
     await flush();
 
-    expect(container.textContent).toContain('cannot receive a bank-receipt allocation');
+    expect(container.querySelector('[role="alert"]')?.textContent).toBe(
+      text('admin.walletReceipts.error.allocation', 'en')
+    );
+    expect(container.textContent).not.toContain('cannot receive a bank-receipt allocation');
+    expect(invoiceInput.value).toBe(INVOICE_ID);
     const confirm = container.querySelector(
       '[data-testid="wallet-receipt-confirm"]'
     ) as HTMLButtonElement;
@@ -1244,6 +1254,317 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       expect(container.textContent).toContain('TRK-aaaa');
     }
   );
+  async function editConfirmationField(id: string, value: string) {
+    const field = container.querySelector<HTMLInputElement | HTMLTextAreaElement>(`#${id}`)!;
+    await act(async () => {
+      const prototype =
+        field instanceof HTMLInputElement
+          ? HTMLInputElement.prototype
+          : HTMLTextAreaElement.prototype;
+      Object.getOwnPropertyDescriptor(prototype, 'value')!.set!.call(field, value);
+      field.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await flush();
+    return field;
+  }
+  function feedback(field: HTMLElement) {
+    return field
+      .getAttribute('aria-describedby')
+      ?.split(' ')
+      .map((id) => document.getElementById(id))
+      .find((node) => node?.getAttribute('role') === 'alert');
+  }
+  function confirmNode(emergency = false) {
+    return container.querySelector<HTMLButtonElement>(
+      `[data-testid="wallet-receipt-${emergency ? 'emergency-confirm' : 'confirm'}"]`
+    )!;
+  }
+  async function renderConfirmation(emergency = false) {
+    if (emergency) {
+      const existing = vi.mocked(fetch).getMockImplementation()!;
+      vi.mocked(fetch).mockImplementation((input, init) =>
+        String(input).endsWith(`/bank-receipt-top-ups/${TX_A}`)
+          ? Promise.resolve(
+              Response.json(
+                receiptDto(TX_A, {
+                  canEmergencyOverride: true,
+                  dualApproval: {
+                    requestId: 'approval-1',
+                    initiatorId: 'finance-1',
+                    invoiceId: INVOICE_ID,
+                  },
+                })
+              )
+            )
+          : existing(input, init)
+      );
+    }
+    await act(async () => root.render(<AdminWalletReceiptsPage />));
+    await flush();
+    await vi.waitFor(() => expect(confirmNode(emergency)?.disabled).toBe(false));
+  }
+  async function submitConfirmation(emergency = false, times = 1) {
+    await act(async () => {
+      for (let index = 0; index < times; index++)
+        confirmNode(emergency)
+          .closest('form')!
+          .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+    await flush();
+  }
+
+  it.each(['bad', '11111111-1111', 'invalid-private-invoice'])(
+    'retains and focuses invalid invoice input %j without asking for a review or writing money',
+    async (raw) => {
+      await renderConfirmation();
+      const reason = await editConfirmationField('reject-reason', 'Retain rejection draft');
+      const field = await editConfirmationField('apply-invoice-id', raw);
+      expect(field.getAttribute('aria-invalid')).toBeNull();
+      expect(confirmNode().disabled).toBe(false);
+      await submitConfirmation();
+      await vi.waitFor(() => expect(document.activeElement).toBe(field));
+      expect(feedback(field)?.textContent).toBe(text('admin.walletReceipts.error.invoiceId', 'en'));
+      expect((field as HTMLInputElement).value).toBe(raw);
+      expect((reason as HTMLTextAreaElement).value).toBe('Retain rejection draft');
+      expect(
+        vi
+          .mocked(fetch)
+          .mock.calls.some(
+            ([url, init]) => String(url).includes('/review?') || init?.method === 'POST'
+          )
+      ).toBe(false);
+    }
+  );
+
+  it.each(['en', 'fa'] as const)(
+    'corrects touched invoice feedback and reviews canonical UUIDs in %s',
+    async (locale) => {
+      document.documentElement.lang = locale;
+      await renderConfirmation();
+      const field = await editConfirmationField('apply-invoice-id', 'bad');
+      await act(async () => {
+        field.focus();
+        field.blur();
+      });
+      await vi.waitFor(() =>
+        expect(feedback(field)?.textContent).toBe(
+          text('admin.walletReceipts.error.invoiceId', locale)
+        )
+      );
+      const invoice = 'abcdefab-1111-7111-8111-111111111111';
+      const raw = ` ${invoice.toUpperCase()} `;
+      await editConfirmationField('apply-invoice-id', raw);
+      await vi.waitFor(() => expect(confirmNode().disabled).toBe(false));
+      expect(feedback(field)).toBeUndefined();
+      expect((field as HTMLInputElement).value).toBe(raw);
+      expect(
+        vi
+          .mocked(fetch)
+          .mock.calls.some(([url]) => String(url).endsWith(`/review?invoiceId=${invoice}`))
+      ).toBe(true);
+      await submitConfirmation();
+      const write = vi
+        .mocked(fetch)
+        .mock.calls.find(
+          ([url, init]) => String(url).endsWith('/confirm') && init?.method === 'POST'
+        );
+      expect(JSON.parse(String(write?.[1]?.body))).toEqual({
+        expectedReviewHash: REVIEW_HASH,
+        invoiceId: invoice,
+      });
+    }
+  );
+
+  it.each(['', '  ', 'x'.repeat(2001)])(
+    'retains and focuses invalid emergency reason without writing: %j',
+    async (raw) => {
+      await renderConfirmation(true);
+      const field = await editConfirmationField('receipt-emergency-reason', raw);
+      await submitConfirmation(true);
+      await vi.waitFor(() => expect(document.activeElement).toBe(field));
+      expect(feedback(field)?.textContent).toBe(
+        text('admin.walletReceipts.error.emergencyReason', 'en')
+      );
+      expect((field as HTMLTextAreaElement).value).toBe(raw);
+      expect(container.querySelector<HTMLInputElement>('#apply-invoice-id')?.value).toBe(
+        INVOICE_ID
+      );
+      expect(vi.mocked(fetch).mock.calls.some(([, init]) => init?.method === 'POST')).toBe(false);
+    }
+  );
+
+  it.each([
+    { emergency: false, fields: ['invoiceId'], owned: true },
+    { emergency: false, fields: ['invoiceId', 'expectedReviewHash'], owned: false },
+    { emergency: false, fields: ['emergencyOverrideReason'], owned: false },
+    { emergency: true, fields: ['emergencyOverrideReason'], owned: true },
+    { emergency: true, fields: ['invoiceId'], owned: false },
+    { emergency: true, fields: ['invoiceId', 'emergencyOverrideReason'], owned: false },
+    { emergency: true, fields: ['emergencyOverrideReason', 'actorUserId'], owned: false },
+  ])('maps only editable confirmation metadata %#', async ({ emergency, fields, owned }) => {
+    vi.mocked(fetch).mockImplementation((input, init) =>
+      String(input).endsWith('/confirm')
+        ? Promise.resolve(
+            Response.json(
+              {
+                error: { code: ErrorCodes.VALIDATION_INPUT_INVALID.code, fields },
+                message: 'private-finance-diagnostic',
+              },
+              { status: 400 }
+            )
+          )
+        : defaultFetch(input, init)
+    );
+    await renderConfirmation(emergency);
+    const invoiceRaw = ` ${INVOICE_ID} `;
+    if (!emergency) await editConfirmationField('apply-invoice-id', invoiceRaw);
+    const rejection = await editConfirmationField('reject-reason', 'Keep rejection investigation');
+    const raw = '  Keep emergency investigation  ';
+    if (emergency) await editConfirmationField('receipt-emergency-reason', raw);
+    await vi.waitFor(() => expect(confirmNode(emergency).disabled).toBe(false));
+    await submitConfirmation(emergency);
+    const field = container.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+      emergency ? '#receipt-emergency-reason' : '#apply-invoice-id'
+    )!;
+    if (owned) {
+      await vi.waitFor(() => expect(document.activeElement).toBe(field));
+      expect(feedback(field)?.textContent).toBe(
+        text(
+          emergency
+            ? 'admin.walletReceipts.error.emergencyReason'
+            : 'admin.walletReceipts.error.invoiceId',
+          'en'
+        )
+      );
+    } else {
+      await vi.waitFor(() =>
+        expect(container.querySelector('[role="alert"]')?.textContent).toBe(
+          text('admin.walletReceipts.error.save', 'en')
+        )
+      );
+      expect(feedback(field)).toBeUndefined();
+    }
+    expect(field.disabled).toBe(false);
+    expect(field.value).toBe(emergency ? raw : invoiceRaw);
+    expect((rejection as HTMLTextAreaElement).value).toBe('Keep rejection investigation');
+    expect(container.querySelector<HTMLInputElement>('#apply-invoice-id')?.readOnly).toBe(
+      emergency
+    );
+    expect(container.textContent).not.toContain('private-finance-diagnostic');
+  });
+
+  it.each([false, true])(
+    'locks all receipt drafts and duplicate confirmation before the write settles (emergency=%s)',
+    async (emergency) => {
+      let finish!: (response: Response) => void;
+      const bodies: unknown[] = [];
+      vi.mocked(fetch).mockImplementation((input, init) => {
+        if (String(input).endsWith('/confirm')) {
+          bodies.push(JSON.parse(String(init?.body)));
+          return new Promise<Response>((resolve) => {
+            finish = resolve;
+          });
+        }
+        return defaultFetch(input, init);
+      });
+      await renderConfirmation(emergency);
+      if (!emergency) await editConfirmationField('apply-invoice-id', INVOICE_ID);
+      if (emergency)
+        await editConfirmationField('receipt-emergency-reason', '  Urgent bank deadline  ');
+      await vi.waitFor(() => expect(confirmNode(emergency).disabled).toBe(false));
+      await submitConfirmation(emergency, 2);
+      expect(bodies).toHaveLength(1);
+      expect(container.querySelector<HTMLInputElement>('#apply-invoice-id')?.disabled).toBe(true);
+      expect(container.querySelector<HTMLTextAreaElement>('#reject-reason')?.disabled).toBe(true);
+      expect(confirmNode(emergency).getAttribute('aria-busy')).toBe('true');
+      expect(confirmNode(emergency).querySelector('.animate-spin')).not.toBeNull();
+      await submitConfirmation(emergency, 2);
+      expect(bodies).toHaveLength(1);
+      await act(async () =>
+        finish(Response.json({ message: 'private-finance-diagnostic' }, { status: 503 }))
+      );
+      await vi.waitFor(() => expect(confirmNode(emergency).disabled).toBe(false));
+      expect(container.textContent).not.toContain('private-finance-diagnostic');
+      expect(container.querySelector<HTMLInputElement>('#apply-invoice-id')?.value).toBe(
+        INVOICE_ID
+      );
+      if (emergency)
+        expect(
+          container.querySelector<HTMLTextAreaElement>('#receipt-emergency-reason')?.value
+        ).toBe('  Urgent bank deadline  ');
+    }
+  );
+
+  it('ignores late owned-field failures after the receipt workspace is replaced', async () => {
+    let finish!: (response: Response) => void;
+    vi.mocked(fetch).mockImplementation((input, init) =>
+      String(input).endsWith('/confirm')
+        ? new Promise<Response>((resolve) => {
+            finish = resolve;
+          })
+        : defaultFetch(input, init)
+    );
+    await renderConfirmation();
+    await submitConfirmation();
+    await act(async () => root.render(<AdminWalletReceiptsPage key="replacement" />));
+    await flush();
+    const field = await editConfirmationField('apply-invoice-id', INVOICE_ID);
+    await act(async () =>
+      finish(
+        Response.json(
+          { error: { code: ErrorCodes.VALIDATION_INPUT_INVALID.code, fields: ['invoiceId'] } },
+          { status: 400 }
+        )
+      )
+    );
+    expect((field as HTMLInputElement).value).toBe(INVOICE_ID);
+    expect(feedback(field)).toBeUndefined();
+    expect(container.querySelector('[role="alert"]')).toBeNull();
+  });
+
+  it('retains invoice and rejection drafts through owned review errors and clears feedback after an explicit fresh review', async () => {
+    let failure = true;
+    vi.mocked(fetch).mockImplementation((input, init) =>
+      String(input).includes('/review?') && failure
+        ? Promise.resolve(
+            Response.json(
+              {
+                error: { code: ErrorCodes.VALIDATION_INPUT_INVALID.code, fields: ['invoiceId'] },
+                message: 'private-review-diagnostic',
+              },
+              { status: 400 }
+            )
+          )
+        : defaultFetch(input, init)
+    );
+    await renderConfirmation();
+    await editConfirmationField('reject-reason', 'Keep valid rejection reason');
+    const field = await editConfirmationField('apply-invoice-id', ` ${INVOICE_ID} `);
+    await vi.waitFor(() => expect(document.activeElement).toBe(field));
+    expect(feedback(field)?.textContent).toBe(text('admin.walletReceipts.error.invoiceId', 'en'));
+    expect(confirmNode().disabled).toBe(true);
+    expect(container.textContent).not.toContain('private-review-diagnostic');
+    await act(async () => {
+      field.focus();
+      field.blur();
+    });
+    await flush();
+    expect(feedback(field)?.textContent).toBe(text('admin.walletReceipts.error.invoiceId', 'en'));
+    expect(field.getAttribute('aria-invalid')).toBe('true');
+    failure = false;
+    const refresh = [...container.querySelectorAll('button')].find(
+      (node) => node.textContent === text('admin.walletReceipts.review.refresh', 'en')
+    )!;
+    await act(async () => refresh.click());
+    await vi.waitFor(() => expect(confirmNode().disabled).toBe(false));
+    expect(feedback(field)).toBeUndefined();
+    expect((field as HTMLInputElement).value).toBe(` ${INVOICE_ID} `);
+    expect(container.querySelector<HTMLTextAreaElement>('#reject-reason')?.value).toBe(
+      'Keep valid rejection reason'
+    );
+    expect(vi.mocked(fetch).mock.calls.some(([, init]) => init?.method === 'POST')).toBe(false);
+  });
+
   it('does not enable an invoice confirmation when the allocation request disconnects', async () => {
     vi.mocked(fetch).mockImplementation(async (input, init) => {
       if (String(input).includes('/review?')) throw new Error('offline');

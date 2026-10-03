@@ -1,4 +1,5 @@
 import { useReceiptRejectionForm } from '../hooks/useReceiptRejectionForm.js';
+import { useWalletReceiptConfirmationForms } from '../hooks/useWalletReceiptConfirmationForms.js';
 import { inputErrorFields } from '../lib/input-error-fields.js';
 import { useReceiptQueueQuery, receiptQueueParams } from '../hooks/useReceiptQueueQuery.js';
 import {
@@ -231,7 +232,13 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const rejection = useReceiptRejectionForm('wallet');
   const [reason, setReason] = rejection.field('reason');
   const rejectionBusy = rejection.form.formState.isSubmitting;
-  const [emergencyReason, setEmergencyReason] = useState('');
+  const confirmation = useWalletReceiptConfirmationForms();
+  const [invoiceId, setInvoiceId] = confirmation.invoice.field('invoiceId');
+  const [emergencyReason, setEmergencyReason] =
+    confirmation.emergency.field('emergencyOverrideReason');
+  const confirmationBusy =
+    confirmation.invoice.form.formState.isSubmitting ||
+    confirmation.emergency.form.formState.isSubmitting;
   const [loading, setLoading] = useState(true);
   const [acting, setActing] = useState(false);
   const [queueError, setQueueError] = useState<string | null>(null);
@@ -241,11 +248,14 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const [detailRevision, setDetailRevision] = useState(0);
   const [reviewRevision, setReviewRevision] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  const [clientIssue, setClientIssue] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
-  const [invoiceId, setInvoiceId] = useState('');
   const [allocation, setAllocation] = useState<AllocationPreview | null>(null);
   const [allocationError, setAllocationError] = useState<string | null>(null);
+  // A successful local blur check cannot clear a failed financial review.
+  const [allocationInputInvalid, setAllocationInputInvalid] = useState(false);
+  const invoiceError =
+    confirmation.invoice.errors.invoiceId?.message ??
+    (allocationInputInvalid ? t('admin.walletReceipts.error.invoiceId', locale) : undefined);
   const [allocationLoading, setAllocationLoading] = useState(false);
   const [financialReview, setFinancialReview] = useState<BankReceiptConfirmationReview | null>(
     null
@@ -257,7 +267,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     financialReview.scope.profileId === selected.walletId &&
     financialReview.data.receipt.amount === selected.amount &&
     (financialReview.data.receipt.bankName ?? null) === (selected.bankName ?? null) &&
-    (financialReview.data.invoice?.invoice.id ?? '') === invoiceId.trim() &&
+    (financialReview.data.invoice?.invoice.id ?? '') === invoiceId.trim().toLowerCase() &&
     !allocationLoading &&
     !allocationError &&
     time.status === 'ready';
@@ -306,11 +316,11 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     setSelected(row);
     setSelectedId(id);
     rejection.form.reset({ reason: '' });
-    setEmergencyReason('');
-    setInvoiceId(row?.dualApproval?.invoiceId ?? '');
+    confirmation.emergency.form.reset({ emergencyOverrideReason: '' });
+    confirmation.invoice.form.reset({ invoiceId: row?.dualApproval?.invoiceId ?? '' });
     setAllocation(null);
     setAllocationError(null);
-    setClientIssue(null);
+    setAllocationInputInvalid(false);
     setDetailError(false);
     setStatus(null);
   }
@@ -431,7 +441,8 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
           invalidateDecision();
           selectedRef.current = data;
           setSelected(data);
-          if (data.dualApproval) setInvoiceId(data.dualApproval.invoiceId ?? '');
+          if (data.dualApproval)
+            confirmation.invoice.form.reset({ invoiceId: data.dualApproval.invoiceId ?? '' });
         }
       } catch {
         if (!controller.signal.aborted) setDetailError(true);
@@ -443,7 +454,8 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   }, [selectedId, detailRevision]);
 
   useEffect(() => {
-    const trimmed = invoiceId.trim();
+    const trimmed = invoiceId.trim().toLowerCase();
+    setAllocationInputInvalid(false);
     const scope = JSON.stringify([
       selected?.transactionId,
       selected?.walletId,
@@ -463,7 +475,9 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     }
     if (trimmed && !isTransactionUuid(trimmed)) {
       setAllocation(null);
-      setAllocationError(t('admin.walletReceipts.error.invoiceId', locale));
+      setAllocationError(
+        selected.dualApproval ? t('admin.walletReceipts.error.invoiceId', locale) : null
+      );
       setAllocationLoading(false);
       return;
     }
@@ -483,9 +497,11 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
           return;
         }
         if (!res.ok) {
-          setAllocationError(
-            errorMessage(data, t('admin.walletReceipts.error.allocation', locale))
-          );
+          const fields = inputErrorFields(data, res.status).fields;
+          const owned =
+            !selected.dualApproval && fields && confirmation.invoice.applyServerErrors(fields);
+          setAllocationInputInvalid(Boolean(owned));
+          setAllocationError(t('admin.walletReceipts.error.allocation', locale));
           return;
         }
         const review = parseBankReceiptConfirmationReview(data);
@@ -502,6 +518,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
           invalidateDecision();
         financialReviewRef.current = review;
         setFinancialReview(review);
+        confirmation.invoice.form.clearErrors('invoiceId');
         setAllocationLoading(false);
         setAllocation(
           review.data.invoice
@@ -589,7 +606,14 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
         setFinancialReview(null);
       }
       const fields = inputErrorFields(data, res.status).fields;
-      if (action.kind === 'reject' && fields && rejection.applyServerErrors(fields)) {
+      const ownedFields =
+        fields &&
+        (action.kind === 'reject'
+          ? rejection.applyServerErrors(fields)
+          : action.emergencyOverrideReason !== undefined
+            ? confirmation.emergency.applyServerErrors(fields)
+            : !selectedRef.current?.dualApproval && confirmation.invoice.applyServerErrors(fields));
+      if (ownedFields) {
         restoreTriggerRef.current = false;
         setError(null);
       } else {
@@ -620,7 +644,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
         row.transactionId === dto.transactionId ? dto : row
       );
       setItems(rowsRef.current);
-      setInvoiceId(dto.dualApproval.invoiceId ?? '');
+      confirmation.invoice.form.reset({ invoiceId: dto.dualApproval.invoiceId ?? '' });
       return 'ok';
     }
     const overpay = dto.overpayment && BigInt(dto.overpayment.walletCreditAmount) > 0n;
@@ -672,54 +696,86 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     }
   }
 
-  function handleConfirm(emergencyOverrideReason?: string) {
-    if (
-      !selected ||
+  const canConfirmNow = useRef(false);
+  canConfirmNow.current = Boolean(
+    selected?.canDecide &&
+    !acting &&
+    !rejectionBusy &&
+    !stepUpOpen &&
+    !loading &&
+    !queueError &&
+    !detailLoading &&
+    !detailError &&
+    !accessDenied.current
+  );
+  const reviewReadyNow = useRef(false);
+  reviewReadyNow.current = reviewReady;
+  function validationPending() {
+    return (
       rejection.form.isSubmissionPending() ||
-      acting ||
-      rejectionBusy ||
-      stepUpOpen ||
-      loading ||
-      queueError ||
-      detailLoading ||
-      detailError ||
-      accessDenied.current ||
-      !reviewReady ||
-      !financialReview
+      confirmation.invoice.form.isSubmissionPending() ||
+      confirmation.emergency.form.isSubmissionPending()
+    );
+  }
+  async function confirmReceipt(
+    generation: number,
+    transactionId: string,
+    invoice: string,
+    emergencyOverrideReason?: string
+  ) {
+    const current = selectedRef.current;
+    const review = financialReviewRef.current;
+    if (
+      !canConfirmNow.current ||
+      !reviewReadyNow.current ||
+      !current ||
+      !review ||
+      generation !== workGeneration.current ||
+      selectedIdRef.current !== transactionId ||
+      (review.data.invoice?.invoice.id ?? '') !== invoice
     )
       return;
     if (
       emergencyOverrideReason !== undefined &&
-      (!selected.canEmergencyOverride ||
-        !selected.dualApproval ||
-        !emergencyOverrideReason.trim() ||
-        emergencyOverrideReason.trim().length > APPROVAL_REVIEW_REASON_MAX_LENGTH)
+      (!current.dualApproval || !current.canEmergencyOverride)
     )
       return;
-    const trimmed = invoiceId.trim();
-    if (trimmed && !isTransactionUuid(trimmed)) {
-      setClientIssue(t('admin.walletReceipts.error.invoiceId', locale));
-      return;
-    }
-    if (
-      trimmed &&
-      isTransactionUuid(trimmed) &&
-      (allocationLoading || allocationError || !allocation)
-    ) {
-      setClientIssue(allocationError ?? t('admin.walletReceipts.error.allocationPending', locale));
-      return;
-    }
-    setClientIssue(null);
-    void runAction({
-      transactionId: selected.transactionId,
-      generation: workGeneration.current,
+    await runAction({
+      transactionId,
+      generation,
       kind: 'confirm',
-      review: financialReview,
-      invoiceId: isTransactionUuid(trimmed) ? trimmed : null,
-      ...(emergencyOverrideReason !== undefined
-        ? { emergencyOverrideReason: emergencyOverrideReason.trim() }
-        : {}),
+      review,
+      invoiceId: invoice || null,
+      ...(emergencyOverrideReason !== undefined ? { emergencyOverrideReason } : {}),
     });
+  }
+  function handleConfirm(event: FormEvent) {
+    event.preventDefault();
+    if (!canConfirmNow.current || validationPending() || !selected) return;
+    const generation = workGeneration.current;
+    const transactionId = selected.transactionId;
+    setError(null);
+    void confirmation.invoice.form.handleSubmit(({ invoiceId }) =>
+      confirmReceipt(generation, transactionId, invoiceId.trim().toLowerCase())
+    )(event);
+  }
+  function handleEmergencyConfirm(event: FormEvent) {
+    event.preventDefault();
+    if (
+      !canConfirmNow.current ||
+      validationPending() ||
+      !reviewReady ||
+      !selected?.dualApproval ||
+      !selected.canEmergencyOverride
+    )
+      return;
+    const generation = workGeneration.current;
+    const transactionId = selected.transactionId;
+    const invoice = invoiceId.trim().toLowerCase();
+    setError(null);
+    void confirmation.emergency.form.handleSubmit(({ emergencyOverrideReason }) =>
+      confirmReceipt(generation, transactionId, invoice, emergencyOverrideReason.trim())
+    )(event);
   }
 
   const canRejectNow = useRef(false);
@@ -732,11 +788,12 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     !allocationLoading &&
     !detailLoading &&
     !detailError &&
+    !confirmationBusy &&
     !accessDenied.current
   );
   function handleReject(e: FormEvent) {
     e.preventDefault();
-    if (!canRejectNow.current) return;
+    if (!canRejectNow.current || validationPending()) return;
     const generation = workGeneration.current;
     const transactionId = selected!.transactionId;
     void rejection.form.handleSubmit(async ({ reason }) => {
@@ -746,7 +803,6 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
         selectedIdRef.current !== transactionId
       )
         return;
-      setClientIssue(null);
       await runAction({ transactionId, generation, kind: 'reject', reason: reason.trim() });
     })(e);
   }
@@ -894,7 +950,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                 items={items}
                 view={view}
                 selectedId={selectedId}
-                disabled={acting || stepUpOpen || rejectionBusy}
+                disabled={acting || stepUpOpen || rejectionBusy || confirmationBusy}
                 onSelect={(id) => {
                   if (id !== selectedIdRef.current) selectReceipt(id);
                 }}
@@ -924,7 +980,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
               )}
               {selected.dualApproval && selected.state === 'Pending' && (
                 <p
-                  className="rounded border border-warning/20 bg-warning-soft p-3 text-sm text-amber-950"
+                  className="rounded border border-warning/20 bg-warning-soft p-3 text-sm text-foreground"
                   role="status"
                 >
                   {t('admin.walletReceipts.approvalPending', locale)}
@@ -1011,144 +1067,198 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
               )}
               {selected.canDecide ? (
                 <div className="space-y-4 border-t border-border pt-4">
-                  <div>
-                    <label
-                      htmlFor="apply-invoice-id"
-                      className="block text-sm font-medium text-foreground mb-1"
-                    >
-                      {t('admin.walletReceipts.invoiceId', locale)}
-                    </label>
-                    <input
-                      id="apply-invoice-id"
-                      name="invoiceId"
-                      readOnly={Boolean(selected.dualApproval)}
-                      disabled={acting || stepUpOpen || rejectionBusy}
-                      type="text"
-                      dir="ltr"
-                      inputMode="text"
-                      autoComplete="off"
-                      spellCheck={false}
-                      value={invoiceId}
-                      onChange={(e) => setInvoiceId(e.target.value)}
-                      placeholder={t('admin.walletReceipts.invoiceIdPlaceholder', locale)}
-                      aria-describedby="apply-invoice-hint"
-                      className="w-full border border-input rounded px-3 py-2 font-mono text-sm"
-                    />
-                    <p id="apply-invoice-hint" className="text-xs text-muted-foreground mt-1">
-                      {t('admin.walletReceipts.invoiceIdHint', locale)}
-                    </p>
-                  </div>
-
-                  {allocationError && (
-                    <p className="text-sm text-destructive" role="alert">
-                      {allocationError}
-                    </p>
-                  )}
-
-                  {allocationLoading && (
-                    <p role="status">{t('admin.walletReceipts.review.loading', locale)}</p>
-                  )}
-                  {financialReview && (
-                    <BankReceiptFinancialReview
-                      review={financialReview}
-                      formatDate={time.format}
-                      formatPaymentDate={(value) => formatPaymentDate(value, locale)}
-                    />
-                  )}
-                  <button
-                    type="button"
-                    disabled={acting || stepUpOpen || allocationLoading}
-                    onClick={() => setReviewRevision((v) => v + 1)}
-                    className="rounded border px-3 py-2"
+                  <form
+                    onSubmit={handleConfirm}
+                    noValidate
+                    className="space-y-4"
+                    aria-busy={acting || confirmationBusy || stepUpOpen || undefined}
                   >
-                    {t('admin.walletReceipts.review.refresh', locale)}
-                  </button>
+                    <div>
+                      <label
+                        htmlFor="apply-invoice-id"
+                        className="block text-sm font-medium text-foreground mb-1"
+                      >
+                        {t('admin.walletReceipts.invoiceId', locale)}
+                      </label>
+                      <input
+                        id="apply-invoice-id"
+                        {...confirmation.invoice.bind('invoiceId')}
+                        readOnly={Boolean(selected.dualApproval)}
+                        disabled={acting || stepUpOpen || rejectionBusy || confirmationBusy}
+                        type="text"
+                        dir="ltr"
+                        inputMode="text"
+                        autoComplete="off"
+                        spellCheck={false}
+                        value={invoiceId}
+                        onChange={(e) => setInvoiceId(e.target.value)}
+                        placeholder={t('admin.walletReceipts.invoiceIdPlaceholder', locale)}
+                        aria-invalid={Boolean(invoiceError) || undefined}
+                        aria-describedby={`apply-invoice-hint${invoiceError ? ` ${confirmation.invoice.errorId('invoiceId')}` : ''}`}
+                        className="w-full border border-input rounded px-3 py-2 font-mono text-sm"
+                      />
+                      <p id="apply-invoice-hint" className="text-xs text-muted-foreground mt-1">
+                        {t('admin.walletReceipts.invoiceIdHint', locale)}
+                      </p>
+                      {!selected.dualApproval && (
+                        <p
+                          id={confirmation.invoice.errorId('invoiceId')}
+                          role={invoiceError ? 'alert' : undefined}
+                          aria-hidden={!invoiceError || undefined}
+                          className={`text-sm text-destructive mt-1${invoiceError ? '' : ' invisible'}`}
+                        >
+                          {invoiceError ?? t('admin.walletReceipts.error.invoiceId', locale)}
+                        </p>
+                      )}
+                    </div>
 
-                  {clientIssue && (
-                    <p
-                      id="wallet-receipt-client-issue"
-                      className="text-sm text-destructive"
-                      role="alert"
+                    {allocationError && !invoiceError && (
+                      <p className="text-sm text-destructive" role="alert">
+                        {allocationError}
+                      </p>
+                    )}
+
+                    {allocationLoading && (
+                      <p role="status">{t('admin.walletReceipts.review.loading', locale)}</p>
+                    )}
+                    {financialReview && (
+                      <BankReceiptFinancialReview
+                        review={financialReview}
+                        formatDate={time.format}
+                        formatPaymentDate={(value) => formatPaymentDate(value, locale)}
+                      />
+                    )}
+                    <button
+                      type="button"
+                      disabled={
+                        acting ||
+                        stepUpOpen ||
+                        allocationLoading ||
+                        confirmationBusy ||
+                        rejectionBusy
+                      }
+                      onClick={() => setReviewRevision((v) => v + 1)}
+                      className="rounded border px-3 py-2"
                     >
-                      {clientIssue}
-                    </p>
-                  )}
+                      {t('admin.walletReceipts.review.refresh', locale)}
+                    </button>
 
-                  <button
-                    ref={confirmButtonRef}
-                    type="button"
-                    data-testid="wallet-receipt-confirm"
-                    onClick={() => handleConfirm()}
-                    disabled={
-                      acting ||
-                      rejectionBusy ||
-                      loading ||
-                      !!queueError ||
-                      detailLoading ||
-                      detailError ||
-                      stepUpOpen ||
-                      !reviewReady ||
-                      (isTransactionUuid(invoiceId.trim()) &&
-                        (allocationLoading || !!allocationError || !allocation))
-                    }
-                    aria-busy={acting || allocationLoading}
-                    className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 disabled:opacity-50"
-                  >
-                    {acting
-                      ? t('admin.walletReceipts.saving', locale)
-                      : allocation?.isOverpayment
-                        ? t('admin.walletReceipts.confirmOverpayment', locale)
-                        : t('admin.walletReceipts.confirm', locale)}
-                  </button>
+                    <button
+                      ref={confirmButtonRef}
+                      type="submit"
+                      data-testid="wallet-receipt-confirm"
+                      disabled={
+                        acting ||
+                        rejectionBusy ||
+                        confirmationBusy ||
+                        loading ||
+                        !!queueError ||
+                        detailLoading ||
+                        detailError ||
+                        stepUpOpen ||
+                        (!reviewReady &&
+                          (!invoiceId.trim() ||
+                            isTransactionUuid(invoiceId.trim()) ||
+                            Boolean(selected.dualApproval))) ||
+                        (isTransactionUuid(invoiceId.trim()) &&
+                          (allocationLoading || !!allocationError || !allocation))
+                      }
+                      aria-busy={
+                        acting || confirmationBusy || stepUpOpen || allocationLoading || undefined
+                      }
+                      className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 disabled:opacity-50"
+                    >
+                      {(acting || confirmationBusy || stepUpOpen) && (
+                        <span
+                          aria-hidden="true"
+                          className="me-2 inline-block size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                        />
+                      )}
+                      {acting || confirmationBusy || stepUpOpen
+                        ? t('admin.walletReceipts.saving', locale)
+                        : allocation?.isOverpayment
+                          ? t('admin.walletReceipts.confirmOverpayment', locale)
+                          : t('admin.walletReceipts.confirm', locale)}
+                    </button>
+                  </form>
 
                   {selected.dualApproval && selected.canEmergencyOverride && (
-                    <fieldset className="space-y-3 rounded border border-amber-500 p-4">
-                      <legend className="px-1 font-medium">
-                        {t('admin.walletReceipts.emergencyTitle', locale)}
-                      </legend>
-                      <p id="receipt-emergency-hint" className="text-sm">
-                        {t('admin.walletReceipts.emergencyHint', locale)}
-                      </p>
-                      <label
-                        htmlFor="receipt-emergency-reason"
-                        className="block text-sm font-medium"
-                      >
-                        {t('admin.walletReceipts.emergencyReason', locale)}
-                      </label>
-                      <textarea
-                        id="receipt-emergency-reason"
-                        rows={3}
-                        required
-                        aria-describedby="receipt-emergency-hint"
-                        maxLength={APPROVAL_REVIEW_REASON_MAX_LENGTH}
-                        value={emergencyReason}
-                        onChange={(event) => setEmergencyReason(event.target.value)}
-                        disabled={acting || stepUpOpen || rejectionBusy}
-                        className="w-full rounded border border-input px-3 py-2"
-                      />
-                      <button
-                        type="button"
-                        ref={emergencyButtonRef}
-                        data-testid="wallet-receipt-emergency-confirm"
-                        disabled={
-                          acting ||
-                          rejectionBusy ||
-                          loading ||
-                          !!queueError ||
-                          detailLoading ||
-                          detailError ||
-                          !reviewReady ||
-                          stepUpOpen ||
-                          !emergencyReason.trim() ||
-                          (!!invoiceId.trim() &&
-                            (allocationLoading || !!allocationError || !allocation))
-                        }
-                        onClick={() => handleConfirm(emergencyReason)}
-                        className="rounded bg-amber-900 px-4 py-2 text-white disabled:opacity-50"
-                      >
-                        {t('admin.walletReceipts.emergencyConfirm', locale)}
-                      </button>
-                    </fieldset>
+                    <form
+                      onSubmit={handleEmergencyConfirm}
+                      noValidate
+                      aria-busy={acting || confirmationBusy || stepUpOpen || undefined}
+                    >
+                      <fieldset className="space-y-3 rounded border border-amber-500 p-4">
+                        <legend className="px-1 font-medium">
+                          {t('admin.walletReceipts.emergencyTitle', locale)}
+                        </legend>
+                        <p id="receipt-emergency-hint" className="text-sm">
+                          {t('admin.walletReceipts.emergencyHint', locale)}
+                        </p>
+                        <label
+                          htmlFor="receipt-emergency-reason"
+                          className="block text-sm font-medium"
+                        >
+                          {t('admin.walletReceipts.emergencyReason', locale)}
+                        </label>
+                        <textarea
+                          id="receipt-emergency-reason"
+                          {...confirmation.emergency.bind('emergencyOverrideReason')}
+                          rows={3}
+                          required
+                          aria-required="true"
+                          aria-describedby={`receipt-emergency-hint${confirmation.emergency.errors.emergencyOverrideReason ? ` ${confirmation.emergency.errorId('emergencyOverrideReason')}` : ''}`}
+                          maxLength={APPROVAL_REVIEW_REASON_MAX_LENGTH}
+                          value={emergencyReason}
+                          onChange={(event) => setEmergencyReason(event.target.value)}
+                          disabled={acting || stepUpOpen || rejectionBusy || confirmationBusy}
+                          className="w-full rounded border border-input px-3 py-2"
+                        />
+                        <p
+                          id={confirmation.emergency.errorId('emergencyOverrideReason')}
+                          role={
+                            confirmation.emergency.errors.emergencyOverrideReason
+                              ? 'alert'
+                              : undefined
+                          }
+                          aria-hidden={
+                            !confirmation.emergency.errors.emergencyOverrideReason || undefined
+                          }
+                          className={`text-sm text-destructive${confirmation.emergency.errors.emergencyOverrideReason ? '' : ' invisible'}`}
+                        >
+                          {confirmation.emergency.errors.emergencyOverrideReason?.message ??
+                            t('admin.walletReceipts.error.emergencyReason', locale)}
+                        </p>
+                        <button
+                          type="submit"
+                          ref={emergencyButtonRef}
+                          data-testid="wallet-receipt-emergency-confirm"
+                          disabled={
+                            acting ||
+                            rejectionBusy ||
+                            confirmationBusy ||
+                            loading ||
+                            !!queueError ||
+                            detailLoading ||
+                            detailError ||
+                            !reviewReady ||
+                            stepUpOpen ||
+                            (!!invoiceId.trim() &&
+                              (allocationLoading || !!allocationError || !allocation))
+                          }
+                          aria-busy={acting || confirmationBusy || stepUpOpen || undefined}
+                          className="rounded bg-amber-900 px-4 py-2 text-white disabled:opacity-50"
+                        >
+                          {(acting || confirmationBusy || stepUpOpen) && (
+                            <span
+                              aria-hidden="true"
+                              className="me-2 inline-block size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                            />
+                          )}
+                          {t('admin.walletReceipts.emergencyConfirm', locale)}
+                        </button>
+                      </fieldset>
+                    </form>
                   )}
 
                   <form onSubmit={handleReject} className="space-y-3" noValidate>
@@ -1175,7 +1285,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                         maxLength={BANK_RECEIPT_REJECT_REASON_MAX_LENGTH}
                         rows={3}
                         value={reason}
-                        disabled={acting || stepUpOpen || rejectionBusy}
+                        disabled={acting || stepUpOpen || rejectionBusy || confirmationBusy}
                         onChange={(e) => setReason(e.target.value)}
                         className="w-full border border-input rounded px-3 py-2"
                       />
@@ -1199,6 +1309,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                       disabled={
                         acting ||
                         rejectionBusy ||
+                        confirmationBusy ||
                         stepUpOpen ||
                         loading ||
                         !!queueError ||

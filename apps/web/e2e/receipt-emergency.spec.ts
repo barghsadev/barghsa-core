@@ -1,6 +1,8 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { bankReceiptReview } from '../src/test/bank-receipt-review-fixture';
+import { tWalletReceipts as text } from '@barghsa/i18n/wallet-receipts';
+import { crmShell } from './crm-shell-fixture';
 
 const first = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const second = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
@@ -25,18 +27,11 @@ const receipt = (transactionId: string) => ({
   dualApproval: { requestId: transactionId, initiatorId: 'finance-1', invoiceId: null },
 });
 
-for (const locale of ['en', 'fa']) {
+for (const locale of ['en', 'fa'] as const) {
   test(`emergency confirmation retains receipt, reason and focus through step-up (${locale})`, async ({
     page,
   }) => {
-    await page.addInitScript((value) => {
-      const apply = () => {
-        if (document.documentElement) document.documentElement.lang = value;
-      };
-      apply();
-      new MutationObserver(apply).observe(document, { childList: true });
-    }, locale);
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'UTC' } })
     );
@@ -75,7 +70,7 @@ for (const locale of ['en', 'fa']) {
     await page.route('**/api/auth/step-up', (route) => route.fulfill({ json: { verified: true } }));
     await page.goto('/admin/wallet-receipts');
     const action = page.getByTestId('wallet-receipt-emergency-confirm');
-    await expect(action).toBeDisabled();
+    await expect(action).toBeEnabled();
     await expect(page.getByTestId('admin-wallet-receipts-page')).toHaveAttribute(
       'dir',
       locale === 'fa' ? 'rtl' : 'ltr'
@@ -83,6 +78,13 @@ for (const locale of ['en', 'fa']) {
     const reason = page.getByLabel(
       locale === 'en' ? 'Emergency override reason (required)' : 'دلیل تأیید اضطراری (الزامی)'
     );
+    await action.click();
+    await expect(reason).toBeFocused();
+    await expect(reason).toHaveAttribute('aria-invalid', 'true');
+    await expect(page.getByRole('alert')).toContainText(
+      text('admin.walletReceipts.error.emergencyReason', locale)
+    );
+    expect(actions).toEqual([]);
     await reason.fill('  Bank deadline; second reviewer unavailable  ');
     expect(
       (
@@ -93,7 +95,13 @@ for (const locale of ['en', 'fa']) {
     ).toEqual([]);
     await action.click();
     await expect.poll(() => actions.length).toBe(1);
-    await expect(page.getByRole('button').filter({ hasText: 'RECEIPT-B' })).toBeDisabled();
+    await expect(
+      page
+        .getByRole('row')
+        .filter({ hasText: 'RECEIPT-B' })
+        .getByRole('button')
+        .or(page.getByRole('button').filter({ hasText: 'RECEIPT-B' }))
+    ).toBeDisabled();
     await expect(reason).toBeDisabled();
     release();
     const dialog = page.getByRole('dialog');

@@ -28,9 +28,9 @@ import {
 } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { InputFieldException } from '../common/input-field.exception.js';
 import {
   BANK_RECEIPT_CONFIRM_PERMISSION,
-  BANK_RECEIPT_OVERPAYMENT_ERRORS,
   BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
   APPROVAL_REVIEW_REASON_MAX_LENGTH,
   parseOptionalInvoiceId,
@@ -152,11 +152,7 @@ export class BankReceiptConfirmationController {
     assertUuid(transactionId);
     const parsed = parseOptionalInvoiceId({ invoiceId });
     if (!parsed.ok || !parsed.invoiceId) {
-      httpError(
-        ErrorCodes.VALIDATION_INPUT_INVALID.code,
-        BANK_RECEIPT_OVERPAYMENT_ERRORS.BAD_INVOICE_ID(),
-        400
-      );
+      throw new InputFieldException(['invoiceId']);
     }
     return this.service.previewAllocation(transactionId, parsed.invoiceId);
   }
@@ -196,7 +192,7 @@ export class BankReceiptConfirmationController {
     this.assertConfirmPermission(req);
     assertUuid(transactionId);
     const parsed = parseOptionalInvoiceId({ invoiceId });
-    if (!parsed.ok) httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, parsed.message, 400);
+    if (!parsed.ok) throw new InputFieldException(['invoiceId']);
     return this.service.review({
       transactionId,
       invoiceId: parsed.invoiceId,
@@ -263,12 +259,22 @@ export class BankReceiptConfirmationController {
       })
       .strict()
       .safeParse(body);
-    if (!confirmation.success)
+    if (!confirmation.success) {
+      const fields = confirmation.error.issues.map((issue) =>
+        issue.path.length === 1 ? issue.path[0] : undefined
+      );
+      if (
+        fields.length &&
+        fields.every((field) => field === 'invoiceId' || field === 'emergencyOverrideReason')
+      ) {
+        throw new InputFieldException(fields as string[]);
+      }
       httpError(
         ErrorCodes.VALIDATION_INPUT_INVALID.code,
         'Valid financial review confirmation required',
         400
       );
+    }
     const parsed = parseOptionalInvoiceId(body ?? {});
     if (!parsed.ok) {
       httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, parsed.message, 400);

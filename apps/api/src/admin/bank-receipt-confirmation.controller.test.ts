@@ -67,7 +67,8 @@ function makeController() {
     walletCreditAmount: '150000',
     isOverpayment: true,
   });
-  const service = { listPendingPage, get, confirm, reject, previewAllocation };
+  const review = vi.fn().mockResolvedValue({});
+  const service = { listPendingPage, get, confirm, reject, previewAllocation, review };
   const correlationId = { getCorrelationId: vi.fn().mockReturnValue('corr-1') };
   const controller = new BankReceiptConfirmationController(
     service as never,
@@ -175,6 +176,86 @@ describe('bank-receipt confirmation permission gate (T-04.2.02.04)', () => {
   });
 
   it.each([
+    { input: { invoiceId: 'not-an-invoice' }, fields: ['invoiceId'] },
+    { input: { invoiceId: 12 }, fields: ['invoiceId'] },
+    { input: { invoiceId: '' }, fields: ['invoiceId'] },
+    { input: { emergencyOverrideReason: '' }, fields: ['emergencyOverrideReason'] },
+    { input: { emergencyOverrideReason: '  ' }, fields: ['emergencyOverrideReason'] },
+    { input: { emergencyOverrideReason: null }, fields: ['emergencyOverrideReason'] },
+    { input: { emergencyOverrideReason: 'x'.repeat(2001) }, fields: ['emergencyOverrideReason'] },
+    {
+      input: { invoiceId: 'bad', emergencyOverrideReason: '' },
+      fields: ['invoiceId', 'emergencyOverrideReason'],
+    },
+  ])(
+    'identifies only owned confirmation fields before calling finance: $fields',
+    async ({ input, fields }) => {
+      const { controller, service } = makeController();
+      await expect(
+        controller.confirm(adminReq, TX_ID, { expectedReviewHash: REVIEW_HASH, ...input })
+      ).rejects.toMatchObject({ status: 400, fields });
+      expect(service.confirm).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each([
+    { expectedReviewHash: 'private-hash', invoiceId: 'bad' },
+    { expectedReviewHash: REVIEW_HASH, invoiceId: 'bad', actorUserId: 'private-actor' },
+    { expectedReviewHash: REVIEW_HASH, emergencyOverrideReason: '', extra: true },
+  ])('keeps mixed protected confirmation failures generic', async (body) => {
+    const { controller, service } = makeController();
+    const error = await controller.confirm(adminReq, TX_ID, body).catch((error: unknown) => error);
+    expect(error).toMatchObject({ status: 400 });
+    expect(error).not.toHaveProperty('fields');
+    expect(JSON.stringify(rejectionBody(error))).not.toMatch(/private-hash|private-actor/);
+    expect(service.confirm).not.toHaveBeenCalled();
+  });
+
+  it('preserves bounded emergency reason, invoice normalization and exact review authority', async () => {
+    const { controller, service } = makeController();
+    const invoiceId = 'abcdefab-1111-7111-8111-111111111111';
+    await controller.confirm(adminReq, TX_ID, {
+      expectedReviewHash: REVIEW_HASH,
+      invoiceId: invoiceId.toUpperCase(),
+      emergencyOverrideReason: '  Bank deadline  ',
+    });
+    expect(service.confirm).toHaveBeenCalledWith(
+      expect.objectContaining({
+        invoiceId,
+        expectedReviewHash: REVIEW_HASH,
+        emergencyOverrideReason: 'Bank deadline',
+        actorUserId: 'admin-1',
+        sessionId: 'staff-session',
+        csrfToken: 'staff-csrf',
+      })
+    );
+  });
+
+  it('checks permission before returning confirmation field metadata', async () => {
+    const { controller, service } = makeController();
+    const error = await controller
+      .confirm(nonAdminReq, TX_ID, { invoiceId: 'bad', emergencyOverrideReason: '' })
+      .catch((error: unknown) => error);
+    expect(error).toMatchObject({ status: 403 });
+    expect(error).not.toHaveProperty('fields');
+    expect(service.confirm).not.toHaveBeenCalled();
+  });
+
+  it.each([{ invoiceId: 'not-an-invoice' }, { invoiceId: ['ambiguous-invoice'] }])(
+    'returns a public invoice identifier for malformed financial review query %j',
+    async ({ invoiceId }) => {
+      const { controller, service } = makeController();
+      await expect(
+        controller.review(adminReq, TX_ID, invoiceId as unknown as string)
+      ).rejects.toMatchObject({
+        status: 400,
+        fields: ['invoiceId'],
+      });
+      expect(service.review).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each([
     undefined,
     {},
     { expectedReviewHash: 'invalid' },
@@ -197,7 +278,7 @@ describe('bank-receipt confirmation permission gate (T-04.2.02.04)', () => {
     const rejection = await controller
       .allocation(adminReq, TX_ID, 'not-an-invoice')
       .catch((e: unknown) => e);
-    expect(rejection).toMatchObject({ status: 400 });
+    expect(rejection).toMatchObject({ status: 400, fields: ['invoiceId'] });
     expect(service.previewAllocation).not.toHaveBeenCalled();
   });
 });
