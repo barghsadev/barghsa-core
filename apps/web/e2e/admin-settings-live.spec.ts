@@ -1638,12 +1638,7 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     const headers = {
       cookie: `barghsa_session=${http.session}`,
       'x-csrf-token': http.csrf,
@@ -1684,7 +1679,11 @@ for (const locale of ['en', 'fa'])
       mimeType: 'application/pdf',
       buffer: Buffer.from('%PDF-1.7'),
     });
-    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(
+      page
+        .getByRole('alert')
+        .filter({ hasText: fa ? 'یک فایل متنی UTF-8' : 'Choose a nonempty UTF-8 text file' })
+    ).toBeVisible();
     await expect(
       page.getByRole('button', { name: fa ? 'بارگذاری نسخه' : 'Upload version', exact: true })
     ).toBeDisabled();
@@ -1738,9 +1737,9 @@ for (const locale of ['en', 'fa'])
       ],
     });
     await page.setViewportSize({ width: 390, height: 844 });
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
-      true
-    );
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+      .toBe(true);
     await page.screenshot({ path: `/tmp/contract-templates-${locale}.png`, fullPage: true });
     await page
       .getByRole('button', { name: fa ? 'افزودن قالب' : 'Add template', exact: true })
@@ -2504,12 +2503,7 @@ for (const locale of ['en', 'fa'])
   }, testInfo) => {
     const fa = locale === 'fa';
     const versionId = `live-terms-${locale}`;
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
         url = new URL(request.url());
@@ -2619,9 +2613,11 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: fa ? 'ایجاد پیش‌نویس' : 'Create Draft', exact: true })
       .click();
-    await expect(page.getByRole('alert')).toContainText(
-      fa ? 'شناسه نسخه قبلاً استفاده شده است' : 'This version ID is already used'
-    );
+    await expect(
+      page.getByRole('alert').filter({
+        hasText: fa ? 'شناسه نسخه قبلاً استفاده شده است' : 'This version ID is already used',
+      })
+    ).toBeVisible();
     await expect(
       page.getByRole('textbox', { name: fa ? 'محتوای انگلیسی' : 'English content', exact: true })
     ).toHaveText('Temporary draft');

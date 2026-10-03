@@ -1,3 +1,16 @@
+import { contentFormText } from '@barghsa/i18n/content-forms';
+import { Alert } from '@barghsa/ui';
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import {
+  CatalogueSaveButton,
+  catalogueRootMessage,
+} from '../components/CatalogueEditorFeedback.js';
+import {
+  emptyContractTemplateDraft,
+  contractTemplateInvalidFields,
+  type ContractTemplateDraft,
+} from '../lib/content-form.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
@@ -11,7 +24,7 @@ import type {
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
-type Draft = { name: string; description: string; status: 'active' | 'inactive' };
+type Draft = ContractTemplateDraft;
 type Upload = { fileName: string; contentType: string; content: string };
 const MAX_BYTES = 10 * 1024 * 1024;
 const record = (value: unknown): value is Record<string, unknown> =>
@@ -70,8 +83,45 @@ export default function AdminContractTemplatesPage() {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => contractTemplatesText(`admin.templates.${key}`, locale);
-  const [selected, setSelected] = useState<string | null>(null),
-    [draft, setDraft] = useState<Draft | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
+  const formText = (key: Parameters<typeof contentFormText>[0]) => contentFormText(key, locale);
+  const messages = {
+    name: formText('name'),
+    description: formText('description'),
+    status: formText('status'),
+  };
+  const editor = useWizardForm<Draft>(
+    async () => {
+      const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return contentFormSchema(messages, contractTemplateInvalidFields);
+    },
+    emptyContractTemplateDraft,
+    formText('validationUnavailable')
+  );
+  const resetTemplate = editor.form.reset;
+  const registerTemplate = editor.form.register;
+  const statusRef = useCallback(
+    (node: HTMLInputElement | null) => {
+      registerTemplate('status').ref(node ? { focus: () => node.focus() } : null);
+    },
+    [registerTemplate]
+  );
+  const draft = selected ? editor.values : null;
+  const setDraft = (value: Draft) => {
+    for (const field of ['name', 'description', 'status'] as const)
+      editor.form.setValue(field, value[field], {
+        shouldDirty: true,
+        shouldValidate:
+          editor.form.getFieldState(field).isTouched || editor.form.getFieldState(field).invalid,
+      });
+  };
+  const applyFieldErrors = useActionFieldErrors(editor.form, messages, formText('invalid'));
+  const [needsReset, setNeedsReset] = useState(false),
+    [uncertain, setUncertain] = useState(false);
+  const [recoveryReady, setRecoveryReady] = useState(false);
+  const validationBusy = useRef(false);
+  const invalidFocus = useRef<{ field: keyof Draft; generation: number } | null>(null);
+
   const [action, setAction] = useState<TeamAction | null>(null),
     [saved, setSaved] = useState(false);
   const [upload, setUpload] = useState<Upload | null>(null),
@@ -85,21 +135,26 @@ export default function AdminContractTemplatesPage() {
   const acceptedRows = useRef<ContractTemplateDto[] | null>(null);
   const closeAction = useCallback(() => {
     workGeneration.current++;
+    validationBusy.current = false;
+    editor.setValidationPending(false);
     actionRef.current = null;
     setAction(null);
-  }, []);
+  }, [editor.setValidationPending]);
   const clearEditor = useCallback(() => {
     closeAction();
     fileGeneration.current++;
     acceptedDetail.current = null;
     setSelected(null);
-    setDraft(null);
+    resetTemplate(emptyContractTemplateDraft());
+    setNeedsReset(false);
+    setUncertain(false);
+    setRecoveryReady(false);
     setUpload(null);
     setFileError(false);
     setReading(false);
     setSaved(false);
     if (fileInput.current) fileInput.current.value = '';
-  }, [closeAction]);
+  }, [closeAction, resetTemplate]);
   const denied = useCallback(() => {
     acceptedRows.current = null;
     clearEditor();
@@ -120,8 +175,20 @@ export default function AdminContractTemplatesPage() {
     detail = history.data;
   const listReady =
     !scope.denied && !catalogue.loading && !catalogue.error && catalogue.data !== null;
-  const detailReady = selected === 'new' || (!!detail && !history.loading && !history.error);
-  const ready = listReady && detailReady;
+  const detailReady =
+    selected === 'new' ||
+    (!!detail && !history.loading && !history.error && acceptedDetail.current?.id === detail.id);
+  const ready = listReady && detailReady && !needsReset && !uncertain;
+  useEffect(() => {
+    if (editor.pending || !ready || action) return;
+    const target = invalidFocus.current;
+    if (!target) return;
+    const frame = requestAnimationFrame(() => {
+      invalidFocus.current = null;
+      if (target.generation === workGeneration.current) editor.form.setFocus(target.field);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [editor.pending, editor.errors, editor.form.setFocus, ready, action]);
   useEffect(
     () => () => {
       workGeneration.current++;
@@ -149,6 +216,8 @@ export default function AdminContractTemplatesPage() {
     const before = previous?.find((row) => row.id === selected);
     if (before && basis(before) !== basis(next)) {
       closeAction();
+      setNeedsReset(true);
+      setRecoveryReady(false);
       history.retry();
     }
   }, [
@@ -163,7 +232,11 @@ export default function AdminContractTemplatesPage() {
   useEffect(() => {
     if (!detail || history.loading || history.error) return;
     const previous = acceptedDetail.current;
-    if (!previous || metadata(previous) !== metadata(detail)) setDraft(draftOf(detail));
+    if (!previous) resetTemplate(draftOf(detail));
+    else if (metadata(previous) !== metadata(detail)) {
+      setNeedsReset(true);
+      setRecoveryReady(true);
+    }
     if (
       previous &&
       (basis(previous) !== basis(detail) ||
@@ -171,7 +244,7 @@ export default function AdminContractTemplatesPage() {
     )
       closeAction();
     acceptedDetail.current = detail;
-  }, [detail, history.loading, history.error, closeAction]);
+  }, [detail, history.loading, history.error, closeAction, resetTemplate]);
   function chooseEditor(value: string | null) {
     if (value === selected) {
       if (history.error) history.retry();
@@ -179,14 +252,42 @@ export default function AdminContractTemplatesPage() {
     }
     clearEditor();
     setSelected(value);
-    if (value === 'new') setDraft({ name: '', description: '', status: 'active' });
+    if (value === 'new') resetTemplate(emptyContractTemplateDraft());
   }
   function refresh() {
+    if (validationBusy.current || uncertain) closeAction();
+    setRecoveryReady(false);
     if (scope.denied) scope.recover();
     else {
       catalogue.retry();
       if (selected && selected !== 'new') history.retry();
     }
+  }
+  useEffect(() => {
+    if ((uncertain || needsReset) && listReady && detailReady) setRecoveryReady(true);
+  }, [uncertain, needsReset, listReady, detailReady]);
+  function resetSaved() {
+    if (!listReady || !detailReady || !recoveryReady || actionRef.current || validationBusy.current)
+      return;
+    closeAction();
+    resetTemplate(
+      selected === 'new'
+        ? emptyContractTemplateDraft()
+        : detail
+          ? draftOf(detail)
+          : emptyContractTemplateDraft()
+    );
+    fileGeneration.current++;
+    setUpload(null);
+    setReading(false);
+    setNeedsReset(false);
+    setUncertain(false);
+  }
+  function unconfirmed() {
+    setUncertain(true);
+    setRecoveryReady(false);
+    catalogue.retry();
+    if (selected !== 'new') history.retry();
   }
   function propose(
     path: string,
@@ -195,7 +296,15 @@ export default function AdminContractTemplatesPage() {
     description: string,
     body?: unknown
   ) {
-    if (!listReady || (method !== 'DELETE' && !detailReady)) return;
+    if (
+      !listReady ||
+      uncertain ||
+      needsReset ||
+      validationBusy.current ||
+      actionRef.current ||
+      (method !== 'DELETE' && !detailReady)
+    )
+      return;
     closeAction();
     setSaved(false);
     const next: TeamAction = {
@@ -218,27 +327,67 @@ export default function AdminContractTemplatesPage() {
     actionRef.current = next;
     setAction(next);
   }
-  function save(event: FormEvent) {
+  async function save(event: FormEvent) {
     event.preventDefault();
-    if (!draft || !selected || !ready || !draft.name.trim()) return;
-    propose(
-      `/api/admin/contract-templates${selected === 'new' ? '' : `/${selected}`}`,
-      selected === 'new' ? 'POST' : 'PATCH',
-      label('save'),
-      label('confirmSave'),
-      {
-        name: draft.name.trim(),
-        description: draft.description,
-        ...(selected === 'new' ? {} : { status: draft.status }),
+    if (!draft || !selected || !ready || actionRef.current || validationBusy.current) return;
+    const generation = workGeneration.current;
+    validationBusy.current = true;
+    editor.setValidationPending(true);
+    try {
+      let captured: Draft | undefined;
+      await editor.form.handleSubmit(
+        (value) => {
+          captured = value;
+        },
+        (errors) => {
+          // Safari needs the fieldset's unlocked DOM commit before native focus.
+          if (generation === workGeneration.current) {
+            const field = (['name', 'description', 'status'] as const).find(
+              (field) => errors[field]
+            );
+            invalidFocus.current = field ? { field, generation } : null;
+            validationBusy.current = false;
+            editor.setValidationPending(false);
+          }
+        }
+      )();
+      if (generation !== workGeneration.current || scope.denied || !captured) return;
+      validationBusy.current = false;
+      editor.setValidationPending(false);
+      propose(
+        `/api/admin/contract-templates${selected === 'new' ? '' : `/${selected}`}`,
+        selected === 'new' ? 'POST' : 'PATCH',
+        label('save'),
+        label('confirmSave'),
+        {
+          name: captured.name.trim(),
+          description: captured.description,
+          ...(selected === 'new' ? {} : { status: captured.status }),
+        }
+      );
+    } finally {
+      if (generation === workGeneration.current) {
+        validationBusy.current = false;
+        editor.setValidationPending(false);
       }
-    );
+    }
   }
   async function readFile(file: File | undefined) {
     const generation = ++fileGeneration.current;
     setUpload(null);
     setFileError(false);
     setReading(false);
-    if (!file || scope.denied || actionRef.current || !selected || selected === 'new') return;
+    if (
+      !file ||
+      scope.denied ||
+      validationBusy.current ||
+      uncertain ||
+      needsReset ||
+      actionRef.current ||
+      !selected ||
+      selected === 'new'
+    )
+      return;
     if (
       file.size > MAX_BYTES ||
       file.size === 0 ||
@@ -295,7 +444,10 @@ export default function AdminContractTemplatesPage() {
           {!scope.denied && catalogue.data !== null && (
             <>
               <ListPage.Toolbar>
-                <Button disabled={!listReady || !!action} onClick={() => chooseEditor('new')}>
+                <Button
+                  disabled={!listReady || !!action || editor.pending || uncertain || needsReset}
+                  onClick={() => chooseEditor('new')}
+                >
                   {label('add')}
                 </Button>
               </ListPage.Toolbar>
@@ -308,16 +460,37 @@ export default function AdminContractTemplatesPage() {
                   </Button>
                 </div>
               )}
+              {(uncertain || needsReset) && (
+                <Alert variant="destructive">
+                  {formText(uncertain ? 'unverified' : 'changed')}
+                </Alert>
+              )}
+              {draft && (uncertain || needsReset) && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={!listReady || !detailReady || !recoveryReady || !!action}
+                  onClick={resetSaved}
+                >
+                  {formText('reset')}
+                </Button>
+              )}
               {draft && (
                 <form
+                  noValidate
+                  aria-busy={editor.pending || undefined}
                   aria-label={label('editor')}
                   onSubmit={save}
                   className="flex flex-col gap-4 border-y py-5"
                 >
-                  <fieldset disabled={!!action} className="space-y-4">
+                  {catalogueRootMessage(editor.errors) && (
+                    <Alert variant="destructive">{catalogueRootMessage(editor.errors)}</Alert>
+                  )}
+                  <fieldset disabled={!!action || editor.pending || !ready} className="space-y-4">
                     <div className="flex flex-col gap-2">
                       <Label htmlFor="template-name">{label('name')}</Label>
                       <Input
+                        {...editor.bind('name')}
                         id="template-name"
                         required
                         maxLength={200}
@@ -325,9 +498,18 @@ export default function AdminContractTemplatesPage() {
                         onChange={(event) => setDraft({ ...draft, name: event.target.value })}
                       />
                     </div>
+                    <p
+                      id={editor.errorId('name')}
+                      role={editor.errors.name ? 'alert' : undefined}
+                      aria-hidden={!editor.errors.name || undefined}
+                      className={`text-sm text-destructive ${editor.errors.name ? '' : 'invisible'}`}
+                    >
+                      {editor.errors.name?.message ?? messages.name}
+                    </p>
                     <div className="flex flex-col gap-2">
                       <Label htmlFor="template-description">{label('description')}</Label>
                       <textarea
+                        {...editor.bind('description')}
                         id="template-description"
                         className="min-h-24 rounded-md border bg-background p-3"
                         maxLength={2000}
@@ -337,9 +519,19 @@ export default function AdminContractTemplatesPage() {
                         }
                       />
                     </div>
+                    <p
+                      id={editor.errorId('description')}
+                      role={editor.errors.description ? 'alert' : undefined}
+                      aria-hidden={!editor.errors.description || undefined}
+                      className={`text-sm text-destructive ${editor.errors.description ? '' : 'invisible'}`}
+                    >
+                      {editor.errors.description?.message ?? messages.description}
+                    </p>
                     {selected !== 'new' && (
                       <label className="flex items-center gap-2">
                         <input
+                          {...editor.bind('status')}
+                          ref={statusRef}
                           type="checkbox"
                           checked={draft.status === 'active'}
                           onChange={(event) =>
@@ -352,10 +544,20 @@ export default function AdminContractTemplatesPage() {
                         {label('active')}
                       </label>
                     )}
+                    <p
+                      id={editor.errorId('status')}
+                      role={editor.errors.status ? 'alert' : undefined}
+                      aria-hidden={!editor.errors.status || undefined}
+                      className={`text-sm text-destructive ${editor.errors.status ? '' : 'invisible'}`}
+                    >
+                      {editor.errors.status?.message ?? messages.status}
+                    </p>
                     <div className="flex gap-2">
-                      <Button type="submit" disabled={!draft.name.trim() || !ready}>
-                        {label('save')}
-                      </Button>
+                      <CatalogueSaveButton
+                        label={label('save')}
+                        pending={editor.pending}
+                        disabled={!ready || editor.pending || !!action}
+                      />
                       <Button type="button" variant="outline" onClick={() => chooseEditor(null)}>
                         {label('cancel')}
                       </Button>
@@ -371,7 +573,8 @@ export default function AdminContractTemplatesPage() {
                     onDragOver={(event) => event.preventDefault()}
                     onDrop={(event) => {
                       event.preventDefault();
-                      if (!action) void readFile(event.dataTransfer.files[0]);
+                      if (!action && !editor.pending && ready)
+                        void readFile(event.dataTransfer.files[0]);
                     }}
                   >
                     <Label htmlFor="template-file">{label('file')}</Label>
@@ -379,7 +582,7 @@ export default function AdminContractTemplatesPage() {
                     <Button
                       type="button"
                       variant="outline"
-                      disabled={!!action}
+                      disabled={!!action || editor.pending || uncertain || needsReset}
                       onClick={() => fileInput.current?.click()}
                     >
                       {label('chooseFile')}
@@ -390,7 +593,7 @@ export default function AdminContractTemplatesPage() {
                       type="file"
                       accept="text/*,.txt,.html,.md,.csv"
                       className="hidden"
-                      disabled={!!action}
+                      disabled={!!action || editor.pending || uncertain || needsReset}
                       onChange={(event) => {
                         void readFile(event.target.files?.[0]);
                         event.target.value = '';
@@ -456,14 +659,23 @@ export default function AdminContractTemplatesPage() {
                       <Button
                         variant="outline"
                         aria-label={`${label('open')} ${row.name}`}
-                        disabled={!listReady || !!action}
+                        disabled={
+                          !listReady || !!action || editor.pending || uncertain || needsReset
+                        }
                         onClick={() => chooseEditor(row.id)}
                       >
                         {label('open')}
                       </Button>
                       <Button
                         variant="outline"
-                        disabled={row.versionCount > 0 || !listReady || !!action}
+                        disabled={
+                          row.versionCount > 0 ||
+                          !listReady ||
+                          !!action ||
+                          editor.pending ||
+                          uncertain ||
+                          needsReset
+                        }
                         aria-label={`${label('delete')} ${row.name}`}
                         onClick={() =>
                           propose(
@@ -488,7 +700,16 @@ export default function AdminContractTemplatesPage() {
         <TeamActionDialog
           action={action}
           onClose={closeAction}
-          confirmationDisabled={!listReady || (action.method !== 'DELETE' && !detailReady)}
+          onDenied={scope.deny}
+          onUnconfirmed={unconfirmed}
+          onValidationError={(fields) =>
+            !action.path.endsWith('/versions') &&
+            action.method !== 'DELETE' &&
+            applyFieldErrors(fields)
+          }
+          confirmationDisabled={
+            uncertain || needsReset || !listReady || (action.method !== 'DELETE' && !detailReady)
+          }
           summary={
             <div className="space-y-2">
               <Button
@@ -544,6 +765,22 @@ export default function AdminContractTemplatesPage() {
                 (selected !== 'new' && result.status !== expected.status)
               )
                 throw new Error('Invalid template acknowledgement');
+            }
+            // Accept this command's receipt as the refresh baseline. Our own saved
+            // version must not be mistaken for a concurrent editor's change.
+            if (action.path.endsWith('/versions') && validVersion(result) && detail) {
+              const next = {
+                ...detail,
+                versionCount: detail.versionCount + 1,
+                latestVersion: result,
+                versions: [...detail.versions, result],
+              };
+              acceptedDetail.current = next;
+              acceptedRows.current =
+                acceptedRows.current?.map((row) => (row.id === detail.id ? next : row)) ?? null;
+            } else if (validTemplate(result)) {
+              acceptedRows.current =
+                acceptedRows.current?.map((row) => (row.id === result.id ? result : row)) ?? null;
             }
             closeAction();
             if (

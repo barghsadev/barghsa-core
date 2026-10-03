@@ -11,6 +11,21 @@ import type { TeamDraft, RoutingDraft } from './staff-team-form.js';
 import type { Draft, PriceDraft, ProductType } from './catalogue-form.js';
 import type { AgreementDraft, InventoryDraft } from './saving-catalogue-form.js';
 
+export function contentFormSchema<Draft extends object>(
+  messages: Record<keyof Draft, string>,
+  invalidFields: (draft: Draft) => (keyof Draft)[]
+) {
+  return custom<Draft>().check((ctx) => {
+    for (const field of invalidFields(ctx.value))
+      ctx.issues.push({
+        code: 'custom',
+        input: ctx.value,
+        path: [String(field)],
+        message: messages[field],
+      });
+  });
+}
+
 export function providerFormSchema<Draft extends object>(
   messages: Record<keyof Draft, string>,
   invalidFields: (draft: Draft) => (keyof Draft)[]

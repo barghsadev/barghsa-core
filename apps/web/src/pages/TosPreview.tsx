@@ -1,22 +1,21 @@
 import { useMemo, useEffect } from 'react';
 import TosContent from '../components/TosContent.js';
 import { diffLines } from 'diff';
-import { adminTosText } from './admin-tos-text.js';
+import type { adminTosText } from './admin-tos-text.js';
 
 export default function TosPreview({
+  text,
   current,
   proposed,
   language,
-  locale,
   onReady,
 }: {
+  text: ReturnType<typeof adminTosText>;
   current: string;
   proposed: string;
   language: 'fa' | 'en';
-  locale: 'fa' | 'en';
   onReady: () => void;
 }) {
-  const text = adminTosText(locale);
   useEffect(onReady, [onReady]);
   const changes = useMemo(
     () => diffLines(current, proposed, { timeout: 50, maxEditLength: 2000 }),

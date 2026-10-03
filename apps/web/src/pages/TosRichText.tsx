@@ -1,27 +1,29 @@
+import type { WizardFieldBinding } from '../hooks/useWizardForm.js';
 import { useEffect, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Markdown } from '@tiptap/markdown';
-import { adminTosText } from './admin-tos-text.js';
+import type { adminTosText } from './admin-tos-text.js';
 
 const extensions = [StarterKit.configure({ underline: false }), Markdown];
 
 export default function TosRichText({
+  text,
   value,
   onChange,
   label,
   language,
-  locale,
   disabled = false,
+  binding,
 }: {
+  text: ReturnType<typeof adminTosText>;
   value: string;
   onChange: (value: string) => void;
   label: string;
   language: 'fa' | 'en';
-  locale: 'fa' | 'en';
   disabled?: boolean;
+  binding?: WizardFieldBinding;
 }) {
-  const text = adminTosText(locale);
   // Preserve documents with constructs not represented by the editor schema.
   const [sourceOnly] = useState(() =>
     /<\/?[a-z][^>]*>|!\[|^.*\|.*$|^\s*[-*+] \[[ xX]\]|^\s*\[\^.+\]:/im.test(value)
@@ -45,11 +47,26 @@ export default function TosRichText({
           'min-h-48 p-3 outline-none focus-visible:ring-2 focus-visible:ring-blue-600 [&_h2]:text-xl [&_h2]:font-bold [&_p]:my-2 [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:ps-6 [&_ol]:ps-6 [&_blockquote]:border-s-4 [&_blockquote]:ps-3 [&_a]:underline [&_a]:text-blue-700',
       },
     },
+    onBlur: () => binding?.onBlur(),
     onUpdate: ({ editor: current }) => !sourceOnly && onChange(current.getMarkdown()),
   });
   useEffect(() => {
     editor?.setEditable(!disabled, false);
   }, [editor, disabled]);
+  useEffect(() => {
+    if (sourceOnly) return;
+    const node = editor?.view.dom;
+    binding?.ref(node ?? null);
+    if (node) {
+      node.setAttribute('aria-invalid', String(binding?.['aria-invalid'] ?? false));
+      if (binding?.['aria-describedby'])
+        node.setAttribute('aria-describedby', binding['aria-describedby']);
+      else node.removeAttribute('aria-describedby');
+    }
+    return () => {
+      binding?.ref(null);
+    };
+  }, [editor, binding, sourceOnly]);
   const actions = editor
     ? [
         {
@@ -89,6 +106,7 @@ export default function TosRichText({
       <div className="space-y-2">
         <p className="text-sm text-muted-foreground">{text.preserveSource}</p>
         <textarea
+          {...binding}
           aria-label={label}
           required
           dir={language === 'fa' ? 'rtl' : 'ltr'}

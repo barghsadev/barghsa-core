@@ -3011,7 +3011,7 @@ for (const locale of ['en', 'fa']) {
     } finally {
       release();
     }
-    await expect(english).toHaveAttribute('contenteditable', 'true');
+    await expect(english).toHaveAttribute('contenteditable', 'false');
     await expect(english.locator('strong')).toHaveText('Important terms');
   });
 }
@@ -3166,7 +3166,7 @@ test('TOS edit conflicts preserve local text and reload the newer revision expli
   const english = page.getByRole('textbox', { name: 'English content', exact: true });
   await english.fill('My unsaved text');
   await page.getByRole('button', { name: 'Update Draft', exact: true }).click();
-  await expect(page.getByRole('alert')).toContainText('Another editor');
+  await expect(page.getByRole('alert').filter({ hasText: 'Another editor' })).toBeVisible();
   await expect(english).toHaveText('My unsaved text');
   await expect(page.getByRole('button', { name: 'Update Draft', exact: true })).toBeDisabled();
   expect(writes[0]?.expectedRevision).toBe('a'.repeat(64));
@@ -3192,7 +3192,7 @@ test('TOS creation does not report malformed success as a saved draft', async ({
   await page.getByRole('textbox', { name: 'Persian content', exact: true }).fill('Terms');
   await page.getByRole('textbox', { name: 'English content', exact: true }).fill('Unsaved terms');
   await page.getByRole('button', { name: 'Create Draft', exact: true }).click();
-  await expect(page.getByRole('alert')).toContainText('could not be confirmed');
+  await expect(page.getByRole('alert').filter({ hasText: 'could not be confirmed' })).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'English content', exact: true })).toHaveText(
     'Unsaved terms'
   );

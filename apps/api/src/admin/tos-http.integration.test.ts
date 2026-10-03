@@ -508,3 +508,29 @@ it('does not record consent after the session expires while waiting for the term
     );
   }
 });
+
+it.each(['versionId', 'contentFa', 'contentEn'] as const)(
+  'links empty %s feedback without writing or exposing text',
+  async (field) => {
+    for (const value of ['', '   ']) {
+      const response = await request('', 'POST', { ...draft, [field]: value });
+      expect(response.status).toBe(400);
+      const body = await response.json();
+      expect(body).toMatchObject({ error: { fields: [field] } });
+      expect(JSON.stringify(body)).not.toContain(draft.contentEn);
+    }
+    expect(
+      (await http.pool.query('SELECT count(*)::int AS count FROM tos_versions')).rows[0].count
+    ).toBe(0);
+  }
+);
+it('checks permission before reporting terms field names and preserves a saved draft on bad edit', async () => {
+  const denied = await request('', 'POST', {}, 'other');
+  expect(denied.status).toBe(403);
+  expect(await denied.json()).not.toHaveProperty('error.fields');
+  const saved = await create();
+  const response = await request(`/${saved.id}`, 'PUT', { contentEn: ' ' });
+  expect(response.status).toBe(400);
+  expect(await response.json()).toMatchObject({ error: { fields: ['contentEn'] } });
+  expect(await (await request(`/${saved.id}`)).json()).toMatchObject(draft);
+});

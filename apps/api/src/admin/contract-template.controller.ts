@@ -1,3 +1,4 @@
+import { rejectContentFields } from './content-input-fields.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -101,9 +102,7 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
  *   `@RequiresStepUp()` — template uploads can inject markup that may
  *   be rendered in generated contracts, so writes are guarded.
  *
- * The admin web UI slice (template list with version history, drag &
- * drop upload, placeholder extraction result display, edit metadata
- * modal, fa/en dicts, RTL/a11y) is deferred.
+ * The staff UI provides metadata editing, immutable version uploads and history.
  */
 @ApiTags('Admin · Contract Templates')
 @ApiBearerAuth()
@@ -168,12 +167,7 @@ export class ContractTemplateController {
     this.assertDocumentsPermission(req);
     const parsed = CreateContractTemplateSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid contract template payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      rejectContentFields(parsed.error.issues, ['name', 'description', 'status']);
     }
     return this.service.create({
       name: parsed.data.name,
@@ -204,12 +198,7 @@ export class ContractTemplateController {
     assertUuid(id);
     const parsed = UpdateContractTemplateSchema.safeParse(body ?? {});
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid contract template payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      rejectContentFields(parsed.error.issues, ['name', 'description', 'status']);
     }
     const data = parsed.data;
     return this.service.update(id, {

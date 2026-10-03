@@ -108,9 +108,19 @@ it.each([
       .querySelector('form')!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
-  const writes = vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === 'POST');
-  expect(writes).toHaveLength(1);
-  expect(JSON.parse(String(writes[0]![1]?.body))).toEqual({
+  await vi.waitFor(() =>
+    expect(vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(
+      1
+    )
+  );
+  await vi.waitFor(async () => {
+    await act(async () => {});
+    if (scenario.success) expect(host.querySelector('form')).toBeNull();
+    else expect(host.querySelector('[role=alert]')).not.toBeNull();
+  });
+  const confirmedWrites = vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === 'POST');
+  expect(confirmedWrites).toHaveLength(1);
+  expect(JSON.parse(String(confirmedWrites[0]![1]?.body))).toEqual({
     versionId: 'v2',
     contentFa: 'شرایط',
     contentEn: 'Terms',

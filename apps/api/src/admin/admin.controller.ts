@@ -1,3 +1,4 @@
+import { rejectContentFields } from './content-input-fields.js';
 import { assertStaffTeamFields, assertStaffRoutingFields } from './staff-team-fields.js';
 import { assertServiceSettingsFields } from './service-settings-fields.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
@@ -1164,17 +1165,24 @@ export class AdminController {
     }
 
     const schema = z.object({
-      versionId: z.string().min(1).max(50),
-      contentFa: z.string().min(1),
-      contentEn: z.string().min(1),
+      versionId: z
+        .string()
+        .min(1)
+        .max(50)
+        .refine((value) => !!value.trim()),
+      contentFa: z
+        .string()
+        .min(1)
+        .refine((value) => !!value.trim()),
+      contentEn: z
+        .string()
+        .min(1)
+        .refine((value) => !!value.trim()),
     });
 
     const parsed = schema.safeParse(rawBody);
     if (!parsed.success) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400
-      );
+      rejectContentFields(parsed.error.issues, ['versionId', 'contentFa', 'contentEn']);
     }
 
     return this.tosService.createVersion(
@@ -1222,17 +1230,27 @@ export class AdminController {
 
     const schema = z.object({
       expectedRevision: z.string().regex(/^[a-f0-9]{64}$/),
-      versionId: z.string().min(1).max(50).optional(),
-      contentFa: z.string().min(1).optional(),
-      contentEn: z.string().min(1).optional(),
+      versionId: z
+        .string()
+        .min(1)
+        .max(50)
+        .refine((value) => !!value.trim())
+        .optional(),
+      contentFa: z
+        .string()
+        .min(1)
+        .refine((value) => !!value.trim())
+        .optional(),
+      contentEn: z
+        .string()
+        .min(1)
+        .refine((value) => !!value.trim())
+        .optional(),
     });
 
     const parsed = schema.safeParse(rawBody);
     if (!parsed.success) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400
-      );
+      rejectContentFields(parsed.error.issues, ['versionId', 'contentFa', 'contentEn']);
     }
 
     // Filter to only defined fields for the service call

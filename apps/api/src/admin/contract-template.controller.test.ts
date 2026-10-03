@@ -167,3 +167,24 @@ describe('ContractTemplateController (T-09.12.04)', () => {
     expect(result.deleted).toBe(true);
   });
 });
+
+it.each([
+  { body: { name: ' ' }, fields: ['name'] },
+  { body: { name: 'x'.repeat(201) }, fields: ['name'] },
+  { body: { name: 'Valid', description: 'x'.repeat(2001) }, fields: ['description'] },
+  { body: { name: 'Valid', unknown: 'private text' }, fields: [] },
+])('publishes safe owned create feedback for $fields', async ({ body, fields }) => {
+  const { controller, service } = makeController();
+  const error = await controller.create(adminReq, body).catch((e: unknown) => e);
+  expect(error).toMatchObject({ status: 400, fields });
+  expect(rejectionBody(error)).toEqual({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code });
+  expect(service.create).not.toHaveBeenCalled();
+});
+it('validates update status without exposing document content', async () => {
+  const { controller, service } = makeController();
+  const error = await controller
+    .update(adminReq, TEMPLATE_ID, { status: 'invalid' } as never)
+    .catch((e: unknown) => e);
+  expect(error).toMatchObject({ status: 400, fields: ['status'] });
+  expect(service.update).not.toHaveBeenCalled();
+});

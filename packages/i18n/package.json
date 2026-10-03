@@ -241,6 +241,11 @@
       "types": "./dist/provider-forms.d.ts",
       "import": "./dist/provider-forms.js",
       "default": "./dist/provider-forms.js"
+    },
+    "./content-forms": {
+      "types": "./dist/content-forms.d.ts",
+      "import": "./dist/content-forms.js",
+      "default": "./dist/content-forms.js"
     }
   },
   "scripts": {

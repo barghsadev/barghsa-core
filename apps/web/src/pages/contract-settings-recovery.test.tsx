@@ -138,7 +138,9 @@ it('a new template draft survives refreshing an empty catalogue', async () => {
   await click('Refresh');
   expect(host.querySelector<HTMLInputElement>('#template-name')!.value).toBe('New contract');
   await submit();
-  expect(captured.action?.body).toEqual({ name: 'New contract', description: '' });
+  await vi.waitFor(() =>
+    expect(captured.action?.body).toEqual({ name: 'New contract', description: '' })
+  );
 });
 it('history recovery preserves prepared file content and freezes confirmation while unavailable', async () => {
   let fail = false;
@@ -166,7 +168,7 @@ it('history recovery preserves prepared file content and freezes confirmation wh
   expect(captured.disabled).toBe(false);
   expect(captured.action?.body).toEqual(body);
 });
-it('fresh template metadata resets obsolete draft and closes confirmation', async () => {
+it('fresh template metadata retains local text until reset and closes confirmation', async () => {
   let changed = false;
   templatesFetch({
     detail: () =>
@@ -183,6 +185,8 @@ it('fresh template metadata resets obsolete draft and closes confirmation', asyn
   changed = true;
   await click('Refresh');
   expect(host.querySelector('[data-testid=confirmation]')).toBeNull();
+  expect(host.querySelector<HTMLInputElement>('#template-name')!.value).toBe('Old proposal');
+  await click('Reset to saved content');
   expect(host.querySelector<HTMLInputElement>('#template-name')!.value).toBe('Changed by staff');
   await act(async () => old({ ...contractTemplate, name: 'Old proposal' }));
   expect(host.textContent).not.toContain('Changes saved.');
@@ -305,12 +309,14 @@ it('cancelled template commands cannot clear newer edits and malformed acknowled
   await render(Templates);
   await click('Open');
   await submit();
+  await vi.waitFor(() => expect(captured.close).toBeTypeOf('function'));
   const old = captured.success!;
   await act(async () => captured.close!());
   await fill('#template-name', 'Newer');
   await act(async () => old(contractTemplate));
   expect(host.querySelector<HTMLInputElement>('#template-name')!.value).toBe('Newer');
   await submit();
+  await vi.waitFor(() => expect(host.querySelector('[data-testid=confirmation]')).not.toBeNull());
   await expect(captured.success!({})).rejects.toThrow('Invalid template acknowledgement');
   expect(host.querySelector('#template-name')).not.toBeNull();
 });
@@ -385,6 +391,7 @@ it('limits validation rejects out of range local edits and unexpected acknowledg
   expect(captured.action).toBeNull();
   await fill('#contract-limit-leadTimeDays', '14');
   await submit();
+  await vi.waitFor(() => expect(host.querySelector('[data-testid=confirmation]')).not.toBeNull());
   await expect(captured.success!({})).rejects.toThrow('Unverified catalogue acknowledgement');
   await expect(captured.success!(electricityLimits)).rejects.toThrow(
     'Unverified catalogue acknowledgement'

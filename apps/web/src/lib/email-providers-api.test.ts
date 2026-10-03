@@ -21,7 +21,7 @@ afterEach(() => vi.unstubAllGlobals());
 function respond(value: unknown, status = 200) {
   vi.stubGlobal(
     'fetch',
-    vi.fn().mockResolvedValue(new Response(JSON.stringify(value), { status }))
+    vi.fn(async () => new Response(JSON.stringify(value), { status }))
   );
 }
 describe('provider response contracts', () => {

@@ -1,3 +1,12 @@
+import { contentFormText } from '@barghsa/i18n/content-forms';
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import { emptyTermsDraft, termsInvalidFields, type TermsDraft } from '../lib/content-form.js';
+import {
+  CatalogueSaveButton,
+  catalogueRootMessage,
+} from '../components/CatalogueEditorFeedback.js';
+import { Alert } from '@barghsa/ui';
 import { adminTosText } from './admin-tos-text.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { adminControlsText } from '@barghsa/i18n/admin-controls';
@@ -52,6 +61,24 @@ export default function AdminTosPage() {
   const time = useAccountTime();
   const locale = useLocale();
   const text = adminTosText(locale);
+  const formText = (key: Parameters<typeof contentFormText>[0]) => contentFormText(key, locale);
+  const messages = {
+    versionId: formText('versionId'),
+    contentFa: formText('contentFa'),
+    contentEn: formText('contentEn'),
+  };
+  const editor = useWizardForm<TermsDraft>(
+    async () => {
+      const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return contentFormSchema(messages, termsInvalidFields);
+    },
+    emptyTermsDraft,
+    formText('validationUnavailable')
+  );
+  const resetTerms = editor.form.reset;
+  const applyFieldErrors = useActionFieldErrors(editor.form, messages, formText('invalid'));
+  const [uncertainSave, setUncertainSave] = useState(false);
+
   const historyRequest = useRef(0);
   const mounted = useRef(false);
   const publishBaseline = useRef<string | null>(null);
@@ -73,9 +100,9 @@ export default function AdminTosPage() {
   const [editConflict, setEditConflict] = useState(false);
   const [discarding, setDiscarding] = useState(false);
   const discardInFlight = useRef(false);
-  const [versionId, setVersionId] = useState('');
-  const [contentFa, setContentFa] = useState('');
-  const [contentEn, setContentEn] = useState('');
+  const [versionId] = editor.field('versionId');
+  const [contentFa, setContentFa] = editor.field('contentFa');
+  const [contentEn, setContentEn] = editor.field('contentEn');
   const [saving, setSaving] = useState(false);
 
   // Publish dialog state
@@ -98,7 +125,8 @@ export default function AdminTosPage() {
     busyTokens.current.save++;
     saveInFlight.current = false;
     setSaving(false);
-  }, []);
+    editor.setValidationPending(false);
+  }, [editor.setValidationPending]);
   const clearPrivate = useCallback(() => {
     resetEditorBusy();
     busyTokens.current.publish++;
@@ -118,14 +146,13 @@ export default function AdminTosPage() {
     setEditId(null);
     setEditRevision(null);
     setEditConflict(false);
-    setVersionId('');
-    setContentFa('');
-    setContentEn('');
+    resetTerms(emptyTermsDraft());
+    setUncertainSave(false);
     setPublishVersion(null);
     setPreviewReady(false);
     setViewVersion(null);
     setError({ key: 'denied' });
-  }, [resetEditorBusy]);
+  }, [resetEditorBusy, resetTerms]);
   const scope = useCatalogueScope(clearPrivate);
   useEffect(() => {
     mounted.current = true;
@@ -141,6 +168,10 @@ export default function AdminTosPage() {
   currentPublish.current = publishVersion;
   const fetchVersions = useCallback(async () => {
     if (scope.denied) return;
+    if (editor.isPending()) {
+      editorGeneration.current++;
+      resetEditorBusy();
+    }
     const epoch = scope.version,
       request = ++historyRequest.current;
     const current = () =>
@@ -204,7 +235,7 @@ export default function AdminTosPage() {
     } finally {
       if (current()) setLoading(false);
     }
-  }, [scope.denied, scope.version, scope.live, scope.deny, resetEditorBusy]);
+  }, [scope.denied, scope.version, scope.live, scope.deny, resetEditorBusy, editor.isPending]);
 
   useEffect(() => {
     void fetchVersions();
@@ -224,9 +255,8 @@ export default function AdminTosPage() {
     setEditId(null);
     setEditRevision(null);
     setEditConflict(false);
-    setVersionId('');
-    setContentFa('');
-    setContentEn('');
+    resetTerms(emptyTermsDraft());
+    setUncertainSave(false);
     setShowEditor(true);
   }
 
@@ -241,9 +271,8 @@ export default function AdminTosPage() {
     setEditId(v.id);
     setEditRevision(v.revision);
     setEditConflict(false);
-    setVersionId(v.versionId);
-    setContentFa(v.contentFa);
-    setContentEn(v.contentEn);
+    resetTerms({ versionId: v.versionId, contentFa: v.contentFa, contentEn: v.contentEn });
+    setUncertainSave(false);
     setShowEditor(true);
   }
 
@@ -259,12 +288,15 @@ export default function AdminTosPage() {
 
   async function handleSave(e: FormEvent) {
     e.preventDefault();
-    if (saveInFlight.current || !historyReady || loading || editConflict || (!editId && hasDraft))
+    if (
+      saveInFlight.current ||
+      !historyReady ||
+      loading ||
+      editConflict ||
+      uncertainSave ||
+      (!editId && hasDraft)
+    )
       return;
-    if (!contentFa.trim() || !contentEn.trim()) {
-      setError({ key: 'requiredContent' });
-      return;
-    }
     const epoch = scope.version,
       generation = editorGeneration.current;
     const current = () =>
@@ -272,8 +304,20 @@ export default function AdminTosPage() {
     const token = ++busyTokens.current.save;
     saveInFlight.current = true;
     setSaving(true);
+    editor.setValidationPending(true);
 
+    let requestSent = false;
     try {
+      let captured: TermsDraft | undefined;
+      await editor.form.handleSubmit((value) => {
+        captured = value;
+      })();
+      if (!current() || !captured) return;
+      editor.setValidationPending(false);
+      const { versionId, contentFa, contentEn } = captured;
+      editor.form.clearErrors('root');
+      setError(null);
+      requestSent = true;
       if (editId) {
         // Update existing draft
         if (!editRevision) throw new TosUiError('previewRequired');
@@ -297,6 +341,22 @@ export default function AdminTosPage() {
           throw new TosUiError('draftChanged');
         }
         if (!res.ok) {
+          if (res.status === 400) {
+            const data: unknown = await res.json().catch(() => null);
+            if (!current()) return;
+            const fields =
+              data &&
+              typeof data === 'object' &&
+              'error' in data &&
+              data.error &&
+              typeof data.error === 'object' &&
+              'fields' in data.error
+                ? data.error.fields
+                : null;
+            if (Array.isArray(fields) && applyFieldErrors(fields)) return;
+          }
+          if (res.status >= 500) setUncertainSave(true);
+          requestSent = false;
           throw new TosUiError('saveFailed', res.status);
         }
         const result: unknown = await res.json().catch(() => null);
@@ -311,6 +371,7 @@ export default function AdminTosPage() {
           (editId && result.id !== editId)
         ) {
           setHistoryReady(false);
+          setUncertainSave(true);
           throw new TosUiError('unconfirmedWrite');
         }
         historyRequest.current++;
@@ -335,6 +396,22 @@ export default function AdminTosPage() {
           throw new TosUiError('createConflict');
         }
         if (!res.ok) {
+          if (res.status === 400) {
+            const data: unknown = await res.json().catch(() => null);
+            if (!current()) return;
+            const fields =
+              data &&
+              typeof data === 'object' &&
+              'error' in data &&
+              data.error &&
+              typeof data.error === 'object' &&
+              'fields' in data.error
+                ? data.error.fields
+                : null;
+            if (Array.isArray(fields) && applyFieldErrors(fields)) return;
+          }
+          if (res.status >= 500) setUncertainSave(true);
+          requestSent = false;
           throw new TosUiError('saveFailed', res.status);
         }
         const result: unknown = await res.json().catch(() => null);
@@ -349,6 +426,7 @@ export default function AdminTosPage() {
           (editId && result.id !== editId)
         ) {
           setHistoryReady(false);
+          setUncertainSave(true);
           throw new TosUiError('unconfirmedWrite');
         }
         historyRequest.current++;
@@ -359,11 +437,17 @@ export default function AdminTosPage() {
       setShowEditor(false);
       await fetchVersions();
     } catch (err) {
-      if (current()) setError(displayError(err, 'saveFailed'));
+      if (current()) {
+        if (requestSent && !(err instanceof TosUiError)) setUncertainSave(true);
+        setError(displayError(err, 'saveFailed'));
+        if (!(err instanceof TosUiError))
+          editor.form.setError('root', { type: 'server', message: text.saveFailed });
+      }
     } finally {
       if (token === busyTokens.current.save) {
         saveInFlight.current = false;
         setSaving(false);
+        editor.setValidationPending(false);
       }
     }
   }
@@ -583,6 +667,7 @@ export default function AdminTosPage() {
               {/* Draft editor */}
               {showEditor && (
                 <form
+                  noValidate
                   onSubmit={handleSave}
                   className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
                 >
@@ -590,52 +675,100 @@ export default function AdminTosPage() {
                     {editId ? text.editDraft : text.createNewDraft}
                   </h2>
 
-                  <div>
-                    <label
-                      htmlFor="admintospage-field-1"
-                      className="block text-sm font-medium text-foreground mb-1"
-                    >
-                      {text.versionId} <span className="text-destructive">*</span>
-                    </label>
-                    <input
-                      id="admintospage-field-1"
-                      type="text"
-                      value={versionId}
-                      onChange={(e) => setVersionId(e.target.value)}
-                      className="w-full border border-input rounded px-3 py-2"
-                      placeholder={text.versionExample}
-                      maxLength={50}
-                      required
-                      disabled={!!editId || saving}
-                    />
-                  </div>
+                  {catalogueRootMessage(editor.errors) && (
+                    <Alert variant="destructive">{catalogueRootMessage(editor.errors)}</Alert>
+                  )}
+                  {uncertainSave && <Alert variant="destructive">{formText('unverified')}</Alert>}
+                  {uncertainSave && historyReady && !loading && !hasDraft && !editId && (
+                    <Button type="button" variant="outline" onClick={openCreate}>
+                      {formText('reset')}
+                    </Button>
+                  )}
+                  <fieldset
+                    disabled={saving || !historyReady || loading || editConflict || uncertainSave}
+                    className="space-y-4"
+                  >
+                    <div>
+                      <label
+                        htmlFor="admintospage-field-1"
+                        className="block text-sm font-medium text-foreground mb-1"
+                      >
+                        {text.versionId} <span className="text-destructive">*</span>
+                      </label>
+                      <input
+                        {...editor.bind('versionId')}
+                        id="admintospage-field-1"
+                        type="text"
+                        value={versionId}
+                        onChange={(e) => editor.field('versionId')[1](e.target.value)}
+                        className="w-full border border-input rounded px-3 py-2"
+                        placeholder={text.versionExample}
+                        maxLength={50}
+                        required
+                        disabled={!!editId || saving}
+                      />
+                      {editor.errors.versionId && (
+                        <p
+                          id={editor.errorId('versionId')}
+                          role="alert"
+                          className="text-sm text-destructive"
+                        >
+                          {editor.errors.versionId.message}
+                        </p>
+                      )}
+                    </div>
 
-                  <Suspense fallback={<p role="status">{text.editorLoading}</p>}>
-                    <div className="space-y-2">
-                      <p className="font-medium">{text.persian} *</p>
-                      <TosRichText
-                        key={`${editId ?? 'new'}-${editRevision}-fa`}
-                        value={contentFa}
-                        onChange={setContentFa}
-                        label={text.persian}
-                        language="fa"
-                        locale={locale}
-                        disabled={saving || !historyReady || loading}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <p className="font-medium">{text.english} *</p>
-                      <TosRichText
-                        key={`${editId ?? 'new'}-${editRevision}-en`}
-                        value={contentEn}
-                        onChange={setContentEn}
-                        label={text.english}
-                        language="en"
-                        locale={locale}
-                        disabled={saving || !historyReady || loading}
-                      />
-                    </div>
-                  </Suspense>
+                    <Suspense fallback={<p role="status">{text.editorLoading}</p>}>
+                      <div className="space-y-2">
+                        <p className="font-medium">{text.persian} *</p>
+                        <TosRichText
+                          text={text}
+                          key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-fa`}
+                          binding={editor.bind('contentFa')}
+                          value={contentFa}
+                          onChange={setContentFa}
+                          label={text.persian}
+                          language="fa"
+                          disabled={
+                            saving || !historyReady || loading || editConflict || uncertainSave
+                          }
+                        />
+                        {editor.errors.contentFa && (
+                          <p
+                            id={editor.errorId('contentFa')}
+                            role="alert"
+                            className="text-sm text-destructive"
+                          >
+                            {editor.errors.contentFa.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <p className="font-medium">{text.english} *</p>
+                        <TosRichText
+                          text={text}
+                          key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-en`}
+                          binding={editor.bind('contentEn')}
+                          value={contentEn}
+                          onChange={setContentEn}
+                          label={text.english}
+                          language="en"
+                          disabled={
+                            saving || !historyReady || loading || editConflict || uncertainSave
+                          }
+                        />
+                      </div>
+                      {editor.errors.contentEn && (
+                        <p
+                          id={editor.errorId('contentEn')}
+                          role="alert"
+                          className="text-sm text-destructive"
+                        >
+                          {editor.errors.contentEn.message}
+                        </p>
+                      )}
+                    </Suspense>
+                  </fieldset>
 
                   {!editId && savedDraft && historyReady && (
                     <div className="space-y-2">
@@ -653,7 +786,7 @@ export default function AdminTosPage() {
                       </Button>
                     </div>
                   )}
-                  {editConflict && editId && (
+                  {(editConflict || uncertainSave) && editId && (
                     <Button
                       type="button"
                       onClick={reloadDraft}
@@ -664,15 +797,18 @@ export default function AdminTosPage() {
                     </Button>
                   )}
                   <div className="flex flex-wrap gap-3">
-                    <Button
-                      type="submit"
+                    <CatalogueSaveButton
+                      pending={saving}
+                      label={saving ? text.saving : editId ? text.updateDraft : text.createDraft}
                       disabled={
-                        saving || !historyReady || loading || editConflict || (!editId && hasDraft)
+                        saving ||
+                        !historyReady ||
+                        loading ||
+                        editConflict ||
+                        uncertainSave ||
+                        (!editId && hasDraft)
                       }
-                      className="px-4 py-2 bg-primary text-primary-foreground rounded disabled:opacity-50"
-                    >
-                      {saving ? text.saving : editId ? text.updateDraft : text.createDraft}
-                    </Button>
+                    />
                     <Button
                       type="button"
                       onClick={() => {
@@ -714,6 +850,7 @@ export default function AdminTosPage() {
                   </div>
                   <Suspense fallback={<p role="status">{text.previewLoading}</p>}>
                     <TosPreview
+                      text={text}
                       current={
                         (previewLocale === 'fa'
                           ? versions.find((v) => v.isActive)?.contentFa
@@ -722,7 +859,6 @@ export default function AdminTosPage() {
                       proposed={
                         previewLocale === 'fa' ? publishVersion.contentFa : publishVersion.contentEn
                       }
-                      locale={locale}
                       language={previewLocale}
                       onReady={markPreviewReady}
                     />

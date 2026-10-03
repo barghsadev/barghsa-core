@@ -53,6 +53,7 @@ export function TeamActionDialog({
   finalFocus,
   onDenied,
   onValidationError,
+  onUnconfirmed,
 }: (
   | { action: TeamAction; verification?: never; selection?: never }
   | {
@@ -69,6 +70,7 @@ export function TeamActionDialog({
   confirmationDisabled?: boolean;
   onDenied?: (status?: 401 | 403) => void;
   onValidationError?: (fields: unknown[]) => boolean;
+  onUnconfirmed?: () => void;
 }) {
   const locale = useLocale();
   const copy = action ?? verification;
@@ -122,6 +124,7 @@ export function TeamActionDialog({
     inFlight.current = true;
     setBusy(true);
     setError(null);
+    let commandSent = false;
     try {
       if (!otpVerified && (needsPassword || !action)) {
         const verified = await fetch('/api/auth/step-up', {
@@ -151,6 +154,7 @@ export function TeamActionDialog({
           : action.body instanceof FormData
             ? action.body
             : JSON.stringify(action.body);
+      commandSent = true;
       const response = await fetch(action.path, {
         method: action.method,
         credentials: 'include',
@@ -177,6 +181,8 @@ export function TeamActionDialog({
       }
       if (rateLimited(response)) return;
       if (!response.ok) {
+        commandSent = false;
+        if (response.status >= 500) onUnconfirmed?.();
         if (
           response.status === 400 &&
           code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
@@ -198,6 +204,7 @@ export function TeamActionDialog({
         return;
       }
       if (action.successStatus !== undefined && response.status !== action.successStatus) {
+        onUnconfirmed?.();
         setError(t('team.error', locale));
         return;
       }
@@ -208,7 +215,10 @@ export function TeamActionDialog({
       await onSuccess(data);
       if (mounted.current && currentAction.current === action) onClose();
     } catch {
-      if (mounted.current && currentAction.current === action) setError(t('team.error', locale));
+      if (mounted.current && currentAction.current === action) {
+        if (commandSent) onUnconfirmed?.();
+        setError(t('team.error', locale));
+      }
     } finally {
       inFlight.current = false;
       if (mounted.current) setBusy(false);

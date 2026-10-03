@@ -535,7 +535,14 @@ it.each(['', 'replacement-secret'])(
     vi.stubGlobal(
       'fetch',
       vi.fn(
-        async (_url, init) => new Response(JSON.stringify(init?.method === 'PUT' ? smtp : [smtp]))
+        async (_url, init) =>
+          new Response(
+            JSON.stringify(
+              init?.method === 'PUT'
+                ? { ...smtp, label: JSON.parse(String(init.body)).label }
+                : [smtp]
+            )
+          )
       )
     );
     await act(async () => root.render(<AdminEmailProvidersPage />));
