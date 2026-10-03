@@ -16,6 +16,7 @@ import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { ManualInvoiceService } from './manual-invoice.service.js';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { parseInvoiceInput } from './invoice-input-fields.js';
 
 const irr = z
   .string()
@@ -84,9 +85,7 @@ export class ManualInvoiceController {
   async review(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
     if (!hasStaffPermission(req, 'invoices:write'))
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
-    const parsed = reviewInputSchema.safeParse(body);
-    if (!parsed.success)
-      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    const parsed = { data: parseInvoiceInput(reviewInputSchema, body, true) };
     return this.service.reviewManualInvoice(
       {
         profileId: parsed.data.profileId,
@@ -157,12 +156,7 @@ export class ManualInvoiceController {
   async create(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
     if (!hasStaffPermission(req, 'invoices:write'))
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
-    const parsed = inputSchema.safeParse(body);
-    if (!parsed.success)
-      throw new HttpException(
-        { error: ErrorCodes.VALIDATION_PARSE_ZOD.code, details: parsed.error.flatten() },
-        400
-      );
+    const parsed = { data: parseInvoiceInput(inputSchema, body, true) };
     const correlationId = correlationIdStorage.getStore();
     const invoice = await this.service.createManualInvoice({
       profileId: parsed.data.profileId,

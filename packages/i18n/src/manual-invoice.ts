@@ -1,4 +1,19 @@
 const fa: Record<string, string> = {
+  'admin.manualInvoice.profileInvalid': 'پروفایل مشتری را انتخاب کنید.',
+  'admin.manualInvoice.reasonInvalid': 'شرحی بین ۱ تا ۱٬۰۰۰ نویسه وارد کنید.',
+  'admin.manualInvoice.amountInvalid':
+    'مبلغ بدهکار یا بستانکار را به ریال و به‌صورت عدد صحیح غیرصفر در محدوده مجاز وارد کنید.',
+  'admin.manualInvoice.linesInvalid':
+    'بین ۱ تا ۱۰۰ ردیف معتبر با جمع مثبت و در محدوده مبلغ مجاز ریال وارد کنید.',
+  'admin.manualInvoice.descriptionInvalid': 'شرحی بین ۱ تا ۱٬۰۰۰ نویسه وارد کنید.',
+  'admin.manualInvoice.quantityInvalid': 'تعداد صحیحی بین ۱ تا ۲٬۱۴۷٬۴۸۳٬۶۴۷ وارد کنید.',
+  'admin.manualInvoice.priceInvalid':
+    'قیمت واحد را به ریال و به‌صورت عدد صحیح نامنفی در محدوده مجاز وارد کنید.',
+  'admin.manualInvoice.vatInvalid': 'مالیات را بین ۰ تا ۱۰۰ درصد با حداکثر دو رقم اعشار وارد کنید.',
+  'admin.manualInvoice.validationUnavailable':
+    'اعتبارسنجی فرم بارگذاری نشد. پیش از تلاش دوباره صفحه را تازه‌سازی کنید.',
+  'admin.manualInvoice.reviewFailed':
+    'بررسی مالی بارگذاری نشد. پیش‌نویس شما حفظ شده است؛ دوباره تلاش کنید.',
   'admin.manualInvoice.title': 'صدور فاکتور دستی',
   'admin.manualInvoice.description':
     'مشتری و ردیف‌های فاکتور را انتخاب کنید و مبلغ نهایی را پیش از صدور بررسی کنید.',
@@ -56,6 +71,21 @@ const fa: Record<string, string> = {
 };
 
 const en: Record<string, string> = {
+  'admin.manualInvoice.profileInvalid': 'Choose a customer profile.',
+  'admin.manualInvoice.reasonInvalid': 'Enter an explanation of 1 to 1,000 characters.',
+  'admin.manualInvoice.amountInvalid':
+    'Enter a nonzero whole-IRR charge or credit within the supported range.',
+  'admin.manualInvoice.linesInvalid':
+    'Add 1 to 100 valid lines with a positive total within the supported IRR range.',
+  'admin.manualInvoice.descriptionInvalid': 'Enter a description of 1 to 1,000 characters.',
+  'admin.manualInvoice.quantityInvalid': 'Enter a whole quantity from 1 to 2,147,483,647.',
+  'admin.manualInvoice.priceInvalid':
+    'Enter a nonnegative whole-IRR unit price within the supported range.',
+  'admin.manualInvoice.vatInvalid': 'Enter VAT from 0 to 100%, with at most two decimal places.',
+  'admin.manualInvoice.validationUnavailable':
+    'Form validation could not load. Refresh the page before trying again.',
+  'admin.manualInvoice.reviewFailed':
+    'The financial review could not be loaded. Your entries are kept; try again.',
   'admin.manualInvoice.title': 'Create a manual invoice',
   'admin.manualInvoice.description':
     'Choose a customer, add invoice lines and review the total before issuing.',

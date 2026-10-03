@@ -1,4 +1,4 @@
-import { ManualInvoiceForm } from '../components/ManualInvoicePanel.js';
+import ManualInvoiceForm from '../components/ManualInvoiceForm.js';
 import { act, type ComponentType } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -852,13 +852,20 @@ it.each([
   await act(async () => root.render(<ManualInvoiceForm correction={correction} />));
   await setInput(host.querySelector<HTMLInputElement>('#correction-reason')!, 'Correct invoice');
   await setInput(host.querySelector<HTMLInputElement>(`[id^="manual-${field}-"]`)!, value);
-  expect(host.querySelector<HTMLButtonElement>('button[type=submit]')?.disabled).toBe(true);
+  expect(host.querySelector<HTMLButtonElement>('button[type=submit]')?.disabled).toBe(false);
   await act(async () =>
     host
       .querySelector('form')!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
-  expect(host.querySelector('[role=alert]')).not.toBeNull();
+  await vi.waitFor(() => expect(host.querySelector('[role=alert]')).not.toBeNull());
+  await vi.waitFor(() =>
+    expect(host.querySelector<HTMLButtonElement>('button[type=submit]')?.disabled).toBe(false)
+  );
+  if (!(field === 'price' && value === '0'))
+    expect(
+      host.querySelector<HTMLInputElement>(`[id^="manual-${field}-"]`)?.getAttribute('aria-invalid')
+    ).toBe('true');
   expect(fetch).not.toHaveBeenCalled();
 });
 it.each([
@@ -969,6 +976,13 @@ it.each([
   await act(async () => root.render(<ManualInvoiceForm correction={correction} />));
   await setInput(host.querySelector<HTMLInputElement>('#correction-reason')!, 'Correct invoice');
   await act(async () => host.querySelector<HTMLButtonElement>('button[type=submit]')!.click());
+  await vi.waitFor(() =>
+    expect(
+      Array.from(document.querySelectorAll<HTMLButtonElement>('[role=dialog] button')).some(
+        (button) => button.textContent?.trim() === 'Cancel and issue replacement'
+      )
+    ).toBe(true)
+  );
   const confirm = Array.from(
     document.querySelectorAll<HTMLButtonElement>('[role=dialog] button')
   ).find((button) => button.textContent?.trim() === 'Cancel and issue replacement');
@@ -985,7 +999,8 @@ it.each([
       const first = vi.mocked(fetch).mock.calls[1]![1]?.body;
       await act(async () => host.querySelector<HTMLButtonElement>('button[type=submit]')!.click());
       expect(vi.mocked(fetch).mock.calls[2]![1]?.body).toBe(first);
-    } else expect(host.querySelector<HTMLInputElement>('#correction-reason')?.disabled).toBe(false);
+    } else if (scenario.status === 403) expect(host.querySelector('#correction-reason')).toBeNull();
+    else expect(host.querySelector<HTMLInputElement>('#correction-reason')?.disabled).toBe(false);
   }
 });
 

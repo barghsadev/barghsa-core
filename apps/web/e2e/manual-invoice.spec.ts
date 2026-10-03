@@ -38,6 +38,15 @@ for (const locale of ['fa', 'en'] as const)
         route.fulfill({
           json: {
             appTitle: 'Finance',
+            appTitleFa: 'امور مالی',
+            supportEmail: 'support@example.test',
+            supportPhone: '+982112345678',
+            supportMobile: '+989121234567',
+            backgroundColor: '#f6f7f4',
+            darkBackgroundColor: '#15201c',
+            fontFamily: 'vazirmatn',
+            borderRadiusRem: 0.75,
+            spacingScale: 1,
             slogan: '',
             primaryColor: '#2563eb',
             secondaryColor: '#64748b',
@@ -142,6 +151,7 @@ for (const locale of ['fa', 'en'] as const)
         return route.fulfill({ json: { success: true } });
       });
       await page.goto('/admin/invoices');
+      await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
       await page
         .context()
         .addCookies([
@@ -155,7 +165,10 @@ for (const locale of ['fa', 'en'] as const)
         name: fa ? 'صدور فاکتور' : 'Issue invoice',
         exact: true,
       });
-      await expect(issue).toBeDisabled();
+      await expect(issue).toBeEnabled();
+      await issue.click();
+      await expect(panel.getByRole('combobox')).toHaveAttribute('aria-invalid', 'true');
+      expect(previews).toHaveLength(0);
       await panel
         .getByRole('combobox', { name: fa ? 'پروفایل مشتری' : 'Customer profile' })
         .selectOption(profileId);
@@ -175,7 +188,9 @@ for (const locale of ['fa', 'en'] as const)
       await description.fill(fa ? 'برق مصرفی' : 'Electricity');
       await price.fill(fa ? '۵۵۰۵۵' : '55055');
       await vat.fill('100.01');
-      await expect(issue).toBeDisabled();
+      await issue.click();
+      await expect(vat).toHaveAttribute('aria-invalid', 'true');
+      expect(previews).toHaveLength(0);
       await vat.fill(fa ? '۱۰' : '10');
       await panel
         .getByRole('button', { name: fa ? 'افزودن ردیف' : 'Add line', exact: true })
@@ -192,7 +207,9 @@ for (const locale of ['fa', 'en'] as const)
       await panel
         .getByRole('button', { name: fa ? 'افزودن ردیف' : 'Add line', exact: true })
         .click();
-      await expect(issue).toBeDisabled();
+      await issue.click();
+      await expect(description.nth(2)).toHaveAttribute('aria-invalid', 'true');
+      expect(previews).toHaveLength(0);
       await panel.locator('[data-array-action=remove]').nth(2).click();
       await expect(issue).toBeEnabled();
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(

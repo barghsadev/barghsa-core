@@ -34,6 +34,15 @@ for (const locale of ['fa', 'en'] as const)
             route.fulfill({
               json: {
                 appTitle: 'Finance',
+                appTitleFa: 'امور مالی',
+                supportEmail: 'support@example.test',
+                supportPhone: '+982112345678',
+                supportMobile: '+989121234567',
+                backgroundColor: '#f6f7f4',
+                darkBackgroundColor: '#15201c',
+                fontFamily: 'vazirmatn',
+                borderRadiusRem: 0.75,
+                spacingScale: 1,
                 slogan: '',
                 primaryColor: '#2563eb',
                 secondaryColor: '#64748b',
@@ -246,6 +255,7 @@ for (const locale of ['fa', 'en'] as const)
             return route.fulfill({ json: { success: true } });
           });
           await page.goto('/admin/invoices');
+          await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
           await page
             .context()
             .addCookies([
@@ -280,7 +290,10 @@ for (const locale of ['fa', 'en'] as const)
                   : 'Issue adjustment',
             exact: true,
           });
-          await expect(issue).toBeDisabled();
+          await expect(issue).toBeEnabled();
+          await issue.click();
+          await expect(reason).toHaveAttribute('aria-invalid', 'true');
+          expect(requests).toHaveLength(0);
           await reason.fill(fa ? 'اصلاح مصرف' : 'Usage correction');
           if (kind === 'replacement') {
             const price = panel.getByLabel(fa ? 'قیمت واحد (ریال)' : 'Unit price (IRR)', {
@@ -296,7 +309,9 @@ for (const locale of ['fa', 'en'] as const)
               exact: true,
             });
             await amount.fill('0');
-            await expect(issue).toBeDisabled();
+            await issue.click();
+            await expect(amount).toHaveAttribute('aria-invalid', 'true');
+            expect(requests).toHaveLength(0);
             await amount.fill(fa ? '-۲۵۰۰۰' : '-25000');
           }
           const total = formatCurrencyIrr(kind === 'replacement' ? 5506n : -25000n, locale, {

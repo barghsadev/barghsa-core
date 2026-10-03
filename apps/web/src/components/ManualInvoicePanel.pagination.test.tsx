@@ -1,7 +1,7 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
-import { ManualInvoiceForm } from './ManualInvoicePanel.js';
+import ManualInvoiceForm from './ManualInvoiceForm.js';
 
 afterEach(() => {
   vi.unstubAllGlobals();

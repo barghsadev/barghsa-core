@@ -239,6 +239,16 @@
         "types": "./dist/cjs/finance/refunds.d.ts",
         "default": "./dist/cjs/finance/refunds.js"
       }
+    },
+    "./finance/invoices": {
+      "import": {
+        "types": "./dist/finance/invoices.d.ts",
+        "default": "./dist/finance/invoices.js"
+      },
+      "require": {
+        "types": "./dist/cjs/finance/invoices.d.ts",
+        "default": "./dist/cjs/finance/invoices.js"
+      }
     }
   },
   "scripts": {

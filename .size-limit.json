@@ -127,6 +127,18 @@
     "limitKB": 160
   },
   {
+    "name": "Staff invoice editor on demand",
+    "phase": "interaction",
+    "entries": ["src/components/ManualInvoiceForm.tsx"],
+    "limitKB": 250
+  },
+  {
+    "name": "Staff invoice validation on interaction",
+    "phase": "interaction",
+    "entries": ["src/lib/invoice-form-schemas.ts"],
+    "limitKB": 20
+  },
+  {
     "name": "Refund financial summary on demand",
     "phase": "interaction",
     "entries": ["src/components/RefundFinancialReviewSummary.tsx"],

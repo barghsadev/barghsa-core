@@ -28,6 +28,7 @@ import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { CancelAndReplaceInvoiceService } from './cancel-and-replace-invoice.service.js';
 import { InvoiceAdjustmentApprovalService } from './invoice-adjustment-approval.service.js';
 import { invoiceCorrectionContext } from './invoice-correction-request.js';
+import { parseInvoiceInput } from './invoice-input-fields.js';
 
 const maxIrr = 9_223_372_036_854_775_807n;
 const base = {
@@ -79,7 +80,9 @@ const adjustmentReviewInput = z
     amount: z
       .string()
       .regex(/^-?\d{1,19}$/)
-      .refine((v) => BigInt(v) !== 0n && BigInt(v) >= -maxIrr && BigInt(v) <= maxIrr),
+      .pipe(
+        z.string().refine((v) => BigInt(v) !== 0n && BigInt(v) >= -maxIrr && BigInt(v) <= maxIrr)
+      ),
   })
   .strict();
 const replacementReviewInput = z
@@ -176,9 +179,7 @@ export class InvoiceCorrectionsController {
     @Body() body: unknown
   ) {
     const invoiceId = this.invoiceId(req, value);
-    const parsed = reviewInput.safeParse(body);
-    if (!parsed.success)
-      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    const parsed = { data: parseInvoiceInput(reviewInput, body, false) };
     return parsed.data.kind === 'replacement'
       ? this.replacements.review({
           invoiceId,
@@ -283,9 +284,7 @@ export class InvoiceCorrectionsController {
     @Res({ passthrough: true }) response: Response
   ) {
     const invoiceId = this.invoiceId(req, value);
-    const parsed = input.safeParse(body);
-    if (!parsed.success)
-      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    const parsed = { data: parseInvoiceInput(input, body, false) };
     const data = parsed.data;
     const correlationId = correlationIdStorage.getStore();
     const common = {

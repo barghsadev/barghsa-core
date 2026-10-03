@@ -1,11 +1,17 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { Button, Field, FieldLabel, Input } from '@barghsa/ui';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { Button, Field, FieldLabel, Input, PageLoading } from '@barghsa/ui';
 import { tInvoiceCorrections as t } from '@barghsa/i18n/invoice-corrections';
 import { t as appText } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { isInvoiceUuid } from '../lib/due-at-override.js';
-import { ManualInvoiceForm, type InvoiceCorrectionSource } from './ManualInvoicePanel.js';
+import { isInvoiceUuid } from '../lib/invoice-uuid.js';
+import { useInvoiceLookupForm } from '../hooks/useInvoiceLookupForm.js';
+import {
+  RefundFieldFeedback as InvoiceFieldFeedback,
+  RefundFormAlert as InvoiceFormAlert,
+} from './RefundFormFeedback.js';
+import type { InvoiceCorrectionSource } from './ManualInvoiceForm.js';
+const ManualInvoiceForm = lazy(() => import('./ManualInvoiceForm.js'));
 
 function isSource(value: unknown, id: string): value is InvoiceCorrectionSource {
   if (!value || typeof value !== 'object') return false;
@@ -40,13 +46,24 @@ function isSource(value: unknown, id: string): value is InvoiceCorrectionSource 
 export default function InvoiceCorrectionsPanel() {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
-  const [invoiceId, setInvoiceId] = useState('');
+  const lookup = useInvoiceLookupForm(t('invoiceIdInvalid', locale)!);
+  const [invoiceId, setInvoiceId] = lookup.field('invoiceId');
   const [source, setSource] = useState<InvoiceCorrectionSource | null>(null);
   const [loading, setLoading] = useState(false),
     [locked, setLocked] = useState(false),
-    [error, setError] = useState(false);
+    [error, setError] = useState<'error' | 'denied' | null>(null);
+  const lockedRef = useRef(false);
+  const loadPending = useRef<number | null>(null);
+  const loadedId = useRef('');
+  const generation = useRef(0);
   const abort = useRef<AbortController | null>(null);
-  useEffect(() => () => abort.current?.abort(), []);
+  useEffect(
+    () => () => {
+      ++generation.current;
+      abort.current?.abort();
+    },
+    []
+  );
   const correction = useMemo(
     () =>
       source
@@ -54,10 +71,26 @@ export default function InvoiceCorrectionsPanel() {
             ...source,
             kind: (BigInt(source.paidAmount) > 0n ? 'adjustment' : 'replacement') as
               'adjustment' | 'replacement',
-            onLocked: setLocked,
+            unavailable: loading || !!error,
+            onLocked: (value: boolean) => {
+              lockedRef.current = value;
+              setLocked(value);
+            },
+            onDenied: () => {
+              ++generation.current;
+              loadPending.current = null;
+              abort.current?.abort();
+              setSource(null);
+              loadedId.current = '';
+              lookup.form.reset({ invoiceId: '' });
+              lockedRef.current = false;
+              setLocked(false);
+              setLoading(false);
+              setError('denied');
+            },
           }
         : undefined,
-    [source]
+    [source, loading, error]
   );
   const allowed =
     correction &&
@@ -67,30 +100,41 @@ export default function InvoiceCorrectionsPanel() {
     ).includes(correction.state);
   async function load(event: FormEvent) {
     event.preventDefault();
-    if (locked) return;
+    if (lockedRef.current || loadPending.current !== null) return;
     abort.current?.abort();
-    const request = new AbortController();
+    const request = new AbortController(),
+      owner = ++generation.current;
+    loadPending.current = owner;
     abort.current = request;
-    setSource(null);
-    setError(false);
-    const id = invoiceId.trim().toLowerCase();
-    if (!isInvoiceUuid(id)) {
-      setError(true);
-      setLoading(false);
-      return;
-    }
     setLoading(true);
+    setError(null);
     try {
-      const response = await fetch(`/api/admin/invoices/${id}/corrections`, {
-        signal: request.signal,
-      });
-      const data: unknown = await response.json();
-      if (!response.ok || !isSource(data, id)) throw new Error('Invalid invoice');
-      if (!request.signal.aborted) setSource(data);
-    } catch {
-      if (!request.signal.aborted) setError(true);
+      await lookup.form.handleSubmit(async (values) => {
+        if (owner !== generation.current) return;
+        const id = values.invoiceId.trim().toLowerCase();
+        if (loadedId.current !== id) setSource(null);
+        try {
+          const response = await fetch(`/api/admin/invoices/${id}/corrections`, {
+            signal: request.signal,
+          });
+          const data: unknown = await response.json();
+          if (owner !== generation.current) return;
+          if ([401, 403, 404].includes(response.status)) {
+            setSource(null);
+            loadedId.current = '';
+            setError('denied');
+            return;
+          }
+          if (!response.ok || !isSource(data, id)) throw Error('Invalid invoice');
+          loadedId.current = id;
+          setSource(data);
+        } catch {
+          if (owner === generation.current) setError('error');
+        }
+      })();
     } finally {
-      if (!request.signal.aborted) setLoading(false);
+      if (loadPending.current === owner) loadPending.current = null;
+      if (owner === generation.current) setLoading(false);
     }
   }
   return (
@@ -105,31 +149,52 @@ export default function InvoiceCorrectionsPanel() {
         </h2>
         <p className="text-sm text-muted-foreground">{t('description', locale)}</p>
       </header>
-      <form onSubmit={load} className="space-y-3">
+      <form
+        onSubmit={load}
+        noValidate
+        className="space-y-3"
+        aria-busy={loading || lookup.form.formState.isSubmitting || undefined}
+      >
         <Field data-disabled={locked}>
           <FieldLabel htmlFor="correction-invoice-id">{t('invoiceId', locale)}</FieldLabel>
           <Input
             id="correction-invoice-id"
+            {...lookup.bind('invoiceId')}
             dir="ltr"
             autoComplete="off"
             value={invoiceId}
             disabled={locked}
             onChange={(event) => {
+              ++generation.current;
+              loadPending.current = null;
               abort.current?.abort();
               setLoading(false);
               setSource(null);
-              setError(false);
+              loadedId.current = '';
+              setError(null);
               setInvoiceId(event.target.value);
             }}
           />
+          <InvoiceFieldFeedback
+            id={lookup.errorId('invoiceId')}
+            error={lookup.errors.invoiceId}
+            message={t('invoiceIdInvalid', locale)!}
+          />
         </Field>
+        <InvoiceFormAlert message={lookup.errors.root?.validation?.message} />
         <Button type="submit" variant="outline" disabled={locked || loading}>
+          {loading && (
+            <span
+              aria-hidden="true"
+              className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+            />
+          )}
           {t(loading ? 'loading' : 'load', locale)}
         </Button>
       </form>
       {error && (
         <p role="alert" className="text-destructive">
-          {t('loadError', locale)}
+          {t(error === 'denied' ? 'denied' : 'loadError', locale)}
         </p>
       )}
       {source && (
@@ -152,7 +217,12 @@ export default function InvoiceCorrectionsPanel() {
       )}
       {correction &&
         (allowed ? (
-          <ManualInvoiceForm key={correction.invoiceId} correction={correction} />
+          <Suspense fallback={<PageLoading label={t('loading', locale)!} />}>
+            <ManualInvoiceForm
+              key={correction.invoiceId + ':' + correction.kind + ':' + correction.profileId}
+              correction={correction}
+            />
+          </Suspense>
         ) : (
           <p role="status">{t('unavailable', locale)}</p>
         ))}

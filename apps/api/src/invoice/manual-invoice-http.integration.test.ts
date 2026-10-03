@@ -377,3 +377,46 @@ it('rejects staff permission removed while the target profile lock is pending', 
     );
   }
 });
+
+it('returns only owned invoice fields after authorization and creates no invoice for invalid input', async () => {
+  const inputSession = randomUUID(),
+    inputCsrf = randomUUID();
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
+    VALUES ($1,'manual-finance',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,
+    [inputSession, inputCsrf, randomUUID()]
+  );
+  const inputHeaders = {
+    Cookie: `barghsa_session=${inputSession}`,
+    'X-CSRF-Token': inputCsrf,
+    'Content-Type': 'application/json',
+  };
+  const body = payload();
+  const invalid = {
+    ...body,
+    lines: [
+      { ...body.lines[0], quantity: 0 },
+      { ...body.lines[1], description: ' ' },
+    ],
+  };
+  const response = await review(invalid, inputHeaders);
+  expect(response.status).toBe(400);
+  expect(await response.json()).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['lineQuantity0', 'lineDescription1'] },
+  });
+  const confirmation = await create(
+    { ...invalid, expectedReviewHash: 'a'.repeat(64) },
+    inputHeaders
+  );
+  expect(confirmation.status).toBe(400);
+  expect(await confirmation.json()).toMatchObject({
+    error: { fields: ['lineQuantity0', 'lineDescription1'] },
+  });
+  const mixed = await create({ ...invalid, expectedReviewHash: 'bad' }, inputHeaders);
+  expect(mixed.status).toBe(400);
+  expect(await mixed.json()).toMatchObject({ error: { code: 'VALIDATION:PARSE:ZOD_ERROR' } });
+  const unauthenticated = await review(invalid, { 'Content-Type': 'application/json' });
+  expect(unauthenticated.status).toBe(401);
+  expect(await unauthenticated.json()).not.toHaveProperty('error.fields');
+  expect(await invoiceCount(body.idempotencyKey)).toBe(0);
+});

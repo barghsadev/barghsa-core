@@ -944,3 +944,36 @@ it.each(['session', 'step-up'] as const)(
     });
   }
 );
+
+it.each(['replacement', 'adjustment'] as const)(
+  '%s maps only owned correction inputs before any financial write',
+  async (kind) => {
+    const { headers } = await actor();
+    const id = await original(kind),
+      before = await snapshot(id);
+    const body =
+      kind === 'replacement'
+        ? { ...payload(kind), reason: ' ', lines: [{ ...lines[0], vatRate: 10001 }] }
+        : { ...payload(kind), reason: ' ', amount: 'not-an-integer' };
+    const fields = kind === 'replacement' ? ['reason', 'lineVatRate0'] : ['reason', 'amount'];
+    const preview = await fetch(`${http.base}/api/admin/invoices/${id}/corrections/review`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ ...body, idempotencyKey: undefined }),
+    });
+    expect(preview.status).toBe(400);
+    expect(await preview.json()).toMatchObject({
+      error: { code: 'VALIDATION:INPUT:INVALID', fields },
+    });
+    const confirmation = await create(id, { ...body, expectedReviewHash: 'a'.repeat(64) }, headers);
+    expect(confirmation.status).toBe(400);
+    expect(await confirmation.json()).toMatchObject({ error: { fields } });
+    const mixed = await create(id, { ...body, expectedReviewHash: 'bad' }, headers);
+    expect(mixed.status).toBe(400);
+    const mixedBody = await mixed.json();
+    expect(mixedBody).toMatchObject({ error: { code: 'VALIDATION:PARSE:ZOD_ERROR' } });
+    expect(mixedBody).not.toHaveProperty('error.fields');
+    expect(await snapshot(id)).toEqual(before);
+    expect(await linkedCount(id)).toBe(0);
+  }
+);

@@ -1,4 +1,6 @@
 const en = {
+  invoiceIdInvalid: 'Enter a valid original invoice ID.',
+  denied: 'Sign in with current Finance access to correct invoices.',
   title: 'Invoice corrections',
   description:
     'Replace an unpaid invoice, or issue a charge or credit after payment. Original lines remain available to the customer.',
@@ -55,6 +57,8 @@ const en = {
   issuing: 'Issuing correction…',
 };
 const fa: Record<keyof typeof en, string> = {
+  invoiceIdInvalid: 'شناسه معتبر فاکتور اصلی را وارد کنید.',
+  denied: 'برای اصلاح فاکتور باید وارد حساب دارای دسترسی مالی شوید.',
   title: 'اصلاح فاکتور',
   description:
     'فاکتور پرداخت‌نشده را جایگزین کنید یا پس از پرداخت، فاکتور بدهکار یا بستانکار صادر کنید. ردیف‌های اصلی برای مشتری قابل مشاهده می‌مانند.',
