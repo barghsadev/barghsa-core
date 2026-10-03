@@ -108,8 +108,63 @@ describe('DualApprovalController permission gate (S-09.07, admin:financial:edit)
     const rejection = await controller
       .rejectApprovalRequest('req-1', {}, adminReq)
       .catch((e: unknown) => e);
-    expect(rejection).toMatchObject({ status: 400 });
+    expect(rejection).toMatchObject({ status: 400, fields: ['reason'] });
     expect(service.rejectApprovalRequest).not.toHaveBeenCalled();
+  });
+
+  it.each([undefined, null, 12, '', '  ', 'x'.repeat(2001)])(
+    'returns only the public reason identifier for invalid owned input %j',
+    async (reason) => {
+      const { controller, service } = makeController();
+      const error = await controller
+        .rejectApprovalRequest('req-1', { reason }, adminReq)
+        .catch((error: unknown) => error);
+      expect(error).toMatchObject({ status: 400, fields: ['reason'] });
+      expect(rejectionBody(error)).toEqual({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code });
+      expect(service.rejectApprovalRequest).not.toHaveBeenCalled();
+    }
+  );
+  it.each([
+    null,
+    [],
+    'private-root',
+    { reason: '', actorUserId: 'private-actor' },
+    { reason: 'x'.repeat(2001), expectedVersion: 'private-version' },
+  ])('keeps root and mixed rejection errors generic: %j', async (body) => {
+    const { controller, service } = makeController();
+    const error = await controller
+      .rejectApprovalRequest('req-1', body, adminReq)
+      .catch((error: unknown) => error);
+    expect(error).toMatchObject({ status: 400 });
+    expect(error).not.toHaveProperty('fields');
+    expect(JSON.stringify(rejectionBody(error))).not.toMatch(
+      /private-root|private-actor|private-version/
+    );
+    expect(service.rejectApprovalRequest).not.toHaveBeenCalled();
+  });
+  it('checks authority before exposing reason metadata', async () => {
+    const { controller, service } = makeController();
+    const error = await controller
+      .rejectApprovalRequest('req-1', { reason: '' }, nonAdminReq)
+      .catch((error: unknown) => error);
+    expect(error).toMatchObject({ status: 403 });
+    expect(error).not.toHaveProperty('fields');
+    expect(service.rejectApprovalRequest).not.toHaveBeenCalled();
+  });
+  it('preserves trimmed bounded reasons and existing extra-property compatibility', async () => {
+    const { controller, service } = makeController();
+    const reason = 'x'.repeat(2000);
+    await controller.rejectApprovalRequest(
+      'req-1',
+      { reason: `  ${reason}  `, ignored: true },
+      adminReq
+    );
+    expect(service.rejectApprovalRequest).toHaveBeenCalledWith(
+      'req-1',
+      adminReq.session,
+      '127.0.0.1',
+      reason
+    );
   });
 });
 

@@ -1654,6 +1654,7 @@ export const fa: I18nDictionary = {
   'admin.approvals.approve': 'تأیید',
   'admin.approvals.reject': 'رد',
   'admin.approvals.rejectReason': 'دلیل رد درخواست',
+  'admin.approvals.invalidReason': 'دلیل رد درخواست باید بین ۱ تا ۲۰۰۰ نویسه داشته باشد.',
   'admin.approvals.confirm':
     'تصمیم خود را برای این درخواست تأیید کنید. تأیید درخواست، پرداخت را اجرا نمی‌کند.',
   'admin.approvals.conflict':
@@ -3338,6 +3339,7 @@ export const en: I18nDictionary = {
   'admin.approvals.approve': 'Approve',
   'admin.approvals.reject': 'Reject',
   'admin.approvals.rejectReason': 'Reason for rejection',
+  'admin.approvals.invalidReason': 'Enter a rejection reason of 1–2000 characters.',
   'admin.approvals.confirm':
     'Confirm the decision for this request. Approval does not execute the payment.',
   'admin.approvals.conflict':

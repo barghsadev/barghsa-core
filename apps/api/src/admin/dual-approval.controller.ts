@@ -18,6 +18,7 @@ import { z } from 'zod';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { InputFieldException } from '../common/input-field.exception.js';
 import {
   DualApprovalService,
   DUAL_APPROVAL_ACTION_TYPES,
@@ -230,6 +231,14 @@ export class DualApprovalController {
 
     const parsed = RejectApprovalRequestSchema.safeParse(rawBody);
     if (!parsed.success) {
+      if (
+        rawBody !== null &&
+        typeof rawBody === 'object' &&
+        !Array.isArray(rawBody) &&
+        Object.keys(rawBody).every((field) => field === 'reason') &&
+        parsed.error.issues.every((issue) => issue.path.length === 1 && issue.path[0] === 'reason')
+      )
+        throw new InputFieldException(['reason']);
       throw new HttpException(
         {
           statusCode: 400,

@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { bankReceiptConfirmationLockKeys } from '../wallet/bank-receipt-confirmation.service.js';
 import { invoiceBankReceiptConfirmationLockKeys } from '../invoice/invoice-bank-receipt-confirmation.service.js';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -67,6 +68,46 @@ it('reads a linked approval request without depending on its queue page', async 
       })
     ).status
   ).toBe(400);
+});
+
+it('exposes only owned rejection fields after verification and leaves the approval pending', async () => {
+  const id = await seed();
+  const reject = (user: string, body: unknown) =>
+    fetch(`${http.base}/api/admin/approval-requests/${id}/reject`, {
+      method: 'POST',
+      headers: headers[user]!,
+      body: JSON.stringify(body),
+    });
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='reviewer'");
+  const verification = await reject('reviewer', { reason: '' });
+  expect(verification.status).toBe(403);
+  expect(await verification.json()).not.toHaveProperty('error.fields');
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id IN ('reviewer','support')"
+  );
+  const denied = await reject('support', { reason: '' });
+  expect(denied.status).toBe(403);
+  expect(await denied.json()).not.toHaveProperty('error.fields');
+  for (const reason of ['', '  ', 'private-reason'.repeat(200)]) {
+    const response = await reject('reviewer', { reason });
+    expect(response.status).toBe(400);
+    expect(await response.json()).toMatchObject({
+      error: { code: ErrorCodes.VALIDATION_INPUT_INVALID.code, fields: ['reason'] },
+    });
+  }
+  const mixed = await reject('reviewer', { reason: '', actorUserId: 'private-actor' });
+  expect(mixed.status).toBe(400);
+  const body = await mixed.json();
+  expect(body).not.toHaveProperty('error.fields');
+  expect(JSON.stringify(body)).not.toContain('private-actor');
+  expect(
+    (
+      await http.pool.query(
+        'SELECT status,reviewer_id,review_reason FROM approval_requests WHERE id=$1',
+        [id]
+      )
+    ).rows[0]
+  ).toEqual({ status: 'pending', reviewer_id: null, review_reason: null });
 });
 
 for (const action of ['create', 'approve', 'reject'] as const) {

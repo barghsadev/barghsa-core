@@ -106,7 +106,11 @@ test('rejection requires a reason and conflict never reports success', async ({ 
     return route.fulfill({ status: 409, json: {} });
   });
   await page.goto('/admin/approval-requests');
-  await expect(page.getByRole('button', { name: 'Reject', exact: true })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Reject', exact: true })).toBeEnabled();
+  await page.getByRole('button', { name: 'Reject', exact: true }).click();
+  await expect(page.getByLabel('Reason for rejection')).toBeFocused();
+  await expect(page.getByLabel('Reason for rejection')).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
   await page.getByLabel('Reason for rejection').fill('  Evidence does not match  ');
   await page.getByRole('button', { name: 'Reject', exact: true }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();

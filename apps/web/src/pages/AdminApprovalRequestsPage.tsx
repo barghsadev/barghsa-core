@@ -3,8 +3,11 @@ import { tInvoiceCorrections } from '@barghsa/i18n/invoice-corrections';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { APPROVAL_REVIEW_REASON_MAX_LENGTH } from '@barghsa/shared/finance';
 import { Button, FinancialReviewSummary, Label, ListPage } from '@barghsa/ui';
+import {
+  ApprovalDecisionForm,
+  type ApprovalDecisionDraft,
+} from '../components/ApprovalDecisionForm.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import DualApprovalThresholdPanel from '../components/DualApprovalThresholdPanel.js';
@@ -85,6 +88,10 @@ function ApprovalWorkspace({
   const [saved, setSaved] = useState(false);
   const [adjustmentDecision, setAdjustmentDecision] = useState(false);
   const [reasons, setReasons] = useState<Record<string, string>>({});
+  const [validating, setValidating] = useState<string | null>(null);
+  const validationOwner = useRef<number | null>(null);
+  const decisionDraft = useRef<ApprovalDecisionDraft | null>(null);
+  const returnFocus = useRef<HTMLElement | null>(null);
   const [action, setAction] = useState<TeamAction | null>(null);
   const [review, setReview] = useState<Request | null>(null);
   const generation = useRef(0);
@@ -106,11 +113,31 @@ function ApprovalWorkspace({
   const [acceptedScope, setAcceptedScope] = useState('');
   const scope = JSON.stringify([requestId, status]);
   const visibleItems = acceptedScope === scope ? items : [];
+  const currentItems = useRef(visibleItems);
+  currentItems.current = visibleItems;
+  const available = useRef(false);
+  available.current = !loading && !error && !denied && acceptedScope === scope;
   function clearDecision() {
     ++workGeneration.current;
     selected.current = null;
+    decisionDraft.current = null;
+    validationOwner.current = null;
+    setValidating(null);
     setAction(null);
     setReview(null);
+  }
+  function denyAccess() {
+    ++generation.current;
+    activeController.current?.abort();
+    accessDenied.current = true;
+    setDenied(true);
+    setLoading(false);
+    setError(true);
+    setItems([]);
+    setReasons({});
+    setSaved(false);
+    returnFocus.current = null;
+    clearDecision();
   }
   const load = useCallback(async () => {
     activeController.current?.abort();
@@ -155,12 +182,7 @@ function ApprovalWorkspace({
       if (current !== generation.current || controller.signal.aborted) return;
       setError(true);
       if (caught instanceof Error && caught.message === 'denied') {
-        accessDenied.current = true;
-        setDenied(true);
-        setItems([]);
-        setReasons({});
-        setSaved(false);
-        clearDecision();
+        denyAccess();
       }
     } finally {
       if (current === generation.current) setLoading(false);
@@ -180,10 +202,45 @@ function ApprovalWorkspace({
     },
     []
   );
-  function decide(request: Request, decision: 'approve' | 'reject') {
-    if (loading || error || accessDenied.current || request.status !== 'pending') return;
-    const reason = (reasons[request.id] ?? '').trim();
-    if (decision === 'reject' && !reason) return;
+  async function validateReject(request: Request, run: (owner: number) => Promise<void>) {
+    if (
+      !available.current ||
+      selected.current ||
+      validationOwner.current !== null ||
+      accessDenied.current
+    )
+      return;
+    const owner = workGeneration.current;
+    validationOwner.current = owner;
+    setValidating(request.id);
+    try {
+      await run(owner);
+    } finally {
+      if (validationOwner.current === owner) {
+        validationOwner.current = null;
+        setValidating(null);
+      }
+    }
+  }
+  function decide(
+    request: Request,
+    decision: 'approve' | 'reject',
+    draft: ApprovalDecisionDraft,
+    reason = '',
+    owner?: number
+  ) {
+    if (
+      !available.current ||
+      accessDenied.current ||
+      selected.current ||
+      request.status !== 'pending' ||
+      (owner !== undefined && owner !== workGeneration.current) ||
+      (decision === 'approve' && validationOwner.current !== null) ||
+      !currentItems.current.some((row) => JSON.stringify(row) === JSON.stringify(request))
+    )
+      return;
+    decisionDraft.current = draft;
+    returnFocus.current = draft.focus;
     setSaved(false);
     setAdjustmentDecision(
       request.actionType === 'manual_adjustment' && Boolean(request.details?.invoiceAdjustment)
@@ -205,9 +262,15 @@ function ApprovalWorkspace({
 
   const actionGeneration = commandGeneration.current;
   return (
-    <section className="mx-auto max-w-4xl space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <section
+      aria-labelledby="approval-requests-title"
+      className="mx-auto max-w-4xl space-y-6"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
       <header className="space-y-2">
-        <h1 className="text-2xl font-semibold">{t('admin.approvals.title', locale)}</h1>
+        <h1 id="approval-requests-title" className="text-2xl font-semibold">
+          {t('admin.approvals.title', locale)}
+        </h1>
         <p className="text-sm text-muted-foreground">{t('admin.approvals.description', locale)}</p>
       </header>
       <DualApprovalThresholdPanel />
@@ -235,7 +298,7 @@ function ApprovalWorkspace({
                   id="approval-status"
                   className="rounded border bg-card text-card-foreground p-2"
                   value={status}
-                  disabled={!!action}
+                  disabled={!!action || validating !== null}
                   onChange={(event) => {
                     if (queries) {
                       queries.setQuery({ filters: { status: event.target.value } });
@@ -256,7 +319,11 @@ function ApprovalWorkspace({
                 </select>
               </>
             )}
-            <Button variant="outline" disabled={loading} onClick={() => void load()}>
+            <Button
+              variant="outline"
+              disabled={loading || validating !== null}
+              onClick={() => void load()}
+            >
               {t('admin.approvals.refresh', locale)}
             </Button>
           </div>
@@ -347,7 +414,7 @@ function ApprovalWorkspace({
                   ))}
                 </dl>
                 {request.details?.entityType === 'wallet_bank_receipt' && (
-                  <a className="text-blue-700 underline" href="/admin/wallet-receipts">
+                  <a className="text-primary underline" href="/admin/wallet-receipts">
                     {t('admin.approvals.walletReceipts', locale)}
                   </a>
                 )}
@@ -364,41 +431,26 @@ function ApprovalWorkspace({
                     </a>
                   )}
                 {request.status === 'pending' && (
-                  <div className="space-y-2">
-                    <Label htmlFor={`reason-${request.id}`}>
-                      {t('admin.approvals.rejectReason', locale)}
-                    </Label>
-                    <textarea
-                      id={`reason-${request.id}`}
-                      maxLength={APPROVAL_REVIEW_REASON_MAX_LENGTH}
-                      className="block w-full rounded border p-2"
-                      disabled={!!action}
-                      value={reasons[request.id] ?? ''}
-                      onChange={(event) =>
-                        setReasons((previous) => ({
-                          ...previous,
-                          [request.id]: event.target.value,
-                        }))
-                      }
-                    />
-                    <div className="flex flex-wrap gap-2">
-                      <Button
-                        disabled={!!action || loading || error}
-                        onClick={() => decide(request, 'approve')}
-                      >
-                        {t('admin.approvals.approve', locale)}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        disabled={
-                          !!action || loading || error || !(reasons[request.id] ?? '').trim()
-                        }
-                        onClick={() => decide(request, 'reject')}
-                      >
-                        {t('admin.approvals.reject', locale)}
-                      </Button>
-                    </div>
-                  </div>
+                  <ApprovalDecisionForm
+                    requestId={request.id}
+                    initialReason={reasons[request.id] ?? ''}
+                    disabled={!!action || validating !== null || loading || error}
+                    {...(validating === request.id ||
+                    (action &&
+                      selected.current?.id === request.id &&
+                      action.path.endsWith('/reject'))
+                      ? { pending: 'reject' as const }
+                      : action && selected.current?.id === request.id
+                        ? { pending: 'approve' as const }
+                        : {})}
+                    onChange={(reason) =>
+                      setReasons((previous) => ({ ...previous, [request.id]: reason }))
+                    }
+                    validate={(run) => validateReject(request, run)}
+                    decide={(decision, draft, reason, owner) =>
+                      decide(request, decision, draft, reason, owner)
+                    }
+                  />
                 )}
               </li>
             ))}
@@ -412,6 +464,7 @@ function ApprovalWorkspace({
             hasMore={
               !error &&
               !action &&
+              validating === null &&
               visibleItems.length > PAGE_SIZE &&
               (!queries || queries.query.page < 1_000_000)
             }
@@ -422,7 +475,7 @@ function ApprovalWorkspace({
                 : setOffset((value) => value + PAGE_SIZE)
             }
             previous={{
-              enabled: offset > 0 && !error && !action,
+              enabled: offset > 0 && !error && !action && validating === null,
               label: t('admin.approvals.previous', locale),
               onClick: () =>
                 queries
@@ -435,6 +488,16 @@ function ApprovalWorkspace({
       {action && (
         <TeamActionDialog
           action={action}
+          finalFocus={() => returnFocus.current}
+          onValidationError={(fields) =>
+            action.path.endsWith('/reject') &&
+            actionGeneration === workGeneration.current &&
+            !accessDenied.current &&
+            (decisionDraft.current?.applyServerErrors(fields) ?? false)
+          }
+          onDenied={() => {
+            if (actionGeneration === workGeneration.current) denyAccess();
+          }}
           summary={
             review ? (
               <FinancialReviewSummary
@@ -496,9 +559,18 @@ function ApprovalWorkspace({
           onClose={() => {
             if (actionGeneration === workGeneration.current) clearDecision();
           }}
-          onSuccess={async () => {
+          onSuccess={async (result) => {
             if (accessDenied.current || actionGeneration !== workGeneration.current) return;
             const id = selected.current?.id;
+            const expectedStatus = action.path.endsWith('/reject') ? 'rejected' : 'approved';
+            if (
+              !result ||
+              typeof result !== 'object' ||
+              (result as Request).id !== id ||
+              (result as Request).status !== expectedStatus
+            )
+              throw new Error('Invalid approval acknowledgement');
+            decisionDraft.current?.clear();
             clearDecision();
             if (id)
               setReasons((old) => {
