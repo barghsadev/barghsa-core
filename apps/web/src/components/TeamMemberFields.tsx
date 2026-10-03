@@ -1,10 +1,14 @@
 import { useState } from 'react';
+import { z } from 'zod';
+import { FormField, type UseFormReturn } from '@barghsa/ui/form';
 import { Avatar, AvatarFallback, Button } from '@barghsa/ui';
 import { Crown } from 'lucide-react';
 import { t } from '@barghsa/i18n/team';
 import { useLocale } from '../hooks/useLocale.js';
 import { maskDestination } from '../lib/mask-destination.js';
 import { TEAM_ROLES, type TeamEntry, type TeamRole } from '../lib/team-catalogue.js';
+import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 
 export function teamMemberName(entry: TeamEntry, unnamed: string) {
   return entry.name?.trim() || (entry.username ? maskDestination(entry.username) : unnamed);
@@ -46,28 +50,67 @@ export function TeamIdentity({ entry, owner = false }: { entry: TeamEntry; owner
     </div>
   );
 }
-export function useTeamRoleDraft(roles: string[]) {
+type RoleValues = { roles: TeamRole[] };
+interface TeamRoleDraft {
+  form: UseFormReturn<RoleValues>;
+  errors: UseFormReturn<RoleValues>['formState']['errors'];
+  errorId: (name: 'roles') => string;
+  selected: TeamRole[];
+  onValidationError: (fields: unknown[]) => boolean;
+  stale: boolean;
+  unchanged: boolean;
+  toggle: (role: TeamRole, checked: boolean) => void;
+  reset: () => void;
+  confirm: () => void;
+}
+export function useTeamRoleDraft(roles: string[]): TeamRoleDraft {
+  const locale = useLocale();
   const basis = [...roles].sort().join(',');
-  const [draft, setDraft] = useState({
-    basis,
-    roles: roles.filter((role): role is TeamRole => TEAM_ROLES.includes(role as TeamRole)),
-  });
+  const [draftBasis, setDraftBasis] = useState(basis);
+  const draft = useDraftForm(
+    z.object({
+      roles: z
+        .array(z.enum(TEAM_ROLES))
+        .min(1, t('team.invalidRoles', locale))
+        .max(3, t('team.invalidRoles', locale))
+        .refine((value) => new Set(value).size === value.length, t('team.invalidRoles', locale)),
+    }),
+    {
+      roles: roles.filter((role): role is TeamRole => TEAM_ROLES.includes(role as TeamRole)),
+    }
+  );
+  const selected = draft.values.roles;
+  const onValidationError = useActionFieldErrors(
+    draft.form,
+    {
+      roles: t('team.invalidRoles', locale),
+    },
+    t('team.error', locale)
+  );
   return {
-    selected: draft.roles,
-    stale: draft.basis !== basis,
-    unchanged:
-      draft.roles.length === roles.length && draft.roles.every((role) => roles.includes(role)),
+    form: draft.form,
+    errors: draft.errors,
+    errorId: draft.errorId,
+    selected,
+    onValidationError,
+    stale: draftBasis !== basis,
+    unchanged: selected.length === roles.length && selected.every((role) => roles.includes(role)),
     toggle: (role: TeamRole, checked: boolean) =>
-      setDraft((current) => ({
-        ...current,
-        roles: checked ? [...current.roles, role] : current.roles.filter((item) => item !== role),
-      })),
-    reset: () =>
-      setDraft({
-        basis,
+      draft.form.setValue(
+        'roles',
+        checked ? [...new Set([...selected, role])] : selected.filter((item) => item !== role),
+        { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+      ),
+    reset: () => {
+      setDraftBasis(basis);
+      draft.form.reset({
         roles: roles.filter((role): role is TeamRole => TEAM_ROLES.includes(role as TeamRole)),
-      }),
-    confirm: () => setDraft({ basis: [...draft.roles].sort().join(','), roles: draft.roles }),
+      });
+    },
+    confirm: () => {
+      setDraftBasis([...selected].sort().join(','));
+      draft.form.reset({ roles: selected });
+    },
   };
 }
 export function TeamRoleFields({
@@ -83,20 +126,42 @@ export function TeamRoleFields({
     word = (key: string) => t(`team.${key}`, locale);
   return (
     <>
-      <fieldset disabled={locked} className="flex flex-wrap gap-3">
-        <legend className="sr-only">{word('roles')}</legend>
-        {TEAM_ROLES.map((role) => (
-          <label key={role} className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              tabIndex={0}
-              checked={draft.selected.includes(role)}
-              onChange={(event) => draft.toggle(role, event.target.checked)}
-            />
-            {word(role)}
-          </label>
-        ))}
-      </fieldset>
+      <FormField
+        control={draft.form.control}
+        name="roles"
+        render={({ field }) => (
+          <fieldset
+            disabled={locked || draft.form.formState.isSubmitting}
+            className="flex flex-wrap gap-3"
+            aria-invalid={!!draft.errors.roles || undefined}
+            aria-describedby={draft.errors.roles ? draft.errorId('roles') : undefined}
+          >
+            <legend className="sr-only">{word('roles')}</legend>
+            {TEAM_ROLES.map((role, index) => (
+              <label key={role} className="flex items-center gap-2">
+                <input
+                  ref={index === 0 ? field.ref : undefined}
+                  name={field.name}
+                  onBlur={field.onBlur}
+                  aria-invalid={!!draft.errors.roles || undefined}
+                  aria-describedby={draft.errors.roles ? draft.errorId('roles') : undefined}
+                  type="checkbox"
+                  value={role}
+                  tabIndex={0}
+                  checked={draft.selected.includes(role)}
+                  onChange={(event) => draft.toggle(role, event.target.checked)}
+                />
+                {word(role)}
+              </label>
+            ))}
+          </fieldset>
+        )}
+      />
+      {draft.errors.roles && (
+        <p id={draft.errorId('roles')} role="alert" className="text-sm text-destructive">
+          {draft.errors.roles.message}
+        </p>
+      )}
       {draft.stale && (
         <div className="space-y-2">
           <p role="status">{word('staleRoles')}</p>

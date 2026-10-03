@@ -44,7 +44,11 @@ export function AgentDetailDialog({
   visible: boolean;
   canCommand: boolean;
   onClose: () => void;
-  onSave: (roles: TeamRole[], onConfirmed: () => void) => void;
+  onSave: (
+    roles: TeamRole[],
+    onConfirmed: () => void,
+    onValidationError: (fields: unknown[]) => boolean
+  ) => void;
   onRemove: () => void;
   onWithdraw: () => void;
   revision: number;
@@ -56,6 +60,8 @@ export function AgentDetailDialog({
   const draft = useTeamRoleDraft(roles),
     owner = roles.includes('Owner'),
     pending = entry.type === 'invitation';
+  const liveCanSave = useRef(false);
+  liveCanSave.current = visible && canCommand && !draft.stale && !owner && !pending;
   // Keep the draft above the popup lifecycle, but never leave a second modal behind review.
   if (!visible) return null;
   return (
@@ -118,8 +124,13 @@ export function AgentDetailDialog({
             <h3 className="font-medium">{word('roles')}</h3>
             <TeamRoleFields draft={draft} locked={!canCommand} canCommand={canCommand} />
             <Button
-              disabled={!canCommand || draft.stale || !draft.selected.length || draft.unchanged}
-              onClick={() => onSave(draft.selected, draft.confirm)}
+              disabled={
+                !canCommand || draft.stale || draft.form.formState.isSubmitting || draft.unchanged
+              }
+              onClick={draft.form.handleSubmit(
+                ({ roles }) =>
+                  liveCanSave.current && onSave(roles, draft.confirm, draft.onValidationError)
+              )}
             >
               {word('saveRoles')}
             </Button>

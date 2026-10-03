@@ -734,3 +734,156 @@ it.each(['agent', 'invitation'] as const)(
     expect(host.textContent).toContain('Change saved');
   }
 );
+
+const fieldFailure = (fields: unknown[]) =>
+  reply({ error: { code: 'VALIDATION:INPUT:INVALID', fields, message: 'raw server text' } }, 400);
+async function nextFrames() {
+  await act(
+    async () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+      )
+  );
+}
+it('validates invitation destinations on blur and before sending, retaining correction', async () => {
+  const requests = await render((path, init) =>
+    init?.method ? reply({ id: 'accepted-invite' }, 201) : baseline(path)
+  );
+  await click('Invite a team member');
+  await fill('#team-username', 'bad-destination');
+  await act(async () =>
+    document
+      .querySelector<HTMLInputElement>('#team-username')!
+      .dispatchEvent(new FocusEvent('focusout', { bubbles: true }))
+  );
+  expect(document.querySelector('#team-username')?.getAttribute('aria-invalid')).toBe('true');
+  await submit();
+  expect(requests.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(0);
+  expect(document.activeElement?.id).toBe('team-username');
+  await fill('#team-username', ' 09121234567 ');
+  expect(document.querySelector('#team-username')?.getAttribute('aria-invalid')).toBeNull();
+  await submit();
+  expect(
+    JSON.parse(String(requests.mock.calls.find(([, init]) => init?.method === 'POST')![1]!.body))
+  ).toEqual({ username: '09121234567', role: 'Manager' });
+  expect(document.querySelector('[role=dialog]')).toBeNull();
+});
+it.each(['username', 'role', 'message'] as const)(
+  'returns invitation %s errors to the retained draft',
+  async (field) => {
+    let fail = true;
+    await render((path, init) =>
+      init?.method
+        ? fail
+          ? fieldFailure([field])
+          : reply({ id: 'accepted-invite' }, 201)
+        : baseline(path)
+    );
+    await click('Invite a team member');
+    await fill('#team-username', 'recipient@example.test');
+    await fill('#invite-message', 'Retained invitation note');
+    await submit();
+    await nextFrames();
+    const id = field === 'username' ? 'team-username' : `invite-${field}`;
+    expect(document.activeElement?.id).toBe(id);
+    expect(document.querySelector(`#${id}`)?.getAttribute('aria-invalid')).toBe('true');
+    expect(document.querySelector<HTMLInputElement>('#team-username')!.value).toBe(
+      'recipient@example.test'
+    );
+    expect(document.querySelector<HTMLTextAreaElement>('#invite-message')!.value).toBe(
+      'Retained invitation note'
+    );
+    expect(document.body.textContent).not.toContain('raw server text');
+    fail = false;
+    await submit();
+    expect(document.querySelector('[role=dialog]')).toBeNull();
+  }
+);
+it.each([['unknown'], [], ['username', '__proto__']])(
+  'unknown invitation metadata %j stays a recoverable form-level error',
+  async (...fields) => {
+    await render((path, init) => (init?.method ? fieldFailure(fields) : baseline(path)));
+    await click('Invite a team member');
+    await fill('#team-username', 'recipient@example.test');
+    await submit();
+    expect(document.querySelector('[role=dialog] [role=alert]')).not.toBeNull();
+    expect(document.querySelector('#team-username')?.getAttribute('aria-invalid')).toBeNull();
+    expect(document.body.textContent).not.toContain('raw server text');
+  }
+);
+it('locks invitation submission once and retains the draft after a network failure', async () => {
+  let reject!: (reason: Error) => void;
+  const requests = await render((path, init) =>
+    init?.method
+      ? new Promise<Response>((_, fail) => {
+          reject = fail;
+        })
+      : baseline(path)
+  );
+  await click('Invite a team member');
+  await fill('#team-username', 'recipient@example.test');
+  await submit();
+  await submit();
+  expect(requests.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(1);
+  expect(document.querySelector('[role=dialog] button[aria-busy=true]')).not.toBeNull();
+  expect(document.querySelector<HTMLInputElement>('#team-username')!.disabled).toBe(true);
+  await act(async () => reject(new Error('offline')));
+  expect(document.querySelector<HTMLInputElement>('#team-username')!.value).toBe(
+    'recipient@example.test'
+  );
+  expect(document.querySelector<HTMLInputElement>('#team-username')!.disabled).toBe(false);
+  expect(document.querySelector('[role=dialog] [role=alert]')).not.toBeNull();
+});
+it.each([false, true])(
+  'role field errors close confirmation and restore the %s detail draft',
+  async (details) => {
+    const requests = await render((path, init) =>
+      init?.method
+        ? fieldFailure(['roles'])
+        : path.includes('/activity')
+          ? reply(historyPage())
+          : baseline(path)
+    );
+    if (details) await click('View details');
+    const area = () => (details ? detailDialog() : host);
+    const role = (name: string) =>
+      [...area().querySelectorAll<HTMLInputElement>('input[type=checkbox]')].find(
+        (n) => n.parentElement?.textContent === name
+      )!;
+    await act(async () => role('Manager').click());
+    expect(area().textContent).toContain('Choose at least one valid role');
+    await click('Save roles', details);
+    expect(requests.mock.calls.some(([, init]) => init?.method === 'PUT')).toBe(false);
+    await act(async () => role('Finance').click());
+    expect(area().querySelector('input[aria-invalid=true]')).toBeNull();
+    await click('Save roles', details);
+    await submit();
+    await nextFrames();
+    expect(details ? detailDialog().textContent : host.textContent).toContain(
+      'Choose at least one valid role'
+    );
+    expect(role('Finance').checked).toBe(true);
+    expect(document.activeElement).toBe(role('Manager'));
+    expect(role('Manager').getAttribute('aria-invalid')).toBe('true');
+    expect(document.body.textContent).not.toContain('raw server text');
+    expect(requests.mock.calls.filter(([, init]) => init?.method === 'PUT')).toHaveLength(1);
+  }
+);
+
+it.each([
+  { note: 'x'.repeat(1001), kind: 'length' },
+  { note: 'private\0note', kind: 'null' },
+])('invalid invitation message $kind stays in the editor without sending', async ({ note }) => {
+  const requests = await render(baseline);
+  await click('Invite a team member');
+  await fill('#team-username', 'recipient@example.test');
+  await fill('#invite-message', note);
+  await submit();
+  await nextFrames();
+  const message = document.querySelector<HTMLTextAreaElement>('#invite-message')!;
+  expect(message.value).toBe(note);
+  expect(document.activeElement).toBe(message);
+  expect(message.getAttribute('aria-invalid')).toBe('true');
+  expect(message.getAttribute('aria-describedby')).toContain('invite-message-hint');
+  expect(requests.mock.calls.some(([, init]) => init?.method === 'POST')).toBe(false);
+});

@@ -269,3 +269,31 @@ it('preserves original invitation and membership dates through a full role repla
     }))
   );
 });
+
+it.each(
+  [[], ['Owner'], ['Finance', 'Finance'], ['Manager', 'Finance', 'Legal', 'Finance']].map(
+    (roles) => ({ roles })
+  )
+)('invalid roles $roles return a public group error without changing access', async ({ roles }) => {
+  const c = await setup(),
+    before = await snapshot(c);
+  const response = await mutate(c, 'roles', roles);
+  expect(response.status).toBe(400);
+  const result = await response.json();
+  expect(result).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID', fields: ['roles'] } });
+  expect(JSON.stringify(result)).not.toContain(c.target);
+  expect(await snapshot(c)).toEqual(before);
+});
+it('step-up still precedes role validation and exposes no field metadata', async () => {
+  const c = await setup(),
+    before = await snapshot(c);
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE session_id=$1', [
+    c.sessionId,
+  ]);
+  const response = await mutate(c, 'roles', []);
+  expect(response.status).toBe(403);
+  const result = await response.json();
+  expect(result).toHaveProperty('error.code', 'AUTHZ:STEP_UP_REQUIRED');
+  expect(result).not.toHaveProperty('error.fields');
+  expect(await snapshot(c)).toEqual(before);
+});

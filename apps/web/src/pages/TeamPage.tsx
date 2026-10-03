@@ -2,6 +2,8 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/team';
 import {
+  Alert,
+  AlertDescription,
   Badge,
   Textarea,
   ListPage,
@@ -16,6 +18,12 @@ import {
   DialogFooter,
 } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
+import { z } from 'zod';
+import { Loader2 } from 'lucide-react';
+import { normalizeUsername } from '@barghsa/shared/validation';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { maskDestination } from '../lib/mask-destination.js';
 import { withCsrf } from '../lib/csrf.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -229,7 +237,12 @@ function TeamMembers({
   const [activityRevision, setActivityRevision] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [action, setAction] = useState<
-    (TeamAction & { successMessage?: string; onConfirmed?: () => void }) | null
+    | (TeamAction & {
+        successMessage?: string;
+        onConfirmed?: () => void;
+        onValidationError?: (fields: unknown[]) => boolean;
+      })
+    | null
   >(null);
   const [ownershipStep, setOwnershipStep] = useState<'verify' | 'select' | 'confirm' | null>(null);
   const [recipientId, setRecipientId] = useState('');
@@ -237,9 +250,34 @@ function TeamMembers({
   const recipientSelect = useRef<HTMLSelectElement>(null);
   const restoreTransferFocus = useRef(false);
   const teamHeading = useRef<HTMLHeadingElement>(null);
-  const [username, setUsername] = useState('');
-  const [role, setRole] = useState<Role>('Manager');
-  const [message, setMessage] = useState('');
+  const invitation = useDraftForm(
+    z.object({
+      username: z
+        .string()
+        .trim()
+        .max(254, t('team.invalidInvitation', locale))
+        .refine((value) => normalizeUsername(value) !== null, t('team.invalidInvitation', locale)),
+      role: z.enum(ROLES, { error: t('team.invalidRole', locale) }),
+      message: z
+        .string()
+        .max(1000, t('team.invalidMessage', locale))
+        .refine((value) => !value.includes('\0'), t('team.invalidMessage', locale)),
+    }),
+    { username: '', role: 'Manager', message: '' }
+  );
+  const [username, setUsername] = invitation.field('username');
+  const [role, setRole] = invitation.field('role');
+  const [message, setMessage] = invitation.field('message');
+  const resetInvitation = invitation.form.reset;
+  const invitationFieldErrors = useActionFieldErrors(
+    invitation.form,
+    {
+      username: t('team.invalidInvitation', locale),
+      role: t('team.invalidRole', locale),
+      message: t('team.invalidMessage', locale),
+    },
+    t('team.error', locale)
+  );
   const [inviting, setInviting] = useState(false);
   const [invitationOpen, setInvitationOpen] = useState(false);
   const inviteTrigger = useRef<HTMLButtonElement>(null);
@@ -264,12 +302,11 @@ function TeamMembers({
     setDetail(null);
     setOwnershipStep(null);
     setAction(null);
-    setUsername('');
-    setMessage('');
+    resetInvitation({ username: '', role: 'Manager', message: '' });
     setRecipientId('');
     setError(null);
     setNotice(null);
-  }, []);
+  }, [resetInvitation]);
   const scope = useCatalogueScope(clearPrivate);
   const validate = useCallback(
     (value: unknown): value is Team => validTeam(value) && value.profileId === profile.id,
@@ -354,61 +391,80 @@ function TeamMembers({
     const current = () =>
       mounted.current && generation.current === version && scope.live.current === epoch;
     invitationPending.current = true;
-    setInviting(true);
-    setError(null);
-    setNotice(null);
     try {
-      const response = await fetch(
-        `/api/profiles/${encodeURIComponent(team.profileId)}/invitations`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({
-            username: username.trim(),
-            role,
-            ...(message.trim() ? { message: message.trim() } : {}),
-          }),
-        }
-      );
-      if (!current()) return;
-      if (response.status === 401 || response.status === 403) {
-        denyTeam(response.status);
-        return;
-      }
-      if (!response.ok) {
-        setError(
-          word(
-            response.status === 409
-              ? 'conflict'
-              : response.status === 429
-                ? 'rateLimit'
-                : response.status === 400
-                  ? 'invalidInvitation'
-                  : 'error'
-          )
+      await invitation.form.handleSubmit(async (values) => {
+        if (!current()) return;
+        setInviting(true);
+        setError(null);
+        setNotice(null);
+        const response = await fetch(
+          `/api/profiles/${encodeURIComponent(team.profileId)}/invitations`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify({
+              username: values.username.trim(),
+              role: values.role,
+              ...(values.message.trim() ? { message: values.message.trim() } : {}),
+            }),
+          }
         );
-        return;
-      }
-      const result: unknown = await response.json().catch(() => null);
-      if (!current()) return;
-      if (
-        response.status !== 201 ||
-        !result ||
-        typeof result !== 'object' ||
-        !('id' in result) ||
-        typeof result.id !== 'string' ||
-        !/^[a-zA-Z0-9_-]{1,100}$/.test(result.id)
-      ) {
-        setError(word('error'));
-        return;
-      }
-      setUsername('');
-      setMessage('');
-      restoreInviteFocus.current = true;
-      setInvitationOpen(false);
-      await load();
-      setNotice(word('invited'));
+        if (!current()) return;
+        if (response.status === 401 || response.status === 403) {
+          denyTeam(response.status);
+          return;
+        }
+        if (!response.ok) {
+          if (response.status === 400) {
+            const failure: unknown = await response.json().catch(() => null);
+            if (!current()) return;
+            if (
+              failure &&
+              typeof failure === 'object' &&
+              'error' in failure &&
+              failure.error &&
+              typeof failure.error === 'object' &&
+              'code' in failure.error &&
+              failure.error.code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+              'fields' in failure.error &&
+              Array.isArray(failure.error.fields) &&
+              invitationFieldErrors(failure.error.fields)
+            )
+              return;
+          }
+          setError(
+            word(
+              response.status === 409
+                ? 'conflict'
+                : response.status === 429
+                  ? 'rateLimit'
+                  : response.status === 400
+                    ? 'invalidInvitation'
+                    : 'error'
+            )
+          );
+          return;
+        }
+        const result: unknown = await response.json().catch(() => null);
+        if (!current()) return;
+        if (
+          response.status !== 201 ||
+          !result ||
+          typeof result !== 'object' ||
+          !('id' in result) ||
+          typeof result.id !== 'string' ||
+          !/^[a-zA-Z0-9_-]{1,100}$/.test(result.id)
+        ) {
+          setError(word('error'));
+          return;
+        }
+        resetInvitation({ username: '', role: values.role, message: '' });
+        restoreInviteFocus.current = true;
+        setInvitationOpen(false);
+        await load();
+        setNotice(word('invited'));
+      })(event);
     } catch {
       if (current()) setError(word('error'));
     } finally {
@@ -449,7 +505,13 @@ function TeamMembers({
     }
   }, [ready, detail, detailedEntry]);
   const base = `/api/profiles/${encodeURIComponent(team?.profileId ?? '')}`;
-  const openAction = (next: TeamAction & { successMessage?: string; onConfirmed?: () => void }) => {
+  const openAction = (
+    next: TeamAction & {
+      successMessage?: string;
+      onConfirmed?: () => void;
+      onValidationError?: (fields: unknown[]) => boolean;
+    }
+  ) => {
     if (!ready) return;
     reviewBasis.current = basis;
     setNotice(null);
@@ -486,7 +548,13 @@ function TeamMembers({
     await load();
     setNotice(action?.successMessage ?? word('saved'));
   };
-  const saveMember = (userId: string, entry: Entry, roles: Role[], onConfirmed: () => void) =>
+  const saveMember = (
+    userId: string,
+    entry: Entry,
+    roles: Role[],
+    onConfirmed: () => void,
+    onValidationError: (fields: unknown[]) => boolean
+  ) =>
     openAction({
       title: word('saveRoles'),
       description: word('rolesTargetWarning')
@@ -496,6 +564,7 @@ function TeamMembers({
       method: 'PUT',
       body: { roles },
       onConfirmed,
+      onValidationError,
     });
   const removeMember = (userId: string, entry: Entry) =>
     openAction({
@@ -646,8 +715,8 @@ function TeamMembers({
                             detailTrigger.current = button;
                             setDetail({ type: 'agent', id: userId });
                           }}
-                          onSave={(roles, onConfirmed) =>
-                            saveMember(userId, member.entry, roles, onConfirmed)
+                          onSave={(roles, onConfirmed, onValidationError) =>
+                            saveMember(userId, member.entry, roles, onConfirmed, onValidationError)
                           }
                           onRemove={() => removeMember(userId, member.entry)}
                         />
@@ -708,7 +777,9 @@ function TeamMembers({
           visible={!action && !ownershipStep}
           canCommand={ready}
           onClose={closeDetail}
-          onSave={(roles, onConfirmed) => saveMember(detail.id, detailedEntry, roles, onConfirmed)}
+          onSave={(roles, onConfirmed, onValidationError) =>
+            saveMember(detail.id, detailedEntry, roles, onConfirmed, onValidationError)
+          }
           onRemove={() => removeMember(detail.id, detailedEntry)}
           onWithdraw={() => withdraw(detailedEntry)}
           revision={activityRevision}
@@ -727,17 +798,24 @@ function TeamMembers({
         >
           <DialogContent
             dir={locale === 'fa' ? 'rtl' : 'ltr'}
-            showCloseButton={!inviting}
+            showCloseButton={!inviting && !invitation.form.formState.isSubmitting}
+            className="max-h-[90dvh] overflow-y-auto"
             finalFocus={false}
           >
             <DialogHeader>
               <DialogTitle>{word('invite')}</DialogTitle>
               <DialogDescription>{word('consent')}</DialogDescription>
             </DialogHeader>
-            <form onSubmit={invite} className="space-y-4">
+            <form noValidate onSubmit={invite} className="space-y-4">
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
               <div className="flex-1 min-w-48 space-y-1">
                 <Label htmlFor="team-username">{word('username')}</Label>
                 <Input
+                  {...invitation.bind('username')}
                   autoFocus
                   id="team-username"
                   required
@@ -746,10 +824,20 @@ function TeamMembers({
                   onChange={(event) => setUsername(event.target.value)}
                   disabled={inviting}
                 />
+                {invitation.errors.username && (
+                  <p
+                    id={invitation.errorId('username')}
+                    role="alert"
+                    className="text-sm text-destructive"
+                  >
+                    {invitation.errors.username.message}
+                  </p>
+                )}
               </div>
               <div className="space-y-1">
                 <Label htmlFor="invite-role">{word('role')}</Label>
                 <select
+                  {...invitation.bind('role')}
                   id="invite-role"
                   tabIndex={0}
                   className="block rounded border border-input bg-background text-foreground p-2"
@@ -763,20 +851,44 @@ function TeamMembers({
                     </option>
                   ))}
                 </select>
+                {invitation.errors.role && (
+                  <p
+                    id={invitation.errorId('role')}
+                    role="alert"
+                    className="text-sm text-destructive"
+                  >
+                    {invitation.errors.role.message}
+                  </p>
+                )}
               </div>
               <div className="space-y-1">
                 <Label htmlFor="invite-message">{word('message')}</Label>
                 <Textarea
+                  {...invitation.bind('message')}
                   id="invite-message"
                   maxLength={1000}
                   value={message}
-                  aria-describedby="invite-message-hint"
+                  aria-describedby={[
+                    'invite-message-hint',
+                    invitation.errors.message ? invitation.errorId('message') : null,
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
                   disabled={inviting}
                   onChange={(event) => setMessage(event.target.value)}
                 />
                 <p id="invite-message-hint" className="text-sm text-muted-foreground">
                   {word('messageHint')}
                 </p>
+                {invitation.errors.message && (
+                  <p
+                    id={invitation.errorId('message')}
+                    role="alert"
+                    className="text-sm text-destructive"
+                  >
+                    {invitation.errors.message.message}
+                  </p>
+                )}
               </div>
               {username.trim() && (
                 <p role="status" className="[overflow-wrap:anywhere]">
@@ -786,11 +898,6 @@ function TeamMembers({
                     .replace('{entity}', team?.profileName ?? word('legalEntity'))}
                 </p>
               )}
-              {error && (
-                <p role="alert" className="text-destructive">
-                  {error}
-                </p>
-              )}
               <Button type="button" variant="outline" disabled={loading} onClick={resource.retry}>
                 {word('refreshMembers')}
               </Button>
@@ -798,15 +905,26 @@ function TeamMembers({
                 <Button
                   type="button"
                   variant="outline"
-                  disabled={inviting}
+                  disabled={inviting || invitation.form.formState.isSubmitting}
                   onClick={() => {
+                    if (invitationPending.current) return;
                     restoreInviteFocus.current = true;
                     setInvitationOpen(false);
                   }}
                 >
                   {word('cancel')}
                 </Button>
-                <Button type="submit" disabled={!ready || inviting || !username.trim()}>
+                <Button
+                  type="submit"
+                  aria-busy={inviting || invitation.form.formState.isSubmitting || undefined}
+                  disabled={!ready || inviting || invitation.form.formState.isSubmitting}
+                >
+                  {inviting && (
+                    <Loader2
+                      aria-hidden="true"
+                      className="size-4 animate-spin motion-reduce:animate-none"
+                    />
+                  )}
                   {word(inviting ? 'working' : 'sendInvite')}
                 </Button>
               </DialogFooter>
@@ -820,6 +938,7 @@ function TeamMembers({
           action={action}
           onClose={() => setAction(null)}
           onSuccess={finished}
+          {...(action.onValidationError ? { onValidationError: action.onValidationError } : {})}
           onDenied={denyTeam}
           confirmationDisabled={!ready || staleReview}
           summary={
@@ -947,14 +1066,19 @@ function Member({
   locked: boolean;
   formatJoinedAt: (value: string) => string;
   roles: string[];
-  onSave: (roles: Role[], onConfirmed: () => void) => void;
+  onSave: (
+    roles: Role[],
+    onConfirmed: () => void,
+    onValidationError: (fields: unknown[]) => boolean
+  ) => void;
   onRemove: () => void;
 }) {
   const locale = useLocale();
   const draft = useTeamRoleDraft(roles);
-  const selected = draft.selected,
-    stale = draft.stale;
+  const stale = draft.stale;
   const owner = roles.includes('Owner');
+  const liveCanSave = useRef(false);
+  liveCanSave.current = canCommand && !locked && !stale && !owner;
   const word = (key: string) => t(`team.${key}`, locale);
   return (
     <tr className="border-t align-top">
@@ -1019,10 +1143,13 @@ function Member({
               locked ||
               stale ||
               owner ||
-              !selected.length ||
-              (selected.length === roles.length && selected.every((role) => roles.includes(role)))
+              draft.form.formState.isSubmitting ||
+              draft.unchanged
             }
-            onClick={() => onSave(selected, draft.confirm)}
+            onClick={draft.form.handleSubmit(
+              ({ roles }) =>
+                liveCanSave.current && onSave(roles, draft.confirm, draft.onValidationError)
+            )}
           >
             {word('saveRoles')}
           </Button>

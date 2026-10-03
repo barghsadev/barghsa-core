@@ -64,6 +64,9 @@ const fa: Record<string, string> = {
   'team.messageHint':
     'حداکثر ۱۰۰۰ نویسه. گیرنده این پیام را در جزئیات دعوت\u200cنامه می\u200cبیند.',
   'team.unnamed': 'عضو تیم',
+  'team.invalidRole': 'یک نقش معتبر انتخاب کنید.',
+  'team.invalidRoles': 'حداقل یک نقش معتبر انتخاب کنید؛ هر نقش فقط یک بار.',
+  'team.invalidMessage': 'پیام باید حداکثر ۱۰۰۰ نویسه داشته باشد و شامل نویسه نامعتبر نباشد.',
   'team.invalidInvitation':
     'ایمیل یا شماره موبایل معتبر وارد کنید. نمی\u200cتوانید خودتان را دعوت کنید.',
 
@@ -193,6 +196,9 @@ const en: Record<string, string> = {
   'team.messageHint':
     'Up to 1,000 characters. The recipient sees this message in the invitation details.',
   'team.unnamed': 'Team member',
+  'team.invalidRole': 'Choose a valid role.',
+  'team.invalidRoles': 'Choose at least one valid role, without duplicates.',
+  'team.invalidMessage': 'Use no more than 1000 characters and no null characters.',
   'team.invalidInvitation': 'Enter a valid email or mobile number. You cannot invite yourself.',
 
   'team.refreshProfiles': 'Refresh profile',

@@ -2,6 +2,7 @@ import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { rateLimitKey } from '@barghsa/shared/rate-limit';
+import { InputFieldException } from '../common/input-field.exception.js';
 import { normalizeUsername } from '@barghsa/shared/validation';
 import type {
   InvitationDecisionInput,
@@ -321,33 +322,19 @@ export class AgentsService {
       message !== undefined &&
       (typeof message !== 'string' || message.length > 1000 || message.includes('\0'))
     ) {
-      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+      throw new InputFieldException(['message']);
     }
     const invitationMessage = message?.trim() || null;
 
     // ── Validate role ──────────────────────────────────────
     if (!AgentsService.VALID_INVITE_ROLES.has(role)) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: `Invalid role '${role}'. Must be one of: ${[...AgentsService.VALID_INVITE_ROLES].join(', ')}`,
-        },
-        400
-      );
+      throw new InputFieldException(['role']);
     }
 
     // ── Normalise and validate username ────────────────────
     const normalised = normalizeUsername(username);
     if (!normalised) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Invalid username. Provide a valid email or Iranian mobile number.',
-        },
-        400
-      );
+      throw new InputFieldException(['username']);
     }
 
     // ── Verify the profile exists and is a LEGAL profile ────
@@ -405,14 +392,7 @@ export class AgentsService {
       await client.query('BEGIN');
       const recipientUserId = await this.lockInvitationActor(client, profileId, actor, normalised);
       if (recipientUserId === actor.userId) {
-        throw new HttpException(
-          {
-            statusCode: 400,
-            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-            message: 'You cannot invite yourself',
-          },
-          400
-        );
+        throw new InputFieldException(['username']);
       }
 
       // ── Check: invitee must not already be a pending invite ──
@@ -1283,10 +1263,7 @@ export class AgentsService {
       roles.some((role) => !AgentsService.VALID_INVITE_ROLES.has(role)) ||
       new Set(roles).size !== roles.length
     ) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400
-      );
+      throw new InputFieldException(['roles']);
     }
     const client = await getDbPool().connect();
     try {

@@ -421,3 +421,51 @@ for (const operation of ['withdraw', 'decline'] as const) {
     }
   }, 10000);
 }
+
+for (const [body, fields] of [
+  [{ username: '', role: 'Legal' }, ['username']],
+  [{ username: 'bad-destination', role: 'Legal' }, ['username']],
+  [{ username: 'a'.repeat(255), role: 'Legal' }, ['username']],
+  [{ username: 'new@example.test', role: 'Owner' }, ['role']],
+  [{ username: 'new@example.test', role: 'Legal', message: 'x'.repeat(1001) }, ['message']],
+  [{ username: 'new@example.test', role: 'Legal', message: 'private\0note' }, ['message']],
+  [
+    { username: null, role: 'Unknown', message: 123, secret: 'do-not-return' },
+    ['username', 'role', 'message'],
+  ],
+] as const)
+  it(`returns only public invitation field identifiers ${fields.join(',')} / ${JSON.stringify(body).slice(0, 90)}`, async () => {
+    const c = await setup(),
+      before = await state(c);
+    const response = await request(c, 'create', { body });
+    expect(response.status).toBe(400);
+    const result = await response.json();
+    expect(result).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID', fields } });
+    expect(JSON.stringify(result)).not.toContain('do-not-return');
+    expect(JSON.stringify(result)).not.toContain('private');
+    expect(await state(c)).toEqual(before);
+  });
+it('self-invitation returns the username field without revealing recipient information', async () => {
+  const c = await setup(),
+    before = await state(c);
+  const response = await request(c, 'create', {
+    body: { username: `${c.actor}@example.test`, role: 'Finance' },
+  });
+  expect(response.status).toBe(400);
+  const result = await response.json();
+  expect(result).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['username'] },
+  });
+  expect(JSON.stringify(result)).not.toContain(c.actor);
+  expect(await state(c)).toEqual(before);
+});
+it('permission denial does not disclose destination validation fields', async () => {
+  const c = await setup('Finance'),
+    before = await state(c);
+  const response = await request(c, 'create', {
+    body: { username: 'bad-destination', role: 'Legal' },
+  });
+  expect(response.status).toBe(403);
+  expect(await response.json()).not.toHaveProperty('error.fields');
+  expect(await state(c)).toEqual(before);
+});

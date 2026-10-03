@@ -21,6 +21,7 @@ import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { InputFieldException } from '../common/input-field.exception.js';
 
 @ApiTags('Agents')
 @Controller('api/profiles/:profileId')
@@ -130,7 +131,16 @@ export class AgentsController {
           .optional(),
       })
       .safeParse(body);
-    if (!parsed.success || !z.uuid().safeParse(profileId).success)
+    if (!parsed.success)
+      throw new InputFieldException(
+        parsed.error.issues.flatMap((issue) =>
+          typeof issue.path[0] === 'string' &&
+          ['username', 'role', 'message'].includes(issue.path[0])
+            ? [issue.path[0]]
+            : []
+        )
+      );
+    if (!z.uuid().safeParse(profileId).success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
     const userId = req.session.userId;
     const result = await this.agentsService.createInvitation(
@@ -191,7 +201,11 @@ export class AgentsController {
           .max(3),
       })
       .safeParse(body);
-    if (!parsed.success || !z.uuid().safeParse(profileId).success)
+    if (!parsed.success)
+      throw new InputFieldException(
+        parsed.error.issues.flatMap((issue) => (issue.path[0] === 'roles' ? ['roles'] : []))
+      );
+    if (!z.uuid().safeParse(profileId).success)
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400
