@@ -199,6 +199,86 @@ function save(body: unknown = input, user = 'operator') {
     body: JSON.stringify(body),
   });
 }
+it('returns owned fields for electricity settings without disclosing submitted values or unknown keys', async () => {
+  const cases = [
+    ['wizard-draft-ttl', { days: 'PRIVATE_VALUE' }, ['days']],
+    ['electricity-contract-template', { versionId: 'PRIVATE_VALUE' }, ['versionId']],
+    [
+      'green-electricity-rules',
+      {
+        ...input,
+        simple_order: { ...input.simple_order, average_power_threshold_kw: 'PRIVATE_VALUE' },
+      },
+      ['simpleThreshold'],
+    ],
+  ] as const;
+  for (const [path, body, fields] of cases) {
+    const put = (data: unknown, user = 'operator') =>
+      fetch(`${http.base}/api/admin/config/${path}`, {
+        method: 'PUT',
+        headers: headers[user]!,
+        body: JSON.stringify(data),
+      });
+    const invalid = await put(body);
+    expect(invalid.status).toBe(400);
+    const payload = await invalid.json();
+    expect(payload).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID', fields } });
+    expect(JSON.stringify(payload)).not.toContain('PRIVATE_VALUE');
+    const mixed = await put({ ...body, PRIVATE_KEY: 'PRIVATE_VALUE' });
+    expect(mixed.status).toBe(400);
+    const mixedPayload = await mixed.json();
+    expect(JSON.stringify(mixedPayload)).not.toContain('fields');
+    expect(JSON.stringify(mixedPayload)).not.toContain('PRIVATE_KEY');
+    const forbidden = await put(body, 'other');
+    expect(forbidden.status).toBe(403);
+    expect(JSON.stringify(await forbidden.json())).not.toContain('fields');
+  }
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='config_change'")).rows
+  ).toEqual([]);
+});
+it('preserves camel, snake and mixed green-rule aliases and exact successful receipts', async () => {
+  const bodies = [
+    input,
+    {
+      simpleOrder: {
+        mandatoryGreenEnabled: true,
+        averagePowerThresholdKw: 1750,
+        mandatoryGreenSharePercent: 4.1,
+      },
+      advancedOrder: {
+        mandatoryGreenEnabled: false,
+        averagePowerThresholdKw: 2100,
+        mandatoryGreenSharePercent: 0,
+      },
+    },
+    {
+      simple_order: {
+        mandatory_green_enabled: true,
+        averagePowerThresholdKw: 1750,
+        mandatory_green_share_percent: 4.1,
+      },
+      advancedOrder: {
+        mandatoryGreenEnabled: false,
+        average_power_threshold_kw: 2100,
+        mandatoryGreenSharePercent: 0,
+      },
+      compatibleExtra: true,
+    },
+  ];
+  for (const body of bodies) {
+    const response = await save(body);
+    expect(response.status, http.logs()).toBe(200);
+    const receipt = await response.json();
+    expect(
+      await (
+        await fetch(`${http.base}/api/admin/config/green-electricity-rules`, {
+          headers: headers.operator!,
+        })
+      ).json()
+    ).toEqual(receipt);
+  }
+});
 it('serializes first writes and preserves a continuous audit version chain', async () => {
   const responses = await Promise.all([save(), save(input, 'viewer')]);
   expect(responses.map((r) => r.status)).toEqual([200, 200]);

@@ -3,10 +3,7 @@ import { Button, Input, Label, Alert } from '@barghsa/ui';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import {
-  useSavingCatalogueEditor,
-  type SavingEditorProps,
-} from '../hooks/useSavingCatalogueEditor.js';
+import { useCatalogueEditor, type CatalogueEditorProps } from '../hooks/useCatalogueEditor.js';
 import {
   inventoryDefaults,
   inventoryValues,
@@ -22,7 +19,7 @@ import { TeamActionDialog } from './TeamActionDialog.js';
 export function SavingInventoryPanel({
   hardwareId,
   ...props
-}: SavingEditorProps & { hardwareId: string }) {
+}: CatalogueEditorProps & { hardwareId: string }) {
   const locale = useLocale();
   const label = (key: string) => tCatalogue(key, locale);
   const numbers = useNumberFormatting(locale);
@@ -37,7 +34,7 @@ export function SavingInventoryPanel({
     stockCount: label('invalidStockCount'),
     reservationMinutes: label('invalidReservationMinutes'),
   };
-  const editor = useSavingCatalogueEditor<Inventory, InventoryDraft>({
+  const editor = useCatalogueEditor<Inventory, InventoryDraft>({
     ...props,
     identity: hardwareId,
     path,

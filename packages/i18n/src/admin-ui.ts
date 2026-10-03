@@ -790,15 +790,34 @@ export const fa: I18nDictionary = {
   'admin.contractLimits.leadTimeDaysHelp':
     'عدد صحیح از ۰ تا ۳۶۵۰۰ وارد کنید. صفر به معنی مجاز بودن شروع از امروز است.',
   'admin.green.title': 'قواعد برق سبز',
+  'admin.green.ruleEditor': 'ویرایش قواعد برق سبز',
+  'admin.green.invalidActivation':
+    'محصول برق سبز فعال با قیمت مثبت لازم است؛ یا قاعده را غیرفعال کنید.',
+  'admin.green.readError': 'دریافت این تنظیمات انجام نشد. مقادیر واردشده حفظ شده است.',
+  'admin.green.unverified':
+    'ذخیره تأیید نشد. پنجره را ببندید و پیش از تلاش دوباره، تنظیمات را تازه\u200cسازی کنید.',
+  'admin.green.working': 'در حال بررسی…',
+  'admin.green.invalidThreshold': 'عدد صحیح نامنفی تا ۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۱ وارد کنید.',
+  'admin.green.invalidShare': 'درصدی از ۰ تا ۱۰۰ انتخاب کنید.',
+  'admin.green.invalidRetention': 'عدد صحیح از ۱ تا ۳۶۵ روز وارد کنید.',
+  'admin.green.invalidTemplate': 'نسخه فعال با متغیرهای مجاز یا «بدون قالب» را انتخاب کنید.',
+  'admin.green.validationUnavailable':
+    'بررسی فرم در دسترس نیست. مقادیر حفظ شده است؛ دوباره تلاش کنید.',
+  'admin.green.invalid': 'فیلدهای مشخص\u200cشده را بررسی کنید.',
+  'admin.green.enabledState': 'فعال',
+  'admin.green.disabledState': 'غیرفعال',
+  'admin.green.safetyLoading': 'در حال بررسی وضعیت محصول برق سبز…',
+  'admin.green.safetyError':
+    'وضعیت محصول برق سبز بررسی نشد. ذخیره قواعد تا بررسی دوباره در دسترس نیست.',
   'admin.green.description': 'سهم اجباری برق سبز را برای هر نوع سفارش تنظیم کنید.',
   'admin.green.refresh': 'تازه‌سازی',
-  'admin.green.loading': 'در حال دریافت قواعد…',
+  'admin.green.loading': 'در حال دریافت تنظیمات…',
   'admin.green.forbidden': 'اجازه مدیریت این قواعد را ندارید.',
   'admin.green.error':
     'دریافت قواعد انجام نشد. ممکن است تنظیمات ذخیره‌شده به اصلاح نیاز داشته باشد.',
   'admin.green.retry': 'تلاش مجدد',
   'admin.green.save': 'ذخیره قواعد',
-  'admin.green.saved': 'قواعد ذخیره شد.',
+  'admin.green.saved': 'تنظیمات ذخیره شد.',
   'admin.green.confirm':
     'این قواعد برای سفارش‌های جدید اعمال می‌شود. سفارش‌های تأییدشده قواعد ذخیره‌شده خود را نگه می‌دارند.',
   'admin.green.snapshot':
@@ -2470,14 +2489,34 @@ export const en: I18nDictionary = {
   'admin.contractLimits.leadTimeDaysHelp':
     'Enter an integer from 0 to 36500. Zero permits a start date of today.',
   'admin.green.title': 'Green-electricity rules',
+  'admin.green.ruleEditor': 'Edit green-electricity rules',
+  'admin.green.invalidActivation':
+    'Use an active green product with a positive price, or disable this rule.',
+  'admin.green.readError': 'These settings could not be loaded. Your entered values are kept.',
+  'admin.green.unverified':
+    'The save could not be confirmed. Close the dialog and refresh these settings before trying again.',
+  'admin.green.working': 'Checking…',
+  'admin.green.invalidThreshold': 'Enter a nonnegative whole number up to 9007199254740991.',
+  'admin.green.invalidShare': 'Choose a percentage from 0 to 100.',
+  'admin.green.invalidRetention': 'Enter a whole number from 1 to 365 days.',
+  'admin.green.invalidTemplate':
+    'Choose an active version with supported placeholders, or no template.',
+  'admin.green.validationUnavailable':
+    'Form validation is unavailable. Your values are kept; try again.',
+  'admin.green.invalid': 'Check the highlighted fields.',
+  'admin.green.enabledState': 'Enabled',
+  'admin.green.disabledState': 'Disabled',
+  'admin.green.safetyLoading': 'Checking the green product…',
+  'admin.green.safetyError':
+    'The green product could not be checked. Saving rules is unavailable until the check succeeds.',
   'admin.green.description': 'Configure mandatory green shares for each ordering mode.',
   'admin.green.refresh': 'Refresh',
-  'admin.green.loading': 'Loading rules…',
+  'admin.green.loading': 'Loading settings…',
   'admin.green.forbidden': 'You do not have permission to manage these rules.',
   'admin.green.error': 'Rules could not be loaded. Stored configuration may need repair.',
   'admin.green.retry': 'Retry',
   'admin.green.save': 'Save rules',
-  'admin.green.saved': 'Rules saved.',
+  'admin.green.saved': 'Settings saved.',
   'admin.green.confirm':
     'Apply these rules to new orders. Existing confirmed orders keep their saved rules.',
   'admin.green.snapshot':

@@ -1,3 +1,10 @@
+import type {
+  GreenDraft,
+  GreenSafety,
+  RetentionDraft,
+  TemplateDraft,
+  TemplateSetting,
+} from './electricity-settings-form.js';
 import { custom } from 'zod/mini';
 import type { Draft, PriceDraft, ProductType } from './catalogue-form.js';
 import type { AgreementDraft, InventoryDraft } from './saving-catalogue-form.js';
@@ -103,5 +110,58 @@ export function priceFormSchema(
       if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(ctx.value.time)) issue('time');
       else if (ctx.value.date && !resolve(ctx.value)) issue('date');
     }
+  });
+}
+
+export function greenSettingsSchema(
+  messages: Record<keyof GreenDraft, string>,
+  integer: (raw: string, min: number, max: number) => number | null,
+  safety: GreenSafety | null
+) {
+  return custom<GreenDraft>().check((ctx) => {
+    const issue = (field: keyof GreenDraft) =>
+      ctx.issues.push({
+        code: 'custom',
+        input: ctx.value,
+        path: [field],
+        message: messages[field],
+      });
+    for (const prefix of ['simple', 'advanced'] as const) {
+      if (integer(ctx.value[`${prefix}Threshold`], 0, Number.MAX_SAFE_INTEGER) === null)
+        issue(`${prefix}Threshold`);
+      const share = ctx.value[`${prefix}Share`];
+      if (!Number.isFinite(share) || share < 0 || share > 100) issue(`${prefix}Share`);
+      const mode = prefix === 'simple' ? 'simpleOrder' : 'advancedOrder';
+      if (ctx.value[`${prefix}Enabled`] && share > 0 && safety?.[mode].reasons.length)
+        issue(`${prefix}Enabled`);
+    }
+  });
+}
+export function retentionSettingsSchema(
+  messages: Record<keyof RetentionDraft, string>,
+  integer: (raw: string, min: number, max: number) => number | null
+) {
+  return custom<RetentionDraft>().check((ctx) => {
+    if (integer(ctx.value.days, 1, 365) === null)
+      ctx.issues.push({ code: 'custom', input: ctx.value, path: ['days'], message: messages.days });
+  });
+}
+export function templateSettingsSchema(
+  messages: Record<keyof TemplateDraft, string>,
+  options: TemplateSetting['options']
+) {
+  return custom<TemplateDraft>().check((ctx) => {
+    if (
+      ctx.value.versionId !== null &&
+      !options.some(
+        (option) => option.id === ctx.value.versionId && option.active && option.supported
+      )
+    )
+      ctx.issues.push({
+        code: 'custom',
+        input: ctx.value,
+        path: ['versionId'],
+        message: messages.versionId,
+      });
   });
 }

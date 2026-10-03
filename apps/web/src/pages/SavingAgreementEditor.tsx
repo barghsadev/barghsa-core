@@ -3,10 +3,7 @@ import { tCatalogue } from '@barghsa/i18n/catalogue';
 import { Button, Label, Input, Textarea, Alert } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
-import {
-  useSavingCatalogueEditor,
-  type SavingEditorProps,
-} from '../hooks/useSavingCatalogueEditor.js';
+import { useCatalogueEditor, type CatalogueEditorProps } from '../hooks/useCatalogueEditor.js';
 import {
   agreementDefaults,
   agreementValues,
@@ -22,7 +19,7 @@ export function SavingAgreementEditor({
   planId,
   onChanged,
   ...props
-}: SavingEditorProps & { planId: string; onChanged: () => void }) {
+}: CatalogueEditorProps & { planId: string; onChanged: () => void }) {
   const locale = useLocale();
   const label = (key: string) => tCatalogue(key, locale);
   const base = `/api/admin/catalogue/saving-plans/${encodeURIComponent(planId)}`;
@@ -32,7 +29,7 @@ export function SavingAgreementEditor({
     [planId]
   );
   const messages = { title: label('invalidAgreementTitle'), body: label('invalidAgreementBody') };
-  const editor = useSavingCatalogueEditor<AgreementConfig, AgreementDraft>({
+  const editor = useCatalogueEditor<AgreementConfig, AgreementDraft>({
     ...props,
     identity: planId,
     path: `${base}/configuration`,

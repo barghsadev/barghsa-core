@@ -1577,8 +1577,8 @@ export class AdminService {
     return { days: await readWizardDraftTtl(getDbPool()) };
   }
 
-  async getElectricityContractTemplate() {
-    const pool = getDbPool();
+  async getElectricityContractTemplate(client?: PoolClient) {
+    const pool = client ?? getDbPool();
     const row = (
       await pool.query<{ value: unknown }>(
         "SELECT value FROM app_config WHERE key='electricity.contract_template_version_id'"
@@ -1645,9 +1645,7 @@ export class AdminService {
           !version ||
           !version.placeholders.every((name) => ['date', 'customerName', 'amount'].includes(name))
         ) {
-          throw new BadRequestException(
-            'Choose an active text template using only date, customerName, and amount placeholders'
-          );
+          throw new InputFieldException(['versionId']);
         }
       }
       const previous = (
@@ -1685,9 +1683,10 @@ export class AdminService {
           ip,
         ]
       );
+      const receipt = await this.getElectricityContractTemplate(client);
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
-      return this.getElectricityContractTemplate();
+      return receipt;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

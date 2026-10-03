@@ -6,15 +6,14 @@ import { useCatalogueResource, useCatalogueScope } from './useCatalogueResource.
 import { useWizardForm } from './useWizardForm.js';
 import { useActionFieldErrors } from './useActionFieldErrors.js';
 
-export interface SavingEditorProps {
+export interface CatalogueEditorProps {
   disabled?: boolean;
   refreshVersion?: number;
+  contextBasis?: string;
   onBusyChange?: (busy: boolean) => void;
   onDenied?: () => void;
 }
-type SavingCatalogueEditor<Data, Draft extends FieldValues> = ReturnType<
-  typeof useWizardForm<Draft>
-> & {
+type CatalogueEditor<Data, Draft extends FieldValues> = ReturnType<typeof useWizardForm<Draft>> & {
   resource: ReturnType<typeof useCatalogueResource<Data>>;
   action: TeamAction | null;
   busy: boolean;
@@ -34,9 +33,9 @@ type SavingCatalogueEditor<Data, Draft extends FieldValues> = ReturnType<
   feedback: (field: FieldPath<Draft>) => ReactNode;
 };
 
-/** The two saving catalogue editors share draft, permission and captured-action ownership. */
-export function useSavingCatalogueEditor<Data, Draft extends FieldValues>(
-  options: SavingEditorProps & {
+/** Catalogue and configuration editors share draft, permission and captured-action ownership. */
+export function useCatalogueEditor<Data, Draft extends FieldValues>(
+  options: CatalogueEditorProps & {
     identity: string;
     path: string;
     validate: (value: unknown) => value is Data;
@@ -47,7 +46,7 @@ export function useSavingCatalogueEditor<Data, Draft extends FieldValues>(
     messages: Record<FieldPath<Draft>, string>;
     label: (key: string) => string;
   }
-): SavingCatalogueEditor<Data, Draft> {
+): CatalogueEditor<Data, Draft> {
   const { identity, path, validate, basis, defaults, values, messages, label } = options;
   const callbacks = useRef(options);
   callbacks.current = options;
@@ -90,6 +89,15 @@ export function useSavingCatalogueEditor<Data, Draft extends FieldValues>(
     setSaved(false);
     resource.retry();
   }, [options.refreshVersion, resource.retry]);
+  const contextBasis = useRef(options.contextBasis);
+  useEffect(() => {
+    if (contextBasis.current === options.contextBasis) return;
+    contextBasis.current = options.contextBasis;
+    generation.current++;
+    command.current = null;
+    invalidFocus.current = null;
+    setAction(null);
+  }, [options.contextBasis]);
   data.current = resource.data;
   const pending = editor.pending || editor.form.formState.isSubmitting;
   const busy = pending || action !== null;
@@ -195,7 +203,7 @@ export function useSavingCatalogueEditor<Data, Draft extends FieldValues>(
     if (!current()) return false;
     if (!matches) {
       setUncertain(true);
-      throw new Error('Unverified saving catalogue acknowledgement');
+      throw new Error('Unverified catalogue acknowledgement');
     }
     return true;
   }

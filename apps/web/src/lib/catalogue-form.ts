@@ -84,6 +84,11 @@ export function catalogueInteger(raw: string): string | null {
   const normalized = normalizeProfileDigits(raw).trim();
   return /^\d{1,18}$/.test(normalized) ? BigInt(normalized).toString() : null;
 }
+export function boundedCatalogueInteger(raw: string, min: number, max: number): number | null {
+  const value = catalogueInteger(raw);
+  if (value === null || BigInt(value) < BigInt(min) || BigInt(value) > BigInt(max)) return null;
+  return Number(value);
+}
 export function record(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === 'object' && !Array.isArray(value);
 }

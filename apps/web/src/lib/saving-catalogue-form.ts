@@ -1,4 +1,4 @@
-import { catalogueInteger, record } from './catalogue-form.js';
+import { boundedCatalogueInteger, record } from './catalogue-form.js';
 
 export interface AgreementDraft {
   title: string;
@@ -99,11 +99,7 @@ export const inventoryDefaults: InventoryDraft = {
   stockCount: '0',
   reservationMinutes: '1440',
 };
-export function inventoryInteger(raw: string, min: number, max: number): number | null {
-  const value = catalogueInteger(raw);
-  if (value === null || BigInt(value) < BigInt(min) || BigInt(value) > BigInt(max)) return null;
-  return Number(value);
-}
+export const inventoryInteger = boundedCatalogueInteger;
 export function validInventory(value: unknown): value is Inventory {
   return (
     record(value) &&

@@ -814,6 +814,7 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     await page.addInitScript((value) => {
+      localStorage.setItem('barghsa.locale', value);
       if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
@@ -889,8 +890,8 @@ for (const locale of ['en', 'fa'])
       });
     await simple.getByRole('checkbox').check();
     await advanced.getByRole('checkbox').check();
-    await simple.getByRole('spinbutton').fill('1500');
-    await advanced.getByRole('spinbutton').fill('2100');
+    await simple.getByRole('textbox').fill('1500');
+    await advanced.getByRole('textbox').fill('2100');
     await simple.getByRole('slider').focus();
     await page.keyboard.press('Home');
     await page.keyboard.press('ArrowUp');
@@ -903,8 +904,8 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await settleLiveRequests();
     await page.reload();
-    await expect(simple.getByRole('spinbutton')).toHaveValue('1500');
-    await expect(advanced.getByRole('spinbutton')).toHaveValue('2100');
+    await expect(simple.getByRole('textbox')).toHaveValue('1500');
+    await expect(advanced.getByRole('textbox')).toHaveValue('2100');
     await expect(simple.getByRole('slider')).toHaveAccessibleName(
       new RegExp(fa ? '0\\.1%' : '۰٫۱٪')
     );
@@ -942,15 +943,9 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: fa ? 'ذخیره قواعد' : 'Save rules', exact: true })
       .click();
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
-      .click();
-    await expect(page.getByRole('dialog').getByRole('alert')).toBeVisible();
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true })
-      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(simple.getByRole('checkbox')).toBeFocused();
+    await expect(simple.getByRole('checkbox')).toHaveAttribute('aria-invalid', 'true');
     await simple.getByRole('checkbox').uncheck();
     await advanced.getByRole('checkbox').uncheck();
     await page

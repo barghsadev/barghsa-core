@@ -46,6 +46,8 @@ import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { InputFieldException } from '../common/input-field.exception.js';
+import { assertGreenSettingsFields } from './electricity-settings-fields.js';
 
 /**
  * Zod schema for the create-staff-user request body.
@@ -2225,6 +2227,13 @@ export class AdminController {
       body.days < 1 ||
       body.days > 365
     ) {
+      if (
+        body &&
+        typeof body === 'object' &&
+        !Array.isArray(body) &&
+        Object.keys(body).every((key) => key === 'days')
+      )
+        throw new InputFieldException(['days']);
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
     }
     return this.adminService.setElectricityOrderDraftTtl(
@@ -2258,8 +2267,15 @@ export class AdminController {
   async setElectricityContractTemplate(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
     this.assertElectricitySettingsPermission(req);
     const parsed = z.object({ versionId: z.string().uuid().nullable() }).strict().safeParse(body);
-    if (!parsed.success)
+    if (!parsed.success) {
+      if (
+        parsed.error.issues.every(
+          (issue) => issue.path.length === 1 && issue.path[0] === 'versionId'
+        )
+      )
+        throw new InputFieldException(['versionId']);
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    }
     return this.adminService.setElectricityContractTemplate(
       parsed.data.versionId,
       req.session,
@@ -2441,6 +2457,7 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async setGreenElectricityRules(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertElectricitySettingsPermission(req);
+    assertGreenSettingsFields(rawBody);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.adminService.setGreenElectricityConfig(rawBody, req.session, ip);
   }

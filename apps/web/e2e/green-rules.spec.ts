@@ -67,7 +67,7 @@ for (const locale of ['en', 'fa'])
       if (!verified)
         return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
       denied = true;
-      return route.fulfill({ json: config });
+      return route.fulfill({ json: route.request().postDataJSON() });
     });
     await page.route('**/api/admin/config/green-electricity-rules/safety-status', (route) =>
       route.fulfill({
@@ -90,7 +90,7 @@ for (const locale of ['en', 'fa'])
       name: fa ? 'سفارش ساده' : 'Simple orders',
       exact: true,
     });
-    await simple.getByRole('spinbutton').fill('1750');
+    await simple.getByRole('textbox').fill('1750');
     await page
       .getByRole('button', { name: fa ? 'ذخیره قواعد' : 'Save rules', exact: true })
       .click();
