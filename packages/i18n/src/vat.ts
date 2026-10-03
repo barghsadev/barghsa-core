@@ -1,5 +1,12 @@
 import { lookup } from './lookup.js';
 const fa: Record<string, string> = {
+  'admin.vat.invalidCategory': 'یک دسته معتبر انتخاب کنید.',
+  'admin.vat.invalidPercent': 'نرخ را از ۰ تا ۱۰۰، با حداکثر دو رقم اعشار وارد کنید.',
+  'admin.vat.invalidProduct': 'یک محصول موجود انتخاب کنید.',
+  'admin.vat.invalidRate': 'یک نرخ موجود انتخاب کنید.',
+  'admin.vat.invalidTime': 'زمان معتبر را با قالب ساعت و دقیقه وارد کنید.',
+  'admin.vat.validationUnavailable': 'اعتبارسنجی بارگیری نشد. دوباره تلاش کنید.',
+  'admin.vat.working': 'در حال بررسی…',
   'admin.vat.title': 'تنظیمات مالیات بر ارزش افزوده',
   'admin.vat.precedence':
     'نرخ اختصاصی محصول اولویت دارد؛ سپس نرخ دسته و در نبود هر دو، صفر درصد اعمال می‌شود.',
@@ -73,6 +80,13 @@ const fa: Record<string, string> = {
   'admin.vat.category.product_override': 'نرخ اختصاصی',
 };
 const en: Record<string, string> = {
+  'admin.vat.invalidCategory': 'Choose a valid category.',
+  'admin.vat.invalidPercent': 'Enter a rate from 0 to 100 with at most two decimal places.',
+  'admin.vat.invalidProduct': 'Choose an available product.',
+  'admin.vat.invalidRate': 'Choose an available rate.',
+  'admin.vat.invalidTime': 'Enter a valid time in hours and minutes.',
+  'admin.vat.validationUnavailable': 'Validation could not load. Try again.',
+  'admin.vat.working': 'Checking…',
   'admin.vat.title': 'VAT configuration',
   'admin.vat.precedence':
     'A product override takes priority, followed by its category rate, with 0% as the fallback.',

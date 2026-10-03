@@ -271,3 +271,74 @@ it('records verified step-up time in the price configuration audit', async () =>
     stepUpVerifiedAt: verifiedAt.toISOString(),
   });
 });
+
+it.each([
+  ['', { category: 'unknown', rateBasisPoints: 900 }, ['category']],
+  ['', { category: 'electricity', rateBasisPoints: 10001 }, ['percent']],
+  [
+    '',
+    { category: 'electricity', rateBasisPoints: 900, effectiveFrom: 'private-invalid' },
+    ['date', 'time'],
+  ],
+  ['/rate/end', { effectiveUntil: 'private-invalid' }, ['date', 'time']],
+  [
+    '/overrides',
+    { productId: 'private-product', vatConfigId: 'private-rate' },
+    ['productId', 'rateId'],
+  ],
+  ['/override/end', { effectiveUntil: 'private-invalid' }, ['date', 'time']],
+] as const)('returns only owned form identifiers for %s', async (path, body, fields) => {
+  const response = await fetch(
+    `${http.base}/api/admin/finance/vat${path.replace('/rate', `/${rateId}`).replace('/override/', `/overrides/${overrideId}/`)}`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    }
+  );
+  expect(response.status).toBe(400);
+  const error = (await response.json()) as { error: Record<string, unknown> };
+  expect(error.error).toMatchObject({ code: 'VALIDATION:INPUT:INVALID', fields });
+  expect(JSON.stringify(error)).not.toContain('private-');
+  expect(error.error).not.toHaveProperty('details');
+  await unchanged();
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+  ).toHaveLength(0);
+});
+it.each([
+  { category: 'electricity', rateBasisPoints: 'private-value', actorUserId: 'private-actor' },
+  { category: 'electricity', rateBasisPoints: 10001, unexpected: 'private-value' },
+  [],
+])('keeps malformed or mixed protected payloads generic', async (body) => {
+  const response = await fetch(`${http.base}/api/admin/finance/vat`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  });
+  expect(response.status).toBe(400);
+  const error = (await response.json()) as { error: Record<string, unknown> };
+  expect(error.error.code).toBe('VALIDATION:PARSE:ZOD_ERROR');
+  expect(error.error).not.toHaveProperty('fields');
+  expect(JSON.stringify(error)).not.toContain('private-');
+  await unchanged();
+});
+it('checks current finance permission before exposing field feedback', async () => {
+  await http.pool.query("DELETE FROM user_roles WHERE user_id='vat-admin'");
+  try {
+    const response = await fetch(`${http.base}/api/admin/finance/vat`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ category: 'private-value', rateBasisPoints: -1 }),
+    });
+    expect(response.status).toBe(403);
+    const error = (await response.json()) as { error: Record<string, unknown> };
+    expect(error.error).not.toHaveProperty('fields');
+    expect(JSON.stringify(error)).not.toContain('private-value');
+    await unchanged();
+  } finally {
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES ('vat-admin','vat-editor')"
+    );
+  }
+});

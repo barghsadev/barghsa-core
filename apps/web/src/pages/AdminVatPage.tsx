@@ -22,6 +22,15 @@ import {
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import {
+  vatDefaults,
+  vatBasisPoints,
+  vatDraftInstant,
+  type VatDraft,
+  type VatFormContext,
+} from '../lib/vat-form.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 type Product = { id: string; title: Record<string, string>; type: string };
 type Editor =
@@ -38,7 +47,9 @@ function validWindow(value: unknown): value is Record<string, unknown> {
     record(value) &&
     typeof value.id === 'string' &&
     instant(value.effectiveFrom) &&
-    (value.effectiveUntil === null || instant(value.effectiveUntil)) &&
+    (value.effectiveUntil === null ||
+      (instant(value.effectiveUntil) &&
+        Date.parse(String(value.effectiveUntil)) > Date.parse(String(value.effectiveFrom)))) &&
     Number.isInteger(value.rateBasisPoints) &&
     Number(value.rateBasisPoints) >= 0 &&
     Number(value.rateBasisPoints) <= 10000
@@ -119,20 +130,129 @@ function commandBasis(
   }
   return JSON.stringify(financialBasis(rates.find((v) => v.id === id)));
 }
+/** Accept a captured write or the service's documented same-open-version no-op. */
+function matchesReceipt(
+  command: TeamAction,
+  result: unknown,
+  rates: VatConfigDto[],
+  overrides: VatProductOverrideDto[]
+) {
+  if (!record(command.body) || !validWindow(result)) return false;
+  const body = command.body;
+  const sameInstant = (a: unknown, b: unknown) =>
+    instant(a) && instant(b) && Date.parse(String(a)) === Date.parse(String(b));
+  const override = command.path.includes('/overrides');
+  if (override ? !validOverrides([result]) : !validRates([result])) return false;
+  if (command.path.endsWith('/end')) {
+    const target = (override ? overrides : rates).find(
+      (row) => row.id === command.path.split('/').at(-2)
+    );
+    if (
+      !target ||
+      result.id !== target.id ||
+      result.rateBasisPoints !== target.rateBasisPoints ||
+      !sameInstant(result.effectiveFrom, target.effectiveFrom) ||
+      result.effectiveUntil === null
+    )
+      return false;
+    if (
+      'productId' in target
+        ? result.productId !== target.productId || result.vatConfigId !== target.vatConfigId
+        : result.category !== target.category
+    )
+      return false;
+    return (
+      body.effectiveUntil === undefined || sameInstant(result.effectiveUntil, body.effectiveUntil)
+    );
+  }
+  if (
+    override
+      ? result.productId !== body.productId || result.vatConfigId !== body.vatConfigId
+      : result.category !== body.category || result.rateBasisPoints !== body.rateBasisPoints
+  )
+    return false;
+  if (
+    override &&
+    result.rateBasisPoints !== rates.find((row) => row.id === body.vatConfigId)?.rateBasisPoints
+  )
+    return false;
+  if (result.effectiveUntil !== null) return false;
+  const existing = (override ? overrides : rates).find((row) => row.id === result.id);
+  const sameVersion =
+    existing?.effectiveUntil === null &&
+    JSON.stringify(financialBasis(existing)) ===
+      JSON.stringify(financialBasis(result as unknown as VatConfigDto | VatProductOverrideDto));
+  if (existing && !sameVersion) return false;
+  return (
+    body.effectiveFrom === undefined ||
+    sameInstant(result.effectiveFrom, body.effectiveFrom) ||
+    sameVersion
+  );
+}
 export default function AdminVatPage() {
   const preference = useTimezone();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => tVat(`admin.vat.${key}`, locale);
   const [editor, setEditor] = useState<Editor | null>(null);
-  const [category, setCategory] = useState<string>('electricity'),
-    [percent, setPercent] = useState('0'),
-    [productId, setProductId] = useState(''),
-    [rateId, setRateId] = useState('');
-  const [scheduled, setScheduled] = useState(false),
-    [date, setDate] = useState<Date | undefined>(),
-    [time, setTime] = useState('00:00'),
-    [invalidDate, setInvalidDate] = useState(false);
+  const validationContext = useRef<VatFormContext>({
+    kind: 'rate',
+    categories,
+    productIds: [],
+    rateIds: [],
+    resolveDate: () => undefined,
+  });
+  const messages: Record<keyof VatDraft, string> = {
+    category: label('invalidCategory'),
+    percent: label('invalidPercent'),
+    productId: label('invalidProduct'),
+    rateId: label('invalidRate'),
+    scheduled: label('invalidDate'),
+    date: label('invalidDate'),
+    time: label('invalidTime'),
+  };
+  const draft = useWizardForm<VatDraft>(
+    async () => {
+      const context = validationContext.current;
+      const { vatFormSchema } = await import('../lib/vat-form-schema.js');
+      return vatFormSchema(context, messages, {
+        basisPoints: vatBasisPoints,
+        instant: vatDraftInstant,
+      });
+    },
+    vatDefaults,
+    label('validationUnavailable')
+  );
+  const [category, setCategory] = draft.field('category'),
+    [percent, setPercent] = draft.field('percent'),
+    [productId, setProductId] = draft.field('productId'),
+    [rateId, setRateId] = draft.field('rateId'),
+    [scheduled, setScheduled] = draft.field('scheduled'),
+    [date, setDate] = draft.field('date'),
+    [time, setTime] = draft.field('time');
+  const [invalidDate, setInvalidDate] = useState(false);
+  const applyServerErrors = useActionFieldErrors(draft.form, messages, label('invalid'));
+  const invalidFocus = useRef<keyof VatDraft | null>(null);
+  const locked = draft.pending || draft.form.formState.isSubmitting;
+  useEffect(() => {
+    if (!locked && invalidFocus.current) {
+      draft.form.setFocus(invalidFocus.current);
+      invalidFocus.current = null;
+    }
+  }, [locked, draft.form]);
+  function feedback(field: keyof VatDraft) {
+    const message = draft.errors[field]?.message;
+    return (
+      <p
+        id={draft.errorId(field)}
+        role={message ? 'alert' : undefined}
+        aria-hidden={message ? undefined : true}
+        className={`text-sm text-destructive ${message ? '' : 'invisible'}`}
+      >
+        {typeof message === 'string' ? message : messages[field]}
+      </p>
+    );
+  }
   const [action, setAction] = useState<TeamAction | null>(null),
     [saved, setSaved] = useState(false);
   const generation = useRef(0),
@@ -144,15 +264,10 @@ export default function AdminVatPage() {
     frozenBasis.current = null;
     setEditor(null);
     setAction(null);
-    setScheduled(false);
-    setDate(undefined);
-    setTime('00:00');
+    draft.form.reset(vatDefaults);
+    invalidFocus.current = null;
     setInvalidDate(false);
-    setPercent('0');
-    setCategory('electricity');
-    setProductId('');
-    setRateId('');
-  }, []);
+  }, [draft.form.reset]);
   const clearWork = useCallback(() => {
     clearEditor();
     setSaved(false);
@@ -170,6 +285,13 @@ export default function AdminVatPage() {
     products = productRead.data ?? [];
   const zone =
     preference.status === 'ready' ? preference.timezone : (acceptedZone ?? preference.timezone);
+  validationContext.current = {
+    kind: editor?.kind ?? 'rate',
+    categories,
+    productIds: products.map((row) => row.id),
+    rateIds: rates.map((row) => row.id),
+    resolveDate: (value, hours, minutes) => datePickerAtTime(value, hours, minutes, zone),
+  };
   const hasZone = preference.status === 'ready' || acceptedZone !== null;
   const rateDisabled =
     scope.denied || rateRead.loading || rateRead.error || preference.status !== 'ready';
@@ -181,8 +303,26 @@ export default function AdminVatPage() {
       : kind === 'endOverride'
         ? overrideDisabled
         : rateDisabled;
-  const work = useRef({ editor, action, scheduled, rates, overrides, products });
-  work.current = { editor, action, scheduled, rates, overrides, products };
+  const work = useRef({
+    editor,
+    action,
+    scheduled,
+    rates,
+    overrides,
+    products,
+    zone,
+    disabled: true,
+  });
+  work.current = {
+    editor,
+    action,
+    scheduled,
+    rates,
+    overrides,
+    products,
+    zone,
+    disabled: editor === null || commandDisabled(editor.kind),
+  };
   useEffect(
     () => () => {
       generation.current++;
@@ -197,6 +337,7 @@ export default function AdminVatPage() {
       setAction(null);
       if (work.current.scheduled) {
         setDate(undefined);
+        draft.form.clearErrors(['date', 'time']);
         setInvalidDate(true);
       }
     }
@@ -303,83 +444,93 @@ export default function AdminVatPage() {
     );
   }
   function open(next: Editor) {
-    if (commandDisabled(next.kind)) return;
+    if (commandDisabled(next.kind) || draft.isPending() || action) return;
     clearEditor();
     setSaved(false);
     setEditor(next);
-    setScheduled(false);
-    setDate(undefined);
-    setTime('00:00');
-    setInvalidDate(false);
-    setPercent('0');
-    setCategory('electricity');
-    setProductId('');
-    setRateId('');
   }
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!event.currentTarget.checkValidity()) return;
-    if (!editor || commandDisabled(editor.kind)) return;
-    if (
-      editor.kind === 'override' &&
-      (!products.some((row) => row.id === productId) || !rates.some((row) => row.id === rateId))
-    )
-      return;
-    let instant: string | undefined;
-    if (scheduled) {
-      const match = /^(\d{2}):(\d{2})$/.exec(time);
-      if (!date || !match) {
-        setInvalidDate(true);
-        return;
-      }
-      const value = datePickerAtTime(date, Number(match[1]), Number(match[2]), zone);
-      if (!value) {
-        setInvalidDate(true);
-        return;
-      }
-      instant = value.toISOString();
-    }
-    const ending = editor.kind === 'endRate' || editor.kind === 'endOverride';
-    const path =
-      editor.kind === 'rate'
-        ? ''
-        : editor.kind === 'override'
-          ? '/overrides'
-          : editor.kind === 'endRate'
-            ? `/${editor.id}/end`
-            : `/overrides/${editor.id}/end`;
-    const body = ending
-      ? { ...(instant ? { effectiveUntil: instant } : {}) }
-      : editor.kind === 'rate'
-        ? {
-            category,
-            rateBasisPoints: Math.round(Number(percent) * 100),
-            ...(instant ? { effectiveFrom: instant } : {}),
-          }
-        : { productId, vatConfigId: rateId, ...(instant ? { effectiveFrom: instant } : {}) };
+    if (!editor || commandDisabled(editor.kind) || draft.isPending() || action) return;
+    const version = generation.current;
+    const context = validationContext.current;
+    const selected = editor;
+    draft.setValidationPending(true);
     setSaved(false);
-    const command: TeamAction = {
-      path: `/api/admin/finance/vat${path}`,
-      method: 'POST',
-      title: label(ending ? 'end' : 'save'),
-      description: label(ending ? 'confirmEnd' : 'confirmSave'),
-      body,
-      forbiddenMessage: label('denied'),
-      conflictMessage: label('conflict'),
-      errorMessages: {
-        'VALIDATION:PARSE:ZOD_ERROR': label('invalid'),
-        VAT_RATE_INVALID: label('invalid'),
-        VAT_RATE_INVALID_EFFECTIVE_FROM: label('invalidWindow'),
-        VAT_RATE_INVALID_EFFECTIVE_UNTIL: label('invalidWindow'),
-        VAT_OVERRIDE_INVALID_EFFECTIVE_FROM: label('invalidWindow'),
-        VAT_OVERRIDE_INVALID_EFFECTIVE_UNTIL: label('invalidWindow'),
-        VAT_OVERRIDE_CONFIG_INACTIVE: label('inactiveRate'),
-        VAT_REFERENCE_MISSING: label('missing'),
-      },
-    };
-    commandVersion.current = generation.current;
-    frozenBasis.current = commandBasis(command, rates, overrides, products);
-    setAction(command);
+    try {
+      await draft.form.handleSubmit(
+        async (values) => {
+          if (
+            version !== generation.current ||
+            work.current.editor !== selected ||
+            work.current.disabled ||
+            work.current.zone !== zone
+          )
+            return;
+          const instant = values.scheduled
+            ? (vatDraftInstant(values, context) ?? undefined)
+            : undefined;
+          const ending = editor.kind === 'endRate' || editor.kind === 'endOverride';
+          const path =
+            editor.kind === 'rate'
+              ? ''
+              : editor.kind === 'override'
+                ? '/overrides'
+                : editor.kind === 'endRate'
+                  ? `/${editor.id}/end`
+                  : `/overrides/${editor.id}/end`;
+          const body = ending
+            ? { ...(instant ? { effectiveUntil: instant } : {}) }
+            : editor.kind === 'rate'
+              ? {
+                  category: values.category,
+                  rateBasisPoints: vatBasisPoints(values.percent)!,
+                  ...(instant ? { effectiveFrom: instant } : {}),
+                }
+              : {
+                  productId: values.productId,
+                  vatConfigId: values.rateId,
+                  ...(instant ? { effectiveFrom: instant } : {}),
+                };
+          setSaved(false);
+          const command: TeamAction = {
+            path: `/api/admin/finance/vat${path}`,
+            method: 'POST',
+            title: label(ending ? 'end' : 'save'),
+            description: label(ending ? 'confirmEnd' : 'confirmSave'),
+            body,
+            forbiddenMessage: label('denied'),
+            conflictMessage: label('conflict'),
+            errorMessages: {
+              'VALIDATION:PARSE:ZOD_ERROR': label('invalid'),
+              VAT_RATE_INVALID: label('invalid'),
+              VAT_RATE_INVALID_EFFECTIVE_FROM: label('invalidWindow'),
+              VAT_RATE_INVALID_EFFECTIVE_UNTIL: label('invalidWindow'),
+              VAT_OVERRIDE_INVALID_EFFECTIVE_FROM: label('invalidWindow'),
+              VAT_OVERRIDE_INVALID_EFFECTIVE_UNTIL: label('invalidWindow'),
+              VAT_OVERRIDE_CONFIG_INACTIVE: label('inactiveRate'),
+              VAT_REFERENCE_MISSING: label('missing'),
+            },
+          };
+          const basis = commandBasis(command, rates, overrides, products);
+          if (
+            basis !==
+            commandBasis(command, work.current.rates, work.current.overrides, work.current.products)
+          )
+            return;
+          commandVersion.current = version;
+          frozenBasis.current = basis;
+          setAction(command);
+        },
+        (errors) => {
+          invalidFocus.current =
+            (Object.keys(errors).find((key) => key in messages) as keyof VatDraft | undefined) ??
+            null;
+        }
+      )();
+    } finally {
+      draft.setValidationPending(false);
+    }
   }
   return (
     <div
@@ -428,12 +579,15 @@ export default function AdminVatPage() {
             </div>
           )}
           <div className="flex flex-wrap gap-2">
-            <Button disabled={rateDisabled} onClick={() => open({ kind: 'rate' })}>
+            <Button
+              disabled={rateDisabled || locked || action !== null}
+              onClick={() => open({ kind: 'rate' })}
+            >
               {label('addRate')}
             </Button>
             <Button
               variant="outline"
-              disabled={choicesDisabled}
+              disabled={choicesDisabled || locked || action !== null}
               onClick={() => open({ kind: 'override' })}
             >
               {label('addOverride')}
@@ -442,195 +596,218 @@ export default function AdminVatPage() {
           {editor && (
             <form
               aria-label={label('editor')}
+              noValidate
               onSubmit={submit}
+              aria-busy={locked || undefined}
               className="flex flex-col gap-4 border-y py-5"
             >
-              {'title' in editor && <h2 className="font-semibold">{editor.title}</h2>}
-              {editor.kind === 'rate' && (
-                <>
-                  <div className="flex min-w-0 flex-col gap-2">
-                    <Label htmlFor="vat-category">{label('category')}</Label>
-                    <select
-                      id="vat-category"
-                      className="max-w-full rounded-md border bg-background p-2"
-                      value={category}
-                      onChange={(event) => setCategory(event.target.value)}
-                    >
-                      {categories.map((value) => (
-                        <option key={value} value={value}>
-                          {label(`category.${value}`)}
-                        </option>
-                      ))}
-                    </select>
+              <fieldset
+                disabled={locked || action !== null}
+                className="flex min-w-0 flex-col gap-4 border-0 p-0"
+              >
+                {'title' in editor && <h2 className="font-semibold">{editor.title}</h2>}
+                {editor.kind === 'rate' && (
+                  <>
+                    <div className="flex min-w-0 flex-col gap-2">
+                      <Label htmlFor="vat-category">{label('category')}</Label>
+                      <select
+                        id="vat-category"
+                        {...draft.bind('category')}
+                        className="max-w-full rounded-md border bg-background p-2"
+                        value={category}
+                        onChange={(event) => setCategory(event.target.value)}
+                      >
+                        {categories.map((value) => (
+                          <option key={value} value={value}>
+                            {label(`category.${value}`)}
+                          </option>
+                        ))}
+                      </select>
+                      {feedback('category')}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="vat-percent">{label('percent')}</Label>
+                      <Input
+                        id="vat-percent"
+                        {...draft.bind('percent')}
+                        type="text"
+                        inputMode="decimal"
+                        dir="ltr"
+                        value={percent}
+                        onChange={(event) => setPercent(event.target.value)}
+                      />
+                      {feedback('percent')}
+                    </div>
+                  </>
+                )}
+                {editor.kind === 'override' && (
+                  <>
+                    <p>{label('overrideHelp')}</p>
+                    <div className="flex min-w-0 flex-col gap-2">
+                      <Label htmlFor="vat-product">{label('product')}</Label>
+                      <select
+                        id="vat-product"
+                        {...draft.bind('productId')}
+                        className="max-w-full rounded-md border bg-background p-2"
+                        required
+                        value={productId}
+                        onChange={(event) => setProductId(event.target.value)}
+                      >
+                        <option value="">{label('chooseProduct')}</option>
+                        {productId && !products.some((row) => row.id === productId) && (
+                          <option value={productId}>
+                            {label('unavailable')} ({productId})
+                          </option>
+                        )}
+                        {products.map((product) => (
+                          <option key={product.id} value={product.id}>
+                            {productTitle(product.id)}
+                          </option>
+                        ))}
+                      </select>
+                      {feedback('productId')}
+                    </div>
+                    <div className="flex min-w-0 flex-col gap-2">
+                      <Label htmlFor="vat-rate">{label('rate')}</Label>
+                      <select
+                        id="vat-rate"
+                        {...draft.bind('rateId')}
+                        className="max-w-full rounded-md border bg-background p-2"
+                        required
+                        value={rateId}
+                        onChange={(event) => setRateId(event.target.value)}
+                      >
+                        <option value="">{label('chooseRate')}</option>
+                        {rateId && !rates.some((row) => row.id === rateId) && (
+                          <option value={rateId}>
+                            {label('unavailable')} ({rateId})
+                          </option>
+                        )}
+                        {rates.map((rate) => (
+                          <option key={rate.id} value={rate.id}>
+                            {label(`category.${rate.category}`)} ·{' '}
+                            {numbers.percent(rate.rateBasisPoints / 10000)} ·{' '}
+                            {dateText(rate.effectiveFrom)}
+                          </option>
+                        ))}
+                      </select>
+                      {feedback('rateId')}
+                    </div>
+                  </>
+                )}
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={scheduled}
+                    onChange={(event) => {
+                      setScheduled(event.target.checked);
+                      setInvalidDate(false);
+                    }}
+                  />
+                  {label('schedule')}
+                </label>
+                {!scheduled && <p className="text-sm">{label('immediate')}</p>}
+                {scheduled && (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="min-w-0">
+                      <Label htmlFor="vat-date">{label('date')}</Label>
+                      <DatePicker
+                        id="vat-date"
+                        {...draft.bind('date')}
+                        label={label('date')}
+                        placeholder={label('chooseDate')}
+                        locale={locale}
+                        timezone={zone}
+                        {...(date ? { value: date } : {})}
+                        onChange={(value) => {
+                          setDate(value);
+                          setInvalidDate(false);
+                        }}
+                      />
+                      {feedback('date')}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="vat-time">{label('time')}</Label>
+                      <Input
+                        id="vat-time"
+                        {...draft.bind('time')}
+                        type="time"
+                        dir="ltr"
+                        required
+                        value={time}
+                        onChange={(event) => {
+                          setTime(event.target.value);
+                          setInvalidDate(false);
+                        }}
+                      />
+                      {feedback('time')}
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="vat-percent">{label('percent')}</Label>
-                    <Input
-                      id="vat-percent"
-                      type="number"
-                      min="0"
-                      max="100"
-                      step="0.01"
-                      required
-                      value={percent}
-                      onChange={(event) => setPercent(event.target.value)}
-                    />
-                  </div>
-                </>
-              )}
-              {editor.kind === 'override' && (
-                <>
-                  <p>{label('overrideHelp')}</p>
-                  <div className="flex min-w-0 flex-col gap-2">
-                    <Label htmlFor="vat-product">{label('product')}</Label>
-                    <select
-                      id="vat-product"
-                      className="max-w-full rounded-md border bg-background p-2"
-                      required
-                      value={productId}
-                      onChange={(event) => setProductId(event.target.value)}
-                    >
-                      <option value="">{label('chooseProduct')}</option>
-                      {productId && !products.some((row) => row.id === productId) && (
-                        <option value={productId}>
-                          {label('unavailable')} ({productId})
-                        </option>
-                      )}
-                      {products.map((product) => (
-                        <option key={product.id} value={product.id}>
-                          {productTitle(product.id)}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex min-w-0 flex-col gap-2">
-                    <Label htmlFor="vat-rate">{label('rate')}</Label>
-                    <select
-                      id="vat-rate"
-                      className="max-w-full rounded-md border bg-background p-2"
-                      required
-                      value={rateId}
-                      onChange={(event) => setRateId(event.target.value)}
-                    >
-                      <option value="">{label('chooseRate')}</option>
-                      {rateId && !rates.some((row) => row.id === rateId) && (
-                        <option value={rateId}>
-                          {label('unavailable')} ({rateId})
-                        </option>
-                      )}
-                      {rates.map((rate) => (
-                        <option key={rate.id} value={rate.id}>
-                          {label(`category.${rate.category}`)} ·{' '}
-                          {numbers.percent(rate.rateBasisPoints / 10000)} ·{' '}
-                          {dateText(rate.effectiveFrom)}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </>
-              )}
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={scheduled}
-                  onChange={(event) => {
-                    setScheduled(event.target.checked);
-                    setInvalidDate(false);
-                  }}
-                />
-                {label('schedule')}
-              </label>
-              {!scheduled && <p className="text-sm">{label('immediate')}</p>}
-              {scheduled && (
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="min-w-0">
-                    <Label htmlFor="vat-date">{label('date')}</Label>
-                    <DatePicker
-                      id="vat-date"
-                      label={label('date')}
-                      placeholder={label('chooseDate')}
-                      locale={locale}
-                      timezone={zone}
-                      {...(date ? { value: date } : {})}
-                      onChange={(value) => {
-                        setDate(value);
-                        setInvalidDate(false);
-                      }}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="vat-time">{label('time')}</Label>
-                    <Input
-                      id="vat-time"
-                      type="time"
-                      dir="ltr"
-                      required
-                      value={time}
-                      onChange={(event) => {
-                        setTime(event.target.value);
-                        setInvalidDate(false);
-                      }}
-                    />
-                  </div>
+                )}
+                {invalidDate && <p role="alert">{label('invalidDate')}</p>}
+                {editor.kind === 'rate' && (
+                  <ConfigPreviewCard
+                    title={settingsText('admin.settings.comparison', locale)}
+                    current={
+                      <div className="flex flex-col gap-2">
+                        <p>{label(`category.${category}`)}</p>
+                        <p>
+                          {(() => {
+                            const current = rates.find(
+                              (row) =>
+                                row.category === category &&
+                                vatWindowStatus(row.effectiveFrom, row.effectiveUntil) === 'current'
+                            );
+                            return current
+                              ? numbers.percent(current.rateBasisPoints / 10000)
+                              : settingsText('admin.settings.none', locale);
+                          })()}
+                        </p>
+                      </div>
+                    }
+                    draft={
+                      <div className="flex flex-col gap-2">
+                        <p>{label(`category.${category}`)}</p>
+                        <p>
+                          {vatBasisPoints(percent) !== null
+                            ? numbers.percent(vatBasisPoints(percent)! / 10000)
+                            : label('invalid')}
+                        </p>
+                        <p>
+                          {scheduled
+                            ? `${label('schedule')} ${date ? dateText(date.toISOString()) : label('chooseDate')} ${time}`
+                            : label('immediate')}
+                        </p>
+                      </div>
+                    }
+                  />
+                )}
+                <div className="flex gap-2">
+                  <Button type="submit" disabled={commandDisabled(editor.kind)}>
+                    {locked && (
+                      <span
+                        aria-hidden="true"
+                        className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                      />
+                    )}
+                    {label(
+                      locked
+                        ? 'working'
+                        : editor.kind === 'endRate' || editor.kind === 'endOverride'
+                          ? 'end'
+                          : 'save'
+                    )}
+                  </Button>
+                  <Button type="button" variant="outline" onClick={clearEditor}>
+                    {label('cancel')}
+                  </Button>
                 </div>
+              </fieldset>
+              {draft.errors.root && (
+                <p role="alert">
+                  {draft.errors.root.validation?.message ?? draft.errors.root.message}
+                </p>
               )}
-              {invalidDate && <p role="alert">{label('invalidDate')}</p>}
-              {editor.kind === 'rate' && (
-                <ConfigPreviewCard
-                  title={settingsText('admin.settings.comparison', locale)}
-                  current={
-                    <div className="flex flex-col gap-2">
-                      <p>{label(`category.${category}`)}</p>
-                      <p>
-                        {(() => {
-                          const current = rates.find(
-                            (row) =>
-                              row.category === category &&
-                              vatWindowStatus(row.effectiveFrom, row.effectiveUntil) === 'current'
-                          );
-                          return current
-                            ? numbers.percent(current.rateBasisPoints / 10000)
-                            : settingsText('admin.settings.none', locale);
-                        })()}
-                      </p>
-                    </div>
-                  }
-                  draft={
-                    <div className="flex flex-col gap-2">
-                      <p>{label(`category.${category}`)}</p>
-                      <p>
-                        {/^(?:\d+(?:\.\d{1,2})?|\.\d{1,2})$/.test(percent) && Number(percent) <= 100
-                          ? numbers.percent(Number(percent) / 100)
-                          : label('invalid')}
-                      </p>
-                      <p>
-                        {scheduled
-                          ? `${label('schedule')} ${date ? dateText(date.toISOString()) : label('chooseDate')} ${time}`
-                          : label('immediate')}
-                      </p>
-                    </div>
-                  }
-                />
-              )}
-              <div className="flex gap-2">
-                <Button
-                  type="submit"
-                  disabled={
-                    commandDisabled(editor.kind) ||
-                    (scheduled && !date) ||
-                    (editor.kind === 'override' &&
-                      (!products.some((row) => row.id === productId) ||
-                        !rates.some((row) => row.id === rateId)))
-                  }
-                >
-                  {label(
-                    editor.kind === 'endRate' || editor.kind === 'endOverride' ? 'end' : 'save'
-                  )}
-                </Button>
-                <Button type="button" variant="outline" onClick={clearEditor}>
-                  {label('cancel')}
-                </Button>
-              </div>
             </form>
           )}
           <section>
@@ -699,7 +876,7 @@ export default function AdminVatPage() {
                                 <Button
                                   variant="outline"
                                   aria-label={`${label('end')} ${label(`category.${rate.category}`)}`}
-                                  disabled={rateDisabled}
+                                  disabled={rateDisabled || locked || action !== null}
                                   onClick={() =>
                                     open({
                                       kind: 'endRate',
@@ -787,7 +964,7 @@ export default function AdminVatPage() {
                                 <Button
                                   variant="outline"
                                   aria-label={`${label('endOverride')} ${productTitle(row.productId)}`}
-                                  disabled={overrideDisabled}
+                                  disabled={overrideDisabled || locked || action !== null}
                                   onClick={() =>
                                     open({
                                       kind: 'endOverride',
@@ -815,14 +992,33 @@ export default function AdminVatPage() {
         <TeamActionDialog
           action={action}
           summary={recovery}
+          finalFocus={false}
+          onDenied={() => scope.deny()}
+          onValidationError={(fields) => {
+            const allowed = [
+              ...(editor?.kind === 'rate'
+                ? ['category', 'percent']
+                : editor?.kind === 'override'
+                  ? ['productId', 'rateId']
+                  : []),
+              ...(scheduled ? ['date', 'time'] : []),
+            ];
+            return (
+              commandVersion.current === generation.current &&
+              fields.every((field) => typeof field === 'string' && allowed.includes(field)) &&
+              applyServerErrors(fields)
+            );
+          }}
           confirmationDisabled={editor === null || commandDisabled(editor.kind)}
           onClose={() => {
             generation.current++;
             frozenBasis.current = null;
             setAction(null);
           }}
-          onSuccess={((version) => async () => {
+          onSuccess={((version) => async (result) => {
             if (version !== generation.current) return;
+            if (!matchesReceipt(action, result, rates, overrides))
+              throw new Error('Invalid VAT acknowledgement');
             clearEditor();
             setSaved(true);
             rateRead.retry();

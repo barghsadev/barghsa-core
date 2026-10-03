@@ -36,7 +36,17 @@ for (const locale of ['en', 'fa'])
       if (!verified)
         return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
       denied = true;
-      return route.fulfill({ status: 201, json: {} });
+      return route.fulfill({
+        status: 201,
+        json: {
+          id: 'saved',
+          category: 'electricity',
+          rateBasisPoints: 725,
+          effectiveFrom: new Date().toISOString(),
+          effectiveUntil: null,
+          status: 'current',
+        },
+      });
     });
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct';
@@ -214,9 +224,16 @@ for (const locale of ['en', 'fa'] as const) {
             effectiveUntil: null,
           });
         else if (path.endsWith('/overrides/override/end'))
-          overrides.find((row) => row.id === 'override')!.effectiveUntil = until;
-        else rates[1]!.effectiveUntil = until;
-        return route.fulfill({ json: {} });
+          overrides.find((row) => row.id === 'override')!.effectiveUntil =
+            '2026-02-01T00:00:00.000Z';
+        else rates[1]!.effectiveUntil = '2026-02-01T00:00:00.000Z';
+        return route.fulfill({
+          json: path.endsWith('/overrides')
+            ? overrides.at(-1)
+            : path.endsWith('/overrides/override/end')
+              ? overrides.find((row) => row.id === 'override')
+              : rates[1],
+        });
       }
       return route.fulfill({
         json: path.endsWith('/products')

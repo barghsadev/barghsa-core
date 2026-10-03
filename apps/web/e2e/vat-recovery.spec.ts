@@ -49,7 +49,10 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/finance/vat', (route) => {
       if (route.request().method() === 'POST') {
         writes.push(route.request().postDataJSON());
-        return route.fulfill({ json: {} });
+        return route.fulfill({
+          status: 201,
+          json: { ...electricityVatRate, id: 'new-rate', rateBasisPoints: 850 },
+        });
       }
       return route.fulfill(
         fail ? { status: 503, json: {} } : { json: [vatRate, electricityVatRate] }
@@ -110,12 +113,14 @@ for (const locale of ['en', 'fa'] as const) {
     let fail = false,
       removed = false,
       rateReads = 0,
-      overrideReads = 0;
+      overrideReads = 0,
+      overrideWrites = 0;
     await page.route('**/api/admin/finance/vat', (route) => {
       rateReads++;
       return route.fulfill({ json: [vatRate, electricityVatRate] });
     });
     await page.route('**/api/admin/finance/vat/overrides', (route) => {
+      if (route.request().method() === 'POST') overrideWrites++;
       overrideReads++;
       return route.fulfill({ json: [vatOverride] });
     });
@@ -144,7 +149,11 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog).toHaveCount(0);
     await expect(page.locator('#vat-product')).toHaveValue(vatProduct.id);
     await expect(page.locator('#vat-product')).toContainText(label('unavailable'));
-    await expect(page.getByRole('button', { name: label('save'), exact: true })).toBeDisabled();
+    await page.getByRole('button', { name: label('save'), exact: true }).click();
+    await expect(page.locator('#vat-product')).toBeFocused();
+    await expect(page.locator('#vat-product')).toHaveAttribute('aria-invalid', 'true');
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect(overrideWrites).toBe(0);
   });
   test(`VAT timezone recovery keeps scheduling input and denial removes private histories (${locale})`, async ({
     page,

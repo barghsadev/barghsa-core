@@ -13,6 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { InputFieldException } from '../common/input-field.exception.js';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
@@ -93,8 +94,14 @@ function assertCategoryFilter(raw: string | undefined): string | undefined {
   return parsed.data;
 }
 
-function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
-  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }));
+function invalidPayload(issues: z.ZodIssue[], owned: Record<string, string[]>): never {
+  if (
+    issues.length &&
+    issues.every((issue) => issue.path.length === 1 && Object.hasOwn(owned, String(issue.path[0])))
+  ) {
+    throw new InputFieldException(issues.flatMap((issue) => owned[String(issue.path[0])] ?? []));
+  }
+  httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid VAT payload');
 }
 
 /**
@@ -109,9 +116,8 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
  *   verification via `@RequiresStepUp()` (StepUpGuard) — VAT rates are
  *   financial configuration and sensitive writes.
  *
- * The admin web UI slice (table: category/product, rate, effective
- * from, status; add future-effective rate; product override toggle;
- * fa/en dicts, RTL/a11y) is deferred.
+ * The admin web editor preserves history, supports scheduled windows, and
+ * consumes only owned field identifiers for localized validation feedback.
  */
 @ApiTags('Admin · VAT Configuration')
 @ApiBearerAuth()
@@ -211,12 +217,11 @@ export class VatConfigController {
     this.assertFinancePermission(req);
     const parsed = CreateVatRateSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid VAT rate payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      invalidPayload(parsed.error.issues, {
+        category: ['category'],
+        rateBasisPoints: ['percent'],
+        effectiveFrom: ['date', 'time'],
+      });
     }
     return this.service.createRate({
       category: parsed.data.category,
@@ -250,12 +255,7 @@ export class VatConfigController {
     assertUuid(id);
     const parsed = EndVatRateSchema.safeParse(body ?? {});
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid VAT rate payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      invalidPayload(parsed.error.issues, { effectiveUntil: ['date', 'time'] });
     }
     return this.service.endRate({
       id,
@@ -287,12 +287,11 @@ export class VatConfigController {
     this.assertFinancePermission(req);
     const parsed = CreateProductOverrideSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid product override payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      invalidPayload(parsed.error.issues, {
+        productId: ['productId'],
+        vatConfigId: ['rateId'],
+        effectiveFrom: ['date', 'time'],
+      });
     }
     return this.service.createProductOverride({
       productId: parsed.data.productId,
@@ -326,12 +325,7 @@ export class VatConfigController {
     assertUuid(id);
     const parsed = EndProductOverrideSchema.safeParse(body ?? {});
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid product override payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      invalidPayload(parsed.error.issues, { effectiveUntil: ['date', 'time'] });
     }
     return this.service.endProductOverride({
       id,

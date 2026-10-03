@@ -11,7 +11,9 @@ import {
 } from '../test/vat-catalogue-fixtures.js';
 const captured = vi.hoisted(() => ({
   action: null as TeamAction | null,
-  success: null as (() => Promise<void>) | null,
+  success: null as ((result?: unknown) => Promise<void>) | null,
+  validation: null as ((fields: unknown[]) => boolean) | null,
+  denied: null as (() => void) | null,
   close: null as (() => void) | null,
   disabled: false,
 }));
@@ -34,12 +36,18 @@ vi.mock('../components/TeamActionDialog.js', () => ({
     onSuccess,
     onClose,
     confirmationDisabled,
+    onValidationError,
+    onDenied,
   }: {
     action: TeamAction;
-    onSuccess: () => Promise<void>;
+    onSuccess: (result?: unknown) => Promise<void>;
+    onValidationError: (fields: unknown[]) => boolean;
+    onDenied: () => void;
     onClose: () => void;
     confirmationDisabled: boolean;
   }) => {
+    captured.validation = onValidationError;
+    captured.denied = onDenied;
     captured.action = action;
     captured.success = onSuccess;
     captured.close = onClose;
@@ -48,18 +56,24 @@ vi.mock('../components/TeamActionDialog.js', () => ({
   },
 }));
 vi.mock('@barghsa/ui', async () => {
+  const { forwardRef } = await import('react');
   const ui = await vi.importActual<typeof import('@barghsa/ui')>('@barghsa/ui');
   return {
     ...ui,
-    DatePicker: ({ onChange, value }: { onChange: (value: Date) => void; value?: Date }) => (
+    DatePicker: forwardRef<
+      HTMLButtonElement,
+      { onChange: (value: Date) => void; value?: Date; id?: string }
+    >(({ onChange, value, id }, ref) => (
       <button
         type="button"
+        ref={ref}
+        id={id}
         data-selected={value?.toISOString() ?? ''}
         onClick={() => onChange(new Date('2026-11-12T12:00:00Z'))}
       >
         Pick date
       </button>
-    ),
+    )),
   };
 });
 let host: HTMLDivElement, root: Root;
@@ -88,6 +102,8 @@ async function click(text: string) {
   );
   expect(node, text).toBeDefined();
   await act(async () => node!.click());
+  if (text === 'Save rate' || text === 'End rate')
+    await vi.waitFor(() => expect(host.querySelector('form[aria-busy="true"]')).toBeNull());
 }
 async function fill(selector: string, value: string) {
   const node = host.querySelector<HTMLInputElement | HTMLSelectElement>(selector)!;
@@ -328,7 +344,9 @@ it('timezone retry retains drafts and only retries the timezone; changing the ac
   expect(host.querySelector<HTMLInputElement>('#vat-percent')!.value).toBe('7.25');
   expect(host.querySelector<HTMLInputElement>('#vat-time')!.value).toBe('10:15');
   await click('Pick date');
-  expect(host.textContent).not.toContain('Choose a valid date and time');
+  expect(
+    [...host.querySelectorAll('[role=alert]')].map((node) => node.textContent).join('')
+  ).not.toContain('Choose a valid date and time');
   await click('Save rate');
   expect(captured.action?.body).toMatchObject({ effectiveFrom: '2026-11-12T10:15:00.000Z' });
 });
@@ -402,4 +420,90 @@ it('compares the active category rate and fractional draft without committing th
   expect(captured.action).toBeNull();
   await fill('#vat-percent', '1.234');
   expect(preview.textContent).toContain('Check the form values.');
+});
+
+it('keeps localized raw percentage, locks a reviewed draft and accepts only a matching receipt', async () => {
+  mock((path) => response(data(path)));
+  await render();
+  await click('Add rate');
+  await fill('#vat-percent', '۰۷٫۲۵');
+  await click('Save rate');
+  expect(captured.action?.body).toEqual({ category: 'electricity', rateBasisPoints: 725 });
+  expect(host.querySelector<HTMLInputElement>('#vat-percent')!.value).toBe('۰۷٫۲۵');
+  expect(host.querySelector('#vat-percent')!.matches(':disabled')).toBe(true);
+  await expect(
+    captured.success!({ ...electricityVatRate, rateBasisPoints: 726 })
+  ).rejects.toThrow();
+  expect(host.querySelector<HTMLInputElement>('#vat-percent')!.value).toBe('۰۷٫۲۵');
+  await act(async () =>
+    captured.success!({ ...electricityVatRate, id: 'new-rate', rateBasisPoints: 725 })
+  );
+  expect(host.querySelector('#vat-percent')).toBeNull();
+  expect(host.textContent).toContain('Changes saved.');
+});
+it('returns owned API fields to the editor, preserves raw input and refuses foreign fields', async () => {
+  mock((path) => response(data(path)));
+  await render();
+  await click('Add rate');
+  await fill('#vat-percent', ' 7.25 ');
+  await click('Save rate');
+  expect(captured.validation!(['productId'])).toBe(false);
+  await act(async () => {
+    expect(captured.validation!(['percent'])).toBe(true);
+    captured.close!();
+  });
+  await vi.waitFor(() => expect(document.activeElement).toBe(host.querySelector('#vat-percent')));
+  expect(host.querySelector<HTMLInputElement>('#vat-percent')!.value).toBe(' 7.25 ');
+  expect(host.querySelector('#vat-percent')!.getAttribute('aria-invalid')).toBe('true');
+});
+it('denied writes clear all private work and invalidate a previous successful callback', async () => {
+  mock((path) => response(data(path)));
+  await render();
+  await click('Add product override');
+  await fill('#vat-product', vatProduct.id);
+  await fill('#vat-rate', vatRate.id);
+  await click('Save rate');
+  const success = captured.success!;
+  await act(async () => captured.denied!());
+  await act(async () => success(vatOverride));
+  expect(host.querySelector('form')).toBeNull();
+  expect(host.querySelector('table')).toBeNull();
+  expect(host.textContent).not.toContain('Changes saved.');
+});
+
+it.each(['rate', 'override'] as const)(
+  'binds scheduled %s end receipts to the captured target and instant',
+  async (kind) => {
+    mock((path) => response(data(path)));
+    await render();
+    await click(kind === 'rate' ? 'End rate' : 'End override');
+    await act(async () => host.querySelector<HTMLInputElement>('input[type=checkbox]')!.click());
+    await click('Pick date');
+    await fill('#vat-time', '10:15');
+    await click('End rate');
+    const until = '2026-11-12T06:45:00.000Z';
+    expect(captured.action?.body).toEqual({ effectiveUntil: until });
+    const target = kind === 'rate' ? vatRate : vatOverride;
+    await expect(
+      captured.success!({ ...target, effectiveUntil: '2026-11-12T07:45:00.000Z' })
+    ).rejects.toThrow();
+    expect(host.querySelector('#vat-time')).not.toBeNull();
+    await act(async () => captured.success!({ ...target, effectiveUntil: until }));
+    expect(host.querySelector('form')).toBeNull();
+    expect(host.textContent).toContain('Changes saved.');
+  }
+);
+it('accepts the documented same-open-rate no-op while rejecting a rewritten existing version', async () => {
+  mock((path) => response(data(path)));
+  await render();
+  await click('Add rate');
+  await fill('#vat-percent', '9');
+  await act(async () => host.querySelector<HTMLInputElement>('input[type=checkbox]')!.click());
+  await click('Pick date');
+  await click('Save rate');
+  await expect(
+    captured.success!({ ...electricityVatRate, effectiveFrom: '2026-11-12T00:00:00.000Z' })
+  ).rejects.toThrow();
+  await act(async () => captured.success!(electricityVatRate));
+  expect(host.querySelector('form')).toBeNull();
 });
