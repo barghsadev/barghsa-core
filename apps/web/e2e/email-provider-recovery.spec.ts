@@ -1,3 +1,7 @@
+import { providerOtpSend, startProviderOtp, providerOtpProof } from './provider-otp-fixture';
+import { t } from '@barghsa/i18n/admin-ui';
+import { providerFormText } from '@barghsa/i18n/provider-forms';
+import { providerText } from '@barghsa/i18n/providers';
 import { crmShell } from './crm-shell-fixture';
 import { cookieResponse } from './cookie-response';
 import { test, expect } from './coverage-fixture';
@@ -5,6 +9,7 @@ import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'] as const) {
   test(`provider list rejects malformed data and recovers (${locale})`, async ({ page }) => {
     await crmShell(page, locale);
+    await providerOtpSend(page);
     let valid = false;
     await page.route('**/api/admin/email-providers', (route) =>
       route.fulfill({ json: valid ? [] : null })
@@ -37,6 +42,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await crmShell(page, locale);
+    await providerOtpSend(page);
     let saves = 0;
     await page.route('**/api/admin/email-providers', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: [] });
@@ -48,6 +54,7 @@ for (const locale of ['en', 'fa'] as const) {
             : {
                 id: 'new-provider',
                 transport: 'resend',
+                maskedConfig: { from_email: 'sender@example.test', api_key: '********cret' },
                 label: 'Recovery',
                 status: 'draft',
                 lastTestStatus: 'pending',
@@ -79,6 +86,17 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       page.getByLabel(locale === 'fa' ? 'کلید API' : 'API key', { exact: false })
     ).toHaveValue('test-provider-secret');
+    await expect(page.locator('form button[type=submit]')).toBeDisabled();
+    await page
+      .getByRole('button', { name: providerText('admin.providers.refresh', locale), exact: true })
+      .click();
+    await page
+      .getByRole('button', { name: providerFormText('reset', locale), exact: true })
+      .click();
+    await page.locator('#email-provider-label').fill('Recovery');
+    await page.locator('#email-provider-transport').selectOption('resend');
+    await page.locator('#email-provider-apiKey').fill('test-provider-secret');
+    await page.locator('#email-provider-fromEmail').fill('sender@example.test');
     await page.locator('button[type="submit"]').click();
     await expect(page.locator('#email-provider-label')).toHaveCount(0);
     expect(saves).toBe(2);
@@ -100,6 +118,7 @@ for (const locale of ['en', 'fa'] as const) {
     let testCalls = 0;
     let activateCalls = 0;
     await crmShell(page, locale);
+    await providerOtpSend(page);
     await page.route('**/api/admin/email-providers**', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: [provider] });
       const path = new URL(route.request().url()).pathname;
@@ -162,7 +181,7 @@ for (const locale of ['en', 'fa'] as const) {
 }
 
 for (const locale of ['en', 'fa'] as const) {
-  test(`provider save completes password step-up with the captured configuration (${locale})`, async ({
+  test(`provider save completes OTP step-up with the captured configuration (${locale})`, async ({
     page,
     baseURL,
   }) => {
@@ -172,6 +191,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.context().addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: currentCsrf }]);
     const attempts: unknown[] = [];
     await crmShell(page, locale);
+    await providerOtpSend(page);
     await page.route('**/api/admin/email-providers', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: [] });
       expect(route.request().headers()['x-csrf-token']).toBe(currentCsrf);
@@ -182,6 +202,7 @@ for (const locale of ['en', 'fa'] as const) {
               json: {
                 id: 'new',
                 transport: 'resend',
+                maskedConfig: { from_email: 'sender@example.test', api_key: '********-key' },
                 label: 'Protected provider',
                 status: 'draft',
                 lastTestStatus: 'pending',
@@ -190,14 +211,14 @@ for (const locale of ['en', 'fa'] as const) {
           : { status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } }
       );
     });
-    await page.route('**/api/auth/step-up', (route) => {
+    await page.route('**/api/auth/step-up/otp/verify', (route) => {
       expect(route.request().headers()['x-csrf-token']).toBe(currentCsrf);
-      verified = route.request().postDataJSON().password === 'correct';
+      verified = route.request().postDataJSON().code === '123456';
       if (!verified) return route.fulfill({ status: 401, json: {} });
       currentCsrf = 'rotated-provider-csrf';
       return cookieResponse(route, {
         headers: { 'set-cookie': `barghsa_csrf=${currentCsrf}; Path=/; SameSite=Strict` },
-        json: {},
+        json: providerOtpProof(),
       });
     });
     await page.goto('/admin/providers');
@@ -214,12 +235,16 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('button[type="submit"]').click();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
-    const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
-    await dialog.locator('input[type="password"]').fill('wrong');
+    await startProviderOtp(page, locale);
+    const confirm = dialog.getByRole('button', {
+      name: t('admin.stepUp.verify', locale),
+      exact: true,
+    });
+    await dialog.locator('input[autocomplete=one-time-code]').fill('000000');
     await confirm.click();
     await expect(dialog.getByRole('alert')).toBeVisible();
     expect(attempts).toHaveLength(1);
-    await dialog.locator('input[type="password"]').fill('correct');
+    await dialog.locator('input[autocomplete=one-time-code]').fill('123456');
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     await expect(page.locator('#email-provider-label')).toHaveCount(0);
@@ -234,7 +259,7 @@ for (const locale of ['en', 'fa'] as const) {
 }
 
 for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] as const) {
-  test(`provider ${operation} resumes after password verification`, async ({ page }) => {
+  test(`provider ${operation} resumes after OTP verification`, async ({ page }) => {
     let verified = false;
     const initialState =
       operation === 'disable' ? 'active' : operation === 'rollback' ? 'disabled' : 'draft';
@@ -247,6 +272,7 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
     };
     const attempts: string[] = [];
     await crmShell(page, 'en');
+    await providerOtpSend(page);
     await page.route('**/api/admin/email-providers**', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: [provider] });
       const path = new URL(route.request().url()).pathname;
@@ -272,9 +298,9 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
             : provider,
       });
     });
-    await page.route('**/api/auth/step-up', (route) => {
-      verified = route.request().postDataJSON().password === 'correct';
-      return route.fulfill({ status: verified ? 200 : 401, json: {} });
+    await page.route('**/api/auth/step-up/otp/verify', (route) => {
+      verified = route.request().postDataJSON().code === '123456';
+      return route.fulfill({ status: verified ? 200 : 401, json: providerOtpProof() });
     });
     page.on('dialog', (dialog) => dialog.accept());
     await page.goto('/admin/providers');
@@ -292,8 +318,9 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
       .getByRole('button', { name: names[operation], exact: operation !== 'test-connection' })
       .click();
     const dialog = page.getByRole('dialog');
-    await dialog.locator('input[type="password"]').fill('correct');
-    await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
+    await startProviderOtp(page, 'en');
+    await dialog.locator('input[autocomplete=one-time-code]').fill('123456');
+    await dialog.getByRole('button', { name: t('admin.stepUp.verify', 'en'), exact: true }).click();
     await expect(dialog).toHaveCount(0);
     expect(attempts).toEqual(
       Array(2).fill(`/api/admin/email-providers/protected-row/${operation}`)
@@ -317,18 +344,26 @@ test('provider draft edit preserves its stored secret through step-up', async ({
   let verified = false;
   const attempts: unknown[] = [];
   await crmShell(page, 'en');
+  await providerOtpSend(page);
   await page.route('**/api/admin/email-providers**', (route) => {
     if (route.request().method() === 'GET') return route.fulfill({ json: [provider] });
     expect(route.request().method()).toBe('PUT');
     expect(new URL(route.request().url()).pathname).toBe('/api/admin/email-providers/draft-row');
     attempts.push(route.request().postDataJSON());
     return route.fulfill(
-      verified ? { json: provider } : { status: 403, json: { requiresStepUp: true } }
+      verified
+        ? {
+            json: {
+              ...provider,
+              maskedConfig: { ...provider.maskedConfig, ...route.request().postDataJSON().config },
+            },
+          }
+        : { status: 403, json: { requiresStepUp: true } }
     );
   });
-  await page.route('**/api/auth/step-up', (route) => {
+  await page.route('**/api/auth/step-up/otp/verify', (route) => {
     verified = true;
-    return route.fulfill({ json: {} });
+    return route.fulfill({ json: providerOtpProof() });
   });
   await page.goto('/admin/providers');
 
@@ -341,8 +376,9 @@ test('provider draft edit preserves its stored secret through step-up', async ({
   await page.getByLabel('From email', { exact: false }).fill('changed@example.test');
   await page.locator('button[type="submit"]').click();
   const dialog = page.getByRole('dialog');
-  await dialog.locator('input[type="password"]').fill('correct');
-  await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
+  await startProviderOtp(page, 'en');
+  await dialog.locator('input[autocomplete=one-time-code]').fill('123456');
+  await dialog.getByRole('button', { name: t('admin.stepUp.verify', 'en'), exact: true }).click();
   await expect(dialog).toHaveCount(0);
   expect(attempts).toEqual(
     Array(2).fill({ label: 'Existing provider', config: { from_email: 'changed@example.test' } })

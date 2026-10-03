@@ -547,3 +547,90 @@ for (const channel of ['email', 'sms']) {
     });
   }
 }
+
+for (const [family, config, fields] of [
+  ['email', { port: 2.5, connection_timeout: 601 }, ['port', 'connectionTimeout']],
+  ['email', { from_email: 'invalid', password: 's'.repeat(2049) }, ['password', 'fromEmail']],
+  ['sms', { api_key: 'x'.repeat(1025), sender: '3000' }, ['key']],
+  [
+    'sms',
+    {
+      api_key: 'fixture-key',
+      sender: '3000',
+      template_mappings: [{ event_key: 'auth.otp', template_id: '42', variables: { code: 4 } }],
+    },
+    ['mappings'],
+  ],
+] as const) {
+  it(`${family} configuration input returns only owned fields and rolls back`, async () => {
+    const before = await snapshot(`${family}_provider_configs`);
+    const response = await fetch(`${http.base}/api/admin/${family}-providers`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        label: 'Fixture',
+        ...(family === 'email' ? { transport: 'smtp' } : {}),
+        config,
+      }),
+    });
+    expect(response.status).toBe(400);
+    const body = (await response.json()) as { error: { fields: string[] } };
+    expect(body.error.fields).toEqual(fields);
+    expect(JSON.stringify(body)).not.toContain('fixture-key');
+    expect(JSON.stringify(body)).not.toContain('ssssssss');
+    expect(await snapshot(`${family}_provider_configs`)).toEqual(before);
+  });
+}
+it('provider authorization takes precedence over invalid input feedback', async () => {
+  await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='provider-writer'");
+  for (const family of ['email', 'sms']) {
+    const response = await fetch(`${http.base}/api/admin/${family}-providers`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ label: '', config: { api_key: 'submitted-secret' } }),
+    });
+    expect(response.status).toBe(403);
+    expect(await response.json()).not.toHaveProperty('error.fields');
+  }
+});
+
+it('email edits clear optional public values while retaining encrypted credentials', async () => {
+  const created = await fetch(`${http.base}/api/admin/email-providers`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      transport: 'resend',
+      label: 'Clear optional fields',
+      config: {
+        api_key: 'fixture-key-to-preserve',
+        from_email: 'sender@example.test',
+        reply_to: 'reply@example.test',
+        sending_domain: 'example.test',
+      },
+    }),
+  });
+  expect(created.status).toBe(201);
+  const row = (await created.json()) as { id: string };
+  const before = (
+    await http.pool.query('SELECT config FROM email_provider_configs WHERE id=$1', [row.id])
+  ).rows[0].config;
+  const updated = await fetch(`${http.base}/api/admin/email-providers/${row.id}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ config: { reply_to: null, sending_domain: null } }),
+  });
+  expect(updated.status).toBe(200);
+  const receipt = (await updated.json()) as { maskedConfig: Record<string, unknown> };
+  expect(receipt.maskedConfig).not.toHaveProperty('reply_to');
+  expect(receipt.maskedConfig).not.toHaveProperty('sending_domain');
+  const after = (
+    await http.pool.query(
+      'SELECT config,last_test_status FROM email_provider_configs WHERE id=$1',
+      [row.id]
+    )
+  ).rows[0];
+  expect(after.config.api_key).toBe(before.api_key);
+  expect(after.config.api_key).toMatch(/^v1:/);
+  expect(JSON.stringify(receipt)).not.toContain('fixture-key-to-preserve');
+  expect(after.last_test_status).toBe('pending');
+});

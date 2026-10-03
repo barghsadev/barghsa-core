@@ -1,3 +1,5 @@
+import { providerOtpSend, startProviderOtp, providerOtpProof } from './provider-otp-fixture';
+import { providerFormText } from '@barghsa/i18n/provider-forms';
 import { crmShell } from './crm-shell-fixture';
 import { cookieResponse } from './cookie-response';
 import { test, expect } from './coverage-fixture';
@@ -136,10 +138,26 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('textbox', { name: `${text('variable')} 2.1`, exact: true }).fill('code');
     await page.getByRole('textbox', { name: `${text('parameter')} 2.1`, exact: true }).fill('CODE');
     await panel.getByRole('button', { name: text('save'), exact: true }).click();
-    await expect(panel.getByRole('alert')).toContainText(text('unavailable'));
+    await expect(panel.getByRole('alert').filter({ hasText: text('unavailable') })).toBeVisible();
     await expect(
       page.getByRole('combobox', { name: `${text('language')} 2`, exact: true })
     ).toHaveValue('en');
+    await expect(panel.locator('form button[type=submit]')).toBeDisabled();
+    await panel.getByRole('button', { name: text('refresh'), exact: true }).click();
+    await panel
+      .getByRole('button', { name: providerFormText('reset', locale), exact: true })
+      .click();
+    await page
+      .getByRole('combobox', { name: `${text('language')} 1`, exact: true })
+      .selectOption('fa');
+    await panel.getByRole('button', { name: text('addMapping'), exact: true }).click();
+    await page.getByRole('combobox', { name: `${text('event')} 2`, exact: true }).fill('auth.otp');
+    await page
+      .getByRole('combobox', { name: `${text('language')} 2`, exact: true })
+      .selectOption('en');
+    await page.getByRole('textbox', { name: `${text('template')} 2`, exact: true }).fill('43');
+    await page.getByRole('textbox', { name: `${text('variable')} 2.1`, exact: true }).fill('code');
+    await page.getByRole('textbox', { name: `${text('parameter')} 2.1`, exact: true }).fill('CODE');
     await panel.getByRole('button', { name: text('save'), exact: true }).click();
     await expect(panel.getByRole('status').filter({ hasText: text('saved') })).toBeVisible();
     await expect(page.locator('#sms-test-event option')).toHaveCount(1);
@@ -214,8 +232,25 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('textbox', { name: `${text('parameter')} 2.1`, exact: true })
       .fill('AMOUNT');
     await panel.getByRole('button', { name: text('save'), exact: true }).click();
-    await expect(panel.getByRole('alert')).toContainText(text('unavailable'));
+    await expect(panel.getByRole('alert').filter({ hasText: text('unavailable') })).toBeVisible();
     await expect(page.locator('#sms-timeout')).toHaveValue('25');
+    await expect(panel.locator('form button[type=submit]')).toBeDisabled();
+    await panel.getByRole('button', { name: text('refresh'), exact: true }).click();
+    await panel
+      .getByRole('button', { name: providerFormText('reset', locale), exact: true })
+      .click();
+    await page.locator('#sms-timeout').fill('25');
+    await panel.getByRole('button', { name: text('addMapping'), exact: true }).click();
+    await page
+      .getByRole('combobox', { name: `${text('event')} 2`, exact: true })
+      .fill('invoice.created');
+    await page.getByRole('textbox', { name: `${text('template')} 2`, exact: true }).fill('43');
+    await page
+      .getByRole('textbox', { name: `${text('variable')} 2.1`, exact: true })
+      .fill('amount');
+    await page
+      .getByRole('textbox', { name: `${text('parameter')} 2.1`, exact: true })
+      .fill('AMOUNT');
     await panel.getByRole('button', { name: text('save'), exact: true }).click();
     await expect(page.locator('#sms-key')).toHaveCount(0);
     await expect(panel.getByRole('status').filter({ hasText: text('saved') })).toHaveText(
@@ -258,8 +293,20 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('textbox', { name: `${text('variable')} 1.1`, exact: true }).fill('code');
     await page.getByRole('textbox', { name: `${text('parameter')} 1.1`, exact: true }).fill('CODE');
     await panel.getByRole('button', { name: text('save'), exact: true }).click();
-    await expect(panel.getByRole('alert')).toBeVisible();
+    await expect(panel.getByRole('alert').filter({ hasText: text('unavailable') })).toBeVisible();
     await expect(page.locator('#sms-key')).toHaveValue('new-test-secret');
+    await expect(panel.locator('form button[type=submit]')).toBeDisabled();
+    await panel.getByRole('button', { name: text('refresh'), exact: true }).click();
+    await panel
+      .getByRole('button', { name: providerFormText('reset', locale), exact: true })
+      .click();
+    await page.locator('#sms-label').fill('Created SMS');
+    await page.locator('#sms-sender').fill('3001');
+    await page.locator('#sms-key').fill('new-test-secret');
+    await page.getByRole('combobox', { name: `${text('event')} 1`, exact: true }).fill('auth.otp');
+    await page.getByRole('textbox', { name: `${text('template')} 1`, exact: true }).fill('42');
+    await page.getByRole('textbox', { name: `${text('variable')} 1.1`, exact: true }).fill('code');
+    await page.getByRole('textbox', { name: `${text('parameter')} 1.1`, exact: true }).fill('CODE');
     await panel.getByRole('button', { name: text('save'), exact: true }).click();
     await expect(page.locator('#sms-key')).toHaveCount(0);
     await expect(panel.getByRole('status').filter({ hasText: text('saved') })).toHaveText(
@@ -285,12 +332,13 @@ for (const locale of ['en', 'fa'] as const) {
       variables: { code: 'INVOICE_CODE' },
     });
     await page.route('**/api/admin/sms-providers', (route) => route.fulfill({ json: [row] }));
-    await page.route('**/api/auth/step-up', (route) => {
-      if (route.request().postDataJSON().password !== 'right-password')
+    await providerOtpSend(page);
+    await page.route('**/api/auth/step-up/otp/verify', (route) => {
+      if (route.request().postDataJSON().code !== '123456')
         return route.fulfill({ status: 401, json: {} });
       verified = true;
       return cookieResponse(route, {
-        json: {},
+        json: providerOtpProof(),
         headers: { 'set-cookie': 'barghsa_csrf=sms-current; Path=/; SameSite=Strict' },
       });
     });
@@ -345,11 +393,12 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(preview).toContainText('test-code');
     await preview.getByRole('button', { name: text('test'), exact: true }).click();
     const dialog = page.getByRole('dialog');
-    await dialog.locator('input[type=password]').fill('wrong-password');
+    await startProviderOtp(page, locale);
+    await dialog.locator('input[autocomplete=one-time-code]').fill('000000');
     await dialog.locator('button[type=submit]').click();
     await expect(dialog.getByRole('alert')).toBeVisible();
     expect(tests).toBe(0);
-    await dialog.locator('input[type=password]').fill('right-password');
+    await dialog.locator('input[autocomplete=one-time-code]').fill('123456');
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await expect(panel.getByRole('alert')).toContainText(text('failed'));

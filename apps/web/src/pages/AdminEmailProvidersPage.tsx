@@ -11,7 +11,26 @@ import { ProviderAlertHistory } from '../components/ProviderAlertHistory.js';
 import { providerText } from '@barghsa/i18n/providers';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { FormEvent, ReactNode } from 'react';
+import { cloneElement, type FormEvent, type ReactElement } from 'react';
+import { useWizardForm, type WizardFieldBinding } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import {
+  CatalogueSaveButton,
+  catalogueRootMessage,
+} from '../components/CatalogueEditorFeedback.js';
+import { providerFormText } from '@barghsa/i18n/provider-forms';
+import {
+  emptyEmailDraft,
+  savedForm,
+  smtpConfig,
+  resendConfig,
+  emailInvalidFields,
+  emailConfigFor,
+  type EmailDraft,
+  type SmtpForm,
+  type ResendForm,
+  type TransportForm,
+} from '../lib/provider-form.js';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
 import {
@@ -58,117 +77,6 @@ const TEST_COLORS: Record<TestStatus, string> = {
 // Transport-specific form state
 // ---------------------------------------------------------------------------
 
-interface SmtpForm {
-  host: string;
-  port: string;
-  security: 'TLS' | 'STARTTLS';
-  username: string;
-  password: string;
-  connectionTimeout: string;
-  commandTimeout: string;
-  fromName: string;
-  fromEmail: string;
-  replyTo: string;
-}
-
-interface ResendForm {
-  apiKey: string;
-  fromName: string;
-  fromEmail: string;
-  replyTo: string;
-  sendingDomain: string;
-}
-
-type TransportForm = SmtpForm | ResendForm;
-
-const EMPTY_SMTP: SmtpForm = {
-  host: '',
-  port: '587',
-  security: 'STARTTLS',
-  username: '',
-  password: '',
-  connectionTimeout: '10',
-  commandTimeout: '15',
-  fromName: '',
-  fromEmail: '',
-  replyTo: '',
-};
-
-const EMPTY_RESEND: ResendForm = {
-  apiKey: '',
-  fromName: '',
-  fromEmail: '',
-  replyTo: '',
-  sendingDomain: '',
-};
-
-function savedForm(provider: EmailProvider): TransportForm {
-  const value = provider.maskedConfig;
-  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new ProviderRequestError();
-  const config = value as Record<string, unknown>;
-  const field = (key: string, required = false): string => {
-    const value = config[key] === undefined ? '' : config[key];
-    if (typeof value !== 'string' || (required && !value.trim())) throw new ProviderRequestError();
-    return value;
-  };
-  const integer = (key: string, fallback: number, max: number): string => {
-    const value = config[key] === undefined ? fallback : config[key];
-    if (typeof value !== 'number' || !Number.isInteger(value) || value < 1 || value > max)
-      throw new ProviderRequestError();
-    return String(value);
-  };
-  const common = {
-    fromName: field('from_name'),
-    fromEmail: field('from_email', true),
-    replyTo: field('reply_to'),
-  };
-  if (provider.transport === 'resend') {
-    return { ...common, apiKey: '', sendingDomain: field('sending_domain') };
-  }
-  const security = config.security === undefined ? 'STARTTLS' : config.security;
-  if (security !== 'TLS' && security !== 'STARTTLS') throw new ProviderRequestError();
-  return {
-    ...common,
-    host: field('host', true),
-    port: integer('port', 587, 65535),
-    security,
-    username: field('username'),
-    password: '',
-    connectionTimeout: integer('connection_timeout', 10, 600),
-    commandTimeout: integer('command_timeout', 15, 600),
-  };
-}
-
-function smtpConfig(form: SmtpForm): Record<string, unknown> {
-  const config: Record<string, unknown> = {
-    host: form.host,
-    port: Number(form.port),
-    security: form.security,
-    connection_timeout: Number(form.connectionTimeout),
-    command_timeout: Number(form.commandTimeout),
-    from_email: form.fromEmail,
-  };
-  if (form.username) config.username = form.username;
-  if (form.password) config.password = form.password;
-  if (form.fromName) config.from_name = form.fromName;
-  if (form.replyTo) config.reply_to = form.replyTo;
-  return config;
-}
-
-function resendConfig(form: ResendForm): Record<string, unknown> {
-  const config: Record<string, unknown> = {
-    from_email: form.fromEmail,
-  };
-  // Only include the API key when a new value was provided. When editing, an
-  // empty apiKey means "keep the stored key" (server merges the patch over the
-  // existing config), mirroring how the SMTP password is treated.
-  if (form.apiKey) config.api_key = form.apiKey;
-  if (form.fromName) config.from_name = form.fromName;
-  if (form.replyTo) config.reply_to = form.replyTo;
-  if (form.sendingDomain) config.sending_domain = form.sendingDomain;
-  return config;
-}
-
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
@@ -184,6 +92,7 @@ export default function AdminEmailProvidersPage() {
     action: TeamAction;
     basis: string;
     onSuccess: (result: unknown) => Promise<void>;
+    save?: boolean;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -192,19 +101,55 @@ export default function AdminEmailProvidersPage() {
   const [showEditor, setShowEditor] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [, setEditStatus] = useState<Status | null>(null);
-  const [label, setLabel] = useState('');
   const [transport, setTransport] = useState<Transport>('smtp');
-  const [form, setForm] = useState<TransportForm>(EMPTY_SMTP);
+  const messages = Object.fromEntries(
+    Object.keys(emptyEmailDraft()).map((key) => [
+      key,
+      providerFormText(
+        key === 'password'
+          ? 'passwordMessage'
+          : key === 'apiKey'
+            ? 'apiKeyMessage'
+            : (key as Exclude<keyof EmailDraft, 'password' | 'apiKey'>),
+        uiLocale
+      ),
+    ])
+  ) as Record<keyof EmailDraft, string>;
+  const editor = useWizardForm<EmailDraft>(
+    async () => {
+      const { providerFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return providerFormSchema(messages, (draft) =>
+        emailInvalidFields(draft, transport, editId !== null)
+      );
+    },
+    emptyEmailDraft,
+    providerFormText('validationUnavailable', uiLocale)
+  );
+  const form = editor.values;
+  const [label, setLabel] = editor.field('label');
+  const generation = useRef(0);
+  const [uncertain, setUncertain] = useState(false);
+  const [recovered, setRecovered] = useState(false);
+  const fieldErrors = useActionFieldErrors(
+    editor.form,
+    messages,
+    providerText('admin.providers.error.save', uiLocale)
+  );
 
   // Per-row test outcome cache
   const [testOutcome, setTestOutcome] = useState<Record<string, TestConnectionOutcome>>({});
 
+  const resetForm = editor.form.reset;
   const clearPrivate = useCallback(() => {
     setShowEditor(false);
     setEditId(null);
     setEditBasis(null);
-    setForm(EMPTY_SMTP);
-    setLabel('');
+    resetForm(emptyEmailDraft());
+    generation.current++;
+    inFlight.current = false;
+    editor.setValidationPending(false);
+    setUncertain(false);
+    setRecovered(false);
     setTransport('smtp');
     setProtectedAction(null);
     setTestOutcome({});
@@ -212,7 +157,7 @@ export default function AdminEmailProvidersPage() {
     setNotice(null);
     setInvalidConfig(false);
     setBusy(false);
-  }, []);
+  }, [resetForm, editor.setValidationPending]);
   const scope = useCatalogueScope(clearPrivate);
   const catalogue = useProviderCatalogue(scope, listProviders);
   const providers = catalogue.data ?? [];
@@ -249,9 +194,13 @@ export default function AdminEmailProvidersPage() {
   }, [catalogue.refresh]);
   useEffect(() => {
     if (protectedAction && protectedAction.basis !== basis) setProtectedAction(null);
-    setBusy(false);
+    if (!inFlight.current) setBusy(false);
   }, [basis, protectedAction]);
-  const recover = () => (scope.denied ? scope.recover() : void fetchAll());
+  const recover = async () => {
+    if (scope.denied) return scope.recover();
+    await fetchAll();
+    if (!inFlight.current) setRecovered(true);
+  };
   const recovery = (
     <div className="space-y-2">
       <Button type="button" variant="outline" disabled={loading || busy} onClick={recover}>
@@ -263,13 +212,22 @@ export default function AdminEmailProvidersPage() {
     </div>
   );
 
+  function resetRecovery() {
+    generation.current++;
+    inFlight.current = false;
+    setBusy(false);
+    setUncertain(false);
+    setRecovered(false);
+    editor.setValidationPending(false);
+  }
   function openCreate() {
+    resetRecovery();
     setEditId(null);
     setEditBasis(null);
     setEditStatus(null);
     setLabel('');
     setTransport('smtp');
-    setForm(EMPTY_SMTP);
+    editor.form.reset(emptyEmailDraft());
     setError(null);
     setNotice(null);
     setShowEditor(true);
@@ -288,21 +246,21 @@ export default function AdminEmailProvidersPage() {
       setInvalidConfig(true);
       return;
     }
+    resetRecovery();
     setEditId(p.id);
     setEditBasis(rowBasis(p, false));
     setEditStatus(p.status);
-    setLabel(p.label);
     setTransport(p.transport);
-    setForm(saved);
+    editor.form.reset({ ...emptyEmailDraft(), ...saved, label: p.label });
     setError(null);
     setNotice(null);
     setShowEditor(true);
   }
 
   function closeEditor() {
+    resetRecovery();
     setShowEditor(false);
-    setForm(transport === 'smtp' ? { ...EMPTY_SMTP } : { ...EMPTY_RESEND });
-    setLabel('');
+    editor.form.reset(emptyEmailDraft());
     setEditId(null);
     setEditBasis(null);
     setEditStatus(null);
@@ -311,24 +269,27 @@ export default function AdminEmailProvidersPage() {
   function handleTransportChange(next: Transport) {
     setTransport(next);
     // Reset the form when switching transports to avoid stale secret fields.
-    setForm(next === 'smtp' ? { ...EMPTY_SMTP } : { ...EMPTY_RESEND });
+    generation.current++;
+    editor.form.reset({ ...emptyEmailDraft(), label });
   }
 
-  function setField(key: string, value: string) {
-    setForm((prev) => ({ ...prev, [key]: value }));
+  function setField(key: keyof EmailDraft, value: string) {
+    editor.field(key)[1](value as EmailDraft[typeof key]);
   }
 
   function offerStepUp(
     error: unknown,
     title: string,
     description: string,
-    onSuccess: (result: unknown) => Promise<void>
+    onSuccess: (result: unknown) => Promise<void>,
+    save = false
   ): boolean {
     if (!(error instanceof ProviderStepUpError)) return false;
     setProtectedAction({
       basis,
       action: { ...error.action, title, description, requiresOtp: true },
       onSuccess,
+      save,
     });
     return true;
   }
@@ -337,90 +298,119 @@ export default function AdminEmailProvidersPage() {
     e.preventDefault();
     if (
       inFlight.current ||
+      editor.isPending() ||
       protectedAction ||
       busy ||
       loading ||
       loadFailed ||
       scope.denied ||
-      staleEditor
+      staleEditor ||
+      uncertain
     )
       return;
     inFlight.current = true;
-    const current = capture();
+    const ticket = ++generation.current;
+    const validScope = capture();
+    const current = () => ticket === generation.current && validScope();
+    editor.setValidationPending(true);
     setBusy(true);
     setError(null);
     setNotice(null);
+    const captured: { value?: EmailDraft } = {};
     try {
-      // Client-side required-field validation mirrors the server schemas.
-      if (!label.trim()) throw new Error(providerText('admin.providers.field.required', uiLocale));
-      if (transport === 'smtp') {
-        const f = form as SmtpForm;
-        if (!f.host.trim() || !f.fromEmail.trim()) {
-          throw new Error(providerText('admin.providers.field.required', uiLocale));
-        }
-        if (editId) {
-          await updateProvider(editId, { label: label.trim(), config: smtpConfig(f) });
-        } else {
-          await createProvider(transport, label.trim(), smtpConfig(f));
-        }
-      } else {
-        const f = form as ResendForm;
-        // from_email is always required; the API key is only required on
-        // create. When editing, an empty apiKey preserves the stored key
-        // (server merges the config patch over the existing config).
-        if (!f.fromEmail.trim() || (!editId && !f.apiKey.trim())) {
-          throw new Error(providerText('admin.providers.field.required', uiLocale));
-        }
-        if (editId) {
-          await updateProvider(editId, { label: label.trim(), config: resendConfig(f) });
-        } else {
-          await createProvider(transport, label.trim(), resendConfig(f));
-        }
-      }
-      if (!current()) return;
-      setTestOutcome({});
-      closeEditor();
-      await fetchAll();
-    } catch (err) {
-      if (!current()) return;
-      if (err instanceof ProviderRequestError && err.denied) {
-        scope.deny();
+      await editor.form.handleSubmit((value) => {
+        captured.value = value;
+      })();
+      if (!captured.value || !current() || loading || loadFailed || scope.denied || staleEditor)
         return;
-      }
-      if (
-        offerStepUp(
-          err,
-          providerText(
-            editId ? 'admin.providers.update.title' : 'admin.providers.create.title',
-            uiLocale
-          ),
-          label.trim(),
-          async (result) => {
-            if (!current()) return;
-            const saved = validateProviderResult(result, 'draft', editId ?? undefined);
-            if (saved.transport !== transport) throw new ProviderRequestError();
-            setTestOutcome({});
-            closeEditor();
-            await fetchAll();
-          }
-        )
-      )
-        return;
-      setError(
-        err instanceof Error && !(err instanceof ProviderRequestError)
-          ? err.message
-          : providerText('admin.providers.error.save', uiLocale)
+      const draft = captured.value,
+        id = editId,
+        kind = transport;
+      const config = emailConfigFor(
+        draft,
+        kind,
+        providers.find((p) => p.id === id)
       );
+      const accept = async (result: unknown) => {
+        if (!current()) return;
+        try {
+          const saved = validateProviderResult(result, 'draft', id ?? undefined);
+          if (saved.transport !== kind || saved.label !== draft.label.trim())
+            throw new ProviderRequestError();
+          const savedDraft = savedForm(saved);
+          const publicConfig =
+            kind === 'smtp'
+              ? smtpConfig(savedDraft as SmtpForm)
+              : resendConfig(savedDraft as ResendForm);
+          for (const [key, value] of Object.entries(config)) {
+            if (
+              !['password', 'api_key'].includes(key) &&
+              publicConfig[key] !== (value === null ? undefined : value)
+            )
+              throw new ProviderRequestError();
+          }
+        } catch {
+          setUncertain(true);
+          setRecovered(false);
+          throw new ProviderRequestError(false, [], true);
+        }
+        setTestOutcome({});
+        closeEditor();
+        await fetchAll();
+      };
+      try {
+        const result = id
+          ? await updateProvider(id, { label: draft.label.trim(), config })
+          : await createProvider(kind, draft.label.trim(), config);
+        if (!current()) {
+          if (ticket === generation.current) {
+            setUncertain(true);
+            setRecovered(false);
+          }
+          return;
+        }
+        await accept(result);
+      } catch (err) {
+        if (!current()) return;
+        if (err instanceof ProviderRequestError && err.denied) {
+          scope.deny();
+          return;
+        }
+        if (err instanceof ProviderRequestError && fieldErrors(err.fields)) return;
+        if (
+          offerStepUp(
+            err,
+            providerText(
+              id ? 'admin.providers.update.title' : 'admin.providers.create.title',
+              uiLocale
+            ),
+            draft.label.trim(),
+            accept,
+            true
+          )
+        )
+          return;
+        if (err instanceof ProviderRequestError && err.uncertain) {
+          setUncertain(true);
+          setRecovered(false);
+        }
+        setError(providerText('admin.providers.error.save', uiLocale));
+      }
     } finally {
-      inFlight.current = false;
-      if (current()) setBusy(false);
+      if (ticket === generation.current) {
+        inFlight.current = false;
+        setBusy(false);
+        editor.setValidationPending(false);
+      }
     }
   }
 
   async function handleTest(p: EmailProvider, recipient: string) {
     if (inFlight.current || protectedAction || loading || loadFailed || scope.denied) return;
     inFlight.current = true;
-    const current = capture();
+    const ticket = ++generation.current;
+    const validScope = capture();
+    const current = () => ticket === generation.current && validScope();
     setBusy(true);
     setError(null);
     setNotice(null);
@@ -455,15 +445,19 @@ export default function AdminEmailProvidersPage() {
         [p.id]: { ok: false, error: providerText('admin.providers.error.test', uiLocale) },
       }));
     } finally {
-      inFlight.current = false;
-      if (current()) setBusy(false);
+      if (ticket === generation.current) {
+        inFlight.current = false;
+        setBusy(false);
+      }
     }
   }
 
   async function handleActivate(p: EmailProvider) {
     if (inFlight.current || protectedAction || loading || loadFailed || scope.denied) return;
     inFlight.current = true;
-    const current = capture();
+    const ticket = ++generation.current;
+    const validScope = capture();
+    const current = () => ticket === generation.current && validScope();
     setBusy(true);
     setError(null);
     setNotice(null);
@@ -492,8 +486,10 @@ export default function AdminEmailProvidersPage() {
         return;
       setError(providerText('admin.providers.error.activate', uiLocale));
     } finally {
-      inFlight.current = false;
-      if (current()) setBusy(false);
+      if (ticket === generation.current) {
+        inFlight.current = false;
+        setBusy(false);
+      }
     }
   }
 
@@ -501,7 +497,9 @@ export default function AdminEmailProvidersPage() {
     if (!window.confirm(providerText('admin.providers.disableConfirm', uiLocale))) return;
     if (inFlight.current || protectedAction || loading || loadFailed || scope.denied) return;
     inFlight.current = true;
-    const current = capture();
+    const ticket = ++generation.current;
+    const validScope = capture();
+    const current = () => ticket === generation.current && validScope();
     setBusy(true);
     setError(null);
     setNotice(null);
@@ -530,8 +528,10 @@ export default function AdminEmailProvidersPage() {
         return;
       setError(providerText('admin.providers.error.disable', uiLocale));
     } finally {
-      inFlight.current = false;
-      if (current()) setBusy(false);
+      if (ticket === generation.current) {
+        inFlight.current = false;
+        setBusy(false);
+      }
     }
   }
 
@@ -539,7 +539,9 @@ export default function AdminEmailProvidersPage() {
     if (!window.confirm(providerText('admin.providers.rollbackConfirm', uiLocale))) return;
     if (inFlight.current || protectedAction || loading || loadFailed || scope.denied) return;
     inFlight.current = true;
-    const current = capture();
+    const ticket = ++generation.current;
+    const validScope = capture();
+    const current = () => ticket === generation.current && validScope();
     setBusy(true);
     setError(null);
     setNotice(null);
@@ -571,8 +573,10 @@ export default function AdminEmailProvidersPage() {
         return;
       setError(providerText('admin.providers.error.rollback', uiLocale));
     } finally {
-      inFlight.current = false;
-      if (current()) setBusy(false);
+      if (ticket === generation.current) {
+        inFlight.current = false;
+        setBusy(false);
+      }
     }
   }
 
@@ -652,11 +656,42 @@ export default function AdminEmailProvidersPage() {
       {/* Editor */}
       {showEditor && (
         <form
+          noValidate
           onSubmit={handleSave}
           className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
         >
           {staleEditor && <p role="alert">{providerText('admin.providers.stale', uiLocale)}</p>}
-          <fieldset disabled={busy || !!protectedAction} className="space-y-4">
+          {uncertain && <p role="alert">{providerFormText('uncertain', uiLocale)}</p>}
+          {(staleEditor || uncertain) && (
+            <Button
+              type="button"
+              variant="outline"
+              disabled={
+                loading || loadFailed || busy || !!protectedAction || (uncertain && !recovered)
+              }
+              onClick={() => {
+                const row = providers.find((p) => p.id === editId);
+                if (row) openEdit(row);
+                else openCreate();
+              }}
+            >
+              {providerFormText('reset', uiLocale)}
+            </Button>
+          )}
+          {catalogueRootMessage(editor.errors) && (
+            <p role="alert">{catalogueRootMessage(editor.errors)}</p>
+          )}
+          <fieldset
+            disabled={
+              busy ||
+              editor.pending ||
+              !!protectedAction ||
+              staleEditor ||
+              uncertain ||
+              scope.denied
+            }
+            className="space-y-4"
+          >
             <h2 className="text-lg font-semibold">
               {editId
                 ? providerText('admin.providers.update.title', uiLocale)
@@ -672,6 +707,7 @@ export default function AdminEmailProvidersPage() {
                 <span className="text-destructive">*</span>
               </label>
               <input
+                {...editor.bind('label')}
                 type="text"
                 id="email-provider-label"
                 value={label}
@@ -679,6 +715,11 @@ export default function AdminEmailProvidersPage() {
                 className="w-full border border-input rounded px-3 py-2"
                 required
               />
+              {editor.errors.label && (
+                <p id={editor.errorId('label')} role="alert" className="text-sm text-destructive">
+                  {editor.errors.label.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -702,29 +743,38 @@ export default function AdminEmailProvidersPage() {
             </div>
 
             {transport === 'smtp' ? (
-              <SmtpFields form={form as SmtpForm} setField={setField} editing={editId !== null} />
+              <SmtpFields
+                form={form}
+                setField={setField}
+                editing={editId !== null}
+                feedback={editor}
+              />
             ) : (
               <ResendFields
                 form={form as ResendForm}
                 setField={setField}
                 editing={editId !== null}
+                feedback={editor}
               />
             )}
 
             <div className="flex gap-3 pt-2">
-              <button
-                type="submit"
+              <CatalogueSaveButton
+                pending={editor.pending}
                 disabled={
-                  busy || loading || loadFailed || scope.denied || !!protectedAction || staleEditor
+                  busy ||
+                  loading ||
+                  loadFailed ||
+                  scope.denied ||
+                  !!protectedAction ||
+                  staleEditor ||
+                  uncertain
                 }
-                className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 disabled:opacity-50"
-              >
-                {busy
-                  ? providerText('admin.providers.saving', uiLocale)
-                  : editId
-                    ? providerText('admin.providers.update', uiLocale)
-                    : providerText('admin.providers.create', uiLocale)}
-              </button>
+                label={providerText(
+                  editId ? 'admin.providers.update' : 'admin.providers.create',
+                  uiLocale
+                )}
+              />
               <button
                 type="button"
                 onClick={closeEditor}
@@ -742,8 +792,14 @@ export default function AdminEmailProvidersPage() {
         <TeamActionDialog
           action={protectedAction.action}
           onSuccess={protectedAction.onSuccess}
+          {...(protectedAction.save ? { onValidationError: fieldErrors } : {})}
           confirmationDisabled={
-            loading || loadFailed || scope.denied || staleEditor || protectedAction.basis !== basis
+            (protectedAction.save && uncertain) ||
+            loading ||
+            loadFailed ||
+            scope.denied ||
+            staleEditor ||
+            protectedAction.basis !== basis
           }
           summary={
             <>
@@ -1017,17 +1073,25 @@ function SmtpFields({
   form,
   setField,
   editing,
+  feedback,
 }: {
   form: SmtpForm;
-  setField: (k: string, v: string) => void;
+  setField: (k: keyof EmailDraft, v: string) => void;
   editing: boolean;
+  feedback: ReturnType<typeof useWizardForm<EmailDraft>>;
 }) {
   const uiLocale = useLocale();
-  const set = (k: keyof SmtpForm, v: string) => setField(k as string, v);
+  const set = (k: keyof SmtpForm, v: string) => setField(k, v);
   const sec = (k: string) => providerText(`admin.providers.field.${k}`, uiLocale);
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <Field label={sec('host')} required>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <Field
+        binding={feedback.bind('host')}
+        error={feedback.errors.host?.message}
+        errorId={feedback.errorId('host')}
+        label={sec('host')}
+        required
+      >
         <input
           type="text"
           value={form.host}
@@ -1035,7 +1099,13 @@ function SmtpFields({
           className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
-      <Field label={sec('port')} required>
+      <Field
+        binding={feedback.bind('port')}
+        error={feedback.errors.port?.message}
+        errorId={feedback.errorId('port')}
+        label={sec('port')}
+        required
+      >
         <input
           type="number"
           value={form.port}
@@ -1043,7 +1113,12 @@ function SmtpFields({
           className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
-      <Field label={sec('security')}>
+      <Field
+        binding={feedback.bind('security')}
+        error={feedback.errors.security?.message}
+        errorId={feedback.errorId('security')}
+        label={sec('security')}
+      >
         <select
           value={form.security}
           onChange={(e) => set('security', e.target.value)}
@@ -1054,7 +1129,14 @@ function SmtpFields({
         </select>
       </Field>
       {(['connectionTimeout', 'commandTimeout'] as const).map((key) => (
-        <Field key={key} label={sec(key)} required>
+        <Field
+          key={key}
+          binding={feedback.bind(key)}
+          error={feedback.errors[key]?.message}
+          errorId={feedback.errorId(key)}
+          label={sec(key)}
+          required
+        >
           <input
             type="number"
             min={1}
@@ -1067,7 +1149,12 @@ function SmtpFields({
           />
         </Field>
       ))}
-      <Field label={sec('username')}>
+      <Field
+        binding={feedback.bind('username')}
+        error={feedback.errors.username?.message}
+        errorId={feedback.errorId('username')}
+        label={sec('username')}
+      >
         <input
           type="text"
           value={form.username}
@@ -1075,7 +1162,13 @@ function SmtpFields({
           className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
-      <Field label={sec('password')} secret>
+      <Field
+        binding={feedback.bind('password')}
+        error={feedback.errors.password?.message}
+        errorId={feedback.errorId('password')}
+        label={sec('password')}
+        secret
+      >
         <input
           type="password"
           value={form.password}
@@ -1087,7 +1180,12 @@ function SmtpFields({
           className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
-      <Field label={sec('fromName')}>
+      <Field
+        binding={feedback.bind('fromName')}
+        error={feedback.errors.fromName?.message}
+        errorId={feedback.errorId('fromName')}
+        label={sec('fromName')}
+      >
         <input
           type="text"
           value={form.fromName}
@@ -1095,7 +1193,13 @@ function SmtpFields({
           className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
-      <Field label={sec('fromEmail')} required>
+      <Field
+        binding={feedback.bind('fromEmail')}
+        error={feedback.errors.fromEmail?.message}
+        errorId={feedback.errorId('fromEmail')}
+        label={sec('fromEmail')}
+        required
+      >
         <input
           type="email"
           value={form.fromEmail}
@@ -1103,7 +1207,12 @@ function SmtpFields({
           className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
-      <Field label={sec('replyTo')}>
+      <Field
+        binding={feedback.bind('replyTo')}
+        error={feedback.errors.replyTo?.message}
+        errorId={feedback.errorId('replyTo')}
+        label={sec('replyTo')}
+      >
         <input
           type="email"
           value={form.replyTo}
@@ -1119,17 +1228,26 @@ function ResendFields({
   form,
   setField,
   editing,
+  feedback,
 }: {
   form: ResendForm;
-  setField: (k: string, v: string) => void;
+  setField: (k: keyof EmailDraft, v: string) => void;
   editing: boolean;
+  feedback: ReturnType<typeof useWizardForm<EmailDraft>>;
 }) {
   const uiLocale = useLocale();
-  const set = (k: keyof ResendForm, v: string) => setField(k as string, v);
+  const set = (k: keyof ResendForm, v: string) => setField(k, v);
   const sec = (k: string) => providerText(`admin.providers.field.${k}`, uiLocale);
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <Field label={sec('apiKey')} required secret>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <Field
+        binding={feedback.bind('apiKey')}
+        error={feedback.errors.apiKey?.message}
+        errorId={feedback.errorId('apiKey')}
+        label={sec('apiKey')}
+        required={!editing}
+        secret
+      >
         <input
           type="password"
           value={form.apiKey}
@@ -1141,7 +1259,12 @@ function ResendFields({
           className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
-      <Field label={sec('fromName')}>
+      <Field
+        binding={feedback.bind('fromName')}
+        error={feedback.errors.fromName?.message}
+        errorId={feedback.errorId('fromName')}
+        label={sec('fromName')}
+      >
         <input
           type="text"
           value={form.fromName}
@@ -1149,7 +1272,13 @@ function ResendFields({
           className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
-      <Field label={sec('fromEmail')} required>
+      <Field
+        binding={feedback.bind('fromEmail')}
+        error={feedback.errors.fromEmail?.message}
+        errorId={feedback.errorId('fromEmail')}
+        label={sec('fromEmail')}
+        required
+      >
         <input
           type="email"
           value={form.fromEmail}
@@ -1157,7 +1286,12 @@ function ResendFields({
           className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
-      <Field label={sec('replyTo')}>
+      <Field
+        binding={feedback.bind('replyTo')}
+        error={feedback.errors.replyTo?.message}
+        errorId={feedback.errorId('replyTo')}
+        label={sec('replyTo')}
+      >
         <input
           type="email"
           value={form.replyTo}
@@ -1165,7 +1299,12 @@ function ResendFields({
           className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
-      <Field label={sec('sendingDomain')}>
+      <Field
+        binding={feedback.bind('sendingDomain')}
+        error={feedback.errors.sendingDomain?.message}
+        errorId={feedback.errorId('sendingDomain')}
+        label={sec('sendingDomain')}
+      >
         <input
           type="text"
           value={form.sendingDomain}
@@ -1244,11 +1383,17 @@ function Field({
   required,
   secret,
   children,
+  binding,
+  error,
+  errorId,
 }: {
   label: string;
   required?: boolean;
   secret?: boolean;
-  children: ReactNode;
+  children: ReactElement<Record<string, unknown>>;
+  binding: WizardFieldBinding;
+  error?: string | undefined;
+  errorId: string;
 }) {
   return (
     <label className="block">
@@ -1257,7 +1402,12 @@ function Field({
         {required && <span className="text-destructive"> *</span>}
         {secret && <span className="ml-1 text-xs text-muted-foreground" />}
       </span>
-      {children}
+      {cloneElement(children, { ...binding, id: `email-provider-${binding.name}` })}
+      {error && (
+        <span id={errorId} role="alert" className="block text-sm text-destructive">
+          {error}
+        </span>
+      )}
     </label>
   );
 }

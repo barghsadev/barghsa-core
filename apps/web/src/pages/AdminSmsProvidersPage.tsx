@@ -11,6 +11,22 @@ import { smsProviderText } from '@barghsa/i18n/providers';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { ProviderHealthMetrics } from '../components/ProviderHealthMetrics.js';
 import { ProviderAlertHistory } from '../components/ProviderAlertHistory.js';
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import {
+  CatalogueSaveButton,
+  catalogueRootMessage,
+} from '../components/CatalogueEditorFeedback.js';
+import { providerFormText } from '@barghsa/i18n/provider-forms';
+import {
+  editorFor,
+  configFor,
+  mapping,
+  variable,
+  smsInvalidFields,
+  type SmsEditor,
+  type Mapping,
+} from '../lib/provider-form.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import {
@@ -24,111 +40,8 @@ import {
   readSmsProvider,
   sameSmsConfig,
   smsRequest,
-  type SmsConfig,
   type SmsProvider,
 } from '../lib/sms-providers-api.js';
-
-type Variable = { id: string; internal: string; parameter: string };
-type Mapping = {
-  id: string;
-  event: string;
-  locale: 'all' | 'fa' | 'en';
-  template: string;
-  variables: Variable[];
-};
-type Editor = {
-  id: string | null;
-  label: string;
-  key: string;
-  keyConfigured: boolean;
-  sender: string;
-  timeout: string;
-  throughput: string;
-  credit: string;
-  mappings: Mapping[];
-};
-const variable = (): Variable => ({ id: crypto.randomUUID(), internal: '', parameter: '' });
-const mapping = (): Mapping => ({
-  id: crypto.randomUUID(),
-  event: '',
-  locale: 'all',
-  template: '',
-  variables: [variable()],
-});
-function editorFor(row?: SmsProvider, clone = false): Editor {
-  return {
-    id: clone ? null : (row?.id ?? null),
-    label: row?.label ?? '',
-    key: '',
-    keyConfigured: !clone && !!row?.keyConfigured,
-    sender: row?.config.sender ?? '',
-    timeout: String(row?.config.timeout ?? 15),
-    throughput: String(row?.config.throughput_limit ?? 100),
-    credit: String(row?.config.low_credit_threshold ?? 0),
-    mappings: row?.config.template_mappings.map((m) => ({
-      id: crypto.randomUUID(),
-      event: m.event_key,
-      locale: m.locale ?? 'all',
-      template: m.template_id,
-      variables: Object.entries(m.variables).map(([internal, parameter]) => ({
-        id: crypto.randomUUID(),
-        internal,
-        parameter,
-      })),
-    })) ?? [mapping()],
-  };
-}
-function configFor(editor: Editor): SmsConfig {
-  const integer = (value: string, min: number, max: number) => {
-    const n = Number(value);
-    if (!/^\d+$/.test(value) || !Number.isSafeInteger(n) || n < min || n > max)
-      throw new Error('invalid');
-    return n;
-  };
-  if (
-    !editor.label.trim() ||
-    !editor.sender.trim() ||
-    (!editor.keyConfigured && !editor.key.trim())
-  )
-    throw new Error('invalid');
-  const seen = new Set<string>();
-  return {
-    sender: editor.sender.trim(),
-    timeout: integer(editor.timeout, 1, 300),
-    throughput_limit: integer(editor.throughput, 1, 10000),
-    low_credit_threshold: integer(editor.credit, 0, 1_000_000_000),
-    template_mappings: editor.mappings.map((m) => {
-      const identity = `${m.event.trim()}:${m.locale}`;
-      if (!m.event.trim() || !/^[1-9]\d*$/.test(m.template.trim()) || seen.has(identity))
-        throw new Error('invalid');
-      seen.add(identity);
-      const names = new Set<string>(),
-        parameters = new Set<string>();
-      const pairs = m.variables.map((v) => {
-        const name = v.internal.trim(),
-          parameter = v.parameter.trim();
-        if (
-          !name ||
-          !parameter ||
-          names.has(name) ||
-          parameters.has(parameter) ||
-          ['__proto__', 'constructor', 'prototype'].some((part) => name.split('.').includes(part))
-        )
-          throw new Error('invalid');
-        names.add(name);
-        parameters.add(parameter);
-        return [name, parameter];
-      });
-      if (!pairs.length) throw new Error('invalid');
-      return {
-        event_key: m.event.trim(),
-        ...(m.locale === 'all' ? {} : { locale: m.locale }),
-        template_id: m.template.trim(),
-        variables: Object.fromEntries(pairs),
-      };
-    }),
-  };
-}
 
 export default function AdminSmsProvidersPage() {
   const locale = useLocale(),
@@ -142,7 +55,7 @@ export default function AdminSmsProvidersPage() {
   };
   const [busy, setBusy] = useState(false);
   const [editSource, setEditSource] = useState<{ id: string; basis: string } | null>(null);
-  const [editor, setEditor] = useState<Editor | null>(null),
+  const [showEditor, setShowEditor] = useState(false),
     [selected, setSelected] = useState<string | null>(null),
     [firstEvent, setFirstEvent] = useState('');
   const [error, setError] = useState<string | null>(null),
@@ -151,10 +64,68 @@ export default function AdminSmsProvidersPage() {
     action: TeamAction;
     basis: string;
     onSuccess: (result: unknown) => Promise<void>;
+    save?: boolean;
   } | null>(null);
   const inFlight = useRef(false);
+  const generation = useRef(0);
+  const validationOwner = useRef(0);
+  const [uncertain, setUncertain] = useState(false),
+    [recovered, setRecovered] = useState(false);
+  const eventNames = useRef<string[]>([]);
+  const messages: Record<keyof SmsEditor, string> = {
+    id: '',
+    keyConfigured: '',
+    label: providerFormText('label', locale),
+    key: providerFormText('apiKeyMessage', locale),
+    sender: providerFormText('sender', locale),
+    timeout: providerFormText('timeout', locale),
+    throughput: providerFormText('throughput', locale),
+    credit: providerFormText('credit', locale),
+    mappings: providerFormText('mappings', locale),
+  };
+  const form = useWizardForm<SmsEditor>(
+    async () => {
+      const { providerFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return providerFormSchema(messages, (draft) => smsInvalidFields(draft, eventNames.current));
+    },
+    () => editorFor(),
+    providerFormText('validationUnavailable', locale)
+  );
+  const editor = showEditor ? form.values : null;
+  const setEditor = (value: SmsEditor | null) => {
+    resetForm(value ?? editorFor());
+    setShowEditor(value !== null);
+  };
+  const registerMapping = form.form.register;
+  const mappingRef = useCallback(
+    (node: HTMLElement | null) => {
+      registerMapping('mappings').ref(node ? { focus: () => node.focus() } : null);
+    },
+    [registerMapping]
+  );
+  const fieldErrors = useActionFieldErrors(
+    form.form,
+    {
+      label: messages.label,
+      key: messages.key,
+      sender: messages.sender,
+      timeout: messages.timeout,
+      throughput: messages.throughput,
+      credit: messages.credit,
+      mappings: messages.mappings,
+    },
+    text('invalid')
+  );
+  const resetForm = form.form.reset;
   const clearPrivate = useCallback(() => {
-    setEditor(null);
+    form.form.reset(editorFor());
+    setShowEditor(false);
+    generation.current++;
+    validationOwner.current++;
+    inFlight.current = false;
+    form.setValidationPending(false);
+    setUncertain(false);
+    setRecovered(false);
     setEditSource(null);
     setSelected(null);
     setFirstEvent('');
@@ -162,12 +133,13 @@ export default function AdminSmsProvidersPage() {
     setError(null);
     setNotice(null);
     setBusy(false);
-  }, []);
+  }, [resetForm, form.setValidationPending]);
   const scope = useCatalogueScope(clearPrivate);
   const catalogue = useProviderCatalogue(scope, listSmsProviders);
   const eventKeys = useProviderCatalogue(scope, listSmsEventKeys);
   const providers = catalogue.data ?? [],
     events = eventKeys.data ?? [];
+  eventNames.current = events;
   const loading = catalogue.loading,
     loadFailed = catalogue.error;
   const refresh = catalogue.refresh;
@@ -193,7 +165,7 @@ export default function AdminSmsProvidersPage() {
   const invalidEvents = !!editor && editor.mappings.some((m) => !events.includes(m.event.trim()));
   useEffect(() => {
     if (protectedAction && protectedAction.basis !== basis) setProtectedAction(null);
-    setBusy(false);
+    if (!inFlight.current) setBusy(false);
   }, [basis, protectedAction]);
   useEffect(() => {
     if (
@@ -212,7 +184,11 @@ export default function AdminSmsProvidersPage() {
           type="button"
           variant="outline"
           disabled={loading || busy}
-          onClick={() => (scope.denied ? scope.recover() : void refresh())}
+          onClick={async () => {
+            if (scope.denied) return scope.recover();
+            await refresh();
+            if (!inFlight.current) setRecovered(true);
+          }}
         >
           {text(loadFailed || scope.denied ? 'retry' : 'refresh')}
         </Button>
@@ -240,10 +216,13 @@ export default function AdminSmsProvidersPage() {
 
   async function mutate(
     action: Pick<TeamAction, 'path' | 'method' | 'body'>,
-    accept: (result: unknown) => Promise<void>
+    accept: (result: unknown) => Promise<void>,
+    save = false
   ) {
     if (inFlight.current || disabled || !eventsReady) return;
-    const current = capture();
+    const validScope = capture();
+    const ticket = ++generation.current;
+    const current = () => ticket === generation.current && validScope();
     inFlight.current = true;
     setBusy(true);
     setError(null);
@@ -251,15 +230,25 @@ export default function AdminSmsProvidersPage() {
     try {
       const result = await smsRequest(action.path, action.method as 'POST' | 'PUT', action.body);
       if (current()) await accept(result);
+      else if (save && ticket === generation.current) {
+        setUncertain(true);
+        setRecovered(false);
+      }
     } catch (e) {
       if (!current()) return;
       if (e instanceof ProviderRequestError && e.denied) {
         scope.deny();
         return;
       }
+      if (save && e instanceof ProviderRequestError && fieldErrors(e.fields)) return;
+      if (save && e instanceof ProviderRequestError && e.uncertain) {
+        setUncertain(true);
+        setRecovered(false);
+      }
       if (e instanceof ProviderStepUpError)
         setProtectedAction({
           basis,
+          save,
           action: {
             ...e.action,
             title: text('title'),
@@ -272,42 +261,72 @@ export default function AdminSmsProvidersPage() {
         });
       else setError(text('unavailable'));
     } finally {
-      inFlight.current = false;
-      if (current()) setBusy(false);
+      if (ticket === generation.current) {
+        inFlight.current = false;
+        setBusy(false);
+      }
     }
   }
   async function save(event: FormEvent) {
     event.preventDefault();
-    if (!editor || disabled || !eventsReady || staleEditor || invalidEvents) return;
-    let config: SmsConfig;
-    try {
-      config = configFor(editor);
-    } catch {
-      setError(text('invalid'));
+    if (
+      !editor ||
+      inFlight.current ||
+      form.isPending() ||
+      disabled ||
+      !eventsReady ||
+      staleEditor ||
+      uncertain
+    )
       return;
+    const owner = ++validationOwner.current;
+    const ticket = generation.current,
+      validScope = capture();
+    form.setValidationPending(true);
+    const captured: { value?: SmsEditor } = {};
+    try {
+      await form.form.handleSubmit((value) => {
+        captured.value = value;
+      })();
+      if (!captured.value || ticket !== generation.current || !validScope()) return;
+      const draft = captured.value,
+        config = configFor(draft),
+        label = draft.label.trim();
+      await mutate(
+        {
+          path: draft.id ? `/${encodeURIComponent(draft.id)}` : '',
+          method: draft.id ? 'PUT' : 'POST',
+          body: { label, config: { ...config, ...(draft.key ? { api_key: draft.key } : {}) } },
+        },
+        async (result) => {
+          let saved: SmsProvider;
+          try {
+            saved = readSmsProvider(result, {
+              status: 'draft',
+              ...(draft.id ? { id: draft.id } : {}),
+            });
+            if (
+              saved.label !== label ||
+              !saved.keyConfigured ||
+              !sameSmsConfig(saved.config, config)
+            )
+              throw new ProviderRequestError();
+          } catch {
+            setUncertain(true);
+            setRecovered(false);
+            throw new ProviderRequestError(false, [], true);
+          }
+          setEditor(null);
+          setSelected(saved.id);
+          setFirstEvent(saved.config.template_mappings[0]?.event_key ?? '');
+          setNotice(text('saved'));
+          await refresh();
+        },
+        true
+      );
+    } finally {
+      if (owner === validationOwner.current) form.setValidationPending(false);
     }
-    const captured = editor,
-      label = editor.label.trim();
-    await mutate(
-      {
-        path: captured.id ? `/${encodeURIComponent(captured.id)}` : '',
-        method: captured.id ? 'PUT' : 'POST',
-        body: { label, config: { ...config, ...(captured.key ? { api_key: captured.key } : {}) } },
-      },
-      async (result) => {
-        const saved = readSmsProvider(result, {
-          status: 'draft',
-          ...(captured.id ? { id: captured.id } : {}),
-        });
-        if (saved.label !== label || !saved.keyConfigured || !sameSmsConfig(saved.config, config))
-          throw new ProviderRequestError();
-        setEditor(null);
-        setSelected(saved.id);
-        setFirstEvent(saved.config.template_mappings[0]?.event_key ?? '');
-        setNotice(text('saved'));
-        await refresh();
-      }
-    );
   }
   function lifecycle(row: SmsProvider, operation: 'activate' | 'disable' | 'rollback') {
     if (disabled || !eventsReady) return;
@@ -370,17 +389,23 @@ export default function AdminSmsProvidersPage() {
       }
     );
   }
-  function field<K extends keyof Editor>(key: K, value: Editor[K]) {
-    setEditor((old) => (old ? { ...old, [key]: value } : old));
+  function field(
+    key: 'label' | 'sender' | 'timeout' | 'throughput' | 'credit' | 'key' | 'mappings',
+    value: string | Mapping[]
+  ) {
+    form.field(key)[1](value);
   }
   function changeMapping(id: string, change: Partial<Mapping>) {
-    setEditor((old) =>
-      old
-        ? { ...old, mappings: old.mappings.map((m) => (m.id === id ? { ...m, ...change } : m)) }
-        : old
+    field(
+      'mappings',
+      form.form.getValues('mappings').map((m) => (m.id === id ? { ...m, ...change } : m))
     );
   }
   function open(row?: SmsProvider, clone = false) {
+    generation.current++;
+    setUncertain(false);
+    setRecovered(false);
+    form.setValidationPending(false);
     setEditor(editorFor(row, clone));
     setEditSource(row ? { id: row.id, basis: rowBasis(row, false) } : null);
     setSelected(null);
@@ -400,6 +425,7 @@ export default function AdminSmsProvidersPage() {
           action={protectedAction.action}
           onClose={() => setProtectedAction(null)}
           onSuccess={protectedAction.onSuccess}
+          {...(protectedAction.save ? { onValidationError: fieldErrors } : {})}
           summary={
             <>
               {(loadFailed || scope.denied) && (
@@ -413,6 +439,7 @@ export default function AdminSmsProvidersPage() {
             document.querySelector<HTMLButtonElement>('[data-slot="list-page"] button')
           }
           confirmationDisabled={
+            (protectedAction.save && uncertain) ||
             loading ||
             loadFailed ||
             scope.denied ||
@@ -579,11 +606,32 @@ export default function AdminSmsProvidersPage() {
         </ListPage.Content>
       </ListPage>
       {editor && (
-        <form onSubmit={save} className="min-w-0 rounded border p-4 space-y-4">
+        <form noValidate onSubmit={save} className="min-w-0 rounded border p-4 space-y-4">
           {staleEditor && <p role="alert">{text('stale')}</p>}
           {invalidEvents && eventsReady && <p role="alert">{text('eventsChanged')}</p>}
+          {uncertain && <p role="alert">{providerFormText('uncertain', locale)}</p>}
+          {(staleEditor || uncertain) && (
+            <Button
+              type="button"
+              variant="outline"
+              disabled={
+                loading || loadFailed || busy || !!protectedAction || (uncertain && !recovered)
+              }
+              onClick={() => {
+                const row = providers.find((p) => p.id === editSource?.id);
+                open(row, editor.id === null && !!row);
+              }}
+            >
+              {providerFormText('reset', locale)}
+            </Button>
+          )}
+          {catalogueRootMessage(form.errors) && (
+            <p role="alert">{catalogueRootMessage(form.errors)}</p>
+          )}
           <fieldset
-            disabled={busy || !!protectedAction || scope.denied}
+            disabled={
+              busy || form.pending || !!protectedAction || scope.denied || staleEditor || uncertain
+            }
             className="min-w-0 space-y-4"
           >
             <legend className="font-semibold">{text(editor.id ? 'edit' : 'new')}</legend>
@@ -592,6 +640,7 @@ export default function AdminSmsProvidersPage() {
                 <div key={key}>
                   <Label htmlFor={`sms-${key}`}>{text(key)}</Label>
                   <Input
+                    {...form.bind(key)}
                     id={`sms-${key}`}
                     value={editor[key]}
                     onChange={(e) => field(key, e.target.value)}
@@ -605,11 +654,17 @@ export default function AdminSmsProvidersPage() {
                           ? { min: 0, max: 1_000_000_000 }
                           : { maxLength: key === 'sender' ? 64 : 120 })}
                   />
+                  {form.errors[key] && (
+                    <p id={form.errorId(key)} role="alert" className="text-sm text-destructive">
+                      {form.errors[key]?.message}
+                    </p>
+                  )}
                 </div>
               ))}
               <div>
                 <Label htmlFor="sms-key">{text('key')}</Label>
                 <Input
+                  {...form.bind('key')}
                   id="sms-key"
                   type="password"
                   autoComplete="new-password"
@@ -617,8 +672,15 @@ export default function AdminSmsProvidersPage() {
                   required={!editor.keyConfigured}
                   maxLength={1024}
                   onChange={(e) => field('key', e.target.value)}
-                  aria-describedby="sms-key-hint"
+                  aria-describedby={[form.bind('key')['aria-describedby'], 'sms-key-hint']
+                    .filter(Boolean)
+                    .join(' ')}
                 />
+                {form.errors.key && (
+                  <p id={form.errorId('key')} role="alert" className="text-sm text-destructive">
+                    {form.errors.key.message}
+                  </p>
+                )}
                 <p id="sms-key-hint" className="text-sm text-muted-foreground">
                   {text(editor.keyConfigured ? 'keyHint' : 'keyMissing')}
                 </p>
@@ -629,6 +691,11 @@ export default function AdminSmsProvidersPage() {
                 <option key={event} value={event} />
               ))}
             </datalist>
+            {form.errors.mappings && (
+              <p id={form.errorId('mappings')} role="alert" className="text-sm text-destructive">
+                {form.errors.mappings.message}
+              </p>
+            )}
             <ScrollArea
               scrollbarOrientation="horizontal"
               aria-label={text('mappings')}
@@ -660,6 +727,11 @@ export default function AdminSmsProvidersPage() {
                     <tr key={m.id} className="border-t align-top">
                       <td className="p-2">
                         <Input
+                          {...(index === 0 ? { ...form.bind('mappings'), ref: mappingRef } : {})}
+                          aria-invalid={form.errors.mappings ? true : undefined}
+                          aria-describedby={
+                            form.errors.mappings ? form.errorId('mappings') : undefined
+                          }
                           aria-label={`${text('event')} ${index + 1}`}
                           list="sms-events"
                           value={m.event}
@@ -770,17 +842,17 @@ export default function AdminSmsProvidersPage() {
             <Button
               type="button"
               variant="outline"
+              {...(!editor.mappings.length ? { ...form.bind('mappings'), ref: mappingRef } : {})}
               onClick={() => field('mappings', [...editor.mappings, mapping()])}
             >
               {text('addMapping')}
             </Button>
             <div className="flex gap-2">
-              <Button
-                type="submit"
-                disabled={disabled || !eventsReady || staleEditor || invalidEvents}
-              >
-                {text('save')}
-              </Button>
+              <CatalogueSaveButton
+                pending={form.pending}
+                disabled={disabled || !eventsReady || staleEditor || uncertain}
+                label={text('save')}
+              />
               <Button type="button" variant="outline" onClick={() => setEditor(null)}>
                 {text('cancel')}
               </Button>

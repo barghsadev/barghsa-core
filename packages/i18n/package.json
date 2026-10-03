@@ -236,6 +236,11 @@
       "types": "./dist/notification-forms.d.ts",
       "import": "./dist/notification-forms.js",
       "default": "./dist/notification-forms.js"
+    },
+    "./provider-forms": {
+      "types": "./dist/provider-forms.d.ts",
+      "import": "./dist/provider-forms.js",
+      "default": "./dist/provider-forms.js"
     }
   },
   "scripts": {

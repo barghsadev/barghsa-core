@@ -187,7 +187,7 @@ for (const scenario of scenarios) {
     await click(scenario.edit);
     await fill(scenario.key, 'synthetic-secret');
     await submit();
-    expect(host.querySelector('form')).toBeNull();
+    await vi.waitFor(() => expect(host.querySelector('form')).toBeNull());
     expect(host.querySelector('tbody tr')).toBeNull();
   });
   it(`${scenario.name}: read recovery retains OTP and pauses its captured command`, async () => {

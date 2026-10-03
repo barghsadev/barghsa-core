@@ -41,7 +41,11 @@ export interface TestConnectionOutcome {
   error: string | null;
 }
 export class ProviderRequestError extends Error {
-  constructor(readonly denied = false) {
+  constructor(
+    readonly denied = false,
+    readonly fields: unknown[] = [],
+    readonly uncertain = false
+  ) {
     super('Provider request unavailable');
   }
 }
@@ -177,12 +181,19 @@ export async function providerRequest(
         });
       }
     }
-    if (!response.ok)
-      throw new ProviderRequestError(response.status === 401 || response.status === 403);
+    if (!response.ok) {
+      const errorBody = record(await response.json().catch(() => null));
+      const fields = record(errorBody?.error)?.fields;
+      throw new ProviderRequestError(
+        response.status === 401 || response.status === 403,
+        response.status === 400 && Array.isArray(fields) ? fields : [],
+        method !== 'GET' && response.status >= 500
+      );
+    }
     return await response.json();
   } catch (error) {
     if (signal?.aborted || error instanceof ProviderRequestError) throw error;
-    throw new ProviderRequestError();
+    throw new ProviderRequestError(false, [], method !== 'GET');
   }
 }
 const request = providerRequest;
@@ -205,22 +216,25 @@ export async function createProvider(
   label: string,
   config: Record<string, unknown>
 ) {
-  const row = validateProviderResult(
-    await request('', 'POST', { transport, label, config }),
-    'draft'
-  );
-  if (row.transport !== transport) throw new ProviderRequestError();
-  return row;
+  const result = await request('', 'POST', { transport, label, config });
+  try {
+    const row = validateProviderResult(result, 'draft');
+    if (row.transport !== transport) throw new ProviderRequestError();
+    return row;
+  } catch {
+    throw new ProviderRequestError(false, [], true);
+  }
 }
 export async function updateProvider(
   id: string,
   body: { label?: string; config?: Record<string, unknown> }
 ) {
-  return validateProviderResult(
-    await request(`/${encodeURIComponent(id)}`, 'PUT', body),
-    'draft',
-    id
-  );
+  const result = await request(`/${encodeURIComponent(id)}`, 'PUT', body);
+  try {
+    return validateProviderResult(result, 'draft', id);
+  } catch {
+    throw new ProviderRequestError(false, [], true);
+  }
 }
 export async function testConnection(
   id: string,

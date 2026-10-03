@@ -1,3 +1,4 @@
+import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import type { APIRequestContext, Route } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
@@ -2721,4 +2722,117 @@ for (const locale of ['en', 'fa'] as const)
     await settleLiveRequests();
     await page.reload();
     await expect(page.locator('#delivery-window-start')).toHaveValue('10:15');
+  });
+
+for (const locale of ['en', 'fa'] as const)
+  test(`provider forms persist write-only credentials through the migrated API (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+    const headers = {
+      cookie: `barghsa_session=${http.session}`,
+      'x-csrf-token': http.csrf,
+      origin: 'https://app.example.test',
+    };
+    const eventKey = `provider.forms.${locale}`;
+    const template = await page.request.post(`${http.base}/api/admin/notifications/templates`, {
+      headers,
+      data: {
+        eventKey,
+        channel: 'sms',
+        locale,
+        subject: '',
+        bodyTemplate: 'Code {{code}}',
+        variables: [{ name: 'code', description: 'Verification code' }],
+      },
+    });
+    expect(template.status()).toBe(201);
+    const createdTemplate = await template.json();
+    expect(
+      (
+        await page.request.post(
+          `${http.base}/api/admin/notifications/templates/${createdTemplate.id}/publish`,
+          { headers, data: {} }
+        )
+      ).ok()
+    ).toBe(true);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      await forwardLiveRequest(route, {
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: { ...request.headers(), ...headers, host: new URL(http.base).host },
+      });
+    });
+    await page.goto('/admin/providers');
+    const emailText = (key: string) => providerText(`admin.providers.${key}`, locale);
+    await page.getByRole('button', { name: emailText('new'), exact: true }).click();
+    await page.locator('#email-provider-label').fill(`Live SMTP ${locale}`);
+    await page.locator('#email-provider-host').fill('smtp.example.test');
+    await page.locator('#email-provider-fromEmail').fill('sender@example.test');
+    await page.locator('#email-provider-replyTo').fill('reply@example.test');
+    await page.locator('#email-provider-password').fill('fixture-smtp-write-only');
+    await page.locator('form button[type=submit]').click();
+    await expect(page.locator('#email-provider-label')).toHaveCount(0);
+    const emails = async () =>
+      await (await page.request.get(`${http.base}/api/admin/email-providers`, { headers })).json();
+    let saved = (await emails()).find(
+      (row: { label: string }) => row.label === `Live SMTP ${locale}`
+    );
+    expect(saved.maskedConfig.password).toMatch(/^\*+/);
+    expect(JSON.stringify(saved)).not.toContain('fixture-smtp-write-only');
+    const secret = saved.maskedConfig.password;
+    await page
+      .getByRole('row')
+      .filter({ hasText: `Live SMTP ${locale}` })
+      .getByRole('button', { name: emailText('update'), exact: true })
+      .click();
+    await expect(page.locator('#email-provider-password')).toHaveValue('');
+    await page.locator('#email-provider-replyTo').fill('');
+    await page.locator('#email-provider-port').fill('465');
+    await page.locator('form button[type=submit]').click();
+    await expect(page.locator('#email-provider-label')).toHaveCount(0);
+    saved = (await emails()).find((row: { label: string }) => row.label === `Live SMTP ${locale}`);
+    expect(saved.maskedConfig.port).toBe(465);
+    expect(saved.maskedConfig).not.toHaveProperty('reply_to');
+    expect(saved.maskedConfig.password).toBe(secret);
+    expect(saved.lastTestStatus).toBe('pending');
+    await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
+    const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
+    await page.getByRole('button', { name: text('new'), exact: true }).click();
+    await page.locator('#sms-label').fill(`Live SMS ${locale}`);
+    await page.locator('#sms-key').fill('fixture-sms-write-only');
+    await page.locator('#sms-sender').fill('3000');
+    await page.getByRole('combobox', { name: `${text('event')} 1`, exact: true }).fill(eventKey);
+    await page.getByRole('textbox', { name: `${text('template')} 1`, exact: true }).fill('42');
+    await page.getByRole('textbox', { name: `${text('variable')} 1.1`, exact: true }).fill('code');
+    await page.getByRole('textbox', { name: `${text('parameter')} 1.1`, exact: true }).fill('CODE');
+    await page.locator('form button[type=submit]').click();
+    await expect(page.locator('#sms-key')).toHaveCount(0);
+    const messages = async () =>
+      await (await page.request.get(`${http.base}/api/admin/sms-providers`, { headers })).json();
+    let sms = (await messages()).find(
+      (row: { label: string }) => row.label === `Live SMS ${locale}`
+    );
+    expect(JSON.stringify(sms)).not.toContain('fixture-sms-write-only');
+    const key = sms.maskedConfig.api_key;
+    await page
+      .getByRole('row')
+      .filter({ hasText: `Live SMS ${locale}` })
+      .getByRole('button', { name: text('edit'), exact: true })
+      .click();
+    await expect(page.locator('#sms-key')).toHaveValue('');
+    await page.locator('#sms-timeout').fill('25');
+    await page.locator('form button[type=submit]').click();
+    await expect(page.locator('#sms-key')).toHaveCount(0);
+    sms = (await messages()).find((row: { label: string }) => row.label === `Live SMS ${locale}`);
+    expect(sms.maskedConfig.timeout).toBe(25);
+    expect(sms.maskedConfig.api_key).toBe(key);
+    expect(sms.maskedConfig.template_mappings).toEqual([
+      { event_key: eventKey, template_id: '42', variables: { code: 'CODE' } },
+    ]);
+    await settleLiveRequests();
+    await page.reload();
+    await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
+    await expect(page.getByRole('cell', { name: `Live SMS ${locale}`, exact: true })).toBeVisible();
   });

@@ -1,3 +1,4 @@
+import { validateEmailConfigPatch } from './provider-input-fields';
 import { mutateProvider, testProvider, type ProviderMutationSession } from './provider-mutation.js';
 import { requireSessionOtpStepUp } from '../session/session-step-up.js';
 import { resolveProviderTestRecipient } from './provider-test-recipient.js';
@@ -284,6 +285,7 @@ export class EmailProviderConfigService {
     session: ProviderMutationSession
   ): Promise<EmailProviderConfigResult> {
     return mutateProvider(this.db, input.createdBy, session, 'email', 'created', async (client) => {
+      validateEmailConfigPatch(input.transport, input.config);
       const id = uuidv7();
       const config = this.secrets.encryptConfig(input.transport, input.config);
       await client.query(
@@ -327,9 +329,12 @@ export class EmailProviderConfigService {
          * blank when editing. Omitting a secret on update keeps the current one
          * instead of silently wiping it; providing a new one encrypts it at rest.
          */
+        validateEmailConfigPatch(existing.transport, input.config, true);
         const encryptedPatch = this.secrets.encryptConfig(existing.transport, input.config);
         params.push(encryptedPatch);
-        sets.push(`config = COALESCE(config, '{}'::jsonb) || $${params.length}::jsonb`);
+        sets.push(
+          `config = jsonb_strip_nulls(COALESCE(config, '{}'::jsonb) || $${params.length}::jsonb)`
+        );
         sets.push(
           "last_test_status = 'pending', last_test_at = NULL, last_test_error = NULL, delivery_verified_at = NULL, delivery_config_hash = NULL"
         );

@@ -56,6 +56,8 @@ async function main() {
   });
   await new Promise<void>((done) => storage.listen(0, '127.0.0.1', done));
   cleanups.push(() => new Promise<void>((done) => storage.close(() => done())));
+  const previousProviderKey = process.env.PROVIDER_CONFIG_ENCRYPTION_KEY;
+  process.env.PROVIDER_CONFIG_ENCRYPTION_KEY = randomUUID();
   const http = await startHttpFixture(
     database.connectionString,
     `http://127.0.0.1:${(storage.address() as { port: number }).port}`,
@@ -64,6 +66,8 @@ async function main() {
     '',
     true
   );
+  if (previousProviderKey === undefined) delete process.env.PROVIDER_CONFIG_ENCRYPTION_KEY;
+  else process.env.PROVIDER_CONFIG_ENCRYPTION_KEY = previousProviderKey;
   cleanups.push(() => http.close());
   const session = randomUUID(),
     csrf = randomUUID(),
@@ -73,8 +77,8 @@ async function main() {
     ('team-ui-admin','admin-ui@example.test','test-only',true,true),
     ('team-ui-member','Member UI','test-only',false,true)`);
   await http.pool.query(
-    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
-    VALUES ($1,'team-ui-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())`,
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,otp_step_up_verified_at)
+    VALUES ($1,'team-ui-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW(),NOW())`,
     [session, csrf, randomUUID()]
   );
   await http.pool.query(

@@ -1,3 +1,4 @@
+import { providerInputError } from './provider-input-fields';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -26,12 +27,12 @@ import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard';
 
 export const CreateProviderSchema = z.object({
   transport: z.enum(['smtp', 'resend']),
-  label: z.string().min(1).max(120),
+  label: z.string().trim().min(1).max(120),
   config: z.record(z.string(), z.unknown()),
 });
 
 export const UpdateProviderSchema = z.object({
-  label: z.string().min(1).max(120).optional(),
+  label: z.string().trim().min(1).max(120).optional(),
   config: z.record(z.string(), z.unknown()).optional(),
 });
 
@@ -105,10 +106,7 @@ export class EmailProviderConfigController {
     this.assertProviderEditPermission(req);
     const parsed = CreateProviderSchema.safeParse(body);
     if (!parsed.success) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_PARSE_ZOD.code },
-        400
-      );
+      throw providerInputError(parsed.error.issues, 'email');
     }
     const input: CreateProviderInput = {
       transport: parsed.data.transport,
@@ -132,10 +130,7 @@ export class EmailProviderConfigController {
     this.assertProviderEditPermission(req);
     const parsed = UpdateProviderSchema.safeParse(body);
     if (!parsed.success) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_PARSE_ZOD.code },
-        400
-      );
+      throw providerInputError(parsed.error.issues, 'email');
     }
     const input: UpdateProviderInput = {};
     if (parsed.data.label !== undefined) input.label = parsed.data.label;

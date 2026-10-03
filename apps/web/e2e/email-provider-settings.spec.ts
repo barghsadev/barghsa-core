@@ -1,5 +1,6 @@
 import { crmShell } from './crm-shell-fixture';
 import { test, expect } from './coverage-fixture';
+import { providerFormText } from '@barghsa/i18n/provider-forms';
 import { providerText } from '@barghsa/i18n/providers';
 
 for (const locale of ['en', 'fa'] as const) {
@@ -101,7 +102,12 @@ for (const locale of ['en', 'fa'] as const) {
           config: { ...config, ...(transport === 'smtp' ? { connection_timeout: 31 } : {}) },
         });
         if (writes === 1) return route.fulfill({ status: 503, json: {} });
-        row = { ...row, label: 'Renamed email', lastTestStatus: 'pending' };
+        row = {
+          ...row,
+          label: 'Renamed email',
+          lastTestStatus: 'pending',
+          maskedConfig: { ...row.maskedConfig, ...route.request().postDataJSON().config },
+        };
         return route.fulfill({ json: row });
       });
       await page.route('**/api/admin/email-providers/saved-email/test-connection', (route) => {
@@ -170,6 +176,14 @@ for (const locale of ['en', 'fa'] as const) {
       await form.locator('button[type=submit]').click();
       await expect(page.getByRole('alert').filter({ hasText: text('error.save') })).toBeVisible();
       await expect(form.locator('#email-provider-label')).toHaveValue('Renamed email');
+      await expect(form.locator('button[type=submit]')).toBeDisabled();
+      await page.getByRole('button', { name: text('refresh'), exact: true }).click();
+      await page
+        .getByRole('button', { name: providerFormText('reset', locale), exact: true })
+        .click();
+      await form.locator('#email-provider-label').fill('Renamed email');
+      if (transport === 'smtp')
+        await form.getByLabel(text('field.connectionTimeout'), { exact: false }).fill('31');
       await form.locator('button[type=submit]').click();
       await expect(form).toHaveCount(0);
       await expect(page.getByRole('cell', { name: 'Renamed email', exact: true })).toBeVisible();

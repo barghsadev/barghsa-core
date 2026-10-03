@@ -1,3 +1,4 @@
+import { providerInputError } from './provider-input-fields';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -26,12 +27,12 @@ import type { AuthenticatedRequest } from '../session/session.guard';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard';
 
 export const CreateSmsProviderSchema = z.object({
-  label: z.string().min(1).max(120),
+  label: z.string().trim().min(1).max(120),
   config: SmsirConfigSchema,
 });
 
 export const UpdateSmsProviderSchema = z.object({
-  label: z.string().min(1).max(120).optional(),
+  label: z.string().trim().min(1).max(120).optional(),
   config: SmsirConfigSchema.partial().optional(),
 });
 
@@ -117,10 +118,7 @@ export class SmsProviderConfigController {
     this.assertProviderEditPermission(req);
     const parsed = CreateSmsProviderSchema.safeParse(body);
     if (!parsed.success) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_PARSE_ZOD.code },
-        400
-      );
+      throw providerInputError(parsed.error.issues, 'sms');
     }
     const input: CreateSmsProviderInput = {
       label: parsed.data.label,
@@ -143,10 +141,7 @@ export class SmsProviderConfigController {
     this.assertProviderEditPermission(req);
     const parsed = UpdateSmsProviderSchema.safeParse(body);
     if (!parsed.success) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_PARSE_ZOD.code },
-        400
-      );
+      throw providerInputError(parsed.error.issues, 'sms');
     }
     const input: UpdateSmsProviderInput = {};
     if (parsed.data.label !== undefined) input.label = parsed.data.label;
