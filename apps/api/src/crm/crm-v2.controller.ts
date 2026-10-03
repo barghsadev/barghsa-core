@@ -1,4 +1,9 @@
-import { crmLegalEditSchema, type CrmLegalEdit } from './crm-profile-legal.js';
+import { InputFieldException } from '../common/input-field.exception.js';
+import {
+  crmLegalChangesSchema,
+  crmLegalEditSchema,
+  type CrmLegalEdit,
+} from './crm-profile-legal.js';
 import type { SchemaObject } from '@nestjs/swagger';
 import { crmAddressEditSchema, type CrmAddressEdit } from './crm-profile-address.js';
 import { z } from 'zod';
@@ -344,14 +349,25 @@ export class CrmV2Controller {
       .strict()
       .safeParse(dto);
     if (!parsed.success) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Only validated nonidentity profile and legal fields can be edited directly',
-        },
-        400
-      );
+      const fields = parsed.error.issues.flatMap(({ path }) => {
+        if (path.length === 1 && ['title', 'email', 'mobile'].includes(String(path[0])))
+          return [String(path[0])];
+        if (
+          path.length === 2 &&
+          path[0] === 'address' &&
+          ['provinceId', 'cityId', 'fullAddress', 'postalCode'].includes(String(path[1]))
+        )
+          return [String(path[1])];
+        if (
+          path.length === 3 &&
+          path[0] === 'legal' &&
+          path[1] === 'changes' &&
+          Object.hasOwn(crmLegalChangesSchema.shape, String(path[2]))
+        )
+          return [String(path[2])];
+        return [];
+      });
+      throw new InputFieldException(fields);
     }
 
     const result = await this.crmV2Service.updateProfile(

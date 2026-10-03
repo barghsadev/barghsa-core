@@ -1,4 +1,7 @@
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useRef, useState } from 'react';
+import { z } from 'zod';
+import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { Button, Input, Label, DependentSelect } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/crm';
 import { useLocale } from '../hooks/useLocale.js';
@@ -42,46 +45,76 @@ export function CrmAddressEditor({
 }) {
   const locale = useLocale();
   const fieldId = useId();
-  const [fields, setFields] = useState<AddressFields>({
-    provinceId: address.provinceId,
-    cityId: address.cityId,
-    fullAddress: address.fullAddress,
-    postalCode: address.postalCode,
-  });
-  const [attempted, setAttempted] = useState(false);
+  const saveButton = useRef<HTMLButtonElement>(null);
+  const messages = {
+    provinceId: t('crm.address.locationInvalid', locale),
+    cityId: t('crm.address.locationInvalid', locale),
+    fullAddress: t('crm.address.fullInvalid', locale),
+    postalCode: t('crm.address.postalInvalid', locale),
+  };
+  const draft = useDraftForm<AddressFields>(
+    z
+      .object({
+        provinceId: z.string(),
+        cityId: z.string(),
+        fullAddress: z.string(),
+        postalCode: z.string(),
+      })
+      .superRefine((values, context) => {
+        const unchanged =
+          values.provinceId === address.provinceId && values.cityId === address.cityId;
+        if (!unchanged) {
+          if (!provinces.ready || !provinces.options.some((p) => p.id === values.provinceId))
+            context.addIssue({
+              code: 'custom',
+              path: ['provinceId'],
+              message: messages.provinceId,
+            });
+          if (!cities.ready || !cities.options.some((c) => c.id === values.cityId))
+            context.addIssue({ code: 'custom', path: ['cityId'], message: messages.cityId });
+        }
+        if (!values.fullAddress.trim() || values.fullAddress.trim().length > 500)
+          context.addIssue({
+            code: 'custom',
+            path: ['fullAddress'],
+            message: messages.fullAddress,
+          });
+        if (!/^[1-9][0-9]{9}$/.test(values.postalCode.trim()))
+          context.addIssue({ code: 'custom', path: ['postalCode'], message: messages.postalCode });
+      }),
+    {
+      provinceId: address.provinceId,
+      cityId: address.cityId,
+      fullAddress: address.fullAddress,
+      postalCode: address.postalCode,
+    }
+  );
+  const fields = draft.values;
+  const errors = draft.errors;
+  const onValidationError = useActionFieldErrors(
+    draft.form,
+    messages,
+    t('crm.profile.error.generic', locale)
+  );
   const [pending, setPending] = useState<AddressFields | null>(null);
   const provinces = useGeographyOptions('/api/geography/provinces');
   const cities = useGeographyOptions(
     fields.provinceId ? '/api/geography/provinces/' + fields.provinceId + '/cities' : null,
     fields.provinceId || undefined
   );
-  const unchangedLocation =
-    fields.provinceId === address.provinceId && fields.cityId === address.cityId;
-  const errors = {
-    location:
-      !unchangedLocation &&
-      (!provinces.ready ||
-        !cities.ready ||
-        !provinces.options.some((p) => p.id === fields.provinceId) ||
-        !cities.options.some((c) => c.id === fields.cityId)),
-    fullAddress: !fields.fullAddress.trim() || fields.fullAddress.trim().length > 500,
-    postalCode: !/^[1-9][0-9]{9}$/.test(fields.postalCode.trim()),
-  };
   const changed = (Object.keys(fields) as (keyof AddressFields)[]).some(
     (key) => fields[key].trim() !== address[key]
   );
   const label = (name: PlaceName | null) =>
     (locale === 'fa' ? name?.nameFa : name?.nameEn) || t('crm.records.unknown', locale);
-  function review(event: FormEvent) {
-    event.preventDefault();
-    setAttempted(true);
-    if (!changed || Object.values(errors).some(Boolean)) return;
+  const review = draft.form.handleSubmit((values) => {
+    if (!changed || pending) return;
     setPending({
-      ...fields,
-      fullAddress: fields.fullAddress.trim(),
-      postalCode: fields.postalCode.trim(),
+      ...values,
+      fullAddress: values.fullAddress.trim(),
+      postalCode: values.postalCode.trim(),
     });
-  }
+  });
   async function saved(value: unknown) {
     const result = value as {
       updated?: unknown;
@@ -119,28 +152,25 @@ export function CrmAddressEditor({
         className="space-y-4"
         aria-label={t('crm.address.edit', locale)}
       >
-        <fieldset disabled={pending !== null} className="space-y-4">
+        <fieldset
+          disabled={pending !== null || draft.form.formState.isSubmitting}
+          className="space-y-4"
+        >
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-1">
               <Label htmlFor={fieldId + '-province'}>
                 {t('crm.profile.field.province', locale)}
               </Label>
               <select
+                {...draft.bind('provinceId')}
                 id={fieldId + '-province'}
                 value={fields.provinceId}
                 disabled={!provinces.ready}
-                onChange={(event) =>
-                  setFields((current) => ({
-                    ...current,
-                    provinceId: event.target.value,
-                    cityId: '',
-                  }))
-                }
+                onChange={(event) => {
+                  draft.field('provinceId')[1](event.target.value);
+                  draft.field('cityId')[1]('');
+                }}
                 className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-                aria-invalid={attempted && errors.location}
-                aria-describedby={
-                  attempted && errors.location ? fieldId + '-location-error' : undefined
-                }
               >
                 <option value="">{t('crm.address.chooseProvince', locale)}</option>
                 {!provinces.options.some((p) => p.id === address.provinceId) && (
@@ -158,10 +188,20 @@ export function CrmAddressEditor({
                 locale={locale}
                 testId="crm-address-province-retry"
               />
+              {errors.provinceId && (
+                <p
+                  id={draft.errorId('provinceId')}
+                  role="alert"
+                  className="text-sm text-destructive"
+                >
+                  {errors.provinceId.message}
+                </p>
+              )}
             </div>
             <div className="space-y-1">
               <Label htmlFor={fieldId + '-city'}>{t('crm.profile.field.city', locale)}</Label>
               <DependentSelect
+                {...draft.bind('cityId')}
                 id={fieldId + '-city'}
                 dependencyValue={fields.provinceId}
                 value={fields.cityId}
@@ -178,14 +218,8 @@ export function CrmAddressEditor({
                   label: label(address.cityName),
                   dependencyValue: address.provinceId,
                 }}
-                onChange={(event) =>
-                  setFields((current) => ({ ...current, cityId: event.target.value }))
-                }
+                onChange={(event) => draft.field('cityId')[1](event.target.value)}
                 className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-                aria-invalid={attempted && errors.location}
-                aria-describedby={
-                  attempted && errors.location ? fieldId + '-location-error' : undefined
-                }
               />
               <GeographyLoadError
                 {...cities}
@@ -193,61 +227,55 @@ export function CrmAddressEditor({
                 locale={locale}
                 testId="crm-address-city-retry"
               />
+              {errors.cityId && (
+                <p id={draft.errorId('cityId')} role="alert" className="text-sm text-destructive">
+                  {errors.cityId.message}
+                </p>
+              )}
             </div>
           </div>
-          {attempted && errors.location && (
-            <p id={fieldId + '-location-error'} role="alert" className="text-sm text-destructive">
-              {t('crm.address.locationInvalid', locale)}
-            </p>
-          )}
           <div className="space-y-1">
             <Label htmlFor={fieldId + '-full'}>{t('crm.address.fullAddress', locale)}</Label>
             <textarea
+              {...draft.bind('fullAddress')}
               id={fieldId + '-full'}
               required
               maxLength={500}
               rows={3}
               value={fields.fullAddress}
-              onChange={(event) =>
-                setFields((current) => ({ ...current, fullAddress: event.target.value }))
-              }
+              onChange={(event) => draft.field('fullAddress')[1](event.target.value)}
               className="w-full rounded-md border border-input bg-background p-3 text-sm"
-              aria-invalid={attempted && errors.fullAddress}
-              aria-describedby={
-                attempted && errors.fullAddress ? fieldId + '-full-error' : undefined
-              }
             />
-            {attempted && errors.fullAddress && (
-              <p id={fieldId + '-full-error'} role="alert" className="text-sm text-destructive">
-                {t('crm.address.fullInvalid', locale)}
+            {errors.fullAddress && (
+              <p
+                id={draft.errorId('fullAddress')}
+                role="alert"
+                className="text-sm text-destructive"
+              >
+                {errors.fullAddress.message}
               </p>
             )}
           </div>
           <div className="space-y-1">
             <Label htmlFor={fieldId + '-postal'}>{t('crm.profile.field.postalCode', locale)}</Label>
             <Input
+              {...draft.bind('postalCode')}
               id={fieldId + '-postal'}
               required
               inputMode="numeric"
               maxLength={10}
               dir="ltr"
               value={fields.postalCode}
-              onChange={(event) =>
-                setFields((current) => ({ ...current, postalCode: event.target.value }))
-              }
-              aria-invalid={attempted && errors.postalCode}
-              aria-describedby={
-                attempted && errors.postalCode ? fieldId + '-postal-error' : undefined
-              }
+              onChange={(event) => draft.field('postalCode')[1](event.target.value)}
             />
-            {attempted && errors.postalCode && (
-              <p id={fieldId + '-postal-error'} role="alert" className="text-sm text-destructive">
-                {t('crm.address.postalInvalid', locale)}
+            {errors.postalCode && (
+              <p id={draft.errorId('postalCode')} role="alert" className="text-sm text-destructive">
+                {errors.postalCode.message}
               </p>
             )}
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button type="submit" disabled={!changed}>
+            <Button ref={saveButton} type="submit" disabled={!changed}>
               {t('crm.profile.edit.save', locale)}
             </Button>
             <Button type="button" variant="outline" onClick={onCancel}>
@@ -282,6 +310,8 @@ export function CrmAddressEditor({
           }}
           onClose={() => setPending(null)}
           onSuccess={saved}
+          onValidationError={onValidationError}
+          finalFocus={saveButton}
         />
       )}
     </>

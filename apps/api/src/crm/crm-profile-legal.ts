@@ -1,3 +1,4 @@
+import { InputFieldException } from '../common/input-field.exception.js';
 import { z } from 'zod';
 import type { PoolClient } from 'pg';
 import { HttpException } from '@nestjs/common';
@@ -128,17 +129,20 @@ export async function editCrmLegalInfo(client: PoolClient, profileId: string, in
     if (entries.some(([key]) => key === province || key === city)) {
       const p = edit.changes[province] ?? previous[province],
         c = edit.changes[city] ?? previous[city];
-      if (!p || !c)
-        throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
-      await requireAddressGeography(client, p, c);
+      if (!p || !c) throw new InputFieldException([province, city]);
+      try {
+        await requireAddressGeography(client, p, c);
+      } catch (error) {
+        if (error instanceof InputFieldException) throw new InputFieldException([province, city]);
+        throw error;
+      }
     }
   }
   if (entries.some(([key]) => key === 'companyTypeId')) {
     const company = await client.query('SELECT id FROM company_types WHERE id=$1 FOR SHARE', [
       edit.changes.companyTypeId,
     ]);
-    if (!company.rows.length)
-      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    if (!company.rows.length) throw new InputFieldException(['companyTypeId']);
   }
   if (entries.length)
     await client.query(

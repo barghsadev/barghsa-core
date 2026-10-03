@@ -42,20 +42,15 @@ const label = (key: string, locale: Locale) =>
   );
 
 async function setup(page: Page, locale: Locale, dark = false, allowed = true, archived = false) {
-  await page.addInitScript(
-    ({ locale, dark }) => {
-      localStorage.setItem('barghsa.locale', locale);
-      localStorage.setItem('theme', dark ? 'dark' : 'light');
-      const apply = () => {
-        document.documentElement.lang = locale;
-        document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
-        document.documentElement.classList.toggle('dark', dark);
-      };
-      if (document.documentElement) apply();
-      new MutationObserver(apply).observe(document, { childList: true });
-    },
-    { locale, dark }
-  );
+  await page.addInitScript((locale) => {
+    localStorage.setItem('barghsa.locale', locale);
+    const apply = () => {
+      document.documentElement.lang = locale;
+      document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
+    };
+    if (document.documentElement) apply();
+    new MutationObserver(apply).observe(document, { childList: true });
+  }, locale);
   const current = {
     profile: {
       id: profileId,
@@ -140,6 +135,24 @@ async function setup(page: Page, locale: Locale, dark = false, allowed = true, a
   );
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'UTC' } })
+  );
+  await page.route('**/api/public/branding/config', (route) =>
+    route.fulfill({
+      json: {
+        appTitle: 'CRM validation',
+        appTitleFa: 'بررسی پروفایل',
+        supportEmail: 'support@example.test',
+        supportPhone: '+98 21 12345678',
+        supportMobile: '+98 912 1234567',
+        slogan: '',
+        primaryColor: '#176b5b',
+        secondaryColor: '#547467',
+        accentColor: '#d6a74e',
+        logoUrl: null,
+        faviconUrl: null,
+        darkMode: dark,
+      },
+    })
   );
   let write: ((route: Route) => Promise<void>) | undefined;
   await page.route('**/api/crm/profiles/' + profileId, (route) =>
@@ -230,6 +243,9 @@ for (const locale of ['fa', 'en'] as const) {
           route.fulfill({ json: { success: true } })
         );
         await fixture.open();
+        await expect
+          .poll(() => page.locator('html').evaluate((n) => n.classList.contains('dark')))
+          .toBe(dark);
         const panel = page.locator('#panel-details');
         const edit = panel.getByRole('button', { name: t('crm.legal.edit', locale), exact: true });
         await edit.click();
@@ -405,3 +421,73 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(registry).toHaveValue('CONCURRENT');
   });
 }
+
+for (const locale of ['fa', 'en'] as const)
+  test(`CRM legal server field errors retain all changed fields and focus correction (${locale})`, async ({
+    page,
+  }) => {
+    const fixture = await setup(page, locale),
+      writes: Record<string, unknown>[] = [];
+    fixture.setWrite(async (route) => {
+      const body = route.request().postDataJSON();
+      writes.push(body);
+      if (writes.length === 1)
+        return route.fulfill({
+          status: 400,
+          json: {
+            error: {
+              code: 'VALIDATION:INPUT:INVALID',
+              fields: ['officialEmail'],
+              message: 'private detail',
+            },
+          },
+        });
+      const saved = {
+        ...fixture.current.legalInfo,
+        ...body.legal.changes,
+        updatedAt: '2026-09-01T01:00:00.654321Z',
+      };
+      fixture.current.legalInfo = saved;
+      return route.fulfill({
+        json: { updated: true, profile: fixture.current.profile, legalInfo: saved },
+      });
+    });
+    await fixture.open();
+    const panel = page.locator('#panel-details');
+    await panel.getByRole('button', { name: t('crm.legal.edit', locale), exact: true }).click();
+    const registry = panel.getByLabel(label('registrationNumber', locale), { exact: true });
+    const email = panel.getByLabel(label('officialEmail', locale), { exact: true });
+    await registry.fill('RETAINED-REG');
+    await email.fill('broken');
+    await registry.focus();
+    await expect(email).toHaveAttribute('aria-invalid', 'true');
+    await email.fill('draft@example.test');
+    await expect(email).not.toHaveAttribute('aria-invalid', 'true');
+    const save = panel.getByRole('button', {
+      name: t('crm.profile.edit.save', locale),
+      exact: true,
+    });
+    await save.click();
+    const confirm = page
+      .getByRole('dialog')
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true });
+    await confirm.click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(email).toBeEnabled();
+    await expect(email).toBeFocused();
+    await expect(email).toHaveValue('draft@example.test');
+    await expect(email).toHaveAttribute('aria-invalid', 'true');
+    await expect(registry).toHaveValue('RETAINED-REG');
+    await expect(panel).not.toContainText('private detail');
+    expect(
+      (await new AxeBuilder({ page }).include('form[aria-label]').analyze()).violations
+    ).toEqual([]);
+    await email.fill('corrected@example.test');
+    await save.click();
+    await confirm.click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(panel.getByRole('status')).toBeVisible();
+    await expect(panel).toContainText('RETAINED-REG');
+    await expect(panel).toContainText('corrected@example.test');
+    expect(writes).toHaveLength(2);
+  });

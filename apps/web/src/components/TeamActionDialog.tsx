@@ -10,6 +10,7 @@ import {
 import { t } from '@barghsa/i18n/app';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
+  Alert,
   Button,
   Dialog,
   DialogContent,
@@ -51,6 +52,7 @@ export function TeamActionDialog({
   onSuccess,
   finalFocus,
   onDenied,
+  onValidationError,
 }: (
   | { action: TeamAction; verification?: never; selection?: never }
   | {
@@ -66,6 +68,7 @@ export function TeamActionDialog({
   summary?: ReactNode;
   confirmationDisabled?: boolean;
   onDenied?: (status?: 401 | 403) => void;
+  onValidationError?: (fields: unknown[]) => boolean;
 }) {
   const locale = useLocale();
   const copy = action ?? verification;
@@ -174,6 +177,15 @@ export function TeamActionDialog({
       }
       if (rateLimited(response)) return;
       if (!response.ok) {
+        if (
+          response.status === 400 &&
+          code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+          Array.isArray(data?.error?.fields) &&
+          onValidationError?.(data.error.fields)
+        ) {
+          onClose();
+          return;
+        }
         const mappedMessage = action.errorMessages?.[code];
         setError(
           (typeof mappedMessage === 'function' ? mappedMessage(data) : mappedMessage) ??
@@ -246,6 +258,7 @@ export function TeamActionDialog({
               <DialogTitle>{copy.title}</DialogTitle>
               <DialogDescription>{copy.description}</DialogDescription>
             </DialogHeader>
+            {error && <Alert variant="destructive">{error}</Alert>}
             {summary}
             {needsPassword && (
               <div className="space-y-2">
@@ -267,22 +280,24 @@ export function TeamActionDialog({
                 {t('team.retryAfter', locale).replace('{seconds}', numbers.number(remaining))}
               </p>
             )}
-            {error && (
-              <p role="alert" className="text-sm text-destructive">
-                {error}
-              </p>
-            )}
             <DialogFooter>
               <Button type="button" variant="outline" disabled={busy} onClick={onClose}>
                 {t('team.cancel', locale)}
               </Button>
               <Button
                 type="submit"
+                aria-busy={busy || undefined}
                 autoFocus={focusConfirmation && !needsPassword}
                 disabled={
                   confirmationDisabled || busy || remaining > 0 || (needsPassword && !password)
                 }
               >
+                {busy && (
+                  <span
+                    aria-hidden="true"
+                    className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                  />
+                )}
                 {t(busy ? 'team.working' : 'team.confirm', locale)}
               </Button>
             </DialogFooter>

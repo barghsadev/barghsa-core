@@ -1,3 +1,4 @@
+import { InputFieldException } from '../common/input-field.exception.js';
 import { editCrmLegalInfo, readCrmLegalInfo } from './crm-profile-legal.js';
 import { editCrmAddress } from './crm-profile-address.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -464,11 +465,10 @@ export class CrmV2Service {
     const mobile =
       mobileInput && MOBILE_RE.test(mobileInput) ? `+98${mobileInput.slice(1)}` : mobileInput;
     if (dto.title !== undefined && dto.title !== null && dto.title.length > 256)
-      return { error: 'Title is too long' };
+      throw new InputFieldException(['title']);
     if (email && (email.length > 254 || !EMAIL_RE.test(email)))
-      return { error: 'Invalid email format' };
-    if (mobile && !/^\+989\d{9}$/.test(mobile))
-      return { error: 'Invalid Iranian mobile number format' };
+      throw new InputFieldException(['email']);
+    if (mobile && !/^\+989\d{9}$/.test(mobile)) throw new InputFieldException(['mobile']);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');

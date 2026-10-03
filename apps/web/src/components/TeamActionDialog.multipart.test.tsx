@@ -127,3 +127,187 @@ it('keeps successful step-up verification across a failed save and retries the i
   expect(fetcher.mock.calls[2]![1]?.body).toBe(JSON.stringify(body));
   expect(onSuccess).toHaveBeenCalledOnce();
 });
+
+it.each([
+  [400, { code: 'VALIDATION:INPUT:INVALID', fields: ['postalCode'] }, true],
+  [400, { code: 'OTHER', fields: ['postalCode'] }, false],
+  [400, { code: 'VALIDATION:INPUT:INVALID', fields: 'postalCode' }, false],
+  [409, { code: 'VALIDATION:INPUT:INVALID', fields: ['postalCode'] }, false],
+] as const)(
+  'routes only structured input errors from status %s to the owning form',
+  async (status, error, mapped) => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response(JSON.stringify({ error }), { status }))
+    );
+    const onValidationError = vi.fn(() => true),
+      onClose = vi.fn(),
+      onSuccess = vi.fn(async () => {});
+    await act(async () =>
+      root.render(
+        <TeamActionDialog
+          action={{
+            title: 'Edit',
+            description: 'Customer',
+            path: '/api/crm/profiles/one',
+            method: 'PUT',
+          }}
+          onClose={onClose}
+          onSuccess={onSuccess}
+          onValidationError={onValidationError}
+        />
+      )
+    );
+    await act(async () =>
+      document
+        .querySelector('[role=dialog] form')!
+        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    );
+    expect(onValidationError).toHaveBeenCalledTimes(mapped ? 1 : 0);
+    expect(onClose).toHaveBeenCalledTimes(mapped ? 1 : 0);
+    expect(onSuccess).not.toHaveBeenCalled();
+    if (!mapped) expect(document.querySelector('[role=dialog] [role=alert]')).not.toBeNull();
+  }
+);
+it('retains generic confirmation feedback when public fields are not owned by the editor', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            error: {
+              code: 'VALIDATION:INPUT:INVALID',
+              fields: ['nationalId'],
+              message: 'private detail',
+            },
+          }),
+          { status: 400 }
+        )
+    )
+  );
+  const onClose = vi.fn(),
+    onValidationError = vi.fn(() => false);
+  await act(async () =>
+    root.render(
+      <TeamActionDialog
+        action={{
+          title: 'Edit',
+          description: 'Customer',
+          path: '/api/crm/profiles/one',
+          method: 'PUT',
+        }}
+        onClose={onClose}
+        onSuccess={vi.fn(async () => {})}
+        onValidationError={onValidationError}
+      />
+    )
+  );
+  await act(async () =>
+    document
+      .querySelector('[role=dialog] form')!
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  );
+  expect(onValidationError).toHaveBeenCalledWith(['nationalId']);
+  expect(onClose).not.toHaveBeenCalled();
+  expect(document.querySelector('[role=dialog] [role=alert]')?.textContent).toContain(
+    'could not be completed'
+  );
+  expect(document.body.textContent).not.toContain('private detail');
+});
+it('ignores an obsolete validation response after the captured action changes', async () => {
+  let resolve!: (response: Response) => void;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(
+      () =>
+        new Promise<Response>((done) => {
+          resolve = done;
+        })
+    )
+  );
+  const onClose = vi.fn(),
+    onValidationError = vi.fn(() => true);
+  const props = { onClose, onValidationError, onSuccess: vi.fn(async () => {}) };
+  await act(async () =>
+    root.render(
+      <TeamActionDialog
+        {...props}
+        action={{
+          title: 'Edit one',
+          description: 'Customer one',
+          path: '/api/crm/profiles/one',
+          method: 'PUT',
+        }}
+      />
+    )
+  );
+  await act(async () =>
+    document
+      .querySelector('[role=dialog] form')!
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  );
+  await act(async () =>
+    root.render(
+      <TeamActionDialog
+        {...props}
+        action={{
+          title: 'Edit two',
+          description: 'Customer two',
+          path: '/api/crm/profiles/two',
+          method: 'PUT',
+        }}
+      />
+    )
+  );
+  await act(async () =>
+    resolve(
+      new Response(
+        JSON.stringify({ error: { code: 'VALIDATION:INPUT:INVALID', fields: ['email'] } }),
+        { status: 400 }
+      )
+    )
+  );
+  expect(onValidationError).not.toHaveBeenCalled();
+  expect(onClose).not.toHaveBeenCalled();
+  expect(document.querySelector('[role=dialog] [role=alert]')).toBeNull();
+});
+
+it('locks the pending confirmation against duplicate submits and announces its busy state', async () => {
+  let resolve!: (response: Response) => void;
+  const fetcher = vi.fn(
+    () =>
+      new Promise<Response>((done) => {
+        resolve = done;
+      })
+  );
+  vi.stubGlobal('fetch', fetcher);
+  const onSuccess = vi.fn(async () => {}),
+    onClose = vi.fn();
+  await act(async () =>
+    root.render(
+      <TeamActionDialog
+        action={{
+          title: 'Edit',
+          description: 'Customer',
+          path: '/api/crm/profiles/one',
+          method: 'PUT',
+        }}
+        onSuccess={onSuccess}
+        onClose={onClose}
+      />
+    )
+  );
+  const form = document.querySelector('[role=dialog] form')!;
+  await act(async () => {
+    for (let i = 0; i < 2; i++)
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  });
+  expect(fetcher).toHaveBeenCalledOnce();
+  const submit = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+  expect(submit.disabled).toBe(true);
+  expect(submit.getAttribute('aria-busy')).toBe('true');
+  await act(async () => resolve(new Response(JSON.stringify({ updated: true }))));
+  expect(onSuccess).toHaveBeenCalledOnce();
+  expect(onClose).toHaveBeenCalledOnce();
+});

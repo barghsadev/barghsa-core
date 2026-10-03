@@ -94,7 +94,12 @@ it('validates contact and identity fields and treats no-op edits as successful w
     { username: 'attacker@example.test' },
     { nationalId: '0012345678' },
   ]) {
-    expect((await edit(body)).status).toBe(400);
+    const rejected = await edit(body);
+    expect(rejected.status).toBe(400);
+    const error = ((await rejected.json()) as { error: { fields?: unknown } }).error;
+    const field = Object.keys(body)[0]!;
+    if (['email', 'mobile', 'title'].includes(field)) expect(error.fields).toEqual([field]);
+    else expect(error.fields).toBeUndefined();
   }
   expect((await edit({}, 'invalid-id')).status).toBe(400);
   expect((await edit({}, randomUUID())).status).toBe(404);
@@ -110,7 +115,9 @@ it('validates contact and identity fields and treats no-op edits as successful w
     ).rows[0].count
   ).toBe(0);
   await http.pool.query("DELETE FROM user_roles WHERE user_id='contact-staff'");
-  expect((await edit({ title: 'Forbidden' })).status).toBe(403);
+  const denied = await edit({ email: 'invalid' });
+  expect(denied.status).toBe(403);
+  expect(((await denied.json()) as { error: { fields?: unknown } }).error.fields).toBeUndefined();
 });
 
 it('rolls back profile edits when their audit write fails', async () => {

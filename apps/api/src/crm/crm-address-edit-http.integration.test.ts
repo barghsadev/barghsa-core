@@ -182,8 +182,16 @@ it('rejects invalid address fields, identity edits and new inactive or unrelated
     { ...edit, fullAddress: 'x'.repeat(501) },
     { ...edit, postalCode: '0123456789' },
     { ...edit, cityId: city },
-  ])
-    expect((await update(profileId, { title: 'Must roll back', address })).status).toBe(400);
+  ]) {
+    const rejected = await update(profileId, { title: 'Must roll back', address });
+    expect(rejected.status).toBe(400);
+    const fields = ((await rejected.json()) as { error: { fields?: unknown } }).error.fields;
+    if (address.fullAddress.trim().length === 0 || address.fullAddress.length > 500)
+      expect(fields).toEqual(['fullAddress']);
+    else if (address.postalCode.startsWith('0')) expect(fields).toEqual(['postalCode']);
+    else if (address.cityId === city) expect(fields).toEqual(['provinceId', 'cityId']);
+    else expect(fields).toBeUndefined();
+  }
   expect((await update(profileId, { firstName: 'Identity bypass', address: edit })).status).toBe(
     400
   );

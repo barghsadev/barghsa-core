@@ -1,4 +1,7 @@
-import { useId, useRef, useState, type FormEvent, type RefObject } from 'react';
+import { useId, useRef, useState, type RefObject } from 'react';
+import { z } from 'zod';
+import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { Button, Input, Label, DependentSelect } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/crm';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
@@ -52,11 +55,25 @@ export function CrmLegalEditor({
   const locale = useLocale(),
     id = useId(),
     saveButton = useRef<HTMLButtonElement>(null);
-  const [values, setValues] = useState(
+  const label = (field: Field) => t('crm.profile.field.' + labelKey(field), locale);
+  const messages = Object.fromEntries(
+    fields.map((field) => [field, t('crm.legal.invalid', locale).replace('{field}', label(field))])
+  ) as Record<Field, string>;
+  const draft = useDraftForm<Record<Field, string>>(
+    z.record(z.enum(fields), z.string()).superRefine((values, context) => {
+      for (const field of inspect(values).invalid)
+        context.addIssue({ code: 'custom', path: [field], message: messages[field] });
+    }),
     () =>
       Object.fromEntries(fields.map((key) => [key, legalInfo[key] ?? ''])) as Record<Field, string>
   );
-  const [errors, setErrors] = useState<Field[]>([]);
+  const values = draft.values;
+  const errors = draft.errors;
+  const onValidationError = useActionFieldErrors(
+    draft.form,
+    messages,
+    t('crm.profile.error.generic', locale)
+  );
   const [pending, setPending] = useState<Changes | null>(null);
   const provinces = useGeographyOptions('/api/geography/provinces');
   const companies = useGeographyOptions('/api/geography/company-types');
@@ -79,7 +96,6 @@ export function CrmLegalEditor({
     representativeProvinceId: provinces,
     representativeCityId: representativeCities,
   };
-  const label = (field: Field) => t('crm.profile.field.' + labelKey(field), locale);
   function display(field: Field, value: string | null) {
     const list = options[field as keyof typeof options];
     if (!list || !value) return value || '—';
@@ -95,16 +111,11 @@ export function CrmLegalEditor({
       : t('crm.records.unknown', locale);
   }
   function change(field: Field, value: string) {
-    setValues((old) => ({
-      ...old,
-      [field]: value,
-      ...(field === 'officialProvinceId' ? { officialCityId: '' } : {}),
-      ...(field === 'representativeProvinceId' ? { representativeCityId: '' } : {}),
-    }));
-    setErrors((old) => old.filter((key) => key !== field));
+    draft.field(field)[1](value);
+    if (field === 'officialProvinceId') draft.field('officialCityId')[1]('');
+    if (field === 'representativeProvinceId') draft.field('representativeCityId')[1]('');
   }
-  function review(event: FormEvent) {
-    event.preventDefault();
+  function inspect(values: Record<Field, string>) {
     const changes: Changes = {},
       invalid: Field[] = [];
     for (const field of fields) {
@@ -119,7 +130,7 @@ export function CrmLegalEditor({
       if (
         (!nullable && !text) ||
         text.length > max ||
-        (text && kind === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text)) ||
+        (text && kind === 'email' && !z.email().safeParse(text).success) ||
         (text &&
           kind === 'date' &&
           (!/^\d{4}-\d{2}-\d{2}$/.test(text) ||
@@ -131,9 +142,13 @@ export function CrmLegalEditor({
       )
         invalid.push(field);
     }
-    setErrors(invalid);
-    if (!invalid.length && Object.keys(changes).length) setPending(changes);
+    return { changes, invalid };
   }
+  const review = draft.form.handleSubmit((values) => {
+    if (pending) return;
+    const { changes } = inspect(values);
+    if (Object.keys(changes).length) setPending(changes);
+  });
   async function saved(value: unknown) {
     const result = value as {
       updated?: unknown;
@@ -183,11 +198,14 @@ export function CrmLegalEditor({
         className="col-span-full space-y-4 rounded border bg-card text-card-foreground p-4 [color-scheme:light] dark:[color-scheme:dark]"
       >
         <p className="text-sm text-muted-foreground">{t('crm.legal.description', locale)}</p>
-        <fieldset disabled={pending !== null} className="grid gap-4 sm:grid-cols-2">
+        <fieldset
+          disabled={pending !== null || draft.form.formState.isSubmitting}
+          className="grid gap-4 sm:grid-cols-2"
+        >
           {fields.map((field) => {
             const [max, kind] = specs[field],
               fieldId = id + '-' + field,
-              invalid = errors.includes(field);
+              invalid = !!errors[field];
             const list = options[field as keyof typeof options];
             const name = legalInfo[(labelKey(field) + 'Name') as keyof LegalInfo];
             const currentName =
@@ -197,13 +215,12 @@ export function CrmLegalEditor({
                   : name.nameEn
                 : t('crm.records.unknown', locale);
             const inputProps = {
+              ...draft.bind(field),
               id: fieldId,
               value: values[field],
               onChange: (
                 event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
               ) => change(field, event.target.value),
-              'aria-invalid': invalid,
-              'aria-describedby': invalid ? fieldId + '-error' : undefined,
             };
             const dependencyField =
               field === 'officialCityId'
@@ -274,8 +291,8 @@ export function CrmLegalEditor({
                   />
                 )}
                 {invalid && (
-                  <p id={fieldId + '-error'} role="alert" className="text-sm text-destructive">
-                    {t('crm.legal.invalid', locale).replace('{field}', label(field))}
+                  <p id={draft.errorId(field)} role="alert" className="text-sm text-destructive">
+                    {errors[field]?.message}
                   </p>
                 )}
               </div>
@@ -315,6 +332,7 @@ export function CrmLegalEditor({
           finalFocus={() => saveButton.current ?? returnFocus.current}
           onClose={() => setPending(null)}
           onSuccess={saved}
+          onValidationError={onValidationError}
         />
       )}
     </>

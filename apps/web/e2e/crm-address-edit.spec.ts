@@ -317,3 +317,72 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(panel).not.toContainText('Stale draft');
   });
 }
+
+for (const locale of ['fa', 'en'] as const)
+  test(`CRM address server field errors retain draft and focus correction (${locale})`, async ({
+    page,
+  }) => {
+    const fixture = await setup(page, locale),
+      writes: Record<string, unknown>[] = [];
+    fixture.setWrite(async (route) => {
+      const body = route.request().postDataJSON();
+      writes.push(body);
+      if (writes.length === 1)
+        return route.fulfill({
+          status: 400,
+          json: {
+            error: {
+              code: 'VALIDATION:INPUT:INVALID',
+              fields: ['postalCode'],
+              message: 'private detail',
+            },
+          },
+        });
+      const saved = {
+        ...fixture.current.addresses[0]!,
+        ...body.address,
+        updatedAt: '2026-09-01T01:00:00.654321Z',
+      };
+      fixture.current.addresses = [saved];
+      return route.fulfill({
+        json: { updated: true, profile: fixture.current.profile, address: saved },
+      });
+    });
+    await fixture.open();
+    const panel = page.locator('#panel-addresses');
+    await panel
+      .getByRole('button', { name: locale === 'fa' ? 'ویرایش آدرس' : 'Edit address', exact: true })
+      .click();
+    const full = panel.getByLabel(locale === 'fa' ? 'آدرس کامل' : 'Full address', { exact: true });
+    const postal = panel.getByLabel(locale === 'fa' ? 'کد پستی' : 'Postal code', { exact: true });
+    await full.fill('Retained street');
+    await postal.fill('0123456789');
+    await full.focus();
+    await expect(postal).toHaveAttribute('aria-invalid', 'true');
+    await postal.fill('2345678901');
+    await expect(postal).not.toHaveAttribute('aria-invalid', 'true');
+    const save = panel.getByRole('button', {
+      name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
+      exact: true,
+    });
+    await save.click();
+    const confirm = page
+      .getByRole('dialog')
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true });
+    await confirm.click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(postal).toBeEnabled();
+    await expect(postal).toBeFocused();
+    await expect(postal).toHaveValue('2345678901');
+    await expect(postal).toHaveAttribute('aria-invalid', 'true');
+    await expect(full).toHaveValue('Retained street');
+    await expect(panel).not.toContainText('private detail');
+    await postal.fill('3456789012');
+    await save.click();
+    await confirm.click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(panel.getByRole('status')).toBeVisible();
+    await expect(panel).toContainText('Retained street');
+    await expect(panel).toContainText('3456789012');
+    expect(writes).toHaveLength(2);
+  });

@@ -1,7 +1,22 @@
+import type { Route } from '@playwright/test';
+import { fullNavigation } from './navigation-fixture';
+import { t } from '@barghsa/i18n/crm';
 import { verifyClippedContrast } from './clipped-contrast';
 import { formatBrowserDate } from './browser-date';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
+// Protected routes require a staff session independently of the customer permissions.
+const defaultApiResponse = (route: Route) =>
+  new URL(route.request().url()).pathname === '/api/auth/user'
+    ? route.fulfill({
+        json: {
+          userId: 'crm-staff-viewer',
+          isStaff: true,
+          requiresTosAcceptance: false,
+          navigation: fullNavigation('staff'),
+        },
+      })
+    : route.fulfill({ status: 404, json: {} });
 const id = '11111111-1111-4111-8111-111111111111';
 function detail(targetAdmin: boolean, allowed: boolean) {
   return {
@@ -44,12 +59,13 @@ for (const allowed of [true, false])
     page,
   }) => {
     await page.addInitScript(() => {
+      localStorage.setItem('barghsa.locale', 'en');
       if (document.documentElement) document.documentElement.lang = 'en';
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = 'en';
       }).observe(document, { childList: true });
     });
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/**', defaultApiResponse);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
     );
@@ -72,6 +88,7 @@ for (const allowed of [true, false])
 for (const locale of ['fa', 'en'] as const)
   test(`CRM required URL opens the retained archived profile (${locale})`, async ({ page }) => {
     await page.addInitScript((lang) => {
+      localStorage.setItem('barghsa.locale', lang);
       if (document.documentElement) document.documentElement.lang = lang;
       new MutationObserver(() => {
         document.documentElement.lang = lang;
@@ -85,7 +102,7 @@ for (const locale of ['fa', 'en'] as const)
       archivedReason: 'Customer closure request',
     });
     let profileChecks = 0;
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/**', defaultApiResponse);
     await page.route('**/api/profiles', (route) => {
       profileChecks++;
       return route.fulfill({ json: [] });
@@ -108,7 +125,7 @@ for (const locale of ['fa', 'en'] as const)
         exact: true,
       })
     ).toHaveCount(0);
-    await expect(page.getByRole('combobox')).toHaveCount(0);
+    await expect(page.getByRole('main').getByRole('combobox')).toHaveCount(0);
     // Account security remains available: only the selected profile is archived.
     await expect(
       page.getByRole('button', {
@@ -141,6 +158,7 @@ for (const locale of ['fa', 'en'] as const) {
     page,
   }) => {
     await page.addInitScript((lang) => {
+      localStorage.setItem('barghsa.locale', lang);
       if (document.documentElement) document.documentElement.lang = lang;
       new MutationObserver(() => {
         document.documentElement.lang = lang;
@@ -171,7 +189,7 @@ for (const locale of ['fa', 'en'] as const) {
       agentRelationships: { items: [invitation], nextCursor: 'older-agents' },
       verificationHistory: { items: [verification], nextCursor: 'older-history' },
     };
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/**', defaultApiResponse);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
     );
@@ -309,6 +327,7 @@ for (const locale of ['fa', 'en'] as const) {
       page,
     }) => {
       await page.addInitScript((lang) => {
+        localStorage.setItem('barghsa.locale', lang);
         if (document.documentElement) document.documentElement.lang = lang;
         new MutationObserver(() => {
           document.documentElement.lang = lang;
@@ -323,7 +342,7 @@ for (const locale of ['fa', 'en'] as const) {
             ? 'تغییر اجباری رمز عبور'
             : 'Force Password Change';
       const confirmName = locale === 'fa' ? 'تأیید' : 'Confirm';
-      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/**', defaultApiResponse);
       await page.route('**/api/user/settings/timezone', (route) =>
         route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
       );
@@ -367,7 +386,7 @@ for (const locale of ['fa', 'en'] as const) {
       await expect(dialog.getByRole('alert')).toBeVisible();
       await expect(dialog).toContainText('Lost device');
       acknowledged = true;
-      await password.fill('Test-password-123!');
+      await expect(dialog.locator('input[type=password]')).toHaveCount(0);
       await confirm.click();
       await expect(dialog).toHaveCount(0);
       expect(bodies).toEqual(Array(3).fill({ reason: 'Lost device' }));
@@ -378,12 +397,13 @@ for (const locale of ['fa', 'en'] as const) {
       page,
     }) => {
       await page.addInitScript((lang) => {
+        localStorage.setItem('barghsa.locale', lang);
         if (document.documentElement) document.documentElement.lang = lang;
         new MutationObserver(() => {
           document.documentElement.lang = lang;
         }).observe(document, { childList: true });
       }, locale);
-      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/**', defaultApiResponse);
       await page.route('**/api/user/settings/timezone', (route) =>
         route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
       );
@@ -494,6 +514,7 @@ for (const locale of ['fa', 'en'] as const)
     page,
   }) => {
     await page.addInitScript((lang) => {
+      localStorage.setItem('barghsa.locale', lang);
       if (document.documentElement) document.documentElement.lang = lang;
       new MutationObserver(() => {
         document.documentElement.lang = lang;
@@ -502,7 +523,7 @@ for (const locale of ['fa', 'en'] as const)
     const current = detail(false, true);
     let fail = true;
     const writes: unknown[] = [];
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/**', defaultApiResponse);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
     );
@@ -551,6 +572,17 @@ for (const locale of ['fa', 'en'] as const)
     await expect(mobile).toHaveValue('+989121234567');
     await expect(page.getByText('signin@example.test', { exact: true })).toBeVisible();
     await expect(page.locator('input[value="signin@example.test"]')).toHaveCount(0);
+    await email.fill('broken');
+    await mobile.fill('09121234569');
+    await page
+      .getByRole('button', {
+        name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
+        exact: true,
+      })
+      .click();
+    await expect(email).toHaveAttribute('aria-invalid', 'true');
+    await expect(email).toBeFocused();
+    expect(writes).toEqual([]);
     await email.fill('NEW-OFFICE@example.test');
     await mobile.fill('09121234569');
     await page
@@ -586,6 +618,7 @@ for (const locale of ['fa', 'en'] as const)
     page,
   }) => {
     await page.addInitScript((lang) => {
+      localStorage.setItem('barghsa.locale', lang);
       if (document.documentElement) document.documentElement.lang = lang;
       new MutationObserver(() => {
         document.documentElement.lang = lang;
@@ -637,7 +670,7 @@ for (const locale of ['fa', 'en'] as const)
       ],
     };
     current.profile.profileType = 'LEGAL';
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/**', defaultApiResponse);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
     );
@@ -749,6 +782,7 @@ for (const locale of ['fa', 'en'] as const)
       page,
     }) => {
       await page.addInitScript((lang) => {
+        localStorage.setItem('barghsa.locale', lang);
         if (document.documentElement) document.documentElement.lang = lang;
         new MutationObserver(() => {
           document.documentElement.lang = lang;
@@ -760,7 +794,7 @@ for (const locale of ['fa', 'en'] as const)
         viewerPermissions: { ...detail(false, true).viewerPermissions, canReadDocuments: allowed },
       };
       current.profile.profileType = 'LEGAL';
-      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/**', defaultApiResponse);
       await page.route('**/api/user/settings/timezone', (route) =>
         route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
       );
@@ -862,6 +896,7 @@ for (const locale of ['en', 'fa'] as const)
       page,
     }) => {
       await page.addInitScript((lang) => {
+        localStorage.setItem('barghsa.locale', lang);
         if (document.documentElement) document.documentElement.lang = lang;
         new MutationObserver(() => {
           document.documentElement.lang = lang;
@@ -880,7 +915,7 @@ for (const locale of ['en', 'fa'] as const)
             updatedAt: current.profile.updatedAt,
           },
         });
-      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/**', defaultApiResponse);
       await page.route(`**/api/crm/profiles/${id}`, (route) => route.fulfill({ json: current }));
       await page.route('**/api/crm/verification-cases?*', (route) =>
         route.fulfill({
@@ -943,6 +978,7 @@ for (const locale of ['fa', 'en'] as const)
       page,
     }, testInfo) => {
       await page.addInitScript((locale) => {
+        localStorage.setItem('barghsa.locale', locale);
         const apply = () => {
           document.documentElement.lang = locale;
           document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
@@ -950,11 +986,15 @@ for (const locale of ['fa', 'en'] as const)
         if (document.documentElement) apply();
         new MutationObserver(apply).observe(document, { childList: true });
       }, locale);
-      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/**', defaultApiResponse);
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
           json: {
             appTitle: 'Archive review',
+            appTitleFa: 'بررسی پروفایل',
+            supportEmail: 'support@example.test',
+            supportPhone: '+98 21 12345678',
+            supportMobile: '+98 912 1234567',
             slogan: '',
             primaryColor: '#2563eb',
             secondaryColor: '#64748b',
@@ -1159,6 +1199,7 @@ for (const locale of ['fa', 'en'] as const)
       page,
     }, testInfo) => {
       await page.addInitScript((locale) => {
+        localStorage.setItem('barghsa.locale', locale);
         const apply = () => {
           document.documentElement.lang = locale;
           document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
@@ -1166,11 +1207,15 @@ for (const locale of ['fa', 'en'] as const)
         if (document.documentElement) apply();
         new MutationObserver(apply).observe(document, { childList: true });
       }, locale);
-      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/**', defaultApiResponse);
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
           json: {
             appTitle: 'Archive review',
+            appTitleFa: 'بررسی پروفایل',
+            supportEmail: 'support@example.test',
+            supportPhone: '+98 21 12345678',
+            supportMobile: '+98 912 1234567',
             slogan: '',
             primaryColor: '#2563eb',
             secondaryColor: '#64748b',
@@ -1295,6 +1340,7 @@ for (const locale of ['fa', 'en'] as const)
       page,
     }) => {
       await page.addInitScript((locale) => {
+        localStorage.setItem('barghsa.locale', locale);
         const apply = () => {
           document.documentElement.lang = locale;
           document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
@@ -1302,11 +1348,15 @@ for (const locale of ['fa', 'en'] as const)
         if (document.documentElement) apply();
         new MutationObserver(apply).observe(document, { childList: true });
       }, locale);
-      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/**', defaultApiResponse);
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
           json: {
             appTitle: 'Archive review',
+            appTitleFa: 'بررسی پروفایل',
+            supportEmail: 'support@example.test',
+            supportPhone: '+98 21 12345678',
+            supportMobile: '+98 912 1234567',
             slogan: '',
             primaryColor: '#2563eb',
             secondaryColor: '#64748b',
@@ -1346,6 +1396,9 @@ for (const locale of ['fa', 'en'] as const)
       });
       await page.goto(`/admin/crm/profiles/${id}`);
       const main = page.getByRole('main');
+      await expect
+        .poll(() => page.locator('html').evaluate((n) => n.classList.contains('dark')))
+        .toBe(darkMode);
       await expect(main.getByRole('status')).toHaveText(
         locale === 'fa' ? 'در حال بارگذاری پروفایل…' : 'Loading profile...'
       );
@@ -1379,3 +1432,105 @@ for (const locale of ['fa', 'en'] as const)
       await expect(main.getByRole('tablist')).toBeVisible();
       expect([...new Set(requestedPhases)]).toEqual([0, 1, 2, 3, 4, 5]);
     });
+
+for (const locale of ['fa', 'en'] as const)
+  test(`CRM contact draft survives server field errors and rejects mismatched receipts (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((lang) => {
+      localStorage.setItem('barghsa.locale', lang);
+      if (document.documentElement) document.documentElement.lang = lang;
+    }, locale);
+    const current = detail(false, true),
+      writes: Record<string, string>[] = [];
+    await page.route('**/api/**', defaultApiResponse);
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'UTC' } })
+    );
+    await page.route(`**/api/crm/profiles/${id}`, (route) => {
+      if (route.request().method() !== 'PUT') return route.fulfill({ json: current });
+      const body = route.request().postDataJSON();
+      writes.push(body);
+      if (writes.length <= 2)
+        return route.fulfill({
+          status: 400,
+          json: {
+            error: {
+              code: 'VALIDATION:INPUT:INVALID',
+              fields: [writes.length === 1 ? 'nationalId' : 'email'],
+              message: 'private detail',
+            },
+          },
+        });
+      if (writes.length === 3)
+        return route.fulfill({ json: { updated: true, profile: current.profile } });
+      Object.assign(current.profile, {
+        title: body.title,
+        contactEmail: body.email.trim().toLowerCase(),
+        contactMobile: body.mobile,
+      });
+      return route.fulfill({ json: { ...current, updated: true } });
+    });
+    await page.goto(`/admin/crm/profiles/${id}`);
+    // Editing from Overview opens the fields; hidden tabs must retain this same draft.
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
+      .click();
+    const email = page.getByLabel(locale === 'fa' ? 'ایمیل' : 'Email', { exact: true });
+    const title = page.getByLabel(t('crm.profile.field.title', locale), { exact: true });
+    const mobile = page.getByLabel(t('crm.profile.label.mobile', locale), { exact: true });
+    await title.fill('x'.repeat(257));
+    await mobile.fill('1234');
+    const initialSave = page.getByRole('button', {
+      name: t('crm.profile.edit.save', locale),
+      exact: true,
+    });
+    await initialSave.click();
+    await expect(mobile).toHaveAttribute('aria-invalid', 'true');
+    await expect(mobile).toBeFocused();
+    await mobile.fill(current.profile.contactMobile);
+    await initialSave.click();
+    await expect(title).toBeFocused();
+    await expect(title).toHaveAttribute('aria-invalid', 'true');
+    expect(writes).toEqual([]);
+    await email.fill('draft@example.test');
+    await title.fill('Draft title');
+    await page
+      .getByRole('tab', { name: locale === 'fa' ? 'خلاصه' : 'Overview', exact: true })
+      .click();
+    const save = page.getByRole('button', {
+      name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
+      exact: true,
+    });
+    await save.click();
+    const dialog = page.getByRole('dialog');
+    const confirm = dialog.getByRole('button', {
+      name: locale === 'fa' ? 'تأیید' : 'Confirm',
+      exact: true,
+    });
+    await confirm.click();
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(dialog).not.toContainText('private detail');
+    await expect(email).toHaveValue('draft@example.test');
+    await confirm.click();
+    await expect(dialog).toHaveCount(0);
+    await expect(email).toBeEnabled();
+    await expect(email).toBeFocused();
+    await expect(email).toHaveAttribute('aria-invalid', 'true');
+    await expect(title).toHaveValue('Draft title');
+    await expect(page.locator('body')).not.toContainText('private detail');
+    await email.fill('corrected@example.test');
+    await expect(email).not.toHaveAttribute('aria-invalid', 'true');
+    await save.click();
+    await confirm.click();
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(email).toHaveValue('corrected@example.test');
+    await expect(title).toHaveValue('Draft title');
+    await confirm.click();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.getByText('corrected@example.test', { exact: true })).toBeVisible();
+    await expect(page.getByText('Draft title', { exact: true })).toBeVisible();
+    expect(writes).toHaveLength(4);
+    expect(writes[0]).toEqual(writes[1]);
+    expect(writes[2]).toEqual(writes[3]);
+  });

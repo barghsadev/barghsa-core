@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { useWizardForm as useDraftForm, type WizardFieldBinding } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { CrmLegalEditor } from '../components/CrmLegalEditor.js';
 import { CrmAddressEditor } from '../components/CrmAddressEditor.js';
 import { CrmLegalDocuments } from '../components/CrmLegalDocuments.js';
@@ -222,11 +225,36 @@ function CrmProfileDetailContent() {
   }, [editingLegal]);
   const [addressSaved, setAddressSaved] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editFields, setEditFields] = useState<EditableFields>({
-    title: '',
-    email: '',
-    mobile: '',
-  });
+  const editMessages = {
+    email: t('crm.legal.invalid', locale).replace('{field}', t('crm.profile.label.email', locale)),
+    mobile: t('crm.legal.invalid', locale).replace(
+      '{field}',
+      t('crm.profile.label.mobile', locale)
+    ),
+    title: t('crm.legal.invalid', locale).replace('{field}', t('crm.profile.field.title', locale)),
+  };
+  const editDraft = useDraftForm<EditableFields>(
+    z.object({
+      email: z.string().superRefine((value, context) => {
+        const text = value.trim();
+        if (value.length > 254 || (text && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text)))
+          context.addIssue({ code: 'custom', message: editMessages.email });
+      }),
+      mobile: z.string().superRefine((value, context) => {
+        const text = value.trim();
+        if (value.length > 32 || (text && !/^(?:09\d{9}|\+989\d{9})$/.test(text)))
+          context.addIssue({ code: 'custom', message: editMessages.mobile });
+      }),
+      title: z.string().max(256, editMessages.title),
+    }),
+    { title: '', email: '', mobile: '' }
+  );
+  const editFields = editDraft.values;
+  const editValidationError = useActionFieldErrors(
+    editDraft.form,
+    editMessages,
+    t('crm.profile.error.generic', locale)
+  );
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [pendingAction, setPendingAction] = useState<{
@@ -283,12 +311,13 @@ function CrmProfileDetailContent() {
   /** Enter edit mode, pre-filling form fields from current data */
   function handleStartEdit() {
     if (!data) return;
-    setEditFields({
+    editDraft.form.reset({
       title: data.profile.title ?? '',
       email: data.profile.contactEmail ?? '',
       mobile: data.profile.contactMobile ?? '',
     });
     setIsEditing(true);
+    setActiveTab('details');
     setSaveError(null);
     setSaveSuccess(false);
   }
@@ -313,7 +342,8 @@ function CrmProfileDetailContent() {
       kind,
     });
   }
-  function handleConfirmSave() {
+  const handleConfirmSave = editDraft.form.handleSubmit((values) => {
+    if (saving || !isEditing) return;
     queueAction(
       {
         title: t('crm.profile.edit.confirm.title', locale),
@@ -321,14 +351,14 @@ function CrmProfileDetailContent() {
         path: `/api/crm/profiles/${profileId}`,
         method: 'PUT',
         body: {
-          title: editFields.title || null,
-          email: editFields.email || null,
-          mobile: editFields.mobile || null,
+          title: values.title || null,
+          email: values.email || null,
+          mobile: values.mobile || null,
         },
       },
       'edit'
     );
-  }
+  });
   function handleForcePasswordChange() {
     if (!data || !forcePwChangeReason.trim()) return;
     setShowForcePwChange(false);
@@ -370,7 +400,20 @@ function CrmProfileDetailContent() {
         : result.profileId === profileId;
     if (kind === 'edit') {
       const profile = result.profile as Record<string, unknown> | undefined;
-      if (result.updated !== true || profile?.id !== profileId) {
+      const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() || null : null;
+      const mobile = typeof body.mobile === 'string' ? body.mobile.trim() || null : null;
+      const normalizedMobile =
+        mobile && /^09\d{9}$/.test(mobile) ? '+98' + mobile.slice(1) : mobile;
+      if (
+        result.updated !== true ||
+        !profile ||
+        profile.id !== profileId ||
+        profile.title !== body.title ||
+        profile.contactEmail !== email ||
+        profile.contactMobile !== normalizedMobile ||
+        typeof profile.updatedAt !== 'string' ||
+        !Number.isFinite(Date.parse(profile.updatedAt))
+      ) {
         throw new Error('Invalid CRM profile update acknowledgement');
       }
     } else {
@@ -525,15 +568,18 @@ function CrmProfileDetailContent() {
             ) : (
               <>
                 <button
-                  onClick={handleConfirmSave}
-                  disabled={saving}
+                  onClick={(event) => {
+                    setActiveTab('details');
+                    void handleConfirmSave(event);
+                  }}
+                  disabled={saving || editDraft.form.formState.isSubmitting}
                   className="text-sm px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700 transition-colors disabled:opacity-50"
                 >
                   {saving ? '...' : t('crm.profile.edit.save', locale)}
                 </button>
                 <button
                   onClick={handleCancelEdit}
-                  disabled={saving}
+                  disabled={saving || editDraft.form.formState.isSubmitting}
                   className="text-sm px-3 py-1 rounded bg-muted text-foreground hover:bg-accent transition-colors disabled:opacity-50"
                 >
                   {t('crm.profile.edit.cancel', locale)}
@@ -827,7 +873,7 @@ function CrmProfileDetailContent() {
       )}
 
       {/* Tab: Profile Details */}
-      {(activeTab === 'details' || editingLegal) && (
+      {(activeTab === 'details' || editingLegal || isEditing) && (
         <div
           id="panel-details"
           role="tabpanel"
@@ -867,13 +913,19 @@ function CrmProfileDetailContent() {
                 <EditRow
                   label={t('crm.profile.label.email', locale)}
                   value={editFields.email}
-                  onChange={(v) => setEditFields((prev) => ({ ...prev, email: v }))}
+                  onChange={editDraft.field('email')[1]}
+                  binding={editDraft.bind('email')}
+                  error={editDraft.errors.email?.message}
+                  disabled={saving || editDraft.form.formState.isSubmitting}
                   placeholder={profile.contactEmail ?? t('crm.profile.edit.noChanges', locale)}
                 />
                 <EditRow
                   label={t('crm.profile.label.mobile', locale)}
                   value={editFields.mobile}
-                  onChange={(v) => setEditFields((prev) => ({ ...prev, mobile: v }))}
+                  onChange={editDraft.field('mobile')[1]}
+                  binding={editDraft.bind('mobile')}
+                  error={editDraft.errors.mobile?.message}
+                  disabled={saving || editDraft.form.formState.isSubmitting}
                   placeholder={profile.contactMobile ?? t('crm.profile.edit.noChanges', locale)}
                 />
               </>
@@ -928,7 +980,10 @@ function CrmProfileDetailContent() {
               <EditRow
                 label={t('crm.profile.field.title', locale)}
                 value={editFields.title}
-                onChange={(v) => setEditFields((prev) => ({ ...prev, title: v }))}
+                onChange={editDraft.field('title')[1]}
+                binding={editDraft.bind('title')}
+                error={editDraft.errors.title?.message}
+                disabled={saving || editDraft.form.formState.isSubmitting}
                 placeholder={profile.title ?? t('crm.profile.edit.noChanges', locale)}
               />
             ) : (
@@ -1217,17 +1272,27 @@ function CrmProfileDetailContent() {
               role="region"
               aria-label={t('crm.profile.tab.sessions', locale)}
             >
-              <table className="w-full text-sm">
+              <table className="w-full text-sm whitespace-nowrap">
                 <thead>
                   <tr className="border-b border-border text-start text-muted-foreground">
-                    <th className="pb-2 font-medium">{t('crm.profile.label.sessionId', locale)}</th>
-                    <th className="pb-2 font-medium">{t('crm.profile.label.created', locale)}</th>
-                    <th className="pb-2 font-medium">
+                    <th className="py-2 font-medium text-start">
+                      {t('crm.profile.label.sessionId', locale)}
+                    </th>
+                    <th className="py-2 font-medium text-start">
+                      {t('crm.profile.label.created', locale)}
+                    </th>
+                    <th className="py-2 font-medium text-start">
                       {t('crm.profile.label.lastActive', locale)}
                     </th>
-                    <th className="pb-2 font-medium">{t('crm.profile.label.expires', locale)}</th>
-                    <th className="pb-2 font-medium">{t('crm.profile.label.status', locale)}</th>
-                    <th className="pb-2 font-medium">{t('crm.profile.label.device', locale)}</th>
+                    <th className="py-2 font-medium text-start">
+                      {t('crm.profile.label.expires', locale)}
+                    </th>
+                    <th className="py-2 font-medium text-start">
+                      {t('crm.profile.label.status', locale)}
+                    </th>
+                    <th className="py-2 font-medium text-start">
+                      {t('crm.profile.label.device', locale)}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1348,6 +1413,7 @@ function CrmProfileDetailContent() {
           finalFocus={pendingAction.kind === 'archive' ? archiveButton : undefined}
           onClose={() => setPendingAction(null)}
           onSuccess={actionSucceeded}
+          {...(pendingAction.kind === 'edit' ? { onValidationError: editValidationError } : {})}
         />
       )}
       {showForcePwChange && (
@@ -1472,11 +1538,17 @@ function EditRow({
   value,
   onChange,
   placeholder,
+  binding,
+  error,
+  disabled,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
+  binding: WizardFieldBinding;
+  error: string | undefined;
+  disabled: boolean;
 }) {
   const inputId = useId();
   return (
@@ -1485,6 +1557,8 @@ function EditRow({
         {label}
       </label>
       <input
+        {...binding}
+        disabled={disabled}
         id={inputId}
         type="text"
         value={value}
@@ -1493,6 +1567,11 @@ function EditRow({
         dir="auto"
         className="mt-1 w-full border border-input rounded px-2 py-1 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring outline-none"
       />
+      {error && (
+        <p id={binding['aria-describedby']} role="alert" className="text-sm text-destructive">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

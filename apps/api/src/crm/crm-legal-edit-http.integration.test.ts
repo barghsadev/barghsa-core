@@ -193,6 +193,10 @@ for (const invalid of [
       { title: 'Must roll back' }
     );
     expect(response.status, http.logs()).toBe(400);
+    const fields = ((await response.json()) as { error: { fields?: unknown } }).error.fields;
+    const editable = Object.keys(invalid).filter((field) => Object.hasOwn(changes, field));
+    if (editable.length) expect(fields).toEqual(editable);
+    else expect(fields).toBeUndefined();
     expect((await detail(id)).legalInfo).toEqual(original);
     expect((await detail(id)).profile.title).toBe('Old title');
     expect(await audits(id)).toEqual([]);
