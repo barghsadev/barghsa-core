@@ -99,6 +99,11 @@ export class ContractCancellationRequestService {
       };
     });
   }
+  async assertRequestAccess(id: string, actor: ContractActor): Promise<void> {
+    await customerContractAccess(actor, true, async (client, profile) => {
+      await this.requestable(client, id, profile);
+    });
+  }
   async submit(
     id: string,
     input: z.infer<typeof cancellationRequestSchema>,

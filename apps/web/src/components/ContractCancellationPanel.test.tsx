@@ -2,6 +2,7 @@ import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { en, fa } from '@barghsa/i18n/contracts';
+import type * as Documents from '../lib/documents.js';
 import { ContractCancellationPanel } from './ContractCancellationPanel.js';
 import type {
   CancellationIntent,
@@ -16,11 +17,15 @@ const h = vi.hoisted(() => ({
   status: null as CancellationStatus | null,
   preview: null as CancellationPreview | null,
   intent: null as CancellationIntent | null,
-  result: null as CancellationIntent | null,
+  result: null as unknown,
   fail: false,
+  success: null as null | ((value: unknown) => Promise<void>),
+  invalid: null as null | ((fields: unknown[]) => boolean),
+  deny: null as null | (() => void),
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => h.locale }));
-vi.mock('../lib/documents.js', () => ({
+vi.mock('../lib/documents.js', async (original) => ({
+  ...(await original<typeof Documents>()),
   documentRequest: vi.fn(async (path: string) => {
     if (h.fail) throw new Error('offline');
     if (path.endsWith('cancellation-status')) return h.status;
@@ -34,13 +39,20 @@ vi.mock('./TeamActionDialog.js', () => ({
     summary,
     onClose,
     onSuccess,
+    onValidationError,
+    onDenied,
   }: {
     action: TeamAction;
     summary: ReactNode;
     onClose: () => void;
     onSuccess: (value: unknown) => Promise<void>;
+    onValidationError: (fields: unknown[]) => boolean;
+    onDenied: () => void;
   }) => {
     h.action = action;
+    h.success = onSuccess;
+    h.invalid = onValidationError;
+    h.deny = onDenied;
     return (
       <div role="dialog">
         {summary}
@@ -54,6 +66,7 @@ let container: HTMLDivElement, root: Root;
 const changed = vi.fn();
 const saved = (): CancellationIntent => ({
   id: 'intent',
+  contractId: 'contract',
   versionId: 'version',
   reason: 'End service',
   financialFingerprint: 'fingerprint',
@@ -65,6 +78,7 @@ const saved = (): CancellationIntent => ({
   },
 });
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   h.locale = 'en';
   h.action = null;
   h.intent = null;
@@ -127,6 +141,16 @@ async function click(label: string) {
   );
   expect(button, label).toBeTruthy();
   await act(async () => button!.click());
+  const w = h.locale === 'fa' ? fa : en;
+  if (label === w.cancellationReview)
+    await vi.waitFor(() => {
+      expect(
+        [...container.querySelectorAll('button')].some(
+          (button) => button.textContent === w.cancellationRefresh
+        )
+      ).toBe(true);
+      expect(container.textContent).not.toContain(w.loading);
+    });
 }
 async function input(selector: string, value: string) {
   const node = container.querySelector(selector)!;
@@ -149,11 +173,7 @@ for (const locale of ['en', 'fa'] as const)
       await click(w.cancellationReview);
       expect(container.textContent).toContain(w.cancellationElectricity);
       await input('textarea', 'End service');
-      await act(async () =>
-        container
-          .querySelector('form')!
-          .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-      );
+      await submitDecision();
       expect(h.action?.path).toBe('/api/admin/contracts/contract/cancellations');
       expect(h.action?.body).toMatchObject({
         expectedVersionId: 'version',
@@ -173,6 +193,12 @@ for (const locale of ['en', 'fa'] as const)
       expect(h.action?.body).toMatchObject({ intentId: 'intent' });
       expect(h.action?.description).toContain(w.cancellationIrreversible);
       expect(container.textContent).toContain(w.cancellationAlreadyReturned);
+      h.result = {
+        contractId: 'contract',
+        versionId: 'version',
+        intentId: 'intent',
+        state: 'Cancelled',
+      };
       await click('Confirm');
       expect(changed).toHaveBeenCalledOnce();
     }
@@ -217,19 +243,11 @@ it('validates explicit custom refunds before opening the confirmation', async ()
   );
   await input('textarea', 'Partial return');
   await input('input[inputmode="numeric"]', '101');
-  await act(async () =>
-    container
-      .querySelector('form')!
-      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-  );
+  await submitDecision();
   expect(h.action).toBeNull();
-  expect(container.textContent).toContain(en.cancellationInvalid);
+  expect(container.textContent).toContain(en.cancellationAmountInvalid);
   await input('input[inputmode="numeric"]', '40');
-  await act(async () =>
-    container
-      .querySelector('form')!
-      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-  );
+  await submitDecision();
   expect(h.action?.body).toMatchObject({
     refundDecision: {
       mode: 'custom',
@@ -311,7 +329,7 @@ it('requires a reason even for an explicit zero discretionary return', async () 
     });
   await submit();
   expect(h.action).toBeNull();
-  expect(container.textContent).toContain(en.cancellationInvalid);
+  expect(container.textContent).toContain(en.cancellationReasonInvalid);
   await input('textarea', 'No discretionary return approved');
   await submit();
   expect(h.action?.body).toMatchObject({ refundDecision: { mode: 'custom', refunds: [] } });
@@ -326,4 +344,195 @@ it('keeps bigint precision and permits an explicit zero refund', () => {
   expect(validCancellationAmount('0', '10')).toBe(true);
   expect(validCancellationAmount('9007199254740993', '9007199254740993')).toBe(true);
   expect(validCancellationAmount('9007199254740994', '9007199254740993')).toBe(false);
+});
+
+async function prepareDraft() {
+  await render();
+  await click(en.cancellationReview);
+  await input('#cancellation-reason', '  Raw cancellation draft  ');
+}
+async function submitDecision() {
+  await act(async () =>
+    container
+      .querySelector('form')!
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  );
+  await vi.waitFor(() =>
+    expect(
+      container.querySelector('form')?.getAttribute('aria-busy') === 'true' &&
+        !container.querySelector('[role="dialog"]')
+    ).toBe(false)
+  );
+}
+it('preserves custom amounts and destinations across unchanged and changed financial refreshes', async () => {
+  h.preview!.serviceType = 'solar';
+  await prepareDraft();
+  await act(async () => container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click());
+  await input('input[inputmode=numeric]', '40');
+  await act(async () => {
+    const el = container.querySelector('select')!;
+    el.value = 'external_bank';
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  await click(en.cancellationRefresh);
+  expect(container.querySelector('textarea')?.value).toBe('  Raw cancellation draft  ');
+  expect(container.querySelector<HTMLInputElement>('input[inputmode=numeric]')?.value).toBe('40');
+  expect(container.querySelector('select')?.value).toBe('external_bank');
+  h.preview = {
+    ...h.preview!,
+    fingerprint: 'changed',
+    invoices: [{ ...h.preview!.invoices[0]!, availableRefundAmount: '30' }],
+  };
+  await click(en.cancellationRefresh);
+  await submitDecision();
+  expect(h.action).toBeNull();
+  await vi.waitFor(() =>
+    expect(document.activeElement).toBe(container.querySelector('input[inputmode=numeric]'))
+  );
+  expect(container.querySelector('textarea')?.value).toBe('  Raw cancellation draft  ');
+  await input('input[inputmode=numeric]', '20');
+  await submitDecision();
+  expect(h.action?.body).toMatchObject({
+    expectedFingerprint: 'changed',
+    reason: 'Raw cancellation draft',
+    refundDecision: {
+      mode: 'custom',
+      refunds: [{ invoiceId: 'invoice', amount: '20', destination: 'external_bank' }],
+    },
+  });
+});
+it('maps a submitted refund index to the filtered invoice and rejects mixed metadata', async () => {
+  h.preview!.serviceType = 'solar';
+  h.preview!.invoices.unshift({ ...h.preview!.invoices[0]!, id: 'zero' });
+  await prepareDraft();
+  await act(async () => container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click());
+  await input('#return-zero', '0');
+  await input('#return-invoice', '40');
+  await submitDecision();
+  expect(h.invalid!(['refundAmount1'])).toBe(false);
+  expect(h.invalid!(['refundAmount0', 'invoiceId'])).toBe(false);
+  await act(async () => {
+    expect(h.invalid!(['refundAmount0'])).toBe(true);
+  });
+  await click('Dismiss');
+  await vi.waitFor(() =>
+    expect(document.activeElement).toBe(container.querySelector('#return-invoice'))
+  );
+  expect(container.querySelector<HTMLInputElement>('#return-invoice')?.value).toBe('40');
+  expect(container.querySelector<HTMLInputElement>('#return-zero')?.value).toBe('0');
+  expect(changed).not.toHaveBeenCalled();
+});
+it('does not validate hidden custom amounts for a full wallet decision', async () => {
+  h.preview!.serviceType = 'solar';
+  await prepareDraft();
+  await act(async () => container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click());
+  await input('#return-invoice', 'bad');
+  await act(async () => container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click());
+  await submitDecision();
+  expect(h.action?.body).toMatchObject({ refundDecision: { mode: 'full_wallet' } });
+});
+it('keeps drafts through a failed financial read and ordinary dismissal', async () => {
+  await prepareDraft();
+  h.fail = true;
+  await click(en.cancellationRefresh);
+  expect(container.querySelector('textarea')?.value).toBe('  Raw cancellation draft  ');
+  expect(container.querySelector<HTMLButtonElement>('button[type=submit]')?.disabled).toBe(true);
+  h.fail = false;
+  await click(en.cancellationRefresh);
+  await submitDecision();
+  await click('Dismiss');
+  expect(container.querySelector('textarea')?.value).toBe('  Raw cancellation draft  ');
+});
+it('locks amounts, destination, mode and reason while retaining one command', async () => {
+  h.preview!.serviceType = 'solar';
+  await prepareDraft();
+  await act(async () => container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click());
+  await submitDecision();
+  const captured = h.action;
+  expect(container.querySelector('textarea')?.disabled).toBe(true);
+  expect(container.querySelector('select')?.disabled).toBe(true);
+  expect(container.querySelector<HTMLInputElement>('#return-invoice')?.disabled).toBe(true);
+  expect(container.querySelector<HTMLInputElement>('input[type=checkbox]')?.disabled).toBe(true);
+  await submitDecision();
+  expect(h.action).toBe(captured);
+});
+it.each([
+  'contractId',
+  'versionId',
+  'financialFingerprint',
+  'reason',
+  'customerRequestId',
+  'refundDecision',
+] as const)('requires a matching prepare acknowledgement: %s', async (field) => {
+  await prepareDraft();
+  await submitDecision();
+  const receipt = {
+    ...saved(),
+    reason: 'Raw cancellation draft',
+    [field]: field === 'refundDecision' ? { mode: 'custom', refunds: [] } : 'other',
+  };
+  await expect(h.success!(receipt)).rejects.toThrow('acknowledgement');
+  expect(changed).not.toHaveBeenCalled();
+  await click('Dismiss');
+  expect(container.querySelector('textarea')?.value).toBe('  Raw cancellation draft  ');
+});
+it('requires a matching execute acknowledgement before reporting a cancellation', async () => {
+  h.intent = saved();
+  await render();
+  await click(en.cancellationReview);
+  await click(en.cancellationConfirm);
+  await expect(
+    h.success!({
+      contractId: 'contract',
+      versionId: 'version',
+      intentId: 'other',
+      state: 'Cancelled',
+    })
+  ).rejects.toThrow('acknowledgement');
+  expect(changed).not.toHaveBeenCalled();
+  expect(h.invalid!(['reason'])).toBe(false);
+});
+it('clears private financial work on denial and ignores the captured prepare result', async () => {
+  await prepareDraft();
+  await submitDecision();
+  const success = h.success!;
+  await act(async () => h.deny!());
+  await act(async () => success(saved()));
+  expect(changed).not.toHaveBeenCalled();
+  expect(container.querySelector('textarea')).toBeNull();
+  expect(container.textContent).not.toContain('Raw cancellation draft');
+  await click(en.cancellationRefresh);
+  expect(container.querySelector('textarea')?.value).toBe('');
+});
+it('abandons old version callbacks and drafts on scope change', async () => {
+  await prepareDraft();
+  await submitDecision();
+  const success = h.success!;
+  await act(async () =>
+    root.render(
+      <ContractCancellationPanel id="contract" versionId="next" staff={true} onChanged={changed} />
+    )
+  );
+  await act(async () => success(saved()));
+  expect(changed).not.toHaveBeenCalled();
+  expect(container.querySelector('textarea')).toBeNull();
+});
+it('retains the decision draft during a parent status refresh', async () => {
+  await prepareDraft();
+  await click(en.refresh);
+  expect(container.querySelector('textarea')?.value).toBe('  Raw cancellation draft  ');
+});
+
+it('retains but disables a draft until a failed parent status refresh recovers', async () => {
+  await prepareDraft();
+  h.fail = true;
+  await click(en.refresh);
+  expect(container.querySelector('textarea')?.value).toBe('  Raw cancellation draft  ');
+  expect(container.querySelector('textarea')?.disabled).toBe(true);
+  await submitDecision();
+  expect(h.action).toBeNull();
+  h.fail = false;
+  await click(en.refresh);
+  expect(container.querySelector('textarea')?.disabled).toBe(false);
+  expect(container.querySelector('textarea')?.value).toBe('  Raw cancellation draft  ');
 });

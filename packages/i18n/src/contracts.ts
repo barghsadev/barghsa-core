@@ -139,6 +139,12 @@ export const en = {
   cancellationInvoice: 'Invoice',
   cancellationDestination: 'Return destination',
   cancellationReason: 'Reason for cancellation',
+  cancellationValidationUnavailable:
+    'Validation is unavailable. Refresh the page before submitting.',
+  cancellationReasonInvalid: 'Enter a reason of 1–1,000 characters.',
+  cancellationAmountInvalid:
+    'Enter a whole IRR amount from zero to this invoice’s available balance.',
+  cancellationDestinationInvalid: 'Choose a return destination.',
   cancellationInvalid: 'Enter a reason and valid whole IRR amounts within each invoice balance.',
   irr: 'IRR',
   'cancellation.not_cancelled': 'Service has not been cancelled',
@@ -476,6 +482,11 @@ export const fa: Record<keyof typeof en, string> = {
   cancellationInvoice: 'صورتحساب',
   cancellationDestination: 'مقصد بازپرداخت',
   cancellationReason: 'دلیل لغو قرارداد',
+  cancellationValidationUnavailable:
+    'اعتبارسنجی در دسترس نیست. پیش از ارسال صفحه را تازه‌سازی کنید.',
+  cancellationReasonInvalid: 'دلیل را با ۱ تا ۱٬۰۰۰ نویسه وارد کنید.',
+  cancellationAmountInvalid: 'مبلغ صحیح ریالی از صفر تا مانده قابل بازگشت این صورتحساب وارد کنید.',
+  cancellationDestinationInvalid: 'مقصد بازگشت وجه را انتخاب کنید.',
   cancellationInvalid: 'دلیل لغو و مبلغ صحیح ریالی در محدوده مانده هر صورتحساب را وارد کنید.',
   irr: 'ریال',
   'cancellation.not_cancelled': 'خدمت لغو نشده است',

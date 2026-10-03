@@ -15,6 +15,8 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
+import { InputFieldException } from '../common/input-field.exception.js';
+import { cancellationInputFields } from './contract-cancellation-input-fields.js';
 import { contractUuid } from './contract-validation.js';
 import {
   ContractCancellationRequestService,
@@ -67,13 +69,19 @@ export class CustomerCancellationRequestController {
       },
     },
   })
-  submit(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() body: unknown) {
-    return this.service.submit(
-      parse(contractUuid, id),
-      parse(cancellationRequestSchema, body),
-      req.session,
-      req.ip ?? '127.0.0.1'
-    );
+  async submit(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() body: unknown) {
+    const contractId = parse(contractUuid, id);
+    const result = cancellationRequestSchema.safeParse(body);
+    if (!result.success) {
+      const fields = cancellationInputFields(result.error.issues, 'request');
+      if (fields) {
+        // Use the same live profile/session permission and ownership checks as submission.
+        await this.service.assertRequestAccess(contractId, req.session);
+        throw new InputFieldException(fields);
+      }
+      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    }
+    return this.service.submit(contractId, result.data, req.session, req.ip ?? '127.0.0.1');
   }
 }
 @ApiTags('Admin · Contracts')
@@ -131,9 +139,19 @@ export class StaffCancellationRequestController {
     authorize(req);
     return this.service.reject(
       parse(contractUuid, requestId),
-      parse(rejectCancellationRequestSchema, body),
+      parseRejection(body),
       req.session,
       req.ip ?? '127.0.0.1'
     );
   }
+}
+
+function parseRejection(body: unknown) {
+  const result = rejectCancellationRequestSchema.safeParse(body);
+  if (!result.success) {
+    const fields = cancellationInputFields(result.error.issues, 'reject');
+    if (fields) throw new InputFieldException(fields);
+    throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+  }
+  return result.data;
 }

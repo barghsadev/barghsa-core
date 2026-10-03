@@ -41,6 +41,7 @@ for (const locale of ['en', 'fa'] as const)
         returned = false;
       const attempts: Array<Record<string, unknown>> = [];
       const decision = () => ({
+        contractId: id,
         id: '55555555-5555-4555-8555-555555555555',
         versionId,
         financialFingerprint: 'a'.repeat(64),
@@ -181,7 +182,10 @@ for (const locale of ['en', 'fa'] as const)
         expect(approved).toBe(true);
         expect(route.request().postDataJSON().intentId).toBe(decision().id);
         cancelled = true;
-        return route.fulfill({ status: 201, json: { state: 'Cancelled' } });
+        return route.fulfill({
+          status: 201,
+          json: { state: 'Cancelled', contractId: id, versionId, intentId: decision().id },
+        });
       });
       await page.route('**/api/auth/step-up', (route) => {
         expect(route.request().postDataJSON()).toEqual({ password: 'Test-password' });

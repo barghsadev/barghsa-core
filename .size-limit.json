@@ -121,6 +121,18 @@
     "limitKB": 15
   },
   {
+    "name": "Cancellation form validation on demand",
+    "phase": "interaction",
+    "entries": ["src/lib/cancellation-form-schemas.ts"],
+    "limitKB": 20
+  },
+  {
+    "name": "Cancellation staff decision editor on demand",
+    "phase": "interaction",
+    "entries": ["src/components/ContractCancellationEditor.tsx"],
+    "limitKB": 120
+  },
+  {
     "name": "Contract detail on demand",
     "phase": "interaction",
     "entries": ["src/components/ContractDetail.tsx"],

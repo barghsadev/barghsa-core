@@ -35,6 +35,7 @@ export interface CancellationPreview {
   }>;
 }
 export interface CancellationIntent {
+  contractId: string;
   id: string;
   customerRequestId?: string | null;
   versionId: string;

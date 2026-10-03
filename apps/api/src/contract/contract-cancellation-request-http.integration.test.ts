@@ -391,3 +391,81 @@ it('requires CSRF and denies a staff user whose cancellation permission was revo
       .rows[0].status
   ).toBe('Pending');
 });
+
+it('limits cancellation request field metadata to an authorized owner and keeps failures read-only', async () => {
+  const f = await fixture();
+  await publish(f);
+  const path = `contracts/${f.row.id}/cancellation-requests`;
+  const body = { ...requestBody(f), reason: ' ', preferredDestination: 'invalid' };
+  const owned = await send(path, 'POST', body, f.owner);
+  expect(owned.status).toBe(400);
+  expect(await owned.json()).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['reason', 'preferredDestination'] },
+  });
+  const other = await login(randomUUID());
+  expect((await send(path, 'POST', body, other)).status).toBe(404);
+  const mixed = await send(path, 'POST', { ...body, expectedVersionId: 'bad' }, f.owner);
+  expect(await mixed.json()).toMatchObject({ error: { code: 'VALIDATION:PARSE:ZOD_ERROR' } });
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE user_id=$1', [f.owner]);
+  const expired = await send(path, 'POST', body, f.owner);
+  expect(expired.status).toBe(403);
+  expect(JSON.stringify(await expired.json())).not.toContain('fields');
+  expect(
+    (
+      await http.pool.query(
+        'SELECT count(*)::int AS n FROM contract_cancellation_requests WHERE contract_id=$1',
+        [f.row.id]
+      )
+    ).rows[0].n
+  ).toBe(0);
+});
+it('authorizes staff reason metadata without rejecting or cancelling the request', async () => {
+  const f = await fixture();
+  await publish(f);
+  const response = await submit(f);
+  expect(response.status).toBe(201);
+  const request = (await response.json()) as RequestDto;
+  const path = `admin/contract-cancellation-requests/${request.id}/reject`;
+  const body = { reason: ' ', idempotencyKey: randomUUID() };
+  expect((await send(path, 'POST', body, 'request-support')).status).toBe(403);
+  const invalid = await send(path, 'POST', body);
+  expect(await invalid.json()).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['reason'] },
+  });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT status,resolution_reason FROM contract_cancellation_requests WHERE id=$1',
+        [request.id]
+      )
+    ).rows[0]
+  ).toEqual({ status: 'Pending', resolution_reason: null });
+});
+it('reports indexed refund fields while preserving immutable version and fingerprint gates', async () => {
+  const f = await fixture();
+  const path = `admin/contracts/${f.row.id}/cancellations`;
+  const body = {
+    ...command(f.row.currentVersionId),
+    expectedFingerprint: 'a'.repeat(64),
+    reason: 'End service',
+    refundDecision: {
+      mode: 'custom',
+      refunds: [{ invoiceId: randomUUID(), amount: '0', destination: 'wrong' }],
+    },
+  };
+  expect((await send(path, 'POST', body, 'request-support')).status).toBe(403);
+  const invalid = await send(path, 'POST', body);
+  expect(await invalid.json()).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['refundAmount0', 'refundDestination0'] },
+  });
+  const mixed = await send(path, 'POST', { ...body, expectedFingerprint: 'bad' });
+  expect(await mixed.json()).toMatchObject({ error: { code: 'VALIDATION:PARSE:ZOD_ERROR' } });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT count(*)::int AS n FROM contract_cancellation_intents WHERE contract_id=$1',
+        [f.row.id]
+      )
+    ).rows[0].n
+  ).toBe(0);
+});

@@ -6,6 +6,8 @@ import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { ContractCancellationService } from './contract-cancellation.service.js';
+import { InputFieldException } from '../common/input-field.exception.js';
+import { cancellationInputFields } from './contract-cancellation-input-fields.js';
 import { contractUuid } from './contract-validation.js';
 import {
   prepareCancellationSchema,
@@ -103,12 +105,14 @@ export class ContractCancellationController {
   })
   prepare(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() body: unknown) {
     this.authorize(req);
-    return this.service.prepare(
-      parse(contractUuid, id),
-      parse(prepareCancellationSchema, body),
-      req.session,
-      req.ip ?? '127.0.0.1'
-    );
+    const contractId = parse(contractUuid, id);
+    const result = prepareCancellationSchema.safeParse(body);
+    if (!result.success) {
+      const fields = cancellationInputFields(result.error.issues, 'decision');
+      if (fields) throw new InputFieldException(fields);
+      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    }
+    return this.service.prepare(contractId, result.data, req.session, req.ip ?? '127.0.0.1');
   }
 
   @Get(':intentId')

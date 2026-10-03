@@ -48,6 +48,7 @@ for (const locale of ['en', 'fa'] as const)
         prepared = false;
       const attempts: unknown[] = [];
       const decision = () => ({
+        contractId: id,
         id: 'intent',
         customerRequestId: request!.id,
         versionId,
@@ -195,7 +196,10 @@ for (const locale of ['en', 'fa'] as const)
           contractState: 'Cancelled',
           resolutionReason: 'Approved customer request',
         };
-        return route.fulfill({ status: 201, json: { state: 'Cancelled' } });
+        return route.fulfill({
+          status: 201,
+          json: { state: 'Cancelled', contractId: id, versionId, intentId: decision().id },
+        });
       });
       const customerOpen = async () => {
         operatingContext = 'customer';
@@ -259,7 +263,7 @@ for (const locale of ['en', 'fa'] as const)
       await requestPanel
         .getByRole('button', { name: w.cancellationRequestReject, exact: true })
         .click();
-      await expect(requestPanel.getByRole('alert')).toContainText(w.cancellationInvalid);
+      await expect(requestPanel.getByRole('alert')).toContainText(w.cancellationReasonInvalid);
       await requestPanel
         .getByLabel(w.cancellationRequestRejectReason, { exact: true })
         .fill('Please contact support');

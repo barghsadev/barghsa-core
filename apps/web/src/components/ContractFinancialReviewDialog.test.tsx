@@ -141,6 +141,9 @@ async function render(action: TeamAction, status = 'ready') {
       />
     )
   );
+  await vi.waitFor(() =>
+    expect(host.textContent).not.toContain((harness.locale === 'fa' ? fa : en).loading)
+  );
 }
 for (const locale of ['en', 'fa'] as const) {
   for (const kind of ['acceptance', 'request', 'record'] as const) {

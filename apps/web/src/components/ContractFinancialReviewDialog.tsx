@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  parseContractFinancialReview,
-  type ContractFinancialReview,
-} from '@barghsa/shared/finance';
+import type { ContractFinancialReview } from '@barghsa/shared/finance';
 import { contractText } from '@barghsa/i18n/contracts';
 import { PageLoading } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
@@ -60,7 +57,9 @@ export function ContractFinancialReviewDialog({
         ...(acceptance ? {} : { method: 'POST', body: JSON.stringify(selection) }),
       }
     )
-      .then((value) => {
+      .then(async (value) => {
+        if (controller.signal.aborted) return;
+        const { parseContractFinancialReview } = await import('@barghsa/shared/finance');
         if (controller.signal.aborted) return;
         const parsed = parseContractFinancialReview(value);
         const expectedAction = acceptance
@@ -113,6 +112,7 @@ export function ContractFinancialReviewDialog({
       }
       onClose={onClose}
       onSuccess={async (result) => {
+        const { parseContractFinancialReview } = await import('@barghsa/shared/finance');
         const returned = parseContractFinancialReview(
           (result as { financialReview?: unknown } | null)?.financialReview
         );
