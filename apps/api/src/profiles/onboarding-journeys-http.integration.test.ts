@@ -85,19 +85,44 @@ for (const type of ['INDIVIDUAL', 'LEGAL'])
     expect(journey.profiles).toHaveLength(1);
     expect(journey.profiles[0]).toMatchObject({ profileType: type, isDefault: true });
   });
-it('serializes concurrent retries and rejects another request key without duplicate drafts or audits', async () => {
-  const requestId = randomUUID();
-  const responses = await Promise.all([
-    start(['INDIVIDUAL', 'LEGAL'], requestId),
-    start(['LEGAL', 'INDIVIDUAL'], requestId),
-    start(),
-  ]);
-  expect(responses.map((r) => r.status)).toEqual([201, 201, 409]);
-  const journeys = await Promise.all(responses.map((r) => r.json()));
-  expect(journeys[1]).toEqual(journeys[0]);
-  expect(journeys[2]).toHaveProperty('error');
-  expect(await counts()).toEqual({ profiles: 2, journeys: 1, audits: 3 });
-});
+it.each(['retries-first', 'competitor-first'] as const)(
+  'serializes concurrent starts with %s without duplicate drafts or audits',
+  async (order) => {
+    const requestId = randomUUID(),
+      competitorId = randomUUID();
+    const commands = [
+      { types: ['INDIVIDUAL', 'LEGAL'], requestId },
+      { types: ['LEGAL', 'INDIVIDUAL'], requestId },
+      { types: ['INDIVIDUAL', 'LEGAL'], requestId: competitorId },
+    ];
+    if (order === 'competitor-first') commands.reverse();
+    const responses = await Promise.all(
+      commands.map((command) => start(command.types, command.requestId))
+    );
+    // HTTP invocation order does not determine database-lock acquisition order.
+    const stored = await http.pool.query<{ id: string; request_id: string }>(
+      "SELECT id,request_id FROM profile_onboarding_journeys WHERE user_id='setup-owner'"
+    );
+    expect(stored.rows).toHaveLength(1);
+    const winner = stored.rows[0]!;
+    expect([requestId, competitorId]).toContain(winner.request_id);
+    const journey = await (await read(`journeys/${winner.id}`)).json();
+    const bodies = await Promise.all(responses.map((response) => response.json()));
+    for (const [index, command] of commands.entries()) {
+      if (command.requestId === winner.request_id) {
+        expect(responses[index]!.status).toBe(201);
+        expect(bodies[index]).toEqual(journey);
+      } else {
+        expect(responses[index]!.status).toBe(409);
+        expect(bodies[index]).toHaveProperty('error');
+      }
+    }
+    expect(await (await start(['LEGAL', 'INDIVIDUAL'], winner.request_id)).json()).toEqual(journey);
+    const losingId = winner.request_id === requestId ? competitorId : requestId;
+    expect((await start(['INDIVIDUAL', 'LEGAL'], losingId)).status).toBe(409);
+    expect(await counts()).toEqual({ profiles: 2, journeys: 1, audits: 3 });
+  }
+);
 it('rejects a changed retry or a different selection while setup remains open', async () => {
   const requestId = randomUUID();
   expect((await start(['INDIVIDUAL'], requestId)).status).toBe(201);
