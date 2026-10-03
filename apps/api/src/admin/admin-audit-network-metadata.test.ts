@@ -13,7 +13,7 @@ const operations = [
   ],
   [
     'setWalletTopUpLimitConfig',
-    (c: AdminController, r: AuthenticatedRequest) => c.setWalletTopUpLimit({}, r),
+    (c: AdminController, r: AuthenticatedRequest) => c.setWalletTopUpLimit({ limit_irr: 1 }, r),
   ],
   [
     'setGreenElectricityConfig',

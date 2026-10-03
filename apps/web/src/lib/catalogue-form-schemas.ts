@@ -9,6 +9,25 @@ import { custom } from 'zod/mini';
 import type { Draft, PriceDraft, ProductType } from './catalogue-form.js';
 import type { AgreementDraft, InventoryDraft } from './saving-catalogue-form.js';
 
+export function integerSettingsSchema<Draft extends Record<string, string>>(
+  messages: Record<keyof Draft, string>,
+  fields: readonly { key: keyof Draft; min: number; max: number }[],
+  integer: (raw: string, min: number, max: number) => number | null
+) {
+  return custom<Draft>().check((ctx) => {
+    for (const { key, min, max } of fields) {
+      const raw = ctx.value[key];
+      if (typeof raw !== 'string' || integer(raw, min, max) === null)
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value,
+          path: [String(key)],
+          message: messages[key],
+        });
+    }
+  });
+}
+
 export function agreementFormSchema(messages: Record<keyof AgreementDraft, string>) {
   return custom<AgreementDraft>().check((ctx) => {
     for (const field of ['title', 'body'] as const) {

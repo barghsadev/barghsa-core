@@ -60,6 +60,10 @@ async function submit(times = 1) {
         .querySelector('form')!
         .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
   });
+  await vi.waitFor(async () => {
+    await act(async () => {});
+    expect(host.querySelector('form')?.getAttribute('aria-busy')).not.toBe('true');
+  });
 }
 async function focusFrame() {
   await act(
@@ -132,9 +136,8 @@ it.each([
     requiresOtp: true,
   });
   const captured = harness.confirmation!.action;
-  expect(field().disabled).toBe(true);
-  expect(host.querySelector('button[type="submit"]')?.getAttribute('aria-busy')).toBe('true');
-  expect(host.querySelector('.animate-spin')).not.toBeNull();
+  expect(field().matches(':disabled')).toBe(true);
+  expect(host.querySelector('button[type="submit"]')?.matches(':disabled')).toBe(true);
   await submit(2);
   expect(harness.confirmation!.action).toBe(captured);
   expect(fetch).toHaveBeenCalledTimes(1);
@@ -150,7 +153,7 @@ it('returns owned server validation to the retained raw draft and focuses the en
   });
   await focusFrame();
   expect(field().value).toBe(' ۲۵۰٬۰۰۰ ');
-  expect(field().disabled).toBe(false);
+  expect(field().matches(':disabled')).toBe(false);
   expect(document.activeElement).toBe(field());
   expect(linkedError()?.textContent).toBe(message());
   expect(host.querySelector('[data-testid="threshold-confirmation"]')).toBeNull();
@@ -184,12 +187,13 @@ it.each([null, {}, { thresholdIrR: '250000' }, { thresholdIrR: 250001 }])(
     await submit();
     await act(async () =>
       expect(harness.confirmation!.onSuccess(result)).rejects.toThrow(
-        'Invalid configuration response'
+        'Unverified catalogue acknowledgement'
       )
     );
     expect(field().value).toBe('۲۵۰٬۰۰۰');
     expect(host.textContent).not.toContain(t('admin.receiptThreshold.saved', 'en'));
     expect(host.querySelector('[data-testid="threshold-confirmation"]')).not.toBeNull();
+    vi.mocked(fetch).mockImplementation(async () => Response.json({ thresholdIrR: 250000 }));
     await act(async () => {
       await harness.confirmation!.onSuccess({ thresholdIrR: 250000 });
       harness.confirmation!.onClose();
@@ -251,7 +255,7 @@ it('ignores old command callbacks after the threshold workspace is replaced', as
     expect(old.onValidationError(['thresholdIrR'])).toBe(false);
   });
   expect(field().value).toBe('300000');
-  expect(field().disabled).toBe(false);
+  expect(field().matches(':disabled')).toBe(false);
   expect(host.textContent).not.toContain(t('admin.receiptThreshold.saved', 'en'));
 });
 

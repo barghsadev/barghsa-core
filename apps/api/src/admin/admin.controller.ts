@@ -48,6 +48,7 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { assertGreenSettingsFields } from './electricity-settings-fields.js';
+import { assertWalletLimitFields } from './limit-settings-fields.js';
 
 /**
  * Zod schema for the create-staff-user request body.
@@ -2150,6 +2151,7 @@ export class AdminController {
   async setWalletTopUpLimit(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertFinancialThresholdPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    assertWalletLimitFields(rawBody);
     return this.adminService.setWalletTopUpLimitConfig(rawBody, req.session, ip);
   }
 

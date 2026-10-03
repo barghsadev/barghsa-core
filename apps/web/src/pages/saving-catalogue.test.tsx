@@ -100,16 +100,19 @@ it('offers an explicit publish action for a staff agreement draft', async () => 
       async () =>
         new Response(
           JSON.stringify({
+            planId: '11111111-1111-4111-8111-111111111111',
             agreements: [
               {
-                id: 'draft-1',
+                id: '22222222-2222-4222-8222-222222222222',
+                plan_id: '11111111-1111-4111-8111-111111111111',
                 title: 'New terms',
                 body: 'Draft text',
                 status: 'draft',
                 effective_from: null,
               },
               {
-                id: 'active-1',
+                id: '33333333-3333-4333-8333-333333333333',
+                plan_id: '11111111-1111-4111-8111-111111111111',
                 title: 'Current terms',
                 body: 'Current text',
                 status: 'active',
@@ -125,16 +128,24 @@ it('offers an explicit publish action for a staff agreement draft', async () => 
   const root = createRoot(container);
   try {
     await act(async () =>
-      root.render(<SavingAgreementEditor planId="plan-1" onChanged={() => {}} />)
+      root.render(
+        <SavingAgreementEditor planId="11111111-1111-4111-8111-111111111111" onChanged={() => {}} />
+      )
     );
     expect(container.textContent).toContain('Current terms');
     expect(container.textContent).toContain('New terms');
     const activate = Array.from(container.querySelectorAll('button')).find(
       (button) => button.textContent === 'Activate agreement'
     );
-    await act(async () => activate?.click());
+    expect(activate).toBeDefined();
+    expect(activate!.disabled).toBe(false);
+    expect(fetch).toHaveBeenCalledWith(
+      '/api/admin/catalogue/saving-plans/11111111-1111-4111-8111-111111111111/configuration',
+      expect.objectContaining({ credentials: 'include' })
+    );
+    await act(async () => activate!.click());
     expect(container.textContent).toContain(
-      '/api/admin/catalogue/saving-plans/plan-1/agreements/draft-1/activate'
+      '/api/admin/catalogue/saving-plans/11111111-1111-4111-8111-111111111111/agreements/22222222-2222-4222-8222-222222222222/activate'
     );
   } finally {
     await act(async () => root.unmount());

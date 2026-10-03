@@ -250,7 +250,7 @@ for (const [locale, darkMode] of [
     await expect(lead).toHaveValue('7');
     denied = true;
     await page.getByRole('button', { name: limit('refresh'), exact: true }).click();
-    await expect(page.getByRole('spinbutton')).toHaveCount(0);
+    await expect(page.locator('input[id^="contract-limit-"]')).toHaveCount(0);
     await expect(page.getByRole('alert')).toContainText(limit('forbidden'));
   });
 }

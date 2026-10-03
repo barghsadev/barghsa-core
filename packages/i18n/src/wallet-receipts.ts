@@ -49,6 +49,12 @@ const fa: Record<string, string> = {
   'admin.receiptThreshold.label': 'آستانه (ریال)',
   'admin.receiptThreshold.save': 'ذخیره آستانه',
   'admin.receiptThreshold.saved': 'آستانه ذخیره شد.',
+  'admin.receiptThreshold.loading': 'در حال بارگذاری آستانه…',
+  'admin.receiptThreshold.working': 'در حال بررسی آستانه…',
+  'admin.receiptThreshold.validationUnavailable':
+    'بررسی ورودی در دسترس نیست. پیش از ذخیره دوباره تلاش کنید.',
+  'admin.receiptThreshold.unverified':
+    'آستانه ذخیره‌شده قابل بررسی نیست. انصراف دهید و پیش از ذخیره دوباره، مقدار فعلی را بارگذاری کنید.',
   'admin.receiptThreshold.disabled':
     'صفر آستانه را برای عملیات جدید غیرفعال می\u200cکند. درخواست\u200cهای تأیید موجود همچنان به تصمیم نیاز دارند.',
   'admin.receiptThreshold.unavailable': 'آستانه در دسترس نیست. هیچ تنظیمی فرض نشده است.',
@@ -171,6 +177,11 @@ const en: Record<string, string> = {
   'admin.receiptThreshold.label': 'Threshold (IRR)',
   'admin.receiptThreshold.save': 'Save threshold',
   'admin.receiptThreshold.saved': 'Threshold saved.',
+  'admin.receiptThreshold.loading': 'Loading threshold…',
+  'admin.receiptThreshold.working': 'Checking threshold…',
+  'admin.receiptThreshold.validationUnavailable': 'Validation is unavailable. Retry before saving.',
+  'admin.receiptThreshold.unverified':
+    'The saved threshold could not be verified. Cancel and reload before saving again.',
   'admin.receiptThreshold.disabled':
     'Zero disables the threshold for new actions. Existing pending approvals still require a decision.',
   'admin.receiptThreshold.unavailable': 'Threshold unavailable. No setting has been assumed.',

@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
-import { crmShell } from './crm-shell-fixture';
+import { setupCatalogueForms } from './catalogue-form-fixture';
 import { mockOtpStepUp, completeOtp } from './otp-step-up-fixture';
 import { tWalletReceipts as text } from '@barghsa/i18n/wallet-receipts';
 import { t as appText } from '@barghsa/i18n/app';
@@ -8,7 +8,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 
 const path = '**/api/admin/config/dual-approval-threshold';
 async function shell(page: Page, locale: 'en' | 'fa' = 'en') {
-  await crmShell(page, locale);
+  await setupCatalogueForms(page, locale, false);
   await page.route('**/api/admin/approval-requests?*', (route) => route.fulfill({ json: [] }));
 }
 
@@ -19,12 +19,14 @@ for (const locale of ['en', 'fa'] as const) {
     await shell(page, locale);
     const auth = await mockOtpStepUp(page);
     const writes: unknown[] = [];
+    let threshold = 100000;
     await page.route(path, (route) => {
       if (route.request().method() === 'GET')
-        return route.fulfill({ json: { thresholdIrR: 100000 } });
+        return route.fulfill({ json: { thresholdIrR: threshold } });
       expect(auth.verified).toBe(true);
       writes.push(route.request().postDataJSON());
-      return route.fulfill({ json: { thresholdIrR: 250000 } });
+      threshold = 250000;
+      return route.fulfill({ json: { thresholdIrR: threshold } });
     });
     await page.goto('/admin/approval-requests');
     const panel = page.getByRole('region', {
@@ -90,7 +92,7 @@ test('threshold load failure assumes no value and can retry; denied permission h
     )
   );
   await page.goto('/admin/approval-requests');
-  await expect(page.getByRole('alert')).toHaveText(
+  await expect(page.getByRole('alert')).toContainText(
     'Threshold unavailable. No setting has been assumed.'
   );
   await expect(page.getByLabel('Threshold (IRR)')).toHaveCount(0);
@@ -140,10 +142,11 @@ for (const locale of ['en', 'fa'] as const) {
       );
       const auth = await mockOtpStepUp(page);
       const writes: unknown[] = [];
+      let threshold = 100000;
       let mode: 'field' | 'mixed' | 'service' | 'mismatch' | 'success' = 'field';
       await page.route(path, (route) => {
         if (route.request().method() === 'GET')
-          return route.fulfill({ json: { thresholdIrR: 100000 } });
+          return route.fulfill({ json: { thresholdIrR: threshold } });
         expect(auth.verified).toBe(true);
         writes.push(route.request().postDataJSON());
         if (mode === 'field' || mode === 'mixed')
@@ -159,6 +162,7 @@ for (const locale of ['en', 'fa'] as const) {
           });
         if (mode === 'service')
           return route.fulfill({ status: 503, json: { message: 'private-threshold-diagnostic' } });
+        if (mode === 'success') threshold = 250000;
         return route.fulfill({ json: { thresholdIrR: mode === 'mismatch' ? 250001 : 250000 } });
       });
       await page.goto('/admin/approval-requests');
@@ -186,7 +190,7 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(panel.getByRole('alert')).toHaveCount(0);
       await save.click();
       await expect(field).toBeDisabled();
-      await expect(save).toHaveAttribute('aria-busy', 'true');
+      await expect(save).toBeDisabled();
       expect(writes).toEqual([]);
       let dialog = page.getByRole('dialog');
       await completeOtp(dialog, locale);
@@ -220,25 +224,40 @@ for (const locale of ['en', 'fa'] as const) {
       await save.click();
       dialog = page.getByRole('dialog');
       await completeOtp(dialog, locale);
-      await expect(dialog.getByRole('alert')).toHaveText(appText('team.error', locale));
+      await expect(
+        dialog.getByRole('alert').filter({ hasText: appText('team.error', locale) })
+      ).toHaveText(appText('team.error', locale));
       await expect(field).toHaveValue(raw);
       await expect(page.getByText('private-threshold-diagnostic')).toHaveCount(0);
       mode = 'service';
       await dialog
         .getByRole('button', { name: appText('team.confirm', locale), exact: true })
         .click();
-      await expect(dialog.getByRole('alert')).toHaveText(appText('team.error', locale));
+      await expect(
+        dialog.getByRole('alert').filter({ hasText: appText('team.error', locale) })
+      ).toHaveText(appText('team.error', locale));
       mode = 'mismatch';
       await dialog
         .getByRole('button', { name: appText('team.confirm', locale), exact: true })
         .click();
-      await expect(dialog.getByRole('alert')).toHaveText(appText('team.error', locale));
+      await expect(
+        dialog.getByRole('alert').filter({ hasText: appText('team.error', locale) })
+      ).toHaveText(appText('team.error', locale));
       await expect(panel.getByRole('status', { includeHidden: true })).toHaveCount(0);
       expect(writes).toHaveLength(4);
-      mode = 'success';
+      await expect(
+        dialog.getByRole('button', { name: appText('team.confirm', locale), exact: true })
+      ).toBeDisabled();
       await dialog
-        .getByRole('button', { name: appText('team.confirm', locale), exact: true })
+        .getByRole('button', { name: appText('team.cancel', locale), exact: true })
         .click();
+      await panel
+        .getByRole('button', { name: text('admin.receiptThreshold.retry', locale), exact: true })
+        .click();
+      mode = 'success';
+      await save.click();
+      dialog = page.getByRole('dialog');
+      await completeOtp(dialog, locale);
       await expect(dialog).toHaveCount(0);
       await expect(panel.getByRole('status')).toHaveText(
         text('admin.receiptThreshold.saved', locale)

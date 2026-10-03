@@ -958,12 +958,7 @@ for (const locale of ['en', 'fa'])
 
 for (const locale of ['en', 'fa'])
   test(`contract limits save and reload through the migrated API (${locale})`, async ({ page }) => {
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
         url = new URL(request.url());

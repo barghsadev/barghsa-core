@@ -68,7 +68,7 @@ export function useCatalogueResource<T>(
     }));
     void (async () => {
       try {
-        const response = await fetch(path, { signal: controller.signal });
+        const response = await fetch(path, { credentials: 'include', signal: controller.signal });
         if (!current()) return;
         if (response.status === 401 || response.status === 403) {
           if (response.status === 401) onUnauthorized?.();

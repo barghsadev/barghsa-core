@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { Alert, Button, Input, Label } from '@barghsa/ui';
+import {
+  CatalogueEditorStatus,
+  CatalogueSaveButton,
+  catalogueRootMessage,
+} from '../components/CatalogueEditorFeedback.js';
 import type { GreenElectricityConfig } from '@barghsa/shared/finance';
 import { TeamActionDialog } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -37,68 +42,6 @@ import {
 const base = '/api/admin/config';
 type Copy = (key: string) => string;
 type Kind = 'rules' | 'retention' | 'template';
-function EditorStatus({
-  label,
-  loading,
-  error,
-  denied,
-  saved,
-  uncertain,
-  refresh,
-  busy,
-}: {
-  label: Copy;
-  loading: boolean;
-  error: boolean;
-  denied: boolean;
-  saved: boolean;
-  uncertain: boolean;
-  refresh: () => void;
-  busy: boolean;
-}) {
-  return (
-    <>
-      {loading && <p role="status">{label('loading')}</p>}
-      {denied && <Alert variant="destructive">{label('forbidden')}</Alert>}
-      {error && (
-        <div role="alert" className="space-y-2 rounded-md border border-destructive p-3">
-          <p>{label('readError')}</p>
-          <Button type="button" variant="outline" disabled={busy} onClick={refresh}>
-            {label('retry')}
-          </Button>
-        </div>
-      )}
-      {saved && <p role="status">{label('saved')}</p>}
-      {uncertain && <Alert variant="destructive">{label('unverified')}</Alert>}
-    </>
-  );
-}
-function SaveButton({
-  label,
-  pending,
-  disabled,
-}: {
-  label: string;
-  pending: boolean;
-  disabled: boolean;
-}) {
-  return (
-    <Button type="submit" disabled={disabled} aria-busy={pending || undefined}>
-      {pending && (
-        <span
-          aria-hidden="true"
-          className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-        />
-      )}
-      {label}
-    </Button>
-  );
-}
-function rootMessage(errors: {
-  root?: Record<string, { message?: string }> & { message?: string };
-}) {
-  return errors.root?.validation?.message ?? errors.root?.message;
-}
 function GreenEditor({
   label,
   safety,
@@ -131,11 +74,11 @@ function GreenEditor({
       return greenSettingsSchema(messages, boundedCatalogueInteger, captured);
     },
   });
-  const rootError = rootMessage(editor.errors);
+  const rootError = catalogueRootMessage(editor.errors);
   const body = editor.action?.body;
   return (
     <section className="space-y-4" aria-label={label('ruleEditor')}>
-      <EditorStatus
+      <CatalogueEditorStatus
         {...editor}
         loading={editor.resource.loading}
         error={editor.resource.error}
@@ -231,7 +174,7 @@ function GreenEditor({
               );
             })}
           </div>
-          <SaveButton
+          <CatalogueSaveButton
             label={label(editor.pending ? 'working' : 'save')}
             pending={editor.pending}
             disabled={editor.disabled}
@@ -299,7 +242,7 @@ function RetentionEditor({ label, ...props }: CatalogueEditorProps & { label: Co
     },
   });
   const [days, setDays] = editor.field('days'),
-    rootError = rootMessage(editor.errors);
+    rootError = catalogueRootMessage(editor.errors);
   const body = editor.action?.body;
   return (
     <section
@@ -308,7 +251,7 @@ function RetentionEditor({ label, ...props }: CatalogueEditorProps & { label: Co
     >
       <h2 className="text-lg font-semibold">{label('draftTtlTitle')}</h2>
       <p className="text-sm text-muted-foreground">{label('draftTtlDescription')}</p>
-      <EditorStatus
+      <CatalogueEditorStatus
         {...editor}
         loading={editor.resource.loading}
         error={editor.resource.error}
@@ -345,7 +288,7 @@ function RetentionEditor({ label, ...props }: CatalogueEditorProps & { label: Co
               />
               {editor.feedback('days')}
             </div>
-            <SaveButton
+            <CatalogueSaveButton
               label={label(editor.pending ? 'working' : 'draftTtlSave')}
               pending={editor.pending}
               disabled={editor.disabled}
@@ -406,7 +349,7 @@ function TemplateEditor({ label, ...props }: CatalogueEditorProps & { label: Cop
     },
   });
   const [versionId, setVersionId] = editor.field('versionId'),
-    rootError = rootMessage(editor.errors),
+    rootError = catalogueRootMessage(editor.errors),
     setting = editor.resource.data;
   const body = editor.action?.body,
     selected = record(body)
@@ -419,7 +362,7 @@ function TemplateEditor({ label, ...props }: CatalogueEditorProps & { label: Cop
     >
       <h2 className="text-lg font-semibold">{label('templateTitle')}</h2>
       <p className="text-sm text-muted-foreground">{label('templateDescription')}</p>
-      <EditorStatus
+      <CatalogueEditorStatus
         {...editor}
         loading={editor.resource.loading}
         error={editor.resource.error}
@@ -470,7 +413,7 @@ function TemplateEditor({ label, ...props }: CatalogueEditorProps & { label: Cop
               {editor.feedback('versionId')}
             </div>
             <p className="text-sm text-muted-foreground">{label('templatePlaceholders')}</p>
-            <SaveButton
+            <CatalogueSaveButton
               label={label(editor.pending ? 'working' : 'templateSave')}
               pending={editor.pending}
               disabled={editor.disabled}

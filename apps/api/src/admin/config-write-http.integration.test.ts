@@ -143,6 +143,59 @@ function write(item: (typeof cases)[number], user = 'operator') {
 }
 
 const walletLimit = cases.find((item) => item.path === 'wallet-top-up-limit')!;
+it('wallet limit returns only its public form field for invalid amounts and checks permission first', async () => {
+  for (const user of ['operator', 'viewer']) {
+    const response = await fetch(`${http.base}/api/admin/config/wallet-top-up-limit`, {
+      method: 'PUT',
+      headers: headers[user]!,
+      body: JSON.stringify({ limit_irr: 'private-value', expected_version: 0 }),
+    });
+    expect(response.status).toBe(user === 'operator' ? 400 : 403);
+    const body = await response.json();
+    if (user === 'operator') expect(body).toMatchObject({ error: { fields: ['limitIrR'] } });
+    else expect(body).not.toHaveProperty('error.fields');
+    expect(JSON.stringify(body)).not.toContain('private-value');
+  }
+  expect(
+    (await http.pool.query('SELECT key FROM app_config WHERE key=$1', [walletLimit.key])).rows
+  ).toHaveLength(0);
+  expect((await http.pool.query('SELECT id FROM audit_log')).rows).toHaveLength(0);
+});
+it('wallet limit keeps mixed and invalid-version errors general without weakening concurrency', async () => {
+  for (const body of [
+    { limit_irr: -1, privateSecret: 'private-value' },
+    { limit_irr: -1, expected_version: 'bad' },
+    { limit_irr: 0, expected_version: 'bad' },
+  ]) {
+    const response = await fetch(`${http.base}/api/admin/config/wallet-top-up-limit`, {
+      method: 'PUT',
+      headers: headers.operator!,
+      body: JSON.stringify(body),
+    });
+    expect(response.status).toBe(400);
+    const json = await response.json();
+    expect(json).not.toHaveProperty('error.fields');
+    expect(JSON.stringify(json)).not.toMatch(/privateSecret|private-value/);
+  }
+  expect(
+    (await http.pool.query('SELECT key FROM app_config WHERE key=$1', [walletLimit.key])).rows
+  ).toHaveLength(0);
+});
+it('wallet limit preserves compatible extras and alias precedence with an exact versioned receipt', async () => {
+  const response = await fetch(`${http.base}/api/admin/config/wallet-top-up-limit`, {
+    method: 'PUT',
+    headers: headers.operator!,
+    body: JSON.stringify({
+      limit_irr: 0,
+      limitIrR: -1,
+      expected_version: null,
+      expectedVersion: 0,
+      legacy: 'ignored',
+    }),
+  });
+  expect(response.status).toBe(200);
+  expect(await response.json()).toEqual({ limitIrR: 0, version: 1 });
+});
 const daytimeWindow = cases.find((item) => item.path === 'delivery-window')!;
 async function resetWalletLimitActor() {
   await http.pool.query(

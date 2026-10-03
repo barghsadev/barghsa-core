@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { setupCatalogueForms } from './catalogue-form-fixture';
 
 for (const locale of ['en', 'fa'] as const) {
   const labels =
@@ -20,13 +21,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`${locale}: financial limit confirmation retains the exact amount through password and failed saves`, async ({
     page,
   }) => {
-    await page.addInitScript((language) => {
-      if (document.documentElement) document.documentElement.lang = language;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = language;
-      }).observe(document, { childList: true });
-    }, locale);
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await setupCatalogueForms(page, locale, false);
     let verified = false;
     let fail = true;
     let mismatch = false;
@@ -66,12 +61,14 @@ for (const locale of ['en', 'fa'] as const) {
     expect(value.limitIrR).toBe(2000000000);
     fail = false;
     mismatch = true;
-    await dialog.getByLabel(labels.password, { exact: true }).fill('Test-password');
     await dialog.getByRole('button', { name: labels.confirm, exact: true }).click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(dialog.getByRole('button', { name: labels.confirm, exact: true })).toBeDisabled();
     await expect(panel.getByText(labels.saved, { exact: true })).toHaveCount(0);
+    await dialog.getByRole('button', { name: labels.cancel, exact: true }).click();
+    await panel.getByRole('button', { name: labels.reload, exact: true }).click();
     mismatch = false;
-    await dialog.getByLabel(labels.password, { exact: true }).fill('Test-password');
+    await panel.getByTestId('wallet-top-up-limit-save').click();
+    dialog = page.getByRole('dialog');
     await dialog.getByRole('button', { name: labels.confirm, exact: true }).click();
     await expect(dialog).toHaveCount(0);
     expect(attempts).toEqual(Array(4).fill({ limit_irr: 500000000, expected_version: 0 }));
@@ -90,9 +87,7 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     value = { limitIrR: 75000, version: 3 };
     await panel.getByRole('button', { name: labels.reload, exact: true }).click();
-    await expect(input).toHaveValue(
-      new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US').format(75000)
-    );
+    await expect(input).toHaveValue('75000');
     conflict = false;
     await input.fill('90000');
     await panel.getByTestId('wallet-top-up-limit-save').click();
@@ -106,13 +101,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`${locale}: failed or malformed limit reads disable writes until a valid retry`, async ({
     page,
   }) => {
-    await page.addInitScript((language) => {
-      if (document.documentElement) document.documentElement.lang = language;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = language;
-      }).observe(document, { childList: true });
-    }, locale);
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await setupCatalogueForms(page, locale, false);
     let reads = 0;
     await page.route('**/api/admin/config/wallet-top-up-limit', (route) => {
       expect(route.request().method()).toBe('GET');
@@ -127,8 +116,8 @@ for (const locale of ['en', 'fa'] as const) {
     const panel = page.getByTestId('wallet-top-up-limit-panel');
     for (let i = 0; i < 2; i++) {
       await expect(panel.getByRole('alert')).toBeVisible();
-      await expect(panel.getByTestId('wallet-top-up-limit-save')).toBeDisabled();
-      await expect(panel.getByTestId('wallet-top-up-limit-input')).toBeDisabled();
+      await expect(panel.getByTestId('wallet-top-up-limit-save')).toHaveCount(0);
+      await expect(panel.getByTestId('wallet-top-up-limit-input')).toHaveCount(0);
       await panel.getByRole('button', { name: labels.reload, exact: true }).click();
     }
     await expect(panel.getByTestId('wallet-top-up-limit-save')).toBeEnabled();

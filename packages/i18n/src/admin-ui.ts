@@ -777,6 +777,16 @@ export const fa: I18nDictionary = {
   'admin.contractLimits.retry': 'تلاش مجدد',
   'admin.contractLimits.save': 'ذخیره محدودیت‌ها',
   'admin.contractLimits.saved': 'محدودیت‌ها ذخیره شد.',
+  'admin.contractLimits.invalidPercent': 'درصد صحیح از ۰ تا ۱٬۰۰۰ وارد کنید.',
+  'admin.contractLimits.invalidDuration': 'مدت صحیح از ۱ تا ۱٬۲۰۰ ماه وارد کنید.',
+  'admin.contractLimits.invalidLeadTime': 'فاصله شروع صحیح از ۰ تا ۳۶٬۵۰۰ روز وارد کنید.',
+  'admin.contractLimits.invalid': 'محدودیت‌های مشخص‌شده را بررسی کنید.',
+  'admin.contractLimits.working': 'در حال بررسی محدودیت‌ها…',
+  'admin.contractLimits.readError': 'محدودیت‌ها دریافت نشد. پیش‌نویس شما حفظ شده است.',
+  'admin.contractLimits.validationUnavailable':
+    'بررسی ورودی در دسترس نیست. پیش از ذخیره دوباره تلاش کنید.',
+  'admin.contractLimits.unverified':
+    'تأیید ذخیره قابل بررسی نیست. انصراف دهید و پیش از ذخیره دوباره، مقدار فعلی را بارگذاری کنید.',
   'admin.contractLimits.scope':
     'مدت و فاصله شروع برای پیش‌نویس‌های جدید است. سقف افزایش مقدار برای درخواست‌های جدید قراردادهای فعال اعمال می‌شود.',
   'admin.contractLimits.confirm':
@@ -2476,6 +2486,15 @@ export const en: I18nDictionary = {
   'admin.contractLimits.retry': 'Retry',
   'admin.contractLimits.save': 'Save limits',
   'admin.contractLimits.saved': 'Limits saved.',
+  'admin.contractLimits.invalidPercent': 'Enter a whole percentage from 0 to 1,000.',
+  'admin.contractLimits.invalidDuration': 'Enter a whole duration from 1 to 1,200 months.',
+  'admin.contractLimits.invalidLeadTime': 'Enter a whole lead time from 0 to 36,500 days.',
+  'admin.contractLimits.invalid': 'Check the highlighted limits.',
+  'admin.contractLimits.working': 'Checking limits…',
+  'admin.contractLimits.readError': 'Limits could not be loaded. Your draft is kept.',
+  'admin.contractLimits.validationUnavailable': 'Validation is unavailable. Retry before saving.',
+  'admin.contractLimits.unverified':
+    'The save acknowledgement could not be verified. Cancel and reload before saving again.',
   'admin.contractLimits.scope':
     'Duration and lead time apply to new drafts. The increase cap applies to new requests on active contracts.',
   'admin.contractLimits.confirm':

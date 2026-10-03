@@ -23,6 +23,7 @@ describe('WalletTopUpLimitConfigPanel (T-04.2.02.06)', () => {
   let fetchMock: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
+    vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
     document.documentElement.lang = 'en';
     container = document.createElement('div');
     document.body.appendChild(container);
@@ -103,11 +104,11 @@ describe('WalletTopUpLimitConfigPanel (T-04.2.02.06)', () => {
       fetchMock.mock.calls.some(([, init]) => (init as RequestInit | undefined)?.method === 'PUT')
     ).toBe(false);
     expect(container.textContent).toContain('Limit must be an integer between 0 and');
-    expect(
-      container
-        .querySelector('[data-testid="wallet-top-up-limit-input"]')
-        ?.getAttribute('aria-invalid')
-    ).toBe('true');
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(input.getAttribute('aria-invalid')).toBe('true');
+    });
+    await vi.waitFor(() => expect(document.activeElement).toBe(input));
   });
 
   it('hides the panel when the admin is not allowed to read the config', async () => {

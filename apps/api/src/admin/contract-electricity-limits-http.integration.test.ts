@@ -52,6 +52,62 @@ function save(user = 'operator') {
     body: JSON.stringify(input),
   });
 }
+it('returns owned camelCase fields for invalid limits without writing settings or audit', async () => {
+  const response = await fetch(`${http.base}/api/admin/config/contract-electricity-limits`, {
+    method: 'PUT',
+    headers: headers.operator!,
+    body: JSON.stringify({
+      max_quantity_increase_percent: -1,
+      maxContractDuration: 0,
+      lead_time_days: 36501,
+    }),
+  });
+  expect(response.status).toBe(400);
+  expect(await response.json()).toMatchObject({
+    error: {
+      code: 'VALIDATION:INPUT:INVALID',
+      fields: ['maxQuantityIncreasePercent', 'maxContractDuration', 'leadTimeDays'],
+    },
+  });
+  expect(
+    (await http.pool.query('SELECT key FROM app_config WHERE key=$1', [key])).rows
+  ).toHaveLength(0);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+  ).toHaveLength(0);
+});
+it('keeps unknown and mixed input general without reflecting private keys, and checks permission first', async () => {
+  for (const user of ['operator', 'other']) {
+    const response = await fetch(`${http.base}/api/admin/config/contract-electricity-limits`, {
+      method: 'PUT',
+      headers: headers[user]!,
+      body: JSON.stringify({ ...input, lead_time_days: -1, privateSecret: 'private-value' }),
+    });
+    expect(response.status).toBe(user === 'operator' ? 400 : 403);
+    const body = await response.json();
+    expect(body).not.toHaveProperty('error.fields');
+    expect(JSON.stringify(body)).not.toMatch(/privateSecret|private-value/);
+  }
+});
+it('preserves snake/camel alias precedence and boundary values', async () => {
+  const response = await fetch(`${http.base}/api/admin/config/contract-electricity-limits`, {
+    method: 'PUT',
+    headers: headers.operator!,
+    body: JSON.stringify({
+      max_quantity_increase_percent: 1000,
+      maxQuantityIncreasePercent: -1,
+      maxContractDuration: 1200,
+      lead_time_days: null,
+      leadTimeDays: 36500,
+    }),
+  });
+  expect(response.status).toBe(200);
+  expect(await response.json()).toEqual({
+    maxQuantityIncreasePercent: 1000,
+    maxContractDuration: 1200,
+    leadTimeDays: 36500,
+  });
+});
 it('serializes first saves from different staff before recording previous versions', async () => {
   const client = await http.pool.connect();
   let first: Promise<Response> | undefined, second: Promise<Response> | undefined;

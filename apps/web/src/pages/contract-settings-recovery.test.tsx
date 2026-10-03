@@ -80,6 +80,10 @@ async function submit() {
       .querySelector('form')!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
+  await vi.waitFor(async () => {
+    await act(async () => {});
+    expect(host.querySelector('form')?.getAttribute('aria-busy')).not.toBe('true');
+  });
 }
 function templatesFetch(
   options: {
@@ -381,9 +385,9 @@ it('limits validation rejects out of range local edits and unexpected acknowledg
   expect(captured.action).toBeNull();
   await fill('#contract-limit-leadTimeDays', '14');
   await submit();
-  await expect(captured.success!({})).rejects.toThrow('Invalid limits acknowledgement');
+  await expect(captured.success!({})).rejects.toThrow('Unverified catalogue acknowledgement');
   await expect(captured.success!(electricityLimits)).rejects.toThrow(
-    'Invalid limits acknowledgement'
+    'Unverified catalogue acknowledgement'
   );
   saved = true;
   await act(async () => captured.success!({ ...electricityLimits, leadTimeDays: 14 }));

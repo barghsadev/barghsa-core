@@ -10,6 +10,11 @@ const fa: Record<string, string> = {
   'admin.walletLimit.save': 'ذخیره',
   'admin.walletLimit.saving': 'در حال ذخیره…',
   'admin.walletLimit.saved': 'ذخیره شد',
+  'admin.walletLimit.blocked': 'همه شارژهای آنلاین مسدود خواهند شد.',
+  'admin.walletLimit.validationUnavailable':
+    'بررسی ورودی در دسترس نیست. پیش از ذخیره دوباره تلاش کنید.',
+  'admin.walletLimit.unverified':
+    'مبلغ یا نسخه ذخیره‌شده قابل بررسی نیست. انصراف دهید و پیش از ذخیره دوباره، مقدار فعلی را بارگذاری کنید.',
   'admin.walletLimit.loading': 'در حال بارگذاری سقف شارژ آنلاین…',
   'admin.walletLimit.loadFailed': 'بارگذاری سقف شارژ آنلاین ناموفق بود',
   'admin.walletLimit.saveFailed': 'ذخیره سقف شارژ آنلاین ناموفق بود',
@@ -31,6 +36,10 @@ const en: Record<string, string> = {
   'admin.walletLimit.save': 'Save',
   'admin.walletLimit.saving': 'Saving…',
   'admin.walletLimit.saved': 'Saved',
+  'admin.walletLimit.blocked': 'All online top-ups will be blocked.',
+  'admin.walletLimit.validationUnavailable': 'Validation is unavailable. Retry before saving.',
+  'admin.walletLimit.unverified':
+    'The saved amount or version could not be verified. Cancel and reload before saving again.',
   'admin.walletLimit.loading': 'Loading online top-up limit…',
   'admin.walletLimit.loadFailed': 'Failed to load the online top-up limit',
   'admin.walletLimit.saveFailed': 'Failed to save the online top-up limit',

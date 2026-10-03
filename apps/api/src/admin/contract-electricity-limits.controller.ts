@@ -16,6 +16,7 @@ import type { ContractElectricityLimits } from '@barghsa/shared/admin';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { ContractElectricityLimitsService } from './contract-electricity-limits.service.js';
+import { assertContractLimitFields } from './limit-settings-fields.js';
 
 function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
@@ -150,6 +151,7 @@ export class ContractElectricityLimitsController {
     @Body() body: Record<string, unknown>
   ): Promise<ContractElectricityLimits> {
     this.assertElectricitySettingsPermission(req);
+    assertContractLimitFields(body);
     return this.service.update({
       raw: body,
       actor: req.session,

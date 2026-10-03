@@ -209,6 +209,16 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
   }
   return {
     ...editor,
+    field: (name) => {
+      const [value, update] = editor.field(name);
+      return [
+        value,
+        (next) => {
+          setSaved(false);
+          update(next);
+        },
+      ];
+    },
     resource,
     action,
     pending,
@@ -220,7 +230,9 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
     disabled: !ready || busy || uncertain,
     submit,
     propose,
-    close,
+    close: () => {
+      if (current()) close();
+    },
     verifyReceipt,
     refresh: () => {
       if (editor.isPending() || command.current) return;

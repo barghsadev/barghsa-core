@@ -44,9 +44,11 @@ for (const locale of ['en', 'fa'])
       exact: true,
     });
     await lead.fill('-1');
-    await expect(
-      page.getByRole('button', { name: fa ? 'ذخیره محدودیت‌ها' : 'Save limits', exact: true })
-    ).toBeDisabled();
+    await page
+      .getByRole('button', { name: fa ? 'ذخیره محدودیت‌ها' : 'Save limits', exact: true })
+      .click();
+    await expect(lead).toHaveAttribute('aria-invalid', 'true');
+    await expect(lead).toBeFocused();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await lead.fill('14');
     await page
@@ -69,5 +71,7 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('alert')).toContainText(
       fa ? 'اجازه مدیریت' : 'permission to manage'
     );
-    await expect(page.getByRole('spinbutton')).toHaveCount(0);
+    await expect(
+      page.locator('[id^="contract-limit-"] input, input[id^="contract-limit-"]')
+    ).toHaveCount(0);
   });
