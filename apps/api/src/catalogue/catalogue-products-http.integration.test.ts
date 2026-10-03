@@ -1,5 +1,6 @@
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import type { ProductDetailDto } from './catalogue-products.service.js';
 import { startHttpFixture } from '../test/http-fixture.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
@@ -450,4 +451,90 @@ it('allows an authorized staff member to restore both electricity limits to zero
     ).rows
   ).toHaveLength(2);
   expect((await request(`/${id}`, 'PUT', { minKwh: '101', maxKwh: '100' })).status).toBe(400);
+});
+
+it.each([
+  ['title-fa', { title: { fa: ' ', en: 'Valid' } }, ['titleFa']],
+  ['title-en', { title: { fa: 'Valid', en: 'x'.repeat(301) } }, ['titleEn']],
+  ['description', { description: { fa: '', en: 'x'.repeat(4001) } }, ['descriptionEn']],
+  ['categories', { categories: ['not-a-category'] }, ['categories']],
+  ['hardware', { hardwareIds: ['not-a-uuid'] }, ['hardwareIds']],
+  ['minimum', { minKwh: '-1' }, ['minKwh']],
+  ['maximum', { maxKwh: '1.2' }, ['maxKwh']],
+] as const)(
+  'maps only owned catalogue fields (%s) without writing or reflecting values',
+  async (_, body, fields) => {
+    const id = await seed();
+    const response = await request(`/${id}`, 'PUT', body);
+    expect(response.status).toBe(400);
+    expect(await response.json()).toMatchObject({
+      error: { code: 'VALIDATION:INPUT:INVALID', fields },
+    });
+    expect(
+      (await http.pool.query('SELECT title,price FROM products WHERE id=$1', [id])).rows[0]
+    ).toEqual({ title: { en: 'Original', fa: 'Test' }, price: '1000' });
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'"))
+        .rows
+    ).toHaveLength(0);
+  }
+);
+it.each([
+  [{ price: '1e3' }, ['price']],
+  [{ price: '1', effectiveFrom: 'not-an-instant' }, ['date', 'time']],
+] as const)(
+  'maps invalid price versions to visible field identifiers (%j)',
+  async (body, fields) => {
+    const id = await seed();
+    const response = await request(`/${id}/prices`, 'POST', body);
+    expect(response.status).toBe(400);
+    expect(await response.json()).toMatchObject({
+      error: { code: 'VALIDATION:INPUT:INVALID', fields },
+    });
+    expect(
+      (await http.pool.query('SELECT id FROM product_price_versions WHERE product_id=$1', [id]))
+        .rows
+    ).toHaveLength(0);
+  }
+);
+it('keeps unknown/protected mixed errors general and checks permission before field validation', async () => {
+  const id = await seed();
+  const body = { title: { fa: '', en: 'Valid', privateField: 'private-value' }, type: 'changed' };
+  const response = await request(`/${id}`, 'PUT', body);
+  expect(response.status).toBe(400);
+  const payload = (await response.json()) as { error: { code: string } };
+  expect(payload.error.code).toBe('VALIDATION:PARSE:ZOD_ERROR');
+  expect(JSON.stringify(payload)).not.toContain('private-value');
+  expect(JSON.stringify(payload)).not.toContain('fields');
+  expect((await request(`/${id}`, 'PUT', { title: { fa: '', en: '' } }, 'other')).status).toBe(403);
+});
+it('returns persisted saving-plan hardware in create/update/read receipts and leaves identical replacements unaudited', async () => {
+  const first = await seed(),
+    second = await seed();
+  const created = await request('', 'POST', {
+    type: 'saving_plan',
+    title: { fa: 'طرح', en: 'Plan' },
+    hardwareIds: [first],
+    status: 'inactive',
+  });
+  expect(created.status).toBe(201);
+  const plan = (await created.json()) as ProductDetailDto;
+  expect(plan.hardwareIds).toEqual([first]);
+  const updated = await request(`/${plan.id}`, 'PUT', { hardwareIds: [second] });
+  expect(updated.status).toBe(200);
+  expect(((await updated.json()) as ProductDetailDto).hardwareIds).toEqual([second]);
+  expect(((await (await request(`/${plan.id}`)).json()) as ProductDetailDto).hardwareIds).toEqual([
+    second,
+  ]);
+  const noop = await request(`/${plan.id}`, 'PUT', { hardwareIds: [second] });
+  expect(noop.status).toBe(200);
+  expect(((await noop.json()) as ProductDetailDto).hardwareIds).toEqual([second]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM audit_log WHERE event='catalogue_product_updated' AND metadata::jsonb->>'productId'=$1",
+        [plan.id]
+      )
+    ).rows
+  ).toHaveLength(1);
 });

@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { catalogueDetail } from '../src/test/catalogue-fixtures';
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
@@ -33,7 +34,10 @@ for (const locale of ['en', 'fa'])
       if (!verified)
         return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
       denied = true;
-      return route.fulfill({ status: 201, json: {} });
+      return route.fulfill({
+        status: 201,
+        json: { ...catalogueDetail(), ...route.request().postDataJSON() },
+      });
     });
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct';

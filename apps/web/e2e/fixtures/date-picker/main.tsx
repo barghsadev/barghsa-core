@@ -9,11 +9,13 @@ function Fixture() {
   const dst = params.has('dst');
   const [locale, setLocale] = React.useState<'en' | 'fa'>(params.has('fa') ? 'fa' : 'en');
   const [date, setDate] = React.useState<Date | undefined>(
-    dst
-      ? new Date('2026-03-07T05:00:00Z')
-      : params.has('timezone')
-        ? new Date('2026-03-20T21:00:00Z')
-        : new Date(2026, 2, 22, 12)
+    params.has('emptyDate')
+      ? undefined
+      : dst
+        ? new Date('2026-03-07T05:00:00Z')
+        : params.has('timezone')
+          ? new Date('2026-03-20T21:00:00Z')
+          : new Date(2026, 2, 22, 12)
   );
   const [range, setRange] = React.useState<{ from: Date | undefined; to?: Date } | undefined>({
     from: params.has('empty') ? undefined : date,
@@ -28,16 +30,20 @@ function Fixture() {
     locale,
     numerals: params.has('latin') ? ('latn' as const) : undefined,
     timezone: dst ? 'America/New_York' : (params.get('timezone') ?? 'UTC'),
-    minDate: dst
-      ? new Date('2026-03-07T05:00:00Z')
-      : params.has('timezone')
-        ? new Date('2026-03-20T20:30:00Z')
-        : new Date(2026, 2, 21, 12),
-    maxDate: dst
-      ? new Date('2026-03-09T04:00:00Z')
-      : params.has('timezone')
-        ? new Date('2026-03-22T20:30:00Z')
-        : new Date(2026, 2, 23, 12),
+    minDate: params.has('emptyDate')
+      ? undefined
+      : dst
+        ? new Date('2026-03-07T05:00:00Z')
+        : params.has('timezone')
+          ? new Date('2026-03-20T20:30:00Z')
+          : new Date(2026, 2, 21, 12),
+    maxDate: params.has('emptyDate')
+      ? undefined
+      : dst
+        ? new Date('2026-03-09T04:00:00Z')
+        : params.has('timezone')
+          ? new Date('2026-03-22T20:30:00Z')
+          : new Date(2026, 2, 23, 12),
     label: 'Delivery date',
     disabled: params.has('disabled'),
     error: params.has('error') ? 'Choose an allowed date' : undefined,

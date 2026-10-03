@@ -276,3 +276,26 @@ for (const theme of ['light', 'dark']) {
     await expect(trigger).toBeFocused();
   });
 }
+
+for (const browserZone of ['UTC', 'Europe/Istanbul']) {
+  test.describe(`fresh account-zone picker in ${browserZone}`, () => {
+    test.use({ timezoneId: browserZone });
+    test('a new selection keeps the chosen day in New York', async ({ page }) => {
+      // Keep native Date constructors so the timezone library retains its date subclasses.
+      await page.addInitScript(() => {
+        Date.now = () => Date.parse('2026-03-07T12:00:00Z');
+      });
+      await page.goto(`${url}?emptyDate&timezone=America%2FNew_York`);
+      const trigger = page.getByRole('combobox', { name: 'Delivery date' });
+      await trigger.click();
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: /March 8th/ })
+        .click();
+      await expect(trigger).toContainText('March 8, 2026');
+      await expect(page.getByRole('status', { name: 'Stored value', exact: true })).toHaveText(
+        '"2026-03-08T05:00:00.000Z"'
+      );
+    });
+  });
+}

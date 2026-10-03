@@ -125,6 +125,8 @@ export interface ElectricityLimitVersionDto {
 
 /** Product detail with versioned price and electricity-limit histories. */
 export interface ProductDetailDto extends ProductDto {
+  /** Persisted hardware selections for saving plans. */
+  hardwareIds?: string[];
   priceHistory: PriceVersionDto[];
   electricityLimitHistory: ElectricityLimitVersionDto[];
 }
@@ -274,6 +276,7 @@ export class CatalogueProductsService {
       ...this.toDto(withAggregates[0]!),
       priceHistory: history.map((row) => this.toHistoryDto(row)),
       electricityLimitHistory: limitHistory.map((row) => this.toLimitHistoryDto(row)),
+      ...(product.type === 'saving_plan' ? { hardwareIds: await this.hardwareIds(pool, id) } : {}),
     };
   }
 
@@ -938,6 +941,7 @@ export class CatalogueProductsService {
       ...this.toDto(withAggregates[0]!),
       priceHistory: history.map((row) => this.toHistoryDto(row)),
       electricityLimitHistory: limitHistory.map((row) => this.toLimitHistoryDto(row)),
+      ...(product.type === 'saving_plan' ? { hardwareIds: await this.hardwareIds(q, id) } : {}),
     };
   }
 

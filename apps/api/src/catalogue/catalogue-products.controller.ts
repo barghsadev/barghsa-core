@@ -16,6 +16,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
+import { InputFieldException } from '../common/input-field.exception.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
@@ -122,9 +123,36 @@ function assertTypeFilter(raw: string | undefined, typeName = 'type'): ProductTy
   return parsed.data;
 }
 
-function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
-  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }));
+function invalidPayload(issues: z.ZodIssue[], owned: Record<string, string[]>): never {
+  const field = (issue: z.ZodIssue) => {
+    if (issue.code === 'unrecognized_keys') return undefined;
+    const path = issue.path;
+    if (path.length === 1)
+      return Object.hasOwn(owned, String(path[0])) ? owned[String(path[0])] : undefined;
+    if (path.length === 2) {
+      const key =
+        typeof path[1] === 'number' && ['categories', 'hardwareIds'].includes(String(path[0]))
+          ? String(path[0])
+          : path.join('.');
+      return Object.hasOwn(owned, key) ? owned[key] : undefined;
+    }
+    return undefined;
+  };
+  const mapped = issues.map(field);
+  if (mapped.length && mapped.every((value) => value !== undefined))
+    throw new InputFieldException(mapped.flatMap((value) => value ?? []));
+  httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid catalogue payload');
 }
+const productFields = {
+  title: ['titleFa', 'titleEn'],
+  'title.fa': ['titleFa'],
+  'title.en': ['titleEn'],
+  description: ['descriptionFa', 'descriptionEn'],
+  'description.fa': ['descriptionFa'],
+  'description.en': ['descriptionEn'],
+  categories: ['categories'],
+  hardwareIds: ['hardwareIds'],
+};
 
 /**
  * Admin endpoints for product catalogue management (S-09.12, T-09.12.01) —
@@ -212,12 +240,7 @@ export class CatalogueProductsController {
     this.assertCataloguePermission(req);
     const parsed = CreateProductSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid catalogue product payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      invalidPayload(parsed.error.issues, { ...productFields, price: ['price'] });
     }
     const d = parsed.data;
     const description: LocalizedText | null =
@@ -257,12 +280,11 @@ export class CatalogueProductsController {
     assertUuid(id);
     const parsed = UpdateProductSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid catalogue product payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      invalidPayload(parsed.error.issues, {
+        ...productFields,
+        minKwh: ['minKwh'],
+        maxKwh: ['maxKwh'],
+      });
     }
     const d = parsed.data;
     return this.service.update(id, {
@@ -323,12 +345,7 @@ export class CatalogueProductsController {
     assertUuid(id);
     const parsed = AddPriceSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid price payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      invalidPayload(parsed.error.issues, { price: ['price'], effectiveFrom: ['date', 'time'] });
     }
     return this.service.addPrice({
       productId: id,

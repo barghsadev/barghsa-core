@@ -1,5 +1,19 @@
 import { lookup } from './lookup.js';
 const en: Record<string, string> = {
+  invalidTitleFa: 'Enter a Persian title of 1 to 300 characters.',
+  invalidTitleEn: 'Enter an English title of 1 to 300 characters.',
+  invalidDescription: 'Use at most 4,000 characters.',
+  invalidPrice: 'Enter a whole IRR amount of up to 18 digits.',
+  invalidCategories: 'Choose categories available for this product type.',
+  invalidHardware: 'Choose at least one available hardware product.',
+  invalidLimits:
+    'Enter whole kWh bounds with at least one positive bound; a nonzero maximum must be at least the minimum.',
+  invalidTime: 'Enter a valid time in hours and minutes.',
+  validationUnavailable: 'Validation could not load. Try again.',
+  working: 'Checking…',
+  unverifiedCreate:
+    'The save could not be verified. Cancel this editor and review the catalogue before creating another product.',
+  unavailable: 'Choice no longer available',
   title: 'Product catalogue',
   refresh: 'Refresh',
   loading: 'Loading…',
@@ -115,6 +129,20 @@ const en: Record<string, string> = {
   inventoryConflict: 'Stock cannot be lower than open reservations. Refresh and try again.',
 };
 const fa: Record<string, string> = {
+  invalidTitleFa: 'عنوان فارسی را با ۱ تا ۳۰۰ نویسه وارد کنید.',
+  invalidTitleEn: 'عنوان انگلیسی را با ۱ تا ۳۰۰ نویسه وارد کنید.',
+  invalidDescription: 'حداکثر ۴۰۰۰ نویسه وارد کنید.',
+  invalidPrice: 'مبلغ ریالی صحیح را با حداکثر ۱۸ رقم وارد کنید.',
+  invalidCategories: 'دسته‌های مجاز این نوع محصول را انتخاب کنید.',
+  invalidHardware: 'دست‌کم یک محصول تجهیزات موجود انتخاب کنید.',
+  invalidLimits:
+    'حدود صحیح کیلووات‌ساعت را با دست‌کم یک حد مثبت وارد کنید؛ سقف غیرصفر باید برابر یا بیشتر از حداقل باشد.',
+  invalidTime: 'ساعت و دقیقه معتبر وارد کنید.',
+  validationUnavailable: 'اعتبارسنجی بارگیری نشد. دوباره تلاش کنید.',
+  working: 'در حال بررسی…',
+  unverifiedCreate:
+    'ذخیره تأیید نشد. این ویرایشگر را لغو و پیش از ساخت محصول دیگر، فهرست را بررسی کنید.',
+  unavailable: 'گزینه دیگر در دسترس نیست',
   title: 'فهرست محصولات',
   refresh: 'تازه‌سازی',
   loading: 'در حال بارگذاری…',

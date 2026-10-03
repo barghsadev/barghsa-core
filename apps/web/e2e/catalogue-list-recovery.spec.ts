@@ -141,7 +141,7 @@ for (const type of catalogueTypes)
       holdList = true;
       await page.getByRole('button', { name: label('refresh'), exact: true }).click();
       await expect.poll(() => !!held).toBe(true);
-      await expect(titleInput).toHaveValue('Sample product');
+      await expect(titleInput).toHaveValue('Keep product draft');
       await expect(content).toHaveAttribute('aria-busy', 'true');
       await expect(content.getByRole('button').first()).toBeVisible();
       await titleInput.fill('Keep refreshed product draft');
@@ -183,7 +183,7 @@ for (const type of catalogueTypes)
       holdList = true;
       await page.getByRole('button', { name: label('refresh'), exact: true }).click();
       await expect.poll(() => !!held).toBe(true);
-      await expect(titleInput).toHaveValue('Sample product');
+      await expect(titleInput).toHaveValue('Keep refreshed product draft');
       if (type === 'saving_plan')
         await expect(page.getByRole('button', { name: label('save'), exact: true })).toBeEnabled();
       await page.getByRole('button', { name: label('save'), exact: true }).click();
