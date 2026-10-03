@@ -22,6 +22,9 @@ test('target validation and confirmation preserve settings through a failed save
     verified = true;
     return route.fulfill({ json: { verified: true } });
   });
+  await page.route('**/api/admin/config/escalation-policy', (route) =>
+    route.fulfill({ status: 403, json: {} })
+  );
   await page.goto('/admin/service-targets');
   const input = page.getByLabel('Hours — Tickets', { exact: true });
   for (const invalid of ['0', '1.5', '8761']) {
@@ -40,7 +43,6 @@ test('target validation and confirmation preserve settings through a failed save
   expect(values.ticket).toBe(24);
   await expect(page.getByText('Changes saved.', { exact: true })).toHaveCount(0);
   fail = false;
-  await dialog.getByLabel('Confirm your password').fill('Test-password');
   await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(dialog).toHaveCount(0);
   expect(attempts).toEqual(Array(3).fill({ ticket: 72, verification_case: null }));
@@ -50,7 +52,12 @@ test('target settings deny controls when access is unavailable', async ({ page }
   await page.route('**/api/admin/config/service-response-targets', (route) =>
     route.fulfill({ status: 403, json: {} })
   );
+  await page.route('**/api/admin/config/escalation-policy', (route) =>
+    route.fulfill({ status: 403, json: {} })
+  );
   await page.goto('/admin/service-targets');
-  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(
+    page.getByRole('region', { name: 'Staff response targets', exact: true }).getByRole('alert')
+  ).toBeVisible();
   await expect(page.locator('form')).toHaveCount(0);
 });

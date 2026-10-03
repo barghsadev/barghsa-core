@@ -6,6 +6,7 @@ import type {
   TemplateSetting,
 } from './electricity-settings-form.js';
 import { custom } from 'zod/mini';
+import type { ServiceDraft, ServiceField } from './service-settings-form.js';
 import type { Draft, PriceDraft, ProductType } from './catalogue-form.js';
 import type { AgreementDraft, InventoryDraft } from './saving-catalogue-form.js';
 
@@ -182,5 +183,23 @@ export function templateSettingsSchema(
         path: ['versionId'],
         message: messages.versionId,
       });
+  });
+}
+
+export function serviceSettingsSchema(
+  fields: readonly ServiceField[],
+  messages: Record<keyof ServiceDraft, string>,
+  integer: (raw: string, min: number, max: number) => number | null
+) {
+  return custom<ServiceDraft>().check((ctx) => {
+    for (const field of fields) {
+      if (ctx.value[field.enabled] && integer(ctx.value[field.hours], 1, 8760) === null)
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value,
+          path: [field.hours],
+          message: messages[field.hours],
+        });
+    }
   });
 }

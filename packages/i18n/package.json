@@ -216,6 +216,16 @@
       "types": "./dist/onboarding-drafts.d.ts",
       "import": "./dist/onboarding-drafts.js",
       "default": "./dist/onboarding-drafts.js"
+    },
+    "./service-settings": {
+      "types": "./dist/service-settings.d.ts",
+      "import": "./dist/service-settings.js",
+      "default": "./dist/service-settings.js"
+    },
+    "./invoice-financial-review": {
+      "types": "./dist/invoice-financial-review.d.ts",
+      "import": "./dist/invoice-financial-review.js",
+      "default": "./dist/invoice-financial-review.js"
     }
   },
   "scripts": {

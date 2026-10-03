@@ -129,3 +129,34 @@ for (const config of configurations) {
     expect((await call(config.path, 'PUT', {})).status).toBe(200);
   });
 }
+
+for (const [path, body, fields] of [
+  [
+    'config/service-response-targets',
+    { ticket: 'private-value', verification_case: 0 },
+    ['ticketHours', 'verificationCaseHours'],
+  ],
+  [
+    'config/escalation-policy',
+    {
+      ticket: {
+        level2: { delayHours: 'private-value', channels: ['in_app'] },
+        level3: { delayHours: 8761, channels: ['in_app'] },
+      },
+    },
+    ['ticketLevel2Hours', 'ticketLevel3Hours'],
+  ],
+] as const) {
+  it(`${path} returns safe owned fields without writing an audit or reflecting input`, async () => {
+    const before = (await http.pool.query('SELECT COUNT(*)::int AS count FROM audit_log')).rows[0]
+      .count;
+    const response = await call(path, 'PUT', body);
+    expect(response.status).toBe(400);
+    const result = await response.json();
+    expect(result).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID', fields } });
+    expect(JSON.stringify(result)).not.toContain('private-value');
+    expect(
+      (await http.pool.query('SELECT COUNT(*)::int AS count FROM audit_log')).rows[0].count
+    ).toBe(before);
+  });
+}

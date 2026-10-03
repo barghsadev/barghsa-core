@@ -1,5 +1,5 @@
 import type { WalletPaymentReviewData } from '@barghsa/shared/finance';
-import { tWalletInvoicePayment as t } from '@barghsa/i18n/wallet-invoice-payment';
+import { tInvoiceFinancialReview as t } from '@barghsa/i18n/invoice-financial-review';
 import { contractText } from '@barghsa/i18n/contracts';
 import type { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 

@@ -10,6 +10,7 @@ export interface CatalogueEditorProps {
   disabled?: boolean;
   refreshVersion?: number;
   contextBasis?: string;
+  retainChangedDraft?: boolean;
   onBusyChange?: (busy: boolean) => void;
   onDenied?: () => void;
 }
@@ -20,6 +21,9 @@ type CatalogueEditor<Data, Draft extends FieldValues> = ReturnType<typeof useWiz
   ready: boolean;
   uncertain: boolean;
   saved: boolean;
+  stale: boolean;
+  resetToCurrent: () => void;
+  deny: () => void;
   denied: boolean;
   disabled: boolean;
   submit: (event: FormEvent, capture: (draft: Draft) => TeamAction) => Promise<void>;
@@ -27,7 +31,7 @@ type CatalogueEditor<Data, Draft extends FieldValues> = ReturnType<typeof useWiz
   close: () => void;
   verifyReceipt: (matches: boolean) => boolean;
   refresh: () => void;
-  complete: () => void;
+  complete: (value?: Data) => void;
   onDenied: () => void;
   onValidationError: (fields: unknown[]) => boolean;
   feedback: (field: FieldPath<Draft>) => ReactNode;
@@ -54,6 +58,7 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
     source = useRef<{ identity: string; basis: string } | null>(null);
   const command = useRef<{ action: TeamAction; generation: number } | null>(null);
   const [action, setAction] = useState<TeamAction | null>(null);
+  const [stale, setStale] = useState(false);
   const [uncertain, setUncertain] = useState(false),
     [saved, setSaved] = useState(false);
   const data = useRef<Data | null>(null);
@@ -63,6 +68,8 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
     label('validationUnavailable')
   );
   const { reset, clearErrors, setFocus } = editor.form;
+  const dirtyDraft = useRef(false);
+  dirtyDraft.current = editor.form.formState.isDirty;
   const invalidFocus = useRef<FieldPath<Draft> | null>(null);
   const deny = useCallback(() => {
     generation.current++;
@@ -74,6 +81,7 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
     setAction(null);
     setUncertain(false);
     setSaved(false);
+    setStale(false);
     callbacks.current.onDenied?.();
   }, [reset, defaults]);
   const scope = useCatalogueScope(deny);
@@ -102,7 +110,12 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
   const pending = editor.pending || editor.form.formState.isSubmitting;
   const busy = pending || action !== null;
   const ready =
-    !scope.denied && !!resource.data && !resource.error && !resource.loading && !options.disabled;
+    !scope.denied &&
+    !!resource.data &&
+    !resource.error &&
+    !resource.loading &&
+    !options.disabled &&
+    !stale;
   const live = useRef({ identity, ready, uncertain });
   live.current = { identity, ready, uncertain };
   useEffect(() => {
@@ -115,6 +128,7 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
       setAction(null);
       setUncertain(false);
       setSaved(false);
+      setStale(false);
     }
     if (!resource.data) return;
     const accepted = basis(resource.data);
@@ -122,7 +136,12 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
       generation.current++;
       command.current = null;
       invalidFocus.current = null;
-      reset(values(resource.data));
+      if (source.current && callbacks.current.retainChangedDraft && dirtyDraft.current)
+        setStale(true);
+      else {
+        reset(values(resource.data));
+        setStale(false);
+      }
       setAction(null);
     }
     source.current = { identity, basis: accepted };
@@ -226,6 +245,15 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
     ready,
     uncertain,
     saved,
+    stale,
+    deny: scope.deny,
+    resetToCurrent: () => {
+      if (!resource.data || busy || scope.denied) return;
+      generation.current++;
+      reset(values(resource.data));
+      setStale(false);
+      setSaved(false);
+    },
     denied: scope.denied,
     disabled: !ready || busy || uncertain,
     submit,
@@ -240,8 +268,14 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
       if (scope.denied) scope.recover();
       else resource.retry();
     },
-    complete: () => {
+    complete: (value) => {
       if (current()) {
+        if (value !== undefined) {
+          source.current = { identity, basis: basis(value) };
+          reset(values(value));
+          resource.accept(value);
+          setStale(false);
+        }
         close();
         setSaved(true);
       }

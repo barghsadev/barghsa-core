@@ -74,3 +74,22 @@ it('projects additive profile roles without borrowing owner or staff powers', ()
   expect(combined.paths).not.toContain('/settings/team');
   expect(customerNavigation().paths).toEqual(['/app', '/notifications', '/settings']);
 });
+
+it('allows service settings navigation for either independently granted configuration permission', async () => {
+  for (const permission of ['admin:service-targets:edit', 'admin:service-escalation:edit'])
+    expect((await resolveNavigation(staff([permission]))).paths).toEqual([
+      '/app',
+      '/admin/inbox',
+      '/admin/service-targets',
+    ]);
+  expect(
+    (
+      await resolveNavigation(
+        staff(['admin:service-escalation:edit', 'admin:service-targets:edit'])
+      )
+    ).paths.filter((path) => path === '/admin/service-targets')
+  ).toHaveLength(1);
+  expect((await resolveNavigation(staff(['admin:staff-teams:edit']))).paths).not.toContain(
+    '/admin/service-targets'
+  );
+});

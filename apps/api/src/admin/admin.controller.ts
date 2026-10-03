@@ -1,3 +1,4 @@
+import { assertServiceSettingsFields } from './service-settings-fields.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import type { VerificationModeConfig } from './verification-mode-config.js';
 import {
@@ -2549,6 +2550,7 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async setServiceResponseTargets(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertServiceTargetsEditPermission(req);
+    assertServiceSettingsFields(rawBody, 'targets');
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.adminService.setServiceResponseTargets(rawBody, req.session, ip);
   }
@@ -2684,6 +2686,7 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async setEscalationPolicy(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertEscalationEditPermission(req);
+    assertServiceSettingsFields(rawBody, 'escalation');
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.adminService.setEscalationPolicy(rawBody, req.session, ip);
   }

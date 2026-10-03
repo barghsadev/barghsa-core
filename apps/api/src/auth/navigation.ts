@@ -30,7 +30,7 @@ export const STAFF_NAVIGATION: ReadonlyArray<readonly [string, ...string[]]> = [
   ['/admin/electricity-price-adjustments', 'contracts:read', 'contracts:write'],
   ['/admin/documents', 'legal:read'],
   ['/admin/reconciliation', 'admin:reconciliation:view'],
-  ['/admin/service-targets', 'admin:service-targets:edit'],
+  ['/admin/service-targets', 'admin:service-targets:edit', 'admin:service-escalation:edit'],
   ['/admin/staff-teams', 'admin:staff-teams:edit'],
   ['/admin/failed-notifications', 'admin:jobs:view'],
   ['/admin/failed-jobs', 'admin:jobs:view'],

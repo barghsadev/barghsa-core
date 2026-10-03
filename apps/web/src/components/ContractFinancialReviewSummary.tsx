@@ -1,7 +1,7 @@
 import type { ContractFinancialReview } from '@barghsa/shared/finance';
 import { FinancialReviewSummary } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
-import { tWalletInvoicePayment as invoiceText } from '@barghsa/i18n/wallet-invoice-payment';
+import { tInvoiceFinancialReview as invoiceText } from '@barghsa/i18n/invoice-financial-review';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { invoiceFinancialReviewRows } from './InvoiceFinancialReviewRows.js';
