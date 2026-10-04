@@ -216,6 +216,28 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
       expect(mockAttachDocument).not.toHaveBeenCalled();
     });
 
+    it('returns only the owned attachment field without exposing submitted values', async () => {
+      for (const body of [{ storageKey: '' }, { storageKey: 'private-key'.repeat(100) }]) {
+        try {
+          await controller.attachDocument(adminReq, '01900000-0000-7000-8000-000000000001', body);
+          expect.fail('Expected validation failure');
+        } catch (error) {
+          expect(error).toMatchObject({
+            response: { error: 'VALIDATION:INPUT:INVALID' },
+            fields: ['storageKey'],
+          });
+          expect(JSON.stringify(error)).not.toContain('private-key');
+        }
+      }
+      expect(mockAttachDocument).not.toHaveBeenCalled();
+    });
+    it('checks permission before exposing attachment validation fields', async () => {
+      await expect(
+        controller.attachDocument(nonAdminReq, '01900000-0000-7000-8000-000000000001', {} as never)
+      ).rejects.toMatchObject({ status: 403 });
+      expect(mockAttachDocument).not.toHaveBeenCalled();
+    });
+
     it('attaches a document by storage key', async () => {
       mockAttachDocument.mockResolvedValue(baseDoc());
       const result = await controller.attachDocument(

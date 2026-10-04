@@ -13,6 +13,15 @@ export const KNOWLEDGE_DOCUMENT_ACCEPT = Object.keys(documentTypes)
   .map((ext) => `.${ext}`)
   .join(',');
 
+export const validKnowledgeDocument = (file: File | null): file is File =>
+  !!file && file.size > 0 && !!documentTypes[file.name.split('.').pop()?.toLowerCase() ?? ''];
+
+export class KnowledgeUploadDenied extends Error {
+  constructor(readonly status: 401 | 403) {
+    super('Upload authorization denied');
+  }
+}
+
 async function post(path: string, body: unknown, signal: AbortSignal) {
   const response = await fetch(path, {
     method: 'POST',
@@ -21,6 +30,8 @@ async function post(path: string, body: unknown, signal: AbortSignal) {
     headers: withCsrf({ Accept: 'application/json', 'Content-Type': 'application/json' }),
     body: JSON.stringify(body),
   });
+  if (response.status === 401 || response.status === 403)
+    throw new KnowledgeUploadDenied(response.status);
   if (!response.ok) throw new Error('Upload request failed');
   const data: unknown = await response.json();
   if (!data || typeof data !== 'object' || Array.isArray(data))

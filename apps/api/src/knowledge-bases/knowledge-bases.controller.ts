@@ -344,7 +344,7 @@ export class KnowledgeBasesController {
     this.assertKbPermission(req);
     const parsed = AttachDocumentSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid document payload');
+      rejectContentFields(parsed.error.issues, ['storageKey']);
     }
     return this.service.attachDocument({
       kbId: id,

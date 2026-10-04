@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 
 /** Publish digits opposite to the page language without altering the language. */
-export async function mockOppositeNumerals(page: Page, locale: string) {
+export async function mockOppositeNumerals(page: Page, locale: string, darkMode = false) {
   await page.route('**/api/public/branding/config', (route) =>
     route.fulfill({
       json: {
@@ -16,7 +16,7 @@ export async function mockOppositeNumerals(page: Page, locale: string) {
         accentColor: '#f59e0b',
         logoUrl: null,
         faviconUrl: null,
-        darkMode: false,
+        darkMode,
         numberStyle: locale === 'fa' ? 'western' : 'persian',
       },
     })

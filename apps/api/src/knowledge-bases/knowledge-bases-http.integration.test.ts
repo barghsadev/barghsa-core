@@ -807,6 +807,12 @@ for (const method of ['POST', 'PUT'] as const)
 
 for (const entry of [
   {
+    name: 'knowledge document attachment',
+    path: () => `knowledge-bases/${ids.kb}/documents`,
+    body: { storageKey: 'private-input'.repeat(100) },
+    fields: ['storageKey'],
+  },
+  {
     name: 'knowledge-base query',
     path: () => `knowledge-bases/${ids.kb}/query`,
     body: { query: 'private-input'.repeat(100) },

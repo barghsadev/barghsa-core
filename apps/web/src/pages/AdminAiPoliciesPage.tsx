@@ -1,3 +1,5 @@
+import { validCatalogueCount, validCataloguePriority } from '../lib/knowledge-documents.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { CatalogueRelationEditor } from '../components/CatalogueRelationEditor.js';
 import {
   matchesMembership,
@@ -62,10 +64,11 @@ function validEntries(value: unknown): value is Entry[] {
         (v.policyType === undefined || types.includes(v.policyType as PolicyType)) &&
         (v.rules === undefined || record(v.rules)) &&
         (v.enabled === undefined || typeof v.enabled === 'boolean') &&
-        (v.priority === undefined || typeof v.priority === 'number') &&
+        validCatalogueCount(v.memberCount) &&
+        validCataloguePriority(v.priority) &&
         (v.priorityOverride === undefined ||
           v.priorityOverride === null ||
-          typeof v.priorityOverride === 'number')
+          validCataloguePriority(v.priorityOverride))
     )
   );
 }
@@ -117,6 +120,7 @@ export default function AdminAiPoliciesPage({
 } = {}) {
   const locale = useLocale(),
     label = (key: string) => t(`admin.policies.${key}`, locale);
+  const numbers = useNumberFormatting(locale);
   const [kind, setKind] = useState<Kind>(initialKind);
   const copy = (key: Parameters<typeof knowledgePolicyFormText>[0]) =>
     knowledgePolicyFormText(key, locale);
@@ -991,16 +995,25 @@ export default function AdminAiPoliciesPage({
                     <div className="min-w-0">
                       <h2 className="break-words font-semibold">{row.title}</h2>
                       <p className="whitespace-pre-wrap break-words text-sm">{row.description}</p>
+                      {kind === 'policy-groups' && (
+                        <p className="text-sm text-muted-foreground">
+                          {label('members')}:{' '}
+                          {row.memberCount === undefined ? '—' : numbers.number(row.memberCount)}
+                        </p>
+                      )}
                       {row.policyType && (
                         <div className="mt-2 flex flex-wrap gap-2 text-sm">
                           <span className="rounded-full bg-muted px-2 py-1">
                             {label(row.policyType)}
                           </span>
                           <span className="px-2 py-1">
-                            {label(row.enabled ? 'enabled' : 'disabled')}
+                            {row.enabled === undefined
+                              ? label('unavailable')
+                              : label(row.enabled ? 'enabled' : 'disabled')}
                           </span>
                           <span className="px-2 py-1">
-                            {label('priority')}: {row.priority ?? 100}
+                            {label('priority')}:{' '}
+                            {row.priority === undefined ? '—' : numbers.number(row.priority)}
                           </span>
                         </div>
                       )}
@@ -1123,7 +1136,7 @@ export default function AdminAiPoliciesPage({
                         labels={{
                           member: '',
                           priority: `${label('priorityOverride')} · ${item.title}`,
-                          inherit: `${label('inheritPriority')} (${item.priority ?? 100})`,
+                          inherit: `${label('inheritPriority')} (${item.priority === undefined ? '—' : numbers.number(item.priority)})`,
                           save: label('updatePriority'),
                           unavailable: label('unavailable'),
                         }}

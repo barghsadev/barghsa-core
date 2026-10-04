@@ -1,5 +1,5 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { uploadKnowledgeDocument } from './knowledge-base-upload.js';
+import { KnowledgeUploadDenied, uploadKnowledgeDocument } from './knowledge-base-upload.js';
 const key = 'uploads/document/guide.pdf';
 afterEach(() => vi.unstubAllGlobals());
 function fixture(
@@ -69,3 +69,21 @@ it('rejects unsupported or empty files before reserving storage', async () => {
     await expect(uploadKnowledgeDocument(file, new AbortController().signal)).rejects.toThrow();
   expect(request).not.toHaveBeenCalled();
 });
+
+for (const status of [401, 403] as const)
+  it(`distinguishes same-origin authorization denial ${status} from a storage failure`, async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status })));
+    await expect(
+      uploadKnowledgeDocument(new File(['data'], 'guide.pdf'), new AbortController().signal)
+    ).rejects.toBeInstanceOf(KnowledgeUploadDenied);
+    const request = fixture();
+    request
+      .mockReset()
+      .mockResolvedValueOnce(
+        Response.json({ key, presignedUrl: 'https://storage.example.test/guide' })
+      )
+      .mockResolvedValueOnce(new Response(null, { status }));
+    await expect(
+      uploadKnowledgeDocument(new File(['data'], 'guide.pdf'), new AbortController().signal)
+    ).rejects.not.toBeInstanceOf(KnowledgeUploadDenied);
+  });

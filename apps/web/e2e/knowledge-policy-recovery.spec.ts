@@ -5,7 +5,6 @@ import { t as appT } from '@barghsa/i18n/app';
 import {
   knowledgeBase as kb,
   knowledgeGroup as kg,
-  knowledgeDetail as kd,
   policyEntry as policy,
   policySecond,
   policyGroup as pg,
@@ -42,17 +41,19 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }, info) => {
     await shell(page, locale);
+    const documentKb = { ...kb, sourceType: 'document' as const, sourceConfig: {} };
+    const documentDetail = { ...documentKb, documents: [] };
     let failList = false,
       failDetail = false,
       listReads = 0,
       detailReads = 0;
     await page.route('**/api/admin/knowledge-bases', (route) => {
       listReads++;
-      return route.fulfill(failList ? { status: 503, json: {} } : { json: [kb] });
+      return route.fulfill(failList ? { status: 503, json: {} } : { json: [documentKb] });
     });
     await page.route(`**/api/admin/knowledge-bases/${kb.id}`, (route) => {
       detailReads++;
-      return route.fulfill(failDetail ? { status: 503, json: {} } : { json: kd });
+      return route.fulfill(failDetail ? { status: 503, json: {} } : { json: documentDetail });
     });
     await page.route('**/api/admin/knowledge-bases/documents/available**', (route) =>
       route.fulfill({

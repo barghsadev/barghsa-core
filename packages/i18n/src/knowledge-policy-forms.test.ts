@@ -3,6 +3,10 @@ import { knowledgePolicyFormText } from './knowledge-policy-forms.js';
 for (const locale of ['en', 'fa'] as const)
   it(`has owned knowledge/policy feedback in ${locale}`, () => {
     for (const key of [
+      'search',
+      'storageKey',
+      'file',
+      'documentSource',
       'member',
       'query',
       'title',

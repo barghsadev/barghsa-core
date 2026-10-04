@@ -1,3 +1,9 @@
+import {
+  matchesKnowledgeDocumentReceipt,
+  matchesKnowledgeDocuments,
+  validCatalogueCount,
+  type KnowledgeDocumentCommand,
+} from '../lib/knowledge-documents.js';
 import { CatalogueRelationEditor } from '../components/CatalogueRelationEditor.js';
 import {
   matchesMembership,
@@ -69,9 +75,14 @@ function validEntries(value: unknown): value is Entry[] {
       const config = v.sourceConfig,
         chunk = v.chunkingStrategy;
       return (
-        ['documentCount', 'memberCount'].every(
-          (k) => v[k] === undefined || typeof v[k] === 'number'
-        ) &&
+        ['documentCount', 'memberCount'].every((k) => validCatalogueCount(v[k])) &&
+        (v.audience === undefined ||
+          ['admin', 'staff', 'customer', 'public'].includes(v.audience as string)) &&
+        (v.sourceType === undefined ||
+          ['document', 'url', 'api'].includes(v.sourceType as string)) &&
+        (v.contentState === undefined ||
+          ['empty', 'processing', 'ready', 'error'].includes(v.contentState as string)) &&
+        (v.isEnabled === undefined || typeof v.isEnabled === 'boolean') &&
         (config === undefined ||
           (record(config) &&
             (config.urls === undefined ||
@@ -209,7 +220,8 @@ export default function AdminKnowledgeBasesPage({
   const formCapture = useRef<{ body: Record<string, unknown>; id?: string } | null>(null);
   const actionRef = useRef<TeamAction | null>(null);
   const operationCapture = useRef<MembershipCommand | null>(null),
-    uncertainOperation = useRef<MembershipCommand | null>(null);
+    uncertainOperation = useRef<MembershipCommand | KnowledgeDocumentCommand | null>(null);
+  const documentCapture = useRef<KnowledgeDocumentCommand | null>(null);
   const requiredOperationRead = useRef<{ detail: number; choices: number | null }>({
     detail: 0,
     choices: null,
@@ -220,6 +232,7 @@ export default function AdminKnowledgeBasesPage({
     if (!value) {
       formCapture.current = null;
       operationCapture.current = null;
+      documentCapture.current = null;
     }
     updateAction(value);
   }, []);
@@ -490,6 +503,7 @@ export default function AdminKnowledgeBasesPage({
         ? { successStatus: method === 'POST' ? 201 : 200, conflictMessage: copy('changed') }
         : {}),
       ...(operationCapture.current ? { successStatus: 204, conflictMessage: copy('changed') } : {}),
+      ...(documentCapture.current ? { successStatus: method === 'POST' ? 200 : 204 } : {}),
       title,
       description,
       ...(body === undefined ? {} : { body }),
@@ -537,8 +551,8 @@ export default function AdminKnowledgeBasesPage({
     }
   }
   function unconfirmed() {
-    if (operationCapture.current) {
-      const operation = operationCapture.current;
+    if (operationCapture.current || documentCapture.current) {
+      const operation = (operationCapture.current ?? documentCapture.current)!;
       uncertainOperation.current = operation;
       setOperationUncertain(true);
       generation.current++;
@@ -1013,17 +1027,30 @@ export default function AdminKnowledgeBasesPage({
                       <p className="whitespace-pre-wrap break-words text-sm">{row.description}</p>
                       <p className="text-sm text-muted-foreground">
                         {label(kind === 'knowledge-bases' ? 'documents' : 'members')}:{' '}
-                        {numbers.number(row.documentCount ?? row.memberCount ?? 0)}
+                        {(kind === 'knowledge-bases' ? row.documentCount : row.memberCount) ===
+                        undefined
+                          ? '—'
+                          : numbers.number(
+                              (kind === 'knowledge-bases' ? row.documentCount : row.memberCount)!
+                            )}
                       </p>
                       {kind === 'knowledge-bases' && (
                         <div className="space-y-1 text-sm text-muted-foreground">
                           <p>
-                            {label('contentState')}: {label(`state${row.contentState ?? 'empty'}`)}
+                            {label('contentState')}:{' '}
+                            {row.contentState === undefined
+                              ? label('unknown')
+                              : label(`state${row.contentState}`)}
                             {' · '}
-                            {label(row.isEnabled ? 'enabled' : 'disabled')}
+                            {row.isEnabled === undefined
+                              ? label('unknown')
+                              : label(row.isEnabled ? 'enabled' : 'disabled')}
                           </p>
                           <p>
-                            {label('audience')}: {label(`audience${row.audience ?? 'admin'}`)}
+                            {label('audience')}:{' '}
+                            {row.audience === undefined
+                              ? label('unknown')
+                              : label(`audience${row.audience}`)}
                           </p>
                         </div>
                       )}
@@ -1154,9 +1181,9 @@ export default function AdminKnowledgeBasesPage({
                   ) : (
                     <p>{label('noMatches')}</p>
                   ))}
+                {operationRecovery}
                 {kind === 'kb-groups' ? (
                   <>
-                    {operationRecovery}
                     <CatalogueRelationEditor
                       key={detail.id}
                       mode="kb"
@@ -1222,20 +1249,44 @@ export default function AdminKnowledgeBasesPage({
                 ) : (
                   <>
                     <h3 className="font-semibold">{label('documents')}</h3>
+                    {(detail.sourceType === 'url' || detail.sourceType === 'api') && (
+                      <p className="text-sm text-muted-foreground">{copy('documentSource')}</p>
+                    )}
                     <KnowledgeBaseDocumentPicker
                       key={detail.id}
                       attachedKeys={detail.documents?.map((doc) => doc.storageKey) ?? []}
-                      onAttach={((target, version, basis) => (key: string) => {
+                      disabled={
+                        detailDisabled ||
+                        !!action ||
+                        pending ||
+                        form.pending ||
+                        operationUncertain ||
+                        detail.sourceType === 'url' ||
+                        detail.sourceType === 'api'
+                      }
+                      onDenied={scope.deny}
+                      onAttach={((target, version, basis) => (key, owner) => {
                         const current = work.current;
                         if (
                           version !== selectionGeneration.current ||
                           target !== current.selected ||
                           !current.detail ||
-                          basis !== retrievalBasis(current.detail)
+                          basis !== retrievalBasis(current.detail) ||
+                          current.detailDisabled ||
+                          actionRef.current ||
+                          networkPending.current ||
+                          operationUncertain
                         )
                           return;
+                        documentCapture.current = {
+                          kbId: target,
+                          storageKey: key,
+                          expected: 'present',
+                          choicesRequired: false,
+                          owner,
+                        };
                         propose(
-                          `/api/admin/knowledge-bases/${detail.id}/documents`,
+                          `/api/admin/knowledge-bases/${target}/documents`,
                           'POST',
                           label('attach'),
                           detail.audience && detail.audience !== 'admin'
@@ -1256,14 +1307,28 @@ export default function AdminKnowledgeBasesPage({
                               variant="outline"
                               disabled={detailDisabled || !!action || pending || operationUncertain}
                               aria-label={`${label('detach')} ${doc.fileName}`}
-                              onClick={() =>
+                              onClick={() => {
+                                if (
+                                  detailDisabled ||
+                                  actionRef.current ||
+                                  networkPending.current ||
+                                  operationUncertain
+                                )
+                                  return;
+                                documentCapture.current = {
+                                  kbId: detail.id,
+                                  documentId: doc.id,
+                                  storageKey: doc.storageKey,
+                                  expected: 'absent',
+                                  choicesRequired: false,
+                                };
                                 propose(
                                   `/api/admin/knowledge-bases/${detail.id}/documents/${doc.id}`,
                                   'DELETE',
                                   label('detach'),
                                   label('confirmDetach')
-                                )
-                              }
+                                );
+                              }}
                             >
                               {label('detach')}
                             </Button>
@@ -1298,7 +1363,7 @@ export default function AdminKnowledgeBasesPage({
           onPendingChange={onPendingChange}
           onDenied={scope.deny}
           onValidationError={(fields) =>
-            operationCapture.current?.owner?.fields(fields) ??
+            (operationCapture.current?.owner ?? documentCapture.current?.owner)?.fields(fields) ??
             (formCapture.current ? ownedFields(fields) : false)
           }
           onUnconfirmed={unconfirmed}
@@ -1333,6 +1398,34 @@ export default function AdminKnowledgeBasesPage({
               setNotice(true);
               list.retry();
               choices.retry();
+              return;
+            }
+            const document = documentCapture.current;
+            if (document) {
+              if (document.expected === 'present') {
+                if (!matchesKnowledgeDocumentReceipt(value, document))
+                  throw new Error('Unconfirmed document attachment');
+                document.documentId = value.id;
+              }
+              const response = await fetch(`/api/admin/knowledge-bases/${document.kbId}`, {
+                credentials: 'include',
+              });
+              if (actionRef.current !== command) return;
+              if (response.status === 401 || response.status === 403) {
+                scope.deny();
+                return;
+              }
+              if (response.status !== 200) throw new Error('Unconfirmed document catalogue');
+              const fresh: unknown = await response.json();
+              if (actionRef.current !== command) return;
+              if (!validateDetail(fresh) || !matchesKnowledgeDocuments(fresh, document))
+                throw new Error('Unconfirmed document catalogue');
+              if (!selectedRead.accept(fresh)) throw new Error('Obsolete document catalogue');
+              document.owner?.verified('');
+              setAction(null);
+              onPendingChange(false);
+              setNotice(true);
+              list.retry();
               return;
             }
             const captured = formCapture.current;

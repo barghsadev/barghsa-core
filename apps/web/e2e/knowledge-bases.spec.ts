@@ -207,9 +207,21 @@ for (const locale of ['en', 'fa'])
           storageKey: 'uploads/document/guide.pdf',
         });
         attached = true;
-        return route.fulfill({ json: {} });
+        return route.fulfill({
+          status: 200,
+          json: {
+            id: '01900000-0000-7000-8000-000000000009',
+            kbId: kb.id,
+            storageKey: 'uploads/document/guide.pdf',
+            fileName: 'Guide.pdf',
+            processingStatus: 'pending',
+          },
+        });
       }
-      if (path.endsWith('/documents/doc') && route.request().method() === 'DELETE') {
+      if (
+        path.endsWith('/documents/01900000-0000-7000-8000-000000000009') &&
+        route.request().method() === 'DELETE'
+      ) {
         attached = false;
         return route.fulfill({ status: 204 });
       }
@@ -223,7 +235,7 @@ for (const locale of ['en', 'fa'])
             documents: attached
               ? [
                   {
-                    id: 'doc',
+                    id: '01900000-0000-7000-8000-000000000009',
                     storageKey: 'uploads/document/guide.pdf',
                     fileName: 'Guide.pdf',
                     processingStatus: 'pending',
@@ -342,7 +354,7 @@ for (const locale of ['en', 'fa']) {
             documents: attached
               ? [
                   {
-                    id: 'doc',
+                    id: '01900000-0000-7000-8000-000000000009',
                     storageKey: key,
                     fileName: 'new-guide.pdf',
                     processingStatus: 'pending',
@@ -361,7 +373,16 @@ for (const locale of ['en', 'fa']) {
         if (!verified)
           return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
         attached = true;
-        return route.fulfill({ status: 201, json: { id: 'doc', storageKey: key } });
+        return route.fulfill({
+          status: 200,
+          json: {
+            id: '01900000-0000-7000-8000-000000000009',
+            kbId: kb.id,
+            storageKey: key,
+            fileName: 'new-guide.pdf',
+            processingStatus: 'pending',
+          },
+        });
       });
       await page.route('**/api/auth/step-up', (route) => {
         verified = route.request().postDataJSON().password === 'correct';

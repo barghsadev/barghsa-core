@@ -1,5 +1,9 @@
 import type { Locale } from './index.js';
 const en = {
+  search: 'Use at most 200 characters to search documents.',
+  storageKey: 'Choose an available document that is not already attached.',
+  file: 'Choose a non-empty PDF, Word, Excel, text or CSV document.',
+  documentSource: 'Upload and attach files on a knowledge base with a document source.',
   member: 'Choose an available member that is not already linked.',
   query: 'Enter a query with 1 to 500 characters.',
   title: 'Enter a title with 1 to 120 characters.',
@@ -29,6 +33,10 @@ const en = {
   reset: 'Reset to saved settings',
 };
 const fa: Record<keyof typeof en, string> = {
+  search: 'برای جست‌وجوی سند حداکثر ۲۰۰ نویسه وارد کنید.',
+  storageKey: 'سندی در دسترس را انتخاب کنید که قبلاً پیوست نشده است.',
+  file: 'یک سند PDF، Word، Excel، متنی یا CSV غیرخالی انتخاب کنید.',
+  documentSource: 'بارگذاری و پیوست فایل برای پایگاه دانشی با منبع سند در دسترس است.',
   member: 'عضوی در دسترس را انتخاب کنید که قبلاً پیوند نخورده است.',
   query: 'پرسشی با ۱ تا ۵۰۰ نویسه وارد کنید.',
   title: 'عنوانی با ۱ تا ۱۲۰ نویسه وارد کنید.',
