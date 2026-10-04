@@ -62,6 +62,7 @@ async function click(text: string) {
   );
   expect(button, text).toBeDefined();
   await act(async () => button!.click());
+  if (text === 'Save policy') await vi.waitFor(() => expect(captured.action).not.toBeNull());
 }
 async function fill(selector: string, value: string) {
   const node = document.querySelector<HTMLInputElement>(selector)!;
@@ -198,32 +199,38 @@ it('policy confirmation stays frozen and disabled during failed catalogue recove
   await act(async () => captured.close!());
   expect(document.querySelector<HTMLInputElement>('#upload-policy-size')!.value).toBe('1');
 });
-it.each(['policy', 'limit'])('changed %s invalidates an obsolete editor', async (kind) => {
-  let changed = false;
-  uploadsFetch({
-    list: () =>
-      response([
-        {
-          ...uploadPolicy,
-          maxSizeBytes: changed && kind === 'policy' ? 1048576 : uploadPolicy.maxSizeBytes,
-        },
-      ]),
-    limits: () =>
-      response([
-        {
-          ...policyLimit,
-          maxSizeBytes: changed && kind === 'limit' ? 1048576 : policyLimit.maxSizeBytes,
-        },
-      ]),
-  });
-  await render(Uploads);
-  await click('Edit');
-  await fill('#upload-policy-size', '1.5');
-  changed = true;
-  await click('Refresh');
-  expect(document.querySelector('#upload-policy-size')).toBeNull();
-  expect(captured.action).toBeNull();
-});
+it.each(['policy', 'limit'])(
+  'changed %s retains local entries until explicit reset',
+  async (kind) => {
+    let changed = false;
+    uploadsFetch({
+      list: () =>
+        response([
+          {
+            ...uploadPolicy,
+            maxSizeBytes: changed && kind === 'policy' ? 1048576 : uploadPolicy.maxSizeBytes,
+          },
+        ]),
+      limits: () =>
+        response([
+          {
+            ...policyLimit,
+            maxSizeBytes: changed && kind === 'limit' ? 1048576 : policyLimit.maxSizeBytes,
+          },
+        ]),
+    });
+    await render(Uploads);
+    await click('Edit');
+    await fill('#upload-policy-size', '1.5');
+    changed = true;
+    await click('Refresh');
+    expect(document.querySelector<HTMLInputElement>('#upload-policy-size')!.value).toBe('1.5');
+    expect(document.querySelector<HTMLInputElement>('#upload-policy-size')!.disabled).toBe(true);
+    expect(captured.action).toBeNull();
+    await click('Reset to saved settings');
+    expect(document.querySelector<HTMLInputElement>('#upload-policy-size')!.value).toBe('1');
+  }
+);
 it('access failure preserves editing and can recover independently', async () => {
   let fail = false;
   const requests = uploadsFetch({ access: () => response({ canEdit: true }, fail ? 503 : 200) });

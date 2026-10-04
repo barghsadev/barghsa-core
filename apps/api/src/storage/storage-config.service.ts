@@ -19,6 +19,7 @@ import {
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { rejectContentFields } from '../admin/content-input-fields.js';
 
 type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 const multipartCleanupPolicyKey = 'storage.multipart_orphan_hours';
@@ -39,13 +40,13 @@ export class StorageConfigService {
   }
 
   async saveMultipartCleanupPolicy(raw: unknown, session: MutationSession) {
-    const parsed = multipartCleanupPolicyInput.safeParse(raw);
-    if (!parsed.success) throw new BadRequestException({ error: 'VALIDATION:INPUT_INVALID' });
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, session.userId, 'admin:storage:edit');
       await requireSessionStepUp(client, session);
+      const parsed = multipartCleanupPolicyInput.safeParse(raw);
+      if (!parsed.success) rejectContentFields(parsed.error.issues, ['hours']);
       await client.query(
         `INSERT INTO app_config(key,value,version) VALUES($1,'{"hours":24}'::jsonb,0)
          ON CONFLICT(key) DO NOTHING`,
@@ -118,7 +119,17 @@ export class StorageConfigService {
   }
   private async candidate(raw: unknown) {
     const parsed = storageConfigUpdate.safeParse(raw);
-    if (!parsed.success) throw new BadRequestException({ error: 'VALIDATION:INPUT_INVALID' });
+    if (!parsed.success)
+      rejectContentFields(parsed.error.issues, [
+        'endpoint',
+        'region',
+        'bucket',
+        'accessKeyId',
+        'forcePathStyle',
+        'privateEndpointUrl',
+        'publicEndpointUrl',
+        'secretAccessKey',
+      ]);
     const current = await this.read();
     if (parsed.data.version !== current.version)
       throw new ConflictException({ error: 'STORAGE:CONFIG_CHANGED' });

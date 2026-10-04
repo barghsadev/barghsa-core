@@ -54,6 +54,7 @@ export function TeamActionDialog({
   onDenied,
   onValidationError,
   onUnconfirmed,
+  onPendingChange,
 }: (
   | { action: TeamAction; verification?: never; selection?: never }
   | {
@@ -71,6 +72,7 @@ export function TeamActionDialog({
   onDenied?: (status?: 401 | 403) => void;
   onValidationError?: (fields: unknown[]) => boolean;
   onUnconfirmed?: () => void;
+  onPendingChange?: (pending: boolean) => void;
 }) {
   const locale = useLocale();
   const copy = action ?? verification;
@@ -123,6 +125,7 @@ export function TeamActionDialog({
     if (confirmationDisabled || inFlight.current || retryAt > Date.now()) return;
     inFlight.current = true;
     setBusy(true);
+    onPendingChange?.(true);
     setError(null);
     let commandSent = false;
     try {
@@ -222,6 +225,7 @@ export function TeamActionDialog({
     } finally {
       inFlight.current = false;
       if (mounted.current) setBusy(false);
+      if (mounted.current && currentAction.current === action) onPendingChange?.(false);
     }
   }
 

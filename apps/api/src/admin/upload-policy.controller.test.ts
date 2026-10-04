@@ -128,7 +128,10 @@ describe('UploadPolicyController (T-09.12.05)', () => {
       .create(adminReq, { category: 'document', allowedExtensions: ['exe'], maxSizeBytes: 1024 })
       .catch((e: unknown) => e);
     expect(rejection).toMatchObject({ status: 400 });
-    expect(rejectionBody(rejection)).toMatchObject({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code });
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+    });
+    expect(rejection).toMatchObject({ fields: ['allowedExtensions'] });
     expect(service.create).not.toHaveBeenCalled();
   });
 
@@ -151,6 +154,29 @@ describe('UploadPolicyController (T-09.12.05)', () => {
       })
       .catch((e: unknown) => e);
     expect(rejection).toMatchObject({ status: 400 });
+    expect(service.create).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    [{ allowedExtensions: [] }, ['allowedExtensions']],
+    [{ maxSizeBytes: 0.5 }, ['maxSizeBytes']],
+    [
+      { allowedExtensions: ['private-validation-value'], maxSizeBytes: -1 },
+      ['allowedExtensions', 'maxSizeBytes'],
+    ],
+    [{ hidden: 'private-validation-value' }, []],
+  ])('exposes only owned policy fields without validator values (%j)', async (patch, fields) => {
+    const { controller, service } = makeController();
+    const rejection = await controller
+      .create(adminReq, {
+        category: 'document',
+        allowedExtensions: ['.pdf'],
+        maxSizeBytes: 1024,
+        ...patch,
+      } as never)
+      .catch((error: unknown) => error);
+    expect(rejection).toMatchObject({ status: 400, fields });
+    expect(JSON.stringify(rejectionBody(rejection))).not.toContain('private-validation-value');
     expect(service.create).not.toHaveBeenCalled();
   });
 

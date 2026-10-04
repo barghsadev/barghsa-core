@@ -75,6 +75,46 @@ async function update(secret?: string): Promise<Record<string, unknown>> {
   return { ...config, ...(secret === undefined ? {} : { secretAccessKey: secret }) };
 }
 
+it('returns owned storage fields without echoing credentials or writing invalid configuration', async () => {
+  const before = await current();
+  const response = await request('/config', 'PUT', {
+    ...(await update('private-field-test-secret')),
+    endpoint: 'https://private-field-test-secret:password@example.test/path',
+    bucket: ' ',
+  });
+  expect(response.status, http.logs()).toBe(400);
+  const body: unknown = await response.json();
+  expect(body).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['endpoint', 'bucket'] },
+  });
+  expect(JSON.stringify(body)).not.toContain('private-field-test-secret');
+  expect(await current()).toEqual(before);
+});
+it('keeps cleanup policy unchanged after an owned hours error', async () => {
+  const before = await (await request('/multipart-cleanup-policy')).json();
+  const response = await request('/multipart-cleanup-policy', 'PUT', { hours: 169, version: 0 });
+  expect(response.status, http.logs()).toBe(400);
+  expect(await response.json()).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['hours'] },
+  });
+  expect(await (await request('/multipart-cleanup-policy')).json()).toEqual(before);
+});
+it('checks current storage permission before returning invalid cleanup fields', async () => {
+  await http.pool.query(
+    "UPDATE staff_roles SET permissions='[]' WHERE role_id='storage-editor-role'"
+  );
+  try {
+    const response = await request('/multipart-cleanup-policy', 'PUT', { hours: 169, version: 0 });
+    expect(response.status).toBe(403);
+    const body: unknown = await response.json();
+    expect(body).not.toHaveProperty('error.fields');
+  } finally {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions='[\"admin:storage:edit\"]' WHERE role_id='storage-editor-role'"
+    );
+  }
+});
+
 it('lets a verified storage admin set the orphan cleanup age with optimistic versioning', async () => {
   const initial = await request('/multipart-cleanup-policy');
   expect(initial.status).toBe(200);

@@ -2,6 +2,20 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState, useRef, useCallback, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
+import { storagePolicyFormText } from '@barghsa/i18n/storage-policy-forms';
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import {
+  CatalogueFieldFeedback,
+  CatalogueSaveButton,
+  catalogueRootMessage,
+} from '../components/CatalogueEditorFeedback.js';
+import {
+  policyDraft,
+  policyInvalidFields,
+  emptyPolicyDraft,
+  type UploadPolicyDraft,
+} from '../lib/storage-policy-form.js';
 import type { UploadPolicyDto } from '@barghsa/shared/admin';
 import {
   Button,
@@ -15,6 +29,7 @@ import {
   Label,
   ListPage,
   ScrollArea,
+  Alert,
 } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -26,8 +41,6 @@ interface Limit {
 interface Editor {
   limit: Limit;
   basis: string;
-  extensions: string[];
-  size: string;
 }
 function record(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -88,14 +101,52 @@ export default function AdminUploadPoliciesPage() {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`admin.uploadPolicies.${key}`, locale);
+  const text = (key: Parameters<typeof storagePolicyFormText>[0]) =>
+    storagePolicyFormText(key, locale);
+  const limitRef = useRef<Limit | null>(null);
+  const form = useWizardForm<UploadPolicyDraft>(
+    async () => {
+      const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return contentFormSchema<UploadPolicyDraft>(
+        { extensions: text('extensions'), size: text('size') },
+        (draft) => policyInvalidFields(draft, limitRef.current)
+      );
+    },
+    emptyPolicyDraft,
+    text('unavailable')
+  );
+  const resetPolicy = form.form.reset,
+    registerPolicy = form.form.register;
+  const extensionsRef = useCallback(
+    (node: HTMLFieldSetElement | null) => {
+      registerPolicy('extensions').ref(
+        node ? { focus: () => node.querySelector('input')?.focus() } : null
+      );
+    },
+    [registerPolicy]
+  );
+  const fieldErrors = useActionFieldErrors(
+    form.form,
+    { extensions: text('extensions'), size: text('size') },
+    text('invalid')
+  );
   const [limits, setLimits] = useState<Limit[]>([]),
     [policies, setPolicies] = useState<UploadPolicyDto[]>([]);
   const [loading, setLoading] = useState(true),
     [error, setError] = useState(false),
     [canEdit, setCanEdit] = useState(false),
     [revision, setRevision] = useState(0);
-  const [editor, setEditor] = useState<Editor | null>(null),
-    [formError, setFormError] = useState(false);
+  const [editor, setEditor] = useState<Editor | null>(null);
+  const [needsReset, setNeedsReset] = useState(false),
+    [uncertain, setUncertain] = useState(false),
+    [recoveryReady, setRecoveryReady] = useState(false);
+  const validationBusy = useRef(false),
+    dialogBusy = useRef(false);
+  const [dialogPending, setDialogPending] = useState(false);
+  const onPendingChange = useCallback((pending: boolean) => {
+    dialogBusy.current = pending;
+    setDialogPending(pending);
+  }, []);
   const [action, setAction] = useState<TeamAction | null>(null),
     [notice, setNotice] = useState(false);
   const [accessRevision, setAccessRevision] = useState(0);
@@ -110,14 +161,26 @@ export default function AdminUploadPoliciesPage() {
   const actionBasis = useRef<{ category: string; basis: string } | null>(null);
   const generation = useRef(0);
   const actionGeneration = useRef(0);
-  const clearWork = useCallback(() => {
+  const actionRef = useRef<TeamAction | null>(null);
+  const withdraw = useCallback(() => {
     generation.current++;
-    setEditor(null);
+    validationBusy.current = false;
+    form.setValidationPending(false);
+    actionRef.current = null;
     setAction(null);
     actionBasis.current = null;
-    setFormError(false);
+    onPendingChange(false);
+  }, [form.setValidationPending, onPendingChange]);
+  const clearWork = useCallback(() => {
+    withdraw();
+    setEditor(null);
+    limitRef.current = null;
+    resetPolicy(emptyPolicyDraft());
+    setNeedsReset(false);
+    setUncertain(false);
+    setRecoveryReady(false);
     setNotice(false);
-  }, []);
+  }, [withdraw, resetPolicy]);
   const deny = useCallback(() => {
     accessRequest.current?.abort();
     listRequest.current?.abort();
@@ -198,11 +261,16 @@ export default function AdminUploadPoliciesPage() {
         if (work) {
           const category = 'limit' in work ? work.limit.category : work.category;
           const limit = boundaries.find((item) => item.category === category);
-          if (!limit || basis(limit, versions) !== work.basis) clearWork();
+          if (!limit) clearWork();
+          else if (basis(limit, versions) !== work.basis) {
+            withdraw();
+            if (editorRef.current) setNeedsReset(true);
+          }
         }
         accepted.current = true;
         setPolicies(versions);
         setLimits(boundaries);
+        setRecoveryReady(true);
       } catch {
         if (!controller.signal.aborted) setError(true);
       } finally {
@@ -210,9 +278,14 @@ export default function AdminUploadPoliciesPage() {
       }
     })();
     return () => controller.abort();
-  }, [revision, canEdit, accessVersion, accessLoading, accessError, deny, clearWork]);
+  }, [revision, canEdit, accessVersion, accessLoading, accessError, deny, clearWork, withdraw]);
   const disabled = !canEdit || loading || error || accessLoading || accessError;
-  const refresh = () => setAccessRevision((v) => v + 1);
+  const refresh = () => {
+    if (dialogBusy.current) return;
+    if (validationBusy.current || uncertain) withdraw();
+    setRecoveryReady(false);
+    setAccessRevision((v) => v + 1);
+  };
   const size = (bytes: number) =>
     `${numbers.number(bytes / mib, { maximumFractionDigits: 6 })} ${label('mib')}`;
   const date = (value: string | null) => (value ? time.format(value) : label('openEnded'));
@@ -224,7 +297,12 @@ export default function AdminUploadPoliciesPage() {
   };
   const recoveryControls = (
     <div className="space-y-2">
-      <Button type="button" variant="outline" disabled={accessLoading || loading} onClick={refresh}>
+      <Button
+        type="button"
+        variant="outline"
+        disabled={accessLoading || loading || dialogPending}
+        onClick={refresh}
+      >
         {t('admin.jobs.refresh', locale)}
       </Button>
       {(accessLoading || loading) && <p role="status">{t('common.loading', locale)}</p>}
@@ -247,57 +325,72 @@ export default function AdminUploadPoliciesPage() {
     </div>
   );
   function edit(limit: Limit, current: UploadPolicyDto | undefined) {
-    if (disabled) return;
-    generation.current++;
-    setFormError(false);
+    if (disabled || uncertain || actionRef.current || validationBusy.current) return;
+    withdraw();
+    setNeedsReset(false);
     setNotice(false);
+    limitRef.current = limit;
+    resetPolicy(policyDraft(limit, current));
     setEditor({
       limit,
       basis: basis(limit, policies),
-      extensions: (current?.allowedExtensions ?? limit.allowedExtensions).filter((ext) =>
-        limit.allowedExtensions.includes(ext)
-      ),
-      size: String(Math.min(current?.maxSizeBytes ?? limit.maxSizeBytes, limit.maxSizeBytes) / mib),
     });
   }
-  function submit(event: FormEvent) {
+  async function submit(event: FormEvent) {
     event.preventDefault();
-    if (!editor || disabled) return;
-    const bytes = Number(editor.size) * mib;
     if (
-      !Number.isSafeInteger(bytes) ||
-      bytes < 1 ||
-      bytes > editor.limit.maxSizeBytes ||
-      editor.extensions.length === 0
-    ) {
-      setFormError(true);
+      !editor ||
+      disabled ||
+      needsReset ||
+      uncertain ||
+      validationBusy.current ||
+      actionRef.current
+    )
       return;
+    const epoch = generation.current;
+    validationBusy.current = true;
+    form.setValidationPending(true);
+    try {
+      let captured: UploadPolicyDraft | undefined;
+      await form.form.handleSubmit((value) => {
+        captured = value;
+      })();
+      if (!captured || epoch !== generation.current || disabled) return;
+      const bytes = Number(captured.size) * mib;
+      actionBasis.current = { category: editor.limit.category, basis: editor.basis };
+      actionGeneration.current = generation.current;
+      const next: TeamAction = {
+        title: label('save'),
+        description: `${label('confirm')} ${label(`category.${editor.limit.category}`)}: ${captured.extensions.join(', ')} · ${size(bytes)}`,
+        path: '/api/admin/upload-policies',
+        method: 'POST',
+        body: {
+          category: editor.limit.category,
+          allowedExtensions: captured.extensions,
+          maxSizeBytes: bytes,
+        },
+        conflictMessage: label('scheduleConflict'),
+        forbiddenMessage: label('forbidden'),
+        errorMessages: errors,
+        successStatus: 201,
+      };
+      actionRef.current = next;
+      setAction(next);
+    } finally {
+      if (epoch === generation.current) {
+        validationBusy.current = false;
+        form.setValidationPending(false);
+      }
     }
-    actionBasis.current = { category: editor.limit.category, basis: editor.basis };
-    actionGeneration.current = generation.current;
-    setAction({
-      title: label('save'),
-      description: `${label('confirm')} ${label(`category.${editor.limit.category}`)}: ${editor.extensions.join(', ')} · ${size(bytes)}`,
-      path: '/api/admin/upload-policies',
-      method: 'POST',
-      body: {
-        category: editor.limit.category,
-        allowedExtensions: editor.extensions,
-        maxSizeBytes: bytes,
-      },
-      conflictMessage: label('scheduleConflict'),
-      forbiddenMessage: label('forbidden'),
-      errorMessages: errors,
-    });
   }
   function end(policy: UploadPolicyDto, limit: Limit) {
-    if (disabled) return;
+    if (disabled || uncertain || validationBusy.current || actionRef.current || needsReset) return;
     generation.current++;
     setEditor(null);
     actionBasis.current = { category: limit.category, basis: basis(limit, policies) };
     actionGeneration.current = generation.current;
     setNotice(false);
-    setAction({
+    const next: TeamAction = {
       title: label('end'),
       description: `${label('endConfirm')} ${label(`category.${limit.category}`)}: ${limit.allowedExtensions.join(', ')} · ${size(limit.maxSizeBytes)}`,
       path: `/api/admin/upload-policies/${policy.id}/end`,
@@ -306,7 +399,51 @@ export default function AdminUploadPoliciesPage() {
       conflictMessage: label('scheduleConflict'),
       forbiddenMessage: label('forbidden'),
       errorMessages: errors,
-    });
+      successStatus: 200,
+    };
+    actionRef.current = next;
+    setAction(next);
+  }
+  function resetSaved() {
+    if (
+      disabled ||
+      !recoveryReady ||
+      dialogBusy.current ||
+      validationBusy.current ||
+      actionRef.current
+    )
+      return;
+    if (editor) {
+      const limit = limits.find((item) => item.category === editor.limit.category);
+      if (!limit) {
+        clearWork();
+        return;
+      }
+      limitRef.current = limit;
+      resetPolicy(
+        policyDraft(
+          limit,
+          policies.find((item) => item.category === limit.category && item.status === 'current')
+        )
+      );
+      setEditor({ limit, basis: basis(limit, policies) });
+    }
+    setNeedsReset(false);
+    setUncertain(false);
+  }
+  function unconfirmed() {
+    listRequest.current?.abort();
+    accessRequest.current?.abort();
+    setUncertain(true);
+    setRecoveryReady(false);
+    setAccessRevision((value) => value + 1);
+  }
+  function cancelEditor() {
+    withdraw();
+    setEditor(null);
+    limitRef.current = null;
+    resetPolicy(emptyPolicyDraft());
+    setNeedsReset(false);
   }
   return (
     <section className="min-w-0 space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
@@ -318,9 +455,26 @@ export default function AdminUploadPoliciesPage() {
         </div>
       </header>
       {notice && <p role="status">{label('saved')}</p>}
+      {uncertain && !editor && (
+        <div className="space-y-2">
+          <Alert variant="destructive">{text('unverified')}</Alert>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={disabled || !recoveryReady || !!action || dialogPending}
+            onClick={resetSaved}
+          >
+            {text('reset')}
+          </Button>
+        </div>
+      )}
       <ListPage>
         <ListPage.Toolbar>
-          <Button variant="outline" disabled={accessLoading || loading} onClick={refresh}>
+          <Button
+            variant="outline"
+            disabled={accessLoading || loading || dialogPending}
+            onClick={refresh}
+          >
             {t('admin.jobs.refresh', locale)}
           </Button>
         </ListPage.Toolbar>
@@ -396,7 +550,7 @@ export default function AdminUploadPoliciesPage() {
                           <div className="flex flex-wrap gap-2">
                             <Button
                               variant="outline"
-                              disabled={disabled}
+                              disabled={disabled || uncertain || form.pending || !!action}
                               onClick={() => edit(limit, current)}
                               aria-label={`${label('edit')} ${label(`category.${limit.category}`)}`}
                             >
@@ -405,7 +559,7 @@ export default function AdminUploadPoliciesPage() {
                             {current?.effectiveUntil === null && (
                               <Button
                                 variant="outline"
-                                disabled={disabled}
+                                disabled={disabled || uncertain || form.pending || !!action}
                                 onClick={() => end(current, limit)}
                                 aria-label={`${label('end')} ${label(`category.${limit.category}`)}`}
                               >
@@ -455,11 +609,16 @@ export default function AdminUploadPoliciesPage() {
         <Dialog
           open
           onOpenChange={(open) => {
-            if (!open) setEditor(null);
+            if (!open) cancelEditor();
           }}
         >
           <DialogContent dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-            <form onSubmit={submit} className="space-y-4">
+            <form
+              noValidate
+              aria-busy={form.pending || undefined}
+              onSubmit={submit}
+              className="space-y-4"
+            >
               <DialogHeader>
                 <DialogTitle>
                   {label('edit')} {label(`category.${editor.limit.category}`)}
@@ -467,21 +626,46 @@ export default function AdminUploadPoliciesPage() {
                 <DialogDescription>{label('warning')}</DialogDescription>
               </DialogHeader>
               {recoveryControls}
-              <fieldset className="space-y-2">
+              {(needsReset || uncertain) && (
+                <>
+                  <Alert variant="destructive">{text(uncertain ? 'unverified' : 'changed')}</Alert>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={disabled || !recoveryReady || form.pending}
+                    onClick={resetSaved}
+                  >
+                    {text('reset')}
+                  </Button>
+                </>
+              )}
+              {catalogueRootMessage(form.errors) && (
+                <Alert variant="destructive">{catalogueRootMessage(form.errors)}</Alert>
+              )}
+              <fieldset
+                ref={extensionsRef}
+                className="space-y-2"
+                disabled={disabled || needsReset || uncertain || form.pending}
+                aria-invalid={form.bind('extensions')['aria-invalid']}
+                aria-describedby={form.bind('extensions')['aria-describedby']}
+                onBlur={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget))
+                    form.bind('extensions').onBlur();
+                }}
+              >
                 <legend className="font-medium">{label('formats')}</legend>
                 <div className="flex flex-wrap gap-3">
                   {editor.limit.allowedExtensions.map((ext) => (
                     <label key={ext} className="flex items-center gap-2">
                       <input
                         type="checkbox"
-                        checked={editor.extensions.includes(ext)}
+                        checked={form.values.extensions.includes(ext)}
                         onChange={(event) =>
-                          setEditor({
-                            ...editor,
-                            extensions: event.target.checked
-                              ? [...editor.extensions, ext]
-                              : editor.extensions.filter((value) => value !== ext),
-                          })
+                          form.field('extensions')[1](
+                            event.target.checked
+                              ? [...form.values.extensions, ext]
+                              : form.values.extensions.filter((value) => value !== ext)
+                          )
                         }
                       />
                       <bdi>{ext}</bdi>
@@ -489,32 +673,45 @@ export default function AdminUploadPoliciesPage() {
                   ))}
                 </div>
               </fieldset>
+              <CatalogueFieldFeedback
+                id={form.errorId('extensions')}
+                error={form.errors.extensions}
+                message={text('extensions')}
+              />
               <div className="space-y-2">
                 <Label htmlFor="upload-policy-size">
                   {label('maxSize')} ({label('mib')})
                 </Label>
                 <Input
+                  {...form.bind('size')}
                   id="upload-policy-size"
                   type="number"
                   min={1 / mib}
                   max={editor.limit.maxSizeBytes / mib}
                   step="any"
                   required
-                  value={editor.size}
-                  onChange={(event) => setEditor({ ...editor, size: event.target.value })}
+                  value={form.values.size}
+                  disabled={disabled || needsReset || uncertain || form.pending}
+                  onChange={(event) => form.field('size')[1](event.target.value)}
                 />
                 <p className="text-sm text-muted-foreground">
                   {label('ceiling')}: {size(editor.limit.maxSizeBytes)}
                 </p>
               </div>
-              {formError && <p role="alert">{label('invalid')}</p>}
+              <CatalogueFieldFeedback
+                id={form.errorId('size')}
+                error={form.errors.size}
+                message={text('size')}
+              />
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setEditor(null)}>
+                <Button type="button" variant="outline" onClick={cancelEditor}>
                   {label('cancel')}
                 </Button>
-                <Button type="submit" disabled={disabled}>
-                  {label('save')}
-                </Button>
+                <CatalogueSaveButton
+                  label={label('save')}
+                  pending={form.pending}
+                  disabled={disabled || needsReset || uncertain || form.pending}
+                />
               </DialogFooter>
             </form>
           </DialogContent>
@@ -523,17 +720,49 @@ export default function AdminUploadPoliciesPage() {
       {action && (
         <TeamActionDialog
           action={action}
-          confirmationDisabled={disabled}
-          summary={recoveryControls}
-          onClose={() => {
-            generation.current++;
-            setAction(null);
-            actionBasis.current = null;
+          confirmationDisabled={disabled || uncertain || needsReset}
+          onDenied={deny}
+          onUnconfirmed={unconfirmed}
+          onPendingChange={onPendingChange}
+          onValidationError={(fields) => {
+            if (
+              action.path !== '/api/admin/upload-policies' ||
+              !fields.length ||
+              !fields.every((field) => field === 'allowedExtensions' || field === 'maxSizeBytes')
+            )
+              return false;
+            return fieldErrors(
+              fields.map((field) => (field === 'allowedExtensions' ? 'extensions' : 'size'))
+            );
           }}
+          summary={recoveryControls}
+          onClose={withdraw}
           onSuccess={(() => {
             const commandGeneration = actionGeneration.current;
-            return async () => {
-              if (commandGeneration !== generation.current) return;
+            return async (result: unknown) => {
+              if (commandGeneration !== generation.current || actionRef.current !== action) return;
+              if (!validPolicies([result])) throw new Error('Invalid policy receipt');
+              const receipt = result as UploadPolicyDto;
+              if (action.path === '/api/admin/upload-policies') {
+                const expected = action.body as {
+                  category: string;
+                  allowedExtensions: string[];
+                  maxSizeBytes: number;
+                };
+                if (
+                  receipt.category !== expected.category ||
+                  receipt.maxSizeBytes !== expected.maxSizeBytes ||
+                  receipt.status !== 'current' ||
+                  JSON.stringify([...receipt.allowedExtensions].sort()) !==
+                    JSON.stringify([...expected.allowedExtensions].sort())
+                )
+                  throw new Error('Unmatched policy receipt');
+              } else if (
+                receipt.id !== action.path.split('/').at(-2) ||
+                receipt.status !== 'expired' ||
+                !receipt.effectiveUntil
+              )
+                throw new Error('Unmatched ending receipt');
               clearWork();
               setNotice(true);
               refresh();

@@ -1,4 +1,5 @@
 import { hasStaffPermission } from '../session/staff-permissions.js';
+import { rejectContentFields } from './content-input-fields.js';
 import {
   Body,
   Controller,
@@ -190,12 +191,7 @@ export class UploadPolicyController {
     this.assertUploadsPermission(req);
     const parsed = CreateUploadPolicySchema.safeParse(body);
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid upload policy payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      rejectContentFields(parsed.error.issues, ['allowedExtensions', 'maxSizeBytes']);
     }
     return this.service.create({
       category: parsed.data.category,

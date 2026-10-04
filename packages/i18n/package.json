@@ -246,6 +246,11 @@
       "types": "./dist/content-forms.d.ts",
       "import": "./dist/content-forms.js",
       "default": "./dist/content-forms.js"
+    },
+    "./storage-policy-forms": {
+      "types": "./dist/storage-policy-forms.d.ts",
+      "import": "./dist/storage-policy-forms.js",
+      "default": "./dist/storage-policy-forms.js"
     }
   },
   "scripts": {

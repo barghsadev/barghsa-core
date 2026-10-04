@@ -555,6 +555,11 @@ it.each(['', 'replacement-secret'])(
         .querySelector('form')!
         .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
     );
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(vi.mocked(fetch).mock.calls.some(([, init]) => init?.method === 'PUT')).toBe(true);
+      expect(host.querySelector('#email-provider-label')).toBeNull();
+    });
     const request = vi.mocked(fetch).mock.calls.find(([, init]) => init?.method === 'PUT')!;
     expect(request[0]).toBe('/api/admin/email-providers/smtp-one');
     expect(JSON.parse(String(request[1]?.body))).toEqual({

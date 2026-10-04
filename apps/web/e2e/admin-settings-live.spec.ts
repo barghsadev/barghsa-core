@@ -584,12 +584,7 @@ for (const locale of ['en', 'fa'])
     const fa = locale === 'fa',
       category = fa ? 'image' : 'document',
       name = fa ? 'تصاویر' : 'Documents';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
         url = new URL(request.url());
@@ -664,12 +659,7 @@ for (const locale of ['en', 'fa'])
 for (const locale of ['en', 'fa'])
   test(`storage configuration persists through the real API (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
         url = new URL(request.url());
@@ -728,6 +718,28 @@ for (const locale of ['en', 'fa'])
       hasSecretKey: true,
     });
     expect(await saved.text()).not.toContain(`browser-secret-${locale}`);
+    await page.locator('#storage-cleanup-hours').fill('48');
+    await page
+      .getByRole('button', {
+        name: fa ? 'ذخیره زمان پاک‌سازی' : 'Save cleanup age',
+        exact: true,
+      })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    const cleanup = await page.request.get(
+      `${http.base}/api/admin/storage/multipart-cleanup-policy`,
+      {
+        headers: { cookie: `barghsa_session=${http.session}` },
+      }
+    );
+    expect(await cleanup.json()).toMatchObject({ hours: 48 });
+    await settleLiveRequests();
+    await page.reload();
+    await expect(page.locator('#storage-cleanup-hours')).toHaveValue('48');
     await page.screenshot({ path: `/tmp/storage-config-${locale}.png`, fullPage: true });
   });
 

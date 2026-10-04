@@ -1,5 +1,26 @@
 import { Alert, Button } from '@barghsa/ui';
 type Copy = (key: string) => string;
+/** Reserve localized feedback space so blur validation cannot move a tap target. */
+export function CatalogueFieldFeedback({
+  id,
+  error,
+  message,
+}: {
+  id: string;
+  error?: { message?: string | undefined } | undefined;
+  message: string;
+}) {
+  return (
+    <p
+      id={id}
+      role={error ? 'alert' : undefined}
+      aria-hidden={!error || undefined}
+      className={`text-sm text-destructive ${error ? '' : 'invisible'}`}
+    >
+      {error?.message ?? message}
+    </p>
+  );
+}
 export function CatalogueEditorStatus({
   label,
   loading,

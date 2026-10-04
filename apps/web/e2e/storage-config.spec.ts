@@ -1,21 +1,19 @@
 import { test, expect } from './coverage-fixture';
+import { setupCatalogueForms } from './catalogue-form-fixture';
 for (const locale of ['en', 'fa'])
   test(`storage editor retains a versioned save through step-up and failure (${locale})`, async ({
     page,
   }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await setupCatalogueForms(page, fa ? 'fa' : 'en', false);
     let failLoad = true,
       verified = false,
       failSave = true,
       denied = false;
     const attempts: unknown[] = [];
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/admin/storage/multipart-cleanup-policy', (route) =>
+      route.fulfill({ json: { hours: 24, version: 0 } })
+    );
     await page.route('**/api/admin/storage/config', (route) => {
       if (route.request().method() === 'GET')
         return route.fulfill(
@@ -42,11 +40,15 @@ for (const locale of ['en', 'fa'])
         return route.fulfill({ status: 403, json: { error: { code: 'AUTHZ:STEP_UP_REQUIRED' } } });
       if (failSave)
         return route.fulfill({
-          status: 503,
+          status: 400,
           json: { error: { code: 'STORAGE:CONNECTION_FAILED' } },
         });
       denied = true;
-      return route.fulfill({ status: 200, json: { version: 8 } });
+      const { secretAccessKey: _secret, ...publicFields } = route.request().postDataJSON();
+      return route.fulfill({
+        status: 200,
+        json: { ...publicFields, hasSecretKey: true, version: 8 },
+      });
     });
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct-password';
@@ -76,7 +78,7 @@ for (const locale of ['en', 'fa'])
       fa ? 'اتصال ناموفق' : 'Connection failed'
     );
     failSave = false;
-    await password.fill('correct-password');
+    await expect(password).toHaveCount(0);
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(attempts).toHaveLength(3);

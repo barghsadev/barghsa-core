@@ -1,29 +1,19 @@
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
+import { setupCatalogueForms } from './catalogue-form-fixture';
+import { uploadPolicy } from '../src/test/policy-catalogue-fixtures';
 import { ErrorCodes } from '@barghsa/shared/errors';
 for (const locale of ['en', 'fa'])
   test(`upload policy editor retains an exact save across failures (${locale})`, async ({
     page,
   }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+    await setupCatalogueForms(page, fa ? 'fa' : 'en', false);
     let canEdit = true,
       failLoad = true,
       verified = false,
       failSave = true;
     const attempts: unknown[] = [];
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
-    await page.route('**/api/auth/user', (route) =>
-      route.fulfill({
-        json: {
-          userId: 'admin',
-          isStaff: true,
-          operatingContext: 'staff',
-          canSwitchContext: false,
-          requiresTosAcceptance: false,
-        },
-      })
-    );
     await mockOppositeNumerals(page, locale);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
@@ -51,15 +41,25 @@ for (const locale of ['en', 'fa'])
           status: 403,
           json: { error: { code: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code } },
         });
-      if (failSave) return route.fulfill({ status: 503, json: {} });
+      if (failSave) return route.fulfill({ status: 400, json: {} });
       canEdit = false;
-      return route.fulfill({ status: 201, json: { id: 'test-policy' } });
+      return route.fulfill({
+        status: 201,
+        json: { ...uploadPolicy, ...route.request().postDataJSON() },
+      });
     });
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct-password';
       return route.fulfill({ status: verified ? 200 : 401, json: {} });
     });
+    const failedRead = page.waitForResponse(
+      (response) =>
+        new URL(response.url()).pathname === '/api/admin/upload-policies' &&
+        response.request().method() === 'GET' &&
+        response.status() === 503
+    );
     await page.goto('/admin/upload-policies');
+    await failedRead;
     await expect(page.getByRole('alert')).toBeVisible();
     failLoad = false;
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Try again', exact: true }).click();
@@ -92,7 +92,7 @@ for (const locale of ['en', 'fa'])
     await confirm.click();
     await expect(dialog.getByRole('alert')).toBeVisible();
     failSave = false;
-    await password.fill('correct-password');
+    await expect(password).toHaveCount(0);
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(attempts).toHaveLength(3);

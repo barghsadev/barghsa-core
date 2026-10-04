@@ -63,9 +63,11 @@ it('submits a changed multipart cleanup age with its configuration version', asy
   );
   expect(button).toBeDefined();
   await act(async () => button!.click());
-  expect(harness.action).toMatchObject({
-    method: 'PUT',
-    path: '/api/admin/storage/multipart-cleanup-policy',
-    body: { hours: 48, version: 0 },
-  });
+  await vi.waitFor(() =>
+    expect(harness.action).toMatchObject({
+      method: 'PUT',
+      path: '/api/admin/storage/multipart-cleanup-policy',
+      body: { hours: 48, version: 0 },
+    })
+  );
 });
