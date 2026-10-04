@@ -1,6 +1,11 @@
 import type { Page } from '@playwright/test';
 import { fullNavigation } from './navigation-fixture';
-export async function setupCatalogueForms(page: Page, locale: 'fa' | 'en', darkMode: boolean) {
+export async function setupCatalogueForms(
+  page: Page,
+  locale: 'fa' | 'en',
+  darkMode: boolean,
+  backgrounds: { backgroundColor?: string; darkBackgroundColor?: string } = {}
+) {
   await page.addInitScript((locale) => localStorage.setItem('barghsa.locale', locale), locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
@@ -22,8 +27,8 @@ export async function setupCatalogueForms(page: Page, locale: 'fa' | 'en', darkM
         supportEmail: 'support@example.test',
         supportPhone: '+982112345678',
         supportMobile: '+989121234567',
-        backgroundColor: '#f6f7f4',
-        darkBackgroundColor: '#15201c',
+        backgroundColor: backgrounds.backgroundColor ?? '#f6f7f4',
+        darkBackgroundColor: backgrounds.darkBackgroundColor ?? '#15201c',
         fontFamily: 'vazirmatn',
         borderRadiusRem: 0.75,
         spacingScale: 1,

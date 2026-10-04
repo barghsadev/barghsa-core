@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, Button, ListPage } from '@barghsa/ui';
+import { Alert, Button, ListPage, ScrollArea } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import { aiAgentFormText } from '@barghsa/i18n/ai-agent-forms';
 import { AgentSlotChoiceForm } from '../components/AgentSlotChoiceForm.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -23,6 +24,7 @@ type AssignmentReview = TeamAction & {
 export default function AdminAgentSlotsPage() {
   const locale = useLocale(),
     label = (key: string) => t(`admin.slots.${key}`, locale);
+  const time = useAccountTime(locale);
   const [choices, setChoices] = useState<Partial<Record<SlotKey, { id: string; basis: string }>>>(
     {}
   );
@@ -160,13 +162,14 @@ export default function AdminAgentSlotsPage() {
   );
   return (
     <section
-      className="mx-auto flex w-full min-w-0 max-w-4xl flex-col gap-6 p-4 md:p-8"
+      className="mx-auto flex w-full min-w-0 max-w-6xl flex-col gap-6 p-4 md:p-8"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <header>
         <h1 className="text-2xl font-semibold">{label('title')}</h1>
         <p className="mt-2">{label('description')}</p>
       </header>
+      {time.notice}
       {saved && <p role="status">{label('saved')}</p>}
       {uncertainSlot && (
         <>
@@ -192,68 +195,113 @@ export default function AdminAgentSlotsPage() {
           loadingView={<p role="status">{label('loading')}</p>}
           errorView={<p role="alert">{label(scope.denied ? 'denied' : 'error')}</p>}
         >
-          <div className="divide-y">
-            {slots.data?.map((slot) => {
-              const draft = choices[slot.slotKey],
-                choice = draft?.id ?? slot.agent?.id ?? '';
-              const selected = agents.data?.find((agent) => agent.id === choice);
-              const stale = !!draft && draft.basis !== slotBasis(slot);
-              const shared = slots
-                .data!.filter(
-                  (other) => other.slotKey !== slot.slotKey && choice && other.agent?.id === choice
-                )
-                .map((other) => label(other.slotKey));
-              return (
-                <AgentSlotChoiceForm
-                  key={slot.slotKey}
-                  slot={slot}
-                  agents={agents.data ?? []}
-                  draft={draft}
-                  stale={stale}
-                  ready={ready}
-                  locked={!!action || validating}
-                  blocked={!!uncertainSlot}
-                  resetBlocked={!!action || validating || (!!uncertainSlot && !recovered)}
-                  locale={locale}
-                  label={label}
-                  shared={shared}
-                  onChange={(id) => {
-                    setSaved(false);
-                    setChoices((value) => ({
-                      ...value,
-                      [slot.slotKey]: { id, basis: draft?.basis ?? slotBasis(slot) },
-                    }));
-                  }}
-                  onReset={() => resetChoice(slot.slotKey)}
-                  begin={begin}
-                  current={current}
-                  finish={finish}
-                  propose={(epoch, agentId, errors) => {
-                    if (!current(epoch) || !ready || stale || actionRef.current || uncertainSlot)
-                      return;
-                    setSaved(false);
-                    validationErrors.current = errors;
-                    const next: AssignmentReview = {
-                      slotKey: slot.slotKey,
-                      agentId,
-                      basis: reviewBasis(slot.slotKey, agentId),
-                      epoch: scope.version,
-                      title: label('save'),
-                      description: `${label(slot.slotKey)}: ${slot.agent?.title ?? label('unassigned')} → ${selected?.title ?? label('unassigned')}. ${selected && !selected.enabled ? label('disabledHelp') : ''} ${shared.length ? `${label('shared')}: ${shared.join(locale === 'fa' ? '، ' : ', ')}. ` : ''}${label('confirm')}`,
-                      path: `/api/admin/agent-slots/${slot.slotKey}/agent`,
-                      method: 'PUT',
-                      successStatus: 200,
-                      body: { agentId },
-                      forbiddenMessage: label('denied'),
-                      conflictMessage: label('conflict'),
-                    };
-                    actionRef.current = next;
-                    setAction(next);
-                  }}
-                />
-              );
-            })}
-          </div>
+          <ScrollArea
+            scrollbarOrientation="horizontal"
+            className="max-w-full min-w-0 rounded-lg border bg-background"
+            role="region"
+            aria-label={copy('slotsTable')}
+          >
+            <table className="w-full min-w-[940px] table-fixed text-start text-sm">
+              <colgroup>
+                <col className="w-[170px]" />
+                <col className="w-[180px]" />
+                <col className="w-[190px]" />
+                <col />
+              </colgroup>
+              <thead className="border-b bg-muted">
+                <tr>
+                  {[copy('slot'), label('current'), copy('lastChanged'), copy('assignment')].map(
+                    (name) => (
+                      <th key={name} scope="col" className="p-4 text-start font-semibold">
+                        {name}
+                      </th>
+                    )
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {slots.data?.map((slot) => {
+                  const draft = choices[slot.slotKey],
+                    choice = draft?.id ?? slot.agent?.id ?? '';
+                  const selected = agents.data?.find((agent) => agent.id === choice);
+                  const stale = !!draft && draft.basis !== slotBasis(slot);
+                  const shared = slots
+                    .data!.filter(
+                      (other) =>
+                        other.slotKey !== slot.slotKey && choice && other.agent?.id === choice
+                    )
+                    .map((other) => label(other.slotKey));
+                  return (
+                    <tr key={slot.slotKey} className="border-b align-top last:border-0">
+                      <th scope="row" className="p-4 text-start font-semibold">
+                        {label(slot.slotKey)}
+                      </th>
+                      <td className="break-words p-4" dir="auto">
+                        {slot.agent?.title ?? label('unassigned')}
+                      </td>
+                      <td className="p-4">
+                        <time dateTime={slot.updatedAt}>{time.format(slot.updatedAt)}</time>
+                      </td>
+                      <td className="p-4">
+                        <AgentSlotChoiceForm
+                          slot={slot}
+                          agents={agents.data ?? []}
+                          draft={draft}
+                          stale={stale}
+                          ready={ready}
+                          locked={!!action || validating}
+                          blocked={!!uncertainSlot}
+                          resetBlocked={!!action || validating || (!!uncertainSlot && !recovered)}
+                          locale={locale}
+                          label={label}
+                          shared={shared}
+                          onChange={(id) => {
+                            setSaved(false);
+                            setChoices((value) => ({
+                              ...value,
+                              [slot.slotKey]: { id, basis: draft?.basis ?? slotBasis(slot) },
+                            }));
+                          }}
+                          onReset={() => resetChoice(slot.slotKey)}
+                          begin={begin}
+                          current={current}
+                          finish={finish}
+                          propose={(epoch, agentId, errors) => {
+                            if (
+                              !current(epoch) ||
+                              !ready ||
+                              stale ||
+                              actionRef.current ||
+                              uncertainSlot
+                            )
+                              return;
+                            setSaved(false);
+                            validationErrors.current = errors;
+                            const next: AssignmentReview = {
+                              slotKey: slot.slotKey,
+                              agentId,
+                              basis: reviewBasis(slot.slotKey, agentId),
+                              epoch: scope.version,
+                              title: label('save'),
+                              description: `${label(slot.slotKey)}: ${slot.agent?.title ?? label('unassigned')} → ${selected?.title ?? label('unassigned')}. ${selected && !selected.enabled ? label('disabledHelp') : ''} ${shared.length ? `${label('shared')}: ${shared.join(locale === 'fa' ? '، ' : ', ')}. ` : ''}${label('confirm')}`,
+                              path: `/api/admin/agent-slots/${slot.slotKey}/agent`,
+                              method: 'PUT',
+                              successStatus: 200,
+                              body: { agentId },
+                              forbiddenMessage: label('denied'),
+                              conflictMessage: label('conflict'),
+                            };
+                            actionRef.current = next;
+                            setAction(next);
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </ScrollArea>
         </ListPage.Content>
       </ListPage>
       {action && (

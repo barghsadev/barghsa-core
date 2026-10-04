@@ -1,4 +1,5 @@
 import { Alert, Button } from '@barghsa/ui';
+import { getBrandTextColor, useBrandConfig } from '../providers/BrandThemeProvider.js';
 type Copy = (key: string) => string;
 /** Reserve localized feedback space so blur validation cannot move a tap target. */
 export function CatalogueFieldFeedback({
@@ -10,12 +11,16 @@ export function CatalogueFieldFeedback({
   error?: { message?: string | undefined } | undefined;
   message: string;
 }) {
+  const { brandConfig, userMode } = useBrandConfig();
+  const dark = userMode === null ? brandConfig.darkMode : userMode === 'dark';
+  const background = dark ? brandConfig.darkBackgroundColor : brandConfig.backgroundColor;
   return (
     <p
       id={id}
       role={error ? 'alert' : undefined}
       aria-hidden={!error || undefined}
       className={`text-sm text-destructive ${error ? '' : 'invisible'}`}
+      style={{ color: getBrandTextColor(dark ? '#ffafb2' : '#a42c35', [background]) }}
     >
       {error?.message ?? message}
     </p>

@@ -95,3 +95,13 @@ it('rejects ambiguous catalogues and invalid numeric details', () => {
   expect(validDetail({ ...aiDetail, maxTokens: 1.5 }, aiAgent.id)).toBe(false);
   expect(validDetail({ ...aiDetail, temperature: Infinity }, aiAgent.id)).toBe(false);
 });
+
+it.each(['kbCount', 'policyCount'] as const)(
+  'rejects malformed %s instead of displaying a fabricated count',
+  (field) => {
+    for (const value of [-1, 0.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1, '2'])
+      expect(validAgents([{ ...aiAgent, [field]: value }])).toBe(false);
+    expect(validAgents([{ ...aiAgent, [field]: 0 }])).toBe(true);
+    expect(validAgents([{ ...aiAgent, [field]: undefined }])).toBe(true);
+  }
+);

@@ -7,6 +7,8 @@ export interface Agent extends Ref {
   modelId: string;
   modelTitle: string;
   enabled: boolean;
+  kbCount?: number;
+  policyCount?: number;
 }
 export interface Detail extends Agent {
   systemPrompt: string;
@@ -72,6 +74,11 @@ export function validAgents(value: unknown): value is Agent[] {
         record(v) &&
         ['id', 'title', 'description', 'modelId', 'modelTitle'].every(
           (k) => typeof v[k] === 'string'
+        ) &&
+        ['kbCount', 'policyCount'].every(
+          (k) =>
+            v[k] === undefined ||
+            (typeof v[k] === 'number' && Number.isSafeInteger(v[k]) && v[k] >= 0)
         ) &&
         typeof v.enabled === 'boolean' &&
         !!v.id &&

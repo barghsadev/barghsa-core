@@ -93,13 +93,9 @@ export function AgentSlotChoiceForm({
     <form
       noValidate
       aria-busy={form.pending || undefined}
-      className="min-w-0 space-y-3 py-5"
+      className="min-w-0 space-y-3"
       onSubmit={(event) => void submit(event)}
     >
-      <h2 className="text-lg font-semibold">{label(slot.slotKey)}</h2>
-      <p className="text-sm text-muted-foreground">
-        {label('current')}: {slot.agent?.title ?? label('unassigned')}
-      </p>
       {stale && <p role="alert">{label('stale')}</p>}
       {missing && <p role="alert">{label('unavailable')}</p>}
       {catalogueRootMessage(form.errors) && <p role="alert">{catalogueRootMessage(form.errors)}</p>}

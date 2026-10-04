@@ -25,6 +25,8 @@ const TeamActionDialog = lazy(() =>
     default: module.TeamActionDialog,
   }))
 );
+import { AgentPromptTextarea } from '../components/AgentPromptTextarea.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { AdminAgentTestChat } from '../components/AdminAgentTestChat.js';
 import {
   type Agent,
@@ -49,6 +51,7 @@ import {
 export default function AdminAiAgentsPage() {
   const locale = useLocale(),
     label = (key: string) => t(`admin.agents.${key}`, locale);
+  const numbers = useNumberFormatting(locale);
   const [rows, setRows] = useState<Agent[]>([]),
     [options, setOptions] = useState<Options | null>(null),
     [editor, setEditor] = useState<string | null>(null);
@@ -571,16 +574,31 @@ export default function AdminAiAgentsPage() {
                           dir="auto"
                           onChange={(event) => form.field(key)[1](event.target.value)}
                         />
+                      ) : key === 'systemPrompt' ? (
+                        <AgentPromptTextarea
+                          {...form.bind(key)}
+                          id={id}
+                          maxLength={max}
+                          value={draft[key]}
+                          dir="auto"
+                          aria-describedby={`${form.errorId(key)} agent-prompt-help`}
+                          onChange={(event) => form.field(key)[1](event.target.value)}
+                        />
                       ) : (
                         <textarea
                           {...form.bind(key)}
                           id={id}
-                          className={`rounded-md border bg-background p-3 ${key === 'systemPrompt' ? 'min-h-40' : 'min-h-24'}`}
+                          className="min-h-24 rounded-md border bg-background p-3"
                           maxLength={max}
                           value={draft[key]}
                           dir="auto"
                           onChange={(event) => form.field(key)[1](event.target.value)}
                         />
+                      )}
+                      {key === 'systemPrompt' && (
+                        <p id="agent-prompt-help" className="text-sm text-foreground">
+                          {copy('promptHelp')}
+                        </p>
                       )}
                       <CatalogueFieldFeedback
                         id={form.errorId(key)}
@@ -780,6 +798,18 @@ export default function AdminAiAgentsPage() {
                         {label('model')}: {row.modelTitle}
                       </p>
                       <span className="text-sm">{label(row.enabled ? 'enabled' : 'disabled')}</span>
+                      <dl className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
+                        <div className="flex gap-2">
+                          <dt>{copy('linkedKbs')}</dt>
+                          <dd>{row.kbCount === undefined ? '—' : numbers.number(row.kbCount)}</dd>
+                        </div>
+                        <div className="flex gap-2">
+                          <dt>{copy('linkedPolicies')}</dt>
+                          <dd>
+                            {row.policyCount === undefined ? '—' : numbers.number(row.policyCount)}
+                          </dd>
+                        </div>
+                      </dl>
                     </div>
                     <div className="flex shrink-0 flex-wrap gap-2">
                       <Button

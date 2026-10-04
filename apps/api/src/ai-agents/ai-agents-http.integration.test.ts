@@ -679,3 +679,34 @@ it.each(['create', 'update'] as const)(
     ).toHaveLength(0);
   }
 );
+
+it('reports exact direct link counts in the agent list and refreshed detail', async () => {
+  const kbId = await prepareLink({ kind: 'kb', action: 'add' });
+  const policyId = await prepareLink({ kind: 'policy', action: 'add' });
+  const groups = await createGroups();
+  const updated = await updateGroups({
+    kbIds: [kbId],
+    policyIds: [policyId],
+    kbGroupIds: [groups.kb],
+    policyGroupIds: [groups.policy],
+  });
+  expect(updated.status).toBe(200);
+  const list = await fetch(`${http.base}/api/admin/agents`, { headers });
+  expect(list.status).toBe(200);
+  expect(await list.json()).toEqual([
+    expect.objectContaining({ id: agentId, kbCount: 1, policyCount: 1 }),
+  ]);
+  const detail = await fetch(`${http.base}/api/admin/agents/${agentId}`, { headers });
+  expect(detail.status).toBe(200);
+  expect(await detail.json()).toMatchObject({
+    kbCount: 1,
+    policyCount: 1,
+    kbs: [expect.objectContaining({ id: kbId })],
+    policies: [expect.objectContaining({ id: policyId })],
+  });
+  expect((await updateGroups({ kbIds: [], policyIds: [] })).status).toBe(200);
+  const cleared = await fetch(`${http.base}/api/admin/agents`, { headers });
+  expect(await cleared.json()).toEqual([
+    expect.objectContaining({ id: agentId, kbCount: 0, policyCount: 0 }),
+  ]);
+});

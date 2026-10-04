@@ -32,6 +32,8 @@ export const aiAgent = {
   modelId: aiModel.id,
   modelTitle: aiModel.title,
   enabled: true,
+  kbCount: 1,
+  policyCount: 0,
 };
 export const aiOptions = {
   models: [{ id: aiModel.id, title: aiModel.title }],

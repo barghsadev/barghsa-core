@@ -19,6 +19,14 @@ const en = {
   changed: 'Saved agent settings changed. Your entries are preserved; reset before continuing.',
   uncertain: 'The save could not be verified. Refresh and reset before saving again.',
   reset: 'Reset to saved settings',
+  linkedKbs: 'Direct knowledge base links',
+  linkedPolicies: 'Direct policy links',
+  promptHelp:
+    'Markdown headings, lists, links and code are highlighted. Instructions are saved as entered.',
+  slotsTable: 'Agent slot assignments',
+  slot: 'Slot',
+  lastChanged: 'Last changed',
+  assignment: 'Assignment',
 };
 const fa: Record<keyof typeof en, string> = {
   title: 'عنوان عامل را با ۱ تا ۱۲۰ نویسه وارد کنید.',
@@ -41,6 +49,14 @@ const fa: Record<keyof typeof en, string> = {
     'تنظیمات ذخیره‌شده عامل تغییر کرده است. داده‌های شما حفظ شده است؛ پیش از ادامه بازنشانی کنید.',
   uncertain: 'ذخیره تأیید نشد. پیش از ذخیره دوباره، تازه‌سازی و بازنشانی کنید.',
   reset: 'بازنشانی به تنظیمات ذخیره‌شده',
+  linkedKbs: 'پیوندهای مستقیم پایگاه دانش',
+  linkedPolicies: 'پیوندهای مستقیم سیاست',
+  promptHelp:
+    'عنوان‌ها، فهرست‌ها، پیوندها و کدهای Markdown مشخص می‌شوند. دستورها همان‌گونه که وارد شده‌اند ذخیره می‌شوند.',
+  slotsTable: 'تخصیص‌های جایگاه عامل',
+  slot: 'جایگاه',
+  lastChanged: 'آخرین تغییر',
+  assignment: 'تخصیص',
 };
 export function aiAgentFormText(key: keyof typeof en, locale: Locale): string {
   return (locale === 'fa' ? fa : en)[key];

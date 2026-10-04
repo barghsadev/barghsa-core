@@ -21,6 +21,13 @@ for (const locale of ['fa', 'en'] as const)
       'changed',
       'uncertain',
       'reset',
+      'linkedKbs',
+      'linkedPolicies',
+      'promptHelp',
+      'slotsTable',
+      'slot',
+      'lastChanged',
+      'assignment',
     ];
     for (const field of fields) {
       expect(aiAgentFormText(field, locale).trim()).not.toBe('');
