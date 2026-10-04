@@ -1,6 +1,6 @@
 import { HttpException } from '@nestjs/common';
+import { rejectContentFields } from '../admin/content-input-fields.js';
 import { getDbPool } from '@barghsa/db';
-import { ErrorCodes } from '@barghsa/shared/errors';
 import type { PoolClient } from 'pg';
 import { z } from 'zod';
 import { v7 as uuidv7 } from 'uuid';
@@ -88,10 +88,6 @@ export async function updateOtpConfig(
 
 export function parseOtpConfigUpdate(raw: unknown): z.infer<typeof UpdateOtpConfigSchema> {
   const parsed = UpdateOtpConfigSchema.safeParse(raw);
-  if (!parsed.success)
-    throw new HttpException(
-      { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-      400
-    );
+  if (!parsed.success) rejectContentFields(parsed.error.issues, ['ttlSeconds']);
   return parsed.data;
 }

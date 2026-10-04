@@ -89,9 +89,18 @@ it('requires current admin permissions, CSRF and recent password confirmation', 
 
 it('rejects invalid bounds, fractional values and missing versions without changing settings', async () => {
   for (const ttlSeconds of [59, 901, 1.5, '300', null]) {
-    expect((await update({ ttlSeconds, expectedVersion: 0 })).status).toBe(400);
+    const invalid = await update({ ttlSeconds, expectedVersion: 0 });
+    expect(invalid.status).toBe(400);
+    expect(await invalid.json()).toMatchObject({
+      error: { code: 'VALIDATION:INPUT:INVALID', fields: ['ttlSeconds'] },
+    });
   }
-  expect((await update({ ttlSeconds: 300 })).status).toBe(400);
+  const missingVersion = await update({ ttlSeconds: 300 });
+  expect(missingVersion.status).toBe(400);
+  expect(await missingVersion.json()).not.toHaveProperty('error.fields');
+  const denied = await update({ ttlSeconds: 'private-submitted-value' }, customerHeaders);
+  expect(denied.status).toBe(403);
+  expect(await denied.text()).not.toContain('private-submitted-value');
   await expectNoChange();
 });
 

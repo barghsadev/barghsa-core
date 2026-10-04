@@ -26,6 +26,8 @@ vi.mock('../hooks/useAccountTime.js', () => ({
 it.each(['denied', 'cancelled', 'unmounted'] as const)(
   'does not restore OTP settings from a late completion after %s',
   async (kind) => {
+    capture.success = capture.close = null;
+    vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
     document.documentElement.lang = 'en';
     let denied = false;
     vi.stubGlobal(
@@ -58,6 +60,7 @@ it.each(['denied', 'cancelled', 'unmounted'] as const)(
         input.dispatchEvent(new Event('input', { bubbles: true }));
       });
       await click('Save code expiry');
+      await vi.waitFor(() => expect(capture.success).toBeTypeOf('function'));
       const complete = capture.success!;
       if (kind === 'denied') {
         await click('View changes');

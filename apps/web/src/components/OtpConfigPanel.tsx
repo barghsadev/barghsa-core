@@ -1,83 +1,152 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import type { TeamAction } from './TeamActionDialog.js';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { Button, Input, Label } from '@barghsa/ui';
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { useSettingsSnapshot } from '../hooks/useSettingsSnapshot.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import {
+  validOtpConfig,
+  otpBasis,
+  invalidOtpFields,
+  type OtpConfig,
+  type OtpDraft,
+} from '../lib/verification-settings-form.js';
+import { Alert, Button, Input, Label } from '@barghsa/ui';
+import { CatalogueFieldFeedback, catalogueRootMessage } from './CatalogueEditorFeedback.js';
 import { SettingsFormSection } from './SettingsFormSection.js';
 import { AuditLogViewer } from './AuditLogViewer.js';
-
 const TeamActionDialog = lazy(() =>
   import('./TeamActionDialog.js').then((module) => ({ default: module.TeamActionDialog }))
 );
-interface Config {
-  ttlSeconds: number;
-  version: number;
-}
-function readConfig(raw: unknown): Config {
-  const config = raw as Partial<Config> | null;
-  if (
-    !config ||
-    !Number.isInteger(config.ttlSeconds) ||
-    config.ttlSeconds! < 60 ||
-    config.ttlSeconds! > 900 ||
-    !Number.isSafeInteger(config.version) ||
-    config.version! < 0
-  )
-    throw new Error('Invalid OTP configuration');
-  return config as Config;
-}
-
 export function OtpConfigPanel() {
-  const locale = useLocale();
-  const numbers = useNumberFormatting(locale);
+  const locale = useLocale(),
+    numbers = useNumberFormatting(locale);
   const text = (key: Parameters<typeof verificationConfigText>[0]) =>
     verificationConfigText(key, locale);
-  const [current, setCurrent] = useState<Config | null>(null);
-  const [seconds, setSeconds] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [failed, setFailed] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [reload, setReload] = useState(0);
-  const [proposal, setProposal] = useState<{ ttlSeconds: number; expectedVersion: number } | null>(
-    null
+  const form = useWizardForm<OtpDraft>(
+    async () => {
+      const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return contentFormSchema({ ttlSeconds: text('invalidLifetime') }, invalidOtpFields);
+    },
+    () => ({ ttlSeconds: '' }),
+    text('formUnavailable')
   );
-  const saveRef = useRef<HTMLButtonElement>(null);
-  const generation = useRef(0),
-    completionGeneration = generation.current;
-  function closeReview() {
+  const fieldErrors = useActionFieldErrors(
+    form.form,
+    { ttlSeconds: text('invalidLifetime') },
+    text('invalid')
+  );
+  const resetForm = form.form.reset;
+  const reset = useCallback(
+    (value: OtpConfig | null) => {
+      resetForm({ ttlSeconds: value ? String(value.ttlSeconds) : '' });
+      setSaved(false);
+    },
+    [resetForm]
+  );
+  const [action, setAction] = useState<TeamAction | null>(null),
+    [saved, setSaved] = useState(false),
+    [pending, setPending] = useState(false);
+  const saveRef = useRef<HTMLButtonElement>(null),
+    actionRef = useRef<TeamAction | null>(null),
+    generation = useRef(0),
+    validating = useRef(false),
+    commandPending = useRef(false);
+  const onPendingChange = useCallback((value: boolean) => {
+    commandPending.current = value;
+    setPending(value);
+  }, []);
+  const withdraw = useCallback(() => {
     generation.current++;
-    setProposal(null);
-  }
-  useEffect(() => {
-    generation.current++;
-    const controller = new AbortController();
-    setLoading(true);
-    setFailed(false);
-    setSaved(false);
-    void (async () => {
-      try {
-        const response = await fetch('/api/admin/config/otp', { signal: controller.signal });
-        if (!response.ok) throw new Error('Settings unavailable');
-        const config = readConfig(await response.json());
-        if (controller.signal.aborted) return;
-        setCurrent(config);
-        setSeconds(String(config.ttlSeconds));
-      } catch {
-        if (!controller.signal.aborted) {
-          setFailed(true);
-          setCurrent(null);
-        }
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
-      }
-    })();
-    return () => {
+    validating.current = false;
+    form.setValidationPending(false);
+    actionRef.current = null;
+    setAction(null);
+    onPendingChange(false);
+  }, [form.setValidationPending, onPendingChange]);
+  const state = useSettingsSnapshot(
+    '/api/admin/config/otp',
+    validOtpConfig,
+    otpBasis,
+    reset,
+    withdraw
+  );
+  useEffect(
+    () => () => {
       generation.current++;
-      controller.abort();
-    };
-  }, [reload]);
-  const value = Number(seconds);
-  const valid = seconds.trim() !== '' && Number.isInteger(value) && value >= 60 && value <= 900;
+      actionRef.current = null;
+    },
+    []
+  );
+  const blocked = !state.ready || state.changed || state.uncertain;
+  const busy = form.pending || !!action;
+  function refresh() {
+    if (commandPending.current) return;
+    if (validating.current || state.uncertain) withdraw();
+    setSaved(false);
+    state.refresh();
+  }
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    if (blocked || !state.current || validating.current || actionRef.current) return;
+    const epoch = generation.current;
+    validating.current = true;
+    form.setValidationPending(true);
+    setSaved(false);
+    try {
+      let body: { ttlSeconds: number; expectedVersion: number } | undefined;
+      await form.form.handleSubmit((value) => {
+        const ttlSeconds = Number(value.ttlSeconds);
+        if (ttlSeconds !== state.current!.ttlSeconds)
+          body = { ttlSeconds, expectedVersion: state.current!.version };
+      })();
+      if (!body || epoch !== generation.current || state.scope.denied) return;
+      const next: TeamAction = {
+        title: text('otpSave'),
+        description: text('otpDescription'),
+        path: '/api/admin/config/otp',
+        method: 'PUT',
+        body,
+        successStatus: 200,
+        requiresPassword: true,
+        conflictMessage: text('otpConflict'),
+        forbiddenMessage: text('forbidden'),
+      };
+      actionRef.current = next;
+      setAction(next);
+    } finally {
+      if (epoch === generation.current) {
+        validating.current = false;
+        form.setValidationPending(false);
+      }
+    }
+  }
+  const completionGeneration = generation.current;
+  const feedback = (
+    <>
+      {state.scope.denied && <Alert variant="destructive">{text('forbidden')}</Alert>}
+      {state.resource.loading && <p role="status">{text('otpLoading')}</p>}
+      {state.resource.error && <Alert variant="destructive">{text('otpLoadFailed')}</Alert>}
+      {(state.changed || state.uncertain) && (
+        <Alert variant="destructive">{text(state.uncertain ? 'unverified' : 'changedDraft')}</Alert>
+      )}
+      {(state.changed || state.uncertain) && (
+        <Button
+          type="button"
+          variant="outline"
+          disabled={busy || !state.ready || (state.uncertain && !state.recovered)}
+          onClick={state.resetSaved}
+        >
+          {text('resetSaved')}
+        </Button>
+      )}
+      {catalogueRootMessage(form.errors) && (
+        <Alert variant="destructive">{catalogueRootMessage(form.errors)}</Alert>
+      )}
+    </>
+  );
   return (
     <>
       <SettingsFormSection
@@ -87,61 +156,57 @@ export function OtpConfigPanel() {
         className="mt-8 max-w-xl"
         saved={saved}
         savedMessage={text('otpSaved')}
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (!current || !valid || loading || proposal || value === current.ttlSeconds) return;
-          setSaved(false);
-          setProposal({ ttlSeconds: value, expectedVersion: current.version });
-        }}
+        noValidate
+        aria-busy={form.pending || undefined}
+        onSubmit={(event) => void submit(event)}
         actions={
           <>
             <Button
               ref={saveRef}
               type="submit"
-              disabled={loading || !current || !!proposal || !valid || value === current.ttlSeconds}
+              disabled={
+                blocked || busy || Number(form.values.ttlSeconds) === state.current?.ttlSeconds
+              }
+              aria-busy={form.pending || undefined}
             >
+              {form.pending && (
+                <span
+                  aria-hidden="true"
+                  className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                />
+              )}
               {text('otpSave')}
             </Button>
             <Button
               type="button"
               variant="outline"
-              disabled={loading || !!proposal}
-              onClick={() => setReload((count) => count + 1)}
+              disabled={state.resource.loading || pending}
+              onClick={refresh}
             >
               {text('otpReload')}
             </Button>
           </>
         }
       >
-        {loading && (
-          <p role="status" className="mt-3">
-            {text('otpLoading')}
-          </p>
-        )}
-        {failed && (
-          <p role="alert" className="mt-3 text-destructive">
-            {text('otpLoadFailed')}
-          </p>
-        )}
-        {saved && (
-          <p role="status" className="mt-3">
-            {text('otpSaved')}
-          </p>
-        )}
-        <fieldset disabled={loading || current === null || proposal !== null} className="space-y-2">
+        {feedback}
+        {saved && <p role="status">{text('otpSaved')}</p>}
+        <fieldset disabled={blocked || busy} className="space-y-2 min-w-0">
           <legend className="sr-only">{text('otpTitle')}</legend>
           <Label htmlFor="otp-lifetime">{text('otpLabel')}</Label>
           <Input
+            {...form.bind('ttlSeconds')}
             id="otp-lifetime"
             type="number"
             min={60}
             max={900}
             step={1}
             required
-            value={seconds}
-            aria-describedby="otp-lifetime-hint"
+            value={form.values.ttlSeconds}
+            aria-describedby={[form.bind('ttlSeconds')['aria-describedby'], 'otp-lifetime-hint']
+              .filter(Boolean)
+              .join(' ')}
             onChange={(event) => {
-              setSeconds(event.target.value);
+              form.field('ttlSeconds')[1](event.target.value);
               setSaved(false);
             }}
           />
@@ -150,47 +215,59 @@ export function OtpConfigPanel() {
               .replace('{min}', numbers.number(60))
               .replace('{max}', numbers.number(900))}
           </p>
+          <CatalogueFieldFeedback
+            id={form.errorId('ttlSeconds')}
+            error={form.errors.ttlSeconds}
+            message={text('invalidLifetime')}
+          />
         </fieldset>
       </SettingsFormSection>
-      {current && (
+      {state.current && (
         <AuditLogViewer
           scope="otp"
-          refreshKey={current.version}
-          onDenied={() => {
-            generation.current++;
-            setCurrent(null);
-            setSeconds('');
-            setSaved(false);
-            setProposal(null);
-            setFailed(true);
-          }}
+          refreshKey={state.current.version}
+          onDenied={state.scope.deny}
         />
       )}
-      {proposal && (
+      {action && (
         <Suspense fallback={<p role="status">{text('loading')}</p>}>
           <TeamActionDialog
             finalFocus={saveRef}
-            action={{
-              title: text('otpSave'),
-              description: text('otpDescription'),
-              path: '/api/admin/config/otp',
-              method: 'PUT',
-              body: proposal,
-              requiresPassword: true,
-              conflictMessage: text('otpConflict'),
-            }}
-            onClose={closeReview}
+            action={action}
+            onClose={withdraw}
+            onDenied={state.scope.deny}
+            onPendingChange={onPendingChange}
+            onUnconfirmed={state.unconfirmed}
+            onValidationError={fieldErrors}
+            confirmationDisabled={blocked}
+            summary={
+              <Button
+                type="button"
+                variant="outline"
+                disabled={state.resource.loading || pending}
+                onClick={refresh}
+              >
+                {text('otpReload')}
+              </Button>
+            }
             onSuccess={async (raw) => {
-              if (generation.current !== completionGeneration) return;
-              const config = readConfig(raw);
               if (
-                config.ttlSeconds !== proposal.ttlSeconds ||
-                config.version !== proposal.expectedVersion + 1
+                completionGeneration !== generation.current ||
+                actionRef.current !== action ||
+                state.scope.denied
               )
-                throw new Error('Mismatched OTP configuration');
-              setCurrent(config);
-              setSeconds(String(config.ttlSeconds));
+                return;
+              const body = action.body as { ttlSeconds: number; expectedVersion: number };
+              if (
+                !validOtpConfig(raw) ||
+                raw.ttlSeconds !== body.ttlSeconds ||
+                raw.version !== body.expectedVersion + 1
+              )
+                throw new Error('Unconfirmed OTP configuration');
+              if (!state.accept(raw)) throw new Error('Obsolete OTP receipt');
+              withdraw();
               setSaved(true);
+              state.resource.retry();
             }}
           />
         </Suspense>

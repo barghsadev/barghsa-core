@@ -1,4 +1,5 @@
 import { cookieResponse } from './cookie-response';
+import { crmShell } from './crm-shell-fixture';
 import { test, expect } from './coverage-fixture';
 
 for (const locale of ['en', 'fa']) {
@@ -6,17 +7,7 @@ for (const locale of ['en', 'fa']) {
   test(`verification draft requires exact confirmation and recovers activation conflicts (${locale})`, async ({
     page,
   }) => {
-    await page.addInitScript((lang) => {
-      const apply = () => {
-        if (document.documentElement) {
-          document.documentElement.lang = lang;
-          document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
-        }
-      };
-      apply();
-      new MutationObserver(apply).observe(document, { childList: true });
-    }, locale);
-    await page.route('**/api/**', (r) => r.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await page.route('**/api/admin/config/otp', (r) =>
       r.fulfill({ json: { ttlSeconds: 300, version: 0 } })
     );
@@ -60,7 +51,14 @@ for (const locale of ['en', 'fa']) {
     await page
       .getByRole('button', { name: fa ? 'ذخیره پیش‌نویس' : 'Save draft', exact: true })
       .click();
-    await expect(page.locator('#admin-content').getByRole('status')).toContainText(
+    await expect(
+      page
+        .locator('#admin-content')
+        .getByRole('status')
+        .filter({
+          hasText: fa ? 'روش فعال احراز هویت تغییر نکرده' : 'Active verification mode is unchanged',
+        })
+    ).toContainText(
       fa ? 'روش فعال احراز هویت تغییر نکرده' : 'Active verification mode is unchanged'
     );
     expect(config.mode).toBe('DISABLED');
@@ -94,6 +92,12 @@ for (const locale of ['en', 'fa']) {
         exact: true,
       })
       .click();
+    await page
+      .getByRole('button', {
+        name: fa ? 'بازنشانی به تنظیمات ذخیره‌شده' : 'Reset to saved settings',
+        exact: true,
+      })
+      .click();
     await expect(activate).toBeEnabled();
     await activate.click();
     await dialog
@@ -101,9 +105,14 @@ for (const locale of ['en', 'fa']) {
       .fill('Settings-password-123!');
     await confirm.click();
     await expect(dialog).toHaveCount(0);
-    await expect(page.locator('#admin-content').getByRole('status')).toContainText(
-      fa ? 'روش احراز هویت فعال شد' : 'Verification mode activated'
-    );
+    await expect(
+      page
+        .locator('#admin-content')
+        .getByRole('status')
+        .filter({
+          hasText: fa ? 'روش احراز هویت فعال شد' : 'Verification mode activated',
+        })
+    ).toContainText(fa ? 'روش احراز هویت فعال شد' : 'Verification mode activated');
     await page.reload();
     await expect(page.locator('#verification-mode-MANUAL')).toBeChecked();
     await expect(activate).toHaveCount(0);

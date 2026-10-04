@@ -128,6 +128,40 @@ it('requires an explicit versioned action and never enables the absent provider'
     expect((await write(action, 0, 'API')).status).toBe(503);
   expect(await snapshot()).toEqual(before);
 });
+it('returns only owned validation identifiers after checking write permission', async () => {
+  const before = await snapshot();
+  const update = (body: unknown) =>
+    fetch(http.base + path, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(body),
+    });
+  const invalid = await update({
+    mode: 'private-submitted-value',
+    action: 'draft',
+    expectedVersion: 0,
+  });
+  expect(invalid.status).toBe(400);
+  const raw = await invalid.text();
+  expect(JSON.parse(raw)).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['mode'] },
+  });
+  expect(raw).not.toContain('private-submitted-value');
+  const unknownAction = await update({
+    mode: 'MANUAL',
+    action: 'private-action',
+    expectedVersion: 0,
+  });
+  expect(unknownAction.status).toBe(400);
+  expect(await unknownAction.json()).not.toHaveProperty('error.fields');
+  await http.pool.query(
+    "UPDATE staff_roles SET permissions='[]' WHERE role_id='verification-editor'"
+  );
+  const denied = await update({ mode: 'private-submitted-value' });
+  expect(denied.status).toBe(403);
+  expect(await denied.text()).not.toContain('private-submitted-value');
+  expect(await snapshot()).toEqual(before);
+});
 it('does not activate a draft after a legacy writer changed active policy', async () => {
   await write();
   await http.pool.query(

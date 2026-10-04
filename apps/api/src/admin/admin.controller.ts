@@ -880,16 +880,7 @@ export class AdminController {
     }
 
     const parsed = SetProfileVerificationModeSchema.safeParse(rawBody);
-    if (!parsed.success) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'A valid mode, action and expectedVersion are required',
-        },
-        400
-      );
-    }
+    if (!parsed.success) rejectContentFields(parsed.error.issues, ['mode']);
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.adminService.setProfileVerificationMode(parsed.data, req.session, ip);

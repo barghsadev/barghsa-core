@@ -1,4 +1,14 @@
 const en = {
+  invalidMode: 'Select manual verification or no verification.',
+  invalidLifetime: 'Enter a whole number of seconds from 60 to 900.',
+  invalid: 'Check this setting before saving.',
+  formUnavailable: 'Validation is unavailable. Your selection is preserved; try again.',
+  changedDraft:
+    'Saved settings changed. Your selection is preserved; reset to the saved settings before continuing.',
+  unverified:
+    'The change could not be confirmed. Reload and reset to the saved settings before continuing.',
+  resetSaved: 'Reset to saved settings',
+  forbidden: 'You do not have permission to manage these settings.',
   otpTitle: 'One-time code expiry',
   otpDescription:
     'Applies to newly sent registration, login and recovery codes. Codes already sent keep their existing expiry.',
@@ -35,6 +45,16 @@ const en = {
 } as const;
 
 const fa: Record<keyof typeof en, string> = {
+  invalidMode: 'احراز هویت دستی یا بدون احراز هویت را انتخاب کنید.',
+  invalidLifetime: 'تعداد صحیح ثانیه از ۶۰ تا ۹۰۰ وارد کنید.',
+  invalid: 'پیش از ذخیره، این تنظیم را بررسی کنید.',
+  formUnavailable: 'اعتبارسنجی در دسترس نیست. انتخاب شما حفظ شده است؛ دوباره تلاش کنید.',
+  changedDraft:
+    'تنظیمات ذخیره‌شده تغییر کرده است. انتخاب شما حفظ شده است؛ پیش از ادامه به تنظیمات ذخیره‌شده بازنشانی کنید.',
+  unverified:
+    'تغییر تأیید نشد. پیش از ادامه دوباره بارگذاری کنید و به تنظیمات ذخیره‌شده بازنشانی کنید.',
+  resetSaved: 'بازنشانی به تنظیمات ذخیره‌شده',
+  forbidden: 'اجازه مدیریت این تنظیمات را ندارید.',
   otpTitle: 'زمان اعتبار کد یک‌بارمصرف',
   otpDescription:
     'برای کدهای جدید ثبت‌نام، ورود و بازیابی اعمال می‌شود. زمان اعتبار کدهای ارسال‌شده تغییر نمی‌کند.',

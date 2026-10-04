@@ -50,7 +50,11 @@ for (const locale of ['en', 'fa']) {
     await expect(save).toBeDisabled();
     for (const invalid of ['', '59', '901', '60.5']) {
       await input.fill(invalid);
-      await expect(save).toBeDisabled();
+      await save.click();
+      await expect(input).toHaveAttribute('aria-invalid', 'true');
+      await expect(input).toBeFocused();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+      expect(writes).toHaveLength(0);
     }
     await input.fill('120');
     await save.click();
@@ -106,19 +110,31 @@ for (const locale of ['en', 'fa']) {
       .getByLabel(fa ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
       .fill('Settings-password-123!');
     const confirm = dialog.locator('button[type=submit]');
-    for (let attempt = 1; attempt <= 3; attempt++) {
+    const resetName = fa ? 'بازنشانی به تنظیمات ذخیره‌شده' : 'Reset to saved settings';
+    for (let attempt = 1; attempt <= 2; attempt++) {
       await dialog
         .getByLabel(fa ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
         .fill('Settings-password-123!');
       await confirm.click();
       await expect.poll(() => writes).toBe(attempt);
       await expect(dialog.getByRole('alert')).toBeVisible();
-      await expect(
-        dialog.getByLabel(fa ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
-      ).toBeEnabled();
       await expect(input).toHaveValue('120');
       await expect(panel.getByText(savedText, { exact: true })).toHaveCount(0);
+      await expect(confirm).toBeDisabled();
+      await page.keyboard.press('Escape');
+      await expect(dialog).toHaveCount(0);
+      await panel.getByRole('button', { name: reloadName, includeHidden: true }).click();
+      await expect(input).toHaveValue('120');
+      await panel.getByRole('button', { name: resetName, exact: true }).click();
+      await expect(input).toHaveValue('300');
+      await input.fill('120');
+      await panel.getByRole('button', { name: saveName, exact: true }).click();
     }
+    await dialog
+      .getByLabel(fa ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
+      .fill('Settings-password-123!');
+    await confirm.click();
+    await expect.poll(() => writes).toBe(3);
     await expect(dialog.getByRole('alert')).toContainText(
       fa ? 'تنظیمات تغییر کرده است' : 'Settings changed'
     );
@@ -126,6 +142,8 @@ for (const locale of ['en', 'fa']) {
     await expect(dialog).toHaveCount(0);
     await expect(input).toHaveValue('120');
     await panel.getByRole('button', { name: reloadName, includeHidden: true }).click();
+    await expect(input).toHaveValue('120');
+    await panel.getByRole('button', { name: resetName, exact: true }).click();
     await expect(input).toHaveValue('180');
     await input.fill('240');
     const request = page.waitForRequest(
