@@ -411,7 +411,17 @@ export class AiTestChatService {
       reply,
       sources,
       attribution: sources.length ? 'retrieved_context' : 'general_guidance',
-      policyResults: policy.results,
+      policyResults: policy.results.map((result) =>
+        result.type === 'content_filter'
+          ? {
+              ...result,
+              ruleChecks: [
+                ...(result.ruleChecks ?? []),
+                { rule: 'outputFilter' as const, outcome: 'passed' as const },
+              ],
+            }
+          : result
+      ),
       tokenUsage: completion.tokenUsage,
       latencyMs: Date.now() - started,
       remainingQuota,

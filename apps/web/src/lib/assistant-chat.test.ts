@@ -3,6 +3,7 @@ import {
   readAssistantAvailability,
   readKnowledgeAnswer,
   readTestChatResult,
+  chatTokenTotal,
 } from './assistant-chat.js';
 const id = '01900000-0000-7000-8000-000000000001';
 const source = { kbId: id, title: 'Guide', documentTitle: null, excerpt: 'Published passage' };
@@ -22,7 +23,14 @@ const result = {
 };
 it('accepts current contracts, legacy missing customer metadata, and unassigned availability', () => {
   expect(readKnowledgeAnswer(answer)).toEqual({ ...answer, answeredAt: null, policyChecks: null });
-  expect(readTestChatResult(result, id)).toEqual(result);
+  expect(readTestChatResult(result, id)).toEqual({
+    ...result,
+    policyResults: result.policyResults.map((policy) => ({
+      ...policy,
+      priority: null,
+      ruleChecks: null,
+    })),
+  });
   expect(
     readTestChatResult({
       ...result,
@@ -47,6 +55,51 @@ it('accepts current contracts, legacy missing customer metadata, and unassigned 
       slotKey: 'individual_chatbot',
     })
   ).not.toBeNull();
+});
+it('accepts recorded rule outcomes and preserves missing legacy metadata as unavailable', () => {
+  const recorded = {
+    ...result.policyResults[0],
+    priority: -20,
+    ruleChecks: [
+      { rule: 'tone', outcome: 'applied' },
+      { rule: 'language', outcome: 'overridden' },
+    ],
+  };
+  expect(readTestChatResult({ ...result, policyResults: [recorded] })?.policyResults).toEqual([
+    recorded,
+  ]);
+  expect(readTestChatResult(result)?.policyResults[0]).toMatchObject({
+    priority: null,
+    ruleChecks: null,
+  });
+});
+it('refuses malformed or duplicated rule details and invalid priorities', () => {
+  for (const invalid of [
+    { priority: '20' },
+    { priority: 1.5 },
+    { priority: Infinity },
+    { priority: 2147483648 },
+    { ruleChecks: {} },
+    { ruleChecks: [{ rule: 'private', outcome: 'applied' }] },
+    { ruleChecks: [{ rule: ['tone'], outcome: 'applied' }] },
+    { ruleChecks: [{ rule: 'tone', outcome: ['applied'] }] },
+    { ruleChecks: [{ rule: 'tone', outcome: 'unknown' }] },
+    {
+      ruleChecks: [
+        { rule: 'tone', outcome: 'applied' },
+        { rule: 'tone', outcome: 'overridden' },
+      ],
+    },
+  ])
+    expect(
+      readTestChatResult({ ...result, policyResults: [{ ...result.policyResults[0], ...invalid }] })
+    ).toBeNull();
+});
+it('reports token totals only when usage is available and the sum is a safe integer', () => {
+  expect(chatTokenTotal({ input: 9, output: 5 })).toBe(14);
+  expect(chatTokenTotal({ input: 0, output: 0 })).toBe(0);
+  expect(chatTokenTotal(null)).toBeNull();
+  expect(chatTokenTotal({ input: Number.MAX_SAFE_INTEGER, output: 1 })).toBeNull();
 });
 it.each([
   null,

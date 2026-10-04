@@ -9,6 +9,7 @@ import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useChatRetryAfter } from '../hooks/useChatRetryAfter.js';
+import { ResponseMetadataPanel } from './ResponseMetadataPanel.js';
 import {
   CatalogueFieldFeedback,
   CatalogueSaveButton,
@@ -358,43 +359,7 @@ export function AdminAgentTestChat({
                     : 'generalGuidance'
                 )}
               </p>
-              <details className="text-sm">
-                <summary className="cursor-pointer">{label('metadata')}</summary>
-                <div className="space-y-2 p-2">
-                  <p>
-                    {label('tokens')}:{' '}
-                    {turn.result.tokenUsage
-                      ? `${numbers.number(turn.result.tokenUsage.input)} / ${numbers.number(turn.result.tokenUsage.output)}`
-                      : label('unknown')}
-                  </p>
-                  <p>
-                    {label('latency')}:{' '}
-                    {copy('milliseconds').replace('{count}', numbers.number(turn.result.latencyMs))}
-                  </p>
-                  <p>
-                    {label('sources')}: {numbers.number(turn.result.sources.length)}
-                  </p>
-                  {turn.result.sources.map((source, sourceIndex) => (
-                    <details key={`${source.kbId}-${sourceIndex}`}>
-                      <summary>
-                        {source.title}
-                        {source.documentTitle ? ` / ${source.documentTitle}` : ''}
-                      </summary>
-                      <p className="whitespace-pre-wrap break-words">{source.excerpt}</p>
-                    </details>
-                  ))}
-                  <p>
-                    {label('policies')}: {numbers.number(turn.result.policyResults.length)}
-                  </p>
-                  <ul>
-                    {turn.result.policyResults.map((policy) => (
-                      <li key={policy.id}>
-                        {policy.title} — {copy(policy.result)}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </details>
+              <ResponseMetadataPanel result={turn.result} locale={locale} />
             </div>
           ))}
         </div>

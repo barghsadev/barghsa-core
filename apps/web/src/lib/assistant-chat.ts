@@ -27,11 +27,41 @@ export type TestChatResult = {
   reply: string;
   sources: Source[];
   attribution: 'retrieved_context' | 'general_guidance';
-  policyResults: { id: string; title: string; type: string; result: 'applied' | 'blocked' }[];
+  policyResults: {
+    id: string;
+    title: string;
+    type: string;
+    result: 'applied' | 'blocked';
+    priority: number | null;
+    ruleChecks: ChatRuleCheck[] | null;
+  }[];
   tokenUsage: { input: number; output: number } | null;
   latencyMs: number;
   remainingQuota: number;
 };
+export const chatPolicyRules = [
+  'topics',
+  'actions',
+  'inputFilter',
+  'outputFilter',
+  'scopes',
+  'tone',
+  'language',
+  'maxLength',
+  'requireSources',
+  'format',
+  'rateLimit',
+] as const;
+export const chatRuleOutcomes = ['matched', 'passed', 'applied', 'overridden', 'blocked'] as const;
+type ChatRuleCheck = {
+  rule: (typeof chatPolicyRules)[number];
+  outcome: (typeof chatRuleOutcomes)[number];
+};
+export function chatTokenTotal(usage: TestChatResult['tokenUsage']): number | null {
+  if (!usage) return null;
+  const total = usage.input + usage.output;
+  return Number.isSafeInteger(total) && total >= 0 ? total : null;
+}
 export function chatRecord(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === 'object' && !Array.isArray(value);
 }
@@ -118,6 +148,7 @@ export function readTestChatResult(value: unknown, conversationId?: string): Tes
   )
     return null;
   const seen = new Set<string>();
+  const policyResults: TestChatResult['policyResults'] = [];
   for (const policy of value.policyResults as unknown[]) {
     if (
       !chatRecord(policy) ||
@@ -135,10 +166,40 @@ export function readTestChatResult(value: unknown, conversationId?: string): Tes
         'rate_limit',
       ].includes(policy.type) ||
       typeof policy.result !== 'string' ||
-      !['applied', 'blocked'].includes(policy.result)
+      !['applied', 'blocked'].includes(policy.result) ||
+      (policy.priority !== undefined &&
+        policy.priority !== null &&
+        (typeof policy.priority !== 'number' ||
+          !Number.isInteger(policy.priority) ||
+          policy.priority < -2147483648 ||
+          policy.priority > 2147483647))
     )
       return null;
+    const checks = policy.ruleChecks;
+    if (checks !== undefined && checks !== null) {
+      if (!Array.isArray(checks) || checks.length > chatPolicyRules.length) return null;
+      const rules = new Set<string>();
+      for (const check of checks as unknown[]) {
+        if (
+          !chatRecord(check) ||
+          typeof check.rule !== 'string' ||
+          !chatPolicyRules.some((rule) => rule === check.rule) ||
+          rules.has(check.rule) ||
+          !chatRuleOutcomes.some((outcome) => outcome === check.outcome)
+        )
+          return null;
+        rules.add(check.rule);
+      }
+    }
     seen.add(policy.id);
+    policyResults.push({
+      id: policy.id,
+      title: policy.title,
+      type: policy.type,
+      result: policy.result as 'applied' | 'blocked',
+      priority: (policy.priority ?? null) as number | null,
+      ruleChecks: (checks ?? null) as ChatRuleCheck[] | null,
+    });
   }
-  return value as TestChatResult;
+  return { ...value, policyResults } as TestChatResult;
 }

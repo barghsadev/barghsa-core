@@ -15,6 +15,21 @@ export interface PolicyResult {
   type: PolicyType;
   priority: number;
   result: 'applied' | 'blocked';
+  ruleChecks?: {
+    rule:
+      | 'topics'
+      | 'actions'
+      | 'inputFilter'
+      | 'outputFilter'
+      | 'scopes'
+      | 'tone'
+      | 'language'
+      | 'maxLength'
+      | 'requireSources'
+      | 'format'
+      | 'rateLimit';
+    outcome: 'matched' | 'passed' | 'applied' | 'overridden' | 'blocked';
+  }[];
 }
 
 export interface PolicyEvaluation {
@@ -51,6 +66,7 @@ export function evaluatePolicies(policies: RuntimePolicy[], message: string): Po
   let languageSelected = false;
 
   for (const policy of sorted) {
+    const ruleChecks: NonNullable<PolicyResult['ruleChecks']> = [];
     const parsed = rulesSchemas[policy.policy_type].safeParse(policy.rules);
     let denied: string | null = parsed.success ? null : 'policy_invalid';
     if (parsed.success) {
@@ -60,15 +76,18 @@ export function evaluatePolicies(policies: RuntimePolicy[], message: string): Po
         case 'allowed_topics':
           if (!terms('topics').some((topic) => normalized.includes(topic.toLocaleLowerCase())))
             denied = 'topic_not_allowed';
+          ruleChecks.push({ rule: 'topics', outcome: denied ? 'blocked' : 'matched' });
           break;
         case 'disallowed_actions':
           if (terms('actions').some((action) => normalized.includes(action.toLocaleLowerCase())))
             denied = 'action_disallowed';
+          ruleChecks.push({ rule: 'actions', outcome: denied ? 'blocked' : 'passed' });
           break;
         case 'content_filter': {
           const blockedTerms = terms('blockedTerms');
           if (blockedTerms.some((term) => normalized.includes(term.toLocaleLowerCase())))
             denied = 'input_filtered';
+          ruleChecks.push({ rule: 'inputFilter', outcome: denied ? 'blocked' : 'passed' });
           outputFilters.push({ policyId: policy.id, terms: blockedTerms });
           break;
         }
@@ -82,11 +101,13 @@ export function evaluatePolicies(policies: RuntimePolicy[], message: string): Po
                 ? current
                 : new Set([...current].filter((item) => allowed.has(item)));
           if (scopes.size === 0) denied = 'data_scope_empty';
+          ruleChecks.push({ rule: 'scopes', outcome: denied ? 'blocked' : 'applied' });
           break;
         }
         case 'response_style': {
           const tone = rules.tone as string;
           const language = rules.language as string | undefined;
+          ruleChecks.push({ rule: 'tone', outcome: toneSelected ? 'overridden' : 'applied' });
           if (!toneSelected) {
             instructions.push(`Use this response tone: ${tone}.`);
             toneSelected = true;
@@ -94,17 +115,24 @@ export function evaluatePolicies(policies: RuntimePolicy[], message: string): Po
           if (language && !languageSelected) {
             instructions.push(`Respond in ${language}.`);
             languageSelected = true;
+            ruleChecks.push({ rule: 'language', outcome: 'applied' });
+          } else if (language) {
+            ruleChecks.push({ rule: 'language', outcome: 'overridden' });
           }
           const length = rules.maxLength as number | undefined;
+          if (length !== undefined) ruleChecks.push({ rule: 'maxLength', outcome: 'applied' });
           if (length !== undefined && (maxLength === null || length < maxLength)) {
             maxLength = length;
             maxLengthPolicyId = policy.id;
           }
           if (rules.requireSources === true && requireSourcesPolicyId === null)
             requireSourcesPolicyId = policy.id;
+          if (rules.requireSources === true)
+            ruleChecks.push({ rule: 'requireSources', outcome: 'applied' });
           break;
         }
         case 'output_format':
+          ruleChecks.push({ rule: 'format', outcome: outputFormat ? 'overridden' : 'applied' });
           if (!outputFormat) {
             outputFormat = {
               format: rules.format as 'plain_text' | 'json_object',
@@ -118,6 +146,7 @@ export function evaluatePolicies(policies: RuntimePolicy[], message: string): Po
           }
           break;
         case 'rate_limit':
+          ruleChecks.push({ rule: 'rateLimit', outcome: 'applied' });
           rateLimits.push({
             policyId: policy.id,
             maxRequests: rules.maxRequests as number,
@@ -136,8 +165,16 @@ export function evaluatePolicies(policies: RuntimePolicy[], message: string): Po
       type: policy.policy_type,
       priority: policy.priority,
       result: denied ? 'blocked' : 'applied',
+      ruleChecks,
     });
   }
+  for (const result of results)
+    for (const check of result.ruleChecks ?? []) {
+      if (check.rule === 'maxLength')
+        check.outcome = result.id === maxLengthPolicyId ? 'applied' : 'overridden';
+      if (check.rule === 'requireSources')
+        check.outcome = result.id === requireSourcesPolicyId ? 'applied' : 'overridden';
+    }
   return {
     blocked: reason !== null,
     reason,

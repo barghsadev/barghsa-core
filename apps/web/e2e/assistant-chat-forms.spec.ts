@@ -15,7 +15,19 @@ const answer = {
 const result = {
   ...answer,
   conversationId: id,
-  policyResults: [{ id, title: 'Style', type: 'response_style', result: 'applied' }],
+  policyResults: [
+    {
+      id,
+      title: 'Style',
+      type: 'response_style',
+      result: 'applied',
+      priority: -20,
+      ruleChecks: [
+        { rule: 'tone', outcome: 'applied' },
+        { rule: 'language', outcome: 'overridden' },
+      ],
+    },
+  ],
   tokenUsage: { input: 9, output: 5 },
   latencyMs: 12,
   remainingQuota: 9,
@@ -176,6 +188,18 @@ for (const kind of ['customer', 'admin'] as const)
         await expect(chat).toContainText(`${digits(9)} / ${digits(5)}`);
         await expect(chat).toContainText(copy('milliseconds').replace('{count}', digits(12)));
         await expect(chat).toContainText(copy('applied'));
+        await expect(
+          chat.getByText(copy('tokenParts'), { exact: true }).locator('..').locator('dd')
+        ).toHaveAttribute('dir', 'ltr');
+        await expect(chat).toContainText(`${copy('rule.tone')} — ${copy('outcome.applied')}`);
+        await expect(chat).toContainText(
+          `${copy('rule.language')} — ${copy('outcome.overridden')}`
+        );
+        await expect(chat).toContainText(`${copy('priority')}: ${digits(-20)}`);
+        const tokenTotal = chat.getByText(copy('tokenTotal'), { exact: true }).locator('..');
+        await expect(tokenTotal).toContainText(digits(14));
+        await tokenTotal.scrollIntoViewIfNeeded();
+        await page.screenshot({ path: info.outputPath(`metadata-recorded-${locale}.png`) });
       } else await expect(chat).toContainText(label('remaining').replace('{count}', digits(4)));
       const violations = await new AxeBuilder({ page })
         .include(
@@ -249,3 +273,75 @@ for (const kind of ['customer', 'admin'] as const)
       expect(sent).toHaveLength(3);
     });
   }
+
+for (const locale of ['en', 'fa'] as const) {
+  const label = (key: string) => adminText(`admin.agents.testChat.${key}`, locale);
+  const copy = (key: Parameters<typeof assistantChatFormText>[0]) =>
+    assistantChatFormText(key, locale);
+  test(`${locale}: admin metadata preserves unknown legacy details, safe totals, and literal source text`, async ({
+    page,
+    baseURL,
+  }, info) => {
+    await setup(page, 'admin', locale, baseURL!);
+    let mode: 'legacy' | 'overflow' = 'legacy';
+    await page.route('**/api/admin/ai/test-chat', (route) =>
+      route.fulfill({
+        json:
+          mode === 'legacy'
+            ? {
+                ...result,
+                sources: [],
+                attribution: 'general_guidance',
+                tokenUsage: null,
+                policyResults: [
+                  { id, title: 'Legacy style', type: 'response_style', result: 'applied' },
+                ],
+              }
+            : {
+                ...result,
+                tokenUsage: { input: Number.MAX_SAFE_INTEGER, output: 1 },
+                sources: [
+                  {
+                    ...answer.sources[0],
+                    title: '<img src=x onerror=alert(1)>',
+                    excerpt: '<script>private()</script>',
+                  },
+                ],
+              },
+      })
+    );
+    await page.goto('/admin/agents');
+    const chat = page.getByRole('region', { name: label('title'), exact: true });
+    await chat.locator('#test-chat-agent').selectOption(id);
+    const send = async () => {
+      await chat.locator('#test-chat-message').fill('Metadata question');
+      await chat.getByRole('button', { name: label('send'), exact: true }).click();
+      await expect(chat).toContainText('Verified guide answer');
+      await chat.getByText(label('metadata'), { exact: true }).click();
+    };
+    await send();
+    await expect(chat.getByText(copy('noSources'), { exact: true })).toBeVisible();
+    await expect(chat.getByText(copy('rulesUnrecorded'), { exact: true })).toBeVisible();
+    const total = chat.getByText(copy('tokenTotal'), { exact: true }).locator('..');
+    await expect(total).toContainText(copy('unrecorded'));
+    const tokens = chat.locator('summary').filter({ hasText: label('tokens') });
+    await tokens.focus();
+    await tokens.press('Enter');
+    await expect(total).toBeHidden();
+    await tokens.press('Enter');
+    await expect(total).toBeVisible();
+    await chat.getByRole('button', { name: label('newConversation'), exact: true }).click();
+    mode = 'overflow';
+    await send();
+    await expect(total).toContainText(copy('unrecorded'));
+    const source = chat.locator('summary').filter({ hasText: '<img src=x onerror=alert(1)>' });
+    await source.click();
+    await expect(chat.getByText('<script>private()</script>', { exact: true })).toBeVisible();
+    await expect(chat.locator('img,script')).toHaveCount(0);
+    await total.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: info.outputPath(`metadata-legacy-overflow-${locale}.png`) });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
+      false
+    );
+  });
+}

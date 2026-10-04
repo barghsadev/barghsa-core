@@ -619,11 +619,39 @@ it('resolves group priority, filters input/output and applies policy rate limits
   await http.pool.query('SELECT rate_limit_rolling_reset(true,$1)', [
     `ai:policy:${limitPolicy}:agent:${agentId}:user:test-chat-admin`,
   ]);
-  const accepted = await send({ agentId, requestId: randomUUID(), message: 'Allowed again' });
+  const body = { agentId, requestId: randomUUID(), message: 'Allowed again' };
+  const accepted = await send(body);
   expect(accepted.status).toBe(200);
   const result = (await accepted.json()) as TestChatResponse;
   expect(result.reply).toBe('{"ok":true}');
   expect(result.policyResults[0]).toMatchObject({ id: jsonPolicy, priority: -20 });
+  expect(result.policyResults).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        id: jsonPolicy,
+        ruleChecks: [{ rule: 'format', outcome: 'applied' }],
+      }),
+      expect.objectContaining({
+        id: plainPolicy,
+        ruleChecks: [{ rule: 'format', outcome: 'overridden' }],
+      }),
+      expect.objectContaining({
+        id: filterPolicy,
+        ruleChecks: [
+          { rule: 'inputFilter', outcome: 'passed' },
+          { rule: 'outputFilter', outcome: 'passed' },
+        ],
+      }),
+      expect.objectContaining({
+        id: limitPolicy,
+        ruleChecks: [{ rule: 'rateLimit', outcome: 'applied' }],
+      }),
+    ])
+  );
+  expect(JSON.stringify(result.policyResults)).not.toContain('secret');
+  const calls = completions;
+  expect(await (await send(body)).json()).toEqual(result);
+  expect(completions).toBe(calls);
   const limited = await send({ agentId, requestId: randomUUID(), message: 'Another allowed' });
   expect(limited.status).toBe(429);
   expect(await limited.json()).toMatchObject({
