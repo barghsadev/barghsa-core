@@ -170,6 +170,7 @@ for (const kind of ['requests', 'files', 'postal'] as const) {
     await act(async () => root.render(<Bound kind={kind} />));
     await click('First solar buyer');
     await act(async () => host.querySelector<HTMLFormElement>('form')!.requestSubmit());
+    await vi.waitFor(() => expect(host.querySelector('[data-testid=confirmation]')).not.toBeNull());
     const old = confirmation!;
     expect(old).not.toBeNull();
     await act(async () =>
@@ -178,6 +179,7 @@ for (const kind of ['requests', 'files', 'postal'] as const) {
     expect(host.querySelector('[data-testid="confirmation"]')).toBeNull();
     expect(host.querySelector('#solar-review-reason')).toBeNull();
     await act(async () => host.querySelector<HTMLFormElement>('form')!.requestSubmit());
+    await vi.waitFor(() => expect(host.querySelector('[data-testid=confirmation]')).not.toBeNull());
     const count = calls.length;
     await act(async () => {
       await old.onSuccess();

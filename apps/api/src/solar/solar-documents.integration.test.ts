@@ -163,6 +163,114 @@ afterAll(async () => {
   }
 }, 30_000);
 
+it('returns only owned staff form fields and leaves state, versions and audits unchanged on rejection', async () => {
+  const documentId = randomUUID();
+  const rejectionPath = `admin/solar/requests/${requestId}/documents/${documentId}/reject`;
+  const previewPath = `admin/solar/requests/${requestId}/documents/review-set-decision`;
+  const additionalPath = `admin/solar/requests/${requestId}/documents/request-additional`;
+  const guidancePath = 'admin/solar/document-guidance';
+  const guidance = { fa: 'مدارک', en: 'Documents', suggestions: [] };
+  const hash = 'a'.repeat(64);
+  const state = async () => ({
+    guidance: await (await send('solar-reviewer', guidancePath)).json(),
+    config: (await http.pool.query('SELECT key,value,version FROM app_config ORDER BY key')).rows,
+    version: (await http.pool.query("SELECT version FROM config_version WHERE id='global'")).rows,
+    audit: (await http.pool.query('SELECT COUNT(*)::int AS count FROM audit_log')).rows,
+    request: (
+      await http.pool.query('SELECT status FROM solar_construction_requests WHERE id=$1', [
+        requestId,
+      ])
+    ).rows,
+    documentRequests: (
+      await http.pool.query(
+        'SELECT id,description FROM solar_document_requests WHERE request_id=$1 ORDER BY id',
+        [requestId]
+      )
+    ).rows,
+  });
+  const before = await state();
+  for (const [path, method, body, fields] of [
+    [guidancePath, 'PUT', { ...guidance, fa: ' ' }, ['fa']],
+    [guidancePath, 'PUT', { ...guidance, en: 'PRIVATE'.repeat(572) }, ['en']],
+    [
+      guidancePath,
+      'PUT',
+      { ...guidance, suggestions: [{ fa: '', en: 'PRIVATE'.repeat(29) }] },
+      ['suggestionsFa', 'suggestionsEn'],
+    ],
+    [
+      guidancePath,
+      'PUT',
+      {
+        ...guidance,
+        suggestions: Array.from({ length: 31 }, () => ({ fa: 'مدرک', en: 'Document' })),
+      },
+      ['suggestionsFa', 'suggestionsEn'],
+    ],
+    [rejectionPath, 'POST', { expectedRevision: 1 }, ['reason']],
+    [rejectionPath, 'POST', { expectedRevision: 1, reason: 'PRIVATE'.repeat(167) }, ['reason']],
+    [previewPath, 'POST', { decision: 'request_additional' }, ['description']],
+    [
+      previewPath,
+      'POST',
+      { decision: 'request_additional', description: 'PRIVATE'.repeat(334) },
+      ['description'],
+    ],
+    [additionalPath, 'POST', { expectedReviewHash: hash, description: ' ' }, ['description']],
+    [guidancePath, 'PUT', { ...guidance, fa: '', 'PRIVATE KEY': 'PRIVATE VALUE' }, null],
+    [guidancePath, 'PUT', { ...guidance, suggestions: 'PRIVATE VALUE' }, null],
+    [rejectionPath, 'POST', { expectedRevision: 0, reason: '' }, null],
+    [additionalPath, 'POST', { expectedReviewHash: 'PRIVATE', description: '' }, null],
+  ] as const) {
+    const response = await send('solar-reviewer', path, method, body);
+    expect(response.status, http.logs()).toBe(400);
+    const result = await response.json();
+    if (fields)
+      expect(result).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID', fields } });
+    else expect(result).not.toHaveProperty('error.fields');
+    expect(JSON.stringify(result)).not.toContain('PRIVATE');
+  }
+  for (const [path, method, body] of [
+    [guidancePath, 'PUT', { fa: '' }],
+    [rejectionPath, 'POST', { reason: '' }],
+    [previewPath, 'POST', { decision: 'request_additional' }],
+    [additionalPath, 'POST', { description: '' }],
+  ] as const) {
+    const denied = await send('solar-buyer', path, method, body);
+    expect(denied.status, http.logs()).toBe(403);
+    expect(await denied.json()).not.toHaveProperty('error.fields');
+  }
+  const permissions = (
+    await http.pool.query<{ permissions: string }>(
+      "SELECT permissions FROM staff_roles WHERE role_id='solar-review-staff'"
+    )
+  ).rows[0]!.permissions;
+  await http.pool.query(
+    "UPDATE staff_roles SET permissions='[]' WHERE role_id='solar-review-staff'"
+  );
+  try {
+    const revoked = await send('solar-reviewer', rejectionPath, 'POST', {
+      expectedRevision: 1,
+      reason: '',
+    });
+    expect(revoked.status, http.logs()).toBe(403);
+    expect(await revoked.json()).not.toHaveProperty('error.fields');
+  } finally {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions=$1 WHERE role_id='solar-review-staff'",
+      [permissions]
+    );
+  }
+  expect(
+    (
+      await http.pool.query<{ permissions: string }>(
+        "SELECT permissions FROM staff_roles WHERE role_id='solar-review-staff'"
+      )
+    ).rows[0]?.permissions
+  ).toBe(permissions);
+  expect(await state()).toEqual(before);
+});
+
 it('supports empty submission, editable guidance, per-file decisions, replacement lineage and postal handoff', async () => {
   const guidance = await send('solar-reviewer', 'admin/solar/document-guidance', 'PUT', {
     fa: 'مدارک محل را بارگذاری کنید.',

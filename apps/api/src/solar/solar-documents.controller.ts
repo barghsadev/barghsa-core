@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  ForbiddenException,
   Get,
   HttpCode,
   Param,
@@ -18,6 +19,8 @@ import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { SolarDocumentsService } from './solar-documents.service.js';
+import { InputFieldException } from '../common/input-field.exception.js';
+import { hasStaffPermission } from '../session/staff-permissions.js';
 
 const guidance = z
   .object({
@@ -39,20 +42,64 @@ const review = z
     reason: z.string().trim().min(1).max(1000).optional(),
   })
   .strict();
+const rejection = review.safeExtend({ reason: z.string().trim().min(1).max(1000) });
 const additional = z.object({ description: z.string().trim().min(1).max(2000) }).strict();
 const reviewHash = z.string().regex(/^[a-f0-9]{64}$/);
 const confirmedAdditional = additional.safeExtend({ expectedReviewHash: reviewHash });
 const confirmedAdvance = z.object({ expectedReviewHash: reviewHash }).strict();
-const setDecisionReview = z
-  .object({
-    decision: z.enum(['request_additional', 'advance']),
-    description: z.string().trim().min(1).max(2000).optional(),
-  })
-  .strict();
+const setDecisionReview = z.discriminatedUnion('decision', [
+  additional.safeExtend({ decision: z.literal('request_additional') }),
+  z
+    .object({
+      decision: z.literal('advance'),
+      description: additional.shape.description.optional(),
+    })
+    .strict(),
+]);
 function parse<S extends z.ZodType>(schema: S, body: unknown): z.output<S> {
   const result = schema.safeParse(body);
   if (!result.success) throw new BadRequestException('Invalid solar document request');
   return result.data as z.output<S>;
+}
+
+/** Only known editable fields leave the server; structural/protected errors stay general. */
+function parseStaff<S extends z.ZodType>(
+  schema: S,
+  body: unknown,
+  family: 'guidance' | 'reason' | 'description'
+): z.output<S> {
+  const result = schema.safeParse(body);
+  if (result.success) return result.data as z.output<S>;
+  const fields: string[] = [];
+  for (const issue of result.error.issues) {
+    const path = issue.path;
+    if (!['invalid_type', 'too_small', 'too_big'].includes(issue.code))
+      throw new BadRequestException('Invalid solar document request');
+    if (family !== 'guidance' && path.length === 1 && path[0] === family) {
+      fields.push(family);
+    } else if (
+      family === 'guidance' &&
+      path.length === 1 &&
+      (path[0] === 'fa' || path[0] === 'en')
+    ) {
+      fields.push(path[0]);
+    } else if (family === 'guidance' && path[0] === 'suggestions') {
+      if (path.length === 1 && issue.code === 'too_big')
+        fields.push('suggestionsFa', 'suggestionsEn');
+      else if (
+        path.length === 3 &&
+        typeof path[1] === 'number' &&
+        (path[2] === 'fa' || path[2] === 'en')
+      )
+        fields.push(path[2] === 'fa' ? 'suggestionsFa' : 'suggestionsEn');
+      else throw new BadRequestException('Invalid solar document request');
+    } else throw new BadRequestException('Invalid solar document request');
+  }
+  throw new InputFieldException(fields);
+}
+
+function requireFormPermission(req: AuthenticatedRequest, permission: string) {
+  if (!hasStaffPermission(req, permission)) throw new ForbiddenException();
 }
 
 @ApiTags('Solar documents')
@@ -106,7 +153,12 @@ export class StaffSolarDocumentsController {
   @ApiOperation({ summary: 'Edit solar document guidance and suggestions' })
   @ApiZodBody(guidance)
   setGuidance(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
-    return this.service.setGuidance(req.session, parse(guidance, body), req.ip ?? '127.0.0.1');
+    requireFormPermission(req, 'admin:catalogue:edit');
+    return this.service.setGuidance(
+      req.session,
+      parseStaff(guidance, body, 'guidance'),
+      req.ip ?? '127.0.0.1'
+    );
   }
 
   @Get('requests')
@@ -158,14 +210,15 @@ export class StaffSolarDocumentsController {
   @Post('requests/:id/documents/:docId/reject')
   @HttpCode(200)
   @ApiOperation({ summary: 'Reject one solar document with a reason' })
-  @ApiZodBody(review)
+  @ApiZodBody(rejection)
   reject(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Param('docId', new ParseUUIDPipe()) docId: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const input = parse(review, body);
+    requireFormPermission(req, 'orders:write');
+    const input = parseStaff(rejection, body, 'reason');
     return this.service.decide(
       req.session,
       id,
@@ -186,7 +239,8 @@ export class StaffSolarDocumentsController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const input = parse(confirmedAdditional, body);
+    requireFormPermission(req, 'orders:write');
+    const input = parseStaff(confirmedAdditional, body, 'description');
     return this.service.requestAdditional(
       req.session,
       id,
@@ -205,7 +259,8 @@ export class StaffSolarDocumentsController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const input = parse(setDecisionReview, body);
+    requireFormPermission(req, 'orders:write');
+    const input = parseStaff(setDecisionReview, body, 'description');
     return this.service.reviewSetDecision(req.session, id, input.decision, input.description);
   }
 

@@ -222,7 +222,7 @@ for (const Page of [Documents, Postal]) {
     }
   });
 }
-it('successful guidance save clears an earlier document-stage validation error', async () => {
+it('successful guidance save clears its owned validation error', async () => {
   const writes: string[] = [];
   vi.stubGlobal(
     'fetch',
@@ -239,12 +239,12 @@ it('successful guidance save clears an earlier document-stage validation error',
     await act(async () =>
       form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
     );
-    expect(container.querySelector('[role="alert"]')).not.toBeNull();
+    await vi.waitFor(() => expect(container.querySelector('[role="alert"]')).not.toBeNull());
     await act(async () => fill(input, solarGuidance.fa));
     await act(async () =>
       form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
     );
-    expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+    await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).not.toBeNull());
     await act(async () => button(document, 'Confirm').click());
     expect(writes).toEqual(['/api/admin/solar/document-guidance']);
     expect(document.querySelector('[role="dialog"]')).toBeNull();

@@ -1,6 +1,24 @@
 import { lookup } from './lookup.js';
 
 const en: Record<string, string> = {
+  documentReasonInvalid: 'Enter a rejection reason of 1–1,000 characters.',
+  documentDescriptionInvalid: 'Enter an additional-document description of 1–2,000 characters.',
+  documentGuidanceInvalid: 'Enter guidance of 1–4,000 characters.',
+  documentSuggestionsInvalid:
+    'Use up to 30 lines of 1–200 characters each, with the same number of Persian and English suggestions.',
+  documentReviewHelp:
+    'Rejection reasons allow up to 1,000 characters. Additional-document descriptions allow up to 2,000 characters.',
+  documentGuidanceHelp: 'Required. Up to 4,000 characters per language.',
+  documentSuggestionsHelp:
+    'Optional. One document per line, up to 30 lines and 200 characters per line. Match the Persian and English line counts.',
+  documentValidationUnavailable:
+    'Could not validate this form. Your changes are still here. Try again.',
+  documentGuidanceUnconfirmed:
+    'The guidance update could not be confirmed. Your draft is still here. Reload guidance before trying again.',
+  documentGuidanceReload: 'Reload guidance',
+  documentGuidanceForbidden:
+    'Editing document guidance is unavailable. Your draft is still here. Reload guidance to check access.',
+
   wizardProperty: 'Property details',
   postalArrivalEstimate: 'Estimated arrival date',
   postalNoEstimate: 'No arrival estimate recorded.',
@@ -302,6 +320,23 @@ const en: Record<string, string> = {
 };
 
 const fa: Record<string, string> = {
+  documentReasonInvalid: 'دلیل رد را با ۱ تا ۱٬۰۰۰ نویسه وارد کنید.',
+  documentDescriptionInvalid: 'شرح مدرک اضافی را با ۱ تا ۲٬۰۰۰ نویسه وارد کنید.',
+  documentGuidanceInvalid: 'راهنما را با ۱ تا ۴٬۰۰۰ نویسه وارد کنید.',
+  documentSuggestionsInvalid:
+    'حداکثر ۳۰ سطر با ۱ تا ۲۰۰ نویسه در هر سطر وارد کنید. تعداد پیشنهادهای فارسی و انگلیسی باید یکسان باشد.',
+  documentReviewHelp: 'دلیل رد تا ۱٬۰۰۰ نویسه و شرح مدرک اضافی تا ۲٬۰۰۰ نویسه مجاز است.',
+  documentGuidanceHelp: 'الزامی؛ حداکثر ۴٬۰۰۰ نویسه برای هر زبان.',
+  documentSuggestionsHelp:
+    'اختیاری؛ هر مدرک در یک سطر، حداکثر ۳۰ سطر و ۲۰۰ نویسه در هر سطر. تعداد سطرهای فارسی و انگلیسی باید یکسان باشد.',
+  documentValidationUnavailable:
+    'اعتبارسنجی فرم انجام نشد. تغییرات شما حفظ شده است. دوباره تلاش کنید.',
+  documentGuidanceUnconfirmed:
+    'ذخیرهٔ راهنما تأیید نشد. پیش\u200cنویس شما حفظ شده است. پیش از تلاش مجدد، راهنما را بازخوانی کنید.',
+  documentGuidanceReload: 'بازخوانی راهنما',
+  documentGuidanceForbidden:
+    'ویرایش راهنمای مدارک در دسترس نیست. پیش‌نویس شما حفظ شده است. برای بررسی دسترسی، راهنما را بازخوانی کنید.',
+
   wizardProperty: 'مشخصات ملک',
   postalArrivalEstimate: 'تاریخ تقریبی رسیدن مدارک',
   postalNoEstimate: 'تاریخ تقریبی رسیدن مدارک ثبت نشده است.',

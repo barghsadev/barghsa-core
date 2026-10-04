@@ -13408,25 +13408,49 @@
           "content": {
             "application/json": {
               "schema": {
-                "additionalProperties": false,
-                "properties": {
-                  "decision": {
-                    "enum": [
-                      "request_additional",
-                      "advance"
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "decision": {
+                        "enum": [
+                          "request_additional"
+                        ],
+                        "type": "string"
+                      },
+                      "description": {
+                        "maxLength": 2000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "description",
+                      "decision"
                     ],
-                    "type": "string"
+                    "type": "object"
                   },
-                  "description": {
-                    "maxLength": 2000,
-                    "minLength": 1,
-                    "type": "string"
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "decision": {
+                        "enum": [
+                          "advance"
+                        ],
+                        "type": "string"
+                      },
+                      "description": {
+                        "maxLength": 2000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "decision"
+                    ],
+                    "type": "object"
                   }
-                },
-                "required": [
-                  "decision"
-                ],
-                "type": "object"
+                ]
               }
             }
           },
@@ -13552,7 +13576,8 @@
                   }
                 },
                 "required": [
-                  "expectedRevision"
+                  "expectedRevision",
+                  "reason"
                 ],
                 "type": "object"
               }

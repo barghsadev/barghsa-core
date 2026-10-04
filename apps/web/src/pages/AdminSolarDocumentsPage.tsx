@@ -1,5 +1,22 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, FinancialReviewSummary, Input, Label, ListPage } from '@barghsa/ui';
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  FinancialReviewSummary,
+  Input,
+  ListPage,
+} from '@barghsa/ui';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useZodForm,
+} from '@barghsa/ui/form';
 import { tSolar } from '@barghsa/i18n/solar';
 import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
@@ -7,6 +24,18 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import {
+  confirmedSolarGuidance,
+  emptySolarGuidance,
+  solarGuidanceBody,
+  solarGuidanceDraft,
+  validSolarGuidance,
+  type SolarGuidanceDraft,
+  type SolarReviewDraft,
+  type SolarReviewIntent,
+} from '../lib/solar-document-form.js';
 import type { SolarDocumentQueries } from '../lib/solar-staff-query.js';
 
 interface RequestRow {
@@ -75,11 +104,57 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
   const [selected, setSelected] = useState<string | null>(null);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [guidance, setGuidance] = useState<Guidance | null>(null);
-  const [fa, setFa] = useState(''),
-    [en, setEn] = useState('');
-  const [faSuggestions, setFaSuggestions] = useState(''),
-    [enSuggestions, setEnSuggestions] = useState('');
-  const [reason, setReason] = useState('');
+  const intent = useRef<SolarReviewIntent>('request_additional');
+  const documentForm = useZodForm<SolarReviewDraft>(
+    async () =>
+      (await import('../lib/solar-document-form-schemas.js')).solarReviewSchema(
+        intent.current,
+        copy(intent.current === 'reject' ? 'documentReasonInvalid' : 'documentDescriptionInvalid')
+      ),
+    {
+      defaultValues: { reason: '' },
+      validationUnavailableMessage: copy('documentValidationUnavailable'),
+    }
+  );
+  const guidanceMessages = {
+    fa: copy('documentGuidanceInvalid'),
+    en: copy('documentGuidanceInvalid'),
+    faSuggestions: copy('documentSuggestionsInvalid'),
+    enSuggestions: copy('documentSuggestionsInvalid'),
+  };
+  const guidanceForm = useZodForm<SolarGuidanceDraft>(
+    async () =>
+      (await import('../lib/solar-document-form-schemas.js')).solarGuidanceSchema(guidanceMessages),
+    {
+      defaultValues: emptySolarGuidance,
+      validationUnavailableMessage: copy('documentValidationUnavailable'),
+    }
+  );
+  const guidanceDirty = useRef(false);
+  guidanceDirty.current = guidanceForm.formState.isDirty;
+  const documentFields = useActionFieldErrors(
+    documentForm,
+    {
+      reason: copy(
+        intent.current === 'reject' ? 'documentReasonInvalid' : 'documentDescriptionInvalid'
+      ),
+    },
+    copy('documentError')
+  );
+  const currentDocumentFields = useRef(documentFields);
+  currentDocumentFields.current = documentFields;
+  const guidanceFields = useActionFieldErrors(
+    guidanceForm,
+    guidanceMessages,
+    copy('documentError')
+  );
+  const [guidanceUnconfirmed, setGuidanceUnconfirmed] = useState(false);
+  const [guidanceDenied, setGuidanceDenied] = useState(false);
+  const [commandPending, setCommandPending] = useState(false);
+  const commandPendingRef = useRef(false);
+  const preparingDecisionRef = useRef(false);
+  const actionRef = useRef<NonNullable<typeof action> | null>(null);
+
   const [preview, setPreview] = useState<string | null>(null);
   const [action, setAction] = useState<(TeamAction & { setReview?: SetReview }) | null>(null);
   const [preparingDecision, setPreparingDecision] = useState(false);
@@ -107,22 +182,39 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
   const [guidanceRevision, setGuidanceRevision] = useState(0);
   const reviewRequest = useRef(0);
   const commandGeneration = useRef(0);
+  function busy() {
+    return (
+      !!actionRef.current ||
+      commandPendingRef.current ||
+      preparingDecisionRef.current ||
+      documentForm.isSubmissionPending() ||
+      guidanceForm.isSubmissionPending()
+    );
+  }
   function propose(next: NonNullable<typeof action>) {
     commandGeneration.current = ++reviewRequest.current;
+    preparingDecisionRef.current = false;
     setPreparingDecision(false);
+    actionRef.current = next;
     setAction(next);
   }
   function invalidateReview() {
     reviewRequest.current += 1;
+    commandPendingRef.current = false;
+    setCommandPending(false);
+    actionRef.current = null;
     setAction(null);
+    preparingDecisionRef.current = false;
     setPreparingDecision(false);
   }
   function selectRequest(id: string | null, documentId: string | null = null) {
+    if (commandPendingRef.current) return;
     invalidateReview();
     if (selected !== id) {
       setDetail(null);
       setDetailError(false);
-      setReason('');
+      documentForm.reset({ reason: '' });
+      setError(false);
     }
     setSelected(id);
     setPreview(documentId);
@@ -283,107 +375,150 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
       })
       .then((value) => {
         if (controller.signal.aborted) return;
+        if (!validSolarGuidance(value)) throw new Error('guidance');
         setGuidance(value);
-        setFa(value.fa);
-        setEn(value.en);
-        setFaSuggestions(value.suggestions.map((item) => item.fa).join('\n'));
-        setEnSuggestions(value.suggestions.map((item) => item.en).join('\n'));
+        if (!guidanceDirty.current) guidanceForm.reset(solarGuidanceDraft(value));
+        setGuidanceUnconfirmed(false);
+        setGuidanceDenied(false);
       })
       .catch(() => {
         if (!controller.signal.aborted) setGuidanceError(true);
       });
     return () => controller.abort();
   }, [guidanceRevision]);
-  function saveGuidance(event: FormEvent) {
-    event.preventDefault();
-    const persian = faSuggestions
-      .split('\n')
-      .map((item) => item.trim())
-      .filter(Boolean);
-    const english = enSuggestions
-      .split('\n')
-      .map((item) => item.trim())
-      .filter(Boolean);
-    if (!fa.trim() || !en.trim() || persian.length !== english.length) {
-      setError(true);
+  function saveGuidance(event: FormEvent<HTMLFormElement>) {
+    if (busy() || guidanceUnconfirmed || guidanceDenied) {
+      event.preventDefault();
       return;
     }
-    propose({
-      title: copy('saveGuidance'),
-      description: copy('saveGuidance'),
-      path: '/api/admin/solar/document-guidance',
-      method: 'PUT',
-      body: {
-        fa: fa.trim(),
-        en: en.trim(),
-        suggestions: persian.map((item, index) => ({ fa: item, en: english[index] })),
-      },
-    });
+    const generation = reviewRequest.current;
+    void guidanceForm.handleSubmit((draft) => {
+      if (generation !== reviewRequest.current) return;
+      propose({
+        title: copy('saveGuidance'),
+        description: copy('saveGuidance'),
+        path: '/api/admin/solar/document-guidance',
+        method: 'PUT',
+        body: solarGuidanceBody(draft),
+      });
+    })(event);
   }
   function review(document: DocumentRow, decision: 'approve' | 'reject') {
-    if (decision === 'reject' && !reason.trim()) return;
-    propose({
-      title: copy(decision),
-      description: document.file_name,
-      path: `/api/admin/solar/requests/${selected}/documents/${document.document_id}/${decision}`,
-      method: 'POST',
-      body: {
-        expectedRevision: document.revision,
-        ...(decision === 'reject' ? { reason: reason.trim() } : {}),
-      },
-    });
-  }
-  async function prepareSetDecision(decision: 'request_additional' | 'advance') {
-    if (!selected || preparingDecision) return;
-    const requestId = selected;
-    const description = reason.trim();
-    if (decision === 'request_additional' && !description) {
-      setError(true);
-      return;
-    }
-    const request = ++reviewRequest.current;
-    setPreparingDecision(true);
-    setError(false);
-    try {
-      const response = await fetch(
-        `/api/admin/solar/requests/${encodeURIComponent(requestId)}/documents/review-set-decision`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({
-            decision,
-            ...(decision === 'request_additional' ? { description } : {}),
-          }),
-        }
-      );
-      if (!response.ok) throw new Error('review');
-      const setReview = (await response.json()) as SetReview;
-      if (request !== reviewRequest.current) return;
+    if (!selected || busy()) return;
+    const requestId = selected,
+      generation = reviewRequest.current;
+    const submit = (value: string) => {
+      if (generation !== reviewRequest.current) return;
+      setError(false);
       propose({
-        title: copy(decision === 'advance' ? 'advancePostal' : 'requestAdditional'),
-        description: requestId,
+        title: copy(decision),
+        description: document.file_name,
+        path: `/api/admin/solar/requests/${requestId}/documents/${document.document_id}/${decision}`,
         method: 'POST',
-        path: `/api/admin/solar/requests/${encodeURIComponent(requestId)}/documents/${decision === 'advance' ? 'advance' : 'request-additional'}`,
         body: {
-          ...(decision === 'request_additional' ? { description } : {}),
-          expectedReviewHash: setReview.hash,
+          expectedRevision: document.revision,
+          ...(decision === 'reject' ? { reason: value.trim() } : {}),
         },
-        conflictMessage: copy('documentSetReviewChanged'),
-        setReview,
       });
-    } catch {
-      if (request === reviewRequest.current) setError(true);
-    } finally {
-      if (request === reviewRequest.current) setPreparingDecision(false);
+    };
+    if (decision === 'approve') submit('');
+    else {
+      intent.current = 'reject';
+      void documentForm.handleSubmit((draft) => submit(draft.reason))();
+    }
+  }
+  function prepareSetDecision(decision: 'request_additional' | 'advance') {
+    if (!selected || busy()) return;
+    const requestId = selected,
+      generation = reviewRequest.current;
+    const prepare = async (description: string) => {
+      if (generation !== reviewRequest.current) return;
+      const request = ++reviewRequest.current;
+      preparingDecisionRef.current = true;
+      setPreparingDecision(true);
+      setError(false);
+      try {
+        const response = await fetch(
+          `/api/admin/solar/requests/${encodeURIComponent(requestId)}/documents/review-set-decision`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify({
+              decision,
+              ...(decision === 'request_additional' ? { description: description.trim() } : {}),
+            }),
+          }
+        );
+        const value = await response.json().catch(() => null);
+        if (request !== reviewRequest.current) return;
+        if (!response.ok) {
+          if (
+            response.status === 400 &&
+            value?.error?.code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+            Array.isArray(value.error.fields) &&
+            decision === 'request_additional' &&
+            value.error.fields.length &&
+            value.error.fields.every((field: unknown) => field === 'description') &&
+            currentDocumentFields.current(['reason'])
+          )
+            return;
+          throw new Error('review');
+        }
+        const setReview = value as SetReview;
+        if (
+          !setReview ||
+          typeof setReview.hash !== 'string' ||
+          !setReview.data ||
+          setReview.data.requestId !== requestId ||
+          !Array.isArray(setReview.data.documents) ||
+          !Array.isArray(setReview.data.existingRequests)
+        )
+          throw new Error('review');
+        propose({
+          title: copy(decision === 'advance' ? 'advancePostal' : 'requestAdditional'),
+          description: requestId,
+          method: 'POST',
+          path: `/api/admin/solar/requests/${encodeURIComponent(requestId)}/documents/${decision === 'advance' ? 'advance' : 'request-additional'}`,
+          body: {
+            ...(decision === 'request_additional' ? { description: description.trim() } : {}),
+            expectedReviewHash: setReview.hash,
+          },
+          conflictMessage: copy('documentSetReviewChanged'),
+          setReview,
+        });
+      } catch {
+        if (request === reviewRequest.current) setError(true);
+      } finally {
+        if (request === reviewRequest.current) {
+          preparingDecisionRef.current = false;
+          setPreparingDecision(false);
+        }
+      }
+    };
+    if (decision === 'advance') void prepare('');
+    else {
+      intent.current = 'request_additional';
+      void documentForm.handleSubmit((draft) => prepare(draft.reason))();
     }
   }
   const actionGeneration = commandGeneration.current;
+  const editorLocked =
+    commandPending ||
+    !!action ||
+    preparingDecision ||
+    documentForm.formState.isSubmitting ||
+    guidanceForm.formState.isSubmitting;
+  const guidanceAction = action?.path === '/api/admin/solar/document-guidance';
   return (
     <div className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('staffTitle')}</h1>
       {time.notice}
-      {error && <p role="alert">{copy('documentError')}</p>}
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{copy('documentError')}</AlertDescription>
+        </Alert>
+      )}
       <section className="space-y-3 rounded-xl border p-5">
         <h2 className="text-xl font-semibold">{copy('staffPendingFiles')}</h2>
         <ListPage>
@@ -412,6 +547,7 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
                 <li key={document.id}>
                   <button
                     type="button"
+                    disabled={commandPending}
                     className="w-full rounded-md border p-3 text-start"
                     onClick={() => {
                       selectRequest(document.request_id, document.document_id);
@@ -479,6 +615,7 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
                 <li key={row.id}>
                   <button
                     type="button"
+                    disabled={commandPending}
                     className={`w-full rounded-md border p-3 text-start ${selected === row.id ? 'border-primary' : ''}`}
                     onClick={() => {
                       selectRequest(row.id);
@@ -542,7 +679,11 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
         </div>
       )}
       {detail && selected && (
-        <section className="space-y-4 rounded-xl border p-5">
+        <section
+          role="group"
+          aria-label={copy('staffDocuments')}
+          className="space-y-4 rounded-xl border p-5"
+        >
           <h2 className="text-xl font-semibold">{copy('staffDocuments')}</h2>
           <p>
             {copy('status')}: {copy(`status_${detail.request.status}`)}
@@ -566,13 +707,18 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
                       detail.request.status
                     ) && (
                       <>
-                        <Button variant="outline" onClick={() => review(document, 'approve')}>
+                        <Button
+                          variant="outline"
+                          disabled={editorLocked}
+                          onClick={() => review(document, 'approve')}
+                        >
                           {copy('approve')}
                         </Button>
                         <Button
                           variant="outline"
                           onClick={() => review(document, 'reject')}
-                          disabled={!reason.trim()}
+                          loading={documentForm.formState.isSubmitting}
+                          disabled={editorLocked}
                         >
                           {copy('reject')}
                         </Button>
@@ -593,54 +739,198 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
               allowReplacement={false}
             />
           )}
-          <div>
-            <Label htmlFor="solar-review-reason">{copy('reason')}</Label>
-            <Input
-              id="solar-review-reason"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
+          <Form {...documentForm}>
+            {documentForm.formState.errors.root && (
+              <Alert variant="destructive">
+                <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
+              </Alert>
+            )}
+            <FormField
+              control={documentForm.control}
+              name="reason"
+              render={({ field }) => (
+                <FormItem id="solar-review-reason">
+                  <FormLabel>{copy('reason')}</FormLabel>
+                  <FormControl>
+                    <Input {...field} disabled={editorLocked} />
+                  </FormControl>
+                  <FormDescription>{copy('documentReviewHelp')}</FormDescription>
+                  <div className="grid">
+                    {(['documentReasonInvalid', 'documentDescriptionInvalid'] as const).map(
+                      (key) => (
+                        <p
+                          key={key}
+                          aria-hidden="true"
+                          className="invisible col-start-1 row-start-1 text-sm"
+                        >
+                          {copy(key)}
+                        </p>
+                      )
+                    )}
+                    <FormMessage className="col-start-1 row-start-1" />
+                  </div>
+                </FormItem>
+              )}
             />
-          </div>
+          </Form>
           <div className="flex flex-wrap gap-2">
             <Button
               variant="outline"
-              disabled={!reason.trim() || preparingDecision}
+              disabled={editorLocked}
+              loading={preparingDecision || documentForm.formState.isSubmitting}
               onClick={() => void prepareSetDecision('request_additional')}
             >
               {copy('requestAdditional')}
             </Button>
-            <Button disabled={preparingDecision} onClick={() => void prepareSetDecision('advance')}>
+            <Button
+              disabled={editorLocked}
+              loading={preparingDecision}
+              onClick={() => void prepareSetDecision('advance')}
+            >
               {copy('advancePostal')}
             </Button>
           </div>
         </section>
       )}
       {guidance && (
-        <form className="space-y-3 rounded-xl border p-5" onSubmit={saveGuidance}>
-          <h2 className="text-xl font-semibold">{copy('documentGuidance')}</h2>
-          {(
-            [
-              [copy('guidanceFa'), fa, setFa],
-              [copy('guidanceEn'), en, setEn],
-              [copy('suggestionsFa'), faSuggestions, setFaSuggestions],
-              [copy('suggestionsEn'), enSuggestions, setEnSuggestions],
-            ] as const
-          ).map(([label, value, setter]) => (
-            <label key={label} className="block space-y-1">
-              <span>{label}</span>
-              <textarea
-                className="min-h-24 w-full rounded-md border bg-background p-2"
-                value={value}
-                onChange={(e) => setter(e.target.value)}
-              />
-            </label>
-          ))}
-          <Button type="submit">{copy('saveGuidance')}</Button>
-        </form>
+        <Form {...guidanceForm}>
+          <div role="group" aria-label={copy('documentGuidance')}>
+            <form className="space-y-3 rounded-xl border p-5" onSubmit={saveGuidance} noValidate>
+              <h2 className="text-xl font-semibold">{copy('documentGuidance')}</h2>
+              {guidanceForm.formState.errors.root && (
+                <Alert variant="destructive">
+                  <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
+                </Alert>
+              )}
+              {(guidanceUnconfirmed || guidanceDenied) && (
+                <Alert variant="destructive">
+                  <AlertDescription>
+                    {copy(
+                      guidanceDenied ? 'documentGuidanceForbidden' : 'documentGuidanceUnconfirmed'
+                    )}
+                  </AlertDescription>
+                </Alert>
+              )}
+              {(
+                [
+                  ['fa', 'solar-guidance-fa', 'guidanceFa', 'documentGuidanceHelp'],
+                  ['en', 'solar-guidance-en', 'guidanceEn', 'documentGuidanceHelp'],
+                  [
+                    'faSuggestions',
+                    'solar-guidance-fa-suggestions',
+                    'suggestionsFa',
+                    'documentSuggestionsHelp',
+                  ],
+                  [
+                    'enSuggestions',
+                    'solar-guidance-en-suggestions',
+                    'suggestionsEn',
+                    'documentSuggestionsHelp',
+                  ],
+                ] as const
+              ).map(([name, id, label, help]) => (
+                <FormField
+                  key={name}
+                  control={guidanceForm.control}
+                  name={name}
+                  render={({ field }) => (
+                    <FormItem id={id}>
+                      <FormLabel>{copy(label)}</FormLabel>
+                      <FormControl>
+                        <textarea
+                          {...field}
+                          disabled={editorLocked || guidanceDenied}
+                          dir={name.startsWith('fa') ? 'rtl' : 'ltr'}
+                          className="min-h-24 w-full rounded-md border bg-background p-2"
+                        />
+                      </FormControl>
+                      <FormDescription>{copy(help)}</FormDescription>
+                      <div className="grid">
+                        <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
+                          {guidanceMessages[name]}
+                        </p>
+                        <FormMessage className="col-start-1 row-start-1" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              ))}
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="submit"
+                  loading={guidanceForm.formState.isSubmitting}
+                  disabled={editorLocked || guidanceUnconfirmed || guidanceDenied}
+                >
+                  {copy('saveGuidance')}
+                </Button>
+                {(guidanceUnconfirmed || guidanceDenied) && (
+                  <Button
+                    id="solar-guidance-reload"
+                    type="button"
+                    variant="outline"
+                    disabled={editorLocked}
+                    onClick={() => setGuidanceRevision((value) => value + 1)}
+                  >
+                    {copy('documentGuidanceReload')}
+                  </Button>
+                )}
+              </div>
+            </form>
+          </div>
+        </Form>
       )}
       {action && (
         <TeamActionDialog
           action={action}
+          confirmationDisabled={guidanceAction && (guidanceUnconfirmed || guidanceDenied)}
+          onPendingChange={(pending) => {
+            if (actionGeneration === reviewRequest.current) {
+              commandPendingRef.current = pending;
+              setCommandPending(pending);
+            }
+          }}
+          onValidationError={(fields) => {
+            if (actionGeneration !== reviewRequest.current) return false;
+            if (guidanceAction) {
+              const names = {
+                fa: 'fa',
+                en: 'en',
+                suggestionsFa: 'faSuggestions',
+                suggestionsEn: 'enSuggestions',
+              } as const;
+              if (
+                !fields.length ||
+                !fields.every((field) => typeof field === 'string' && Object.hasOwn(names, field))
+              )
+                return false;
+              return guidanceFields(fields.map((field) => names[field as keyof typeof names]));
+            }
+            const expected = action.path.endsWith('/reject')
+              ? 'reason'
+              : action.path.endsWith('/request-additional')
+                ? 'description'
+                : null;
+            return (
+              !!expected &&
+              !!fields.length &&
+              fields.every((field) => field === expected) &&
+              documentFields(['reason'])
+            );
+          }}
+          onUnconfirmed={() => {
+            if (actionGeneration === reviewRequest.current && guidanceAction)
+              setGuidanceUnconfirmed(true);
+          }}
+          onDenied={() => {
+            if (actionGeneration !== reviewRequest.current) return;
+            if (guidanceAction) setGuidanceDenied(true);
+            else {
+              invalidateReview();
+              selectRequest(null);
+              setDetail(null);
+              setError(true);
+            }
+          }}
           onClose={() => {
             if (actionGeneration === reviewRequest.current) invalidateReview();
           }}
@@ -687,12 +977,23 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
               />
             ) : undefined
           }
-          onSuccess={async () => {
+          onSuccess={async (receipt) => {
             if (actionGeneration !== reviewRequest.current) return;
-            setAction(null);
-            setReason('');
-            setPreview(null);
-            refresh();
+            if (guidanceAction) {
+              const expected = action.body as Guidance;
+              if (!confirmedSolarGuidance(receipt, expected)) {
+                setGuidanceUnconfirmed(true);
+                throw new Error('guidance receipt');
+              }
+              setGuidance(expected);
+              guidanceForm.reset(solarGuidanceDraft(expected));
+              setGuidanceUnconfirmed(false);
+              invalidateReview();
+            } else {
+              documentForm.reset({ reason: '' });
+              setPreview(null);
+              refresh();
+            }
           }}
         />
       )}
