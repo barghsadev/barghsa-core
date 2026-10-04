@@ -2,6 +2,11 @@ import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { startHttpFixture } from '../test/http-fixture.js';
+import {
+  consultationFeeEffects,
+  consultationReplayActor,
+  waitForCapturedConsultationDeadline,
+} from '../test/consultation-fee-http-proof.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
@@ -390,6 +395,88 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
   };
   expect((await offerFee(`${root}/fee`, 'reviewer', firstOffer)).status).toBe(409);
   expect((await post(`${root}/review`, 'reviewer', {})).status).toBe(200);
+  const invalidOffer = { ...firstOffer, expectedReviewHash: 'a'.repeat(64) };
+  const rejectedFee = async (
+    route: string,
+    body: unknown,
+    fields?: string[],
+    status = 400,
+    user = 'reviewer'
+  ) => {
+    const before = await consultationFeeEffects(http.pool, requestId);
+    const response = await post(route, user, body);
+    expect(response.status, http.logs()).toBe(status);
+    const failure = await response.json();
+    expect(failure).toHaveProperty(
+      'error.correlationId',
+      expect.stringMatching(/^[0-9a-f-]{36}$/i)
+    );
+    expect(JSON.stringify(failure)).not.toContain('PRIVATE');
+    if (fields) expect(failure).toHaveProperty('error.fields', fields);
+    else expect(failure).not.toHaveProperty('error.fields');
+    expect(await consultationFeeEffects(http.pool, requestId)).toEqual(before);
+  };
+  for (const [route, body] of [
+    [
+      `${root}/fee-review`,
+      {
+        fee: firstOffer.fee,
+        scope: firstOffer.scope,
+        deliverables: firstOffer.deliverables,
+        validUntil,
+      },
+    ],
+    [`${root}/fee`, invalidOffer],
+  ] as const) {
+    for (const [invalid, fields] of [
+      [{ ...body, fee: '0' }, ['fee']],
+      [{ ...body, fee: '9223372036854775808' }, ['fee']],
+      [{ ...body, scope: 'x'.repeat(4001) }, ['scope']],
+      [{ ...body, deliverables: '' }, ['deliverables']],
+      [{ ...body, validUntil: '2000-01-01T00:00:00Z' }, ['validUntil']],
+      [{ ...body, reason: 'x'.repeat(2001) }, ['reason']],
+    ] as const)
+      await rejectedFee(route, invalid, [...fields]);
+    for (const invalid of [
+      { ...body, fee: '0', extra: 'PRIVATE' },
+      null,
+      ...(route.endsWith('/fee')
+        ? [
+            { ...body, idempotencyKey: 'PRIVATE', fee: '0' },
+            { ...body, expectedReviewHash: 'PRIVATE' },
+          ]
+        : []),
+    ])
+      await rejectedFee(route, invalid);
+    await rejectedFee(
+      route.replace(requestId, randomUUID()),
+      { ...body, fee: '0' },
+      undefined,
+      404
+    );
+    await rejectedFee(route, { ...body, fee: '0' }, undefined, 403, 'customer');
+  }
+  await http.pool.query(
+    "UPDATE staff_roles SET permissions='[\"orders:write\"]' WHERE role_id='consultation-staff'"
+  );
+  try {
+    await rejectedFee(
+      `${root}/fee-review`,
+      { fee: '0', scope: firstOffer.scope, deliverables: firstOffer.deliverables, validUntil },
+      undefined,
+      403
+    );
+  } finally {
+    await http.pool.query(
+      'UPDATE staff_roles SET permissions=\'["orders:read","orders:write","invoices:write"]\' WHERE role_id=\'consultation-staff\''
+    );
+  }
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='reviewer'");
+  try {
+    await rejectedFee(`${root}/fee`, { ...invalidOffer, fee: '0' }, undefined, 403);
+  } finally {
+    await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='reviewer'");
+  }
   const firstPreview = await post(`${root}/fee-review`, 'reviewer', {
     fee: firstOffer.fee,
     scope: firstOffer.scope,
@@ -564,6 +651,60 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
     reason: 'Do not replace after payment',
   });
   expect(afterPayment.status, http.logs()).toBe(409);
+  headers['fee-replay-reviewer'] = await consultationReplayActor(
+    http.pool,
+    'fee-replay-reviewer',
+    'consultation-staff'
+  );
+  const progressEffects = await consultationFeeEffects(http.pool, requestId);
+  const originalReplay = await post(`${root}/fee`, 'reviewer', {
+    ...firstOffer,
+    expectedReviewHash: reviewed.hash,
+  });
+  expect(originalReplay.status, http.logs()).toBe(200);
+  expect(await originalReplay.json()).toEqual(offerResult);
+  for (const [user, body] of [
+    ['fee-replay-reviewer', { ...firstOffer, expectedReviewHash: reviewed.hash }],
+    ['reviewer', { ...firstOffer, expectedReviewHash: 'a'.repeat(64) }],
+    [
+      'reviewer',
+      { ...firstOffer, scope: 'PRIVATE changed scope', expectedReviewHash: reviewed.hash },
+    ],
+  ] as const)
+    await rejectedFee(`${root}/fee`, body, undefined, 409, user);
+  expect(await consultationFeeEffects(http.pool, requestId)).toEqual(progressEffects);
+  const expiringSubmit = await post('/api/consultations/requests', 'customer', {
+    profileId,
+    productId,
+    submissionKey: randomUUID(),
+  });
+  expect(expiringSubmit.status, http.logs()).toBe(201);
+  const expiringId = ((await expiringSubmit.json()) as { requestId: string }).requestId;
+  const expiringRoot = `/api/admin/consultations/requests/${expiringId}`;
+  expect((await post(`${expiringRoot}/review`, 'reviewer', {})).status, http.logs()).toBe(200);
+  const expiringBody = {
+    ...firstOffer,
+    idempotencyKey: randomUUID(),
+    validUntil: new Date(Date.now() + 5000).toISOString(),
+  };
+  const expiringPreview = await post(`${expiringRoot}/fee-review`, 'reviewer', {
+    fee: expiringBody.fee,
+    scope: expiringBody.scope,
+    deliverables: expiringBody.deliverables,
+    validUntil: expiringBody.validUntil,
+  });
+  expect(expiringPreview.status, http.logs()).toBe(200);
+  const expiringHash = ((await expiringPreview.json()) as { hash: string }).hash;
+  const expiringCommand = { ...expiringBody, expectedReviewHash: expiringHash };
+  const expiringWrite = await post(`${expiringRoot}/fee`, 'reviewer', expiringCommand);
+  expect(expiringWrite.status, http.logs()).toBe(200);
+  const expiringReceipt = await expiringWrite.json(),
+    expiryEffects = await consultationFeeEffects(http.pool, expiringId);
+  await waitForCapturedConsultationDeadline(expiringBody.validUntil);
+  const expiredReplay = await post(`${expiringRoot}/fee`, 'reviewer', expiringCommand);
+  expect(expiredReplay.status, http.logs()).toBe(200);
+  expect(await expiredReplay.json()).toEqual(expiringReceipt);
+  expect(await consultationFeeEffects(http.pool, expiringId)).toEqual(expiryEffects);
   expect(
     (
       await http.pool.query('SELECT invoice_id,fee FROM consultation_requests WHERE id=$1', [
@@ -595,7 +736,7 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
   expect(
     (await http.pool.query('SELECT state FROM invoices WHERE id=$1', [anotherInvoiceId])).rows[0]
   ).toMatchObject({ state: 'Cancelled' });
-});
+}, 30_000);
 
 it('projects owned consultation reasons while retaining exact bounds, live authority and invoice step-up guards', async () => {
   const submitted = await post('/api/consultations/requests', 'customer', {

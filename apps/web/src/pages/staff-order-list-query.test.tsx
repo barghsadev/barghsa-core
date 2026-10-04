@@ -192,7 +192,7 @@ for (const item of cases) {
     const mounted = await mount({ orderId: firstWork });
     try {
       await act(async () => button(mounted.container, item.approve).click());
-      expect(finish).toBeDefined();
+      await vi.waitFor(() => expect(finish).toBeDefined());
       await mounted.move({ orderId: olderWork });
       await act(async () => finish(Response.json({})));
       expect(mounted.container.querySelector('[role="dialog"]')).toBeNull();

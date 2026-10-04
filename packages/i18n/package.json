@@ -291,6 +291,11 @@
       "types": "./dist/saving-hardware.d.ts",
       "import": "./dist/saving-hardware.js",
       "default": "./dist/saving-hardware.js"
+    },
+    "./consultation-fee": {
+      "types": "./dist/consultation-fee.d.ts",
+      "import": "./dist/consultation-fee.js",
+      "default": "./dist/consultation-fee.js"
     }
   },
   "scripts": {

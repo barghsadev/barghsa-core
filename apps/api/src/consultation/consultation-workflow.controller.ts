@@ -21,6 +21,8 @@ import { CONSULTATION_STATUSES } from './consultation-state.js';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 
+import { parseConsultationFeeInput } from './consultation-fee-input-fields.js';
+
 const assignment = z.discriminatedUnion('assignTo', [
   z.object({ assignTo: z.literal('self') }).strict(),
   z.object({ assignTo: z.literal('team'), team: z.string().trim().min(1).max(80) }).strict(),
@@ -34,7 +36,12 @@ const declineOffer = optionalReason.extend({ expectedReviewHash: reviewHash });
 const feeOffer = z
   .object({
     idempotencyKey: z.string().uuid(),
-    fee: z.string().regex(/^[1-9][0-9]{0,18}$/),
+    fee: z
+      .string()
+      .regex(/^[1-9][0-9]{0,18}$/)
+      .refine(
+        (value) => /^[1-9][0-9]{0,18}$/.test(value) && BigInt(value) <= 9_223_372_036_854_775_807n
+      ),
     scope: z.string().trim().min(1).max(4000),
     deliverables: z.string().trim().min(1).max(4000),
     validUntil: z.iso.datetime({ offset: true }),
@@ -46,7 +53,12 @@ const feeReviewInput = feeOffer.omit({ idempotencyKey: true, expectedReviewHash:
 const paidFeeAdjustment = z
   .object({
     idempotencyKey: z.string().uuid(),
-    fee: z.string().regex(/^[1-9][0-9]{0,18}$/),
+    fee: z
+      .string()
+      .regex(/^[1-9][0-9]{0,18}$/)
+      .refine(
+        (value) => /^[1-9][0-9]{0,18}$/.test(value) && BigInt(value) <= 9_223_372_036_854_775_807n
+      ),
     reason: z.string().trim().min(1).max(1000),
     validUntil: z.iso.datetime({ offset: true }),
     expectedReviewHash: reviewHash,
@@ -182,24 +194,38 @@ export class StaffConsultationWorkflowController {
   @HttpCode(200)
   @ApiOperation({ summary: 'Issue or replace a consultation fee offer and invoice' })
   @ApiZodBody(feeOffer)
-  setFee(
+  async setFee(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.workflow.setFee(req.session, id, parse(feeOffer, body), req.ip ?? '127.0.0.1');
+    requireFormPermission(req);
+    const input = await parseConsultationFeeInput(
+      feeOffer,
+      body,
+      ['fee', 'scope', 'deliverables', 'validUntil', 'reason'],
+      () => this.workflow.assertCanEditFee(req.session, id, false, true)
+    );
+    return this.workflow.setFee(req.session, id, input, req.ip ?? '127.0.0.1');
   }
 
   @Post('requests/:id/fee-review')
   @HttpCode(200)
   @ApiOperation({ summary: 'Preview the authoritative consultation fee offer and invoice outcome' })
   @ApiZodBody(feeReviewInput)
-  feeReview(
+  async feeReview(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.workflow.feeReview(req.session, id, parse(feeReviewInput, body));
+    requireFormPermission(req);
+    const input = await parseConsultationFeeInput(
+      feeReviewInput,
+      body,
+      ['fee', 'scope', 'deliverables', 'validUntil', 'reason'],
+      () => this.workflow.assertCanEditFee(req.session, id, false, false)
+    );
+    return this.workflow.feeReview(req.session, id, input);
   }
 
   @Post('requests/:id/paid-fee')
@@ -208,29 +234,38 @@ export class StaffConsultationWorkflowController {
     summary: 'Adjust an accepted paid consultation fee with a charge or credit and refund request',
   })
   @ApiZodBody(paidFeeAdjustment)
-  adjustPaidFee(
+  async adjustPaidFee(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.workflow.adjustPaidFee(
-      req.session,
-      id,
-      parse(paidFeeAdjustment, body),
-      req.ip ?? '127.0.0.1'
+    requireFormPermission(req);
+    const input = await parseConsultationFeeInput(
+      paidFeeAdjustment,
+      body,
+      ['fee', 'validUntil', 'reason'],
+      () => this.workflow.assertCanEditFee(req.session, id, true, true)
     );
+    return this.workflow.adjustPaidFee(req.session, id, input, req.ip ?? '127.0.0.1');
   }
 
   @Post('requests/:id/paid-fee-review')
   @HttpCode(200)
   @ApiOperation({ summary: 'Preview the paid consultation charge or credit and refund allocation' })
   @ApiZodBody(paidFeeReviewInput)
-  paidFeeReview(
+  async paidFeeReview(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.workflow.paidFeeReview(req.session, id, parse(paidFeeReviewInput, body));
+    requireFormPermission(req);
+    const input = await parseConsultationFeeInput(
+      paidFeeReviewInput,
+      body,
+      ['fee', 'validUntil', 'reason'],
+      () => this.workflow.assertCanEditFee(req.session, id, true, false)
+    );
+    return this.workflow.paidFeeReview(req.session, id, input);
   }
 
   @Post('requests/:id/paid-cancel')

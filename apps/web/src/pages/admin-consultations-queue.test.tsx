@@ -120,6 +120,7 @@ it('submits a staff offer deadline in the saved account timezone', async () => {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const submitted: Array<Record<string, unknown>> = [];
+  let reviewedFee: unknown;
   const requestId = '11111111-1111-4111-8111-111111111111';
   const profileId = '22222222-2222-4222-8222-222222222222';
   const request = {
@@ -148,6 +149,7 @@ it('submits a staff offer deadline in the saved account timezone', async () => {
             deliverables: 'Report',
             fee: '100000',
             invoice_id: null,
+            invoice_state: null,
             has_paid_invoice: false,
             uncovered_credit: '0',
             offer_valid_until: '2099-01-01T12:30:00.000Z',
@@ -173,9 +175,15 @@ it('submits a staff offer deadline in the saved account timezone', async () => {
           },
           hash: 'a'.repeat(64),
         };
+        reviewedFee = data;
       } else {
         submitted.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
-        data = { financialReview: { hash: 'a'.repeat(64) } };
+        data = {
+          requestId,
+          status: 'offer_pending',
+          invoiceId: '66666666-6666-4666-8666-666666666666',
+          financialReview: reviewedFee,
+        };
       }
       return new Response(JSON.stringify(data), {
         headers: { 'Content-Type': 'application/json' },
@@ -196,7 +204,10 @@ it('submits a staff offer deadline in the saved account timezone', async () => {
       '2099-01-02T02:30'
     );
     await act(async () => button('Issue fee offer and invoice')?.click());
-    expect(document.body.textContent).toContain('Review fee offer and invoice');
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(document.body.textContent).toContain('Review fee offer and invoice');
+    });
     await act(async () => button('Confirm')?.click());
     expect(submitted).toHaveLength(1);
     expect(submitted[0]?.validUntil).toBe('2099-01-01T12:30:00.000Z');
@@ -225,6 +236,7 @@ it('confirms the reviewed paid-fee charge before sending the staff adjustment', 
     priority: 'normal',
   };
   const submitted: Array<Record<string, unknown>> = [];
+  let reviewedFee: unknown;
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string, init?: RequestInit) => {
@@ -275,6 +287,7 @@ it('confirms the reviewed paid-fee charge before sending the staff adjustment', 
           },
           hash: 'b'.repeat(64),
         };
+        reviewedFee = data;
       } else if (url.endsWith('/paid-resolution-review')) {
         const input = JSON.parse(String(init?.body)) as Record<string, string>;
         data = {
@@ -305,9 +318,16 @@ it('confirms the reviewed paid-fee charge before sending the staff adjustment', 
         };
       } else {
         submitted.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
-        data = {
-          financialReview: { hash: url.endsWith('/paid-cancel') ? 'c'.repeat(64) : 'b'.repeat(64) },
-        };
+        data = url.endsWith('/paid-cancel')
+          ? { financialReview: { hash: 'c'.repeat(64) } }
+          : {
+              requestId,
+              status: 'offer_pending',
+              invoiceId: '77777777-7777-4777-8777-777777777777',
+              adjustmentInvoiceId: '77777777-7777-4777-8777-777777777777',
+              refundIds: [],
+              financialReview: reviewedFee,
+            };
       }
       return new Response(JSON.stringify(data), {
         headers: { 'Content-Type': 'application/json' },
@@ -331,15 +351,19 @@ it('confirms the reviewed paid-fee charge before sending the staff adjustment', 
     await act(async () => {
       fill(feeInput!, '600000');
     });
-    const reason = Array.from(container.querySelectorAll('textarea')).find((item) =>
-      item.closest('label')?.textContent?.includes('Reason for fee adjustment')
+    const reason = container.querySelector<HTMLTextAreaElement>('#consultation-offer-reason');
+    expect(container.querySelector('label[for=consultation-offer-reason]')?.textContent).toBe(
+      'Reason for fee adjustment'
     );
     expect(reason).toBeDefined();
     await act(async () => {
       fill(reason!, 'Additional review');
     });
     await act(async () => button('Adjust paid fee')?.click());
-    expect(document.body.textContent).toContain('Review paid fee adjustment');
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(document.body.textContent).toContain('Review paid fee adjustment');
+    });
     expect(document.body.textContent).toContain('100,000 IRR');
     await act(async () => button('Confirm')?.click());
     expect(submitted).toHaveLength(1);

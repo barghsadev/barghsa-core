@@ -35,6 +35,13 @@ import {
   type ConsultationOfferReview,
 } from '@barghsa/shared/finance';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
+import { InputFieldException } from '../common/input-field.exception.js';
+import { consultationOfferDeadline } from './consultation-fee-input-fields.js';
+import {
+  consultationFeeCommand,
+  replayConsultationFee,
+  replayConsultationPaidFee,
+} from './consultation-fee-replay.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 type StaffAction = 'review' | 'request-info' | 'reject' | 'cancel' | 'complete';
@@ -374,6 +381,49 @@ export class ConsultationWorkflowService {
     });
   }
 
+  async assertCanEditFee(actor: Actor, id: string, paid: boolean, write: boolean): Promise<void> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const source = (
+        await client.query<{ profile_id: string; invoice_id: string | null }>(
+          'SELECT profile_id,invoice_id FROM consultation_requests WHERE id=$1',
+          [id]
+        )
+      ).rows[0];
+      if (!source) throw new NotFoundException('Consultation request not found');
+      await client.query('SELECT id FROM profiles WHERE id=$1 FOR SHARE', [source.profile_id]);
+      if (paid) await lockDualApprovalThreshold(client, 'read');
+      await requireStaffMutationPermission(client, actor.userId, 'orders:write');
+      if (paid) await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
+      await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+      const checkSession = write ? requireSessionStepUp : requireCurrentSession;
+      await checkSession(client, actor);
+      const invoices = paid
+        ? (
+            await client.query<{ id: string }>(
+              'SELECT id FROM invoices WHERE consultation_id=$1 ORDER BY id',
+              [id]
+            )
+          ).rows
+        : source.invoice_id
+          ? [{ id: source.invoice_id }]
+          : [];
+      for (const invoice of invoices)
+        await client.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [invoice.id]);
+      const request = await this.lockRequest(client, id);
+      if (request.profile_id !== source.profile_id || request.invoice_id !== source.invoice_id)
+        throw new ConflictException('Consultation changed; refresh before acting');
+      await checkSession(client, actor);
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async setFee(
     actor: Actor,
     id: string,
@@ -388,13 +438,47 @@ export class ConsultationWorkflowService {
     },
     ip: string
   ) {
-    const fee = BigInt(input.fee);
-    if (fee <= 0n || fee > 9_223_372_036_854_775_807n)
-      throw new BadRequestException('Consultation fee is outside the supported IRR range');
-    const validUntil = new Date(input.validUntil);
-    if (!Number.isFinite(validUntil.getTime()) || validUntil <= new Date())
-      throw new BadRequestException('Offer validity must be in the future');
     return this.staffMutation(actor, id, ip, 'fee_set', async (client, request) => {
+      // Preserve invoice-service authority even when its original result is replayed.
+      await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+      await requireSessionStepUp(client, actor);
+      const priorInvoices = (
+        await client.query<{ id: string }>(
+          `SELECT id FROM invoices WHERE consultation_id=$1
+         AND (metadata->>'idempotencyKey'=$2 OR metadata#>>'{correctionRequest,key}'=$2) LIMIT 2`,
+          [id, input.idempotencyKey]
+        )
+      ).rows;
+      if (priorInvoices.length > 1)
+        throw new ConflictException('Fee offer request key is ambiguous');
+      const previousKey = priorInvoices[0];
+      if (previousKey) {
+        const savedRows = (
+          await client.query<{ user_id: string; metadata: unknown }>(
+            `SELECT user_id,metadata::jsonb AS metadata FROM audit_log
+           WHERE event='consultation.request.changed'
+             AND metadata::jsonb->>'requestId'=$1
+             AND metadata::jsonb->>'action'='fee_offer_review'
+             AND metadata::jsonb->>'idempotencyKey'=$2 LIMIT 2`,
+            [id, input.idempotencyKey]
+          )
+        ).rows;
+        const saved = savedRows[0];
+        if (savedRows.length !== 1 || !saved || saved.user_id !== actor.userId)
+          throw new ConflictException('Fee offer request key was already used');
+        const result = replayConsultationFee(
+          saved.metadata,
+          previousKey.id,
+          request.profile_id,
+          id,
+          input
+        );
+        await requireSessionStepUp(client, actor);
+        return result;
+      }
+      const fee = BigInt(input.fee);
+      if (fee <= 0n || fee > 9_223_372_036_854_775_807n) throw new InputFieldException(['fee']);
+      const validUntil = consultationOfferDeadline(input.validUntil);
       const paidHistory = (
         await client.query<{ paid: boolean }>(
           'SELECT EXISTS(SELECT 1 FROM invoices WHERE consultation_id=$1 AND paid_amount>0) AS paid',
@@ -403,61 +487,6 @@ export class ConsultationWorkflowService {
       ).rows[0]?.paid;
       if (paidHistory)
         throw new ConflictException('Paid consultation fees require the paid adjustment workflow');
-      const previousKey = (
-        await client.query<{ id: string }>(
-          `SELECT id FROM invoices WHERE consultation_id=$1
-           AND (metadata->>'idempotencyKey'=$2 OR metadata#>>'{correctionRequest,key}'=$2)
-           LIMIT 1`,
-          [id, input.idempotencyKey]
-        )
-      ).rows[0];
-      if (previousKey) {
-        const current = (
-          await client.query<{
-            fee: string | null;
-            scope: string | null;
-            deliverables: string | null;
-            offer_valid_until: Date | null;
-          }>(
-            'SELECT fee,scope,deliverables,offer_valid_until FROM consultation_requests WHERE id=$1',
-            [id]
-          )
-        ).rows[0]!;
-        if (
-          previousKey.id !== request.invoice_id ||
-          request.status !== 'offer_pending' ||
-          current.fee !== input.fee ||
-          current.scope !== input.scope ||
-          current.deliverables !== input.deliverables ||
-          current.offer_valid_until?.getTime() !== validUntil.getTime()
-        )
-          throw new ConflictException('Fee offer request key was already used');
-        const saved = (
-          await client.query<{ metadata: unknown }>(
-            `SELECT metadata::jsonb AS metadata FROM audit_log
-             WHERE event='consultation.request.changed'
-               AND metadata::jsonb->>'requestId'=$1
-               AND metadata::jsonb->>'action'='fee_offer_review'
-               AND metadata::jsonb->>'idempotencyKey'=$2 LIMIT 1`,
-            [id, input.idempotencyKey]
-          )
-        ).rows[0];
-        const financialReview = new ReviewSnapshotService().assertStored(
-          saved?.metadata,
-          input.expectedReviewHash,
-          { action: 'consultation.fee-offer', profileId: request.profile_id, resourceId: id }
-        );
-        if (
-          (financialReview as ConsultationFeeReview).data.reason !== (input.reason?.trim() ?? null)
-        )
-          throw new ConflictException('Fee offer request key was already used');
-        return {
-          requestId: id,
-          status: 'offer_pending' as const,
-          invoiceId: previousKey.id,
-          financialReview,
-        };
-      }
       if (request.status !== 'under_review' && request.status !== 'offer_pending')
         throw new ConflictException('Consultation is not ready for a fee offer');
       if (request.status === 'offer_pending' && !request.invoice_id)
@@ -473,8 +502,7 @@ export class ConsultationWorkflowService {
       };
       let invoiceId: string;
       if (request.invoice_id) {
-        if (!input.reason?.trim())
-          throw new BadRequestException('A reason is required to replace a consultation offer');
+        if (!input.reason?.trim()) throw new InputFieldException(['reason']);
         const previous = (
           await client.query<{ consultation_id: string | null; profile_id: string }>(
             'SELECT consultation_id,profile_id FROM invoices WHERE id=$1',
@@ -526,7 +554,13 @@ export class ConsultationWorkflowService {
         client,
         actor.userId,
         id,
-        { action: 'fee_offer_review', idempotencyKey: input.idempotencyKey, financialReview },
+        {
+          action: 'fee_offer_review',
+          idempotencyKey: input.idempotencyKey,
+          financialReview,
+          command: consultationFeeCommand(input),
+          result: { requestId: id, status: 'offer_pending', invoiceId, financialReview },
+        },
         ip
       );
       return { requestId: id, status: 'offer_pending' as const, invoiceId, financialReview };
@@ -545,11 +579,8 @@ export class ConsultationWorkflowService {
     }
   ): Promise<ConsultationFeeReview> {
     const fee = BigInt(input.fee);
-    if (fee <= 0n || fee > 9_223_372_036_854_775_807n)
-      throw new BadRequestException('Consultation fee is outside the supported IRR range');
-    const validUntil = new Date(input.validUntil);
-    if (!Number.isFinite(validUntil.getTime()) || validUntil <= new Date())
-      throw new BadRequestException('Offer validity must be in the future');
+    if (fee <= 0n || fee > 9_223_372_036_854_775_807n) throw new InputFieldException(['fee']);
+    const validUntil = consultationOfferDeadline(input.validUntil);
     if (request.status !== 'under_review' && request.status !== 'offer_pending')
       throw new ConflictException('Consultation is not ready for a fee offer');
     if (request.status === 'offer_pending' && !request.invoice_id)
@@ -564,8 +595,7 @@ export class ConsultationWorkflowService {
       throw new ConflictException('Paid consultation fees require the paid adjustment workflow');
     let previousInvoice: { id: string; state: string; totalAmount: string } | null = null;
     if (request.invoice_id) {
-      if (!input.reason?.trim())
-        throw new BadRequestException('A reason is required to replace a consultation offer');
+      if (!input.reason?.trim()) throw new InputFieldException(['reason']);
       const previous = (
         await client.query<{
           id: string;
@@ -674,10 +704,8 @@ export class ConsultationWorkflowService {
   ): Promise<ConsultationPaidFeeReview> {
     const nextFee = BigInt(input.fee);
     if (nextFee <= 0n || nextFee > 9_223_372_036_854_775_807n)
-      throw new BadRequestException('Consultation fee is outside the supported IRR range');
-    const validUntil = new Date(input.validUntil);
-    if (!Number.isFinite(validUntil.getTime()) || validUntil <= new Date())
-      throw new BadRequestException('Offer validity must be in the future');
+      throw new InputFieldException(['fee']);
+    const validUntil = consultationOfferDeadline(input.validUntil);
     if (request.status !== 'offer_accepted' || !request.invoice_id || !request.fee)
       throw new ConflictException('Only an accepted paid consultation can be adjusted');
     await this.assertCreditsCovered(client, request.id);
@@ -704,7 +732,7 @@ export class ConsultationWorkflowService {
     )
       throw new ConflictException('Consultation invoice is not paid');
     const difference = nextFee - BigInt(request.fee);
-    if (difference === 0n) throw new BadRequestException('The revised fee must differ');
+    if (difference === 0n) throw new InputFieldException(['fee']);
     const title = request.product_snapshot?.title;
     if (!title?.fa || !title.en || !request.scope || !request.deliverables)
       throw new ConflictException('Consultation terms are unavailable');
@@ -848,51 +876,31 @@ export class ConsultationWorkflowService {
     },
     ip: string
   ) {
-    const nextFee = BigInt(input.fee);
-    if (nextFee <= 0n || nextFee > 9_223_372_036_854_775_807n)
-      throw new BadRequestException('Consultation fee is outside the supported IRR range');
-    const validUntil = new Date(input.validUntil);
-    if (!Number.isFinite(validUntil.getTime()) || validUntil <= new Date())
-      throw new BadRequestException('Offer validity must be in the future');
     return this.staffMutation(
       actor,
       id,
       ip,
       'paid_fee_adjusted',
       async (client, request) => {
-        const prior = (
-          await client.query<{
-            metadata: {
-              fee: string;
-              reason: string;
-              validUntil: string;
-              result: unknown;
-              financialReview?: ConsultationPaidFeeReview;
-            };
-          }>(
-            `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='consultation.fee.adjusted'
-           AND metadata::jsonb->>'requestId'=$1 AND metadata::jsonb->>'idempotencyKey'=$2 LIMIT 1`,
+        await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+        const priorRows = (
+          await client.query<{ user_id: string; metadata: unknown }>(
+            `SELECT user_id,metadata::jsonb AS metadata FROM audit_log WHERE event='consultation.fee.adjusted'
+           AND metadata::jsonb->>'requestId'=$1 AND metadata::jsonb->>'idempotencyKey'=$2 LIMIT 2`,
             [id, input.idempotencyKey]
           )
-        ).rows[0];
+        ).rows;
+        if (priorRows.length > 1)
+          throw new ConflictException('Paid fee adjustment key is ambiguous');
+        const prior = priorRows[0];
         if (prior) {
-          if (
-            prior.metadata.fee !== input.fee ||
-            prior.metadata.reason !== input.reason ||
-            prior.metadata.validUntil !== validUntil.toISOString()
-          )
+          if (prior.user_id !== actor.userId)
             throw new ConflictException('Paid fee adjustment key was already used');
-          new ReviewSnapshotService().assertStored(
-            { financialReview: prior.metadata.financialReview },
-            input.expectedReviewHash,
-            {
-              action: 'consultation.paid-fee-adjustment',
-              profileId: request.profile_id,
-              resourceId: id,
-            }
-          );
-          return prior.metadata.result;
+          const result = replayConsultationPaidFee(prior.metadata, request.profile_id, id, input);
+          await requireSessionStepUp(client, actor);
+          return result;
         }
+        const validUntil = new Date(input.validUntil);
         const financialReview = await this.paidFeeReviewForLocked(client, request, input);
         new ReviewSnapshotService().assertConfirmed(financialReview, input.expectedReviewHash);
         const difference = BigInt(financialReview.data.difference);

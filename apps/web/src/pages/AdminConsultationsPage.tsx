@@ -21,10 +21,23 @@ import {
   FormMessage,
   useZodForm,
 } from '@barghsa/ui/form';
+import { tConsultationFee } from '@barghsa/i18n/consultation-fee';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import {
+  emptyConsultationFee,
+  consultationFeeTerms,
+  consultationFeeFields,
+  matchedConsultationFeeReview,
+  matchedConsultationFeeReceipt,
+  publicConsultationFeeError,
+  definitiveConsultationFeeRejection,
+  type ConsultationFeeDraft,
+  type ConsultationFeeSource,
+  type ConsultationFeeReviewValue,
+} from '../lib/consultation-fee-form.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import {
-  parseConsultationFeeReview,
-  parseConsultationPaidFeeReview,
   parseConsultationPaidResolutionReview,
   type ConsultationFeeReview,
   type ConsultationPaidFeeReview,
@@ -32,7 +45,7 @@ import {
 } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { offerInputFromInstant, offerInstantFromInput } from '../lib/consultation-offer-time.js';
+import { offerInputFromInstant } from '../lib/consultation-offer-time.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
 import { staffOrderId } from '../lib/staff-order-list-query.js';
@@ -86,6 +99,16 @@ const statuses = [
 ] as const;
 
 type ReasonIntent = 'request-info' | 'complete' | 'reject' | 'cancel' | 'recover_refund';
+interface FeeCommand {
+  action: TeamAction;
+  source: ConsultationFeeSource;
+  review: ConsultationFeeReviewValue;
+  scope: string;
+  generation: number;
+  attempted: boolean;
+  uncertain: boolean;
+  rejected: boolean;
+}
 interface ReasonCommand {
   requestId: string;
   profileId: string;
@@ -187,8 +210,10 @@ function ConsultationAssignment({
 export function AdminConsultationsPage({ queries }: { queries?: ConsultationListQuery } = {}) {
   const { assignment: initialAssignment } = useSearch({ from: '/admin/consultations' });
   const locale = useLocale();
+  const actor = useAccountUser();
   const time = useAccountTime(locale);
   const copy = (key: string) => tConsultation(key, locale);
+  const feeCopy = (key: string) => tConsultationFee(key, locale);
   const [accepted, setAccepted] = useState<{
     criteria: string;
     cursor: string | null;
@@ -205,7 +230,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   const setSelectedId = (id: string | null, replace = false) =>
     queries ? queries.select(id, replace) : setLocalSelected(id);
   const [loadedDetail, setDetail] = useState<Detail | null>(null);
-  const detail = loadedDetail?.request.id === selectedId ? loadedDetail : null;
+  const detailScope = useRef('');
   const [status, setStatus] = useState('');
   const [assignment, setAssignment] = useState(initialAssignment ?? 'all');
   const [priority, setPriority] = useState('all');
@@ -219,10 +244,18 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     appliedAssignment,
     appliedPriority,
     appliedMinAgeDays,
+    actor,
   ]);
   const rows = accepted?.criteria === criteria ? accepted.rows : [];
   const nextAfter = accepted?.criteria === criteria ? accepted.nextAfter : null;
+  const queueScope = JSON.stringify([criteria, after]);
+  const currentQueueScope = useRef(queueScope);
+  currentQueueScope.current = queueScope;
   const workScope = JSON.stringify([criteria, selectedId]);
+  const detail =
+    loadedDetail?.request.id === selectedId && detailScope.current === workScope
+      ? loadedDetail
+      : null;
   const work = useRef({ scope: workScope, generation: 0 });
   if (work.current.scope !== workScope)
     work.current = { scope: workScope, generation: work.current.generation + 1 };
@@ -249,11 +282,128 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     { reason: copy(reasonPaid ? 'paidReasonInvalid1000' : 'reasonInvalid2000') },
     copy('actionError')
   );
-  const [fee, setFee] = useState('');
-  const [scope, setScope] = useState('');
-  const [deliverables, setDeliverables] = useState('');
-  const [validUntil, setValidUntil] = useState('');
-  const [offerReason, setOfferReason] = useState('');
+  const feeSource = useRef<ConsultationFeeSource | null>(null);
+  feeSource.current = detail?.request ?? null;
+  const feeZone = useRef<string | null>(null);
+  feeZone.current = time.status === 'ready' ? time.timezone : null;
+  const feeMessages = {
+    fee: feeCopy(detail?.request.status === 'offer_accepted' ? 'paidFeeInvalid' : 'feeInvalid'),
+    scope: feeCopy('scopeInvalid'),
+    deliverables: feeCopy('deliverablesInvalid'),
+    validUntil: feeCopy('deadlineInvalid'),
+    reason: feeCopy(
+      detail?.request.status === 'offer_accepted' ? 'paidReasonInvalid' : 'replacementReasonInvalid'
+    ),
+  };
+  const feeForm: ReturnType<typeof useZodForm<ConsultationFeeDraft>> =
+    useZodForm<ConsultationFeeDraft>(
+      async () => {
+        // RHF owns touched-field values; command preparation separately fences edited drafts.
+        const generation = work.current.generation;
+        const source = feeSource.current;
+        const zone = feeZone.current;
+        const schemas = await import('../lib/consultation-fee-form-schemas.js');
+        return source &&
+          work.current.scope === workScope &&
+          generation === work.current.generation &&
+          source === feeSource.current &&
+          zone === feeZone.current
+          ? schemas.consultationFeeSchema(source, zone, feeMessages)
+          : schemas.inactiveConsultationFeeSchema;
+      },
+      {
+        defaultValues: emptyConsultationFee,
+        validationUnavailableMessage: feeCopy('validationUnavailable'),
+      }
+    );
+  const feeFields = useActionFieldErrors(feeForm, feeMessages, copy('actionError'));
+  const setFee = (value: string) => feeForm.setValue('fee', value);
+  const setScope = (value: string) => feeForm.setValue('scope', value);
+  const setDeliverables = (value: string) => feeForm.setValue('deliverables', value);
+  const setValidUntil = (value: string) => feeForm.setValue('validUntil', value);
+  const setOfferReason = (value: string) => feeForm.setValue('reason', value);
+  const feeCommand = useRef<FeeCommand | null>(null);
+  const [feeUncertain, setFeeUncertain] = useState(false);
+  const readGeneration = useRef(0);
+  const detailAbort = useRef<AbortController | null>(null);
+  const queueAbort = useRef<AbortController | null>(null);
+  function invalidateFeeReads() {
+    ++readGeneration.current;
+    detailAbort.current?.abort();
+    queueAbort.current?.abort();
+    setQueueLoading(false);
+  }
+  function feeActive(command: FeeCommand) {
+    return (
+      work.current.scope === workScope &&
+      feeCommand.current === command &&
+      command.scope === work.current.scope &&
+      command.generation === work.current.generation
+    );
+  }
+  function feeUnknown(command: FeeCommand) {
+    if (!feeActive(command)) return;
+    command.uncertain = true;
+    setFeeUncertain(true);
+    commandPendingRef.current = false;
+    setCommandPending(false);
+    actionRef.current = null;
+    setAction(null);
+  }
+  function feeRelease(command: FeeCommand) {
+    if (!feeActive(command)) return;
+    feeCommand.current = null;
+    setFeeUncertain(false);
+    clearAction();
+  }
+  function showFeeFields(value: unknown, source: ConsultationFeeSource) {
+    const error = definitiveConsultationFeeRejection(value);
+    if (error?.code !== ErrorCodes.VALIDATION_INPUT_INVALID.code || !Array.isArray(error.fields))
+      return false;
+    const fields = consultationFeeFields(error.fields, source);
+    return !!fields && feeFields(fields);
+  }
+  function decorateFeeAction(command: FeeCommand, ownedAction: TeamAction) {
+    ownedAction.errorMessages = Object.fromEntries(
+      [
+        ErrorCodes.VALIDATION_INPUT_INVALID.code,
+        'VALIDATION:INPUT_INVALID',
+        ErrorCodes.CONFLICT_STATE.code,
+        ErrorCodes.CONFLICT_VERSION.code,
+        ErrorCodes.NOT_FOUND_RESOURCE.code,
+      ].map((code) => [
+        code,
+        (result: unknown) => {
+          if (
+            !feeActive(command) ||
+            command.action !== ownedAction ||
+            actionRef.current !== ownedAction
+          )
+            return copy('actionError');
+          if (publicConsultationFeeError(result)?.code === ErrorCodes.NOT_FOUND_RESOURCE.code) {
+            denyAction();
+            return copy('actionError');
+          }
+          if (definitiveConsultationFeeRejection(result)) {
+            command.rejected = true;
+            if (!command.uncertain && showFeeFields(result, command.source)) feeRelease(command);
+          }
+          return copy('actionError');
+        },
+      ])
+    );
+  }
+  function retryFee() {
+    const command = feeCommand.current;
+    if (!command || !feeActive(command) || commandPendingRef.current) return;
+    const next = { ...command.action };
+    command.action = next;
+    decorateFeeAction(command, next);
+    actionRef.current = next;
+    setAction(next);
+    actionScope.current = workScope;
+    actionGeneration.current = work.current.generation;
+  }
   const offerDirty = useRef(false);
   const [offerKey, setOfferKey] = useState(() => crypto.randomUUID());
   const [revision, setRevision] = useState(0);
@@ -286,6 +436,8 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   const accessGeneration = useRef(0);
   function busy() {
     return (
+      !!feeCommand.current ||
+      feeForm.isSubmissionPending() ||
       !!actionRef.current ||
       preparingRef.current ||
       commandPendingRef.current ||
@@ -308,6 +460,10 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     reviewRequest.current += 1;
     work.current.generation += 1;
     clearAction();
+    feeCommand.current = null;
+    setFeeUncertain(false);
+    feeForm.reset(emptyConsultationFee);
+    invalidateFeeReads();
     recoveringReason.current = null;
     unconfirmedRef.current = false;
     setUnconfirmed(false);
@@ -329,6 +485,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     if (clearSelection) setSelectedId(null);
   }
   function refresh() {
+    if (feeCommand.current) return;
     resetQueue();
     setRevision((value) => value + 1);
   }
@@ -336,6 +493,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   useEffect(() => {
     const controller = new AbortController();
     const capturedAccess = accessGeneration.current;
+    const capturedRead = readGeneration.current;
     setTeamsError(false);
     void fetch('/api/admin/consultations/teams', {
       credentials: 'include',
@@ -346,11 +504,20 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
         return (await response.json()) as { teams: Array<{ name: string }> };
       })
       .then((result) => {
-        if (!controller.signal.aborted && capturedAccess === accessGeneration.current)
+        if (
+          !controller.signal.aborted &&
+          capturedAccess === accessGeneration.current &&
+          capturedRead === readGeneration.current
+        )
           setTeams(result.teams.map((item) => item.name));
       })
       .catch(() => {
-        if (!controller.signal.aborted) setTeamsError(true);
+        if (
+          !controller.signal.aborted &&
+          capturedRead === readGeneration.current &&
+          capturedAccess === accessGeneration.current
+        )
+          setTeamsError(true);
       });
     return () => controller.abort();
   }, [revision, teamsRevision]);
@@ -358,6 +525,8 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   useEffect(() => {
     const controller = new AbortController();
     const capturedAccess = accessGeneration.current;
+    const capturedRead = readGeneration.current;
+    queueAbort.current = controller;
     setQueueError(false);
     setQueueDenied(false);
     setQueueLoading(true);
@@ -377,7 +546,12 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
         return (await response.json()) as { requests: RequestRow[]; nextAfter: string | null };
       })
       .then((result) => {
-        if (!controller.signal.aborted && capturedAccess === accessGeneration.current) {
+        if (
+          !controller.signal.aborted &&
+          capturedAccess === accessGeneration.current &&
+          capturedRead === readGeneration.current &&
+          currentQueueScope.current === queueScope
+        ) {
           setAccepted((current) => {
             const extending =
               !!after &&
@@ -396,14 +570,25 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
         }
       })
       .catch((error: unknown) => {
-        if (controller.signal.aborted || capturedAccess !== accessGeneration.current) return;
+        if (
+          controller.signal.aborted ||
+          capturedAccess !== accessGeneration.current ||
+          capturedRead !== readGeneration.current ||
+          currentQueueScope.current !== queueScope
+        )
+          return;
         if (error instanceof Error && ['401', '403'].includes(error.message)) {
           denyAction();
           setReviewLoading(false);
         } else setQueueError(true);
       })
       .finally(() => {
-        if (!controller.signal.aborted) setQueueLoading(false);
+        if (
+          !controller.signal.aborted &&
+          capturedRead === readGeneration.current &&
+          currentQueueScope.current === queueScope
+        )
+          setQueueLoading(false);
       });
     return () => controller.abort();
   }, [
@@ -413,11 +598,15 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     appliedMinAgeDays,
     criteria,
     after,
+    queueScope,
     revision,
     listRevision,
   ]);
 
   useEffect(() => {
+    feeCommand.current = null;
+    setFeeUncertain(false);
+    feeForm.reset(emptyConsultationFee);
     clearAction();
     preparingRef.current = false;
     reasonCommand.current = null;
@@ -439,6 +628,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   }, [workScope]);
 
   useEffect(() => {
+    if (feeCommand.current) return;
     reviewRequest.current += 1;
     setFeeReview(null);
     setPaidFeeReview(null);
@@ -452,6 +642,8 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
       return;
     }
     const controller = new AbortController();
+    detailAbort.current = controller;
+    const capturedRead = readGeneration.current;
     const capturedGeneration = work.current.generation;
     const recoveryAtRead = recoveringReason.current;
     setDetail(null);
@@ -471,7 +663,12 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
         return result;
       })
       .then((result) => {
-        if (!controller.signal.aborted && capturedGeneration === work.current.generation) {
+        if (
+          !controller.signal.aborted &&
+          capturedGeneration === work.current.generation &&
+          capturedRead === readGeneration.current
+        ) {
+          detailScope.current = workScope;
           setDetail(result);
           const command = recoveringReason.current;
           if (
@@ -487,22 +684,30 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
           }
           if (!offerDirty.current) {
             setFee(result.request.fee ?? '');
-            setScope(result.request.scope ?? '');
-            setDeliverables(result.request.deliverables ?? '');
+            // Paid revisions consume amount/deadline/reason, preserving hidden ordinary-offer drafts.
+            if (!result.request.has_paid_invoice) {
+              setScope(result.request.scope ?? '');
+              setDeliverables(result.request.deliverables ?? '');
+            }
             setOfferReason('');
           }
         }
       })
       .catch((error: unknown) => {
-        if (controller.signal.aborted || capturedGeneration !== work.current.generation) return;
+        if (
+          controller.signal.aborted ||
+          capturedGeneration !== work.current.generation ||
+          capturedRead !== readGeneration.current
+        )
+          return;
         if (error instanceof Error && ['401', '403', '404'].includes(error.message)) denyAction();
         else setDetailError(true);
       });
     return () => controller.abort();
-  }, [selectedId, criteria, revision, detailRevision]);
+  }, [selectedId, criteria, revision, detailRevision, workScope]);
 
   useEffect(() => {
-    if (detail && time.status === 'ready' && !offerDirty.current) {
+    if (detail && time.status === 'ready' && !offerDirty.current && !feeCommand.current) {
       setValidUntil(offerInputFromInstant(detail.request.offer_valid_until, time.timezone));
     }
   }, [detail, time.status, time.timezone]);
@@ -570,111 +775,122 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     })();
   }
 
-  async function prepareFeeOffer() {
-    if (!selectedId || !current || !offerDeadline || busy()) return;
-    const terms = {
-      fee,
-      scope: scope.trim(),
-      deliverables: deliverables.trim(),
-      validUntil: offerDeadline.toISOString(),
-      ...(current.invoice_id ? { reason: offerReason.trim() } : {}),
-    };
-    const request = ++reviewRequest.current;
-    const generation = work.current.generation;
-    preparingRef.current = true;
-    setReviewLoading(true);
-    setError(false);
-    try {
-      const response = await fetch(
-        `/api/admin/consultations/requests/${encodeURIComponent(selectedId)}/fee-review`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify(terms),
-        }
-      );
-      if (!response.ok) throw new Error('fee-review');
-      const review = parseConsultationFeeReview(await response.json());
-      if (request !== reviewRequest.current || generation !== work.current.generation) return;
-      if (
-        !review ||
-        review.scope.resourceId !== selectedId ||
-        review.scope.profileId !== current.profile_id ||
-        review.data.fee !== terms.fee ||
-        review.data.scope !== terms.scope ||
-        review.data.deliverables !== terms.deliverables ||
-        review.data.validUntil !== terms.validUntil ||
-        review.data.reason !== (terms.reason ?? null) ||
-        review.data.previousInvoice?.id !== (current.invoice_id ?? undefined)
-      )
-        throw new Error('fee-review');
-      setFeeReview(review);
-      propose('fee', copy(current.invoice_id ? 'replaceFee' : 'issueFee'), {
-        ...terms,
-        idempotencyKey: offerKey,
-        expectedReviewHash: review.hash,
-      });
-    } catch {
-      if (request !== reviewRequest.current || generation !== work.current.generation) return;
-      setError(true);
-      refresh();
-    } finally {
-      if (request === reviewRequest.current && generation === work.current.generation) {
-        preparingRef.current = false;
-        setReviewLoading(false);
-      }
-    }
+  function prepareFeeOffer() {
+    prepareFee(false);
   }
-
-  async function preparePaidFee() {
-    if (!selectedId || !current || !offerDeadline || busy()) return;
-    const terms = { fee, reason: offerReason.trim(), validUntil: offerDeadline.toISOString() };
-    const request = ++reviewRequest.current;
+  function preparePaidFee() {
+    prepareFee(true);
+  }
+  function prepareFee(paid: boolean) {
+    if (work.current.scope !== workScope || !selectedId || !detail || !feeZone.current || busy())
+      return;
+    const capturedSource = detail.request;
+    const capturedZone = feeZone.current;
     const generation = work.current.generation;
+    const request = ++reviewRequest.current;
+    const raw = JSON.stringify(feeForm.getValues());
     preparingRef.current = true;
     setReviewLoading(true);
     setError(false);
-    try {
-      const response = await fetch(
-        `/api/admin/consultations/requests/${encodeURIComponent(selectedId)}/paid-fee-review`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify(terms),
+    feeForm.clearErrors();
+    void feeForm
+      .handleSubmit(async (draft) => {
+        if (
+          work.current.scope !== workScope ||
+          generation !== work.current.generation ||
+          request !== reviewRequest.current ||
+          capturedSource !== feeSource.current ||
+          capturedZone !== feeZone.current ||
+          raw !== JSON.stringify(feeForm.getValues()) ||
+          !capturedZone
+        )
+          return;
+        const terms = consultationFeeTerms(draft, capturedSource, capturedZone);
+        if (!terms) return;
+        try {
+          const response = await fetch(
+            `/api/admin/consultations/requests/${encodeURIComponent(selectedId)}/${paid ? 'paid-fee-review' : 'fee-review'}`,
+            {
+              method: 'POST',
+              credentials: 'include',
+              headers: withCsrf({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify(terms),
+            }
+          );
+          const value = await response.json().catch(() => null);
+          if (
+            work.current.scope !== workScope ||
+            generation !== work.current.generation ||
+            request !== reviewRequest.current ||
+            capturedSource !== feeSource.current ||
+            capturedZone !== feeZone.current
+          )
+            return;
+          if ([401, 403, 404].includes(response.status)) {
+            denyAction();
+            return;
+          }
+          if (raw !== JSON.stringify(feeForm.getValues())) return;
+          if (!response.ok) {
+            if (response.status === 400 && showFeeFields(value, capturedSource)) return;
+            throw new Error('fee-review');
+          }
+          const review =
+            response.status === 200
+              ? matchedConsultationFeeReview(value, capturedSource, terms)
+              : null;
+          if (!review) throw new Error('fee-review');
+          const path = paid ? 'paid-fee' : 'fee';
+          const next: TeamAction = {
+            title: copy(
+              paid ? 'adjustPaidFee' : capturedSource.invoice_id ? 'replaceFee' : 'issueFee'
+            ),
+            description: `${capturedSource.profile_name} · ${copy(paid ? 'adjustPaidFee' : 'feeOffer')}`,
+            path: `/api/admin/consultations/requests/${selectedId}/${path}`,
+            method: 'POST',
+            successStatus: 200,
+            body: { ...terms, idempotencyKey: offerKey, expectedReviewHash: review.hash },
+            forbiddenMessage: copy('actionError'),
+          };
+          const command: FeeCommand = {
+            action: next,
+            source: capturedSource,
+            review,
+            scope: workScope,
+            generation,
+            attempted: false,
+            uncertain: false,
+            rejected: false,
+          };
+          decorateFeeAction(command, next);
+          invalidateFeeReads();
+          feeCommand.current = command;
+          if ('revisedFee' in review.data) setPaidFeeReview(review as ConsultationPaidFeeReview);
+          else setFeeReview(review as ConsultationFeeReview);
+          actionScope.current = workScope;
+          actionGeneration.current = generation;
+          actionRef.current = next;
+          setAction(next);
+        } catch {
+          if (
+            work.current.scope === workScope &&
+            generation === work.current.generation &&
+            request === reviewRequest.current &&
+            raw === JSON.stringify(feeForm.getValues())
+          )
+            setError(true);
         }
-      );
-      if (!response.ok) throw new Error('paid-fee-review');
-      const review = parseConsultationPaidFeeReview(await response.json());
-      if (request !== reviewRequest.current || generation !== work.current.generation) return;
-      if (
-        !review ||
-        review.scope.resourceId !== selectedId ||
-        review.scope.profileId !== current.profile_id ||
-        review.data.previousFee !== current.fee ||
-        review.data.revisedFee !== terms.fee ||
-        review.data.reason !== terms.reason ||
-        review.data.validUntil !== terms.validUntil ||
-        review.data.paidInvoice.id !== current.invoice_id
-      )
-        throw new Error('paid-fee-review');
-      setPaidFeeReview(review);
-      propose('paid-fee', copy('adjustPaidFee'), {
-        ...terms,
-        idempotencyKey: offerKey,
-        expectedReviewHash: review.hash,
+      })()
+      .finally(() => {
+        if (
+          work.current.scope === workScope &&
+          generation === work.current.generation &&
+          request === reviewRequest.current
+        ) {
+          preparingRef.current = false;
+          setReviewLoading(false);
+        }
       });
-    } catch {
-      if (request !== reviewRequest.current || generation !== work.current.generation) return;
-      setError(true);
-      refresh();
-    } finally {
-      if (request === reviewRequest.current && generation === work.current.generation) {
-        preparingRef.current = false;
-        setReviewLoading(false);
-      }
-    }
   }
 
   async function preparePaidResolution(
@@ -738,21 +954,85 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   }
 
   const current = detail?.request;
-  const offerDeadline =
-    time.status === 'ready'
-      ? current?.offer_valid_until &&
-        validUntil === offerInputFromInstant(current.offer_valid_until, time.timezone)
-        ? new Date(current.offer_valid_until)
-        : offerInstantFromInput(validUntil, time.timezone)
-      : undefined;
-  const validOfferDeadline =
-    offerDeadline && Number.isFinite(offerDeadline.getTime()) && offerDeadline > new Date();
   const editorLocked =
-    !!action || reviewLoading || commandPending || reasonForm.formState.isSubmitting;
+    !!action ||
+    !!feeCommand.current ||
+    reviewLoading ||
+    commandPending ||
+    reasonForm.formState.isSubmitting;
   const currentAction = () =>
+    work.current.scope === workScope &&
     actionRef.current === action &&
     actionScope.current === work.current.scope &&
     actionGeneration.current === work.current.generation;
+  function feeField(
+    name: keyof ConsultationFeeDraft,
+    id: string,
+    label: string,
+    help: string,
+    kind: 'input' | 'date' | 'textarea'
+  ) {
+    return (
+      <FormField
+        control={feeForm.control}
+        name={name}
+        render={({ field }) => (
+          <FormItem id={id} className="space-y-1 text-sm">
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+              {kind === 'textarea' ? (
+                <textarea
+                  {...field}
+                  aria-required="true"
+                  disabled={
+                    !!action ||
+                    !!feeCommand.current ||
+                    commandPending ||
+                    reasonForm.formState.isSubmitting ||
+                    unconfirmed ||
+                    feeUncertain
+                  }
+                  onChange={(event) => {
+                    offerDirty.current = true;
+                    field.onChange(event);
+                  }}
+                  className="min-h-20 w-full rounded-md border bg-background p-2"
+                />
+              ) : (
+                <input
+                  {...field}
+                  aria-required="true"
+                  type={kind === 'date' ? 'datetime-local' : 'text'}
+                  inputMode={kind === 'input' ? 'numeric' : undefined}
+                  disabled={
+                    !!action ||
+                    !!feeCommand.current ||
+                    commandPending ||
+                    reasonForm.formState.isSubmitting ||
+                    unconfirmed ||
+                    feeUncertain ||
+                    (kind === 'date' && time.status !== 'ready')
+                  }
+                  onChange={(event) => {
+                    offerDirty.current = true;
+                    field.onChange(event);
+                  }}
+                  className="w-full rounded-md border bg-background p-2"
+                />
+              )}
+            </FormControl>
+            <FormDescription>{feeCopy(help)}</FormDescription>
+            <div className="grid">
+              <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
+                {feeMessages[name]}
+              </p>
+              <FormMessage className="col-start-1 row-start-1" />
+            </div>
+          </FormItem>
+        )}
+      />
+    );
+  }
   return (
     <main className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="flex flex-wrap items-start justify-between gap-3">
@@ -771,8 +1051,9 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <select
                   className="w-full rounded-md border bg-background p-2"
                   value={appliedStatus}
-                  disabled={commandPending}
+                  disabled={commandPending || !!feeCommand.current}
                   onChange={(event) => {
+                    if (feeCommand.current || work.current.scope !== workScope) return;
                     if (queries) queries.setFilters({ status: event.target.value });
                     else {
                       resetQueue(true);
@@ -793,8 +1074,9 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <select
                   className="w-full rounded-md border bg-background p-2"
                   value={appliedAssignment}
-                  disabled={commandPending}
+                  disabled={commandPending || !!feeCommand.current}
                   onChange={(event) => {
+                    if (feeCommand.current || work.current.scope !== workScope) return;
                     if (queries) queries.setFilters({ assignment: event.target.value });
                     else {
                       resetQueue(true);
@@ -812,8 +1094,9 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <select
                   className="w-full rounded-md border bg-background p-2"
                   value={appliedPriority}
-                  disabled={commandPending}
+                  disabled={commandPending || !!feeCommand.current}
                   onChange={(event) => {
+                    if (feeCommand.current || work.current.scope !== workScope) return;
                     if (queries) queries.setFilters({ priority: event.target.value });
                     else {
                       resetQueue(true);
@@ -831,8 +1114,9 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <select
                   className="w-full rounded-md border bg-background p-2"
                   value={appliedMinAgeDays}
-                  disabled={commandPending}
+                  disabled={commandPending || !!feeCommand.current}
                   onChange={(event) => {
+                    if (feeCommand.current || work.current.scope !== workScope) return;
                     if (queries) queries.setFilters({ minAgeDays: event.target.value });
                     else {
                       resetQueue(true);
@@ -851,9 +1135,9 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
             <Button
               variant="outline"
               onClick={() => {
-                if (!commandPendingRef.current) refresh();
+                if (!commandPendingRef.current && !feeCommand.current) refresh();
               }}
-              disabled={queueLoading || commandPending}
+              disabled={queueLoading || commandPending || !!feeCommand.current}
             >
               {copy('refresh')}
             </Button>
@@ -871,6 +1155,19 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
           <p role="alert" className="text-destructive">
             {copy('loadError')}
           </p>
+        )}
+        {feeUncertain && (
+          <div role="alert" className="space-y-2">
+            <p>{feeCopy('uncertain')}</p>
+            <Button
+              data-testid="consultation-fee-retry"
+              variant="outline"
+              disabled={commandPending}
+              onClick={retryFee}
+            >
+              {feeCopy('retryCaptured')}
+            </Button>
+          </div>
         )}
         {unconfirmed && (
           <div role="alert" className="space-y-2">
@@ -912,9 +1209,15 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <button
                   key={row.id}
                   type="button"
-                  disabled={commandPending}
+                  disabled={commandPending || !!feeCommand.current}
                   onClick={() => {
-                    if (commandPendingRef.current || row.id === selectedId) return;
+                    if (
+                      work.current.scope !== workScope ||
+                      commandPendingRef.current ||
+                      feeCommand.current ||
+                      row.id === selectedId
+                    )
+                      return;
                     setSelectedId(row.id);
                     setDetail(null);
                     reasonForm.reset({ reason: '' });
@@ -950,6 +1253,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
               kind="cursor"
               hasMore={
                 !!nextAfter &&
+                !feeCommand.current &&
                 !queueError &&
                 !queueDenied &&
                 (queueLoading ||
@@ -957,13 +1261,16 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
               }
               loading={queueLoading}
               onNext={() => {
-                if (!nextAfter || commandPendingRef.current) return;
+                if (!nextAfter || commandPendingRef.current || feeCommand.current) return;
                 if (queries) queries.queue.next(nextAfter);
                 else setAfter(nextAfter);
               }}
               previous={{
-                enabled: !queueDenied && (queries?.queue.hasPrevious ?? false),
-                onClick: () => queries?.queue.previous(),
+                enabled:
+                  !queueDenied && !feeCommand.current && (queries?.queue.hasPrevious ?? false),
+                onClick: () => {
+                  if (!feeCommand.current) queries?.queue.previous();
+                },
                 label: appText('historyPagination.previous', locale),
               }}
               label={appText('historyPagination.label', locale)}
@@ -1048,160 +1355,92 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                   </section>
                 )}
                 {(current.status === 'under_review' ||
-                  (current.status === 'offer_pending' && !current.has_paid_invoice)) && (
-                  <div className="space-y-3 rounded-lg border p-4">
-                    <h3 className="font-semibold">{copy('feeOffer')}</h3>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <label className="space-y-1 text-sm">
-                        <span>{copy('feeIrr')}</span>
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          pattern="[1-9][0-9]*"
-                          value={fee}
-                          onChange={(event) => {
-                            offerDirty.current = true;
-                            setFee(event.target.value);
-                          }}
-                          disabled={editorLocked || unconfirmed}
-                          className="w-full rounded-md border bg-background p-2"
-                        />
-                      </label>
-                      <label className="space-y-1 text-sm">
-                        <span>{copy('offerValidUntil')}</span>
-                        <input
-                          type="datetime-local"
-                          value={validUntil}
-                          onChange={(event) => {
-                            offerDirty.current = true;
-                            setValidUntil(event.target.value);
-                          }}
-                          disabled={time.status !== 'ready' || editorLocked || unconfirmed}
-                          className="w-full rounded-md border bg-background p-2"
-                        />
-                      </label>
-                    </div>
-                    <label className="block space-y-1 text-sm">
-                      <span>{copy('scope')}</span>
-                      <textarea
-                        value={scope}
-                        onChange={(event) => {
-                          offerDirty.current = true;
-                          setScope(event.target.value);
-                        }}
-                        disabled={editorLocked || unconfirmed}
-                        maxLength={4000}
-                        className="min-h-20 w-full rounded-md border bg-background p-2"
-                      />
-                    </label>
-                    <label className="block space-y-1 text-sm">
-                      <span>{copy('deliverables')}</span>
-                      <textarea
-                        value={deliverables}
-                        onChange={(event) => {
-                          offerDirty.current = true;
-                          setDeliverables(event.target.value);
-                        }}
-                        disabled={editorLocked || unconfirmed}
-                        maxLength={4000}
-                        className="min-h-20 w-full rounded-md border bg-background p-2"
-                      />
-                    </label>
-                    {current.invoice_id && (
-                      <label className="block space-y-1 text-sm">
-                        <span>{copy('replaceReason')}</span>
-                        <textarea
-                          value={offerReason}
-                          onChange={(event) => {
-                            offerDirty.current = true;
-                            setOfferReason(event.target.value);
-                          }}
-                          disabled={editorLocked || unconfirmed}
-                          maxLength={2000}
-                          className="min-h-16 w-full rounded-md border bg-background p-2"
-                        />
-                      </label>
-                    )}
-                    <Button
-                      disabled={
-                        editorLocked ||
-                        unconfirmed ||
-                        !/^[1-9][0-9]{0,18}$/.test(fee) ||
-                        !scope.trim() ||
-                        !deliverables.trim() ||
-                        !validOfferDeadline ||
-                        (!!current.invoice_id && !offerReason.trim())
-                      }
-                      onClick={() => void prepareFeeOffer()}
+                  (current.status === 'offer_pending' && !current.has_paid_invoice) ||
+                  current.status === 'offer_accepted') && (
+                  <Form {...feeForm}>
+                    <form
+                      data-testid="consultation-fee-form"
+                      noValidate
+                      className="space-y-3 rounded-lg border p-4"
+                      aria-label={copy(
+                        current.status === 'offer_accepted' ? 'adjustPaidFee' : 'feeOffer'
+                      )}
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        if (current.status === 'offer_accepted') preparePaidFee();
+                        else prepareFeeOffer();
+                      }}
                     >
-                      {copy(current.invoice_id ? 'replaceFee' : 'issueFee')}
-                    </Button>
-                  </div>
+                      <h3 className="font-semibold">
+                        {copy(current.status === 'offer_accepted' ? 'adjustPaidFee' : 'feeOffer')}
+                      </h3>
+                      {current.status === 'offer_accepted' && (
+                        <p className="text-sm text-muted-foreground">{copy('adjustPaidFeeHelp')}</p>
+                      )}
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {feeField('fee', 'consultation-fee', copy('feeIrr'), 'feeHelp', 'input')}
+                        {feeField(
+                          'validUntil',
+                          'consultation-valid-until',
+                          copy('offerValidUntil'),
+                          'deadlineHelp',
+                          'date'
+                        )}
+                      </div>
+                      {current.status !== 'offer_accepted' && (
+                        <>
+                          {feeField(
+                            'scope',
+                            'consultation-scope',
+                            copy('scope'),
+                            'termsHelp',
+                            'textarea'
+                          )}
+                          {feeField(
+                            'deliverables',
+                            'consultation-deliverables',
+                            copy('deliverables'),
+                            'termsHelp',
+                            'textarea'
+                          )}
+                        </>
+                      )}
+                      {(current.status === 'offer_accepted' || current.invoice_id) &&
+                        feeField(
+                          'reason',
+                          'consultation-offer-reason',
+                          copy(
+                            current.status === 'offer_accepted'
+                              ? 'adjustmentReason'
+                              : 'replaceReason'
+                          ),
+                          'reasonHelp',
+                          'textarea'
+                        )}
+                      {feeForm.formState.errors.root && (
+                        <Alert variant="destructive">{feeCopy('validationUnavailable')}</Alert>
+                      )}
+                      {reviewLoading && <p role="status">{feeCopy('checking')}</p>}
+                      <Button
+                        type="submit"
+                        loading={reviewLoading || feeForm.formState.isSubmitting}
+                        disabled={
+                          editorLocked || unconfirmed || feeUncertain || time.status !== 'ready'
+                        }
+                      >
+                        {copy(
+                          current.status === 'offer_accepted'
+                            ? 'adjustPaidFee'
+                            : current.invoice_id
+                              ? 'replaceFee'
+                              : 'issueFee'
+                        )}
+                      </Button>
+                    </form>
+                  </Form>
                 )}
                 {current.status === 'offer_pending' && current.has_paid_invoice && (
                   <p className="rounded-lg border p-4 text-sm">{copy('paidAdjustmentPending')}</p>
-                )}
-                {current.status === 'offer_accepted' && (
-                  <div className="space-y-3 rounded-lg border p-4">
-                    <h3 className="font-semibold">{copy('adjustPaidFee')}</h3>
-                    <p className="text-sm text-muted-foreground">{copy('adjustPaidFeeHelp')}</p>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <label className="space-y-1 text-sm">
-                        <span>{copy('feeIrr')}</span>
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          pattern="[1-9][0-9]*"
-                          value={fee}
-                          onChange={(event) => {
-                            offerDirty.current = true;
-                            setFee(event.target.value);
-                          }}
-                          disabled={editorLocked || unconfirmed}
-                          className="w-full rounded-md border bg-background p-2"
-                        />
-                      </label>
-                      <label className="space-y-1 text-sm">
-                        <span>{copy('offerValidUntil')}</span>
-                        <input
-                          type="datetime-local"
-                          value={validUntil}
-                          onChange={(event) => {
-                            offerDirty.current = true;
-                            setValidUntil(event.target.value);
-                          }}
-                          disabled={time.status !== 'ready' || editorLocked || unconfirmed}
-                          className="w-full rounded-md border bg-background p-2"
-                        />
-                      </label>
-                    </div>
-                    <label className="block space-y-1 text-sm">
-                      <span>{copy('adjustmentReason')}</span>
-                      <textarea
-                        value={offerReason}
-                        onChange={(event) => {
-                          offerDirty.current = true;
-                          setOfferReason(event.target.value);
-                        }}
-                        disabled={editorLocked || unconfirmed}
-                        maxLength={1000}
-                        className="min-h-16 w-full rounded-md border bg-background p-2"
-                      />
-                    </label>
-                    <Button
-                      disabled={
-                        editorLocked ||
-                        unconfirmed ||
-                        !/^[1-9][0-9]{0,18}$/.test(fee) ||
-                        fee === current.fee ||
-                        !offerReason.trim() ||
-                        !validOfferDeadline
-                      }
-                      onClick={() => void preparePaidFee()}
-                    >
-                      {copy('adjustPaidFee')}
-                    </Button>
-                  </div>
                 )}
                 <div className="flex flex-wrap gap-2">
                   <Button
@@ -1400,6 +1639,10 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
           confirmationDisabled={unconfirmed}
           onPendingChange={(pending) => {
             if (!currentAction()) return;
+            if (pending && feeCommand.current) {
+              feeCommand.current.attempted = true;
+              invalidateFeeReads();
+            }
             commandPendingRef.current = pending;
             setCommandPending(pending);
           }}
@@ -1411,7 +1654,12 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
             reasonFields(fields)
           }
           onUnconfirmed={() => {
-            if (!currentAction() || !reasonCommand.current || reasonCommand.current.paid) return;
+            if (!currentAction()) return;
+            if (feeCommand.current) {
+              feeUnknown(feeCommand.current);
+              return;
+            }
+            if (!reasonCommand.current || reasonCommand.current.paid) return;
             recoveringReason.current = reasonCommand.current;
             unconfirmedRef.current = true;
             setUnconfirmed(true);
@@ -1609,10 +1857,35 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
             ) : undefined
           }
           onClose={() => {
-            if (currentAction()) clearAction();
+            if (!currentAction()) return;
+            const command = feeCommand.current;
+            if (command) {
+              if (command.uncertain || (command.attempted && !command.rejected))
+                feeUnknown(command);
+              else feeRelease(command);
+            } else clearAction();
           }}
           onSuccess={async (result) => {
             if (!currentAction()) return;
+            const feeCaptured = feeCommand.current;
+            if (feeCaptured) {
+              if (
+                !feeActive(feeCaptured) ||
+                !matchedConsultationFeeReceipt(result, feeCaptured.review)
+              )
+                throw new Error('Consultation fee receipt did not match');
+              feeCommand.current = null;
+              setFeeUncertain(false);
+              offerDirty.current = false;
+              setOfferKey(crypto.randomUUID());
+              if (feeCaptured.source.status === 'offer_accepted' || feeCaptured.source.invoice_id)
+                setOfferReason('');
+              setFeeReview(null);
+              setPaidFeeReview(null);
+              clearAction();
+              refresh();
+              return;
+            }
             if (
               (feeReview || paidFeeReview || resolutionReview) &&
               (result as { financialReview?: { hash?: string } } | null)?.financialReview?.hash !==

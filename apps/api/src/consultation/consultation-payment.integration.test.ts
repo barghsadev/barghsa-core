@@ -1,6 +1,11 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import {
+  consultationFeeEffects,
+  consultationReplayActor,
+  waitForCapturedConsultationDeadline,
+} from '../test/consultation-fee-http-proof.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let profileId: string;
@@ -267,6 +272,83 @@ it('charges or credits a paid consultation without changing the paid invoice', a
     reason: 'Additional review required',
     validUntil,
   };
+  const rejectedPaidFee = async (
+    route: string,
+    body: unknown,
+    fields?: string[],
+    status = 400,
+    user = 'consultation-finance'
+  ) => {
+    const before = await consultationFeeEffects(http.pool, requestId);
+    const response = await post(route, user, body);
+    expect(response.status, http.logs()).toBe(status);
+    const failure = await response.json();
+    expect(failure).toHaveProperty(
+      'error.correlationId',
+      expect.stringMatching(/^[0-9a-f-]{36}$/i)
+    );
+    expect(JSON.stringify(failure)).not.toContain('PRIVATE');
+    if (fields) expect(failure).toHaveProperty('error.fields', fields);
+    else expect(failure).not.toHaveProperty('error.fields');
+    expect(await consultationFeeEffects(http.pool, requestId)).toEqual(before);
+  };
+  const invalidPaid = { ...chargeInput, expectedReviewHash: 'a'.repeat(64) };
+  for (const [route, body] of [
+    [`${root}/paid-fee-review`, { fee: chargeInput.fee, reason: chargeInput.reason, validUntil }],
+    [`${root}/paid-fee`, invalidPaid],
+  ] as const) {
+    for (const [invalid, fields] of [
+      [{ ...body, fee: '0' }, ['fee']],
+      [{ ...body, fee: '9223372036854775808' }, ['fee']],
+      [{ ...body, fee: '500000' }, ['fee']],
+      [{ ...body, reason: 'x'.repeat(1001) }, ['reason']],
+      [{ ...body, validUntil: '2000-01-01T00:00:00Z' }, ['validUntil']],
+    ] as const)
+      await rejectedPaidFee(route, invalid, [...fields]);
+    for (const invalid of [
+      null,
+      { ...body, fee: '0', unknown: 'PRIVATE' },
+      ...(route.endsWith('/paid-fee')
+        ? [
+            { ...body, idempotencyKey: 'PRIVATE', fee: '0' },
+            { ...body, expectedReviewHash: 'PRIVATE' },
+          ]
+        : []),
+    ])
+      await rejectedPaidFee(route, invalid);
+    await rejectedPaidFee(
+      route.replace(requestId, randomUUID()),
+      { ...body, fee: '0' },
+      undefined,
+      404
+    );
+    await rejectedPaidFee(route, { ...body, fee: '0' }, undefined, 403, 'consultation-payer');
+  }
+  await http.pool.query(
+    'UPDATE staff_roles SET permissions=\'["orders:read","orders:write","invoices:write"]\' WHERE role_id=\'consultation-payment-staff\''
+  );
+  try {
+    await rejectedPaidFee(
+      `${root}/paid-fee-review`,
+      { fee: '0', reason: chargeInput.reason, validUntil },
+      undefined,
+      403
+    );
+  } finally {
+    await http.pool.query(
+      'UPDATE staff_roles SET permissions=\'["orders:read","orders:write","invoices:write","admin:financial:edit"]\' WHERE role_id=\'consultation-payment-staff\''
+    );
+  }
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='consultation-finance'"
+  );
+  try {
+    await rejectedPaidFee(`${root}/paid-fee`, { ...invalidPaid, reason: '' }, undefined, 403);
+  } finally {
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='consultation-finance'"
+    );
+  }
   const chargePreview = await post(`${root}/paid-fee-review`, 'consultation-finance', {
     fee: chargeInput.fee,
     reason: chargeInput.reason,
@@ -346,6 +428,32 @@ it('charges or credits a paid consultation without changing the paid invoice', a
     (await decide(`/api/consultations/requests/${requestId}/accept`, 'consultation-payer')).status
   ).toBe(200);
   await pay(chargeBody.invoiceId);
+  headers['paid-fee-replay-reviewer'] = await consultationReplayActor(
+    http.pool,
+    'paid-fee-replay-reviewer',
+    'consultation-payment-staff'
+  );
+  const paidProgressEffects = await consultationFeeEffects(http.pool, requestId);
+  const paidProgressReplay = await post(`${root}/paid-fee`, 'consultation-finance', {
+    ...chargeInput,
+    expectedReviewHash: chargeReview.hash,
+  });
+  expect(paidProgressReplay.status, http.logs()).toBe(200);
+  expect(await paidProgressReplay.json()).toEqual(chargeBody);
+  for (const [user, body] of [
+    ['paid-fee-replay-reviewer', { ...chargeInput, expectedReviewHash: chargeReview.hash }],
+    ['consultation-finance', { ...chargeInput, expectedReviewHash: 'a'.repeat(64) }],
+    [
+      'consultation-finance',
+      {
+        ...chargeInput,
+        reason: 'Different captured reason',
+        expectedReviewHash: chargeReview.hash,
+      },
+    ],
+  ] as const)
+    await rejectedPaidFee(`${root}/paid-fee`, body, undefined, 409, user);
+  expect(await consultationFeeEffects(http.pool, requestId)).toEqual(paidProgressEffects);
   const creditInput = {
     idempotencyKey: randomUUID(),
     fee: '450000',
@@ -427,6 +535,44 @@ it('charges or credits a paid consultation without changing the paid invoice', a
   });
   expect(body.refunds.map((refund) => refund.id).sort()).toEqual([...creditBody.refundIds].sort());
   expect(body.refunds.reduce((sum, refund) => sum + BigInt(refund.amount), 0n)).toBe(150000n);
+  const expiring = await offer();
+  expect(
+    (await decide(`/api/consultations/requests/${expiring.requestId}/accept`, 'consultation-payer'))
+      .status,
+    http.logs()
+  ).toBe(200);
+  await pay(expiring.invoiceId);
+  const expiringPaid = {
+    idempotencyKey: randomUUID(),
+    fee: '600000',
+    reason: 'Captured expiry proof',
+    validUntil: new Date(Date.now() + 5000).toISOString(),
+  };
+  const expiringPreview = await post(`${expiring.root}/paid-fee-review`, 'consultation-finance', {
+    fee: expiringPaid.fee,
+    reason: expiringPaid.reason,
+    validUntil: expiringPaid.validUntil,
+  });
+  expect(expiringPreview.status, http.logs()).toBe(200);
+  const expiringHash = ((await expiringPreview.json()) as { hash: string }).hash;
+  const expiringCommand = { ...expiringPaid, expectedReviewHash: expiringHash };
+  const expiringWrite = await post(
+    `${expiring.root}/paid-fee`,
+    'consultation-finance',
+    expiringCommand
+  );
+  expect(expiringWrite.status, http.logs()).toBe(200);
+  const expiringReceipt = await expiringWrite.json(),
+    expiryEffects = await consultationFeeEffects(http.pool, expiring.requestId);
+  await waitForCapturedConsultationDeadline(expiringPaid.validUntil);
+  const expiredReplay = await post(
+    `${expiring.root}/paid-fee`,
+    'consultation-finance',
+    expiringCommand
+  );
+  expect(expiredReplay.status, http.logs()).toBe(200);
+  expect(await expiredReplay.json()).toEqual(expiringReceipt);
+  expect(await consultationFeeEffects(http.pool, expiring.requestId)).toEqual(expiryEffects);
   const rejected = await resolvePaid(`${root}/paid-reject`, 'consultation-finance', {
     idempotencyKey: randomUUID(),
     reason: 'Service cannot be provided',
@@ -516,7 +662,7 @@ it('charges or credits a paid consultation without changing the paid invoice', a
     headers: headers['consultation-finance']!,
   });
   expect(await recoveredDetail.json()).toMatchObject({ request: { uncovered_credit: '0' } });
-});
+}, 30_000);
 
 it('cancels an unpaid revised charge and requests a refund for the prior paid consultation', async () => {
   const { requestId, invoiceId, root } = await offer();
