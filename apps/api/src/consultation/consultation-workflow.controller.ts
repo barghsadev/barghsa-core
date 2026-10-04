@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  ForbiddenException,
   Get,
   HttpCode,
   Param,
@@ -17,6 +18,8 @@ import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { ConsultationWorkflowService } from './consultation-workflow.service.js';
 import { CONSULTATION_STATUSES } from './consultation-state.js';
+import { InputFieldException } from '../common/input-field.exception.js';
+import { hasStaffPermission } from '../session/staff-permissions.js';
 
 const assignment = z.discriminatedUnion('assignTo', [
   z.object({ assignTo: z.literal('self') }).strict(),
@@ -72,6 +75,24 @@ function parse<S extends z.ZodType>(schema: S, body: unknown): z.output<S> {
   const parsed = schema.safeParse(body);
   if (!parsed.success) throw new BadRequestException('Invalid consultation action');
   return parsed.data as z.output<S>;
+}
+function parseReason(body: unknown): z.output<typeof reason> {
+  const parsed = reason.safeParse(body);
+  if (parsed.success) return parsed.data;
+  if (
+    parsed.error.issues.length &&
+    parsed.error.issues.every(
+      (issue) =>
+        issue.path.length === 1 &&
+        issue.path[0] === 'reason' &&
+        ['invalid_type', 'too_small', 'too_big'].includes(issue.code)
+    )
+  )
+    throw new InputFieldException(['reason']);
+  throw new BadRequestException('Invalid consultation action');
+}
+function requireFormPermission(req: AuthenticatedRequest) {
+  if (!hasStaffPermission(req, 'orders:write')) throw new ForbiddenException('Permission denied');
 }
 
 @ApiTags('Admin · Consultations')
@@ -288,11 +309,12 @@ export class StaffConsultationWorkflowController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
+    requireFormPermission(req);
     return this.workflow.staffAction(
       req.session,
       id,
       'request-info',
-      parse(reason, body).reason,
+      parseReason(body).reason,
       req.ip ?? '127.0.0.1'
     );
   }
@@ -306,11 +328,12 @@ export class StaffConsultationWorkflowController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
+    requireFormPermission(req);
     return this.workflow.staffAction(
       req.session,
       id,
       'reject',
-      parse(reason, body).reason,
+      parseReason(body).reason,
       req.ip ?? '127.0.0.1'
     );
   }
@@ -324,11 +347,12 @@ export class StaffConsultationWorkflowController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
+    requireFormPermission(req);
     return this.workflow.staffAction(
       req.session,
       id,
       'cancel',
-      parse(reason, body).reason,
+      parseReason(body).reason,
       req.ip ?? '127.0.0.1'
     );
   }
@@ -342,11 +366,12 @@ export class StaffConsultationWorkflowController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
+    requireFormPermission(req);
     return this.workflow.staffAction(
       req.session,
       id,
       'complete',
-      parse(reason, body).reason,
+      parseReason(body).reason,
       req.ip ?? '127.0.0.1'
     );
   }
@@ -385,7 +410,7 @@ export class CustomerConsultationWorkflowController {
     return this.workflow.provideInfo(
       req.session,
       id,
-      parse(reason, body).reason,
+      parseReason(body).reason,
       req.ip ?? '127.0.0.1'
     );
   }

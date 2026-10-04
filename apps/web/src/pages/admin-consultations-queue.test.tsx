@@ -344,10 +344,19 @@ it('confirms the reviewed paid-fee charge before sending the staff adjustment', 
     await act(async () => button('Confirm')?.click());
     expect(submitted).toHaveLength(1);
     expect(submitted[0]?.expectedReviewHash).toBe('b'.repeat(64));
+    await vi.waitFor(() => {
+      expect(document.querySelector('[role="dialog"]')).toBeNull();
+      expect(container.querySelector<HTMLTextAreaElement>('#consultation-reason')?.disabled).toBe(
+        false
+      );
+    });
     const closeReason = container.querySelector<HTMLTextAreaElement>('#consultation-reason');
     expect(closeReason).toBeDefined();
     await act(async () => fill(closeReason!, 'Customer requested cancellation'));
     await act(async () => button('Cancel request')?.click());
+    await vi.waitFor(() =>
+      expect(document.body.textContent).toContain('Review paid consultation decision')
+    );
     expect(document.body.textContent).toContain('Review paid consultation decision');
     expect(document.body.textContent).toContain('500,000 IRR');
     await act(async () => button('Confirm')?.click());

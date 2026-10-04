@@ -197,7 +197,7 @@ it('product recovery preserves selected/confirmed consultation and its failed su
         writes.push(JSON.parse(options.body as string));
         return writes.length === 1
           ? new Response('{}', { status: 503 })
-          : Response.json({ requestId: browseRequestId });
+          : Response.json({ requestId: browseRequestId, status: 'submitted' });
       }
       if (url.includes('/products?')) {
         if (hold)
@@ -218,9 +218,10 @@ it('product recovery preserves selected/confirmed consultation and its failed su
       confirmation.click();
     });
     const form = host.querySelector('form')!;
-    await act(async () =>
-      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-    );
+    await act(async () => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+      await vi.waitFor(() => expect(writes).toHaveLength(1));
+    });
     expect(writes).toHaveLength(1);
     hold = true;
     await act(async () => button(host, 'Refresh consultations').click());
@@ -239,9 +240,10 @@ it('product recovery preserves selected/confirmed consultation and its failed su
     expect(writes).toHaveLength(1);
     await act(async () => button(host, 'Try again').click());
     expect(radio.checked && confirmation.checked).toBe(true);
-    await act(async () =>
-      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-    );
+    await act(async () => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+      await vi.waitFor(() => expect(navigate).toHaveBeenCalledOnce());
+    });
     expect(writes).toHaveLength(2);
     expect(writes[1]).toEqual(writes[0]);
     expect(navigate).toHaveBeenCalledOnce();
@@ -261,7 +263,7 @@ it('a refreshed catalogue without the selected product clears confirmation befor
     vi.fn(async (url: string) =>
       Response.json(
         url.includes('/products?') && replaced
-          ? { products: [{ ...browseConsultation, id: 'replacement-product' }] }
+          ? { products: [{ ...browseConsultation, id: '86000000-0000-4000-8000-000000000099' }] }
           : consultationData(url)
       )
     )
@@ -279,7 +281,19 @@ it('a refreshed catalogue without the selected product clears confirmation befor
       false
     );
     expect(host.querySelector<HTMLButtonElement>('form button[type="submit"]')?.disabled).toBe(
-      true
+      false
+    );
+    await act(async () => {
+      host
+        .querySelector('form')!
+        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+      await vi.waitFor(() =>
+        expect(host.textContent).toContain('Choose an available consultation for this profile.')
+      );
+    });
+    expect(host.textContent).toContain('Confirm that this request is for the displayed profile.');
+    expect(vi.mocked(fetch).mock.calls.some(([, options]) => options?.method === 'POST')).toBe(
+      false
     );
   } finally {
     await close();

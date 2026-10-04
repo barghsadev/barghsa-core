@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearch } from '@tanstack/react-router';
 import {
   Button,
+  Alert,
   FinancialReviewSummary,
   Label,
   ListPage,
@@ -10,6 +11,16 @@ import {
   StatusTimeline,
   type StatusTone,
 } from '@barghsa/ui';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useZodForm,
+} from '@barghsa/ui/form';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import {
   parseConsultationFeeReview,
@@ -26,6 +37,8 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { withCsrf } from '../lib/csrf.js';
 import { staffOrderId } from '../lib/staff-order-list-query.js';
 import type { ConsultationListQuery } from '../lib/support-list-query.js';
+import { consultationReceipt, type ConsultationReasonDraft } from '../lib/consultation-form.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 
 interface RequestRow {
   id: string;
@@ -71,6 +84,59 @@ const statuses = [
   'rejected',
   'cancelled',
 ] as const;
+
+type ReasonIntent = 'request-info' | 'complete' | 'reject' | 'cancel' | 'recover_refund';
+interface ReasonCommand {
+  requestId: string;
+  profileId: string;
+  reason: string;
+  expectedStatus: string;
+  history: Detail['history'];
+  paid: boolean;
+}
+function validHistory(value: unknown): value is Detail['history'] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (event) =>
+        event &&
+        typeof event === 'object' &&
+        !Array.isArray(event) &&
+        typeof event.status === 'string' &&
+        typeof event.actor_type === 'string' &&
+        (event.reason === null || typeof event.reason === 'string') &&
+        typeof event.created_at === 'string' &&
+        Number.isFinite(Date.parse(event.created_at)) &&
+        (event.actor_name === undefined ||
+          event.actor_name === null ||
+          typeof event.actor_name === 'string')
+    )
+  );
+}
+function savedReason(detail: Detail, command: ReasonCommand) {
+  const stable = (event: Detail['history'][number]) =>
+    JSON.stringify([event.status, event.actor_type, event.reason, event.created_at]);
+  return (
+    detail.request.id === command.requestId &&
+    detail.request.profile_id === command.profileId &&
+    Array.isArray(detail.history) &&
+    detail.history.length > command.history.length &&
+    command.history.every((event, index) => {
+      const saved = detail.history[index];
+      return saved !== undefined && stable(event) === stable(saved);
+    }) &&
+    detail.history
+      .slice(command.history.length)
+      .some(
+        (event) =>
+          event.actor_type === 'staff' &&
+          event.status === command.expectedStatus &&
+          event.reason === command.reason &&
+          typeof event.created_at === 'string' &&
+          Number.isFinite(Date.parse(event.created_at))
+      )
+  );
+}
 
 const statusTones: Record<(typeof statuses)[number], StatusTone> = {
   submitted: 'info',
@@ -156,14 +222,39 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   ]);
   const rows = accepted?.criteria === criteria ? accepted.rows : [];
   const nextAfter = accepted?.criteria === criteria ? accepted.nextAfter : null;
+  const workScope = JSON.stringify([criteria, selectedId]);
+  const work = useRef({ scope: workScope, generation: 0 });
+  if (work.current.scope !== workScope)
+    work.current = { scope: workScope, generation: work.current.generation + 1 };
   const [team, setTeam] = useState('');
   const [teams, setTeams] = useState<string[]>([]);
-  const [reason, setReason] = useState('');
+  const reasonPaidRef = useRef(false);
+  const [reasonPaid, setReasonPaid] = useState(false);
+  const reasonForm = useZodForm<ConsultationReasonDraft>(
+    async () => {
+      const generation = work.current.generation;
+      const paid = reasonPaidRef.current;
+      const schemas = await import('../lib/consultation-form-schemas.js');
+      return generation === work.current.generation
+        ? schemas.reasonSchema(
+            copy(paid ? 'paidReasonInvalid1000' : 'reasonInvalid2000'),
+            paid ? 1000 : 2000
+          )
+        : schemas.inactiveReasonSchema;
+    },
+    { defaultValues: { reason: '' }, validationUnavailableMessage: copy('validationUnavailable') }
+  );
+  const reasonFields = useActionFieldErrors(
+    reasonForm,
+    { reason: copy(reasonPaid ? 'paidReasonInvalid1000' : 'reasonInvalid2000') },
+    copy('actionError')
+  );
   const [fee, setFee] = useState('');
   const [scope, setScope] = useState('');
   const [deliverables, setDeliverables] = useState('');
   const [validUntil, setValidUntil] = useState('');
   const [offerReason, setOfferReason] = useState('');
+  const offerDirty = useRef(false);
   const [offerKey, setOfferKey] = useState(() => crypto.randomUUID());
   const [revision, setRevision] = useState(0);
   const [listRevision, setListRevision] = useState(0);
@@ -176,12 +267,62 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   const reviewRequest = useRef(0);
   const [error, setError] = useState(false);
   const [action, setAction] = useState<TeamAction | null>(null);
+  const actionRef = useRef<TeamAction | null>(null);
+  const actionScope = useRef(workScope);
+  const actionGeneration = useRef(0);
+  const reasonCommand = useRef<ReasonCommand | null>(null);
+  const recoveringReason = useRef<ReasonCommand | null>(null);
+  const unconfirmedRef = useRef(false);
+  const [unconfirmed, setUnconfirmed] = useState(false);
+  const preparingRef = useRef(false);
+  const commandPendingRef = useRef(false);
+  const [commandPending, setCommandPending] = useState(false);
   const [feeReview, setFeeReview] = useState<ConsultationFeeReview | null>(null);
   const [paidFeeReview, setPaidFeeReview] = useState<ConsultationPaidFeeReview | null>(null);
   const [resolutionReview, setResolutionReview] = useState<ConsultationPaidResolutionReview | null>(
     null
   );
   const [reviewLoading, setReviewLoading] = useState(false);
+  const accessGeneration = useRef(0);
+  function busy() {
+    return (
+      !!actionRef.current ||
+      preparingRef.current ||
+      commandPendingRef.current ||
+      reasonForm.isSubmissionPending() ||
+      unconfirmedRef.current
+    );
+  }
+  function clearAction() {
+    actionRef.current = null;
+    setAction(null);
+    reasonCommand.current = null;
+    setFeeReview(null);
+    setPaidFeeReview(null);
+    setResolutionReview(null);
+    commandPendingRef.current = false;
+    setCommandPending(false);
+  }
+  function denyAction() {
+    accessGeneration.current += 1;
+    reviewRequest.current += 1;
+    work.current.generation += 1;
+    clearAction();
+    recoveringReason.current = null;
+    unconfirmedRef.current = false;
+    setUnconfirmed(false);
+    setAccepted(null);
+    setSelectedId(null, true);
+    setDetail(null);
+    setQueueDenied(true);
+    reasonForm.reset({ reason: '' });
+  }
+  useEffect(
+    () => () => {
+      work.current.generation += 1;
+    },
+    []
+  );
   function resetQueue(clearSelection = false) {
     setAccepted(null);
     setAfter(null);
@@ -194,6 +335,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
 
   useEffect(() => {
     const controller = new AbortController();
+    const capturedAccess = accessGeneration.current;
     setTeamsError(false);
     void fetch('/api/admin/consultations/teams', {
       credentials: 'include',
@@ -204,7 +346,8 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
         return (await response.json()) as { teams: Array<{ name: string }> };
       })
       .then((result) => {
-        if (!controller.signal.aborted) setTeams(result.teams.map((item) => item.name));
+        if (!controller.signal.aborted && capturedAccess === accessGeneration.current)
+          setTeams(result.teams.map((item) => item.name));
       })
       .catch(() => {
         if (!controller.signal.aborted) setTeamsError(true);
@@ -214,6 +357,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
 
   useEffect(() => {
     const controller = new AbortController();
+    const capturedAccess = accessGeneration.current;
     setQueueError(false);
     setQueueDenied(false);
     setQueueLoading(true);
@@ -233,7 +377,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
         return (await response.json()) as { requests: RequestRow[]; nextAfter: string | null };
       })
       .then((result) => {
-        if (!controller.signal.aborted) {
+        if (!controller.signal.aborted && capturedAccess === accessGeneration.current) {
           setAccepted((current) => {
             const extending =
               !!after &&
@@ -252,18 +396,10 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
         }
       })
       .catch((error: unknown) => {
-        if (controller.signal.aborted) return;
+        if (controller.signal.aborted || capturedAccess !== accessGeneration.current) return;
         if (error instanceof Error && ['401', '403'].includes(error.message)) {
-          reviewRequest.current += 1;
-          setAccepted(null);
-          setSelectedId(null, true);
-          setDetail(null);
-          setAction(null);
-          setFeeReview(null);
-          setPaidFeeReview(null);
-          setResolutionReview(null);
+          denyAction();
           setReviewLoading(false);
-          setQueueDenied(true);
         } else setQueueError(true);
       })
       .finally(() => {
@@ -282,23 +418,33 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   ]);
 
   useEffect(() => {
-    setReason('');
+    clearAction();
+    preparingRef.current = false;
+    reasonCommand.current = null;
+    reasonForm.reset({ reason: '' });
+    reasonPaidRef.current = false;
+    setReasonPaid(false);
+    recoveringReason.current = null;
+    unconfirmedRef.current = false;
+    setUnconfirmed(false);
     setTeam('');
     setFee('');
     setScope('');
     setDeliverables('');
     setValidUntil('');
     setOfferReason('');
+    offerDirty.current = false;
     setOfferKey(crypto.randomUUID());
     setError(false);
-  }, [selectedId]);
+  }, [workScope]);
 
   useEffect(() => {
     reviewRequest.current += 1;
     setFeeReview(null);
     setPaidFeeReview(null);
     setResolutionReview(null);
-    setAction(null);
+    clearAction();
+    preparingRef.current = false;
     setReviewLoading(false);
     setDetailError(false);
     if (!selectedId) {
@@ -306,50 +452,126 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
       return;
     }
     const controller = new AbortController();
+    const capturedGeneration = work.current.generation;
+    const recoveryAtRead = recoveringReason.current;
     setDetail(null);
     void fetch(`/api/admin/consultations/requests/${encodeURIComponent(selectedId)}`, {
       credentials: 'include',
       signal: controller.signal,
     })
       .then(async (response) => {
-        if (!response.ok) throw new Error('detail');
-        return (await response.json()) as Detail;
+        if (!response.ok) throw new Error(String(response.status));
+        const result = (await response.json()) as Detail;
+        if (
+          result?.request?.id !== selectedId ||
+          typeof result.request.profile_id !== 'string' ||
+          !validHistory(result.history)
+        )
+          throw new Error('detail');
+        return result;
       })
       .then((result) => {
-        if (!controller.signal.aborted) {
+        if (!controller.signal.aborted && capturedGeneration === work.current.generation) {
           setDetail(result);
-          setFee(result.request.fee ?? '');
-          setScope(result.request.scope ?? '');
-          setDeliverables(result.request.deliverables ?? '');
-          setOfferReason('');
+          const command = recoveringReason.current;
+          if (
+            command &&
+            command === recoveryAtRead &&
+            !commandPendingRef.current &&
+            savedReason(result, command)
+          ) {
+            recoveringReason.current = null;
+            unconfirmedRef.current = false;
+            setUnconfirmed(false);
+            reasonForm.reset({ reason: '' });
+          }
+          if (!offerDirty.current) {
+            setFee(result.request.fee ?? '');
+            setScope(result.request.scope ?? '');
+            setDeliverables(result.request.deliverables ?? '');
+            setOfferReason('');
+          }
         }
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setDetailError(true);
+      .catch((error: unknown) => {
+        if (controller.signal.aborted || capturedGeneration !== work.current.generation) return;
+        if (error instanceof Error && ['401', '403', '404'].includes(error.message)) denyAction();
+        else setDetailError(true);
       });
     return () => controller.abort();
-  }, [selectedId, revision, detailRevision]);
+  }, [selectedId, criteria, revision, detailRevision]);
 
   useEffect(() => {
-    if (detail && time.status === 'ready') {
+    if (detail && time.status === 'ready' && !offerDirty.current) {
       setValidUntil(offerInputFromInstant(detail.request.offer_valid_until, time.timezone));
     }
   }, [detail, time.status, time.timezone]);
 
   function prepare(path: string, title: string, body: Record<string, unknown> = {}) {
-    if (!selectedId) return;
-    setAction({
+    if (busy()) return;
+    propose(path, title, body);
+  }
+  function propose(path: string, title: string, body: Record<string, unknown> = {}) {
+    if (
+      !selectedId ||
+      work.current.scope !== workScope ||
+      actionRef.current ||
+      commandPendingRef.current ||
+      unconfirmedRef.current
+    )
+      return;
+    const next: TeamAction = {
       title,
       description: `${detail?.request.profile_name ?? ''} · ${title}`,
       path: `/api/admin/consultations/requests/${selectedId}/${path}`,
       method: 'POST',
       body,
       forbiddenMessage: copy('actionError'),
-    });
+    };
+    actionScope.current = workScope;
+    actionGeneration.current = work.current.generation;
+    actionRef.current = next;
+    setAction(next);
+  }
+  function prepareReason(intent: ReasonIntent, title: string, paid = false) {
+    if (!selectedId || !detail || busy()) return;
+    reasonPaidRef.current = paid;
+    setReasonPaid(paid);
+    reasonForm.clearErrors();
+    const generation = work.current.generation;
+    const captured = detail;
+    void reasonForm.handleSubmit(async (draft) => {
+      if (generation !== work.current.generation || work.current.scope !== workScope) return;
+      const reason = draft.reason.trim();
+      reasonCommand.current = {
+        requestId: captured.request.id,
+        profileId: captured.request.profile_id,
+        reason,
+        expectedStatus:
+          intent === 'request-info'
+            ? 'awaiting_customer_info'
+            : intent === 'complete'
+              ? 'completed'
+              : intent === 'reject'
+                ? 'rejected'
+                : intent === 'cancel'
+                  ? 'cancelled'
+                  : captured.request.status,
+        history: captured.history.map((event) => ({ ...event })),
+        paid,
+      };
+      if (paid)
+        await preparePaidResolution(
+          intent as 'cancel' | 'reject' | 'recover_refund',
+          title,
+          reason
+        );
+      else propose(intent, title, { reason });
+    })();
   }
 
   async function prepareFeeOffer() {
-    if (!selectedId || !current || !offerDeadline || reviewLoading) return;
+    if (!selectedId || !current || !offerDeadline || busy()) return;
     const terms = {
       fee,
       scope: scope.trim(),
@@ -358,6 +580,8 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
       ...(current.invoice_id ? { reason: offerReason.trim() } : {}),
     };
     const request = ++reviewRequest.current;
+    const generation = work.current.generation;
+    preparingRef.current = true;
     setReviewLoading(true);
     setError(false);
     try {
@@ -372,7 +596,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
       );
       if (!response.ok) throw new Error('fee-review');
       const review = parseConsultationFeeReview(await response.json());
-      if (request !== reviewRequest.current) return;
+      if (request !== reviewRequest.current || generation !== work.current.generation) return;
       if (
         !review ||
         review.scope.resourceId !== selectedId ||
@@ -386,24 +610,29 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
       )
         throw new Error('fee-review');
       setFeeReview(review);
-      prepare('fee', copy(current.invoice_id ? 'replaceFee' : 'issueFee'), {
+      propose('fee', copy(current.invoice_id ? 'replaceFee' : 'issueFee'), {
         ...terms,
         idempotencyKey: offerKey,
         expectedReviewHash: review.hash,
       });
     } catch {
-      if (request !== reviewRequest.current) return;
+      if (request !== reviewRequest.current || generation !== work.current.generation) return;
       setError(true);
       refresh();
     } finally {
-      if (request === reviewRequest.current) setReviewLoading(false);
+      if (request === reviewRequest.current && generation === work.current.generation) {
+        preparingRef.current = false;
+        setReviewLoading(false);
+      }
     }
   }
 
   async function preparePaidFee() {
-    if (!selectedId || !current || !offerDeadline || reviewLoading) return;
+    if (!selectedId || !current || !offerDeadline || busy()) return;
     const terms = { fee, reason: offerReason.trim(), validUntil: offerDeadline.toISOString() };
     const request = ++reviewRequest.current;
+    const generation = work.current.generation;
+    preparingRef.current = true;
     setReviewLoading(true);
     setError(false);
     try {
@@ -418,7 +647,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
       );
       if (!response.ok) throw new Error('paid-fee-review');
       const review = parseConsultationPaidFeeReview(await response.json());
-      if (request !== reviewRequest.current) return;
+      if (request !== reviewRequest.current || generation !== work.current.generation) return;
       if (
         !review ||
         review.scope.resourceId !== selectedId ||
@@ -431,17 +660,20 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
       )
         throw new Error('paid-fee-review');
       setPaidFeeReview(review);
-      prepare('paid-fee', copy('adjustPaidFee'), {
+      propose('paid-fee', copy('adjustPaidFee'), {
         ...terms,
         idempotencyKey: offerKey,
         expectedReviewHash: review.hash,
       });
     } catch {
-      if (request !== reviewRequest.current) return;
+      if (request !== reviewRequest.current || generation !== work.current.generation) return;
       setError(true);
       refresh();
     } finally {
-      if (request === reviewRequest.current) setReviewLoading(false);
+      if (request === reviewRequest.current && generation === work.current.generation) {
+        preparingRef.current = false;
+        setReviewLoading(false);
+      }
     }
   }
 
@@ -450,8 +682,18 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     title: string,
     reason: string
   ) {
-    if (!selectedId || !current || reviewLoading) return;
+    if (
+      !selectedId ||
+      !current ||
+      preparingRef.current ||
+      commandPendingRef.current ||
+      actionRef.current ||
+      unconfirmedRef.current
+    )
+      return;
     const request = ++reviewRequest.current;
+    const generation = work.current.generation;
+    preparingRef.current = true;
     setReviewLoading(true);
     setError(false);
     try {
@@ -466,7 +708,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
       );
       if (!response.ok) throw new Error('paid-resolution-review');
       const review = parseConsultationPaidResolutionReview(await response.json());
-      if (request !== reviewRequest.current) return;
+      if (request !== reviewRequest.current || generation !== work.current.generation) return;
       if (
         !review ||
         review.scope.resourceId !== selectedId ||
@@ -478,17 +720,20 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
       )
         throw new Error('paid-resolution-review');
       setResolutionReview(review);
-      prepare(action === 'recover_refund' ? 'refund-recovery' : `paid-${action}`, title, {
+      propose(action === 'recover_refund' ? 'refund-recovery' : `paid-${action}`, title, {
         idempotencyKey: offerKey,
         reason,
         expectedReviewHash: review.hash,
       });
     } catch {
-      if (request !== reviewRequest.current) return;
+      if (request !== reviewRequest.current || generation !== work.current.generation) return;
       setError(true);
       refresh();
     } finally {
-      if (request === reviewRequest.current) setReviewLoading(false);
+      if (request === reviewRequest.current && generation === work.current.generation) {
+        preparingRef.current = false;
+        setReviewLoading(false);
+      }
     }
   }
 
@@ -502,6 +747,12 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
       : undefined;
   const validOfferDeadline =
     offerDeadline && Number.isFinite(offerDeadline.getTime()) && offerDeadline > new Date();
+  const editorLocked =
+    !!action || reviewLoading || commandPending || reasonForm.formState.isSubmitting;
+  const currentAction = () =>
+    actionRef.current === action &&
+    actionScope.current === work.current.scope &&
+    actionGeneration.current === work.current.generation;
   return (
     <main className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="flex flex-wrap items-start justify-between gap-3">
@@ -520,6 +771,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <select
                   className="w-full rounded-md border bg-background p-2"
                   value={appliedStatus}
+                  disabled={commandPending}
                   onChange={(event) => {
                     if (queries) queries.setFilters({ status: event.target.value });
                     else {
@@ -541,6 +793,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <select
                   className="w-full rounded-md border bg-background p-2"
                   value={appliedAssignment}
+                  disabled={commandPending}
                   onChange={(event) => {
                     if (queries) queries.setFilters({ assignment: event.target.value });
                     else {
@@ -559,6 +812,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <select
                   className="w-full rounded-md border bg-background p-2"
                   value={appliedPriority}
+                  disabled={commandPending}
                   onChange={(event) => {
                     if (queries) queries.setFilters({ priority: event.target.value });
                     else {
@@ -577,6 +831,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <select
                   className="w-full rounded-md border bg-background p-2"
                   value={appliedMinAgeDays}
+                  disabled={commandPending}
                   onChange={(event) => {
                     if (queries) queries.setFilters({ minAgeDays: event.target.value });
                     else {
@@ -593,7 +848,13 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
             </div>
           }
           actions={
-            <Button variant="outline" onClick={refresh} disabled={queueLoading}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                if (!commandPendingRef.current) refresh();
+              }}
+              disabled={queueLoading || commandPending}
+            >
               {copy('refresh')}
             </Button>
           }
@@ -610,6 +871,20 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
           <p role="alert" className="text-destructive">
             {copy('loadError')}
           </p>
+        )}
+        {unconfirmed && (
+          <div role="alert" className="space-y-2">
+            <p>{copy('actionUnconfirmed')}</p>
+            <Button
+              variant="outline"
+              disabled={commandPending || reviewLoading || reasonForm.formState.isSubmitting}
+              onClick={() => {
+                if (!commandPendingRef.current) setDetailRevision((value) => value + 1);
+              }}
+            >
+              {copy('retry')}
+            </Button>
+          </div>
         )}
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
           <section aria-label={copy('staffTitle')} className="space-y-2">
@@ -637,10 +912,12 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <button
                   key={row.id}
                   type="button"
+                  disabled={commandPending}
                   onClick={() => {
+                    if (commandPendingRef.current || row.id === selectedId) return;
                     setSelectedId(row.id);
                     setDetail(null);
-                    setReason('');
+                    reasonForm.reset({ reason: '' });
                     setOfferKey(crypto.randomUUID());
                   }}
                   aria-pressed={selectedId === row.id}
@@ -680,7 +957,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
               }
               loading={queueLoading}
               onNext={() => {
-                if (!nextAfter) return;
+                if (!nextAfter || commandPendingRef.current) return;
                 if (queries) queries.queue.next(nextAfter);
                 else setAfter(nextAfter);
               }}
@@ -782,7 +1059,11 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                           inputMode="numeric"
                           pattern="[1-9][0-9]*"
                           value={fee}
-                          onChange={(event) => setFee(event.target.value)}
+                          onChange={(event) => {
+                            offerDirty.current = true;
+                            setFee(event.target.value);
+                          }}
+                          disabled={editorLocked || unconfirmed}
                           className="w-full rounded-md border bg-background p-2"
                         />
                       </label>
@@ -791,8 +1072,11 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                         <input
                           type="datetime-local"
                           value={validUntil}
-                          onChange={(event) => setValidUntil(event.target.value)}
-                          disabled={time.status !== 'ready'}
+                          onChange={(event) => {
+                            offerDirty.current = true;
+                            setValidUntil(event.target.value);
+                          }}
+                          disabled={time.status !== 'ready' || editorLocked || unconfirmed}
                           className="w-full rounded-md border bg-background p-2"
                         />
                       </label>
@@ -801,7 +1085,11 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                       <span>{copy('scope')}</span>
                       <textarea
                         value={scope}
-                        onChange={(event) => setScope(event.target.value)}
+                        onChange={(event) => {
+                          offerDirty.current = true;
+                          setScope(event.target.value);
+                        }}
+                        disabled={editorLocked || unconfirmed}
                         maxLength={4000}
                         className="min-h-20 w-full rounded-md border bg-background p-2"
                       />
@@ -810,7 +1098,11 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                       <span>{copy('deliverables')}</span>
                       <textarea
                         value={deliverables}
-                        onChange={(event) => setDeliverables(event.target.value)}
+                        onChange={(event) => {
+                          offerDirty.current = true;
+                          setDeliverables(event.target.value);
+                        }}
+                        disabled={editorLocked || unconfirmed}
                         maxLength={4000}
                         className="min-h-20 w-full rounded-md border bg-background p-2"
                       />
@@ -820,7 +1112,11 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                         <span>{copy('replaceReason')}</span>
                         <textarea
                           value={offerReason}
-                          onChange={(event) => setOfferReason(event.target.value)}
+                          onChange={(event) => {
+                            offerDirty.current = true;
+                            setOfferReason(event.target.value);
+                          }}
+                          disabled={editorLocked || unconfirmed}
                           maxLength={2000}
                           className="min-h-16 w-full rounded-md border bg-background p-2"
                         />
@@ -828,7 +1124,8 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                     )}
                     <Button
                       disabled={
-                        reviewLoading ||
+                        editorLocked ||
+                        unconfirmed ||
                         !/^[1-9][0-9]{0,18}$/.test(fee) ||
                         !scope.trim() ||
                         !deliverables.trim() ||
@@ -856,7 +1153,11 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                           inputMode="numeric"
                           pattern="[1-9][0-9]*"
                           value={fee}
-                          onChange={(event) => setFee(event.target.value)}
+                          onChange={(event) => {
+                            offerDirty.current = true;
+                            setFee(event.target.value);
+                          }}
+                          disabled={editorLocked || unconfirmed}
                           className="w-full rounded-md border bg-background p-2"
                         />
                       </label>
@@ -865,8 +1166,11 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                         <input
                           type="datetime-local"
                           value={validUntil}
-                          onChange={(event) => setValidUntil(event.target.value)}
-                          disabled={time.status !== 'ready'}
+                          onChange={(event) => {
+                            offerDirty.current = true;
+                            setValidUntil(event.target.value);
+                          }}
+                          disabled={time.status !== 'ready' || editorLocked || unconfirmed}
                           className="w-full rounded-md border bg-background p-2"
                         />
                       </label>
@@ -875,14 +1179,19 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                       <span>{copy('adjustmentReason')}</span>
                       <textarea
                         value={offerReason}
-                        onChange={(event) => setOfferReason(event.target.value)}
+                        onChange={(event) => {
+                          offerDirty.current = true;
+                          setOfferReason(event.target.value);
+                        }}
+                        disabled={editorLocked || unconfirmed}
                         maxLength={1000}
                         className="min-h-16 w-full rounded-md border bg-background p-2"
                       />
                     </label>
                     <Button
                       disabled={
-                        reviewLoading ||
+                        editorLocked ||
+                        unconfirmed ||
                         !/^[1-9][0-9]{0,18}$/.test(fee) ||
                         fee === current.fee ||
                         !offerReason.trim() ||
@@ -897,12 +1206,16 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <div className="flex flex-wrap gap-2">
                   <Button
                     variant="outline"
+                    disabled={editorLocked || unconfirmed}
                     onClick={() => prepare('assign', copy('assignSelf'), { assignTo: 'self' })}
                   >
                     {copy('assignSelf')}
                   </Button>
                   {current.status === 'submitted' && (
-                    <Button onClick={() => prepare('review', copy('startReview'))}>
+                    <Button
+                      disabled={editorLocked || unconfirmed}
+                      onClick={() => prepare('review', copy('startReview'))}
+                    >
                       {copy('startReview')}
                     </Button>
                   )}
@@ -913,6 +1226,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                     <select
                       id="consultation-team"
                       value={team}
+                      disabled={editorLocked || unconfirmed}
                       onChange={(event) => setTeam(event.target.value)}
                       className="w-full rounded-md border bg-background p-2"
                     >
@@ -926,7 +1240,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                   </div>
                   <Button
                     variant="outline"
-                    disabled={!team.trim()}
+                    disabled={!team.trim() || editorLocked || unconfirmed}
                     onClick={() =>
                       prepare('assign', copy('assignTeam'), { assignTo: 'team', team: team.trim() })
                     }
@@ -934,91 +1248,120 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                     {copy('assignTeam')}
                   </Button>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="consultation-reason">{copy('note')}</Label>
-                  <textarea
-                    id="consultation-reason"
-                    className="min-h-24 w-full rounded-md border bg-background p-2"
-                    value={reason}
-                    onChange={(event) => setReason(event.target.value)}
-                    maxLength={1000}
-                  />
-                  {current.has_paid_invoice && (
-                    <p className="text-sm text-muted-foreground">{copy('paidClosureHelp')}</p>
-                  )}
-                  {BigInt(current.uncovered_credit) > 0n && (
-                    <p role="status" className="text-sm text-destructive">
-                      {copy('uncoveredCredit')}:{' '}
-                      {new Intl.NumberFormat(locale).format(BigInt(current.uncovered_credit))} IRR
-                    </p>
-                  )}
-                  <div className="flex flex-wrap gap-2">
-                    {current.status === 'under_review' && (
-                      <Button
-                        variant="outline"
-                        disabled={!reason.trim()}
-                        onClick={() =>
-                          prepare('request-info', copy('requestInfo'), { reason: reason.trim() })
-                        }
-                      >
-                        {copy('requestInfo')}
-                      </Button>
+                <Form {...reasonForm}>
+                  <form
+                    aria-label={copy('reasonFormTitle')}
+                    className="space-y-2"
+                    onSubmit={(event) => event.preventDefault()}
+                    noValidate
+                  >
+                    {reasonForm.formState.errors.root && (
+                      <Alert variant="destructive">{copy('validationUnavailable')}</Alert>
                     )}
-                    {current.status === 'offer_accepted' && (
-                      <Button
-                        disabled={!reason.trim()}
-                        onClick={() =>
-                          prepare('complete', copy('complete'), { reason: reason.trim() })
-                        }
-                      >
-                        {copy('complete')}
-                      </Button>
-                    )}
-                    {!['completed', 'rejected', 'cancelled', 'offer_declined'].includes(
-                      current.status
-                    ) && (
-                      <>
-                        <Button
-                          variant="outline"
-                          disabled={!reason.trim() || reviewLoading}
-                          onClick={() =>
-                            current.has_paid_invoice
-                              ? void preparePaidResolution('reject', copy('reject'), reason.trim())
-                              : prepare('reject', copy('reject'), { reason: reason.trim() })
-                          }
-                        >
-                          {copy('reject')}
-                        </Button>
-                        <Button
-                          variant="outline"
-                          disabled={!reason.trim() || reviewLoading}
-                          onClick={() =>
-                            current.has_paid_invoice
-                              ? void preparePaidResolution('cancel', copy('cancel'), reason.trim())
-                              : prepare('cancel', copy('cancel'), { reason: reason.trim() })
-                          }
-                        >
-                          {copy('cancel')}
-                        </Button>
-                      </>
+                    <FormField
+                      control={reasonForm.control}
+                      name="reason"
+                      render={({ field }) => (
+                        <FormItem id="consultation-reason">
+                          <FormLabel>{copy('note')}</FormLabel>
+                          <FormControl>
+                            <textarea
+                              {...field}
+                              aria-required="true"
+                              disabled={editorLocked || unconfirmed}
+                              className="min-h-24 w-full rounded-md border bg-background p-2"
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            {copy(reasonPaid ? 'paidReasonHelp' : 'reasonHelp')}
+                          </FormDescription>
+                          <div className="grid">
+                            <p
+                              aria-hidden="true"
+                              className="invisible col-start-1 row-start-1 text-sm"
+                            >
+                              {copy(reasonPaid ? 'paidReasonInvalid1000' : 'reasonInvalid2000')}
+                            </p>
+                            <FormMessage className="col-start-1 row-start-1" />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    {current.has_paid_invoice && (
+                      <p className="text-sm text-muted-foreground">{copy('paidClosureHelp')}</p>
                     )}
                     {BigInt(current.uncovered_credit) > 0n && (
-                      <Button
-                        variant="outline"
-                        disabled={!reason.trim() || reviewLoading}
-                        onClick={() =>
-                          void preparePaidResolution(
-                            'recover_refund',
-                            copy('recoverRefund'),
-                            reason.trim()
-                          )
-                        }
-                      >
-                        {copy('recoverRefund')}
-                      </Button>
+                      <p role="status" className="text-sm text-destructive">
+                        {copy('uncoveredCredit')}:{' '}
+                        {new Intl.NumberFormat(locale).format(BigInt(current.uncovered_credit))} IRR
+                      </p>
                     )}
-                  </div>
-                </div>
+                    <div className="flex flex-wrap gap-2">
+                      {current.status === 'under_review' && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          loading={reasonForm.formState.isSubmitting || reviewLoading}
+                          disabled={editorLocked || unconfirmed}
+                          onClick={() => prepareReason('request-info', copy('requestInfo'))}
+                        >
+                          {copy('requestInfo')}
+                        </Button>
+                      )}
+                      {current.status === 'offer_accepted' && (
+                        <Button
+                          type="button"
+                          loading={reasonForm.formState.isSubmitting || reviewLoading}
+                          disabled={editorLocked || unconfirmed}
+                          onClick={() => prepareReason('complete', copy('complete'))}
+                        >
+                          {copy('complete')}
+                        </Button>
+                      )}
+                      {!['completed', 'rejected', 'cancelled', 'offer_declined'].includes(
+                        current.status
+                      ) && (
+                        <>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            loading={reasonForm.formState.isSubmitting || reviewLoading}
+                            disabled={editorLocked || unconfirmed}
+                            onClick={() =>
+                              prepareReason('reject', copy('reject'), current.has_paid_invoice)
+                            }
+                          >
+                            {copy('reject')}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            loading={reasonForm.formState.isSubmitting || reviewLoading}
+                            disabled={editorLocked || unconfirmed}
+                            onClick={() =>
+                              prepareReason('cancel', copy('cancel'), current.has_paid_invoice)
+                            }
+                          >
+                            {copy('cancel')}
+                          </Button>
+                        </>
+                      )}
+                      {BigInt(current.uncovered_credit) > 0n && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          loading={reasonForm.formState.isSubmitting || reviewLoading}
+                          disabled={editorLocked || unconfirmed}
+                          onClick={() =>
+                            prepareReason('recover_refund', copy('recoverRefund'), true)
+                          }
+                        >
+                          {copy('recoverRefund')}
+                        </Button>
+                      )}
+                    </div>
+                  </form>
+                </Form>
                 <section className="space-y-2">
                   <h3 className="font-semibold">{copy('history')}</h3>
                   <StatusTimeline
@@ -1051,9 +1394,31 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
           </section>
         </div>
       </ListPage>
-      {action && (
+      {action && actionScope.current === workScope && (
         <TeamActionDialog
           action={action}
+          confirmationDisabled={unconfirmed}
+          onPendingChange={(pending) => {
+            if (!currentAction()) return;
+            commandPendingRef.current = pending;
+            setCommandPending(pending);
+          }}
+          onValidationError={(fields) =>
+            currentAction() &&
+            !!reasonCommand.current &&
+            fields.length > 0 &&
+            fields.every((field) => field === 'reason') &&
+            reasonFields(fields)
+          }
+          onUnconfirmed={() => {
+            if (!currentAction() || !reasonCommand.current || reasonCommand.current.paid) return;
+            recoveringReason.current = reasonCommand.current;
+            unconfirmedRef.current = true;
+            setUnconfirmed(true);
+          }}
+          onDenied={() => {
+            if (currentAction()) denyAction();
+          }}
           summary={
             resolutionReview ? (
               <FinancialReviewSummary
@@ -1244,20 +1609,32 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
             ) : undefined
           }
           onClose={() => {
-            setAction(null);
-            setFeeReview(null);
-            setPaidFeeReview(null);
-            setResolutionReview(null);
+            if (currentAction()) clearAction();
           }}
           onSuccess={async (result) => {
+            if (!currentAction()) return;
             if (
               (feeReview || paidFeeReview || resolutionReview) &&
               (result as { financialReview?: { hash?: string } } | null)?.financialReview?.hash !==
                 (feeReview ?? paidFeeReview ?? resolutionReview)?.hash
             )
               throw new Error('Consultation fee confirmation did not match the review');
-            setReason('');
-            setOfferKey(crypto.randomUUID());
+            const command = reasonCommand.current;
+            if (
+              command &&
+              !command.paid &&
+              !consultationReceipt(result, command.requestId, command.expectedStatus)
+            )
+              throw new Error('Consultation reason receipt did not match');
+            if (command) {
+              reasonForm.reset({ reason: '' });
+              recoveringReason.current = null;
+              unconfirmedRef.current = false;
+              setUnconfirmed(false);
+            } else if (feeReview || paidFeeReview) {
+              offerDirty.current = false;
+            }
+            if (feeReview || paidFeeReview || resolutionReview) setOfferKey(crypto.randomUUID());
             setFeeReview(null);
             setPaidFeeReview(null);
             setResolutionReview(null);

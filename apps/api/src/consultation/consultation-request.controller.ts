@@ -23,6 +23,7 @@ import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { ConsultationRequestService } from './consultation-request.service.js';
+import { InputFieldException } from '../common/input-field.exception.js';
 
 const submission = z
   .object({
@@ -54,7 +55,19 @@ export class ConsultationRequestController {
   @ApiZodBody(submission)
   submit(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
     const parsed = submission.safeParse(body);
-    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    if (!parsed.success) {
+      if (
+        parsed.error.issues.length &&
+        parsed.error.issues.every(
+          (issue) =>
+            issue.path.length === 1 &&
+            issue.path[0] === 'productId' &&
+            ['invalid_type', 'invalid_format'].includes(issue.code)
+        )
+      )
+        throw new InputFieldException(['productId']);
+      throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    }
     return this.service.submit(req.session, parsed.data, req.ip ?? '127.0.0.1');
   }
 

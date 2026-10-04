@@ -35,6 +35,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
   }> = [{ status: 'submitted', actor_type: 'customer', reason: null, created_at: submittedAt }];
   const customerRequest = () => ({
     id: requestId,
+    profile_id: profileId,
     status,
     product_snapshot: { title },
     submitted_at: submittedAt,
@@ -112,7 +113,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
     expect(route.request().method()).toBe('POST');
     expect(route.request().postDataJSON()).toMatchObject({ profileId, productId });
     submitted = true;
-    return route.fulfill({ status: 201, json: { requestId } });
+    return route.fulfill({ status: 201, json: { requestId, status: 'submitted' } });
   });
   await page.route(`**/api/consultations/requests/${requestId}`, (route) =>
     route.fulfill({ json: { request: customerRequest(), history, adjustments: [], refunds: [] } })
@@ -130,7 +131,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
     expect(status).toBe('submitted');
     status = 'under_review';
     history.push({ status, actor_type: 'staff', reason: null, created_at: submittedAt });
-    return route.fulfill({ json: { status } });
+    return route.fulfill({ json: { requestId, status } });
   });
   await page.route(`**/api/admin/consultations/requests/${requestId}/fee-review`, (route) => {
     const input = route.request().postDataJSON() as Record<string, string>;
@@ -226,7 +227,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
       reason: 'Consultation delivered',
       created_at: submittedAt,
     });
-    return route.fulfill({ json: { status } });
+    return route.fulfill({ json: { requestId, status } });
   });
 
   await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));

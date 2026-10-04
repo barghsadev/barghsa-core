@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -328,4 +329,57 @@ it('lists seeded products by profile, submits without invoicing, and isolates hi
       })
     ).status
   ).toBe(400);
+});
+
+it('owns only malformed product selection and rejects protected or unauthorized submissions without writes', async () => {
+  const productId = (
+    await http.pool.query(
+      "SELECT id FROM products WHERE system_key='electricity_generation_station'"
+    )
+  ).rows[0].id as string;
+  const body = { profileId: profiles.individual!, productId, submissionKey: randomUUID() };
+  const snapshot = async () =>
+    (
+      await http.pool.query(
+        `SELECT
+         (SELECT count(*)::int FROM consultation_requests) AS requests,
+         (SELECT count(*)::int FROM consultation_request_events) AS events,
+         (SELECT count(*)::int FROM invoices) AS invoices,
+         (SELECT count(*)::int FROM audit_log WHERE event LIKE 'consultation.%') AS audits,
+         (SELECT count(*)::int FROM in_app_notifications) AS notifications`
+      )
+    ).rows[0];
+  const before = await snapshot();
+  for (const [input, fields] of [
+    [{ ...body, productId: 'PRIVATE' }, ['productId']],
+    [{ ...body, productId: null }, ['productId']],
+    [{ ...body, profileId: 'PRIVATE' }, undefined],
+    [{ ...body, submissionKey: 'PRIVATE' }, undefined],
+    [{ ...body, productId: 'PRIVATE', profileId: 'PRIVATE' }, undefined],
+    [{ ...body, productId: 'PRIVATE', privateKey: 'PRIVATE' }, undefined],
+    [[], undefined],
+  ] as Array<[unknown, string[] | undefined]>) {
+    const response = await fetch(`${http.base}/api/consultations/requests`, {
+      method: 'POST',
+      headers: headers.individual!,
+      body: JSON.stringify(input),
+    });
+    expect(response.status, http.logs()).toBe(400);
+    const receipt = (await response.json()) as { error: { code: string; fields?: string[] } };
+    expect(receipt.error.code).toBe(
+      fields ? ErrorCodes.VALIDATION_INPUT_INVALID.code : 'VALIDATION:INPUT_INVALID'
+    );
+    expect(receipt.error.fields).toEqual(fields);
+    expect(JSON.stringify(receipt)).not.toMatch(/PRIVATE|privateKey|submissionKey/);
+  }
+  const denied = await fetch(`${http.base}/api/consultations/requests`, {
+    method: 'POST',
+    headers: headers.company!,
+    body: JSON.stringify(body),
+  });
+  expect(denied.status, http.logs()).toBe(404);
+  expect((await denied.json()) as { error: { fields?: string[] } }).toMatchObject({
+    error: expect.not.objectContaining({ fields: expect.anything() }),
+  });
+  expect(await snapshot()).toEqual(before);
 });

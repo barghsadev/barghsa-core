@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -594,4 +595,155 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
   expect(
     (await http.pool.query('SELECT state FROM invoices WHERE id=$1', [anotherInvoiceId])).rows[0]
   ).toMatchObject({ state: 'Cancelled' });
+});
+
+it('projects owned consultation reasons while retaining exact bounds, live authority and invoice step-up guards', async () => {
+  const submitted = await post('/api/consultations/requests', 'customer', {
+    profileId,
+    productId,
+    submissionKey: randomUUID(),
+  });
+  expect(submitted.status, http.logs()).toBe(201);
+  const created = (await submitted.json()) as { requestId: string; status: string };
+  expect(created).toEqual({ requestId: expect.any(String), status: 'submitted' });
+  const requestId = created.requestId;
+  const root = `/api/admin/consultations/requests/${requestId}`;
+  const informationPath = `/api/consultations/requests/${requestId}/provide-info`;
+  expect((await post(`${root}/review`, 'reviewer', {})).status).toBe(200);
+  const snapshot = async () =>
+    (
+      await http.pool.query(
+        `SELECT
+         (SELECT to_jsonb(r) FROM consultation_requests r WHERE id=$1::uuid) AS request,
+         (SELECT jsonb_agg(to_jsonb(e) ORDER BY created_at,id)
+          FROM consultation_request_events e WHERE request_id=$1::uuid) AS events,
+         (SELECT jsonb_agg(to_jsonb(i) ORDER BY id)
+          FROM invoices i WHERE consultation_id=$1::text) AS invoices,
+         (SELECT count(*)::int FROM audit_log
+          WHERE event LIKE 'consultation.%' AND metadata::jsonb->>'requestId'=$1::text) AS audits,
+         (SELECT count(*)::int FROM in_app_notifications WHERE profile_id=$2::uuid) AS notifications`,
+        [requestId, profileId]
+      )
+    ).rows[0];
+  const reject = async (
+    path: string,
+    user: string,
+    body: unknown,
+    fields?: string[],
+    status = 400
+  ) => {
+    const response = await post(path, user, body);
+    expect(response.status, http.logs()).toBe(status);
+    const receipt = (await response.json()) as { error: { code: string; fields?: string[] } };
+    if (status === 400) expect(receipt.error.code).toBe(ErrorCodes.VALIDATION_INPUT_INVALID.code);
+    expect(receipt.error.fields).toEqual(fields);
+    expect(JSON.stringify(receipt)).not.toMatch(/PRIVATE|expectedReviewHash|privateKey/);
+    return receipt;
+  };
+  const before = await snapshot();
+  for (const action of ['request-info', 'complete', 'reject', 'cancel']) {
+    await reject(`${root}/${action}`, 'reviewer', { reason: 'PRIVATE'.repeat(286) }, ['reason']);
+    await reject(`${root}/${action}`, 'reviewer', { reason: '', privateKey: 'PRIVATE' });
+    await reject(`${root}/${action}`, 'customer', { reason: '' }, undefined, 403);
+  }
+  await reject(informationPath, 'customer', { reason: ' ' }, ['reason']);
+  await reject(informationPath, 'customer', { reason: [] }, ['reason']);
+  await reject(informationPath, 'customer', { reason: '', expectedReviewHash: 'PRIVATE' });
+  await reject(informationPath, 'customer', []);
+  const permissions = (
+    await http.pool.query<{ permissions: string }>(
+      "SELECT permissions FROM staff_roles WHERE role_id='consultation-staff'"
+    )
+  ).rows[0]!.permissions;
+  try {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions=$1 WHERE role_id='consultation-staff'",
+      [JSON.stringify(['orders:read'])]
+    );
+    await reject(`${root}/request-info`, 'reviewer', { reason: '' }, undefined, 403);
+  } finally {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions=$1 WHERE role_id='consultation-staff'",
+      [permissions]
+    );
+  }
+  expect(await snapshot()).toEqual(before);
+  const requestedReason = 's'.repeat(2000);
+  const requested = await post(`${root}/request-info`, 'reviewer', {
+    reason: ` ${requestedReason} `,
+  });
+  expect(requested.status, http.logs()).toBe(200);
+  expect(await requested.json()).toEqual({ requestId, status: 'awaiting_customer_info' });
+  const waiting = await snapshot();
+  const staffContextDenied = await reject(
+    informationPath,
+    'reviewer',
+    { reason: 'Other actor' },
+    undefined,
+    403
+  );
+  expect(staffContextDenied.error.code).toBe(ErrorCodes.AUTHZ_FORBIDDEN.code);
+  expect(await snapshot()).toEqual(waiting);
+  const suppliedReason = 'c'.repeat(2000);
+  const supplied = await post(informationPath, 'customer', { reason: ` ${suppliedReason} ` });
+  expect(supplied.status, http.logs()).toBe(200);
+  expect(await supplied.json()).toEqual({ requestId, status: 'under_review' });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT status,reason FROM consultation_request_events WHERE request_id=$1 ORDER BY created_at,id',
+        [requestId]
+      )
+    ).rows.slice(-2)
+  ).toEqual([
+    { status: 'awaiting_customer_info', reason: requestedReason },
+    { status: 'under_review', reason: suppliedReason },
+  ]);
+  const offered = await offerFee(`${root}/fee`, 'reviewer', {
+    idempotencyKey: randomUUID(),
+    fee: '100000',
+    scope: 'Existing invoice guards',
+    deliverables: 'Written report',
+    validUntil: new Date(Date.now() + 7 * 86_400_000).toISOString(),
+  });
+  expect(offered.status, http.logs()).toBe(200);
+  const invoiced = await snapshot();
+  try {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions=$1 WHERE role_id='consultation-staff'",
+      [JSON.stringify(['orders:read', 'orders:write'])]
+    );
+    await reject(`${root}/reject`, 'reviewer', { reason: 'Valid rejection' }, undefined, 403);
+  } finally {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions=$1 WHERE role_id='consultation-staff'",
+      [permissions]
+    );
+  }
+  expect(await snapshot()).toEqual(invoiced);
+  const stepUp = (
+    await http.pool.query<{ step_up_verified_at: string }>(
+      "SELECT step_up_verified_at::text FROM sessions WHERE user_id='reviewer'"
+    )
+  ).rows[0]!.step_up_verified_at;
+  try {
+    await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='reviewer'");
+    const denied = await reject(
+      `${root}/cancel`,
+      'reviewer',
+      { reason: 'Valid cancellation' },
+      undefined,
+      403
+    );
+    expect(denied.error.code).toBe(ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code);
+  } finally {
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=$1::timestamptz WHERE user_id='reviewer'",
+      [stepUp]
+    );
+  }
+  expect(await snapshot()).toEqual(invoiced);
+  const rejected = await post(`${root}/reject`, 'reviewer', { reason: 'r'.repeat(2000) });
+  expect(rejected.status, http.logs()).toBe(200);
+  expect(await rejected.json()).toEqual({ requestId, status: 'rejected' });
 });

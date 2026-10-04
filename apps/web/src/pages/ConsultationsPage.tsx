@@ -14,7 +14,33 @@ import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { Button, StatusFilter, StatusBadge, ListViewToggle } from '@barghsa/ui';
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  StatusFilter,
+  StatusBadge,
+  ListViewToggle,
+} from '@barghsa/ui';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useZodForm,
+} from '@barghsa/ui/form';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import {
+  consultationIntakeReceipt,
+  definitiveConsultationRejection,
+  emptyConsultationIntake,
+  type ConsultationIntakeDraft,
+} from '../lib/consultation-form.js';
 import { CONSULTATION_REQUEST_STATUSES } from '@barghsa/shared/validation';
 import { useCursorHistory } from '../hooks/useCursorHistory.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -82,8 +108,13 @@ export function ConsultationsPage({
   const numbers = useNumberFormatting(locale);
   const time = useAccountTime(locale);
   const copy = (key: string) => tConsultation(key, locale);
-  const [profile, setProfile] = useState<SwitcherProfile | null>(null);
-  const [products, setProducts] = useState<Product[]>([]);
+  const actorId = useAccountUser();
+  const [acceptedActor, setAcceptedActor] = useState(actorId);
+  const [profileState, setProfile] = useState<SwitcherProfile | null>(null);
+  const profile = acceptedActor === actorId ? profileState : null;
+  const [productState, setProducts] = useState<Product[]>([]);
+  const [productsScope, setProductsScope] = useState('');
+  const products = productsScope === `${actorId ?? ''}:${profile?.id ?? ''}` ? productState : [];
   const statusOptions: Parameters<typeof StatusFilter>[0]['options'] =
     CONSULTATION_REQUEST_STATUSES.map((value) => ({
       value,
@@ -104,19 +135,86 @@ export function ConsultationsPage({
   const [requestsLoading, setRequestsLoading] = useState(true);
   const [requestsError, setRequestsError] = useState(false);
   const [requestRevision, setRequestRevision] = useState(0);
-  const [selectedProductId, setSelectedProductId] = useState('');
-  const [confirmed, setConfirmed] = useState(false);
+  const generation = useRef(0);
+  const scope = `${actorId ?? ''}:${profile?.id ?? ''}`;
+  const acceptedScope = useRef(scope);
+  if (acceptedScope.current !== scope) {
+    acceptedScope.current = scope;
+    ++generation.current;
+  }
+  const schemaGeneration = generation.current;
+  const intakeMessages = {
+    productId: copy('productInvalid'),
+    confirm: copy('confirmationInvalid'),
+  };
+  const intake = useZodForm<ConsultationIntakeDraft>(
+    async () => {
+      const schemas = await import('../lib/consultation-form-schemas.js');
+      return schemaGeneration === generation.current
+        ? schemas.intakeSchema(intakeMessages)
+        : schemas.inactiveIntakeSchema;
+    },
+    {
+      defaultValues: emptyConsultationIntake,
+      validationUnavailableMessage: copy('validationUnavailable'),
+    }
+  );
+  const intakeFields = useActionFieldErrors(
+    intake,
+    { productId: intakeMessages.productId },
+    copy('submitError')
+  );
+  const selectedProductId = intake.watch('productId');
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const submissionKey = useRef<string | null>(null);
+  const pendingIntake = useRef<{
+    profileId: string;
+    productId: string;
+    submissionKey: string;
+  } | null>(null);
+  const [intakeUnconfirmed, setIntakeUnconfirmed] = useState(false);
+  useEffect(() => {
+    ++generation.current;
+    intake.reset(emptyConsultationIntake);
+    submissionKey.current = null;
+    pendingIntake.current = null;
+    setIntakeUnconfirmed(false);
+    setSubmitting(false);
+    setSubmitError(false);
+  }, [scope]);
+  useEffect(
+    () => () => {
+      ++generation.current;
+    },
+    []
+  );
 
   const [profileRevision, setProfileRevision] = useState(0);
   const [productsRevision, setProductsRevision] = useState(0);
   const [productsLoading, setProductsLoading] = useState(true);
   const [productsError, setProductsError] = useState(false);
   const [productsDenied, setProductsDenied] = useState(false);
+  const catalogueRevision = useRef(0);
+  const catalogue = useRef({
+    products,
+    loading: productsLoading,
+    error: productsError,
+    denied: productsDenied,
+  });
+  catalogue.current = {
+    products,
+    loading: productsLoading,
+    error: productsError,
+    denied: productsDenied,
+  };
+  function refreshProducts() {
+    ++catalogueRevision.current;
+    catalogue.current.loading = true;
+    setProductsRevision((value) => value + 1);
+  }
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
@@ -131,18 +229,24 @@ export function ConsultationsPage({
       })
       .then((data) => {
         if (controller.signal.aborted) return;
+        setAcceptedActor(actorId);
         setProfile(data.profiles.find((item) => item.id === data.activeProfileId) ?? null);
       })
       .catch(() => {
-        if (!controller.signal.aborted) setLoadError(true);
+        if (!controller.signal.aborted) {
+          setProfile(null);
+          setLoadError(true);
+        }
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [profileRevision]);
+  }, [profileRevision, actorId]);
   useEffect(() => {
     if (!profile) return;
+    ++catalogueRevision.current;
+    catalogue.current.loading = true;
     const controller = new AbortController();
     setProductsLoading(true);
     setProductsError(false);
@@ -156,13 +260,29 @@ export function ConsultationsPage({
         return response.json() as Promise<{ products: Product[] }>;
       })
       .then((data) => {
-        if (!controller.signal.aborted) setProducts(data.products);
+        if (controller.signal.aborted) return;
+        if (
+          !Array.isArray(data.products) ||
+          !data.products.every(
+            (product) =>
+              typeof product.id === 'string' &&
+              typeof product.title?.en === 'string' &&
+              typeof product.title?.fa === 'string'
+          )
+        )
+          throw new Error('products');
+        setProducts(data.products);
+        setProductsScope(scope);
       })
       .catch((cause: unknown) => {
         if (controller.signal.aborted) return;
-        if (cause instanceof Error && cause.message === '403') {
+        if (cause instanceof Error && ['401', '403', '404'].includes(cause.message)) {
           setProducts([]);
           setProductsDenied(true);
+          if (!pendingIntake.current) {
+            intake.reset(emptyConsultationIntake);
+            submissionKey.current = null;
+          }
         } else setProductsError(true);
       })
       .finally(() => {
@@ -171,9 +291,12 @@ export function ConsultationsPage({
     return () => controller.abort();
   }, [profile, productsRevision]);
   useEffect(() => {
-    if (selectedProductId && !products.some((product) => product.id === selectedProductId)) {
-      setSelectedProductId('');
-      setConfirmed(false);
+    if (
+      !pendingIntake.current &&
+      selectedProductId &&
+      !products.some((product) => product.id === selectedProductId)
+    ) {
+      intake.reset(emptyConsultationIntake);
       setSubmitError(false);
       submissionKey.current = null;
     }
@@ -223,41 +346,92 @@ export function ConsultationsPage({
     acceptPage,
   ]);
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function submit(event: FormEvent<HTMLFormElement>) {
     if (
       !profile ||
-      !products.some((product) => product.id === selectedProductId) ||
       productsLoading ||
       productsError ||
       productsDenied ||
-      !confirmed ||
-      submitting
-    )
+      submitting ||
+      intake.isSubmissionPending()
+    ) {
+      event.preventDefault();
       return;
-    setSubmitting(true);
-    setSubmitError(false);
-    try {
-      const response = await fetch('/api/consultations/requests', {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          profileId: profile.id,
-          productId: selectedProductId,
-          submissionKey: (submissionKey.current ??= crypto.randomUUID()),
-        }),
-      });
-      if (!response.ok) throw new Error('submit');
-      const result = (await response.json()) as { requestId: string };
-      void navigate({
-        to: '/consultations/$requestId',
-        params: { requestId: result.requestId },
-      });
-    } catch {
-      setSubmitError(true);
-      setSubmitting(false);
     }
+    const capturedGeneration = generation.current;
+    const capturedCatalogue = catalogueRevision.current;
+    const capturedProfile = profile.id;
+    void intake.handleSubmit(async (draft) => {
+      if (
+        capturedGeneration !== generation.current ||
+        capturedCatalogue !== catalogueRevision.current ||
+        catalogue.current.loading ||
+        catalogue.current.error ||
+        catalogue.current.denied ||
+        intake.getValues('productId') !== draft.productId ||
+        intake.getValues('confirm') !== draft.confirm ||
+        (!pendingIntake.current &&
+          !catalogue.current.products.some((product) => product.id === draft.productId))
+      )
+        return;
+      const body = pendingIntake.current ?? {
+        profileId: capturedProfile,
+        productId: draft.productId,
+        submissionKey: (submissionKey.current ??= crypto.randomUUID()),
+      };
+      pendingIntake.current = body;
+      setSubmitting(true);
+      setSubmitError(false);
+      let completed = false;
+      try {
+        const response = await fetch('/api/consultations/requests', {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify(body),
+        });
+        const result = await response.json().catch(() => null);
+        if (capturedGeneration !== generation.current) return;
+        if (!response.ok) {
+          if (
+            response.status === 400 &&
+            result?.error?.code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+            Array.isArray(result.error.fields) &&
+            intakeFields(result.error.fields)
+          ) {
+            pendingIntake.current = null;
+            setIntakeUnconfirmed(false);
+            return;
+          }
+          if ([401, 403, 404].includes(response.status)) {
+            setProducts([]);
+            setProductsDenied(true);
+          }
+          if (definitiveConsultationRejection(response.status, result)) {
+            pendingIntake.current = null;
+            setIntakeUnconfirmed(false);
+            setSubmitError(true);
+            return;
+          }
+          throw new Error('submit');
+        }
+        if (!consultationIntakeReceipt(result)) throw new Error('receipt');
+        pendingIntake.current = null;
+        setIntakeUnconfirmed(false);
+        completed = true;
+        void navigate({
+          to: '/consultations/$requestId',
+          params: { requestId: result.requestId },
+        });
+      } catch {
+        if (capturedGeneration === generation.current) {
+          setSubmitError(true);
+          setIntakeUnconfirmed(true);
+        }
+      } finally {
+        if (capturedGeneration === generation.current && !completed) setSubmitting(false);
+      }
+    })(event);
   }
 
   const profileName = profile
@@ -376,116 +550,193 @@ export function ConsultationsPage({
       {!loading && !loadError && !profile && <p role="alert">{copy('profileRequired')}</p>}
       {!loading && !loadError && profile && (
         <>
-          <form onSubmit={submit} className="max-w-4xl space-y-5">
-            <div className="rounded-xl border bg-card p-4">
-              <span className="text-sm text-muted-foreground">{copy('profile')}</span>
-              <p className="font-medium" dir="auto">
-                {profileName}
-              </p>
-            </div>
-            <fieldset className="space-y-3">
-              <legend className="text-xl font-semibold">{copy('available')}</legend>
-              <ListPage>
-                <ListPage.Toolbar
-                  actions={
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={productsLoading}
-                      onClick={() => setProductsRevision((value) => value + 1)}
-                    >
-                      {copy('refreshProducts')}
-                    </Button>
-                  }
-                />
-                <ListPage.Content
-                  loading={productsLoading}
-                  error={productsError || productsDenied}
-                  empty={!products.length}
-                  retainContent={!!products.length && !productsDenied}
-                  loadingView={<p role="status">{copy('loading')}</p>}
-                  errorView={
-                    productsDenied ? (
-                      <p role="alert">{copy('productsDenied')}</p>
-                    ) : (
-                      <div className="space-y-2">
-                        <p role="alert">{copy('productsError')}</p>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setProductsRevision((value) => value + 1)}
-                        >
-                          {copy('retry')}
-                        </Button>
-                      </div>
-                    )
-                  }
-                  emptyView={<p className="text-muted-foreground">{copy('emptyProducts')}</p>}
-                >
-                  {products.map((product) => (
-                    <label
-                      key={product.id}
-                      className={`flex cursor-pointer gap-3 rounded-xl border bg-card p-5 transition-colors hover:border-primary ${selectedProductId === product.id ? 'border-primary ring-1 ring-primary' : ''}`}
-                    >
-                      <input
-                        type="radio"
-                        name="consultationProduct"
-                        value={product.id}
-                        checked={selectedProductId === product.id}
-                        onChange={() => {
-                          setSelectedProductId(product.id);
-                          submissionKey.current = null;
-                          setSubmitError(false);
-                        }}
-                        className="mt-1"
-                      />
-                      <span className="space-y-1">
-                        <span className="block font-semibold" dir="auto">
-                          {product.title[locale]}
-                        </span>
-                        {product.description?.[locale] && (
-                          <span className="block text-sm text-muted-foreground" dir="auto">
-                            {product.description[locale]}
-                          </span>
-                        )}
-                      </span>
-                    </label>
-                  ))}
-                </ListPage.Content>
-              </ListPage>
-            </fieldset>
-            {products.length > 0 && (
-              <>
-                <label className="flex items-start gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={confirmed}
-                    onChange={(event) => setConfirmed(event.target.checked)}
-                    className="mt-1"
-                  />
-                  <span>{copy('confirm')}</span>
-                </label>
-                {submitError && (
-                  <p role="alert" className="text-destructive">
-                    {copy('submitError')}
+          <Form {...intake}>
+            <div role="group" aria-label={copy('intakeForm')}>
+              <form onSubmit={submit} noValidate className="max-w-4xl space-y-5">
+                <div className="rounded-xl border bg-card p-4">
+                  <span className="text-sm text-muted-foreground">{copy('profile')}</span>
+                  <p className="font-medium" dir="auto">
+                    {profileName}
                   </p>
+                </div>
+                {intake.formState.errors.root && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{copy('validationUnavailable')}</AlertDescription>
+                  </Alert>
                 )}
-                <Button
-                  type="submit"
-                  disabled={
-                    productsLoading ||
-                    productsError ||
-                    productsDenied ||
-                    !products.some((product) => product.id === selectedProductId) ||
-                    !confirmed ||
-                    submitting
-                  }
-                >
-                  {copy(submitting ? 'submitting' : 'request')}
-                </Button>
-              </>
-            )}
-          </form>
+                <FormField
+                  control={intake.control}
+                  name="productId"
+                  render={({ field }) => (
+                    <FormItem id="consultation-product">
+                      <FormLabel id="consultation-product-label" className="text-xl font-semibold">
+                        {copy('available')}
+                      </FormLabel>
+                      <FormControl>
+                        <div
+                          role="radiogroup"
+                          aria-labelledby="consultation-product-label"
+                          onBlur={field.onBlur}
+                        >
+                          <ListPage>
+                            <ListPage.Toolbar
+                              actions={
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  disabled={productsLoading || intake.formState.isSubmitting}
+                                  onClick={refreshProducts}
+                                >
+                                  {copy('refreshProducts')}
+                                </Button>
+                              }
+                            />
+                            <ListPage.Content
+                              loading={productsLoading}
+                              error={productsError || productsDenied}
+                              empty={!products.length}
+                              retainContent={!!products.length && !productsDenied}
+                              loadingView={<p role="status">{copy('loading')}</p>}
+                              errorView={
+                                productsDenied ? (
+                                  <p role="alert">{copy('productsDenied')}</p>
+                                ) : (
+                                  <div className="space-y-2">
+                                    <p role="alert">{copy('productsError')}</p>
+                                    <Button
+                                      type="button"
+                                      variant="outline"
+                                      onClick={refreshProducts}
+                                    >
+                                      {copy('retry')}
+                                    </Button>
+                                  </div>
+                                )
+                              }
+                              emptyView={
+                                <p className="text-muted-foreground">{copy('emptyProducts')}</p>
+                              }
+                            >
+                              {products.map((product, index) => (
+                                <label
+                                  key={product.id}
+                                  className={`flex cursor-pointer gap-3 rounded-xl border bg-card p-5 transition-colors hover:border-primary ${selectedProductId === product.id ? 'border-primary ring-1 ring-primary' : ''}`}
+                                >
+                                  <input
+                                    type="radio"
+                                    id={`consultation-product-${product.id}`}
+                                    ref={index === 0 ? field.ref : undefined}
+                                    name={field.name}
+                                    value={product.id}
+                                    checked={selectedProductId === product.id}
+                                    disabled={
+                                      submitting ||
+                                      intake.formState.isSubmitting ||
+                                      intakeUnconfirmed ||
+                                      productsLoading ||
+                                      productsError ||
+                                      productsDenied
+                                    }
+                                    aria-describedby="consultation-product-description consultation-product-message"
+                                    onChange={() => {
+                                      field.onChange(product.id);
+                                      submissionKey.current = null;
+                                      setSubmitError(false);
+                                    }}
+                                    className="mt-1"
+                                  />
+                                  <span className="space-y-1">
+                                    <span className="block font-semibold" dir="auto">
+                                      {product.title[locale]}
+                                    </span>
+                                    {product.description?.[locale] && (
+                                      <span
+                                        className="block text-sm text-muted-foreground"
+                                        dir="auto"
+                                      >
+                                        {product.description[locale]}
+                                      </span>
+                                    )}
+                                  </span>
+                                </label>
+                              ))}
+                            </ListPage.Content>
+                          </ListPage>
+                        </div>
+                      </FormControl>
+                      <FormDescription>{copy('productHelp')}</FormDescription>
+                      <div className="grid">
+                        <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
+                          {intakeMessages.productId}
+                        </p>
+                        <FormMessage className="col-start-1 row-start-1" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                {!productsDenied && (products.length > 0 || pendingIntake.current) && (
+                  <>
+                    <FormField
+                      control={intake.control}
+                      name="confirm"
+                      render={({ field }) => (
+                        <FormItem id="consultation-confirmation">
+                          <div className="flex items-start gap-2 text-sm">
+                            <FormControl>
+                              <input
+                                type="checkbox"
+                                ref={field.ref}
+                                name={field.name}
+                                checked={field.value}
+                                onChange={(event) => field.onChange(event.target.checked)}
+                                onBlur={field.onBlur}
+                                disabled={
+                                  submitting || intake.formState.isSubmitting || intakeUnconfirmed
+                                }
+                                className="mt-1"
+                              />
+                            </FormControl>
+                            <FormLabel>{copy('confirm')}</FormLabel>
+                          </div>
+                          <FormDescription>{copy('confirmationHelp')}</FormDescription>
+                          <div className="grid">
+                            <p
+                              aria-hidden="true"
+                              className="invisible col-start-1 row-start-1 text-sm"
+                            >
+                              {intakeMessages.confirm}
+                            </p>
+                            <FormMessage className="col-start-1 row-start-1" />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    {submitError && (
+                      <Alert variant="destructive">
+                        <AlertDescription>
+                          {copy(intakeUnconfirmed ? 'intakeUnconfirmed' : 'submitError')}
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                    <Button
+                      type="submit"
+                      loading={intake.formState.isSubmitting || submitting}
+                      disabled={
+                        productsLoading ||
+                        productsError ||
+                        productsDenied ||
+                        submitting ||
+                        intake.formState.isSubmitting
+                      }
+                    >
+                      {copy('request')}
+                    </Button>
+                  </>
+                )}
+              </form>
+            </div>
+          </Form>
+
           <section className="space-y-3" aria-labelledby="consultation-requests-title">
             <h2 id="consultation-requests-title" className="text-xl font-semibold">
               {copy('myRequests')}

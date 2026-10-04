@@ -1,7 +1,9 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from '@tanstack/react-router';
 import {
   Button,
+  Alert,
+  AlertDescription,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -9,9 +11,29 @@ import {
   DialogHeader,
   DialogTitle,
   FinancialReviewSummary,
-  Label,
   StatusTimeline,
 } from '@barghsa/ui';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useZodForm,
+} from '@barghsa/ui/form';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import {
+  confirmedConsultationInformation,
+  consultationReceipt,
+  consultationUuid,
+  definitiveConsultationRejection,
+  type ConsultationReasonDraft,
+  type ConsultationInformationCommand,
+} from '../lib/consultation-form.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import {
   parseConsultationOfferReview,
@@ -27,6 +49,7 @@ import { consultationNextAction } from '../lib/consultation-next-action.js';
 interface Detail {
   request: {
     id: string;
+    profile_id: string;
     status: string;
     product_snapshot: { title: { fa: string; en: string } };
     submitted_at: string;
@@ -65,65 +88,224 @@ export function ConsultationDetailPage() {
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tConsultation(key, locale);
-  const [detail, setDetail] = useState<Detail | null>(null);
+  const actorId = useAccountUser();
+  const scope = `${actorId ?? ''}:${requestId}`;
+  const currentScope = useRef(scope);
+  const generation = useRef(0);
+  if (currentScope.current !== scope) {
+    currentScope.current = scope;
+    ++generation.current;
+  }
+  const [acceptedScope, setAcceptedScope] = useState(scope);
+  const [detailState, setDetail] = useState<Detail | null>(null);
+  const detail = acceptedScope === scope ? detailState : null;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [information, setInformation] = useState('');
+  const schemaGeneration = generation.current;
+  const informationForm = useZodForm<ConsultationReasonDraft>(
+    async () => {
+      const schemas = await import('../lib/consultation-form-schemas.js');
+      return schemaGeneration === generation.current
+        ? schemas.reasonSchema(copy('informationInvalid'))
+        : schemas.inactiveReasonSchema;
+    },
+    { defaultValues: { reason: '' }, validationUnavailableMessage: copy('validationUnavailable') }
+  );
+  const informationFields = useActionFieldErrors(
+    informationForm,
+    { reason: copy('informationInvalid') },
+    copy('actionError')
+  );
+  const pendingInformation = useRef<ConsultationInformationCommand | null>(null);
+  const [informationUnconfirmed, setInformationUnconfirmed] = useState(false);
+  const actionPending = useRef(false);
+  const profileId = useRef<string | null>(null);
   const [sending, setSending] = useState(false);
   const [actionError, setActionError] = useState(false);
   const [infoSent, setInfoSent] = useState(false);
   const [revision, setRevision] = useState(0);
   const [decisionReview, setDecisionReview] = useState<ConsultationOfferReview | null>(null);
   useEffect(() => {
+    ++generation.current;
+    profileId.current = null;
+    setDetail(null);
+    informationForm.reset({ reason: '' });
+    pendingInformation.current = null;
+    setInformationUnconfirmed(false);
+    actionPending.current = false;
+    setSending(false);
+    setActionError(false);
+    setInfoSent(false);
+    setDecisionReview(null);
+  }, [scope]);
+  useEffect(
+    () => () => {
+      ++generation.current;
+    },
+    []
+  );
+  useEffect(() => {
     const controller = new AbortController();
+    const capturedGeneration = generation.current;
+    const recoveryAtRead = actionPending.current ? null : pendingInformation.current;
+    setLoading(true);
+    setError(false);
+    setDetail(null);
     void fetch(`/api/consultations/requests/${encodeURIComponent(requestId)}`, {
       credentials: 'include',
       signal: controller.signal,
     })
       .then(async (response) => {
         if (!response.ok) throw new Error('request');
-        return (await response.json()) as Detail;
+        const value = (await response.json()) as Detail;
+        if (
+          !value ||
+          value.request?.id !== requestId ||
+          !consultationUuid(value.request.profile_id) ||
+          typeof value.request.status !== 'string' ||
+          typeof value.request.product_snapshot?.title?.en !== 'string' ||
+          typeof value.request.product_snapshot?.title?.fa !== 'string' ||
+          !Array.isArray(value.history) ||
+          !value.history.every(
+            (event) =>
+              typeof event.status === 'string' &&
+              typeof event.actor_type === 'string' &&
+              (event.reason === null || typeof event.reason === 'string') &&
+              typeof event.created_at === 'string'
+          ) ||
+          !Array.isArray(value.adjustments) ||
+          !Array.isArray(value.refunds)
+        )
+          throw new Error('request');
+        return value;
       })
       .then((result) => {
-        if (!controller.signal.aborted) setDetail(result);
+        if (controller.signal.aborted || capturedGeneration !== generation.current) return;
+        if (profileId.current && profileId.current !== result.request.profile_id) {
+          ++generation.current;
+          pendingInformation.current = null;
+          informationForm.reset({ reason: '' });
+          setInformationUnconfirmed(false);
+          setActionError(false);
+          setInfoSent(false);
+          actionPending.current = false;
+          setSending(false);
+          setDecisionReview(null);
+        }
+        profileId.current = result.request.profile_id;
+        if (
+          recoveryAtRead &&
+          pendingInformation.current === recoveryAtRead &&
+          !actionPending.current &&
+          confirmedConsultationInformation(result, recoveryAtRead)
+        ) {
+          pendingInformation.current = null;
+          informationForm.reset({ reason: '' });
+          setInformationUnconfirmed(false);
+          setActionError(false);
+          setInfoSent(true);
+        }
+        setAcceptedScope(scope);
+        setDetail(result);
       })
       .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+        if (!controller.signal.aborted && capturedGeneration === generation.current) {
+          setDetail(null);
+          setDecisionReview(null);
+          setError(true);
+        }
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [requestId, revision]);
+  }, [scope, revision]);
 
-  async function provideInfo(event: FormEvent) {
-    event.preventDefault();
-    if (!information.trim() || sending) return;
-    setSending(true);
-    setActionError(false);
-    try {
-      const response = await fetch(
-        `/api/consultations/requests/${encodeURIComponent(requestId)}/provide-info`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ reason: information.trim() }),
-        }
-      );
-      if (!response.ok) throw new Error('provide-info');
-      setInformation('');
-      setInfoSent(true);
-      setRevision((value) => value + 1);
-    } catch {
-      setActionError(true);
-    } finally {
-      setSending(false);
+  function provideInfo(event: FormEvent<HTMLFormElement>) {
+    if (
+      actionPending.current ||
+      pendingInformation.current ||
+      informationUnconfirmed ||
+      informationForm.isSubmissionPending() ||
+      !detail ||
+      detail.request.status !== 'awaiting_customer_info'
+    ) {
+      event.preventDefault();
+      return;
     }
+    const capturedGeneration = generation.current;
+    const capturedDetail = detail;
+    void informationForm.handleSubmit(async (draft) => {
+      if (capturedGeneration !== generation.current) return;
+      const command: ConsultationInformationCommand = {
+        requestId,
+        profileId: capturedDetail.request.profile_id,
+        reason: draft.reason.trim(),
+        history: capturedDetail.history.map((event) => ({ ...event })),
+      };
+      pendingInformation.current = command;
+      actionPending.current = true;
+      setSending(true);
+      setActionError(false);
+      try {
+        const response = await fetch(
+          `/api/consultations/requests/${encodeURIComponent(requestId)}/provide-info`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify({ reason: command.reason }),
+          }
+        );
+        const result = await response.json().catch(() => null);
+        if (capturedGeneration !== generation.current) return;
+        if (!response.ok) {
+          if (
+            response.status === 400 &&
+            result?.error?.code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+            Array.isArray(result.error.fields) &&
+            informationFields(result.error.fields)
+          ) {
+            pendingInformation.current = null;
+            return;
+          }
+          if ([401, 403, 404].includes(response.status)) {
+            setDetail(null);
+            setDecisionReview(null);
+            setError(true);
+          }
+          if (definitiveConsultationRejection(response.status, result)) {
+            pendingInformation.current = null;
+            setInformationUnconfirmed(false);
+            setActionError(true);
+            return;
+          }
+          throw new Error('provide-info');
+        }
+        if (!consultationReceipt(result, command.requestId, 'under_review'))
+          throw new Error('receipt');
+        pendingInformation.current = null;
+        informationForm.reset({ reason: '' });
+        setInfoSent(true);
+        setRevision((value) => value + 1);
+      } catch {
+        if (capturedGeneration === generation.current) {
+          setActionError(true);
+          setInformationUnconfirmed(true);
+        }
+      } finally {
+        if (capturedGeneration === generation.current) {
+          actionPending.current = false;
+          setSending(false);
+        }
+      }
+    })(event);
   }
 
   async function beginDecision(decision: 'accept' | 'decline') {
-    if (sending || !detail?.request) return;
+    if (actionPending.current || informationForm.isSubmissionPending() || !detail?.request) return;
+    const capturedGeneration = generation.current;
+    actionPending.current = true;
     setSending(true);
     setActionError(false);
     try {
@@ -136,8 +318,10 @@ export function ConsultationDetailPage() {
           body: JSON.stringify({ decision }),
         }
       );
+      if (capturedGeneration !== generation.current) return;
       if (!response.ok) throw new Error('offer-review');
       const review = parseConsultationOfferReview(await response.json());
+      if (capturedGeneration !== generation.current) return;
       const current = detail.request;
       if (
         !review ||
@@ -152,15 +336,22 @@ export function ConsultationDetailPage() {
         throw new Error('Offer review differs from displayed offer');
       setDecisionReview(review);
     } catch {
-      setActionError(true);
-      setRevision((value) => value + 1);
+      if (capturedGeneration === generation.current) {
+        setActionError(true);
+        setRevision((value) => value + 1);
+      }
     } finally {
-      setSending(false);
+      if (capturedGeneration === generation.current) {
+        actionPending.current = false;
+        setSending(false);
+      }
     }
   }
 
   async function decide() {
-    if (sending || !decisionReview) return;
+    if (actionPending.current || informationForm.isSubmissionPending() || !decisionReview) return;
+    const capturedGeneration = generation.current;
+    actionPending.current = true;
     const { decision, hash } = {
       decision: decisionReview.data.decision,
       hash: decisionReview.hash,
@@ -177,12 +368,14 @@ export function ConsultationDetailPage() {
           body: JSON.stringify({ expectedReviewHash: hash }),
         }
       );
+      if (capturedGeneration !== generation.current) return;
       if (!response.ok) throw new Error(decision);
       const result = (await response.json()) as {
         paymentRequired?: boolean;
         invoiceId?: string;
         financialReview?: { hash?: string };
       };
+      if (capturedGeneration !== generation.current) return;
       if (result.financialReview?.hash !== hash) throw new Error('Unverified offer decision');
       setDecisionReview(null);
       if (decision === 'accept' && result.paymentRequired && result.invoiceId) {
@@ -191,11 +384,16 @@ export function ConsultationDetailPage() {
       }
       setRevision((value) => value + 1);
     } catch {
-      setDecisionReview(null);
-      setActionError(true);
-      setRevision((value) => value + 1);
+      if (capturedGeneration === generation.current) {
+        setDecisionReview(null);
+        setActionError(true);
+        setRevision((value) => value + 1);
+      }
     } finally {
-      setSending(false);
+      if (capturedGeneration === generation.current) {
+        actionPending.current = false;
+        setSending(false);
+      }
     }
   }
 
@@ -217,6 +415,14 @@ export function ConsultationDetailPage() {
         {copy('back')}
       </Link>
       <h1 className="text-3xl font-semibold">{copy('details')}</h1>
+      <Button
+        type="button"
+        variant="outline"
+        disabled={sending || informationForm.formState.isSubmitting || loading}
+        onClick={() => setRevision((value) => value + 1)}
+      >
+        {copy('informationReload')}
+      </Button>
       {time.notice}
       {loading && <p role="status">{copy('loading')}</p>}
       {error && <p role="alert">{copy('loadError')}</p>}
@@ -355,30 +561,70 @@ export function ConsultationDetailPage() {
               )}
             </section>
           )}
-          {request.status === 'awaiting_customer_info' && (
-            <form
-              id="consultation-information-form"
-              onSubmit={provideInfo}
-              className="space-y-3 rounded-xl border bg-card p-5"
-            >
-              <Label htmlFor="consultation-information">{copy('information')}</Label>
-              <textarea
-                id="consultation-information"
-                value={information}
-                onChange={(event) => setInformation(event.target.value)}
-                maxLength={2000}
-                required
-                className="min-h-28 w-full rounded-md border bg-background p-3"
-              />
-              {actionError && (
-                <p role="alert" className="text-destructive">
-                  {copy('actionError')}
-                </p>
-              )}
-              <Button type="submit" disabled={sending || !information.trim()}>
-                {copy('provideInfo')}
-              </Button>
-            </form>
+          {(request.status === 'awaiting_customer_info' ||
+            (informationUnconfirmed && pendingInformation.current)) && (
+            <Form {...informationForm}>
+              <div role="group" aria-label={copy('information')}>
+                <form
+                  id="consultation-information-form"
+                  onSubmit={provideInfo}
+                  noValidate
+                  className="space-y-3 rounded-xl border bg-card p-5"
+                >
+                  {informationForm.formState.errors.root && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{copy('validationUnavailable')}</AlertDescription>
+                    </Alert>
+                  )}
+                  <FormField
+                    control={informationForm.control}
+                    name="reason"
+                    render={({ field }) => (
+                      <FormItem id="consultation-information">
+                        <FormLabel>{copy('information')}</FormLabel>
+                        <FormControl>
+                          <textarea
+                            {...field}
+                            disabled={
+                              sending ||
+                              informationForm.formState.isSubmitting ||
+                              informationUnconfirmed
+                            }
+                            className="min-h-28 w-full rounded-md border bg-background p-3"
+                          />
+                        </FormControl>
+                        <FormDescription>{copy('informationHelp')}</FormDescription>
+                        <div className="grid">
+                          <p
+                            aria-hidden="true"
+                            className="invisible col-start-1 row-start-1 text-sm"
+                          >
+                            {copy('informationInvalid')}
+                          </p>
+                          <FormMessage className="col-start-1 row-start-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  {actionError && (
+                    <Alert variant="destructive">
+                      <AlertDescription>
+                        {copy(informationUnconfirmed ? 'informationUnconfirmed' : 'actionError')}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  <Button
+                    type="submit"
+                    loading={informationForm.formState.isSubmitting || sending}
+                    disabled={
+                      sending || informationForm.formState.isSubmitting || informationUnconfirmed
+                    }
+                  >
+                    {copy('provideInfo')}
+                  </Button>
+                </form>
+              </div>
+            </Form>
           )}
           {infoSent && <p role="status">{copy('infoSent')}</p>}
           <section className="space-y-3">
