@@ -105,7 +105,7 @@ it('moves a consultation through staff assignment, customer information, and a r
   );
   expect(queue.status, http.logs()).toBe(200);
   expect((await queue.json()) as { requests: Array<{ id: string }> }).toMatchObject({
-    requests: [{ id: requestId }],
+    requests: [{ id: requestId, staff_owner_id: null, staff_owner_name: null, staff_team: null }],
   });
   const later = await fetch(
     `${http.base}/api/admin/consultations/requests?status=submitted&assignment=unassigned&priority=normal&minAgeDays=0&after=${requestId}`,
@@ -200,6 +200,11 @@ it('moves a consultation through staff assignment, customer information, and a r
   const staffDetail = await fetch(`${http.base}${root}`, { headers: headers.reviewer! });
   expect(staffDetail.status).toBe(200);
   expect(await staffDetail.json()).toMatchObject({
+    request: {
+      id: requestId,
+      staff_owner_id: 'reviewer',
+      staff_owner_name: 'Chosen consultation staff',
+    },
     history: expect.arrayContaining([
       expect.objectContaining({ actor_name: 'Chosen consultation staff' }),
     ]),
@@ -213,6 +218,12 @@ it('moves a consultation through staff assignment, customer information, and a r
     })
   ).json()) as { history: Array<{ actor_name: string | null }> };
   expect(cleared.history.every((event) => event.actor_name === null)).toBe(true);
+  const clearedStaff = await fetch(`${http.base}${root}`, { headers: headers.reviewer! });
+  expect(clearedStaff.status).toBe(200);
+  expect(await clearedStaff.json()).toMatchObject({
+    request: { id: requestId, staff_owner_id: 'reviewer', staff_owner_name: null },
+    history: expect.arrayContaining([expect.objectContaining({ actor_name: null })]),
+  });
   const notifications = (
     await http.pool.query<{ count: number }>(
       "SELECT count(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='customer' AND profile_id=$1",
@@ -251,6 +262,18 @@ it('moves a consultation through staff assignment, customer information, and a r
   expect(await teamDetail.json()).toMatchObject({
     request: { staff_owner_username: null, staff_team: 'Consultation team' },
   });
+  const staffTeamDetail = await fetch(`${http.base}/api/admin/consultations/requests/${secondId}`, {
+    headers: headers.reviewer!,
+  });
+  expect(staffTeamDetail.status).toBe(200);
+  expect(await staffTeamDetail.json()).toMatchObject({
+    request: {
+      id: secondId,
+      staff_owner_id: null,
+      staff_owner_name: null,
+      staff_team: 'Consultation team',
+    },
+  });
   const unassigned = await fetch(
     `${http.base}/api/admin/consultations/requests?assignment=unassigned`,
     {
@@ -258,6 +281,93 @@ it('moves a consultation through staff assignment, customer information, and a r
     }
   );
   expect((await unassigned.json()) as { requests: unknown[] }).toMatchObject({ requests: [] });
+});
+
+it('projects only consented consultation owner names without changing queue paging or selected detail', async () => {
+  await http.pool.query(
+    `INSERT INTO users(user_id,username,password_hash,is_staff)
+     VALUES('context-named','private-named-login@example.test','test-only',true),
+       ('context-hidden','private-hidden-login@example.test','test-only',true)`
+  );
+  await http.pool.query(
+    `INSERT INTO profiles(user_id,profile_type,status,is_default,first_name,last_name)
+     VALUES('context-named','INDIVIDUAL','ACTIVE',true,'Private named','Profile'),
+       ('context-hidden','INDIVIDUAL','ACTIVE',true,'Private hidden','Profile')`
+  );
+  await http.pool.query(
+    `INSERT INTO conversation_identities(user_id,display_name,share_in_activity)
+     VALUES('context-named','Chosen consultation owner',true),
+       ('context-hidden','Support-only owner',false)`
+  );
+  const ids = Array.from({ length: 101 }, () => randomUUID());
+  await http.pool.query(
+    `INSERT INTO consultation_requests(id,profile_id,product_id,product_snapshot,submitted_by,
+       submission_key,staff_owner_id,staff_team,status,submitted_at)
+     SELECT id,$2,$3,'{"title":{"en":"Assignment context","fa":"مسئول مشاوره"}}'::jsonb,
+       'customer',id,CASE n%4 WHEN 0 THEN 'context-named' WHEN 1 THEN 'context-hidden' ELSE NULL END,
+       CASE WHEN n%4=2 THEN 'Operations team' END,'submitted',NOW()-INTERVAL '20 days'+n*INTERVAL '1 second'
+     FROM unnest($1::uuid[]) WITH ORDINALITY AS seed(id,n)`,
+    [ids, profileId, productId]
+  );
+  const path = '/api/admin/consultations/requests?status=submitted&priority=high&minAgeDays=7';
+  const queue = await fetch(`${http.base}${path}`, { headers: headers.reviewer! });
+  expect(queue.status, http.logs()).toBe(200);
+  const page = (await queue.json()) as {
+    requests: Array<{
+      id: string;
+      staff_owner_id: string | null;
+      staff_owner_name: string | null;
+      staff_team: string | null;
+    }>;
+    nextAfter: string | null;
+  };
+  expect(page.requests.map((row) => row.id)).toEqual(ids.slice(0, 100));
+  expect(page.nextAfter).toBe(ids[99]);
+  for (const [index, row] of page.requests.entries()) {
+    const n = index + 1;
+    expect(row).toMatchObject({
+      staff_owner_id: n % 4 === 0 ? 'context-named' : n % 4 === 1 ? 'context-hidden' : null,
+      staff_owner_name: n % 4 === 0 ? 'Chosen consultation owner' : null,
+      staff_team: n % 4 === 2 ? 'Operations team' : null,
+    });
+  }
+  expect(JSON.stringify(page)).not.toMatch(
+    /private-.*login|Private (named|hidden)|Support-only owner/
+  );
+  const next = await fetch(`${http.base}${path}&after=${page.nextAfter}`, {
+    headers: headers.reviewer!,
+  });
+  expect(next.status, http.logs()).toBe(200);
+  expect(await next.json()).toMatchObject({
+    requests: [{ id: ids[100], staff_owner_id: 'context-hidden', staff_owner_name: null }],
+    nextAfter: null,
+  });
+  const selected = () =>
+    fetch(`${http.base}/api/admin/consultations/requests/${ids[3]}`, {
+      headers: headers.reviewer!,
+    });
+  const detail = await selected();
+  expect(detail.status, http.logs()).toBe(200);
+  expect(await detail.json()).toMatchObject({
+    request: {
+      id: ids[3],
+      staff_owner_id: 'context-named',
+      staff_owner_name: 'Chosen consultation owner',
+    },
+  });
+  await http.pool.query(
+    "UPDATE conversation_identities SET share_in_activity=false WHERE user_id='context-named'"
+  );
+  expect(await (await selected()).json()).toMatchObject({
+    request: { id: ids[3], staff_owner_name: null },
+  });
+  await http.pool.query(
+    "UPDATE conversation_identities SET share_in_activity=true WHERE user_id='context-named'"
+  );
+  await http.pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id='context-named'");
+  expect(await (await selected()).json()).toMatchObject({
+    request: { id: ids[3], staff_owner_name: null },
+  });
 });
 
 it('issues and atomically replaces an unpaid consultation fee, but refuses a paid invoice', async () => {

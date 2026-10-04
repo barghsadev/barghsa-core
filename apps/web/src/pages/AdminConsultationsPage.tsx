@@ -1,7 +1,15 @@
 import { t as appText } from '@barghsa/i18n/app';
 import { useEffect, useRef, useState } from 'react';
 import { useSearch } from '@tanstack/react-router';
-import { Button, FinancialReviewSummary, Label, ListPage } from '@barghsa/ui';
+import {
+  Button,
+  FinancialReviewSummary,
+  Label,
+  ListPage,
+  StatusBadge,
+  StatusTimeline,
+  type StatusTone,
+} from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import {
   parseConsultationFeeReview,
@@ -26,6 +34,7 @@ interface RequestRow {
   status: string;
   product_snapshot: { title: { fa: string; en: string } };
   staff_owner_id: string | null;
+  staff_owner_name?: string | null;
   staff_team: string | null;
   submitted_at: string;
   priority: 'high' | 'normal';
@@ -62,6 +71,52 @@ const statuses = [
   'rejected',
   'cancelled',
 ] as const;
+
+const statusTones: Record<(typeof statuses)[number], StatusTone> = {
+  submitted: 'info',
+  under_review: 'warning',
+  awaiting_customer_info: 'warning',
+  offer_pending: 'warning',
+  offer_accepted: 'success',
+  offer_declined: 'destructive',
+  completed: 'default',
+  rejected: 'destructive',
+  cancelled: 'destructive',
+};
+function consultationStatus(status: string, copy: (key: string) => string) {
+  return Object.hasOwn(statusTones, status)
+    ? { label: copy(`status_${status}`), tone: statusTones[status as keyof typeof statusTones] }
+    : { label: copy('status_unknown'), tone: 'default' as const };
+}
+function ConsultationAssignment({
+  request,
+  copy,
+}: {
+  request: RequestRow;
+  copy: (key: string) => string;
+}) {
+  const team = request.staff_team?.trim();
+  const owner = request.staff_owner_id
+    ? request.staff_owner_name?.trim() || copy('assignedStaff')
+    : team
+      ? copy('awaitingOwner')
+      : copy('unassigned');
+  return (
+    <span
+      data-slot="consultation-assignment"
+      className="flex min-w-0 flex-col gap-1 text-sm text-muted-foreground"
+    >
+      <span>
+        {copy('owner')}: <bdi className="break-words">{owner}</bdi>
+      </span>
+      {team && (
+        <span>
+          {copy('team')}: <bdi className="break-words">{team}</bdi>
+        </span>
+      )}
+    </span>
+  );
+}
 
 export function AdminConsultationsPage({ queries }: { queries?: ConsultationListQuery } = {}) {
   const { assignment: initialAssignment } = useSearch({ from: '/admin/consultations' });
@@ -589,7 +644,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                     setOfferKey(crypto.randomUUID());
                   }}
                   aria-pressed={selectedId === row.id}
-                  className={`w-full rounded-xl border bg-card p-4 text-start hover:border-primary ${selectedId === row.id ? 'border-primary ring-1 ring-primary' : ''}`}
+                  className={`min-w-0 w-full rounded-xl border bg-card p-4 text-start hover:border-primary ${selectedId === row.id ? 'border-primary ring-1 ring-primary' : ''}`}
                 >
                   <span className="block font-semibold" dir="auto">
                     {row.product_snapshot.title[locale]}
@@ -597,13 +652,19 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                   <span className="mt-1 block text-sm" dir="auto">
                     {row.profile_name}
                   </span>
-                  <span className="mt-2 block text-sm text-muted-foreground">
-                    {copy(`status_${row.status}`)} · {copy(row.priority)} ·{' '}
-                    {time.format(row.submitted_at, {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                    })}
+                  <span className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                    <StatusBadge state={row.status} {...consultationStatus(row.status, copy)} />
+                    <span>
+                      {copy(row.priority)} ·{' '}
+                      {time.format(row.submitted_at, {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                      })}
+                    </span>
+                  </span>
+                  <span className="mt-2 block">
+                    <ConsultationAssignment request={row} copy={copy} />
                   </span>
                 </button>
               ))}
@@ -652,17 +713,14 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                   <p>
                     {copy('customer')}: <span dir="auto">{current.profile_name}</span>
                   </p>
-                  <p>
-                    {copy('status')}: {copy(`status_${current.status}`)}
+                  <p className="my-2 flex flex-wrap items-center gap-2">
+                    {copy('status')}:{' '}
+                    <StatusBadge
+                      state={current.status}
+                      {...consultationStatus(current.status, copy)}
+                    />
                   </p>
-                  <p>
-                    {copy('owner')}: {current.staff_owner_id ?? copy('unassigned')}
-                  </p>
-                  {current.staff_team && (
-                    <p>
-                      {copy('team')}: {current.staff_team}
-                    </p>
-                  )}
+                  <ConsultationAssignment request={current} copy={copy} />
                 </div>
                 {current.expected_next_step && (
                   <p>
@@ -963,28 +1021,30 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 </div>
                 <section className="space-y-2">
                   <h3 className="font-semibold">{copy('history')}</h3>
-                  <ol className="space-y-2 border-s-2 ps-3">
-                    {detail.history.map((event, index) => (
-                      <li
-                        key={`${event.created_at}-${index}`}
-                        className="rounded border p-2 text-sm"
-                      >
-                        <span className="font-medium">{copy(`status_${event.status}`)}</span> ·{' '}
-                        <bdi className="break-words">
-                          {[event.actor_name, copy(`actor_${event.actor_type}`)]
-                            .filter(Boolean)
-                            .join(' · ')}
-                        </bdi>
-                        <time
-                          className="block text-xs text-muted-foreground"
-                          dateTime={event.created_at}
-                        >
-                          {time.format(event.created_at)}
-                        </time>
-                        {event.reason && <p dir="auto">{event.reason}</p>}
-                      </li>
-                    ))}
-                  </ol>
+                  <StatusTimeline
+                    label={copy('history')}
+                    items={detail.history.map((event, index) => {
+                      const actor = ['staff', 'customer'].includes(event.actor_type)
+                        ? event.actor_type
+                        : 'unknown';
+                      const presentation = consultationStatus(event.status, copy);
+                      return {
+                        id: `${event.created_at}-${index}`,
+                        title: presentation.label,
+                        tone: presentation.tone,
+                        state: event.status,
+                        dateTime: event.created_at,
+                        dateLabel: time.format(event.created_at),
+                        actorLabel: [
+                          actor === 'unknown' ? null : event.actor_name,
+                          copy(`actor_${actor}`),
+                        ]
+                          .filter(Boolean)
+                          .join(' · '),
+                        description: event.reason ?? undefined,
+                      };
+                    })}
+                  />
                 </section>
               </>
             )}

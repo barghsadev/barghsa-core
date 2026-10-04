@@ -159,9 +159,17 @@ export class ConsultationWorkflowService {
           ]
         )
       ).rows;
+      const page = requests.slice(0, 100);
+      const names = await activityNames(
+        client,
+        page.map((request) => request.staff_owner_id as string | null)
+      );
       await client.query('COMMIT');
       return {
-        requests: requests.slice(0, 100),
+        requests: page.map((request) => ({
+          ...request,
+          staff_owner_name: names.get(request.staff_owner_id as string) ?? null,
+        })),
         nextAfter: requests.length > 100 ? requests[99]!.id : null,
       };
     } catch (error) {
@@ -207,13 +215,16 @@ export class ConsultationWorkflowService {
           [id]
         )
       ).rows;
-      const names = await activityNames(
-        client,
-        history.map((event) => event.actor_user_id as string)
-      );
+      const names = await activityNames(client, [
+        request.staff_owner_id as string | null,
+        ...history.map((event) => event.actor_user_id as string),
+      ]);
       await client.query('COMMIT');
       return {
-        request,
+        request: {
+          ...request,
+          staff_owner_name: names.get(request.staff_owner_id as string) ?? null,
+        },
         history: history.map((event) => ({
           ...event,
           actor_name: names.get(event.actor_user_id as string) ?? null,

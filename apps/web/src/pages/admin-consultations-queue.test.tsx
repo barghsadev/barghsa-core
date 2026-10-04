@@ -2,6 +2,13 @@ import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { AdminConsultationsPage } from './AdminConsultationsPage.js';
+import { tConsultation } from '@barghsa/i18n/consultation';
+import {
+  consultationContextRows,
+  consultationContextDetail,
+  consultationContextTones,
+  privateConsultationOwnerId,
+} from '../test/consultation-assignment-fixtures.js';
 
 const routeSearch = vi.hoisted(() => ({ assignment: undefined as string | undefined }));
 vi.mock('@tanstack/react-router', () => ({ useSearch: () => routeSearch }));
@@ -351,3 +358,88 @@ it('confirms the reviewed paid-fee charge before sending the staff adjustment', 
     container.remove();
   }
 });
+
+it.each(['en', 'fa'] as const)(
+  'presents consultation ownership and status history without internal identities (%s)',
+  async (locale) => {
+    document.documentElement.lang = locale;
+    vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+    const requests = consultationContextRows();
+    const copy = (key: string) => tConsultation(key, locale);
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        const request = requests.find((item) => url.endsWith(`/requests/${item.id}`));
+        return Response.json(
+          url.endsWith('/settings/timezone')
+            ? { timezone: 'Pacific/Kiritimati' }
+            : url.endsWith('/teams')
+              ? { teams: [] }
+              : request
+                ? consultationContextDetail(request)
+                : { requests, nextAfter: null }
+        );
+      })
+    );
+    const container = document.createElement('div');
+    document.body.append(container);
+    const root = createRoot(container);
+    try {
+      await act(async () => root.render(<AdminConsultationsPage />));
+      const rows = [...container.querySelectorAll<HTMLButtonElement>('button[aria-pressed]')];
+      expect(rows).toHaveLength(requests.length);
+      expect(
+        rows.map((row) => row.querySelector('[data-slot=badge]')!.getAttribute('data-variant'))
+      ).toEqual(consultationContextTones);
+      for (const [index, request] of requests.entries()) {
+        const expectedOwner = request.staff_owner_id
+          ? request.staff_owner_name || copy('assignedStaff')
+          : request.staff_team
+            ? copy('awaitingOwner')
+            : copy('unassigned');
+        const queueAssignment = rows[index]!.querySelector('[data-slot=consultation-assignment]')!;
+        expect(queueAssignment.textContent).toContain(expectedOwner);
+        if (request.staff_team) expect(queueAssignment.textContent).toContain(request.staff_team);
+        await act(async () => rows[index]!.click());
+        const detail = container.querySelector(`section[aria-label="${copy('details')}"]`)!;
+        expect(detail.querySelector('[data-slot=consultation-assignment]')!.textContent).toContain(
+          expectedOwner
+        );
+        expect(detail.querySelector('[data-slot=badge]')!.getAttribute('data-variant')).toBe(
+          consultationContextTones[index]
+        );
+        expect(detail.querySelector('[data-slot=badge]')!.textContent).toBe(
+          copy(index === 9 ? 'status_unknown' : `status_${request.status}`)
+        );
+      }
+      const timeline = container.querySelector('[data-slot=status-timeline]')!;
+      expect(timeline.querySelectorAll('li')).toHaveLength(10);
+      expect(
+        [...timeline.querySelectorAll('[data-tone]')].map((node) => node.getAttribute('data-tone'))
+      ).toEqual(consultationContextTones);
+      expect(timeline.textContent).toContain(copy('actor_customer'));
+      expect(timeline.textContent).toContain(copy('actor_staff'));
+      expect(timeline.textContent).toContain(copy('actor_unknown'));
+      expect(timeline.textContent).toContain('Reviewer <script>');
+      expect(timeline.textContent).toContain('<img src=x onerror=alert(1)>');
+      expect(timeline.textContent).toContain('Consultation delivered');
+      expect(timeline.querySelector('time')!.getAttribute('datetime')).toBe(
+        '2026-09-23T10:00:00.000Z'
+      );
+      if (locale === 'en')
+        expect(timeline.querySelector('time')!.textContent).toContain('Sep 24, 2026');
+      expect(container.querySelectorAll('script, img')).toHaveLength(0);
+      for (const privateValue of [
+        privateConsultationOwnerId,
+        'Unbound private name',
+        'private_future_status',
+        'private_actor_type',
+        'Private future actor',
+      ])
+        expect(container.textContent).not.toContain(privateValue);
+    } finally {
+      await act(async () => root.unmount());
+      container.remove();
+    }
+  }
+);
