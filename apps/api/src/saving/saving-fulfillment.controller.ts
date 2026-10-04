@@ -242,18 +242,20 @@ export class SavingFulfillmentController {
   @RateLimit({ namespace: 'saving:staff-amend-hardware-review:user', limit: 30, windowMs: 60_000 })
   @ApiOperation({ summary: 'Preview exact charge or credit before changing paid saving hardware' })
   @ApiZodBody(hardwareAmendmentReviewInput)
-  amendHardwareReview(
+  async amendHardwareReview(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
     this.permission(req, true);
-    return this.service.hardwareAmendmentReview(
-      id,
-      parse(hardwareAmendmentReviewInput, body),
-      req.session,
-      hasStaffPermission(req, 'invoices:write')
+    const allowPriceAdjustment = hasStaffPermission(req, 'invoices:write');
+    const input = await parseSavingChangeInput(
+      hardwareAmendmentReviewInput,
+      body,
+      ['hardwareProductId', 'reason'],
+      () => this.service.assertCanAmendHardware(id, req.session, false, body, allowPriceAdjustment)
     );
+    return this.service.hardwareAmendmentReview(id, input, req.session, allowPriceAdjustment);
   }
 
   @Post(':id/amend-hardware')
@@ -262,18 +264,25 @@ export class SavingFulfillmentController {
   @RateLimit({ namespace: 'saving:staff-amend-hardware:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Swap paid hardware or issue a charge before a higher-priced swap' })
   @ApiZodBody(hardwareAmendment)
-  amendHardware(
+  async amendHardware(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
     this.permission(req, true);
+    const allowPriceAdjustment = hasStaffPermission(req, 'invoices:write');
+    const input = await parseSavingChangeInput(
+      hardwareAmendment,
+      body,
+      ['hardwareProductId', 'reason'],
+      () => this.service.assertCanAmendHardware(id, req.session, true, body, allowPriceAdjustment)
+    );
     return this.service.amendHardware(
       id,
-      parse(hardwareAmendment, body),
+      input,
       req.session,
       req.ip ?? 'unknown',
-      hasStaffPermission(req, 'invoices:write')
+      allowPriceAdjustment
     );
   }
 
@@ -282,7 +291,7 @@ export class SavingFulfillmentController {
   @RateLimit({ namespace: 'saving:staff-cancel-upgrade-review:user', limit: 30, windowMs: 60_000 })
   @ApiOperation({ summary: 'Preview unpaid charge and stock release before cancelling an upgrade' })
   @ApiZodBody(hardwareUpgradeCancellationReviewInput)
-  cancelHardwareUpgradeReview(
+  async cancelHardwareUpgradeReview(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
@@ -290,11 +299,13 @@ export class SavingFulfillmentController {
     this.permission(req, true);
     if (!hasStaffPermission(req, 'invoices:write'))
       throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
-    return this.service.hardwareUpgradeCancellationReview(
-      id,
-      parse(hardwareUpgradeCancellationReviewInput, body),
-      req.session
+    const input = await parseSavingChangeInput(
+      hardwareUpgradeCancellationReviewInput,
+      body,
+      ['reason'],
+      () => this.service.assertCanCancelHardwareUpgrade(id, req.session, false, body)
     );
+    return this.service.hardwareUpgradeCancellationReview(id, input, req.session);
   }
 
   @Post(':id/cancel-hardware-upgrade')
@@ -303,7 +314,7 @@ export class SavingFulfillmentController {
   @RateLimit({ namespace: 'saving:staff-cancel-upgrade:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Cancel an unpaid hardware upgrade and release its reserved stock' })
   @ApiZodBody(hardwareUpgradeCancellation)
-  cancelHardwareUpgrade(
+  async cancelHardwareUpgrade(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
@@ -311,12 +322,10 @@ export class SavingFulfillmentController {
     this.permission(req, true);
     if (!hasStaffPermission(req, 'invoices:write'))
       throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
-    return this.service.cancelHardwareUpgrade(
-      id,
-      parse(hardwareUpgradeCancellation, body),
-      req.session,
-      req.ip ?? 'unknown'
+    const input = await parseSavingChangeInput(hardwareUpgradeCancellation, body, ['reason'], () =>
+      this.service.assertCanCancelHardwareUpgrade(id, req.session, true, body)
     );
+    return this.service.cancelHardwareUpgrade(id, input, req.session, req.ip ?? 'unknown');
   }
 
   @Post(':id/stages/:stage/:action/review')

@@ -7,6 +7,11 @@ import { Button, Card, CardContent, FinancialReviewSummary, Input, Label } from 
 import { tSaving } from '@barghsa/i18n/saving';
 import { tSavingStaffReview } from '@barghsa/i18n/saving-staff-review';
 import { tSavingChange } from '@barghsa/i18n/saving-change';
+import { SavingHardwareCommandForm } from '../components/SavingHardwareCommandForm.js';
+import type {
+  SavingHardwareDraftCache,
+  SavingHardwareOption,
+} from '../lib/saving-hardware-form.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   Form,
@@ -31,13 +36,9 @@ import {
 import { t } from '@barghsa/i18n/app';
 import {
   parseSavingAddressAmendmentReview,
-  parseSavingHardwareAmendmentReview,
-  parseSavingHardwareUpgradeCancellationReview,
   parseSavingFulfillmentStageReview,
   parseSavingStaffDecisionReview,
   type SavingAddressAmendmentReview,
-  type SavingHardwareAmendmentReview,
-  type SavingHardwareUpgradeCancellationReview,
   type SavingFulfillmentStageReview,
   type SavingStaffDecisionReview,
 } from '@barghsa/shared/finance';
@@ -78,6 +79,9 @@ interface Order {
   orderId: string;
   profileId: string;
   customerName: string;
+  agreementSnapshot: string;
+  refundedIrR: string;
+  pendingRefundIrR: string;
   status: string;
   financialStatus: string;
   submittedAt: string;
@@ -111,11 +115,7 @@ interface Detail extends Order {
   hardwareAmendments: SavingHardwareAmendment[];
   hardwareUpgrades: SavingHardwareUpgrade[];
   addressOptions: Array<{ id: string; fullAddress: string; postalCode: string }>;
-  hardwareOptions: Array<{
-    id: string;
-    title: { fa: string; en: string };
-    priceDeltaIrR: string;
-  }>;
+  hardwareOptions: SavingHardwareOption[];
   canAmendAddress: boolean;
   canAmendHardware: boolean;
 }
@@ -198,6 +198,9 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
   const sourceScope = JSON.stringify([actor, profileRevision, selected, lane]);
   const currentScope = useRef(sourceScope);
   currentScope.current = sourceScope;
+  const withdrawnDraftScope = useRef<string | null>(null);
+  const currentDraftScope = useRef(sourceScope);
+  currentDraftScope.current = withdrawnDraftScope.current === sourceScope ? '' : sourceScope;
   const currentActor = useRef(actor);
   currentActor.current = actor;
   const currentProfileRevision = useRef(profileRevision);
@@ -219,18 +222,47 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
   const addressCurrentScope = useRef(addressScope);
   addressCurrentScope.current = addressScope;
   const [, setAddressLockRevision] = useState(0);
+  const hardwareDrafts = useRef(new Map<string, SavingHardwareDraftCache>());
+  for (const [id, draft] of hardwareDrafts.current) {
+    if (draft.baseScope !== sourceScope) hardwareDrafts.current.delete(id);
+  }
+  const hardwareScope = JSON.stringify([
+    sourceScope,
+    detail?.profileId,
+    detail?.versionId,
+    detail?.hardwareProductId,
+    detail?.hardwareTitle,
+    detail?.billIdentifier,
+    detail?.customerName,
+    detail?.agreementSnapshot,
+    detail?.refundedIrR,
+    detail?.pendingRefundIrR,
+    detail?.canAmendHardware,
+    detail?.contractId,
+    detail?.contractState,
+    detail?.invoiceId,
+    detail?.invoiceState,
+    detail?.totalIrR,
+    detail?.paidIrR,
+    detail?.addressSnapshot,
+    detail?.hardwareOptions,
+    detail?.hardwareUpgrades,
+  ]);
+  const hardwareCurrentScope = useRef(hardwareScope);
+  hardwareCurrentScope.current = hardwareScope;
   const otherWork = useRef(false);
   const actionRef = useRef<TeamAction | null>(null);
   const readEpoch = useRef(0);
   const queueAbort = useRef<AbortController | null>(null);
   const detailAbort = useRef<AbortController | null>(null);
   const navigationLocked = () =>
-    !!addressOwner.current && (addressOwner.current.attempted || addressOwner.current.uncertain);
+    !!addressOwner.current &&
+    (!!addressOwner.current.kind ||
+      addressOwner.current.attempted ||
+      addressOwner.current.uncertain);
 
   const [note, setNote] = useState('');
   const [handover, setHandover] = useState('');
-  const [amendHardwareId, setAmendHardwareId] = useState('');
-  const [amendHardwareReason, setAmendHardwareReason] = useState('');
   const [action, setRenderedAction] = useState<TeamAction | null>(null);
   function setAction(value: TeamAction | null) {
     actionRef.current = value;
@@ -238,16 +270,9 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
   }
 
   const [decisionReview, setDecisionReview] = useState<SavingStaffDecisionReview | null>(null);
-  const [hardwareReview, setHardwareReview] = useState<SavingHardwareAmendmentReview | null>(null);
-  const [upgradeCancellationReview, setUpgradeCancellationReview] =
-    useState<SavingHardwareUpgradeCancellationReview | null>(null);
   const [stageReview, setStageReview] = useState<SavingFulfillmentStageReview | null>(null);
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState(false);
-  const [hardwareReviewLoading, setHardwareReviewLoading] = useState(false);
-  const [hardwareReviewError, setHardwareReviewError] = useState(false);
-  const [upgradeCancellationReviewLoading, setUpgradeCancellationReviewLoading] = useState(false);
-  const [upgradeCancellationReviewError, setUpgradeCancellationReviewError] = useState(false);
   const [stageReviewLoading, setStageReviewLoading] = useState(false);
   const [stageReviewError, setStageReviewError] = useState(false);
   const reviewRequest = useRef(0);
@@ -274,16 +299,16 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
   }
 
   function withdrawSelected(reason: 'forbidden' | 'missing', id: string) {
+    withdrawnDraftScope.current = sourceScope;
     ++readEpoch.current;
     queueAbort.current?.abort();
     detailAbort.current?.abort();
     addressDraft.current = null;
+    hardwareDrafts.current.clear();
     setDetail(null);
     setDetailError(true);
     setNote('');
     setHandover('');
-    setAmendHardwareReason('');
-    setAmendHardwareId('');
     if (reason === 'forbidden') {
       setAccepted(null);
       setState('forbidden');
@@ -361,8 +386,6 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
   useEffect(() => {
     setNote('');
     setHandover('');
-    setAmendHardwareReason('');
-    setAmendHardwareId('');
   }, [selected, lane, actor, profileRevision]);
 
   useEffect(() => {
@@ -370,16 +393,10 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
     otherWork.current = false;
     setDetailError(false);
     setDecisionReview(null);
-    setHardwareReview(null);
-    setUpgradeCancellationReview(null);
     setStageReview(null);
     setAction(null);
     setReviewLoading(false);
     setReviewError(false);
-    setHardwareReviewLoading(false);
-    setHardwareReviewError(false);
-    setUpgradeCancellationReviewLoading(false);
-    setUpgradeCancellationReviewError(false);
     setStageReviewLoading(false);
     setStageReviewError(false);
     if (!selected) {
@@ -413,13 +430,9 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
       })
       .then((value) => {
         if (fresh() && value) {
+          withdrawnDraftScope.current = null;
           setDetail(value);
           setDetailScope(sourceScope);
-          setAmendHardwareId((current) =>
-            current && value.hardwareOptions.some((option) => option.id === current)
-              ? current
-              : (value.hardwareOptions[0]?.id ?? '')
-          );
         }
       })
       .catch(() => {
@@ -561,136 +574,6 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
     }
   }
 
-  async function amendHardware() {
-    if (addressOwner.current || otherWork.current) return;
-    if (
-      !detail ||
-      addressOwner.current ||
-      otherWork.current ||
-      hardwareReviewLoading ||
-      !amendHardwareReason.trim() ||
-      !amendHardwareId
-    )
-      return;
-    const order = detail;
-    const reason = amendHardwareReason.trim();
-    const targetId = amendHardwareId;
-    const request = ++reviewRequest.current;
-    otherWork.current = true;
-    setHardwareReviewLoading(true);
-    setHardwareReviewError(false);
-    try {
-      const response = await fetch(
-        `/api/staff/saving/orders/${encodeURIComponent(order.id)}/amend-hardware-review`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({
-            expectedVersionId: order.versionId,
-            expectedHardwareId: order.hardwareProductId,
-            hardwareProductId: targetId,
-            reason,
-          }),
-        }
-      );
-      if (!response.ok) throw new Error('Hardware review unavailable');
-      const financialReview = parseSavingHardwareAmendmentReview(await response.json());
-      if (request !== reviewRequest.current) return;
-      if (
-        !financialReview ||
-        financialReview.scope.profileId !== order.profileId ||
-        financialReview.scope.resourceId !== order.id ||
-        financialReview.data.versionId !== order.versionId ||
-        financialReview.data.currentHardwareId !== order.hardwareProductId ||
-        financialReview.data.targetHardwareId !== targetId ||
-        financialReview.data.reason !== reason
-      )
-        throw new Error('Hardware review mismatch');
-      setHardwareReview(financialReview);
-      setAction({
-        title: copy('staffAmendHardware'),
-        description: copy('staffHardwareReviewConfirm'),
-        method: 'POST',
-        path: `/api/staff/saving/orders/${order.id}/amend-hardware`,
-        body: {
-          idempotencyKey: crypto.randomUUID(),
-          expectedVersionId: financialReview.data.versionId,
-          expectedHardwareId: financialReview.data.currentHardwareId,
-          expectedReviewHash: financialReview.hash,
-          hardwareProductId: financialReview.data.targetHardwareId,
-          reason,
-        },
-        conflictMessage: copy('staffConflict'),
-        forbiddenMessage: copy('staffForbidden'),
-      });
-    } catch {
-      if (request === reviewRequest.current) {
-        setHardwareReview(null);
-        setHardwareReviewError(true);
-      }
-    } finally {
-      if (request === reviewRequest.current) otherWork.current = false;
-      if (request === reviewRequest.current) setHardwareReviewLoading(false);
-    }
-  }
-
-  async function cancelHardwareUpgrade(upgrade: SavingHardwareUpgrade, reason: string) {
-    if (addressOwner.current || otherWork.current) return;
-    if (!detail || !reason || upgradeCancellationReviewLoading) return;
-    const order = detail;
-    const request = ++reviewRequest.current;
-    otherWork.current = true;
-    setUpgradeCancellationReviewLoading(true);
-    setUpgradeCancellationReviewError(false);
-    try {
-      const response = await fetch(
-        `/api/staff/saving/orders/${encodeURIComponent(order.id)}/cancel-hardware-upgrade-review`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ upgradeId: upgrade.id, reason }),
-        }
-      );
-      if (!response.ok) throw new Error('Upgrade cancellation review unavailable');
-      const financialReview = parseSavingHardwareUpgradeCancellationReview(await response.json());
-      if (request !== reviewRequest.current) return;
-      if (
-        !financialReview ||
-        financialReview.scope.profileId !== order.profileId ||
-        financialReview.scope.resourceId !== order.id ||
-        financialReview.data.upgradeId !== upgrade.id ||
-        financialReview.data.adjustmentInvoiceId !== upgrade.adjustmentInvoiceId ||
-        financialReview.data.reason !== reason
-      )
-        throw new Error('Upgrade cancellation review mismatch');
-      setUpgradeCancellationReview(financialReview);
-      setAction({
-        title: copy('hardwareUpgradeCancel'),
-        description: copy('staffUpgradeCancellationConfirm'),
-        method: 'POST',
-        path: `/api/staff/saving/orders/${order.id}/cancel-hardware-upgrade`,
-        body: {
-          idempotencyKey: crypto.randomUUID(),
-          upgradeId: upgrade.id,
-          expectedReviewHash: financialReview.hash,
-          reason,
-        },
-        conflictMessage: copy('staffConflict'),
-        forbiddenMessage: copy('staffForbidden'),
-      });
-    } catch {
-      if (request === reviewRequest.current) {
-        setUpgradeCancellationReview(null);
-        setUpgradeCancellationReviewError(true);
-      }
-    } finally {
-      if (request === reviewRequest.current) otherWork.current = false;
-      if (request === reviewRequest.current) setUpgradeCancellationReviewLoading(false);
-    }
-  }
-
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="flex flex-wrap items-start justify-between gap-3">
@@ -804,12 +687,15 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                 state !== 'error' &&
                 state !== 'forbidden' &&
                 (state === 'loading' ||
+                  (nextAfter === after && accepted?.cursor !== after) ||
                   (queries ? queries.queue.canAdvance(nextAfter) : nextAfter !== after))
               }
               loading={state === 'loading'}
               onNext={() => {
                 if (navigationLocked() || !nextAfter) return;
-                if (queries) queries.queue.next(nextAfter);
+                if (after === nextAfter && accepted?.cursor !== after)
+                  setListRevision((value) => value + 1);
+                else if (queries) queries.queue.next(nextAfter);
                 else setAfter(nextAfter);
               }}
               previous={{
@@ -892,14 +778,30 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                 />
                 <SavingHardwareUpgradeHistory
                   upgrades={detail.hardwareUpgrades ?? []}
-                  onCancel={(upgrade, reason) => void cancelHardwareUpgrade(upgrade, reason)}
+                  renderCancel={(upgrade) => (
+                    <SavingHardwareCommandForm
+                      key={`${hardwareScope}:${upgrade.id}`}
+                      upgrade={upgrade}
+                      order={detail}
+                      owner={addressOwner}
+                      scope={hardwareScope}
+                      currentScope={hardwareCurrentScope}
+                      draftCache={hardwareDrafts}
+                      baseScope={sourceScope}
+                      currentBaseScope={currentDraftScope}
+                      blocked={() => !!actionRef.current || otherWork.current}
+                      notify={() => setAddressLockRevision((value) => value + 1)}
+                      onPending={() => {
+                        ++readEpoch.current;
+                        queueAbort.current?.abort();
+                        detailAbort.current?.abort();
+                        if (accepted) setState('ready');
+                      }}
+                      onSuccess={refreshQueue}
+                      onWithdraw={(reason) => withdrawSelected(reason, detail.id)}
+                    />
+                  )}
                 />
-                {upgradeCancellationReviewLoading ? (
-                  <p role="status">{copy('staffUpgradeCancellationLoading')}</p>
-                ) : null}
-                {upgradeCancellationReviewError ? (
-                  <p role="alert">{copy('staffReviewError')}</p>
-                ) : null}
                 {detail.canAmendAddress && (
                   <PaidSavingAddressForm
                     key={addressScope}
@@ -909,8 +811,10 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                     currentScope={addressCurrentScope}
                     draftCache={addressDraft}
                     baseScope={sourceScope}
-                    currentBaseScope={currentScope}
-                    blocked={() => !!actionRef.current || otherWork.current}
+                    currentBaseScope={currentDraftScope}
+                    blocked={() =>
+                      !!addressOwner.current?.kind || !!actionRef.current || otherWork.current
+                    }
                     notify={() => setAddressLockRevision((value) => value + 1)}
                     onPending={() => {
                       ++readEpoch.current;
@@ -923,53 +827,26 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                   />
                 )}
                 {detail.canAmendHardware && (
-                  <div className="space-y-3 rounded-md border p-4">
-                    <h3 className="font-semibold">{copy('staffAmendHardware')}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {copy('staffAmendHardwareHelp')}
-                    </p>
-                    <Label htmlFor="saving-amend-hardware">{copy('stepHardware')}</Label>
-                    <select
-                      id="saving-amend-hardware"
-                      className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-                      value={amendHardwareId}
-                      onChange={(event) => setAmendHardwareId(event.target.value)}
-                    >
-                      {detail.hardwareOptions.map((hardware) => (
-                        <option key={hardware.id} value={hardware.id}>
-                          {hardware.title[locale]}
-                          {BigInt(hardware.priceDeltaIrR) < 0n
-                            ? ` · ${copy('hardwareCreditIssued')}: ${money.money((-BigInt(hardware.priceDeltaIrR)).toString())}`
-                            : BigInt(hardware.priceDeltaIrR) > 0n
-                              ? ` · ${copy('hardwareAdditionalCharge')}: ${money.money(hardware.priceDeltaIrR)}`
-                              : ''}
-                        </option>
-                      ))}
-                    </select>
-                    <Label htmlFor="saving-amend-hardware-reason">{copy('staffAmendReason')}</Label>
-                    <Input
-                      id="saving-amend-hardware-reason"
-                      value={amendHardwareReason}
-                      maxLength={1000}
-                      onChange={(event) => setAmendHardwareReason(event.target.value)}
-                    />
-                    <Button
-                      variant="outline"
-                      disabled={
-                        !!addressOwner.current ||
-                        !amendHardwareReason.trim() ||
-                        !amendHardwareId ||
-                        hardwareReviewLoading
-                      }
-                      onClick={() => void amendHardware()}
-                    >
-                      {copy('staffAmendHardware')}
-                    </Button>
-                    {hardwareReviewLoading ? (
-                      <p role="status">{copy('staffHardwareReviewLoading')}</p>
-                    ) : null}
-                    {hardwareReviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
-                  </div>
+                  <SavingHardwareCommandForm
+                    key={`${hardwareScope}:hardware`}
+                    order={detail}
+                    owner={addressOwner}
+                    scope={hardwareScope}
+                    currentScope={hardwareCurrentScope}
+                    draftCache={hardwareDrafts}
+                    baseScope={sourceScope}
+                    currentBaseScope={currentDraftScope}
+                    blocked={() => !!actionRef.current || otherWork.current}
+                    notify={() => setAddressLockRevision((value) => value + 1)}
+                    onPending={() => {
+                      ++readEpoch.current;
+                      queueAbort.current?.abort();
+                      detailAbort.current?.abort();
+                      if (accepted) setState('ready');
+                    }}
+                    onSuccess={refreshQueue}
+                    onWithdraw={(reason) => withdrawSelected(reason, detail.id)}
+                  />
                 )}
                 {detail.status === 'awaiting_staff_review' && (
                   <div className="flex flex-wrap gap-2">
@@ -1224,201 +1101,6 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                   </div>
                 }
               />
-            ) : hardwareReview ? (
-              <FinancialReviewSummary
-                title={copy('staffHardwareReviewTitle')}
-                rows={[
-                  {
-                    id: 'customer',
-                    label: copy('customer'),
-                    value: hardwareReview.data.customerName,
-                  },
-                  {
-                    id: 'profile',
-                    label: copy('staffReviewProfile'),
-                    value: hardwareReview.data.profileName,
-                  },
-                  {
-                    id: 'bill',
-                    label: copy('staffBill'),
-                    value: hardwareReview.data.billIdentifier,
-                  },
-                  {
-                    id: 'address',
-                    label: copy('staffAddress'),
-                    value: String(hardwareReview.data.addressSnapshot.full_address ?? ''),
-                  },
-                  {
-                    id: 'contract',
-                    label: copy('staffReviewContractVersion'),
-                    value: money.number(hardwareReview.data.versionNumber),
-                  },
-                  {
-                    id: 'invoice',
-                    label: copy('staffInvoice'),
-                    value: t(`invoices.state.${hardwareReview.data.invoiceState}`, locale),
-                  },
-                  {
-                    id: 'paid',
-                    label: copy('staffPaid'),
-                    value: money.money(hardwareReview.data.paidAmount),
-                  },
-                  {
-                    id: 'current-hardware',
-                    label: copy('staffHardwareCurrent'),
-                    value: hardwareReview.data.currentHardwareTitle[locale],
-                  },
-                  {
-                    id: 'current-price',
-                    label: copy('staffHardwareCurrentPrice'),
-                    value: money.money(hardwareReview.data.currentHardwarePriceIrR),
-                  },
-                  {
-                    id: 'current-vat',
-                    label: copy('staffHardwareCurrentVat'),
-                    value: `${money.number(hardwareReview.data.currentHardwareVatRateBps / 100)}%`,
-                  },
-                  {
-                    id: 'current-total',
-                    label: copy('staffHardwareCurrentTotal'),
-                    value: money.money(hardwareReview.data.currentOrderTotalIrR),
-                  },
-                  {
-                    id: 'target-hardware',
-                    label: copy('staffHardwareTarget'),
-                    value: hardwareReview.data.targetHardwareTitle[locale],
-                  },
-                  {
-                    id: 'target-price',
-                    label: copy('staffHardwareTargetPrice'),
-                    value: money.money(hardwareReview.data.targetHardwarePriceIrR),
-                  },
-                  {
-                    id: 'target-vat',
-                    label: copy('staffHardwareTargetVat'),
-                    value: `${money.number(hardwareReview.data.targetHardwareVatRateBps / 100)}%`,
-                  },
-                  {
-                    id: 'outcome',
-                    label: copy('staffReviewOutcome'),
-                    value: copy(`staffHardwareOutcome.${hardwareReview.data.outcome}`),
-                  },
-                  {
-                    id: 'delta',
-                    label: copy('staffHardwareDelta'),
-                    value: money.money(
-                      (hardwareReview.data.priceDeltaIrR.startsWith('-')
-                        ? -BigInt(hardwareReview.data.priceDeltaIrR)
-                        : BigInt(hardwareReview.data.priceDeltaIrR)
-                      ).toString()
-                    ),
-                  },
-                  ...(hardwareReview.data.targetStockTracking
-                    ? [
-                        {
-                          id: 'availability',
-                          label: copy('staffHardwareAvailable'),
-                          value: money.number(hardwareReview.data.targetAvailableCount),
-                        },
-                      ]
-                    : []),
-                ]}
-                total={{
-                  label: copy('staffHardwareTargetTotal'),
-                  value: money.money(hardwareReview.data.targetOrderTotalIrR),
-                }}
-                notice={
-                  <div className="space-y-2">
-                    <p>{hardwareReview.data.reason}</p>
-                    <p className="whitespace-pre-wrap break-words" dir="auto">
-                      {hardwareReview.data.agreementSnapshot}
-                    </p>
-                  </div>
-                }
-              />
-            ) : upgradeCancellationReview ? (
-              <FinancialReviewSummary
-                title={copy('staffUpgradeCancellationTitle')}
-                rows={[
-                  {
-                    id: 'customer',
-                    label: copy('customer'),
-                    value: upgradeCancellationReview.data.customerName,
-                  },
-                  {
-                    id: 'profile',
-                    label: copy('staffReviewProfile'),
-                    value: upgradeCancellationReview.data.profileName,
-                  },
-                  {
-                    id: 'bill',
-                    label: copy('staffBill'),
-                    value: upgradeCancellationReview.data.billIdentifier,
-                  },
-                  {
-                    id: 'address',
-                    label: copy('staffAddress'),
-                    value: String(
-                      upgradeCancellationReview.data.addressSnapshot.full_address ?? ''
-                    ),
-                  },
-                  {
-                    id: 'contract',
-                    label: copy('staffReviewContractVersion'),
-                    value: money.number(upgradeCancellationReview.data.versionNumber),
-                  },
-                  {
-                    id: 'previous-hardware',
-                    label: copy('staffHardwareCurrent'),
-                    value: upgradeCancellationReview.data.previousHardware.title[locale],
-                  },
-                  {
-                    id: 'replacement-hardware',
-                    label: copy('staffHardwareTarget'),
-                    value: upgradeCancellationReview.data.replacementHardware.title[locale],
-                  },
-                  {
-                    id: 'invoice',
-                    label: copy('staffInvoice'),
-                    value: t(
-                      `invoices.state.${upgradeCancellationReview.data.adjustmentInvoiceState}`,
-                      locale
-                    ),
-                  },
-                  {
-                    id: 'paid',
-                    label: copy('staffPaid'),
-                    value: money.money(upgradeCancellationReview.data.invoicePaidIrR),
-                  },
-                  {
-                    id: 'charge',
-                    label: copy('hardwareAdditionalCharge'),
-                    value: money.money(upgradeCancellationReview.data.additionalChargeIrR),
-                  },
-                  {
-                    id: 'reservation',
-                    label: copy('staffUpgradeCancellationReservation'),
-                    value: copy(
-                      upgradeCancellationReview.data.stockReserved
-                        ? 'staffUpgradeCancellationRelease'
-                        : 'staffUpgradeCancellationNoReservation'
-                    ),
-                  },
-                ]}
-                total={{
-                  label: copy('staffTotal'),
-                  value: money.money(upgradeCancellationReview.data.invoiceTotalIrR),
-                }}
-                notice={
-                  <div className="space-y-2">
-                    <p>{copy('staffUpgradeCancellationOutcome')}</p>
-                    <p>{upgradeCancellationReview.data.reason}</p>
-                    <p className="whitespace-pre-wrap break-words" dir="auto">
-                      {upgradeCancellationReview.data.agreementSnapshot}
-                    </p>
-                  </div>
-                }
-              />
             ) : stageReview ? (
               <FinancialReviewSummary
                 title={copy('staffStageReviewTitle')}
@@ -1491,14 +1173,11 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
           onClose={() => {
             setAction(null);
             setDecisionReview(null);
-            setHardwareReview(null);
-            setUpgradeCancellationReview(null);
             setStageReview(null);
           }}
           onSuccess={async () => {
             setNote('');
             setHandover('');
-            setAmendHardwareReason('');
             refreshQueue();
           }}
         />
@@ -1593,6 +1272,7 @@ function SavingAddressReviewSummary({
 }
 
 interface SavingAddressOwner {
+  kind?: 'hardware' | 'cancellation';
   attempted: boolean;
   uncertain: boolean;
 }

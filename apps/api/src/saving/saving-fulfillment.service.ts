@@ -8,6 +8,7 @@ import { getDbPool } from '@barghsa/db';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import { GiftCodeService } from '../admin/gift-code.service.js';
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import {
   auditContract,
   contractIdempotency,
@@ -1074,6 +1075,84 @@ export class SavingFulfillmentService {
       }
     );
     return { review, basis, hardware };
+  }
+
+  private async hardwareInputAuthority(
+    id: string,
+    actor: Actor,
+    write: boolean,
+    read: (client: PoolClient) => Promise<void>
+  ): Promise<void> {
+    const target = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM saving_orders WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!target) throw new NotFoundException('Saving order not found');
+    const check = async (client: PoolClient, archived: boolean) => {
+      if (archived) throw new ConflictException('Profile is archived');
+      await read(client);
+    };
+    if (write)
+      await staffContractMutation(target.profile_id, actor, check, { financialReview: true });
+    else await staffContractFinancialReview(target.profile_id, actor, check);
+  }
+
+  async assertCanAmendHardware(
+    id: string,
+    actor: Actor,
+    write: boolean,
+    body: unknown,
+    allowPriceAdjustment: boolean
+  ): Promise<void> {
+    await this.hardwareInputAuthority(id, actor, write, async (client) => {
+      const row = await this.lockRow(client, id, 'SHARE');
+      const targetId =
+        body && typeof body === 'object' && 'hardwareProductId' in body
+          ? body.hardwareProductId
+          : undefined;
+      const option = (await this.hardwareOptions(client, row, true)).find(
+        (value) => value.id === targetId
+      );
+      if (option && BigInt(option.priceDeltaIrR) !== 0n) {
+        if (!allowPriceAdjustment)
+          throw new ForbiddenException('Invoice write permission is required for price changes');
+        await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+      }
+    });
+  }
+
+  async assertCanCancelHardwareUpgrade(
+    id: string,
+    actor: Actor,
+    write: boolean,
+    body: unknown
+  ): Promise<void> {
+    await this.hardwareInputAuthority(id, actor, write, async (client) => {
+      await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+      const upgradeId =
+        body && typeof body === 'object' && 'upgradeId' in body ? body.upgradeId : undefined;
+      const invoiceId = (
+        await client.query<{ adjustment_invoice_id: string }>(
+          'SELECT adjustment_invoice_id FROM saving_hardware_upgrade_requests WHERE id=$1 AND order_id=$2',
+          [upgradeId, id]
+        )
+      ).rows[0]?.adjustment_invoice_id;
+      if (!invoiceId) throw new ConflictException('Hardware upgrade was not found');
+      await client.query('SELECT id FROM invoices WHERE id=$1 FOR SHARE', [invoiceId]);
+      const upgrade = (
+        await client.query<{ contract_id: string }>(
+          `SELECT contract_id FROM saving_hardware_upgrade_requests
+            WHERE id=$1 AND order_id=$2 AND adjustment_invoice_id=$3 FOR SHARE`,
+          [upgradeId, id, invoiceId]
+        )
+      ).rows[0];
+      if (!upgrade) throw new ConflictException('Hardware upgrade was not found');
+      const row = await this.lockRow(client, id, 'SHARE');
+      if (row.contract_id !== upgrade.contract_id)
+        throw new ConflictException('Hardware upgrade contract has changed');
+    });
   }
 
   async hardwareAmendmentReview(

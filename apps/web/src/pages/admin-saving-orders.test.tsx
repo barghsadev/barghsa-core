@@ -1,4 +1,4 @@
-import { act } from 'react';
+import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import AdminSavingOrdersPage from './AdminSavingOrdersPage.js';
@@ -8,19 +8,10 @@ vi.mock('../components/ContractCancellationRequestQueue.js', () => ({
 }));
 vi.mock('../components/SavingOrderDocuments.js', () => ({ SavingOrderDocuments: () => null }));
 vi.mock('../components/SavingOrderComments.js', () => ({ SavingOrderComments: () => null }));
-vi.mock('../components/SavingHardwareUpgradeHistory.js', () => ({
-  SavingHardwareUpgradeHistory: ({
-    upgrades,
-    onCancel,
-  }: {
-    upgrades: Array<{ id: string }>;
-    onCancel?: (upgrade: { id: string }, reason: string) => void;
-  }) =>
-    upgrades.length ? (
-      <button onClick={() => onCancel?.(upgrades[0]!, 'Customer changed their mind')}>
-        Cancel upgrade
-      </button>
-    ) : null,
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({ children, params }: { children: ReactNode; params?: { invoiceId: string } }) => (
+    <a href={`/invoices/${params?.invoiceId ?? ''}`}>{children}</a>
+  ),
 }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: (value: string) => value, number: String }),
@@ -386,11 +377,15 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
     previousTitle: { fa: 'دستگاه', en: 'Current device' },
     hardwareTitle: { fa: 'جایگزین', en: 'Replacement device' },
   };
+  const pendingUpgrades: Array<typeof upgrade> = [];
   const detail = {
     id,
     orderId: id,
     profileId,
     customerName: 'Buyer Company',
+    agreementSnapshot: 'Accepted agreement',
+    refundedIrR: '0',
+    pendingRefundIrR: '0',
     status: 'approved',
     financialStatus: 'paid',
     submittedAt: '2026-09-30T00:00:00.000Z',
@@ -412,7 +407,7 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
     revisions: [],
     addressAmendments: [],
     hardwareAmendments: [],
-    hardwareUpgrades: [upgrade],
+    hardwareUpgrades: pendingUpgrades,
     addressOptions: [
       {
         id: '66666666-6666-7666-8666-666666666666',
@@ -426,6 +421,11 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
         id: targetHardwareId,
         title: { fa: 'جایگزین', en: 'Replacement device' },
         priceDeltaIrR: '50000',
+        priceIrR: '250000',
+        vatRateBps: 0,
+        totalIrR: '350000',
+        stockTracking: true,
+        availableCount: 2,
       },
     ],
     canAmendAddress: true,
@@ -536,13 +536,20 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
     hash: 'd'.repeat(64),
   };
   const fetchMock = vi.fn(async (url: string, _init?: RequestInit) => {
+    if (url.endsWith('/amend-hardware')) {
+      detail.hardwareUpgrades = [upgrade];
+      detail.canAmendHardware = false;
+    } else if (url.endsWith('/cancel-hardware-upgrade')) {
+      detail.hardwareUpgrades = [{ ...upgrade, status: 'cancelled' }];
+      detail.canAmendHardware = true;
+    }
     const data =
       url === '/api/user/settings/timezone'
         ? { timezone: 'Asia/Tehran' }
         : url.endsWith('/cancel-hardware-upgrade-review')
           ? cancellationReview
           : url.endsWith('/cancel-hardware-upgrade')
-            ? { status: 'cancelled' }
+            ? { savingOrderId: id, upgradeId, status: 'cancelled' }
             : url.endsWith('/amend-address-review')
               ? addressReview
               : url.endsWith('/amend-address')
@@ -554,11 +561,20 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
                 : url.endsWith('/amend-hardware-review')
                   ? review
                   : url.endsWith('/amend-hardware')
-                    ? { status: 'awaiting_payment' }
+                    ? {
+                        upgradeId,
+                        savingOrderId: id,
+                        hardwareProductId: targetHardwareId,
+                        priceDeltaIrR: '50000',
+                        adjustmentInvoiceId: upgradeInvoiceId,
+                        status: 'awaiting_payment',
+                      }
                     : url === `/api/staff/saving/orders/${id}`
                       ? detail
                       : { orders: [detail], nextAfter: null };
-    return Response.json(data, { status: url.endsWith('/amend-address') ? 201 : 200 });
+    return Response.json(data, {
+      status: url.endsWith('/amend-address') || url.endsWith('/amend-hardware') ? 201 : 200,
+    });
   });
   vi.stubGlobal('fetch', fetchMock);
   const container = document.createElement('div');
@@ -582,6 +598,10 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
       (button) => button.textContent === 'Swap hardware'
     );
     await act(async () => swap!.click());
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+    });
     expect(fetchMock).toHaveBeenCalledWith(
       `/api/staff/saving/orders/${id}/amend-hardware-review`,
       expect.objectContaining({
@@ -608,10 +628,28 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
       expectedHardwareId: currentHardwareId,
       hardwareProductId: targetHardwareId,
     });
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(document.querySelector('[role="dialog"]')).toBeNull();
+    });
+    const cancelReason = container.querySelector<HTMLInputElement>(
+      `#saving-upgrade-cancel-${upgradeId}`
+    )!;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+        cancelReason,
+        'Customer changed their mind'
+      );
+      cancelReason.dispatchEvent(new Event('input', { bubbles: true }));
+    });
     const cancel = [...container.querySelectorAll('button')].find(
       (button) => button.textContent === 'Cancel upgrade'
     );
     await act(async () => cancel!.click());
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+    });
     expect(fetchMock).toHaveBeenCalledWith(
       `/api/staff/saving/orders/${id}/cancel-hardware-upgrade-review`,
       expect.objectContaining({

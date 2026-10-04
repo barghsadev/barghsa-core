@@ -281,6 +281,11 @@
       "types": "./dist/saving-change.d.ts",
       "import": "./dist/saving-change.js",
       "default": "./dist/saving-change.js"
+    },
+    "./saving-hardware": {
+      "types": "./dist/saving-hardware.d.ts",
+      "import": "./dist/saving-hardware.js",
+      "default": "./dist/saving-hardware.js"
     }
   },
   "scripts": {

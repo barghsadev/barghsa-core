@@ -72,6 +72,67 @@ async function rejectedSavingChange(
   expect(await savingChangeSnapshot(id)).toEqual(before);
 }
 
+async function savingHardwareSnapshot(id: string) {
+  const effects = (
+    await http.pool.query(
+      `SELECT
+        (SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM saving_hardware_amendments a WHERE order_id=$1) AS amendments,
+        (SELECT jsonb_agg(to_jsonb(u) ORDER BY id) FROM saving_hardware_upgrade_requests u WHERE order_id=$1) AS upgrades,
+        (SELECT jsonb_agg(to_jsonb(r) ORDER BY id) FROM saving_inventory_reservations r WHERE order_id=$1) AS reservations,
+        (SELECT jsonb_agg(to_jsonb(k) ORDER BY entity_type,idempotency_key) FROM idempotency_keys k WHERE entity_type IN ('saving_hardware_amendment','saving_hardware_upgrade_cancel')) AS keys,
+        (SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM audit_log a WHERE event IN ('saving.hardware_amended','saving.hardware_upgrade_requested','saving.hardware_upgrade_cancelled')) AS audits`,
+      [id]
+    )
+  ).rows[0];
+  return { resource: await savingChangeSnapshot(id), effects };
+}
+
+async function rejectedSavingHardware(
+  id: string,
+  path: string,
+  body: unknown,
+  fields?: string[],
+  status = 400,
+  headers = staffHeaders
+) {
+  const before = await savingHardwareSnapshot(id);
+  await rejectedSavingChange(id, path, body, headers, fields, status);
+  expect(await savingHardwareSnapshot(id)).toEqual(before);
+}
+
+async function hardwareFeedbackProbes(work: () => Promise<void>) {
+  // Isolate only added invalid-input probes, then restore the original journeys' quotas.
+  const keys = [
+    'amend-hardware-review',
+    'amend-hardware',
+    'cancel-upgrade-review',
+    'cancel-upgrade',
+  ].map((name) => `saving:staff-${name}:user:127.0.0.1`);
+  const saved = (
+    await http.pool.query<{ value: unknown }>(
+      'SELECT to_jsonb(r) AS value FROM rate_limit_windows r WHERE NOT security AND key=ANY($1::text[])',
+      [keys]
+    )
+  ).rows.map((row) => row.value);
+  await http.pool.query(
+    'DELETE FROM rate_limit_windows WHERE NOT security AND key=ANY($1::text[])',
+    [keys]
+  );
+  try {
+    await work();
+  } finally {
+    await http.pool.query(
+      'DELETE FROM rate_limit_windows WHERE NOT security AND key=ANY($1::text[])',
+      [keys]
+    );
+    if (saved.length)
+      await http.pool.query(
+        'INSERT INTO rate_limit_windows SELECT * FROM jsonb_populate_recordset(NULL::rate_limit_windows,$1::jsonb)',
+        [JSON.stringify(saved)]
+      );
+  }
+}
+
 async function decisionReview(orderId: string, action: 'approve' | 'reject', reason = '') {
   const response = await request(
     `/api/staff/saving/orders/${orderId}/financial-review`,
@@ -1111,6 +1172,128 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     priceDeltaIrR: '0',
   });
   hardwareInput.expectedReviewHash = initialHardwareReview.hash;
+  await hardwareFeedbackProbes(async () => {
+    const previewBody = {
+      expectedVersionId: hardwareInput.expectedVersionId,
+      expectedHardwareId: hardwareInput.expectedHardwareId,
+      hardwareProductId: hardwareInput.hardwareProductId,
+      reason: hardwareInput.reason,
+    };
+    for (const [route, body] of [
+      [`${hardwarePath}-review`, previewBody],
+      [hardwarePath, hardwareInput],
+    ] as const) {
+      for (const [invalid, fields] of [
+        [{ ...body, hardwareProductId: 'PRIVATE' }, ['hardwareProductId']],
+        [{ ...body, reason: '  ' }, ['reason']],
+        [{ ...body, reason: 'x'.repeat(1001) }, ['reason']],
+        [{ ...body, hardwareProductId: '', reason: '' }, ['hardwareProductId', 'reason']],
+      ] as const)
+        await rejectedSavingHardware(result.savingOrderId, route, invalid, [...fields]);
+      for (const invalid of [
+        { ...body, expectedVersionId: 'PRIVATE' },
+        { ...body, reason: '', expectedHardwareId: 'PRIVATE' },
+        { ...body, reason: '', extra: 'PRIVATE' },
+        null,
+        ...(route === hardwarePath
+          ? [
+              { ...body, reason: '', idempotencyKey: 'PRIVATE' },
+              { ...body, reason: '', expectedReviewHash: 'PRIVATE' },
+            ]
+          : []),
+      ])
+        await rejectedSavingHardware(result.savingOrderId, route, invalid);
+      await rejectedSavingHardware(
+        result.savingOrderId,
+        route,
+        { ...body, reason: '' },
+        undefined,
+        403,
+        customerHeaders
+      );
+      await rejectedSavingHardware(
+        result.savingOrderId,
+        route.replace(result.savingOrderId, randomUUID()),
+        { ...body, reason: '' },
+        undefined,
+        404
+      );
+    }
+    const originalPermissions = (
+      await http.pool.query<{ permissions: unknown }>(
+        "SELECT permissions FROM staff_roles WHERE role_id='saving-order-admin'"
+      )
+    ).rows[0]!.permissions;
+    try {
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions='[\"contracts:write\"]' WHERE role_id='saving-order-admin'"
+      );
+      for (const route of [`${hardwarePath}-review`, hardwarePath]) {
+        const body = route === hardwarePath ? hardwareInput : previewBody;
+        await rejectedSavingHardware(result.savingOrderId, route, { ...body, reason: '' }, [
+          'reason',
+        ]);
+        await rejectedSavingHardware(
+          result.savingOrderId,
+          route,
+          { ...body, hardwareProductId: costlyHardwareId, reason: '' },
+          undefined,
+          403
+        );
+      }
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions='[\"contracts:read\"]' WHERE role_id='saving-order-admin'"
+      );
+      await rejectedSavingHardware(
+        result.savingOrderId,
+        `${hardwarePath}-review`,
+        { ...previewBody, reason: '' },
+        undefined,
+        403
+      );
+    } finally {
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions=$1::jsonb WHERE role_id='saving-order-admin'",
+        [
+          typeof originalPermissions === 'string'
+            ? originalPermissions
+            : JSON.stringify(originalPermissions),
+        ]
+      );
+    }
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='saving-order-staff'"
+    );
+    try {
+      await rejectedSavingHardware(
+        result.savingOrderId,
+        hardwarePath,
+        { ...hardwareInput, reason: '' },
+        undefined,
+        403
+      );
+    } finally {
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='saving-order-staff'"
+      );
+    }
+    await http.pool.query(
+      "UPDATE sessions SET revoked_at=NOW() WHERE user_id='saving-order-staff'"
+    );
+    try {
+      await rejectedSavingHardware(
+        result.savingOrderId,
+        `${hardwarePath}-review`,
+        { ...previewBody, reason: '' },
+        undefined,
+        401
+      );
+    } finally {
+      await http.pool.query(
+        "UPDATE sessions SET revoked_at=NULL WHERE user_id='saving-order-staff'"
+      );
+    }
+  });
   expect(
     await (
       await request(
@@ -1627,6 +1810,100 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   });
   expect(BigInt(cancellationSnapshot.data.additionalChargeIrR)).toBeGreaterThan(0n);
   cancelUpgradeInput.expectedReviewHash = cancellationSnapshot.hash;
+  await hardwareFeedbackProbes(async () => {
+    const previewBody = {
+      upgradeId: cancelUpgradeInput.upgradeId,
+      reason: cancelUpgradeInput.reason,
+    };
+    for (const [route, body] of [
+      [`${cancelUpgradePath}-review`, previewBody],
+      [cancelUpgradePath, cancelUpgradeInput],
+    ] as const) {
+      for (const reason of ['', 'x'.repeat(1001), null])
+        await rejectedSavingHardware(result.savingOrderId, route, { ...body, reason }, ['reason']);
+      for (const invalid of [
+        { ...body, upgradeId: 'PRIVATE' },
+        { ...body, reason: '', upgradeId: 'PRIVATE' },
+        { ...body, reason: '', extra: 'PRIVATE' },
+        null,
+        ...(route === cancelUpgradePath
+          ? [
+              { ...body, reason: '', idempotencyKey: 'PRIVATE' },
+              { ...body, reason: '', expectedReviewHash: 'PRIVATE' },
+            ]
+          : []),
+      ])
+        await rejectedSavingHardware(result.savingOrderId, route, invalid);
+      await rejectedSavingHardware(
+        result.savingOrderId,
+        route,
+        { ...body, upgradeId: randomUUID(), reason: '' },
+        undefined,
+        409
+      );
+      await rejectedSavingHardware(
+        result.savingOrderId,
+        route.replace(result.savingOrderId, randomUUID()),
+        { ...body, reason: '' },
+        undefined,
+        404
+      );
+      await rejectedSavingHardware(
+        result.savingOrderId,
+        route,
+        { ...body, reason: '' },
+        undefined,
+        403,
+        customerHeaders
+      );
+    }
+    const originalPermissions = (
+      await http.pool.query<{ permissions: unknown }>(
+        "SELECT permissions FROM staff_roles WHERE role_id='saving-order-admin'"
+      )
+    ).rows[0]!.permissions;
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions='[\"contracts:write\"]' WHERE role_id='saving-order-admin'"
+    );
+    try {
+      for (const [route, body] of [
+        [`${cancelUpgradePath}-review`, previewBody],
+        [cancelUpgradePath, cancelUpgradeInput],
+      ] as const)
+        await rejectedSavingHardware(
+          result.savingOrderId,
+          route,
+          { ...body, reason: '' },
+          undefined,
+          403
+        );
+    } finally {
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions=$1::jsonb WHERE role_id='saving-order-admin'",
+        [
+          typeof originalPermissions === 'string'
+            ? originalPermissions
+            : JSON.stringify(originalPermissions),
+        ]
+      );
+    }
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='saving-order-staff'"
+    );
+    try {
+      await rejectedSavingHardware(
+        result.savingOrderId,
+        cancelUpgradePath,
+        { ...cancelUpgradeInput, reason: '' },
+        undefined,
+        403
+      );
+    } finally {
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='saving-order-staff'"
+      );
+    }
+  });
   const { expectedReviewHash: _unusedCancelHash, ...cancelWithoutHash } = cancelUpgradeInput;
   expect((await request(cancelUpgradePath, 'POST', cancelWithoutHash, staffHeaders)).status).toBe(
     400

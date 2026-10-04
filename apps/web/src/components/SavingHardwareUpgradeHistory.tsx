@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
-import { useState } from 'react';
-import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
+import type { ReactNode } from 'react';
+import { Card, CardContent } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -20,15 +20,14 @@ export interface SavingHardwareUpgrade {
 
 export function SavingHardwareUpgradeHistory({
   upgrades,
-  onCancel,
+  renderCancel,
 }: {
   upgrades: SavingHardwareUpgrade[];
-  onCancel?: (upgrade: SavingHardwareUpgrade, reason: string) => void;
+  renderCancel?: (upgrade: SavingHardwareUpgrade) => ReactNode;
 }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
-  const [cancelReason, setCancelReason] = useState('');
   if (upgrades.length === 0) return null;
   return (
     <Card>
@@ -58,27 +57,7 @@ export function SavingHardwareUpgradeHistory({
               {upgrade.status === 'awaiting_payment' &&
                 upgrade.paidIrR === '0' &&
                 ['Unpaid', 'Overdue'].includes(upgrade.invoiceState) &&
-                onCancel && (
-                  <div className="space-y-2 pt-2">
-                    <Label htmlFor={`saving-upgrade-cancel-${upgrade.id}`}>
-                      {copy('staffAmendReason')}
-                    </Label>
-                    <Input
-                      id={`saving-upgrade-cancel-${upgrade.id}`}
-                      value={cancelReason}
-                      maxLength={1000}
-                      onChange={(event) => setCancelReason(event.target.value)}
-                    />
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      disabled={!cancelReason.trim()}
-                      onClick={() => onCancel(upgrade, cancelReason.trim())}
-                    >
-                      {copy('hardwareUpgradeCancel')}
-                    </Button>
-                  </div>
-                )}
+                renderCancel && <div className="space-y-2 pt-2">{renderCancel(upgrade)}</div>}
             </li>
           ))}
         </ol>
