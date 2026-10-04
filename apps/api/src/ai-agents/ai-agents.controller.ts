@@ -1,3 +1,4 @@
+import { rejectContentFields } from '../admin/content-input-fields.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -167,14 +168,21 @@ export class AgentsController {
   ): Promise<AgentDto> {
     this.assertAgentPermission(req);
     const parsed = CreateAgentSchema.safeParse(body);
-    if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid AI agent payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
-    }
+    if (!parsed.success)
+      rejectContentFields(parsed.error.issues, [
+        'title',
+        'description',
+        'modelId',
+        'systemPrompt',
+        'temperature',
+        'maxTokens',
+        'linkMode',
+        'kbIds',
+        'policyIds',
+        'kbGroupIds',
+        'policyGroupIds',
+        'enabled',
+      ]);
     return this.service.create({
       title: parsed.data.title,
       description: parsed.data.description ?? '',
@@ -216,14 +224,21 @@ export class AgentsController {
     this.assertAgentPermission(req);
     assertUuid(id);
     const parsed = UpdateAgentSchema.safeParse(body);
-    if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid AI agent payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
-    }
+    if (!parsed.success)
+      rejectContentFields(parsed.error.issues, [
+        'title',
+        'description',
+        'modelId',
+        'systemPrompt',
+        'temperature',
+        'maxTokens',
+        'linkMode',
+        'kbIds',
+        'policyIds',
+        'kbGroupIds',
+        'policyGroupIds',
+        'enabled',
+      ]);
     return this.service.update(id, {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
       ...(parsed.data.description !== undefined ? { description: parsed.data.description } : {}),

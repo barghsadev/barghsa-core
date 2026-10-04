@@ -203,9 +203,13 @@ it('slot save requires an exact acknowledgement and preserves unrelated choices'
   await choose('website_chatbot', other.id);
   await submit();
   await submit('[role=dialog] form');
-  expect(document.querySelector('[role=dialog] [role=alert]')).not.toBeNull();
+  expect(document.querySelector('[role=dialog]')).toBeNull();
+  expect(host.textContent).toContain('The save could not be verified.');
   expect(choices().value).toBe(agent.id);
   valid = true;
+  await click('Reset to saved settings');
+  await choose();
+  await submit();
   await submit('[role=dialog] form');
   expect(document.querySelector('[role=dialog]')).toBeNull();
   expect(host.querySelector<HTMLSelectElement>('#slot-website_chatbot')!.value).toBe(other.id);
@@ -231,7 +235,8 @@ it.each(['renamed', 'enabled', 'sharing'])(
     await choose();
     await submit();
     await submit('[role=dialog] form');
-    expect(document.querySelector('[role=dialog] [role=alert]')).not.toBeNull();
+    expect(document.querySelector('[role=dialog]')).toBeNull();
+    expect(host.textContent).toContain('The save could not be verified.');
     expect(choices().value).toBe(agent.id);
     expect(host.textContent).not.toContain('Assignment saved.');
   }
@@ -257,8 +262,18 @@ it('slot unassignment acknowledgement must confirm null for the chosen slot', as
       .form!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
   await submit('[role=dialog] form');
-  expect(document.querySelector('[role=dialog] [role=alert]')).not.toBeNull();
+  expect(document.querySelector('[role=dialog]')).toBeNull();
+  expect(host.textContent).toContain('The save could not be verified.');
   valid = true;
+  await click('Reset to saved settings');
+  await choose('staff_chatbot', '');
+  await act(async () =>
+    host
+      .querySelector<HTMLSelectElement>('#slot-staff_chatbot')!
+      .form!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  );
+  await vi.dynamicImportSettled();
+  await act(async () => {});
   await submit('[role=dialog] form');
   expect(document.querySelector('[role=dialog]')).toBeNull();
   expect(host.querySelector<HTMLSelectElement>('#slot-staff_chatbot')!.value).toBe('');

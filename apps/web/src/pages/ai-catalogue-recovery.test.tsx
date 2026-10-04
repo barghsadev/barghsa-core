@@ -292,13 +292,12 @@ it('options recovery retains selected knowledge and makes withdrawn choices remo
   expect(host.querySelector<HTMLTextAreaElement>('#agent-system-prompt')!.value).toBe(
     'Retained prompt'
   );
-  expect(
-    [...host.querySelectorAll<HTMLButtonElement>('button')].find(
-      (b) => b.textContent === 'Save agent'
-    )!.disabled
-  ).toBe(true);
+  await click('Save agent');
+  await vi.waitFor(() => expect(host.querySelector('fieldset[aria-invalid=true]')).not.toBeNull());
+  expect(captured.action).toBeNull();
   await check('Option no longer available');
   await click('Save agent');
+  await vi.waitFor(() => expect(captured.action).not.toBeNull());
   expect(captured.action?.body).toMatchObject({ systemPrompt: 'Retained prompt', kbIds: [] });
 });
 it('agent detail failure has a dedicated retry without rereading catalogue or options', async () => {
@@ -313,7 +312,7 @@ it('agent detail failure has a dedicated retry without rereading catalogue or op
   expect(requests.mock.calls.filter(([u]) => String(u) === '/api/admin/agents')).toHaveLength(1);
   expect(requests.mock.calls.filter(([u]) => String(u).endsWith('/options'))).toHaveLength(1);
 });
-it('detail display-name changes preserve prompt work but changed server configuration clears it', async () => {
+it('detail display-name changes preserve prompt work but changed server configuration requires reset', async () => {
   let phase = 0;
   agentsFetch({
     detail: () =>
@@ -331,7 +330,11 @@ it('detail display-name changes preserve prompt work but changed server configur
   expect(host.querySelector<HTMLTextAreaElement>('#agent-system-prompt')!.value).toBe('My prompt');
   phase = 2;
   await click('Refresh');
-  expect(host.querySelector('#agent-system-prompt')).toBeNull();
+  expect(host.querySelector<HTMLTextAreaElement>('#agent-system-prompt')!.value).toBe('My prompt');
+  await click('Reset to saved settings');
+  expect(host.querySelector<HTMLTextAreaElement>('#agent-system-prompt')!.value).toBe(
+    'New server prompt'
+  );
 });
 it('options denial aborts older successful list and detail reads', async () => {
   let hold = false,
@@ -369,6 +372,7 @@ it('obsolete agent save completion cannot close a newer draft after cancellation
   await render(Agents);
   await click('Edit');
   await click('Save agent');
+  await vi.waitFor(() => expect(captured.action).not.toBeNull());
   const old = captured.success!;
   await act(async () => captured.close!());
   await fill('#agent-title', 'Newer title');
@@ -401,16 +405,16 @@ it('an absent selected model remains visible and blocks agent saving without era
   await click('Refresh');
   expect(host.querySelector<HTMLTextAreaElement>('#agent-system-prompt')!.value).toBe('Keep text');
   expect(host.querySelector<HTMLSelectElement>('#agent-model')!.value).toBe(aiModel.id);
-  expect(
-    [...host.querySelectorAll<HTMLButtonElement>('button')].find(
-      (b) => b.textContent === 'Save agent'
-    )!.disabled
-  ).toBe(true);
+  await click('Save agent');
+  await vi.waitFor(() =>
+    expect(host.querySelector('#agent-model')!.getAttribute('aria-invalid')).toBe('true')
+  );
+  expect(captured.action).toBeNull();
 });
 it('linked collection display-name reordering preserves agent prompt and selected IDs', async () => {
   let reordered = false;
-  const first = { id: 'kb-one', title: 'A knowledge' },
-    second = { id: 'kb-two', title: 'B knowledge' };
+  const first = { id: '01900000-0000-7000-8000-000000000021', title: 'A knowledge' },
+    second = { id: '01900000-0000-7000-8000-000000000022', title: 'B knowledge' };
   agentsFetch({
     options: () => response({ ...aiOptions, kbs: [first, second] }),
     detail: () =>
@@ -428,8 +432,9 @@ it('linked collection display-name reordering preserves agent prompt and selecte
     'Keep selected context'
   );
   await click('Save agent');
+  await vi.waitFor(() => expect(captured.action).not.toBeNull());
   expect(captured.action?.body).toMatchObject({
     systemPrompt: 'Keep selected context',
-    kbIds: ['kb-one', 'kb-two'],
+    kbIds: ['01900000-0000-7000-8000-000000000021', '01900000-0000-7000-8000-000000000022'],
   });
 });

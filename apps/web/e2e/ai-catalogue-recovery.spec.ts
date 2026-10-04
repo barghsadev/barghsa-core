@@ -1,29 +1,12 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
+import { aiAgentFormText } from '@barghsa/i18n/ai-agent-forms';
 import { t as appT } from '@barghsa/i18n/app';
 import { aiModelFormText } from '@barghsa/i18n/ai-model-forms';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { aiModel, aiAgent, aiOptions, aiDetail } from '../src/test/ai-catalogue-fixtures';
 test.use({ viewport: { width: 390, height: 844 } });
-async function shell(page: Page, locale: 'en' | 'fa') {
-  await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
-  await page.route('**/api/auth/user', (route) =>
-    route.fulfill({
-      json: {
-        userId: 'admin',
-        isStaff: true,
-        operatingContext: 'staff',
-        canSwitchContext: false,
-        requiresTosAcceptance: false,
-      },
-    })
-  );
-  await page.route('**/api/user/settings/timezone', (route) =>
-    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
-  );
-}
 async function inspect(page: Page, name: string, locale: 'en' | 'fa', project: string) {
   expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -112,7 +95,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`agent list and options recover independently and preserve prompt and test-chat work (${locale})`, async ({
     page,
   }, info) => {
-    await shell(page, locale);
+    await setupCatalogueForms(page, locale, false);
     let failList = false,
       failOptions = false,
       removed = false,
@@ -168,11 +151,13 @@ for (const locale of ['en', 'fa'] as const) {
     failOptions = false;
     removed = true;
     await page.getByRole('button', { name: a('optionsRetry'), exact: true }).click();
-    await expect(page.getByRole('button', { name: a('save'), exact: true })).toBeDisabled();
+    await page.getByRole('button', { name: a('save'), exact: true }).click();
+    await expect(page.locator('fieldset[aria-invalid=true]')).toBeFocused();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(listReads).toBe(listsBefore);
     await expect(page.locator('#agent-system-prompt')).toHaveValue('Retained system prompt');
     const withdrawn = page.getByRole('checkbox', {
-      name: `${a('unavailable')} (kb-one)`,
+      name: `${a('unavailable')} (${aiOptions.kbs[0]!.id})`,
       exact: true,
     });
     await withdrawn.click();
@@ -190,10 +175,10 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#test-chat-message')).toHaveCount(0);
     await expect(page.getByRole('alert')).toHaveText(a('denied'));
   });
-  test(`agent settings retry is independent and changed configuration clears stale editing (${locale})`, async ({
+  test(`agent settings retry is independent and changed configuration retains editing until reset (${locale})`, async ({
     page,
   }, info) => {
-    await shell(page, locale);
+    await setupCatalogueForms(page, locale, false);
     let fail = true,
       phase = 0,
       lists = 0,
@@ -205,7 +190,13 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/agents/options', (route) => {
       options++;
       return route.fulfill({
-        json: { ...aiOptions, kbs: [...aiOptions.kbs, { id: 'kb-two', title: 'Other knowledge' }] },
+        json: {
+          ...aiOptions,
+          kbs: [
+            ...aiOptions.kbs,
+            { id: '01900000-0000-7000-8000-000000000022', title: 'Other knowledge' },
+          ],
+        },
       });
     });
     await page.route(`**/api/admin/agents/${aiAgent.id}`, (route) =>
@@ -216,8 +207,14 @@ for (const locale of ['en', 'fa'] as const) {
               json: {
                 ...aiDetail,
                 kbs: phase
-                  ? [{ id: 'kb-two', title: 'Renamed knowledge' }, ...aiDetail.kbs]
-                  : [...aiDetail.kbs, { id: 'kb-two', title: 'Other knowledge' }],
+                  ? [
+                      { id: '01900000-0000-7000-8000-000000000022', title: 'Renamed knowledge' },
+                      ...aiDetail.kbs,
+                    ]
+                  : [
+                      ...aiDetail.kbs,
+                      { id: '01900000-0000-7000-8000-000000000022', title: 'Other knowledge' },
+                    ],
                 modelTitle: phase ? 'Renamed model' : aiDetail.modelTitle,
                 systemPrompt: phase === 2 ? 'Changed server prompt' : aiDetail.systemPrompt,
               },
@@ -239,7 +236,8 @@ for (const locale of ['en', 'fa'] as const) {
     await inspect(page, 'detail', locale, info.project.name);
     phase = 2;
     await page.getByRole('button', { name: a('refresh'), exact: true }).click();
-    await expect(page.locator('#agent-system-prompt')).toHaveCount(0);
-    await expect(page.getByRole('alert')).toHaveCount(0);
+    await expect(page.locator('#agent-system-prompt')).toHaveValue('Keep my prompt');
+    await page.getByRole('button', { name: aiAgentFormText('reset', locale), exact: true }).click();
+    await expect(page.locator('#agent-system-prompt')).toHaveValue('Changed server prompt');
   });
 }

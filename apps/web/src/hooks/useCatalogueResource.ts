@@ -30,23 +30,29 @@ export function useCatalogueResource<T>(
   const { onUnauthorized } = options;
   const sequence = useRef(0);
   const [attempt, setAttempt] = useState(0);
+  const nextAttempt = useRef(0);
   const [result, setResult] = useState<{
     key: string;
     data: T | null;
     loading: boolean;
     error: boolean;
+    readAttempt: number | null;
   } | null>(null);
   const key = `${version}:${path}`;
   const liveKey = useRef(key);
   liveKey.current = key;
-  const retry = useCallback(() => setAttempt((v) => v + 1), []);
+  const retry = useCallback(() => {
+    const requested = ++nextAttempt.current;
+    setAttempt(requested);
+    return requested;
+  }, []);
   /** Publish a validated mutation receipt before reloading its authoritative catalogue. */
   const accept = useCallback(
     (data: T) => {
       if (!path || denied || live.current !== version || liveKey.current !== key || !validate(data))
         return false;
       sequence.current++;
-      setResult({ key, data, loading: false, error: false });
+      setResult({ key, data, loading: false, error: false, readAttempt: null });
       return true;
     },
     [path, denied, live, version, validate, key]
@@ -65,6 +71,7 @@ export function useCatalogueResource<T>(
       data: previous?.key === key ? previous.data : null,
       loading: true,
       error: false,
+      readAttempt: previous?.key === key ? previous.readAttempt : null,
     }));
     void (async () => {
       try {
@@ -79,7 +86,7 @@ export function useCatalogueResource<T>(
         const data: unknown = await response.json();
         if (!current()) return;
         if (!validate(data)) throw new Error('Invalid catalogue');
-        setResult({ key, data, loading: false, error: false });
+        setResult({ key, data, loading: false, error: false, readAttempt: attempt });
       } catch {
         if (current())
           setResult((previous) => ({
@@ -87,6 +94,7 @@ export function useCatalogueResource<T>(
             data: previous?.key === key ? previous.data : null,
             loading: false,
             error: true,
+            readAttempt: previous?.key === key ? previous.readAttempt : null,
           }));
       }
     })();
@@ -97,6 +105,8 @@ export function useCatalogueResource<T>(
     data: accepted?.data ?? null,
     loading: !!path && !denied && (accepted?.loading ?? true),
     error: accepted?.error ?? false,
+    // Only a successful authoritative read satisfies recovery; local receipts do not.
+    readAttempt: accepted?.readAttempt ?? null,
     retry,
     accept,
   };

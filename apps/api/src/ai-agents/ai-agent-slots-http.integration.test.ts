@@ -247,3 +247,21 @@ it('records current step-up proof on the mutation audit', async () => {
     stepUpVerifiedAt: verifiedAt.toISOString(),
   });
 });
+
+it('reports owned slot feedback without assigning an agent or exposing input', async () => {
+  const response = await assign('private-invalid-value');
+  expect(response.status).toBe(400);
+  const body = (await response.json()) as { error: unknown };
+  expect(body.error).toMatchObject({ code: 'VALIDATION:INPUT:INVALID', fields: ['agentId'] });
+  expect(JSON.stringify(body)).not.toContain('private-invalid-value');
+  expect(
+    (
+      await http.pool.query(
+        "SELECT agent_id FROM ai_agent_slots WHERE slot_key='individual_chatbot'"
+      )
+    ).rows
+  ).toEqual([{ agent_id: null }]);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
+  ).toHaveLength(0);
+});

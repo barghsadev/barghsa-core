@@ -86,7 +86,7 @@ describe('AgentSlotsController (T-09.11.05)', () => {
     it('rejects a malformed agentId with 400', async () => {
       await expect(
         controller.assign(adminReq, 'individual_chatbot', { agentId: 'not-a-uuid' } as never)
-      ).rejects.toMatchObject({ status: 400 });
+      ).rejects.toMatchObject({ status: 400, fields: ['agentId'] });
       expect(mockAssign).not.toHaveBeenCalled();
     });
 

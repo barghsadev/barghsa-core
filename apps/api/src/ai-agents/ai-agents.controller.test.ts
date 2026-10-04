@@ -124,6 +124,49 @@ describe('AgentsController (T-09.11.04)', () => {
     });
   });
 
+  it.each(['create', 'update'] as const)(
+    'returns only owned field identifiers for invalid agent %s',
+    async (action) => {
+      const body = {
+        title: ' ',
+        description: 'x'.repeat(2001),
+        modelId: 'invalid',
+        systemPrompt: 'x'.repeat(8001),
+        temperature: 3,
+        maxTokens: 1.5,
+        linkMode: 'invalid',
+        enabled: 'true',
+        kbIds: ['invalid'],
+        policyIds: ['invalid'],
+        kbGroupIds: ['invalid'],
+        policyGroupIds: ['invalid'],
+      };
+      const result =
+        action === 'create'
+          ? controller.create(adminReq, body as never)
+          : controller.update(adminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', body as never);
+      await expect(result).rejects.toMatchObject({
+        status: 400,
+        fields: [
+          'title',
+          'description',
+          'modelId',
+          'systemPrompt',
+          'temperature',
+          'maxTokens',
+          'linkMode',
+          'kbIds',
+          'policyIds',
+          'kbGroupIds',
+          'policyGroupIds',
+          'enabled',
+        ],
+      });
+      expect(mockCreate).not.toHaveBeenCalled();
+      expect(mockUpdate).not.toHaveBeenCalled();
+    }
+  );
+
   describe('POST /api/admin/agents', () => {
     it('rejects a missing modelId', async () => {
       await expect(controller.create(adminReq, { title: 'x' } as never)).rejects.toMatchObject({

@@ -62,14 +62,22 @@ export function CatalogueSaveButton({
   pending,
   disabled,
   testId,
+  ariaLabel,
 }: {
   label: string;
   pending: boolean;
   disabled: boolean;
   testId?: string;
+  ariaLabel?: string;
 }) {
   return (
-    <Button data-testid={testId} type="submit" disabled={disabled} aria-busy={pending || undefined}>
+    <Button
+      data-testid={testId}
+      aria-label={ariaLabel}
+      type="submit"
+      disabled={disabled}
+      aria-busy={pending || undefined}
+    >
       {pending && (
         <span
           aria-hidden="true"

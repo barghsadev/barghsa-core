@@ -646,3 +646,36 @@ it('records current step-up proof on the mutation audit', async () => {
     stepUpVerifiedAt: verifiedAt.toISOString(),
   });
 });
+
+it.each(['create', 'update'] as const)(
+  'reports safe owned agent %s feedback without a write',
+  async (action) => {
+    const response = await fetch(
+      `${http.base}/api/admin/agents${action === 'create' ? '' : `/${agentId}`}`,
+      {
+        method: action === 'create' ? 'POST' : 'PUT',
+        headers,
+        body: JSON.stringify({
+          title: ' ',
+          modelId: 'private-invalid-value',
+          temperature: 3,
+          maxTokens: 1.5,
+          kbGroupIds: ['private-invalid-value'],
+        }),
+      }
+    );
+    expect(response.status).toBe(400);
+    const body = (await response.json()) as { error: unknown };
+    expect(body.error).toMatchObject({
+      code: 'VALIDATION:INPUT:INVALID',
+      fields: ['title', 'modelId', 'temperature', 'maxTokens', 'kbGroupIds'],
+    });
+    expect(JSON.stringify(body)).not.toContain('private-invalid-value');
+    expect((await http.pool.query('SELECT id,title FROM ai_agents')).rows).toEqual([
+      { id: agentId, title: 'Support' },
+    ]);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+    ).toHaveLength(0);
+  }
+);

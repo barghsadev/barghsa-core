@@ -35,7 +35,7 @@ export const aiAgent = {
 };
 export const aiOptions = {
   models: [{ id: aiModel.id, title: aiModel.title }],
-  kbs: [{ id: 'kb-one', title: 'Tariffs' }],
+  kbs: [{ id: '01900000-0000-7000-8000-000000000021', title: 'Tariffs' }],
   policies: [],
   kbGroups: [],
   policyGroups: [],

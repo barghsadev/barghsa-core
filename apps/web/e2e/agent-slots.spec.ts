@@ -1,10 +1,11 @@
-import { crmShell } from './crm-shell-fixture';
+import { setupCatalogueForms } from './catalogue-form-fixture';
+import { cookieResponse } from './cookie-response';
 import { assignmentAgent, assignmentSlots } from '../src/test/assignment-settings-fixtures';
 import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
   test(`slot assignment retries after password verification (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
-    await crmShell(page, locale);
+    await setupCatalogueForms(page, locale as 'en' | 'fa', false);
     let failed = true,
       verified = false,
       denied = false;
@@ -38,7 +39,12 @@ for (const locale of ['en', 'fa'])
     });
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct';
-      return route.fulfill({ status: verified ? 200 : 401, json: {} });
+      return verified
+        ? cookieResponse(route, {
+            json: { verified: true },
+            headers: { 'Set-Cookie': 'barghsa_csrf=slot-fresh; Path=/; SameSite=Lax' },
+          })
+        : route.fulfill({ status: 401, json: {} });
     });
     await page.goto('/admin/agent-slots');
     await expect(page.getByRole('alert')).toBeVisible();

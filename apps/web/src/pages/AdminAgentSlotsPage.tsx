@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Label, ListPage } from '@barghsa/ui';
+import { Alert, Button, ListPage } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
+import { aiAgentFormText } from '@barghsa/i18n/ai-agent-forms';
+import { AgentSlotChoiceForm } from '../components/AgentSlotChoiceForm.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -27,11 +29,32 @@ export default function AdminAgentSlotsPage() {
   const [action, setAction] = useState<AssignmentReview | null>(null),
     [saved, setSaved] = useState(false);
   const refreshButton = useRef<HTMLButtonElement>(null);
-  const clearPrivate = useCallback(() => {
-    setChoices({});
+  const [validating, setValidating] = useState(false),
+    [uncertainSlot, setUncertainSlot] = useState<SlotKey | null>(null);
+  const generation = useRef(0),
+    locked = useRef(false),
+    cancelValidation = useRef<(() => void) | null>(null),
+    actionRef = useRef<AssignmentReview | null>(null),
+    validationErrors = useRef<((fields: unknown[]) => boolean) | null>(null);
+  const requiredReads = useRef({ slots: 0, agents: 0 });
+  const copy = (key: Parameters<typeof aiAgentFormText>[0]) => aiAgentFormText(key, locale);
+  const withdraw = useCallback(() => {
+    generation.current++;
+    locked.current = false;
+    cancelValidation.current?.();
+    cancelValidation.current = null;
+    setValidating(false);
     setAction(null);
-    setSaved(false);
+    actionRef.current = null;
+    validationErrors.current = null;
   }, []);
+
+  const clearPrivate = useCallback(() => {
+    withdraw();
+    setChoices({});
+    setUncertainSlot(null);
+    setSaved(false);
+  }, [withdraw]);
   const scope = useCatalogueScope(clearPrivate);
   const slots = useCatalogueResource(scope, '/api/admin/agent-slots', isAgentSlots);
   const agents = useCatalogueResource(scope, '/api/admin/agents', isAssignmentAgents);
@@ -43,6 +66,51 @@ export default function AdminAgentSlotsPage() {
     !agents.loading &&
     !slots.error &&
     !agents.error;
+  const recovered =
+    ready &&
+    (slots.readAttempt ?? -1) >= requiredReads.current.slots &&
+    (agents.readAttempt ?? -1) >= requiredReads.current.agents;
+  function refreshSlots() {
+    if (locked.current && !actionRef.current) withdraw();
+    return scope.denied ? scope.recover() : slots.retry();
+  }
+  function refreshAgents() {
+    if (locked.current && !actionRef.current) withdraw();
+    agents.retry();
+  }
+  function unconfirmed() {
+    const command = actionRef.current;
+    if (!command) return;
+    setUncertainSlot(command.slotKey);
+    withdraw();
+    requiredReads.current = { slots: slots.retry(), agents: agents.retry() };
+  }
+  function begin(cancel: () => void) {
+    if (locked.current || actionRef.current || uncertainSlot || !ready) return null;
+    locked.current = true;
+    cancelValidation.current = cancel;
+    setValidating(true);
+    return generation.current;
+  }
+  const current = (epoch: number) => epoch === generation.current;
+  function finish(epoch: number) {
+    if (!current(epoch)) return;
+    cancelValidation.current = null;
+    locked.current = false;
+    setValidating(false);
+  }
+  function resetChoice(key: SlotKey) {
+    if (!ready || validating || actionRef.current || (uncertainSlot === key && !recovered)) return;
+    generation.current++;
+    setChoices((value) => {
+      const next = { ...value };
+      delete next[key];
+      return next;
+    });
+    if (uncertainSlot === key) setUncertainSlot(null);
+    setSaved(false);
+  }
+
   const reviewBasis = (slotKey: SlotKey, agentId: string | null) => {
     const slot = slots.data?.find((row) => row.slotKey === slotKey);
     const agent = agents.data?.find((row) => row.id === agentId);
@@ -63,10 +131,8 @@ export default function AdminAgentSlotsPage() {
   const reviewed = useRef({ action, basis: currentBasis });
   reviewed.current = { action, basis: currentBasis };
   useEffect(() => {
-    if (action && (action.epoch !== scope.version || action.basis !== currentBasis))
-      setAction(null);
-  }, [action, currentBasis, scope.version]);
-  const refreshSlots = () => (scope.denied ? scope.recover() : slots.retry());
+    if (action && (action.epoch !== scope.version || action.basis !== currentBasis)) withdraw();
+  }, [action, currentBasis, scope.version, withdraw]);
   const recovery = (dialog = false) => (
     <div className="flex flex-wrap items-start gap-3">
       <div className="space-y-2">
@@ -85,7 +151,7 @@ export default function AdminAgentSlotsPage() {
         <div className="space-y-2">
           {agents.loading && <p role="status">{label('agentsLoading')}</p>}
           {agents.error && <p role="alert">{label('agentsError')}</p>}
-          <Button type="button" variant="outline" disabled={agents.loading} onClick={agents.retry}>
+          <Button type="button" variant="outline" disabled={agents.loading} onClick={refreshAgents}>
             {label('agentsRetry')}
           </Button>
         </div>
@@ -102,6 +168,19 @@ export default function AdminAgentSlotsPage() {
         <p className="mt-2">{label('description')}</p>
       </header>
       {saved && <p role="status">{label('saved')}</p>}
+      {uncertainSlot && (
+        <>
+          <Alert variant="destructive">{copy('uncertain')}</Alert>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={!recovered || !!action || validating}
+            onClick={() => resetChoice(uncertainSlot)}
+          >
+            {copy('reset')}
+          </Button>
+        </>
+      )}
       <ListPage>
         <ListPage.Toolbar>{recovery()}</ListPage.Toolbar>
         <ListPage.Content
@@ -118,8 +197,6 @@ export default function AdminAgentSlotsPage() {
               const draft = choices[slot.slotKey],
                 choice = draft?.id ?? slot.agent?.id ?? '';
               const selected = agents.data?.find((agent) => agent.id === choice);
-              const missing = !!choice && !selected;
-              const unavailable = missing && agents.data !== null;
               const stale = !!draft && draft.basis !== slotBasis(slot);
               const shared = slots
                 .data!.filter(
@@ -127,22 +204,36 @@ export default function AdminAgentSlotsPage() {
                 )
                 .map((other) => label(other.slotKey));
               return (
-                <form
+                <AgentSlotChoiceForm
                   key={slot.slotKey}
-                  className="min-w-0 space-y-3 py-5"
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    if (
-                      !ready ||
-                      action ||
-                      stale ||
-                      unavailable ||
-                      choice === (slot.agent?.id ?? '')
-                    )
+                  slot={slot}
+                  agents={agents.data ?? []}
+                  draft={draft}
+                  stale={stale}
+                  ready={ready}
+                  locked={!!action || validating}
+                  blocked={!!uncertainSlot}
+                  resetBlocked={!!action || validating || (!!uncertainSlot && !recovered)}
+                  locale={locale}
+                  label={label}
+                  shared={shared}
+                  onChange={(id) => {
+                    setSaved(false);
+                    setChoices((value) => ({
+                      ...value,
+                      [slot.slotKey]: { id, basis: draft?.basis ?? slotBasis(slot) },
+                    }));
+                  }}
+                  onReset={() => resetChoice(slot.slotKey)}
+                  begin={begin}
+                  current={current}
+                  finish={finish}
+                  propose={(epoch, agentId, errors) => {
+                    if (!current(epoch) || !ready || stale || actionRef.current || uncertainSlot)
                       return;
                     setSaved(false);
-                    const agentId = choice || null;
-                    setAction({
+                    validationErrors.current = errors;
+                    const next: AssignmentReview = {
                       slotKey: slot.slotKey,
                       agentId,
                       basis: reviewBasis(slot.slotKey, agentId),
@@ -151,90 +242,15 @@ export default function AdminAgentSlotsPage() {
                       description: `${label(slot.slotKey)}: ${slot.agent?.title ?? label('unassigned')} → ${selected?.title ?? label('unassigned')}. ${selected && !selected.enabled ? label('disabledHelp') : ''} ${shared.length ? `${label('shared')}: ${shared.join(locale === 'fa' ? '، ' : ', ')}. ` : ''}${label('confirm')}`,
                       path: `/api/admin/agent-slots/${slot.slotKey}/agent`,
                       method: 'PUT',
+                      successStatus: 200,
                       body: { agentId },
                       forbiddenMessage: label('denied'),
                       conflictMessage: label('conflict'),
-                    });
+                    };
+                    actionRef.current = next;
+                    setAction(next);
                   }}
-                >
-                  <h2 className="text-lg font-semibold">{label(slot.slotKey)}</h2>
-                  <p className="text-sm text-muted-foreground">
-                    {label('current')}: {slot.agent?.title ?? label('unassigned')}
-                  </p>
-                  {stale && <p role="alert">{label('stale')}</p>}
-                  {unavailable && <p role="alert">{label('unavailable')}</p>}
-                  <fieldset disabled={!!action} className="flex min-w-0 flex-wrap items-end gap-3">
-                    <div className="flex min-w-0 flex-col gap-2">
-                      <Label htmlFor={`slot-${slot.slotKey}`}>
-                        {label('agent')} · {label(slot.slotKey)}
-                      </Label>
-                      <select
-                        id={`slot-${slot.slotKey}`}
-                        className="max-w-full rounded-md border bg-background p-2"
-                        value={choice}
-                        onChange={(event) => {
-                          setSaved(false);
-                          setChoices((current) => ({
-                            ...current,
-                            [slot.slotKey]: {
-                              id: event.target.value,
-                              basis: draft?.basis ?? slotBasis(slot),
-                            },
-                          }));
-                        }}
-                      >
-                        <option value="">{label('unassigned')}</option>
-                        {missing && (
-                          <option value={choice}>
-                            {slot.agent?.id === choice
-                              ? slot.agent.title
-                              : label('unavailableChoice')}
-                          </option>
-                        )}
-                        {agents.data?.map((agent) => (
-                          <option key={agent.id} value={agent.id}>
-                            {agent.title}
-                            {agent.enabled ? '' : ` (${label('disabled')})`}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <Button
-                      type="submit"
-                      disabled={!ready || stale || unavailable || choice === (slot.agent?.id ?? '')}
-                      aria-label={`${label('save')} ${label(slot.slotKey)}`}
-                    >
-                      {label('save')}
-                    </Button>
-                    {draft && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        aria-label={`${label('reset')} ${label(slot.slotKey)}`}
-                        onClick={() => {
-                          setChoices((current) => {
-                            const next = { ...current };
-                            delete next[slot.slotKey];
-                            return next;
-                          });
-                          setSaved(false);
-                        }}
-                      >
-                        {label('reset')}
-                      </Button>
-                    )}
-                  </fieldset>
-                  {selected && !selected.enabled && (
-                    <p className="text-sm" role="status">
-                      {label('disabledHelp')}
-                    </p>
-                  )}
-                  {shared.length > 0 && (
-                    <p className="text-sm">
-                      {label('shared')}: {shared.join(locale === 'fa' ? '، ' : ', ')}
-                    </p>
-                  )}
-                </form>
+                />
               );
             })}
           </div>
@@ -244,12 +260,17 @@ export default function AdminAgentSlotsPage() {
         <TeamActionDialog
           action={action}
           onDenied={scope.deny}
+          onUnconfirmed={unconfirmed}
+          onValidationError={(fields) => validationErrors.current?.(fields) ?? false}
           summary={recovery(true)}
           confirmationDisabled={
-            !ready || action.epoch !== scope.version || action.basis !== currentBasis
+            !ready ||
+            !!uncertainSlot ||
+            action.epoch !== scope.version ||
+            action.basis !== currentBasis
           }
           finalFocus={() => refreshButton.current}
-          onClose={() => setAction(null)}
+          onClose={withdraw}
           onSuccess={async (result) => {
             if (
               scope.live.current !== action.epoch ||

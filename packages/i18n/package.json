@@ -256,6 +256,11 @@
       "types": "./dist/ai-model-forms.d.ts",
       "import": "./dist/ai-model-forms.js",
       "default": "./dist/ai-model-forms.js"
+    },
+    "./ai-agent-forms": {
+      "types": "./dist/ai-agent-forms.d.ts",
+      "import": "./dist/ai-agent-forms.js",
+      "default": "./dist/ai-agent-forms.js"
     }
   },
   "scripts": {

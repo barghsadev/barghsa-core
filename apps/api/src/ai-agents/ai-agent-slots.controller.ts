@@ -1,3 +1,4 @@
+import { rejectContentFields } from '../admin/content-input-fields.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -60,10 +61,6 @@ function assertSlotKey(slotKey: string): AgentSlotKey {
     );
   }
   return parsed.data;
-}
-
-function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
-  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }));
 }
 
 /**
@@ -132,14 +129,7 @@ export class AgentSlotsController {
     this.assertAgentPermission(req);
     const key = assertSlotKey(slotKey);
     const parsed = AssignAgentSchema.safeParse(body);
-    if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid slot assignment payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
-    }
+    if (!parsed.success) rejectContentFields(parsed.error.issues, ['agentId']);
     return this.service.assign({
       slotKey: key,
       agentId: parsed.data.agentId,

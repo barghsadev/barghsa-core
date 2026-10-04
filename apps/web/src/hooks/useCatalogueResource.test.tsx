@@ -34,6 +34,7 @@ it('a validated save receipt supersedes older reads and cannot cross a denied sc
     });
     await act(async () => resolve(new Response('24')));
     expect(host.textContent).toBe('72');
+    expect(resource.readAttempt).toBeNull();
     await act(async () => {
       expect(resource.accept(NaN)).toBe(false);
     });
@@ -45,6 +46,22 @@ it('a validated save receipt supersedes older reads and cannot cross a denied sc
     });
     await act(async () => resolve(new Response('18')));
     expect(host.textContent).toBe('18');
+    expect(resource.readAttempt).toBe(0);
+    let required = 0;
+    await act(async () => {
+      required = resource.retry();
+    });
+    expect(required).toBe(1);
+    expect(resource.readAttempt).toBe(0);
+    await act(async () => resolve(new Response('unavailable', { status: 503 })));
+    expect(resource.error).toBe(true);
+    expect(resource.readAttempt).toBe(0);
+    await act(async () => {
+      required = resource.retry();
+    });
+    await act(async () => resolve(new Response('20')));
+    expect(resource.readAttempt).toBe(required);
+    expect(resource.readAttempt).toBe(2);
     await act(async () => scope.deny());
     await act(async () => {
       expect(oldAccept(48)).toBe(false);

@@ -1,19 +1,6 @@
 import { test, expect } from './coverage-fixture';
-async function mockUnknownApi(page: import('@playwright/test').Page) {
-  await page.route('**/api/**', (route) =>
-    new URL(route.request().url()).pathname === '/api/auth/user'
-      ? route.fulfill({
-          json: {
-            userId: 'admin',
-            isStaff: true,
-            operatingContext: 'staff',
-            canSwitchContext: false,
-            requiresTosAcceptance: false,
-          },
-        })
-      : route.fulfill({ status: 404, json: {} })
-  );
-}
+import { setupCatalogueForms } from './catalogue-form-fixture';
+import { cookieResponse } from './cookie-response';
 for (const locale of ['en', 'fa'])
   test(`admin can test an agent and inspect response context (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
@@ -23,7 +10,7 @@ for (const locale of ['en', 'fa'])
     const agentId = '01900000-0000-7000-8000-000000000011';
     const sent: unknown[] = [];
     let general = false;
-    await mockUnknownApi(page);
+    await setupCatalogueForms(page, locale as 'en' | 'fa', false);
     await page.route('**/api/admin/agents/options', (route) =>
       route.fulfill({
         json: { models: [], kbs: [], policies: [], kbGroups: [], policyGroups: [] },
@@ -109,7 +96,7 @@ for (const locale of ['en', 'fa'])
       verified = false,
       denied = false;
     const attempts: unknown[] = [];
-    await mockUnknownApi(page);
+    await setupCatalogueForms(page, locale as 'en' | 'fa', false);
     await page.route('**/api/admin/agents/options', (route) =>
       route.fulfill({
         json: {
@@ -134,7 +121,12 @@ for (const locale of ['en', 'fa'])
     });
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct';
-      return route.fulfill({ status: verified ? 200 : 401, json: {} });
+      return verified
+        ? cookieResponse(route, {
+            json: { verified: true },
+            headers: { 'Set-Cookie': 'barghsa_csrf=agent-fresh; Path=/; SameSite=Lax' },
+          })
+        : route.fulfill({ status: 401, json: {} });
     });
     await page.goto('/admin/agents');
     await expect(page.getByRole('alert')).toBeVisible();
