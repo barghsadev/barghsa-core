@@ -133,6 +133,66 @@ async function hardwareFeedbackProbes(work: () => Promise<void>) {
   }
 }
 
+async function savingOperationsSnapshot(id: string) {
+  const effects = (
+    await http.pool.query(
+      `SELECT
+        (SELECT jsonb_agg(to_jsonb(e) ORDER BY id) FROM saving_fulfillment_events e WHERE order_id=$1) AS events,
+        (SELECT jsonb_agg(to_jsonb(p) ORDER BY p.version_id) FROM contract_publications p JOIN contracts c ON c.id=p.contract_id WHERE c.order_id=s.order_id AND c.service_type='savings') AS publications,
+        (SELECT jsonb_agg(to_jsonb(o) ORDER BY id) FROM refund_obligations o WHERE order_id=s.order_id) AS obligations,
+        (SELECT jsonb_agg(to_jsonb(r) ORDER BY r.id) FROM refunds r JOIN invoices i ON i.id=r.invoice_id WHERE i.order_id=s.order_id) AS refunds,
+        (SELECT jsonb_agg(to_jsonb(k) ORDER BY entity_type,idempotency_key) FROM idempotency_keys k WHERE entity_type IN ('saving_staff_review','saving_stage_advance')) AS keys,
+        (SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM audit_log a WHERE event LIKE 'saving.order_review.%' OR event LIKE 'saving.fulfillment.%') AS audits
+       FROM saving_orders s WHERE s.id=$1`,
+      [id]
+    )
+  ).rows[0];
+  return { resource: await savingHardwareSnapshot(id), effects };
+}
+
+async function rejectedSavingOperations(
+  id: string,
+  path: string,
+  body: unknown,
+  fields?: string[],
+  status = 400,
+  headers = staffHeaders
+) {
+  const before = await savingOperationsSnapshot(id);
+  await rejectedSavingChange(id, path, body, headers, fields, status);
+  expect(await savingOperationsSnapshot(id)).toEqual(before);
+}
+
+async function operationsFeedbackProbes(work: () => Promise<void>) {
+  // Preserve the original journey quotas around only this batch's invalid-input probes.
+  const keys = ['staff-financial-review', 'staff-review', 'stage-review', 'stage-advance'].map(
+    (name) => `saving:${name}:user:127.0.0.1`
+  );
+  const saved = (
+    await http.pool.query<{ value: unknown }>(
+      'SELECT to_jsonb(r) AS value FROM rate_limit_windows r WHERE NOT security AND key=ANY($1::text[])',
+      [keys]
+    )
+  ).rows.map((row) => row.value);
+  await http.pool.query(
+    'DELETE FROM rate_limit_windows WHERE NOT security AND key=ANY($1::text[])',
+    [keys]
+  );
+  try {
+    await work();
+  } finally {
+    await http.pool.query(
+      'DELETE FROM rate_limit_windows WHERE NOT security AND key=ANY($1::text[])',
+      [keys]
+    );
+    if (saved.length)
+      await http.pool.query(
+        'INSERT INTO rate_limit_windows SELECT * FROM jsonb_populate_recordset(NULL::rate_limit_windows,$1::jsonb)',
+        [JSON.stringify(saved)]
+      );
+  }
+}
+
 async function decisionReview(orderId: string, action: 'approve' | 'reject', reason = '') {
   const response = await request(
     `/api/staff/saving/orders/${orderId}/financial-review`,
@@ -981,6 +1041,118 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     expectedReviewHash: approvalReview.hash,
   };
   const approvePath = `/api/staff/saving/orders/${result.savingOrderId}/approve`;
+  await operationsFeedbackProbes(async () => {
+    const preview = { action: 'reject', reason: 'Valid rejection' };
+    const mutation = { ...approval, reason: 'Valid rejection' };
+    for (const [route, body] of [
+      [`/api/staff/saving/orders/${result.savingOrderId}/financial-review`, preview],
+      [`/api/staff/saving/orders/${result.savingOrderId}/reject`, mutation],
+    ] as const) {
+      for (const reason of ['', 'x'.repeat(1001), null])
+        await rejectedSavingOperations(result.savingOrderId, route, { ...body, reason }, [
+          'reason',
+        ]);
+      for (const invalid of [
+        { ...body, reason: '', extra: 'PRIVATE' },
+        'action' in body
+          ? { ...body, action: 'PRIVATE', reason: '' }
+          : { ...body, expectedVersionId: 'PRIVATE', reason: '' },
+        ...('idempotencyKey' in body
+          ? [
+              { ...body, idempotencyKey: 'PRIVATE', reason: '' },
+              { ...body, expectedReviewHash: 'PRIVATE', reason: '' },
+            ]
+          : []),
+        null,
+      ])
+        await rejectedSavingOperations(result.savingOrderId, route, invalid);
+      await rejectedSavingOperations(
+        result.savingOrderId,
+        route,
+        { ...body, reason: '' },
+        undefined,
+        403,
+        customerHeaders
+      );
+      await rejectedSavingOperations(
+        result.savingOrderId,
+        route.replace(result.savingOrderId, randomUUID()),
+        { ...body, reason: '' },
+        undefined,
+        404
+      );
+    }
+    await rejectedSavingOperations(
+      result.savingOrderId,
+      `/api/staff/saving/orders/${result.savingOrderId}/financial-review`,
+      { action: 'approve', reason: 'PRIVATE' }
+    );
+    await rejectedSavingOperations(result.savingOrderId, approvePath, { ...approval, reason: '' });
+    const permissions = (
+      await http.pool.query<{ permissions: unknown }>(
+        "SELECT permissions FROM staff_roles WHERE role_id='saving-order-admin'"
+      )
+    ).rows[0]!.permissions;
+    try {
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions='[\"contracts:write\"]' WHERE role_id='saving-order-admin'"
+      );
+      for (const [route, body] of [
+        [`/api/staff/saving/orders/${result.savingOrderId}/financial-review`, preview],
+        [`/api/staff/saving/orders/${result.savingOrderId}/reject`, mutation],
+      ] as const)
+        await rejectedSavingOperations(result.savingOrderId, route, { ...body, reason: '' }, [
+          'reason',
+        ]);
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions='[\"contracts:read\"]' WHERE role_id='saving-order-admin'"
+      );
+      await rejectedSavingOperations(
+        result.savingOrderId,
+        `/api/staff/saving/orders/${result.savingOrderId}/financial-review`,
+        { ...preview, reason: '' },
+        undefined,
+        403
+      );
+    } finally {
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions=$1::jsonb WHERE role_id='saving-order-admin'",
+        [typeof permissions === 'string' ? permissions : JSON.stringify(permissions)]
+      );
+    }
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='saving-order-staff'"
+    );
+    try {
+      await rejectedSavingOperations(
+        result.savingOrderId,
+        `/api/staff/saving/orders/${result.savingOrderId}/reject`,
+        { ...mutation, reason: '' },
+        undefined,
+        403
+      );
+    } finally {
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='saving-order-staff'"
+      );
+    }
+    await http.pool.query(
+      "UPDATE sessions SET revoked_at=NOW() WHERE user_id='saving-order-staff'"
+    );
+    try {
+      await rejectedSavingOperations(
+        result.savingOrderId,
+        `/api/staff/saving/orders/${result.savingOrderId}/financial-review`,
+        { ...preview, reason: '' },
+        undefined,
+        401
+      );
+    } finally {
+      await http.pool.query(
+        "UPDATE sessions SET revoked_at=NULL WHERE user_id='saving-order-staff'"
+      );
+    }
+  });
   expect(
     (
       await request(
@@ -1085,6 +1257,124 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     expect(review.data).toMatchObject({ stage, action });
     return { ...input, expectedReviewHash: review.hash };
   };
+  await operationsFeedbackProbes(async () => {
+    const mutation = { ...stageInput(), handoverDescription: 'Existing description' };
+    const preview = {
+      expectedStatus: mutation.expectedStatus,
+      explanation: mutation.explanation,
+      handoverDescription: mutation.handoverDescription,
+    };
+    for (const [route, body] of [
+      [`${stagePath('product_delivery')}/review`, preview],
+      [stagePath('product_delivery'), mutation],
+    ] as const) {
+      for (const [invalid, fields] of [
+        [{ ...body, explanation: '' }, ['explanation']],
+        [{ ...body, handoverDescription: 'x'.repeat(1001) }, ['handoverDescription']],
+        [
+          { ...body, explanation: '', handoverDescription: null },
+          ['explanation', 'handoverDescription'],
+        ],
+      ] as const)
+        await rejectedSavingOperations(result.savingOrderId, route, invalid, [...fields]);
+      for (const invalid of [
+        { ...body, expectedStatus: 'PRIVATE', explanation: '' },
+        { ...body, explanation: '', extra: 'PRIVATE' },
+        ...('idempotencyKey' in body
+          ? [
+              { ...body, idempotencyKey: 'PRIVATE', explanation: '' },
+              { ...body, expectedReviewHash: 'PRIVATE', explanation: '' },
+            ]
+          : []),
+        null,
+      ])
+        await rejectedSavingOperations(result.savingOrderId, route, invalid);
+      await rejectedSavingOperations(
+        result.savingOrderId,
+        route.replace('product_delivery', 'PRIVATE'),
+        { ...body, explanation: '' }
+      );
+      await rejectedSavingOperations(
+        result.savingOrderId,
+        route,
+        { ...body, explanation: '' },
+        undefined,
+        403,
+        customerHeaders
+      );
+      await rejectedSavingOperations(
+        result.savingOrderId,
+        route.replace(result.savingOrderId, randomUUID()),
+        { ...body, explanation: '' },
+        undefined,
+        404
+      );
+    }
+    const permissions = (
+      await http.pool.query<{ permissions: unknown }>(
+        "SELECT permissions FROM staff_roles WHERE role_id='saving-order-admin'"
+      )
+    ).rows[0]!.permissions;
+    try {
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions='[\"contracts:write\"]' WHERE role_id='saving-order-admin'"
+      );
+      for (const [route, body] of [
+        [`${stagePath('product_delivery')}/review`, preview],
+        [stagePath('product_delivery'), mutation],
+      ] as const)
+        await rejectedSavingOperations(result.savingOrderId, route, { ...body, explanation: '' }, [
+          'explanation',
+        ]);
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions='[\"contracts:read\"]' WHERE role_id='saving-order-admin'"
+      );
+      await rejectedSavingOperations(
+        result.savingOrderId,
+        `${stagePath('product_delivery')}/review`,
+        { ...preview, explanation: '' },
+        undefined,
+        403
+      );
+    } finally {
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions=$1::jsonb WHERE role_id='saving-order-admin'",
+        [typeof permissions === 'string' ? permissions : JSON.stringify(permissions)]
+      );
+    }
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='saving-order-staff'"
+    );
+    try {
+      await rejectedSavingOperations(
+        result.savingOrderId,
+        stagePath('product_delivery'),
+        { ...mutation, explanation: '' },
+        undefined,
+        403
+      );
+    } finally {
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='saving-order-staff'"
+      );
+    }
+    await http.pool.query(
+      "UPDATE sessions SET revoked_at=NOW() WHERE user_id='saving-order-staff'"
+    );
+    try {
+      await rejectedSavingOperations(
+        result.savingOrderId,
+        `${stagePath('product_delivery')}/review`,
+        { ...preview, explanation: '' },
+        undefined,
+        401
+      );
+    } finally {
+      await http.pool.query(
+        "UPDATE sessions SET revoked_at=NULL WHERE user_id='saving-order-staff'"
+      );
+    }
+  });
   expect(
     (await request(stagePath('product_delivery'), 'POST', stageInput(), staffHeaders)).status
   ).toBe(409);
@@ -2190,6 +2480,29 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   );
   expect(completed.status, http.logs()).toBe(200);
   expect(await completed.json()).toMatchObject({ status: 'completed', nextStage: null });
+  const finalReplaySnapshot = await savingOperationsSnapshot(result.savingOrderId);
+  const terminalStageReplay = await request(
+    stagePath('product_delivery'),
+    'POST',
+    deliveryInput,
+    staffHeaders
+  );
+  expect(terminalStageReplay.status, http.logs()).toBe(200);
+  expect(await terminalStageReplay.json()).toEqual({
+    savingOrderId: result.savingOrderId,
+    status: 'in_progress',
+    stage: 'product_delivery',
+    stageStatus: 'completed',
+    nextStage: 'installation_and_document_upload',
+  });
+  const terminalApprovalReplay = await request(approvePath, 'POST', approval, staffHeaders);
+  expect(terminalApprovalReplay.status, http.logs()).toBe(200);
+  expect(await terminalApprovalReplay.json()).toEqual({
+    savingOrderId: result.savingOrderId,
+    status: 'approved',
+    refundId: null,
+  });
+  expect(await savingOperationsSnapshot(result.savingOrderId)).toEqual(finalReplaySnapshot);
   expect(
     await (await request(`/api/contracts/${result.contractId}/cancellation-requests`, 'GET')).json()
   ).toMatchObject({ canRequest: false });

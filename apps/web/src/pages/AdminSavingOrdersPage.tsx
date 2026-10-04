@@ -3,10 +3,12 @@ import type { SavingFulfillmentEvent } from '../lib/saving-fulfillment.js';
 import { ListPage } from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { useEffect, useRef, useState, type RefObject } from 'react';
-import { Button, Card, CardContent, FinancialReviewSummary, Input, Label } from '@barghsa/ui';
+import { Button, Card, CardContent, FinancialReviewSummary, Input } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { tSavingStaffReview } from '@barghsa/i18n/saving-staff-review';
 import { tSavingChange } from '@barghsa/i18n/saving-change';
+import { SavingStaffOperationForm } from '../components/SavingStaffOperationForm.js';
+import type { SavingOperationReview } from '../lib/saving-staff-operation-form.js';
 import { SavingHardwareCommandForm } from '../components/SavingHardwareCommandForm.js';
 import type {
   SavingHardwareDraftCache,
@@ -36,11 +38,7 @@ import {
 import { t } from '@barghsa/i18n/app';
 import {
   parseSavingAddressAmendmentReview,
-  parseSavingFulfillmentStageReview,
-  parseSavingStaffDecisionReview,
   type SavingAddressAmendmentReview,
-  type SavingFulfillmentStageReview,
-  type SavingStaffDecisionReview,
 } from '@barghsa/shared/finance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -250,8 +248,14 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
   ]);
   const hardwareCurrentScope = useRef(hardwareScope);
   hardwareCurrentScope.current = hardwareScope;
-  const otherWork = useRef(false);
-  const actionRef = useRef<TeamAction | null>(null);
+  const operationScope = JSON.stringify([
+    hardwareScope,
+    detail?.status,
+    detail?.pricingSnapshot,
+    detail?.stages,
+  ]);
+  const operationCurrentScope = useRef(operationScope);
+  operationCurrentScope.current = operationScope;
   const readEpoch = useRef(0);
   const queueAbort = useRef<AbortController | null>(null);
   const detailAbort = useRef<AbortController | null>(null);
@@ -263,19 +267,6 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
 
   const [note, setNote] = useState('');
   const [handover, setHandover] = useState('');
-  const [action, setRenderedAction] = useState<TeamAction | null>(null);
-  function setAction(value: TeamAction | null) {
-    actionRef.current = value;
-    setRenderedAction(value);
-  }
-
-  const [decisionReview, setDecisionReview] = useState<SavingStaffDecisionReview | null>(null);
-  const [stageReview, setStageReview] = useState<SavingFulfillmentStageReview | null>(null);
-  const [reviewLoading, setReviewLoading] = useState(false);
-  const [reviewError, setReviewError] = useState(false);
-  const [stageReviewLoading, setStageReviewLoading] = useState(false);
-  const [stageReviewError, setStageReviewError] = useState(false);
-  const reviewRequest = useRef(0);
   const [revision, setRevision] = useState(0);
   const [listRevision, setListRevision] = useState(0);
   const [detailRevision, setDetailRevision] = useState(0);
@@ -344,7 +335,6 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
           if (fresh()) {
             setAccepted(null);
             setSelected(null, true);
-            reviewRequest.current += 1;
             setDetail(null);
             setState('forbidden');
           }
@@ -389,16 +379,7 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
   }, [selected, lane, actor, profileRevision]);
 
   useEffect(() => {
-    reviewRequest.current++;
-    otherWork.current = false;
     setDetailError(false);
-    setDecisionReview(null);
-    setStageReview(null);
-    setAction(null);
-    setReviewLoading(false);
-    setReviewError(false);
-    setStageReviewLoading(false);
-    setStageReviewError(false);
     if (!selected) {
       setDetail(null);
       return;
@@ -440,139 +421,6 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
       });
     return () => controller.abort();
   }, [sourceScope, revision, detailRevision]);
-
-  async function review(decision: 'approve' | 'reject') {
-    if (addressOwner.current || otherWork.current) return;
-    if (
-      !detail ||
-      addressOwner.current ||
-      otherWork.current ||
-      reviewLoading ||
-      (decision === 'reject' && !note.trim())
-    )
-      return;
-    const order = detail;
-    const reason = decision === 'reject' ? note.trim() : '';
-    const request = ++reviewRequest.current;
-    otherWork.current = true;
-    setReviewLoading(true);
-    setReviewError(false);
-    try {
-      const response = await fetch(
-        `/api/staff/saving/orders/${encodeURIComponent(order.id)}/financial-review`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ action: decision, reason }),
-        }
-      );
-      if (!response.ok) throw new Error('Review unavailable');
-      const financialReview = parseSavingStaffDecisionReview(await response.json());
-      if (request !== reviewRequest.current) return;
-      if (
-        !financialReview ||
-        financialReview.data.action !== decision ||
-        financialReview.data.reason !== reason ||
-        financialReview.data.versionId !== order.versionId ||
-        financialReview.scope.profileId !== order.profileId ||
-        financialReview.scope.resourceId !== order.id
-      )
-        throw new Error('Review mismatch');
-      setDecisionReview(financialReview);
-      setAction({
-        title: copy(decision === 'approve' ? 'staffApprove' : 'staffReject'),
-        description: copy('staffReviewConfirm'),
-        method: 'POST',
-        path: `/api/staff/saving/orders/${order.id}/${decision}`,
-        body: {
-          idempotencyKey: crypto.randomUUID(),
-          expectedVersionId: financialReview.data.versionId,
-          expectedReviewHash: financialReview.hash,
-          ...(decision === 'reject' ? { reason } : {}),
-        },
-        conflictMessage: copy('staffConflict'),
-        forbiddenMessage: copy('staffForbidden'),
-      });
-    } catch {
-      if (request === reviewRequest.current) {
-        setDecisionReview(null);
-        setReviewError(true);
-      }
-    } finally {
-      if (request === reviewRequest.current) otherWork.current = false;
-      if (request === reviewRequest.current) setReviewLoading(false);
-    }
-  }
-
-  async function advance(stage: StageName, choice: 'complete' | 'skip') {
-    if (addressOwner.current || otherWork.current) return;
-    if (
-      !detail ||
-      stageReviewLoading ||
-      !note.trim() ||
-      stagePrerequisites(stage, detail).length > 0 ||
-      (stage === 'equipment_handover' && choice === 'complete' && !handover.trim())
-    )
-      return;
-    const order = detail;
-    const explanation = note.trim();
-    const handoverDescription = handover.trim();
-    const path = `/api/staff/saving/orders/${encodeURIComponent(order.id)}/stages/${stage}/${choice}`;
-    const request = ++reviewRequest.current;
-    otherWork.current = true;
-    setStageReviewLoading(true);
-    setStageReviewError(false);
-    try {
-      const response = await fetch(`${path}/review`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          expectedStatus: 'in_progress',
-          explanation,
-          ...(handoverDescription ? { handoverDescription } : {}),
-        }),
-      });
-      if (!response.ok) throw new Error('Stage review unavailable');
-      const financialReview = parseSavingFulfillmentStageReview(await response.json());
-      if (request !== reviewRequest.current) return;
-      if (
-        !financialReview ||
-        financialReview.scope.profileId !== order.profileId ||
-        financialReview.scope.resourceId !== order.id ||
-        financialReview.data.stage !== stage ||
-        financialReview.data.action !== choice ||
-        financialReview.data.explanation !== explanation ||
-        financialReview.data.handoverDescription !== (handoverDescription || null)
-      )
-        throw new Error('Stage review mismatch');
-      setStageReview(financialReview);
-      setAction({
-        title: copy(choice === 'skip' ? 'staffSkip' : 'staffComplete'),
-        description: copy('staffStageReviewConfirm'),
-        method: 'POST',
-        path,
-        body: {
-          idempotencyKey: crypto.randomUUID(),
-          expectedStatus: 'in_progress',
-          expectedReviewHash: financialReview.hash,
-          explanation,
-          ...(handoverDescription ? { handoverDescription } : {}),
-        },
-        conflictMessage: copy('staffConflict'),
-        forbiddenMessage: copy('staffForbidden'),
-      });
-    } catch {
-      if (request === reviewRequest.current) {
-        setStageReview(null);
-        setStageReviewError(true);
-      }
-    } finally {
-      if (request === reviewRequest.current) otherWork.current = false;
-      if (request === reviewRequest.current) setStageReviewLoading(false);
-    }
-  }
 
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
@@ -789,7 +637,7 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                       draftCache={hardwareDrafts}
                       baseScope={sourceScope}
                       currentBaseScope={currentDraftScope}
-                      blocked={() => !!actionRef.current || otherWork.current}
+                      blocked={() => !!addressOwner.current}
                       notify={() => setAddressLockRevision((value) => value + 1)}
                       onPending={() => {
                         ++readEpoch.current;
@@ -812,9 +660,7 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                     draftCache={addressDraft}
                     baseScope={sourceScope}
                     currentBaseScope={currentDraftScope}
-                    blocked={() =>
-                      !!addressOwner.current?.kind || !!actionRef.current || otherWork.current
-                    }
+                    blocked={() => !!addressOwner.current?.kind}
                     notify={() => setAddressLockRevision((value) => value + 1)}
                     onPending={() => {
                       ++readEpoch.current;
@@ -836,7 +682,7 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                     draftCache={hardwareDrafts}
                     baseScope={sourceScope}
                     currentBaseScope={currentDraftScope}
-                    blocked={() => !!actionRef.current || otherWork.current}
+                    blocked={() => !!addressOwner.current}
                     notify={() => setAddressLockRevision((value) => value + 1)}
                     onPending={() => {
                       ++readEpoch.current;
@@ -848,116 +694,32 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                     onWithdraw={(reason) => withdrawSelected(reason, detail.id)}
                   />
                 )}
-                {detail.status === 'awaiting_staff_review' && (
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      disabled={reviewLoading || !!addressOwner.current}
-                      onClick={() => void review('approve')}
-                    >
-                      {copy('staffApprove')}
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      disabled={!!addressOwner.current || !note.trim() || reviewLoading}
-                      onClick={() => void review('reject')}
-                    >
-                      {copy('staffReject')}
-                    </Button>
-                    {reviewLoading ? <p role="status">{copy('staffReviewLoading')}</p> : null}
-                    {reviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
-                  </div>
-                )}
-                <div className="space-y-2">
-                  <Label htmlFor="saving-staff-note">{copy('staffReason')}</Label>
-                  <Input
-                    id="saving-staff-note"
-                    aria-describedby={
-                      detail.status === 'awaiting_staff_review'
-                        ? undefined
-                        : 'saving-staff-note-audience'
-                    }
-                    value={note}
-                    maxLength={1000}
-                    onChange={(event) => setNote(event.target.value)}
-                  />
-                  {detail.status !== 'awaiting_staff_review' && (
-                    <p id="saving-staff-note-audience" className="text-sm text-muted-foreground">
-                      {copy('stagePublicNote')}
-                    </p>
-                  )}
-                </div>
-                {detail.stages.some(
-                  (stage) => stage.stage === 'equipment_handover' && stage.status === 'in_progress'
-                ) && (
-                  <div className="space-y-2">
-                    <Label htmlFor="saving-handover">{copy('staffHandover')}</Label>
-                    <Input
-                      id="saving-handover"
-                      value={handover}
-                      maxLength={1000}
-                      onChange={(event) => setHandover(event.target.value)}
-                    />
-                  </div>
-                )}
-                <ol className="space-y-2">
-                  {detail.stages.map((stage) => {
-                    const prerequisites = stagePrerequisites(stage.stage, detail);
-                    return (
-                      <li key={stage.stage} className="rounded-md border p-3">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <span>
-                            <strong>{copy(stage.stage)}</strong> · {copy(stage.status)}
-                          </span>
-                          {stage.status === 'in_progress' && (
-                            <span className="flex gap-2">
-                              <Button
-                                size="sm"
-                                disabled={
-                                  !!addressOwner.current ||
-                                  !note.trim() ||
-                                  prerequisites.length > 0 ||
-                                  (stage.stage === 'equipment_handover' && !handover.trim())
-                                }
-                                onClick={() => void advance(stage.stage, 'complete')}
-                              >
-                                {copy('staffComplete')}
-                              </Button>
-                              {stage.stage === 'equipment_handover' && (
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  disabled={!!addressOwner.current || !note.trim()}
-                                  onClick={() => void advance(stage.stage, 'skip')}
-                                >
-                                  {copy('staffSkip')}
-                                </Button>
-                              )}
-                            </span>
-                          )}
-                        </div>
-                        {stage.explanation && (
-                          <p className="mt-2 text-sm">
-                            {stage.stage === 'request_confirmation' &&
-                            stage.status === 'completed' &&
-                            stage.explanation === 'Staff approved request'
-                              ? copy('stageConfirmedNote')
-                              : stage.explanation}
-                          </p>
-                        )}
-                        {stage.status === 'in_progress' && prerequisites.length > 0 && (
-                          <p className="mt-2 text-sm text-muted-foreground">
-                            {prerequisites.map((reason) => copy(reason)).join(' ')}
-                          </p>
-                        )}
-                        {stage.handover_description && (
-                          <p className="mt-2 text-sm">{stage.handover_description}</p>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ol>
-                {stageReviewLoading ? <p role="status">{copy('staffStageReviewLoading')}</p> : null}
-                {stageReviewError ? <p role="alert">{copy('staffReviewError')}</p> : null}
+                <SavingStaffOperationForm
+                  key={operationScope}
+                  order={detail}
+                  draft={{ note, handover }}
+                  onDraft={(value) => {
+                    if (operationCurrentScope.current !== operationScope) return;
+                    setNote(value.note);
+                    setHandover(value.handover);
+                  }}
+                  owner={addressOwner}
+                  scope={operationScope}
+                  currentScope={operationCurrentScope}
+                  notify={() => setAddressLockRevision((value) => value + 1)}
+                  onPending={() => {
+                    ++readEpoch.current;
+                    queueAbort.current?.abort();
+                    detailAbort.current?.abort();
+                    setState(acceptedCurrent ? 'ready' : 'error');
+                  }}
+                  onSuccess={refreshQueue}
+                  onWithdraw={(reason) => withdrawSelected(reason, detail.id)}
+                  prerequisites={(stage) =>
+                    stagePrerequisites(stage, detail).map((reason) => copy(reason))
+                  }
+                  summary={(review) => <SavingStaffOperationSummary review={review} />}
+                />
                 <SavingFulfillmentHistory
                   events={detail.events}
                   truncated={detail.eventsTruncated}
@@ -978,212 +740,201 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
           )}
         </div>
       </ListPage>
-      {action && detail && (
-        <TeamActionDialog
-          action={action}
-          summary={
-            decisionReview ? (
-              <FinancialReviewSummary
-                title={copy('staffReviewTitle')}
-                rows={[
-                  {
-                    id: 'customer',
-                    label: copy('customer'),
-                    value: decisionReview.data.customerName,
-                  },
-                  {
-                    id: 'profile',
-                    label: copy('staffReviewProfile'),
-                    value: decisionReview.data.profileName,
-                  },
-                  {
-                    id: 'bill',
-                    label: copy('staffBill'),
-                    value: decisionReview.data.billIdentifier,
-                  },
-                  {
-                    id: 'hardware',
-                    label: copy('stepHardware'),
-                    value: decisionReview.data.hardwareTitle[locale],
-                  },
-                  {
-                    id: 'address',
-                    label: copy('staffAddress'),
-                    value: String(decisionReview.data.addressSnapshot.full_address ?? ''),
-                  },
-                  {
-                    id: 'contract',
-                    label: copy('staffReviewContractVersion'),
-                    value: money.number(decisionReview.data.versionNumber),
-                  },
-                  {
-                    id: 'invoice',
-                    label: copy('staffInvoice'),
-                    value: t(`invoices.state.${decisionReview.data.invoiceState}`, locale),
-                  },
-                  {
-                    id: 'paid',
-                    label: copy('staffPaid'),
-                    value: money.money(decisionReview.data.paidAmount),
-                  },
-                  ...(decisionReview.data.refundedAmount !== '0'
-                    ? [
-                        {
-                          id: 'refunded',
-                          label: copy('staffReviewRefunded'),
-                          value: money.money(decisionReview.data.refundedAmount),
-                        },
-                      ]
-                    : []),
-                  ...(decisionReview.data.pendingRefundAmount !== '0'
-                    ? [
-                        {
-                          id: 'pending-refund',
-                          label: copy('staffReviewPendingRefund'),
-                          value: money.money(decisionReview.data.pendingRefundAmount),
-                        },
-                      ]
-                    : []),
-                  {
-                    id: 'outcome',
-                    label: copy('staffReviewOutcome'),
-                    value: copy(`staffReviewOutcome.${decisionReview.data.outcome}`),
-                  },
-                  ...reviewPriceLines(decisionReview.data.pricingSnapshot).map((line, index) => ({
-                    id: `price-${index}`,
-                    label: line.title[locale],
-                    value: (
-                      <span className="space-y-1 text-sm">
-                        <span className="block">
-                          {copy('staffPrice')}: {money.money(line.amountIrR)}
-                        </span>
-                        <span className="block">
-                          {copy('discount')}: {money.money(line.discountIrR)}
-                        </span>
-                        <span className="block">
-                          {copy('staffReviewNet')}: {money.money(line.netIrR)}
-                        </span>
-                        <span className="block">
-                          {copy('vat')}: {money.money(line.vatIrR)}
-                        </span>
-                      </span>
-                    ),
-                  })),
-                  ...(decisionReview.data.refundAmount !== '0'
-                    ? [
-                        {
-                          id: 'refund',
-                          label: copy('staffReviewRefund'),
-                          value: money.money(decisionReview.data.refundAmount),
-                        },
-                      ]
-                    : []),
-                  ...(decisionReview.data.releasesGiftCode
-                    ? [
-                        {
-                          id: 'gift',
-                          label: copy('giftCode'),
-                          value: copy('staffReviewGiftRelease'),
-                        },
-                      ]
-                    : []),
-                ]}
-                total={{
-                  label: copy('staffTotal'),
-                  value: money.money(decisionReview.data.invoiceTotal),
-                }}
-                notice={
-                  <div className="space-y-2">
-                    {decisionReview.data.reason ? <p>{decisionReview.data.reason}</p> : null}
-                    <p className="whitespace-pre-wrap break-words" dir="auto">
-                      {decisionReview.data.agreementSnapshot}
-                    </p>
-                  </div>
-                }
-              />
-            ) : stageReview ? (
-              <FinancialReviewSummary
-                title={copy('staffStageReviewTitle')}
-                rows={[
-                  { id: 'customer', label: copy('customer'), value: stageReview.data.customerName },
-                  {
-                    id: 'profile',
-                    label: copy('staffReviewProfile'),
-                    value: stageReview.data.profileName,
-                  },
-                  {
-                    id: 'stage',
-                    label: copy('staffStageReviewStage'),
-                    value: copy(stageReview.data.stage),
-                  },
-                  {
-                    id: 'transition',
-                    label: copy('staffStageReviewTransition'),
-                    value: `${copy(stageReview.data.currentStatus)} → ${copy(stageReview.data.nextStatus)}`,
-                  },
-                  {
-                    id: 'next',
-                    label: copy('staffStageReviewNext'),
-                    value: stageReview.data.nextStage
-                      ? copy(stageReview.data.nextStage)
-                      : copy('completed'),
-                  },
-                  {
-                    id: 'contract',
-                    label: copy('staffContract'),
-                    value: copy(stageReview.data.contractState),
-                  },
-                  {
-                    id: 'invoice',
-                    label: copy('staffInvoice'),
-                    value: t(`invoices.state.${stageReview.data.invoiceState}`, locale),
-                  },
-                  {
-                    id: 'paid',
-                    label: copy('staffPaid'),
-                    value: money.money(stageReview.data.paidAmountIrR),
-                  },
-                  {
-                    id: 'explanation',
-                    label: copy('staffReason'),
-                    value: stageReview.data.explanation,
-                  },
-                  ...(stageReview.data.handoverDescription
-                    ? [
-                        {
-                          id: 'handover',
-                          label: copy('staffHandover'),
-                          value: stageReview.data.handoverDescription,
-                        },
-                      ]
-                    : []),
-                ]}
-                total={{
-                  label: copy('staffTotal'),
-                  value: money.money(stageReview.data.invoiceTotalIrR),
-                }}
-                notice={
-                  <p className="whitespace-pre-wrap break-words" dir="auto">
-                    {stageReview.data.agreementSnapshot}
-                  </p>
-                }
-              />
-            ) : undefined
-          }
-          onClose={() => {
-            setAction(null);
-            setDecisionReview(null);
-            setStageReview(null);
-          }}
-          onSuccess={async () => {
-            setNote('');
-            setHandover('');
-            refreshQueue();
-          }}
-        />
-      )}
     </section>
   );
+}
+
+function SavingStaffOperationSummary({ review }: { review: SavingOperationReview }) {
+  const locale = useLocale();
+  const money = useNumberFormatting(locale);
+  const copy = (key: string) => tSavingStaffReview(key, locale) ?? tSaving(key, locale);
+  const decisionReview = review.kind === 'decision' ? review.value : null;
+  const stageReview = review.kind === 'stage' ? review.value : null;
+  return decisionReview ? (
+    <FinancialReviewSummary
+      title={copy('staffReviewTitle')}
+      rows={[
+        {
+          id: 'customer',
+          label: copy('customer'),
+          value: decisionReview.data.customerName,
+        },
+        {
+          id: 'profile',
+          label: copy('staffReviewProfile'),
+          value: decisionReview.data.profileName,
+        },
+        {
+          id: 'bill',
+          label: copy('staffBill'),
+          value: decisionReview.data.billIdentifier,
+        },
+        {
+          id: 'hardware',
+          label: copy('stepHardware'),
+          value: decisionReview.data.hardwareTitle[locale],
+        },
+        {
+          id: 'address',
+          label: copy('staffAddress'),
+          value: String(decisionReview.data.addressSnapshot.full_address ?? ''),
+        },
+        {
+          id: 'contract',
+          label: copy('staffReviewContractVersion'),
+          value: money.number(decisionReview.data.versionNumber),
+        },
+        {
+          id: 'invoice',
+          label: copy('staffInvoice'),
+          value: t(`invoices.state.${decisionReview.data.invoiceState}`, locale),
+        },
+        {
+          id: 'paid',
+          label: copy('staffPaid'),
+          value: money.money(decisionReview.data.paidAmount),
+        },
+        ...(decisionReview.data.refundedAmount !== '0'
+          ? [
+              {
+                id: 'refunded',
+                label: copy('staffReviewRefunded'),
+                value: money.money(decisionReview.data.refundedAmount),
+              },
+            ]
+          : []),
+        ...(decisionReview.data.pendingRefundAmount !== '0'
+          ? [
+              {
+                id: 'pending-refund',
+                label: copy('staffReviewPendingRefund'),
+                value: money.money(decisionReview.data.pendingRefundAmount),
+              },
+            ]
+          : []),
+        {
+          id: 'outcome',
+          label: copy('staffReviewOutcome'),
+          value: copy(`staffReviewOutcome.${decisionReview.data.outcome}`),
+        },
+        ...reviewPriceLines(decisionReview.data.pricingSnapshot).map((line, index) => ({
+          id: `price-${index}`,
+          label: line.title[locale],
+          value: (
+            <span className="space-y-1 text-sm">
+              <span className="block">
+                {copy('staffPrice')}: {money.money(line.amountIrR)}
+              </span>
+              <span className="block">
+                {copy('discount')}: {money.money(line.discountIrR)}
+              </span>
+              <span className="block">
+                {copy('staffReviewNet')}: {money.money(line.netIrR)}
+              </span>
+              <span className="block">
+                {copy('vat')}: {money.money(line.vatIrR)}
+              </span>
+            </span>
+          ),
+        })),
+        ...(decisionReview.data.refundAmount !== '0'
+          ? [
+              {
+                id: 'refund',
+                label: copy('staffReviewRefund'),
+                value: money.money(decisionReview.data.refundAmount),
+              },
+            ]
+          : []),
+        ...(decisionReview.data.releasesGiftCode
+          ? [
+              {
+                id: 'gift',
+                label: copy('giftCode'),
+                value: copy('staffReviewGiftRelease'),
+              },
+            ]
+          : []),
+      ]}
+      total={{
+        label: copy('staffTotal'),
+        value: money.money(decisionReview.data.invoiceTotal),
+      }}
+      notice={
+        <div className="space-y-2">
+          {decisionReview.data.reason ? <p>{decisionReview.data.reason}</p> : null}
+          <p className="whitespace-pre-wrap break-words" dir="auto">
+            {decisionReview.data.agreementSnapshot}
+          </p>
+        </div>
+      }
+    />
+  ) : stageReview ? (
+    <FinancialReviewSummary
+      title={copy('staffStageReviewTitle')}
+      rows={[
+        { id: 'customer', label: copy('customer'), value: stageReview.data.customerName },
+        {
+          id: 'profile',
+          label: copy('staffReviewProfile'),
+          value: stageReview.data.profileName,
+        },
+        {
+          id: 'stage',
+          label: copy('staffStageReviewStage'),
+          value: copy(stageReview.data.stage),
+        },
+        {
+          id: 'transition',
+          label: copy('staffStageReviewTransition'),
+          value: `${copy(stageReview.data.currentStatus)} → ${copy(stageReview.data.nextStatus)}`,
+        },
+        {
+          id: 'next',
+          label: copy('staffStageReviewNext'),
+          value: stageReview.data.nextStage ? copy(stageReview.data.nextStage) : copy('completed'),
+        },
+        {
+          id: 'contract',
+          label: copy('staffContract'),
+          value: copy(stageReview.data.contractState),
+        },
+        {
+          id: 'invoice',
+          label: copy('staffInvoice'),
+          value: t(`invoices.state.${stageReview.data.invoiceState}`, locale),
+        },
+        {
+          id: 'paid',
+          label: copy('staffPaid'),
+          value: money.money(stageReview.data.paidAmountIrR),
+        },
+        {
+          id: 'explanation',
+          label: copy('staffReason'),
+          value: stageReview.data.explanation,
+        },
+        ...(stageReview.data.handoverDescription
+          ? [
+              {
+                id: 'handover',
+                label: copy('staffHandover'),
+                value: stageReview.data.handoverDescription,
+              },
+            ]
+          : []),
+      ]}
+      total={{
+        label: copy('staffTotal'),
+        value: money.money(stageReview.data.invoiceTotalIrR),
+      }}
+      notice={
+        <p className="whitespace-pre-wrap break-words" dir="auto">
+          {stageReview.data.agreementSnapshot}
+        </p>
+      }
+    />
+  ) : undefined;
 }
 
 function SavingAddressReviewSummary({
@@ -1272,7 +1023,7 @@ function SavingAddressReviewSummary({
 }
 
 interface SavingAddressOwner {
-  kind?: 'hardware' | 'cancellation';
+  kind?: 'hardware' | 'cancellation' | 'decision' | 'stage';
   attempted: boolean;
   uncertain: boolean;
 }

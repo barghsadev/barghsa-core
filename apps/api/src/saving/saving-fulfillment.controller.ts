@@ -144,13 +144,20 @@ export class SavingFulfillmentController {
     summary: 'Preview exact contract, invoice and refund outcome before saving order decision',
   })
   @ApiZodBody(decisionReviewInput)
-  financialReview(
+  async financialReview(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
     this.permission(req, true);
-    const input = parse(decisionReviewInput, body);
+    const rejecting =
+      typeof body === 'object' && body !== null && 'action' in body && body.action === 'reject';
+    const input = await parseSavingChangeInput(
+      decisionReviewInput,
+      body,
+      rejecting ? ['reason'] : [],
+      () => this.service.assertCanDecideOrAdvance(id, req.session, false, false)
+    );
     return this.service.decisionReview(id, input.action, input.reason, req.session);
   }
 
@@ -181,19 +188,16 @@ export class SavingFulfillmentController {
   @RateLimit({ namespace: 'saving:staff-review:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Reject a saving request with reason and refund handling' })
   @ApiZodBody(rejection)
-  reject(
+  async reject(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
     this.permission(req, true);
-    return this.service.decide(
-      id,
-      'reject',
-      parse(rejection, body),
-      req.session,
-      req.ip ?? 'unknown'
+    const input = await parseSavingChangeInput(rejection, body, ['reason'], () =>
+      this.service.assertCanDecideOrAdvance(id, req.session, true, false)
     );
+    return this.service.decide(id, 'reject', input, req.session, req.ip ?? 'unknown');
   }
 
   @Post(':id/amend-address-review')
@@ -333,7 +337,7 @@ export class SavingFulfillmentController {
   @RateLimit({ namespace: 'saving:stage-review:user', limit: 30, windowMs: 60_000 })
   @ApiOperation({ summary: 'Preview the exact saving fulfillment stage transition' })
   @ApiZodBody(stageReviewInput)
-  advanceReview(
+  async advanceReview(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Param('stage') stage: string,
     @Param('action') action: string,
@@ -343,11 +347,17 @@ export class SavingFulfillmentController {
     this.permission(req, true);
     if (!SAVING_STAGES.includes(stage as SavingStage) || !['complete', 'skip'].includes(action))
       throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    const input = await parseSavingChangeInput(
+      stageReviewInput,
+      body,
+      ['explanation', 'handoverDescription'],
+      () => this.service.assertCanDecideOrAdvance(id, req.session, false, true)
+    );
     return this.service.advanceReview(
       id,
       stage as SavingStage,
       action as StageAction,
-      parse(stageReviewInput, body),
+      input,
       req.session
     );
   }
@@ -360,7 +370,7 @@ export class SavingFulfillmentController {
     summary: 'Complete a saving fulfillment stage or skip optional equipment handover',
   })
   @ApiZodBody(stageInput)
-  advance(
+  async advance(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Param('stage') stage: string,
     @Param('action') action: string,
@@ -370,11 +380,17 @@ export class SavingFulfillmentController {
     this.permission(req, true);
     if (!SAVING_STAGES.includes(stage as SavingStage) || !['complete', 'skip'].includes(action))
       throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    const input = await parseSavingChangeInput(
+      stageInput,
+      body,
+      ['explanation', 'handoverDescription'],
+      () => this.service.assertCanDecideOrAdvance(id, req.session, true, true)
+    );
     return this.service.advance(
       id,
       stage as SavingStage,
       action as StageAction,
-      parse(stageInput, body),
+      input,
       req.session,
       req.ip ?? 'unknown'
     );

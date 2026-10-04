@@ -104,6 +104,11 @@ it('shows the locked saving decision and submits its exact review hash', async (
     profileId,
     customerName: 'Buyer Company',
     status: 'awaiting_staff_review',
+    agreementSnapshot: 'Agreement text',
+    refundedIrR: '0',
+    pendingRefundIrR: '0',
+    contractId,
+    invoiceId,
     financialStatus: 'unpaid',
     submittedAt: '2026-09-30T00:00:00.000Z',
     billIdentifier: '1234567890123',
@@ -111,7 +116,18 @@ it('shows the locked saving decision and submits its exact review hash', async (
     installationAddressId: '66666666-6666-7666-8666-666666666666',
     hardwareProductId: '77777777-7777-7777-8777-777777777777',
     hardwareTitle: { fa: 'دستگاه', en: 'Device' },
-    pricingSnapshot: { plan: { title: { fa: 'طرح', en: 'Saving plan' } } },
+    pricingSnapshot: {
+      plan: { title: { fa: 'طرح', en: 'Saving plan' } },
+      lines: [
+        {
+          title: { fa: 'طرح', en: 'Saving plan' },
+          amountIrR: '300',
+          discountIrR: '0',
+          netIrR: '300',
+          vatIrR: '0',
+        },
+      ],
+    },
     versionId,
     invoiceState: 'Unpaid',
     contractState: 'AwaitingStaffReview',
@@ -139,17 +155,7 @@ it('shows the locked saving decision and submits its exact review hash', async (
       billIdentifier: order.billIdentifier,
       hardwareTitle: order.hardwareTitle,
       addressSnapshot: order.addressSnapshot,
-      pricingSnapshot: {
-        lines: [
-          {
-            title: { fa: 'طرح', en: 'Saving plan' },
-            amountIrR: '300',
-            discountIrR: '0',
-            netIrR: '300',
-            vatIrR: '0',
-          },
-        ],
-      },
+      pricingSnapshot: order.pricingSnapshot,
       agreementSnapshot: 'Agreement text',
       contractId,
       contractState: 'AwaitingStaffReview',
@@ -175,7 +181,7 @@ it('shows the locked saving decision and submits its exact review hash', async (
         : url.endsWith('/financial-review')
           ? financialReview
           : url.endsWith('/approve')
-            ? { status: 'approved' }
+            ? { savingOrderId: id, status: 'approved', refundId: null }
             : url === `/api/staff/saving/orders/${id}`
               ? order
               : { orders: [order], nextAfter: null };
@@ -195,6 +201,10 @@ it('shows the locked saving decision and submits its exact review hash', async (
       (button) => button.textContent === 'Approve request'
     );
     await act(async () => approve!.click());
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+    });
     expect(fetchMock).toHaveBeenCalledWith(
       `/api/staff/saving/orders/${id}/financial-review`,
       expect.objectContaining({ body: JSON.stringify({ action: 'approve', reason: '' }) })
@@ -240,6 +250,11 @@ it('previews a fulfillment transition and submits its exact review hash', async 
     profileId,
     customerName: 'Buyer Company',
     status: 'in_progress',
+    agreementSnapshot: 'Agreement text',
+    refundedIrR: '0',
+    pendingRefundIrR: '0',
+    contractId,
+    invoiceId,
     financialStatus: 'paid',
     submittedAt: '2026-09-30T00:00:00.000Z',
     billIdentifier: '1234567890123',
@@ -307,7 +322,13 @@ it('previews a fulfillment transition and submits its exact review hash', async 
         : url === `${path}/review`
           ? financialReview
           : url === path
-            ? { status: 'in_progress' }
+            ? {
+                savingOrderId: id,
+                status: 'in_progress',
+                stage: 'product_delivery',
+                stageStatus: 'completed',
+                nextStage: 'installation_and_document_upload',
+              }
             : url === `/api/staff/saving/orders/${id}`
               ? order
               : { orders: [order], nextAfter: null };
@@ -335,6 +356,10 @@ it('previews a fulfillment transition and submits its exact review hash', async 
       (button) => button.textContent === 'Complete stage'
     );
     await act(async () => complete!.click());
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+    });
     expect(document.body.textContent).toContain('Installation and document upload');
     expect(document.body.textContent).toContain('Agreement text');
     expect(fetchMock.mock.calls.some(([url]) => url === path)).toBe(false);

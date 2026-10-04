@@ -48,7 +48,7 @@ export interface SavingHardwareSource {
 export interface SavingHardwareOwner {
   attempted: boolean;
   uncertain: boolean;
-  kind?: 'hardware' | 'cancellation';
+  kind?: 'hardware' | 'cancellation' | 'decision' | 'stage';
 }
 export type SavingHardwareReview =
   | { kind: 'hardware'; value: SavingHardwareAmendmentReview }

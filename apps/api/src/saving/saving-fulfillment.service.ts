@@ -584,6 +584,30 @@ export class SavingFulfillmentService {
     );
   }
 
+  async assertCanDecideOrAdvance(
+    id: string,
+    actor: Actor,
+    write: boolean,
+    fulfillment: boolean
+  ): Promise<void> {
+    const target = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM saving_orders WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!target) throw new NotFoundException('Saving order not found');
+    const check = async (client: PoolClient, archived: boolean) => {
+      if (archived) throw new ConflictException('Profile is archived');
+      await this.lockRow(client, id, 'SHARE');
+    };
+    if (write) {
+      if (fulfillment)
+        await staffContractMutation(target.profile_id, actor, check, { financialReview: true });
+      else await staffContractMutation(target.profile_id, actor, check);
+    } else await staffContractFinancialReview(target.profile_id, actor, check);
+  }
+
   async decisionReview(id: string, action: ReviewAction, reason: string, actor: Actor) {
     const profile = (
       await getDbPool().query<{ profile_id: string }>(
