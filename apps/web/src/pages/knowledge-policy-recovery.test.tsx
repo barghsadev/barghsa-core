@@ -559,8 +559,12 @@ it.each([
     await click('Refresh');
     expect(host.textContent).toContain(rows[0].title);
     expect(host.querySelector('[role=alert]')).not.toBeNull();
-    expect(
-      [...host.querySelectorAll<HTMLButtonElement>('ul button')].every((button) => button.disabled)
-    ).toBe(true);
+    const controls = [
+      ...host.querySelectorAll<HTMLButtonElement>(
+        'tbody button, [data-slot="card-list-view"] button'
+      ),
+    ];
+    expect(controls.length).toBeGreaterThan(0);
+    expect(controls.every((button) => button.disabled)).toBe(true);
   }
 );

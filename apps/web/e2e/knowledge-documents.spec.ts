@@ -205,10 +205,16 @@ for (const locale of ['en', 'fa'] as const)
       const digits = (n: number) =>
         new Intl.NumberFormat(locale === 'fa' ? 'en-US' : 'fa-IR').format(n);
       await expect(
-        page.getByText(`${p('priority')}: ${digits(123)}`, { exact: true })
+        page
+          .getByRole('list', { name: p('policies'), exact: true })
+          .getByText(`${p('priority')}: ${digits(123)}`, { exact: true })
       ).toBeVisible();
       await button(p('policy-groups')).click();
-      await expect(page.getByText(`${p('members')}: ${digits(12)}`, { exact: true })).toBeVisible();
+      await expect(
+        page
+          .getByRole('list', { name: p('policy-groups'), exact: true })
+          .getByText(`${p('members')}: ${digits(12)}`, { exact: true })
+      ).toBeVisible();
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true
       );

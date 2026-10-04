@@ -1,6 +1,7 @@
 import { validCatalogueCount, validCataloguePriority } from '../lib/knowledge-documents.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { CatalogueRelationEditor } from '../components/CatalogueRelationEditor.js';
+import { CatalogueRecordTable } from '../components/CatalogueRecordTable.js';
 import {
   matchesMembership,
   memberIdsBasis,
@@ -986,76 +987,80 @@ export default function AdminAiPoliciesPage({
               }
               emptyView={<p>{label('empty')}</p>}
             >
-              <ul className="divide-y">
-                {rows.map((row) => (
-                  <li
-                    key={row.id}
-                    className="flex flex-col gap-3 py-4 sm:flex-row sm:items-start sm:justify-between"
-                  >
-                    <div className="min-w-0">
-                      <h2 className="break-words font-semibold">{row.title}</h2>
-                      <p className="whitespace-pre-wrap break-words text-sm">{row.description}</p>
-                      {kind === 'policy-groups' && (
-                        <p className="text-sm text-muted-foreground">
-                          {label('members')}:{' '}
-                          {row.memberCount === undefined ? '—' : numbers.number(row.memberCount)}
-                        </p>
-                      )}
-                      {row.policyType && (
-                        <div className="mt-2 flex flex-wrap gap-2 text-sm">
-                          <span className="rounded-full bg-muted px-2 py-1">
-                            {label(row.policyType)}
-                          </span>
-                          <span className="px-2 py-1">
-                            {row.enabled === undefined
-                              ? label('unavailable')
-                              : label(row.enabled ? 'enabled' : 'disabled')}
-                          </span>
-                          <span className="px-2 py-1">
-                            {label('priority')}:{' '}
+              <CatalogueRecordTable
+                rows={rows}
+                locale={locale}
+                caption={label(kind)}
+                nameLabel={label('name')}
+                detailsLabel={copy('tableDetails')}
+                actionsLabel={copy('tableActions')}
+                renderDetails={(row) => (
+                  <div className="space-y-2 text-sm text-muted-foreground">
+                    {kind === 'policy-groups' && (
+                      <p className="text-sm text-muted-foreground">
+                        {label('members')}:{' '}
+                        {row.memberCount === undefined ? '—' : numbers.number(row.memberCount)}
+                      </p>
+                    )}
+                    {row.policyType && (
+                      <div className="mt-2 flex flex-wrap gap-2 text-sm">
+                        <span className="rounded-full bg-muted px-2 py-1">
+                          {label(row.policyType)}
+                        </span>
+                        <span className="px-2 py-1">
+                          {row.enabled === undefined
+                            ? label('unavailable')
+                            : label(row.enabled ? 'enabled' : 'disabled')}
+                        </span>
+                        <span className="px-2 py-1">
+                          {label('priority')}:{' '}
+                          <bdi>
                             {row.priority === undefined ? '—' : numbers.number(row.priority)}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex shrink-0 flex-wrap gap-2">
-                      {kind === 'policy-groups' && (
-                        <Button
-                          variant="outline"
-                          aria-label={`${label('open')} ${row.title}`}
-                          disabled={disabled || form.pending || !!action || pending}
-                          onClick={() => open(row.id)}
-                        >
-                          {label('open')}
-                        </Button>
-                      )}
+                          </bdi>
+                        </span>
+                      </div>
+                    )}
+                    {kind === 'policies' && !row.policyType && <p>{label('unavailable')}</p>}
+                  </div>
+                )}
+                renderActions={(row) => (
+                  <>
+                    {kind === 'policy-groups' && (
                       <Button
                         variant="outline"
-                        aria-label={`${label('edit')} ${row.title}`}
+                        aria-label={`${label('open')} ${row.title}`}
                         disabled={disabled || form.pending || !!action || pending}
-                        onClick={() => edit(row)}
+                        onClick={() => open(row.id)}
                       >
-                        {label('edit')}
+                        {label('open')}
                       </Button>
-                      <Button
-                        variant="outline"
-                        aria-label={`${label('delete')} ${row.title}`}
-                        disabled={disabled || form.pending || !!action || pending}
-                        onClick={() =>
-                          propose(
-                            `/api/admin/${kind}/${row.id}`,
-                            'DELETE',
-                            label('delete'),
-                            `${row.title}. ${label('confirmDelete')}`
-                          )
-                        }
-                      >
-                        {label('delete')}
-                      </Button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                    )}
+                    <Button
+                      variant="outline"
+                      aria-label={`${label('edit')} ${row.title}`}
+                      disabled={disabled || form.pending || !!action || pending}
+                      onClick={() => edit(row)}
+                    >
+                      {label('edit')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      aria-label={`${label('delete')} ${row.title}`}
+                      disabled={disabled || form.pending || !!action || pending}
+                      onClick={() =>
+                        propose(
+                          `/api/admin/${kind}/${row.id}`,
+                          'DELETE',
+                          label('delete'),
+                          `${row.title}. ${label('confirmDelete')}`
+                        )
+                      }
+                    >
+                      {label('delete')}
+                    </Button>
+                  </>
+                )}
+              />
             </ListPage.Content>
             {selected && kind === 'policy-groups' && (
               <section className="flex flex-col gap-4 border-t pt-5" aria-label={label('members')}>

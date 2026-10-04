@@ -102,6 +102,7 @@ for (const locale of ['en', 'fa'] as const)
       priorityOverride: null as number | null,
     };
     const group = { id: '01900000-0000-7000-8000-000000000002', title: 'Support', description: '' };
+    const policies: Record<string, unknown>[] = [{ ...policy }];
     const writes: unknown[] = [];
     let linked = false,
       memberOverride: number | null = null,
@@ -119,13 +120,27 @@ for (const locale of ['en', 'fa'] as const)
       })
     );
     await page.route('**/api/admin/policies', (route) => {
-      if (route.request().method() === 'GET') return route.fulfill({ json: [policy] });
-      writes.push(route.request().postDataJSON());
-      return route.fulfill({ status: 201, json: policy });
+      if (route.request().method() === 'GET') return route.fulfill({ json: policies });
+      const body = route.request().postDataJSON();
+      writes.push(body);
+      const created = {
+        ...policy,
+        ...body,
+        id: `01900000-0000-7000-8000-${String(policies.length + 1).padStart(12, '0')}`,
+      };
+      policies.push(created);
+      return route.fulfill({ status: 201, json: created });
     });
-    await page.route(`**/api/admin/policies/${policy.id}`, (route) => {
-      writes.push(route.request().postDataJSON());
-      return route.fulfill({ json: policy });
+    await page.route('**/api/admin/policies/*', (route) => {
+      const id = new URL(route.request().url()).pathname.split('/').at(-1);
+      const index = policies.findIndex((row) => row.id === id);
+      if (index < 0) return route.fulfill({ status: 404, json: {} });
+      if (route.request().method() !== 'GET') {
+        const body = route.request().postDataJSON();
+        writes.push(body);
+        policies[index] = { ...policies[index], ...body };
+      }
+      return route.fulfill({ json: policies[index] });
     });
     await page.route('**/api/admin/policy-groups', (route) => {
       if (route.request().method() === 'GET')
@@ -138,7 +153,7 @@ for (const locale of ['en', 'fa'] as const)
       route.fulfill({
         json: {
           ...group,
-          members: linked ? [{ ...policy, priorityOverride: memberOverride }] : [],
+          members: linked ? [{ ...policies[0], priorityOverride: memberOverride }] : [],
         },
       })
     );
@@ -161,7 +176,7 @@ for (const locale of ['en', 'fa'] as const)
         page
           .getByRole('button', { name: label('addPolicy'), exact: true })
           .or(page.getByRole('button', { name: label('addGroup'), exact: true }))
-      ).toBeVisible();
+      ).toBeEnabled();
     };
     await page.goto('/admin/policies');
     await page.getByRole('button', { name: `${label('edit')} Energy`, exact: true }).click();

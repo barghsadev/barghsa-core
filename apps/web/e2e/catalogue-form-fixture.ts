@@ -4,7 +4,11 @@ export async function setupCatalogueForms(
   page: Page,
   locale: 'fa' | 'en',
   darkMode: boolean,
-  backgrounds: { backgroundColor?: string; darkBackgroundColor?: string } = {}
+  backgrounds: {
+    backgroundColor?: string;
+    darkBackgroundColor?: string;
+    numberStyle?: 'locale' | 'persian' | 'western';
+  } = {}
 ) {
   await page.addInitScript((locale) => localStorage.setItem('barghsa.locale', locale), locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
@@ -39,7 +43,7 @@ export async function setupCatalogueForms(
         logoUrl: null,
         faviconUrl: null,
         darkMode,
-        numberStyle: locale === 'fa' ? 'persian' : 'western',
+        numberStyle: backgrounds.numberStyle ?? (locale === 'fa' ? 'persian' : 'western'),
       },
     })
   );

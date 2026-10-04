@@ -246,7 +246,7 @@ function SortIcon({ columnId, currentSort }: { columnId: string; currentSort: So
   return <ChevronDownIcon aria-hidden="true" className="ms-1 size-3.5 shrink-0" />;
 }
 
-function DataTable<T extends Record<string, unknown>>({
+function DataTable<T extends object>({
   locale = 'en',
   numerals,
   columns,
@@ -463,7 +463,9 @@ function DataTable<T extends Record<string, unknown>>({
                           {col.cell
                             ? col.cell(row as T, index)
                             : col.accessorKey
-                              ? ((row[col.accessorKey as string] as React.ReactNode) ?? '-')
+                              ? (((row as Record<string, unknown>)[
+                                  col.accessorKey as string
+                                ] as React.ReactNode) ?? '-')
                               : '-'}
                         </td>
                       ))}

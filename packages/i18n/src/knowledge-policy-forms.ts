@@ -1,5 +1,7 @@
 import type { Locale } from './index.js';
 const en = {
+  tableActions: 'Actions',
+  tableDetails: 'Details',
   search: 'Use at most 200 characters to search documents.',
   storageKey: 'Choose an available document that is not already attached.',
   file: 'Choose a non-empty PDF, Word, Excel, text or CSV document.',
@@ -33,6 +35,8 @@ const en = {
   reset: 'Reset to saved settings',
 };
 const fa: Record<keyof typeof en, string> = {
+  tableActions: 'اقدامات',
+  tableDetails: 'جزئیات',
   search: 'برای جست‌وجوی سند حداکثر ۲۰۰ نویسه وارد کنید.',
   storageKey: 'سندی در دسترس را انتخاب کنید که قبلاً پیوست نشده است.',
   file: 'یک سند PDF، Word، Excel، متنی یا CSV غیرخالی انتخاب کنید.',

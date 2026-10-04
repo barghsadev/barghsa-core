@@ -5,6 +5,7 @@ import {
   type KnowledgeDocumentCommand,
 } from '../lib/knowledge-documents.js';
 import { CatalogueRelationEditor } from '../components/CatalogueRelationEditor.js';
+import { CatalogueRecordTable } from '../components/CatalogueRecordTable.js';
 import {
   matchesMembership,
   memberIdsBasis,
@@ -1016,81 +1017,82 @@ export default function AdminKnowledgeBasesPage({
               }
               emptyView={<p>{label('empty')}</p>}
             >
-              <ul className="divide-y">
-                {rows.map((row) => (
-                  <li
-                    key={row.id}
-                    className="flex flex-col gap-3 py-4 sm:flex-row sm:items-start sm:justify-between"
-                  >
-                    <div className="min-w-0">
-                      <h2 className="break-words font-semibold">{row.title}</h2>
-                      <p className="whitespace-pre-wrap break-words text-sm">{row.description}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {label(kind === 'knowledge-bases' ? 'documents' : 'members')}:{' '}
-                        {(kind === 'knowledge-bases' ? row.documentCount : row.memberCount) ===
-                        undefined
-                          ? '—'
-                          : numbers.number(
-                              (kind === 'knowledge-bases' ? row.documentCount : row.memberCount)!
-                            )}
-                      </p>
-                      {kind === 'knowledge-bases' && (
-                        <div className="space-y-1 text-sm text-muted-foreground">
-                          <p>
-                            {label('contentState')}:{' '}
-                            {row.contentState === undefined
-                              ? label('unknown')
-                              : label(`state${row.contentState}`)}
-                            {' · '}
-                            {row.isEnabled === undefined
-                              ? label('unknown')
-                              : label(row.isEnabled ? 'enabled' : 'disabled')}
-                          </p>
-                          <p>
-                            {label('audience')}:{' '}
-                            {row.audience === undefined
-                              ? label('unknown')
-                              : label(`audience${row.audience}`)}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex shrink-0 flex-wrap gap-2">
-                      <Button
-                        variant="outline"
-                        disabled={disabled || form.pending || !!action || pending}
-                        onClick={() => open(row.id)}
-                        aria-label={`${label('open')} ${row.title}`}
-                      >
-                        {label('open')}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        disabled={disabled || form.pending || !!action || pending}
-                        onClick={() => edit(row)}
-                        aria-label={`${label('edit')} ${row.title}`}
-                      >
-                        {label('edit')}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        disabled={disabled || form.pending || !!action || pending}
-                        onClick={() =>
-                          propose(
-                            `/api/admin/${kind}/${row.id}`,
-                            'DELETE',
-                            label('delete'),
-                            `${row.title}. ${label('confirmDelete')}`
-                          )
-                        }
-                        aria-label={`${label('delete')} ${row.title}`}
-                      >
-                        {label('delete')}
-                      </Button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              <CatalogueRecordTable
+                rows={rows}
+                locale={locale}
+                caption={label(kind)}
+                nameLabel={label('name')}
+                detailsLabel={copy('tableDetails')}
+                actionsLabel={copy('tableActions')}
+                renderDetails={(row) => (
+                  <div className="space-y-2 text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground">
+                      {label(kind === 'knowledge-bases' ? 'documents' : 'members')}:{' '}
+                      {(kind === 'knowledge-bases' ? row.documentCount : row.memberCount) ===
+                      undefined
+                        ? '—'
+                        : numbers.number(
+                            (kind === 'knowledge-bases' ? row.documentCount : row.memberCount)!
+                          )}
+                    </p>
+                    {kind === 'knowledge-bases' && (
+                      <div className="space-y-1 text-sm text-muted-foreground">
+                        <p>
+                          {label('contentState')}:{' '}
+                          {row.contentState === undefined
+                            ? label('unknown')
+                            : label(`state${row.contentState}`)}
+                          {' · '}
+                          {row.isEnabled === undefined
+                            ? label('unknown')
+                            : label(row.isEnabled ? 'enabled' : 'disabled')}
+                        </p>
+                        <p>
+                          {label('audience')}:{' '}
+                          {row.audience === undefined
+                            ? label('unknown')
+                            : label(`audience${row.audience}`)}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+                renderActions={(row) => (
+                  <>
+                    <Button
+                      variant="outline"
+                      disabled={disabled || form.pending || !!action || pending}
+                      onClick={() => open(row.id)}
+                      aria-label={`${label('open')} ${row.title}`}
+                    >
+                      {label('open')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled={disabled || form.pending || !!action || pending}
+                      onClick={() => edit(row)}
+                      aria-label={`${label('edit')} ${row.title}`}
+                    >
+                      {label('edit')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled={disabled || form.pending || !!action || pending}
+                      onClick={() =>
+                        propose(
+                          `/api/admin/${kind}/${row.id}`,
+                          'DELETE',
+                          label('delete'),
+                          `${row.title}. ${label('confirmDelete')}`
+                        )
+                      }
+                      aria-label={`${label('delete')} ${row.title}`}
+                    >
+                      {label('delete')}
+                    </Button>
+                  </>
+                )}
+              />
             </ListPage.Content>
             {detail && (
               <section aria-label={detail.title} className="flex flex-col gap-4 border-t pt-5">

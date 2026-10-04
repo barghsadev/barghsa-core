@@ -50,7 +50,8 @@ test('ESM and CommonJS consumers resolve strict public prop types', () => {
       import type { FormInputProps, FormTextareaProps, FormPhoneInputProps, FormSelectProps, FormCheckboxProps, FormSwitchProps, FormRadioGroupProps, FormComboboxProps, FormSliderProps, FormDatePickerProps, FormDateRangePickerProps, FormStepProps } from '@barghsa/ui/form';
       import { z } from 'zod';
       import { createElement } from 'react';
-      const table: DataTableProps<{ id: string; amount: string }> = {
+      interface CatalogueRow { id: string; amount: string }
+      const table: DataTableProps<CatalogueRow> = {
         columns: [{ id: 'amount', header: 'Amount', accessorKey: 'amount' }], data: [], keyExtractor: row => row.id,
         caption: 'Invoices', stickyHeader: true, rowLabel: row => row.id,
         renderCard: row => createElement(TextCell, { value: row.amount }),
@@ -58,6 +59,7 @@ test('ESM and CommonJS consumers resolve strict public prop types', () => {
         expandedRows: new Set(['one']), onExpansionChange: keys => { const selected: Set<string | number> = keys; void selected; },
       };
       const cards: CardListViewProps<{ id: string }> = { data: [], keyExtractor: row => row.id, renderCard: row => row.id };
+      const interfaceTable = createElement(DataTable<CatalogueRow>, table);
       // @ts-expect-error Stable row keys cannot be boolean.
       cards.keyExtractor = row => !!row.id;
       const action: CellAction = { id: 'view', label: 'View', onSelect: () => {} };
@@ -65,7 +67,7 @@ test('ESM and CommonJS consumers resolve strict public prop types', () => {
       const currency: Parameters<typeof CurrencyCell>[0] = { amount: '9007199254740993123', format: amount => String(amount) };
       // @ts-expect-error Numbers cannot be ambiguous strings.
       const badNumber: Parameters<typeof NumberCell>[0] = { value: '1.5' };
-      void [table, cards, action, cellDate, currency, badNumber, DataTable, CardListView, TextCell, NumberCell, CurrencyCell, StatusCell, AvatarCell, ActionCell, LinkCell];
+      void [table, interfaceTable, cards, action, cellDate, currency, badNumber, DataTable, CardListView, TextCell, NumberCell, CurrencyCell, StatusCell, AvatarCell, ActionCell, LinkCell];
       function AddressForm() {
         const form = useZodForm(z.object({ postalCode: z.string().transform(Number) }), {
           defaultValues: { postalCode: '1234567890' },
