@@ -87,6 +87,7 @@ describe('AdminService staff assignment rules (T-09.08.02)', () => {
       expect(result).toEqual({
         ticket: { teamId: 'team-1', strategy: 'round_robin' },
         verification_case: { teamId: null, strategy: 'load' },
+        consultation: DEFAULT_STAFF_ASSIGNMENT_RULES.consultation,
       });
     });
 
@@ -120,7 +121,7 @@ describe('AdminService staff assignment rules (T-09.08.02)', () => {
       mockQuery.mockResolvedValueOnce({
         rows: [
           {
-            value: { consultation: { teamId: 't-9', strategy: 'load' } },
+            value: { consultations: { teamId: 't-9', strategy: 'load' } },
           },
         ],
       });
@@ -128,6 +129,7 @@ describe('AdminService staff assignment rules (T-09.08.02)', () => {
       const result = await service.getStaffAssignmentRules();
       expect(result.ticket).toEqual(DEFAULT_STAFF_ASSIGNMENT_RULES.ticket);
       expect(result.verification_case).toEqual(DEFAULT_STAFF_ASSIGNMENT_RULES.verification_case);
+      expect(result.consultation).toEqual(DEFAULT_STAFF_ASSIGNMENT_RULES.consultation);
     });
   });
 
@@ -137,7 +139,7 @@ describe('AdminService staff assignment rules (T-09.08.02)', () => {
 
       await expect(
         service.setStaffAssignmentRules(
-          { consultation: { teamId: 't', strategy: 'load' } },
+          { consultations: { teamId: 't', strategy: 'load' } },
           actor,
           'ip'
         )
@@ -221,6 +223,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       };
       client.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // routing advisory
         .mockResolvedValueOnce({ rows: [{ user_id: 'u-1' }, { user_id: 'u-2' }] }) // members exist
         .mockResolvedValueOnce({ rows: [teamRow] }) // INSERT staff_teams RETURNING
         .mockResolvedValueOnce({ rows: [] }) // INSERT members
@@ -266,6 +269,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       };
       client.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // routing advisory
         .mockResolvedValueOnce({ rows: [teamRow] }) // INSERT staff_teams RETURNING
         .mockResolvedValueOnce({ rows: [] }) // audit
         .mockResolvedValueOnce({ rows: [] }); // COMMIT
@@ -285,6 +289,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       mockConnect.mockResolvedValue(client);
       client.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // routing advisory
         .mockResolvedValueOnce({ rows: [{ user_id: 'u-1' }] }) // only u-1 exists
         .mockResolvedValueOnce({ rows: [] }); // ROLLBACK
 
@@ -303,7 +308,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       mockConnect.mockResolvedValue(client);
       client.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
-        .mockResolvedValueOnce({ rows: [] }) // members exist (none)
+        .mockResolvedValueOnce({ rows: [] }) // routing advisory
         .mockRejectedValueOnce(
           Object.assign(new Error('duplicate key value violates unique constraint "uq_st_name"'), {
             code: '23505',
@@ -329,6 +334,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       mockConnect.mockResolvedValue(client);
       client.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // routing advisory
         .mockResolvedValueOnce({ rows: [] }) // observed members
         .mockResolvedValueOnce({ rows: [] }) // SELECT FOR UPDATE
         .mockResolvedValueOnce({ rows: [] }); // ROLLBACK
@@ -354,6 +360,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       const updatedRow = { ...existingRow, name: 'Billing Plus' };
       client.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // routing advisory
         .mockResolvedValueOnce({ rows: [{ user_id: 'u-1' }] }) // observed members
         .mockResolvedValueOnce({ rows: [existingRow] }) // SELECT FOR UPDATE
         .mockResolvedValueOnce({ rows: [{ user_id: 'u-1' }] }) // prev members
@@ -408,6 +415,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       };
       client.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // routing advisory
         .mockResolvedValueOnce({ rows: [{ user_id: 'u-1' }] }) // observed members
         .mockResolvedValueOnce({ rows: [existingRow] }) // SELECT FOR UPDATE
         .mockResolvedValueOnce({ rows: [{ user_id: 'u-1' }] }) // prev members
@@ -426,6 +434,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       mockConnect.mockResolvedValue(client);
       client.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // routing advisory
         .mockResolvedValueOnce({ rows: [] }) // SELECT FOR UPDATE
         .mockResolvedValueOnce({ rows: [] }); // ROLLBACK
 
@@ -440,6 +449,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       mockConnect.mockResolvedValue(client);
       client.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // routing advisory
         .mockResolvedValueOnce({ rows: [{ id: 'team-1', name: 'Billing' }] }) // SELECT FOR UPDATE
         .mockResolvedValueOnce({ rows: [] }) // DELETE team
         .mockResolvedValueOnce({ rows: [] }) // audit

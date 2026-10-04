@@ -1,4 +1,5 @@
 import { expect, it } from 'vitest';
+import { STAFF_ASSIGNMENT_WORK_TYPES } from '@barghsa/shared/admin';
 import {
   emptyTeamDraft,
   teamBody,
@@ -6,6 +7,7 @@ import {
   routingInvalidFields,
   routingValues,
   routingBody,
+  ruleField,
   validTeams,
   validMembers,
   validRouting,
@@ -71,6 +73,27 @@ it('rejects duplicate, withdrawn and malformed priority chains while preserving 
   expect(routingInvalidFields(active, [])).toEqual(['ticketRule']);
   expect(routingInvalidFields(routingValues(staffRoutingRules), [])).toEqual([]);
   expect(routingBody(routingValues(staffRoutingRules))).toEqual(staffRoutingRules);
+});
+it('retains and validates consultation priorities independently from other work types', () => {
+  const rules = {
+    ...staffRoutingRules,
+    consultation: {
+      teamId: staffTeamId,
+      strategy: 'load' as const,
+      fallbacks: [
+        { teamId: '33333333-3333-4333-8333-333333333333', strategy: 'expertise' as const },
+      ],
+    },
+  };
+  const draft = routingValues(rules);
+  expect(Object.keys(draft).sort()).toEqual(STAFF_ASSIGNMENT_WORK_TYPES.map(ruleField).sort());
+  expect(routingBody(draft)).toEqual(rules);
+  expect(routingInvalidFields(draft, [staffTeamId])).toEqual(['consultationRule']);
+  expect(routingBasis(rules)).not.toBe(routingBasis(staffRoutingRules));
+  draft.consultationRule.fallbacks = [];
+  expect(routingInvalidFields(draft, [staffTeamId])).toEqual([]);
+  expect(rules.consultation.fallbacks).toHaveLength(1);
+  expect(validRouting({ ...rules, consultation: undefined })).toBe(false);
 });
 it('accepts only complete directory, candidate and configuration reads', () => {
   expect(validTeams([staffTeam])).toBe(true);

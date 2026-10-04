@@ -1,0 +1,3 @@
+ALTER TABLE "staff_assignment_cursors" DROP CONSTRAINT "staff_assignment_cursors_work_type_check";--> statement-breakpoint
+CREATE INDEX "consultation_open_owner_idx" ON "consultation_requests" USING btree ("staff_owner_id") WHERE "consultation_requests"."status" NOT IN ('offer_declined','completed','rejected','cancelled');--> statement-breakpoint
+ALTER TABLE "staff_assignment_cursors" ADD CONSTRAINT "staff_assignment_cursors_work_type_check" CHECK ("staff_assignment_cursors"."work_type" IN ('ticket','verification_case','consultation'));

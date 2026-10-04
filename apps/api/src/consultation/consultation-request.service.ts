@@ -12,6 +12,7 @@ import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { OrdersService } from '../orders/orders.service.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
+import { StaffAssignmentService } from '../staff-assignment/staff-assignment.service.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 interface ProductRow {
@@ -30,7 +31,10 @@ export interface ConsultationSubmission {
 
 @Injectable()
 export class ConsultationRequestService {
-  constructor(private readonly orders: OrdersService) {}
+  constructor(
+    private readonly orders: OrdersService,
+    private readonly assignmentService: StaffAssignmentService
+  ) {}
 
   private readonly productSql = `SELECT p.id,p.system_key,p.title,p.description,
     (p.system_key='electricity_saving_certificate' OR EXISTS(
@@ -78,16 +82,42 @@ export class ConsultationRequestService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      await this.orders.lockOrderActor(client, actor);
-      if (!(await this.orders.mayManageOrders(client, actor.userId, input.profileId, true)))
-        throw new NotFoundException('Profile not found');
-      await this.orders.lockProfileSubmissions(client, input.profileId);
+      // Serialize identical submissions before routing. Replays must not consume
+      // a round-robin position or create another assignment audit/notification.
+      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
+        `consultation-submission:${actor.userId}:${input.submissionKey}`,
+      ]);
       const previous = (
         await client.query<{ id: string; profile_id: string; product_id: string }>(
           'SELECT id,profile_id,product_id FROM consultation_requests WHERE submitted_by=$1 AND submission_key=$2',
           [actor.userId, input.submissionKey]
         )
       ).rows[0];
+      const requestId = uuidv7();
+      const productHint = previous
+        ? null
+        : (
+            await client.query<{ system_key: string | null }>(
+              'SELECT system_key FROM products WHERE id=$1',
+              [input.productId]
+            )
+          ).rows[0];
+      // Teams and all candidate/actor accounts lock in the shared engine's
+      // stable order before the ordinary actor/session submission boundary.
+      const assignment = previous
+        ? null
+        : await this.assignmentService.choose(
+            client,
+            'consultation',
+            requestId,
+            actor.userId,
+            [productHint?.system_key ?? input.productId],
+            [actor.userId]
+          );
+      await this.orders.lockOrderActor(client, actor);
+      if (!(await this.orders.mayManageOrders(client, actor.userId, input.profileId, true)))
+        throw new NotFoundException('Profile not found');
+      await this.orders.lockProfileSubmissions(client, input.profileId);
       if (previous) {
         if (previous.profile_id !== input.profileId || previous.product_id !== input.productId)
           throw new BadRequestException('Submission key belongs to another request');
@@ -109,11 +139,10 @@ export class ConsultationRequestService {
       if (!product) throw new BadRequestException('Choose an active consultation product');
       if (product.legal_only && profile.profile_type !== 'LEGAL')
         throw new BadRequestException('This consultation requires a legal-entity profile');
-      const requestId = uuidv7();
       await client.query(
         `INSERT INTO consultation_requests(id,profile_id,product_id,product_snapshot,
-          submitted_by,submission_key,status)
-         VALUES($1,$2,$3,$4::jsonb,$5,$6,'submitted')`,
+            submitted_by,submission_key,status,staff_owner_id,staff_team)
+           VALUES($1,$2,$3,$4::jsonb,$5,$6,'submitted',$7,$8)`,
         [
           requestId,
           input.profileId,
@@ -125,6 +154,8 @@ export class ConsultationRequestService {
           }),
           actor.userId,
           input.submissionKey,
+          assignment?.userId ?? null,
+          assignment?.teamName ?? null,
         ]
       );
       await client.query(
@@ -151,6 +182,28 @@ export class ConsultationRequestService {
               },
             },
             link: `/consultations/${requestId}`,
+          },
+          client
+        );
+      }
+      if (assignment) {
+        await new NotificationsService().create(
+          {
+            userId: assignment.userId,
+            operatingContext: 'staff',
+            type: 'general',
+            title: 'Consultation assigned',
+            localizedContent: {
+              fa: {
+                title: 'مشاوره به شما ارجاع شد',
+                body: 'یک درخواست مشاوره برای بررسی به شما ارجاع شد.',
+              },
+              en: {
+                title: 'Consultation assigned',
+                body: 'A consultation request has been assigned to you for review.',
+              },
+            },
+            link: `/admin/consultations?requestId=${requestId}`,
           },
           client
         );

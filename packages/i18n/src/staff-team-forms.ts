@@ -11,7 +11,7 @@ export const fa: Record<string, string> = {
   'admin.teams.rulesRetry': 'تلاش دوباره برای دریافت قوانین',
   'admin.teams.title': 'تیم‌ها و تخصیص کار',
   'admin.teams.description':
-    'قوانین فقط بر تیکت‌ها و پرونده‌های جدید اعمال می‌شوند. کارهای قبلی جابه‌جا نمی‌شوند.',
+    'قوانین فقط بر تیکت‌ها، پرونده‌های اصلاح هویت و درخواست‌های مشاوره جدید اعمال می‌شوند. کارهای قبلی جابه‌جا نمی‌شوند.',
   'admin.teams.saved': 'تغییرات ذخیره شد.',
   'admin.teams.loading': 'در حال بارگذاری…',
   'admin.teams.error': 'دریافت تنظیمات ممکن نیست یا دسترسی ندارید.',
@@ -47,9 +47,10 @@ export const fa: Record<string, string> = {
   'admin.teams.moveUp': 'افزایش اولویت',
   'admin.teams.moveDown': 'کاهش اولویت',
   'admin.teams.expertiseHelp':
-    'مهارت بر اساس برچسب تیم است و فرد واجد شرایط با کمترین کار باز انتخاب می‌شود. برچسب ticket یا verification_case کل نوع کار را پوشش می‌دهد؛ برچسب‌های جزئی support، order، invoice، identity، individual و legal هستند. نبود تیم یا عضو واجد شرایط به تخصیص دستی منجر می‌شود.',
+    'مهارت بر اساس برچسب تیم است و فرد واجد شرایط با کمترین کار باز انتخاب می‌شود. برچسب ticket، verification_case یا consultation کل نوع کار را پوشش می‌دهد؛ برچسب‌های جزئی support، order، invoice، identity، individual و legal هستند. نبود تیم یا عضو واجد شرایط به تخصیص دستی منجر می‌شود.',
   'admin.teams.ticket': 'تیکت‌ها',
   'admin.teams.verification_case': 'پرونده‌های اصلاح هویت',
+  'admin.teams.consultation': 'درخواست‌های مشاوره',
   'admin.teams.team': 'تیم مسئول',
   'admin.teams.manual': 'تخصیص دستی',
   'admin.teams.unavailable': 'تیم در دسترس نیست — تخصیص دستی',
@@ -87,7 +88,7 @@ export const en: Record<string, string> = {
   'admin.teams.rulesRetry': 'Retry assignment rules',
   'admin.teams.title': 'Teams and work assignment',
   'admin.teams.description':
-    'Rules apply only to new tickets and correction cases. Existing work keeps its assignee.',
+    'Rules apply only to new tickets, correction cases and consultation requests. Existing work keeps its assignee.',
   'admin.teams.saved': 'Changes saved.',
   'admin.teams.loading': 'Loading…',
   'admin.teams.error': 'Settings could not be loaded, or you do not have access.',
@@ -123,9 +124,10 @@ export const en: Record<string, string> = {
   'admin.teams.moveUp': 'Move up',
   'admin.teams.moveDown': 'Move down',
   'admin.teams.expertiseHelp':
-    'Expertise matches team tags, then picks the eligible member with the least open work. Use ticket or verification_case for a whole work type; narrower tags are support, order, invoice, identity, individual and legal. No available team or eligible member means manual assignment.',
+    'Expertise matches team tags, then picks the eligible member with the least open work. Use ticket, verification_case or consultation for a whole work type; narrower tags are support, order, invoice, identity, individual and legal. No available team or eligible member means manual assignment.',
   'admin.teams.ticket': 'Tickets',
   'admin.teams.verification_case': 'Identity correction cases',
+  'admin.teams.consultation': 'Consultation requests',
   'admin.teams.team': 'Assigned team',
   'admin.teams.manual': 'Manual assignment',
   'admin.teams.unavailable': 'Team unavailable — manual assignment',

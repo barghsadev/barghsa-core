@@ -1,5 +1,6 @@
 import { fullNavigation } from './navigation-fixture';
 import { test, expect } from './coverage-fixture';
+import { DEFAULT_STAFF_ASSIGNMENT_RULES, type StaffAssignmentRules } from '@barghsa/shared/admin';
 const id = '11111111-1111-4111-8111-111111111111';
 for (const locale of ['en', 'fa'])
   test(`staff team and routing changes survive confirmation and failure (${locale})`, async ({
@@ -48,10 +49,7 @@ for (const locale of ['en', 'fa'])
     let teams: Array<{ id: string; name: string; memberUserIds: string[]; isActive: boolean }> = [],
       verified = false,
       fail = false;
-    let rules = {
-      ticket: { teamId: null as string | null, strategy: 'round_robin' },
-      verification_case: { teamId: null as string | null, strategy: 'round_robin' },
-    };
+    let rules = structuredClone(DEFAULT_STAFF_ASSIGNMENT_RULES);
     const bodies: unknown[] = [];
     await page.route('**/api/admin/staff-teams/members?*', (route) =>
       route.fulfill({
@@ -169,16 +167,9 @@ for (const locale of ['en', 'fa']) {
       skillTags: [],
       isActive: true,
     }));
-    let rules: {
-      ticket: {
-        teamId: string | null;
-        strategy: string;
-        fallbacks?: Array<{ teamId: string; strategy: string }>;
-      };
-      verification_case: { teamId: null; strategy: string };
-    } = {
+    let rules: StaffAssignmentRules = {
+      ...structuredClone(DEFAULT_STAFF_ASSIGNMENT_RULES),
       ticket: { teamId: first, strategy: 'load' },
-      verification_case: { teamId: null, strategy: 'round_robin' },
     };
     let fail = true;
     await page.route('**/api/admin/staff-teams', (route) => route.fulfill({ json: teams }));

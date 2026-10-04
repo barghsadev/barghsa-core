@@ -9,6 +9,8 @@ import {
   staffRoutingRules,
 } from '../test/staff-directory-fixtures.js';
 import type { TeamAction } from '../components/TeamActionDialog.js';
+import { STAFF_ASSIGNMENT_WORK_TYPES } from '@barghsa/shared/admin';
+import { ruleField } from '../lib/staff-team-form.js';
 type SchemaModule = typeof import('../lib/catalogue-form-schemas.js');
 interface Command {
   action: TeamAction;
@@ -328,21 +330,24 @@ it('withdrawn teams produce linked rule feedback and never reach confirmation', 
   await submit('rules');
   expect(harness.command!.action.body).toEqual(staffRoutingRules);
 });
-it('owned rule errors retain priorities and focus the registered primary team control', async () => {
-  await mount();
-  await fill('#team-ticket', staffTeamId);
-  await submit('rules');
-  const command = harness.command!;
-  await act(async () => {
-    expect(command.onValidationError(['ticketRule', 'actorUserId'])).toBe(false);
-    expect(command.onValidationError(['name'])).toBe(false);
-    expect(command.onValidationError(['ticketRule'])).toBe(true);
-    command.onClose();
-  });
-  await vi.waitFor(() => expect(document.activeElement).toBe(input('#team-ticket')));
-  expect(input('#team-ticket').getAttribute('aria-invalid')).toBe('true');
-  expect(input('#team-ticket').value).toBe(staffTeamId);
-});
+it.each(STAFF_ASSIGNMENT_WORK_TYPES)(
+  'owned %s errors retain priorities and focus the registered primary team control',
+  async (type) => {
+    await mount();
+    await fill(`#team-${type}`, staffTeamId);
+    await submit('rules');
+    const command = harness.command!;
+    await act(async () => {
+      expect(command.onValidationError([ruleField(type), 'actorUserId'])).toBe(false);
+      expect(command.onValidationError(['name'])).toBe(false);
+      expect(command.onValidationError([ruleField(type)])).toBe(true);
+      command.onClose();
+    });
+    await vi.waitFor(() => expect(document.activeElement).toBe(input(`#team-${type}`)));
+    expect(input(`#team-${type}`).getAttribute('aria-invalid')).toBe('true');
+    expect(input(`#team-${type}`).value).toBe(staffTeamId);
+  }
+);
 it('fresh ineligible members block save with feedback while keeping member and lead choices', async () => {
   await mount();
   await click('Edit team');

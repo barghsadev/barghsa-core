@@ -20,6 +20,7 @@ it('resolves field feedback and retained-draft guidance in both languages', () =
       'staleTeam',
       'staleRules',
       'unverified',
+      'consultation',
     ]) {
       const value = tStaffTeams(`admin.teams.${key}`, locale);
       expect(value).not.toContain('admin.teams.');

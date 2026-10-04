@@ -67,6 +67,12 @@ it('returns owned field errors over HTTP without reflecting submitted values', a
       ['leadUserId'],
     ],
     ['config/assignment-rules', 'PUT', { ticket: { strategy: 'PRIVATE' } }, ['ticketRule']],
+    [
+      'config/assignment-rules',
+      'PUT',
+      { consultation: { strategy: 'PRIVATE' } },
+      ['consultationRule'],
+    ],
   ] as const) {
     const response = await call(path, method, body),
       result = (await response.json()) as { error: { code: string; fields: string[] } };

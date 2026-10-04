@@ -14,11 +14,16 @@ describe('staff assignment rules contract (T-09.08.02)', () => {
     expect(DEFAULT_STAFF_ASSIGNMENT_RULES).toEqual({
       ticket: { teamId: null, strategy: 'round_robin' },
       verification_case: { teamId: null, strategy: 'round_robin' },
+      consultation: { teamId: null, strategy: 'round_robin' },
     });
   });
 
   it('work types cover exactly the assignable domains today', () => {
-    expect([...STAFF_ASSIGNMENT_WORK_TYPES].sort()).toEqual(['ticket', 'verification_case']);
+    expect([...STAFF_ASSIGNMENT_WORK_TYPES].sort()).toEqual([
+      'consultation',
+      'ticket',
+      'verification_case',
+    ]);
   });
 
   describe('isValidStaffAssignmentStrategy', () => {
@@ -43,6 +48,7 @@ describe('staff assignment rules contract (T-09.08.02)', () => {
       const result = validateStaffAssignmentRules({
         ticket: { teamId: 'team-1', strategy: 'round_robin' },
         verification_case: { teamId: null, strategy: 'expertise' },
+        consultation: { teamId: 'team-2', strategy: 'load' },
       });
       expect(result.ok).toBe(true);
       expect(result.issues).toEqual([]);
@@ -51,10 +57,10 @@ describe('staff assignment rules contract (T-09.08.02)', () => {
     it('rejects unknown work types so typos cannot create dead config', () => {
       const result = validateStaffAssignmentRules({
         ticket: { teamId: 'team-1', strategy: 'round_robin' },
-        consultation: { teamId: 'team-2', strategy: 'load' },
+        consultations: { teamId: 'team-2', strategy: 'load' },
       });
       expect(result.ok).toBe(false);
-      expect(result.issues.join(' ')).toContain("Unknown work type 'consultation'");
+      expect(result.issues.join(' ')).toContain("Unknown work type 'consultations'");
     });
 
     it('rejects malformed rules (bad teamId type, bad strategy)', () => {
@@ -79,6 +85,7 @@ describe('staff assignment rules contract (T-09.08.02)', () => {
       const result = toStaffAssignmentRules({ ticket: { teamId: 't-1', strategy: 'load' } });
       expect(result.ticket).toEqual({ teamId: 't-1', strategy: 'load' });
       expect(result.verification_case).toEqual(DEFAULT_STAFF_ASSIGNMENT_RULES.verification_case);
+      expect(result.consultation).toEqual(DEFAULT_STAFF_ASSIGNMENT_RULES.consultation);
     });
 
     it('degrades corrupt rules per-type without throwing', () => {

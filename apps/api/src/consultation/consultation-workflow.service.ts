@@ -1,3 +1,4 @@
+import { STAFF_ASSIGNMENT_RULES_CONFIG_KEY } from '@barghsa/shared/admin';
 import { activityNames } from '../common/activity-identity.js';
 import {
   BadRequestException,
@@ -80,8 +81,8 @@ export class ConsultationWorkflowService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      await requireCurrentSession(client, actor);
       await requireStaffMutationPermission(client, actor.userId, 'orders:read');
+      await requireCurrentSession(client, actor);
       const teams = (
         await client.query<{ name: string }>(
           'SELECT name FROM staff_teams WHERE is_active ORDER BY name'
@@ -108,8 +109,8 @@ export class ConsultationWorkflowService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      await requireCurrentSession(client, actor);
       await requireStaffMutationPermission(client, actor.userId, 'orders:read');
+      await requireCurrentSession(client, actor);
       const cursor = after
         ? (
             await client.query<{ submitted_at: string; status: ConsultationStatus }>(
@@ -175,8 +176,8 @@ export class ConsultationWorkflowService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      await requireCurrentSession(client, actor);
       await requireStaffMutationPermission(client, actor.userId, 'orders:read');
+      await requireCurrentSession(client, actor);
       const request = (
         await client.query(
           `SELECT r.*,i.state AS invoice_state,p.profile_type,p.user_id AS profile_user_id,
@@ -232,37 +233,46 @@ export class ConsultationWorkflowService {
     input: { assignTo: 'self' | 'team'; team?: string },
     ip: string
   ) {
-    return this.staffMutation(actor, id, ip, 'assigned', async (client, request) => {
-      if (['completed', 'rejected', 'cancelled', 'offer_declined'].includes(request.status))
-        throw new ConflictException('Consultation request is closed');
-      let team: string | null = null;
-      if (input.assignTo === 'team') {
-        const found = (
-          await client.query<{ name: string }>(
-            'SELECT name FROM staff_teams WHERE name=$1 AND is_active FOR SHARE',
-            [input.team]
-          )
-        ).rows[0];
-        if (!found) throw new BadRequestException('Choose an active staff team');
-        team = found.name;
-      }
-      const owner = input.assignTo === 'self' ? actor.userId : null;
-      const nextStatus = request.status === 'submitted' && owner ? 'under_review' : request.status;
-      await client.query(
-        `UPDATE consultation_requests SET staff_owner_id=$2,staff_team=$3,status=$4,updated_at=NOW()
+    return this.staffMutation(
+      actor,
+      id,
+      ip,
+      'assigned',
+      async (client, request) => {
+        if (['completed', 'rejected', 'cancelled', 'offer_declined'].includes(request.status))
+          throw new ConflictException('Consultation request is closed');
+        let team: string | null = null;
+        if (input.assignTo === 'team') {
+          const found = (
+            await client.query<{ name: string }>(
+              'SELECT name FROM staff_teams WHERE name=$1 AND is_active FOR SHARE',
+              [input.team]
+            )
+          ).rows[0];
+          if (!found) throw new BadRequestException('Choose an active staff team');
+          team = found.name;
+        }
+        const owner = input.assignTo === 'self' ? actor.userId : null;
+        const nextStatus =
+          request.status === 'submitted' && owner ? 'under_review' : request.status;
+        await client.query(
+          `UPDATE consultation_requests SET staff_owner_id=$2,staff_team=$3,status=$4,updated_at=NOW()
          WHERE id=$1`,
-        [id, owner, team, nextStatus]
-      );
-      await this.event(
-        client,
-        id,
-        nextStatus,
-        actor.userId,
-        input.assignTo === 'team' ? `Assigned to team ${team}` : 'Assigned to staff'
-      );
-      if (nextStatus !== request.status) await this.notify(client, request, nextStatus);
-      return { requestId: id, status: nextStatus, staffOwnerId: owner, staffTeam: team };
-    });
+          [id, owner, team, nextStatus]
+        );
+        await this.event(
+          client,
+          id,
+          nextStatus,
+          actor.userId,
+          input.assignTo === 'team' ? `Assigned to team ${team}` : 'Assigned to staff'
+        );
+        if (nextStatus !== request.status) await this.notify(client, request, nextStatus);
+        return { requestId: id, status: nextStatus, staffOwnerId: owner, staffTeam: team };
+      },
+      false,
+      input.assignTo === 'team' ? input.team : undefined
+    );
   }
 
   async staffAction(
@@ -1602,11 +1612,16 @@ export class ConsultationWorkflowService {
     ip: string,
     action: string,
     change: (client: PoolClient, request: RequestRow) => Promise<T>,
-    financial = false
+    financial = false,
+    assignmentTeam?: string
   ): Promise<T> {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
+      if (assignmentTeam)
+        await client.query('SELECT pg_advisory_xact_lock_shared(hashtext($1))', [
+          STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
+        ]);
       const preview = (
         await client.query<{ profile_id: string; invoice_id: string | null }>(
           'SELECT profile_id,invoice_id FROM consultation_requests WHERE id=$1',
@@ -1616,6 +1631,12 @@ export class ConsultationWorkflowService {
       if (!preview) throw new NotFoundException('Consultation request not found');
       await client.query('SELECT id FROM profiles WHERE id=$1 FOR SHARE', [preview.profile_id]);
       if (financial) await lockDualApprovalThreshold(client, 'read');
+      // Routing locks teams before candidate accounts. Manual assignment must
+      // use the same order when its actor is also an automatic-routing candidate.
+      if (assignmentTeam)
+        await client.query('SELECT id FROM staff_teams WHERE name=$1 AND is_active FOR SHARE', [
+          assignmentTeam,
+        ]);
       await requireStaffMutationPermission(client, actor.userId, 'orders:write');
       if (financial) {
         await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');

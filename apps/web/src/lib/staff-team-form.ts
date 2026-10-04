@@ -27,20 +27,23 @@ export interface TeamDraft {
   members: string[];
   leadUserId: string | null;
 }
-export interface RoutingDraft {
-  ticketRule: StaffAssignmentRules['ticket'];
-  verificationCaseRule: StaffAssignmentRules['verification_case'];
-}
-export const ruleField = (type: keyof StaffAssignmentRules) =>
-  type === 'ticket' ? 'ticketRule' : 'verificationCaseRule';
-export const routingValues = (rules: StaffAssignmentRules): RoutingDraft => ({
-  ticketRule: structuredClone(rules.ticket),
-  verificationCaseRule: structuredClone(rules.verification_case),
-});
-export const routingBody = (draft: RoutingDraft): StaffAssignmentRules => ({
-  ticket: structuredClone(draft.ticketRule),
-  verification_case: structuredClone(draft.verificationCaseRule),
-});
+const ruleFields = {
+  ticket: 'ticketRule',
+  verification_case: 'verificationCaseRule',
+  consultation: 'consultationRule',
+} as const satisfies Record<keyof StaffAssignmentRules, string>;
+export type RoutingDraft = {
+  [Type in keyof StaffAssignmentRules as (typeof ruleFields)[Type]]: StaffAssignmentRules[Type];
+};
+export const ruleField = (type: keyof StaffAssignmentRules) => ruleFields[type];
+export const routingValues = (rules: StaffAssignmentRules): RoutingDraft =>
+  Object.fromEntries(
+    STAFF_ASSIGNMENT_WORK_TYPES.map((type) => [ruleField(type), structuredClone(rules[type])])
+  ) as RoutingDraft;
+export const routingBody = (draft: RoutingDraft): StaffAssignmentRules =>
+  Object.fromEntries(
+    STAFF_ASSIGNMENT_WORK_TYPES.map((type) => [type, structuredClone(draft[ruleField(type)])])
+  ) as StaffAssignmentRules;
 export const emptyTeamDraft = (): TeamDraft => ({
   name: '',
   description: '',

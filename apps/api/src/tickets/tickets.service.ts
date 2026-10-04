@@ -367,14 +367,18 @@ export class TicketsService {
       .map((user) => ({ id: user.id as string, name: user.name as string }));
   }
 
-  private async activeOwnedProfile(client: PoolClient, userId: string): Promise<string> {
+  private async activeOwnedProfile(
+    client: PoolClient,
+    userId: string,
+    lock = true
+  ): Promise<string> {
     const result = await client.query<{ id: string }>(
       `SELECT p.id FROM profiles p
        JOIN users u ON u.user_id=p.user_id AND u.disabled_at IS NULL
        LEFT JOIN user_profile_contexts c ON c.user_id=u.user_id
        WHERE p.user_id=$1 AND NOT p.archived
          AND ((c.user_id IS NULL AND p.is_default) OR p.id=c.profile_id)
-       FOR UPDATE OF p`,
+       ${lock ? 'FOR UPDATE OF p' : ''}`,
       [userId]
     );
     if (!result.rows[0]) throw new HttpException('Active owned profile required', 403);
@@ -505,6 +509,7 @@ export class TicketsService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
+      await authorizeTicketMutation(client, actor, actor.userId, false);
       const profileId = await this.activeOwnedProfile(client, actor.userId);
       const blockers = await this.closureBlockers(client, profileId);
       const requests = (
@@ -549,7 +554,10 @@ export class TicketsService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      const profileId = await this.activeOwnedProfile(client, actor.userId);
+      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
+        `profile-lifecycle:${actor.userId}:${idempotencyKey}`,
+      ]);
+      const profileHint = await this.activeOwnedProfile(client, actor.userId, false);
       const previous = (
         await client.query<{
           id: string;
@@ -561,6 +569,21 @@ export class TicketsService {
           [actor.userId, idempotencyKey]
         )
       ).rows[0];
+      const ticketId = randomUUID();
+      const assignment = previous
+        ? null
+        : await this.assignmentService.choose(
+            client,
+            'ticket',
+            ticketId,
+            actor.userId,
+            ['privacy'],
+            [actor.userId]
+          );
+      await authorizeTicketMutation(client, actor, actor.userId, false);
+      const profileId = await this.activeOwnedProfile(client, actor.userId);
+      if (profileId !== profileHint)
+        throw new HttpException('Active owned profile changed; refresh and retry', 409);
       if (previous && (previous.profile_id !== profileId || previous.privacy_request_type !== type))
         throw new HttpException('Idempotency key belongs to a different request', 409);
       if (previous) {
@@ -568,15 +591,6 @@ export class TicketsService {
         await client.query('COMMIT');
         return { ticketId: previous.id, profileId, type, created: false };
       }
-      const ticketId = randomUUID();
-      const assignment = await this.assignmentService.choose(
-        client,
-        'ticket',
-        ticketId,
-        actor.userId,
-        ['privacy'],
-        [actor.userId]
-      );
       const ticket = mapRow(
         (
           await client.query(
@@ -848,6 +862,7 @@ export class TicketsService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
+      await authorizeTicketMutation(client, actor, actor.userId, false);
       const profileId = await this.activeOwnedProfile(client, actor.userId);
       const request = (
         await client.query<{ privacy_export_job_id: string | null }>(
@@ -894,6 +909,7 @@ export class TicketsService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
+      await authorizeTicketMutation(client, actor, actor.userId, false);
       const profileId = await this.activeOwnedProfile(client, actor.userId);
       const request = (
         await client.query<{ privacy_export_storage_key: string; privacy_export_expires_at: Date }>(
@@ -970,13 +986,6 @@ export class TicketsService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      if (data.profileId) {
-        const profile = await client.query(
-          'SELECT id FROM profiles WHERE id=$1 AND user_id=$2 AND archived=false FOR UPDATE',
-          [data.profileId, userId]
-        );
-        if (!profile.rows.length) throw new HttpException('Profile not found', 404);
-      }
       const id = randomUUID();
       const assignment = await this.assignmentService.choose(
         client,
@@ -987,6 +996,13 @@ export class TicketsService {
         actor ? [userId] : []
       );
       if (actor) await authorizeTicketMutation(client, actor, userId, false);
+      if (data.profileId) {
+        const profile = await client.query(
+          'SELECT id FROM profiles WHERE id=$1 AND user_id=$2 AND archived=false FOR UPDATE',
+          [data.profileId, userId]
+        );
+        if (!profile.rows.length) throw new HttpException('Profile not found', 404);
+      }
       if (data.relatedEntityId) {
         if (!z.uuid().safeParse(data.relatedEntityId).success)
           throw new HttpException('Invalid related record identifier', 400);

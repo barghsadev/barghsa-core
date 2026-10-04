@@ -54,10 +54,9 @@ export default function AdminStaffTeamsPage() {
     members: label('invalidMembers'),
     leadUserId: label('invalidLead'),
   };
-  const routingMessages = {
-    ticketRule: label('invalidRule'),
-    verificationCaseRule: label('invalidRule'),
-  };
+  const routingMessages = Object.fromEntries(
+    STAFF_ASSIGNMENT_WORK_TYPES.map((type) => [ruleField(type), label('invalidRule')])
+  ) as Record<keyof RoutingDraft, string>;
   const teamForm = useWizardForm<TeamDraft>(
     async () => {
       const { staffTeamSchema } = await import('../lib/catalogue-form-schemas.js');
@@ -101,9 +100,8 @@ export default function AdminStaffTeamsPage() {
     {
       ...routingForm.form,
       setFocus: (field, options) => {
-        if (field === 'ticketRule') routingForm.form.setFocus('ticketRule.teamId', options);
-        else if (field === 'verificationCaseRule')
-          routingForm.form.setFocus('verificationCaseRule.teamId', options);
+        const type = STAFF_ASSIGNMENT_WORK_TYPES.find((type) => ruleField(type) === field);
+        if (type) routingForm.form.setFocus(`${ruleField(type)}.teamId`, options);
         else routingForm.form.setFocus(field, options);
       },
     },

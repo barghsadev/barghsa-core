@@ -45,6 +45,13 @@ export function assertStaffRoutingFields(body: unknown) {
     throw generic();
   const fields = STAFF_ASSIGNMENT_WORK_TYPES.filter(
     (type) => !validateStaffAssignmentRules({ [type]: body[type] }).ok
-  ).map((type) => (type === 'ticket' ? 'ticketRule' : 'verificationCaseRule'));
+  ).map(
+    (type) =>
+      ({
+        ticket: 'ticketRule',
+        verification_case: 'verificationCaseRule',
+        consultation: 'consultationRule',
+      })[type]
+  );
   if (fields.length) throw new InputFieldException(fields);
 }

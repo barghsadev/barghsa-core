@@ -53,6 +53,41 @@ import { InputFieldException } from '../common/input-field.exception.js';
 import { assertGreenSettingsFields } from './electricity-settings-fields.js';
 import { assertWalletLimitFields } from './limit-settings-fields.js';
 
+import {
+  STAFF_ASSIGNMENT_WORK_TYPES,
+  STAFF_ASSIGNMENT_STRATEGIES,
+  STAFF_ASSIGNMENT_MAX_FALLBACKS,
+} from '@barghsa/shared/admin';
+
+const assignmentChoiceProperties = {
+  teamId: { type: 'string' as const, format: 'uuid' },
+  strategy: { type: 'string' as const, enum: [...STAFF_ASSIGNMENT_STRATEGIES] },
+};
+const assignmentRulesSchema = {
+  type: 'object' as const,
+  properties: Object.fromEntries(
+    STAFF_ASSIGNMENT_WORK_TYPES.map((type) => [
+      type,
+      {
+        type: 'object' as const,
+        properties: {
+          ...assignmentChoiceProperties,
+          teamId: { ...assignmentChoiceProperties.teamId, nullable: true },
+          fallbacks: {
+            type: 'array' as const,
+            maxItems: STAFF_ASSIGNMENT_MAX_FALLBACKS,
+            items: {
+              type: 'object' as const,
+              properties: assignmentChoiceProperties,
+              required: ['teamId', 'strategy'],
+            },
+          },
+        },
+      },
+    ])
+  ),
+};
+
 /**
  * Zod schema for the create-staff-user request body.
  */
@@ -2964,19 +2999,7 @@ export class AdminController {
   @ApiResponse({
     status: 200,
     description: 'Current staff assignment rules per work type.',
-    schema: {
-      type: 'object',
-      properties: {
-        ticket: {
-          type: 'object',
-          properties: { teamId: { type: 'string', nullable: true }, strategy: { type: 'string' } },
-        },
-        verification_case: {
-          type: 'object',
-          properties: { teamId: { type: 'string', nullable: true }, strategy: { type: 'string' } },
-        },
-      },
-    },
+    schema: assignmentRulesSchema,
   })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
@@ -3001,50 +3024,12 @@ export class AdminController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Update the staff assignment rules configuration (admin)' })
   @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        ticket: {
-          type: 'object',
-          properties: {
-            teamId: {
-              type: 'string',
-              nullable: true,
-              example: '00000000-0000-7000-8000-000000000000',
-            },
-            strategy: {
-              type: 'string',
-              enum: ['round_robin', 'expertise', 'load'],
-              example: 'round_robin',
-            },
-          },
-        },
-        verification_case: {
-          type: 'object',
-          properties: {
-            teamId: { type: 'string', nullable: true },
-            strategy: { type: 'string', enum: ['round_robin', 'expertise', 'load'] },
-          },
-        },
-      },
-    },
+    schema: assignmentRulesSchema,
   })
   @ApiResponse({
     status: 200,
     description: 'Staff assignment rules updated.',
-    schema: {
-      type: 'object',
-      properties: {
-        ticket: {
-          type: 'object',
-          properties: { teamId: { type: 'string', nullable: true }, strategy: { type: 'string' } },
-        },
-        verification_case: {
-          type: 'object',
-          properties: { teamId: { type: 'string', nullable: true }, strategy: { type: 'string' } },
-        },
-      },
-    },
+    schema: assignmentRulesSchema,
   })
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })

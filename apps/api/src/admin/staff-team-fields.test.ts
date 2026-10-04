@@ -52,11 +52,19 @@ it('keeps manual defaults and maps invalid priorities to their own rule group', 
   expect(() => assertStaffRoutingFields({ ticket: null })).not.toThrow();
   let caught: unknown;
   try {
-    assertStaffRoutingFields({ ticket: { strategy: 'PRIVATE' }, verification_case: [] });
+    assertStaffRoutingFields({
+      ticket: { strategy: 'PRIVATE' },
+      verification_case: [],
+      consultation: { strategy: 'PRIVATE' },
+    });
   } catch (error) {
     caught = error;
   }
-  expect((caught as InputFieldException).fields).toEqual(['ticketRule', 'verificationCaseRule']);
+  expect((caught as InputFieldException).fields).toEqual([
+    'ticketRule',
+    'verificationCaseRule',
+    'consultationRule',
+  ]);
   expect(JSON.stringify((caught as HttpException).getResponse())).not.toContain('PRIVATE');
   expect(() => assertStaffRoutingFields({ PRIVATE: {} })).toThrow(HttpException);
 });

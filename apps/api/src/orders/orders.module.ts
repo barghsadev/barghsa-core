@@ -69,6 +69,7 @@ import {
 import { ConsultationWorkflowService } from '../consultation/consultation-workflow.service.js';
 import { RefundModule } from '../refund/refund.module.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
+import { StaffAssignmentModule } from '../staff-assignment/staff-assignment.module.js';
 
 @Module({
   imports: [
@@ -78,6 +79,7 @@ import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
     DocumentModule,
     ContractModule,
     RefundModule,
+    StaffAssignmentModule,
   ],
   controllers: [
     OrdersController,

@@ -2377,11 +2377,11 @@ export class AdminService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
-      await requireStaffMutationPermission(client, actorUserId, 'admin:staff-teams:edit');
-      await requireSessionStepUp(client, actor);
       await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
         STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
       ]);
+      await requireStaffMutationPermission(client, actorUserId, 'admin:staff-teams:edit');
+      await requireSessionStepUp(client, actor);
       const teamIds = [
         ...new Set(
           Object.values(config)
@@ -2599,6 +2599,9 @@ export class AdminService {
 
     try {
       await client.query('BEGIN');
+      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
+        STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
+      ]);
       await requireStaffMutationPermission(
         client,
         actorUserId,
@@ -2683,6 +2686,9 @@ export class AdminService {
 
     try {
       await client.query('BEGIN');
+      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
+        STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
+      ]);
       // Discover accounts before locking the team, then lock all accounts in
       // the same order as role changes. Verify membership again under the team
       // lock so a concurrent edit cannot introduce an account we did not lock.
@@ -2865,6 +2871,9 @@ export class AdminService {
 
     try {
       await client.query('BEGIN');
+      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
+        STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
+      ]);
       await requireStaffMutationPermission(client, actorUserId, 'admin:staff-teams:edit');
       await requireSessionStepUp(client, actor);
 

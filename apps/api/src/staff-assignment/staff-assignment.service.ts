@@ -12,6 +12,7 @@ import { resolveStaffPermissions } from '../session/staff-permissions.js';
 export interface WorkAssignment {
   userId: string;
   teamId: string;
+  teamName: string;
   strategy: string;
   configVersion: number;
 }
@@ -53,7 +54,7 @@ export class StaffAssignmentService {
     // Opposite fallback orders must not produce opposite lock orders.
     const teams = (
       await client.query(
-        'SELECT id,skill_tags FROM staff_teams WHERE id=ANY($1::uuid[]) AND is_active ORDER BY id FOR UPDATE',
+        'SELECT id,name,skill_tags FROM staff_teams WHERE id=ANY($1::uuid[]) AND is_active ORDER BY id FOR UPDATE',
         [teamIds]
       )
     ).rows;
@@ -113,7 +114,9 @@ export class StaffAssignmentService {
               ? permissions.some((permission) =>
                   ['tickets:*', 'tickets:write', 'tickets:assigned'].includes(permission)
                 )
-              : permissions.includes('crm:verify') && permissions.includes('verification:read'))
+              : workType === 'consultation'
+                ? permissions.includes('orders:read') && permissions.includes('orders:write')
+                : permissions.includes('crm:verify') && permissions.includes('verification:read'))
           );
         })
         .map((row) => row.user_id as string);
@@ -137,7 +140,8 @@ export class StaffAssignmentService {
           await client.query(
             `SELECT u.user_id,
         (SELECT count(*) FROM tickets t WHERE t.assigned_to=u.user_id AND t.status NOT IN ('resolved','closed'))+
-        (SELECT count(*) FROM verification_cases v WHERE v.assigned_to=u.user_id AND v.status IN ('Open','Under Review')) AS work_count
+          (SELECT count(*) FROM verification_cases v WHERE v.assigned_to=u.user_id AND v.status IN ('Open','Under Review'))+
+          (SELECT count(*) FROM consultation_requests r WHERE r.staff_owner_id=u.user_id AND r.status NOT IN ('offer_declined','completed','rejected','cancelled')) AS work_count
         FROM users u WHERE u.user_id=ANY($1::text[]) ORDER BY work_count,u.user_id LIMIT 1`,
             [candidates]
           )
@@ -147,6 +151,7 @@ export class StaffAssignmentService {
       const assignment = {
         userId,
         teamId: rule.teamId,
+        teamName: team.name as string,
         strategy: rule.strategy,
         configVersion: config.version as number,
       };

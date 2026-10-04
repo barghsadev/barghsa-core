@@ -56,6 +56,72 @@ async function rule(strategy: string, team: string | null = teamId) {
     [JSON.stringify({ ticket: { teamId: team, strategy } })]
   );
 }
+it('keeps profile-linked ticket and lifecycle creation unlocked while waiting for routing', async () => {
+  const profileId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO profiles(id,user_id,profile_type,status,first_name,is_default) VALUES ($1,'customer','INDIVIDUAL','VERIFIED','Original',true)",
+    [profileId]
+  );
+  await rule('round_robin');
+  const blocker = await http.pool.connect();
+  const writer = await http.pool.connect();
+  const operations: Promise<Response>[] = [];
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
+      'admin.staff_assignment_rules',
+    ]);
+    const blockerPid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+    operations.push(
+      fetch(`${http.base}/api/tickets`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ subject: 'Profile-linked support', body: 'Details', profileId }),
+      }),
+      fetch(`${http.base}/api/tickets/lifecycle-requests`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ type: 'export', idempotencyKey: randomUUID(), locale: 'en' }),
+      })
+    );
+    await expect
+      .poll(
+        async () =>
+          (
+            await http.pool.query(
+              'SELECT pid FROM pg_stat_activity WHERE $1::int=ANY(pg_blocking_pids(pid))',
+              [blockerPid]
+            )
+          ).rows.length,
+        { timeout: 5000, interval: 20 }
+      )
+      .toBe(2);
+    // Both HTTP transactions have reached the routing gate. A profile writer
+    // must still finish, rather than inherit a profile -> routing lock cycle.
+    await writer.query('BEGIN');
+    await writer.query("SET LOCAL statement_timeout='1s'");
+    await writer.query("UPDATE profiles SET first_name='Fresh snapshot' WHERE id=$1", [profileId]);
+    await writer.query('COMMIT');
+    await blocker.query('COMMIT');
+    const results = await Promise.all(operations);
+    expect(
+      results.map((result) => result.status),
+      http.logs()
+    ).toEqual([201, 201]);
+    expect(await results[0]!.json()).toMatchObject({ profileId });
+    expect(await results[1]!.json()).toMatchObject({ profileId, type: 'export', created: true });
+    expect(
+      (await http.pool.query('SELECT first_name FROM profiles WHERE id=$1', [profileId])).rows[0]
+        .first_name
+    ).toBe('Fresh snapshot');
+  } finally {
+    await writer.query('ROLLBACK');
+    writer.release();
+    await blocker.query('ROLLBACK');
+    blocker.release();
+    await Promise.allSettled(operations);
+  }
+});
 it('allows staff ticket creation alongside manual assignment to that staff member', async () => {
   const existing = (await (await create('Existing customer ticket')).json()) as { id: string };
   const staffHeaders: Record<string, Record<string, string>> = {};

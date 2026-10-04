@@ -100,7 +100,7 @@ export const staffAssignmentCursors = pgTable(
     primaryKey({ columns: [table.teamId, table.workType] }),
     check(
       'staff_assignment_cursors_work_type_check',
-      sql`${table.workType} IN ('ticket','verification_case')`
+      sql`${table.workType} IN ('ticket','verification_case','consultation')`
     ),
   ]
 );

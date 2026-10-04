@@ -63,6 +63,9 @@ export const consultationRequests = pgTable(
     uniqueIndex('consultation_submission_key').on(t.submittedBy, t.submissionKey),
     index('consultation_profile_idx').on(t.profileId, t.submittedAt, t.id),
     index('consultation_status_idx').on(t.status, t.submittedAt, t.id),
+    index('consultation_open_owner_idx')
+      .on(t.staffOwnerId)
+      .where(sql`${t.status} NOT IN ('offer_declined','completed','rejected','cancelled')`),
     check(
       'consultation_status',
       sql`${t.status} IN ('submitted','under_review','awaiting_customer_info','offer_pending','offer_accepted','offer_declined','completed','rejected','cancelled')`

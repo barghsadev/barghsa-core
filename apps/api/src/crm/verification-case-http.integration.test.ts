@@ -221,7 +221,9 @@ for (const action of ['create', 'approve'] as const) {
             [actor]
           );
         } else {
-          await blocker.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE', [target]);
+          // Stop before current authority is acquired. Profile waits now happen
+          // after account/session locks, so revocation must precede that boundary.
+          await blocker.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [actor]);
         }
         const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
         request = action === 'create' ? create(target) : review(caseId!, 'Approved');
@@ -237,7 +239,7 @@ for (const action of ['create', 'approve'] as const) {
           )
           .toBe(true);
         if (invalidation === 'permission') {
-          await http.pool.query('UPDATE users SET is_admin=false WHERE user_id=$1', [actor]);
+          await blocker.query('UPDATE users SET is_admin=false WHERE user_id=$1', [actor]);
         } else if (invalidation === 'commit-expiry') {
           await expect
             .poll(
@@ -258,9 +260,9 @@ for (const action of ['create', 'approve'] as const) {
               : invalidation === 'csrf'
                 ? "csrf_token='replaced'"
                 : "step_up_verified_at=clock_timestamp()-INTERVAL '1 day'";
-          await http.pool.query(`UPDATE sessions SET ${mutation} WHERE user_id=$1`, [actor]);
+          await blocker.query(`UPDATE sessions SET ${mutation} WHERE user_id=$1`, [actor]);
         }
-        await blocker.query('ROLLBACK');
+        await blocker.query(invalidation === 'commit-expiry' ? 'ROLLBACK' : 'COMMIT');
         expect((await request).status).toBe(
           invalidation === 'session' || invalidation === 'commit-expiry' ? 401 : 403
         );

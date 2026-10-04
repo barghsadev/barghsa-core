@@ -110,7 +110,7 @@ for (const locale of ['en', 'fa'] as const)
     });
     test(`team and routing stale drafts, unverified receipts and priority recovery (${locale}, ${dark ? 'dark' : 'light'})`, async ({
       page,
-    }) => {
+    }, info) => {
       await setupCatalogueForms(page, locale, dark);
       const text = (key: string) => t(`admin.teams.${key}`, locale);
       const alternate = '33333333-3333-4333-8333-333333333333';
@@ -152,12 +152,12 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.locator('#staff-team-name')).toBeDisabled();
       await page.getByRole('button', { name: text('resetTeam'), exact: true }).click();
       await expect(page.locator('#staff-team-name')).toHaveValue('Concurrent team');
-      await page.locator('#team-ticket').selectOption(staffTeamId);
+      await page.locator('#team-consultation').selectOption(staffTeamId);
       await page
+        .getByRole('group', { name: text('consultation'), exact: true })
         .getByRole('button', { name: text('addFallback'), exact: true })
-        .first()
         .click();
-      await page.locator('#fallback-strategy-ticket-2').selectOption('expertise');
+      await page.locator('#fallback-strategy-consultation-2').selectOption('expertise');
       const save = page.getByRole('button', { name: text('saveRules'), exact: true });
       await save.click();
       let dialog = page.getByRole('dialog');
@@ -171,14 +171,14 @@ for (const locale of ['en', 'fa'] as const)
       malformed = false;
       await dialog.getByRole('button', { name: text('refreshRules'), exact: true }).click();
       await expect(dialog.locator('button[type=submit]')).toBeEnabled();
-      rules = { ...staffRoutingRules, ticket: { teamId: null, strategy: 'load' } };
+      rules = { ...staffRoutingRules, consultation: { teamId: null, strategy: 'load' } };
       await dialog.getByRole('button', { name: text('refreshRules'), exact: true }).click();
       await expect(dialog).toHaveCount(0);
-      await expect(page.locator('#team-ticket')).toHaveValue(staffTeamId);
+      await expect(page.locator('#team-consultation')).toHaveValue(staffTeamId);
       await expect(save).toBeDisabled();
       await expect(page.getByRole('alert').filter({ hasText: text('staleRules') })).toBeVisible();
       await page.getByRole('button', { name: text('resetRules'), exact: true }).click();
-      await page.locator('#team-ticket').selectOption(staffTeamId);
+      await page.locator('#team-consultation').selectOption(staffTeamId);
       await save.click();
       dialog = page.getByRole('dialog');
       await dialog.locator('button[type=submit]').click();
@@ -190,16 +190,38 @@ for (const locale of ['en', 'fa'] as const)
       await expect(save).toBeDisabled();
       await page.getByRole('button', { name: text('refreshRules'), exact: true }).click();
       await page.getByRole('button', { name: text('resetRules'), exact: true }).click();
-      await page.locator('#team-ticket').selectOption(staffTeamId);
+      await page.locator('#team-consultation').selectOption(staffTeamId);
       wrongReceipt = false;
       await save.click();
       await page.getByRole('dialog').locator('button[type=submit]').click();
       await expect(page.getByRole('dialog')).toHaveCount(0);
       expect(bodies).toHaveLength(2);
+      expect(bodies[1]).toEqual({
+        ...staffRoutingRules,
+        consultation: { teamId: staffTeamId, strategy: 'load' },
+      });
+      await expect(page.locator('#team-consultation')).toHaveValue(staffTeamId);
+      expect(
+        (await new AxeBuilder({ page }).include('form:has(#team-consultation)').analyze())
+          .violations
+      ).toEqual([]);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true
+      );
+      if (
+        (locale === 'fa' && dark && info.project.name === 'mobile-safari') ||
+        (locale === 'en' && !dark && info.project.name === 'chromium')
+      )
+        await page
+          .locator('form')
+          .filter({ has: page.locator('#team-consultation') })
+          .screenshot({
+            path: `/Users/majid/.local/state/barghsa-manual-batches/consultation-assignment/consultation-rules-${locale}-${dark ? 'dark' : 'light'}-${info.project.name}.png`,
+          });
       denied = true;
       await page.getByRole('button', { name: text('refreshRules'), exact: true }).click();
       await expect(page.locator('#staff-team-name')).toHaveCount(0);
-      await expect(page.locator('#team-ticket')).toHaveCount(0);
+      await expect(page.locator('#team-consultation')).toHaveCount(0);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true
       );

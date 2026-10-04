@@ -1142,6 +1142,13 @@
       "when": 1791331202253,
       "tag": "0242_solar_wizard_steps",
       "breakpoints": true
+    },
+    {
+      "idx": 243,
+      "version": "7",
+      "when": 1791331202254,
+      "tag": "0243_consultation_assignment",
+      "breakpoints": true
     }
   ]
 }

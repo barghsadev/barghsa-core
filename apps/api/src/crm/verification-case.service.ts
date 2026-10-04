@@ -117,12 +117,12 @@ export class VerificationCaseService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      const profile = (
-        await client.query('SELECT * FROM profiles WHERE id=$1 AND archived=false FOR UPDATE', [
+      const profileHint = (
+        await client.query('SELECT profile_type FROM profiles WHERE id=$1 AND archived=false', [
           profileId,
         ])
       ).rows[0];
-      if (!profile) {
+      if (!profileHint) {
         await client.query('ROLLBACK');
         return null;
       }
@@ -132,11 +132,24 @@ export class VerificationCaseService {
         'verification_case',
         id,
         actorUserId,
-        ['identity', profile.profile_type === 'LEGAL' ? 'legal' : 'individual'],
+        ['identity', profileHint.profile_type === 'LEGAL' ? 'legal' : 'individual'],
         [actorUserId]
       );
       await requireStaffMutationPermission(client, actorUserId, 'crm:edit-identity');
       await requireSessionStepUp(client, actor);
+      // Routing locks teams and accounts first; take the authoritative profile
+      // lock only after those locks and the current actor/session checks.
+      const profile = (
+        await client.query('SELECT * FROM profiles WHERE id=$1 AND archived=false FOR UPDATE', [
+          profileId,
+        ])
+      ).rows[0];
+      if (!profile) {
+        await client.query('ROLLBACK');
+        return null;
+      }
+      if (profile.profile_type !== profileHint.profile_type)
+        throw new ConflictException('Profile type changed; reload and retry');
       const allowed =
         profile.profile_type === 'LEGAL' ? IDENTITY_FIELDS_LEGAL : IDENTITY_FIELDS_INDIVIDUAL;
       if (!allowed.includes(dto.fieldName))
@@ -379,7 +392,10 @@ export class VerificationCaseService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      // Use the same profile-before-case lock order as creation and archival.
+      await requireStaffMutationPermission(client, reviewerUserId, 'crm:verify');
+      await requireSessionStepUp(client, actor);
+      // Actor authority precedes the profile lock, matching creation/routing;
+      // the profile still locks before the correction record.
       const profile = (
         await client.query(
           `SELECT p.* FROM profiles p JOIN verification_cases v ON v.profile_id=p.id WHERE v.id=$1 FOR UPDATE OF p`,
@@ -390,8 +406,6 @@ export class VerificationCaseService {
         await client.query('ROLLBACK');
         return null;
       }
-      await requireStaffMutationPermission(client, reviewerUserId, 'crm:verify');
-      await requireSessionStepUp(client, actor);
       const row = (
         await client.query('SELECT * FROM verification_cases WHERE id=$1 FOR UPDATE', [caseId])
       ).rows[0];

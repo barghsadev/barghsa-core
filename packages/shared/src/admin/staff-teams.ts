@@ -19,7 +19,7 @@
  *   The strategy is stored anyway (so an admin can pre-configure it) but is
  *   meaningless until a team is chosen.
  *
- * New tickets/corrections consume these rules in their creation transaction.
+ * New tickets, consultations and corrections consume these rules in their creation transaction.
  * Round-robin positions commit with the new item. Expertise matches the team
  * skill tags, then uses the least-loaded eligible member of that team.
  *
@@ -27,7 +27,7 @@
  */
 
 /** Work types that support auto-assignment today. */
-export const STAFF_ASSIGNMENT_WORK_TYPES = ['ticket', 'verification_case'] as const;
+export const STAFF_ASSIGNMENT_WORK_TYPES = ['ticket', 'verification_case', 'consultation'] as const;
 
 /** A work type with assignable open items. */
 export type StaffAssignmentWorkType = (typeof STAFF_ASSIGNMENT_WORK_TYPES)[number];
@@ -73,6 +73,7 @@ export const STAFF_ASSIGNMENT_RULES_CONFIG_KEY = 'admin.staff_assignment_rules';
 export const DEFAULT_STAFF_ASSIGNMENT_RULES: StaffAssignmentRules = {
   ticket: { teamId: null, strategy: 'round_robin' },
   verification_case: { teamId: null, strategy: 'round_robin' },
+  consultation: { teamId: null, strategy: 'round_robin' },
 };
 
 /** Result of validating a proposed assignment-rules map for the admin write path. */
