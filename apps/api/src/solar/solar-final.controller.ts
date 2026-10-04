@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  ForbiddenException,
   Get,
   HttpCode,
   Param,
@@ -20,17 +21,36 @@ import {
   solarContractSchema,
   solarContractConfirmationSchema,
 } from './solar-contract.validation.js';
+import { InputFieldException } from '../common/input-field.exception.js';
+import { hasStaffPermission } from '../session/staff-permissions.js';
 
 const close = z.object({ reason: z.string().trim().min(1).max(1000) }).strict();
 const reviewHash = z.string().regex(/^[a-f0-9]{64}$/);
 const confirmedClose = close.safeExtend({ expectedReviewHash: reviewHash });
 const confirmedApproval = z.object({ expectedReviewHash: reviewHash }).strict();
-const finalDecisionReview = z
-  .object({
-    decision: z.enum(['approve', 'reject', 'close-no-contract']),
-    reason: z.string().trim().min(1).max(1000).optional(),
-  })
-  .strict();
+const finalDecisionReview = z.discriminatedUnion('decision', [
+  z.object({ decision: z.literal('approve'), reason: close.shape.reason.optional() }).strict(),
+  close.safeExtend({ decision: z.literal('reject') }),
+  close.safeExtend({ decision: z.literal('close-no-contract') }),
+]);
+function parseReason<S extends z.ZodType>(schema: S, body: unknown): z.output<S> {
+  const parsed = schema.safeParse(body);
+  if (parsed.success) return parsed.data as z.output<S>;
+  if (
+    parsed.error.issues.length &&
+    parsed.error.issues.every(
+      (issue) =>
+        issue.path.length === 1 &&
+        issue.path[0] === 'reason' &&
+        ['invalid_type', 'too_small', 'too_big'].includes(issue.code)
+    )
+  )
+    throw new InputFieldException(['reason']);
+  throw new BadRequestException('Invalid solar final decision');
+}
+function requireFormPermission(req: AuthenticatedRequest, permission: string) {
+  if (!hasStaffPermission(req, permission)) throw new ForbiddenException('Permission denied');
+}
 @ApiTags('Admin · Solar final decisions')
 @ApiBearerAuth()
 @Controller('api/admin/solar/requests/:id')
@@ -111,9 +131,14 @@ export class StaffSolarFinalController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const parsed = finalDecisionReview.safeParse(body);
-    if (!parsed.success) throw new BadRequestException('Invalid solar final decision');
-    return this.service.reviewDecision(req.session, id, parsed.data.decision, parsed.data.reason);
+    const closing =
+      body &&
+      typeof body === 'object' &&
+      'decision' in body &&
+      body.decision === 'close-no-contract';
+    requireFormPermission(req, closing ? 'contracts:write' : 'orders:write');
+    const input = parseReason(finalDecisionReview, body);
+    return this.service.reviewDecision(req.session, id, input.decision, input.reason);
   }
 
   @Post('start-final-review')
@@ -132,14 +157,14 @@ export class StaffSolarFinalController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const parsed = confirmedClose.safeParse(body);
-    if (!parsed.success) throw new BadRequestException('Reason is required');
+    requireFormPermission(req, 'orders:write');
+    const input = parseReason(confirmedClose, body);
     return this.service.decide(
       req.session,
       id,
       'reject',
-      parsed.data.reason,
-      parsed.data.expectedReviewHash,
+      input.reason,
+      input.expectedReviewHash,
       req.ip ?? '127.0.0.1'
     );
   }
@@ -153,14 +178,14 @@ export class StaffSolarFinalController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const parsed = confirmedClose.safeParse(body);
-    if (!parsed.success) throw new BadRequestException('Reason is required');
+    requireFormPermission(req, 'contracts:write');
+    const input = parseReason(confirmedClose, body);
     return this.service.decide(
       req.session,
       id,
       'close-no-contract',
-      parsed.data.reason,
-      parsed.data.expectedReviewHash,
+      input.reason,
+      input.expectedReviewHash,
       req.ip ?? '127.0.0.1'
     );
   }

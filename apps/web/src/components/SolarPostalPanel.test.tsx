@@ -16,6 +16,7 @@ const guidance = {
 let root: Root;
 let container: HTMLDivElement;
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   container = document.createElement('div');
   document.body.append(container);
   root = createRoot(container);
@@ -50,7 +51,7 @@ it('shows postal instructions and records a shipment, then locks the form while 
           status: postalStatus,
           courier: postalStatus === 'shipped' ? 'Parcel Co' : null,
           tracking_number: postalStatus === 'shipped' ? 'TRACK-123' : null,
-          send_date: postalStatus === 'shipped' ? '2026-01-02T00:00:00Z' : null,
+          send_date: postalStatus === 'shipped' ? '2026-01-02' : null,
           receipt_image_id: null,
           staff_notes: null,
         },
@@ -79,8 +80,10 @@ it('shows postal instructions and records a shipment, then locks the form while 
     container
       .querySelector('form')!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await vi.waitFor(() =>
+      expect(fetcher.mock.calls.some(([url]) => url.includes('/postal/shipment'))).toBe(true)
+    );
   });
-  expect(fetcher.mock.calls.some(([url]) => url.includes('/postal/shipment'))).toBe(true);
   expect(container.textContent).toContain('Shipped, awaiting staff confirmation');
   expect(container.querySelector('form')).toBeNull();
 });

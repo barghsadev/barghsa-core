@@ -1,6 +1,27 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { tSolar } from '@barghsa/i18n/solar';
-import { Button, FinancialReviewSummary, ListPage } from '@barghsa/ui';
+import { Alert, AlertDescription, Button, FinancialReviewSummary, ListPage } from '@barghsa/ui';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useZodForm,
+} from '@barghsa/ui/form';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import {
+  confirmedPostalDecision,
+  confirmedPostalGuidance,
+  emptyPostalGuidance,
+  postalGuidanceBody,
+  postalGuidanceDraft,
+  validPostalGuidance,
+  type PostalGuidanceDraft,
+} from '../lib/solar-postal-form.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
@@ -72,14 +93,57 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
   const [acceptedLane, setAcceptedLane] = useState(lane);
   const visibleRows = acceptedLane === lane ? rows : [];
   const [guidance, setGuidance] = useState<Guidance | null>(null);
-  const [originalsFa, setOriginalsFa] = useState('');
-  const [originalsEn, setOriginalsEn] = useState('');
+  const reasonForm = useZodForm<{ reason: string }>(
+    async () =>
+      (await import('../lib/solar-postal-form-schemas.js')).postalReasonSchema(
+        copy('postalReasonInvalid')
+      ),
+    {
+      defaultValues: { reason: '' },
+      validationUnavailableMessage: copy('documentValidationUnavailable'),
+    }
+  );
+  const reasonFields = useActionFieldErrors(
+    reasonForm,
+    { reason: copy('postalReasonInvalid') },
+    copy('postalError')
+  );
+  const guidanceMessages = {
+    fa: copy('documentGuidanceInvalid'),
+    en: copy('documentGuidanceInvalid'),
+    destinationAddress: copy('postalAddressInvalid'),
+    contactDetails: copy('postalContactInvalid'),
+    originalsFa: copy('postalOriginalsInvalid'),
+    originalsEn: copy('postalOriginalsInvalid'),
+  };
+  const guidanceForm = useZodForm<PostalGuidanceDraft>(
+    async () =>
+      (await import('../lib/solar-postal-form-schemas.js')).postalGuidanceSchema(guidanceMessages),
+    {
+      defaultValues: emptyPostalGuidance,
+      validationUnavailableMessage: copy('documentValidationUnavailable'),
+    }
+  );
+  const guidanceFields = useActionFieldErrors(guidanceForm, guidanceMessages, copy('postalError'));
+  const guidanceDirty = useRef(false);
+  guidanceDirty.current = guidanceForm.formState.isDirty;
+  const [guidanceUnconfirmed, setGuidanceUnconfirmed] = useState(false);
+  const [guidanceDenied, setGuidanceDenied] = useState(false);
+  const [decisionUnconfirmed, setDecisionUnconfirmed] = useState(false);
+  const [commandPending, setCommandPending] = useState(false);
+  const commandPendingRef = useRef(false),
+    preparingRef = useRef(false);
+  const queueRead = useRef(0),
+    guidanceRead = useRef(0),
+    decisionRecoverAfter = useRef(0),
+    guidanceRecoverAfter = useRef(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [reason, setReason] = useState('');
+
   const [action, setAction] = useState<
     (TeamAction & { review?: FinalReview; postalReview?: PostalReview }) | null
   >(null);
+  const actionRef = useRef<typeof action>(null);
   const [preparingDecision, setPreparingDecision] = useState(false);
   const [error, setError] = useState(false);
   const [revision, setRevision] = useState(0);
@@ -91,14 +155,30 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
   const [guidanceError, setGuidanceError] = useState(false);
   const reviewRequest = useRef(0);
   const commandGeneration = useRef(0);
+  function busy() {
+    return (
+      !!actionRef.current ||
+      commandPendingRef.current ||
+      preparingRef.current ||
+      reasonForm.isSubmissionPending() ||
+      guidanceForm.isSubmissionPending()
+    );
+  }
   function propose(next: NonNullable<typeof action>) {
+    if (actionRef.current || commandPendingRef.current) return;
     commandGeneration.current = ++reviewRequest.current;
+    preparingRef.current = false;
     setPreparingDecision(false);
+    actionRef.current = next;
     setAction(next);
   }
   function invalidateReview() {
     reviewRequest.current += 1;
+    commandPendingRef.current = false;
+    setCommandPending(false);
+    actionRef.current = null;
     setAction(null);
+    preparingRef.current = false;
     setPreparingDecision(false);
   }
   const [localBefore, setBefore] = useState<string | null>(null);
@@ -117,7 +197,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
     if (!before || extendingCursor.current !== before) {
       setSelected(null);
       setPreview(null);
-      setReason('');
+      reasonForm.reset({ reason: '' });
       setError(false);
     }
     extendingCursor.current = null;
@@ -142,6 +222,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
   };
   useEffect(() => {
     const controller = new AbortController();
+    const read = ++queueRead.current;
     trackingAccessDenied.current = false;
     setQueueLoading(true);
     setQueueError(false);
@@ -168,6 +249,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
           const shown = new Set(current.map((request) => request.id));
           return [...current, ...value.requests.filter((request) => !shown.has(request.id))];
         });
+        if (read >= decisionRecoverAfter.current) setDecisionUnconfirmed(false);
         acceptedCursor.current = before;
         setAcceptedLane(lane);
         setNextBefore(value.nextBefore);
@@ -190,6 +272,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
   }, [before, lane, revision, queueRevision]);
   useEffect(() => {
     const controller = new AbortController();
+    const read = ++guidanceRead.current;
     setGuidanceError(false);
     void fetch('/api/admin/solar/postal-guidance', {
       credentials: 'include',
@@ -201,9 +284,10 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
       })
       .then((value) => {
         if (controller.signal.aborted) return;
+        if (!validPostalGuidance(value)) throw new Error('guidance');
         setGuidance(value);
-        setOriginalsFa(value.originals.map((item) => item.fa).join('\n'));
-        setOriginalsEn(value.originals.map((item) => item.en).join('\n'));
+        if (!guidanceDirty.current) guidanceForm.reset(postalGuidanceDraft(value));
+        if (read >= guidanceRecoverAfter.current) setGuidanceUnconfirmed(false);
       })
       .catch(() => {
         if (!controller.signal.aborted) setGuidanceError(true);
@@ -211,141 +295,161 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
     return () => controller.abort();
   }, [guidanceRevision]);
   const row = visibleRows.find((item) => item.id === selected);
-  function saveGuidance(event: FormEvent) {
-    event.preventDefault();
-    if (!guidance) return;
-    const fa = originalsFa
-      .split('\n')
-      .map((item) => item.trim())
-      .filter(Boolean);
-    const en = originalsEn
-      .split('\n')
-      .map((item) => item.trim())
-      .filter(Boolean);
-    if (!guidance.fa.trim() || !guidance.en.trim() || fa.length !== en.length) {
-      setError(true);
+  function saveGuidance(event: FormEvent<HTMLFormElement>) {
+    if (!guidance || busy() || guidanceUnconfirmed || guidanceDenied) {
+      event.preventDefault();
       return;
     }
-    propose({
-      title: copy('postalSaveGuidance'),
-      description: copy('postalSaveGuidance'),
-      path: '/api/admin/solar/postal-guidance',
-      method: 'PUT',
-      body: {
-        ...guidance,
-        fa: guidance.fa.trim(),
-        en: guidance.en.trim(),
-        originals: fa.map((item, index) => ({ fa: item, en: en[index] })),
-      },
+    const generation = reviewRequest.current;
+    void guidanceForm.handleSubmit((draft) => {
+      if (generation !== reviewRequest.current) return;
+      propose({
+        title: copy('postalSaveGuidance'),
+        description: copy('postalSaveGuidance'),
+        path: '/api/admin/solar/postal-guidance',
+        method: 'PUT',
+        body: postalGuidanceBody(draft),
+      });
+    })(event);
+  }
+  function prepareDecision(options: {
+    requestId: string;
+    required: boolean;
+    decision: string;
+    previewPath: string;
+    path: string;
+    title: string;
+    conflict: string;
+    kind: 'postal' | 'final';
+  }) {
+    if (busy() || decisionUnconfirmed) return;
+    const generation = reviewRequest.current;
+    const prepare = async (reason: string) => {
+      if (generation !== reviewRequest.current) return;
+      const request = ++reviewRequest.current;
+      preparingRef.current = true;
+      setPreparingDecision(true);
+      setError(false);
+      const body = options.required ? { reason: reason.trim() } : {};
+      try {
+        const response = await fetch(options.previewPath, {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ decision: options.decision, ...body }),
+        });
+        const value = await response.json().catch(() => null);
+        if (request !== reviewRequest.current) return;
+        if (!response.ok) {
+          if (
+            options.required &&
+            response.status === 400 &&
+            value?.error?.code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+            Array.isArray(value.error.fields) &&
+            value.error.fields.length &&
+            value.error.fields.every((field: unknown) => field === 'reason') &&
+            reasonFields(['reason'])
+          )
+            return;
+          throw new Error('review');
+        }
+        if (
+          !value ||
+          typeof value.hash !== 'string' ||
+          !/^[a-f0-9]{64}$/.test(value.hash) ||
+          value.data?.requestId !== options.requestId
+        )
+          throw new Error('review');
+        propose({
+          title: options.title,
+          description: options.requestId,
+          path: options.path,
+          method: 'POST',
+          body: { ...body, expectedReviewHash: value.hash },
+          conflictMessage: options.conflict,
+          ...(options.kind === 'postal'
+            ? { postalReview: value as PostalReview }
+            : { review: value as FinalReview }),
+        });
+      } catch {
+        if (request === reviewRequest.current) setError(true);
+      } finally {
+        if (request === reviewRequest.current) {
+          preparingRef.current = false;
+          setPreparingDecision(false);
+        }
+      }
+    };
+    if (options.required) void reasonForm.handleSubmit((draft) => prepare(draft.reason))();
+    else void prepare('');
+  }
+  function decide(decision: 'confirm-received' | 'mark-incomplete' | 'mark-not-received') {
+    if (!row) return;
+    const path = `/api/admin/solar/requests/${encodeURIComponent(row.id)}/postal`;
+    prepareDecision({
+      requestId: row.id,
+      required: decision !== 'confirm-received',
+      decision: {
+        'confirm-received': 'received',
+        'mark-incomplete': 'incomplete',
+        'mark-not-received': 'not_received',
+      }[decision],
+      previewPath: `${path}/review`,
+      path: `${path}/${decision}`,
+      title: copy(`postal_${decision}`),
+      conflict: copy('postalReviewChanged'),
+      kind: 'postal',
     });
   }
-  async function decide(decision: 'confirm-received' | 'mark-incomplete' | 'mark-not-received') {
-    if (preparingDecision) return;
-    if (!row || (decision !== 'confirm-received' && !reason.trim())) {
-      setError(true);
-      return;
-    }
-    const requestId = row.id;
-    const decisionReason = reason.trim();
-    const reviewDecision = {
-      'confirm-received': 'received',
-      'mark-incomplete': 'incomplete',
-      'mark-not-received': 'not_received',
-    }[decision];
-    const request = ++reviewRequest.current;
-    setPreparingDecision(true);
-    setError(false);
-    try {
-      const response = await fetch(
-        `/api/admin/solar/requests/${encodeURIComponent(requestId)}/postal/review`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({
-            decision: reviewDecision,
-            ...(decision === 'confirm-received' ? {} : { reason: decisionReason }),
-          }),
-        }
-      );
-      if (!response.ok) throw new Error('review');
-      const postalReview = (await response.json()) as PostalReview;
-      if (request !== reviewRequest.current) return;
-      propose({
-        title: copy(`postal_${decision}`),
-        description: requestId,
-        path: `/api/admin/solar/requests/${encodeURIComponent(requestId)}/postal/${decision}`,
-        method: 'POST',
-        body: {
-          ...(decision === 'confirm-received' ? {} : { reason: decisionReason }),
-          expectedReviewHash: postalReview.hash,
-        },
-        conflictMessage: copy('postalReviewChanged'),
-        postalReview,
-      });
-    } catch {
-      if (request === reviewRequest.current) setError(true);
-    } finally {
-      if (request === reviewRequest.current) setPreparingDecision(false);
-    }
-  }
-  async function prepareFinalDecision(decision: FinalDecision, requestId: string) {
-    if (preparingDecision) return;
-    const decisionReason = reason.trim();
-    if (decision !== 'approve' && !decisionReason) {
-      setError(true);
-      return;
-    }
-    const request = ++reviewRequest.current;
-    setPreparingDecision(true);
-    setError(false);
-    try {
-      const response = await fetch(
-        `/api/admin/solar/requests/${encodeURIComponent(requestId)}/final-decision/review`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({
-            decision,
-            ...(decision === 'approve' ? {} : { reason: decisionReason }),
-          }),
-        }
-      );
-      if (!response.ok) throw new Error('review');
-      const review = (await response.json()) as FinalReview;
-      if (request !== reviewRequest.current) return;
-      propose({
-        title: copy(
-          decision === 'approve'
-            ? 'solarFinalApprove'
-            : decision === 'reject'
-              ? 'solarFinalReject'
-              : 'solarCloseNoContract'
-        ),
-        description: requestId,
-        path: `/api/admin/solar/requests/${encodeURIComponent(requestId)}/${decision === 'approve' ? 'final-approve' : decision === 'reject' ? 'final-reject' : 'close-no-contract'}`,
-        method: 'POST',
-        body: {
-          ...(decision === 'approve' ? {} : { reason: decisionReason }),
-          expectedReviewHash: review.hash,
-        },
-        conflictMessage: copy('solarFinalReviewChanged'),
-        review,
-      });
-    } catch {
-      if (request === reviewRequest.current) setError(true);
-    } finally {
-      if (request === reviewRequest.current) setPreparingDecision(false);
-    }
+  function prepareFinalDecision(decision: FinalDecision, requestId: string) {
+    const path = `/api/admin/solar/requests/${encodeURIComponent(requestId)}`;
+    prepareDecision({
+      requestId,
+      required: decision !== 'approve',
+      decision,
+      previewPath: `${path}/final-decision/review`,
+      path: `${path}/${decision === 'approve' ? 'final-approve' : decision === 'reject' ? 'final-reject' : 'close-no-contract'}`,
+      title: copy(
+        decision === 'approve'
+          ? 'solarFinalApprove'
+          : decision === 'reject'
+            ? 'solarFinalReject'
+            : 'solarCloseNoContract'
+      ),
+      conflict: copy('solarFinalReviewChanged'),
+      kind: 'final',
+    });
   }
   const actionGeneration = commandGeneration.current;
   const viewGeneration = reviewRequest.current;
+  const guidanceAction = action?.path === '/api/admin/solar/postal-guidance';
+  const editorLocked =
+    !!action ||
+    commandPending ||
+    preparingDecision ||
+    reasonForm.formState.isSubmitting ||
+    guidanceForm.formState.isSubmitting;
   return (
     <div className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('postalStaffTitle')}</h1>
       {time.notice}
-      {error && <p role="alert">{copy('postalError')}</p>}
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>
+            {copy(decisionUnconfirmed ? 'postalDecisionUnconfirmed' : 'postalError')}
+          </AlertDescription>
+        </Alert>
+      )}
+      {decisionUnconfirmed && (
+        <Button
+          type="button"
+          variant="outline"
+          disabled={editorLocked}
+          onClick={() => setQueueRevision((value) => value + 1)}
+        >
+          {copy('postalDecisionReload')}
+        </Button>
+      )}
       {createdContractId && (
         <p role="status">
           {copy('solarContractCreated')}{' '}
@@ -368,6 +472,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
                   id="solar-postal-lane"
                   className="w-full rounded-md border bg-background p-2"
                   value={lane}
+                  disabled={commandPending}
                   onChange={(event) => {
                     if (queries) {
                       queries.setQuery({ filters: { lane: event.target.value } });
@@ -423,12 +528,14 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
                 <li key={item.id}>
                   <button
                     type="button"
+                    disabled={commandPending}
                     className={`w-full rounded-md border p-3 text-start ${selected === item.id ? 'border-primary' : ''}`}
                     onClick={() => {
+                      if (commandPendingRef.current) return;
                       invalidateReview();
                       setSelected(item.id);
                       setPreview(null);
-                      setReason('');
+                      reasonForm.reset({ reason: '' });
                     }}
                   >
                     <span className="block font-medium">{item.profile_name}</span>
@@ -465,7 +572,11 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
         </ListPage>
       </section>
       {row && (
-        <section className="space-y-3 rounded-xl border p-5">
+        <section
+          role="group"
+          aria-label={copy('postalShipment')}
+          className="space-y-3 rounded-xl border p-5"
+        >
           <h2 className="text-xl font-semibold">{copy('postalShipment')}</h2>
           <p>
             {copy('postalStatus')}: {copy(`postal_${row.postal_status}`)}
@@ -528,37 +639,61 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
           )}
           {row.postal_status === 'shipped' && (
             <>
-              <label className="block">
-                {copy('reason')}
-                <textarea
-                  className="mt-1 w-full rounded-md border p-2"
-                  maxLength={1000}
-                  value={reason}
-                  onChange={(event) => setReason(event.target.value)}
+              <Form {...reasonForm}>
+                {reasonForm.formState.errors.root && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
+                  </Alert>
+                )}
+                <FormField
+                  control={reasonForm.control}
+                  name="reason"
+                  render={({ field }) => (
+                    <FormItem id="solar-postal-reason">
+                      <FormLabel>{copy('reason')}</FormLabel>
+                      <FormControl>
+                        <textarea
+                          {...field}
+                          disabled={editorLocked || decisionUnconfirmed}
+                          className="w-full rounded-md border bg-background p-2"
+                        />
+                      </FormControl>
+                      <FormDescription>{copy('postalReasonHelp')}</FormDescription>
+                      <div className="grid">
+                        <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
+                          {copy('postalReasonInvalid')}
+                        </p>
+                        <FormMessage className="col-start-1 row-start-1" />
+                      </div>
+                    </FormItem>
+                  )}
                 />
-              </label>
+              </Form>
               <div className="flex flex-wrap gap-2">
-                <button
+                <Button
                   className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
-                  disabled={preparingDecision}
+                  loading={preparingDecision || reasonForm.formState.isSubmitting}
+                  disabled={editorLocked || decisionUnconfirmed}
                   onClick={() => void decide('confirm-received')}
                 >
                   {copy('postal_confirm-received')}
-                </button>
-                <button
+                </Button>
+                <Button
                   className="rounded-md border px-4 py-2"
-                  disabled={preparingDecision}
+                  loading={preparingDecision || reasonForm.formState.isSubmitting}
+                  disabled={editorLocked || decisionUnconfirmed}
                   onClick={() => void decide('mark-incomplete')}
                 >
                   {copy('postal_mark-incomplete')}
-                </button>
-                <button
+                </Button>
+                <Button
                   className="rounded-md border px-4 py-2"
-                  disabled={preparingDecision}
+                  loading={preparingDecision || reasonForm.formState.isSubmitting}
+                  disabled={editorLocked || decisionUnconfirmed}
                   onClick={() => void decide('mark-not-received')}
                 >
                   {copy('postal_mark-not-received')}
-                </button>
+                </Button>
               </div>
             </>
           )}
@@ -567,62 +702,91 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
           ) && (
             <div className="space-y-3">
               {row.request_status !== 'postal_documents_received' && (
-                <label className="block">
-                  {copy('reason')}
-                  <textarea
-                    className="mt-1 w-full rounded-md border p-2"
-                    maxLength={1000}
-                    value={reason}
-                    onChange={(event) => setReason(event.target.value)}
+                <Form {...reasonForm}>
+                  {reasonForm.formState.errors.root && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
+                    </Alert>
+                  )}
+                  <FormField
+                    control={reasonForm.control}
+                    name="reason"
+                    render={({ field }) => (
+                      <FormItem id="solar-postal-reason">
+                        <FormLabel>{copy('reason')}</FormLabel>
+                        <FormControl>
+                          <textarea
+                            {...field}
+                            disabled={editorLocked || decisionUnconfirmed}
+                            className="w-full rounded-md border bg-background p-2"
+                          />
+                        </FormControl>
+                        <FormDescription>{copy('postalReasonHelp')}</FormDescription>
+                        <div className="grid">
+                          <p
+                            aria-hidden="true"
+                            className="invisible col-start-1 row-start-1 text-sm"
+                          >
+                            {copy('postalReasonInvalid')}
+                          </p>
+                          <FormMessage className="col-start-1 row-start-1" />
+                        </div>
+                      </FormItem>
+                    )}
                   />
-                </label>
+                </Form>
               )}
               <div className="flex flex-wrap gap-2">
                 {row.request_status === 'postal_documents_received' && (
                   <button
                     type="button"
                     className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
-                    onClick={() =>
+                    disabled={editorLocked || decisionUnconfirmed}
+                    onClick={() => {
+                      if (busy() || decisionUnconfirmed) return;
                       propose({
                         title: copy('solarStartFinalReview'),
                         description: row.id,
                         path: `/api/admin/solar/requests/${row.id}/start-final-review`,
                         method: 'POST',
-                      })
-                    }
+                      });
+                    }}
                   >
                     {copy('solarStartFinalReview')}
                   </button>
                 )}
                 {row.request_status === 'final_review' && (
                   <>
-                    <button
+                    <Button
                       type="button"
                       className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
-                      disabled={preparingDecision}
+                      loading={preparingDecision || reasonForm.formState.isSubmitting}
+                      disabled={editorLocked || decisionUnconfirmed}
                       onClick={() => void prepareFinalDecision('approve', row.id)}
                     >
                       {copy('solarFinalApprove')}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
                       className="rounded-md border border-destructive px-4 py-2 text-destructive"
-                      disabled={preparingDecision}
+                      loading={preparingDecision || reasonForm.formState.isSubmitting}
+                      disabled={editorLocked || decisionUnconfirmed}
                       onClick={() => void prepareFinalDecision('reject', row.id)}
                     >
                       {copy('solarFinalReject')}
-                    </button>
+                    </Button>
                   </>
                 )}
                 {row.request_status !== 'postal_documents_received' && (
-                  <button
+                  <Button
                     type="button"
                     className="rounded-md border px-4 py-2"
-                    disabled={preparingDecision}
+                    loading={preparingDecision || reasonForm.formState.isSubmitting}
+                    disabled={editorLocked || decisionUnconfirmed}
                     onClick={() => void prepareFinalDecision('close-no-contract', row.id)}
                   >
                     {copy('solarCloseNoContract')}
-                  </button>
+                  </Button>
                 )}
               </div>
             </div>
@@ -651,42 +815,152 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
         </div>
       )}
       {guidance && (
-        <form className="space-y-3 rounded-xl border p-5" onSubmit={saveGuidance}>
-          <h2 className="text-xl font-semibold">{copy('postalGuidance')}</h2>
-          {(['fa', 'en', 'destinationAddress', 'contactDetails'] as const).map((key) => (
-            <label key={key} className="block">
-              {copy(`postalGuidance_${key}`)}
-              <textarea
-                className="mt-1 w-full rounded-md border p-2"
-                value={guidance[key]}
-                onChange={(event) => setGuidance({ ...guidance, [key]: event.target.value })}
-              />
-            </label>
-          ))}
-          <label className="block">
-            {copy('postalOriginalsFa')}
-            <textarea
-              className="mt-1 w-full rounded-md border p-2"
-              value={originalsFa}
-              onChange={(event) => setOriginalsFa(event.target.value)}
-            />
-          </label>
-          <label className="block">
-            {copy('postalOriginalsEn')}
-            <textarea
-              className="mt-1 w-full rounded-md border p-2"
-              value={originalsEn}
-              onChange={(event) => setOriginalsEn(event.target.value)}
-            />
-          </label>
-          <button className="rounded-md border px-4 py-2" type="submit">
-            {copy('postalSaveGuidance')}
-          </button>
-        </form>
+        <Form {...guidanceForm}>
+          <div role="group" aria-label={copy('postalGuidance')}>
+            <form className="space-y-3 rounded-xl border p-5" onSubmit={saveGuidance} noValidate>
+              <h2 className="text-xl font-semibold">{copy('postalGuidance')}</h2>
+              {guidanceForm.formState.errors.root && (
+                <Alert variant="destructive">
+                  <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
+                </Alert>
+              )}
+              {(guidanceUnconfirmed || guidanceDenied) && (
+                <Alert variant="destructive">
+                  <AlertDescription>
+                    {copy(guidanceDenied ? 'postalGuidanceForbidden' : 'postalGuidanceUnconfirmed')}
+                  </AlertDescription>
+                </Alert>
+              )}
+              {(
+                [
+                  ['fa', 'solar-postal-guidance-fa', 'postalGuidance_fa', 'documentGuidanceHelp'],
+                  ['en', 'solar-postal-guidance-en', 'postalGuidance_en', 'documentGuidanceHelp'],
+                  [
+                    'destinationAddress',
+                    'solar-postal-guidance-destination-address',
+                    'postalGuidance_destinationAddress',
+                    'postalAddressHelp',
+                  ],
+                  [
+                    'contactDetails',
+                    'solar-postal-guidance-contact-details',
+                    'postalGuidance_contactDetails',
+                    'postalContactHelp',
+                  ],
+                  [
+                    'originalsFa',
+                    'solar-postal-guidance-originals-fa',
+                    'postalOriginalsFa',
+                    'documentSuggestionsHelp',
+                  ],
+                  [
+                    'originalsEn',
+                    'solar-postal-guidance-originals-en',
+                    'postalOriginalsEn',
+                    'documentSuggestionsHelp',
+                  ],
+                ] as const
+              ).map(([name, id, label, help]) => (
+                <FormField
+                  key={name}
+                  control={guidanceForm.control}
+                  name={name}
+                  render={({ field }) => (
+                    <FormItem id={id}>
+                      <FormLabel>{copy(label)}</FormLabel>
+                      <FormControl>
+                        <textarea
+                          {...field}
+                          disabled={editorLocked || guidanceDenied}
+                          dir={
+                            name.endsWith('Fa') || name === 'fa'
+                              ? 'rtl'
+                              : name.endsWith('En') || name === 'en'
+                                ? 'ltr'
+                                : undefined
+                          }
+                          className="w-full rounded-md border bg-background p-2"
+                        />
+                      </FormControl>
+                      <FormDescription>{copy(help)}</FormDescription>
+                      <div className="grid">
+                        <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
+                          {guidanceMessages[name]}
+                        </p>
+                        <FormMessage className="col-start-1 row-start-1" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              ))}
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="submit"
+                  loading={guidanceForm.formState.isSubmitting}
+                  disabled={editorLocked || guidanceUnconfirmed || guidanceDenied}
+                >
+                  {copy('postalSaveGuidance')}
+                </Button>
+                {(guidanceUnconfirmed || guidanceDenied) && (
+                  <Button
+                    id="solar-postal-guidance-reload"
+                    type="button"
+                    variant="outline"
+                    disabled={editorLocked}
+                    onClick={() => setGuidanceRevision((value) => value + 1)}
+                  >
+                    {copy('postalGuidanceReload')}
+                  </Button>
+                )}
+              </div>
+            </form>
+          </div>
+        </Form>
       )}
       {action && (
         <TeamActionDialog
           action={action}
+          confirmationDisabled={
+            guidanceAction ? guidanceUnconfirmed || guidanceDenied : decisionUnconfirmed
+          }
+          onPendingChange={(pending) => {
+            if (actionGeneration === reviewRequest.current) {
+              commandPendingRef.current = pending;
+              setCommandPending(pending);
+            }
+          }}
+          onValidationError={(fields) => {
+            if (actionGeneration !== reviewRequest.current) return false;
+            return guidanceAction
+              ? guidanceFields(fields)
+              : !!(action.body as { reason?: string } | undefined)?.reason &&
+                  !!fields.length &&
+                  fields.every((field) => field === 'reason') &&
+                  reasonFields(['reason']);
+          }}
+          onUnconfirmed={() => {
+            if (actionGeneration !== reviewRequest.current) return;
+            if (guidanceAction) {
+              guidanceRecoverAfter.current = guidanceRead.current + 1;
+              setGuidanceUnconfirmed(true);
+            } else {
+              decisionRecoverAfter.current = queueRead.current + 1;
+              setDecisionUnconfirmed(true);
+              setError(true);
+            }
+          }}
+          onDenied={() => {
+            if (actionGeneration !== reviewRequest.current) return;
+            if (guidanceAction) setGuidanceDenied(true);
+            else {
+              trackingAccessDenied.current = true;
+              invalidateReview();
+              setRows([]);
+              setSelected(null);
+              setPreview(null);
+              setQueueDenied(true);
+            }
+          }}
           onClose={() => {
             if (actionGeneration === reviewRequest.current) invalidateReview();
           }}
@@ -800,11 +1074,21 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
               />
             ) : undefined
           }
-          onSuccess={async () => {
+          onSuccess={async (receipt) => {
             if (actionGeneration !== reviewRequest.current) return;
-            setError(false);
-            refresh();
-            setReason('');
+            if (guidanceAction) {
+              const expected = action.body as Guidance;
+              if (!confirmedPostalGuidance(receipt, expected)) throw new Error('guidance receipt');
+              setGuidance(expected);
+              guidanceForm.reset(postalGuidanceDraft(expected));
+              setGuidanceUnconfirmed(false);
+              invalidateReview();
+            } else {
+              if (!confirmedPostalDecision(receipt, action.path)) throw new Error('postal receipt');
+              setError(false);
+              refresh();
+              reasonForm.reset({ reason: '' });
+            }
           }}
         />
       )}

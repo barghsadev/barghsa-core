@@ -367,7 +367,7 @@ test('solar request moves from customer upload through staff review and postal r
     expect(postalStatus).toBe('shipped');
     postalStatus = 'received';
     requestStatus = 'postal_documents_received';
-    return route.fulfill({ json: { status: requestStatus } });
+    return route.fulfill({ json: { status: postalStatus, requestStatus } });
   });
   await page.route(`**/api/solar/requests/${requestId}/postal`, (route) =>
     route.fulfill({
@@ -377,18 +377,17 @@ test('solar request moves from customer upload through staff review and postal r
           en: 'Mail the originals.',
           fa: 'اصل مدارک را پست کنید.',
           destinationAddress: 'Solar office',
-          contactDetails: null,
+          contactDetails: '',
           originals: [],
         },
-        postal: shipment
-          ? {
-              ...shipment,
-              status: postalStatus,
-              courier: shipment.courier,
-              tracking_number: shipment.trackingNumber,
-              send_date: shipment.sendDate,
-            }
-          : { status: 'waiting_for_shipment' },
+        postal: {
+          status: postalStatus,
+          courier: shipment?.courier ?? null,
+          tracking_number: shipment?.trackingNumber ?? null,
+          send_date: shipment?.sendDate ?? null,
+          receipt_image_id: shipment?.receiptImageId ?? null,
+          staff_notes: null,
+        },
       },
     })
   );

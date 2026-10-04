@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { GenericContainer, Wait, type StartedTestContainer } from 'testcontainers';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 const requireShared = createRequire(resolve(__dirname, '../../../../packages/shared/package.json'));
 const { S3Client, CreateBucketCommand } = requireShared('@aws-sdk/client-s3') as {
@@ -205,6 +206,257 @@ beforeAll(async () => {
   ).toBe(200);
   expect((await advanceDocuments(requestId)).status, http.logs()).toBe(200);
 }, 90_000);
+
+it('returns only owned form fields while rejected bodies leave workflow, config, audit and notification state intact', async () => {
+  const shipmentPath = `solar/requests/${requestId}/postal/shipment`;
+  const postalBase = `admin/solar/requests/${requestId}/postal`;
+  const finalBase = `admin/solar/requests/${requestId}`;
+  const guidancePath = 'admin/solar/postal-guidance';
+  const guidance = {
+    fa: 'مدارک',
+    en: 'Documents',
+    destinationAddress: '',
+    contactDetails: '',
+    originals: [],
+  };
+  const shipment = { courier: 'Courier', trackingNumber: 'TRACK-1', sendDate: '2026-01-02' };
+  const state = async () => ({
+    request: (
+      await http.pool.query(
+        'SELECT status,updated_at FROM solar_construction_requests WHERE id=$1',
+        [requestId]
+      )
+    ).rows,
+    postal: (
+      await http.pool.query('SELECT * FROM solar_construction_postal WHERE request_id=$1', [
+        requestId,
+      ])
+    ).rows,
+    config: (await http.pool.query('SELECT key,value,version FROM app_config ORDER BY key')).rows,
+    version: (await http.pool.query("SELECT version FROM config_version WHERE id='global'")).rows,
+    audit: (await http.pool.query('SELECT id,event,metadata FROM audit_log ORDER BY id')).rows,
+    notifications: (await http.pool.query('SELECT id FROM in_app_notifications ORDER BY id')).rows,
+  });
+  const before = await state();
+  try {
+    for (const [path, body, fields] of [
+      [
+        shipmentPath,
+        {
+          ...shipment,
+          courier: '',
+          trackingNumber: 'PRIVATE'.repeat(29),
+          sendDate: '2026-02-30',
+          receiptImageId: 'PRIVATE',
+        },
+        ['courier', 'trackingNumber', 'sendDate', 'receiptImageId'],
+      ],
+      [shipmentPath, { ...shipment, courier: '', secret: 'PRIVATE' }, null],
+    ] as const) {
+      const response = await send('postal-buyer', path, 'POST', body);
+      expect(response.status, http.logs()).toBe(400);
+      const result = await response.json();
+      if (fields)
+        expect(result).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID', fields } });
+      else expect(result).not.toHaveProperty('error.fields');
+      expect(JSON.stringify(result)).not.toContain('PRIVATE');
+    }
+    for (const [path, method, body, fields] of [
+      [
+        guidancePath,
+        'PUT',
+        {
+          ...guidance,
+          fa: 'ف'.repeat(4001),
+          en: 'e'.repeat(4001),
+          destinationAddress: 'a'.repeat(2001),
+          contactDetails: 'c'.repeat(1001),
+          originals: Array.from({ length: 31 }, () => ({ fa: 'مدرک', en: 'Document' })),
+        },
+        ['fa', 'en', 'destinationAddress', 'contactDetails', 'originalsFa', 'originalsEn'],
+      ],
+      [
+        guidancePath,
+        'PUT',
+        { ...guidance, originals: [{ fa: '', en: 'PRIVATE'.repeat(29) }] },
+        ['originalsFa', 'originalsEn'],
+      ],
+      [guidancePath, 'PUT', { ...guidance, fa: '', secret: 'PRIVATE' }, null],
+      [guidancePath, 'PUT', { ...guidance, originals: 'PRIVATE' }, null],
+      [`${postalBase}/review`, 'POST', { decision: 'incomplete' }, ['reason']],
+      [
+        `${postalBase}/review`,
+        'POST',
+        { decision: 'not_received', reason: 'PRIVATE'.repeat(143) },
+        ['reason'],
+      ],
+      [
+        `${postalBase}/mark-incomplete`,
+        'POST',
+        { reason: '', expectedReviewHash: staleReviewHash },
+        ['reason'],
+      ],
+      [
+        `${postalBase}/mark-not-received`,
+        'POST',
+        { reason: 'PRIVATE'.repeat(143), expectedReviewHash: staleReviewHash },
+        ['reason'],
+      ],
+      [
+        `${postalBase}/mark-incomplete`,
+        'POST',
+        { reason: '', expectedReviewHash: 'PRIVATE' },
+        null,
+      ],
+      [`${finalBase}/final-decision/review`, 'POST', { decision: 'reject' }, ['reason']],
+      [`${finalBase}/final-decision/review`, 'POST', { decision: 'close-no-contract' }, ['reason']],
+      [
+        `${finalBase}/final-reject`,
+        'POST',
+        { reason: '', expectedReviewHash: staleReviewHash },
+        ['reason'],
+      ],
+      [
+        `${finalBase}/close-no-contract`,
+        'POST',
+        { reason: 'PRIVATE'.repeat(143), expectedReviewHash: staleReviewHash },
+        ['reason'],
+      ],
+      [
+        `${finalBase}/close-no-contract`,
+        'POST',
+        { reason: '', expectedReviewHash: 'PRIVATE' },
+        null,
+      ],
+    ] as const) {
+      const response = await send('postal-reviewer', path, method, body);
+      expect(response.status, http.logs()).toBe(400);
+      const result = await response.json();
+      if (fields)
+        expect(result).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID', fields } });
+      else expect(result).not.toHaveProperty('error.fields');
+      expect(JSON.stringify(result)).not.toContain('PRIVATE');
+    }
+    for (const [path, method, body] of [
+      [guidancePath, 'PUT', { fa: '' }],
+      [`${postalBase}/review`, 'POST', { decision: 'incomplete' }],
+      [`${postalBase}/mark-incomplete`, 'POST', { reason: '' }],
+      [`${finalBase}/final-decision/review`, 'POST', { decision: 'close-no-contract' }],
+      [`${finalBase}/final-reject`, 'POST', { reason: '' }],
+      [`${finalBase}/close-no-contract`, 'POST', { reason: '' }],
+    ] as const) {
+      const denied = await send('postal-buyer', path, method, body);
+      expect(denied.status, http.logs()).toBe(403);
+      expect(await denied.json()).not.toHaveProperty('error.fields');
+    }
+    const permissions = (
+      await http.pool.query<{ permissions: string }>(
+        "SELECT permissions FROM staff_roles WHERE role_id='postal-review-staff'"
+      )
+    ).rows[0]!.permissions;
+    try {
+      for (const [grant, allowedDecision, deniedDecision] of [
+        ['orders:write', 'reject', 'close-no-contract'],
+        ['contracts:write', 'close-no-contract', 'reject'],
+      ] as const) {
+        await http.pool.query(
+          "UPDATE staff_roles SET permissions=$1 WHERE role_id='postal-review-staff'",
+          [JSON.stringify([grant])]
+        );
+        const denied = await send('postal-reviewer', `${finalBase}/final-decision/review`, 'POST', {
+          decision: deniedDecision,
+        });
+        expect(denied.status, http.logs()).toBe(403);
+        expect(await denied.json()).not.toHaveProperty('error.fields');
+        const owned = await send('postal-reviewer', `${finalBase}/final-decision/review`, 'POST', {
+          decision: allowedDecision,
+        });
+        expect(owned.status, http.logs()).toBe(400);
+        expect(await owned.json()).toMatchObject({ error: { fields: ['reason'] } });
+      }
+    } finally {
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions=$1 WHERE role_id='postal-review-staff'",
+        [permissions]
+      );
+    }
+    const verifiedAt = (
+      await http.pool.query<{ verified_at: string }>(
+        "SELECT step_up_verified_at::text AS verified_at FROM sessions WHERE user_id='postal-reviewer'"
+      )
+    ).rows[0]!.verified_at;
+    try {
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='postal-reviewer'"
+      );
+      const denied = await send('postal-reviewer', guidancePath, 'PUT', guidance);
+      expect(denied.status, http.logs()).toBe(403);
+      expect(await denied.json()).toMatchObject({
+        error: { code: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code },
+      });
+    } finally {
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=$1::timestamptz WHERE user_id='postal-reviewer'",
+        [verifiedAt]
+      );
+    }
+    expect(await state()).toEqual(before);
+  } finally {
+    // Added validation requests must not consume the following journey fixture's transport quota.
+    await http.pool.query(
+      "DELETE FROM rate_limit_windows WHERE NOT security AND key LIKE 'solar:postal:shipment:%'"
+    );
+    await http.pool.query(
+      "DELETE FROM rate_limit_counters WHERE key LIKE 'solar:postal:shipment:%'"
+    );
+  }
+});
+
+it('returns safe shipment semantic fields only after current request authority and preserves the waiting parcel', async () => {
+  const path = `solar/requests/${requestId}/postal/shipment`;
+  const nextDay = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
+  const snapshot = async () => ({
+    postal: (
+      await http.pool.query('SELECT * FROM solar_construction_postal WHERE request_id=$1', [
+        requestId,
+      ])
+    ).rows,
+    audit: (await http.pool.query('SELECT id FROM audit_log ORDER BY id')).rows,
+    notifications: (await http.pool.query('SELECT id FROM in_app_notifications ORDER BY id')).rows,
+  });
+  const before = await snapshot();
+  try {
+    for (const [body, field] of [
+      [{ courier: 'Courier', trackingNumber: 'TRACK-1', sendDate: nextDay }, 'sendDate'],
+      [
+        {
+          courier: 'Courier',
+          trackingNumber: 'TRACK-1',
+          sendDate: '2026-01-02',
+          receiptImageId: randomUUID(),
+        },
+        'receiptImageId',
+      ],
+    ] as const) {
+      const rejected = await send('postal-buyer', path, 'POST', body);
+      expect(rejected.status, http.logs()).toBe(400);
+      expect(await rejected.json()).toMatchObject({
+        error: { code: 'VALIDATION:INPUT:INVALID', fields: [field] },
+      });
+      const denied = await send('postal-other', path, 'POST', body);
+      expect(denied.status, http.logs()).toBe(404);
+      expect(await denied.json()).not.toHaveProperty('error.fields');
+    }
+    expect(await snapshot()).toEqual(before);
+  } finally {
+    await http.pool.query(
+      "DELETE FROM rate_limit_windows WHERE NOT security AND key LIKE 'solar:postal:shipment:%'"
+    );
+    await http.pool.query(
+      "DELETE FROM rate_limit_counters WHERE key LIKE 'solar:postal:shipment:%'"
+    );
+  }
+});
 
 it('creates a linked solar draft and invoice atomically, then replays the same command', async () => {
   const created = await submitSolar({

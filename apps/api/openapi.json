@@ -13667,26 +13667,70 @@
           "content": {
             "application/json": {
               "schema": {
-                "additionalProperties": false,
-                "properties": {
-                  "decision": {
-                    "enum": [
-                      "approve",
-                      "reject",
-                      "close-no-contract"
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "decision": {
+                        "enum": [
+                          "approve"
+                        ],
+                        "type": "string"
+                      },
+                      "reason": {
+                        "maxLength": 1000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "decision"
                     ],
-                    "type": "string"
+                    "type": "object"
                   },
-                  "reason": {
-                    "maxLength": 1000,
-                    "minLength": 1,
-                    "type": "string"
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "decision": {
+                        "enum": [
+                          "reject"
+                        ],
+                        "type": "string"
+                      },
+                      "reason": {
+                        "maxLength": 1000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "reason",
+                      "decision"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "decision": {
+                        "enum": [
+                          "close-no-contract"
+                        ],
+                        "type": "string"
+                      },
+                      "reason": {
+                        "maxLength": 1000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "reason",
+                      "decision"
+                    ],
+                    "type": "object"
                   }
-                },
-                "required": [
-                  "decision"
-                ],
-                "type": "object"
+                ]
               }
             }
           },
@@ -13939,26 +13983,70 @@
           "content": {
             "application/json": {
               "schema": {
-                "additionalProperties": false,
-                "properties": {
-                  "decision": {
-                    "enum": [
-                      "received",
-                      "incomplete",
-                      "not_received"
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "decision": {
+                        "enum": [
+                          "received"
+                        ],
+                        "type": "string"
+                      },
+                      "reason": {
+                        "maxLength": 1000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "decision"
                     ],
-                    "type": "string"
+                    "type": "object"
                   },
-                  "reason": {
-                    "maxLength": 1000,
-                    "minLength": 1,
-                    "type": "string"
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "decision": {
+                        "enum": [
+                          "incomplete"
+                        ],
+                        "type": "string"
+                      },
+                      "reason": {
+                        "maxLength": 1000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "reason",
+                      "decision"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "decision": {
+                        "enum": [
+                          "not_received"
+                        ],
+                        "type": "string"
+                      },
+                      "reason": {
+                        "maxLength": 1000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "reason",
+                      "decision"
+                    ],
+                    "type": "object"
                   }
-                },
-                "required": [
-                  "decision"
-                ],
-                "type": "object"
+                ]
               }
             }
           },

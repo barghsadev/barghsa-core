@@ -1,6 +1,34 @@
 import { lookup } from './lookup.js';
 
 const en: Record<string, string> = {
+  postalCourierInvalid: 'Enter a courier name of 1–100 characters.',
+  postalTrackingInvalid: 'Enter a tracking number of 1–200 characters.',
+  postalSendDateInvalid: 'Choose a valid sending date on or before today in UTC.',
+  postalReceiptInvalid: 'Select an available receipt image or leave the receipt empty.',
+  postalCourierHelp: 'Required. Up to 100 characters.',
+  postalTrackingHelp: 'Required. Up to 200 characters.',
+  postalSendDateHelp: 'Required. The sending date cannot be after the current UTC calendar day.',
+  postalReceiptHelp: 'Optional. Select a receipt image uploaded for this request.',
+  postalShipmentUnconfirmed:
+    'The shipment save could not be confirmed. Your draft is still here. Reload shipment tracking before trying again.',
+  postalReceiptLoadError: 'Could not load receipt images. Your shipment details are still here.',
+  postalReasonInvalid: 'Enter a reason of 1–1,000 characters.',
+  postalReasonHelp:
+    'Required for an issue, rejection or closing without a contract. Up to 1,000 characters. Receipt confirmation and approval do not need a reason.',
+  postalAddressInvalid: 'Use up to 2,000 characters for the destination address.',
+  postalContactInvalid: 'Use up to 1,000 characters for contact details.',
+  postalOriginalsInvalid:
+    'Use up to 30 lines of 1–200 characters each, with the same number of Persian and English originals.',
+  postalAddressHelp: 'Optional. Up to 2,000 characters.',
+  postalContactHelp: 'Optional. Up to 1,000 characters.',
+  postalGuidanceUnconfirmed:
+    'The postal guidance update could not be confirmed. Your draft is still here. Reload guidance before trying again.',
+  postalGuidanceForbidden: 'Editing postal guidance is unavailable. Your draft is still here.',
+  postalGuidanceReload: 'Reload postal guidance',
+  postalDecisionUnconfirmed:
+    'The decision could not be confirmed. Your reason is still here. Reload the queue before preparing another review.',
+  postalDecisionReload: 'Reload postal queue',
+
   documentReasonInvalid: 'Enter a rejection reason of 1–1,000 characters.',
   documentDescriptionInvalid: 'Enter an additional-document description of 1–2,000 characters.',
   documentGuidanceInvalid: 'Enter guidance of 1–4,000 characters.',
@@ -320,6 +348,35 @@ const en: Record<string, string> = {
 };
 
 const fa: Record<string, string> = {
+  postalCourierInvalid: 'نام شرکت ارسال را با ۱ تا ۱۰۰ نویسه وارد کنید.',
+  postalTrackingInvalid: 'کد رهگیری را با ۱ تا ۲۰۰ نویسه وارد کنید.',
+  postalSendDateInvalid: 'تاریخ ارسال معتبر و حداکثر تا روز جاری به وقت UTC انتخاب کنید.',
+  postalReceiptInvalid: 'یک تصویر رسید در دسترس انتخاب کنید یا رسید را خالی بگذارید.',
+  postalCourierHelp: 'الزامی؛ حداکثر ۱۰۰ نویسه.',
+  postalTrackingHelp: 'الزامی؛ حداکثر ۲۰۰ نویسه.',
+  postalSendDateHelp: 'الزامی؛ تاریخ ارسال نباید پس از روز جاری به وقت UTC باشد.',
+  postalReceiptHelp: 'اختیاری؛ تصویر رسید بارگذاری\u200cشده برای همین درخواست را انتخاب کنید.',
+  postalShipmentUnconfirmed:
+    'ذخیرهٔ اطلاعات ارسال تأیید نشد. پیش\u200cنویس شما حفظ شده است. پیش از تلاش مجدد، اطلاعات رهگیری را بازخوانی کنید.',
+  postalReceiptLoadError: 'تصاویر رسید دریافت نشد. اطلاعات ارسال شما حفظ شده است.',
+  postalReasonInvalid: 'دلیل را با ۱ تا ۱٬۰۰۰ نویسه وارد کنید.',
+  postalReasonHelp:
+    'برای ثبت مشکل، رد یا بستن بدون قرارداد الزامی است؛ حداکثر ۱٬۰۰۰ نویسه. تأیید دریافت و تأیید درخواست به دلیل نیاز ندارند.',
+  postalAddressInvalid: 'نشانی مقصد را با حداکثر ۲٬۰۰۰ نویسه وارد کنید.',
+  postalContactInvalid: 'اطلاعات تماس را با حداکثر ۱٬۰۰۰ نویسه وارد کنید.',
+  postalOriginalsInvalid:
+    'حداکثر ۳۰ سطر با ۱ تا ۲۰۰ نویسه در هر سطر وارد کنید. تعداد اصل مدارک فارسی و انگلیسی باید یکسان باشد.',
+  postalAddressHelp: 'اختیاری؛ حداکثر ۲٬۰۰۰ نویسه.',
+  postalContactHelp: 'اختیاری؛ حداکثر ۱٬۰۰۰ نویسه.',
+  postalGuidanceUnconfirmed:
+    'ذخیرهٔ راهنمای ارسال پستی تأیید نشد. پیش\u200cنویس شما حفظ شده است. پیش از تلاش مجدد، راهنما را بازخوانی کنید.',
+  postalGuidanceForbidden:
+    'ویرایش راهنمای ارسال پستی در دسترس نیست. پیش\u200cنویس شما حفظ شده است.',
+  postalGuidanceReload: 'بازخوانی راهنمای ارسال پستی',
+  postalDecisionUnconfirmed:
+    'ثبت تصمیم تأیید نشد. دلیل شما حفظ شده است. پیش از بررسی مجدد، صف درخواست\u200cها را بازخوانی کنید.',
+  postalDecisionReload: 'بازخوانی صف پستی',
+
   documentReasonInvalid: 'دلیل رد را با ۱ تا ۱٬۰۰۰ نویسه وارد کنید.',
   documentDescriptionInvalid: 'شرح مدرک اضافی را با ۱ تا ۲٬۰۰۰ نویسه وارد کنید.',
   documentGuidanceInvalid: 'راهنما را با ۱ تا ۴٬۰۰۰ نویسه وارد کنید.',

@@ -13,6 +13,7 @@ import { requireStaffMutationPermission } from '../admin/staff-mutation-permissi
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { InputFieldException } from '../common/input-field.exception.js';
 
 type Actor = AuthenticatedRequest['session'];
 type PostalDecision = 'received' | 'incomplete' | 'not_received';
@@ -178,7 +179,7 @@ export class SolarPostalService {
       )
         throw new ConflictException('Shipment is already under review');
       if (input.sendDate > new Date().toISOString().slice(0, 10))
-        throw new BadRequestException('Send date cannot be in the future');
+        throw new InputFieldException(['sendDate']);
       if (input.receiptImageId) {
         const receipt = (
           await client.query(
@@ -188,8 +189,7 @@ export class SolarPostalService {
             [input.receiptImageId, request.profile_id, requestId, actor.userId]
           )
         ).rows[0];
-        if (!receipt)
-          throw new BadRequestException('Select an available receipt image for this request');
+        if (!receipt) throw new InputFieldException(['receiptImageId']);
       }
       await client.query(
         `UPDATE solar_construction_postal SET status='shipped',courier=$2,tracking_number=$3,
