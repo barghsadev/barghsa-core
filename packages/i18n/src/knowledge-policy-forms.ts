@@ -1,5 +1,7 @@
 import type { Locale } from './index.js';
 const en = {
+  member: 'Choose an available member that is not already linked.',
+  query: 'Enter a query with 1 to 500 characters.',
   title: 'Enter a title with 1 to 120 characters.',
   description: 'Use at most 2,000 characters for the description.',
   audience: 'Choose a supported audience.',
@@ -27,6 +29,8 @@ const en = {
   reset: 'Reset to saved settings',
 };
 const fa: Record<keyof typeof en, string> = {
+  member: 'عضوی در دسترس را انتخاب کنید که قبلاً پیوند نخورده است.',
+  query: 'پرسشی با ۱ تا ۵۰۰ نویسه وارد کنید.',
   title: 'عنوانی با ۱ تا ۱۲۰ نویسه وارد کنید.',
   description: 'توضیح را حداکثر با ۲۰۰۰ نویسه وارد کنید.',
   audience: 'مخاطب پشتیبانی‌شده را انتخاب کنید.',

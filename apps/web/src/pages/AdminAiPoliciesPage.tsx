@@ -1,3 +1,9 @@
+import { CatalogueRelationEditor } from '../components/CatalogueRelationEditor.js';
+import {
+  matchesMembership,
+  memberIdsBasis,
+  type MembershipCommand,
+} from '../lib/catalogue-membership.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import {
@@ -11,6 +17,7 @@ import {
   invalidPolicyFields,
   policyBody,
   matchesAiCatalogueReceipt,
+  policyPriority,
 } from '../lib/knowledge-policy-form.js';
 import type { PolicyCatalogueKind } from '../lib/catalogue-category-query.js';
 import { useEffect, useState, useRef, useCallback, type FormEvent } from 'react';
@@ -77,9 +84,6 @@ function priorityBasis(row: Entry) {
 function membersBasis(rows: Entry[]) {
   return JSON.stringify(rows.map(priorityBasis).sort());
 }
-const validPriority = (value: string, optional = false) =>
-  (optional && value === '') ||
-  (/^-?\d+$/.test(value) && Number(value) >= -1000 && Number(value) <= 1000);
 function draftFor(row?: Entry): Draft {
   const rules = row?.rules ?? {},
     items = rules.topics ?? rules.actions ?? rules.scopes ?? rules.blockedTerms;
@@ -149,9 +153,19 @@ export default function AdminAiPoliciesPage({
     requiredRead = useRef(0);
   const formCapture = useRef<{ body: Record<string, unknown>; id?: string } | null>(null);
   const actionRef = useRef<TeamAction | null>(null);
+  const operationCapture = useRef<MembershipCommand | null>(null),
+    uncertainOperation = useRef<MembershipCommand | null>(null);
+  const requiredOperationRead = useRef<{ detail: number; choices: number | null }>({
+    detail: 0,
+    choices: null,
+  });
+  const [operationUncertain, setOperationUncertain] = useState(false);
   const setAction = useCallback((value: TeamAction | null) => {
     actionRef.current = value;
-    if (!value) formCapture.current = null;
+    if (!value) {
+      formCapture.current = null;
+      operationCapture.current = null;
+    }
     updateAction(value);
   }, []);
   const onPendingChange = useCallback((value: boolean) => {
@@ -173,6 +187,9 @@ export default function AdminAiPoliciesPage({
   const draftBasis = useRef<string | null>(null),
     acceptedMembers = useRef<Entry[]>([]);
   const clearSelection = useCallback(() => {
+    setOperationUncertain(false);
+    uncertainOperation.current = null;
+    requiredOperationRead.current = { detail: 0, choices: null };
     generation.current++;
     commandTarget.current = null;
     setSelected(null);
@@ -269,12 +286,7 @@ export default function AdminAiPoliciesPage({
       Object.fromEntries(
         next.map((item) => {
           const before = old.find((row) => row.id === item.id);
-          return [
-            item.id,
-            before && priorityBasis(before) === priorityBasis(item)
-              ? (previous[item.id] ?? override(item))
-              : override(item),
-          ];
+          return [item.id, before ? (previous[item.id] ?? override(item)) : override(item)];
         })
       )
     );
@@ -396,6 +408,7 @@ export default function AdminAiPoliciesPage({
     body?: unknown
   ) {
     if (
+      operationUncertain ||
       commandDisabled(path, body) ||
       actionRef.current ||
       validationBusy.current ||
@@ -416,6 +429,7 @@ export default function AdminAiPoliciesPage({
       ...(formCapture.current
         ? { successStatus: method === 'POST' ? 201 : 200, conflictMessage: copy('changed') }
         : {}),
+      ...(operationCapture.current ? { successStatus: 204, conflictMessage: copy('changed') } : {}),
       title,
       description,
       ...(body === undefined ? {} : { body }),
@@ -481,12 +495,84 @@ export default function AdminAiPoliciesPage({
     }
   }
   function unconfirmed() {
+    if (operationCapture.current) {
+      const operation = operationCapture.current;
+      uncertainOperation.current = operation;
+      setOperationUncertain(true);
+      generation.current++;
+      setAction(null);
+      onPendingChange(false);
+      requiredOperationRead.current = {
+        detail: selectedRead.retry(),
+        choices: operation.choicesRequired ? choices.retry() : null,
+      };
+      return;
+    }
     if (!formCapture.current) return;
     setUncertain(true);
     generation.current++;
     setAction(null);
     onPendingChange(false);
     requiredRead.current = list.retry();
+  }
+  const operationResetDisabled =
+    !operationUncertain ||
+    !!action ||
+    pending ||
+    detailDisabled ||
+    selectedRead.readAttempt === null ||
+    selectedRead.readAttempt < requiredOperationRead.current.detail ||
+    (requiredOperationRead.current.choices !== null &&
+      (choices.loading ||
+        choices.error ||
+        choices.readAttempt === null ||
+        choices.readAttempt < requiredOperationRead.current.choices));
+  const operationRecovery = operationUncertain && (
+    <div className="space-y-2">
+      <p role="alert">{copy('uncertain')}</p>
+      <Button
+        type="button"
+        variant="outline"
+        disabled={operationResetDisabled}
+        onClick={() => {
+          if (operationResetDisabled) return;
+          uncertainOperation.current?.owner?.reset();
+          uncertainOperation.current = null;
+          setOperationUncertain(false);
+        }}
+      >
+        {copy('reset')}
+      </Button>
+    </div>
+  );
+  function proposeMembership(
+    operation: MembershipCommand,
+    method: 'POST' | 'DELETE',
+    body?: unknown
+  ) {
+    if (
+      operationUncertain ||
+      actionRef.current ||
+      validationBusy.current ||
+      networkPending.current ||
+      work.current.selected !== operation.groupId ||
+      (operation.choicesRequired ? work.current.memberDisabled : work.current.detailDisabled)
+    )
+      return;
+    operationCapture.current = operation;
+    propose(
+      `/api/admin/policy-groups/${operation.groupId}/members${method === 'DELETE' ? `/${operation.memberId}` : ''}`,
+      method,
+      label(method === 'DELETE' ? 'unlink' : operation.choicesRequired ? 'link' : 'updatePriority'),
+      label(
+        method === 'DELETE'
+          ? 'confirmUnlink'
+          : operation.choicesRequired
+            ? 'confirmLink'
+            : 'confirmPriority'
+      ),
+      body
+    );
   }
   const resetDisabled =
     disabled ||
@@ -963,75 +1049,54 @@ export default function AdminAiPoliciesPage({
                 <h2 className="break-words text-xl font-semibold">
                   {rows.find((row) => row.id === selected)?.title}
                 </h2>
-                <form
-                  className="flex flex-wrap items-end gap-3"
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    if (member && validPriority(memberPriority, true))
-                      propose(
-                        `/api/admin/policy-groups/${selected}/members`,
-                        'POST',
-                        label('link'),
-                        label('confirmLink'),
-                        {
-                          policyId: member,
-                          ...(memberPriority ? { priorityOverride: Number(memberPriority) } : {}),
-                        }
-                      );
+                {operationRecovery}
+                <CatalogueRelationEditor
+                  key={selected}
+                  mode="policy"
+                  locale={locale}
+                  id="policy-member"
+                  value={member}
+                  priority={memberPriority}
+                  basis={memberIdsBasis(members)}
+                  epoch={generation.current}
+                  options={policies.filter(
+                    (policy) => !members.some((item) => item.id === policy.id)
+                  )}
+                  disabled={
+                    memberDisabled || !!action || pending || form.pending || operationUncertain
+                  }
+                  labels={{
+                    member: label('selectPolicy'),
+                    priority: label('priorityOverride'),
+                    inherit: label('inheritPriority'),
+                    save: label('link'),
+                    unavailable: label('unavailable'),
                   }}
-                >
-                  <div className="flex min-w-0 flex-col gap-2">
-                    <Label htmlFor="policy-member">{label('selectPolicy')}</Label>
-                    <select
-                      id="policy-member"
-                      className="max-w-full rounded-md border bg-background p-2"
-                      required
-                      value={member}
-                      onChange={(event) => setMember(event.target.value)}
-                    >
-                      <option value="">{label('selectPolicy')}</option>
-                      {member &&
-                        (!policies.some((p) => p.id === member) ||
-                          members.some((m) => m.id === member)) && (
-                          <option value={member}>
-                            {label('unavailable')} ({member})
-                          </option>
-                        )}
-                      {policies
-                        .filter((policy) => !members.some((item) => item.id === policy.id))
-                        .map((policy) => (
-                          <option key={policy.id} value={policy.id}>
-                            {policy.title}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="policy-member-priority">{label('priorityOverride')}</Label>
-                    <Input
-                      id="policy-member-priority"
-                      type="number"
-                      min={-1000}
-                      max={1000}
-                      step={1}
-                      placeholder={label('inheritPriority')}
-                      value={memberPriority}
-                      onChange={(event) => setMemberPriority(event.target.value)}
-                    />
-                  </div>
-                  <Button
-                    type="submit"
-                    disabled={
-                      memberDisabled ||
-                      !member ||
-                      !validPriority(memberPriority, true) ||
-                      !policies.some((p) => p.id === member) ||
-                      members.some((m) => m.id === member)
-                    }
-                  >
-                    {label('link')}
-                  </Button>
-                </form>
+                  onChange={(id, priority) => {
+                    setMember(id);
+                    setMemberPriority(priority);
+                  }}
+                  onSubmit={(value, owner) =>
+                    proposeMembership(
+                      {
+                        groupId: selected,
+                        memberId: value.memberId,
+                        expected: value.priorityOverride.trim()
+                          ? policyPriority(value.priorityOverride)
+                          : null,
+                        choicesRequired: true,
+                        owner,
+                      },
+                      'POST',
+                      {
+                        policyId: value.memberId,
+                        ...(value.priorityOverride.trim()
+                          ? { priorityOverride: policyPriority(value.priorityOverride) }
+                          : {}),
+                      }
+                    )
+                  }
+                />
                 <ul className="divide-y">
                   {members.map((item) => (
                     <li
@@ -1039,60 +1104,66 @@ export default function AdminAiPoliciesPage({
                       className="flex flex-wrap items-center justify-between gap-3 py-3"
                     >
                       <span className="min-w-0 break-words">{item.title}</span>
-                      <div className="flex flex-wrap items-end gap-2">
-                        <div className="flex flex-col gap-1">
-                          <Label htmlFor={`member-priority-${item.id}`}>
-                            {label('priorityOverride')} · {item.title}
-                          </Label>
-                          <Input
-                            id={`member-priority-${item.id}`}
-                            type="number"
-                            min={-1000}
-                            max={1000}
-                            step={1}
-                            placeholder={`${label('inheritPriority')} (${item.priority ?? 100})`}
-                            value={memberPriorities[item.id] ?? ''}
-                            onChange={(event) =>
-                              setMemberPriorities({
-                                ...memberPriorities,
-                                [item.id]: event.target.value,
-                              })
+                      <CatalogueRelationEditor
+                        mode="priority"
+                        locale={locale}
+                        id={`member-priority-${item.id}`}
+                        value={item.id}
+                        priority={memberPriorities[item.id] ?? ''}
+                        savedPriority={override(item)}
+                        basis={priorityBasis(item)}
+                        epoch={generation.current}
+                        disabled={
+                          detailDisabled ||
+                          !!action ||
+                          pending ||
+                          form.pending ||
+                          operationUncertain
+                        }
+                        labels={{
+                          member: '',
+                          priority: `${label('priorityOverride')} · ${item.title}`,
+                          inherit: `${label('inheritPriority')} (${item.priority ?? 100})`,
+                          save: label('updatePriority'),
+                          unavailable: label('unavailable'),
+                        }}
+                        onChange={(_, priority) =>
+                          setMemberPriorities((previous) => ({ ...previous, [item.id]: priority }))
+                        }
+                        onSubmit={(value, owner) =>
+                          proposeMembership(
+                            {
+                              groupId: selected,
+                              memberId: item.id,
+                              expected: value.priorityOverride.trim()
+                                ? policyPriority(value.priorityOverride)
+                                : null,
+                              choicesRequired: false,
+                              owner,
+                            },
+                            'POST',
+                            {
+                              policyId: item.id,
+                              priorityOverride: value.priorityOverride.trim()
+                                ? policyPriority(value.priorityOverride)
+                                : null,
                             }
-                          />
-                        </div>
-                        <Button
-                          variant="outline"
-                          disabled={
-                            detailDisabled || !validPriority(memberPriorities[item.id] ?? '', true)
-                          }
-                          onClick={() =>
-                            propose(
-                              `/api/admin/policy-groups/${selected}/members`,
-                              'POST',
-                              label('updatePriority'),
-                              label('confirmPriority'),
-                              {
-                                policyId: item.id,
-                                priorityOverride: memberPriorities[item.id]
-                                  ? Number(memberPriorities[item.id])
-                                  : null,
-                              }
-                            )
-                          }
-                        >
-                          {label('updatePriority')}
-                        </Button>
-                      </div>
+                          )
+                        }
+                      />
                       <Button
                         variant="outline"
-                        disabled={detailDisabled}
+                        disabled={detailDisabled || !!action || pending || operationUncertain}
                         aria-label={`${label('unlink')} ${item.title}`}
                         onClick={() =>
-                          propose(
-                            `/api/admin/policy-groups/${selected}/members/${item.id}`,
-                            'DELETE',
-                            label('unlink'),
-                            label('confirmUnlink')
+                          proposeMembership(
+                            {
+                              groupId: selected,
+                              memberId: item.id,
+                              expected: 'absent',
+                              choicesRequired: false,
+                            },
+                            'DELETE'
                           )
                         }
                       >
@@ -1110,12 +1181,16 @@ export default function AdminAiPoliciesPage({
         <TeamActionDialog
           action={action}
           confirmationDisabled={
+            operationUncertain ||
             commandDisabled(action.path, action.body) ||
             (!!formCapture.current && (changed || uncertain))
           }
           onPendingChange={onPendingChange}
           onDenied={scope.deny}
-          onValidationError={(fields) => (formCapture.current ? ownedFields(fields) : false)}
+          onValidationError={(fields) =>
+            operationCapture.current?.owner?.fields(fields) ??
+            (formCapture.current ? ownedFields(fields) : false)
+          }
           onUnconfirmed={unconfirmed}
           summary={recovery}
           onClose={() => {
@@ -1125,6 +1200,37 @@ export default function AdminAiPoliciesPage({
           }}
           onSuccess={((command, version) => async (value: unknown) => {
             if (actionRef.current !== command) return;
+            const operation = operationCapture.current;
+            if (operation) {
+              const response = await fetch(`/api/admin/policy-groups/${operation.groupId}`, {
+                credentials: 'include',
+              });
+              if (actionRef.current !== command) return;
+              if (response.status === 401 || response.status === 403) {
+                scope.deny();
+                return;
+              }
+              if (response.status !== 200) throw new Error('Unconfirmed group membership');
+              const fresh: unknown = await response.json();
+              if (actionRef.current !== command) return;
+              if (!validateDetail(fresh) || !matchesMembership(fresh, operation))
+                throw new Error('Unconfirmed group membership');
+              if (!selectedRead.accept(fresh)) throw new Error('Obsolete group membership');
+              operation.owner?.verified(
+                operation.choicesRequired
+                  ? memberIdsBasis(fresh.members)
+                  : operation.expected === 'absent'
+                    ? ''
+                    : priorityBasis(fresh.members.find((row) => row.id === operation.memberId)!)
+              );
+              operationCapture.current = null;
+              setAction(null);
+              onPendingChange(false);
+              setNotice(true);
+              list.retry();
+              choices.retry();
+              return;
+            }
             const captured = formCapture.current;
             if (version !== generation.current && !captured) return;
             if (captured && !matchesAiCatalogueReceipt(value, captured.body, captured.id))

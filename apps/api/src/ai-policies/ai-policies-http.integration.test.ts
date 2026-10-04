@@ -581,3 +581,27 @@ for (const method of ['POST', 'PUT'] as const)
       }
     }
   );
+
+it('returns only owned member/priority fields without mutating or auditing a policy group', async () => {
+  const url = `${http.base}/api/admin/policy-groups/${ids.group}/members`,
+    body = JSON.stringify({ policyId: 'private-input', priorityOverride: 1001 });
+  const response = await fetch(url, { method: 'POST', headers, body });
+  expect(response.status).toBe(400);
+  const value = (await response.json()) as { error: { code: string; fields: string[] } };
+  expect(value.error.code).toBe('VALIDATION:INPUT:INVALID');
+  expect(value.error.fields.sort()).toEqual(['policyId', 'priorityOverride']);
+  expect(JSON.stringify(value)).not.toContain('private-input');
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+  ).toHaveLength(0);
+  await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='policy-editor'");
+  try {
+    const denied = await fetch(url, { method: 'POST', headers, body });
+    expect(denied.status).toBe(403);
+    expect(((await denied.json()) as { error: { fields?: unknown } }).error.fields).toBeUndefined();
+  } finally {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions='[\"admin:ai:policies\"]' WHERE role_id='policy-editor'"
+    );
+  }
+});

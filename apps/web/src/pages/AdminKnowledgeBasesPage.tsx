@@ -1,3 +1,10 @@
+import { CatalogueRelationEditor } from '../components/CatalogueRelationEditor.js';
+import {
+  matchesMembership,
+  memberIdsBasis,
+  type MembershipCommand,
+} from '../lib/catalogue-membership.js';
+import { CatalogueQueryEditor } from '../components/CatalogueQueryEditor.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import {
@@ -201,9 +208,19 @@ export default function AdminKnowledgeBasesPage({
     requiredRead = useRef(0);
   const formCapture = useRef<{ body: Record<string, unknown>; id?: string } | null>(null);
   const actionRef = useRef<TeamAction | null>(null);
+  const operationCapture = useRef<MembershipCommand | null>(null),
+    uncertainOperation = useRef<MembershipCommand | null>(null);
+  const requiredOperationRead = useRef<{ detail: number; choices: number | null }>({
+    detail: 0,
+    choices: null,
+  });
+  const [operationUncertain, setOperationUncertain] = useState(false);
   const setAction = useCallback((value: TeamAction | null) => {
     actionRef.current = value;
-    if (!value) formCapture.current = null;
+    if (!value) {
+      formCapture.current = null;
+      operationCapture.current = null;
+    }
     updateAction(value);
   }, []);
   const onPendingChange = useCallback((value: boolean) => {
@@ -226,6 +243,9 @@ export default function AdminKnowledgeBasesPage({
   const draftBasis = useRef<string | null>(null),
     detailBasis = useRef<string | null>(null);
   const clearDetail = useCallback(() => {
+    setOperationUncertain(false);
+    uncertainOperation.current = null;
+    requiredOperationRead.current = { detail: 0, choices: null };
     generation.current++;
     selectionGeneration.current++;
     commandTarget.current = null;
@@ -450,6 +470,7 @@ export default function AdminKnowledgeBasesPage({
     body?: unknown
   ) {
     if (
+      operationUncertain ||
       commandDisabled(path, body) ||
       actionRef.current ||
       validationBusy.current ||
@@ -468,6 +489,7 @@ export default function AdminKnowledgeBasesPage({
       ...(formCapture.current
         ? { successStatus: method === 'POST' ? 201 : 200, conflictMessage: copy('changed') }
         : {}),
+      ...(operationCapture.current ? { successStatus: 204, conflictMessage: copy('changed') } : {}),
       title,
       description,
       ...(body === undefined ? {} : { body }),
@@ -515,12 +537,84 @@ export default function AdminKnowledgeBasesPage({
     }
   }
   function unconfirmed() {
+    if (operationCapture.current) {
+      const operation = operationCapture.current;
+      uncertainOperation.current = operation;
+      setOperationUncertain(true);
+      generation.current++;
+      setAction(null);
+      onPendingChange(false);
+      requiredOperationRead.current = {
+        detail: selectedRead.retry(),
+        choices: operation.choicesRequired ? choices.retry() : null,
+      };
+      return;
+    }
     if (!formCapture.current) return;
     setUncertain(true);
     generation.current++;
     setAction(null);
     onPendingChange(false);
     requiredRead.current = list.retry();
+  }
+  const operationResetDisabled =
+    !operationUncertain ||
+    !!action ||
+    pending ||
+    detailDisabled ||
+    selectedRead.readAttempt === null ||
+    selectedRead.readAttempt < requiredOperationRead.current.detail ||
+    (requiredOperationRead.current.choices !== null &&
+      (choices.loading ||
+        choices.error ||
+        choices.readAttempt === null ||
+        choices.readAttempt < requiredOperationRead.current.choices));
+  const operationRecovery = operationUncertain && (
+    <div className="space-y-2">
+      <p role="alert">{copy('uncertain')}</p>
+      <Button
+        type="button"
+        variant="outline"
+        disabled={operationResetDisabled}
+        onClick={() => {
+          if (operationResetDisabled) return;
+          uncertainOperation.current?.owner?.reset();
+          uncertainOperation.current = null;
+          setOperationUncertain(false);
+        }}
+      >
+        {copy('reset')}
+      </Button>
+    </div>
+  );
+  function proposeMembership(
+    operation: MembershipCommand,
+    method: 'POST' | 'DELETE',
+    body?: unknown
+  ) {
+    if (
+      operationUncertain ||
+      actionRef.current ||
+      validationBusy.current ||
+      networkPending.current ||
+      work.current.selected !== operation.groupId ||
+      (operation.choicesRequired ? work.current.memberDisabled : work.current.detailDisabled)
+    )
+      return;
+    operationCapture.current = operation;
+    propose(
+      `/api/admin/kb-groups/${operation.groupId}/members${method === 'DELETE' ? `/${operation.memberId}` : ''}`,
+      method,
+      label(method === 'DELETE' ? 'unlink' : operation.choicesRequired ? 'link' : 'updatePriority'),
+      label(
+        method === 'DELETE'
+          ? 'confirmUnlink'
+          : operation.choicesRequired
+            ? 'confirmLink'
+            : 'confirmPriority'
+      ),
+      body
+    );
   }
   const resetDisabled =
     disabled ||
@@ -539,9 +633,8 @@ export default function AdminKnowledgeBasesPage({
     formCapture.current = null;
     setNotice(false);
   }
-  async function testQuery(event: FormEvent) {
-    event.preventDefault();
-    if (!detail || detailDisabled || !queryText.trim()) return;
+  async function testQuery(query: string, fields: (value: unknown[]) => boolean) {
+    if (!detail || detailDisabled || actionRef.current || networkPending.current) return;
     queryRequest.current?.abort();
     const request = new AbortController();
     queryRequest.current = request;
@@ -555,12 +648,26 @@ export default function AdminKnowledgeBasesPage({
         method: 'POST',
         signal: request.signal,
         headers: withCsrf({ 'content-type': 'application/json' }),
-        body: JSON.stringify({ query: queryText.trim(), limit: 5 }),
+        body: JSON.stringify({ query, limit: 5 }),
       });
       if (!current()) return;
       if (response.status === 401 || response.status === 403) {
         scope.deny();
         return;
+      }
+      if (response.status === 400) {
+        const value: unknown = await response.json();
+        if (!current()) return;
+        if (
+          record(value) &&
+          record(value.error) &&
+          value.error.code === 'VALIDATION:INPUT:INVALID' &&
+          Array.isArray(value.error.fields) &&
+          fields(value.error.fields)
+        ) {
+          setQueryState('idle');
+          return;
+        }
       }
       if (!response.ok) throw new Error('Query failed');
       const results: unknown = await response.json();
@@ -1007,33 +1114,27 @@ export default function AdminKnowledgeBasesPage({
                     {label('processingError')}: {processingError(detail.contentError)}
                   </p>
                 )}
-                <form onSubmit={(event) => void testQuery(event)} className="flex flex-col gap-2">
-                  <Label htmlFor="kb-test-query">{label('testQuery')}</Label>
-                  <div className="flex flex-wrap gap-2">
-                    <Input
-                      id="kb-test-query"
-                      maxLength={500}
-                      required
-                      value={queryText}
-                      onChange={(event) => {
-                        queryRequest.current?.abort();
-                        setQueryState('idle');
-                        setQueryResult(null);
-                        setQueryText(event.target.value);
-                      }}
-                    />
-                    <Button
-                      type="submit"
-                      disabled={
-                        detailDisabled ||
-                        queryState === 'loading' ||
-                        (kind === 'knowledge-bases' && detail.contentState !== 'ready')
-                      }
-                    >
-                      {label('runQuery')}
-                    </Button>
-                  </div>
-                </form>
+                <CatalogueQueryEditor
+                  key={detail.id}
+                  locale={locale}
+                  value={queryText}
+                  epoch={generation.current}
+                  disabled={
+                    detailDisabled ||
+                    !!action ||
+                    pending ||
+                    (kind === 'knowledge-bases' && detail.contentState !== 'ready')
+                  }
+                  label={label('testQuery')}
+                  saveLabel={label('runQuery')}
+                  onChange={(value) => {
+                    queryRequest.current?.abort();
+                    setQueryState('idle');
+                    setQueryResult(null);
+                    setQueryText(value);
+                  }}
+                  onQuery={testQuery}
+                />
                 {queryState === 'loading' && <p role="status">{label('queryLoading')}</p>}
                 {queryState === 'error' && <p role="alert">{label('queryError')}</p>}
                 {queryResult?.id === detail.id &&
@@ -1055,60 +1156,43 @@ export default function AdminKnowledgeBasesPage({
                   ))}
                 {kind === 'kb-groups' ? (
                   <>
-                    <form
-                      className="flex flex-wrap items-end gap-3"
-                      onSubmit={(event) => {
-                        event.preventDefault();
-                        if (member)
-                          propose(
-                            `/api/admin/kb-groups/${detail.id}/members`,
-                            'POST',
-                            label('link'),
-                            label('confirmLink'),
-                            { kbId: member }
-                          );
+                    {operationRecovery}
+                    <CatalogueRelationEditor
+                      key={detail.id}
+                      mode="kb"
+                      locale={locale}
+                      id="kb-member"
+                      value={member}
+                      basis={memberIdsBasis(detail.members ?? [])}
+                      epoch={generation.current}
+                      options={kbs.filter(
+                        (kb) => !detail.members?.some((existing) => existing.id === kb.id)
+                      )}
+                      disabled={
+                        memberDisabled || !!action || pending || form.pending || operationUncertain
+                      }
+                      labels={{
+                        member: label('selectKb'),
+                        priority: '',
+                        inherit: '',
+                        save: label('link'),
+                        unavailable: label('unavailable'),
                       }}
-                    >
-                      <div className="flex min-w-0 flex-col gap-2">
-                        <Label htmlFor="kb-member">{label('selectKb')}</Label>
-                        <select
-                          id="kb-member"
-                          className="max-w-full rounded-md border bg-background p-2"
-                          required
-                          value={member}
-                          onChange={(event) => setMember(event.target.value)}
-                        >
-                          <option value="">{label('selectKb')}</option>
-                          {member &&
-                            (!kbs.some((kb) => kb.id === member) ||
-                              detail.members?.some((m) => m.id === member)) && (
-                              <option value={member}>
-                                {label('unavailable')} ({member})
-                              </option>
-                            )}
-                          {kbs
-                            .filter(
-                              (kb) => !detail.members?.some((existing) => existing.id === kb.id)
-                            )
-                            .map((kb) => (
-                              <option key={kb.id} value={kb.id}>
-                                {kb.title}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
-                      <Button
-                        type="submit"
-                        disabled={
-                          memberDisabled ||
-                          !member ||
-                          !kbs.some((kb) => kb.id === member) ||
-                          !!detail.members?.some((m) => m.id === member)
-                        }
-                      >
-                        {label('link')}
-                      </Button>
-                    </form>
+                      onChange={(value) => setMember(value)}
+                      onSubmit={(value, owner) =>
+                        proposeMembership(
+                          {
+                            groupId: detail.id,
+                            memberId: value.memberId,
+                            expected: 'present',
+                            choicesRequired: true,
+                            owner,
+                          },
+                          'POST',
+                          { kbId: value.memberId }
+                        )
+                      }
+                    />
                     <ul className="divide-y">
                       {detail.members?.map((item) => (
                         <li key={item.id} className="flex items-center justify-between gap-3 py-3">
@@ -1116,14 +1200,17 @@ export default function AdminKnowledgeBasesPage({
                           <Button
                             variant="outline"
                             onClick={() =>
-                              propose(
-                                `/api/admin/kb-groups/${detail.id}/members/${item.id}`,
-                                'DELETE',
-                                label('unlink'),
-                                label('confirmUnlink')
+                              proposeMembership(
+                                {
+                                  groupId: detail.id,
+                                  memberId: item.id,
+                                  expected: 'absent',
+                                  choicesRequired: false,
+                                },
+                                'DELETE'
                               )
                             }
-                            disabled={detailDisabled}
+                            disabled={detailDisabled || !!action || pending || operationUncertain}
                             aria-label={`${label('unlink')} ${item.title}`}
                           >
                             {label('unlink')}
@@ -1167,7 +1254,7 @@ export default function AdminKnowledgeBasesPage({
                           <div>
                             <Button
                               variant="outline"
-                              disabled={detailDisabled}
+                              disabled={detailDisabled || !!action || pending || operationUncertain}
                               aria-label={`${label('detach')} ${doc.fileName}`}
                               onClick={() =>
                                 propose(
@@ -1204,12 +1291,16 @@ export default function AdminKnowledgeBasesPage({
         <TeamActionDialog
           action={action}
           confirmationDisabled={
+            operationUncertain ||
             commandDisabled(action.path, action.body) ||
             (!!formCapture.current && (changed || uncertain))
           }
           onPendingChange={onPendingChange}
           onDenied={scope.deny}
-          onValidationError={(fields) => (formCapture.current ? ownedFields(fields) : false)}
+          onValidationError={(fields) =>
+            operationCapture.current?.owner?.fields(fields) ??
+            (formCapture.current ? ownedFields(fields) : false)
+          }
           onUnconfirmed={unconfirmed}
           summary={recovery}
           onClose={() => {
@@ -1219,6 +1310,31 @@ export default function AdminKnowledgeBasesPage({
           }}
           onSuccess={((command, version) => async (value: unknown) => {
             if (actionRef.current !== command) return;
+            const operation = operationCapture.current;
+            if (operation) {
+              const response = await fetch(`/api/admin/kb-groups/${operation.groupId}`, {
+                credentials: 'include',
+              });
+              if (actionRef.current !== command) return;
+              if (response.status === 401 || response.status === 403) {
+                scope.deny();
+                return;
+              }
+              if (response.status !== 200) throw new Error('Unconfirmed group membership');
+              const fresh: unknown = await response.json();
+              if (actionRef.current !== command) return;
+              if (!validateDetail(fresh) || !matchesMembership(fresh, operation))
+                throw new Error('Unconfirmed group membership');
+              if (!selectedRead.accept(fresh)) throw new Error('Obsolete group membership');
+              operation.owner?.verified(memberIdsBasis(fresh.members ?? []));
+              operationCapture.current = null;
+              setAction(null);
+              onPendingChange(false);
+              setNotice(true);
+              list.retry();
+              choices.retry();
+              return;
+            }
             const captured = formCapture.current;
             if (version !== generation.current && !captured) return;
             if (captured && !matchesAiCatalogueReceipt(value, captured.body, captured.id))

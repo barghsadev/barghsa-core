@@ -804,3 +804,55 @@ for (const method of ['POST', 'PUT'] as const)
       }
     }
   );
+
+for (const entry of [
+  {
+    name: 'knowledge-base query',
+    path: () => `knowledge-bases/${ids.kb}/query`,
+    body: { query: 'private-input'.repeat(100) },
+    fields: ['query'],
+  },
+  {
+    name: 'knowledge-group query',
+    path: () => `kb-groups/${ids.group}/query`,
+    body: { query: 'private-input'.repeat(100) },
+    fields: ['query'],
+  },
+  {
+    name: 'knowledge-group member',
+    path: () => `kb-groups/${ids.group}/members`,
+    body: { kbId: 'private-input' },
+    fields: ['kbId'],
+  },
+])
+  it(`returns safe owned fields for ${entry.name}`, async () => {
+    const response = await fetch(`${http.base}/api/admin/${entry.path()}`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(entry.body),
+    });
+    expect(response.status).toBe(400);
+    const value = (await response.json()) as { error: { code: string; fields: string[] } };
+    expect(value.error.code).toBe('VALIDATION:INPUT:INVALID');
+    expect(value.error.fields).toEqual(entry.fields);
+    expect(JSON.stringify(value)).not.toContain('private-input');
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+    ).toHaveLength(0);
+    await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='kb-editor'");
+    try {
+      const denied = await fetch(`${http.base}/api/admin/${entry.path()}`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(entry.body),
+      });
+      expect(denied.status).toBe(403);
+      expect(
+        ((await denied.json()) as { error: { fields?: unknown } }).error.fields
+      ).toBeUndefined();
+    } finally {
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions='[\"admin:ai:kb\"]' WHERE role_id='kb-editor'"
+      );
+    }
+  });

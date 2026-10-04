@@ -218,7 +218,7 @@ export class KnowledgeBasesController {
   ): Promise<KbQueryResult[]> {
     this.assertKbPermission(req);
     const parsed = QueryKnowledgeBaseSchema.safeParse(body);
-    if (!parsed.success) httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid query');
+    if (!parsed.success) rejectContentFields(parsed.error.issues, ['query']);
     return this.service.queryKb(id, parsed.data.query, parsed.data.limit);
   }
 
@@ -422,7 +422,7 @@ export class KbGroupsController {
   ): Promise<KbQueryResult[]> {
     this.assertKbPermission(req);
     const parsed = QueryKnowledgeBaseSchema.safeParse(body);
-    if (!parsed.success) httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid query');
+    if (!parsed.success) rejectContentFields(parsed.error.issues, ['query']);
     return this.service.queryGroup(id, parsed.data.query, parsed.data.limit);
   }
 
@@ -517,7 +517,7 @@ export class KbGroupsController {
     this.assertKbPermission(req);
     const parsed = AddGroupMemberSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid member payload');
+      rejectContentFields(parsed.error.issues, ['kbId']);
     }
     return this.service.addGroupMember({
       groupId: id,

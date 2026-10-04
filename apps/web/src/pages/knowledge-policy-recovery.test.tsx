@@ -48,6 +48,7 @@ vi.mock('../components/KnowledgeBaseDocumentPicker.js', () => ({
 let host: HTMLDivElement, root: Root;
 beforeEach(async () => {
   await import('../lib/catalogue-form-schemas.js');
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   document.documentElement.lang = 'en';
   host = document.createElement('div');
   document.body.append(host);
@@ -428,7 +429,7 @@ it('policy group detail retry preserves both selected member and dirty override 
   expect(host.querySelector<HTMLInputElement>(`#member-priority-${policy.id}`)!.value).toBe('250');
   expect(host.querySelector<HTMLInputElement>('#policy-member-priority')!.value).toBe('80');
 });
-it('changed group membership resets only affected overrides and clears old confirmation', async () => {
+it('changed group membership retains overrides, requires explicit reset and clears old confirmation', async () => {
   let changed = false;
   mock((path) =>
     path.endsWith(pg.id)
@@ -449,9 +450,21 @@ it('changed group membership resets only affected overrides and clears old confi
   await fill(`#member-priority-${policy.id}`, '250');
   await fill(`#member-priority-${policySecond.id}`, '350');
   await click('Save priority');
+  await vi.waitFor(async () => {
+    await act(async () => {});
+    expect(
+      host
+        .querySelector(`#member-priority-${policy.id}`)!
+        .closest('form')!
+        .getAttribute('aria-busy')
+    ).toBe('false');
+  });
   const old = captured.success!;
   changed = true;
   await click('Refresh');
+  expect(host.querySelector<HTMLInputElement>(`#member-priority-${policy.id}`)!.value).toBe('250');
+  expect(host.textContent).toContain('Saved settings changed');
+  await click('Reset to saved settings');
   expect(host.querySelector<HTMLInputElement>(`#member-priority-${policy.id}`)!.value).toBe('400');
   expect(host.querySelector<HTMLInputElement>(`#member-priority-${policySecond.id}`)!.value).toBe(
     '350'

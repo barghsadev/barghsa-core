@@ -133,11 +133,6 @@ function requestIp(req: AuthenticatedRequest): string {
   return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
-/** Flattened zod issues so the admin UI can highlight the offending rule field. */
-function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
-  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }));
-}
-
 function rejectPolicyFields(issues: readonly z.ZodIssue[], body: unknown): never {
   const aliases: Record<string, string> = {
     title: 'title',
@@ -428,12 +423,7 @@ export class PolicyGroupsController {
     this.assertPolicyPermission(req);
     const parsed = AddGroupMemberSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid member payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      rejectContentFields(parsed.error.issues, ['policyId', 'priorityOverride']);
     }
     return this.service.addGroupMember({
       groupId: id,

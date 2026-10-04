@@ -264,6 +264,13 @@ for (const locale of ['en', 'fa'] as const) {
     changed = true;
     await dialog.getByRole('button', { name: p('refresh'), exact: true }).click();
     await expect(dialog).toHaveCount(0);
+    await expect(override).toHaveValue('25');
+    await page
+      .getByRole('button', {
+        name: locale === 'fa' ? 'بازنشانی به تنظیمات ذخیره‌شده' : 'Reset to saved settings',
+        exact: true,
+      })
+      .click();
     await expect(override).toHaveValue('30');
     await expect(page.locator('#policy-member-priority')).toHaveValue('75');
   });
