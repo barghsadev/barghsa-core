@@ -276,6 +276,11 @@
       "types": "./dist/order-comments.d.ts",
       "import": "./dist/order-comments.js",
       "default": "./dist/order-comments.js"
+    },
+    "./saving-change": {
+      "types": "./dist/saving-change.d.ts",
+      "import": "./dist/saving-change.js",
+      "default": "./dist/saving-change.js"
     }
   },
   "scripts": {

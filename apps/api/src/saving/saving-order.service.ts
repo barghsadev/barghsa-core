@@ -683,6 +683,22 @@ export class SavingOrderService {
     );
   }
 
+  async assertCanChange(actor: Actor, savingOrderId: string): Promise<void> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      await this.changeContext(client, actor, savingOrderId, false);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async quoteChange(actor: Actor, savingOrderId: string, input: SavingChangeInput) {
     const client = await getDbPool().connect();
     try {

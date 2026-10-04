@@ -18,6 +18,7 @@ import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
+import { parseSavingChangeInput } from './saving-change-input-fields.js';
 import {
   SAVING_STAGES,
   SavingFulfillmentService,
@@ -200,17 +201,19 @@ export class SavingFulfillmentController {
   @RateLimit({ namespace: 'saving:staff-amend-address-review:user', limit: 30, windowMs: 60_000 })
   @ApiOperation({ summary: 'Preview the paid saving order address amendment before confirmation' })
   @ApiZodBody(addressAmendmentReviewInput)
-  amendAddressReview(
+  async amendAddressReview(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
     this.permission(req, true);
-    return this.service.addressAmendmentReview(
-      id,
-      parse(addressAmendmentReviewInput, body),
-      req.session
+    const input = await parseSavingChangeInput(
+      addressAmendmentReviewInput,
+      body,
+      ['addressId', 'reason'],
+      () => this.service.assertCanAmendAddress(id, req.session, false)
     );
+    return this.service.addressAmendmentReview(id, input, req.session);
   }
 
   @Post(':id/amend-address')
@@ -219,18 +222,19 @@ export class SavingFulfillmentController {
   @RateLimit({ namespace: 'saving:staff-amend-address:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Record a paid saving order installation-address amendment' })
   @ApiZodBody(addressAmendment)
-  amendAddress(
+  async amendAddress(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
     this.permission(req, true);
-    return this.service.amendAddress(
-      id,
-      parse(addressAmendment, body),
-      req.session,
-      req.ip ?? 'unknown'
+    const input = await parseSavingChangeInput(
+      addressAmendment,
+      body,
+      ['addressId', 'reason'],
+      () => this.service.assertCanAmendAddress(id, req.session, true)
     );
+    return this.service.amendAddress(id, input, req.session, req.ip ?? 'unknown');
   }
 
   @Post(':id/amend-hardware-review')

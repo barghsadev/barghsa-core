@@ -209,15 +209,18 @@ it.each(['en', 'fa'] as const)(
     try {
       expect(page.field().getAttribute('aria-invalid')).not.toBe('true');
       await page.blur();
-      await vi.waitFor(() => expect(page.field().getAttribute('aria-invalid')).toBe('true'));
-      expect(
-        page
-          .field()
-          .getAttribute('aria-describedby')!
-          .split(' ')
-          .map((id) => document.getElementById(id)?.textContent)
-          .join(' ')
-      ).toContain(copy('invalid', locale));
+      await vi.waitFor(async () => {
+        await act(async () => {});
+        expect(page.field().getAttribute('aria-invalid')).toBe('true');
+        expect(
+          page
+            .field()
+            .getAttribute('aria-describedby')!
+            .split(' ')
+            .map((id) => document.getElementById(id)?.textContent)
+            .join(' ')
+        ).toContain(copy('invalid', locale));
+      });
       await page.choose();
       await vi.waitFor(() => expect(document.activeElement).toBe(page.field()));
       expect(reviews(page.fetcher)).toHaveLength(0);

@@ -8,6 +8,7 @@ import { startHttpFixture } from '../test/http-fixture.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let customerHeaders: Record<string, string>;
 let staffHeaders: Record<string, string>;
+let changeOutsiderHeaders: Record<string, string>;
 let input: {
   profileId: string;
   savingPlanId: string;
@@ -24,6 +25,51 @@ function request(path: string, method: string, body?: unknown, headers = custome
     headers,
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
+}
+
+async function savingChangeSnapshot(id: string) {
+  return (
+    await http.pool.query(
+      `SELECT to_jsonb(s) AS saving_row,
+        (SELECT to_jsonb(o) FROM orders o WHERE o.id=s.order_id) AS order_row,
+        (SELECT to_jsonb(c) FROM contracts c WHERE c.order_id=s.order_id AND c.service_type='savings') AS contract_row,
+        (SELECT jsonb_agg(to_jsonb(i) ORDER BY id) FROM invoices i WHERE i.order_id=s.order_id) AS invoices,
+        (SELECT jsonb_agg(to_jsonb(v) ORDER BY version_number) FROM contract_versions v JOIN contracts c ON c.id=v.contract_id WHERE c.order_id=s.order_id) AS versions,
+        (SELECT jsonb_agg(to_jsonb(r) ORDER BY id) FROM saving_order_revisions r WHERE r.order_id=s.id) AS revisions,
+        (SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM saving_address_amendments a WHERE a.order_id=s.id) AS amendments,
+        (SELECT jsonb_agg(to_jsonb(f) ORDER BY stage) FROM saving_fulfillment_stages f WHERE f.order_id=s.id) AS stages,
+        (SELECT jsonb_agg(to_jsonb(p) ORDER BY id) FROM products p) AS products,
+        (SELECT jsonb_agg(to_jsonb(k) ORDER BY idempotency_key) FROM idempotency_keys k WHERE entity_type='saving_address_amendment') AS keys,
+        (SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM audit_log a WHERE event IN ('saving.address_amended','saving.order.changed')) AS audits,
+        (SELECT jsonb_agg(to_jsonb(n) ORDER BY id) FROM in_app_notifications n WHERE recipient_user_id='saving-order-buyer') AS notices
+       FROM saving_orders s WHERE s.id=$1`,
+      [id]
+    )
+  ).rows[0];
+}
+
+async function rejectedSavingChange(
+  id: string,
+  path: string,
+  body: unknown,
+  headers: Record<string, string>,
+  fields?: string[],
+  status = 400
+) {
+  const before = await savingChangeSnapshot(id);
+  const response = await request(path, 'POST', body, headers);
+  expect(response.status, http.logs()).toBe(status);
+  const failure = await response.json();
+  expect(failure).toHaveProperty('error.correlationId', expect.stringMatching(/^[0-9a-f-]{36}$/i));
+  expect(JSON.stringify(failure)).not.toContain('PRIVATE');
+  if (status === 400)
+    expect(failure).toHaveProperty(
+      'error.code',
+      fields || body === null ? 'VALIDATION:INPUT:INVALID' : 'VALIDATION:INPUT_INVALID'
+    );
+  if (fields) expect(failure).toHaveProperty('error.fields', fields);
+  else expect(failure).not.toHaveProperty('error.fields');
+  expect(await savingChangeSnapshot(id)).toEqual(before);
 }
 
 async function decisionReview(orderId: string, action: 'approve' | 'reject', reason = '') {
@@ -76,6 +122,7 @@ beforeAll(async () => {
   for (const [user, staff] of [
     ['saving-order-buyer', false],
     ['saving-order-staff', true],
+    ['saving-change-outsider', false],
   ] as const) {
     await http.pool.query(
       "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES($1,$2,'test-only',$3)",
@@ -99,6 +146,7 @@ beforeAll(async () => {
       'Content-Type': 'application/json',
     };
     if (staff) staffHeaders = headers;
+    else if (user === 'saving-change-outsider') changeOutsiderHeaders = headers;
     else customerHeaders = headers;
   }
   const profileId = (
@@ -1234,6 +1282,96 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     addressId: amendedAddressId,
     reason: 'Customer confirmed the corrected installation address',
   };
+  const addressPreviewPath = `${amendPath}-review`;
+  const addressPreviewInput = {
+    expectedVersionId: amendmentInput.expectedVersionId,
+    expectedAddressId: amendmentInput.expectedAddressId,
+    addressId: amendmentInput.addressId,
+    reason: amendmentInput.reason,
+  };
+  for (const [route, body] of [
+    [addressPreviewPath, addressPreviewInput],
+    [amendPath, { ...amendmentInput, expectedReviewHash: 'a'.repeat(64) }],
+  ] as const) {
+    for (const [invalid, fields] of [
+      [{ ...body, addressId: 'PRIVATE' }, ['addressId']],
+      [{ ...body, reason: '  ' }, ['reason']],
+      [{ ...body, reason: 'x'.repeat(1001) }, ['reason']],
+      [{ ...body, addressId: '', reason: '' }, ['addressId', 'reason']],
+    ] as const)
+      await rejectedSavingChange(result.savingOrderId, route, invalid, staffHeaders, [...fields]);
+    for (const invalid of [
+      { ...body, expectedVersionId: 'PRIVATE' },
+      { ...body, reason: '', expectedAddressId: 'PRIVATE' },
+      { ...body, reason: '', extra: 'PRIVATE' },
+      null,
+    ])
+      await rejectedSavingChange(result.savingOrderId, route, invalid, staffHeaders);
+    await rejectedSavingChange(
+      result.savingOrderId,
+      route,
+      { ...body, reason: '' },
+      customerHeaders,
+      undefined,
+      403
+    );
+    await rejectedSavingChange(
+      result.savingOrderId,
+      route.replace(result.savingOrderId, randomUUID()),
+      { ...body, reason: '' },
+      staffHeaders,
+      undefined,
+      404
+    );
+  }
+  const livePermissions = (
+    await http.pool.query<{ permissions: unknown }>(
+      "SELECT permissions FROM staff_roles WHERE role_id='saving-order-admin'"
+    )
+  ).rows[0]!.permissions;
+  await http.pool.query(
+    "UPDATE staff_roles SET permissions='[\"contracts:read\"]' WHERE role_id='saving-order-admin'"
+  );
+  try {
+    await rejectedSavingChange(
+      result.savingOrderId,
+      addressPreviewPath,
+      { ...addressPreviewInput, reason: '' },
+      staffHeaders,
+      undefined,
+      403
+    );
+  } finally {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions=$1::jsonb WHERE role_id='saving-order-admin'",
+      [typeof livePermissions === 'string' ? livePermissions : JSON.stringify(livePermissions)]
+    );
+  }
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='saving-order-staff'"
+  );
+  try {
+    await rejectedSavingChange(
+      result.savingOrderId,
+      amendPath,
+      { ...amendmentInput, expectedReviewHash: 'a'.repeat(64), reason: '' },
+      staffHeaders,
+      undefined,
+      403
+    );
+  } finally {
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='saving-order-staff'"
+    );
+  }
+  const maximalPreview = await request(
+    addressPreviewPath,
+    'POST',
+    { ...addressPreviewInput, reason: ` ${'x'.repeat(1000)} ` },
+    staffHeaders
+  );
+  expect(maximalPreview.status, http.logs()).toBe(200);
+  expect(await maximalPreview.json()).toHaveProperty('data.reason', 'x'.repeat(1000));
   const addressPreview = await request(
     `/api/staff/saving/orders/${result.savingOrderId}/amend-address-review`,
     'POST',
@@ -1300,7 +1438,22 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   ]);
   const amended = await request(amendPath, 'POST', amendmentInput, staffHeaders);
   expect(amended.status, http.logs()).toBe(201);
-  const amendment = (await amended.json()) as { amendmentId: string };
+  const amendment = (await amended.json()) as {
+    amendmentId: string;
+    savingOrderId: string;
+    address: unknown;
+  };
+  const savedAddress = (
+    await http.pool.query(
+      'SELECT id,province_id,city_id,full_address,postal_code FROM addresses WHERE id=$1',
+      [amendedAddressId]
+    )
+  ).rows[0];
+  expect(amendment).toEqual({
+    amendmentId: expect.stringMatching(/^[0-9a-f-]{36}$/i),
+    savingOrderId: result.savingOrderId,
+    address: savedAddress,
+  });
   const addressAudit = (
     await http.pool.query<{ metadata: { reviewHash: string } }>(
       `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='saving.address_amended'
@@ -1309,7 +1462,11 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     )
   ).rows[0];
   expect(addressAudit?.metadata.reviewHash).toBe(addressReview.hash);
-  expect((await request(amendPath, 'POST', amendmentInput, staffHeaders)).status).toBe(201);
+  const beforeAddressReplay = await savingChangeSnapshot(result.savingOrderId);
+  const addressReplay = await request(amendPath, 'POST', amendmentInput, staffHeaders);
+  expect(addressReplay.status, http.logs()).toBe(201);
+  expect(await addressReplay.json()).toEqual(amendment);
+  expect(await savingChangeSnapshot(result.savingOrderId)).toEqual(beforeAddressReplay);
   expect(
     (
       await request(
@@ -2473,6 +2630,57 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
     hardwareProductId: firstHardwareId,
     installationAddressId: secondAddress,
   };
+  for (const [route, body] of [
+    [`${path}/change-quote`, addressChange],
+    [
+      `${path}/change`,
+      { ...addressChange, idempotencyKey: randomUUID(), expectedQuoteDigest: 'a'.repeat(64) },
+    ],
+  ] as const) {
+    for (const [invalid, fields] of [
+      [{ ...body, hardwareProductId: 'PRIVATE' }, ['hardwareProductId']],
+      [{ ...body, installationAddressId: '' }, ['installationAddressId']],
+      [
+        { ...body, hardwareProductId: null, installationAddressId: '' },
+        ['hardwareProductId', 'installationAddressId'],
+      ],
+    ] as const)
+      await rejectedSavingChange(order.savingOrderId, route, invalid, customerHeaders, [...fields]);
+    for (const invalid of [
+      { ...body, hardwareProductId: '', expectedQuoteDigest: 'PRIVATE' },
+      { ...body, installationAddressId: '', idempotencyKey: 'PRIVATE' },
+      { ...body, hardwareProductId: '', extra: 'PRIVATE' },
+      null,
+    ])
+      await rejectedSavingChange(order.savingOrderId, route, invalid, customerHeaders);
+    await rejectedSavingChange(
+      order.savingOrderId,
+      route,
+      { ...body, hardwareProductId: '' },
+      staffHeaders,
+      undefined,
+      403
+    );
+    await rejectedSavingChange(
+      order.savingOrderId,
+      route,
+      { ...body, hardwareProductId: '' },
+      changeOutsiderHeaders,
+      undefined,
+      404
+    );
+    await rejectedSavingChange(
+      order.savingOrderId,
+      route.replace(order.savingOrderId, randomUUID()),
+      { ...body, hardwareProductId: '' },
+      customerHeaders,
+      undefined,
+      404
+    );
+  }
+  // Feedback probes consume a separate disposable-fixture request budget.
+  // Keep the unchanged revision/payment journey within its real ten-request limit.
+  await http.pool.query("SELECT rate_limit_rolling_reset(false,'saving:change:user:127.0.0.1')");
   const addressQuoteResponse = await request(`${path}/change-quote`, 'POST', addressChange);
   expect(addressQuoteResponse.status, http.logs()).toBe(201);
   const addressQuote = (await addressQuoteResponse.json()) as {
@@ -2494,10 +2702,25 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
   };
   const addressResult = await request(`${path}/change`, 'POST', addressSubmission);
   expect(addressResult.status, http.logs()).toBe(201);
-  const firstRevision = await addressResult.json();
+  const firstRevision = (await addressResult.json()) as { contractVersionId: string };
+  const priorVersionId = (
+    await http.pool.query<{ previous_version_id: string }>(
+      'SELECT previous_version_id FROM saving_order_revisions WHERE order_id=$1 AND idempotency_key=$2',
+      [order.savingOrderId, addressSubmission.idempotencyKey]
+    )
+  ).rows[0]!.previous_version_id;
+  expect(firstRevision).toEqual({
+    savingOrderId: order.savingOrderId,
+    contractVersionId: expect.stringMatching(/^[0-9a-f-]{36}$/i),
+    invoiceId: order.invoiceId,
+    ...addressQuote,
+  });
+  expect(firstRevision.contractVersionId).not.toBe(priorVersionId);
+  const beforeRevisionReplay = await savingChangeSnapshot(order.savingOrderId);
   const retry = await request(`${path}/change`, 'POST', addressSubmission);
   expect(retry.status, http.logs()).toBe(201);
   expect(await retry.json()).toEqual(firstRevision);
+  expect(await savingChangeSnapshot(order.savingOrderId)).toEqual(beforeRevisionReplay);
   const equipmentChange = { hardwareProductId: alternateId, installationAddressId: secondAddress };
   const equipmentQuoteResponse = await request(`${path}/change-quote`, 'POST', equipmentChange);
   expect(equipmentQuoteResponse.status, http.logs()).toBe(201);

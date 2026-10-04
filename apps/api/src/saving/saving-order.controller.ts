@@ -26,6 +26,7 @@ import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.
 import { SavingOrderService } from './saving-order.service.js';
 import { SavingCustomerDraftService } from './saving-customer-draft.service.js';
 import { RequiresCapability } from '../maintenance/maintenance.guard.js';
+import { parseSavingChangeInput } from './saving-change-input-fields.js';
 
 const quoteInput = z
   .object({
@@ -208,12 +209,18 @@ export class SavingOrderController {
   @RateLimit({ namespace: 'saving:change-quote:user', limit: 30, windowMs: 60_000 })
   @ApiOperation({ summary: 'Quote an unpaid saving order equipment or address change' })
   @ApiZodBody(changeInput)
-  quoteChange(
+  async quoteChange(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.service.quoteChange(req.session, id, parse(changeInput, body));
+    const input = await parseSavingChangeInput(
+      changeInput,
+      body,
+      ['hardwareProductId', 'installationAddressId'],
+      () => this.service.assertCanChange(req.session, id)
+    );
+    return this.service.quoteChange(req.session, id, input);
   }
 
   @Post(':id/change')
@@ -222,17 +229,18 @@ export class SavingOrderController {
     summary: 'Atomically revise an unpaid saving order, invoice, contract and inventory',
   })
   @ApiZodBody(changeSubmissionInput)
-  change(
+  async change(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.service.change(
-      req.session,
-      id,
-      parse(changeSubmissionInput, body),
-      req.ip ?? '127.0.0.1'
+    const input = await parseSavingChangeInput(
+      changeSubmissionInput,
+      body,
+      ['hardwareProductId', 'installationAddressId'],
+      () => this.service.assertCanChange(req.session, id)
     );
+    return this.service.change(req.session, id, input, req.ip ?? '127.0.0.1');
   }
 
   @Post('verify-bill')

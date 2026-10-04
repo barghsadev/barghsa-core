@@ -844,6 +844,23 @@ export class SavingFulfillmentService {
     return { review, address };
   }
 
+  async assertCanAmendAddress(id: string, actor: Actor, write: boolean): Promise<void> {
+    const target = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM saving_orders WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!target) throw new NotFoundException('Saving order not found');
+    const check = async (client: PoolClient, archived: boolean) => {
+      if (archived) throw new ConflictException('Profile is archived');
+      await this.lockRow(client, id, 'SHARE');
+    };
+    if (write)
+      await staffContractMutation(target.profile_id, actor, check, { financialReview: true });
+    else await staffContractFinancialReview(target.profile_id, actor, check);
+  }
+
   async addressAmendmentReview(
     id: string,
     input: Pick<

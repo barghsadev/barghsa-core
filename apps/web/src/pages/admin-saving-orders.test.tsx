@@ -320,7 +320,7 @@ it('previews a fulfillment transition and submits its exact review hash', async 
             : url === `/api/staff/saving/orders/${id}`
               ? order
               : { orders: [order], nextAfter: null };
-    return Response.json(data);
+    return Response.json(data, { status: url.endsWith('/amend-address') ? 201 : 200 });
   });
   vi.stubGlobal('fetch', fetchMock);
   const container = document.createElement('div');
@@ -395,13 +395,15 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
     financialStatus: 'paid',
     submittedAt: '2026-09-30T00:00:00.000Z',
     billIdentifier: '1234567890123',
-    addressSnapshot: { full_address: 'Installation address' },
+    addressSnapshot: { full_address: 'Installation address', postal_code: '1234567890' },
     installationAddressId: '66666666-6666-7666-8666-666666666666',
     hardwareProductId: currentHardwareId,
     hardwareTitle: { fa: 'دستگاه', en: 'Current device' },
     pricingSnapshot: { plan: { title: { fa: 'طرح', en: 'Saving plan' } } },
     versionId,
+    invoiceId: '88888888-8888-7888-8888-888888888888',
     invoiceState: 'Paid',
+    contractId: '77777777-7777-7777-8777-777777777777',
     contractState: 'Active',
     totalIrR: '300000',
     paidIrR: '300000',
@@ -544,7 +546,11 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
             : url.endsWith('/amend-address-review')
               ? addressReview
               : url.endsWith('/amend-address')
-                ? { amendmentId: 'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee' }
+                ? {
+                    amendmentId: 'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee',
+                    savingOrderId: id,
+                    address: addressReview.data.replacementAddress,
+                  }
                 : url.endsWith('/amend-hardware-review')
                   ? review
                   : url.endsWith('/amend-hardware')
@@ -552,7 +558,7 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
                     : url === `/api/staff/saving/orders/${id}`
                       ? detail
                       : { orders: [detail], nextAfter: null };
-    return Response.json(data);
+    return Response.json(data, { status: url.endsWith('/amend-address') ? 201 : 200 });
   });
   vi.stubGlobal('fetch', fetchMock);
   const container = document.createElement('div');
@@ -645,6 +651,12 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
       (button) => button.textContent === 'Amend installation address'
     );
     await act(async () => amendAddress!.click());
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/amend-address-review'))).toBe(
+        true
+      );
+    });
     expect(fetchMock).toHaveBeenCalledWith(
       `/api/staff/saving/orders/${id}/amend-address-review`,
       expect.objectContaining({

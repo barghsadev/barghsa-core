@@ -1,8 +1,10 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Card, CardContent } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { SavingOrderComments } from '../components/SavingOrderComments.js';
@@ -51,6 +53,7 @@ interface Detail extends SavingActionContext {
     totalIrR: string;
   };
   verification_result: { status: string };
+  agreement_version_id: string;
   agreement_snapshot: string;
   agreement_updated: boolean;
   contract_version_id: string;
@@ -69,11 +72,29 @@ export function SavingOrderDetailPage() {
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
-  const [loadedDetail, setDetail] = useState<Detail | null>(null);
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const scope = JSON.stringify([actor, profileRevision, orderId]);
+  const currentScope = useRef(scope);
+  currentScope.current = scope;
+  const commandLock = useRef<{ scope: string; locked: boolean }>({ scope, locked: false });
+  const [loadedDetail, setDetail] = useState<{ scope: string; value: Detail } | null>(null);
+  const currentDetail = useRef(loadedDetail);
+  currentDetail.current = loadedDetail;
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
   const [revision, setRevision] = useState(0);
-  const detail = loadedDetail?.id === orderId ? loadedDetail : null;
+  const detail =
+    loadedDetail?.scope === scope && loadedDetail.value.id === orderId ? loadedDetail.value : null;
+  function refresh() {
+    if (
+      currentScope.current !== scope ||
+      (commandLock.current.scope === scope && commandLock.current.locked)
+    )
+      return;
+    setRevision((value) => value + 1);
+  }
   useEffect(() => {
+    if (commandLock.current.scope === scope && commandLock.current.locked) return;
     const controller = new AbortController();
     setDetail(null);
     setState('loading');
@@ -87,7 +108,7 @@ export function SavingOrderDetailPage() {
       })
       .then((result) => {
         if (!controller.signal.aborted) {
-          setDetail(result);
+          setDetail({ scope, value: result });
           setState('ready');
         }
       })
@@ -98,7 +119,7 @@ export function SavingOrderDetailPage() {
         }
       });
     return () => controller.abort();
-  }, [orderId, revision]);
+  }, [orderId, revision, scope]);
   const action = detail ? savingNextAction(detail) : null;
   const latestCompletedStage = detail?.stages.filter((stage) => stage.completed_at).at(-1);
   const actionOwner =
@@ -123,7 +144,7 @@ export function SavingOrderDetailPage() {
       {state === 'error' && (
         <div className="space-y-2">
           <p role="alert">{copy('error')}</p>
-          <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
+          <Button variant="outline" onClick={refresh}>
             {copy('retry')}
           </Button>
         </div>
@@ -193,7 +214,22 @@ export function SavingOrderDetailPage() {
               planId={detail.saving_plan_id}
               currentHardwareId={detail.hardware_product_id}
               currentAddressId={detail.installation_address_id}
-              onChanged={() => setRevision((value) => value + 1)}
+              currentVersionId={detail.contract_version_id}
+              invoiceId={detail.invoice_id ?? ''}
+              billIdentifier={detail.bill_identifier}
+              agreementVersionId={detail.agreement_version_id}
+              onCommandLock={(locked) => {
+                if (currentScope.current === scope && currentDetail.current === loadedDetail)
+                  commandLock.current = { scope, locked };
+              }}
+              onWithdrawal={() => {
+                if (currentScope.current !== scope || currentDetail.current !== loadedDetail)
+                  return;
+                commandLock.current = { scope, locked: false };
+                setDetail(null);
+                setState('error');
+              }}
+              onChanged={refresh}
             />
           )}
           <Card>
@@ -264,7 +300,7 @@ export function SavingOrderDetailPage() {
                 id={detail.contract_id}
                 versionId={detail.contract_version_id}
                 staff={false}
-                onChanged={() => setRevision((value) => value + 1)}
+                onChanged={refresh}
               />
             </div>
           )}
