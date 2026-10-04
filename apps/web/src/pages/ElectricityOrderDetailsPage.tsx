@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { contractText } from '@barghsa/i18n/contracts';
@@ -15,7 +15,20 @@ import {
   DualStatusDisplay,
   StatusTimeline,
   FinancialReviewSummary,
+  Input,
+  Textarea,
 } from '@barghsa/ui';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useZodForm,
+} from '@barghsa/ui/form';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   parseElectricityCancellationReview,
   type ElectricityCancellationReview,
@@ -23,6 +36,17 @@ import {
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import {
+  correctionRecord,
+  correctionUuid,
+  definitiveElectricityRejection,
+  electricityCorrectionReceipt,
+  type CorrectionOwner,
+  type ElectricityCorrectionLock,
+  type ElectricityAddressDraft,
+} from '../lib/electricity-correction-form.js';
 import { withCsrf } from '../lib/csrf.js';
 import { ElectricityIncreasePanel } from './ElectricityIncreasePanel.js';
 import { ElectricityPriceAdjustmentsPanel } from './ElectricityPriceAdjustmentsPanel.js';
@@ -199,25 +223,132 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
-  const [detail, setDetail] = useState<ElectricityOrderDetail | null>(null);
+  const actor = useAccountUser();
+  const scopeKey = JSON.stringify([actor, orderId]);
+  const scope = useRef(scopeKey);
+  const generation = useRef(0);
+  if (scope.current !== scopeKey) {
+    scope.current = scopeKey;
+    ++generation.current;
+  }
+  const [loadedDetail, setDetail] = useState<ElectricityOrderDetail | null>(null);
+  const [acceptedScope, setAcceptedScope] = useState<string | null>(null);
+  const detail = acceptedScope === scopeKey ? loadedDetail : null;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [retry, setRetry] = useState(0);
-  const [correctedAddress, setCorrectedAddress] = useState('');
-  const [correctedPostalCode, setCorrectedPostalCode] = useState('');
-  const [responseNote, setResponseNote] = useState('');
-  const [correctionKey, setCorrectionKey] = useState(() => crypto.randomUUID());
   const [savingCorrection, setSavingCorrection] = useState(false);
   const [correctionError, setCorrectionError] = useState(false);
+  const [, renderLock] = useState(0);
+  const cancellationActivity = useRef(false);
+  const correctionLock = useMemo<ElectricityCorrectionLock>(() => {
+    const lock: ElectricityCorrectionLock = {
+      owner: null,
+      acquire(owner: CorrectionOwner) {
+        if (lock.owner || cancellationActivity.current) return false;
+        lock.owner = owner;
+        renderLock((value) => value + 1);
+        return true;
+      },
+      release(owner: CorrectionOwner) {
+        if (lock.owner !== owner) return;
+        lock.owner = null;
+        renderLock((value) => value + 1);
+      },
+    };
+    return lock;
+  }, [scopeKey]);
+  const correctionMessages = {
+    fullAddress: t('electricity.correctionForm.addressInvalid', locale),
+    postalCode: t('electricity.correctionForm.postalInvalid', locale),
+    responseNote: t('electricity.correctionForm.noteInvalid', locale),
+  };
+  const correctionForm = useZodForm<ElectricityAddressDraft>(
+    async () => {
+      const token = generation.current;
+      const schemas = await import('../lib/electricity-correction-form-schemas.js');
+      return token === generation.current
+        ? schemas.electricityAddressSchema(correctionMessages)
+        : schemas.inactiveElectricityCorrectionSchema;
+    },
+    {
+      defaultValues: { fullAddress: '', postalCode: '', responseNote: '' },
+      validationUnavailableMessage: t('electricity.correctionForm.validationUnavailable', locale),
+    }
+  );
+  const correctionFieldErrors = useActionFieldErrors(
+    correctionForm,
+    correctionMessages,
+    t('electricity.order.correction.error', locale)
+  );
+  const capturedCorrection = useRef<{
+    body: string;
+    snapshot: ElectricityOrderDetail;
+    generation: number;
+  } | null>(null);
+  const correctionPending = useRef(false);
+  const [unconfirmedCorrection, setUnconfirmedCorrection] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
   const [cancelKey, setCancelKey] = useState(() => crypto.randomUUID());
   const [cancelling, setCancelling] = useState(false);
   const [cancelReviewLoading, setCancelReviewLoading] = useState(false);
   const [cancelReview, setCancelReview] = useState<ElectricityCancellationReview | null>(null);
   const [cancelError, setCancelError] = useState<'stepup' | 'generic' | null>(null);
+  cancellationActivity.current = cancelling || cancelReviewLoading || !!cancelReview;
+
+  function withdraw() {
+    ++generation.current;
+    setDetail(null);
+    setAcceptedScope(null);
+    setError(true);
+    setLoading(false);
+    capturedCorrection.current = null;
+    setUnconfirmedCorrection(false);
+    correctionPending.current = false;
+    setSavingCorrection(false);
+    setCancelling(false);
+    setCancelReviewLoading(false);
+    cancellationActivity.current = false;
+    correctionLock.release('address');
+    correctionLock.release('revision');
+    correctionForm.reset({ fullAddress: '', postalCode: '', responseNote: '' });
+    setCancelReview(null);
+    setCancelReason('');
+  }
+  function reloadDetail() {
+    if (scope.current !== scopeKey || correctionLock.owner || capturedCorrection.current) return;
+    correctionPending.current = false;
+    setSavingCorrection(false);
+    setCancelling(false);
+    setCancelReviewLoading(false);
+    setCancelReview(null);
+    cancellationActivity.current = false;
+    ++generation.current;
+    setDetail(null);
+    setAcceptedScope(null);
+    setLoading(true);
+    setRetry((value) => value + 1);
+  }
+
+  useEffect(() => {
+    capturedCorrection.current = null;
+    correctionPending.current = false;
+    setUnconfirmedCorrection(false);
+    setSavingCorrection(false);
+    setCorrectionError(false);
+    correctionForm.reset({ fullAddress: '', postalCode: '', responseNote: '' });
+    setCancelReview(null);
+    setCancelReason('');
+    setCancelling(false);
+    setCancelReviewLoading(false);
+    return () => {
+      ++generation.current;
+    };
+  }, [scopeKey]);
 
   useEffect(() => {
     const controller = new AbortController();
+    const token = generation.current;
     setLoading(true);
     setError(false);
     void fetch(`/api/electricity/orders/${encodeURIComponent(orderId)}`, {
@@ -225,39 +356,105 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
       signal: controller.signal,
     })
       .then(async (response) => {
+        if (controller.signal.aborted || token !== generation.current) return null;
+        if ([401, 403, 404].includes(response.status)) {
+          withdraw();
+          return null;
+        }
         if (!response.ok) throw new Error('Order unavailable');
         return response.json() as Promise<ElectricityOrderDetail>;
       })
       .then((value) => {
-        if (controller.signal.aborted) return;
+        if (controller.signal.aborted || token !== generation.current || !value) return;
         if (
           !value ||
           value.orderId !== orderId ||
-          !value.contractId ||
-          !value.invoiceId ||
+          !correctionUuid(value.profileId) ||
+          !correctionUuid(value.versionId) ||
+          !correctionUuid(value.contractId) ||
+          !correctionUuid(value.invoiceId) ||
           !/^\d+$/.test(value.totalIrR) ||
           !/^\d+$/.test(value.paidIrR) ||
           !/^\d+$/.test(value.refundedIrR)
         )
           throw new Error('Invalid order detail');
+        if (
+          loadedDetail &&
+          acceptedScope === scopeKey &&
+          loadedDetail.profileId !== value.profileId
+        ) {
+          withdraw();
+          return;
+        }
         setDetail(value);
-        setCorrectedAddress(value.fullAddress);
-        setCorrectedPostalCode(value.postalCode);
+        setAcceptedScope(scopeKey);
+        if (!capturedCorrection.current)
+          correctionForm.reset({
+            fullAddress: value.fullAddress,
+            postalCode: value.postalCode,
+            responseNote: '',
+          });
       })
       .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+        if (!controller.signal.aborted && token === generation.current) setError(true);
       })
       .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if (!controller.signal.aborted && token === generation.current) setLoading(false);
       });
     return () => controller.abort();
-  }, [orderId, retry]);
+  }, [orderId, retry, scopeKey]);
 
   async function resubmitCorrection(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!detail || savingCorrection) return;
+    if (scope.current !== scopeKey) return;
+    if (
+      !detail ||
+      detail.electricityStatus !== 'changes_requested' ||
+      correctionPending.current ||
+      capturedCorrection.current ||
+      !correctionLock.acquire('address')
+    )
+      return;
+    const token = generation.current;
+    const raw = { ...correctionForm.getValues() };
+    correctionPending.current = true;
     setSavingCorrection(true);
     setCorrectionError(false);
+    try {
+      await correctionForm.handleSubmit(async () => {
+        if (
+          token !== generation.current ||
+          JSON.stringify(raw) !== JSON.stringify(correctionForm.getValues())
+        )
+          return;
+        capturedCorrection.current = {
+          body: JSON.stringify({
+            idempotencyKey: crypto.randomUUID(),
+            expectedVersionId: detail.versionId,
+            fullAddress: raw.fullAddress.trim(),
+            postalCode: raw.postalCode.trim(),
+            responseNote: raw.responseNote.trim(),
+          }),
+          snapshot: detail,
+          generation: token,
+        };
+        await sendCorrection(false);
+      })();
+    } catch {
+      if (token === generation.current) setCorrectionError(true);
+    } finally {
+      if (token === generation.current) {
+        correctionPending.current = false;
+        setSavingCorrection(false);
+        if (!capturedCorrection.current) correctionLock.release('address');
+      }
+    }
+  }
+
+  async function sendCorrection(retrying: boolean) {
+    if (scope.current !== scopeKey) return;
+    const attempt = capturedCorrection.current;
+    if (!attempt || attempt.generation !== generation.current) return;
     try {
       const response = await fetch(
         `/api/electricity/orders/${encodeURIComponent(orderId)}/resubmit-address`,
@@ -265,29 +462,81 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           method: 'POST',
           credentials: 'include',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({
-            idempotencyKey: correctionKey,
-            expectedVersionId: detail.versionId,
-            fullAddress: correctedAddress.trim(),
-            postalCode: correctedPostalCode.trim(),
-            responseNote: responseNote.trim(),
-          }),
+          body: attempt.body,
         }
       );
-      if (!response.ok) throw new Error('Resubmission failed');
-      setCorrectionKey(crypto.randomUUID());
-      setResponseNote('');
-      setRetry((value) => value + 1);
+      const value: unknown = await response.json().catch(() => null);
+      if (attempt !== capturedCorrection.current || attempt.generation !== generation.current)
+        return;
+      if ([401, 403, 404].includes(response.status)) {
+        withdraw();
+        return;
+      }
+      if (!response.ok) {
+        if (
+          !retrying &&
+          response.status >= 400 &&
+          response.status < 500 &&
+          definitiveElectricityRejection(value)
+        ) {
+          capturedCorrection.current = null;
+          setUnconfirmedCorrection(false);
+          if (
+            response.status === 400 &&
+            correctionRecord(value) &&
+            correctionRecord(value.error) &&
+            value.error.code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+            Array.isArray(value.error.fields) &&
+            correctionFieldErrors(value.error.fields)
+          )
+            return;
+          setCorrectionError(true);
+          return;
+        }
+        throw new Error('Correction unconfirmed');
+      }
+      if (!electricityCorrectionReceipt(value, attempt.snapshot))
+        throw new Error('Correction unconfirmed');
+      capturedCorrection.current = null;
+      setUnconfirmedCorrection(false);
+      correctionLock.release('address');
+      correctionForm.reset({ ...correctionForm.getValues(), responseNote: '' });
+      reloadDetail();
     } catch {
-      setCorrectionError(true);
+      if (attempt === capturedCorrection.current && attempt.generation === generation.current) {
+        setUnconfirmedCorrection(true);
+        setCorrectionError(true);
+      }
+    }
+  }
+
+  async function retryCorrection() {
+    if (scope.current !== scopeKey) return;
+    if (
+      correctionPending.current ||
+      correctionLock.owner !== 'address' ||
+      !capturedCorrection.current
+    )
+      return;
+    const token = generation.current;
+    correctionPending.current = true;
+    setSavingCorrection(true);
+    setCorrectionError(false);
+    try {
+      await sendCorrection(true);
     } finally {
-      setSavingCorrection(false);
+      if (token === generation.current) {
+        correctionPending.current = false;
+        setSavingCorrection(false);
+      }
     }
   }
 
   async function cancelOrder(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!detail || cancelReviewLoading || !cancelReason.trim()) return;
+    if (!detail || correctionLock.owner || cancelReviewLoading || !cancelReason.trim()) return;
+    const token = generation.current;
+    cancellationActivity.current = true;
     setCancelReviewLoading(true);
     setCancelError(null);
     try {
@@ -300,8 +549,10 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           body: JSON.stringify({ reason: cancelReason.trim() }),
         }
       );
+      if (token !== generation.current) return;
       if (!response.ok) throw new Error('Review failed');
       const review = parseElectricityCancellationReview(await response.json());
+      if (token !== generation.current) return;
       if (
         !review ||
         review.scope.profileId !== detail.profileId ||
@@ -312,14 +563,25 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
         throw new Error('Review mismatch');
       setCancelReview(review);
     } catch {
-      setCancelError('generic');
+      if (token === generation.current) setCancelError('generic');
     } finally {
-      setCancelReviewLoading(false);
+      if (token === generation.current) {
+        cancellationActivity.current = false;
+        setCancelReviewLoading(false);
+      }
     }
   }
 
   async function confirmCancellation() {
-    if (!cancelReview || cancelling || cancelReview.scope.resourceId !== orderId) return;
+    if (
+      !cancelReview ||
+      correctionLock.owner ||
+      cancelling ||
+      cancelReview.scope.resourceId !== orderId
+    )
+      return;
+    const token = generation.current;
+    cancellationActivity.current = true;
     setCancelling(true);
     setCancelError(null);
     try {
@@ -337,6 +599,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           }),
         }
       );
+      if (token !== generation.current) return;
       if (response.status === 403) {
         setCancelError('stepup');
         setCancelReview(null);
@@ -345,13 +608,17 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
       if (!response.ok) throw new Error('Cancellation failed');
       setCancelReview(null);
       setCancelKey(crypto.randomUUID());
-      setRetry((value) => value + 1);
+      reloadDetail();
     } catch {
+      if (token !== generation.current) return;
       setCancelReview(null);
       setCancelError('generic');
-      setRetry((value) => value + 1);
+      reloadDetail();
     } finally {
-      setCancelling(false);
+      if (token === generation.current) {
+        cancellationActivity.current = false;
+        setCancelling(false);
+      }
     }
   }
 
@@ -391,9 +658,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
       ) : error || !detail ? (
         <div role="alert" className="space-y-3">
           <p>{t('electricity.order.detailFailed', locale)}</p>
-          <Button onClick={() => setRetry((value) => value + 1)}>
-            {t('electricity.order.retry', locale)}
-          </Button>
+          <Button onClick={() => reloadDetail()}>{t('electricity.order.retry', locale)}</Button>
         </div>
       ) : (
         <>
@@ -690,7 +955,12 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                   <Button
                     type="submit"
                     variant="outline"
-                    disabled={cancelling || cancelReviewLoading || !cancelReason.trim()}
+                    disabled={
+                      !!correctionLock.owner ||
+                      cancelling ||
+                      cancelReviewLoading ||
+                      !cancelReason.trim()
+                    }
                   >
                     {t(
                       cancelReviewLoading
@@ -710,52 +980,108 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                 <p className="mt-2 text-sm text-muted-foreground">
                   {t('electricity.order.correction.description', locale)}
                 </p>
-                <form
-                  className="mt-4 space-y-3"
-                  onSubmit={(event) => void resubmitCorrection(event)}
-                >
-                  <label className="block text-sm">
-                    {t('electricity.order.deliveryAddress', locale)}
-                    <input
-                      className="mt-1 w-full rounded-md border bg-background p-2"
-                      required
-                      maxLength={500}
-                      value={correctedAddress}
-                      onChange={(event) => setCorrectedAddress(event.target.value)}
-                    />
-                  </label>
-                  <label className="block text-sm">
-                    {t('electricity.order.correction.postalCode', locale)}
-                    <input
-                      className="mt-1 w-full rounded-md border bg-background p-2"
-                      required
-                      value={correctedPostalCode}
-                      onChange={(event) => setCorrectedPostalCode(event.target.value)}
-                    />
-                  </label>
-                  <label className="block text-sm">
-                    {t('electricity.order.correction.responseNote', locale)}
-                    <textarea
-                      className="mt-1 w-full rounded-md border bg-background p-2"
-                      required
-                      maxLength={1000}
-                      value={responseNote}
-                      onChange={(event) => setResponseNote(event.target.value)}
-                    />
-                  </label>
-                  {correctionError ? (
-                    <p role="alert" className="text-destructive">
-                      {t('electricity.order.correction.error', locale)}
-                    </p>
-                  ) : null}
-                  <Button type="submit" disabled={savingCorrection || !responseNote.trim()}>
-                    {t('electricity.order.correction.submit', locale)}
-                  </Button>
-                </form>
+                <Form {...correctionForm}>
+                  <form
+                    noValidate
+                    data-testid="electricity-address-correction-form"
+                    className="mt-4 space-y-3"
+                    onSubmit={(event) => void resubmitCorrection(event)}
+                  >
+                    {(['fullAddress', 'postalCode', 'responseNote'] as const).map((name) => (
+                      <FormField
+                        key={name}
+                        control={correctionForm.control}
+                        name={name}
+                        render={({ field }) => (
+                          <FormItem
+                            id={
+                              name === 'fullAddress'
+                                ? 'correction-address'
+                                : name === 'postalCode'
+                                  ? 'correction-postal'
+                                  : 'correction-note'
+                            }
+                          >
+                            <FormLabel>
+                              {t(
+                                name === 'fullAddress'
+                                  ? 'electricity.order.deliveryAddress'
+                                  : name === 'postalCode'
+                                    ? 'electricity.order.correction.postalCode'
+                                    : 'electricity.order.correction.responseNote',
+                                locale
+                              )}
+                            </FormLabel>
+                            <FormControl>
+                              {name === 'responseNote' ? (
+                                <Textarea
+                                  {...field}
+                                  maxLength={1000}
+                                  disabled={!!correctionLock.owner}
+                                />
+                              ) : (
+                                <Input
+                                  {...field}
+                                  maxLength={name === 'fullAddress' ? 500 : 10}
+                                  inputMode={name === 'postalCode' ? 'numeric' : 'text'}
+                                  disabled={!!correctionLock.owner}
+                                />
+                              )}
+                            </FormControl>
+                            <FormDescription>
+                              {t('electricity.correctionForm.help', locale)}
+                            </FormDescription>
+                            <div className="grid">
+                              <p
+                                aria-hidden="true"
+                                className="invisible col-start-1 row-start-1 text-sm"
+                              >
+                                {correctionMessages[name]}
+                              </p>
+                              <FormMessage className="col-start-1 row-start-1" />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+                    {correctionError || correctionForm.formState.errors.root ? (
+                      <p role="alert" className="text-destructive">
+                        {unconfirmedCorrection
+                          ? t('electricity.correctionForm.uncertain', locale)
+                          : (correctionForm.formState.errors.root?.validation?.message ??
+                            t('electricity.order.correction.error', locale))}
+                      </p>
+                    ) : null}
+                    {correctionLock.owner === 'revision' ? (
+                      <p role="status">{t('electricity.correctionForm.busy', locale)}</p>
+                    ) : null}
+                    <Button
+                      type="submit"
+                      loading={savingCorrection}
+                      disabled={!!correctionLock.owner}
+                    >
+                      {t('electricity.order.correction.submit', locale)}
+                    </Button>
+                    {unconfirmedCorrection ? (
+                      <Button
+                        type="button"
+                        data-testid="electricity-address-correction-retry"
+                        variant="outline"
+                        disabled={savingCorrection}
+                        onClick={() => void retryCorrection()}
+                      >
+                        {t('electricity.correctionForm.retry', locale)}
+                      </Button>
+                    ) : null}
+                  </form>
+                </Form>
                 <Suspense fallback={null}>
                   <ElectricityOrderRevisionForm
+                    key={JSON.stringify([scopeKey, detail.profileId, detail.versionId])}
                     order={detail}
-                    onComplete={() => setRetry((value) => value + 1)}
+                    onComplete={() => reloadDetail()}
+                    coordination={correctionLock}
+                    onDenied={withdraw}
                   />
                 </Suspense>
               </CardContent>
@@ -796,7 +1122,11 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           ) : null}
         </>
       )}
-      {cancelReview && cancelReview.scope.resourceId === orderId ? (
+      {detail &&
+      cancelReview &&
+      cancelReview.scope.resourceId === orderId &&
+      cancelReview.scope.profileId === detail.profileId &&
+      cancelReview.data.versionId === detail.versionId ? (
         <Dialog open onOpenChange={(open) => !open && !cancelling && setCancelReview(null)}>
           <DialogContent
             className="max-h-[90dvh] overflow-y-auto"
@@ -914,7 +1244,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               </Button>
               <Button
                 variant="destructive"
-                disabled={cancelling}
+                disabled={!!correctionLock.owner || cancelling}
                 onClick={() => void confirmCancellation()}
               >
                 {t('electricity.order.detail.cancel', locale)}

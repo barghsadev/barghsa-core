@@ -30,6 +30,7 @@ import { simplePeriodOptions } from './electricity-order.service.js';
 import { ElectricityBillDataService } from './electricity-bill-data.service.js';
 import { ElectricityDraftService } from './electricity-draft.service.js';
 import { RequiresCapability } from '../maintenance/maintenance.guard.js';
+import { InputFieldException } from '../common/input-field.exception.js';
 
 const simpleInput = z
   .object({
@@ -128,24 +129,88 @@ const addressCorrectionInput = z
     responseNote: z.string().trim().min(1).max(1000),
   })
   .strict();
-const revisionPreviewInput = z.union([
-  simpleInput.extend({ expectedVersionId: z.string().uuid() }).strict(),
-  advancedInput.extend({ expectedVersionId: z.string().uuid() }).strict(),
-]);
-const revisionInput = z.union([
-  submitInput
-    .extend({
-      expectedVersionId: z.string().uuid(),
-      responseNote: z.string().trim().min(1).max(1000),
-    })
-    .strict(),
-  advancedSubmitInput
-    .extend({
-      expectedVersionId: z.string().uuid(),
-      responseNote: z.string().trim().min(1).max(1000),
-    })
-    .strict(),
-]);
+const simpleRevisionPreview = simpleInput.extend({ expectedVersionId: z.string().uuid() }).strict();
+const advancedRevisionPreview = advancedInput
+  .extend({ expectedVersionId: z.string().uuid() })
+  .strict();
+const revisionPreviewInput = z.union([simpleRevisionPreview, advancedRevisionPreview]);
+const simpleRevision = submitInput
+  .extend({
+    expectedVersionId: z.string().uuid(),
+    responseNote: z.string().trim().min(1).max(1000),
+  })
+  .strict();
+const advancedRevision = advancedSubmitInput
+  .extend({
+    expectedVersionId: z.string().uuid(),
+    responseNote: z.string().trim().min(1).max(1000),
+  })
+  .strict();
+const revisionInput = z.union([simpleRevision, advancedRevision]);
+const correctionFields: Record<string, string> = {
+  fullAddress: 'fullAddress',
+  postalCode: 'postalCode',
+  responseNote: 'responseNote',
+};
+const revisionFields: Record<string, string> = {
+  period: 'period',
+  totalKwh: 'totalKwh',
+  giftCode: 'giftCode',
+  startAt: 'startAt',
+  endAt: 'endAt',
+  'quantities.thermal': 'thermal',
+  'quantities.green': 'green',
+  'quantities.free_market': 'freeMarket',
+  'quantities.energy_saving': 'energySaving',
+  'address.provinceId': 'provinceId',
+  'address.cityId': 'cityId',
+  'address.fullAddress': 'fullAddress',
+  'address.postalCode': 'postalCode',
+  responseNote: 'responseNote',
+};
+
+/** A failed union may expose fields only from one unambiguous public form variant. */
+function revisionFormSchema(body: unknown, confirmed: boolean): z.ZodType | undefined {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return;
+  const simple = ['period', 'totalKwh'].some((key) => Object.hasOwn(body, key));
+  const advanced = ['startAt', 'endAt', 'quantities'].some((key) => Object.hasOwn(body, key));
+  if (simple === advanced) return;
+  return simple
+    ? confirmed
+      ? simpleRevision
+      : simpleRevisionPreview
+    : confirmed
+      ? advancedRevision
+      : advancedRevisionPreview;
+}
+
+function parseCorrectionForm<S extends z.ZodType>(
+  schema: S,
+  body: unknown,
+  fields: Record<string, string>,
+  projection: z.ZodType | undefined = schema
+): z.output<S> {
+  const result = schema.safeParse(body);
+  if (result.success) return result.data as z.output<S>;
+  const projected = projection?.safeParse(body);
+  const generic = () => new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+  if (!projected || projected.success) throw generic();
+  const owned: string[] = [];
+  for (const issue of projected.error.issues) {
+    const path = issue.path.join('.');
+    if (
+      !Object.hasOwn(fields, path) ||
+      (!['invalid_type', 'too_small', 'too_big', 'invalid_format', 'invalid_value'].includes(
+        issue.code
+      ) &&
+        !(issue.code === 'custom' && fields[path] === 'postalCode'))
+    )
+      throw generic();
+    owned.push(fields[path]!);
+  }
+  if (!owned.length) throw generic();
+  throw new InputFieldException(owned);
+}
 const cancelInput = z
   .object({
     idempotencyKey: z.string().uuid(),
@@ -323,12 +388,11 @@ export class ElectricityOrderController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const parsed = addressCorrectionInput.safeParse(body);
-    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    const parsed = parseCorrectionForm(addressCorrectionInput, body, correctionFields);
     return this.service.resubmitAddressCorrection(
       req.session,
       orderId,
-      parsed.data,
+      parsed,
       req.ip ?? 'unknown'
     );
   }
@@ -343,9 +407,13 @@ export class ElectricityOrderController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const parsed = revisionPreviewInput.safeParse(body);
-    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
-    return this.service.previewRevision(req.session, orderId, parsed.data);
+    const parsed = parseCorrectionForm(
+      revisionPreviewInput,
+      body,
+      revisionFields,
+      revisionFormSchema(body, false)
+    );
+    return this.service.previewRevision(req.session, orderId, parsed);
   }
 
   @Post('orders/:orderId/resubmit')
@@ -358,9 +426,13 @@ export class ElectricityOrderController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const parsed = revisionInput.safeParse(body);
-    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
-    return this.service.resubmitRevision(req.session, orderId, parsed.data, req.ip ?? 'unknown');
+    const parsed = parseCorrectionForm(
+      revisionInput,
+      body,
+      revisionFields,
+      revisionFormSchema(body, true)
+    );
+    return this.service.resubmitRevision(req.session, orderId, parsed, req.ip ?? 'unknown');
   }
 
   @Post('orders/:orderId/cancel-review')

@@ -339,7 +339,9 @@ test('simple electricity order moves from reviewed quote through payment and con
   await page.route(`**/api/staff/electricity/orders/${orderId}/approve`, (route) => {
     staffApprovals.push(route.request().postDataJSON() as Record<string, unknown>);
     reviewComplete = true;
-    return route.fulfill({ json: { orderId, status: 'approved' } });
+    return route.fulfill({
+      json: { orderId, status: 'approved', contractId, invoiceId, refundId: null },
+    });
   });
   await page.route(`**/api/staff/electricity/orders/${orderId}`, (route) =>
     route.fulfill({ json: staffOrder() })

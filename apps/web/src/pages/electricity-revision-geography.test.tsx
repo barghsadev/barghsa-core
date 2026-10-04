@@ -25,6 +25,7 @@ const provinces = [
   { id: 'p2', nameFa: 'استان دو', nameEn: 'Two' },
 ];
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   document.documentElement.lang = 'en';
   host = document.createElement('div');
   document.body.append(host);
@@ -102,8 +103,10 @@ it('blocks a changed province until its bound city list recovers and preserves a
   ).toBe(true);
   expect(host.querySelector('textarea')!.value).toBe('Reviewed correction');
   await act(async () => preview().click());
-  expect(requests.mock.calls.filter(([path]) => path.endsWith('/revision-preview'))).toHaveLength(
-    1
+  await vi.waitFor(() =>
+    expect(requests.mock.calls.filter(([path]) => path.endsWith('/revision-preview'))).toHaveLength(
+      1
+    )
   );
 });
 it('allows review of an unchanged historical address while geography is unavailable', async () => {

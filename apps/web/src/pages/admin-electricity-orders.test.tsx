@@ -317,7 +317,13 @@ it('shows the server refund outcome and submits its exact review hash', async ()
             : url.endsWith('/financial-review')
               ? review
               : url.endsWith('/reject')
-                ? { status: 'rejected' }
+                ? {
+                    orderId,
+                    status: 'rejected',
+                    contractId,
+                    invoiceId,
+                    refundId: '88888888-8888-4888-8888-888888888888',
+                  }
                 : url.endsWith(`/${orderId}`)
                   ? order
                   : url.includes('/comments')
@@ -337,9 +343,9 @@ it('shows the server refund outcome and submits its exact review hash', async ()
       button.textContent?.includes('Electricity Buyer')
     );
     await act(async () => queueButton!.click());
-    const reason = container.querySelector<HTMLInputElement>('#electricity-review-reason')!;
+    const reason = container.querySelector<HTMLTextAreaElement>('#electricity-review-reason')!;
     await act(async () => {
-      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+      Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
         reason,
         'No supply'
       );
@@ -349,6 +355,7 @@ it('shows the server refund outcome and submits its exact review hash', async ()
       (button) => button.textContent === 'Reject order'
     );
     await act(async () => reject!.click());
+    await vi.waitFor(() => expect(document.querySelector('[role=dialog]')).not.toBeNull());
     expect(fetchMock).toHaveBeenCalledWith(
       `/api/staff/electricity/orders/${orderId}/financial-review`,
       expect.objectContaining({ body: JSON.stringify({ action: 'reject', reason: 'No supply' }) })
@@ -481,6 +488,8 @@ it('opens a linked order directly even when it is no longer in the review queue'
     await submitLookup(missingOrderId);
     expect(container.textContent).toContain('Order details were not found or are unavailable.');
     expect(container.textContent).not.toContain('Loading detail…');
+    expect(container.textContent).not.toContain('Electricity Street');
+    expect(lookup.disabled).toBe(false);
     missingAvailable = true;
     const retry = [...container.querySelectorAll('button')].find(
       (button) => button.textContent === 'Retry'

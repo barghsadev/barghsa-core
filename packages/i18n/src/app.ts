@@ -5,6 +5,28 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'electricity.correctionForm.addressInvalid': 'نشانی باید بین ۱ تا ۵۰۰ نویسه باشد.',
+  'electricity.correctionForm.postalInvalid': 'کد پستی معتبر ۱۰ رقمی را وارد کنید.',
+  'electricity.correctionForm.noteInvalid': 'پاسخ باید بین ۱ تا ۱٬۰۰۰ نویسه باشد.',
+  'electricity.correctionForm.giftInvalid': 'کد هدیه باید حداکثر ۱۰۰ نویسه باشد.',
+  'electricity.correctionForm.locationInvalid': 'استان و شهر وابسته به آن را انتخاب کنید.',
+  'electricity.correctionForm.validationUnavailable': 'اعتبارسنجی در دسترس نیست. دوباره تلاش کنید.',
+  'electricity.correctionForm.uncertain':
+    'نتیجه تأیید نشد. پیش از تغییر، همان اصلاح را دوباره ارسال کنید.',
+  'electricity.correctionForm.retry': 'ارسال دوباره اصلاح ثبت‌شده',
+  'electricity.correctionForm.busy':
+    'اصلاح دیگری در انتظار است. پیش از ارسال این فرم آن را تکمیل کنید.',
+  'electricity.correctionForm.help':
+    'اگر فیلدی نیاز به اصلاح داشته باشد، سایر داده‌های شما حفظ می‌شود.',
+  'electricity.correctionForm.loading': 'در حال بررسی اصلاح…',
+  'electricity.staffReasonForm.invalid': 'دلیل باید بین ۱ تا ۱٬۰۰۰ نویسه باشد.',
+  'electricity.staffReasonForm.help':
+    'برای درخواست اصلاح یا رد سفارش، دلیل لازم است. تأیید سفارش از این دلیل استفاده نمی‌کند.',
+  'electricity.staffReasonForm.validationUnavailable':
+    'اعتبارسنجی در دسترس نیست. دوباره تلاش کنید.',
+  'electricity.staffReasonForm.uncertain':
+    'نتیجه تصمیم تأیید نشد. پیش از تغییر، همان تصمیم ثبت‌شده را دوباره ارسال کنید.',
+  'electricity.staffReasonForm.retry': 'ارسال دوباره تصمیم ثبت‌شده',
   'formWizard.invalidField': 'این بخش را بررسی و اصلاح کنید.',
   'formWizard.current': 'مرحلهٔ فعلی',
   'formWizard.completed': 'تکمیل شده',
@@ -1698,6 +1720,26 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'electricity.correctionForm.addressInvalid': 'Enter an address of 1 to 500 characters.',
+  'electricity.correctionForm.postalInvalid': 'Enter a valid 10-digit postal code.',
+  'electricity.correctionForm.noteInvalid': 'Enter a response of 1 to 1,000 characters.',
+  'electricity.correctionForm.giftInvalid': 'Gift codes must be at most 100 characters.',
+  'electricity.correctionForm.locationInvalid': 'Choose a province and its city.',
+  'electricity.correctionForm.validationUnavailable': 'Validation is unavailable. Try again.',
+  'electricity.correctionForm.uncertain':
+    'The result could not be confirmed. Retry the same correction before changing it.',
+  'electricity.correctionForm.retry': 'Retry captured correction',
+  'electricity.correctionForm.busy':
+    'Another correction is pending. Finish it before submitting here.',
+  'electricity.correctionForm.help': 'Your other entries are kept if a field needs correction.',
+  'electricity.correctionForm.loading': 'Checking correction…',
+  'electricity.staffReasonForm.invalid': 'Enter a reason of 1 to 1,000 characters.',
+  'electricity.staffReasonForm.help':
+    'A reason is required to request changes or reject the order. Approval does not use this reason.',
+  'electricity.staffReasonForm.validationUnavailable': 'Validation is unavailable. Try again.',
+  'electricity.staffReasonForm.uncertain':
+    'The decision could not be confirmed. Retry the captured decision before changing it.',
+  'electricity.staffReasonForm.retry': 'Retry captured decision',
   'formWizard.invalidField': 'Check and correct this field.',
   'formWizard.current': 'Current step',
   'formWizard.completed': 'Completed',

@@ -132,6 +132,251 @@ async function submittedOrder() {
   };
 }
 
+async function correctionSnapshot(orderId: string, contractId: string) {
+  return (
+    await http.pool.query(
+      `SELECT
+       (SELECT to_jsonb(o) FROM orders o WHERE id=$1::uuid) AS order_row,
+       (SELECT to_jsonb(e) FROM electricity_orders e WHERE id=$1::uuid) AS electricity_row,
+       (SELECT to_jsonb(c) FROM contracts c WHERE id=$2::uuid) AS contract_row,
+       (SELECT jsonb_agg(to_jsonb(v) ORDER BY version_number) FROM contract_versions v WHERE contract_id=$2::uuid) AS versions,
+       (SELECT jsonb_agg(to_jsonb(i) ORDER BY id) FROM invoices i WHERE order_id=$1::uuid) AS invoices,
+       (SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM audit_log a WHERE metadata::jsonb->>'orderId'=$1::text) AS audits,
+       (SELECT jsonb_agg(to_jsonb(n) ORDER BY id) FROM in_app_notifications n WHERE recipient_user_id='buyer') AS notices`,
+      [orderId, contractId]
+    )
+  ).rows[0];
+}
+
+it('projects correction form feedback without mutations and preserves exact staff/address receipts', async () => {
+  const order = await submittedOrder();
+  const versionId = (
+    await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+      order.contractId,
+    ])
+  ).rows[0].current_version_id;
+  const before = await correctionSnapshot(order.orderId, order.contractId);
+  const staff = (action: string, body: unknown) =>
+    fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}/${action}`, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify(body),
+    });
+  const rejected = async (
+    response: Response,
+    fields?: string[],
+    baseline = before,
+    status = 400
+  ) => {
+    expect(response.status, http.logs()).toBe(status);
+    const body = await response.json();
+    if (fields) expect(body).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID', fields } });
+    else expect(body).not.toHaveProperty('error.fields');
+    expect(JSON.stringify(body)).not.toContain('PRIVATE');
+    expect(await correctionSnapshot(order.orderId, order.contractId)).toEqual(baseline);
+  };
+  await rejected(await staff('financial-review', { action: 'request-changes', reason: ' ' }), [
+    'reason',
+  ]);
+  const decision = {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: versionId,
+    expectedReviewHash: 'a'.repeat(64),
+    reason: ' ',
+  };
+  await rejected(await staff('request-changes', decision), ['reason']);
+  await rejected(await staff('request-changes', { ...decision, expectedVersionId: 'PRIVATE' }));
+  await rejected(await staff('financial-review', { action: 'approve', reason: 'PRIVATE' }));
+  await http.pool.query("DELETE FROM user_roles WHERE user_id='reviewer'");
+  await rejected(
+    await staff('financial-review', { action: 'request-changes', reason: ' ' }),
+    undefined,
+    before,
+    403
+  );
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES('reviewer','role-legal-contracts')"
+  );
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='reviewer'");
+  await rejected(await staff('request-changes', decision), undefined, before, 403);
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='reviewer'");
+  const reason = 'r'.repeat(1000);
+  const reviewed = await staff('financial-review', {
+    action: 'request-changes',
+    reason: `  ${reason}  `,
+  });
+  expect(reviewed.status, http.logs()).toBe(200);
+  const review = (await reviewed.json()) as { hash: string };
+  const command = { ...decision, expectedReviewHash: review.hash, reason: `  ${reason}  ` };
+  const saved = await staff('request-changes', command);
+  expect(saved.status, http.logs()).toBe(200);
+  const receipt = await saved.json();
+  expect(receipt).toEqual({
+    orderId: order.orderId,
+    status: 'changes_requested',
+    contractId: order.contractId,
+    invoiceId: order.invoiceId,
+    refundId: null,
+  });
+  const changed = await correctionSnapshot(order.orderId, order.contractId);
+  expect(await (await staff('request-changes', command)).json()).toEqual(receipt);
+  expect(await correctionSnapshot(order.orderId, order.contractId)).toEqual(changed);
+  const address = {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: versionId,
+    fullAddress: '  Corrected street  ',
+    postalCode: '1234567890',
+    responseNote: `  ${'n'.repeat(1000)}  `,
+  };
+  const resubmit = (body: unknown) => post(`orders/${order.orderId}/resubmit-address`, body);
+  await rejected(
+    await resubmit({ ...address, fullAddress: ' ', postalCode: 'PRIVATE' }),
+    ['fullAddress', 'postalCode'],
+    changed
+  );
+  await rejected(
+    await resubmit({ ...address, responseNote: 'PRIVATE'.repeat(143) }),
+    ['responseNote'],
+    changed
+  );
+  await rejected(
+    await resubmit({ ...address, idempotencyKey: 'PRIVATE', postalCode: 'PRIVATE' }),
+    undefined,
+    changed
+  );
+  const accepted = await resubmit(address);
+  expect(accepted.status, http.logs()).toBe(200);
+  const amended = (await accepted.json()) as { versionId: string };
+  expect(amended).toEqual({
+    orderId: order.orderId,
+    contractId: order.contractId,
+    versionId: expect.any(String),
+    status: 'awaiting_staff_review',
+  });
+  expect(amended.versionId).not.toBe(versionId);
+  const final = await correctionSnapshot(order.orderId, order.contractId);
+  expect(await (await resubmit(address)).json()).toEqual(amended);
+  expect(await correctionSnapshot(order.orderId, order.contractId)).toEqual(final);
+  expect(final.versions).toHaveLength(2);
+  expect(final.invoices).toEqual(changed.invoices);
+  const staffDetail = await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
+    headers: staffHeaders,
+  });
+  expect(await staffDetail.json()).toMatchObject({
+    revisionReview: {
+      staffReason: reason,
+      customerResponse: 'n'.repeat(1000),
+      after: { fullAddress: 'Corrected street', invoiceId: order.invoiceId },
+    },
+  });
+});
+
+it('projects selected revision fields without financial side effects and preserves quote-bound replay', async () => {
+  const order = await submittedOrder();
+  const versionId = (
+    await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+      order.contractId,
+    ])
+  ).rows[0].current_version_id;
+  expect(
+    (
+      await staffPost(order.orderId, 'request-changes', {
+        idempotencyKey: randomUUID(),
+        expectedVersionId: versionId,
+        reason: 'Correct the quantity',
+      })
+    ).status
+  ).toBe(200);
+  const before = await correctionSnapshot(order.orderId, order.contractId);
+  const terms = {
+    profileId: input.profileId,
+    expectedVersionId: versionId,
+    period: 'next_week',
+    totalKwh: '12',
+  };
+  const rejected = async (path: string, body: unknown, fields?: string[]) => {
+    const response = await post(`orders/${order.orderId}/${path}`, body);
+    expect(response.status, http.logs()).toBe(400);
+    const receipt = await response.json();
+    if (fields)
+      expect(receipt).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID', fields } });
+    else expect(receipt).not.toHaveProperty('error.fields');
+    expect(JSON.stringify(receipt)).not.toContain('PRIVATE');
+    expect(await correctionSnapshot(order.orderId, order.contractId)).toEqual(before);
+  };
+  await rejected('revision-preview', { ...terms, totalKwh: 'PRIVATE' }, ['totalKwh']);
+  await rejected(
+    'revision-preview',
+    {
+      profileId: input.profileId,
+      expectedVersionId: versionId,
+      startAt: 'PRIVATE',
+      endAt: '2026-11-02T00:00:00.000Z',
+      quantities: { free_market: '-1' },
+    },
+    ['startAt', 'freeMarket']
+  );
+  await rejected('revision-preview', { ...terms, startAt: 'PRIVATE' });
+  await rejected('revision-preview', { ...terms, expectedVersionId: 'PRIVATE', totalKwh: '0' });
+  const preview = await post(`orders/${order.orderId}/revision-preview`, terms);
+  expect(preview.status, http.logs()).toBe(200);
+  const quote = (await preview.json()) as { reviewDigest: string; totalIrR: string };
+  const command = {
+    ...terms,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: quote.reviewDigest,
+    address: input.address,
+    responseNote: `  ${'n'.repeat(1000)}  `,
+  };
+  await rejected(
+    'resubmit',
+    {
+      ...command,
+      address: {
+        ...(input.address as Record<string, unknown>),
+        fullAddress: 'PRIVATE'.repeat(72),
+        postalCode: 'PRIVATE',
+      },
+    },
+    ['fullAddress', 'postalCode']
+  );
+  await rejected('resubmit', { ...command, expectedQuoteDigest: 'PRIVATE', responseNote: ' ' });
+  const response = await post(`orders/${order.orderId}/resubmit`, command);
+  expect(response.status, http.logs()).toBe(200);
+  const receipt = (await response.json()) as {
+    versionId: string;
+    invoiceId: string;
+    reviewDigest: string;
+  };
+  expect(receipt).toMatchObject({
+    orderId: order.orderId,
+    contractId: order.contractId,
+    status: 'awaiting_staff_review',
+    reviewDigest: quote.reviewDigest,
+    totalIrR: quote.totalIrR,
+  });
+  expect(receipt.versionId).not.toBe(versionId);
+  expect(receipt.invoiceId).not.toBe(order.invoiceId);
+  const final = await correctionSnapshot(order.orderId, order.contractId);
+  expect(await (await post(`orders/${order.orderId}/resubmit`, command)).json()).toEqual(receipt);
+  expect(await correctionSnapshot(order.orderId, order.contractId)).toEqual(final);
+  expect(final.versions).toHaveLength(2);
+  const oldInvoice = final.invoices.find(
+    (invoice: { id: string }) => invoice.id === order.invoiceId
+  );
+  expect(oldInvoice).toMatchObject({ state: 'Cancelled', paid_amount: 0 });
+  const staffDetail = await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
+    headers: staffHeaders,
+  });
+  expect(await staffDetail.json()).toMatchObject({
+    revisionReview: {
+      customerResponse: 'n'.repeat(1000),
+      before: { invoiceId: order.invoiceId },
+      after: { invoiceId: receipt.invoiceId },
+    },
+  });
+});
+
 it('projects only opted-in activity names into authorized customer and staff order history', async () => {
   const order = await submittedOrder();
   const paths = [

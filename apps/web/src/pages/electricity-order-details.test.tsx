@@ -180,8 +180,8 @@ it('loads an order confirmation with its invoice and contract references', async
                 nextBefore: null,
               }
             : {
-                orderId: 'order-1',
-                profileId: 'profile-1',
+                orderId: '11111111-1111-7111-8111-111111111111',
+                profileId: '22222222-2222-7222-8222-222222222222',
                 profileName: 'Customer Company',
                 mode: 'simple',
                 submittedAt: '2026-09-23T08:30:00Z',
@@ -194,17 +194,17 @@ it('loads an order confirmation with its invoice and contract references', async
                 totalKwh: '10',
                 fullAddress: 'Electricity Street',
                 postalCode: '1234567890',
-                contractId: 'contract-1',
+                contractId: '33333333-3333-7333-8333-333333333333',
                 contractState: 'AwaitingStaffReview',
-                versionId: 'version-1',
-                invoiceId: 'invoice-1',
+                versionId: '44444444-4444-7444-8444-444444444444',
+                invoiceId: '55555555-5555-7555-8555-555555555555',
                 invoiceState: 'Unpaid',
                 totalIrR: '2500000',
                 paidIrR: '0',
                 refundedIrR: '0',
                 lines: [
                   {
-                    productId: 'thermal-1',
+                    productId: '88888888-8888-7888-8888-888888888888',
                     systemKey: 'thermal',
                     title: { en: 'Thermal' },
                     quantityKwh: '10',
@@ -232,8 +232,13 @@ it('loads an order confirmation with its invoice and contract references', async
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<ElectricityOrderDetailsPage orderId="order-1" />));
-    expect(request).toHaveBeenCalledWith('/api/electricity/orders/order-1', expect.any(Object));
+    await act(async () =>
+      root.render(<ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />)
+    );
+    expect(request).toHaveBeenCalledWith(
+      '/api/electricity/orders/11111111-1111-7111-8111-111111111111',
+      expect.any(Object)
+    );
     expect(container.textContent).toContain('2500000');
     expect(container.textContent).toContain('Awaiting staff review');
     expect(container.textContent).toContain('Current status');
@@ -263,7 +268,9 @@ it('loads an order confirmation with its invoice and contract references', async
     expect(container.textContent).toContain('We are checking delivery.');
     expect(container.querySelector('a[href="/tickets"]')).not.toBeNull();
     expect(container.querySelector('a[href="/contracts"]')).toBeNull();
-    expect(container.querySelector('a[href="/invoices/invoice-1"]')).not.toBeNull();
+    expect(
+      container.querySelector('a[href="/invoices/55555555-5555-7555-8555-555555555555"]')
+    ).not.toBeNull();
   } finally {
     await act(async () => root.unmount());
     container.remove();
@@ -307,8 +314,8 @@ it.each([
         async () =>
           new Response(
             JSON.stringify({
-              orderId: 'order-1',
-              profileId: 'profile-1',
+              orderId: '11111111-1111-7111-8111-111111111111',
+              profileId: '22222222-2222-7222-8222-222222222222',
               electricityStatus: status,
               financialStatus: financiallyClosed ? 'refunded' : 'refund_pending',
               nextAction: financiallyClosed ? 'none' : 'await_refund',
@@ -316,10 +323,10 @@ it.each([
               periodEnd: '2026-09-30T00:00:00Z',
               totalKwh: '10',
               fullAddress: 'Electricity Street',
-              contractId: 'contract-1',
+              contractId: '33333333-3333-7333-8333-333333333333',
               contractState: 'Cancelled',
-              versionId: 'version-1',
-              invoiceId: 'invoice-1',
+              versionId: '44444444-4444-7444-8444-444444444444',
+              invoiceId: '55555555-5555-7555-8555-555555555555',
               totalIrR: '2500000',
               paidIrR,
               refundedIrR,
@@ -333,7 +340,9 @@ it.each([
     document.body.append(container);
     const root = createRoot(container);
     try {
-      await act(async () => root.render(<ElectricityOrderDetailsPage orderId="order-1" />));
+      await act(async () =>
+        root.render(<ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />)
+      );
       expect(container.textContent).toContain(expected);
       expect(container.textContent).toContain(settlement);
       expect(container.textContent).not.toContain('Amount remaining');
@@ -352,7 +361,7 @@ it.each([
     status: 'approved',
     financialStatus: 'unpaid',
     contractState: 'AwaitingCustomerAcceptance',
-    href: '/invoices/invoice-1',
+    href: '/invoices/55555555-5555-7555-8555-555555555555',
     message: 'Review and pay',
   },
   {
@@ -360,7 +369,7 @@ it.each([
     status: 'approved',
     financialStatus: 'paid',
     contractState: 'AwaitingCustomerAcceptance',
-    href: '/contracts?contractId=contract-1',
+    href: '/contracts?contractId=33333333-3333-7333-8333-333333333333',
     message: 'Review and accept',
   },
   {
@@ -368,7 +377,7 @@ it.each([
     status: 'approved',
     financialStatus: 'payment_under_review',
     contractState: 'AwaitingCustomerAcceptance',
-    href: '/invoices/invoice-1',
+    href: '/invoices/55555555-5555-7555-8555-555555555555',
     message: 'payment is under review',
   },
   {
@@ -376,7 +385,7 @@ it.each([
     status: 'rejected',
     financialStatus: 'refund_pending',
     contractState: 'Rejected',
-    href: '/invoices/invoice-1',
+    href: '/invoices/55555555-5555-7555-8555-555555555555',
     message: 'refund is being processed',
   },
   {
@@ -398,8 +407,8 @@ it.each([
         async () =>
           new Response(
             JSON.stringify({
-              orderId: 'order-1',
-              profileId: 'profile-1',
+              orderId: '11111111-1111-7111-8111-111111111111',
+              profileId: '22222222-2222-7222-8222-222222222222',
               electricityStatus: status,
               financialStatus,
               nextAction: action,
@@ -408,10 +417,10 @@ it.each([
               totalKwh: '10',
               fullAddress: 'Electricity Street',
               postalCode: '1234567890',
-              contractId: 'contract-1',
+              contractId: '33333333-3333-7333-8333-333333333333',
               contractState,
-              versionId: 'version-1',
-              invoiceId: 'invoice-1',
+              versionId: '44444444-4444-7444-8444-444444444444',
+              invoiceId: '55555555-5555-7555-8555-555555555555',
               invoiceState: 'Unpaid',
               totalIrR: '2500000',
               paidIrR: '0',
@@ -425,7 +434,9 @@ it.each([
     document.body.append(container);
     const root = createRoot(container);
     try {
-      await act(async () => root.render(<ElectricityOrderDetailsPage orderId="order-1" />));
+      await act(async () =>
+        root.render(<ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />)
+      );
       const actionLink = Array.from(container.querySelectorAll('a')).find((link) =>
         link.textContent?.includes(message)
       );
@@ -434,7 +445,9 @@ it.each([
         expect(container.querySelector('#electricity-order-correction')).not.toBeNull();
       else if (status === 'approved')
         expect(
-          container.querySelector('a[href="/contracts?contractId=contract-1"]')
+          container.querySelector(
+            'a[href="/contracts?contractId=33333333-3333-7333-8333-333333333333"]'
+          )
         ).not.toBeNull();
     } finally {
       await act(async () => root.unmount());
@@ -448,6 +461,32 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   let revised = false;
+  const revisionQuote = {
+    reviewDigest: 'a'.repeat(64),
+    periodStart: '2026-09-23T00:00:00Z',
+    periodEnd: '2026-09-30T00:00:00Z',
+    durationHours: '168',
+    averagePowerKw: '0.071428571',
+    greenRuleApplies: false,
+    totalKwh: '12',
+    subtotalIrR: '3000000',
+    discountIrR: '0',
+    vatIrR: '0',
+    totalIrR: '3000000',
+    lines: [
+      {
+        productId: '88888888-8888-7888-8888-888888888888',
+        systemKey: 'thermal',
+        quantityKwh: '12',
+        unitPriceIrR: '250000',
+        subtotalIrR: '3000000',
+        discountIrR: '0',
+        vatRateBasisPoints: 0,
+        vatIrR: '0',
+        totalIrR: '3000000',
+      },
+    ],
+  };
   const requests: Array<{ url: string; body?: Record<string, unknown> }> = [];
   vi.stubGlobal(
     'fetch',
@@ -458,14 +497,26 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
       requests.push({ url, ...(body ? { body } : {}) });
       if (url === '/api/geography/provinces')
         return new Response(
-          JSON.stringify([{ id: 'province-1', nameFa: 'استان', nameEn: 'Province' }]),
+          JSON.stringify([
+            { id: '66666666-6666-7666-8666-666666666666', nameFa: 'استان', nameEn: 'Province' },
+          ]),
           { status: 200 }
         );
-      if (url === '/api/geography/provinces/province-1/cities')
+      if (url === '/api/geography/provinces/66666666-6666-7666-8666-666666666666/cities')
         return new Response(
           JSON.stringify([
-            { id: 'city-1', provinceId: 'province-1', nameFa: 'شهر یک', nameEn: 'City one' },
-            { id: 'city-2', provinceId: 'province-1', nameFa: 'شهر دو', nameEn: 'City two' },
+            {
+              id: '77777777-7777-7777-8777-777777777777',
+              provinceId: '66666666-6666-7666-8666-666666666666',
+              nameFa: 'شهر یک',
+              nameEn: 'City one',
+            },
+            {
+              id: '77777777-7777-7777-8777-777777777778',
+              provinceId: '66666666-6666-7666-8666-666666666666',
+              nameFa: 'شهر دو',
+              nameEn: 'City two',
+            },
           ]),
           { status: 200 }
         );
@@ -481,26 +532,27 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
       if (url.endsWith('/revision-preview'))
         return new Response(
           JSON.stringify({
-            reviewDigest: 'a'.repeat(64),
-            totalIrR: '3000000',
-            totalKwh: '12',
-            subtotalIrR: '3000000',
-            discountIrR: '0',
-            vatIrR: '0',
-            lines: [],
+            ...revisionQuote,
           }),
           { status: 200 }
         );
       if (url.endsWith('/resubmit')) {
         revised = true;
-        return new Response(JSON.stringify({ status: 'awaiting_staff_review' }), { status: 200 });
+        return Response.json({
+          orderId: '11111111-1111-7111-8111-111111111111',
+          contractId: '33333333-3333-7333-8333-333333333333',
+          versionId: '44444444-4444-7444-8444-444444444445',
+          invoiceId: '55555555-5555-7555-8555-555555555556',
+          status: 'awaiting_staff_review',
+          ...revisionQuote,
+        });
       }
       if (url.includes('/comments'))
         return new Response(JSON.stringify({ comments: [], nextBefore: null }), { status: 200 });
       return new Response(
         JSON.stringify({
-          orderId: 'order-1',
-          profileId: 'profile-1',
+          orderId: '11111111-1111-7111-8111-111111111111',
+          profileId: '22222222-2222-7222-8222-222222222222',
           mode: 'simple',
           electricityStatus: revised ? 'awaiting_staff_review' : 'changes_requested',
           financialStatus: 'unpaid',
@@ -510,12 +562,16 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
           totalKwh: '10',
           fullAddress: 'Electricity Street',
           postalCode: '1234567890',
-          provinceId: 'province-1',
-          cityId: 'city-1',
-          contractId: 'contract-1',
+          provinceId: '66666666-6666-7666-8666-666666666666',
+          cityId: '77777777-7777-7777-8777-777777777777',
+          contractId: '33333333-3333-7333-8333-333333333333',
           contractState: revised ? 'AwaitingStaffReview' : 'ChangesRequested',
-          versionId: revised ? 'version-2' : 'version-1',
-          invoiceId: revised ? 'invoice-2' : 'invoice-1',
+          versionId: revised
+            ? '44444444-4444-7444-8444-444444444445'
+            : '44444444-4444-7444-8444-444444444444',
+          invoiceId: revised
+            ? '55555555-5555-7555-8555-555555555556'
+            : '55555555-5555-7555-8555-555555555555',
           invoiceState: 'Unpaid',
           totalIrR: revised ? '3000000' : '2500000',
           paidIrR: '0',
@@ -525,7 +581,7 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
               systemKey: 'thermal',
               title: { en: 'Thermal' },
               quantityKwh: '10',
-              productId: 'thermal-1',
+              productId: '88888888-8888-7888-8888-888888888888',
               unitPriceIrR: '250000',
               lineTotalIrR: '2500000',
             },
@@ -540,7 +596,9 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
   const root = createRoot(container);
   try {
     await import('./ElectricityOrderRevisionForm.js');
-    await act(async () => root.render(<ElectricityOrderDetailsPage orderId="order-1" />));
+    await act(async () =>
+      root.render(<ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />)
+    );
     await vi.waitFor(
       () => expect(container.textContent).toContain('Change period, quantity or price'),
       { timeout: 5000 }
@@ -561,19 +619,23 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
         'Quantity corrected'
       );
       note.dispatchEvent(new Event('input', { bubbles: true }));
-      city.value = 'city-2';
+      city.value = '77777777-7777-7777-8777-777777777778';
       city.dispatchEvent(new Event('change', { bubbles: true }));
     });
     await act(async () =>
       form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
     );
+    await vi.waitFor(() =>
+      expect(requests.find((request) => request.url.endsWith('/revision-preview'))).toBeDefined()
+    );
+    await vi.waitFor(() => expect(section.textContent).toContain('3000000'));
     expect(
       requests.find((request) => request.url.endsWith('/revision-preview'))?.body
     ).toMatchObject({
-      profileId: 'profile-1',
+      profileId: '22222222-2222-7222-8222-222222222222',
       period: 'next_week',
       totalKwh: '12',
-      expectedVersionId: 'version-1',
+      expectedVersionId: '44444444-4444-7444-8444-444444444444',
     });
     expect(section.textContent).toContain('3000000');
     const submit = Array.from(section.querySelectorAll('button')).find((button) =>
@@ -583,7 +645,10 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
     expect(requests.find((request) => request.url.endsWith('/resubmit'))?.body).toMatchObject({
       totalKwh: '12',
       expectedQuoteDigest: 'a'.repeat(64),
-      address: { provinceId: 'province-1', cityId: 'city-2' },
+      address: {
+        provinceId: '66666666-6666-7666-8666-666666666666',
+        cityId: '77777777-7777-7777-8777-777777777778',
+      },
       responseNote: 'Quantity corrected',
     });
     expect(revised).toBe(true);

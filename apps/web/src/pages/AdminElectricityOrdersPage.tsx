@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import {
+  Alert,
+  AlertDescription,
+  Textarea,
   Button,
   Card,
   CardContent,
@@ -13,10 +16,26 @@ import {
   StatusTimeline,
 } from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
+import { type ElectricityStaffDecisionReview } from '@barghsa/shared/finance';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
-  parseElectricityStaffDecisionReview,
-  type ElectricityStaffDecisionReview,
-} from '@barghsa/shared/finance';
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useZodForm,
+} from '@barghsa/ui/form';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import {
+  boundStaffDecisionReview,
+  confirmedStaffDecision,
+  definitiveStaffDecisionRejection,
+  type StaffReasonDraft,
+} from '../lib/electricity-staff-reason-form.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -85,6 +104,15 @@ interface ReviewFacts {
 }
 
 type Decision = 'approve' | 'request-changes' | 'reject';
+interface CapturedDecision {
+  action: TeamAction;
+  review: ElectricityStaffDecisionReview;
+  request: number;
+  scope: string;
+  attempted: boolean;
+  rejected: boolean;
+  unconfirmed: boolean;
+}
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 function pricingLines(snapshot: Record<string, unknown>) {
   if (!Array.isArray(snapshot.lines)) return [];
@@ -128,6 +156,8 @@ export default function AdminElectricityOrdersPage({
   queries,
 }: { queries?: StaffOrderListQuery } = {}) {
   const locale = useLocale();
+  const actor = useAccountUser();
+  const formCopy = (key: string) => appText(`electricity.staffReasonForm.${key}`, locale);
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => t(`admin.electricityOrders.${key}`, locale);
@@ -144,6 +174,7 @@ export default function AdminElectricityOrdersPage({
   };
   const [accepted, setAccepted] = useState<{
     criteria: string;
+    actor: string | null;
     cursor: string | null;
     orders: ReviewOrder[];
     nextAfter: string | null;
@@ -164,17 +195,160 @@ export default function AdminElectricityOrdersPage({
   const [lookupInvalid, setLookupInvalid] = useState(false);
   const [localView, setLocalView] = useState<'review' | 'conversations'>('review');
   const queueView = queries?.queue.query.filters.view || localView;
-  const orders = accepted?.criteria === queueView ? accepted.orders : [];
-  const nextAfter = accepted?.criteria === queueView ? accepted.nextAfter : null;
+  const orders =
+    accepted?.criteria === queueView && accepted.actor === actor ? accepted.orders : [];
+  const nextAfter =
+    accepted?.criteria === queueView && accepted.actor === actor ? accepted.nextAfter : null;
   const [loadedDetail, setDetail] = useState<ReviewOrder | null>(null);
-  const detail = loadedDetail?.orderId === selectedId ? loadedDetail : null;
+  const [detailScope, setDetailScope] = useState('');
+  const scope = JSON.stringify([actor, selectedId, queueView]);
+  const detail =
+    loadedDetail?.orderId === selectedId && detailScope === scope ? loadedDetail : null;
   const [detailError, setDetailError] = useState(false);
-  const [reason, setReason] = useState('');
   const [action, setAction] = useState<TeamAction | null>(null);
   const [decisionReview, setDecisionReview] = useState<ElectricityStaffDecisionReview | null>(null);
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState(false);
   const reviewRequest = useRef(0);
+  const currentScope = useRef(scope);
+  const currentActor = useRef(actor);
+  const accessDenied = useRef(false);
+  if (currentActor.current !== actor) {
+    currentActor.current = actor;
+    accessDenied.current = false;
+  }
+  if (currentScope.current !== scope) {
+    currentScope.current = scope;
+    ++reviewRequest.current;
+  }
+  const schemaRequest = reviewRequest.current;
+  const form = useZodForm<StaffReasonDraft>(
+    async () => {
+      const schemas = await import('../lib/electricity-staff-reason-form-schemas.js');
+      return schemaRequest === reviewRequest.current
+        ? schemas.staffReasonSchema(formCopy('invalid'))
+        : schemas.inactiveStaffReasonSchema;
+    },
+    {
+      defaultValues: { reason: '' },
+      validationUnavailableMessage: formCopy('validationUnavailable'),
+    }
+  );
+  const reasonFields = useActionFieldErrors(
+    form,
+    { reason: formCopy('invalid') },
+    copy('reviewError')
+  );
+  const preparing = useRef(false);
+  const pending = useRef(false);
+  const captured = useRef<CapturedDecision | null>(null);
+  const [uncertain, setUncertain] = useState(false);
+  const mounted = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      ++reviewRequest.current;
+    };
+  }, []);
+  function live(command: CapturedDecision) {
+    return (
+      mounted.current &&
+      !accessDenied.current &&
+      captured.current === command &&
+      command.request === reviewRequest.current &&
+      command.scope === currentScope.current
+    );
+  }
+  function locked() {
+    return (
+      preparing.current || pending.current || form.isSubmissionPending() || !!action || uncertain
+    );
+  }
+  function invalidate() {
+    ++reviewRequest.current;
+    captured.current = null;
+    preparing.current = false;
+    pending.current = false;
+    setAction(null);
+    setDecisionReview(null);
+    setReviewLoading(false);
+    setUncertain(false);
+    setReviewError(false);
+  }
+  function deny() {
+    accessDenied.current = true;
+    invalidate();
+    form.reset({ reason: '' });
+    setDenied(true);
+    setLoading(false);
+    setAccepted(null);
+    setSelectedId(null, true);
+    setDetail(null);
+    setDetailError(false);
+  }
+  function missing() {
+    invalidate();
+    form.reset({ reason: '' });
+    setDetail(null);
+    setDetailScope('');
+    setDetailError(true);
+    // A missing selection withdraws its private data while other authorized queue work remains.
+    setAccepted((current) =>
+      current
+        ? { ...current, orders: current.orders.filter((order) => order.orderId !== selectedId) }
+        : current
+    );
+  }
+  function unconfirmed(command: CapturedDecision) {
+    if (!live(command)) return;
+    command.unconfirmed = true;
+    pending.current = false;
+    setUncertain(true);
+    setAction(null);
+    setDecisionReview(null);
+  }
+  function decorateAction(command: CapturedDecision, ownedAction: TeamAction) {
+    ownedAction.errorMessages = Object.fromEntries(
+      [
+        ErrorCodes.VALIDATION_INPUT_INVALID.code,
+        ErrorCodes.CONFLICT_STATE.code,
+        ErrorCodes.CONFLICT_VERSION.code,
+        ErrorCodes.NOT_FOUND_RESOURCE.code,
+      ].map((code) => [
+        code,
+        (result: unknown) => {
+          if (live(command) && command.action === ownedAction) {
+            if (code === ErrorCodes.NOT_FOUND_RESOURCE.code) {
+              missing();
+              return copy('detailError');
+            }
+            if (definitiveStaffDecisionRejection(result)) {
+              command.rejected = true;
+              const fields = (result as { error: { fields?: unknown[] } }).error.fields;
+              if (
+                code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+                !command.unconfirmed &&
+                command.review.data.action !== 'approve' &&
+                Array.isArray(fields) &&
+                reasonFields(fields)
+              )
+                closeDecision(command, ownedAction);
+            }
+          }
+          return code.startsWith('CONFLICT:') ? copy('conflict') : copy('reviewError');
+        },
+      ])
+    );
+  }
+  function closeDecision(command: CapturedDecision, ownedAction: TeamAction) {
+    if (!live(command) || command.action !== ownedAction) return;
+    if (command.unconfirmed || (command.attempted && !command.rejected)) unconfirmed(command);
+    else captured.current = null;
+    pending.current = false;
+    setAction(null);
+    setDecisionReview(null);
+  }
   const [revision, setRevision] = useState(0);
   const [listRevision, setListRevision] = useState(0);
   const [detailRevision, setDetailRevision] = useState(0);
@@ -183,19 +357,20 @@ export default function AdminElectricityOrdersPage({
   const [denied, setDenied] = useState(false);
 
   function refreshQueue() {
-    reviewRequest.current += 1;
+    invalidate();
     setAccepted(null);
     setAfter(null);
     setRevision((value) => value + 1);
   }
 
   function selectOrder(id: string) {
-    reviewRequest.current += 1;
+    if (pending.current || action || uncertain) return;
+    invalidate();
     setSelectedId(id);
     setLookupId(id);
     setLookupInvalid(false);
     setDetailError(false);
-    setReason('');
+    form.reset({ reason: '' });
     setReviewError(false);
     setDecisionReview(null);
     setReviewLoading(false);
@@ -221,6 +396,7 @@ export default function AdminElectricityOrdersPage({
     const controller = new AbortController();
     setLoading(true);
     setError(false);
+    if (accessDenied.current) return () => controller.abort();
     setDenied(false);
     const url = after
       ? `/api/staff/electricity/orders${queueView === 'conversations' ? '/conversations' : ''}?after=${encodeURIComponent(after)}`
@@ -230,35 +406,34 @@ export default function AdminElectricityOrdersPage({
       signal: controller.signal,
     })
       .then(async (response) => {
+        if (controller.signal.aborted || currentActor.current !== actor || accessDenied.current)
+          return null;
         if (response.status === 401 || response.status === 403) {
-          if (!controller.signal.aborted) {
-            setDenied(true);
-            setAccepted(null);
-            setSelectedId(null, true);
-            reviewRequest.current += 1;
-            setDetail(null);
-            setDetailError(false);
-            setAction(null);
-            setDecisionReview(null);
-            setReviewLoading(false);
-          }
+          deny();
           return null;
         }
         if (!response.ok) throw new Error('Queue unavailable');
         return response.json() as Promise<{ orders: ReviewOrder[]; nextAfter: string | null }>;
       })
       .then((value) => {
-        if (!controller.signal.aborted && value) {
+        if (
+          !controller.signal.aborted &&
+          value &&
+          currentActor.current === actor &&
+          !accessDenied.current
+        ) {
           setAccepted((current) => {
             const extending =
               !!after &&
               current?.criteria === queueView &&
+              current.actor === actor &&
               current.nextAfter === after &&
               current.cursor !== after;
             const previous = extending ? current.orders : [];
             const shown = new Set(previous.map((order) => order.orderId));
             return {
               criteria: queueView,
+              actor,
               cursor: after,
               orders: [...previous, ...value.orders.filter((order) => !shown.has(order.orderId))],
               nextAfter: staffOrderId(value.nextAfter) || null,
@@ -267,27 +442,27 @@ export default function AdminElectricityOrdersPage({
         }
       })
       .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+        if (!controller.signal.aborted && currentActor.current === actor && !accessDenied.current)
+          setError(true);
       })
       .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if (!controller.signal.aborted && currentActor.current === actor && !accessDenied.current)
+          setLoading(false);
       });
     return () => controller.abort();
-  }, [after, revision, queueView, listRevision]);
+  }, [after, revision, queueView, listRevision, actor]);
 
   useEffect(() => {
     setLookupId(selectedId ?? '');
     setLookupInvalid(false);
-    setReason('');
-  }, [selectedId, queueView]);
+    form.reset({ reason: '' });
+  }, [selectedId, queueView, actor]);
 
   useEffect(() => {
-    reviewRequest.current++;
-    setAction(null);
-    setDecisionReview(null);
-    setReviewLoading(false);
-    setReviewError(false);
-    if (!selectedId) {
+    invalidate();
+    form.reset({ reason: '' });
+    const request = reviewRequest.current;
+    if (!selectedId || accessDenied.current) {
       setDetail(null);
       return;
     }
@@ -299,69 +474,154 @@ export default function AdminElectricityOrdersPage({
       signal: controller.signal,
     })
       .then(async (response) => {
+        if (
+          controller.signal.aborted ||
+          currentScope.current !== scope ||
+          request !== reviewRequest.current
+        )
+          return null;
+        if ([401, 403].includes(response.status)) {
+          deny();
+          return null;
+        }
+        if (response.status === 404) {
+          missing();
+          return null;
+        }
         if (!response.ok) throw new Error('Detail unavailable');
         return response.json() as Promise<ReviewOrder>;
       })
       .then((value) => {
-        if (!controller.signal.aborted) setDetail(value);
+        if (
+          !controller.signal.aborted &&
+          value &&
+          currentScope.current === scope &&
+          request === reviewRequest.current &&
+          !accessDenied.current
+        ) {
+          setDetail(value);
+          setDetailScope(scope);
+        }
       })
       .catch(() => {
-        if (!controller.signal.aborted) setDetailError(true);
+        if (
+          !controller.signal.aborted &&
+          currentScope.current === scope &&
+          request === reviewRequest.current &&
+          !accessDenied.current
+        )
+          setDetailError(true);
       });
     return () => controller.abort();
-  }, [selectedId, revision, detailRevision]);
+  }, [scope, revision, detailRevision]);
 
-  async function choose(decision: Decision) {
-    if (!detail || reviewLoading || (decision !== 'approve' && !reason.trim())) return;
+  function choose(decision: Decision) {
+    if (
+      !detail ||
+      detail.commercialStatus !== 'awaiting_staff_review' ||
+      locked() ||
+      captured.current ||
+      accessDenied.current
+    )
+      return;
     const order = detail;
-    const request = ++reviewRequest.current;
-    const decisionReason = decision === 'approve' ? '' : reason.trim();
+    const request = reviewRequest.current;
+    const rawReason = form.getValues('reason');
+    preparing.current = true;
     setReviewLoading(true);
     setReviewError(false);
-    try {
-      const response = await fetch(
-        `/api/staff/electricity/orders/${encodeURIComponent(order.orderId)}/financial-review`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ action: decision, reason: decisionReason }),
+    const fresh = () =>
+      mounted.current &&
+      !accessDenied.current &&
+      request === reviewRequest.current &&
+      currentScope.current === scope &&
+      (decision === 'approve' || form.getValues('reason') === rawReason);
+    async function prepare(decisionReason: string) {
+      if (!fresh()) return;
+      try {
+        const response = await fetch(
+          `/api/staff/electricity/orders/${encodeURIComponent(order.orderId)}/financial-review`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify({ action: decision, reason: decisionReason }),
+          }
+        );
+        if (!fresh()) return;
+        if ([401, 403].includes(response.status)) {
+          deny();
+          return;
         }
-      );
-      if (!response.ok) throw new Error('Review unavailable');
-      const review = parseElectricityStaffDecisionReview(await response.json());
-      if (request !== reviewRequest.current) return;
-      if (
-        !review ||
-        review.scope.resourceId !== order.orderId ||
-        review.scope.profileId !== order.profileId ||
-        review.data.versionId !== order.versionId ||
-        review.data.reason !== decisionReason
-      )
-        throw new Error('Review mismatch');
-      setDecisionReview(review);
-      setAction({
-        title: copy(decision),
-        description: copy('confirm'),
-        path: `/api/staff/electricity/orders/${encodeURIComponent(order.orderId)}/${decision}`,
-        method: 'POST',
-        body: {
-          idempotencyKey: crypto.randomUUID(),
-          expectedVersionId: review.data.versionId,
-          expectedReviewHash: review.hash,
-          ...(decision === 'approve' ? {} : { reason: decisionReason }),
-        },
-        conflictMessage: copy('conflict'),
-        forbiddenMessage: copy('forbidden'),
-      });
-    } catch {
-      if (request === reviewRequest.current) {
-        setReviewError(true);
-        setDecisionReview(null);
+        if (response.status === 404) {
+          missing();
+          return;
+        }
+        const value: unknown = await response.json().catch(() => null);
+        if (!fresh()) return;
+        if (
+          response.status === 400 &&
+          decision !== 'approve' &&
+          value &&
+          typeof value === 'object'
+        ) {
+          const error = (value as { error?: { code?: string; fields?: unknown[] } }).error;
+          if (
+            error?.code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+            Array.isArray(error.fields) &&
+            reasonFields(error.fields)
+          )
+            return;
+        }
+        if (!response.ok) throw new Error('Review unavailable');
+        const review = boundStaffDecisionReview(value, order, decision, decisionReason);
+        if (!review) throw new Error('Review mismatch');
+        const command: CapturedDecision = {
+          request,
+          scope,
+          review,
+          attempted: false,
+          rejected: false,
+          unconfirmed: false,
+          action: {
+            title: copy(decision),
+            description: copy('confirm'),
+            path: `/api/staff/electricity/orders/${encodeURIComponent(order.orderId)}/${decision}`,
+            method: 'POST',
+            successStatus: 200,
+            body: {
+              idempotencyKey: crypto.randomUUID(),
+              expectedVersionId: review.data.versionId,
+              expectedReviewHash: review.hash,
+              ...(decision === 'approve' ? {} : { reason: decisionReason }),
+            },
+            conflictMessage: copy('conflict'),
+            forbiddenMessage: copy('forbidden'),
+          },
+        };
+        decorateAction(command, command.action);
+        captured.current = command;
+        setDecisionReview(review);
+        setAction(command.action);
+      } catch {
+        if (fresh()) {
+          setReviewError(true);
+          setDecisionReview(null);
+        }
       }
-    } finally {
-      if (request === reviewRequest.current) setReviewLoading(false);
     }
+    const operation =
+      decision === 'approve'
+        ? prepare('')
+        : form.handleSubmit(async (draft) => {
+            if (draft.reason === rawReason) await prepare(draft.reason.trim());
+          })();
+    void operation.finally(() => {
+      if (request === reviewRequest.current && mounted.current) {
+        preparing.current = false;
+        setReviewLoading(false);
+      }
+    });
   }
 
   const selectedTemplate = detail ? contractTemplate(detail.contractSnapshot) : null;
@@ -393,7 +653,9 @@ export default function AdminElectricityOrdersPage({
                     aria-describedby={lookupInvalid ? 'electricity-order-lookup-error' : undefined}
                   />
                 </div>
-                <Button type="submit">{copy('lookup')}</Button>
+                <Button type="submit" disabled={pending.current || !!action || uncertain}>
+                  {copy('lookup')}
+                </Button>
                 {lookupInvalid ? (
                   <p id="electricity-order-lookup-error" role="alert" className="w-full text-sm">
                     {copy('invalidOrderId')}
@@ -403,8 +665,9 @@ export default function AdminElectricityOrdersPage({
               <nav className="flex flex-wrap gap-2" aria-label={copy('views')}>
                 <Button
                   variant={queueView === 'review' ? 'secondary' : 'outline'}
+                  disabled={pending.current || !!action || uncertain}
                   onClick={() => {
-                    if (queueView === 'review') return;
+                    if (queueView === 'review' || pending.current || action || uncertain) return;
                     if (queries) queries.changeLane('review');
                     else {
                       setLocalView('review');
@@ -417,8 +680,10 @@ export default function AdminElectricityOrdersPage({
                 </Button>
                 <Button
                   variant={queueView === 'conversations' ? 'secondary' : 'outline'}
+                  disabled={pending.current || !!action || uncertain}
                   onClick={() => {
-                    if (queueView === 'conversations') return;
+                    if (queueView === 'conversations' || pending.current || action || uncertain)
+                      return;
                     if (queries) queries.changeLane('conversations');
                     else {
                       setLocalView('conversations');
@@ -433,7 +698,13 @@ export default function AdminElectricityOrdersPage({
             </div>
           }
           actions={
-            <Button variant="outline" onClick={refreshQueue} disabled={loading}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                if (!locked()) refreshQueue();
+              }}
+              disabled={loading || locked()}
+            >
               {copy('refresh')}
             </Button>
           }
@@ -471,6 +742,7 @@ export default function AdminElectricityOrdersPage({
                   key={order.orderId}
                   variant={selectedId === order.orderId ? 'secondary' : 'outline'}
                   className="h-auto w-full justify-start whitespace-normal p-4 text-start"
+                  disabled={pending.current || !!action || uncertain}
                   onClick={() => selectOrder(order.orderId)}
                 >
                   <span className="space-y-1">
@@ -491,17 +763,27 @@ export default function AdminElectricityOrdersPage({
                 !!nextAfter &&
                 !error &&
                 !denied &&
+                !pending.current &&
+                !action &&
+                !uncertain &&
                 (loading || (queries ? queries.queue.canAdvance(nextAfter) : nextAfter !== after))
               }
               loading={loading}
               onNext={() => {
-                if (!nextAfter) return;
+                if (!nextAfter || pending.current || action || uncertain) return;
                 if (queries) queries.queue.next(nextAfter);
                 else setAfter(nextAfter);
               }}
               previous={{
-                enabled: !denied && (queries?.queue.hasPrevious ?? false),
-                onClick: () => queries?.queue.previous(),
+                enabled:
+                  !denied &&
+                  !pending.current &&
+                  !action &&
+                  !uncertain &&
+                  (queries?.queue.hasPrevious ?? false),
+                onClick: () => {
+                  if (!pending.current && !action && !uncertain) queries?.queue.previous();
+                },
                 label: appText('historyPagination.previous', locale),
               }}
               label={appText('historyPagination.label', locale)}
@@ -812,29 +1094,103 @@ export default function AdminElectricityOrdersPage({
                 />
                 {detail.commercialStatus === 'awaiting_staff_review' ? (
                   <div className="space-y-3 border-t pt-4">
-                    <div className="space-y-1">
-                      <Label htmlFor="electricity-review-reason">{copy('reason')}</Label>
-                      <Input
-                        id="electricity-review-reason"
-                        maxLength={1000}
-                        value={reason}
-                        onChange={(event) => setReason(event.target.value)}
-                      />
-                    </div>
+                    <Form {...form}>
+                      <div data-testid="electricity-staff-reason-form">
+                        <FormField
+                          control={form.control}
+                          name="reason"
+                          render={({ field }) => (
+                            <FormItem id="electricity-review-reason">
+                              <FormLabel>{copy('reason')}</FormLabel>
+                              <FormControl>
+                                <Textarea
+                                  {...field}
+                                  disabled={
+                                    reviewLoading ||
+                                    form.formState.isSubmitting ||
+                                    pending.current ||
+                                    !!action ||
+                                    uncertain
+                                  }
+                                />
+                              </FormControl>
+                              <FormDescription>{formCopy('help')}</FormDescription>
+                              <div className="grid">
+                                <p
+                                  aria-hidden="true"
+                                  className="invisible col-start-1 row-start-1 text-sm"
+                                >
+                                  {formCopy('invalid')}
+                                </p>
+                                <FormMessage className="col-start-1 row-start-1" />
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </Form>
+                    {form.formState.errors.root && (
+                      <Alert variant="destructive">
+                        <AlertDescription>{formCopy('validationUnavailable')}</AlertDescription>
+                      </Alert>
+                    )}
+                    {uncertain && (
+                      <Alert>
+                        <AlertDescription>{formCopy('uncertain')}</AlertDescription>
+                        <Button
+                          variant="outline"
+                          disabled={pending.current || !!action}
+                          onClick={() => {
+                            const command = captured.current;
+                            if (!command || !live(command) || pending.current || action) return;
+                            command.attempted = false;
+                            command.rejected = false;
+                            // The hash, body and idempotency key belong to the original uncertain attempt.
+                            command.action = { ...command.action };
+                            decorateAction(command, command.action);
+                            setDecisionReview(command.review);
+                            setAction(command.action);
+                          }}
+                        >
+                          {formCopy('retry')}
+                        </Button>
+                      </Alert>
+                    )}
                     <div className="flex flex-wrap gap-2">
-                      <Button disabled={reviewLoading} onClick={() => void choose('approve')}>
+                      <Button
+                        disabled={
+                          reviewLoading ||
+                          form.formState.isSubmitting ||
+                          pending.current ||
+                          !!action ||
+                          uncertain
+                        }
+                        onClick={() => void choose('approve')}
+                      >
                         {copy('approve')}
                       </Button>
                       <Button
                         variant="outline"
-                        disabled={!reason.trim() || reviewLoading}
+                        disabled={
+                          reviewLoading ||
+                          form.formState.isSubmitting ||
+                          pending.current ||
+                          !!action ||
+                          uncertain
+                        }
                         onClick={() => void choose('request-changes')}
                       >
                         {copy('request-changes')}
                       </Button>
                       <Button
                         variant="destructive"
-                        disabled={!reason.trim() || reviewLoading}
+                        disabled={
+                          reviewLoading ||
+                          form.formState.isSubmitting ||
+                          pending.current ||
+                          !!action ||
+                          uncertain
+                        }
                         onClick={() => void choose('reject')}
                       >
                         {copy('reject')}
@@ -849,7 +1205,7 @@ export default function AdminElectricityOrdersPage({
           ) : null}
         </div>
       </ListPage>
-      {action && decisionReview ? (
+      {action && decisionReview && captured.current && live(captured.current) ? (
         <TeamActionDialog
           action={action}
           summary={
@@ -949,11 +1305,31 @@ export default function AdminElectricityOrdersPage({
             />
           }
           onClose={() => {
-            setAction(null);
-            setDecisionReview(null);
+            const command = captured.current;
+            if (command) closeDecision(command, action);
           }}
-          onSuccess={async () => {
-            setReason('');
+          onDenied={() => {
+            const command = captured.current;
+            if (command && live(command) && command.action === action) deny();
+          }}
+          onPendingChange={(value) => {
+            const command = captured.current;
+            if (!command || !live(command) || command.action !== action) return;
+            if (value) command.attempted = true;
+            pending.current = value;
+          }}
+          onUnconfirmed={() => {
+            const command = captured.current;
+            if (command && command.action === action) unconfirmed(command);
+          }}
+          // Projection needs the complete rejection envelope, handled by errorMessages above.
+          onValidationError={() => false}
+          onSuccess={async (result) => {
+            const command = captured.current;
+            if (!command || !live(command) || command.action !== action) return;
+            if (!confirmedStaffDecision(result, command.review))
+              throw new Error('Unconfirmed decision');
+            form.reset({ reason: '' });
             refreshQueue();
           }}
         />

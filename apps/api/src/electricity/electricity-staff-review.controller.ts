@@ -18,6 +18,7 @@ import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
+import { InputFieldException } from '../common/input-field.exception.js';
 import {
   ElectricityStaffReviewService,
   type StaffReviewAction,
@@ -38,8 +39,30 @@ const previewInput = z
   })
   .strict()
   .refine((value) => (value.action === 'approve' ? !value.reason : !!value.reason), {
+    path: ['reason'],
     message: 'A reason is required only for change requests and rejection',
   });
+
+function parseReasonForm<S extends z.ZodType>(
+  schema: S,
+  body: unknown,
+  editable: boolean
+): z.output<S> {
+  const result = schema.safeParse(body);
+  if (result.success) return result.data as z.output<S>;
+  if (
+    editable &&
+    result.error.issues.length &&
+    result.error.issues.every(
+      (issue) =>
+        issue.path.length === 1 &&
+        issue.path[0] === 'reason' &&
+        ['invalid_type', 'too_small', 'too_big', 'custom'].includes(issue.code)
+    )
+  )
+    throw new InputFieldException(['reason']);
+  throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+}
 
 @ApiTags('Staff · Electricity orders')
 @Controller('api/staff/electricity/orders')
@@ -99,12 +122,16 @@ export class ElectricityStaffReviewController {
     @Req() req: AuthenticatedRequest
   ) {
     this.requirePermission(req, true);
-    const parsed = previewInput.safeParse(body);
-    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    const editable =
+      !!body &&
+      typeof body === 'object' &&
+      'action' in body &&
+      (body.action === 'request-changes' || body.action === 'reject');
+    const parsed = parseReasonForm(previewInput, body, editable);
     return this.service.financialReview(
       id,
-      parsed.data.action,
-      parsed.data.reason?.trim() ?? '',
+      parsed.action,
+      parsed.reason?.trim() ?? '',
       req.session
     );
   }
@@ -156,8 +183,11 @@ export class ElectricityStaffReviewController {
 
   private decide(id: string, action: StaffReviewAction, body: unknown, req: AuthenticatedRequest) {
     this.requirePermission(req, true);
-    const parsed = (action === 'approve' ? baseInput : reasonInput).safeParse(body);
-    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
-    return this.service.decide(id, action, parsed.data, req.session, req.ip ?? 'unknown');
+    const parsed = parseReasonForm(
+      action === 'approve' ? baseInput : reasonInput,
+      body,
+      action !== 'approve'
+    );
+    return this.service.decide(id, action, parsed, req.session, req.ip ?? 'unknown');
   }
 }
