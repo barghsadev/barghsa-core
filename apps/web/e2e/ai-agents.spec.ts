@@ -63,7 +63,7 @@ for (const locale of ['en', 'fa'])
     await chat.getByRole('button', { name: fa ? 'ارسال' : 'Send', exact: true }).click();
     await expect(chat.getByText('Power is available.')).toBeVisible();
     await chat.locator('summary').first().click();
-    await expect(chat.getByText('9 / 5')).toBeVisible();
+    await expect(chat.getByText(fa ? '۹ / ۵' : '9 / 5')).toBeVisible();
     await expect(chat.getByText('Tariffs / Rates.pdf')).toBeVisible();
     await expect(chat.getByText(fa ? /زمینهٔ بازیابی‌شده/ : /retrieved context/)).toBeVisible();
     expect(sent).toHaveLength(1);

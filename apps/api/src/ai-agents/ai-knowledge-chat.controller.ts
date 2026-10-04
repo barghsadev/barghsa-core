@@ -14,6 +14,7 @@ import { z } from 'zod';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { appendAiAudit } from './ai-audit.js';
 import { AiKnowledgeChatService } from './ai-knowledge-chat.service.js';
+import { rejectContentFields } from '../admin/content-input-fields.js';
 
 const QuestionSchema = z
   .object({
@@ -43,8 +44,7 @@ export class AiKnowledgeChatController {
   async ask(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
     const started = Date.now();
     const parsed = QuestionSchema.safeParse(body);
-    if (!parsed.success)
-      throw new HttpException({ statusCode: 400, error: 'VALIDATION:PARSE:ZOD_ERROR' }, 400);
+    if (!parsed.success) rejectContentFields(parsed.error.issues, ['message']);
     const input = parsed.data;
     try {
       const result = await this.service.ask(input, req.session);

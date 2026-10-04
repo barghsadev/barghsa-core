@@ -180,12 +180,40 @@ it('audits staff authorization denials and invalid requests without invoking the
     (
       await http.pool.query<{ output: { status: number } }>(
         `SELECT output FROM ai_audit_log
-         WHERE user_id='test-chat-admin' AND output->>'code'='VALIDATION:PARSE:ZOD_ERROR'`
+         WHERE user_id='test-chat-admin' AND output->>'code'='VALIDATION:INPUT:INVALID'`
       )
     ).rows
   ).toMatchObject([{ output: { status: 400 } }]);
   expect(completions).toBe(before);
 }, 30000);
+
+it('publishes only owned chat field identifiers after authorization, without invoking inference', async () => {
+  const before = completions;
+  const invalid = await send({
+    agentId,
+    requestId: randomUUID(),
+    message: ' '.repeat(2),
+    slotKey: 'private-slot',
+  });
+  expect(invalid.status).toBe(400);
+  expect(await invalid.json()).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['message', 'slotKey'] },
+  });
+  const internal = await send({
+    agentId,
+    requestId: 'private-value',
+    conversationId: 'private-value',
+    message: 'Valid message',
+    privateField: 'private-content',
+  });
+  expect(internal.status).toBe(400);
+  const body = await internal.json();
+  expect(body).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  expect(JSON.stringify(body)).not.toMatch(
+    /private-value|privateField|private-content|conversationId|requestId/
+  );
+  expect(completions).toBe(before);
+});
 
 it('requires every linked knowledge base in all-KB mode and returns its excerpts', async () => {
   await http.pool.query(

@@ -1,31 +1,20 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ArrowUp, BookOpenText } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/app';
-import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
+import { assistantChatFormText } from '@barghsa/i18n/assistant-chat-forms';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@barghsa/ui';
 import { Link } from '@tanstack/react-router';
 import { withCsrf } from '../lib/csrf.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import {
-  knowledgeSuggestions,
-  readKnowledgeMetadata,
-  type KnowledgePolicyCheck,
-} from '../lib/knowledge-assistant.js';
-
-type Source = {
-  kbId: string;
-  title: string;
-  documentTitle: string | null;
-  excerpt: string;
-};
-type Answer = {
-  reply: string;
-  sources: Source[];
-  attribution: 'retrieved_context';
-  remainingQuota: number;
-  policyChecks: KnowledgePolicyCheck[] | null;
-  answeredAt: string | null;
-};
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useChatRetryAfter } from '../hooks/useChatRetryAfter.js';
+import { inputErrorFields } from '../lib/input-error-fields.js';
+import { authErrorCode } from '../lib/auth-errors.js';
+import { readKnowledgeAnswer, type KnowledgeAnswer } from '../lib/assistant-chat.js';
+import { CatalogueFieldFeedback, catalogueRootMessage } from './CatalogueEditorFeedback.js';
+import { knowledgeSuggestions } from '../lib/knowledge-assistant.js';
 type AccountSnapshot = {
   profileName: string;
   walletBalance: string | null;
@@ -35,7 +24,7 @@ type Turn = {
   id: string;
   question: string;
   at: number;
-  answer?: Answer;
+  answer?: KnowledgeAnswer;
   account?: AccountSnapshot;
 };
 type PendingRequest = { requestId: string; message: string };
@@ -59,12 +48,37 @@ export default function KnowledgeAssistantPanel({
   embedded?: boolean;
   pathname?: string;
 }) {
-  const [draft, setDraft] = useState('');
+  const copy = (key: Parameters<typeof assistantChatFormText>[0]) =>
+    assistantChatFormText(key, locale);
+  const form = useWizardForm<{ message: string }>(
+    async () => {
+      const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return contentFormSchema<{ message: string }>({ message: copy('question') }, (value) =>
+        !value.message.trim() || value.message.trim().length > 1000 ? ['message'] : []
+      );
+    },
+    { message: '' },
+    copy('unavailable')
+  );
+  const ownedFields = useActionFieldErrors(
+    form.form,
+    { message: copy('question') },
+    copy('invalid')
+  );
+  const [draft, setDraft] = form.field('message');
+  const numbers = useNumberFormatting(locale);
+  const cooldown = useChatRetryAfter();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [busy, setBusy] = useState(false);
   const [accountLoading, setAccountLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [retry, setRetry] = useState<PendingRequest | null>(null);
+  const [denied, setDenied] = useState(false);
+  // Local resolver completions must not erase feedback from an already returned API result.
+  const [serverMessageError, setServerMessageError] = useState(false);
+  const captured = useRef<PendingRequest | null>(null);
+  const mounted = useRef(false);
+  const generation = useRef(0);
   const input = useRef<HTMLTextAreaElement>(null);
   const promptDisclosure = useRef<HTMLDetailsElement>(null);
   const end = useRef<HTMLDivElement>(null);
@@ -75,7 +89,34 @@ export default function KnowledgeAssistantPanel({
   const timestamp = (value: string | number) =>
     accountTime.format(value, { dateStyle: 'short', timeStyle: 'short' });
 
-  useEffect(() => () => controller.current?.abort(), []);
+  const reset = form.form.reset;
+  function deny() {
+    setServerMessageError(false);
+    captured.current = null;
+    setTurns([]);
+    reset({ message: '' });
+    setRetry(null);
+    setDenied(true);
+    setError(copy('denied'));
+  }
+  useEffect(() => {
+    mounted.current = true;
+    setTurns([]);
+    setRetry(null);
+    setError(null);
+    setBusy(false);
+    setAccountLoading(false);
+    setDenied(false);
+    setServerMessageError(false);
+    captured.current = null;
+    controller.current = null;
+    reset({ message: '' });
+    return () => {
+      mounted.current = false;
+      generation.current++;
+      controller.current?.abort();
+    };
+  }, [profileId, slotKey, reset]);
   useEffect(() => {
     if (open) end.current?.scrollIntoView({ block: 'end' });
   }, [open, turns, busy, error]);
@@ -85,19 +126,14 @@ export default function KnowledgeAssistantPanel({
     input.current.style.height = `${Math.min(input.current.scrollHeight, 240)}px`;
   }, [draft, open]);
 
-  async function send(request?: PendingRequest) {
-    if (busy || controller.current) return;
-    const message = request?.message ?? draft.trim();
-    if (!message || message.length > 1000) return;
-    const payload = request ?? { requestId: crypto.randomUUID(), message };
+  async function send(payload: PendingRequest, newQuestion = false) {
+    if (!mounted.current || denied || controller.current || cooldown.blocked()) return;
     if (promptDisclosure.current) promptDisclosure.current.open = false;
-    if (!request) {
+    if (newQuestion)
       setTurns((current) => [
         ...current,
-        { id: payload.requestId, question: message, at: Date.now() },
+        { id: payload.requestId, question: payload.message, at: Date.now() },
       ]);
-      setDraft('');
-    }
     setBusy(true);
     setAccountLoading(false);
     setError(null);
@@ -113,11 +149,20 @@ export default function KnowledgeAssistantPanel({
         signal: abort.signal,
       });
       if (!response.ok) {
-        const body = (await response.json().catch(() => null)) as {
-          error?: { code?: string };
-        } | null;
+        const body: unknown = await response.json().catch(() => null);
         if (abort.signal.aborted) return;
-        const code = body?.error?.code;
+        if (response.status === 401 || response.status === 403) {
+          deny();
+          return;
+        }
+        const fields = inputErrorFields(body, response.status).fields;
+        const code = authErrorCode(body);
+        if (fields && ownedFields(fields)) {
+          setServerMessageError(true);
+          captured.current = null;
+          setError(copy('invalid'));
+          return;
+        }
         setError(
           code === 'AI_KNOWLEDGE_NO_SOURCE'
             ? label('noSource')
@@ -133,19 +178,23 @@ export default function KnowledgeAssistantPanel({
                       ? label('changed')
                       : label('error')
         );
+        if (response.status === 429) cooldown.read(response);
         if (
           response.status >= 500 ||
           (response.status === 429 && code !== 'AI_MODEL_BUDGET_EXHAUSTED')
         )
           setRetry(payload);
+        else captured.current = null;
         return;
       }
-      const result = (await response.json()) as Answer;
+      const answer = readKnowledgeAnswer(await response.json());
       if (abort.signal.aborted) return;
-      const answer = { ...result, ...readKnowledgeMetadata(result) };
+      if (response.status !== 200 || !answer) throw new Error('Invalid answer');
       setTurns((current) =>
         current.map((turn) => (turn.id === payload.requestId ? { ...turn, answer } : turn))
       );
+      reset({ message: '' });
+      captured.current = null;
     } catch {
       if (abort.signal.aborted) return;
       setError(label('error'));
@@ -157,9 +206,26 @@ export default function KnowledgeAssistantPanel({
       }
     }
   }
+  async function submit() {
+    if (denied || controller.current || captured.current || form.isPending() || cooldown.blocked())
+      return;
+    const epoch = generation.current;
+    setServerMessageError(false);
+    form.setValidationPending(true);
+    try {
+      await form.form.handleSubmit(async (value) => {
+        if (!mounted.current || generation.current !== epoch || denied) return;
+        const payload = { message: value.message.trim(), requestId: crypto.randomUUID() };
+        captured.current = payload;
+        await send(payload, true);
+      })();
+    } finally {
+      if (mounted.current) form.setValidationPending(false);
+    }
+  }
 
   async function showAccountStatus() {
-    if (busy || controller.current) return;
+    if (denied || form.isPending() || captured.current || controller.current) return;
     const id = crypto.randomUUID();
     if (promptDisclosure.current) promptDisclosure.current.open = false;
     setTurns((current) => [...current, { id, question: label('account.action'), at: Date.now() }]);
@@ -175,6 +241,11 @@ export default function KnowledgeAssistantPanel({
         cache: 'no-store',
         signal: abort.signal,
       });
+      if (abort.signal.aborted) return;
+      if (response.status === 401 || response.status === 403) {
+        deny();
+        return;
+      }
       if (!response.ok) throw new Error('Dashboard unavailable');
       const result: unknown = await response.json();
       if (abort.signal.aborted) return;
@@ -279,8 +350,7 @@ export default function KnowledgeAssistantPanel({
                 <p className="whitespace-pre-wrap leading-7">{turn.answer.reply}</p>
                 <details className="border-t pt-3 text-sm">
                   <summary className="cursor-pointer font-medium text-primary">
-                    {label('sources')} ·{' '}
-                    {new Intl.NumberFormat(locale).format(turn.answer.sources.length)}
+                    {label('sources')} · {numbers.number(turn.answer.sources.length)}
                   </summary>
                   <ul className="mt-3 space-y-3">
                     {turn.answer.sources.map((source, index) => (
@@ -308,8 +378,7 @@ export default function KnowledgeAssistantPanel({
                             key={check.type}
                             className="rounded-full border bg-card px-2.5 py-1.5 text-foreground"
                           >
-                            {label(`policies.${check.type}`)} ·{' '}
-                            {new Intl.NumberFormat(locale).format(check.count)}
+                            {label(`policies.${check.type}`)} · {numbers.number(check.count)}
                           </li>
                         ))}
                       </ul>
@@ -342,7 +411,7 @@ export default function KnowledgeAssistantPanel({
                     <dd className="text-end font-semibold tabular-nums">
                       {turn.account.walletBalance === null
                         ? label('account.unavailable')
-                        : formatCurrencyIrr(turn.account.walletBalance, locale)}
+                        : numbers.money(turn.account.walletBalance)}
                     </dd>
                   </div>
                   <div className="flex items-baseline justify-between gap-4">
@@ -350,7 +419,7 @@ export default function KnowledgeAssistantPanel({
                     <dd className="text-end font-semibold tabular-nums">
                       {turn.account.pendingInvoices === null
                         ? label('account.unavailable')
-                        : new Intl.NumberFormat(locale).format(turn.account.pendingInvoices)}
+                        : numbers.number(turn.account.pendingInvoices)}
                     </dd>
                   </div>
                 </dl>
@@ -379,13 +448,36 @@ export default function KnowledgeAssistantPanel({
           <div role="alert" className="space-y-2 rounded-lg border border-destructive/30 p-3">
             <p className="text-sm text-destructive">{error}</p>
             {retry && (
-              <button
-                type="button"
-                className="text-sm font-semibold text-primary underline-offset-4 hover:underline"
-                onClick={() => void send(retry)}
-              >
-                {label('retry')}
-              </button>
+              <div className="flex flex-col gap-2">
+                <p className="text-sm">{copy('retryHelp')}</p>
+                <div className="flex flex-wrap gap-4">
+                  <button
+                    type="button"
+                    disabled={busy || form.pending || cooldown.seconds > 0}
+                    className="text-sm font-semibold text-primary underline-offset-4 hover:underline"
+                    onClick={() => void send(retry)}
+                  >
+                    {label('retry')}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy || form.pending}
+                    className="text-sm font-semibold text-primary underline-offset-4 hover:underline"
+                    onClick={() => {
+                      const request = retry;
+                      captured.current = null;
+                      setRetry(null);
+                      setError(null);
+                      setTurns((current) =>
+                        current.filter((turn) => turn.id !== request.requestId)
+                      );
+                      requestAnimationFrame(() => form.form.setFocus('message'));
+                    }}
+                  >
+                    {copy('edit')}
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         )}
@@ -393,13 +485,21 @@ export default function KnowledgeAssistantPanel({
       </div>
 
       <form
+        noValidate
+        aria-busy={busy || form.pending}
         className="space-y-3 border-t bg-card px-5 py-4"
         onSubmit={(event) => {
           event.preventDefault();
-          void send();
+          void submit();
         }}
       >
         {accountTime.notice}
+        {catalogueRootMessage(form.errors) && (
+          <p role="alert">{catalogueRootMessage(form.errors)}</p>
+        )}
+        {cooldown.seconds > 0 && (
+          <p role="status">{copy('wait').replace('{seconds}', numbers.number(cooldown.seconds))}</p>
+        )}
         <details ref={promptDisclosure}>
           <summary className="min-h-9 cursor-pointer py-2 text-sm font-medium text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
             {label('suggestions')}
@@ -409,10 +509,11 @@ export default function KnowledgeAssistantPanel({
               <button
                 key={key}
                 type="button"
-                disabled={busy}
+                disabled={denied || busy || form.pending || !!retry}
                 className="min-h-9 rounded-full border bg-background px-3 py-1.5 text-start text-xs text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50"
                 onClick={() => {
                   setDraft(t(key, locale));
+                  setServerMessageError(false);
                   setRetry(null);
                   setError(null);
                   input.current?.focus();
@@ -425,7 +526,7 @@ export default function KnowledgeAssistantPanel({
         </details>
         <button
           type="button"
-          disabled={busy}
+          disabled={denied || busy || form.pending || !!retry}
           className="text-start text-sm font-medium text-primary underline-offset-4 hover:underline disabled:opacity-50"
           onClick={() => void showAccountStatus()}
         >
@@ -435,41 +536,69 @@ export default function KnowledgeAssistantPanel({
           {label('input')}
         </label>
         <textarea
-          ref={input}
+          {...form.bind('message')}
+          aria-invalid={serverMessageError || form.bind('message')['aria-invalid']}
+          aria-describedby={
+            serverMessageError ? form.errorId('message') : form.bind('message')['aria-describedby']
+          }
+          onBlur={() => {
+            if (!form.isPending() && !controller.current) form.bind('message').onBlur();
+          }}
+          ref={(node) => {
+            input.current = node;
+            form.bind('message').ref(node);
+          }}
           id="knowledge-question"
           className="min-h-20 max-h-60 w-full resize-none overflow-y-auto rounded-lg border bg-background px-3 py-2 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          maxLength={1000}
           rows={2}
           value={draft}
           placeholder={label('input')}
-          disabled={busy}
+          disabled={denied || busy || form.pending || !!retry}
           onChange={(event) => {
             setDraft(event.target.value);
+            setServerMessageError(false);
             setRetry(null);
             setError(null);
           }}
           onKeyDown={(event) => {
             if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
               event.preventDefault();
-              void send();
+              void submit();
             }
           }}
+        />
+        <CatalogueFieldFeedback
+          id={form.errorId('message')}
+          error={serverMessageError ? { message: copy('question') } : form.errors.message}
+          message={copy('question')}
         />
         <div className="flex items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">
             {turns.at(-1)?.answer
               ? label('remaining').replace(
                   '{count}',
-                  new Intl.NumberFormat(locale).format(turns.at(-1)!.answer!.remainingQuota)
+                  numbers.number(turns.at(-1)!.answer!.remainingQuota)
                 )
               : null}
           </p>
           <button
             type="submit"
-            disabled={busy || !draft.trim()}
+            onMouseDown={(event) => {
+              // WebKit restores scroll on textarea blur; keep the tap target stable until click.
+              event.preventDefault();
+            }}
+            disabled={denied || busy || form.pending || !!retry || cooldown.seconds > 0}
+            aria-busy={busy || form.pending || undefined}
             className="inline-flex min-h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:opacity-50"
           >
-            <ArrowUp className="size-4 rtl:-rotate-90" aria-hidden="true" />
+            {busy || form.pending ? (
+              <span
+                aria-hidden="true"
+                className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+              />
+            ) : (
+              <ArrowUp className="size-4 rtl:-rotate-90" aria-hidden="true" />
+            )}
             {label('send')}
           </button>
         </div>

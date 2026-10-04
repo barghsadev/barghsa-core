@@ -7,6 +7,7 @@ import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.
 import { AiTestChatService } from './ai-test-chat.service.js';
 import type { AgentSlotKey } from './ai-test-chat.service.js';
 import { appendAiAudit } from './ai-audit.js';
+import { rejectContentFields } from '../admin/content-input-fields.js';
 
 const TestChatSchema = z
   .object({
@@ -138,8 +139,8 @@ export class AiTestChatController {
     } else {
       const parsed = TestChatSchema.safeParse(body);
       if (!parsed.success) {
-        await record({ status: 400, code: 'VALIDATION:PARSE:ZOD_ERROR' }, 'allowed');
-        throw new HttpException({ statusCode: 400, error: 'VALIDATION:PARSE:ZOD_ERROR' }, 400);
+        await record({ status: 400, code: 'VALIDATION:INPUT:INVALID' }, 'allowed');
+        rejectContentFields(parsed.error.issues, ['agentId', 'message', 'slotKey']);
       }
       normalized = parsed.data;
     }

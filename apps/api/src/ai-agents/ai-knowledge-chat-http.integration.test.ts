@@ -134,6 +134,25 @@ function ask(body: unknown, requestHeaders = headers) {
   });
 }
 
+it('publishes owned question feedback without reflecting content or consuming provider calls', async () => {
+  const before = completions;
+  const invalid = await ask({ requestId: randomUUID(), message: 'x'.repeat(1001) });
+  expect(invalid.status).toBe(400);
+  expect(await invalid.json()).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['message'] },
+  });
+  const internal = await ask({
+    requestId: 'private-value',
+    message: 'Valid question',
+    privateField: 'private-content',
+  });
+  expect(internal.status).toBe(400);
+  const body = await internal.json();
+  expect(body).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  expect(JSON.stringify(body)).not.toMatch(/private-value|privateField|private-content|requestId/);
+  expect(completions).toBe(before);
+});
+
 it('answers from customer/public sources, audits the profile, and replays one request', async () => {
   expect(
     await (await fetch(`${http.base}/api/ai/knowledge/availability`, { headers })).json()

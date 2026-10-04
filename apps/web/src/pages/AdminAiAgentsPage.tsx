@@ -841,7 +841,12 @@ export default function AdminAiAgentsPage() {
                 ))}
               </ul>
             </ListPage.Content>
-            <AdminAgentTestChat agents={rows} locale={locale} />
+            <AdminAgentTestChat
+              agents={rows}
+              locale={locale}
+              disabled={denied || loading || error}
+              onDenied={deny}
+            />
           </>
         )}
       </ListPage>

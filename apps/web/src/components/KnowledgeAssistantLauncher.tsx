@@ -1,3 +1,4 @@
+import { readAssistantAvailability, type AssistantAvailability } from '../lib/assistant-chat.js';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { BookOpenText } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/app';
@@ -5,12 +6,7 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 
 const KnowledgeAssistantPanel = lazy(() => import('./KnowledgeAssistantPanel.js'));
 
-type Availability = {
-  available: boolean;
-  profileId: string | null;
-  profileName: string | null;
-  slotKey: 'individual_chatbot' | 'legal_entity_chatbot' | null;
-};
+type Availability = AssistantAvailability;
 
 export function KnowledgeAssistantLauncher({
   locale,
@@ -35,7 +31,9 @@ export function KnowledgeAssistantLauncher({
       credentials: 'include',
       signal: controller.signal,
     })
-      .then(async (response) => (response.ok ? ((await response.json()) as Availability) : null))
+      .then(async (response) =>
+        response.status === 200 ? readAssistantAvailability(await response.json()) : null
+      )
       .then((value) => {
         if (!controller.signal.aborted) setAvailability(value ? { ...value, revision } : null);
       })

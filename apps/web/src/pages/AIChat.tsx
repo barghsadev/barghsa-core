@@ -1,15 +1,11 @@
+import { readAssistantAvailability, type AssistantAvailability } from '../lib/assistant-chat.js';
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import KnowledgeAssistantPanel from '../components/KnowledgeAssistantPanel.js';
 
-type Availability = {
-  available: boolean;
-  profileId: string | null;
-  profileName: string | null;
-  slotKey: 'individual_chatbot' | 'legal_entity_chatbot' | null;
-};
+type Availability = AssistantAvailability;
 
 export default function AIChat() {
   const locale = useLocale();
@@ -30,7 +26,9 @@ export default function AIChat() {
     })
       .then(async (response) => {
         if (!response.ok) throw new Error('Assistant availability unavailable');
-        return response.json() as Promise<Availability>;
+        const value = readAssistantAvailability(await response.json());
+        if (response.status !== 200 || !value) throw new Error('Invalid availability');
+        return value;
       })
       .then((result) => {
         if (controller.signal.aborted) return;
