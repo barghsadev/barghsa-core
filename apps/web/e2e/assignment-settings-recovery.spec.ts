@@ -14,7 +14,7 @@ for (const locale of ['en', 'fa'] as const)
     for (const domain of ['slots', 'targets'] as const) {
       test(`${domain} recovery retains draft and password (${locale}, ${theme})`, async ({
         page,
-      }) => {
+      }, info) => {
         await crmShell(page, locale);
         await page.route('**/api/public/branding/config', (route) =>
           route.fulfill({
@@ -43,6 +43,8 @@ for (const locale of ['en', 'fa'] as const)
         let failed = false,
           changed = false,
           denied = false,
+          targetSaved = false,
+          targetVerified = false,
           agentFailed = false,
           agentReads = 0,
           reads = 0;
@@ -55,8 +57,13 @@ for (const locale of ['en', 'fa'] as const)
             ? '/api/admin/agent-slots'
             : '/api/admin/config/service-response-targets';
         await page.route(`**${endpoint}`, (route) => {
-          if (route.request().method() !== 'GET')
+          if (route.request().method() !== 'GET') {
+            if (domain === 'targets' && targetVerified) {
+              targetSaved = true;
+              return route.fulfill({ json: route.request().postDataJSON() });
+            }
             return route.fulfill({ status: 403, json: { requiresStepUp: true } });
+          }
           reads++;
           return route.fulfill({
             status: denied ? 403 : failed ? 503 : 200,
@@ -67,19 +74,27 @@ for (const locale of ['en', 'fa'] as const)
                       ? { ...row, updatedAt: '2026-10-01T01:00:00Z' }
                       : row
                   )
-                : { ticket: changed ? 48 : 24, verification_case: null },
+                : {
+                    ticket: 24,
+                    verification_case: null,
+                    consultation: targetSaved ? 72 : changed ? 48 : 24,
+                  },
           });
         });
         await page.route('**/api/admin/agent-slots/*/agent', (route) =>
           route.fulfill({ status: 403, json: { requiresStepUp: true } })
         );
+        await page.route('**/api/auth/step-up', (route) => {
+          targetVerified = true;
+          return route.fulfill({ json: { verified: true } });
+        });
         await page.goto(domain === 'slots' ? '/admin/agent-slots' : '/admin/service-targets');
         await expect(page.locator('html')).toHaveClass(
           theme === 'dark' ? /dark/ : /^(?!.*dark).*$/
         );
         const text = (key: string) => t(`admin.${domain}.${key}`, locale);
         const input = page.locator(
-          domain === 'slots' ? '#slot-individual_chatbot' : '#target-ticket'
+          domain === 'slots' ? '#slot-individual_chatbot' : '#target-consultation'
         );
         if (domain === 'slots') await input.selectOption(agent.id);
         else await input.fill('72');
@@ -140,11 +155,34 @@ for (const locale of ['en', 'fa'] as const)
           .getByRole('button', { name: text('reset'), exact: domain === 'targets' })
           .click();
         await expect(input).toHaveValue(domain === 'slots' ? '' : '48');
+        if (domain === 'targets') {
+          await input.fill('72');
+          await form.locator('button[type=submit]').click();
+          await confirm.click();
+          await dialog.locator('input[type=password]').fill('synthetic-password');
+          await confirm.click();
+          await expect(dialog).toHaveCount(0);
+          await expect(input).toHaveValue('72');
+          await expect(form.locator('button[type=submit]')).toBeDisabled();
+          expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+          if (
+            (locale === 'en' && theme === 'light' && info.project.name === 'chromium') ||
+            (locale === 'fa' && theme === 'dark' && info.project.name === 'mobile-safari')
+          ) {
+            await page.setViewportSize({ width: 390, height: 2800 });
+            await form.screenshot({
+              path: info.outputPath(
+                `consultation-targets-${locale}-${theme}-${info.project.name}.png`
+              ),
+            });
+            await page.setViewportSize({ width: 390, height: 844 });
+          }
+        }
         denied = true;
         await page.getByRole('button', { name: refresh, exact: true }).click();
         await expect(input).toHaveCount(0);
         denied = false;
         await page.getByRole('button', { name: refresh, exact: true }).click();
-        await expect(input).toHaveValue(domain === 'slots' ? '' : '48');
+        await expect(input).toHaveValue(domain === 'slots' ? '' : '72');
       });
     }

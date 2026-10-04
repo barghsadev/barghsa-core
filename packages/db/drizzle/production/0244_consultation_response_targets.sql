@@ -1,0 +1,4 @@
+ALTER TABLE "service_breach_alerts" DROP CONSTRAINT "chk_sba_service_type";--> statement-breakpoint
+ALTER TABLE "service_breach_alerts" ADD COLUMN "source_activity_at" timestamp with time zone;--> statement-breakpoint
+ALTER TABLE "service_breach_alerts" ADD CONSTRAINT "chk_sba_consultation_activity" CHECK ("service_breach_alerts"."service_type" <> 'consultation' OR "service_breach_alerts"."source_activity_at" IS NOT NULL);--> statement-breakpoint
+ALTER TABLE "service_breach_alerts" ADD CONSTRAINT "chk_sba_service_type" CHECK ("service_breach_alerts"."service_type" IN ('ticket','verification_case','consultation'));

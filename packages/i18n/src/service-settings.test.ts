@@ -12,4 +12,9 @@ it('supplies matching, nonempty Persian and English service-setting copy', () =>
 it('preserves existing target labels in the isolated dictionary', () => {
   expect(tServiceSettings('admin.targets.save', 'en')).toBe('Save response targets');
   expect(tServiceSettings('admin.targets.hours', 'fa')).toBe('ساعت');
+  expect(tServiceSettings('admin.teams.consultation', 'en')).toBe('Consultation requests');
+  expect(tServiceSettings('admin.consultation.responseHelp', 'en')).toContain(
+    'customer information'
+  );
+  expect(tServiceSettings('admin.consultation.responseHelp', 'fa')).toContain('اطلاعات مشتری');
 });

@@ -8,7 +8,7 @@ for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true]) {
     test(`escalation validation, recovery and verified save (${locale}, ${dark ? 'dark' : 'light'})`, async ({
       page,
-    }) => {
+    }, info) => {
       await setupCatalogueForms(page, locale, dark);
       const text = (key: string) => t(`admin.escalation.${key}`, locale);
       let emailEnabled = false;
@@ -19,11 +19,12 @@ for (const locale of ['en', 'fa'] as const)
         wrongReceipt = false,
         verified = false;
       const policy = () => ({
-        ticket: {
+        ticket: null,
+        verification_case: null,
+        consultation: {
           level2: { delayHours: hours, channels: emailEnabled ? ['in_app', 'email'] : ['in_app'] },
           level3: { delayHours: null, channels: ['in_app'] },
         },
-        verification_case: null,
       });
       const writes: unknown[] = [];
       await page.route('**/api/admin/config/service-response-targets', (route) =>
@@ -42,11 +43,13 @@ for (const locale of ['en', 'fa'] as const)
         if (invalidField)
           return route.fulfill({
             status: 400,
-            json: { error: { code: 'VALIDATION:INPUT:INVALID', fields: ['ticketLevel2Hours'] } },
+            json: {
+              error: { code: 'VALIDATION:INPUT:INVALID', fields: ['consultationLevel2Hours'] },
+            },
           });
         if (wrongReceipt) return route.fulfill({ json: policy() });
-        hours = body.ticket.level2.delayHours;
-        emailEnabled = body.ticket.level2.channels.includes('email');
+        hours = body.consultation.level2.delayHours;
+        emailEnabled = body.consultation.level2.channels.includes('email');
         return route.fulfill({ json: body });
       });
       await page.route('**/api/auth/step-up', (route) => {
@@ -54,15 +57,21 @@ for (const locale of ['en', 'fa'] as const)
         return route.fulfill({ json: { verified: true } });
       });
       await page.goto('/admin/service-targets');
-      const form = page.locator('form').filter({ has: page.locator('#escalation-ticketLevel2') });
-      const input = page.locator('#escalation-ticketLevel2');
+      const form = page
+        .locator('form')
+        .filter({ has: page.locator('#escalation-consultationLevel2') });
+      const input = page.locator('#escalation-consultationLevel2');
       const save = form.getByRole('button', { name: text('save'), exact: true });
       const refresh = page.getByRole('button', { name: text('refresh'), exact: true });
       const email = form.getByRole('checkbox', {
-        name: `${text('email')} — ${t('admin.teams.ticket', locale)} — ${text('level2')}`,
+        name: `${text('email')} — ${t('admin.teams.consultation', locale)} — ${text('level2')}`,
         exact: true,
       });
       await expect(input).toHaveValue('24');
+      await expect(page.locator('#escalation-consultationLevel2-help')).toContainText(
+        t('admin.consultation.responseHelp', locale)
+      );
+      await expect(page.locator('#escalation-consultationLevel3')).toBeDisabled();
       // The separately denied target permission leaves escalation usable.
       await expect(page.locator('#target-ticket')).toHaveCount(0);
       await input.fill('1e3');
@@ -125,11 +134,12 @@ for (const locale of ['en', 'fa'] as const)
       await expect(input).toHaveValue('72');
       await expect(form.getByRole('button', { name: text('save'), exact: true })).toBeDisabled();
       expect(writes.at(-1)).toEqual({
-        ticket: {
+        ticket: null,
+        verification_case: null,
+        consultation: {
           level2: { delayHours: 72, channels: ['in_app', 'email'] },
           level3: { delayHours: null, channels: ['in_app'] },
         },
-        verification_case: null,
       });
       expect((await new AxeBuilder({ page }).include('form').analyze()).violations).toEqual([]);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
@@ -144,6 +154,18 @@ for (const locale of ['en', 'fa'] as const)
         path: `/tmp/barghsa-service-escalation-${locale}-${dark ? 'dark' : 'light'}.png`,
         fullPage: true,
       });
+      if (
+        (locale === 'en' && !dark && info.project.name === 'chromium') ||
+        (locale === 'fa' && dark && info.project.name === 'mobile-safari')
+      ) {
+        await page.setViewportSize({ width: 390, height: 3400 });
+        await form.screenshot({
+          path: info.outputPath(
+            `consultation-escalation-${locale}-${dark ? 'dark' : 'light'}-${info.project.name}.png`
+          ),
+        });
+        await page.setViewportSize({ width: 390, height: 844 });
+      }
       denied = true;
       await refresh.click();
       await expect(input).toHaveCount(0);
@@ -156,7 +178,7 @@ for (const locale of ['en', 'fa'] as const)
 test('only one service-settings confirmation owns the page', async ({ page }) => {
   await setupCatalogueForms(page, 'en', false);
   await page.route('**/api/admin/config/service-response-targets', (route) =>
-    route.fulfill({ json: { ticket: 24, verification_case: null } })
+    route.fulfill({ json: { ticket: 24, verification_case: null, consultation: null } })
   );
   await page.route('**/api/admin/config/escalation-policy', (route) =>
     route.fulfill({
@@ -166,6 +188,7 @@ test('only one service-settings confirmation owns the page', async ({ page }) =>
           level3: { delayHours: null, channels: ['in_app'] },
         },
         verification_case: null,
+        consultation: null,
       },
     })
   );

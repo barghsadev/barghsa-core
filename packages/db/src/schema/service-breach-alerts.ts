@@ -6,17 +6,18 @@ import { baseColumns } from '../base-table.js';
  * Service breach alert ledger (S-09.08, T-09.08.01).
  *
  * One row per (service_type, item_id) breach episode — inserted by the
- * worker breach scan when an open ticket / verification case exceeds its
- * admin-configured response target. The UNIQUE constraint is the dedup
+ * worker breach scan when an open ticket, verification case or consultation
+ * exceeds its admin-configured response target. The UNIQUE constraint is the dedup
  * mechanism: the scan inserts with ON CONFLICT DO NOTHING and only alerts
  * for rows it actually inserted, so the same item is never re-alerted on
  * every scan. When an item leaves the breached set the scan deletes its
  * row, so a later re-breach starts a fresh episode.
  *
  * Row layout:
- * - `service_type`  'ticket' | 'verification_case' — must stay in sync with
+ * - `service_type`  'ticket' | 'verification_case' | 'consultation', matching
  *                   SERVICE_RESPONSE_TARGET_TYPES in @barghsa/shared/admin
- * - `item_id`       the open item's id (tickets.id / verification_cases.id)
+ * - `item_id`       the open item's id from tickets, verification_cases or
+ *                   consultation_requests
  * - `target_hours`  snapshot of the breached target (survives later
  *                   reconfiguration for the audit trail)
  * - `alerted_at`    when the episode's alert was recorded (base column)
@@ -24,13 +25,17 @@ import { baseColumns } from '../base-table.js';
  *                   (1 = assigned, 2 = team lead, 3 = admin; T-09.08.03)
  * - `escalated_at`  when the current tier was emitted (NULL until the first
  *                   level-2 escalation; becomes the next tier's delay base)
+ * - `source_activity_at` consultation updated_at snapshot, so committed staff
+ *                   activity resets its episode even when the transaction's
+ *                   timestamp precedes the scanner's alert
  *
  * The escalation columns were added by migration `0039` (additive expand).
- * Database-level CHECK constraints live in the migrations only (Drizzle's
- * column builder in v0.40 does not expose `.check()`): `chk_sba_service_type`,
- * `chk_sba_target_hours`, `chk_sba_escalation_level`, plus the `uq_sba_item`
- * unique constraint. `service-breach-alerts.test.ts` pins migrations 0037 and
- * 0039 so a future `drizzle-kit generate` cannot silently drop them.
+ * The schema and production migrations preserve `chk_sba_service_type`,
+ * `chk_sba_target_hours`, `chk_sba_escalation_level` and `uq_sba_item`. Migration
+ * `0244` expands the domain CHECK and requires an activity snapshot only for
+ * consultation episodes; historical ticket/case snapshots remain NULL.
+ * The populated upgrade test verifies historical episodes, tier limits and
+ * per-item deduplication survive the change.
  *
  * @module db/schema
  */
@@ -41,7 +46,7 @@ export const serviceBreachAlerts = pgTable(
     /** The service type whose open item breached its target. */
     serviceType: text('service_type').notNull(),
 
-    /** The open item's id (tickets.id / verification_cases.id). */
+    /** The open item's id (tickets.id / verification_cases.id / consultation_requests.id). */
     itemId: text('item_id').notNull(),
 
     /** Snapshot of the breached target in hours (always > 0). */
@@ -63,11 +68,21 @@ export const serviceBreachAlerts = pgTable(
      * for the next tier.
      */
     escalatedAt: timestamp('escalated_at', { withTimezone: true, mode: 'date' }),
+
+    /** Exact consultation updated_at; SQL comparisons preserve PostgreSQL precision. */
+    sourceActivityAt: timestamp('source_activity_at', { withTimezone: true, mode: 'date' }),
   },
   (table) => [
     unique('uq_sba_item').on(table.serviceType, table.itemId),
-    check('chk_sba_service_type', sql`${table.serviceType} IN ('ticket','verification_case')`),
+    check(
+      'chk_sba_service_type',
+      sql`${table.serviceType} IN ('ticket','verification_case','consultation')`
+    ),
     check('chk_sba_target_hours', sql`${table.targetHours}>0`),
     check('chk_sba_escalation_level', sql`${table.escalationLevel} BETWEEN 1 AND 3`),
+    check(
+      'chk_sba_consultation_activity',
+      sql`${table.serviceType} <> 'consultation' OR ${table.sourceActivityAt} IS NOT NULL`
+    ),
   ]
 );

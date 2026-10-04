@@ -46,8 +46,8 @@ const configurations = [
   {
     path: 'config/service-response-targets',
     key: 'admin.service_response_targets',
-    value: { ticket: 24 },
-    invalid: { ticket: 1.5 },
+    value: { ticket: 24, consultation: 12 },
+    invalid: { consultation: 1.5 },
   },
   {
     path: 'config/escalation-policy',
@@ -57,9 +57,13 @@ const configurations = [
         level2: { delayHours: 2, channels: ['in_app', 'email'] },
         level3: { delayHours: 3, channels: ['in_app'] },
       },
+      consultation: {
+        level2: { delayHours: 4, channels: ['in_app'] },
+        level3: { delayHours: 5, channels: ['in_app', 'email'] },
+      },
     },
     invalid: {
-      ticket: {
+      consultation: {
         level2: { delayHours: 2, channels: ['email'] },
         level3: { delayHours: 3, channels: ['in_app'] },
       },
@@ -83,7 +87,27 @@ for (const config of configurations) {
     expect(await (await call(config.path)).json()).toEqual({
       ticket: null,
       verification_case: null,
+      consultation: null,
     });
+  });
+  it(`${config.path} reads legacy configurations with consultation disabled and rejects unknown writes`, async () => {
+    const legacy = { ticket: config.value.ticket, verification_case: null };
+    await http.pool.query(
+      `INSERT INTO app_config(key,value,version) VALUES ($1,$2,1)
+       ON CONFLICT (key) DO UPDATE SET value=EXCLUDED.value`,
+      [config.key, legacy]
+    );
+    expect(await (await call(config.path)).json()).toEqual({ ...legacy, consultation: null });
+    const before = (
+      await http.pool.query('SELECT version,value FROM app_config WHERE key=$1', [config.key])
+    ).rows[0];
+    const rejected = await call(config.path, 'PUT', { ...config.value, consultations: 24 });
+    expect(rejected.status).toBe(400);
+    expect(await rejected.json()).not.toHaveProperty('error.fields');
+    expect(
+      (await http.pool.query('SELECT version,value FROM app_config WHERE key=$1', [config.key]))
+        .rows[0]
+    ).toEqual(before);
   });
   it(`${config.path} serializes first writes and rolls audit failures back`, async () => {
     await http.pool.query('DELETE FROM app_config WHERE key=$1', [config.key]);
@@ -145,6 +169,21 @@ for (const [path, body, fields] of [
       },
     },
     ['ticketLevel2Hours', 'ticketLevel3Hours'],
+  ],
+  [
+    'config/service-response-targets',
+    { consultation: 'private-value' },
+    ['consultationTargetHours'],
+  ],
+  [
+    'config/escalation-policy',
+    {
+      consultation: {
+        level2: { delayHours: 'private-value', channels: ['in_app'] },
+        level3: { delayHours: 8761, channels: ['in_app'] },
+      },
+    },
+    ['consultationLevel2Hours', 'consultationLevel3Hours'],
   ],
 ] as const) {
   it(`${path} returns safe owned fields without writing an audit or reflecting input`, async () => {

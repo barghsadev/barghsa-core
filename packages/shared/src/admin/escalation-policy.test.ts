@@ -23,7 +23,11 @@ describe('escalation-policy defaults & keys', () => {
   });
 
   it('defaults every service type to escalation disabled', () => {
-    expect(DEFAULT_ESCALATION_POLICIES).toEqual({ ticket: null, verification_case: null });
+    expect(DEFAULT_ESCALATION_POLICIES).toEqual({
+      ticket: null,
+      verification_case: null,
+      consultation: null,
+    });
   });
 
   it('exposes only in-app and email as escalation channels', () => {
@@ -99,10 +103,12 @@ describe('validateEscalationPolicies', () => {
   });
 
   it('rejects unknown service types so a typo cannot create dead config', () => {
-    const input = { consultation: { level2: { delayHours: 24, channels: ['in_app'] } } };
+    const input = { consultations: { level2: { delayHours: 24, channels: ['in_app'] } } };
     const result = validateEscalationPolicies(input);
     expect(result.ok).toBe(false);
-    expect(result.issues.some((i) => i.includes("Unknown service type 'consultation'"))).toBe(true);
+    expect(result.issues.some((i) => i.includes("Unknown service type 'consultations'"))).toBe(
+      true
+    );
   });
 
   it('rejects a type whose value is not an object or null', () => {
@@ -156,7 +162,7 @@ describe('toEscalationPolicies', () => {
       verification_case: null,
     };
     const result = toEscalationPolicies(input);
-    expect(result).toEqual(input);
+    expect(result).toEqual({ ...input, consultation: null });
   });
 
   it('turns omitted types into null (disabled)', () => {
@@ -167,6 +173,7 @@ describe('toEscalationPolicies', () => {
       },
     });
     expect(result.verification_case).toBeNull();
+    expect(result.consultation).toBeNull();
     expect(result.ticket?.level2.delayHours).toBe(12);
   });
 
@@ -191,5 +198,45 @@ describe('toEscalationPolicies', () => {
     expect(toEscalationPolicies(null)).toEqual(DEFAULT_ESCALATION_POLICIES);
     expect(toEscalationPolicies('x')).toEqual(DEFAULT_ESCALATION_POLICIES);
     expect(toEscalationPolicies([])).toEqual(DEFAULT_ESCALATION_POLICIES);
+  });
+
+  it('opts consultation into both tiers with independent channels and copies the policy', () => {
+    const input = {
+      consultation: {
+        level2: { delayHours: 2, channels: ['in_app', 'email'] },
+        level3: { delayHours: 3, channels: ['in_app'] },
+      },
+    };
+    expect(validateEscalationPolicies(input)).toEqual({ ok: true, issues: [] });
+    const result = toEscalationPolicies(input);
+    expect(result).toEqual({ ticket: null, verification_case: null, ...input });
+    result.consultation!.level2.channels.pop();
+    expect(input.consultation.level2.channels).toEqual(['in_app', 'email']);
+  });
+
+  it('rejects malformed consultation tiers and degrades only their corrupt values', () => {
+    const consultation = {
+      level2: { delayHours: 0, channels: ['email'] },
+      level3: { delayHours: 3, channels: ['in_app'] },
+    };
+    const input = {
+      ticket: {
+        level2: { delayHours: 24, channels: ['in_app'] },
+        level3: { delayHours: 48, channels: ['in_app'] },
+      },
+      consultation,
+    };
+    expect(validateEscalationPolicies(input).issues).toEqual([
+      expect.stringContaining('consultation level2 delayHours'),
+      expect.stringContaining('consultation level2 channels'),
+    ]);
+    expect(toEscalationPolicies(input)).toEqual({
+      ticket: input.ticket,
+      verification_case: null,
+      consultation: {
+        level2: { delayHours: null, channels: ['in_app'] },
+        level3: consultation.level3,
+      },
+    });
   });
 });

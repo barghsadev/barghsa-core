@@ -83,7 +83,7 @@ export function ServiceSettingsEditor({
   const proposal = editor.action?.body as ServiceSettings | undefined;
   const root = catalogueRootMessage(editor.errors);
   return (
-    <section className="space-y-4" aria-label={label('title')}>
+    <section className="space-y-4" role="group" aria-label={label('formTitle')}>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-xl font-semibold">{label('title')}</h2>
         <Button
@@ -187,6 +187,11 @@ export function ServiceSettingsEditor({
                       aria-describedby={`${help} ${editor.errorId(field.hours)}`}
                     />
                     <p id={help} className="text-sm text-muted-foreground">
+                      {field.type === 'consultation' && (
+                        <span className="mb-2 block">
+                          {tServiceSettings('admin.consultation.responseHelp', locale)}
+                        </span>
+                      )}
                       {kind === 'targets' ? label('range') : label(`${field.tier}Help`)}
                     </p>
                     {editor.feedback(field.hours)}

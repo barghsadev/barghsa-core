@@ -29,7 +29,7 @@ for (const scope of ['branding', 'otp', 'service-response-targets'] as const)
           route.fulfill({ json: { mode: 'MANUAL', draft: null, version: 0 } })
         );
         await page.route('**/api/admin/config/service-response-targets', (route) =>
-          route.fulfill({ json: { ticket: 24, verification_case: null } })
+          route.fulfill({ json: { ticket: 24, verification_case: null, consultation: null } })
         );
         const calls: string[] = [],
           mutations: string[] = [];

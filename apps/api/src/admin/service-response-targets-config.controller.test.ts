@@ -21,7 +21,7 @@ function makeController() {
   const getServiceResponseTargets = vi.fn().mockResolvedValue(DEFAULT_SERVICE_RESPONSE_TARGETS);
   const setServiceResponseTargets = vi
     .fn()
-    .mockResolvedValue({ ticket: 48, verification_case: null });
+    .mockResolvedValue({ ticket: 48, verification_case: null, consultation: null });
   const adminService = {
     getServiceResponseTargets,
     setServiceResponseTargets,
@@ -91,7 +91,7 @@ describe('service-response-targets config permission gate (T-09.08.01)', () => {
     const { controller, adminService } = makeController();
     const body = { ticket: 48 };
     const result = await controller.setServiceResponseTargets(body, adminReq);
-    expect(result).toEqual({ ticket: 48, verification_case: null });
+    expect(result).toEqual({ ticket: 48, verification_case: null, consultation: null });
     expect(adminService.setServiceResponseTargets).toHaveBeenCalledWith(
       body,
       adminReq.session,

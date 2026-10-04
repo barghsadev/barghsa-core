@@ -9,7 +9,7 @@
  * ## Model
  *
  * Escalation sits **on top of** the T-09.08.01 breach scan. When an open
- * service item (ticket, verification case) exceeds its response target, the
+ * service item (ticket, verification case, consultation) exceeds its response target, the
  * breach scanner alerts the *assigned* staff — that is the **level-1**
  * escalation (delay = the breached target itself). This module configures
  * the two deeper tiers the escalation worker adds on top:
@@ -104,6 +104,7 @@ export type EscalationPolicies = Record<ServiceResponseTargetType, ServiceEscala
 export const DEFAULT_ESCALATION_POLICIES: EscalationPolicies = {
   ticket: null,
   verification_case: null,
+  consultation: null,
 };
 
 /** Result of validating a proposed escalation policy for the admin write path. */

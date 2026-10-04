@@ -2565,6 +2565,7 @@ export class AdminController {
       properties: {
         ticket: { type: 'number', nullable: true },
         verification_case: { type: 'number', nullable: true },
+        consultation: { type: 'number', nullable: true },
       },
     },
   })
@@ -2595,6 +2596,7 @@ export class AdminController {
       properties: {
         ticket: { type: 'number', nullable: true, example: 48, minimum: 1 },
         verification_case: { type: 'number', nullable: true, example: 72, minimum: 1 },
+        consultation: { type: 'integer', nullable: true, example: 24, minimum: 1, maximum: 8760 },
       },
     },
   })
@@ -2606,6 +2608,7 @@ export class AdminController {
       properties: {
         ticket: { type: 'number', nullable: true },
         verification_case: { type: 'number', nullable: true },
+        consultation: { type: 'number', nullable: true },
       },
     },
   })
@@ -2676,6 +2679,7 @@ export class AdminController {
           },
         },
         verification_case: { type: 'object', nullable: true },
+        consultation: { type: 'object', nullable: true },
       },
     },
   })
@@ -2731,6 +2735,7 @@ export class AdminController {
           },
         },
         verification_case: { type: 'object', nullable: true },
+        consultation: { type: 'object', nullable: true },
       },
     },
   })
@@ -2742,6 +2747,7 @@ export class AdminController {
       properties: {
         ticket: { type: 'object', nullable: true },
         verification_case: { type: 'object', nullable: true },
+        consultation: { type: 'object', nullable: true },
       },
     },
   })

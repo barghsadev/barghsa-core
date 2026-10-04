@@ -94,11 +94,11 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
     });
     const result = await scanServiceBreaches(scanOptions(db));
     expect(result.enabled).toBe(false);
-    // One transaction clearing both domains' ledgers.
+    // One transaction clearing all three domains' ledgers.
     expect(db.pool.connect).toHaveBeenCalledTimes(1);
-    expect(result.pruned).toBe(4);
+    expect(result.pruned).toBe(6);
     const clears = db.calls.filter((c) => c.sql.includes('DELETE FROM service_breach_alerts'));
-    expect(clears.map((c) => c.params[0])).toEqual(['ticket', 'verification_case']);
+    expect(clears.map((c) => c.params[0])).toEqual(['ticket', 'verification_case', 'consultation']);
   });
 
   it('alerts the assigned staff of a breached ticket via the outbox', async () => {
@@ -108,7 +108,7 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
 
     expect(result.enabled).toBe(true);
     expect(result.alerted).toBe(1);
-    expect(result.scanned).toEqual({ ticket: 1, verification_case: 0 });
+    expect(result.scanned).toEqual({ ticket: 1, verification_case: 0, consultation: 0 });
 
     // The breach query applies the ticket open-statuses + target cutoff,
     // measuring the item's age from its last-activity timestamp, and runs a
@@ -229,7 +229,7 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
 
     const result = await scanServiceBreaches(scanOptions(db));
     expect(result.alerted).toBe(1);
-    expect(result.scanned).toEqual({ ticket: 0, verification_case: 1 });
+    expect(result.scanned).toEqual({ ticket: 0, verification_case: 1, consultation: 0 });
 
     const breachCall = db.calls.find((c) => c.sql.includes('FROM verification_cases'));
     expect(breachCall!.params[0]).toEqual(['Open', 'Under Review']);
@@ -439,7 +439,7 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
     );
     expect(clearCall).toBeDefined();
     expect(result.pruned).toBeGreaterThanOrEqual(5);
-    expect(result.scanned).toEqual({ ticket: 0, verification_case: 0 });
+    expect(result.scanned).toEqual({ ticket: 0, verification_case: 0, consultation: 0 });
     // verification_case was still scanned to completion (commit ran).
     expect(db.calls.filter((c) => c.sql === 'BEGIN').length).toBeGreaterThanOrEqual(2);
   });
@@ -457,9 +457,9 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
 
     const result = await scanServiceBreaches(scanOptions(db));
     expect(result.enabled).toBe(true);
-    expect(result.scanned).toEqual({ ticket: 0, verification_case: 0 });
-    // Both types degraded to disabled → only the clear statements ran.
-    expect(db.pool.connect).toHaveBeenCalledTimes(2);
+    expect(result.scanned).toEqual({ ticket: 0, verification_case: 0, consultation: 0 });
+    // Corrupt and omitted types are disabled; all three clear statements run.
+    expect(db.pool.connect).toHaveBeenCalledTimes(3);
     expect(result.pruned).toBe(0);
   });
 

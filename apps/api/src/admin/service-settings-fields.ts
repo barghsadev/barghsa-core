@@ -3,6 +3,7 @@ import {
   SERVICE_RESPONSE_TARGET_TYPES,
   isValidServiceResponseTargetHours,
   isValidEscalationChannels,
+  type ServiceResponseTargetType,
 } from '@barghsa/shared/admin';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { InputFieldException } from '../common/input-field.exception.js';
@@ -10,6 +11,11 @@ import { InputFieldException } from '../common/input-field.exception.js';
 const record = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === 'object' && !Array.isArray(value);
 const generic = () => new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+const fieldPrefixes: Record<ServiceResponseTargetType, { targets: string; escalation: string }> = {
+  ticket: { targets: 'ticket', escalation: 'ticket' },
+  verification_case: { targets: 'verificationCase', escalation: 'verificationCase' },
+  consultation: { targets: 'consultationTarget', escalation: 'consultation' },
+};
 /** Optional/null settings remain compatible; only public hour field IDs leave the server. */
 export function assertServiceSettingsFields(body: unknown, kind: 'targets' | 'escalation') {
   if (
@@ -20,7 +26,7 @@ export function assertServiceSettingsFields(body: unknown, kind: 'targets' | 'es
   const fields: string[] = [];
   for (const type of SERVICE_RESPONSE_TARGET_TYPES) {
     const value = body[type],
-      prefix = type === 'ticket' ? 'ticket' : 'verificationCase';
+      prefix = fieldPrefixes[type][kind];
     if (value === undefined || value === null) continue;
     if (kind === 'targets') {
       if (!isValidServiceResponseTargetHours(value)) fields.push(`${prefix}Hours`);

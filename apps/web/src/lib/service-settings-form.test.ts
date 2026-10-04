@@ -10,6 +10,7 @@ import {
 } from './service-settings-form.js';
 import { serviceSettingsSchema } from './catalogue-form-schemas.js';
 import { boundedCatalogueInteger } from './catalogue-form.js';
+import { isResponseTargets, targetBasis } from './assignment-settings.js';
 
 it('validates enabled hours exactly and retains irrelevant disabled draft values', () => {
   const fields = serviceFields('targets');
@@ -33,15 +34,22 @@ it('validates enabled hours exactly and retains irrelevant disabled draft values
 });
 it('requires complete read policies and mandatory in-app channels', () => {
   const level = { delayHours: 24, channels: ['in_app'] };
-  expect(validEscalationPolicy({ ticket: null, verification_case: null })).toBe(true);
+  expect(validEscalationPolicy({ ticket: null, verification_case: null, consultation: null })).toBe(
+    true
+  );
   for (const value of [
     {},
     { ticket: null },
-    { ticket: { level2: level }, verification_case: null },
-    { ticket: { level2: { ...level, delayHours: 0 }, level3: level }, verification_case: null },
+    { ticket: { level2: level }, verification_case: null, consultation: null },
+    {
+      ticket: { level2: { ...level, delayHours: 0 }, level3: level },
+      verification_case: null,
+      consultation: null,
+    },
     {
       ticket: { level2: { ...level, channels: ['email'] }, level3: level },
       verification_case: null,
+      consultation: null,
     },
   ])
     expect(validEscalationPolicy(value)).toBe(false);
@@ -53,6 +61,7 @@ it('round-trips level-three-only policy without enabling level two, and uses exp
       level3: { delayHours: 48, channels: ['in_app', 'email'] },
     },
     verification_case: null,
+    consultation: null,
   } satisfies EscalationPolicies;
   const raw = serviceValues('escalation', config);
   expect(raw.ticketLevel2Enabled).toBe(false);
@@ -61,6 +70,7 @@ it('round-trips level-three-only policy without enabling level two, and uses exp
   expect(serviceBody('escalation', { ...raw, ticketLevel3Enabled: false })).toEqual({
     ticket: null,
     verification_case: null,
+    consultation: null,
   });
   expect(escalationBasis(config)).toBe(
     escalationBasis({
@@ -71,4 +81,64 @@ it('round-trips level-three-only policy without enabling level two, and uses exp
       },
     })
   );
+});
+
+it('uses explicit consultation field IDs and complete response-target receipts', () => {
+  expect(serviceFields('targets').map((field) => field.hours)).toEqual([
+    'ticketHours',
+    'verificationCaseHours',
+    'consultationTargetHours',
+  ]);
+  expect(
+    serviceFields('escalation')
+      .filter((field) => field.type === 'consultation')
+      .map((field) => field.hours)
+  ).toEqual(['consultationLevel2Hours', 'consultationLevel3Hours']);
+  const config = { ticket: 24, verification_case: null, consultation: 72 };
+  expect(isResponseTargets(config)).toBe(true);
+  expect(isResponseTargets({ ticket: 24, verification_case: null })).toBe(false);
+  expect(isResponseTargets({ ...config, consultation: undefined })).toBe(false);
+  expect(isResponseTargets({ ...config, consultation: 8761 })).toBe(false);
+  expect(targetBasis(config)).not.toBe(targetBasis({ ...config, consultation: 73 }));
+  const draft = serviceValues('targets', config);
+  expect(draft.consultationTargetEnabled).toBe(true);
+  expect(serviceBody('targets', { ...draft, consultationTargetHours: ' ۷۲ ' })).toEqual(config);
+  expect(serviceBody('targets', { ...draft, consultationTargetEnabled: false })).toEqual({
+    ...config,
+    consultation: null,
+  });
+});
+it('round-trips consultation escalation channels and binds receipts to both levels', () => {
+  const config = {
+    ticket: null,
+    verification_case: null,
+    consultation: {
+      level2: { delayHours: 24, channels: ['in_app', 'email'] },
+      level3: { delayHours: 48, channels: ['in_app'] },
+    },
+  } satisfies EscalationPolicies;
+  expect(validEscalationPolicy(config)).toBe(true);
+  expect(validEscalationPolicy({ ticket: null, verification_case: null })).toBe(false);
+  expect(
+    validEscalationPolicy({
+      ...config,
+      consultation: { ...config.consultation, level3: { delayHours: 8761, channels: ['in_app'] } },
+    })
+  ).toBe(false);
+  const draft = serviceValues('escalation', config);
+  expect(draft.consultationLevel2Email).toBe(true);
+  expect(serviceBody('escalation', { ...draft, consultationLevel3Hours: ' ۴۸ ' })).toEqual(config);
+  expect(escalationBasis(config)).not.toBe(
+    escalationBasis({
+      ...config,
+      consultation: { ...config.consultation, level3: { delayHours: 49, channels: ['in_app'] } },
+    })
+  );
+  expect(
+    serviceBody('escalation', {
+      ...draft,
+      consultationLevel2Enabled: false,
+      consultationLevel3Enabled: false,
+    })
+  ).toEqual({ ticket: null, verification_case: null, consultation: null });
 });

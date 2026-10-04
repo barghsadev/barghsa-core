@@ -6,7 +6,7 @@ test('target validation and confirmation preserve settings through a failed save
 }) => {
   await crmShell(page, 'en');
   await mockOppositeNumerals(page, 'en');
-  let values = { ticket: 24, verification_case: null },
+  let values = { ticket: 24, verification_case: null, consultation: 48 },
     verified = false,
     fail = true;
   const attempts: unknown[] = [];
@@ -33,19 +33,24 @@ test('target validation and confirmation preserve settings through a failed save
     await expect(page.getByRole('dialog')).toHaveCount(0);
   }
   await input.fill('72');
+  await page.getByLabel('Hours — Consultation requests', { exact: true }).fill('96');
   await page.getByRole('button', { name: 'Save response targets', exact: true }).click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toContainText('Tickets: ۷۲ Hours');
+  await expect(dialog).toContainText('Consultation requests: ۹۶ Hours');
   await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
   await dialog.getByLabel('Confirm your password').fill('Test-password');
   await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(dialog.getByRole('alert')).toBeVisible();
   expect(values.ticket).toBe(24);
+  expect(values.consultation).toBe(48);
   await expect(page.getByText('Changes saved.', { exact: true })).toHaveCount(0);
   fail = false;
   await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(dialog).toHaveCount(0);
-  expect(attempts).toEqual(Array(3).fill({ ticket: 72, verification_case: null }));
+  expect(attempts).toEqual(
+    Array(3).fill({ ticket: 72, verification_case: null, consultation: 96 })
+  );
 });
 test('target settings deny controls when access is unavailable', async ({ page }) => {
   await crmShell(page, 'en');
@@ -57,7 +62,7 @@ test('target settings deny controls when access is unavailable', async ({ page }
   );
   await page.goto('/admin/service-targets');
   await expect(
-    page.getByRole('region', { name: 'Staff response targets', exact: true }).getByRole('alert')
+    page.getByRole('group', { name: 'Response target hours', exact: true }).getByRole('alert')
   ).toBeVisible();
   await expect(page.locator('form')).toHaveCount(0);
 });

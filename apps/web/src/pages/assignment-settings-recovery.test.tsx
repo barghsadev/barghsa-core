@@ -290,7 +290,7 @@ function targetReads(
       ? (options.stepUp?.() ?? reply({ verified: true }))
       : init?.method === 'PUT'
         ? (options.write?.() ?? reply({}))
-        : (options.read?.() ?? reply({ ticket: 24, verification_case: null }))
+        : (options.read?.() ?? reply({ ticket: 24, verification_case: null, consultation: null }))
   );
   vi.stubGlobal('fetch', requests);
   return requests;
@@ -301,7 +301,10 @@ const renderTargets = async () => {
 const target = () => host.querySelector<HTMLInputElement>('#target-ticket')!;
 it('target draft survives transient failure and property ordering without losing the edited value', async () => {
   let failed = false;
-  targetReads({ read: () => reply({ verification_case: null, ticket: 24 }, failed ? 503 : 200) });
+  targetReads({
+    read: () =>
+      reply({ verification_case: null, consultation: null, ticket: 24 }, failed ? 503 : 200),
+  });
   await renderTargets();
   await fill('#target-ticket', '72');
   failed = true;
@@ -315,7 +318,9 @@ it('target draft survives transient failure and property ordering without losing
 });
 it('changed saved targets retain local edits and invalidate confirmation until reset', async () => {
   let changed = false;
-  targetReads({ read: () => reply({ ticket: changed ? 48 : 24, verification_case: null }) });
+  targetReads({
+    read: () => reply({ ticket: changed ? 48 : 24, verification_case: null, consultation: null }),
+  });
   await renderTargets();
   await fill('#target-ticket', '72');
   await submit();
@@ -329,12 +334,12 @@ it('changed saved targets retain local edits and invalidate confirmation until r
 });
 it('targets reject mismatched acknowledgement and require authoritative recovery before another write', async () => {
   let valid = false,
-    persisted = { ticket: 24, verification_case: null as number | null };
+    persisted = { ticket: 24, verification_case: null, consultation: null as number | null };
   const requests = targetReads({
     read: () => reply(persisted),
     write: () => {
-      if (valid) persisted = { ticket: 72, verification_case: null };
-      return reply(valid ? persisted : { ticket: 71, verification_case: null });
+      if (valid) persisted = { ticket: 72, verification_case: null, consultation: null };
+      return reply(valid ? persisted : { ticket: 71, verification_case: null, consultation: null });
     },
   });
   await renderTargets();
@@ -358,7 +363,7 @@ it('targets reject mismatched acknowledgement and require authoritative recovery
     requests.mock.calls
       .filter(([, init]) => init?.method === 'PUT')
       .map(([, init]) => JSON.parse(String(init?.body)))
-  ).toEqual(Array(2).fill({ ticket: 72, verification_case: null }));
+  ).toEqual(Array(2).fill({ ticket: 72, verification_case: null, consultation: null }));
 });
 it.each(['0', '1.5', '8761', ''])(
   'target submit rejects invalid hours %s even without native form validation',
@@ -401,7 +406,11 @@ for (const scenario of [
           ...(options.stepUp ? { stepUp: options.stepUp } : {}),
         })
       : targetReads({
-          read: () => reply({ ticket: 24, verification_case: null }, options.status?.() ?? 200),
+          read: () =>
+            reply(
+              { ticket: 24, verification_case: null, consultation: null },
+              options.status?.() ?? 200
+            ),
           ...(options.write ? { write: options.write } : {}),
           ...(options.stepUp ? { stepUp: options.stepUp } : {}),
         });
@@ -479,7 +488,7 @@ for (const scenario of [
         reply(
           scenario.name === 'slots'
             ? { ...assignmentSlots()[0], agent, alsoUsedIn: ['staff_chatbot'] }
-            : { ticket: 72, verification_case: null }
+            : { ticket: 72, verification_case: null, consultation: null }
         )
       )
     );
@@ -515,9 +524,9 @@ it.each([
   [],
   {},
   { ticket: 24 },
-  { ticket: 24, verification_case: null, unknown: 1 },
-  { ticket: true, verification_case: null },
-  { ticket: 0, verification_case: null },
+  { ticket: 24, verification_case: null, consultation: null, unknown: 1 },
+  { ticket: true, verification_case: null, consultation: null },
+  { ticket: 0, verification_case: null, consultation: null },
 ])('malformed target metadata cannot become a saved map: %j', (value) =>
   expect(isResponseTargets(value)).toBe(false)
 );

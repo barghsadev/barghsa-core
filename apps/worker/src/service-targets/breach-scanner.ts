@@ -10,8 +10,8 @@ import { enqueueOutbox } from '../notifications/outbox-writer.js';
 /**
  * Service breach scanner (S-09.08, T-09.08.01).
  *
- * Runs periodically in the worker and checks open service items — tickets
- * and verification cases — against the admin-configured response targets
+ * Runs periodically in the worker and checks tickets, verification cases and
+ * consultations against the admin-configured response targets
  * (app_config key `admin.service_response_targets`, hours per service type).
  * When an open item has been awaiting staff longer than its target, the
  * scanner records the breach in `service_breach_alerts` and enqueues an
@@ -63,6 +63,13 @@ export const TICKET_OPEN_STATUSES = ['open', 'in_progress', 'waiting_staff'] as 
 /** Verification-case statuses where the case is still being worked. */
 export const CASE_OPEN_STATUSES = ['Open', 'Under Review'] as const;
 
+/** Consultation statuses where staff owe work; offer_pending includes customer/payment waits. */
+export const CONSULTATION_STAFF_WAIT_STATUSES = [
+  'submitted',
+  'under_review',
+  'offer_accepted',
+] as const;
+
 /** Outcome statistics of one breach scan. */
 export interface BreachScanResult {
   /** False when no config row is persisted (targets not configured yet). */
@@ -105,6 +112,8 @@ interface BreachDomainSpec {
   pruneSql: string;
   /** SQL clearing the whole ledger when the type is disabled. `$1` = service_type. */
   clearSql: string;
+  /** Clear old episodes after staff activity, including activity between scanner passes. */
+  resetRespondedSql?: string;
   /** Recipient policy when an item has no responsible user assigned. */
   fallback: 'admins' | 'none';
 }
@@ -152,6 +161,28 @@ const BREACH_DOMAINS: readonly BreachDomainSpec[] = [
     // Unassigned cases stay with their creator until a reviewer is selected.
     fallback: 'none',
   },
+  {
+    serviceType: 'consultation',
+    openStatuses: CONSULTATION_STAFF_WAIT_STATUSES,
+    findBreachedSql: `SELECT r.id, r.staff_owner_id AS recipient_user_id, r.updated_at::text AS source_activity_at
+        FROM consultation_requests r
+        WHERE r.status = ANY($1::text[]) AND r.updated_at <= $2
+          AND ($4::text IS NULL OR r.id::text > $4)
+        ORDER BY r.id::text ASC LIMIT $3
+        FOR SHARE OF r`,
+    pruneSql: `DELETE FROM service_breach_alerts l
+        WHERE l.service_type = $1 AND NOT EXISTS (
+          SELECT 1 FROM consultation_requests r
+          WHERE r.id = l.item_id::uuid AND r.status = ANY($2::text[])
+            AND r.updated_at <= $3
+        )`,
+    clearSql: `DELETE FROM service_breach_alerts WHERE service_type = $1`,
+    resetRespondedSql: `DELETE FROM service_breach_alerts l
+        USING consultation_requests r
+        WHERE l.service_type = $1 AND r.id = l.item_id::uuid
+          AND r.updated_at IS DISTINCT FROM l.source_activity_at`,
+    fallback: 'admins',
+  },
 ];
 
 /** Default number of breached items processed per service type per scan. */
@@ -170,6 +201,17 @@ export const DEFAULT_BREACH_BATCH_SIZE = 500;
  */
 const LEDGER_UPSERT_SQL = `INSERT INTO service_breach_alerts (service_type, item_id, target_hours)
      VALUES ($1, $2, $3)
+     ON CONFLICT (service_type, item_id)
+       DO UPDATE SET target_hours = EXCLUDED.target_hours
+       WHERE service_breach_alerts.target_hours <> EXCLUDED.target_hours
+     RETURNING id, (xmax = 0) AS inserted`;
+
+// The consultation response clock is snapshotted at full PostgreSQL precision.
+// NOW() is transaction-start time, so comparing activity with alerted_at can miss
+// a response from a transaction that began before the scanner and committed later.
+const CONSULTATION_LEDGER_UPSERT_SQL = `INSERT INTO service_breach_alerts
+     (service_type, item_id, target_hours, source_activity_at)
+     VALUES ($1, $2, $3, $4::timestamptz)
      ON CONFLICT (service_type, item_id)
        DO UPDATE SET target_hours = EXCLUDED.target_hours
        WHERE service_breach_alerts.target_hours <> EXCLUDED.target_hours
@@ -197,6 +239,7 @@ const defaultLogger: Pick<Console, 'warn' | 'info'> = {
 const SERVICE_TYPE_LABELS: Record<ServiceResponseTargetType, { fa: string; en: string }> = {
   ticket: { fa: 'تیکت', en: 'ticket' },
   verification_case: { fa: 'پرونده تأیید هویت', en: 'verification case' },
+  consultation: { fa: 'درخواست مشاوره', en: 'consultation request' },
 };
 
 /**
@@ -221,7 +264,7 @@ export async function scanServiceBreaches(
 
   const result: BreachScanResult = {
     enabled: true,
-    scanned: { ticket: 0, verification_case: 0 },
+    scanned: { ticket: 0, verification_case: 0, consultation: 0 },
     alerted: 0,
     skippedDuplicates: 0,
     pruned: 0,
@@ -285,12 +328,20 @@ export async function scanServiceBreaches(
         }
 
         const cutoff = new Date(now.getTime() - targetHours * HOUR_MS);
+        if (domain.resetRespondedSql) {
+          const reset = await client.query(domain.resetRespondedSql, [domain.serviceType]);
+          result.pruned += reset.rowCount ?? 0;
+        }
 
-        const breached: QueryResult<{ id: string; recipient_user_id: string | null }> =
-          await client.query<{
-            id: string;
-            recipient_user_id: string | null;
-          }>(domain.findBreachedSql, [domain.openStatuses, cutoff, batchSize, afterId]);
+        const breached: QueryResult<{
+          id: string;
+          recipient_user_id: string | null;
+          source_activity_at?: string;
+        }> = await client.query<{
+          id: string;
+          recipient_user_id: string | null;
+          source_activity_at?: string;
+        }>(domain.findBreachedSql, [domain.openStatuses, cutoff, batchSize, afterId]);
         result.scanned[domain.serviceType] += breached.rows.length;
         more = breached.rows.length === batchSize;
         afterId = breached.rows.at(-1)?.id ?? afterId;
@@ -321,8 +372,12 @@ export async function scanServiceBreaches(
             // a fresh episode returns inserted=true; a changed target returns
             // the refreshed row with inserted=false (no re-alert).
             const ledger = await client.query<{ id: string; inserted: boolean }>(
-              LEDGER_UPSERT_SQL,
-              [domain.serviceType, row.id, targetHours]
+              domain.serviceType === 'consultation'
+                ? CONSULTATION_LEDGER_UPSERT_SQL
+                : LEDGER_UPSERT_SQL,
+              domain.serviceType === 'consultation'
+                ? [domain.serviceType, row.id, targetHours, row.source_activity_at]
+                : [domain.serviceType, row.id, targetHours]
             );
             if (ledger.rows.length === 0 || !ledger.rows[0]!.inserted) {
               result.skippedDuplicates++;
@@ -341,6 +396,9 @@ export async function scanServiceBreaches(
                   service_type_name_fa: SERVICE_TYPE_LABELS[domain.serviceType].fa,
                   service_type_name_en: SERVICE_TYPE_LABELS[domain.serviceType].en,
                   item_id: row.id,
+                  ...(domain.serviceType === 'consultation'
+                    ? { link_route: `/admin/consultations?requestId=${row.id}` }
+                    : {}),
                   target_hours: targetHours,
                 },
                 channels: ['in_app'],

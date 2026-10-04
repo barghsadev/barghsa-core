@@ -17,6 +17,9 @@ export const fa: Record<string, string> = {
   'admin.targets.forbidden': 'اجازه مدیریت زمان‌های هدف را ندارید یا دسترسی شما تغییر کرده است.',
   'admin.teams.ticket': 'تیکت‌ها',
   'admin.teams.verification_case': 'پرونده‌های اصلاح هویت',
+  'admin.teams.consultation': 'درخواست‌های مشاوره',
+  'admin.consultation.responseHelp':
+    'فقط درخواست‌های ثبت‌شده، در حال بررسی و با پیشنهاد پذیرفته‌شده منتظر پاسخ کارکنان هستند. انتظار برای اطلاعات مشتری، تصمیم درباره پیشنهاد، پرداخت و وضعیت‌های پایان‌یافته هشدار پاسخ ایجاد نمی‌کند.',
   'admin.targets.formTitle': 'ساعت هدف پاسخ',
   'admin.targets.pageTitle': 'زمان پاسخ و ارجاع هشدار',
   'admin.targets.confirm': 'این زمان‌های هدف ذخیره شوند؟',
@@ -79,6 +82,9 @@ export const en: Record<string, string> = {
   'admin.targets.forbidden': 'You cannot manage response targets, or your access has changed.',
   'admin.teams.ticket': 'Tickets',
   'admin.teams.verification_case': 'Identity correction cases',
+  'admin.teams.consultation': 'Consultation requests',
+  'admin.consultation.responseHelp':
+    'Only submitted, under review, and accepted-offer requests await staff responses. Waiting for customer information, an offer decision, payment, or a terminal outcome does not create response alerts.',
   'admin.targets.formTitle': 'Response target hours',
   'admin.targets.pageTitle': 'Response targets and escalation',
   'admin.targets.confirm': 'Save these response targets?',

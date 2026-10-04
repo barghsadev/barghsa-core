@@ -22,7 +22,11 @@
  */
 
 /** Service types that have open items a response target can apply to today. */
-export const SERVICE_RESPONSE_TARGET_TYPES = ['ticket', 'verification_case'] as const;
+export const SERVICE_RESPONSE_TARGET_TYPES = [
+  'ticket',
+  'verification_case',
+  'consultation',
+] as const;
 
 /** A service type whose open items are checked against response targets. */
 export type ServiceResponseTargetType = (typeof SERVICE_RESPONSE_TARGET_TYPES)[number];
@@ -54,6 +58,7 @@ export const SERVICE_RESPONSE_TARGET_HOURS_RANGE = `an integer between 1 and ${M
 export const DEFAULT_SERVICE_RESPONSE_TARGETS: ServiceResponseTargets = {
   ticket: null,
   verification_case: null,
+  consultation: null,
 };
 
 /** Result of validating a proposed targets map for the admin write path. */
@@ -84,9 +89,8 @@ export function isValidServiceResponseTargetHours(raw: unknown): raw is number {
  *
  * Rules:
  * - must be a plain object;
- * - every key must be a known service type (unknown types — e.g.
- *   `consultation` until its module exists — are rejected so a typo can
- *   never create dead configuration);
+ * - every key must be a known service type (unknown types are rejected so
+ *   a typo can never create dead configuration);
  * - every value must be `null` or an integer within
  *   1…{@link MAX_SERVICE_RESPONSE_TARGET_HOURS}.
  *

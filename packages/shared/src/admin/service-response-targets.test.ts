@@ -13,11 +13,16 @@ describe('service response targets contract (T-09.08.01)', () => {
     expect(DEFAULT_SERVICE_RESPONSE_TARGETS).toEqual({
       ticket: null,
       verification_case: null,
+      consultation: null,
     });
   });
 
   it('catalog covers exactly the domains with open items today', () => {
-    expect([...SERVICE_RESPONSE_TARGET_TYPES].sort()).toEqual(['ticket', 'verification_case']);
+    expect([...SERVICE_RESPONSE_TARGET_TYPES].sort()).toEqual([
+      'consultation',
+      'ticket',
+      'verification_case',
+    ]);
   });
 
   describe('isValidServiceResponseTargetHours', () => {
@@ -48,6 +53,7 @@ describe('service response targets contract (T-09.08.01)', () => {
       const result = validateServiceResponseTargets({
         ticket: 48,
         verification_case: null,
+        consultation: 24,
       });
       expect(result.ok).toBe(true);
       expect(result.issues).toEqual([]);
@@ -56,10 +62,10 @@ describe('service response targets contract (T-09.08.01)', () => {
     it('rejects unknown service types so typos cannot create dead config', () => {
       const result = validateServiceResponseTargets({
         ticket: 48,
-        consultation: 24,
+        consultations: 24,
       });
       expect(result.ok).toBe(false);
-      expect(result.issues.join(' ')).toContain("Unknown service type 'consultation'");
+      expect(result.issues.join(' ')).toContain("Unknown service type 'consultations'");
     });
 
     it('rejects non-object input', () => {
@@ -70,11 +76,12 @@ describe('service response targets contract (T-09.08.01)', () => {
     });
 
     it('rejects zero, negatives, floats, and out-of-range values', () => {
-      for (const bad of [0, -1, 1.5, MAX_SERVICE_RESPONSE_TARGET_HOURS + 1]) {
-        const result = validateServiceResponseTargets({ ticket: bad });
-        expect(result.ok).toBe(false);
-        expect(result.issues.join(' ')).toContain('ticket target must be');
-      }
+      for (const type of SERVICE_RESPONSE_TARGET_TYPES)
+        for (const bad of [0, -1, 1.5, MAX_SERVICE_RESPONSE_TARGET_HOURS + 1]) {
+          const result = validateServiceResponseTargets({ [type]: bad });
+          expect(result.ok).toBe(false);
+          expect(result.issues.join(' ')).toContain(`${type} target must be`);
+        }
     });
   });
 
@@ -83,6 +90,7 @@ describe('service response targets contract (T-09.08.01)', () => {
       expect(toServiceResponseTargets({ ticket: 48 })).toEqual({
         ticket: 48,
         verification_case: null,
+        consultation: null,
       });
     });
 
@@ -95,6 +103,7 @@ describe('service response targets contract (T-09.08.01)', () => {
       ).toEqual({
         ticket: null,
         verification_case: 24,
+        consultation: null,
       });
     });
 
@@ -103,6 +112,7 @@ describe('service response targets contract (T-09.08.01)', () => {
       expect(toServiceResponseTargets({ ticket: 48, verification_case: 72 })).toEqual({
         ticket: 48,
         verification_case: 72,
+        consultation: null,
       });
       // …and degrades every malformed type to disabled, never throwing.
       expect(toServiceResponseTargets(null)).toEqual(DEFAULT_SERVICE_RESPONSE_TARGETS);
@@ -113,6 +123,20 @@ describe('service response targets contract (T-09.08.01)', () => {
       expect(toServiceResponseTargets({ ticket: 0 })).toEqual({
         ticket: null,
         verification_case: null,
+        consultation: null,
+      });
+    });
+
+    it('opts consultation in explicitly and isolates corrupt consultation targets', () => {
+      expect(toServiceResponseTargets({ ticket: 48, consultation: 24 })).toEqual({
+        ticket: 48,
+        verification_case: null,
+        consultation: 24,
+      });
+      expect(toServiceResponseTargets({ ticket: 48, consultation: 0 })).toEqual({
+        ticket: 48,
+        verification_case: null,
+        consultation: null,
       });
     });
   });

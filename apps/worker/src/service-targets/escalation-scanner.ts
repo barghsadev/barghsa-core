@@ -7,7 +7,11 @@ import {
   type ServiceResponseTargetType,
 } from '@barghsa/shared/admin';
 import { enqueueOutbox } from '../notifications/outbox-writer.js';
-import { CASE_OPEN_STATUSES, TICKET_OPEN_STATUSES } from './breach-scanner.js';
+import {
+  CASE_OPEN_STATUSES,
+  TICKET_OPEN_STATUSES,
+  CONSULTATION_STAFF_WAIT_STATUSES,
+} from './breach-scanner.js';
 
 /**
  * Service escalation scanner (S-09.08, T-09.08.03).
@@ -19,12 +23,9 @@ import { CASE_OPEN_STATUSES, TICKET_OPEN_STATUSES } from './breach-scanner.js';
  * the remaining tiers:
  *
  * - **level 2 — team lead**: an episode escalates to the responsible
- *   staff's team once `level2.delayHours` has elapsed past the breach
- *   alert (`alerted_at`), for as long as the item remains breached. Because
- *   the staff-team model (T-09.08.02) has no dedicated lead role yet, the
- *   team-lead recipient is resolved as the responsible user's team members
- *   (the escalation surface that lifts the item to the wider team); if the
- *   responsible user belongs to no team, they fall back to platform admins.
+ *   staff's configured active team lead once `level2.delayHours` has elapsed
+ *   past the breach alert (`alerted_at`), while the item remains breached.
+ *   Missing leads fall back to platform admins.
  * - **level 3 — admin**: the episode escalates to platform admins once
  *   `level3.delayHours` has elapsed past the level-2 escalation
  *   (`escalated_at`).
@@ -135,6 +136,22 @@ const ESCALATION_DOMAINS: readonly EscalationDomainSpec[] = [
         ORDER BY l.id ASC
         LIMIT $6`,
   },
+  {
+    serviceType: 'consultation',
+    openStatuses: CONSULTATION_STAFF_WAIT_STATUSES,
+    findDueSql: (column) => `SELECT l.id AS ledger_id, l.item_id,
+          r.staff_owner_id AS responsible_user_id
+        FROM service_breach_alerts l
+        JOIN consultation_requests r ON r.id = l.item_id::uuid
+        WHERE l.service_type = $1 AND l.escalation_level = $2
+          AND r.status = ANY($5::text[])
+          AND r.updated_at <= $4::timestamptz - (l.target_hours * INTERVAL '1 hour')
+          AND r.updated_at = l.source_activity_at
+          AND l.${column} <= $3
+          AND ($7::uuid IS NULL OR l.id > $7::uuid)
+        ORDER BY l.id ASC LIMIT $6
+        FOR SHARE OF r`,
+  },
 ];
 
 /**
@@ -152,6 +169,7 @@ const ADVANCE_SQL = `UPDATE service_breach_alerts
 const SERVICE_TYPE_LABELS: Record<ServiceResponseTargetType, { fa: string; en: string }> = {
   ticket: { fa: 'تیکت', en: 'ticket' },
   verification_case: { fa: 'پرونده تأیید هویت', en: 'verification case' },
+  consultation: { fa: 'درخواست مشاوره', en: 'consultation request' },
 };
 
 export interface EscalationScanOptions {
@@ -206,7 +224,11 @@ export async function scanServiceEscalations(
 
   const result: EscalationScanResult = {
     enabled: true,
-    escalated: { ticket: { level2: 0, level3: 0 }, verification_case: { level2: 0, level3: 0 } },
+    escalated: {
+      ticket: { level2: 0, level3: 0 },
+      verification_case: { level2: 0, level3: 0 },
+      consultation: { level2: 0, level3: 0 },
+    },
     skippedConcurrent: 0,
     errors: [],
   };
@@ -380,6 +402,9 @@ async function escalateOne(
         service_type_name_fa: SERVICE_TYPE_LABELS[domain.serviceType].fa,
         service_type_name_en: SERVICE_TYPE_LABELS[domain.serviceType].en,
         item_id: candidate.item_id,
+        ...(domain.serviceType === 'consultation'
+          ? { link_route: `/admin/consultations?requestId=${candidate.item_id}` }
+          : {}),
         escalation_level: toLevel,
       },
       channels: level.channels,
@@ -421,10 +446,9 @@ async function resolveAdminRecipients(client: {
 /**
  * Resolve the team-lead recipient for a level-2 escalation.
  *
- * Team-lead is interpreted as the responsible user's team members: find the
- * teams the responsible user belongs to (T-09.08.02), then the default
- * profile of each other member. When the responsible user belongs to no
- * team (or the item is unassigned), fall back to platform admins — the
+ * Find active teams the responsible user belongs to, then their configured
+ * enabled leads. Without a deliverable lead (or when unassigned), fall back
+ * to platform admins — the
  * escalation authority of last resort, matching the breach scanner's
  * unassigned-item behaviour.
  */

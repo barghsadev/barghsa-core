@@ -3,6 +3,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { ServiceSettingsEditor } from './ServiceSettingsEditor.js';
 import Page from './AdminServiceTargetsPage.js';
+import { tServiceSettings as text } from '@barghsa/i18n/service-settings';
 import type { TeamAction } from '../components/TeamActionDialog.js';
 
 interface Confirmation {
@@ -30,15 +31,16 @@ const policy = (hours: number) => ({
     level3: { delayHours: null, channels: ['in_app'] },
   },
   verification_case: null,
+  consultation: null,
 });
 const cases = [
   {
     kind: 'targets',
     selector: '#target-ticket',
     field: 'ticketHours',
-    initial: { ticket: 24, verification_case: null },
-    saved: { ticket: 72, verification_case: null },
-    changed: { ticket: 48, verification_case: null },
+    initial: { ticket: 24, verification_case: null, consultation: null },
+    saved: { ticket: 72, verification_case: null, consultation: null },
+    changed: { ticket: 48, verification_case: null, consultation: null },
   },
   {
     kind: 'escalation',
@@ -47,6 +49,22 @@ const cases = [
     initial: policy(24),
     saved: policy(72),
     changed: policy(48),
+  },
+  {
+    kind: 'targets',
+    selector: '#target-consultation',
+    field: 'consultationTargetHours',
+    initial: { ticket: 24, verification_case: null, consultation: 24 },
+    saved: { ticket: 24, verification_case: null, consultation: 72 },
+    changed: { ticket: 24, verification_case: null, consultation: 48 },
+  },
+  {
+    kind: 'escalation',
+    selector: '#escalation-consultationLevel2',
+    field: 'consultationLevel2Hours',
+    initial: { ticket: null, verification_case: null, consultation: policy(24).ticket },
+    saved: { ticket: null, verification_case: null, consultation: policy(72).ticket },
+    changed: { ticket: null, verification_case: null, consultation: policy(48).ticket },
   },
 ] as const;
 let host: HTMLDivElement, root: Root, read: unknown, status: number;
@@ -226,3 +244,35 @@ it('a captured action locks the other editor, which cannot replace the active co
   await act(async () => command.onClose());
   expect(input('#escalation-ticketLevel2').matches(':disabled')).toBe(false);
 });
+
+it.each(['en', 'fa'] as const)(
+  'denied service editor groups remain distinct inside the settings route landmark (%s)',
+  async (locale) => {
+    harness.locale = locale;
+    status = 403;
+    read = {};
+    await act(async () =>
+      root.render(
+        <div role="region" aria-label={text('admin.targets.title', locale)}>
+          <Page />
+        </div>
+      )
+    );
+    const target = host.querySelector<HTMLElement>(
+      `section[role="group"][aria-label="${text('admin.targets.formTitle', locale)}"]`
+    )!;
+    const escalation = host.querySelector<HTMLElement>(
+      `section[role="group"][aria-label="${text('admin.escalation.formTitle', locale)}"]`
+    )!;
+    expect(target.getAttribute('role')).toBe('group');
+    expect(escalation.getAttribute('role')).toBe('group');
+    expect(host.querySelectorAll('[role=region]')).toHaveLength(1);
+    expect(target.getAttribute('aria-label')).not.toBe(escalation.getAttribute('aria-label'));
+    expect(target.getAttribute('aria-label')).not.toBe(
+      host.querySelector('[role=region]')!.getAttribute('aria-label')
+    );
+    expect(target.querySelectorAll('[role=alert]')).toHaveLength(1);
+    expect(escalation.querySelectorAll('[role=alert]')).toHaveLength(1);
+    expect(host.querySelectorAll('form')).toHaveLength(0);
+  }
+);

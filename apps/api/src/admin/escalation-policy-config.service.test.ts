@@ -61,12 +61,14 @@ describe('AdminService.getEscalationPolicy (T-09.08.03)', () => {
     ]);
   });
 
-  it('returns the stored policy as-is when valid', async () => {
+  it('keeps legacy escalation policies and leaves consultation disabled without warning', async () => {
     const { mockQuery } = await loadService();
     mockQuery.mockResolvedValueOnce({ rows: [{ value: SAMPLE_POLICY }] });
 
+    const warnSpy = vi.spyOn(service['logger'], 'warn').mockImplementation(() => undefined);
     const result = await service.getEscalationPolicy();
-    expect(result).toEqual(SAMPLE_POLICY);
+    expect(result).toEqual({ ...SAMPLE_POLICY, consultation: null });
+    expect(warnSpy).not.toHaveBeenCalled();
   });
 
   it('fills omitted service types from a stored map with null (disabled)', async () => {
@@ -82,6 +84,17 @@ describe('AdminService.getEscalationPolicy (T-09.08.03)', () => {
     const result = await service.getEscalationPolicy();
     expect(result.ticket).toEqual(partial.ticket);
     expect(result.verification_case).toBeNull();
+    expect(result.consultation).toBeNull();
+  });
+
+  it('reads the explicitly enabled consultation policy without changing legacy types', async () => {
+    const { mockQuery } = await loadService();
+    const consultation = {
+      level2: { delayHours: 2, channels: ['in_app', 'email'] },
+      level3: { delayHours: 3, channels: ['in_app'] },
+    };
+    mockQuery.mockResolvedValueOnce({ rows: [{ value: { ...SAMPLE_POLICY, consultation } }] });
+    expect(await service.getEscalationPolicy()).toEqual({ ...SAMPLE_POLICY, consultation });
   });
 
   it('serves normalized values and warns on a corrupt persisted value', async () => {
@@ -149,7 +162,7 @@ describe('AdminService.setEscalationPolicy (T-09.08.03)', () => {
             level2: { delayHours: 24, channels: ['in_app'] },
             level3: { delayHours: 48, channels: ['in_app'] },
           },
-          consultation: 24,
+          consultations: 24,
         },
         actor,
         '127.0.0.1'

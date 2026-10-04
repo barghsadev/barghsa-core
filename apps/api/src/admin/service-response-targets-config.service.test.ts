@@ -56,14 +56,16 @@ describe('AdminService.getServiceResponseTargets (T-09.08.01)', () => {
     ]);
   });
 
-  it('returns the stored map as-is when valid', async () => {
+  it('keeps legacy targets and leaves consultation disabled without a corruption warning', async () => {
     const { mockQuery } = await loadService();
     mockQuery.mockResolvedValueOnce({
       rows: [{ value: { ticket: 48, verification_case: 72 } }],
     });
 
+    const warnSpy = vi.spyOn(service['logger'], 'warn').mockImplementation(() => undefined);
     const result = await service.getServiceResponseTargets();
-    expect(result).toEqual({ ticket: 48, verification_case: 72 });
+    expect(result).toEqual({ ticket: 48, verification_case: 72, consultation: null });
+    expect(warnSpy).not.toHaveBeenCalled();
   });
 
   it('fills omitted service types from a stored map with null', async () => {
@@ -71,7 +73,7 @@ describe('AdminService.getServiceResponseTargets (T-09.08.01)', () => {
     mockQuery.mockResolvedValueOnce({ rows: [{ value: { ticket: 48 } }] });
 
     const result = await service.getServiceResponseTargets();
-    expect(result).toEqual({ ticket: 48, verification_case: null });
+    expect(result).toEqual({ ticket: 48, verification_case: null, consultation: null });
   });
 
   it('serves normalized values and warns on a corrupt persisted value', async () => {
@@ -82,7 +84,7 @@ describe('AdminService.getServiceResponseTargets (T-09.08.01)', () => {
 
     const warnSpy = vi.spyOn(service['logger'], 'warn').mockImplementation(() => undefined);
     const result = await service.getServiceResponseTargets();
-    expect(result).toEqual({ ticket: null, verification_case: null });
+    expect(result).toEqual({ ticket: null, verification_case: null, consultation: null });
     expect(warnSpy).toHaveBeenCalledTimes(1);
   });
 
@@ -96,7 +98,26 @@ describe('AdminService.getServiceResponseTargets (T-09.08.01)', () => {
 
     const warnSpy = vi.spyOn(service['logger'], 'warn').mockImplementation(() => undefined);
     const result = await service.getServiceResponseTargets();
-    expect(result).toEqual({ ticket: 48, verification_case: null });
+    expect(result).toEqual({ ticket: 48, verification_case: null, consultation: null });
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('reads an explicitly enabled consultation target and isolates a corrupt one', async () => {
+    const { mockQuery } = await loadService();
+    const warnSpy = vi.spyOn(service['logger'], 'warn').mockImplementation(() => undefined);
+    mockQuery.mockResolvedValueOnce({ rows: [{ value: { ticket: 48, consultation: 24 } }] });
+    expect(await service.getServiceResponseTargets()).toEqual({
+      ticket: 48,
+      verification_case: null,
+      consultation: 24,
+    });
+    expect(warnSpy).not.toHaveBeenCalled();
+    mockQuery.mockResolvedValueOnce({ rows: [{ value: { ticket: 48, consultation: 0 } }] });
+    expect(await service.getServiceResponseTargets()).toEqual({
+      ticket: 48,
+      verification_case: null,
+      consultation: null,
+    });
     expect(warnSpy).toHaveBeenCalledTimes(1);
   });
 });
@@ -107,7 +128,7 @@ describe('AdminService.setServiceResponseTargets (T-09.08.01)', () => {
   it('rejects an unknown service type with a 400', async () => {
     const { pool } = await loadService();
     await expect(
-      service.setServiceResponseTargets({ ticket: 48, consultation: 24 }, actor, '127.0.0.1')
+      service.setServiceResponseTargets({ ticket: 48, consultations: 24 }, actor, '127.0.0.1')
     ).rejects.toMatchObject({ status: 400 });
     expect(pool.connect).not.toHaveBeenCalled();
   });

@@ -216,7 +216,9 @@ for (const locale of ['en', 'fa'] as const)
           .locator('form')
           .filter({ has: page.locator('#team-consultation') })
           .screenshot({
-            path: `/Users/majid/.local/state/barghsa-manual-batches/consultation-assignment/consultation-rules-${locale}-${dark ? 'dark' : 'light'}-${info.project.name}.png`,
+            path: info.outputPath(
+              `consultation-rules-${locale}-${dark ? 'dark' : 'light'}-${info.project.name}.png`
+            ),
           });
       denied = true;
       await page.getByRole('button', { name: text('refreshRules'), exact: true }).click();

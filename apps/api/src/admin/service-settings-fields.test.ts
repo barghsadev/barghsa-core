@@ -16,6 +16,12 @@ it('only exposes owned hour field identifiers for both setting families', () => 
       { ticket: { level2: { delayHours: 'PRIVATE VALUE' }, level3: { delayHours: 0 } } },
       ['ticketLevel2Hours', 'ticketLevel3Hours'],
     ],
+    ['targets', { consultation: 'PRIVATE VALUE' }, ['consultationTargetHours']],
+    [
+      'escalation',
+      { consultation: { level2: { delayHours: 'PRIVATE VALUE' }, level3: { delayHours: 0 } } },
+      ['consultationLevel2Hours', 'consultationLevel3Hours'],
+    ],
   ] as const) {
     let error: unknown;
     try {
@@ -32,6 +38,7 @@ it('preserves optional and disabled writes and rejects unknown types without ref
   for (const kind of ['targets', 'escalation'] as const) {
     expect(() => assertServiceSettingsFields({}, kind)).not.toThrow();
     expect(() => assertServiceSettingsFields({ ticket: null }, kind)).not.toThrow();
+    expect(() => assertServiceSettingsFields({ consultation: null }, kind)).not.toThrow();
     let error: unknown;
     try {
       assertServiceSettingsFields({ 'PRIVATE KEY': 42 }, kind);
@@ -40,6 +47,37 @@ it('preserves optional and disabled writes and rejects unknown types without ref
     }
     expect(error).toBeInstanceOf(HttpException);
     expect(JSON.stringify((error as HttpException).getResponse())).not.toContain('PRIVATE');
+    expect(error).not.toBeInstanceOf(InputFieldException);
+  }
+});
+
+it('accepts consultation opt-in values but keeps unknown types and malformed channels general', () => {
+  expect(() => assertServiceSettingsFields({ consultation: 24 }, 'targets')).not.toThrow();
+  expect(() =>
+    assertServiceSettingsFields(
+      {
+        consultation: {
+          level2: { delayHours: 2, channels: ['in_app', 'email'] },
+          level3: { delayHours: 3, channels: ['in_app'] },
+        },
+      },
+      'escalation'
+    )
+  ).not.toThrow();
+  for (const [body, kind] of [
+    [{ consultations: 24 }, 'targets'],
+    [
+      { consultation: { level2: { delayHours: 2, channels: ['email'] }, level3: {} } },
+      'escalation',
+    ],
+  ] as const) {
+    let error: unknown;
+    try {
+      assertServiceSettingsFields(body, kind);
+    } catch (e) {
+      error = e;
+    }
+    expect(error).toBeInstanceOf(HttpException);
     expect(error).not.toBeInstanceOf(InputFieldException);
   }
 });

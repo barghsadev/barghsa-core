@@ -46,7 +46,9 @@ it('expands consultation cursors without changing existing routing positions or 
       .rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0243_consultation_assignment'],
+      applied: journal.entries
+        .filter((entry: { idx: number }) => entry.idx >= 243)
+        .map((entry: { tag: string }) => entry.tag),
     });
     expect(
       (await pool.query('SELECT * FROM staff_assignment_cursors ORDER BY work_type')).rows

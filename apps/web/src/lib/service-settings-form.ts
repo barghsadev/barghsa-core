@@ -9,9 +9,14 @@ import { boundedCatalogueInteger, record } from './catalogue-form.js';
 
 export type ServiceSettingsKind = 'targets' | 'escalation';
 export type ServiceSettings = ServiceResponseTargets | EscalationPolicies;
-const prefixes = ['ticket', 'verificationCase'] as const;
-type Prefix = (typeof prefixes)[number];
-type Tier = Prefix | `${Prefix}Level2` | `${Prefix}Level3`;
+const prefixes = {
+  ticket: 'ticket',
+  verification_case: 'verificationCase',
+  consultation: 'consultation',
+} as const satisfies Record<(typeof SERVICE_RESPONSE_TARGET_TYPES)[number], string>;
+type Prefix = (typeof prefixes)[keyof typeof prefixes];
+type Tier =
+  Exclude<Prefix, 'consultation'> | 'consultationTarget' | `${Prefix}Level2` | `${Prefix}Level3`;
 export type ServiceDraft = Record<`${Tier}Hours`, string> &
   Record<`${Tier}Enabled` | `${Tier}Email`, boolean>;
 export interface ServiceField {
@@ -23,11 +28,15 @@ export interface ServiceField {
   email: `${Tier}Email`;
 }
 export function serviceFields(kind: ServiceSettingsKind): ServiceField[] {
-  return SERVICE_RESPONSE_TARGET_TYPES.flatMap((type, i) => {
-    const prefix = prefixes[i]!;
+  return SERVICE_RESPONSE_TARGET_TYPES.flatMap((type) => {
+    const prefix = prefixes[type];
     const tiers = kind === 'targets' ? [undefined] : (['level2', 'level3'] as const);
     return tiers.map((tier) => {
-      const name: Tier = tier ? `${prefix}${tier === 'level2' ? 'Level2' : 'Level3'}` : prefix;
+      const name: Tier = tier
+        ? `${prefix}${tier === 'level2' ? 'Level2' : 'Level3'}`
+        : type === 'consultation'
+          ? 'consultationTarget'
+          : prefixes[type];
       return {
         type,
         tier,
@@ -82,8 +91,12 @@ export function serviceValues(kind: ServiceSettingsKind, config: ServiceSettings
   return draft;
 }
 export function serviceBody(kind: ServiceSettingsKind, draft: ServiceDraft): ServiceSettings {
-  const targets: ServiceResponseTargets = { ticket: null, verification_case: null };
-  const policies: EscalationPolicies = { ticket: null, verification_case: null };
+  const targets = Object.fromEntries(
+    SERVICE_RESPONSE_TARGET_TYPES.map((type) => [type, null])
+  ) as ServiceResponseTargets;
+  const policies = Object.fromEntries(
+    SERVICE_RESPONSE_TARGET_TYPES.map((type) => [type, null])
+  ) as EscalationPolicies;
   for (const field of serviceFields(kind)) {
     const hours = draft[field.enabled]
       ? boundedCatalogueInteger(draft[field.hours], 1, 8760)
