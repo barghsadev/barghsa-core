@@ -1,122 +1,40 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useEffect, useState, useRef, type FormEvent } from 'react';
+import { useEffect, useState, useRef, useCallback, lazy, Suspense, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { Button, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
-import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import type { TeamAction } from '../components/TeamActionDialog.js';
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import { aiModelFormText } from '@barghsa/i18n/ai-model-forms';
+import {
+  CatalogueFieldFeedback,
+  CatalogueSaveButton,
+  catalogueRootMessage,
+} from '../components/CatalogueEditorFeedback.js';
+import { Alert } from '@barghsa/ui';
+const TeamActionDialog = lazy(() =>
+  import('../components/TeamActionDialog.js').then((module) => ({
+    default: module.TeamActionDialog,
+  }))
+);
 import { useLocale } from '../hooks/useLocale.js';
-interface Model {
-  id: string;
-  title: string;
-  providerType: 'openai_compatible' | 'anthropic';
-  baseUrl: string;
-  modelName: string;
-  config: { max_tokens: number; temperature: number };
-  isEnabled: boolean;
-  apiTokenMasked: string;
-  status: 'reachable' | 'unreachable' | 'unknown';
-  lastTestedAt: string | null;
-  lastTestError: string | null;
-  lastTestLatencyMs: number | null;
-  circuitOpen: boolean;
-  circuitCooldownUntil: string | null;
-  budget: {
-    monthlyTokenLimit: number | null;
-    monthlyCostLimitMicros: number | null;
-    inputPricePerMillionMicros: number;
-    outputPricePerMillionMicros: number;
-    usedInputTokens: number;
-    usedOutputTokens: number;
-    usedCostMicros: number;
-    periodStart: string;
-    alertedAt: string | null;
-  } | null;
-}
-interface BudgetDraft {
-  modelId: string;
-  modelTitle: string;
-  monthlyTokenLimit: string;
-  monthlyCostUsd: string;
-  inputPriceUsd: string;
-  outputPriceUsd: string;
-}
-interface Draft {
-  id?: string;
-  title: string;
-  providerType: Model['providerType'];
-  baseUrl: string;
-  modelName: string;
-  maxTokens: number;
-  temperature: number;
-  apiToken: string;
-  tokenChoice: 'keep' | 'replace' | 'clear';
-  masked: string;
-}
-function record(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
-}
-function validModels(value: unknown): value is Model[] {
-  return (
-    Array.isArray(value) &&
-    value.every((m) => {
-      if (!record(m)) return false;
-      const budget = m.budget;
-      return (
-        ['id', 'title', 'baseUrl', 'modelName', 'apiTokenMasked'].every(
-          (k) => typeof m[k] === 'string'
-        ) &&
-        ['openai_compatible', 'anthropic'].includes(String(m.providerType)) &&
-        typeof m.isEnabled === 'boolean' &&
-        ['reachable', 'unreachable', 'unknown'].includes(String(m.status)) &&
-        record(m.config) &&
-        typeof m.config.max_tokens === 'number' &&
-        typeof m.config.temperature === 'number' &&
-        (budget === null ||
-          (record(budget) &&
-            ['monthlyTokenLimit', 'monthlyCostLimitMicros'].every(
-              (k) => budget[k] === null || typeof budget[k] === 'number'
-            ) &&
-            [
-              'inputPricePerMillionMicros',
-              'outputPricePerMillionMicros',
-              'usedInputTokens',
-              'usedOutputTokens',
-              'usedCostMicros',
-            ].every((k) => typeof budget[k] === 'number')))
-      );
-    })
-  );
-}
-function modelBasis(model: Model, kind: 'model' | 'budget' | 'command') {
-  if (kind === 'budget')
-    return JSON.stringify({
-      monthlyTokenLimit: model.budget?.monthlyTokenLimit ?? null,
-      monthlyCostLimitMicros: model.budget?.monthlyCostLimitMicros ?? null,
-      inputPricePerMillionMicros: model.budget?.inputPricePerMillionMicros ?? 0,
-      outputPricePerMillionMicros: model.budget?.outputPricePerMillionMicros ?? 0,
-    });
-  return JSON.stringify({
-    title: model.title,
-    providerType: model.providerType,
-    baseUrl: model.baseUrl,
-    modelName: model.modelName,
-    config: model.config,
-    isEnabled: model.isEnabled,
-    apiTokenMasked: model.apiTokenMasked,
-    ...(kind === 'command' ? { status: model.status } : {}),
-  });
-}
-const blank = (): Draft => ({
-  title: '',
-  providerType: 'openai_compatible',
-  baseUrl: '',
-  modelName: '',
-  maxTokens: 256,
-  temperature: 0,
-  apiToken: '',
-  tokenChoice: 'replace',
-  masked: '',
-});
+import {
+  type Model,
+  type Draft,
+  type BudgetDraft,
+  blank,
+  validModels,
+  modelBasis,
+  modelDraftFor,
+  budgetDraftFor,
+  invalidModelFields,
+  invalidBudgetFields,
+  budgetBody,
+  modelBody,
+  matchesModelReceipt,
+  matchesBudgetReceipt,
+} from '../lib/ai-model-form.js';
 export default function AdminAiModelsPage() {
   const time = useAccountTime();
   const locale = useLocale(),
@@ -127,18 +45,120 @@ export default function AdminAiModelsPage() {
     [denied, setDenied] = useState(false),
     [error, setError] = useState(false),
     [revision, setRevision] = useState(0);
-  const [draft, setDraft] = useState<Draft | null>(null),
-    [budgetDraft, setBudgetDraft] = useState<BudgetDraft | null>(null),
-    [action, setAction] = useState<TeamAction | null>(null),
-    [result, setResult] = useState<{ ok: boolean; text: string } | null>(null);
+  const previousModels = useRef<Model[]>([]);
+  const copy = (key: Parameters<typeof aiModelFormText>[0]) => aiModelFormText(key, locale);
+  const modelMessages = {
+    title: copy('title'),
+    providerType: copy('providerType'),
+    baseUrl: copy('baseUrl'),
+    modelName: copy('modelName'),
+    maxTokens: copy('maxTokens'),
+    temperature: copy('temperature'),
+    apiToken: copy('apiTokenMessage'),
+    tokenChoice: copy('tokenChoice'),
+  };
+  const budgetMessages = {
+    monthlyTokenLimit: copy('monthlyTokenLimit'),
+    monthlyCostUsd: copy('monthlyCostUsd'),
+    inputPriceUsd: copy('inputPriceUsd'),
+    outputPriceUsd: copy('outputPriceUsd'),
+  };
+  const modelForm = useWizardForm<Draft>(
+    async () => {
+      const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return contentFormSchema(
+        { ...modelMessages, id: copy('invalid'), masked: copy('invalid') },
+        (value: Draft) =>
+          invalidModelFields(
+            value,
+            previousModels.current.find((model) => model.id === value.id)
+          )
+      );
+    },
+    blank,
+    copy('unavailable')
+  );
+  const budgetForm = useWizardForm<BudgetDraft>(
+    async () => {
+      const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return contentFormSchema(
+        { ...budgetMessages, modelId: copy('invalid'), modelTitle: copy('invalid') },
+        invalidBudgetFields
+      );
+    },
+    () => ({
+      modelId: '',
+      modelTitle: '',
+      monthlyTokenLimit: '',
+      monthlyCostUsd: '',
+      inputPriceUsd: '0',
+      outputPriceUsd: '0',
+    }),
+    copy('unavailable')
+  );
+  const modelFields = useActionFieldErrors(modelForm.form, modelMessages, copy('invalid'));
+  const budgetFields = useActionFieldErrors(budgetForm.form, budgetMessages, copy('invalid'));
+  const [draftOpen, setDraftOpen] = useState(false),
+    [budgetOpen, setBudgetOpen] = useState(false);
+  const draft = draftOpen ? modelForm.values : null,
+    budgetDraft = budgetOpen ? budgetForm.values : null;
+  function setDraft(value: Draft | null) {
+    modelForm.form.reset(value ?? blank());
+    setDraftOpen(!!value);
+  }
+  function setBudgetDraft(value: BudgetDraft | null) {
+    budgetForm.form.reset(
+      value ?? {
+        modelId: '',
+        modelTitle: '',
+        monthlyTokenLimit: '',
+        monthlyCostUsd: '',
+        inputPriceUsd: '0',
+        outputPriceUsd: '0',
+      }
+    );
+    setBudgetOpen(!!value);
+  }
+  const [action, setAction] = useState<TeamAction | null>(null),
+    [result, setResult] = useState<{ ok: boolean; text: string } | null>(null),
+    [changed, setChanged] = useState(false),
+    [uncertain, setUncertain] = useState(false),
+    [recovered, setRecovered] = useState(false),
+    [pending, setPending] = useState(false);
+  const uncertainRef = useRef(false),
+    recoveryRevision = useRef(0),
+    validating = useRef(false),
+    networkPending = useRef(false),
+    actionRef = useRef<TeamAction | null>(null),
+    capture = useRef<
+      { kind: 'model'; value: Draft } | { kind: 'budget'; value: BudgetDraft } | null
+    >(null);
+  const onPendingChange = useCallback((value: boolean) => {
+    networkPending.current = value;
+    setPending(value);
+  }, []);
   const currentWork = useRef({ draft, budgetDraft });
   currentWork.current = { draft, budgetDraft };
-  const previousModels = useRef<Model[]>([]);
   const generation = useRef(0);
   const commandGeneration = useRef(0);
   const commandBasis = useRef<{ id: string; basis: string } | null>(null);
-  function clearWork() {
+  function withdraw() {
     generation.current++;
+    validating.current = false;
+    modelForm.setValidationPending(false);
+    budgetForm.setValidationPending(false);
+    setAction(null);
+    actionRef.current = null;
+    capture.current = null;
+    commandBasis.current = null;
+    onPendingChange(false);
+  }
+  function clearWork() {
+    withdraw();
+    setChanged(false);
+    setUncertain(false);
+    uncertainRef.current = false;
+    setRecovered(false);
     setDraft(null);
     setBudgetDraft(null);
     setAction(null);
@@ -179,11 +199,16 @@ export default function AdminAiModelsPage() {
         const command = commandBasis.current;
         if (
           (editing?.id && changed(editing.id, 'model')) ||
-          (budget && changed(budget.modelId, 'budget')) ||
-          (command &&
-            !rows.some((m) => m.id === command.id && modelBasis(m, 'command') === command.basis))
+          (budget && changed(budget.modelId, 'budget'))
+        ) {
+          withdraw();
+          setChanged(true);
+        } else if (
+          command &&
+          !rows.some((m) => m.id === command.id && modelBasis(m, 'command') === command.basis)
         )
-          clearWork();
+          withdraw();
+        if (uncertainRef.current && revision >= recoveryRevision.current) setRecovered(true);
         previousModels.current = rows;
         setModels(rows);
         setDenied(false);
@@ -195,22 +220,49 @@ export default function AdminAiModelsPage() {
     })();
     return () => controller.abort();
   }, [revision]);
-  const disabled = loading || error || denied;
+  const unavailable = loading || error || denied;
+  const disabled = unavailable || changed || uncertain;
+  const busy = modelForm.pending || budgetForm.pending || !!action;
+  function refresh() {
+    if (networkPending.current) return;
+    if (validating.current) withdraw();
+    setRevision((v) => v + 1);
+  }
+  function unconfirmed() {
+    recoveryRevision.current = revision + 1;
+    uncertainRef.current = true;
+    setUncertain(true);
+    setRecovered(false);
+    withdraw();
+    setRevision((v) => v + 1);
+  }
+  function resetDraft() {
+    if (unavailable || busy || (uncertain && !recovered)) return;
+    withdraw();
+    if (draft) {
+      const fresh = models.find((m) => m.id === draft.id);
+      setDraft(draft.id ? (fresh ? modelDraftFor(fresh) : null) : blank());
+    }
+    if (budgetDraft) {
+      const fresh = models.find((m) => m.id === budgetDraft.modelId);
+      setBudgetDraft(fresh ? budgetDraftFor(fresh) : null);
+    }
+    setChanged(false);
+    setUncertain(false);
+    uncertainRef.current = false;
+    setRecovered(false);
+    setResult(null);
+  }
   const recovery = (
     <div className="space-y-2">
-      <Button
-        type="button"
-        variant="outline"
-        disabled={loading}
-        onClick={() => setRevision((v) => v + 1)}
-      >
+      <Button type="button" variant="outline" disabled={loading || pending} onClick={refresh}>
         {label('refresh')}
       </Button>
       {loading && <p role="status">{label('loading')}</p>}
       {error && (
         <div role="alert">
           <p>{label('error')}</p>
-          <Button type="button" onClick={() => setRevision((v) => v + 1)}>
+          <Button type="button" onClick={refresh}>
             {label('retry')}
           </Button>
         </div>
@@ -233,39 +285,45 @@ export default function AdminAiModelsPage() {
     AI_MODEL_TEST_EXPIRED: label('workerUnavailable'),
     'VALIDATION:PARSE:ZOD_ERROR': label('invalid'),
   };
-  function submit(event: FormEvent) {
+  async function submit(event: FormEvent) {
     event.preventDefault();
-    if (!draft || disabled) return;
-    commandGeneration.current = generation.current;
-    commandBasis.current = null;
+    if (!draft || disabled || validating.current || actionRef.current) return;
+    const epoch = generation.current;
+    validating.current = true;
+    modelForm.setValidationPending(true);
     setResult(null);
-    setAction({
-      title: label('save'),
-      description: label('confirmSave'),
-      path: `/api/admin/ai-models${draft.id ? `/${draft.id}` : ''}`,
-      method: draft.id ? 'PUT' : 'POST',
-      body: {
-        title: draft.title.trim(),
-        providerType: draft.providerType,
-        baseUrl: draft.baseUrl.trim(),
-        modelName: draft.modelName.trim(),
-        config: { max_tokens: draft.maxTokens, temperature: draft.temperature },
-        ...(draft.tokenChoice === 'clear'
-          ? { apiToken: '' }
-          : draft.tokenChoice === 'replace'
-            ? { apiToken: draft.apiToken }
-            : {}),
-      },
-      forbiddenMessage: label('forbidden'),
-      errorMessages: errors,
-    });
+    try {
+      await modelForm.form.handleSubmit((value) => {
+        if (epoch !== generation.current) return;
+        commandGeneration.current = epoch;
+        commandBasis.current = null;
+        capture.current = { kind: 'model', value: { ...value } };
+        const next: TeamAction = {
+          title: label('save'),
+          description: label('confirmSave'),
+          path: `/api/admin/ai-models${value.id ? `/${value.id}` : ''}`,
+          method: value.id ? 'PUT' : 'POST',
+          body: modelBody(value),
+          successStatus: value.id ? 200 : 201,
+          forbiddenMessage: label('forbidden'),
+          errorMessages: errors,
+        };
+        actionRef.current = next;
+        setAction(next);
+      })();
+    } finally {
+      if (epoch === generation.current) {
+        validating.current = false;
+        modelForm.setValidationPending(false);
+      }
+    }
   }
   function perform(model: Model, kind: 'test' | 'delete' | 'enable' | 'disable') {
-    if (disabled) return;
+    if (disabled || busy || actionRef.current) return;
     commandGeneration.current = generation.current;
     commandBasis.current = { id: model.id, basis: modelBasis(model, 'command') };
     setResult(null);
-    setAction({
+    const next: TeamAction = {
       title: `${label(kind)}: ${model.title}`,
       description: label(
         kind === 'test' ? 'confirmTest' : kind === 'delete' ? 'confirmDelete' : 'confirmToggle'
@@ -275,48 +333,51 @@ export default function AdminAiModelsPage() {
       ...(['enable', 'disable'].includes(kind) ? { body: { isEnabled: kind === 'enable' } } : {}),
       forbiddenMessage: label('forbidden'),
       errorMessages: errors,
-    });
+    };
+    capture.current = null;
+    actionRef.current = next;
+    setAction(next);
   }
   function editBudget(model: Model) {
-    if (disabled) return;
+    if (disabled || busy) return;
     generation.current++;
     setDraft(null);
-    setBudgetDraft({
-      modelId: model.id,
-      modelTitle: model.title,
-      monthlyTokenLimit: model.budget?.monthlyTokenLimit?.toString() ?? '',
-      monthlyCostUsd:
-        model.budget?.monthlyCostLimitMicros === null || model.budget === null
-          ? ''
-          : (model.budget.monthlyCostLimitMicros / 1_000_000).toString(),
-      inputPriceUsd: ((model.budget?.inputPricePerMillionMicros ?? 0) / 1_000_000).toString(),
-      outputPriceUsd: ((model.budget?.outputPricePerMillionMicros ?? 0) / 1_000_000).toString(),
-    });
-  }
-  function submitBudget(event: FormEvent) {
-    event.preventDefault();
-    if (!budgetDraft || disabled) return;
-    commandGeneration.current = generation.current;
-    commandBasis.current = null;
+    setBudgetDraft(budgetDraftFor(model));
+    setChanged(false);
     setResult(null);
-    setAction({
-      title: `${label('budgetSave')}: ${budgetDraft.modelTitle}`,
-      description: label('budgetConfirm'),
-      path: `/api/admin/ai-models/${budgetDraft.modelId}/budget`,
-      method: 'PUT',
-      body: {
-        monthlyTokenLimit: budgetDraft.monthlyTokenLimit
-          ? Number(budgetDraft.monthlyTokenLimit)
-          : null,
-        monthlyCostLimitMicros: budgetDraft.monthlyCostUsd
-          ? Math.round(Number(budgetDraft.monthlyCostUsd) * 1_000_000)
-          : null,
-        inputPricePerMillionMicros: Math.round(Number(budgetDraft.inputPriceUsd) * 1_000_000),
-        outputPricePerMillionMicros: Math.round(Number(budgetDraft.outputPriceUsd) * 1_000_000),
-      },
-      forbiddenMessage: label('forbidden'),
-      errorMessages: errors,
-    });
+  }
+  async function submitBudget(event: FormEvent) {
+    event.preventDefault();
+    if (!budgetDraft || disabled || validating.current || actionRef.current) return;
+    const epoch = generation.current;
+    validating.current = true;
+    budgetForm.setValidationPending(true);
+    setResult(null);
+    try {
+      await budgetForm.form.handleSubmit((value) => {
+        if (epoch !== generation.current) return;
+        commandGeneration.current = epoch;
+        commandBasis.current = null;
+        capture.current = { kind: 'budget', value: { ...value } };
+        const next: TeamAction = {
+          title: `${label('budgetSave')}: ${value.modelTitle}`,
+          description: label('budgetConfirm'),
+          path: `/api/admin/ai-models/${value.modelId}/budget`,
+          method: 'PUT',
+          body: budgetBody(value),
+          successStatus: 200,
+          forbiddenMessage: label('forbidden'),
+          errorMessages: errors,
+        };
+        actionRef.current = next;
+        setAction(next);
+      })();
+    } finally {
+      if (epoch === generation.current) {
+        validating.current = false;
+        budgetForm.setValidationPending(false);
+      }
+    }
   }
   return (
     <section className="min-w-0 space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
@@ -327,9 +388,22 @@ export default function AdminAiModelsPage() {
           <p className="text-muted-foreground">{label('description')}</p>
         </div>
       </header>
+      {(changed || uncertain) && (
+        <Alert variant="destructive">{copy(uncertain ? 'uncertain' : 'changed')}</Alert>
+      )}
+      {(changed || uncertain) && (
+        <Button
+          type="button"
+          variant="outline"
+          disabled={unavailable || busy || (uncertain && !recovered)}
+          onClick={resetDraft}
+        >
+          {copy('reset')}
+        </Button>
+      )}
       <ListPage>
         <ListPage.Toolbar>
-          <Button variant="outline" disabled={loading} onClick={() => setRevision((v) => v + 1)}>
+          <Button variant="outline" disabled={loading || pending} onClick={refresh}>
             {label('refresh')}
           </Button>
         </ListPage.Toolbar>
@@ -351,7 +425,7 @@ export default function AdminAiModelsPage() {
               </div>
             )}
             <Button
-              disabled={disabled}
+              disabled={disabled || busy}
               onClick={() => {
                 generation.current++;
                 setDraft(blank());
@@ -363,124 +437,177 @@ export default function AdminAiModelsPage() {
             </Button>
             {draft && (
               <form
-                onSubmit={submit}
+                noValidate
+                aria-busy={modelForm.pending || undefined}
+                onSubmit={(event) => void submit(event)}
                 className="max-w-2xl space-y-4 rounded-lg border bg-background p-5"
                 aria-label={label('form')}
               >
-                <h2 className="text-lg font-semibold">{label(draft.id ? 'edit' : 'add')}</h2>
-                {(['title', 'baseUrl', 'modelName'] as const).map((key) => (
-                  <div className="space-y-2" key={key}>
-                    <Label htmlFor={`ai-model-${key}`}>
-                      {label(key === 'title' ? 'name' : key)}
-                    </Label>
-                    <Input
-                      id={`ai-model-${key}`}
-                      autoFocus={key === 'title'}
-                      type={key === 'baseUrl' ? 'url' : 'text'}
-                      required
-                      maxLength={key === 'title' ? 120 : key === 'baseUrl' ? 500 : 200}
-                      value={draft[key]}
-                      dir={key === 'title' ? 'auto' : 'ltr'}
-                      onChange={(event) => setDraft({ ...draft, [key]: event.target.value })}
-                    />
-                  </div>
-                ))}
-                <div className="space-y-2">
-                  <Label htmlFor="ai-model-provider">{label('provider')}</Label>
-                  <select
-                    id="ai-model-provider"
-                    className="w-full rounded border bg-background p-2"
-                    value={draft.providerType}
-                    onChange={(event) =>
-                      setDraft({
-                        ...draft,
-                        providerType: event.target.value as Model['providerType'],
-                      })
-                    }
-                  >
-                    <option value="openai_compatible">{label('openai')}</option>
-                    <option value="anthropic">Anthropic</option>
-                  </select>
-                </div>
-                {draft.id && (
+                {catalogueRootMessage(modelForm.errors) && (
+                  <Alert variant="destructive">{catalogueRootMessage(modelForm.errors)}</Alert>
+                )}
+                <fieldset disabled={busy} className="min-w-0 space-y-4">
+                  <legend className="sr-only">{label('form')}</legend>
+                  <h2 className="text-lg font-semibold">{label(draft.id ? 'edit' : 'add')}</h2>
+                  {(['title', 'baseUrl', 'modelName'] as const).map((key) => (
+                    <div className="space-y-2" key={key}>
+                      <Label htmlFor={`ai-model-${key}`}>
+                        {label(key === 'title' ? 'name' : key)}
+                      </Label>
+                      <Input
+                        {...modelForm.bind(key)}
+                        id={`ai-model-${key}`}
+                        autoFocus={key === 'title'}
+                        type={key === 'baseUrl' ? 'url' : 'text'}
+                        required
+                        maxLength={key === 'title' ? 120 : key === 'baseUrl' ? 500 : 200}
+                        value={draft[key]}
+                        dir={key === 'title' ? 'auto' : 'ltr'}
+                        onChange={(event) => modelForm.field(key)[1](event.target.value)}
+                      />
+                      <CatalogueFieldFeedback
+                        id={modelForm.errorId(key)}
+                        error={modelForm.errors[key]}
+                        message={modelMessages[key]!}
+                      />
+                    </div>
+                  ))}
                   <div className="space-y-2">
-                    <Label htmlFor="ai-model-token-choice">{label('tokenChoice')}</Label>
-                    <p className="break-all text-sm" dir="ltr">
-                      {draft.masked || label('noToken')}
-                    </p>
+                    <Label htmlFor="ai-model-provider">{label('provider')}</Label>
                     <select
-                      id="ai-model-token-choice"
+                      {...modelForm.bind('providerType')}
+                      id="ai-model-provider"
                       className="w-full rounded border bg-background p-2"
-                      value={draft.tokenChoice}
+                      value={draft.providerType}
                       onChange={(event) =>
-                        setDraft({
-                          ...draft,
-                          tokenChoice: event.target.value as Draft['tokenChoice'],
-                          apiToken: '',
-                        })
+                        modelForm.field('providerType')[1](
+                          event.target.value as Model['providerType']
+                        )
                       }
                     >
-                      <option value="keep">{label('keep')}</option>
-                      <option value="replace">{label('replace')}</option>
-                      <option value="clear">{label('clear')}</option>
+                      <option value="openai_compatible">{label('openai')}</option>
+                      <option value="anthropic">Anthropic</option>
                     </select>
-                  </div>
-                )}
-                {draft.tokenChoice === 'replace' && (
-                  <div className="space-y-2">
-                    <Label htmlFor="ai-model-token">{label('token')}</Label>
-                    <Input
-                      id="ai-model-token"
-                      type="password"
-                      autoComplete="new-password"
-                      maxLength={4000}
-                      value={draft.apiToken}
-                      onChange={(event) => setDraft({ ...draft, apiToken: event.target.value })}
-                      dir="ltr"
-                      aria-describedby="ai-model-token-help"
+                    <CatalogueFieldFeedback
+                      id={modelForm.errorId('providerType')}
+                      error={modelForm.errors.providerType}
+                      message={modelMessages.providerType!}
                     />
                   </div>
-                )}
-                <p id="ai-model-token-help" className="text-sm text-muted-foreground">
-                  {label('tokenHelp')}
-                </p>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="ai-model-max-tokens">{label('maxTokens')}</Label>
-                    <Input
-                      id="ai-model-max-tokens"
-                      type="number"
-                      min={1}
-                      max={4096}
-                      step={1}
-                      required
-                      value={draft.maxTokens}
-                      onChange={(event) =>
-                        setDraft({ ...draft, maxTokens: Number(event.target.value) })
-                      }
-                    />
+                  {draft.id && (
+                    <div className="space-y-2">
+                      <Label htmlFor="ai-model-token-choice">{label('tokenChoice')}</Label>
+                      <p className="break-all text-sm" dir="ltr">
+                        {draft.masked || label('noToken')}
+                      </p>
+                      <select
+                        {...modelForm.bind('tokenChoice')}
+                        id="ai-model-token-choice"
+                        className="w-full rounded border bg-background p-2"
+                        value={draft.tokenChoice}
+                        onChange={(event) => {
+                          modelForm.field('tokenChoice')[1](
+                            event.target.value as Draft['tokenChoice']
+                          );
+                          modelForm.field('apiToken')[1]('');
+                        }}
+                      >
+                        <option value="keep">{label('keep')}</option>
+                        <option value="replace">{label('replace')}</option>
+                        <option value="clear">{label('clear')}</option>
+                      </select>
+                      <CatalogueFieldFeedback
+                        id={modelForm.errorId('tokenChoice')}
+                        error={modelForm.errors.tokenChoice}
+                        message={modelMessages.tokenChoice!}
+                      />
+                    </div>
+                  )}
+                  {draft.tokenChoice === 'replace' && (
+                    <div className="space-y-2">
+                      <Label htmlFor="ai-model-token">{label('token')}</Label>
+                      <Input
+                        {...modelForm.bind('apiToken')}
+                        id="ai-model-token"
+                        type="password"
+                        autoComplete="new-password"
+                        maxLength={4000}
+                        value={draft.apiToken}
+                        onChange={(event) => modelForm.field('apiToken')[1](event.target.value)}
+                        dir="ltr"
+                        aria-describedby={[
+                          modelForm.bind('apiToken')['aria-describedby'],
+                          'ai-model-token-help',
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
+                      />
+                      <CatalogueFieldFeedback
+                        id={modelForm.errorId('apiToken')}
+                        error={modelForm.errors.apiToken}
+                        message={modelMessages.apiToken!}
+                      />
+                    </div>
+                  )}
+                  <p id="ai-model-token-help" className="text-sm text-muted-foreground">
+                    {label('tokenHelp')}
+                  </p>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="ai-model-max-tokens">{label('maxTokens')}</Label>
+                      <Input
+                        {...modelForm.bind('maxTokens')}
+                        id="ai-model-max-tokens"
+                        type="number"
+                        min={1}
+                        max={4096}
+                        step={1}
+                        required
+                        value={draft.maxTokens}
+                        onChange={(event) => modelForm.field('maxTokens')[1](event.target.value)}
+                      />
+                      <CatalogueFieldFeedback
+                        id={modelForm.errorId('maxTokens')}
+                        error={modelForm.errors.maxTokens}
+                        message={modelMessages.maxTokens!}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="ai-model-temperature">{label('temperature')}</Label>
+                      <Input
+                        {...modelForm.bind('temperature')}
+                        id="ai-model-temperature"
+                        type="number"
+                        min={0}
+                        max={2}
+                        step="any"
+                        required
+                        value={draft.temperature}
+                        onChange={(event) => modelForm.field('temperature')[1](event.target.value)}
+                      />
+                      <CatalogueFieldFeedback
+                        id={modelForm.errorId('temperature')}
+                        error={modelForm.errors.temperature}
+                        message={modelMessages.temperature!}
+                      />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="ai-model-temperature">{label('temperature')}</Label>
-                    <Input
-                      id="ai-model-temperature"
-                      type="number"
-                      min={0}
-                      max={2}
-                      step="any"
-                      required
-                      value={draft.temperature}
-                      onChange={(event) =>
-                        setDraft({ ...draft, temperature: Number(event.target.value) })
-                      }
-                    />
-                  </div>
-                </div>
+                </fieldset>
                 <div className="flex gap-3">
-                  <Button type="submit" disabled={disabled}>
-                    {label('save')}
-                  </Button>
-                  <Button type="button" variant="outline" onClick={() => setDraft(null)}>
+                  <CatalogueSaveButton
+                    label={label('save')}
+                    pending={modelForm.pending}
+                    disabled={disabled || busy}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={pending}
+                    onClick={() => {
+                      withdraw();
+                      setDraft(null);
+                    }}
+                  >
                     {label('cancel')}
                   </Button>
                 </div>
@@ -488,46 +615,68 @@ export default function AdminAiModelsPage() {
             )}
             {budgetDraft && (
               <form
-                onSubmit={submitBudget}
+                noValidate
+                aria-busy={budgetForm.pending || undefined}
+                onSubmit={(event) => void submitBudget(event)}
                 className="max-w-2xl space-y-4 rounded-lg border bg-background p-5"
                 aria-label={label('budgetForm')}
               >
-                <h2 className="text-lg font-semibold">
-                  {label('budgetTitle')}: {budgetDraft.modelTitle}
-                </h2>
-                <p className="text-sm text-muted-foreground">{label('budgetHelp')}</p>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {(
-                    [
-                      ['monthlyTokenLimit', 'budgetTokens', '1', '1000000000', '1'],
-                      ['monthlyCostUsd', 'budgetCost', '0.01', '1000000', '0.01'],
-                      ['inputPriceUsd', 'budgetInputPrice', '0', '1000', '0.000001'],
-                      ['outputPriceUsd', 'budgetOutputPrice', '0', '1000', '0.000001'],
-                    ] as const
-                  ).map(([key, labelKey, min, max, step]) => (
-                    <div className="space-y-2" key={key}>
-                      <Label htmlFor={`ai-model-${key}`}>{label(labelKey)}</Label>
-                      <Input
-                        id={`ai-model-${key}`}
-                        type="number"
-                        dir="ltr"
-                        min={min}
-                        max={max}
-                        step={step}
-                        required={key === 'inputPriceUsd' || key === 'outputPriceUsd'}
-                        value={budgetDraft[key]}
-                        onChange={(event) =>
-                          setBudgetDraft({ ...budgetDraft, [key]: event.target.value })
-                        }
-                      />
-                    </div>
-                  ))}
-                </div>
+                {catalogueRootMessage(budgetForm.errors) && (
+                  <Alert variant="destructive">{catalogueRootMessage(budgetForm.errors)}</Alert>
+                )}
+                <fieldset disabled={busy} className="min-w-0 space-y-4">
+                  <legend className="sr-only">{label('budgetForm')}</legend>
+                  <h2 className="text-lg font-semibold">
+                    {label('budgetTitle')}: {budgetDraft.modelTitle}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">{label('budgetHelp')}</p>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {(
+                      [
+                        ['monthlyTokenLimit', 'budgetTokens', '1', '1000000000', '1'],
+                        ['monthlyCostUsd', 'budgetCost', '0.000001', '1000000', '0.000001'],
+                        ['inputPriceUsd', 'budgetInputPrice', '0', '1000', '0.000001'],
+                        ['outputPriceUsd', 'budgetOutputPrice', '0', '1000', '0.000001'],
+                      ] as const
+                    ).map(([key, labelKey, min, max, step]) => (
+                      <div className="space-y-2" key={key}>
+                        <Label htmlFor={`ai-model-${key}`}>{label(labelKey)}</Label>
+                        <Input
+                          {...budgetForm.bind(key)}
+                          id={`ai-model-${key}`}
+                          type="number"
+                          dir="ltr"
+                          min={min}
+                          max={max}
+                          step={step}
+                          required={key === 'inputPriceUsd' || key === 'outputPriceUsd'}
+                          value={budgetDraft[key]}
+                          onChange={(event) => budgetForm.field(key)[1](event.target.value)}
+                        />
+                        <CatalogueFieldFeedback
+                          id={budgetForm.errorId(key)}
+                          error={budgetForm.errors[key]}
+                          message={budgetMessages[key]!}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </fieldset>
                 <div className="flex gap-3">
-                  <Button type="submit" disabled={disabled}>
-                    {label('budgetSave')}
-                  </Button>
-                  <Button type="button" variant="outline" onClick={() => setBudgetDraft(null)}>
+                  <CatalogueSaveButton
+                    label={label('budgetSave')}
+                    pending={budgetForm.pending}
+                    disabled={disabled || busy}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={pending}
+                    onClick={() => {
+                      withdraw();
+                      setBudgetDraft(null);
+                    }}
+                  >
                     {label('cancel')}
                   </Button>
                 </div>
@@ -542,7 +691,7 @@ export default function AdminAiModelsPage() {
               errorView={
                 <div role="alert">
                   <p>{label('error')}</p>
-                  <Button onClick={() => setRevision((v) => v + 1)}>{label('retry')}</Button>
+                  <Button onClick={refresh}>{label('retry')}</Button>
                 </div>
               }
               emptyView={<p>{label('empty')}</p>}
@@ -551,7 +700,7 @@ export default function AdminAiModelsPage() {
                 scrollbarOrientation="horizontal"
                 className="max-w-full min-w-0 rounded-lg border bg-background"
                 role="region"
-                aria-label={label('title')}
+                aria-label={copy('list')}
               >
                 <table className="w-full min-w-[760px] table-fixed text-start text-sm">
                   <thead className="border-b bg-muted">
@@ -658,22 +807,12 @@ export default function AdminAiModelsPage() {
                           <div className="flex flex-wrap gap-2">
                             <Button
                               variant="outline"
-                              disabled={disabled}
+                              disabled={disabled || busy}
                               onClick={() => {
                                 generation.current++;
                                 setBudgetDraft(null);
-                                setDraft({
-                                  id: model.id,
-                                  title: model.title,
-                                  providerType: model.providerType,
-                                  baseUrl: model.baseUrl,
-                                  modelName: model.modelName,
-                                  maxTokens: model.config.max_tokens,
-                                  temperature: model.config.temperature,
-                                  apiToken: '',
-                                  tokenChoice: 'keep',
-                                  masked: model.apiTokenMasked,
-                                });
+                                setDraft(modelDraftFor(model));
+                                setChanged(false);
                                 setResult(null);
                               }}
                             >
@@ -681,14 +820,14 @@ export default function AdminAiModelsPage() {
                             </Button>
                             <Button
                               variant="outline"
-                              disabled={disabled}
+                              disabled={disabled || busy}
                               onClick={() => perform(model, 'test')}
                             >
                               {label('test')}
                             </Button>
                             <Button
                               variant="outline"
-                              disabled={disabled}
+                              disabled={disabled || busy}
                               onClick={() => editBudget(model)}
                             >
                               {label('budgetEdit')}
@@ -696,7 +835,9 @@ export default function AdminAiModelsPage() {
                             <Button
                               variant="outline"
                               disabled={
-                                disabled || (!model.isEnabled && model.status !== 'reachable')
+                                disabled ||
+                                busy ||
+                                (!model.isEnabled && model.status !== 'reachable')
                               }
                               title={
                                 !model.isEnabled && model.status !== 'reachable'
@@ -709,7 +850,7 @@ export default function AdminAiModelsPage() {
                             </Button>
                             <Button
                               variant="outline"
-                              disabled={disabled}
+                              disabled={disabled || busy}
                               onClick={() => perform(model, 'delete')}
                             >
                               {label('delete')}
@@ -726,32 +867,59 @@ export default function AdminAiModelsPage() {
         )}
       </ListPage>
       {action && (
-        <TeamActionDialog
-          action={action}
-          confirmationDisabled={disabled}
-          summary={recovery}
-          onClose={() => {
-            generation.current++;
-            setAction(null);
-            commandBasis.current = null;
-          }}
-          onSuccess={((command, commandVersion) => async (value: unknown) => {
-            if (commandVersion !== generation.current) return;
-            const data = value as {
-              test?: { ok: boolean; responsePreview?: string; error?: string };
-            } | null;
-            setResult(
-              data?.test
-                ? { ok: data.test.ok, text: data.test.responsePreview ?? data.test.error ?? '' }
-                : { ok: true, text: '' }
-            );
-            if (command.body && typeof command.body === 'object' && 'config' in command.body)
-              setDraft(null);
-            if (command.path.endsWith('/budget')) setBudgetDraft(null);
-            commandBasis.current = null;
-            setRevision((v) => v + 1);
-          })(action, commandGeneration.current)}
-        />
+        <Suspense fallback={<p role="status">{label('loading')}</p>}>
+          <TeamActionDialog
+            action={action}
+            confirmationDisabled={disabled}
+            onPendingChange={onPendingChange}
+            onUnconfirmed={unconfirmed}
+            onValidationError={(fields) =>
+              capture.current?.kind === 'model'
+                ? modelFields(fields)
+                : capture.current?.kind === 'budget'
+                  ? budgetFields(fields)
+                  : false
+            }
+            onDenied={() => {
+              clearWork();
+              previousModels.current = [];
+              setModels([]);
+              setDenied(true);
+            }}
+            summary={recovery}
+            onClose={withdraw}
+            onSuccess={((command, commandVersion) => async (value: unknown) => {
+              if (commandVersion !== generation.current || actionRef.current !== command) return;
+              const captured = capture.current;
+              if (captured) {
+                const matches =
+                  captured.kind === 'model'
+                    ? matchesModelReceipt(value, captured.value)
+                    : matchesBudgetReceipt(value, captured.value);
+                if (!matches) throw new Error('Unconfirmed model settings');
+                const model = value as Model;
+                previousModels.current = [
+                  ...previousModels.current.filter((row) => row.id !== model.id),
+                  model,
+                ];
+                setModels(previousModels.current);
+              }
+              const data = value as {
+                test?: { ok: boolean; responsePreview?: string; error?: string };
+              } | null;
+              setResult(
+                data?.test
+                  ? { ok: data.test.ok, text: data.test.responsePreview ?? data.test.error ?? '' }
+                  : { ok: true, text: '' }
+              );
+              if (command.body && typeof command.body === 'object' && 'config' in command.body)
+                setDraft(null);
+              if (command.path.endsWith('/budget')) setBudgetDraft(null);
+              commandBasis.current = null;
+              setRevision((v) => v + 1);
+            })(action, commandGeneration.current)}
+          />
+        </Suspense>
       )}
     </section>
   );

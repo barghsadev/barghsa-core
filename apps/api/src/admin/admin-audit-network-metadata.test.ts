@@ -27,7 +27,10 @@ const operations = [
     'setEscalationPolicy',
     (c: AdminController, r: AuthenticatedRequest) => c.setEscalationPolicy({}, r),
   ],
-  ['createStaffTeam', (c: AdminController, r: AuthenticatedRequest) => c.createStaffTeam({}, r)],
+  [
+    'createStaffTeam',
+    (c: AdminController, r: AuthenticatedRequest) => c.createStaffTeam({ name: 'Support' }, r),
+  ],
   [
     'updateStaffTeam',
     (c: AdminController, r: AuthenticatedRequest) => c.updateStaffTeam('team', {}, r),

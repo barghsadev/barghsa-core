@@ -1,4 +1,5 @@
 import { hasStaffPermission } from '../session/staff-permissions.js';
+import { rejectContentFields } from '../admin/content-input-fields.js';
 import {
   Body,
   Controller,
@@ -84,12 +85,45 @@ export const AiModelBudgetSchema = z
     inputPricePerMillionMicros: z.number().int().min(0).max(1_000_000_000),
     outputPricePerMillionMicros: z.number().int().min(0).max(1_000_000_000),
   })
-  .refine(
-    (value) =>
-      value.monthlyCostLimitMicros === null ||
-      (value.inputPricePerMillionMicros > 0 && value.outputPricePerMillionMicros > 0),
-    'Both token prices are required for a cost limit'
+  .superRefine((value, ctx) => {
+    if (value.monthlyCostLimitMicros === null) return;
+    for (const field of ['inputPricePerMillionMicros', 'outputPricePerMillionMicros'] as const)
+      if (value[field] <= 0)
+        ctx.addIssue({
+          code: 'custom',
+          path: [field],
+          message: 'A cost limit requires a positive price',
+        });
+  });
+
+const modelFields = {
+  title: 'title',
+  providerType: 'providerType',
+  baseUrl: 'baseUrl',
+  modelName: 'modelName',
+  apiToken: 'apiToken',
+  'config.max_tokens': 'maxTokens',
+  'config.temperature': 'temperature',
+};
+const budgetFields = {
+  monthlyTokenLimit: 'monthlyTokenLimit',
+  monthlyCostLimitMicros: 'monthlyCostUsd',
+  inputPricePerMillionMicros: 'inputPriceUsd',
+  outputPricePerMillionMicros: 'outputPriceUsd',
+};
+/** Only the owning form's public identifiers leave the validator. */
+function rejectFields(
+  issues: readonly { path: readonly PropertyKey[] }[],
+  aliases: Record<string, string>
+): never {
+  rejectContentFields(
+    issues.map((issue) => {
+      const path = issue.path.join('.');
+      return { path: Object.hasOwn(aliases, path) ? [aliases[path]!] : [] };
+    }),
+    Object.values(aliases)
   );
+}
 
 function httpError(code: string, message: string, statusCode = 400): never {
   throw new HttpException({ statusCode, error: code, message }, statusCode);
@@ -159,9 +193,7 @@ export class AiModelsController {
   ): Promise<AiModelDto> {
     this.assertAiModelsPermission(req);
     const parsed = CreateAiModelSchema.safeParse(body);
-    if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid AI model payload');
-    }
+    if (!parsed.success) rejectFields(parsed.error.issues, modelFields);
     return this.service.create({
       title: parsed.data.title,
       providerType: parsed.data.providerType,
@@ -194,9 +226,7 @@ export class AiModelsController {
   ): Promise<AiModelDto> {
     this.assertAiModelsPermission(req);
     const parsed = UpdateAiModelSchema.safeParse(body);
-    if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid AI model payload');
-    }
+    if (!parsed.success) rejectFields(parsed.error.issues, modelFields);
     return this.service.update(id, {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
       ...(parsed.data.providerType !== undefined ? { providerType: parsed.data.providerType } : {}),
@@ -246,7 +276,7 @@ export class AiModelsController {
   ): Promise<AiModelDto> {
     this.assertAiModelsPermission(req);
     const parsed = AiModelBudgetSchema.safeParse(body);
-    if (!parsed.success) httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid AI budget');
+    if (!parsed.success) rejectFields(parsed.error.issues, budgetFields);
     return this.service.setBudget(id, parsed.data, req.session.userId, requestIp(req), req.session);
   }
 

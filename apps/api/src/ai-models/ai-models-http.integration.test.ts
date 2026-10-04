@@ -617,3 +617,32 @@ it('records current step-up proof on the mutation audit', async () => {
     stepUpVerifiedAt: verifiedAt.toISOString(),
   });
 });
+
+it('returns owned model and budget feedback over HTTP without writing or exposing submitted tokens', async () => {
+  const created = await request('', 'POST', {
+    ...input,
+    config: { max_tokens: 0, temperature: 3 },
+    apiToken: 'private-' + 'x'.repeat(4000),
+  });
+  expect(created.status).toBe(400);
+  const invalid = (await created.json()) as { error: unknown };
+  expect(invalid.error).toMatchObject({
+    code: 'VALIDATION:INPUT:INVALID',
+    fields: ['maxTokens', 'temperature', 'apiToken'],
+  });
+  expect(JSON.stringify(invalid)).not.toContain('private-');
+  expect((await http.pool.query('SELECT id FROM ai_models')).rows).toHaveLength(0);
+  const id = await seed();
+  const budget = await request(`/${id}/budget`, 'PUT', {
+    monthlyTokenLimit: null,
+    monthlyCostLimitMicros: 1,
+    inputPricePerMillionMicros: 0,
+    outputPricePerMillionMicros: 0,
+  });
+  expect(budget.status).toBe(400);
+  expect(((await budget.json()) as { error: unknown }).error).toMatchObject({
+    code: 'VALIDATION:INPUT:INVALID',
+    fields: ['inputPriceUsd', 'outputPriceUsd'],
+  });
+  expect(((await (await request(`/${id}`)).json()) as { budget: unknown }).budget).toBeNull();
+});

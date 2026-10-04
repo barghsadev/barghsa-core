@@ -36,6 +36,7 @@ const model = {
 let container: HTMLDivElement;
 let root: Root;
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   harness.action = null;
   container = document.createElement('div');
   document.body.append(container);
@@ -113,6 +114,7 @@ it('keeps untested models inactive and includes request settings when editing', 
     (button) => button.textContent === 'Save model'
   );
   await act(async () => save!.click());
+  await vi.waitFor(() => expect(harness.action).not.toBeNull());
   expect(harness.action).toMatchObject({
     method: 'PUT',
     body: { config: { max_tokens: 512, temperature: 0.4 } },

@@ -2,6 +2,8 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appT } from '@barghsa/i18n/app';
+import { aiModelFormText } from '@barghsa/i18n/ai-model-forms';
+import { setupCatalogueForms } from './catalogue-form-fixture';
 import { aiModel, aiAgent, aiOptions, aiDetail } from '../src/test/ai-catalogue-fixtures';
 test.use({ viewport: { width: 390, height: 844 } });
 async function shell(page: Page, locale: 'en' | 'fa') {
@@ -37,7 +39,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`model drafts, budgets and frozen decisions recover without retaining denied work (${locale})`, async ({
     page,
   }, info) => {
-    await shell(page, locale);
+    await setupCatalogueForms(page, locale, false);
     let fail = false,
       deny = false,
       usage = 100,
@@ -61,7 +63,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/ai-models');
     await expect(page.locator('tbody tr')).toHaveCount(1);
     const viewport = page
-      .getByRole('region', { name: m('title'), exact: true })
+      .getByRole('region', { name: aiModelFormText('list', locale), exact: true })
       .locator('[data-slot="scroll-area-viewport"]');
     await viewport.focus();
     await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
@@ -88,7 +90,9 @@ for (const locale of ['en', 'fa'] as const) {
     await inspect(page, 'budget', locale, info.project.name);
     limit = 20000;
     await page.getByRole('button', { name: m('refresh'), exact: true }).click();
-    await expect(page.locator('#ai-model-monthlyTokenLimit')).toHaveCount(0);
+    await expect(page.locator('#ai-model-monthlyTokenLimit')).toHaveValue('15000');
+    await page.getByRole('button', { name: aiModelFormText('reset', locale), exact: true }).click();
+    await expect(page.locator('#ai-model-monthlyTokenLimit')).toHaveValue('20000');
     await page.getByRole('button', { name: m('test'), exact: true }).click();
     const dialog = page.getByRole('dialog'),
       confirm = dialog.getByRole('button', { name: appT('team.confirm', locale), exact: true });

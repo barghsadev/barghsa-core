@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { HttpException } from '@nestjs/common';
+import { InputFieldException } from '../common/input-field.exception.js';
 import { AiModelsController } from './ai-models.controller.js';
 import type { AiModelsService } from './ai-models.service.js';
 
@@ -11,6 +12,7 @@ const mockCreate = vi.fn();
 const mockUpdate = vi.fn();
 const mockRemove = vi.fn();
 const mockTest = vi.fn();
+const mockSetBudget = vi.fn();
 const mockService = {
   list: mockList,
   get: mockGet,
@@ -18,6 +20,7 @@ const mockService = {
   update: mockUpdate,
   remove: mockRemove,
   test: mockTest,
+  setBudget: mockSetBudget,
 } as unknown as AiModelsService;
 
 const adminSession = {
@@ -188,5 +191,47 @@ describe('AiModelsController (T-09.11.01)', () => {
       expect(result.id).toBe('m-1');
       expect(mockGet).toHaveBeenCalledWith('m-1');
     });
+  });
+});
+
+it('publishes owned configuration identifiers without token or validator text', async () => {
+  const controller = new AiModelsController(mockService);
+  let caught: unknown;
+  try {
+    await controller.create(adminReq, {
+      title: 'Model',
+      providerType: 'openai_compatible',
+      baseUrl: 'https://model.example.test',
+      modelName: 'test',
+      config: { max_tokens: 0, temperature: 3 },
+      apiToken: 'private-' + 'x'.repeat(4000),
+    });
+  } catch (error) {
+    caught = error;
+  }
+  expect(caught).toBeInstanceOf(InputFieldException);
+  expect((caught as InputFieldException).fields).toEqual(['maxTokens', 'temperature', 'apiToken']);
+  expect(JSON.stringify((caught as InputFieldException).getResponse())).not.toContain('private-');
+});
+it('assigns cost-budget price errors to both visible fields', async () => {
+  const controller = new AiModelsController(mockService);
+  let caught: unknown;
+  try {
+    await controller.setBudget(adminReq, 'm-1', {
+      monthlyTokenLimit: null,
+      monthlyCostLimitMicros: 1,
+      inputPricePerMillionMicros: 0,
+      outputPricePerMillionMicros: 0,
+    });
+  } catch (error) {
+    caught = error;
+  }
+  expect((caught as InputFieldException).fields).toEqual(['inputPriceUsd', 'outputPriceUsd']);
+  expect(mockSetBudget).not.toHaveBeenCalled();
+});
+it('checks budget authority before disclosing validation fields', async () => {
+  const controller = new AiModelsController(mockService);
+  await expect(controller.setBudget(nonAdminReq, 'm-1', {} as never)).rejects.toMatchObject({
+    status: 403,
   });
 });

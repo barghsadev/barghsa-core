@@ -1,38 +1,20 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/admin-ui';
-async function mockUnknownApi(page: import('@playwright/test').Page) {
-  await page.route('**/api/**', (route) =>
-    new URL(route.request().url()).pathname === '/api/auth/user'
-      ? route.fulfill({
-          json: {
-            userId: 'admin',
-            isStaff: true,
-            operatingContext: 'staff',
-            canSwitchContext: false,
-            requiresTosAcceptance: false,
-          },
-        })
-      : route.fulfill({ status: 404, json: {} })
-  );
-}
-for (const locale of ['en', 'fa'])
+import { setupCatalogueForms } from './catalogue-form-fixture';
+import { cookieResponse } from './cookie-response';
+import { aiModel } from '../src/test/ai-catalogue-fixtures';
+for (const locale of ['en', 'fa'] as const)
   test(`AI model form retries captured input after password verification (${locale})`, async ({
     page,
   }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      localStorage.setItem('barghsa.locale', value);
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+
     let failed = true,
       verified = false,
       denied = false;
     const attempts: unknown[] = [];
-    await mockUnknownApi(page);
+    await setupCatalogueForms(page, locale, false);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
     );
@@ -45,11 +27,27 @@ for (const locale of ['en', 'fa'])
       if (!verified)
         return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
       denied = true;
-      return route.fulfill({ status: 201, json: {} });
+      const publicBody = { ...route.request().postDataJSON() };
+      delete publicBody.apiToken;
+      return route.fulfill({
+        status: 201,
+        json: {
+          ...aiModel,
+          ...publicBody,
+          apiTokenMasked: '********oken',
+          budget: null,
+        },
+      });
     });
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct';
-      return route.fulfill({ status: verified ? 200 : 401, json: {} });
+      return cookieResponse(route, {
+        status: verified ? 200 : 401,
+        json: { verified },
+        ...(verified
+          ? { headers: { 'Set-Cookie': 'barghsa_csrf=ai-fresh; Path=/; SameSite=Lax' } }
+          : {}),
+      });
     });
     await page.goto('/admin/ai-models');
     await expect(page.getByRole('alert')).toBeVisible();
@@ -97,16 +95,7 @@ for (const locale of ['en', 'fa'] as const)
     page,
   }) => {
     const label = (key: string) => t(`admin.aiModels.${key}`, locale);
-    await page.addInitScript((value) => {
-      localStorage.setItem('barghsa.locale', value);
-      localStorage.setItem('theme', 'dark');
-      const apply = () => {
-        document.documentElement.lang = value;
-        document.documentElement.classList.add('dark');
-      };
-      if (document.documentElement) apply();
-      new MutationObserver(apply).observe(document, { childList: true });
-    }, locale);
+
     let present = true,
       invalid = true,
       inUse = true;
@@ -128,7 +117,7 @@ for (const locale of ['en', 'fa'] as const)
       circuitCooldownUntil: null,
       budget: null,
     };
-    await mockUnknownApi(page);
+    await setupCatalogueForms(page, locale, true);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'UTC' } })
     );
@@ -197,13 +186,7 @@ for (const locale of ['en', 'fa'] as const)
 for (const locale of ['en', 'fa'] as const)
   test(`AI model monthly budget can be configured and read back (${locale})`, async ({ page }) => {
     const label = (key: string) => t(`admin.aiModels.${key}`, locale);
-    await page.addInitScript((value) => {
-      localStorage.setItem('barghsa.locale', value);
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+
     const model = {
       id: '01900000-0000-7000-8000-000000000019',
       title: 'Customer guide model',
@@ -222,7 +205,7 @@ for (const locale of ['en', 'fa'] as const)
       budget: null as Record<string, unknown> | null,
     };
     let saved: unknown = null;
-    await mockUnknownApi(page);
+    await setupCatalogueForms(page, locale, false);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'UTC' } })
     );

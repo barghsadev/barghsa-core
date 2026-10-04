@@ -35,6 +35,7 @@ vi.mock('../components/TeamActionDialog.js', () => ({
 }));
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   document.documentElement.lang = 'en';
   host = document.createElement('div');
   document.body.append(host);
@@ -120,6 +121,7 @@ it('model catalogue retry retains creation text and private token and freezes th
   fail = false;
   await click('Retry');
   await click('Save model');
+  await vi.waitFor(() => expect(captured.action).not.toBeNull());
   expect(captured.action?.body).toEqual({
     title: 'During recovery',
     providerType: 'openai_compatible',
@@ -129,7 +131,7 @@ it('model catalogue retry retains creation text and private token and freezes th
     apiToken: 'test-token',
   });
 });
-it('model health telemetry preserves config editing while configuration changes discard it', async () => {
+it('model health telemetry preserves config editing while configuration changes require an explicit reset', async () => {
   let phase = 0;
   modelsFetch(() =>
     response([
@@ -148,7 +150,11 @@ it('model health telemetry preserves config editing while configuration changes 
   expect(host.querySelector<HTMLInputElement>('#ai-model-title')!.value).toBe('Edited title');
   phase = 2;
   await click('Refresh');
-  expect(host.querySelector('#ai-model-title')).toBeNull();
+  expect(host.querySelector<HTMLInputElement>('#ai-model-title')!.value).toBe('Edited title');
+  await click('Save model');
+  expect(captured.action).toBeNull();
+  await click('Reset model draft');
+  expect(host.querySelector<HTMLInputElement>('#ai-model-modelName')!.value).toBe('changed');
 });
 it('budget usage preserves unsaved limits and pricing while changed limits invalidate editing', async () => {
   let phase = 0;
@@ -172,7 +178,11 @@ it('budget usage preserves unsaved limits and pricing while changed limits inval
   expect(host.querySelector<HTMLInputElement>('#ai-model-monthlyTokenLimit')!.value).toBe('15000');
   phase = 2;
   await click('Refresh');
-  expect(host.querySelector('#ai-model-monthlyTokenLimit')).toBeNull();
+  expect(host.querySelector<HTMLInputElement>('#ai-model-monthlyTokenLimit')!.value).toBe('15000');
+  await click('Save budget');
+  expect(captured.action).toBeNull();
+  await click('Reset model draft');
+  expect(host.querySelector<HTMLInputElement>('#ai-model-monthlyTokenLimit')!.value).toBe('20000');
 });
 it('model confirmation waits for recovery and changes invalidate late completion', async () => {
   let phase = 0;
