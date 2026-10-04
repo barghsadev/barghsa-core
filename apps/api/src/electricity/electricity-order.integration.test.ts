@@ -3452,6 +3452,94 @@ it.each(['charge', 'credit'] as const)(
       expectedReviewHash: proposalReview.hash,
       idempotencyKey: randomUUID(),
     };
+    const priceSnapshot = async () => ({
+      core: await correctionSnapshot(order.orderId, order.contractId),
+      price: (
+        await http.pool.query(
+          `SELECT
+             (SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM electricity_price_adjustments a WHERE contract_id=$1::uuid) AS adjustments,
+             (SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM audit_log a) AS fixture_audits`,
+          [order.contractId]
+        )
+      ).rows[0],
+    });
+    if (kind === 'charge') {
+      const invalidNoWrite = async (
+        endpoint: string,
+        body: unknown,
+        fields?: string[],
+        status = 400,
+        error = fields ? 'VALIDATION:INPUT:INVALID' : 'VALIDATION:INPUT_INVALID'
+      ) => {
+        const before = await priceSnapshot();
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: staffHeaders,
+          body: JSON.stringify(body),
+        });
+        expect(response.status, http.logs()).toBe(status);
+        const failure = await response.json();
+        expect(failure).toHaveProperty('error.code', error);
+        expect(failure).toHaveProperty(
+          'error.correlationId',
+          expect.stringMatching(/^[0-9a-f-]{36}$/i)
+        );
+        expect(JSON.stringify(failure)).not.toContain('PRIVATE');
+        if (fields) expect(failure).toHaveProperty('error.fields', fields);
+        else expect(failure).not.toHaveProperty('error.fields');
+        expect(await priceSnapshot()).toEqual(before);
+      };
+      const reviewPath = `${staffPath}/review`;
+      await invalidNoWrite(reviewPath, { ...proposalInput, effectiveFrom: 'PRIVATE' }, [
+        'effectiveFrom',
+      ]);
+      await invalidNoWrite(reviewPath, { ...proposalInput, percentageBps: 'PRIVATE' }, [
+        'percentageBps',
+      ]);
+      await invalidNoWrite(reviewPath, { ...proposalInput, reason: ' ' }, ['reason']);
+      await invalidNoWrite(
+        reviewPath,
+        { ...proposalInput, contractualBasis: 'PRIVATE'.repeat(286) },
+        ['contractualBasis']
+      );
+      await invalidNoWrite(staffPath, { ...proposalBody, percentageBps: 'PRIVATE' }, [
+        'percentageBps',
+      ]);
+      await invalidNoWrite(staffPath, { ...proposalBody, contractualBasis: ' ' }, [
+        'contractualBasis',
+      ]);
+      await invalidNoWrite(reviewPath, {
+        ...proposalInput,
+        reason: ' ',
+        expectedVersionId: 'PRIVATE',
+      });
+      await http.pool.query(
+        "DELETE FROM user_roles WHERE user_id='reviewer' AND role_id='role-legal-contracts'"
+      );
+      await invalidNoWrite(
+        reviewPath,
+        { ...proposalInput, reason: ' ' },
+        undefined,
+        403,
+        'AUTHZ:FORBIDDEN'
+      );
+      await http.pool.query(
+        "INSERT INTO user_roles(user_id,role_id) VALUES('reviewer','role-legal-contracts')"
+      );
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='reviewer'"
+      );
+      await invalidNoWrite(
+        staffPath,
+        { ...proposalBody, percentageBps: 'PRIVATE' },
+        undefined,
+        403,
+        'AUTHZ:STEP_UP_REQUIRED'
+      );
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=clock_timestamp() WHERE user_id='reviewer'"
+      );
+    }
     const staleProposal = await fetch(staffPath, {
       method: 'POST',
       headers: staffHeaders,
@@ -3476,6 +3564,21 @@ it.each(['charge', 'credit'] as const)(
       calculation: ElectricityPriceAdjustmentReview['data']['calculation'];
     };
     expect(proposed.calculation).toEqual(proposalReview.data.calculation);
+    expect(proposed).toMatchObject({
+      contractId: order.contractId,
+      status: 'proposed',
+      effectiveFrom: proposalInput.effectiveFrom,
+      periodEnd: period.period_end.toISOString(),
+      percentageBps,
+      reason: proposalInput.reason,
+      contractualBasis: proposalInput.contractualBasis,
+      calculationSha256: expect.stringMatching(/^[0-9a-f]{64}$/),
+      adjustmentInvoiceId: null,
+      adjustmentInvoiceState: null,
+      proposedAt: expect.any(String),
+      finalizedAt: null,
+      cancelledAt: null,
+    });
     const reviewAudit = await http.pool.query<{ metadata: { financialReview: { hash: string } } }>(
       `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='electricity.price_proposed'
        AND metadata::jsonb->>'adjustmentId'=$1`,
@@ -3537,6 +3640,11 @@ it.each(['charge', 'credit'] as const)(
       status: string;
     };
     expect(finalized.status).toBe('finalized');
+    const beforeProgressedReplay = await priceSnapshot();
+    const progressedReplay = await propose();
+    expect(progressedReplay.status, http.logs()).toBe(201);
+    expect(await progressedReplay.json()).toEqual(finalized);
+    expect(await priceSnapshot()).toEqual(beforeProgressedReplay);
     const finalAudit = await http.pool.query<{
       metadata: { calculationSha256: string };
     }>(
@@ -3609,16 +3717,26 @@ it.each(['charge', 'credit'] as const)(
     });
     expect(secondProposal.status, http.logs()).toBe(201);
     const secondId = ((await secondProposal.json()) as { adjustmentId: string }).adjustmentId;
+    const cancelBody = { idempotencyKey: randomUUID() };
     const cancelled = await fetch(
       `${http.base}/api/staff/electricity/price-adjustments/${secondId}/cancel`,
       {
         method: 'POST',
         headers: staffHeaders,
-        body: JSON.stringify({ idempotencyKey: randomUUID() }),
+        body: JSON.stringify(cancelBody),
       }
     );
     expect(cancelled.status, http.logs()).toBe(201);
-    expect((await cancelled.json()) as { status: string }).toMatchObject({ status: 'cancelled' });
+    const cancelledRow = await cancelled.json();
+    expect(cancelledRow).toMatchObject({ status: 'cancelled' });
+    const beforeCancelledReplay = await priceSnapshot();
+    const cancelledReplay = await fetch(
+      `${http.base}/api/staff/electricity/price-adjustments/${secondId}/cancel`,
+      { method: 'POST', headers: staffHeaders, body: JSON.stringify(cancelBody) }
+    );
+    expect(cancelledReplay.status, http.logs()).toBe(201);
+    expect(await cancelledReplay.json()).toEqual(cancelledRow);
+    expect(await priceSnapshot()).toEqual(beforeCancelledReplay);
     expect(await (await fetch(customerPath, { headers })).json()).toMatchObject({
       adjustments: [
         expect.objectContaining({ adjustmentId: secondId, status: 'cancelled' }),

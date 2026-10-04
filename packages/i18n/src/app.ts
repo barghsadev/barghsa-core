@@ -5,6 +5,23 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'electricity.priceForm.contractInvalid': 'شناسه معتبر قرارداد را وارد کنید.',
+  'electricity.priceForm.contractHelp':
+    'شناسه قرارداد برق را برای مشاهده و بررسی تغییر قیمت وارد کنید.',
+  'electricity.priceForm.percentageInvalid':
+    'درصد غیرصفر با حداکثر دو رقم اعشار وارد کنید. کاهش باید کمتر از ۱۰۰ درصد باشد.',
+  'electricity.priceForm.dateInvalid': 'تاریخ و زمان معتبر را انتخاب کنید.',
+  'electricity.priceForm.dateHelp': 'تاریخ برای دوره آینده تحویل بررسی می‌شود.',
+  'electricity.priceForm.reasonInvalid': 'دلیل باید بین ۱ تا ۱٬۰۰۰ نویسه باشد.',
+  'electricity.priceForm.reasonHelp': 'این دلیل به مشتری نمایش داده می‌شود.',
+  'electricity.priceForm.basisInvalid': 'مبنای قراردادی باید بین ۱ تا ۲٬۰۰۰ نویسه باشد.',
+  'electricity.priceForm.basisHelp': 'بند یا مبنای قراردادی این تغییر را بنویسید.',
+  'electricity.priceForm.validationUnavailable': 'اعتبارسنجی در دسترس نیست. دوباره تلاش کنید.',
+  'electricity.priceForm.uncertain':
+    'نتیجه تأیید نشد. پیش از تغییر، همان اقدام قیمت ثبت‌شده را دوباره ارسال کنید.',
+  'electricity.priceForm.retryCaptured': 'ارسال دوباره اقدام قیمت ثبت‌شده',
+  'electricity.priceForm.preserved':
+    'اگر فیلدی نیاز به اصلاح داشته باشد، سایر داده‌های شما حفظ می‌شود.',
   'electricity.increaseForm.quantityInvalid': 'عدد صحیح مثبت با حداکثر ۱۹ رقم وارد کنید.',
   'electricity.increaseForm.quantityRange':
     'مقداری بیشتر از مقدار فعلی و در محدوده مجاز نمایش‌داده‌شده انتخاب کنید.',
@@ -1741,6 +1758,23 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'electricity.priceForm.contractInvalid': 'Enter a valid contract ID.',
+  'electricity.priceForm.contractHelp':
+    'Enter an electricity contract ID to view and review price adjustments.',
+  'electricity.priceForm.percentageInvalid':
+    'Enter a nonzero percentage with at most two decimals. A decrease must be less than 100%.',
+  'electricity.priceForm.dateInvalid': 'Choose a valid date and time.',
+  'electricity.priceForm.dateHelp':
+    'The effective date is checked against the future delivery period.',
+  'electricity.priceForm.reasonInvalid': 'Enter a reason of 1 to 1,000 characters.',
+  'electricity.priceForm.reasonHelp': 'This reason is disclosed to the customer.',
+  'electricity.priceForm.basisInvalid': 'Enter a contractual basis of 1 to 2,000 characters.',
+  'electricity.priceForm.basisHelp': 'State the contract clause or basis for this change.',
+  'electricity.priceForm.validationUnavailable': 'Validation is unavailable. Try again.',
+  'electricity.priceForm.uncertain':
+    'The result could not be confirmed. Retry the captured price action before changing it.',
+  'electricity.priceForm.retryCaptured': 'Retry captured price action',
+  'electricity.priceForm.preserved': 'Your other entries are kept if a field needs correction.',
   'electricity.increaseForm.quantityInvalid': 'Enter a positive whole number of at most 19 digits.',
   'electricity.increaseForm.quantityRange':
     'Choose a quantity above the current amount and within the displayed limit.',

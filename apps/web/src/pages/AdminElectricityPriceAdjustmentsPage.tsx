@@ -1,59 +1,72 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
+import { t as appText } from '@barghsa/i18n/app';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { Button, Card, CardContent, FinancialReviewSummary, Input, ListPage } from '@barghsa/ui';
 import {
-  Button,
-  Card,
-  CardContent,
-  FinancialReviewSummary,
-  Input,
-  Label,
-  ListPage,
-} from '@barghsa/ui';
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useZodForm,
+} from '@barghsa/ui/form';
 import {
-  parseElectricityPriceAdjustmentReview,
   type ElectricityPriceAdjustmentCalculation,
   type ElectricityPriceAdjustmentReview,
 } from '@barghsa/shared/finance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { staffOrderId } from '../lib/staff-order-list-query.js';
+import {
+  percentToBps,
+  priceEffectiveFrom,
+  parseStaffPriceState,
+  boundPriceReview,
+  priceCalculationDigest,
+  matchedPriceReceipt,
+  definitivePriceRejection,
+  definitiveMissingPrice,
+  type PriceDraft,
+  type PriceContractDraft,
+  type StaffPriceState,
+} from '../lib/electricity-price-form.js';
+import type { ElectricityPriceAdjustmentRow } from '../lib/electricity-price-adjustment-row.js';
+export { percentToBps } from '../lib/electricity-price-form.js';
 
-interface PriceAdjustment {
-  adjustmentId: string;
-  status: 'proposed' | 'finalized' | 'cancelled';
-  effectiveFrom: string;
-  percentageBps: string;
-  reason: string;
-  contractualBasis: string;
-  adjustmentAmountIrR: string;
-  calculationSha256: string;
-  adjustmentInvoiceId: string | null;
-  calculation: ElectricityPriceAdjustmentCalculation;
-}
-interface StaffPriceState {
+interface WorkspaceOwner {
+  actor: string | null;
   contractId: string;
-  profileId: string;
-  versionId: string;
+  stage: 'picker' | 'prepare' | 'command';
+  attempted: boolean;
+  uncertain: boolean;
+}
+interface WorkspaceControl {
+  actor: string | null;
+  cancelRead: () => void;
+  blocked: () => boolean;
+}
+interface CapturedPriceAction {
+  owner: WorkspaceOwner;
+  generation: number;
+  scope: string;
+  action: TeamAction;
+  operation: 'publish' | 'finalize' | 'cancel';
+  review: ElectricityPriceAdjustmentReview | null;
+  adjustment: ElectricityPriceAdjustmentRow | null;
+  calculation: ElectricityPriceAdjustmentCalculation;
+  calculationSha256: string;
   periodEnd: string;
-  canPropose: boolean;
-  canCancel: boolean;
-  canFinalize: boolean;
-  blockedByIncrease: boolean;
-  adjustments: PriceAdjustment[];
+  rejected: boolean;
 }
-
-export function percentToBps(value: string): string | null {
-  const match = /^(-?)(\d{1,16})(?:\.(\d{1,2}))?$/.exec(value.trim());
-  if (!match) return null;
-  const absolute = BigInt(match[2]!) * 100n + BigInt((match[3] ?? '').padEnd(2, '0') || '0');
-  const signed = match[1] === '-' ? -absolute : absolute;
-  if (signed === 0n || signed <= -10_000n || signed > 9_223_372_036_854_775_807n) return null;
-  return signed.toString();
-}
-
+const emptyDraft: PriceDraft = { percentage: '', effectiveFrom: '', reason: '', basis: '' };
 function bpsToPercent(value: string, locale: 'en' | 'fa') {
   const signed = BigInt(value);
   const absolute = signed < 0n ? -signed : signed;
@@ -69,255 +82,596 @@ export default function AdminElectricityPriceAdjustmentsPage({
   queries,
 }: { queries?: ListQueryBinding } = {}) {
   const locale = useLocale();
+  const actor = useAccountUser();
   const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
-  const initialContractId =
+  const formCopy = (key: string) => appText(`electricity.priceForm.${key}`, locale);
+  const initial =
     typeof window === 'undefined'
       ? ''
       : staffOrderId(new URLSearchParams(window.location.search).get('contractId'));
-  const [localContractId, setLocalContractId] = useState(initialContractId);
-  const contractId = queries ? queries.query.filters.contractId! : localContractId;
-  const [draft, setDraft] = useState({ basis: contractId, value: contractId });
-  if (draft.basis !== contractId) setDraft({ basis: contractId, value: contractId });
-  const contractInput = draft.basis === contractId ? draft.value : contractId;
-  const validContract = staffOrderId(contractInput.trim());
+  const [localContractId, setLocalContractId] = useState(initial);
+  const contractId = staffOrderId(
+    queries ? (queries.query.filters.contractId ?? '') : localContractId
+  ).toLowerCase();
+  const scope = JSON.stringify([actor, contractId]);
+  const currentScope = useRef(scope);
+  currentScope.current = scope;
+  const currentActor = useRef(actor);
+  currentActor.current = actor;
+  const owner = useRef<WorkspaceOwner | null>(null);
+  const control = useRef<WorkspaceControl | null>(null);
+  const [, updateOwner] = useState(0);
+  if (owner.current && owner.current.actor !== actor) owner.current = null;
+  const notify = () => {
+    if (currentActor.current === actor) updateOwner((value) => value + 1);
+  };
+  const form: ReturnType<typeof useZodForm<PriceContractDraft>> = useZodForm<PriceContractDraft>(
+    async () => {
+      const raw = form.getValues('contractId');
+      const schemas = await import('../lib/electricity-price-form-schemas.js');
+      return currentScope.current === scope && form.getValues('contractId') === raw
+        ? schemas.priceContractSchema(formCopy('contractInvalid'))
+        : schemas.inactivePriceContractSchema;
+    },
+    {
+      defaultValues: { contractId },
+      validationUnavailableMessage: formCopy('validationUnavailable'),
+    }
+  );
+  useEffect(() => {
+    form.reset({ contractId });
+  }, [scope]);
+  const selectionLocked =
+    owner.current?.stage === 'command' && (owner.current.attempted || owner.current.uncertain);
+  const heldContract = selectionLocked ? owner.current!.contractId : contractId;
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold">{copy('title')}</h1>
         <p className="text-muted-foreground">{copy('description')}</p>
       </header>
-      <form
-        className="flex flex-wrap items-end gap-3"
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (!validContract) return;
-          if (queries) queries.setQuery({ filters: { contractId: validContract } });
-          else setLocalContractId(validContract);
-        }}
-      >
-        <div className="min-w-64 flex-1 space-y-1">
-          <Label htmlFor="electricity-price-contract">{copy('contractId')}</Label>
-          <Input
-            id="electricity-price-contract"
-            dir="ltr"
-            value={contractInput}
-            onChange={(event) => setDraft({ basis: contractId, value: event.target.value })}
-            aria-invalid={!!contractInput && !validContract}
-            required
+      <Form {...form}>
+        <form
+          noValidate
+          data-testid="electricity-price-contract-form"
+          className="flex flex-wrap items-end gap-3"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (
+              currentScope.current !== scope ||
+              owner.current?.stage === 'picker' ||
+              (control.current?.actor === actor && control.current.blocked()) ||
+              selectionLocked
+            )
+              return;
+            if (control.current?.actor === actor) control.current.cancelRead();
+            const token: WorkspaceOwner = {
+              actor,
+              contractId,
+              stage: 'picker',
+              attempted: false,
+              uncertain: false,
+            };
+            owner.current = token;
+            notify();
+            const raw = form.getValues('contractId');
+            void form
+              .handleSubmit((draft) => {
+                if (
+                  currentScope.current !== scope ||
+                  owner.current !== token ||
+                  form.getValues('contractId') !== raw ||
+                  draft.contractId !== raw
+                )
+                  return;
+                const selected = staffOrderId(draft.contractId.trim()).toLowerCase();
+                if (queries) queries.setQuery({ filters: { contractId: selected } });
+                else setLocalContractId(selected);
+              })(event)
+              .finally(() => {
+                if (owner.current === token) {
+                  owner.current = null;
+                  notify();
+                }
+              });
+          }}
+        >
+          <FormField
+            control={form.control}
+            name="contractId"
+            render={({ field }) => (
+              <FormItem id="electricity-price-contract" className="min-w-0 flex-1 basis-64">
+                <FormLabel>{copy('contractId')}</FormLabel>
+                <FormControl>
+                  <Input {...field} dir="ltr" disabled={selectionLocked} />
+                </FormControl>
+                <FormDescription>{formCopy('contractHelp')}</FormDescription>
+                <FormMessage reserveSpace />
+              </FormItem>
+            )}
           />
-        </div>
-        <Button type="submit" disabled={!validContract}>
-          {copy('open')}
-        </Button>
-      </form>
-      {contractId ? <PriceWorkspace key={contractId} contractId={contractId} /> : null}
+          <Button
+            type="submit"
+            disabled={selectionLocked || form.formState.isSubmitting}
+            aria-busy={form.formState.isSubmitting || undefined}
+          >
+            {form.formState.isSubmitting ? (
+              <span
+                aria-hidden="true"
+                className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+              />
+            ) : null}
+            {copy('open')}
+          </Button>
+          {form.formState.errors.root?.validation ? (
+            <p role="alert" className="w-full">
+              {formCopy('validationUnavailable')}
+            </p>
+          ) : null}
+        </form>
+      </Form>
+      {heldContract ? (
+        <PriceWorkspace
+          key={`${actor}-${heldContract}`}
+          contractId={heldContract}
+          owner={owner}
+          control={control}
+          notify={notify}
+          onWithdraw={() => {
+            if (currentActor.current === actor) form.reset({ contractId: '' });
+          }}
+        />
+      ) : null}
     </section>
   );
 }
 
-function PriceWorkspace({ contractId }: { contractId: string }) {
+function PriceWorkspace({
+  contractId,
+  owner,
+  control,
+  notify,
+  onWithdraw,
+}: {
+  contractId: string;
+  owner: RefObject<WorkspaceOwner | null>;
+  control: RefObject<WorkspaceControl | null>;
+  notify: () => void;
+  onWithdraw: () => void;
+}) {
   const locale = useLocale();
+  const actor = useAccountUser();
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
+  const formCopy = (key: string) => appText(`electricity.priceForm.${key}`, locale);
+  const scope = JSON.stringify([actor, contractId]);
+  const currentScope = useRef(scope);
+  currentScope.current = scope;
+  const mounted = useRef(false);
   const [data, setData] = useState<StaffPriceState | null>(null);
-  const [effectiveFrom, setEffectiveFrom] = useState('');
-  const [percentage, setPercentage] = useState('');
-  const [reason, setReason] = useState('');
-  const [basis, setBasis] = useState('');
   const [revision, setRevision] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<'load' | 'forbidden' | null>(null);
   const accessDenied = useRef(false);
   const reviewGeneration = useRef(0);
+  const readGeneration = useRef(0);
+  const readAbort = useRef<AbortController | null>(null);
   const acceptedData = useRef<StaffPriceState | null>(null);
+  const preparing = useRef(false);
+  const pending = useRef(false);
+  const captured = useRef<CapturedPriceAction | null>(null);
+  const operationOwner = useRef<WorkspaceOwner | null>(null);
+  const [uncertain, setUncertain] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<'load' | 'save' | 'reviewError' | 'forbidden' | null>(null);
   const [action, setAction] = useState<TeamAction | null>(null);
   const [review, setReview] = useState<ElectricityPriceAdjustmentReview | null>(null);
-  const [selectedAdjustment, setSelectedAdjustment] = useState<PriceAdjustment | null>(null);
-  const [proposalKey, setProposalKey] = useState(() => crypto.randomUUID());
-
+  const [selectedAdjustment, setSelectedAdjustment] =
+    useState<ElectricityPriceAdjustmentRow | null>(null);
+  const messages = {
+    percentage: formCopy('percentageInvalid'),
+    effectiveFrom: formCopy('dateInvalid'),
+    reason: formCopy('reasonInvalid'),
+    basis: formCopy('basisInvalid'),
+  };
+  const form: ReturnType<typeof useZodForm<PriceDraft>> = useZodForm<PriceDraft>(
+    async () => {
+      const raw = JSON.stringify(form.getValues());
+      const generation = reviewGeneration.current;
+      const schemas = await import('../lib/electricity-price-form-schemas.js');
+      return generation === reviewGeneration.current &&
+        currentScope.current === scope &&
+        JSON.stringify(form.getValues()) === raw
+        ? schemas.priceProposalSchema(messages)
+        : schemas.inactivePriceSchema;
+    },
+    { defaultValues: emptyDraft, validationUnavailableMessage: formCopy('validationUnavailable') }
+  );
+  const applyFields = useActionFieldErrors(form, messages, copy('save'));
+  const ownedFields = (fields: unknown[]) => {
+    const names: Record<string, keyof PriceDraft> = {
+      percentageBps: 'percentage',
+      effectiveFrom: 'effectiveFrom',
+      reason: 'reason',
+      contractualBasis: 'basis',
+    };
+    return (
+      fields.length > 0 &&
+      fields.every((field) => typeof field === 'string' && Object.hasOwn(names, field)) &&
+      applyFields(fields.map((field) => names[field as string]!))
+    );
+  };
+  function writeLocked() {
+    return pending.current || captured.current?.owner.attempted === true || uncertain;
+  }
+  function commandLocked() {
+    return (
+      preparing.current ||
+      pending.current ||
+      !!captured.current ||
+      !!owner.current ||
+      form.isSubmissionPending()
+    );
+  }
+  function invalidate() {
+    ++reviewGeneration.current;
+    if (owner.current === operationOwner.current) {
+      owner.current = null;
+      notify();
+    }
+    operationOwner.current = null;
+    captured.current = null;
+    preparing.current = false;
+    pending.current = false;
+    setAction(null);
+    setReview(null);
+    setSelectedAdjustment(null);
+    setSaving(false);
+    setUncertain(false);
+  }
+  function cancelRead() {
+    if (!writeLocked()) invalidate();
+  }
+  const controller: WorkspaceControl = { actor, cancelRead, blocked: writeLocked };
+  control.current = controller;
+  function withdraw(kind: 'load' | 'forbidden') {
+    accessDenied.current = kind === 'forbidden';
+    invalidate();
+    acceptedData.current = null;
+    setData(null);
+    form.reset(emptyDraft);
+    setError(null);
+    setLoadError(kind);
+    setLoading(false);
+    onWithdraw();
+  }
+  function refresh() {
+    if (writeLocked() || owner.current?.stage === 'picker') return;
+    if (preparing.current) invalidate();
+    setRevision((value) => value + 1);
+  }
   useEffect(() => {
-    if (!contractId) return;
-    const controller = new AbortController();
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      ++reviewGeneration.current;
+      ++readGeneration.current;
+      if (owner.current === operationOwner.current) owner.current = null;
+      if (control.current?.actor === actor && control.current.cancelRead === cancelRead)
+        control.current = null;
+    };
+  }, []);
+  useEffect(() => {
+    const abort = new AbortController();
+    readAbort.current = abort;
+    const request = ++readGeneration.current;
     setLoading(true);
     setLoadError(null);
+    const fresh = () =>
+      !abort.signal.aborted &&
+      mounted.current &&
+      currentScope.current === scope &&
+      request === readGeneration.current;
     void fetch(
       `/api/staff/electricity/contracts/${encodeURIComponent(contractId)}/price-adjustments`,
-      {
-        credentials: 'include',
-        signal: controller.signal,
-      }
+      { credentials: 'include', signal: abort.signal }
     )
       .then(async (response) => {
-        if ([401, 403].includes(response.status)) throw new Error('forbidden');
+        if (!fresh()) return null;
+        if ([401, 403].includes(response.status)) {
+          withdraw('forbidden');
+          return null;
+        }
+        if (response.status === 404) {
+          withdraw('load');
+          return null;
+        }
         if (!response.ok) throw new Error('load');
-        return response.json() as Promise<StaffPriceState>;
+        const value = parseStaffPriceState(await response.json(), contractId);
+        if (!value) throw new Error('load');
+        return value;
       })
       .then((value) => {
-        if (controller.signal.aborted) return;
-        if (value.contractId !== contractId || !Array.isArray(value.adjustments))
-          throw new Error('load');
+        if (!fresh() || !value) return;
         if (
           acceptedData.current &&
-          JSON.stringify(acceptedData.current) !== JSON.stringify(value)
-        ) {
-          ++reviewGeneration.current;
-          setReview(null);
-          setSelectedAdjustment(null);
-          setAction(null);
-          setSaving(false);
-          setProposalKey(crypto.randomUUID());
-        }
+          JSON.stringify(acceptedData.current) !== JSON.stringify(value) &&
+          !writeLocked()
+        )
+          invalidate();
         accessDenied.current = false;
         acceptedData.current = value;
         setData(value);
       })
-      .catch((caught: unknown) => {
-        if (controller.signal.aborted) return;
-        const forbidden = caught instanceof Error && caught.message === 'forbidden';
-        setLoadError(forbidden ? 'forbidden' : 'load');
-        if (forbidden) deny();
+      .catch(() => {
+        if (fresh()) setLoadError('load');
       })
       .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if (fresh()) setLoading(false);
       });
-    return () => controller.abort();
-  }, [contractId, revision]);
-
-  useEffect(
-    () => () => {
-      ++reviewGeneration.current;
-    },
-    []
-  );
-  function deny() {
-    accessDenied.current = true;
-    ++reviewGeneration.current;
-    acceptedData.current = null;
-    setData(null);
-    setEffectiveFrom('');
-    setPercentage('');
-    setReason('');
-    setBasis('');
+    return () => abort.abort();
+  }, [contractId, revision, scope]);
+  function live(command: CapturedPriceAction) {
+    return (
+      mounted.current &&
+      !accessDenied.current &&
+      captured.current === command &&
+      owner.current === command.owner &&
+      command.owner.actor === actor &&
+      command.scope === currentScope.current &&
+      command.generation === reviewGeneration.current
+    );
+  }
+  function unconfirmed(command: CapturedPriceAction) {
+    if (!live(command)) return;
+    command.owner.uncertain = true;
+    pending.current = false;
+    setUncertain(true);
+    setAction(null);
     setReview(null);
     setSelectedAdjustment(null);
-    setAction(null);
-    setSaving(false);
-    setProposalKey(crypto.randomUUID());
-    setError(null);
-    setLoadError('forbidden');
+    notify();
   }
-
-  async function propose(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const percentageBps = percentToBps(percentage);
+  function close(command: CapturedPriceAction, ownedAction: TeamAction) {
+    if (!live(command) || command.action !== ownedAction || pending.current) return;
+    if (command.owner.uncertain || (command.owner.attempted && !command.rejected))
+      unconfirmed(command);
+    else invalidate();
+  }
+  function decorate(command: CapturedPriceAction, ownedAction: TeamAction) {
+    ownedAction.errorMessages = Object.fromEntries(
+      [
+        ErrorCodes.VALIDATION_INPUT_INVALID.code,
+        'VALIDATION:INPUT_INVALID',
+        ErrorCodes.CONFLICT_STATE.code,
+        ErrorCodes.CONFLICT_VERSION.code,
+        ErrorCodes.NOT_FOUND_RESOURCE.code,
+      ].map((code) => [
+        code,
+        (value: unknown) => {
+          if (!live(command) || command.action !== ownedAction) return copy('save');
+          if (definitiveMissingPrice(value)) {
+            withdraw('load');
+            return copy('load');
+          }
+          if (definitivePriceRejection(value)) {
+            command.rejected = true;
+            const fields = (value as { error: { fields?: unknown[] } }).error.fields;
+            if (
+              !command.owner.uncertain &&
+              command.operation === 'publish' &&
+              code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+              Array.isArray(fields) &&
+              ownedFields(fields)
+            ) {
+              pending.current = false;
+              close(command, ownedAction);
+            }
+          }
+          return code.startsWith('CONFLICT:') ? copy('conflict') : copy('save');
+        },
+      ])
+    );
+  }
+  function capture(command: CapturedPriceAction) {
+    command.owner.stage = 'command';
+    captured.current = command;
+    decorate(command, command.action);
+    setAction(command.action);
+    setReview(command.review);
+    setSelectedAdjustment(command.adjustment);
+    notify();
+  }
+  function retryCaptured() {
+    const command = captured.current;
+    if (
+      currentScope.current !== scope ||
+      !command ||
+      !live(command) ||
+      !command.owner.uncertain ||
+      pending.current
+    )
+      return;
+    const next = { ...command.action };
+    command.action = next;
+    decorate(command, next);
+    setAction(next);
+    setReview(command.review);
+    setSelectedAdjustment(command.adjustment);
+  }
+  function propose() {
     if (
       !data ||
       !data.canPropose ||
-      data.adjustments.some((item) => item.status === 'proposed') ||
+      data.adjustments.some((row) => row.status === 'proposed') ||
       loading ||
       loadError ||
       accessDenied.current ||
-      !percentageBps ||
-      !effectiveFrom ||
-      !reason.trim() ||
-      !basis.trim() ||
-      saving
+      commandLocked() ||
+      currentScope.current !== scope
     )
       return;
+    const source = data;
+    const raw = JSON.stringify(form.getValues());
     const generation = ++reviewGeneration.current;
+    const token: WorkspaceOwner = {
+      actor,
+      contractId,
+      stage: 'prepare',
+      attempted: false,
+      uncertain: false,
+    };
+    owner.current = token;
+    operationOwner.current = token;
+    preparing.current = true;
     setSaving(true);
     setError(null);
-    try {
-      const proposal = {
-        expectedVersionId: data.versionId,
-        effectiveFrom: new Date(effectiveFrom).toISOString(),
-        percentageBps,
-        reason: reason.trim(),
-        contractualBasis: basis.trim(),
-      };
-      const response = await fetch(
-        `/api/staff/electricity/contracts/${encodeURIComponent(data.contractId)}/price-adjustments/review`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify(proposal),
+    notify();
+    const authorized = () =>
+      mounted.current &&
+      !accessDenied.current &&
+      currentScope.current === scope &&
+      generation === reviewGeneration.current &&
+      owner.current === token;
+    const fresh = () => authorized() && raw === JSON.stringify(form.getValues());
+    void form
+      .handleSubmit(async (draft) => {
+        if (!fresh() || JSON.stringify(draft) !== raw) return;
+        const effectiveFrom = priceEffectiveFrom(draft.effectiveFrom);
+        const percentageBps = percentToBps(draft.percentage);
+        if (!effectiveFrom || !percentageBps) return;
+        const proposal = {
+          expectedVersionId: source.versionId,
+          effectiveFrom,
+          percentageBps,
+          reason: draft.reason.trim(),
+          contractualBasis: draft.basis.trim(),
+        };
+        try {
+          const response = await fetch(
+            `/api/staff/electricity/contracts/${encodeURIComponent(contractId)}/price-adjustments/review`,
+            {
+              method: 'POST',
+              credentials: 'include',
+              headers: withCsrf({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify(proposal),
+            }
+          );
+          if (!authorized()) return;
+          if ([401, 403].includes(response.status)) {
+            withdraw('forbidden');
+            return;
+          }
+          if (response.status === 404) {
+            withdraw('load');
+            return;
+          }
+          const value: unknown = await response.json().catch(() => null);
+          if (!fresh()) return;
+          if (response.status === 400 && definitivePriceRejection(value)) {
+            const fields = (value as { error: { fields?: unknown[] } }).error.fields;
+            if (Array.isArray(fields) && ownedFields(fields)) return;
+          }
+          if (!response.ok) throw new Error('review');
+          const financialReview = boundPriceReview(value, source, proposal);
+          if (!financialReview) throw new Error('review');
+          const calculationSha256 = await priceCalculationDigest(financialReview.data.calculation);
+          if (!fresh()) return;
+          capture({
+            owner: token,
+            generation,
+            scope,
+            operation: 'publish',
+            review: financialReview,
+            adjustment: null,
+            calculation: financialReview.data.calculation,
+            calculationSha256,
+            periodEnd: source.periodEnd,
+            rejected: false,
+            action: {
+              title: copy('publish'),
+              description: copy('publishConfirm'),
+              path: `/api/staff/electricity/contracts/${encodeURIComponent(contractId)}/price-adjustments`,
+              method: 'POST',
+              successStatus: 201,
+              body: {
+                ...proposal,
+                expectedReviewHash: financialReview.hash,
+                idempotencyKey: crypto.randomUUID(),
+              },
+              conflictMessage: copy('conflict'),
+              forbiddenMessage: copy('forbidden'),
+            },
+          });
+        } catch {
+          if (fresh()) setError('reviewError');
         }
-      );
-      if (generation !== reviewGeneration.current || accessDenied.current) return;
-      if ([401, 403].includes(response.status)) {
-        deny();
-        return;
-      }
-      if (!response.ok) throw new Error('Review failed');
-      const financialReview = parseElectricityPriceAdjustmentReview(await response.json());
-      if (generation !== reviewGeneration.current || accessDenied.current) return;
-      if (
-        !financialReview ||
-        financialReview.scope.resourceId !== data.contractId ||
-        financialReview.scope.profileId !== data.profileId ||
-        financialReview.data.calculation.versionId !== proposal.expectedVersionId ||
-        financialReview.data.calculation.quote.effectiveFrom !== proposal.effectiveFrom ||
-        financialReview.data.calculation.quote.percentageBps !== proposal.percentageBps ||
-        financialReview.data.calculation.reason !== proposal.reason ||
-        financialReview.data.calculation.contractualBasis !== proposal.contractualBasis
-      )
-        throw new Error('Review mismatch');
-      setReview(financialReview);
-      setSelectedAdjustment(null);
-      setAction({
-        title: copy('publish'),
-        description: copy('publishConfirm'),
-        path: `/api/staff/electricity/contracts/${encodeURIComponent(data.contractId)}/price-adjustments`,
-        method: 'POST',
-        body: {
-          ...proposal,
-          expectedReviewHash: financialReview.hash,
-          idempotencyKey: proposalKey,
-        },
-        conflictMessage: copy('conflict'),
-        forbiddenMessage: copy('forbidden'),
+      })()
+      .finally(() => {
+        if (generation === reviewGeneration.current && mounted.current) {
+          preparing.current = false;
+          setSaving(false);
+          if (!captured.current && owner.current === token) {
+            owner.current = null;
+            operationOwner.current = null;
+            notify();
+          }
+        }
       });
-    } catch {
-      if (generation === reviewGeneration.current) setError('reviewError');
-    } finally {
-      if (generation === reviewGeneration.current) setSaving(false);
-    }
   }
-
-  function confirm(adjustment: PriceAdjustment, operation: 'finalize' | 'cancel') {
+  function confirm(adjustment: ElectricityPriceAdjustmentRow, operation: 'finalize' | 'cancel') {
     if (
+      currentScope.current !== scope ||
+      commandLocked() ||
       !data ||
       loading ||
       loadError ||
       accessDenied.current ||
       adjustment.status !== 'proposed' ||
-      !(operation === 'finalize' ? data.canFinalize : data.canCancel)
+      !(operation === 'finalize' ? data.canFinalize : data.canCancel) ||
+      !data.adjustments.some((row) => row === adjustment)
     )
       return;
-    ++reviewGeneration.current;
-    setSaving(false);
-    setReview(null);
-    setSelectedAdjustment(adjustment);
-    setAction({
-      title: copy(operation),
-      description: copy(`${operation}Confirm`),
-      path: `/api/staff/electricity/price-adjustments/${encodeURIComponent(adjustment.adjustmentId)}/${operation}`,
-      method: 'POST',
-      body: {
-        idempotencyKey: crypto.randomUUID(),
-        ...(operation === 'finalize'
-          ? { expectedCalculationSha256: adjustment.calculationSha256 }
-          : {}),
+    const token: WorkspaceOwner = {
+      actor,
+      contractId,
+      stage: 'command',
+      attempted: false,
+      uncertain: false,
+    };
+    owner.current = token;
+    operationOwner.current = token;
+    const generation = ++reviewGeneration.current;
+    capture({
+      owner: token,
+      generation,
+      scope,
+      operation,
+      review: null,
+      adjustment,
+      calculation: adjustment.calculation,
+      calculationSha256: adjustment.calculationSha256,
+      periodEnd: adjustment.periodEnd,
+      rejected: false,
+      action: {
+        title: copy(operation),
+        description: copy(`${operation}Confirm`),
+        path: `/api/staff/electricity/price-adjustments/${encodeURIComponent(adjustment.adjustmentId)}/${operation}`,
+        method: 'POST',
+        successStatus: 201,
+        body: {
+          idempotencyKey: crypto.randomUUID(),
+          ...(operation === 'finalize'
+            ? { expectedCalculationSha256: adjustment.calculationSha256 }
+            : {}),
+        },
+        conflictMessage: copy('conflict'),
+        forbiddenMessage: copy('forbidden'),
       },
-      conflictMessage: copy('conflict'),
-      forbiddenMessage: copy('forbidden'),
     });
   }
-
-  const confirmationGeneration = reviewGeneration.current;
+  const command = captured.current;
+  const frozen = !!captured.current || pending.current || uncertain;
   const proposed =
     data?.adjustments.some((adjustment) => adjustment.status === 'proposed') ?? false;
   return (
@@ -325,8 +679,8 @@ function PriceWorkspace({ contractId }: { contractId: string }) {
       <ListPage.Toolbar>
         <Button
           variant="outline"
-          disabled={loading}
-          onClick={() => setRevision((value) => value + 1)}
+          disabled={loading || writeLocked() || owner.current?.stage === 'picker'}
+          onClick={refresh}
         >
           {copy('refresh')}
         </Button>
@@ -338,7 +692,8 @@ function PriceWorkspace({ contractId }: { contractId: string }) {
             <Button
               type="button"
               variant="outline"
-              onClick={() => setRevision((value) => value + 1)}
+              disabled={writeLocked() || owner.current?.stage === 'picker'}
+              onClick={refresh}
             >
               {copy('retry')}
             </Button>
@@ -347,6 +702,19 @@ function PriceWorkspace({ contractId }: { contractId: string }) {
       ) : null}
       {loading ? <p role="status">{copy('loading')}</p> : null}
       {error ? <p role="alert">{copy(error)}</p> : null}
+      {uncertain ? (
+        <div role="alert" className="space-y-2">
+          <p>{formCopy('uncertain')}</p>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={pending.current || !!action}
+            onClick={retryCaptured}
+          >
+            {formCopy('retryCaptured')}
+          </Button>
+        </div>
+      ) : null}
       {data ? (
         <div className="space-y-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -361,61 +729,93 @@ function PriceWorkspace({ contractId }: { contractId: string }) {
             <Card>
               <CardContent className="space-y-4 pt-6">
                 <h2 className="font-semibold">{copy('newProposal')}</h2>
-                <form
-                  className="grid gap-4 sm:grid-cols-2"
-                  onSubmit={(event) => void propose(event)}
-                >
-                  <div className="space-y-1">
-                    <Label htmlFor="price-percent">{copy('percentage')}</Label>
-                    <Input
-                      id="price-percent"
-                      inputMode="decimal"
-                      value={percentage}
-                      onChange={(event) => setPercentage(event.target.value)}
-                      required
-                    />
-                    <p className="text-xs text-muted-foreground">{copy('percentageHelp')}</p>
-                  </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="price-effective">{copy('effective')}</Label>
-                    <Input
-                      id="price-effective"
-                      type="datetime-local"
-                      value={effectiveFrom}
-                      onChange={(event) => setEffectiveFrom(event.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="price-reason">{copy('reason')}</Label>
-                    <Input
-                      id="price-reason"
-                      value={reason}
-                      maxLength={1000}
-                      onChange={(event) => setReason(event.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="price-basis">{copy('basis')}</Label>
-                    <Input
-                      id="price-basis"
-                      value={basis}
-                      maxLength={2000}
-                      onChange={(event) => setBasis(event.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <Button
-                      type="submit"
-                      disabled={saving || loading || !!loadError || !percentToBps(percentage)}
-                    >
-                      {copy('reviewProposal')}
-                    </Button>
-                    {saving ? <p role="status">{copy('reviewLoading')}</p> : null}
-                  </div>
-                </form>
+                <Form {...form}>
+                  <form
+                    noValidate
+                    data-testid="electricity-price-proposal-form"
+                    className="grid gap-4 sm:grid-cols-2"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      propose();
+                    }}
+                  >
+                    {(
+                      [
+                        {
+                          name: 'percentage',
+                          id: 'price-percent',
+                          label: 'percentage',
+                          help: copy('percentageHelp'),
+                        },
+                        {
+                          name: 'effectiveFrom',
+                          id: 'price-effective',
+                          label: 'effective',
+                          help: formCopy('dateHelp'),
+                        },
+                        {
+                          name: 'reason',
+                          id: 'price-reason',
+                          label: 'reason',
+                          help: formCopy('reasonHelp'),
+                        },
+                        {
+                          name: 'basis',
+                          id: 'price-basis',
+                          label: 'basis',
+                          help: formCopy('basisHelp'),
+                        },
+                      ] as const
+                    ).map(({ name, id, label, help }) => (
+                      <FormField
+                        key={name}
+                        control={form.control}
+                        name={name}
+                        render={({ field }) => (
+                          <FormItem id={id}>
+                            <FormLabel>{copy(label)}</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                type={name === 'effectiveFrom' ? 'datetime-local' : 'text'}
+                                inputMode={name === 'percentage' ? 'decimal' : undefined}
+                                disabled={frozen}
+                              />
+                            </FormControl>
+                            <FormDescription>{help}</FormDescription>
+                            <FormMessage reserveSpace />
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+                    <div className="space-y-2 sm:col-span-2">
+                      <p className="text-sm text-muted-foreground">{formCopy('preserved')}</p>
+                      <Button
+                        type="submit"
+                        disabled={
+                          saving ||
+                          loading ||
+                          !!loadError ||
+                          frozen ||
+                          owner.current?.stage === 'picker'
+                        }
+                        aria-busy={saving || undefined}
+                      >
+                        {saving ? (
+                          <span
+                            aria-hidden="true"
+                            className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                          />
+                        ) : null}
+                        {copy('reviewProposal')}
+                      </Button>
+                      {saving ? <p role="status">{copy('reviewLoading')}</p> : null}
+                      {form.formState.errors.root?.validation ? (
+                        <p role="alert">{formCopy('validationUnavailable')}</p>
+                      ) : null}
+                    </div>
+                  </form>
+                </Form>
               </CardContent>
             </Card>
           ) : proposed ? (
@@ -476,7 +876,7 @@ function PriceWorkspace({ contractId }: { contractId: string }) {
                       <div className="flex flex-wrap gap-2">
                         {data.canFinalize ? (
                           <Button
-                            disabled={loading || !!loadError}
+                            disabled={loading || !!loadError || commandLocked()}
                             onClick={() => confirm(adjustment, 'finalize')}
                           >
                             {copy('finalize')}
@@ -487,7 +887,7 @@ function PriceWorkspace({ contractId }: { contractId: string }) {
                         {data.canCancel ? (
                           <Button
                             variant="outline"
-                            disabled={loading || !!loadError}
+                            disabled={loading || !!loadError || commandLocked()}
                             onClick={() => confirm(adjustment, 'cancel')}
                           >
                             {copy('cancel')}
@@ -502,7 +902,7 @@ function PriceWorkspace({ contractId }: { contractId: string }) {
           </ListPage.Content>
         </div>
       ) : null}
-      {action ? (
+      {action && command && live(command) ? (
         <TeamActionDialog
           action={action}
           summary={
@@ -523,26 +923,43 @@ function PriceWorkspace({ contractId }: { contractId: string }) {
               />
             ) : null
           }
-          onClose={() => {
-            if (confirmationGeneration !== reviewGeneration.current) return;
-            ++reviewGeneration.current;
-            setAction(null);
-            setReview(null);
-            setSelectedAdjustment(null);
+          onClose={() => close(command, action)}
+          onValidationError={() => false}
+          onDenied={() => {
+            if (live(command) && command.action === action) withdraw('forbidden');
           }}
-          onSuccess={async () => {
-            if (accessDenied.current || confirmationGeneration !== reviewGeneration.current) return;
-            ++reviewGeneration.current;
-            if (review) {
-              setProposalKey(crypto.randomUUID());
-              setReason('');
-              setBasis('');
-              setPercentage('');
-              setEffectiveFrom('');
+          onUnconfirmed={() => {
+            if (live(command) && command.action === action) unconfirmed(command);
+          }}
+          onPendingChange={(value) => {
+            if (!live(command) || command.action !== action) return;
+            pending.current = value;
+            if (value) {
+              ++readGeneration.current;
+              readAbort.current?.abort();
+              setLoading(false);
+              command.owner.attempted = true;
             }
-            setAction(null);
-            setReview(null);
-            setSelectedAdjustment(null);
+            notify();
+          }}
+          onSuccess={async (value) => {
+            if (!live(command) || command.action !== action) return;
+            if (
+              !matchedPriceReceipt(value, {
+                operation: command.operation,
+                contractId,
+                adjustmentId: command.adjustment?.adjustmentId,
+                periodEnd: command.periodEnd,
+                calculation: command.calculation,
+                calculationSha256: command.calculationSha256,
+              })
+            ) {
+              unconfirmed(command);
+              return;
+            }
+            const published = command.operation === 'publish';
+            invalidate();
+            if (published) form.reset(emptyDraft);
             setRevision((value) => value + 1);
           }}
         />

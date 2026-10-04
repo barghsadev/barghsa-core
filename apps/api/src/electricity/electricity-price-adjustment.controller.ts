@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
+import { InputFieldException } from '../common/input-field.exception.js';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -25,9 +26,21 @@ import {
 } from './electricity-price-adjustment.service.js';
 
 const idSchema = z.string().uuid();
-function parse<T>(schema: z.ZodType<T>, value: unknown): T {
+function parse<T>(schema: z.ZodType<T>, value: unknown, fields: readonly string[] = []): T {
   const parsed = schema.safeParse(value);
-  if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+  if (!parsed.success) {
+    if (
+      parsed.error.issues.length &&
+      parsed.error.issues.every(
+        (issue) =>
+          issue.path.length === 1 &&
+          fields.includes(String(issue.path[0])) &&
+          ['invalid_type', 'too_small', 'too_big', 'invalid_format'].includes(issue.code)
+      )
+    )
+      throw new InputFieldException(parsed.error.issues.map((issue) => String(issue.path[0])));
+    throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+  }
   return parsed.data;
 }
 
@@ -80,7 +93,12 @@ export class StaffElectricityPriceAdjustmentController {
       throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
     return this.service.review(
       parse(idSchema, id),
-      parse(reviewPriceAdjustmentSchema, body),
+      parse(reviewPriceAdjustmentSchema, body, [
+        'effectiveFrom',
+        'percentageBps',
+        'reason',
+        'contractualBasis',
+      ]),
       req.session
     );
   }
@@ -96,7 +114,12 @@ export class StaffElectricityPriceAdjustmentController {
       throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
     return this.service.propose(
       parse(idSchema, id),
-      parse(proposePriceAdjustmentSchema, body),
+      parse(proposePriceAdjustmentSchema, body, [
+        'effectiveFrom',
+        'percentageBps',
+        'reason',
+        'contractualBasis',
+      ]),
       req.session,
       req.ip ?? '127.0.0.1'
     );

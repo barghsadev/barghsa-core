@@ -874,6 +874,8 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           ) : null}
           <ElectricityPriceAdjustmentsPanel
             contractId={detail.contractId}
+            profileId={detail.profileId}
+            versionId={detail.versionId}
             formatTimestamp={time.format}
           />
           <Card>

@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 export const changeContractId = '11111111-1111-4111-8111-111111111111';
 export const changeProfileId = '22222222-2222-4222-8222-222222222222';
 export const changeVersionId = '33333333-3333-4333-8333-333333333333';
@@ -74,6 +76,21 @@ export function priceReview(input: {
   effectiveFrom: string;
   percentageBps: string;
 }) {
+  const periodStart = '2026-09-01T00:00:00.000Z';
+  const periodEnd = '2027-09-01T00:00:00.000Z';
+  const eligibleFrom = new Date(
+    Math.max(Date.parse(periodStart), Date.parse(input.effectiveFrom))
+  ).toISOString();
+  const periodMs = BigInt(Date.parse(periodEnd) - Date.parse(periodStart));
+  const remainingMs = BigInt(Math.max(0, Date.parse(periodEnd) - Date.parse(eligibleFrom)));
+  const rounded = (value: bigint, divisor: bigint) =>
+    value < 0n ? -((-value + divisor / 2n) / divisor) : (value + divisor / 2n) / divisor;
+  const oldFutureIrR = rounded(1_000_000n * remainingMs, periodMs);
+  const amountIrR = rounded(
+    1_000_000n * BigInt(input.percentageBps) * remainingMs,
+    10_000n * periodMs
+  );
+  const newFutureIrR = oldFutureIrR + amountIrR;
   return {
     schemaVersion: 1,
     hash: 'b'.repeat(64),
@@ -86,8 +103,8 @@ export function priceReview(input: {
       currency: 'IRR',
       profileId: changeProfileId,
       orderId,
-      periodStart: '2026-09-01T00:00:00.000Z',
-      periodEnd: '2027-09-01T00:00:00.000Z',
+      periodStart,
+      periodEnd,
       calculation: {
         schemaVersion: 1,
         contractId: changeContractId,
@@ -96,10 +113,10 @@ export function priceReview(input: {
         reason: input.reason,
         contractualBasis: input.contractualBasis,
         quote: {
-          amountIrR: '50000',
-          oldFutureIrR: '500000',
-          newFutureIrR: '550000',
-          kind: 'charge',
+          amountIrR: amountIrR.toString(),
+          oldFutureIrR: oldFutureIrR.toString(),
+          newFutureIrR: newFutureIrR.toString(),
+          kind: amountIrR > 0n ? 'charge' : 'credit',
           percentageBps: input.percentageBps,
           effectiveFrom: input.effectiveFrom,
           rounding: 'half-up-to-nearest-IRR',
@@ -108,14 +125,14 @@ export function priceReview(input: {
               source: 'original_invoice',
               invoiceId,
               basisIrR: '1000000',
-              periodStart: '2026-09-01T00:00:00.000Z',
-              periodEnd: '2027-09-01T00:00:00.000Z',
-              eligibleFrom: input.effectiveFrom,
-              oldFutureIrR: '500000',
-              changeIrR: '50000',
-              newFutureIrR: '550000',
-              remainingMs: '15897600000',
-              periodMs: '31536000000',
+              periodStart,
+              periodEnd,
+              eligibleFrom,
+              oldFutureIrR: oldFutureIrR.toString(),
+              changeIrR: amountIrR.toString(),
+              newFutureIrR: newFutureIrR.toString(),
+              remainingMs: remainingMs.toString(),
+              periodMs: periodMs.toString(),
             },
           ],
         },
@@ -123,22 +140,29 @@ export function priceReview(input: {
     },
   };
 }
+const priceCalculation = priceReview({
+  reason: 'Published tariff',
+  contractualBasis: 'Clause 7',
+  effectiveFrom: increaseRow.effectiveFrom,
+  percentageBps: '1000',
+}).data.calculation;
 export const priceRow = {
   adjustmentId: '77777777-7777-4777-8777-777777777777',
+  contractId: changeContractId,
   status: 'proposed' as const,
   effectiveFrom: increaseRow.effectiveFrom,
+  periodEnd: increaseRow.periodEnd,
   percentageBps: '1000',
   reason: 'Published tariff',
   contractualBasis: 'Clause 7',
-  adjustmentAmountIrR: '50000',
-  calculationSha256: 'c'.repeat(64),
+  adjustmentAmountIrR: priceCalculation.quote.amountIrR,
+  calculationSha256: createHash('sha256').update(JSON.stringify(priceCalculation)).digest('hex'),
   adjustmentInvoiceId: null,
-  calculation: priceReview({
-    reason: 'Published tariff',
-    contractualBasis: 'Clause 7',
-    effectiveFrom: increaseRow.effectiveFrom,
-    percentageBps: '1000',
-  }).data.calculation,
+  adjustmentInvoiceState: null,
+  proposedAt: '2026-09-30T00:00:00.000Z',
+  finalizedAt: null,
+  cancelledAt: null,
+  calculation: priceCalculation,
 };
 export const priceState = {
   contractId: changeContractId,

@@ -6,6 +6,16 @@ import AdminElectricityPriceAdjustmentsPage, {
   percentToBps,
 } from './AdminElectricityPriceAdjustmentsPage.js';
 
+import {
+  priceAdjustmentRow,
+  priceContractId,
+  priceProfileId,
+  priceVersionId,
+  priceAdjustmentInvoiceId,
+  priceAdjustmentId,
+  priceOriginalInvoiceId,
+} from '../test/electricity-price-adjustment-fixtures.js';
+
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ irrDigits: String, number: String }),
 }));
@@ -52,34 +62,7 @@ it.each(['proposed', 'finalized'] as const)(
         async () =>
           new Response(
             JSON.stringify({
-              adjustments: [
-                {
-                  adjustmentId: 'price-1',
-                  status,
-                  effectiveFrom: '2026-10-02T00:00:00Z',
-                  percentageBps: '-1000',
-                  reason: 'Published tariff correction',
-                  contractualBasis: 'Clause 7',
-                  adjustmentAmountIrR: '-50000',
-                  adjustmentInvoiceId: status === 'finalized' ? 'credit-1' : null,
-                  calculation: {
-                    quote: {
-                      oldFutureIrR: '500000',
-                      newFutureIrR: '450000',
-                      components: [
-                        {
-                          source: 'original_invoice',
-                          invoiceId: 'invoice-1',
-                          basisIrR: '1000000',
-                          oldFutureIrR: '500000',
-                          changeIrR: '-50000',
-                          eligibleFrom: '2026-10-02T00:00:00Z',
-                        },
-                      ],
-                    },
-                  },
-                },
-              ],
+              adjustments: [priceAdjustmentRow(status)],
             })
           )
       )
@@ -90,7 +73,11 @@ it.each(['proposed', 'finalized'] as const)(
     try {
       await act(async () =>
         root.render(
-          <ElectricityPriceAdjustmentsPanel contractId="11111111-1111-4111-8111-111111111111" />
+          <ElectricityPriceAdjustmentsPanel
+            contractId={priceContractId}
+            profileId={priceProfileId}
+            versionId={priceVersionId}
+          />
         )
       );
       expect(container.textContent).toContain('Published tariff correction');
@@ -102,7 +89,9 @@ it.each(['proposed', 'finalized'] as const)(
         expect(container.textContent).toContain('Your acceptance is not required');
         expect(container.querySelector('a')).toBeNull();
       } else {
-        expect(container.querySelector('a')?.getAttribute('href')).toBe('/invoices/credit-1');
+        expect(container.querySelector('a')?.getAttribute('href')).toBe(
+          `/invoices/${priceAdjustmentInvoiceId}`
+        );
       }
     } finally {
       await act(async () => root.unmount());
@@ -119,55 +108,19 @@ it('opens a disclosed proposal from the staff contract link and starts finalizat
     '/admin/electricity-price-adjustments?contractId=11111111-1111-4111-8111-111111111111'
   );
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
-  const fetchMock = vi.fn(
-    async () =>
-      new Response(
-        JSON.stringify({
-          contractId: '11111111-1111-4111-8111-111111111111',
-          profileId: 'profile-1',
-          versionId: 'version-1',
-          periodEnd: '2026-10-11T00:00:00Z',
-          canPropose: false,
-          blockedByIncrease: false,
-          canCancel: true,
-          canFinalize: true,
-          adjustments: [
-            {
-              adjustmentId: 'price-1',
-              status: 'proposed',
-              effectiveFrom: '2026-10-06T00:00:00Z',
-              percentageBps: '1000',
-              reason: 'Published tariff correction',
-              contractualBasis: 'Clause 7',
-              adjustmentAmountIrR: '50000',
-              calculationSha256: 'a'.repeat(64),
-              adjustmentInvoiceId: null,
-              calculation: {
-                contractId: '11111111-1111-4111-8111-111111111111',
-                versionId: 'version-1',
-                originalInvoiceId: 'invoice-1',
-                reason: 'Published tariff correction',
-                contractualBasis: 'Clause 7',
-                quote: {
-                  effectiveFrom: '2026-10-06T00:00:00Z',
-                  percentageBps: '1000',
-                  amountIrR: '50000',
-                  oldFutureIrR: '500000',
-                  newFutureIrR: '550000',
-                  components: [
-                    {
-                      source: 'original_invoice',
-                      invoiceId: 'invoice-1',
-                      basisIrR: '1000000',
-                      changeIrR: '50000',
-                    },
-                  ],
-                },
-              },
-            },
-          ],
-        })
-      )
+  const proposal = priceAdjustmentRow('proposed', 'charge');
+  const fetchMock = vi.fn(async () =>
+    Response.json({
+      contractId: priceContractId,
+      profileId: priceProfileId,
+      versionId: priceVersionId,
+      periodEnd: proposal.periodEnd,
+      canPropose: false,
+      blockedByIncrease: false,
+      canCancel: true,
+      canFinalize: true,
+      adjustments: [proposal],
+    })
   );
   vi.stubGlobal('fetch', fetchMock);
   const container = document.createElement('div');
@@ -185,11 +138,11 @@ it('opens a disclosed proposal from the staff contract link and starts finalizat
     );
     await act(async () => finalize?.click());
     expect(container.textContent).toContain(
-      '/api/staff/electricity/price-adjustments/price-1/finalize'
+      `/api/staff/electricity/price-adjustments/${priceAdjustmentId}/finalize`
     );
     expect(container.textContent).toContain('Electricity price financial review');
     expect(container.textContent).toContain('50,000 IRR');
-    expect(container.textContent).toContain('invoice-1');
+    expect(container.textContent).toContain(priceOriginalInvoiceId);
   } finally {
     await act(async () => root.unmount());
     container.remove();
@@ -301,6 +254,10 @@ it('reviews the server price before preparing the exact publish command', async 
         .querySelectorAll('form')[1]!
         .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
     );
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(h.action).not.toBeNull();
+    });
     expect(fetchMock.mock.calls.some(([url]) => String(url).endsWith('/review'))).toBe(true);
     expect(h.action?.body).toMatchObject({
       expectedReviewHash: 'a'.repeat(64),
@@ -322,35 +279,24 @@ it('opens a finalized adjustment invoice in the staff ledger', async () => {
     '/admin/electricity-price-adjustments?contractId=11111111-1111-4111-8111-111111111111'
   );
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  const finalized = {
+    ...priceAdjustmentRow('finalized', 'charge'),
+    adjustmentInvoiceId: '11111111-1111-7111-8111-111111111111',
+  };
   vi.stubGlobal(
     'fetch',
-    vi.fn(
-      async () =>
-        new Response(
-          JSON.stringify({
-            contractId: '11111111-1111-4111-8111-111111111111',
-            versionId: 'version-1',
-            periodEnd: '2026-10-11T00:00:00Z',
-            canPropose: false,
-            canCancel: false,
-            canFinalize: false,
-            blockedByIncrease: false,
-            adjustments: [
-              {
-                adjustmentId: 'price-1',
-                status: 'finalized',
-                effectiveFrom: '2026-10-06T00:00:00Z',
-                percentageBps: '1000',
-                reason: 'Tariff',
-                contractualBasis: 'Clause 7',
-                adjustmentAmountIrR: '50000',
-                calculationSha256: 'a'.repeat(64),
-                adjustmentInvoiceId: '11111111-1111-7111-8111-111111111111',
-                calculation: { quote: { oldFutureIrR: '500000', newFutureIrR: '550000' } },
-              },
-            ],
-          })
-        )
+    vi.fn(async () =>
+      Response.json({
+        contractId: priceContractId,
+        profileId: priceProfileId,
+        versionId: priceVersionId,
+        periodEnd: finalized.periodEnd,
+        canPropose: false,
+        canCancel: false,
+        canFinalize: false,
+        blockedByIncrease: false,
+        adjustments: [finalized],
+      })
     )
   );
   const container = document.createElement('div');

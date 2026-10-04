@@ -69,10 +69,14 @@ async function click(label: string) {
   await act(async () => button!.click());
 }
 async function set(id: string, value: string) {
-  const input = container.querySelector<HTMLInputElement>(`#${id}`)!;
+  const input = container.querySelector<HTMLInputElement | HTMLTextAreaElement>(`#${id}`)!;
   expect(input).not.toBeNull();
   await act(async () => {
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, value);
+    const prototype =
+      input instanceof HTMLTextAreaElement
+        ? HTMLTextAreaElement.prototype
+        : HTMLInputElement.prototype;
+    Object.getOwnPropertyDescriptor(prototype, 'value')!.set!.call(input, value);
     input.dispatchEvent(new Event('input', { bubbles: true }));
   });
 }
@@ -86,6 +90,7 @@ async function proposal() {
       .querySelectorAll('form')[1]!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
+  await act(async () => vi.dynamicImportSettled());
 }
 function deferred() {
   let resolve!: (value: Response) => void;

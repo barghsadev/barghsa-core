@@ -1,51 +1,77 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { Button, Card, CardContent } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-
-interface PriceComponent {
-  source: 'original_invoice' | 'quantity_increase' | 'price_adjustment';
-  invoiceId: string;
-  basisIrR: string;
-  oldFutureIrR: string;
-  changeIrR: string;
-  eligibleFrom: string;
-}
-interface PriceAdjustment {
-  adjustmentId: string;
-  status: 'proposed' | 'finalized' | 'cancelled';
-  effectiveFrom: string;
-  percentageBps: string;
-  reason: string;
-  contractualBasis: string;
-  adjustmentAmountIrR: string;
-  adjustmentInvoiceId: string | null;
-  calculation: {
-    quote: { oldFutureIrR: string; newFutureIrR: string; components: PriceComponent[] };
-  };
-}
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import {
+  parseElectricityPriceAdjustmentRow,
+  type ElectricityPriceAdjustmentRow,
+} from '../lib/electricity-price-adjustment-row.js';
 
 export function ElectricityPriceAdjustmentsPanel({
   contractId,
+  profileId,
+  versionId,
   formatTimestamp,
 }: {
   contractId: string;
+  profileId: string;
+  versionId: string | null;
   formatTimestamp?: (value: string) => string;
 }) {
   const locale = useLocale();
   const timestamp =
     formatTimestamp ?? ((value: string) => formatInTimezone(value, 'Asia/Tehran', locale));
   const numbers = useNumberFormatting(locale);
-  const [adjustments, setAdjustments] = useState<PriceAdjustment[]>([]);
+  function percentage(basisPoints: string) {
+    const value = BigInt(basisPoints);
+    const whole = numbers.number(value / 100n);
+    const remainder = value % 100n;
+    if (remainder === 0n) return whole;
+    const fraction = numbers
+      .number(Number(remainder < 0n ? -remainder : remainder) / 100, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        useGrouping: false,
+      })
+      .slice(numbers.number(0).length);
+    const sign =
+      value < 0n && value > -100n ? numbers.number(-1).replace(numbers.number(1), '') : '';
+    return `${sign}${whole}${fraction}`;
+  }
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const scopeKey = JSON.stringify([actor, profileRevision, profileId, contractId, versionId]);
+  const scope = useRef(scopeKey);
+  const generation = useRef(0);
+  const pending = useRef(false);
+  if (scope.current !== scopeKey) {
+    scope.current = scopeKey;
+    ++generation.current;
+  }
+  const [loadedAdjustments, setAdjustments] = useState<ElectricityPriceAdjustmentRow[]>([]);
+  const [acceptedScope, setAcceptedScope] = useState<string | null>(null);
+  const adjustments = acceptedScope === scopeKey ? loadedAdjustments : [];
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [revision, setRevision] = useState(0);
   const copy = (key: string) => t(`electricity.priceAdjustment.${key}`, locale);
+  function reload() {
+    if (scope.current !== scopeKey || pending.current) return;
+    ++generation.current;
+    pending.current = true;
+    setLoading(true);
+    setRevision((value) => value + 1);
+  }
 
   useEffect(() => {
     const controller = new AbortController();
+    const token = generation.current;
+    const current = () => !controller.signal.aborted && token === generation.current;
+    pending.current = true;
     setLoading(true);
     setError(false);
     void fetch(`/api/electricity/contracts/${encodeURIComponent(contractId)}/price-adjustments`, {
@@ -53,32 +79,67 @@ export function ElectricityPriceAdjustmentsPanel({
       signal: controller.signal,
     })
       .then(async (response) => {
+        if (!current()) return null;
+        if ([401, 403, 404].includes(response.status)) {
+          setAdjustments([]);
+          setAcceptedScope(null);
+          setError(true);
+          return null;
+        }
         if (!response.ok) throw new Error('Price history unavailable');
-        return response.json() as Promise<{ adjustments: PriceAdjustment[] }>;
+        const result: unknown = await response.json();
+        if (!current()) return null;
+        if (
+          !result ||
+          typeof result !== 'object' ||
+          !('adjustments' in result) ||
+          !Array.isArray(result.adjustments)
+        )
+          throw new Error('Invalid price history');
+        const rows = result.adjustments.map(parseElectricityPriceAdjustmentRow);
+        if (
+          rows.some((row) => !row || row.contractId !== contractId) ||
+          new Set(rows.map((row) => row?.adjustmentId)).size !== rows.length
+        )
+          throw new Error('Invalid price history');
+        return rows.filter((row): row is ElectricityPriceAdjustmentRow => row !== null);
       })
       .then((result) => {
-        if (!Array.isArray(result.adjustments)) throw new Error('Invalid price history');
-        if (!controller.signal.aborted) setAdjustments(result.adjustments);
+        if (result && current()) {
+          setAdjustments(result);
+          setAcceptedScope(scopeKey);
+        }
       })
       .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+        if (current()) setError(true);
       })
       .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if (current()) {
+          pending.current = false;
+          setLoading(false);
+        }
       });
-    return () => controller.abort();
-  }, [contractId, revision]);
+    return () => {
+      controller.abort();
+      if (token === generation.current) ++generation.current;
+    };
+  }, [scopeKey, contractId, revision]);
 
   if (!loading && !error && adjustments.length === 0) return null;
   return (
-    <Card>
+    <Card data-testid="electricity-price-history">
       <CardContent className="space-y-4 pt-6 text-sm">
         <h2 className="font-semibold">{copy('title')}</h2>
         {loading ? <p role="status">{copy('loading')}</p> : null}
         {error ? (
           <div role="alert" className="flex items-center gap-3">
             <span>{copy('error')}</span>
-            <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
+            <Button
+              data-testid="electricity-price-history-retry"
+              variant="outline"
+              disabled={loading}
+              onClick={reload}
+            >
               {copy('retry')}
             </Button>
           </div>
@@ -111,7 +172,7 @@ export function ElectricityPriceAdjustmentsPanel({
                 </div>
                 <div>
                   <dt className="text-muted-foreground">{copy('percentage')}</dt>
-                  <dd>{numbers.number(Number(adjustment.percentageBps) / 100)}%</dd>
+                  <dd>{percentage(adjustment.percentageBps)}%</dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground">{copy('oldFuture')}</dt>

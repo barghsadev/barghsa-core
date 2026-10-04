@@ -147,21 +147,10 @@ for (const locale of ['en', 'fa'] as const) {
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toContainText(copy('reviewTitle'));
-    const confirm = dialog.getByRole('button', {
-      name: locale === 'en' ? 'Confirm' : 'تأیید',
-      exact: true,
-    });
-    await confirm.click();
-    await expect.poll(() => publishBodies.length).toBe(1);
-    await expect(confirm).toBeEnabled();
-    await confirm.click();
-    await expect.poll(() => publishBodies.length).toBe(2);
-    expect(publishBodies[1]).toEqual(publishBodies[0]);
-    expect(publishBodies[0]!.expectedReviewHash).toBe('b'.repeat(64));
     await dialog
       .getByRole('button', { name: locale === 'en' ? 'Cancel' : 'انصراف', exact: true })
       .click();
-    version = 'changed-version';
+    version = '99999999-9999-4999-8999-999999999999';
     await list.getByRole('button', { name: copy('refresh'), exact: true }).click();
     await expect(page.locator('#price-reason')).toHaveValue('Tariff draft');
     await page.locator('#electricity-price-contract').fill('88888888-8888-4888-8888-888888888888');
@@ -171,6 +160,38 @@ for (const locale of ['en', 'fa'] as const) {
     await list.getByRole('button', { name: copy('refresh'), exact: true }).click();
     await expect(list.getByRole('alert')).toContainText(copy('forbidden'));
     await expect(page.locator('#price-reason')).toHaveCount(0);
+    // Reopen an authorized scope before the write; an unknown command cannot be discarded.
+    status = 200;
+    version = priceState.versionId;
+    await page.locator('#electricity-price-contract').fill(changeContractId);
+    await main.getByRole('button', { name: copy('open'), exact: true }).click();
+    await page.locator('#price-percent').fill('10');
+    await page.locator('#price-effective').fill('2026-10-06T12:00');
+    await page.locator('#price-reason').fill('Tariff draft');
+    await page.locator('#price-basis').fill('Clause draft');
+    await list.getByRole('button', { name: copy('reviewProposal'), exact: true }).click();
+    await expect(dialog).toContainText(copy('reviewTitle'));
+    const confirm = dialog.getByRole('button', {
+      name: locale === 'en' ? 'Confirm' : 'تأیید',
+      exact: true,
+    });
+    await confirm.click();
+    await expect.poll(() => publishBodies.length).toBe(1);
+    await expect(dialog).toHaveCount(0);
+    await page
+      .getByRole('button', {
+        name: appText('electricity.priceForm.retryCaptured', locale),
+        exact: true,
+      })
+      .click();
+    await expect(confirm).toBeEnabled();
+    await confirm.click();
+    await expect.poll(() => publishBodies.length).toBe(2);
+    expect(publishBodies[1]).toEqual(publishBodies[0]);
+    expect(publishBodies[0]!.expectedReviewHash).toBe('b'.repeat(64));
+    await expect(dialog).toHaveCount(0);
+    await expect(page.locator('#price-reason')).toHaveValue('Tariff draft');
+    await expect(page.locator('#electricity-price-contract')).toBeDisabled();
   });
   test(`increase decision submits the reviewed hash and retains its key after a failed write (${locale})`, async ({
     page,

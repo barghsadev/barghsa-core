@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { test, expect, type Page } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { crmShell } from './crm-shell-fixture';
@@ -137,6 +138,7 @@ for (const locale of ['en', 'fa'] as const) {
       (r) => {
         reads.push(r.request().url());
         const contractId = new URL(r.request().url()).pathname.split('/')[5];
+        const calculation = { ...priceRow.calculation, contractId };
         return fail
           ? r.fulfill({ status: 503, json: {} })
           : r.fulfill({
@@ -145,7 +147,14 @@ for (const locale of ['en', 'fa'] as const) {
                 contractId,
                 canPropose: false,
                 adjustments: [
-                  { ...priceRow, calculation: { ...priceRow.calculation, contractId } },
+                  {
+                    ...priceRow,
+                    contractId,
+                    calculation,
+                    calculationSha256: createHash('sha256')
+                      .update(JSON.stringify(calculation))
+                      .digest('hex'),
+                  },
                 ],
               },
             });
