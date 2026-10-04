@@ -1,194 +1,393 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/app';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
-import { Button, Card, CardContent, FinancialReviewSummary } from '@barghsa/ui';
-import { parseElectricityIncreaseSigningReview } from '@barghsa/shared/finance';
+import { Button, Card, CardContent, FinancialReviewSummary, Input } from '@barghsa/ui';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useZodForm,
+  type UseFormReturn,
+} from '@barghsa/ui/form';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import type { ElectricityIncreaseSigningReview } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { withCsrf } from '../lib/csrf.js';
+import {
+  boundIncreaseSigningReview,
+  confirmedIncreaseRequest,
+  confirmedIncreaseSignature,
+  definitiveIncreaseRejection,
+  increaseRecord,
+  increaseState,
+  maximumIncreaseQuantity,
+  type ElectricityIncreaseDraft,
+  type ElectricityIncreaseState,
+} from '../lib/electricity-increase-form.js';
 
-interface IncreaseRequest {
-  requestId: string;
-  requestedKwh: string;
-  status: string;
-  reviewReason: string | null;
-  createdAt: string;
-  amendmentSha256: string | null;
-  adjustmentInvoiceId: string | null;
-  adjustmentAmount: string | null;
-  effectiveAt: string | null;
-  expiredAt: string | null;
-  adjustmentInvoiceState: string | null;
-  adjustmentPaidAmount: string | null;
-  financialFollowUp: boolean;
-  amendmentDocument: {
-    originalKwh: string;
-    requestedKwh: string;
-    incrementalKwh: string;
-    earliestEffectiveFrom: string;
-    periodEnd: string;
-    pricingRule: string;
-    activationRule: string;
-  } | null;
+interface CapturedIncreaseAttempt {
+  kind: 'request' | 'sign';
+  body: string;
+  generation: number;
+  uncertain: boolean;
+  snapshot: ElectricityIncreaseState;
+  quantity?: string;
+  review?: ElectricityIncreaseSigningReview;
 }
-interface IncreaseState {
-  request: IncreaseRequest | null;
-  maxPercentage: number;
-  originalKwh: string;
-  canRequest: boolean;
-  quote: { adjustmentIrR: string; eligibleFrom: string } | null;
-  review: unknown;
-}
-
 export function ElectricityIncreasePanel({
   contractId,
   versionId,
+  profileId,
   formatTimestamp,
 }: {
   contractId: string;
   versionId: string;
+  profileId: string;
   formatTimestamp?: (value: string) => string;
 }) {
   const locale = useLocale();
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const scopeKey = JSON.stringify([actor, profileRevision, profileId, contractId, versionId]);
+  const scope = useRef(scopeKey);
+  const generation = useRef(0);
+  if (scope.current !== scopeKey) {
+    scope.current = scopeKey;
+    ++generation.current;
+  }
   const timestamp =
     formatTimestamp ?? ((value: string) => formatInTimezone(value, 'Asia/Tehran', locale));
   const numbers = useNumberFormatting(locale);
-  const [data, setData] = useState<IncreaseState | null>(null);
-  const [quantity, setQuantity] = useState('');
+  const [loadedData, setData] = useState<ElectricityIncreaseState | null>(null);
+  const [acceptedScope, setAcceptedScope] = useState<string | null>(null);
+  const data = acceptedScope === scopeKey ? loadedData : null;
+  const dataRef = useRef(data);
+  dataRef.current = data;
   const [retry, setRetry] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const pending = useRef(false);
   const [error, setError] = useState<'load' | 'stepup' | 'save' | null>(null);
-  const [key, setKey] = useState(() => crypto.randomUUID());
-  const [signKey, setSignKey] = useState(() => crypto.randomUUID());
   const [agreed, setAgreed] = useState(false);
-
-  useEffect(() => {
-    const controller = new AbortController();
+  const attempt = useRef<CapturedIncreaseAttempt | null>(null);
+  const [captured, setCaptured] = useState<CapturedIncreaseAttempt | null>(null);
+  const [unconfirmed, setUnconfirmed] = useState(false);
+  const copy = (key: string) => t(`electricity.increaseForm.${key}`, locale);
+  const messages = { requestedKwh: copy('quantityInvalid') };
+  const form: UseFormReturn<ElectricityIncreaseDraft> = useZodForm<ElectricityIncreaseDraft>(
+    async () => {
+      const token = generation.current;
+      const current = dataRef.current;
+      const raw = form.getValues().requestedKwh;
+      const schemas = await import('../lib/electricity-increase-form-schemas.js');
+      return token === generation.current &&
+        current &&
+        current === dataRef.current &&
+        raw === form.getValues().requestedKwh
+        ? schemas.electricityIncreaseSchema(
+            { format: copy('quantityInvalid'), range: copy('quantityRange') },
+            current.originalKwh,
+            maximumIncreaseQuantity(current.originalKwh, current.maxPercentage)
+          )
+        : schemas.inactiveIncreaseSchema;
+    },
+    {
+      defaultValues: { requestedKwh: '' },
+      validationUnavailableMessage: copy('validationUnavailable'),
+    }
+  );
+  const fieldErrors = useActionFieldErrors(
+    form,
+    messages,
+    t('electricity.increase.failed', locale)
+  );
+  function clearAttempt() {
+    attempt.current = null;
+    setCaptured(null);
+    setUnconfirmed(false);
+  }
+  function withdraw() {
+    ++generation.current;
+    clearAttempt();
+    dataRef.current = null;
     setData(null);
+    setAcceptedScope(null);
+    form.reset({ requestedKwh: '' });
+    setAgreed(false);
+    pending.current = false;
+    setSaving(false);
+    setLoading(false);
+    setError('load');
+  }
+  function refresh() {
+    if (scope.current !== scopeKey || pending.current || attempt.current) return;
+    ++generation.current;
+    dataRef.current = null;
+    setData(null);
+    setAcceptedScope(null);
     setAgreed(false);
     setLoading(true);
+    setRetry((value) => value + 1);
+  }
+  useEffect(() => {
+    clearAttempt();
+    pending.current = false;
+    setSaving(false);
+    setAgreed(false);
+    form.reset({ requestedKwh: '' });
     setError(null);
+    return () => {
+      ++generation.current;
+    };
+  }, [scopeKey]);
+  useEffect(() => {
+    const controller = new AbortController();
+    const token = generation.current;
+    dataRef.current = null;
+    setData(null);
+    setLoading(true);
+    setError(null);
+    setAgreed(false);
     void fetch(`/api/electricity/contracts/${encodeURIComponent(contractId)}/increase`, {
       credentials: 'include',
       signal: controller.signal,
     })
       .then(async (response) => {
+        if (controller.signal.aborted || token !== generation.current) return null;
+        if ([401, 403, 404].includes(response.status)) {
+          withdraw();
+          return null;
+        }
         if (!response.ok) throw new Error('Increase unavailable');
-        return response.json() as Promise<IncreaseState>;
+        const value: unknown = await response.json();
+        if (controller.signal.aborted || token !== generation.current) return null;
+        if (!increaseState(value)) throw new Error('Increase malformed');
+        if (
+          value.request &&
+          (value.request.contractId !== contractId ||
+            value.request.profileId !== profileId ||
+            value.request.versionId !== versionId ||
+            value.request.originalKwh !== value.originalKwh)
+        ) {
+          withdraw();
+          return null;
+        }
+        return value;
       })
       .then((value) => {
-        if (!controller.signal.aborted) setData(value);
+        if (value && !controller.signal.aborted && token === generation.current) {
+          dataRef.current = value;
+          setData(value);
+          setAcceptedScope(scopeKey);
+        }
       })
       .catch(() => {
-        if (!controller.signal.aborted) setError('load');
+        if (!controller.signal.aborted && token === generation.current) setError('load');
       })
       .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if (!controller.signal.aborted && token === generation.current) setLoading(false);
       });
     return () => controller.abort();
-  }, [contractId, retry]);
-
-  const maximum = data
-    ? (() => {
-        const limit =
-          BigInt(data.originalKwh) + (BigInt(data.originalKwh) * BigInt(data.maxPercentage)) / 100n;
-        return (limit < 9_223_372_036_854_775_807n ? limit : 9_223_372_036_854_775_807n).toString();
-      })()
-    : '';
-  const valid =
-    data &&
-    /^\d+$/.test(quantity) &&
-    BigInt(quantity) > BigInt(data.originalKwh) &&
-    BigInt(quantity) <= BigInt(maximum);
-  const review = data?.review ? parseElectricityIncreaseSigningReview(data.review) : null;
-  const confirmedReview =
-    review &&
-    data?.request &&
-    data.request.amendmentDocument &&
-    data.quote &&
-    review.scope.resourceId === contractId &&
-    review.data.versionId === versionId &&
-    review.data.requestId === data.request.requestId &&
-    review.data.amendmentSha256 === data.request.amendmentSha256 &&
-    review.data.originalKwh === data.originalKwh &&
-    review.data.requestedKwh === data.request.requestedKwh &&
-    review.data.incrementalKwh === data.request.amendmentDocument?.incrementalKwh &&
-    review.data.effectiveFrom === data.request.amendmentDocument.earliestEffectiveFrom &&
-    review.data.periodEnd === data.request.amendmentDocument.periodEnd &&
-    review.data.adjustmentIrR === data.quote.adjustmentIrR &&
-    review.data.eligibleFrom === data.quote.eligibleFrom
-      ? review
-      : null;
-
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!valid || saving) return;
-    setSaving(true);
-    setError(null);
+  }, [scopeKey, contractId, retry]);
+  const maximum = data ? maximumIncreaseQuantity(data.originalKwh, data.maxPercentage) : '';
+  const confirmedReview = data
+    ? boundIncreaseSigningReview(data, contractId, versionId, profileId)
+    : null;
+  async function send(retrying: boolean) {
+    if (scope.current !== scopeKey) return;
+    const current = attempt.current;
+    if (!current || current.generation !== generation.current) return;
     try {
       const response = await fetch(
-        `/api/electricity/contracts/${encodeURIComponent(contractId)}/increase`,
+        `/api/electricity/contracts/${encodeURIComponent(contractId)}/increase${current.kind === 'sign' ? '/sign' : ''}`,
         {
           method: 'POST',
           credentials: 'include',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: current.body,
+        }
+      );
+      const value: unknown = await response.json().catch(() => null);
+      if (current !== attempt.current || current.generation !== generation.current) return;
+      if (
+        response.status === 403 &&
+        increaseRecord(value) &&
+        increaseRecord(value.error) &&
+        value.error.code === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code
+      ) {
+        setError('stepup');
+        return;
+      }
+      if ([401, 403, 404].includes(response.status)) {
+        withdraw();
+        return;
+      }
+      if (!response.ok) {
+        if (
+          !retrying &&
+          response.status >= 400 &&
+          response.status < 500 &&
+          definitiveIncreaseRejection(value, response.status)
+        ) {
+          clearAttempt();
+          if (
+            current.kind === 'request' &&
+            response.status === 400 &&
+            increaseRecord(value) &&
+            increaseRecord(value.error) &&
+            value.error.code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+            Array.isArray(value.error.fields) &&
+            fieldErrors(value.error.fields)
+          )
+            return;
+          setError('save');
+          return;
+        }
+        throw new Error('Increase unconfirmed');
+      }
+      const proven =
+        current.kind === 'request'
+          ? confirmedIncreaseRequest(value, {
+              contractId,
+              versionId,
+              profileId,
+              actor,
+              originalKwh: current.snapshot.originalKwh,
+              requestedKwh: current.quantity!,
+            })
+          : !!current.snapshot.request &&
+            !!current.review &&
+            confirmedIncreaseSignature(value, current.snapshot.request, current.review, actor);
+      if (response.status !== 201 || !proven) throw new Error('Increase receipt unconfirmed');
+      clearAttempt();
+      pending.current = false;
+      setSaving(false);
+      setError(null);
+      if (current.kind === 'request') form.reset({ requestedKwh: '' });
+      setAgreed(false);
+      refresh();
+    } catch {
+      if (current === attempt.current && current.generation === generation.current) {
+        current.uncertain = true;
+        setUnconfirmed(true);
+        setError('save');
+      }
+    }
+  }
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const source = dataRef.current;
+    if (
+      scope.current !== scopeKey ||
+      !source?.canRequest ||
+      source.request ||
+      pending.current ||
+      attempt.current
+    )
+      return;
+    const token = generation.current;
+    const raw = form.getValues().requestedKwh;
+    pending.current = true;
+    setSaving(true);
+    setError(null);
+    try {
+      await form.handleSubmit(async () => {
+        if (
+          token !== generation.current ||
+          source !== dataRef.current ||
+          raw !== form.getValues().requestedKwh
+        )
+          return;
+        const quantity = raw.trim();
+        const command: CapturedIncreaseAttempt = {
+          kind: 'request',
           body: JSON.stringify({
             requestedKwh: quantity,
             expectedVersionId: versionId,
-            idempotencyKey: key,
+            idempotencyKey: crypto.randomUUID(),
           }),
-        }
-      );
-      if (response.status === 403) {
-        setError('stepup');
-        return;
-      }
-      if (!response.ok) throw new Error('Increase request failed');
-      setKey(crypto.randomUUID());
-      setRetry((value) => value + 1);
+          generation: token,
+          uncertain: false,
+          snapshot: source,
+          quantity,
+        };
+        attempt.current = command;
+        setCaptured(command);
+        await send(false);
+      })();
     } catch {
-      setError('save');
+      if (token === generation.current) setError('save');
     } finally {
-      setSaving(false);
+      if (token === generation.current) {
+        pending.current = false;
+        setSaving(false);
+      }
     }
   }
-
   async function sign() {
-    if (!data?.request?.amendmentSha256 || !data.quote || !confirmedReview || !agreed || saving)
+    const source = dataRef.current;
+    if (
+      scope.current !== scopeKey ||
+      pending.current ||
+      attempt.current ||
+      !source?.request?.amendmentSha256 ||
+      source.request.status !== 'awaiting_signature' ||
+      !source.quote ||
+      !confirmedReview ||
+      !agreed
+    )
       return;
+    const token = generation.current;
+    pending.current = true;
+    setSaving(true);
+    setError(null);
+    const command: CapturedIncreaseAttempt = {
+      kind: 'sign',
+      body: JSON.stringify({
+        expectedAmendmentSha256: source.request.amendmentSha256,
+        expectedAdjustmentIrR: source.quote.adjustmentIrR,
+        expectedReviewHash: confirmedReview.hash,
+        idempotencyKey: crypto.randomUUID(),
+      }),
+      generation: token,
+      uncertain: false,
+      snapshot: source,
+      review: confirmedReview,
+    };
+    attempt.current = command;
+    setCaptured(command);
+    try {
+      await send(false);
+    } finally {
+      if (token === generation.current) {
+        pending.current = false;
+        setSaving(false);
+      }
+    }
+  }
+  async function retryCaptured() {
+    if (scope.current !== scopeKey || pending.current || !attempt.current) return;
+    const token = generation.current;
+    pending.current = true;
     setSaving(true);
     setError(null);
     try {
-      const response = await fetch(
-        `/api/electricity/contracts/${encodeURIComponent(contractId)}/increase/sign`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({
-            expectedAmendmentSha256: data.request.amendmentSha256,
-            expectedAdjustmentIrR: data.quote.adjustmentIrR,
-            expectedReviewHash: confirmedReview.hash,
-            idempotencyKey: signKey,
-          }),
-        }
-      );
-      if (response.status === 403) {
-        setError('stepup');
-        return;
-      }
-      if (!response.ok) throw new Error('Signature unavailable');
-      setSignKey(crypto.randomUUID());
-      setAgreed(false);
-      setRetry((value) => value + 1);
-    } catch {
-      setError('save');
+      await send(true);
     } finally {
-      setSaving(false);
+      if (token === generation.current) {
+        pending.current = false;
+        setSaving(false);
+      }
     }
   }
-
   if (!loading && !error && data && !data.canRequest && !data.request) return null;
   return (
     <Card>
@@ -196,7 +395,12 @@ export function ElectricityIncreasePanel({
         <h2 className="font-semibold">{t('electricity.increase.title', locale)}</h2>
         {loading ? <p role="status">{t('electricity.increase.loading', locale)}</p> : null}
         {error === 'load' ? (
-          <Button variant="outline" onClick={() => setRetry((value) => value + 1)}>
+          <Button
+            data-testid="electricity-increase-refresh"
+            variant="outline"
+            onClick={refresh}
+            disabled={saving || !!captured}
+          >
             {t('electricity.increase.retry', locale)}
           </Button>
         ) : null}
@@ -298,11 +502,20 @@ export function ElectricityIncreasePanel({
                   <input
                     type="checkbox"
                     checked={agreed}
-                    onChange={(event) => setAgreed(event.target.checked)}
+                    disabled={saving || !!captured}
+                    onChange={(event) => {
+                      if (scope.current === scopeKey && !pending.current && !attempt.current)
+                        setAgreed(event.target.checked);
+                    }}
                   />
                   <span>{t('electricity.increase.agree', locale)}</span>
                 </label>
-                <Button type="button" disabled={!agreed || saving} onClick={() => void sign()}>
+                <Button
+                  type="button"
+                  loading={saving}
+                  disabled={!agreed || saving || !!captured}
+                  onClick={() => void sign()}
+                >
                   {t('electricity.increase.sign', locale)}
                 </Button>
               </div>
@@ -340,14 +553,10 @@ export function ElectricityIncreasePanel({
                 </a>
               </p>
             ) : null}
-            {error === 'save' ? (
+            {error === 'save' && !captured ? (
               <p role="alert">
                 {t('electricity.increase.signFailed', locale)}{' '}
-                <button
-                  type="button"
-                  className="underline"
-                  onClick={() => setRetry((value) => value + 1)}
-                >
+                <button type="button" className="underline" onClick={refresh}>
                   {t('electricity.increase.retry', locale)}
                 </button>
               </p>
@@ -355,40 +564,84 @@ export function ElectricityIncreasePanel({
           </div>
         ) : null}
         {data?.canRequest ? (
-          <form onSubmit={(event) => void submit(event)} className="space-y-3">
-            <p>
-              {t('electricity.increase.limit', locale)}: {numbers.irrDigits(maximum)} kWh
-            </p>
-            <label className="block" htmlFor="electricity-increase-kwh">
-              {t('electricity.increase.quantity', locale)}
-            </label>
-            <input
-              id="electricity-increase-kwh"
-              type="number"
-              min={(BigInt(data.originalKwh) + 1n).toString()}
-              max={maximum}
-              step="1"
-              required
-              value={quantity}
-              onChange={(event) => setQuantity(event.target.value)}
-              className="w-full rounded-md border bg-background p-2"
-            />
-            <p className="text-muted-foreground">{t('electricity.increase.future', locale)}</p>
-            {error === 'stepup' ? (
+          <Form {...form}>
+            <form
+              noValidate
+              data-testid="electricity-increase-form"
+              onSubmit={(event) => void submit(event)}
+              className="space-y-3"
+            >
+              <p>
+                {t('electricity.increase.limit', locale)}: {numbers.irrDigits(maximum)} kWh
+              </p>
+              <FormField
+                control={form.control}
+                name="requestedKwh"
+                render={({ field }) => (
+                  <FormItem id="electricity-increase-kwh">
+                    <FormLabel>{t('electricity.increase.quantity', locale)}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={21}
+                        disabled={!!captured}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {t('electricity.increase.future', locale)} {copy('preserved')}
+                    </FormDescription>
+                    <div className="grid">
+                      <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
+                        {copy('quantityRange')}
+                      </p>
+                      <FormMessage className="col-start-1 row-start-1" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              {error === 'stepup' ? (
+                <p role="alert">
+                  {t('electricity.increase.stepup', locale)}{' '}
+                  <a className="underline" href="/settings/security">
+                    {t('electricity.increase.security', locale)}
+                  </a>
+                </p>
+              ) : null}
+              {(error === 'save' && !captured) || form.formState.errors.root ? (
+                <p role="alert">
+                  {form.formState.errors.root?.validation?.message ??
+                    t('electricity.increase.failed', locale)}
+                </p>
+              ) : null}
+              <Button type="submit" loading={saving} disabled={saving || !!captured}>
+                {t('electricity.increase.submit', locale)}
+              </Button>
+            </form>
+          </Form>
+        ) : null}
+        {captured && acceptedScope === scopeKey ? (
+          <div className="space-y-2">
+            {unconfirmed ? (
               <p role="alert">
-                {t('electricity.increase.stepup', locale)}{' '}
-                <a className="underline" href="/settings/security">
-                  {t('electricity.increase.security', locale)}
-                </a>
+                {copy(captured.kind === 'sign' ? 'signingUncertain' : 'uncertain')}
               </p>
             ) : null}
-            {error === 'save' ? (
-              <p role="alert">{t('electricity.increase.failed', locale)}</p>
-            ) : null}
-            <Button type="submit" disabled={!valid || saving}>
-              {t('electricity.increase.submit', locale)}
+            <Button
+              type="button"
+              variant="outline"
+              data-testid={
+                captured.kind === 'sign'
+                  ? 'electricity-increase-sign-retry'
+                  : 'electricity-increase-retry'
+              }
+              disabled={saving}
+              onClick={() => void retryCaptured()}
+            >
+              {copy('retryCaptured')}
             </Button>
-          </form>
+          </div>
         ) : null}
       </CardContent>
     </Card>

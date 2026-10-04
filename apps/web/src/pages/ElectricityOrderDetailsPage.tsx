@@ -867,6 +867,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           {detail.contractState === 'Active' ? (
             <ElectricityIncreasePanel
               contractId={detail.contractId}
+              profileId={detail.profileId}
               versionId={detail.versionId}
               formatTimestamp={time.format}
             />

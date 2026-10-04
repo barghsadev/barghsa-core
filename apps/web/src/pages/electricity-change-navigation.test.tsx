@@ -76,6 +76,7 @@ it('increase history clears private work and old callbacks cannot dismiss a newe
   await act(async () => root.render(<Bound />));
   await fill('increase-reason-' + increaseRow.requestId, 'Private draft');
   await click('Approve and issue amendment');
+  await act(async () => vi.dynamicImportSettled());
   const old = confirmation!;
   await act(async () => navigate({ cursor: changeCursor }));
   expect(host.querySelector('[role="dialog"]')).toBeNull();
@@ -83,6 +84,7 @@ it('increase history clears private work and old callbacks cannot dismiss a newe
     host.querySelector<HTMLInputElement>('#increase-reason-' + increaseRow.requestId)?.value
   ).toBe('');
   await click('Approve and issue amendment');
+  await act(async () => vi.dynamicImportSettled());
   const count = fetcher.mock.calls.length;
   await act(async () => {
     old.onClose();

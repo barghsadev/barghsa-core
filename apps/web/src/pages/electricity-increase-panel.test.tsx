@@ -3,47 +3,19 @@ import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { ElectricityIncreasePanel } from './ElectricityIncreasePanel.js';
 
-const contractId = '11111111-1111-4111-8111-111111111111';
-const versionId = '22222222-2222-4222-8222-222222222222';
-const profileId = '33333333-3333-4333-8333-333333333333';
-const requestId = '44444444-4444-4444-8444-444444444444';
-const invoiceId = '55555555-5555-4555-8555-555555555555';
-const orderId = '66666666-6666-4666-8666-666666666666';
-const periodStart = '2026-09-01T00:00:00.000Z';
-const periodEnd = '2026-10-24T00:00:00.000Z';
-const eligibleFrom = '2026-09-24T00:00:00.000Z';
-
-function signingReview() {
-  return {
-    schemaVersion: 1,
-    hash: 'b'.repeat(64),
-    scope: { action: 'electricity.quantity-increase-sign', profileId, resourceId: contractId },
-    data: {
-      currency: 'IRR',
-      profileId,
-      contractId,
-      orderId,
-      versionId,
-      requestId,
-      amendmentSha256: 'a'.repeat(64),
-      originalInvoiceId: invoiceId,
-      originalInvoiceIrR: '1000000',
-      originalKwh: '100',
-      requestedKwh: '120',
-      incrementalKwh: '20',
-      effectiveFrom: eligibleFrom,
-      eligibleFrom,
-      periodStart,
-      periodEnd,
-      remainingMs: String(Date.parse(periodEnd) - Date.parse(eligibleFrom)),
-      periodMs: String(Date.parse(periodEnd) - Date.parse(periodStart)),
-      baseShareIrR: '200000',
-      priceAdjustments: [],
-      adjustmentIrR: '200000',
-      activationRule: 'after-signature-full-payment-and-effective-date',
-    },
-  };
-}
+import {
+  contractId,
+  versionId,
+  profileId,
+  requestId,
+  invoiceId,
+  eligibleFrom,
+  periodEnd,
+  signingReview,
+  requestRow,
+  amendment,
+  signatureRow,
+} from './electricity-increase-fixtures.js';
 
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ irrDigits: String }),
@@ -64,6 +36,8 @@ it('keeps increases hidden while the policy is disabled', async () => {
             maxPercentage: 0,
             originalKwh: '100',
             canRequest: false,
+            quote: null,
+            review: null,
           })
         )
     )
@@ -73,7 +47,13 @@ it('keeps increases hidden while the policy is disabled', async () => {
   const root = createRoot(container);
   try {
     await act(async () =>
-      root.render(<ElectricityIncreasePanel contractId="contract-1" versionId="version-1" />)
+      root.render(
+        <ElectricityIncreasePanel
+          contractId={contractId}
+          versionId={versionId}
+          profileId={profileId}
+        />
+      )
     );
     expect(container.querySelector('input')).toBeNull();
     expect(container.textContent).not.toContain('Request more electricity');
@@ -93,6 +73,7 @@ it('shows the one submitted request without offering a second submission', async
         new Response(
           JSON.stringify({
             request: {
+              ...requestRow(),
               requestedKwh: '120',
               status: 'pending',
               reviewReason: null,
@@ -101,6 +82,8 @@ it('shows the one submitted request without offering a second submission', async
             maxPercentage: 20,
             originalKwh: '100',
             canRequest: false,
+            quote: null,
+            review: null,
           })
         )
     )
@@ -110,7 +93,13 @@ it('shows the one submitted request without offering a second submission', async
   const root = createRoot(container);
   try {
     await act(async () =>
-      root.render(<ElectricityIncreasePanel contractId="contract-1" versionId="version-1" />)
+      root.render(
+        <ElectricityIncreasePanel
+          contractId={contractId}
+          versionId={versionId}
+          profileId={profileId}
+        />
+      )
     );
     expect(container.textContent).toContain('Awaiting staff review');
     expect(container.textContent).toContain('120');
@@ -124,39 +113,53 @@ it('shows the one submitted request without offering a second submission', async
 it('shows approved amendment terms before the customer signs', async () => {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
-  const fetchMock = vi.fn(
-    async () =>
-      new Response(
-        JSON.stringify({
-          request: {
-            requestId,
-            requestedKwh: '120',
-            status: 'awaiting_signature',
-            reviewReason: null,
-            amendmentSha256: 'a'.repeat(64),
-            amendmentDocument: {
-              originalKwh: '100',
+  let signed = false;
+  const fetchMock = vi.fn(async (_url: string, init?: RequestInit) => {
+    if (init?.method === 'POST') {
+      signed = true;
+      return Response.json(signatureRow(), { status: 201 });
+    }
+    return new Response(
+      JSON.stringify({
+        request: signed
+          ? signatureRow()
+          : {
+              ...requestRow({ reviewedAt: eligibleFrom, reviewedBy: 'staff' }),
+              requestId,
               requestedKwh: '120',
-              incrementalKwh: '20',
-              earliestEffectiveFrom: eligibleFrom,
-              periodEnd,
+              status: 'awaiting_signature',
+              reviewReason: null,
+              amendmentSha256: 'a'.repeat(64),
+              amendmentDocument: {
+                ...amendment(),
+                originalKwh: '100',
+                requestedKwh: '120',
+                incrementalKwh: '20',
+                earliestEffectiveFrom: eligibleFrom,
+                periodEnd,
+              },
             },
-          },
-          maxPercentage: 20,
-          originalKwh: '100',
-          canRequest: false,
-          quote: { adjustmentIrR: '200000', eligibleFrom },
-          review: signingReview(),
-        })
-      )
-  );
+        maxPercentage: 20,
+        originalKwh: '100',
+        canRequest: false,
+        quote: { adjustmentIrR: '200000', eligibleFrom },
+        review: signingReview(),
+      })
+    );
+  });
   vi.stubGlobal('fetch', fetchMock);
   const container = document.createElement('div');
   document.body.append(container);
   const root = createRoot(container);
   try {
     await act(async () =>
-      root.render(<ElectricityIncreasePanel contractId={contractId} versionId={versionId} />)
+      root.render(
+        <ElectricityIncreasePanel
+          contractId={contractId}
+          versionId={versionId}
+          profileId={profileId}
+        />
+      )
     );
     expect(container.textContent).toContain('Quantity increase amendment');
     expect(container.textContent).toContain('Additional quantity: 20 kWh');
@@ -196,6 +199,11 @@ it('does not offer signing when the priced review does not reconcile', async () 
         new Response(
           JSON.stringify({
             request: {
+              ...requestRow({
+                reviewedAt: eligibleFrom,
+                reviewedBy: 'staff',
+                amendmentDocument: amendment(),
+              }),
               requestId,
               requestedKwh: '120',
               status: 'awaiting_signature',
@@ -215,7 +223,13 @@ it('does not offer signing when the priced review does not reconcile', async () 
   const root = createRoot(container);
   try {
     await act(async () =>
-      root.render(<ElectricityIncreasePanel contractId={contractId} versionId={versionId} />)
+      root.render(
+        <ElectricityIncreasePanel
+          contractId={contractId}
+          versionId={versionId}
+          profileId={profileId}
+        />
+      )
     );
     expect(container.textContent).toContain('The financial review is unavailable');
     expect(container.querySelector('input[type="checkbox"]')).toBeNull();
@@ -241,16 +255,19 @@ it.each([
           new Response(
             JSON.stringify({
               request: {
+                ...signatureRow({ status: 'expired', expiredAt: periodEnd }),
                 requestedKwh: '120',
                 status: 'expired',
                 reviewReason: null,
-                adjustmentInvoiceId: 'invoice-1',
+                adjustmentInvoiceId: invoiceId,
                 adjustmentInvoiceState: invoiceState,
                 financialFollowUp: followUp,
               },
               maxPercentage: 20,
               originalKwh: '100',
               canRequest: false,
+              quote: null,
+              review: null,
             })
           )
       )
@@ -260,7 +277,13 @@ it.each([
     const root = createRoot(container);
     try {
       await act(async () =>
-        root.render(<ElectricityIncreasePanel contractId="contract-1" versionId="version-1" />)
+        root.render(
+          <ElectricityIncreasePanel
+            contractId={contractId}
+            versionId={versionId}
+            profileId={profileId}
+          />
+        )
       );
       expect(container.textContent).toContain(message);
       expect(container.querySelector('input')).toBeNull();

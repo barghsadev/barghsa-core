@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
+import { InputFieldException } from '../common/input-field.exception.js';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -28,9 +29,21 @@ import {
 } from './electricity-increase.service.js';
 
 const idSchema = z.string().uuid();
-function parse<T>(schema: z.ZodType<T>, value: unknown): T {
+function parse<T>(schema: z.ZodType<T>, value: unknown, fields: readonly string[] = []): T {
   const parsed = schema.safeParse(value);
-  if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+  if (!parsed.success) {
+    if (
+      parsed.error.issues.length &&
+      parsed.error.issues.every(
+        (issue) =>
+          issue.path.length === 1 &&
+          fields.includes(String(issue.path[0])) &&
+          ['invalid_type', 'too_small', 'too_big', 'invalid_format'].includes(issue.code)
+      )
+    )
+      throw new InputFieldException(parsed.error.issues.map((issue) => String(issue.path[0])));
+    throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+  }
   return parsed.data;
 }
 
@@ -59,7 +72,7 @@ export class CustomerElectricityIncreaseController {
   submit(@Param('id') id: string, @Body() body: unknown, @Req() req: AuthenticatedRequest) {
     return this.service.submit(
       parse(idSchema, id),
-      parse(requestIncreaseSchema, body),
+      parse(requestIncreaseSchema, body, ['requestedKwh']),
       req.session,
       req.ip ?? '127.0.0.1'
     );
@@ -120,7 +133,7 @@ export class StaffElectricityIncreaseController {
       throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
     return this.service.approve(
       parse(idSchema, requestId),
-      parse(approveIncreaseSchema, body),
+      parse(approveIncreaseSchema, body, ['effectiveFrom']),
       req.session,
       req.ip ?? '127.0.0.1'
     );
@@ -141,7 +154,7 @@ export class StaffElectricityIncreaseController {
     return this.service.decisionReview(
       parse(idSchema, requestId),
       'approve',
-      parse(approveIncreaseReviewSchema, body),
+      parse(approveIncreaseReviewSchema, body, ['effectiveFrom']),
       req.session
     );
   }
@@ -160,7 +173,7 @@ export class StaffElectricityIncreaseController {
       throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
     return this.service.reject(
       parse(idSchema, requestId),
-      parse(rejectIncreaseSchema, body),
+      parse(rejectIncreaseSchema, body, ['reason']),
       req.session,
       req.ip ?? '127.0.0.1'
     );
@@ -181,7 +194,7 @@ export class StaffElectricityIncreaseController {
     return this.service.decisionReview(
       parse(idSchema, requestId),
       'reject',
-      parse(rejectIncreaseReviewSchema, body),
+      parse(rejectIncreaseReviewSchema, body, ['reason']),
       req.session
     );
   }

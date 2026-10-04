@@ -146,6 +146,7 @@ it('retains an increase confirmation across transient refresh and removes it whe
   );
   await act(async () => root.render(<AdminElectricityIncreasesPage />));
   await click('Approve and issue amendment');
+  await act(async () => vi.dynamicImportSettled());
   expect(container.querySelector('[role="dialog"]')).not.toBeNull();
   const action = captured.action;
   status = 503;

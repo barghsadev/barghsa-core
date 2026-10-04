@@ -2,6 +2,7 @@ import { test, expect, type Page } from './coverage-fixture';
 import type { Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/admin-ui';
+import { t as appText } from '@barghsa/i18n/app';
 import {
   changeContractId,
   changeCursor,
@@ -197,6 +198,13 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await confirm.click();
     await expect.poll(() => writes.length).toBe(1);
+    await expect(dialog).toHaveCount(0);
+    await page
+      .getByRole('button', {
+        name: appText('electricity.increaseDecisionForm.retryCaptured', locale),
+        exact: true,
+      })
+      .click();
     await expect(confirm).toBeEnabled();
     await confirm.click();
     await expect.poll(() => writes.length).toBe(2);

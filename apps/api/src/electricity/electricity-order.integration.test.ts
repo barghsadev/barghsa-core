@@ -2336,6 +2336,63 @@ it.each([
       expectedVersionId: versionId,
       idempotencyKey: randomUUID(),
     };
+    const increaseSnapshot = async () => ({
+      core: await correctionSnapshot(order.orderId, order.contractId),
+      requests: (
+        await http.pool.query(
+          'SELECT to_jsonb(r) AS row FROM electricity_quantity_increase_requests r WHERE contract_id=$1 ORDER BY id',
+          [order.contractId]
+        )
+      ).rows,
+      audits: (await http.pool.query('SELECT to_jsonb(a) AS row FROM audit_log a ORDER BY id'))
+        .rows,
+    });
+    const invalidNoWrite = async (
+      endpoint: string,
+      body: unknown,
+      fields?: string[],
+      requestHeaders = headers,
+      status = 400,
+      error = fields ? 'VALIDATION:INPUT:INVALID' : 'VALIDATION:INPUT_INVALID'
+    ) => {
+      const before = await increaseSnapshot();
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: requestHeaders,
+        body: JSON.stringify(body),
+      });
+      expect(response.status, http.logs()).toBe(status);
+      const failure = await response.json();
+      expect(failure).toHaveProperty('error.code', error);
+      expect(failure).toHaveProperty(
+        'error.correlationId',
+        expect.stringMatching(/^[0-9a-f-]{36}$/i)
+      );
+      expect(JSON.stringify(failure)).not.toContain('PRIVATE');
+      if (fields) expect(failure).toHaveProperty('error.fields', fields);
+      else expect(failure).not.toHaveProperty('error.fields');
+      expect(await increaseSnapshot()).toEqual(before);
+    };
+    if (decision === 'reject') {
+      await invalidNoWrite(path, { ...request, requestedKwh: 'PRIVATE' }, ['requestedKwh']);
+      await invalidNoWrite(path, {
+        ...request,
+        requestedKwh: 'PRIVATE',
+        expectedVersionId: 'PRIVATE',
+      });
+      await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='buyer'");
+      await invalidNoWrite(
+        path,
+        { ...request, requestedKwh: 'PRIVATE' },
+        undefined,
+        headers,
+        403,
+        'AUTHZ:STEP_UP_REQUIRED'
+      );
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=clock_timestamp() WHERE user_id='buyer'"
+      );
+    }
     const overLimit = await fetch(path, {
       method: 'POST',
       headers,
@@ -2345,6 +2402,68 @@ it.each([
     const submitted = await fetch(path, { method: 'POST', headers, body: JSON.stringify(request) });
     expect(submitted.status, http.logs()).toBe(201);
     const result = (await submitted.json()) as { requestId: string; periodEnd: string };
+    if (decision === 'reject') {
+      const staffPath = `${http.base}/api/staff/electricity/increase-requests/${result.requestId}`;
+      const command = { idempotencyKey: randomUUID(), expectedReviewHash: 'a'.repeat(64) };
+      await invalidNoWrite(
+        `${staffPath}/approve/review`,
+        { effectiveFrom: 'PRIVATE' },
+        ['effectiveFrom'],
+        staffHeaders
+      );
+      await invalidNoWrite(
+        `${staffPath}/approve`,
+        { ...command, effectiveFrom: 'PRIVATE' },
+        ['effectiveFrom'],
+        staffHeaders
+      );
+      await invalidNoWrite(
+        `${staffPath}/reject/review`,
+        { reason: 'PRIVATE'.repeat(143) },
+        ['reason'],
+        staffHeaders
+      );
+      await invalidNoWrite(
+        `${staffPath}/reject`,
+        { ...command, reason: ' ' },
+        ['reason'],
+        staffHeaders
+      );
+      await invalidNoWrite(
+        `${staffPath}/reject`,
+        { ...command, reason: ' ', expectedReviewHash: 'PRIVATE' },
+        undefined,
+        staffHeaders
+      );
+      await http.pool.query(
+        "DELETE FROM user_roles WHERE user_id='reviewer' AND role_id='role-legal-contracts'"
+      );
+      await invalidNoWrite(
+        `${staffPath}/reject/review`,
+        { reason: ' ' },
+        undefined,
+        staffHeaders,
+        403,
+        'AUTHZ:FORBIDDEN'
+      );
+      await http.pool.query(
+        "INSERT INTO user_roles(user_id,role_id) VALUES('reviewer','role-legal-contracts')"
+      );
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='reviewer'"
+      );
+      await invalidNoWrite(
+        `${staffPath}/approve`,
+        { ...command, effectiveFrom: 'PRIVATE' },
+        undefined,
+        staffHeaders,
+        403,
+        'AUTHZ:STEP_UP_REQUIRED'
+      );
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=clock_timestamp() WHERE user_id='reviewer'"
+      );
+    }
     expect(
       (await fetch(path, { method: 'POST', headers, body: JSON.stringify(request) })).status,
       http.logs()
@@ -2825,16 +2944,41 @@ it.each([
       data: { outcome: string };
     };
     expect(rejectReview.data.outcome).toBe('reject_without_adjustment');
+    const rejectionCommand = {
+      idempotencyKey: randomUUID(),
+      reason: 'Outside approved capacity',
+      expectedReviewHash: rejectReview.hash,
+    };
     const rejected = await fetch(rejectPath, {
       method: 'POST',
       headers: staffHeaders,
-      body: JSON.stringify({
-        idempotencyKey: randomUUID(),
-        reason: 'Outside approved capacity',
-        expectedReviewHash: rejectReview.hash,
-      }),
+      body: JSON.stringify(rejectionCommand),
     });
     expect(rejected.status, http.logs()).toBe(201);
+    const rejectedRow = await rejected.json();
+    expect(rejectedRow).toMatchObject({
+      requestId: result.requestId,
+      contractId: order.contractId,
+      orderId: order.orderId,
+      profileId: input.profileId,
+      versionId,
+      originalKwh: '10',
+      requestedKwh: '12',
+      status: 'rejected',
+      reviewReason: rejectionCommand.reason,
+      reviewedBy: 'reviewer',
+      amendmentDocument: null,
+      adjustmentInvoiceId: null,
+    });
+    const beforeRejectionReplay = await increaseSnapshot();
+    const replay = await fetch(rejectPath, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify(rejectionCommand),
+    });
+    expect(replay.status, http.logs()).toBe(201);
+    expect(await replay.json()).toEqual(rejectedRow);
+    expect(await increaseSnapshot()).toEqual(beforeRejectionReplay);
     const rejectionAudit = (
       await http.pool.query<{
         metadata: { reviewHash: string; financialReview: { hash: string } };

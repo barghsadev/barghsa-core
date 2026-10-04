@@ -2,6 +2,7 @@ import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import AdminElectricityIncreasesPage from './AdminElectricityIncreasesPage.js';
+import { increaseDecisionFixture } from '../test/electricity-increase-decision-fixtures.js';
 
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ irrDigits: String, number: String }),
@@ -134,7 +135,10 @@ it('shows each staff increase decision review and submits its exact hash', async
     if (path.endsWith('/approve/review')) return Response.json(decisionReview('approve'));
     if (path.endsWith('/reject/review')) return Response.json(decisionReview('reject'));
     if (path.endsWith('/approve') || path.endsWith('/reject'))
-      return Response.json({ status: 'done' });
+      return Response.json(
+        await increaseDecisionFixture().receipt(path.endsWith('/approve') ? 'approve' : 'reject'),
+        { status: 201 }
+      );
     return Response.json({ requests: [request], nextBefore: null });
   });
   vi.stubGlobal('fetch', fetchMock);
@@ -147,6 +151,10 @@ it('shows each staff increase decision review and submits its exact hash', async
     );
     expect(button, label).toBeDefined();
     await act(async () => button!.click());
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+    });
   };
   const confirm = async () => {
     const button = [
@@ -154,6 +162,11 @@ it('shows each staff increase decision review and submits its exact hash', async
     ].find((item) => item.textContent?.includes('Confirm'));
     expect(button).toBeDefined();
     await act(async () => button!.click());
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+      expect(container.querySelector('[id^="increase-reason-"]')).not.toBeNull();
+    });
   };
   try {
     await act(async () => root.render(<AdminElectricityIncreasesPage />));

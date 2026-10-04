@@ -5,6 +5,27 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'electricity.increaseForm.quantityInvalid': 'عدد صحیح مثبت با حداکثر ۱۹ رقم وارد کنید.',
+  'electricity.increaseForm.quantityRange':
+    'مقداری بیشتر از مقدار فعلی و در محدوده مجاز نمایش‌داده‌شده انتخاب کنید.',
+  'electricity.increaseForm.validationUnavailable': 'اعتبارسنجی در دسترس نیست. دوباره تلاش کنید.',
+  'electricity.increaseForm.uncertain':
+    'نتیجه تأیید نشد. پیش از تغییر، درخواست ثبت‌شده را دوباره ارسال کنید.',
+  'electricity.increaseForm.retryCaptured': 'ارسال دوباره درخواست ثبت‌شده',
+  'electricity.increaseForm.preserved':
+    'اگر درخواست نیاز به اصلاح داشته باشد، مقدار واردشده حفظ می‌شود.',
+  'electricity.increaseForm.signingUncertain':
+    'امضا تأیید نشد. پیش از تازه‌سازی، همان امضا را دوباره ارسال کنید.',
+  'electricity.increaseDecisionForm.dateInvalid':
+    'زمان معتبر انتخاب کنید یا تاریخ را خالی بگذارید.',
+  'electricity.increaseDecisionForm.reasonInvalid': 'دلیل باید بین ۱ تا ۱٬۰۰۰ نویسه باشد.',
+  'electricity.increaseDecisionForm.reasonHelp':
+    'تاریخ تأیید و دلیل رد مستقل هستند. تأیید از دلیل رد استفاده نمی‌کند.',
+  'electricity.increaseDecisionForm.validationUnavailable':
+    'اعتبارسنجی در دسترس نیست. دوباره تلاش کنید.',
+  'electricity.increaseDecisionForm.uncertain':
+    'نتیجه تأیید نشد. پیش از تغییر، همان تصمیم ثبت‌شده را دوباره ارسال کنید.',
+  'electricity.increaseDecisionForm.retryCaptured': 'ارسال دوباره تصمیم ثبت‌شده',
   'electricity.correctionForm.addressInvalid': 'نشانی باید بین ۱ تا ۵۰۰ نویسه باشد.',
   'electricity.correctionForm.postalInvalid': 'کد پستی معتبر ۱۰ رقمی را وارد کنید.',
   'electricity.correctionForm.noteInvalid': 'پاسخ باید بین ۱ تا ۱٬۰۰۰ نویسه باشد.',
@@ -1720,6 +1741,25 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'electricity.increaseForm.quantityInvalid': 'Enter a positive whole number of at most 19 digits.',
+  'electricity.increaseForm.quantityRange':
+    'Choose a quantity above the current amount and within the displayed limit.',
+  'electricity.increaseForm.validationUnavailable': 'Validation is unavailable. Try again.',
+  'electricity.increaseForm.uncertain':
+    'The result could not be confirmed. Retry the captured request before changing it.',
+  'electricity.increaseForm.retryCaptured': 'Retry captured request',
+  'electricity.increaseForm.preserved': 'Your quantity is kept if the request needs correction.',
+  'electricity.increaseForm.signingUncertain':
+    'The signature could not be confirmed. Retry the same signature before refreshing.',
+  'electricity.increaseDecisionForm.dateInvalid':
+    'Choose a valid date and time, or leave the date empty.',
+  'electricity.increaseDecisionForm.reasonInvalid': 'Enter a reason of 1 to 1,000 characters.',
+  'electricity.increaseDecisionForm.reasonHelp':
+    'Approval date and rejection reason are independent. Approval does not use the reason.',
+  'electricity.increaseDecisionForm.validationUnavailable': 'Validation is unavailable. Try again.',
+  'electricity.increaseDecisionForm.uncertain':
+    'The result could not be confirmed. Retry the captured decision before changing it.',
+  'electricity.increaseDecisionForm.retryCaptured': 'Retry captured decision',
   'electricity.correctionForm.addressInvalid': 'Enter an address of 1 to 500 characters.',
   'electricity.correctionForm.postalInvalid': 'Enter a valid 10-digit postal code.',
   'electricity.correctionForm.noteInvalid': 'Enter a response of 1 to 1,000 characters.',
