@@ -1,6 +1,24 @@
 import { lookup } from './lookup.js';
 
 const en: Record<string, string> = {
+  postalArrivalInvalid:
+    'Choose a valid arrival date on or after the parcel sending date, or leave it empty.',
+  postalTrackingUrlInvalid:
+    'Use a public HTTPS URL of up to 2,000 characters, without credentials or a custom port, or leave it empty.',
+  postalTrackingNoteInvalid: 'Enter a customer-visible note of 1–1,000 characters.',
+  postalTrackingUrlHelp:
+    'Optional. Public HTTPS link, up to 2,000 characters. The site is not checked automatically.',
+  postalTrackingUnconfirmed:
+    'The tracking update could not be confirmed. Your draft is still here. Reload to verify it or retry the same reviewed update.',
+  postalTrackingRetry: 'Retry reviewed tracking update',
+  progressNoteHelp:
+    'Required. Describe the verified work in up to 1,000 characters. The customer will see this note and receive a notification.',
+  progressNoteInvalid: 'Enter a customer-visible note of 1–1,000 characters.',
+  progressActionUnconfirmed:
+    'The construction update could not be confirmed. Your draft is still here. Reload to verify it before preparing another update.',
+  progressValidationUnavailable:
+    'Could not validate this form. Your changes are still here. Try again.',
+  progressRetryCommand: 'Retry the same update',
   postalCourierInvalid: 'Enter a courier name of 1–100 characters.',
   postalTrackingInvalid: 'Enter a tracking number of 1–200 characters.',
   postalSendDateInvalid: 'Choose a valid sending date on or before today in UTC.',
@@ -59,7 +77,8 @@ const en: Record<string, string> = {
   postalCopied: 'Tracking number copied.',
   postalCopyError: 'Could not copy. Select and copy the tracking number.',
   postalTrackingNote: 'Customer-visible tracking note',
-  postalTrackingNoteHelp: 'The customer will see this note and receive a notification.',
+  postalTrackingNoteHelp:
+    'Required. Up to 1,000 characters. The customer will see this note and receive a notification.',
   postalTrackingRecorded: 'Tracking updated on',
   postalTrackingReview: 'Review tracking update',
   postalTrackingReviewTitle: 'Confirm tracking update',
@@ -348,6 +367,24 @@ const en: Record<string, string> = {
 };
 
 const fa: Record<string, string> = {
+  postalArrivalInvalid:
+    'تاریخ معتبر رسیدن را در روز ارسال بسته یا پس از آن انتخاب کنید، یا خالی بگذارید.',
+  postalTrackingUrlInvalid:
+    'نشانی عمومی HTTPS تا ۲٬۰۰۰ نویسه، بدون اطلاعات ورود یا درگاه سفارشی وارد کنید، یا خالی بگذارید.',
+  postalTrackingNoteInvalid: 'توضیح قابل نمایش به مشتری با ۱ تا ۱٬۰۰۰ نویسه وارد کنید.',
+  postalTrackingUrlHelp:
+    'اختیاری. پیوند عمومی HTTPS تا ۲٬۰۰۰ نویسه. سایت به‌صورت خودکار بررسی نمی‌شود.',
+  postalTrackingUnconfirmed:
+    'ذخیره اطلاعات پیگیری تأیید نشد. پیش‌نویس شما حفظ شده است. برای بررسی دوباره بارگذاری کنید یا همان تغییر بررسی‌شده را دوباره ارسال کنید.',
+  postalTrackingRetry: 'ارسال دوباره تغییر پیگیری بررسی‌شده',
+  progressNoteHelp:
+    'الزامی. کار تأییدشده را با حداکثر ۱٬۰۰۰ نویسه توضیح دهید. مشتری این توضیح را می‌بیند و اعلان دریافت می‌کند.',
+  progressNoteInvalid: 'توضیح قابل نمایش به مشتری با ۱ تا ۱٬۰۰۰ نویسه وارد کنید.',
+  progressActionUnconfirmed:
+    'ثبت پیشرفت ساخت تأیید نشد. پیش‌نویس شما حفظ شده است. پیش از آماده‌سازی تغییر دیگر، دوباره بارگذاری کنید تا نتیجه بررسی شود.',
+  progressValidationUnavailable:
+    'اعتبارسنجی فرم انجام نشد. تغییرات شما حفظ شده است. دوباره تلاش کنید.',
+  progressRetryCommand: 'تلاش دوباره برای همین گزارش',
   postalCourierInvalid: 'نام شرکت ارسال را با ۱ تا ۱۰۰ نویسه وارد کنید.',
   postalTrackingInvalid: 'کد رهگیری را با ۱ تا ۲۰۰ نویسه وارد کنید.',
   postalSendDateInvalid: 'تاریخ ارسال معتبر و حداکثر تا روز جاری به وقت UTC انتخاب کنید.',
@@ -406,7 +443,8 @@ const fa: Record<string, string> = {
   postalCopied: 'کد رهگیری کپی شد.',
   postalCopyError: 'کپی انجام نشد. کد رهگیری را انتخاب و کپی کنید.',
   postalTrackingNote: 'توضیح پیگیری قابل مشاهده برای مشتری',
-  postalTrackingNoteHelp: 'مشتری این توضیح را می\u200cبیند و اعلان دریافت می\u200cکند.',
+  postalTrackingNoteHelp:
+    'الزامی. حداکثر ۱٬۰۰۰ نویسه. مشتری این توضیح را می\u200cبیند و اعلان دریافت می\u200cکند.',
   postalTrackingRecorded: 'زمان به\u200cروزرسانی پیگیری',
   postalTrackingReview: 'بازبینی اطلاعات پیگیری',
   postalTrackingReviewTitle: 'تأیید اطلاعات پیگیری',

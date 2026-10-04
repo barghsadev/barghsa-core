@@ -79,6 +79,104 @@ async function detail(f: Awaited<ReturnType<typeof fixture>>) {
   return response.json() as Promise<Progress>;
 }
 
+it('projects construction note feedback without weakening protected commands, live grants or step-up', async () => {
+  const f = await fixture();
+  const route = `admin/solar/construction/${f.request}`;
+  const snapshot = async () => ({
+    request: (
+      await http.pool.query('SELECT * FROM solar_construction_requests WHERE id=$1', [f.request])
+    ).rows,
+    postal: (
+      await http.pool.query('SELECT * FROM solar_construction_postal WHERE request_id=$1', [
+        f.request,
+      ])
+    ).rows,
+    contract: (await http.pool.query('SELECT * FROM contracts WHERE id=$1', [f.contract])).rows,
+    events: (
+      await http.pool.query(
+        'SELECT * FROM solar_construction_progress_events WHERE request_id=$1 ORDER BY revision',
+        [f.request]
+      )
+    ).rows,
+    audit: (
+      await http.pool.query(
+        "SELECT id,event,metadata FROM audit_log WHERE metadata::jsonb->>'requestId'=$1::text ORDER BY id",
+        [f.request]
+      )
+    ).rows,
+    notifications: (
+      await http.pool.query('SELECT id FROM in_app_notifications WHERE profile_id=$1 ORDER BY id', [
+        f.profile,
+      ])
+    ).rows,
+  });
+  const before = await snapshot();
+  const reject = async (path: string, body: unknown, status: number, owned = false) => {
+    const response = await send(f.actor, path, 'POST', body);
+    expect(response.status, http.logs()).toBe(status);
+    const result = await response.json();
+    if (owned)
+      expect(result).toMatchObject({
+        error: { code: 'VALIDATION:INPUT:INVALID', fields: ['note'] },
+      });
+    else expect(result).not.toHaveProperty('error.fields');
+    expect(JSON.stringify(result)).not.toContain('PRIVATE');
+    expect(await snapshot()).toEqual(before);
+    return result;
+  };
+  for (const confirm of [false, true]) {
+    const path = route + (confirm ? '' : '/review');
+    const base = { ...command(), ...(confirm ? { expectedReviewHash: 'a'.repeat(64) } : {}) };
+    for (const note of [null, ' ', 'PRIVATE'.repeat(143)])
+      await reject(path, { ...base, note }, 400, true);
+    for (const body of [
+      { ...base, stage: 'PRIVATE' },
+      { ...base, operationId: 'PRIVATE', note: ' ' },
+      { ...base, expectedRevision: -1, note: ' ' },
+      { ...base, extra: 'PRIVATE', note: ' ' },
+    ])
+      await reject(path, body, 400);
+  }
+  await reject(route, { ...command(), expectedReviewHash: 'PRIVATE' }, 400);
+  await http.pool.query("UPDATE user_roles SET role_id='construction-reader' WHERE user_id=$1", [
+    f.actor,
+  ]);
+  for (const path of [route + '/review', route]) {
+    const result = await reject(path, { ...command(), note: 'PRIVATE'.repeat(143) }, 403);
+    expect(result).toMatchObject({ error: { code: 'AUTHZ:FORBIDDEN' } });
+  }
+  await http.pool.query("UPDATE user_roles SET role_id='construction-writer' WHERE user_id=$1", [
+    f.actor,
+  ]);
+  const input = await preview(f, { ...command(), note: `  ${'x'.repeat(1000)}  ` });
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE user_id=$1', [f.actor]);
+  const stepUp = await reject(route, input, 403);
+  expect(stepUp).toMatchObject({ requiresStepUp: true });
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 second' WHERE user_id=$1",
+    [f.actor]
+  );
+  const saved = await record(f, input);
+  expect(saved.status, http.logs()).toBe(200);
+  const receipt = (await saved.json()) as Progress;
+  expect(receipt).toMatchObject({
+    requestId: f.request,
+    profileId: f.profile,
+    contractId: f.contract,
+    revision: 1,
+  });
+  expect(receipt.events).toHaveLength(1);
+  expect(receipt.events[0]).toMatchObject({ stage: 'in_progress', note: 'x'.repeat(1000) });
+  expect(await (await record(f, input)).json()).toEqual(receipt);
+  const after = await snapshot();
+  expect(after.events).toHaveLength(1);
+  expect(after.audit).toHaveLength(1);
+  expect(after.notifications).toHaveLength(1);
+  expect(after.request).toEqual(before.request);
+  expect(after.postal).toEqual(before.postal);
+  expect(after.contract).toEqual(before.contract);
+});
+
 it('records three ordered milestones and exposes the same authorized customer timeline without author IDs', async () => {
   const f = await fixture();
   const before = await detail(f);

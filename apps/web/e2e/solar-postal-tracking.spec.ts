@@ -11,9 +11,11 @@ import {
   solarGuidance,
 } from '../src/test/solar-staff-fixtures';
 import { postalCalendarDate, type SolarPostalTracking } from '../src/lib/solar-postal-tracking';
+import { trackingReview, trackingSnapshot } from './solar-operation-form-fixture';
 const base = `/api/admin/solar/requests/${firstSolar}/postal/tracking`;
 function detail(revision = 0): SolarPostalTracking {
   return {
+    ...trackingSnapshot(),
     requestId: firstSolar,
     requestStatus: 'waiting_for_postal_submission',
     postalStatus: 'shipped',
@@ -79,16 +81,7 @@ for (const locale of ['en', 'fa'] as const) {
         const body = r.request().postDataJSON() as Record<string, unknown>;
         previews.push(body);
         return r.fulfill({
-          json: {
-            hash: 'a'.repeat(64),
-            data: {
-              ...current,
-              ...body,
-              previousEstimatedArrivalDate: current.estimatedArrivalDate,
-              previousTrackingUrl: current.trackingUrl,
-              previousNote: current.note,
-            },
-          },
+          json: trackingReview({ ...trackingSnapshot(), ...current }, body),
         });
       }
     );
@@ -242,7 +235,7 @@ for (const locale of ['en', 'fa'] as const) {
     await editor.getByRole('button', { name: copy('postalTrackingReload'), exact: true }).click();
     await expect(editor).toHaveCount(0);
     await expect(page.getByRole('button', { name: /First solar buyer/ })).toHaveCount(0);
-    await expect(page.getByRole('main')).not.toContainText('TRACK-1');
+    await expect(page.locator('#admin-content')).not.toContainText('TRACK-1');
   });
 
   test(`${locale}: a late tracking review cannot reopen after selecting another shipment`, async ({
@@ -288,16 +281,7 @@ for (const locale of ['en', 'fa'] as const) {
         const body = r.request().postDataJSON();
         await held;
         await r.fulfill({
-          json: {
-            hash: 'a'.repeat(64),
-            data: {
-              ...detail(),
-              ...body,
-              previousEstimatedArrivalDate: null,
-              previousTrackingUrl: null,
-              previousNote: null,
-            },
-          },
+          json: trackingReview({ ...trackingSnapshot(), ...detail() }, body),
         });
       }
     );

@@ -13,6 +13,7 @@ import {
   constructionStages,
 } from '../src/test/solar-progress-fixtures';
 import { solarGuidance } from '../src/test/solar-staff-fixtures';
+import { constructionReview, progressWithNotes } from './solar-operation-form-fixture';
 const base = '/api/admin/solar/construction';
 const scope = (page: Page, key: string, locale: 'en' | 'fa') =>
   page.getByRole('region', { name: tSolar(key, locale) });
@@ -52,6 +53,8 @@ for (const locale of ['en', 'fa'] as const) {
     const writes: Array<Record<string, unknown>> = [],
       previews: Array<Record<string, unknown>> = [];
     const saved = new Map<string, Record<string, unknown>>();
+    const savedProgress = () =>
+      progressWithNotes([...saved.values()].map((body) => String(body.note)));
     await page.route(
       (url) => url.pathname === base,
       (r) =>
@@ -67,8 +70,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route(
       (url) => url.pathname === `${base}/${constructionRequest}`,
       async (r) => {
-        if (r.request().method() === 'GET')
-          return r.fulfill({ json: constructionProgress(revision) });
+        if (r.request().method() === 'GET') return r.fulfill({ json: savedProgress() });
         const body = r.request().postDataJSON() as Record<string, unknown>;
         writes.push(body);
         if (needsStepUp) return r.fulfill({ status: 403, json: { requiresStepUp: true } });
@@ -83,7 +85,7 @@ for (const locale of ['en', 'fa'] as const) {
           lost = false;
           return r.fulfill({ status: 503, json: {} });
         }
-        return r.fulfill({ json: constructionProgress(revision) });
+        return r.fulfill({ json: savedProgress() });
       }
     );
     await page.route(
@@ -91,7 +93,7 @@ for (const locale of ['en', 'fa'] as const) {
       (r) => {
         const body = r.request().postDataJSON() as Record<string, unknown>;
         previews.push(body);
-        return r.fulfill({ json: { hash: 'a'.repeat(64) } });
+        return r.fulfill({ json: constructionReview(savedProgress(), body) });
       }
     );
     await page.route('**/api/auth/step-up', (r) => {
@@ -120,6 +122,11 @@ for (const locale of ['en', 'fa'] as const) {
           .fill('test-only-password');
         await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
         await expect(dialog.getByRole('alert')).toBeVisible();
+        const cancel = dialog.getByRole('button', { name: t('team.cancel', locale), exact: true });
+        await expect(cancel).toBeEnabled();
+        await cancel.click();
+        await expect(dialog).toHaveCount(0);
+        await page.getByRole('button', { name: copy('progressRetryCommand'), exact: true }).click();
         await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
       }
       await expect(dialog).toHaveCount(0);
@@ -173,7 +180,7 @@ for (const locale of ['en', 'fa'] as const) {
             agreement_accepted_at: '2026-09-20T23:00:00.000Z',
             submitted_at: '2026-09-20T23:00:00.000Z',
           },
-          progress: constructionProgress(3),
+          progress: savedProgress(),
           history: [],
         },
       })
@@ -182,8 +189,15 @@ for (const locale of ['en', 'fa'] as const) {
       r.fulfill({
         json: {
           guidance: solarGuidance,
-          postal: { status: 'received', trackingNumber: 'TRACK-1' },
-          canRecord: false,
+          requestStatus: 'contract_created',
+          postal: {
+            status: 'received',
+            courier: 'Post',
+            tracking_number: 'TRACK-1',
+            send_date: '2026-09-23',
+            receipt_image_id: null,
+            staff_notes: null,
+          },
         },
       })
     );
@@ -207,7 +221,7 @@ for (const locale of ['en', 'fa'] as const) {
     );
     expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
     await scope(page, 'constructionTitle', locale).screenshot({
-      path: `/tmp/barghsa-solar-progress-${locale}-${info.project.name}.png`,
+      path: info.outputPath(`solar-progress-${locale}.png`),
     });
   });
   test(`${locale}: queue retry retains accepted rows, URL search/cursors restore, and read-only staff cannot record`, async ({
@@ -299,8 +313,9 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route(
       (url) => url.pathname === `${base}/${constructionRequest}/review`,
       async (r) => {
+        const body = r.request().postDataJSON();
         await heldPreview;
-        return r.fulfill({ json: { hash: 'a'.repeat(64) } });
+        return r.fulfill({ json: constructionReview(constructionProgress(), body) });
       }
     );
     await page.goto(`/admin/solar-construction?requestId=${constructionRequest}`);

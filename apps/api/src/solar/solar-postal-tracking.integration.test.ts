@@ -99,6 +99,83 @@ async function counts(f: Fixture) {
     )
   ).rows[0];
 }
+it('projects tracking form fields while preserving live authority and exact no-write snapshots', async () => {
+  const f = await fixture();
+  const snapshot = async () => ({
+    postal: await row(f),
+    request: (
+      await http.pool.query('SELECT * FROM solar_construction_requests WHERE id=$1', [f.request])
+    ).rows,
+    effects: await counts(f),
+  });
+  const before = await snapshot();
+  const reject = async (route: string, body: unknown, status: number, fields: string[] | null) => {
+    const response = await send(f.actor, route, 'POST', body);
+    expect(response.status, http.logs()).toBe(status);
+    const result = await response.json();
+    if (fields)
+      expect(result).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID', fields } });
+    else expect(result).not.toHaveProperty('error.fields');
+    expect(JSON.stringify(result)).not.toContain('PRIVATE');
+    expect(await snapshot()).toEqual(before);
+    return result;
+  };
+  for (const confirm of [false, true]) {
+    const route = path(f) + (confirm ? '' : '/review');
+    const base = { ...command(), ...(confirm ? { expectedReviewHash: 'a'.repeat(64) } : {}) };
+    for (const [body, fields] of [
+      [{ ...base, estimatedArrivalDate: '2026-02-30' }, ['estimatedArrivalDate']],
+      [{ ...base, trackingUrl: 'https://PRIVATE.local/parcel' }, ['trackingUrl']],
+      [{ ...base, note: 'PRIVATE'.repeat(143) }, ['note']],
+      [{ ...base, note: ' ', expectedRevision: 'PRIVATE' }, null],
+      [{ ...base, note: ' ', extra: 'PRIVATE' }, null],
+    ] as const)
+      await reject(route, body, 400, fields ? [...fields] : null);
+  }
+  await reject(path(f), { ...command(), expectedReviewHash: 'PRIVATE' }, 400, null);
+  const early = await reject(
+    path(f) + '/review',
+    { ...command(), estimatedArrivalDate: '2026-01-01' },
+    409,
+    null
+  );
+  expect(early).not.toHaveProperty('error.fields');
+  await http.pool.query("UPDATE user_roles SET role_id='tracking-reader' WHERE user_id=$1", [
+    f.actor,
+  ]);
+  for (const route of [path(f) + '/review', path(f)]) {
+    const result = await reject(route, { ...command(), note: 'PRIVATE'.repeat(143) }, 403, null);
+    expect(result).toMatchObject({ error: { code: 'AUTHZ:FORBIDDEN' } });
+  }
+  await http.pool.query("UPDATE user_roles SET role_id='tracking-writer' WHERE user_id=$1", [
+    f.actor,
+  ]);
+  const { input } = await preview(f, { ...command(), note: `  ${'x'.repeat(1000)}  ` });
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE user_id=$1', [f.actor]);
+  const stepUp = await reject(path(f), input, 403, null);
+  expect(stepUp).toMatchObject({ requiresStepUp: true });
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 second' WHERE user_id=$1",
+    [f.actor]
+  );
+  const saved = await record(f, input);
+  expect(saved.status, http.logs()).toBe(200);
+  const receipt = await saved.json();
+  expect(receipt).toMatchObject({
+    requestId: f.request,
+    profileId: f.profile,
+    receiptImageId: null,
+    revision: 1,
+    note: 'x'.repeat(1000),
+    estimatedArrivalDate: input.estimatedArrivalDate,
+    trackingUrl: input.trackingUrl,
+    postalStatus: 'shipped',
+    requestStatus: 'waiting_for_postal_submission',
+  });
+  expect(await (await record(f, input)).json()).toEqual(receipt);
+  expect(await counts(f)).toEqual({ audit: 1, notifications: 1 });
+});
+
 it('records a reviewed public update once, preserves the shipment stage, and exposes only customer-safe fields', async () => {
   const f = await fixture();
   expect(await (await send(f.actor, path(f))).json()).toMatchObject({

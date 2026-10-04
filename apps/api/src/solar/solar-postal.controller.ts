@@ -69,18 +69,23 @@ function parse<S extends z.ZodType>(schema: S, body: unknown): z.output<S> {
 function parseForm<S extends z.ZodType>(
   schema: S,
   body: unknown,
-  family: 'shipment' | 'guidance' | 'reason'
+  family: 'shipment' | 'guidance' | 'reason' | 'tracking'
 ): z.output<S> {
   const result = schema.safeParse(body);
   if (result.success) return result.data as z.output<S>;
   const fields: string[] = [];
   for (const error of result.error.issues) {
     const path = error.path;
-    if (!['invalid_type', 'too_small', 'too_big', 'invalid_format'].includes(error.code))
+    if (
+      !['invalid_type', 'too_small', 'too_big', 'invalid_format'].includes(error.code) &&
+      !(family === 'tracking' && path[0] === 'trackingUrl' && error.code === 'custom')
+    )
       throw new BadRequestException('Invalid postal request');
     if (
       path.length === 1 &&
       ((family === 'reason' && path[0] === 'reason') ||
+        (family === 'tracking' &&
+          ['estimatedArrivalDate', 'trackingUrl', 'note'].includes(String(path[0]))) ||
         (family === 'shipment' &&
           ['courier', 'trackingNumber', 'sendDate', 'receiptImageId'].includes(String(path[0]))) ||
         (family === 'guidance' &&
@@ -176,7 +181,12 @@ export class StaffSolarPostalController {
     @Req() req: AuthenticatedRequest,
     @Body() body: unknown
   ) {
-    return this.tracking.review(req.session, id, parse(solarPostalTrackingCommand, body));
+    requireFormPermission(req, 'orders:write');
+    return this.tracking.review(
+      req.session,
+      id,
+      parseForm(solarPostalTrackingCommand, body, 'tracking')
+    );
   }
 
   @Post('requests/:id/postal/tracking')
@@ -196,10 +206,11 @@ export class StaffSolarPostalController {
     @Req() req: AuthenticatedRequest,
     @Body() body: unknown
   ) {
+    requireFormPermission(req, 'orders:write');
     return this.tracking.record(
       req.session,
       id,
-      parse(confirmedSolarPostalTrackingCommand, body),
+      parseForm(confirmedSolarPostalTrackingCommand, body, 'tracking'),
       req.ip ?? '127.0.0.1'
     );
   }

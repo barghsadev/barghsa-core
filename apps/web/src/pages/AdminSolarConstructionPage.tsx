@@ -1,11 +1,33 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
-import { Button, Input, Label, ListPage, Textarea } from '@barghsa/ui';
+import { Alert, AlertDescription, Button, Input, Label, ListPage, Textarea } from '@barghsa/ui';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useZodForm,
+} from '@barghsa/ui/form';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import type { SolarProgress } from '../lib/solar-progress.js';
+import {
+  captureProgress,
+  confirmedProgress,
+  definitiveProgressRejection,
+  parseProgress,
+  progressReviewHash,
+  type CapturedProgress,
+  type ProgressNoteDraft,
+} from '../lib/solar-progress-form.js';
 import { withCsrf } from '../lib/csrf.js';
 import { SolarStageProgress } from '../components/SolarStageProgress.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -18,6 +40,14 @@ interface Row {
   stage: string | null;
   revision: number;
 }
+interface ReviewedProgress {
+  captured: CapturedProgress;
+  action: TeamAction;
+  generation: number;
+  attempted: boolean;
+  rejected: boolean;
+  unconfirmed: boolean;
+}
 export function AdminSolarConstructionPage({
   queries,
   selected,
@@ -29,12 +59,14 @@ export function AdminSolarConstructionPage({
 }) {
   const locale = useLocale();
   const time = useAccountTime(locale);
+  const actor = useAccountUser();
   const copy = (key: string) => tSolar(key, locale);
   const [queue, setQueue] = useState<{
     items: Row[];
     nextBefore: string | null;
     search: string;
     key: string;
+    actor: string | null;
   } | null>(null);
   const [queueState, setQueueState] = useState<'loading' | 'ready' | 'error' | 'denied'>('loading');
   const [queueRevision, setQueueRevision] = useState(0);
@@ -43,8 +75,12 @@ export function AdminSolarConstructionPage({
     'loading'
   );
   const [detailRevision, setDetailRevision] = useState(0);
-  const [note, setNote] = useState('');
   const [preparing, setPreparing] = useState(false);
+  const preparingRef = useRef(false);
+  const [pending, setPending] = useState(false);
+  const pendingRef = useRef(false);
+  const [uncertain, setUncertain] = useState(false);
+  const uncertainRef = useRef(false);
   const [saveError, setSaveError] = useState(false);
   const [action, setAction] = useState<TeamAction | null>(null);
   const generation = useRef(0);
@@ -53,10 +89,38 @@ export function AdminSolarConstructionPage({
   const q = queries.query.search,
     before = queries.query.cursor;
   const queueKey = JSON.stringify([q, before]);
-  const currentSelection = useRef(selected);
-  currentSelection.current = selected;
-  const currentQuery = useRef(queueKey);
-  currentQuery.current = queueKey;
+  const currentActor = useRef(actor);
+  if (currentActor.current !== actor) {
+    currentActor.current = actor;
+    accessDenied.current = false;
+  }
+  const scope = JSON.stringify([actor, selected, queueKey]);
+  const currentScope = useRef(scope);
+  if (currentScope.current !== scope) {
+    currentScope.current = scope;
+    ++generation.current;
+  }
+  const schemaGeneration = generation.current;
+  const form = useZodForm<ProgressNoteDraft>(
+    async () => {
+      const schemas = await import('../lib/solar-progress-form-schemas.js');
+      return schemaGeneration === generation.current
+        ? schemas.progressNoteSchema(copy('progressNoteInvalid'))
+        : schemas.inactiveProgressNoteSchema;
+    },
+    {
+      defaultValues: { note: '' },
+      validationUnavailableMessage: copy('progressValidationUnavailable'),
+    }
+  );
+  const noteFields = useActionFieldErrors(
+    form,
+    { note: copy('progressNoteInvalid') },
+    copy('constructionSaveError')
+  );
+  const reviewed = useRef<ReviewedProgress | null>(null);
+  const detailContext = useRef<{ profileId: string; contractId: string | null } | null>(null);
+  const [progressScope, setProgressScope] = useState(scope);
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -67,22 +131,61 @@ export function AdminSolarConstructionPage({
   function invalidate() {
     generation.current += 1;
     setAction(null);
+    reviewed.current = null;
+    preparingRef.current = false;
+    pendingRef.current = false;
+    uncertainRef.current = false;
     setPreparing(false);
+    setPending(false);
+    setUncertain(false);
     setSaveError(false);
   }
   function deny() {
     accessDenied.current = true;
     invalidate();
-    setNote('');
+    form.reset({ note: '' });
     setProgress(null);
     setQueue(null);
     setDetailState('denied');
     setQueueState('denied');
   }
   useEffect(() => {
+    invalidate();
+    detailContext.current = null;
+    form.reset({ note: '' });
+    setProgress(null);
+  }, [scope]);
+  function busy() {
+    return preparingRef.current || pendingRef.current || form.isSubmissionPending() || !!action;
+  }
+  function live(command: ReviewedProgress) {
+    return (
+      mounted.current &&
+      !accessDenied.current &&
+      reviewed.current === command &&
+      command.generation === generation.current &&
+      currentScope.current === scope
+    );
+  }
+  function unconfirmed(command: ReviewedProgress) {
+    if (!live(command)) return;
+    command.unconfirmed = true;
+    uncertainRef.current = true;
+    setUncertain(true);
+    setSaveError(false);
+  }
+  function closeAction() {
+    const command = reviewed.current;
+    if (!command || !live(command)) return;
+    if (command.unconfirmed || (command.attempted && !command.rejected)) unconfirmed(command);
+    else reviewed.current = null;
+    pendingRef.current = false;
+    setPending(false);
+    setAction(null);
+  }
+  useEffect(() => {
     const abort = new AbortController();
     if (accessDenied.current) return () => abort.abort();
-    invalidate();
     setQueueState('loading');
     const params = new URLSearchParams();
     if (q) params.set('q', q);
@@ -92,28 +195,29 @@ export function AdminSolarConstructionPage({
       signal: abort.signal,
     })
       .then(async (response) => {
-        if (abort.signal.aborted || accessDenied.current) return;
+        if (abort.signal.aborted || accessDenied.current || currentActor.current !== actor) return;
         if (response.status === 401 || response.status === 403) {
           deny();
           return;
         }
         if (!response.ok) throw new Error('queue');
         const result = (await response.json()) as { items: Row[]; nextBefore: string | null };
-        if (!abort.signal.aborted && !accessDenied.current) {
-          setQueue({ ...result, search: q, key: queueKey });
+        if (!abort.signal.aborted && !accessDenied.current && currentActor.current === actor) {
+          setQueue({ ...result, search: q, key: queueKey, actor });
           setQueueState('ready');
         }
       })
       .catch(() => {
-        if (!abort.signal.aborted && !accessDenied.current) setQueueState('error');
+        if (!abort.signal.aborted && !accessDenied.current && currentActor.current === actor)
+          setQueueState('error');
       });
     return () => abort.abort();
-  }, [q, before, queueRevision]);
+  }, [q, before, queueRevision, actor]);
   useEffect(() => {
     const abort = new AbortController();
     if (accessDenied.current) return () => abort.abort();
-    invalidate();
-    setNote('');
+    const token = generation.current;
+    const recoveryAtRead = !pendingRef.current && uncertainRef.current ? reviewed.current : null;
     setProgress(null);
     setDetailState('loading');
     if (!selected) return () => abort.abort();
@@ -122,87 +226,177 @@ export function AdminSolarConstructionPage({
       signal: abort.signal,
     })
       .then(async (response) => {
-        if (abort.signal.aborted || accessDenied.current) return;
-        if (response.status === 401 || response.status === 403) {
+        if (
+          abort.signal.aborted ||
+          accessDenied.current ||
+          token !== generation.current ||
+          currentScope.current !== scope
+        )
+          return;
+        if ([401, 403, 404].includes(response.status)) {
           deny();
           return;
         }
         if (!response.ok) throw new Error('detail');
-        const result = (await response.json()) as SolarProgress;
-        if (!abort.signal.aborted && !accessDenied.current) {
+        const result = parseProgress(await response.json());
+        if (!result || result.requestId !== selected) throw new Error('detail');
+        if (!abort.signal.aborted && !accessDenied.current && token === generation.current) {
+          if (
+            detailContext.current &&
+            (detailContext.current.profileId !== result.profileId ||
+              detailContext.current.contractId !== result.contractId)
+          ) {
+            invalidate();
+            form.reset({ note: '' });
+          }
+          detailContext.current = { profileId: result.profileId, contractId: result.contractId };
+          if (
+            recoveryAtRead &&
+            reviewed.current === recoveryAtRead &&
+            !pendingRef.current &&
+            confirmedProgress(result, recoveryAtRead.captured)
+          ) {
+            reviewed.current = null;
+            uncertainRef.current = false;
+            setUncertain(false);
+            setAction(null);
+            form.reset({ note: '' });
+            setSaveError(false);
+          }
           setProgress(result);
+          setProgressScope(scope);
           setDetailState('ready');
         }
       })
       .catch(() => {
-        if (!abort.signal.aborted && !accessDenied.current) setDetailState('error');
+        if (!abort.signal.aborted && !accessDenied.current && token === generation.current)
+          setDetailState('error');
       });
     return () => abort.abort();
-  }, [selected, detailRevision]);
-  async function review(event: FormEvent) {
+  }, [scope, detailRevision]);
+  function review(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!progress?.canRecord || !progress.nextMilestone || preparing || !note.trim()) return;
-    const id = selected!,
-      token = ++generation.current,
-      key = queueKey;
-    const command = {
-      stage: progress.nextMilestone,
-      note: note.trim(),
-      expectedRevision: progress.revision,
-      operationId: crypto.randomUUID(),
-    };
-    setPreparing(true);
-    setSaveError(false);
-    try {
-      const response = await fetch(
-        `/api/admin/solar/construction/${encodeURIComponent(id)}/review`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify(command),
+    if (
+      !progress?.canRecord ||
+      !progress.nextMilestone ||
+      progressScope !== scope ||
+      busy() ||
+      reviewed.current
+    )
+      return;
+    const token = generation.current;
+    const capturedProgress = progress;
+    const rawNote = form.getValues('note');
+    void form.handleSubmit(async (draft) => {
+      if (
+        !mounted.current ||
+        token !== generation.current ||
+        currentScope.current !== scope ||
+        form.getValues('note') !== rawNote ||
+        draft.note !== rawNote
+      )
+        return;
+      const captured = captureProgress(capturedProgress, draft.note, crypto.randomUUID());
+      if (!captured) return;
+      preparingRef.current = true;
+      setPreparing(true);
+      setSaveError(false);
+      try {
+        const response = await fetch(
+          `/api/admin/solar/construction/${encodeURIComponent(captured.requestId)}/review`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify(captured.command),
+          }
+        );
+        if (
+          !mounted.current ||
+          generation.current !== token ||
+          currentScope.current !== scope ||
+          form.getValues('note') !== rawNote
+        )
+          return;
+        if ([401, 403, 404].includes(response.status)) {
+          deny();
+          return;
         }
-      );
-      if (
-        !mounted.current ||
-        generation.current !== token ||
-        currentSelection.current !== id ||
-        currentQuery.current !== key
-      )
-        return;
-      if (response.status === 401 || response.status === 403) {
-        deny();
-        return;
+        const result: unknown = await response.json().catch(() => null);
+        if (
+          !mounted.current ||
+          generation.current !== token ||
+          currentScope.current !== scope ||
+          form.getValues('note') !== rawNote
+        )
+          return;
+        if (response.status === 400 && result && typeof result === 'object') {
+          const error = (result as { error?: { code?: string; fields?: unknown[] } }).error;
+          if (
+            error?.code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+            Array.isArray(error.fields) &&
+            noteFields(error.fields)
+          )
+            return;
+        }
+        if (!response.ok) throw new Error('review');
+        const hash = progressReviewHash(result, captured);
+        if (!hash) throw new Error('review');
+        const command: ReviewedProgress = {
+          captured,
+          generation: token,
+          attempted: false,
+          rejected: false,
+          unconfirmed: false,
+          action: {
+            title: copy('constructionReviewTitle'),
+            description: copy('constructionReviewDescription'),
+            path: `/api/admin/solar/construction/${encodeURIComponent(captured.requestId)}`,
+            method: 'POST',
+            successStatus: 200,
+            body: { ...captured.command, expectedReviewHash: hash },
+            conflictMessage: copy('constructionConflict'),
+            errorMessages: Object.fromEntries(
+              [
+                ErrorCodes.VALIDATION_INPUT_INVALID.code,
+                ErrorCodes.CONFLICT_STATE.code,
+                ErrorCodes.CONFLICT_VERSION.code,
+                ErrorCodes.NOT_FOUND_RESOURCE.code,
+              ].map((code) => [
+                code,
+                (value: unknown) => {
+                  if (code === ErrorCodes.NOT_FOUND_RESOURCE.code && live(command)) {
+                    deny();
+                    return copy('staffQueueForbidden');
+                  }
+                  if (live(command) && definitiveProgressRejection(value)) command.rejected = true;
+                  return code.startsWith('CONFLICT:')
+                    ? copy('constructionConflict')
+                    : copy('constructionSaveError');
+                },
+              ])
+            ),
+          },
+        };
+        reviewed.current = command;
+        setAction(command.action);
+      } catch {
+        if (mounted.current && generation.current === token) setSaveError(true);
+      } finally {
+        if (mounted.current && generation.current === token) {
+          preparingRef.current = false;
+          setPreparing(false);
+        }
       }
-      if (!response.ok) throw new Error('review');
-      const result = (await response.json()) as { hash: string };
-      if (
-        !mounted.current ||
-        generation.current !== token ||
-        currentSelection.current !== id ||
-        currentQuery.current !== key
-      )
-        return;
-      setAction({
-        title: copy('constructionReviewTitle'),
-        description: copy('constructionReviewDescription'),
-        path: `/api/admin/solar/construction/${encodeURIComponent(id)}`,
-        method: 'POST',
-        successStatus: 200,
-        body: { ...command, expectedReviewHash: result.hash },
-        conflictMessage: copy('constructionConflict'),
-      });
-    } catch {
-      if (mounted.current && generation.current === token) setSaveError(true);
-    } finally {
-      if (mounted.current && generation.current === token) setPreparing(false);
-    }
+    })(event);
   }
   // Route changes immediately hide old details even before their fetch cleanup runs.
-  const visible = progress?.requestId === selected ? progress : null;
-  const rows = queue?.search === q && queueState !== 'denied' ? queue.items : [];
-  const fresh = queue?.key === queueKey && queueState === 'ready';
-  const command = action?.body as { stage: string; note: string } | undefined;
+  const visible = progressScope === scope && progress?.requestId === selected ? progress : null;
+  const rows =
+    queue?.actor === actor && queue.search === q && queueState !== 'denied' ? queue.items : [];
+  const fresh = queue?.actor === actor && queue.key === queueKey && queueState === 'ready';
+  const command = reviewed.current?.captured.command;
+  const locked = preparing || pending || form.formState.isSubmitting || !!action || uncertain;
   return (
     <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header>
@@ -218,7 +412,10 @@ export function AdminSolarConstructionPage({
               <Input
                 id="solar-construction-search"
                 value={queries.searchInput}
-                onChange={(event) => queries.setSearchInput(event.target.value)}
+                disabled={pending || !!action}
+                onChange={(event) => {
+                  if (!pendingRef.current && !action) queries.setSearchInput(event.target.value);
+                }}
               />
             </div>
           }
@@ -251,9 +448,11 @@ export function AdminSolarConstructionPage({
                   variant="outline"
                   className="h-auto w-full min-w-0 flex-col items-start gap-2 whitespace-normal p-4 text-start"
                   aria-pressed={selected === row.requestId}
+                  disabled={pending || !!action}
                   onClick={() => {
+                    if (pendingRef.current || action || selected === row.requestId) return;
                     invalidate();
-                    setNote('');
+                    form.reset({ note: '' });
                     setProgress(null);
                     onSelect(row.requestId);
                   }}
@@ -282,6 +481,7 @@ export function AdminSolarConstructionPage({
           label={copy('constructionStaffTitle')}
           nextLabel={copy('moreRequests')}
           onNext={() => {
+            if (pendingRef.current || action) return;
             invalidate();
             if (queue?.nextBefore) queries.next(queue.nextBefore);
           }}
@@ -289,12 +489,47 @@ export function AdminSolarConstructionPage({
             enabled: queries.hasPrevious,
             label: copy('previous'),
             onClick: () => {
+              if (pendingRef.current || action) return;
               invalidate();
               queries.previous();
             },
           }}
         />
       </ListPage>
+      {uncertain && !accessDenied.current && (
+        <Alert variant="destructive">
+          <AlertDescription>{copy('progressActionUnconfirmed')}</AlertDescription>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button
+              id="solar-construction-recovery-reload"
+              type="button"
+              variant="outline"
+              disabled={busy()}
+              onClick={() => {
+                if (!busy()) setDetailRevision((value) => value + 1);
+              }}
+            >
+              {copy('constructionReload')}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={busy()}
+              onClick={() => {
+                const captured = reviewed.current;
+                if (!captured || !live(captured) || busy()) return;
+                captured.attempted = false;
+                captured.rejected = false;
+                uncertainRef.current = false;
+                setUncertain(false);
+                setAction(captured.action);
+              }}
+            >
+              {copy('progressRetryCommand')}
+            </Button>
+          </div>
+        </Alert>
+      )}
       {!selected && <p>{copy('constructionSelect')}</p>}
       {selected && !visible && (
         <div className="space-y-2">
@@ -327,9 +562,11 @@ export function AdminSolarConstructionPage({
               </Link>
             )}
             <Button
+              id="solar-construction-reload"
               variant="outline"
+              disabled={busy()}
               onClick={() => {
-                invalidate();
+                if (busy()) return;
                 setDetailRevision((v) => v + 1);
               }}
             >
@@ -337,34 +574,55 @@ export function AdminSolarConstructionPage({
             </Button>
           </div>
           <SolarStageProgress progress={visible} showTimeNotice={false} />
-          {visible.canRecord && visible.nextMilestone ? (
-            <form className="space-y-4 rounded-xl border bg-card p-5" onSubmit={review}>
-              <h2 className="text-lg font-semibold">
-                {copy(`construction_${visible.nextMilestone}`)}
-              </h2>
-              <div className="space-y-2">
-                <Label htmlFor="solar-construction-note">{copy('constructionNote')}</Label>
-                <Textarea
-                  id="solar-construction-note"
-                  value={note}
-                  onChange={(event) => {
-                    invalidate();
-                    setNote(event.target.value);
-                  }}
-                  required
-                  maxLength={1000}
-                  disabled={preparing || !!action}
-                  aria-describedby="solar-construction-note-help"
+          {(visible.canRecord && visible.nextMilestone) || uncertain ? (
+            <Form {...form}>
+              <form
+                aria-label={copy('constructionReviewTitle')}
+                noValidate
+                className="space-y-4 rounded-xl border bg-card p-5"
+                onSubmit={review}
+              >
+                <h2 className="text-lg font-semibold">
+                  {copy(`construction_${uncertain ? command?.stage : visible.nextMilestone}`)}
+                </h2>
+                {form.formState.errors.root && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{copy('progressValidationUnavailable')}</AlertDescription>
+                  </Alert>
+                )}
+                <FormField
+                  control={form.control}
+                  name="note"
+                  render={({ field }) => (
+                    <FormItem id="solar-construction-note">
+                      <FormLabel>{copy('constructionNote')}</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} aria-required="true" disabled={locked} />
+                      </FormControl>
+                      <FormDescription>{copy('progressNoteHelp')}</FormDescription>
+                      <div className="grid">
+                        <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
+                          {copy('progressNoteInvalid')}
+                        </p>
+                        <FormMessage className="col-start-1 row-start-1" />
+                      </div>
+                    </FormItem>
+                  )}
                 />
-                <p id="solar-construction-note-help" className="text-sm text-muted-foreground">
-                  {copy('constructionNoteHelp')}
-                </p>
-              </div>
-              {saveError && <p role="alert">{copy('constructionSaveError')}</p>}
-              <Button type="submit" loading={preparing} disabled={!note.trim() || !!action}>
-                {copy('constructionReview')}
-              </Button>
-            </form>
+                {saveError && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{copy('constructionSaveError')}</AlertDescription>
+                  </Alert>
+                )}
+                <Button
+                  type="submit"
+                  loading={preparing || form.formState.isSubmitting}
+                  disabled={pending || !!action || uncertain || !visible.canRecord}
+                >
+                  {copy('constructionReview')}
+                </Button>
+              </form>
+            </Form>
           ) : (
             <p role="status">
               {copy(visible.revision === 3 ? 'constructionDone' : 'constructionBlocked')}
@@ -372,14 +630,45 @@ export function AdminSolarConstructionPage({
           )}
         </>
       )}
-      {action && visible && (
+      {action && reviewed.current && (
         <TeamActionDialog
           action={action}
-          onClose={invalidate}
-          onDenied={deny}
+          confirmationDisabled={uncertain}
+          onClose={closeAction}
+          onDenied={() => {
+            if (reviewed.current && live(reviewed.current)) deny();
+          }}
+          onPendingChange={(value) => {
+            const captured = reviewed.current;
+            if (!captured || !live(captured)) return;
+            if (value) captured.attempted = true;
+            pendingRef.current = value;
+            setPending(value);
+          }}
+          onUnconfirmed={() => {
+            if (reviewed.current) unconfirmed(reviewed.current);
+          }}
+          onValidationError={(fields) => {
+            const captured = reviewed.current;
+            if (!captured || !live(captured) || captured.unconfirmed || !noteFields(fields))
+              return false;
+            captured.rejected = true;
+            return true;
+          }}
           onSuccess={async (result) => {
-            setProgress(result as SolarProgress);
-            setNote('');
+            const captured = reviewed.current;
+            if (!captured || !live(captured)) return;
+            const saved = confirmedProgress(result, captured.captured);
+            if (!saved) throw new Error('Unconfirmed construction update');
+            reviewed.current = null;
+            uncertainRef.current = false;
+            pendingRef.current = false;
+            setUncertain(false);
+            setPending(false);
+            setAction(null);
+            setProgress(saved);
+            setProgressScope(scope);
+            form.reset({ note: '' });
             setSaveError(false);
             setQueueRevision((v) => v + 1);
           }}
