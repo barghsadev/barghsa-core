@@ -34,6 +34,11 @@ it('provides bilingual metadata and every known rule outcome', () => {
 it('provides distinct bilingual feedback and stable placeholders', () => {
   for (const key of [
     'question',
+    'yourMessage',
+    'assistantMessage',
+    'accountMessage',
+    'sentAt',
+    'receivedAt',
     'message',
     'agentId',
     'slotKey',

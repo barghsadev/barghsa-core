@@ -345,3 +345,117 @@ for (const locale of ['en', 'fa'] as const) {
     );
   });
 }
+
+for (const kind of ['customer', 'admin'] as const)
+  for (const locale of ['en', 'fa'] as const) {
+    test(`${locale}: ${kind} shared input handles resizing, composition, newlines and timestamped retries`, async ({
+      page,
+      baseURL,
+    }, info) => {
+      await setup(page, kind, locale, baseURL!);
+      const start = '2026-10-04T15:00:00.000Z';
+      const received = '2026-10-04T15:01:00.000Z';
+      const answered = '2026-10-01T22:30:00Z';
+      await page.clock.setFixedTime(new Date(start));
+      const label = (key: string) =>
+        kind === 'admin'
+          ? adminText(`admin.agents.testChat.${key}`, locale)
+          : appText(`assistant.${key}`, locale);
+      let fail = true;
+      const sent: Record<string, unknown>[] = [];
+      await page.route(
+        kind === 'admin' ? '**/api/admin/ai/test-chat' : '**/api/ai/knowledge/questions',
+        (route) => {
+          sent.push(route.request().postDataJSON());
+          return route.fulfill(
+            fail
+              ? { status: 503, json: { error: { code: 'AI_TEST_CHAT_UNAVAILABLE' } } }
+              : {
+                  json:
+                    kind === 'admin'
+                      ? result
+                      : {
+                          ...answer,
+                          answeredAt: answered,
+                          policyChecks: [{ type: 'content_filter', count: 1 }],
+                        },
+                }
+          );
+        }
+      );
+      await page.goto(kind === 'admin' ? '/admin/agents' : '/ai');
+      const chat = page.getByRole('region', { name: label('title'), exact: true });
+      if (kind === 'admin') await chat.locator('#test-chat-agent').selectOption(id);
+      else {
+        const prompts = chat.getByText(appText('assistant.suggestions', locale), { exact: true });
+        await prompts.click();
+        await expect(
+          chat
+            .getByRole('group', { name: appText('assistant.suggestions', locale) })
+            .getByRole('button')
+        ).toHaveCount(4);
+        await expect(
+          chat.getByText(appText('assistant.welcomeNamed', locale).replace('{name}', 'Ari Buyer'), {
+            exact: true,
+          })
+        ).toBeVisible();
+      }
+      const input = chat.locator('textarea');
+      const long = Array.from({ length: 12 }, () => 'Detailed question about electricity.').join(
+        '\n'
+      );
+      await input.fill(long);
+      await expect(input).toHaveCSS('height', '240px');
+      await input.evaluate((node) => {
+        node.dispatchEvent(
+          new KeyboardEvent('keydown', {
+            key: 'Enter',
+            bubbles: true,
+            cancelable: true,
+            isComposing: true,
+          })
+        );
+        const event = new KeyboardEvent('keydown', {
+          key: 'Enter',
+          bubbles: true,
+          cancelable: true,
+        });
+        Object.defineProperty(event, 'keyCode', { value: 229 });
+        node.dispatchEvent(event);
+      });
+      await input.press('Shift+Enter');
+      await input.pressSequentially('Final line');
+      await expect(input).toHaveValue(long + '\nFinal line');
+      expect(sent).toHaveLength(0);
+      await input.press('Enter');
+      const retry = chat.getByRole('button', { name: label('retry'), exact: true });
+      await expect(retry).toBeVisible();
+      await expect(input).toBeDisabled();
+      expect(sent).toHaveLength(1);
+      expect(sent[0]?.message).toBe(long + '\nFinal line');
+      expect(sent[0]).not.toHaveProperty('sentAt');
+      expect(sent[0]).not.toHaveProperty('receivedAt');
+      fail = false;
+      await page.clock.setFixedTime(new Date(received));
+      await retry.click();
+      await expect(chat).toContainText('Verified guide answer');
+      await expect(input).toHaveValue('');
+      await expect(input).toHaveCSS('height', '80px');
+      expect(sent).toHaveLength(2);
+      expect(sent[1]).toEqual(sent[0]);
+      const user = chat.locator('article[data-message-role="user"]'),
+        assistant = chat.locator('article[data-message-role="assistant"]');
+      await expect(user).toHaveCount(1);
+      await expect(assistant).toHaveCount(1);
+      await expect(user.locator('time')).toHaveAttribute('datetime', start);
+      await expect(assistant.locator('time')).toHaveAttribute(
+        'datetime',
+        kind === 'admin' ? received : answered
+      );
+      await assistant.getByText('Verified guide answer', { exact: true }).scrollIntoViewIfNeeded();
+      await page.screenshot({ path: info.outputPath(`shared-chat-${kind}-${locale}.png`) });
+      expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
+        false
+      );
+    });
+  }

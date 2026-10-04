@@ -1,5 +1,5 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ArrowUp, BookOpenText } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { BookOpenText } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { assistantChatFormText } from '@barghsa/i18n/assistant-chat-forms';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@barghsa/ui';
@@ -15,7 +15,14 @@ import { authErrorCode } from '../lib/auth-errors.js';
 import { readKnowledgeAnswer, type KnowledgeAnswer } from '../lib/assistant-chat.js';
 import { CatalogueFieldFeedback, catalogueRootMessage } from './CatalogueEditorFeedback.js';
 import { knowledgeSuggestions } from '../lib/knowledge-assistant.js';
+import {
+  ChatInput,
+  ChatMessage,
+  ChatPromptSuggestions,
+  ChatWelcome,
+} from './AssistantChatComponents.js';
 type AccountSnapshot = {
+  receivedAt: number;
   profileName: string;
   walletBalance: string | null;
   pendingInvoices: number | null;
@@ -120,11 +127,6 @@ export default function KnowledgeAssistantPanel({
   useEffect(() => {
     if (open) end.current?.scrollIntoView({ block: 'end' });
   }, [open, turns, busy, error]);
-  useLayoutEffect(() => {
-    if (!open || !input.current) return;
-    input.current.style.height = 'auto';
-    input.current.style.height = `${Math.min(input.current.scrollHeight, 240)}px`;
-  }, [draft, open]);
 
   async function send(payload: PendingRequest, newQuestion = false) {
     if (!mounted.current || denied || controller.current || cooldown.blocked()) return;
@@ -285,6 +287,7 @@ export default function KnowledgeAssistantPanel({
       )
         throw new Error('Invalid dashboard response');
       const account: AccountSnapshot = {
+        receivedAt: Date.now(),
         profileName:
           typeof dashboard.profile.name === 'string' && dashboard.profile.name.trim()
             ? dashboard.profile.name
@@ -307,6 +310,22 @@ export default function KnowledgeAssistantPanel({
     }
   }
 
+  const promptChips = (
+    <ChatPromptSuggestions
+      label={label('suggestions')}
+      suggestions={suggestions.map((key) => ({ key, label: t(key, locale) }))}
+      disabled={denied || busy || form.pending || !!retry}
+      disclosureRef={promptDisclosure}
+      onPick={(key) => {
+        setDraft(t(key, locale));
+        setServerMessageError(false);
+        setRetry(null);
+        setError(null);
+        input.current?.focus();
+      }}
+    />
+  );
+
   const conversation = (
     <>
       <div
@@ -315,92 +334,47 @@ export default function KnowledgeAssistantPanel({
         aria-live="polite"
       >
         {turns.length === 0 && (
-          <div className="space-y-5">
-            <div className="space-y-2">
-              {profileName && (
-                <p className="font-semibold text-foreground">
-                  {label('welcomeNamed').replace('{name}', profileName)}
-                </p>
-              )}
-              <p className="max-w-sm text-base leading-7 text-foreground">{label('welcome')}</p>
-              <p className="text-sm text-muted-foreground">
-                {label('profileContext').replace(
-                  '{name}',
-                  profileName ?? label(slotKey === 'legal_entity_chatbot' ? 'legal' : 'individual')
-                )}
-              </p>
-            </div>
-          </div>
+          <ChatWelcome
+            greeting={profileName ? label('welcomeNamed').replace('{name}', profileName) : null}
+            description={label('welcome')}
+            profileContext={label('profileContext').replace(
+              '{name}',
+              profileName ?? label(slotKey === 'legal_entity_chatbot' ? 'legal' : 'individual')
+            )}
+          >
+            {promptChips}
+          </ChatWelcome>
         )}
         {turns.map((turn) => (
           <div key={turn.id} className="space-y-3">
-            <div className="ms-auto w-fit max-w-[88%] rounded-2xl rounded-ee-sm bg-primary px-4 py-3 text-primary-foreground [overflow-wrap:anywhere]">
-              <p className="whitespace-pre-wrap leading-6">{turn.question}</p>
-              <time
-                dateTime={new Date(turn.at).toISOString()}
-                aria-label={label('sentAt')}
-                className="mt-1 block text-end text-xs"
-              >
-                {timestamp(turn.at)}
-              </time>
-            </div>
+            <ChatMessage
+              sender="user"
+              message={turn.question}
+              locale={locale}
+              timestamp={turn.at}
+              timestampLabel={label('sentAt')}
+              formatTimestamp={timestamp}
+            />
             {turn.answer && (
-              <div className="max-w-[92%] space-y-3 rounded-2xl rounded-es-sm bg-muted px-4 py-3 text-foreground [overflow-wrap:anywhere]">
-                <p className="text-xs font-semibold text-muted-foreground">{label('answer')}</p>
-                <p className="whitespace-pre-wrap leading-7">{turn.answer.reply}</p>
-                <details className="border-t pt-3 text-sm">
-                  <summary className="cursor-pointer font-medium text-primary">
-                    {label('sources')} · {numbers.number(turn.answer.sources.length)}
-                  </summary>
-                  <ul className="mt-3 space-y-3">
-                    {turn.answer.sources.map((source, index) => (
-                      <li key={`${source.kbId}-${index}`} className="space-y-1">
-                        <p className="font-medium">{source.title}</p>
-                        {source.documentTitle && (
-                          <p className="text-xs text-muted-foreground">{source.documentTitle}</p>
-                        )}
-                        <p className="text-sm leading-6 text-muted-foreground">{source.excerpt}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </details>
-                <div className="space-y-2 border-t pt-3 text-xs text-muted-foreground">
-                  {turn.answer.policyChecks === null ? (
-                    <p>{label('policies.unrecorded')}</p>
-                  ) : turn.answer.policyChecks.length === 0 ? (
-                    <p>{label('policies.none')}</p>
-                  ) : (
-                    <>
-                      <p>{label('policies.checked')}</p>
-                      <ul aria-label={label('policies.checked')} className="flex flex-wrap gap-2">
-                        {turn.answer.policyChecks.map((check) => (
-                          <li
-                            key={check.type}
-                            className="rounded-full border bg-card px-2.5 py-1.5 text-foreground"
-                          >
-                            {label(`policies.${check.type}`)} · {numbers.number(check.count)}
-                          </li>
-                        ))}
-                      </ul>
-                    </>
-                  )}
-                  {turn.answer.answeredAt ? (
-                    <p>
-                      {label('answeredAt')}{' '}
-                      <time dateTime={turn.answer.answeredAt}>
-                        {timestamp(turn.answer.answeredAt)}
-                      </time>
-                    </p>
-                  ) : (
-                    <p>{label('timeUnrecorded')}</p>
-                  )}
-                </div>
-              </div>
+              <ChatMessage
+                sender="assistant"
+                message={turn.answer.reply}
+                locale={locale}
+                timestamp={turn.answer.answeredAt}
+                timestampLabel={label('answeredAt')}
+                formatTimestamp={timestamp}
+                knowledge={turn.answer}
+              />
             )}
             {turn.account && (
-              <div className="max-w-[92%] space-y-4 rounded-2xl rounded-es-sm bg-muted px-4 py-4 text-foreground">
+              <ChatMessage
+                sender="account"
+                locale={locale}
+                timestamp={turn.account.receivedAt}
+                timestampLabel={copy('receivedAt')}
+                formatTimestamp={timestamp}
+              >
                 <div>
-                  <p className="text-sm font-semibold">{label('account.title')}</p>
                   <p className="text-xs text-muted-foreground">
                     {turn.account.profileName} · {label('account.direct')}
                   </p>
@@ -435,7 +409,7 @@ export default function KnowledgeAssistantPanel({
                     </Link>
                   )}
                 </div>
-              </div>
+              </ChatMessage>
             )}
           </div>
         ))}
@@ -500,108 +474,64 @@ export default function KnowledgeAssistantPanel({
         {cooldown.seconds > 0 && (
           <p role="status">{copy('wait').replace('{seconds}', numbers.number(cooldown.seconds))}</p>
         )}
-        <details ref={promptDisclosure}>
-          <summary className="min-h-9 cursor-pointer py-2 text-sm font-medium text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
-            {label('suggestions')}
-          </summary>
-          <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label={label('suggestions')}>
-            {suggestions.map((key) => (
-              <button
-                key={key}
-                type="button"
-                disabled={denied || busy || form.pending || !!retry}
-                className="min-h-9 rounded-full border bg-background px-3 py-1.5 text-start text-xs text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50"
-                onClick={() => {
-                  setDraft(t(key, locale));
-                  setServerMessageError(false);
-                  setRetry(null);
-                  setError(null);
-                  input.current?.focus();
-                }}
-              >
-                {t(key, locale)}
-              </button>
-            ))}
-          </div>
-        </details>
-        <button
-          type="button"
-          disabled={denied || busy || form.pending || !!retry}
-          className="text-start text-sm font-medium text-primary underline-offset-4 hover:underline disabled:opacity-50"
-          onClick={() => void showAccountStatus()}
-        >
-          {label('account.action')}
-        </button>
-        <label htmlFor="knowledge-question" className="sr-only">
-          {label('input')}
-        </label>
-        <textarea
-          {...form.bind('message')}
-          aria-invalid={serverMessageError || form.bind('message')['aria-invalid']}
-          aria-describedby={
-            serverMessageError ? form.errorId('message') : form.bind('message')['aria-describedby']
+        <ChatInput
+          label={label('input')}
+          sendLabel={label('send')}
+          busy={busy || form.pending}
+          disabled={denied || busy || form.pending || !!retry || cooldown.seconds > 0}
+          active={open}
+          textareaProps={{
+            ...form.bind('message'),
+            'aria-invalid': serverMessageError || form.bind('message')['aria-invalid'],
+            'aria-describedby': serverMessageError
+              ? form.errorId('message')
+              : form.bind('message')['aria-describedby'],
+            onBlur: () => {
+              if (!form.isPending() && !controller.current) form.bind('message').onBlur();
+            },
+            ref: (node) => {
+              input.current = node;
+              form.bind('message').ref(node);
+            },
+            id: 'knowledge-question',
+            value: draft,
+            placeholder: label('input'),
+            disabled: denied || busy || form.pending || !!retry,
+            onChange: (event) => {
+              setDraft(event.target.value);
+              setServerMessageError(false);
+              setRetry(null);
+              setError(null);
+            },
+          }}
+          feedback={
+            <CatalogueFieldFeedback
+              id={form.errorId('message')}
+              error={serverMessageError ? { message: copy('question') } : form.errors.message}
+              message={copy('question')}
+            />
           }
-          onBlur={() => {
-            if (!form.isPending() && !controller.current) form.bind('message').onBlur();
-          }}
-          ref={(node) => {
-            input.current = node;
-            form.bind('message').ref(node);
-          }}
-          id="knowledge-question"
-          className="min-h-20 max-h-60 w-full resize-none overflow-y-auto rounded-lg border bg-background px-3 py-2 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          rows={2}
-          value={draft}
-          placeholder={label('input')}
-          disabled={denied || busy || form.pending || !!retry}
-          onChange={(event) => {
-            setDraft(event.target.value);
-            setServerMessageError(false);
-            setRetry(null);
-            setError(null);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
-              event.preventDefault();
-              void submit();
-            }
-          }}
-        />
-        <CatalogueFieldFeedback
-          id={form.errorId('message')}
-          error={serverMessageError ? { message: copy('question') } : form.errors.message}
-          message={copy('question')}
-        />
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-xs text-muted-foreground">
-            {turns.at(-1)?.answer
-              ? label('remaining').replace(
-                  '{count}',
-                  numbers.number(turns.at(-1)!.answer!.remainingQuota)
-                )
-              : null}
-          </p>
+          footer={
+            <p className="text-xs text-muted-foreground">
+              {turns.at(-1)?.answer
+                ? label('remaining').replace(
+                    '{count}',
+                    numbers.number(turns.at(-1)!.answer!.remainingQuota)
+                  )
+                : null}
+            </p>
+          }
+        >
+          {turns.length > 0 && promptChips}
           <button
-            type="submit"
-            onMouseDown={(event) => {
-              // WebKit restores scroll on textarea blur; keep the tap target stable until click.
-              event.preventDefault();
-            }}
-            disabled={denied || busy || form.pending || !!retry || cooldown.seconds > 0}
-            aria-busy={busy || form.pending || undefined}
-            className="inline-flex min-h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+            type="button"
+            disabled={denied || busy || form.pending || !!retry}
+            className="text-start text-sm font-medium text-primary underline-offset-4 hover:underline disabled:opacity-50"
+            onClick={() => void showAccountStatus()}
           >
-            {busy || form.pending ? (
-              <span
-                aria-hidden="true"
-                className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-              />
-            ) : (
-              <ArrowUp className="size-4 rtl:-rotate-90" aria-hidden="true" />
-            )}
-            {label('send')}
+            {label('account.action')}
           </button>
-        </div>
+        </ChatInput>
       </form>
     </>
   );

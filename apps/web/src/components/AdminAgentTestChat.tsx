@@ -10,11 +10,9 @@ import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useChatRetryAfter } from '../hooks/useChatRetryAfter.js';
 import { ResponseMetadataPanel } from './ResponseMetadataPanel.js';
-import {
-  CatalogueFieldFeedback,
-  CatalogueSaveButton,
-  catalogueRootMessage,
-} from './CatalogueEditorFeedback.js';
+import { ChatInput, ChatMessage } from './AssistantChatComponents.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
+import { CatalogueFieldFeedback, catalogueRootMessage } from './CatalogueEditorFeedback.js';
 
 interface AgentOption {
   id: string;
@@ -31,6 +29,9 @@ type Request = {
 };
 const blank = () => ({ agentId: '', slotKey: '', message: '' });
 interface Turn {
+  id: string;
+  sentAt: number;
+  receivedAt: number;
   message: string;
   result: TestChatResult;
 }
@@ -50,6 +51,9 @@ export function AdminAgentTestChat({
   const copy = (key: Parameters<typeof assistantChatFormText>[0]) =>
     assistantChatFormText(key, locale);
   const numbers = useNumberFormatting(locale);
+  const accountTime = useAccountTime(locale);
+  const timestamp = (value: string | number) =>
+    accountTime.format(value, { dateStyle: 'short', timeStyle: 'short' });
   const live = useRef({ agents, disabled, onDenied });
   live.current = { agents, disabled, onDenied };
   const messages = { agentId: copy('agentId'), slotKey: copy('slotKey'), message: copy('message') };
@@ -76,6 +80,7 @@ export function AdminAgentTestChat({
   const [quota, setQuota] = useState<number | null>(null);
   const [pending, setPending] = useState<Request | null>(null);
   const captured = useRef<Request | null>(null);
+  const sentTime = useRef<{ requestId: string; at: number } | null>(null);
   const [busy, setBusy] = useState(false);
   const [denied, setDenied] = useState(false);
   const [serverFields, setServerFields] = useState<(keyof Draft)[]>([]);
@@ -111,6 +116,7 @@ export function AdminAgentTestChat({
     controller.current?.abort();
     controller.current = null;
     captured.current = null;
+    sentTime.current = null;
     setTurns([]);
     setConversationId(undefined);
     setPending(null);
@@ -136,6 +142,9 @@ export function AdminAgentTestChat({
       !live.current.agents.some((a) => a.enabled && a.id === payload.agentId)
     )
       return;
+    if (sentTime.current?.requestId !== payload.requestId)
+      sentTime.current = { requestId: payload.requestId, at: Date.now() };
+    const sentAt = sentTime.current.at;
     const request = new AbortController();
     controller.current = request;
     setBusy(true);
@@ -185,7 +194,10 @@ export function AdminAgentTestChat({
       const result = readTestChatResult(await response.json(), payload.conversationId);
       if (request.signal.aborted || !mounted.current) return;
       if (response.status !== 200 || !result) throw new Error('Invalid answer');
-      setTurns((current) => [...current, { message: payload.message, result }]);
+      setTurns((current) => [
+        ...current,
+        { id: payload.requestId, sentAt, receivedAt: Date.now(), message: payload.message, result },
+      ]);
       setConversationId(result.conversationId);
       setQuota(result.remainingQuota);
       form.form.reset({ agentId: payload.agentId, slotKey: payload.slotKey ?? '', message: '' });
@@ -344,14 +356,24 @@ export function AdminAgentTestChat({
           className="max-h-96 space-y-4 overflow-y-auto rounded-md bg-muted/30 p-3"
         >
           {!turns.length && <p className="text-sm text-muted-foreground">{label('empty')}</p>}
-          {turns.map((turn, index) => (
-            <div key={index} className="space-y-2">
-              <div className="ms-auto max-w-[85%] rounded-lg bg-primary p-3 text-primary-foreground whitespace-pre-wrap break-words">
-                {turn.message}
-              </div>
-              <div className="me-auto max-w-[85%] rounded-lg border bg-background p-3 whitespace-pre-wrap break-words">
-                {turn.result.reply}
-              </div>
+          {turns.map((turn) => (
+            <div key={turn.id} className="space-y-2">
+              <ChatMessage
+                sender="user"
+                message={turn.message}
+                locale={locale}
+                timestamp={turn.sentAt}
+                timestampLabel={copy('sentAt')}
+                formatTimestamp={timestamp}
+              />
+              <ChatMessage
+                sender="assistant"
+                message={turn.result.reply}
+                locale={locale}
+                timestamp={turn.receivedAt}
+                timestampLabel={copy('receivedAt')}
+                formatTimestamp={timestamp}
+              />
               <p className="text-xs text-muted-foreground">
                 {label(
                   turn.result.attribution === 'retrieved_context'
@@ -386,36 +408,34 @@ export function AdminAgentTestChat({
         {cooldown.seconds > 0 && (
           <p role="status">{copy('wait').replace('{seconds}', numbers.number(cooldown.seconds))}</p>
         )}
-        <div className="flex flex-col gap-2">
-          <label htmlFor="test-chat-message" className="sr-only">
-            {label('message')}
-          </label>
-          <textarea
-            id="test-chat-message"
-            className="min-h-16 flex-1 rounded-md border bg-background p-2"
-            {...bind('message')}
-            onBlur={() => {
+        {accountTime.notice}
+        <ChatInput
+          label={label('message')}
+          sendLabel={busy ? label('sending') : label('send')}
+          busy={busy || form.pending}
+          disabled={locked || !!pending || cooldown.seconds > 0}
+          textareaProps={{
+            ...bind('message'),
+            id: 'test-chat-message',
+            value: message,
+            disabled: locked || !!pending,
+            placeholder: label('message'),
+            onBlur: () => {
               if (!form.isPending() && !controller.current) form.bind('message').onBlur();
-            }}
-            disabled={locked || !!pending}
-            value={message}
-            onChange={(event) => {
+            },
+            onChange: (event) => {
               setServerFields((fields) => fields.filter((field) => field !== 'message'));
               form.field('message')[1](event.target.value);
-            }}
-            placeholder={label('message')}
-          />
-          <CatalogueFieldFeedback
-            id={form.errorId('message')}
-            error={feedback('message')}
-            message={messages.message}
-          />
-          <CatalogueSaveButton
-            label={busy ? label('sending') : label('send')}
-            pending={busy || form.pending}
-            disabled={locked || !!pending || cooldown.seconds > 0}
-          />
-        </div>
+            },
+          }}
+          feedback={
+            <CatalogueFieldFeedback
+              id={form.errorId('message')}
+              error={feedback('message')}
+              message={messages.message}
+            />
+          }
+        />
       </form>
     </section>
   );

@@ -96,6 +96,7 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(dialog).toContainText(
       locale === 'fa' ? 'شما با پروفایل Ari Buyer پرسش می‌کنید.' : "You're asking as Ari Buyer."
     );
+    const accountStarted = await page.evaluate(() => Date.now());
     await dialog
       .getByRole('button', {
         name: locale === 'fa' ? 'نمایش وضعیت حساب من' : 'Show my account status',
@@ -109,6 +110,12 @@ for (const locale of ['fa', 'en'] as const) {
       dialog.getByRole('link', { name: locale === 'fa' ? 'مشاهده کیف پول' : 'View wallet' })
     ).toBeVisible();
     expect(sent).toHaveLength(0);
+    const accountReceipt = dialog.locator('article[data-message-role="account"]');
+    await expect(accountReceipt).toHaveCount(1);
+    const receivedAt = Date.parse((await accountReceipt.locator('time').getAttribute('datetime'))!);
+    expect(receivedAt).toBeGreaterThanOrEqual(accountStarted);
+    expect(receivedAt).toBeLessThanOrEqual(await page.evaluate(() => Date.now()));
+    await expect(dialog.locator('article[data-message-role="assistant"]')).toHaveCount(0);
     const question = locale === 'fa' ? 'مدارک لازم چیست؟' : 'What documents do I need?';
     const input = dialog.getByLabel(
       locale === 'fa' ? 'پرسش خود را بنویسید' : 'Write your question'
