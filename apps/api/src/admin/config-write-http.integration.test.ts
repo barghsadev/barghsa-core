@@ -45,8 +45,8 @@ const cases = [
     path: 'service-response-targets',
     key: SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
     body: { ticket: 48, verification_case: 72 },
-    stored: { ticket: 48, verification_case: 72 },
-    response: { ticket: 48, verification_case: 72 },
+    stored: { ticket: 48, verification_case: 72, consultation: null },
+    response: { ticket: 48, verification_case: 72, consultation: null },
     grant: 'admin:service-targets:edit',
   },
   {
@@ -65,6 +65,7 @@ const cases = [
         level3: { delayHours: 48, channels: ['in_app', 'email'] },
       },
       verification_case: null,
+      consultation: null,
     },
     response: {
       ticket: {
@@ -72,6 +73,7 @@ const cases = [
         level3: { delayHours: 48, channels: ['in_app', 'email'] },
       },
       verification_case: null,
+      consultation: null,
     },
     grant: 'admin:service-escalation:edit',
   },
@@ -85,10 +87,12 @@ const cases = [
     stored: {
       ticket: { teamId: null, strategy: 'load' },
       verification_case: { teamId: null, strategy: 'round_robin' },
+      consultation: { teamId: null, strategy: 'round_robin' },
     },
     response: {
       ticket: { teamId: null, strategy: 'load' },
       verification_case: { teamId: null, strategy: 'round_robin' },
+      consultation: { teamId: null, strategy: 'round_robin' },
     },
     grant: 'admin:staff-teams:edit',
   },
