@@ -257,6 +257,11 @@
       "import": "./dist/ai-model-forms.js",
       "default": "./dist/ai-model-forms.js"
     },
+    "./knowledge-policy-forms": {
+      "types": "./dist/knowledge-policy-forms.d.ts",
+      "import": "./dist/knowledge-policy-forms.js",
+      "default": "./dist/knowledge-policy-forms.js"
+    },
     "./ai-agent-forms": {
       "types": "./dist/ai-agent-forms.d.ts",
       "import": "./dist/ai-agent-forms.js",

@@ -160,7 +160,10 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/policies', (route) => {
       if (route.request().method() !== 'GET') {
         writes.push(route.request().postDataJSON());
-        return route.fulfill({ json: policy });
+        return route.fulfill({
+          status: 201,
+          json: { ...policy, ...route.request().postDataJSON() },
+        });
       }
       return route.fulfill(fail ? { status: 503, json: {} } : { json: [policy] });
     });

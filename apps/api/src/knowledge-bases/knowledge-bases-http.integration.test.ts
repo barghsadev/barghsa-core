@@ -761,3 +761,46 @@ it('records current step-up proof on the mutation audit', async () => {
     stepUpVerifiedAt: verifiedAt.toISOString(),
   });
 });
+
+for (const method of ['POST', 'PUT'] as const)
+  it.each(entities)(
+    `returns only owned fields for invalid $kind ${method}, after permission checks`,
+    async (entity) => {
+      const body =
+        entity.kind === 'kb'
+          ? {
+              title: '',
+              sourceType: 'url',
+              sourceConfig: { urls: ['http://private-submitted.test'] },
+              chunkingStrategy: { size: 800, overlap: 800 },
+            }
+          : { title: '', description: 'private-submitted'.repeat(200) };
+      const url = `${http.base}/api/admin/${entity.path}${method === 'PUT' ? `/${ids[entity.kind]}` : ''}`;
+      const invalid = await fetch(url, { method, headers, body: JSON.stringify(body) });
+      expect(invalid.status).toBe(400);
+      const error = (await invalid.json()) as { error: { code: string; fields: string[] } };
+      expect(error.error.code).toBe('VALIDATION:INPUT:INVALID');
+      expect([...error.error.fields].sort()).toEqual(
+        (entity.kind === 'kb'
+          ? ['title', 'sourceUrl', 'chunkOverlap']
+          : ['title', 'description']
+        ).sort()
+      );
+      expect(JSON.stringify(error)).not.toContain('private-submitted');
+      expect(
+        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+      ).toHaveLength(0);
+      await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='kb-editor'");
+      try {
+        const denied = await fetch(url, { method, headers, body: JSON.stringify(body) });
+        expect(denied.status).toBe(403);
+        expect(
+          ((await denied.json()) as { error: { fields?: unknown } }).error.fields
+        ).toBeUndefined();
+      } finally {
+        await http.pool.query(
+          "UPDATE staff_roles SET permissions='[\"admin:ai:kb\"]' WHERE role_id='kb-editor'"
+        );
+      }
+    }
+  );

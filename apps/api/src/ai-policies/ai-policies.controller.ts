@@ -1,3 +1,4 @@
+import { rejectContentFields } from '../admin/content-input-fields.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -137,6 +138,50 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
   return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }));
 }
 
+function rejectPolicyFields(issues: readonly z.ZodIssue[], body: unknown): never {
+  const aliases: Record<string, string> = {
+    title: 'title',
+    description: 'description',
+    policyType: 'policyType',
+    priority: 'priority',
+    enabled: 'enabled',
+    'rules.topics': 'items',
+    'rules.actions': 'items',
+    'rules.scopes': 'items',
+    'rules.blockedTerms': 'items',
+    'rules.tone': 'tone',
+    'rules.language': 'language',
+    'rules.maxLength': 'maxLength',
+    'rules.requireSources': 'requireSources',
+    'rules.format': 'format',
+    'rules.maxRequests': 'maxRequests',
+    'rules.windowSeconds': 'windowSeconds',
+  };
+  const paths = issues.map((issue) => issue.path.join('.'));
+  if (
+    paths.includes('rules') &&
+    body &&
+    typeof body === 'object' &&
+    !Array.isArray(body) &&
+    'policyType' in body &&
+    'rules' in body &&
+    POLICY_TYPES.includes(body.policyType as (typeof POLICY_TYPES)[number])
+  ) {
+    const rules = rulesSchemas[body.policyType as (typeof POLICY_TYPES)[number]].safeParse(
+      body.rules
+    );
+    if (!rules.success)
+      paths.push(...rules.error.issues.map((issue) => `rules.${issue.path.join('.')}`));
+  }
+  rejectContentFields(
+    paths.map((path) => {
+      const key = path.replace(/\.\d+$/, '');
+      return { path: Object.hasOwn(aliases, key) ? [aliases[key]!] : [] };
+    }),
+    Object.values(aliases)
+  );
+}
+
 /**
  * Admin endpoints for AI policy management (S-09.11, T-09.11.03).
  *
@@ -197,12 +242,7 @@ export class PoliciesController {
     this.assertPolicyPermission(req);
     const parsed = CreatePolicySchema.safeParse(body);
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid policy payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      rejectPolicyFields(parsed.error.issues, body);
     }
     return this.service.createPolicy({
       title: parsed.data.title,
@@ -238,12 +278,7 @@ export class PoliciesController {
     this.assertPolicyPermission(req);
     const parsed = UpdatePolicySchema.safeParse(body);
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid policy payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      rejectPolicyFields(parsed.error.issues, body);
     }
     return this.service.updatePolicy(id, {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
@@ -326,12 +361,7 @@ export class PolicyGroupsController {
     this.assertPolicyPermission(req);
     const parsed = CreatePolicyGroupSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid policy group payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      rejectContentFields(parsed.error.issues, ['title', 'description']);
     }
     return this.service.createGroup({
       title: parsed.data.title,
@@ -356,12 +386,7 @@ export class PolicyGroupsController {
     this.assertPolicyPermission(req);
     const parsed = UpdatePolicyGroupSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid policy group payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
+      rejectContentFields(parsed.error.issues, ['title', 'description']);
     }
     return this.service.updateGroup(id, {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),

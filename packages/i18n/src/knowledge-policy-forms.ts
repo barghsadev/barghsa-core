@@ -1,0 +1,59 @@
+import type { Locale } from './index.js';
+const en = {
+  title: 'Enter a title with 1 to 120 characters.',
+  description: 'Use at most 2,000 characters for the description.',
+  audience: 'Choose a supported audience.',
+  sourceType: 'Choose a supported source type.',
+  sourceUrl:
+    'Enter up to 20 HTTPS URLs, one per line, or one HTTPS API address. Each address may contain at most 2,048 characters.',
+  chunkSize: 'Enter a whole chunk size from 100 to 4,000.',
+  chunkOverlap: 'Enter a whole overlap from 0 to 1,000, smaller than the chunk size.',
+  vectorEmbeddingModel: 'Use at most 120 characters for the embedding model.',
+  policyType: 'Choose a supported policy type.',
+  priority: 'Enter a whole priority from −1,000 to 1,000.',
+  items: 'Enter 1 to 200 non-empty items, one per line, with at most 200 characters each.',
+  tone: 'Enter a response tone with 1 to 200 characters.',
+  language: 'Use at most 50 characters for the language.',
+  maxLength: 'Leave the limit blank or enter a whole number from 1 to 100,000.',
+  format: 'Choose plain text or a JSON object.',
+  maxRequests: 'Enter a whole request limit from 1 to 100.',
+  windowSeconds: 'Enter a whole window from 1 to 3,600 seconds.',
+  enabled: 'Choose whether the policy is enabled.',
+  requireSources: 'Choose whether sources are required.',
+  invalid: 'Review the highlighted entries.',
+  unavailable: 'Validation is unavailable. Your entries are preserved; try again.',
+  changed: 'Saved settings changed. Your entries are preserved; reset before saving again.',
+  uncertain: 'The save could not be verified. Refresh and reset before saving again.',
+  reset: 'Reset to saved settings',
+};
+const fa: Record<keyof typeof en, string> = {
+  title: 'عنوانی با ۱ تا ۱۲۰ نویسه وارد کنید.',
+  description: 'توضیح را حداکثر با ۲۰۰۰ نویسه وارد کنید.',
+  audience: 'مخاطب پشتیبانی‌شده را انتخاب کنید.',
+  sourceType: 'نوع منبع پشتیبانی‌شده را انتخاب کنید.',
+  sourceUrl:
+    'حداکثر ۲۰ نشانی HTTPS، هرکدام در یک خط، یا یک نشانی API با HTTPS وارد کنید. هر نشانی حداکثر ۲۰۴۸ نویسه دارد.',
+  chunkSize: 'اندازه قطعه را با عدد صحیح از ۱۰۰ تا ۴۰۰۰ وارد کنید.',
+  chunkOverlap: 'هم‌پوشانی را با عدد صحیح از ۰ تا ۱۰۰۰ و کوچک‌تر از اندازه قطعه وارد کنید.',
+  vectorEmbeddingModel: 'مدل جاسازی را حداکثر با ۱۲۰ نویسه وارد کنید.',
+  policyType: 'نوع سیاست پشتیبانی‌شده را انتخاب کنید.',
+  priority: 'اولویت را با عدد صحیح از ۱۰۰۰− تا ۱۰۰۰ وارد کنید.',
+  items: '۱ تا ۲۰۰ مورد غیرخالی، هرکدام در یک خط و حداکثر با ۲۰۰ نویسه وارد کنید.',
+  tone: 'لحن پاسخ را با ۱ تا ۲۰۰ نویسه وارد کنید.',
+  language: 'زبان را حداکثر با ۵۰ نویسه وارد کنید.',
+  maxLength: 'سقف را خالی بگذارید یا عدد صحیح از ۱ تا ۱۰۰۰۰۰ وارد کنید.',
+  format: 'متن ساده یا شیء JSON را انتخاب کنید.',
+  maxRequests: 'سقف درخواست را با عدد صحیح از ۱ تا ۱۰۰ وارد کنید.',
+  windowSeconds: 'بازه را با عدد صحیح از ۱ تا ۳۶۰۰ ثانیه وارد کنید.',
+  enabled: 'فعال یا غیرفعال بودن سیاست را انتخاب کنید.',
+  requireSources: 'الزام منبع را انتخاب کنید.',
+  invalid: 'داده‌های مشخص‌شده را بررسی کنید.',
+  unavailable: 'اعتبارسنجی در دسترس نیست. داده‌های شما حفظ شده است؛ دوباره تلاش کنید.',
+  changed:
+    'تنظیمات ذخیره‌شده تغییر کرده است. داده‌های شما حفظ شده است؛ پیش از ذخیره دوباره بازنشانی کنید.',
+  uncertain: 'ذخیره تأیید نشد. پیش از ذخیره دوباره، تازه‌سازی و بازنشانی کنید.',
+  reset: 'بازنشانی به تنظیمات ذخیره‌شده',
+};
+export function knowledgePolicyFormText(key: keyof typeof en, locale: Locale): string {
+  return (locale === 'fa' ? fa : en)[key];
+}

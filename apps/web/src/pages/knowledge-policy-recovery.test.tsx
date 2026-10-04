@@ -46,7 +46,8 @@ vi.mock('../components/KnowledgeBaseDocumentPicker.js', () => ({
   },
 }));
 let host: HTMLDivElement, root: Root;
-beforeEach(() => {
+beforeEach(async () => {
+  await import('../lib/catalogue-form-schemas.js');
   document.documentElement.lang = 'en';
   host = document.createElement('div');
   document.body.append(host);
@@ -351,7 +352,7 @@ it('an old document upload callback cannot attach after changing selected scope'
   await act(async () => oldAttach('test-storage-key'));
   expect(captured.action).toBeNull();
 });
-it('configuration changes discard knowledge edits but document-count telemetry preserves them', async () => {
+it('configuration changes preserve knowledge edits and require reset while document telemetry preserves the basis', async () => {
   let phase = 0;
   mock(() =>
     response([
@@ -372,7 +373,15 @@ it('configuration changes discard knowledge edits but document-count telemetry p
   expect(host.querySelector<HTMLInputElement>('#kb-title')!.value).toBe('Unsaved title');
   phase = 2;
   await click('Refresh');
-  expect(host.querySelector('#kb-title')).toBeNull();
+  expect(host.querySelector<HTMLInputElement>('#kb-title')!.value).toBe('Unsaved title');
+  expect(host.textContent).toContain('Saved settings changed');
+  expect(
+    [...host.querySelectorAll<HTMLButtonElement>('button')].find(
+      (b) => b.textContent?.trim() === 'Save'
+    )!.disabled
+  ).toBe(true);
+  await click('Reset to saved settings');
+  expect(host.querySelector<HTMLInputElement>('#kb-title')!.value).toBe(kb.title);
 });
 it('policy catalogue retry preserves complete rule drafts and exact frozen save', async () => {
   let fail = false;

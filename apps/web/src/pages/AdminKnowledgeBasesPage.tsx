@@ -1,3 +1,17 @@
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import {
+  CatalogueFieldFeedback,
+  CatalogueSaveButton,
+  catalogueRootMessage,
+} from '../components/CatalogueEditorFeedback.js';
+import { knowledgePolicyFormText } from '@barghsa/i18n/knowledge-policy-forms';
+import {
+  type KnowledgeDraft as Draft,
+  invalidKnowledgeFields,
+  knowledgeBody,
+  matchesAiCatalogueReceipt,
+} from '../lib/knowledge-policy-form.js';
 import type { KnowledgeCatalogueKind } from '../lib/catalogue-category-query.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useState, useRef, useCallback, type FormEvent } from 'react';
@@ -35,17 +49,7 @@ interface QueryResult {
   metadata: { fileName?: string; url?: string };
 }
 type Kind = 'knowledge-bases' | 'kb-groups';
-type Draft = {
-  id?: string;
-  title: string;
-  description: string;
-  audience: 'admin' | 'staff' | 'customer' | 'public';
-  sourceType: 'document' | 'url' | 'api';
-  sourceUrl: string;
-  chunkSize: number;
-  chunkOverlap: number;
-  vectorEmbeddingModel: string;
-};
+
 function record(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
@@ -132,8 +136,8 @@ function draftFor(entry?: Entry): Draft {
     audience: entry?.audience ?? 'admin',
     sourceType: entry?.sourceType ?? 'document',
     sourceUrl: entry?.sourceConfig?.urls?.join('\n') ?? entry?.sourceConfig?.apiUrl ?? '',
-    chunkSize: entry?.chunkingStrategy?.size ?? 800,
-    chunkOverlap: entry?.chunkingStrategy?.overlap ?? 100,
+    chunkSize: String(entry?.chunkingStrategy?.size ?? 800),
+    chunkOverlap: String(entry?.chunkingStrategy?.overlap ?? 100),
     vectorEmbeddingModel: entry?.vectorEmbeddingModel ?? '',
   };
 }
@@ -162,10 +166,54 @@ export default function AdminKnowledgeBasesPage({
       )[code ?? ''] ?? 'errorGeneric'
     );
   const [kind, setKind] = useState<Kind>(initialKind);
+  const copy = (key: Parameters<typeof knowledgePolicyFormText>[0]) =>
+    knowledgePolicyFormText(key, locale);
+  const kindRef = useRef(kind);
+  kindRef.current = kind;
+  const messages = Object.fromEntries(
+    Object.keys(draftFor()).map((key) => [key, copy(key as Parameters<typeof copy>[0])])
+  ) as Record<keyof Draft, string>;
+  messages.id = copy('invalid');
+  const form = useWizardForm<Draft>(
+    async () => {
+      const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return contentFormSchema(messages, (value) => invalidKnowledgeFields(value, kindRef.current));
+    },
+    draftFor,
+    copy('unavailable')
+  );
+  const ownedFields = useActionFieldErrors(form.form, messages, copy('invalid'));
+  const [draftOpen, setDraftOpen] = useState(false);
+  const draft = draftOpen ? form.values : null;
+  const resetForm = form.form.reset;
+  const setDraft = useCallback(
+    (value: Draft | null) => {
+      resetForm(value ?? draftFor());
+      setDraftOpen(!!value);
+    },
+    [resetForm]
+  );
+  const [changed, setChanged] = useState(false),
+    [uncertain, setUncertain] = useState(false),
+    [pending, setPending] = useState(false);
+  const validationBusy = useRef(false),
+    networkPending = useRef(false),
+    requiredRead = useRef(0);
+  const formCapture = useRef<{ body: Record<string, unknown>; id?: string } | null>(null);
+  const actionRef = useRef<TeamAction | null>(null);
+  const setAction = useCallback((value: TeamAction | null) => {
+    actionRef.current = value;
+    if (!value) formCapture.current = null;
+    updateAction(value);
+  }, []);
+  const onPendingChange = useCallback((value: boolean) => {
+    networkPending.current = value;
+    setPending(value);
+  }, []);
+
   const [selected, setSelected] = useState<string | null>(null);
-  const [draft, setDraft] = useState<Draft | null>(null);
   const [member, setMember] = useState('');
-  const [action, setAction] = useState<TeamAction | null>(null),
+  const [action, updateAction] = useState<TeamAction | null>(null),
     [notice, setNotice] = useState(false);
   const [queryText, setQueryText] = useState('');
   const [queryState, setQueryState] = useState<'idle' | 'loading' | 'error'>('idle');
@@ -189,13 +237,20 @@ export default function AdminKnowledgeBasesPage({
     setQueryState('idle');
     setAction(null);
     detailBasis.current = null;
-  }, []);
+  }, [setAction]);
   const clearWork = useCallback(() => {
     clearDetail();
     setDraft(null);
     setNotice(false);
     draftBasis.current = null;
-  }, [clearDetail]);
+    setChanged(false);
+    setUncertain(false);
+    requiredRead.current = 0;
+    formCapture.current = null;
+    validationBusy.current = false;
+    form.setValidationPending(false);
+    onPendingChange(false);
+  }, [clearDetail, setAction, setDraft, form.setValidationPending, onPendingChange]);
   const scope = useCatalogueScope(clearWork);
   const list = useCatalogueResource(scope, `/api/admin/${kind}`, validEntries);
   const choices = useCatalogueResource(
@@ -253,9 +308,10 @@ export default function AdminKnowledgeBasesPage({
       const fresh = list.data.find((row) => row.id === current.draft?.id);
       if (!fresh || JSON.stringify(draftFor(fresh)) !== draftBasis.current) {
         generation.current++;
-        setDraft(null);
+        setChanged(true);
         setAction(null);
-        draftBasis.current = null;
+        validationBusy.current = false;
+        form.setValidationPending(false);
       }
     }
     const command = commandTarget.current;
@@ -270,7 +326,7 @@ export default function AdminKnowledgeBasesPage({
       commandTarget.current = null;
     }
     if (current.selected && !list.data.some((row) => row.id === current.selected)) clearDetail();
-  }, [list.data, clearDetail]);
+  }, [list.data, clearDetail, setAction, form.setValidationPending]);
   useEffect(() => {
     if (!selectedRead.data) return;
     const next = retrievalBasis(selectedRead.data);
@@ -279,7 +335,7 @@ export default function AdminKnowledgeBasesPage({
       queryRequest.current?.abort();
       setQueryResult(null);
       setQueryState('idle');
-      setAction(null);
+      if (!formCapture.current) setAction(null);
     }
     detailBasis.current = next;
   }, [selectedRead.data]);
@@ -294,13 +350,29 @@ export default function AdminKnowledgeBasesPage({
     }
   }, [choices.data]);
   function open(value: string) {
-    if (disabled || value === selected) return;
+    if (
+      disabled ||
+      value === selected ||
+      networkPending.current ||
+      actionRef.current ||
+      validationBusy.current
+    )
+      return;
     clearDetail();
     setSelected(value);
   }
   function edit(entry?: Entry) {
-    if (disabled) return;
+    if (
+      disabled ||
+      networkPending.current ||
+      validationBusy.current ||
+      actionRef.current ||
+      uncertain
+    )
+      return;
     generation.current++;
+    formCapture.current = null;
+    setChanged(false);
     commandTarget.current = null;
     setAction(null);
     setDraft(draftFor(entry));
@@ -308,6 +380,12 @@ export default function AdminKnowledgeBasesPage({
     setNotice(false);
   }
   function refresh() {
+    if (networkPending.current) return;
+    if (validationBusy.current) {
+      generation.current++;
+      validationBusy.current = false;
+      form.setValidationPending(false);
+    }
     if (scope.denied) scope.recover();
     else {
       list.retry();
@@ -332,7 +410,7 @@ export default function AdminKnowledgeBasesPage({
       <Button
         type="button"
         variant="outline"
-        disabled={list.loading || choices.loading || selectedRead.loading}
+        disabled={pending || list.loading || choices.loading || selectedRead.loading}
         onClick={refresh}
       >
         {label('refresh')}
@@ -371,7 +449,13 @@ export default function AdminKnowledgeBasesPage({
     description: string,
     body?: unknown
   ) {
-    if (commandDisabled(path, body)) return;
+    if (
+      commandDisabled(path, body) ||
+      actionRef.current ||
+      validationBusy.current ||
+      networkPending.current
+    )
+      return;
     const target = rows.find((row) => path === `/api/admin/${kind}/${row.id}`);
     commandTarget.current = target
       ? { id: target.id, basis: JSON.stringify(draftFor(target)) }
@@ -381,6 +465,9 @@ export default function AdminKnowledgeBasesPage({
     setAction({
       path,
       method,
+      ...(formCapture.current
+        ? { successStatus: method === 'POST' ? 201 : 200, conflictMessage: copy('changed') }
+        : {}),
       title,
       description,
       ...(body === undefined ? {} : { body }),
@@ -388,38 +475,69 @@ export default function AdminKnowledgeBasesPage({
       errorMessages: { 'VALIDATION:PARSE:ZOD_ERROR': label('invalid') },
     });
   }
-  function save(event: FormEvent) {
+  async function save(event: FormEvent) {
     event.preventDefault();
-    if (!draft || disabled) return;
-    propose(
-      `/api/admin/${kind}${draft.id ? `/${draft.id}` : ''}`,
-      draft.id ? 'PUT' : 'POST',
-      label('save'),
-      kind === 'knowledge-bases' && draft.audience !== 'admin'
-        ? `${label('confirmSave')} ${label('audienceWarning')}`
-        : label('confirmSave'),
-      kind === 'kb-groups'
-        ? { title: draft.title.trim(), description: draft.description }
-        : {
-            title: draft.title.trim(),
-            description: draft.description,
-            audience: draft.audience,
-            sourceType: draft.sourceType,
-            sourceConfig:
-              draft.sourceType === 'url'
-                ? {
-                    urls: draft.sourceUrl
-                      .split(/\r?\n/)
-                      .map((url) => url.trim())
-                      .filter(Boolean),
-                  }
-                : draft.sourceType === 'api'
-                  ? { apiUrl: draft.sourceUrl.trim() }
-                  : {},
-            chunkingStrategy: { size: draft.chunkSize, overlap: draft.chunkOverlap },
-            vectorEmbeddingModel: draft.vectorEmbeddingModel.trim() || null,
-          }
-    );
+    if (
+      !draft ||
+      disabled ||
+      changed ||
+      uncertain ||
+      actionRef.current ||
+      validationBusy.current ||
+      networkPending.current
+    )
+      return;
+    const epoch = ++generation.current;
+    validationBusy.current = true;
+    form.setValidationPending(true);
+    try {
+      await form.form.handleSubmit((value) => {
+        if (epoch !== generation.current || work.current.disabled || actionRef.current || uncertain)
+          return;
+        validationBusy.current = false;
+        const body = knowledgeBody(value, kindRef.current);
+        formCapture.current = { body, ...(value.id ? { id: value.id } : {}) };
+        propose(
+          `/api/admin/${kind}${value.id ? `/${value.id}` : ''}`,
+          value.id ? 'PUT' : 'POST',
+          label('save'),
+          kind === 'knowledge-bases' && value.audience !== 'admin'
+            ? `${label('confirmSave')} ${label('audienceWarning')}`
+            : label('confirmSave'),
+          body
+        );
+      })();
+    } finally {
+      if (epoch === generation.current) {
+        validationBusy.current = false;
+        form.setValidationPending(false);
+      }
+    }
+  }
+  function unconfirmed() {
+    if (!formCapture.current) return;
+    setUncertain(true);
+    generation.current++;
+    setAction(null);
+    onPendingChange(false);
+    requiredRead.current = list.retry();
+  }
+  const resetDisabled =
+    disabled ||
+    !!action ||
+    form.pending ||
+    pending ||
+    (uncertain && (list.readAttempt === null || list.readAttempt < requiredRead.current));
+  function resetDraft() {
+    if (resetDisabled || !draft) return;
+    generation.current++;
+    const fresh = draft.id ? rows.find((row) => row.id === draft.id) : undefined;
+    setDraft(draft.id && !fresh ? null : draftFor(fresh));
+    draftBasis.current = fresh ? JSON.stringify(draftFor(fresh)) : null;
+    setChanged(false);
+    setUncertain(false);
+    formCapture.current = null;
+    setNotice(false);
   }
   async function testQuery(event: FormEvent) {
     event.preventDefault();
@@ -465,6 +583,7 @@ export default function AdminKnowledgeBasesPage({
           <Button
             key={value}
             autoFocus={focusCategory && kind === value}
+            disabled={pending}
             variant={kind === value ? 'default' : 'outline'}
             aria-pressed={kind === value}
             onClick={() => {
@@ -482,7 +601,7 @@ export default function AdminKnowledgeBasesPage({
         ))}
         <Button
           variant="outline"
-          disabled={list.loading || choices.loading || selectedRead.loading}
+          disabled={pending || list.loading || choices.loading || selectedRead.loading}
           onClick={refresh}
         >
           {label('refresh')}
@@ -495,7 +614,10 @@ export default function AdminKnowledgeBasesPage({
           <>
             {notice && <p role="status">{label('saved')}</p>}
             <ListPage.Toolbar>
-              <Button disabled={disabled} onClick={() => edit()}>
+              <Button
+                disabled={disabled || form.pending || !!action || pending || uncertain}
+                onClick={() => edit()}
+              >
                 {label(kind === 'knowledge-bases' ? 'addKb' : 'addGroup')}
               </Button>
             </ListPage.Toolbar>
@@ -515,154 +637,248 @@ export default function AdminKnowledgeBasesPage({
             )}
             {draft && (
               <form
-                onSubmit={save}
+                noValidate
+                aria-busy={form.pending || undefined}
+                onSubmit={(event) => void save(event)}
                 aria-label={label('editor')}
                 className="flex flex-col gap-4 border-y py-5"
               >
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="kb-title">{label('name')}</Label>
-                  <Input
-                    id="kb-title"
-                    required
-                    maxLength={120}
-                    value={draft.title}
-                    onChange={(event) => setDraft({ ...draft, title: event.target.value })}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="kb-description">{label('description')}</Label>
-                  <textarea
-                    id="kb-description"
-                    className="min-h-24 rounded-md border bg-background p-3"
-                    maxLength={2000}
-                    value={draft.description}
-                    onChange={(event) => setDraft({ ...draft, description: event.target.value })}
-                  />
-                </div>
-                {kind === 'knowledge-bases' && (
-                  <>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="kb-audience">{label('audience')}</Label>
-                      <select
-                        id="kb-audience"
-                        className="rounded-md border bg-background p-2"
-                        value={draft.audience}
-                        onChange={(event) =>
-                          setDraft({ ...draft, audience: event.target.value as Draft['audience'] })
-                        }
-                      >
-                        {(['admin', 'staff', 'customer', 'public'] as const).map((value) => (
-                          <option key={value} value={value}>
-                            {label(`audience${value}`)}
-                          </option>
-                        ))}
-                      </select>
-                      <p className="text-sm text-muted-foreground">{label('audienceHelp')}</p>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="kb-source-type">{label('sourceType')}</Label>
-                      <select
-                        id="kb-source-type"
-                        className="rounded-md border bg-background p-2"
-                        value={draft.sourceType}
-                        onChange={(event) =>
-                          setDraft({
-                            ...draft,
-                            sourceType: event.target.value as Draft['sourceType'],
-                          })
-                        }
-                      >
-                        <option value="document">{label('sourceDocument')}</option>
-                        <option value="url">{label('sourceUrl')}</option>
-                        <option value="api">{label('sourceApi')}</option>
-                      </select>
-                    </div>
-                    {draft.sourceType !== 'document' && (
+                {changed && <p role="alert">{copy('changed')}</p>}
+                {uncertain && <p role="alert">{copy('uncertain')}</p>}
+                {catalogueRootMessage(form.errors) && (
+                  <p role="alert">{catalogueRootMessage(form.errors)}</p>
+                )}
+                <fieldset disabled={form.pending || !!action || pending} className="contents">
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="kb-title">{label('name')}</Label>
+                    <Input
+                      {...form.bind('title')}
+                      id="kb-title"
+                      required
+                      maxLength={120}
+                      value={draft.title}
+                      onChange={(event) =>
+                        form.field('title')[1](event.target.value as Draft['title'])
+                      }
+                    />
+                    <CatalogueFieldFeedback
+                      id={form.errorId('title')}
+                      error={form.errors.title}
+                      message={messages.title}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="kb-description">{label('description')}</Label>
+                    <textarea
+                      {...form.bind('description')}
+                      id="kb-description"
+                      className="min-h-24 rounded-md border bg-background p-3"
+                      maxLength={2000}
+                      value={draft.description}
+                      onChange={(event) =>
+                        form.field('description')[1](event.target.value as Draft['description'])
+                      }
+                    />
+                    <CatalogueFieldFeedback
+                      id={form.errorId('description')}
+                      error={form.errors.description}
+                      message={messages.description}
+                    />
+                  </div>
+                  {kind === 'knowledge-bases' && (
+                    <>
                       <div className="flex flex-col gap-2">
-                        <Label htmlFor="kb-source-url">{label('sourceAddress')}</Label>
-                        {draft.sourceType === 'url' ? (
-                          <>
-                            <textarea
-                              id="kb-source-url"
-                              required
-                              maxLength={40960}
-                              rows={3}
-                              className="rounded-md border bg-background p-3"
-                              value={draft.sourceUrl}
-                              onChange={(event) =>
-                                setDraft({ ...draft, sourceUrl: event.target.value })
-                              }
-                            />
-                            <p className="text-sm text-muted-foreground">
-                              {label('sourceUrlsHelp')}
-                            </p>
-                          </>
-                        ) : (
+                        <Label htmlFor="kb-audience">{label('audience')}</Label>
+                        <select
+                          {...form.bind('audience')}
+                          id="kb-audience"
+                          className="rounded-md border bg-background p-2"
+                          value={draft.audience}
+                          onChange={(event) =>
+                            form.field('audience')[1](event.target.value as Draft['audience'])
+                          }
+                        >
+                          {(['admin', 'staff', 'customer', 'public'] as const).map((value) => (
+                            <option key={value} value={value}>
+                              {label(`audience${value}`)}
+                            </option>
+                          ))}
+                        </select>
+                        <CatalogueFieldFeedback
+                          id={form.errorId('audience')}
+                          error={form.errors.audience}
+                          message={messages.audience}
+                        />
+                        <p className="text-sm text-muted-foreground">{label('audienceHelp')}</p>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="kb-source-type">{label('sourceType')}</Label>
+                        <select
+                          {...form.bind('sourceType')}
+                          id="kb-source-type"
+                          className="rounded-md border bg-background p-2"
+                          value={draft.sourceType}
+                          onChange={(event) => {
+                            form.field('sourceType')[1](event.target.value as Draft['sourceType']);
+                            form.form.clearErrors('sourceUrl');
+                          }}
+                        >
+                          <option value="document">{label('sourceDocument')}</option>
+                          <option value="url">{label('sourceUrl')}</option>
+                          <option value="api">{label('sourceApi')}</option>
+                        </select>
+                        <CatalogueFieldFeedback
+                          id={form.errorId('sourceType')}
+                          error={form.errors.sourceType}
+                          message={messages.sourceType}
+                        />
+                      </div>
+                      {draft.sourceType !== 'document' && (
+                        <div className="flex flex-col gap-2">
+                          <Label htmlFor="kb-source-url">{label('sourceAddress')}</Label>
+                          {draft.sourceType === 'url' ? (
+                            <>
+                              <textarea
+                                {...form.bind('sourceUrl')}
+                                id="kb-source-url"
+                                required
+                                maxLength={40960}
+                                rows={3}
+                                className="rounded-md border bg-background p-3"
+                                value={draft.sourceUrl}
+                                onChange={(event) =>
+                                  form.field('sourceUrl')[1](
+                                    event.target.value as Draft['sourceUrl']
+                                  )
+                                }
+                              />
+                              <CatalogueFieldFeedback
+                                id={form.errorId('sourceUrl')}
+                                error={form.errors.sourceUrl}
+                                message={messages.sourceUrl}
+                              />
+                              <p className="text-sm text-muted-foreground">
+                                {label('sourceUrlsHelp')}
+                              </p>
+                            </>
+                          ) : (
+                            <>
+                              <Input
+                                {...form.bind('sourceUrl')}
+                                id="kb-source-url"
+                                type="url"
+                                required
+                                maxLength={2048}
+                                placeholder="https://"
+                                value={draft.sourceUrl}
+                                onChange={(event) =>
+                                  form.field('sourceUrl')[1](
+                                    event.target.value as Draft['sourceUrl']
+                                  )
+                                }
+                              />
+                              <CatalogueFieldFeedback
+                                id={form.errorId('sourceUrl')}
+                                error={form.errors.sourceUrl}
+                                message={messages.sourceUrl}
+                              />
+                            </>
+                          )}
+                        </div>
+                      )}
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="flex flex-col gap-2">
+                          <Label htmlFor="kb-chunk-size">{label('chunkSize')}</Label>
                           <Input
-                            id="kb-source-url"
-                            type="url"
+                            {...form.bind('chunkSize')}
+                            id="kb-chunk-size"
+                            type="text"
+                            inputMode="numeric"
+                            dir="ltr"
+                            min={100}
+                            max={4000}
                             required
-                            maxLength={2048}
-                            placeholder="https://"
-                            value={draft.sourceUrl}
+                            value={draft.chunkSize}
                             onChange={(event) =>
-                              setDraft({ ...draft, sourceUrl: event.target.value })
+                              form.field('chunkSize')[1](event.target.value as Draft['chunkSize'])
                             }
                           />
-                        )}
+                          <CatalogueFieldFeedback
+                            id={form.errorId('chunkSize')}
+                            error={form.errors.chunkSize}
+                            message={messages.chunkSize}
+                          />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <Label htmlFor="kb-chunk-overlap">{label('chunkOverlap')}</Label>
+                          <Input
+                            {...form.bind('chunkOverlap')}
+                            id="kb-chunk-overlap"
+                            type="text"
+                            inputMode="numeric"
+                            dir="ltr"
+                            min={0}
+                            max={1000}
+                            required
+                            value={draft.chunkOverlap}
+                            onChange={(event) =>
+                              form.field('chunkOverlap')[1](
+                                event.target.value as Draft['chunkOverlap']
+                              )
+                            }
+                          />
+                          <CatalogueFieldFeedback
+                            id={form.errorId('chunkOverlap')}
+                            error={form.errors.chunkOverlap}
+                            message={messages.chunkOverlap}
+                          />
+                        </div>
                       </div>
-                    )}
-                    <div className="grid gap-4 sm:grid-cols-2">
                       <div className="flex flex-col gap-2">
-                        <Label htmlFor="kb-chunk-size">{label('chunkSize')}</Label>
+                        <Label htmlFor="kb-embedding-model">{label('embeddingModel')}</Label>
                         <Input
-                          id="kb-chunk-size"
-                          type="number"
-                          min={100}
-                          max={4000}
-                          required
-                          value={draft.chunkSize}
+                          {...form.bind('vectorEmbeddingModel')}
+                          id="kb-embedding-model"
+                          maxLength={120}
+                          value={draft.vectorEmbeddingModel}
                           onChange={(event) =>
-                            setDraft({ ...draft, chunkSize: Number(event.target.value) })
+                            form.field('vectorEmbeddingModel')[1](
+                              event.target.value as Draft['vectorEmbeddingModel']
+                            )
                           }
                         />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <Label htmlFor="kb-chunk-overlap">{label('chunkOverlap')}</Label>
-                        <Input
-                          id="kb-chunk-overlap"
-                          type="number"
-                          min={0}
-                          max={1000}
-                          required
-                          value={draft.chunkOverlap}
-                          onChange={(event) =>
-                            setDraft({ ...draft, chunkOverlap: Number(event.target.value) })
-                          }
+                        <CatalogueFieldFeedback
+                          id={form.errorId('vectorEmbeddingModel')}
+                          error={form.errors.vectorEmbeddingModel}
+                          message={messages.vectorEmbeddingModel}
                         />
                       </div>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="kb-embedding-model">{label('embeddingModel')}</Label>
-                      <Input
-                        id="kb-embedding-model"
-                        maxLength={120}
-                        value={draft.vectorEmbeddingModel}
-                        onChange={(event) =>
-                          setDraft({ ...draft, vectorEmbeddingModel: event.target.value })
-                        }
-                      />
-                    </div>
-                  </>
-                )}
-                <div className="flex gap-2">
-                  <Button type="submit" disabled={disabled || !draft.title.trim()}>
-                    {label('save')}
-                  </Button>
-                  <Button type="button" variant="outline" onClick={() => setDraft(null)}>
-                    {label('cancel')}
-                  </Button>
-                </div>
+                    </>
+                  )}
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={resetDisabled}
+                      onClick={resetDraft}
+                    >
+                      {copy('reset')}
+                    </Button>
+                    <CatalogueSaveButton
+                      label={label('save')}
+                      pending={form.pending}
+                      disabled={disabled || changed || uncertain}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={uncertain}
+                      onClick={() => setDraft(null)}
+                    >
+                      {label('cancel')}
+                    </Button>
+                  </div>
+                </fieldset>
               </form>
             )}
             <ListPage.Content
@@ -708,7 +924,7 @@ export default function AdminKnowledgeBasesPage({
                     <div className="flex shrink-0 flex-wrap gap-2">
                       <Button
                         variant="outline"
-                        disabled={disabled}
+                        disabled={disabled || form.pending || !!action || pending}
                         onClick={() => open(row.id)}
                         aria-label={`${label('open')} ${row.title}`}
                       >
@@ -716,7 +932,7 @@ export default function AdminKnowledgeBasesPage({
                       </Button>
                       <Button
                         variant="outline"
-                        disabled={disabled}
+                        disabled={disabled || form.pending || !!action || pending}
                         onClick={() => edit(row)}
                         aria-label={`${label('edit')} ${row.title}`}
                       >
@@ -724,7 +940,7 @@ export default function AdminKnowledgeBasesPage({
                       </Button>
                       <Button
                         variant="outline"
-                        disabled={disabled}
+                        disabled={disabled || form.pending || !!action || pending}
                         onClick={() =>
                           propose(
                             `/api/admin/${kind}/${row.id}`,
@@ -987,14 +1203,26 @@ export default function AdminKnowledgeBasesPage({
       {action && (
         <TeamActionDialog
           action={action}
-          confirmationDisabled={commandDisabled(action.path, action.body)}
+          confirmationDisabled={
+            commandDisabled(action.path, action.body) ||
+            (!!formCapture.current && (changed || uncertain))
+          }
+          onPendingChange={onPendingChange}
+          onDenied={scope.deny}
+          onValidationError={(fields) => (formCapture.current ? ownedFields(fields) : false)}
+          onUnconfirmed={unconfirmed}
           summary={recovery}
           onClose={() => {
             generation.current++;
             setAction(null);
+            onPendingChange(false);
           }}
-          onSuccess={((command, version) => async () => {
-            if (version !== generation.current) return;
+          onSuccess={((command, version) => async (value: unknown) => {
+            if (actionRef.current !== command) return;
+            const captured = formCapture.current;
+            if (version !== generation.current && !captured) return;
+            if (captured && !matchesAiCatalogueReceipt(value, captured.body, captured.id))
+              throw new Error('Unconfirmed catalogue settings');
             if (command.body && typeof command.body === 'object' && 'title' in command.body) {
               setDraft(null);
               draftBasis.current = null;

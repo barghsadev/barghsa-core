@@ -1,3 +1,4 @@
+import { rejectContentFields } from '../admin/content-input-fields.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -50,6 +51,33 @@ const chunkingStrategySchema = z
   .strict()
   .refine((value) => value.overlap < value.size);
 const embeddingModelSchema = z.string().trim().min(1).max(120).nullable();
+
+function rejectKnowledgeFields(issues: readonly z.ZodIssue[], sourceRequired = false): never {
+  const aliases: Record<string, string> = {
+    title: 'title',
+    description: 'description',
+    audience: 'audience',
+    sourceType: 'sourceType',
+    'sourceConfig.urls': 'sourceUrl',
+    'sourceConfig.apiUrl': 'sourceUrl',
+    'chunkingStrategy.size': 'chunkSize',
+    'chunkingStrategy.overlap': 'chunkOverlap',
+    chunkingStrategy: 'chunkOverlap',
+    vectorEmbeddingModel: 'vectorEmbeddingModel',
+  };
+  rejectContentFields(
+    issues.map((issue) => {
+      const path = issue.path.join('.');
+      const field = Object.hasOwn(aliases, path)
+        ? aliases[path]
+        : /^sourceConfig\.urls\.\d+$/.test(path) || (sourceRequired && !path)
+          ? 'sourceUrl'
+          : undefined;
+      return { path: field ? [field] : [] };
+    }),
+    Object.values(aliases)
+  );
+}
 
 export const CreateKnowledgeBaseSchema = z
   .object({
@@ -231,7 +259,7 @@ export class KnowledgeBasesController {
     this.assertKbPermission(req);
     const parsed = CreateKnowledgeBaseSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid knowledge base payload');
+      rejectKnowledgeFields(parsed.error.issues, true);
     }
     return this.service.createKb({
       title: parsed.data.title,
@@ -261,7 +289,7 @@ export class KnowledgeBasesController {
     this.assertKbPermission(req);
     const parsed = UpdateKnowledgeBaseSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid knowledge base payload');
+      rejectKnowledgeFields(parsed.error.issues);
     }
     return this.service.updateKb(id, {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
@@ -422,7 +450,7 @@ export class KbGroupsController {
     this.assertKbPermission(req);
     const parsed = CreateKbGroupSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid KB group payload');
+      rejectContentFields(parsed.error.issues, ['title', 'description']);
     }
     return this.service.createGroup({
       title: parsed.data.title,
@@ -447,7 +475,7 @@ export class KbGroupsController {
     this.assertKbPermission(req);
     const parsed = UpdateKbGroupSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid KB group payload');
+      rejectContentFields(parsed.error.issues, ['title', 'description']);
     }
     return this.service.updateGroup(id, {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
