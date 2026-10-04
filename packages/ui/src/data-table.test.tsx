@@ -1,7 +1,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { DataTable, type ColumnDef } from './components/base-ui/data-table';
+import { CardListView, DataTable, type ColumnDef } from './components/base-ui/data-table';
 
 type Row = { id: string; value: number | string | Date | null };
 const columns: ColumnDef<Row>[] = [
@@ -141,4 +141,171 @@ it('tracks uncontrolled row toggles and disables selection while loading', async
     'true'
   );
   expect(container.querySelector('tbody [role="checkbox"]')).toBeNull();
+});
+
+it('binds details to stable row keys through sorting and respects ineligible rows', async () => {
+  const data: Row[] = [
+    { id: 'high', value: 2 },
+    { id: 'low', value: 1 },
+  ];
+  const changed = vi.fn();
+  await act(async () =>
+    root.render(
+      <DataTable
+        columns={columns}
+        data={data}
+        keyExtractor={keyExtractor}
+        selectable
+        rowLabel={(row) => row.id}
+        canExpandRow={(row) => row.id === 'high'}
+        renderExpandedRow={(row) => <p>Details {row.id}</p>}
+        onExpansionChange={changed}
+      />
+    )
+  );
+  expect(container.querySelectorAll('[aria-expanded]')).toHaveLength(1);
+  await click('[aria-label="Show details for high"]');
+  const trigger = container.querySelector('[aria-label="Hide details for high"]')!;
+  const id = trigger.getAttribute('aria-controls');
+  expect(document.getElementById(id!)?.textContent).toBe('Details high');
+  expect(document.getElementById(id!)?.closest('td')?.getAttribute('colspan')).toBe('3');
+  await click('[data-table-sort]');
+  expect(rows()).toEqual(['low', 'high', 'Details high']);
+  expect(
+    container.querySelector('[aria-label="Hide details for high"]')?.getAttribute('aria-controls')
+  ).toBe(id);
+  expect(changed).toHaveBeenCalledExactlyOnceWith(new Set(['high']));
+  await click('[aria-label="Hide details for high"]');
+  expect(document.getElementById(id!)).toBeNull();
+});
+
+it('controlled expansions retain other-page keys without mutating the caller', async () => {
+  const data: Row[] = [{ id: 'one', value: 1 }];
+  const selected = new Set<string | number>(['other page']);
+  const changed = vi.fn();
+  const render = async (expandedRows: Set<string | number>, loading = false) =>
+    act(async () =>
+      root.render(
+        <DataTable
+          columns={columns}
+          data={data}
+          keyExtractor={keyExtractor}
+          expandedRows={expandedRows}
+          onExpansionChange={changed}
+          renderExpandedRow={(row) => <p>Details {row.id}</p>}
+          loading={loading}
+        />
+      )
+    );
+  await render(selected);
+  await click('[aria-expanded]');
+  expect(changed).toHaveBeenLastCalledWith(new Set(['other page', 'one']));
+  expect(selected).toEqual(new Set(['other page']));
+  expect(container.querySelector('[aria-expanded]')?.getAttribute('aria-expanded')).toBe('false');
+  await render(new Set(['other page', 'one']));
+  await click('[aria-expanded]');
+  expect(changed).toHaveBeenLastCalledWith(new Set(['other page']));
+  await render(new Set(['one']), true);
+  expect(container.querySelector('[aria-expanded]')).toBeNull();
+});
+
+it('sort controls support logical arrows, Home and End without sorting or hijacking Tab', async () => {
+  const changed = vi.fn();
+  const cols: ColumnDef<Row>[] = [
+    { ...columns[0]!, id: 'first' },
+    { ...columns[0]!, id: 'second' },
+  ];
+  await act(async () =>
+    root.render(
+      <DataTable
+        locale="fa"
+        columns={cols}
+        data={[]}
+        keyExtractor={keyExtractor}
+        onSortChange={changed}
+      />
+    )
+  );
+  const buttons = [...container.querySelectorAll<HTMLButtonElement>('[data-table-sort]')];
+  buttons[0]!.focus();
+  const press = (key: string) =>
+    buttons
+      .find((b) => b === document.activeElement)!
+      .dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+  await act(async () => {
+    press('ArrowLeft');
+  });
+  expect(document.activeElement).toBe(buttons[1]);
+  await act(async () => {
+    press('Home');
+  });
+  expect(document.activeElement).toBe(buttons[0]);
+  await act(async () => {
+    press('End');
+  });
+  expect(document.activeElement).toBe(buttons[1]);
+  expect(press('Tab')).toBe(true);
+  expect(changed).not.toHaveBeenCalled();
+});
+
+it('mobile and table renderers share order, selection and expansion with distinct disclosure IDs', async () => {
+  const data: Row[] = [
+    { id: 'two', value: 2 },
+    { id: 'one', value: 1 },
+  ];
+  await act(async () =>
+    root.render(
+      <DataTable
+        columns={columns}
+        data={data}
+        keyExtractor={keyExtractor}
+        renderCard={(row) => <p>Card {row.id}</p>}
+        renderExpandedRow={(row) => <p>Details {row.id}</p>}
+        rowLabel={(row) => row.id}
+        selectable
+      />
+    )
+  );
+  const cards = container.querySelector('[data-slot="card-list-view"]')!;
+  await click('[data-slot="card-list-view"] [aria-label="Show details for two"]');
+  const disclosures = [...container.querySelectorAll('[aria-label="Hide details for two"]')];
+  expect(disclosures).toHaveLength(2);
+  const ids = disclosures.map((e) => e.getAttribute('aria-controls'));
+  expect(new Set(ids).size).toBe(2);
+  for (const id of ids) expect(document.getElementById(id!)?.textContent).toBe('Details two');
+  await click('[data-slot="card-list-view"] [role="checkbox"]');
+  expect(container.querySelector('tbody [role="checkbox"]')?.getAttribute('aria-checked')).toBe(
+    'true'
+  );
+  await click('thead [data-table-sort]');
+  expect(cards.firstElementChild?.textContent).toContain('Card one');
+  expect(cards.lastElementChild?.textContent).toContain('Details two');
+  expect(container.querySelector('thead')?.className).toContain('sticky');
+});
+
+it('standalone cards describe loading/empty states without invoking private row renderers', async () => {
+  const renderCard = vi.fn(() => 'Private row');
+  const render = (loading: boolean) =>
+    act(async () =>
+      root.render(
+        <CardListView
+          locale="fa"
+          data={[{ id: 'one' }]}
+          keyExtractor={(row) => row.id}
+          renderCard={renderCard}
+          loading={loading}
+        />
+      )
+    );
+  await render(true);
+  expect(container.textContent).toContain('در حال بارگذاری');
+  expect(renderCard).not.toHaveBeenCalled();
+  await act(async () =>
+    root.render(
+      <CardListView locale="fa" data={[]} keyExtractor={keyExtractor} renderCard={renderCard} />
+    )
+  );
+  expect(container.textContent).toContain('نتیجه‌ای یافت نشد');
+  expect(container.querySelector('ol')?.getAttribute('dir')).toBe('rtl');
+  expect(renderCard).not.toHaveBeenCalled();
 });

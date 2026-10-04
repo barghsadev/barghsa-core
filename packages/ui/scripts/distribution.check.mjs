@@ -43,11 +43,29 @@ test('ESM and CommonJS consumers resolve strict public prop types', () => {
   try {
     const source = `
       import type { EmptyStateProps, ErrorBoundaryProps } from '@barghsa/ui';
+      import { DataTable, CardListView, TextCell, NumberCell, DateCell, CurrencyCell, StatusCell, AvatarCell, ActionCell, LinkCell } from '@barghsa/ui';
+      import type { DataTableProps, CardListViewProps, CellAction } from '@barghsa/ui';
       import { DirectionProvider } from '@barghsa/ui/direction-provider';
       import { useZodForm, FormField } from '@barghsa/ui/form';
       import type { FormInputProps, FormTextareaProps, FormPhoneInputProps, FormSelectProps, FormCheckboxProps, FormSwitchProps, FormRadioGroupProps, FormComboboxProps, FormSliderProps, FormDatePickerProps, FormDateRangePickerProps, FormStepProps } from '@barghsa/ui/form';
       import { z } from 'zod';
       import { createElement } from 'react';
+      const table: DataTableProps<{ id: string; amount: string }> = {
+        columns: [{ id: 'amount', header: 'Amount', accessorKey: 'amount' }], data: [], keyExtractor: row => row.id,
+        caption: 'Invoices', stickyHeader: true, rowLabel: row => row.id,
+        renderCard: row => createElement(TextCell, { value: row.amount }),
+        renderExpandedRow: row => row.id, canExpandRow: row => !!row.amount,
+        expandedRows: new Set(['one']), onExpansionChange: keys => { const selected: Set<string | number> = keys; void selected; },
+      };
+      const cards: CardListViewProps<{ id: string }> = { data: [], keyExtractor: row => row.id, renderCard: row => row.id };
+      // @ts-expect-error Stable row keys cannot be boolean.
+      cards.keyExtractor = row => !!row.id;
+      const action: CellAction = { id: 'view', label: 'View', onSelect: () => {} };
+      const cellDate: Parameters<typeof DateCell>[0] = { value: null, mode: 'relative', format: value => String(value) };
+      const currency: Parameters<typeof CurrencyCell>[0] = { amount: '9007199254740993123', format: amount => String(amount) };
+      // @ts-expect-error Numbers cannot be ambiguous strings.
+      const badNumber: Parameters<typeof NumberCell>[0] = { value: '1.5' };
+      void [table, cards, action, cellDate, currency, badNumber, DataTable, CardListView, TextCell, NumberCell, CurrencyCell, StatusCell, AvatarCell, ActionCell, LinkCell];
       function AddressForm() {
         const form = useZodForm(z.object({ postalCode: z.string().transform(Number) }), {
           defaultValues: { postalCode: '1234567890' },

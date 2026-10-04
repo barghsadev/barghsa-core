@@ -2,6 +2,16 @@ import '@barghsa/ui/styles.css';
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { DataTable } from '../../../../../packages/ui/src/components/base-ui/data-table';
+import {
+  ActionCell,
+  AvatarCell,
+  CurrencyCell,
+  DateCell,
+  LinkCell,
+  NumberCell,
+  StatusCell,
+  TextCell,
+} from '../../../../../packages/ui/src/components/base-ui/data-table-cells';
 
 const rows = [
   { id: 'b', name: 'Beta', fixed: 'Kept B' },
@@ -17,6 +27,78 @@ function Fixture() {
   const [selected, setSelected] = React.useState<Set<string | number>>(new Set());
   const [sortEvents, setSortEvents] = React.useState(0);
   const [selectionEvents, setSelectionEvents] = React.useState(0);
+  const [actionEvents, setActionEvents] = React.useState(0);
+  const advanced = params.has('advanced');
+  const labels =
+    locale === 'fa'
+      ? {
+          amount: 'مبلغ',
+          count: 'تعداد',
+          date: 'تاریخ',
+          actions: 'اقدامات',
+          view: 'نمایش',
+          remove: 'حذف',
+          paid: 'پرداخت‌شده',
+          records: 'صورتحساب‌ها',
+        }
+      : {
+          amount: 'Amount',
+          count: 'Count',
+          date: 'Date',
+          actions: 'Actions',
+          view: 'View',
+          remove: 'Delete',
+          paid: 'Paid',
+          records: 'Invoices',
+        };
+  const numeral = params.has('latin') ? 'latn' : locale === 'fa' ? 'arabext' : 'latn';
+  const money = () => (
+    <CurrencyCell
+      amount="9007199254740993123"
+      format={(amount) =>
+        new Intl.NumberFormat(locale, {
+          style: 'currency',
+          currency: 'IRR',
+          maximumFractionDigits: 0,
+          numberingSystem: numeral,
+        }).format(BigInt(amount))
+      }
+    />
+  );
+  const date = () => (
+    <DateCell
+      value="2026-10-01T22:30:00Z"
+      format={(value) =>
+        new Intl.DateTimeFormat(locale, {
+          timeZone: 'Asia/Tehran',
+          dateStyle: 'short',
+          numberingSystem: numeral,
+        }).format(new Date(value))
+      }
+    />
+  );
+  const action = (name: string) => (
+    <ActionCell
+      label={`${labels.actions} ${name}`}
+      actions={[
+        { id: 'view', label: labels.view, onSelect: () => setActionEvents((count) => count + 1) },
+        {
+          id: 'delete',
+          label: labels.remove,
+          disabled: true,
+          destructive: true,
+          onSelect: () => setActionEvents((count) => count + 100),
+        },
+      ]}
+    />
+  );
+  const data = params.has('long')
+    ? Array.from({ length: 30 }, (_, index) => ({
+        id: `row-${index}`,
+        name: `Record ${index + 1}`,
+        fixed: `Kept ${index + 1}`,
+      }))
+    : rows;
   const controlled = !new URLSearchParams(location.search).has('uncontrolled');
   return (
     <main>
@@ -30,6 +112,42 @@ function Fixture() {
       <button onClick={() => setMode('rows')}>Show rows</button>
       <button onClick={() => setSortable((value) => !value)}>Toggle sorting</button>
       <DataTable
+        caption={labels.records}
+        className={params.has('long') ? 'max-h-64' : undefined}
+        {...(advanced
+          ? {
+              rowLabel: (row: (typeof rows)[number]) => row.name,
+              canExpandRow: (row: (typeof rows)[number]) => row.id !== 'a',
+              renderExpandedRow: (row: (typeof rows)[number]) => (
+                <TextCell value={`Details ${row.name} <script>literal</script>`} />
+              ),
+            }
+          : {})}
+        {...(params.has('responsive')
+          ? {
+              renderCard: (row: (typeof rows)[number]) => (
+                <div className="space-y-3">
+                  <h2 className="font-semibold">
+                    <AvatarCell name={row.name} />
+                  </h2>
+                  <dl className="space-y-2">
+                    <div>
+                      <dt className="text-xs text-muted-foreground">{labels.amount}</dt>
+                      <dd>{money()}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs text-muted-foreground">{labels.date}</dt>
+                      <dd>{date()}</dd>
+                    </div>
+                  </dl>
+                  <div className="flex items-center justify-between gap-3">
+                    <StatusCell state="paid" label={labels.paid} />
+                    {action(row.name)}
+                  </div>
+                </div>
+              ),
+            }
+          : {})}
         sortable={sortable}
         {...(params.has('initial-sort')
           ? { initialSortColumn: 'name', initialSortDirection: 'asc' as const }
@@ -46,8 +164,46 @@ function Fixture() {
             enableHiding: false,
             sortable: false,
           },
+          ...(advanced
+            ? [
+                {
+                  id: 'count',
+                  header: labels.count,
+                  sortable: false,
+                  cell: () => <NumberCell value={12345} locale={locale} numerals={numeral} />,
+                },
+                { id: 'amount', header: labels.amount, sortable: false, cell: money },
+                { id: 'date', header: labels.date, sortable: false, cell: date },
+                {
+                  id: 'state',
+                  header: labels.paid,
+                  sortable: false,
+                  cell: () => <StatusCell state="paid" label={labels.paid} />,
+                },
+                {
+                  id: 'identity',
+                  header: 'Identity',
+                  sortable: false,
+                  cell: (row: (typeof rows)[number]) => <AvatarCell name={row.name} />,
+                },
+                {
+                  id: 'reference',
+                  header: 'Reference',
+                  sortable: false,
+                  cell: (row: (typeof rows)[number]) => (
+                    <LinkCell href={`/invoices/${row.id}`}>Invoice {row.name}</LinkCell>
+                  ),
+                },
+                {
+                  id: 'actions',
+                  header: labels.actions,
+                  sortable: false,
+                  cell: (row: (typeof rows)[number]) => action(row.name),
+                },
+              ]
+            : []),
         ]}
-        data={mode === 'empty' ? [] : rows}
+        data={mode === 'empty' ? [] : data}
         keyExtractor={(row) => row.id}
         selectable
         {...(controlled ? { selectedRows: selected } : {})}
@@ -60,6 +216,7 @@ function Fixture() {
       <output aria-label="Sort events">{sortEvents}</output>
       <output aria-label="Selection events">{selectionEvents}</output>
       <output aria-label="Selected keys">{[...selected].sort().join(',')}</output>
+      <output aria-label="Action events">{actionEvents}</output>
     </main>
   );
 }

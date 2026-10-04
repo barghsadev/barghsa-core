@@ -55,6 +55,7 @@ export * from './components/base-ui/date-time-picker';
 export * from './components/base-ui/combo-box';
 export * from './components/base-ui/multi-select';
 export * from './components/base-ui/data-table';
+export * from './components/base-ui/data-table-cells';
 
 export { cn } from './lib/utils';
 
