@@ -436,6 +436,159 @@ it('keeps electricity order conversations public or staff-only and reachable aft
   const order = await submittedOrder();
   const customerPath = `${http.base}/api/electricity/orders/${order.orderId}/comments`;
   const staffPath = `${http.base}/api/staff/electricity/orders/${order.orderId}/comments`;
+  const commentSnapshot = async () => ({
+    core: await correctionSnapshot(order.orderId, order.contractId),
+    comments: (
+      await http.pool.query(
+        'SELECT to_jsonb(c) AS row FROM electricity_order_comments c WHERE order_id=$1 ORDER BY id',
+        [order.orderId]
+      )
+    ).rows,
+    keys: (
+      await http.pool.query(
+        "SELECT to_jsonb(k) AS row FROM idempotency_keys k WHERE entity_type='electricity_order_comment' ORDER BY idempotency_key"
+      )
+    ).rows,
+    audits: (
+      await http.pool.query(
+        "SELECT to_jsonb(a) AS row FROM audit_log a WHERE event='electricity.order_comment_added' ORDER BY id"
+      )
+    ).rows,
+  });
+  const rejectedComment = async (
+    path: string,
+    auth: Record<string, string>,
+    body: unknown,
+    fields?: string[],
+    status = 400
+  ) => {
+    const before = await commentSnapshot();
+    const response = await fetch(path, {
+      method: 'POST',
+      headers: auth,
+      body: JSON.stringify(body),
+    });
+    expect(response.status, http.logs()).toBe(status);
+    const failure = await response.json();
+    expect(failure).toHaveProperty(
+      'error.correlationId',
+      expect.stringMatching(/^[0-9a-f-]{36}$/i)
+    );
+    expect(JSON.stringify(failure)).not.toContain('PRIVATE');
+    if (status === 400)
+      expect(failure).toHaveProperty(
+        'error.code',
+        fields ? 'VALIDATION:INPUT:INVALID' : 'VALIDATION:INPUT_INVALID'
+      );
+    if (fields) expect(failure).toHaveProperty('error.fields', fields);
+    else expect(failure).not.toHaveProperty('error.fields');
+    expect(await commentSnapshot()).toEqual(before);
+  };
+  await rejectedComment(customerPath, headers, { idempotencyKey: randomUUID(), body: '   ' }, [
+    'body',
+  ]);
+  await rejectedComment(customerPath, headers, {
+    idempotencyKey: 'PRIVATE-invalid-key',
+    body: '   ',
+  });
+  await rejectedComment(customerPath, headers, {
+    idempotencyKey: randomUUID(),
+    body: '   ',
+    visibility: 'PRIVATE-internal',
+  });
+  await rejectedComment(
+    staffPath,
+    staffHeaders,
+    {
+      idempotencyKey: randomUUID(),
+      body: '   ',
+      visibility: 'PRIVATE-unknown',
+    },
+    ['body', 'visibility']
+  );
+  await rejectedComment(
+    staffPath,
+    staffHeaders,
+    {
+      idempotencyKey: randomUUID(),
+      body: `PRIVATE-${'x'.repeat(10000)}`,
+      visibility: 'internal',
+    },
+    ['body']
+  );
+  await rejectedComment(staffPath, staffHeaders, {
+    idempotencyKey: 'PRIVATE-invalid-key',
+    body: '   ',
+    visibility: 'PRIVATE-unknown',
+  });
+  await http.pool.query(
+    "DELETE FROM user_roles WHERE user_id='reviewer' AND role_id='role-legal-contracts'"
+  );
+  try {
+    await rejectedComment(
+      staffPath,
+      staffHeaders,
+      {
+        idempotencyKey: randomUUID(),
+        body: '   ',
+        visibility: 'public',
+      },
+      undefined,
+      403
+    );
+  } finally {
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES('reviewer','role-legal-contracts')"
+    );
+  }
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='reviewer'");
+  try {
+    await rejectedComment(
+      staffPath,
+      staffHeaders,
+      {
+        idempotencyKey: randomUUID(),
+        body: '   ',
+        visibility: 'public',
+      },
+      undefined,
+      403
+    );
+  } finally {
+    await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='reviewer'");
+  }
+  await rejectedComment(
+    `${http.base}/api/electricity/orders/${randomUUID()}/comments`,
+    headers,
+    {
+      idempotencyKey: randomUUID(),
+      body: '   ',
+    },
+    undefined,
+    404
+  );
+  const outsider = randomUUID(),
+    outsiderSession = randomUUID(),
+    outsiderCsrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES($1,$1,'test-only')",
+    [outsider]
+  );
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')",
+    [outsiderSession, outsider, outsiderCsrf, randomUUID()]
+  );
+  await rejectedComment(
+    customerPath,
+    {
+      Cookie: `barghsa_session=${outsiderSession}`,
+      'X-CSRF-Token': outsiderCsrf,
+      'Content-Type': 'application/json',
+    },
+    { idempotencyKey: randomUUID(), body: '   ' },
+    undefined,
+    404
+  );
   const customerInput = { idempotencyKey: randomUUID(), body: 'Please confirm the delivery date.' };
   const customerReply = await fetch(customerPath, {
     method: 'POST',
@@ -444,13 +597,25 @@ it('keeps electricity order conversations public or staff-only and reachable aft
   });
   expect(customerReply.status, http.logs()).toBe(200);
   const customerComment = (await customerReply.json()) as { id: string };
+  expect(customerComment).toMatchObject({
+    id: expect.stringMatching(/^[0-9a-f-]{36}$/i),
+    orderId: order.orderId,
+    authorUserId: 'buyer',
+    authorName: 'buyer@electricity.test',
+    authorRole: 'customer',
+    body: customerInput.body,
+    visibility: 'public',
+    createdAt: expect.any(String),
+  });
+  const beforeCustomerReplay = await commentSnapshot();
   const retry = await fetch(customerPath, {
     method: 'POST',
     headers,
     body: JSON.stringify(customerInput),
   });
   expect(retry.status, http.logs()).toBe(200);
-  expect(((await retry.json()) as { id: string }).id).toBe(customerComment.id);
+  expect(await retry.json()).toEqual(customerComment);
+  expect(await commentSnapshot()).toEqual(beforeCustomerReplay);
   expect((await fetch(customerPath, { headers: staffHeaders })).status).toBe(403);
   expect(
     (
@@ -477,16 +642,37 @@ it('keeps electricity order conversations public or staff-only and reachable aft
   });
   expect(internalReply.status, http.logs()).toBe(200);
   const internalComment = (await internalReply.json()) as { id: string };
+  const publicInput = {
+    idempotencyKey: randomUUID(),
+    body: 'We are checking the delivery date.',
+    visibility: 'public',
+  };
   const publicReply = await fetch(staffPath, {
     method: 'POST',
     headers: staffHeaders,
-    body: JSON.stringify({
-      idempotencyKey: randomUUID(),
-      body: 'We are checking the delivery date.',
-      visibility: 'public',
-    }),
+    body: JSON.stringify(publicInput),
   });
   expect(publicReply.status, http.logs()).toBe(200);
+  const publicComment = await publicReply.json();
+  expect(publicComment).toMatchObject({
+    orderId: order.orderId,
+    authorUserId: 'reviewer',
+    authorName: 'reviewer@electricity.test',
+    authorRole: 'staff',
+    body: publicInput.body,
+    visibility: 'public',
+    id: expect.stringMatching(/^[0-9a-f-]{36}$/i),
+    createdAt: expect.any(String),
+  });
+  const beforePublicReplay = await commentSnapshot();
+  const publicReplay = await fetch(staffPath, {
+    method: 'POST',
+    headers: staffHeaders,
+    body: JSON.stringify(publicInput),
+  });
+  expect(publicReplay.status, http.logs()).toBe(200);
+  expect(await publicReplay.json()).toEqual(publicComment);
+  expect(await commentSnapshot()).toEqual(beforePublicReplay);
 
   const customerList = await fetch(customerPath, { headers });
   expect(customerList.status, http.logs()).toBe(200);
@@ -544,6 +730,27 @@ it('keeps electricity order conversations public or staff-only and reachable aft
       customerComment.id,
     ])
   ).rejects.toMatchObject({ code: '23514' });
+  await http.pool.query("UPDATE users SET is_staff=true WHERE user_id='buyer'");
+  try {
+    const dualContext = await fetch(customerPath, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        idempotencyKey: randomUUID(),
+        body: '  Customer-context staff reply.  ',
+      }),
+    });
+    expect(dualContext.status, http.logs()).toBe(200);
+    expect(await dualContext.json()).toMatchObject({
+      orderId: order.orderId,
+      authorUserId: 'buyer',
+      authorRole: 'staff',
+      body: 'Customer-context staff reply.',
+      visibility: 'public',
+    });
+  } finally {
+    await http.pool.query("UPDATE users SET is_staff=false WHERE user_id='buyer'");
+  }
 });
 
 it('paginates older electricity order comments without losing the visible page', async () => {

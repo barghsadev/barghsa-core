@@ -88,6 +88,11 @@ export class SavingCommentsService {
     };
   }
 
+  /** Invalid editor feedback uses the same live write authority without mutating the thread. */
+  async assertCanAdd(id: string, actor: Actor, staff: boolean): Promise<void> {
+    await this.access(id, actor, staff, true, async () => undefined);
+  }
+
   async list(id: string, actor: Actor, staff: boolean, before?: string) {
     return this.access(id, actor, staff, false, async (client) => {
       const cursor = before

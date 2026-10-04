@@ -2,6 +2,7 @@ import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
 import AdminElectricityOrdersPage from './AdminElectricityOrdersPage.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
 
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: String, number: String }),
@@ -13,6 +14,7 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
   const previousUrl = window.location.href;
   const order = {
     orderId: '84000000-0000-4000-8000-000000000001',
+    profileId: '85000000-0000-4000-8000-000000000001',
     contractId: '22222222-2222-7222-8222-222222222222',
     contractState: 'AwaitingCustomerAcceptance',
     invoiceId: '11111111-1111-7111-8111-111111111111',
@@ -105,12 +107,14 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
               ? {
                   comments: [
                     {
-                      id: 'comment-1',
+                      id: '89000000-0000-4000-8000-000000000001',
+                      orderId: order.orderId,
+                      authorUserId: 'buyer',
                       authorName: 'Electricity Buyer',
                       authorRole: 'customer',
                       visibility: 'public',
                       body: 'Please confirm delivery.',
-                      createdAt: '2026-09-23T00:00:00Z',
+                      createdAt: '2026-09-23T00:00:00.000Z',
                     },
                   ],
                   nextBefore: null,
@@ -143,7 +147,13 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<AdminElectricityOrdersPage />));
+    await act(async () =>
+      root.render(
+        <AccountUserProvider value="reviewer">
+          <AdminElectricityOrdersPage />
+        </AccountUserProvider>
+      )
+    );
     expect(container.textContent).toContain('Electricity Buyer');
     const queueButton = [...container.querySelectorAll('button')].find((button) =>
       button.textContent?.includes('Electricity Buyer')
@@ -240,7 +250,7 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
       [...container.querySelectorAll('button')].find(
         (button) => button.textContent === 'Send message'
       )?.disabled
-    ).toBe(true);
+    ).toBe(false);
   } finally {
     await act(async () => root.unmount());
     container.remove();

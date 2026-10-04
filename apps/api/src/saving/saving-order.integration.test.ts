@@ -489,23 +489,182 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   expect(counts.rows[0]).toMatchObject({ orders: '1', contracts: '1', invoices: '1' });
   const commentsPath = `/api/saving/orders/${result.savingOrderId}/comments`;
   const staffCommentsPath = `/api/staff/saving/orders/${result.savingOrderId}/comments`;
+  const commentSnapshot = async () =>
+    (
+      await http.pool.query(
+        `SELECT
+         (SELECT to_jsonb(o) FROM orders o WHERE id=$1::uuid) AS order_row,
+         (SELECT to_jsonb(s) FROM saving_orders s WHERE id=$2::uuid) AS saving_row,
+         (SELECT to_jsonb(c) FROM contracts c WHERE id=$3::uuid) AS contract_row,
+         (SELECT jsonb_agg(to_jsonb(v) ORDER BY version_number) FROM contract_versions v WHERE contract_id=$3::uuid) AS versions,
+         (SELECT jsonb_agg(to_jsonb(i) ORDER BY id) FROM invoices i WHERE order_id=$1::uuid) AS invoices,
+         (SELECT jsonb_agg(to_jsonb(c) ORDER BY id) FROM saving_order_comments c WHERE order_id=$2::uuid) AS comments,
+         (SELECT jsonb_agg(to_jsonb(k) ORDER BY idempotency_key) FROM idempotency_keys k WHERE entity_type='saving_order_comment') AS keys,
+         (SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM audit_log a WHERE event='saving.order_comment_added') AS audits,
+         (SELECT jsonb_agg(to_jsonb(n) ORDER BY id) FROM in_app_notifications n WHERE recipient_user_id='saving-order-buyer') AS notices`,
+        [result.orderId, result.savingOrderId, result.contractId]
+      )
+    ).rows[0];
+  const rejectedComment = async (
+    path: string,
+    auth: Record<string, string>,
+    body: unknown,
+    fields?: string[],
+    status = 400
+  ) => {
+    const before = await commentSnapshot();
+    const response = await request(path, 'POST', body, auth);
+    expect(response.status, http.logs()).toBe(status);
+    const failure = await response.json();
+    expect(failure).toHaveProperty(
+      'error.correlationId',
+      expect.stringMatching(/^[0-9a-f-]{36}$/i)
+    );
+    expect(JSON.stringify(failure)).not.toContain('PRIVATE');
+    if (status === 400)
+      expect(failure).toHaveProperty(
+        'error.code',
+        fields ? 'VALIDATION:INPUT:INVALID' : 'VALIDATION:INPUT_INVALID'
+      );
+    if (fields) expect(failure).toHaveProperty('error.fields', fields);
+    else expect(failure).not.toHaveProperty('error.fields');
+    expect(await commentSnapshot()).toEqual(before);
+  };
+  await rejectedComment(
+    commentsPath,
+    customerHeaders,
+    {
+      idempotencyKey: randomUUID(),
+      body: '   ',
+    },
+    ['body']
+  );
+  await rejectedComment(commentsPath, customerHeaders, {
+    idempotencyKey: 'PRIVATE-invalid-key',
+    body: '   ',
+  });
+  await rejectedComment(
+    staffCommentsPath,
+    staffHeaders,
+    {
+      idempotencyKey: randomUUID(),
+      body: `PRIVATE-${'x'.repeat(10000)}`,
+    },
+    ['body']
+  );
+  await rejectedComment(staffCommentsPath, staffHeaders, {
+    idempotencyKey: randomUUID(),
+    body: '   ',
+    visibility: 'PRIVATE-internal',
+  });
+  await http.pool.query(
+    "DELETE FROM user_roles WHERE user_id='saving-order-staff' AND role_id='saving-order-admin'"
+  );
+  try {
+    await rejectedComment(
+      staffCommentsPath,
+      staffHeaders,
+      {
+        idempotencyKey: randomUUID(),
+        body: '   ',
+      },
+      undefined,
+      403
+    );
+  } finally {
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES('saving-order-staff','saving-order-admin')"
+    );
+  }
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='saving-order-staff'"
+  );
+  try {
+    await rejectedComment(
+      staffCommentsPath,
+      staffHeaders,
+      {
+        idempotencyKey: randomUUID(),
+        body: '   ',
+      },
+      undefined,
+      403
+    );
+  } finally {
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='saving-order-staff'"
+    );
+  }
+  await rejectedComment(
+    `/api/saving/orders/${randomUUID()}/comments`,
+    customerHeaders,
+    {
+      idempotencyKey: randomUUID(),
+      body: '   ',
+    },
+    undefined,
+    404
+  );
+  const outsider = randomUUID(),
+    outsiderSession = randomUUID(),
+    outsiderCsrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES($1,$1,'test-only')",
+    [outsider]
+  );
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')",
+    [outsiderSession, outsider, outsiderCsrf, randomUUID()]
+  );
+  await rejectedComment(
+    commentsPath,
+    {
+      Cookie: `barghsa_session=${outsiderSession}`,
+      'X-CSRF-Token': outsiderCsrf,
+      'Content-Type': 'application/json',
+    },
+    { idempotencyKey: randomUUID(), body: '   ' },
+    undefined,
+    404
+  );
   const customerComment = { idempotencyKey: randomUUID(), body: 'Please call before delivery.' };
   const postedCustomer = await request(commentsPath, 'POST', customerComment);
   expect(postedCustomer.status, http.logs()).toBe(200);
-  expect(await postedCustomer.json()).toMatchObject({
+  const customerReceipt = await postedCustomer.json();
+  expect(customerReceipt).toMatchObject({
+    id: expect.stringMatching(/^[0-9a-f-]{36}$/i),
+    orderId: result.savingOrderId,
+    authorUserId: 'saving-order-buyer',
+    authorName: 'saving-order-buyer@example.test',
     body: customerComment.body,
     authorRole: 'customer',
+    createdAt: expect.any(String),
   });
+  expect(customerReceipt).not.toHaveProperty('visibility');
+  const beforeCustomerReplay = await commentSnapshot();
   const customerRetry = await request(commentsPath, 'POST', customerComment);
   expect(customerRetry.status, http.logs()).toBe(200);
-  const postedStaff = await request(
-    staffCommentsPath,
-    'POST',
-    { idempotencyKey: randomUUID(), body: 'We will call before delivery.' },
-    staffHeaders
-  );
+  expect(await customerRetry.json()).toEqual(customerReceipt);
+  expect(await commentSnapshot()).toEqual(beforeCustomerReplay);
+  const staffComment = { idempotencyKey: randomUUID(), body: 'We will call before delivery.' };
+  const postedStaff = await request(staffCommentsPath, 'POST', staffComment, staffHeaders);
   expect(postedStaff.status, http.logs()).toBe(200);
-  expect(await postedStaff.json()).toMatchObject({ authorRole: 'staff' });
+  const staffReceipt = await postedStaff.json();
+  expect(staffReceipt).toMatchObject({
+    id: expect.stringMatching(/^[0-9a-f-]{36}$/i),
+    orderId: result.savingOrderId,
+    authorUserId: 'saving-order-staff',
+    authorName: 'saving-order-staff@example.test',
+    authorRole: 'staff',
+    body: staffComment.body,
+    createdAt: expect.any(String),
+  });
+  expect(staffReceipt).not.toHaveProperty('visibility');
+  const beforeStaffReplay = await commentSnapshot();
+  const staffReplay = await request(staffCommentsPath, 'POST', staffComment, staffHeaders);
+  expect(staffReplay.status, http.logs()).toBe(200);
+  expect(await staffReplay.json()).toEqual(staffReceipt);
+  expect(await commentSnapshot()).toEqual(beforeStaffReplay);
   const comments = await request(commentsPath, 'GET');
   expect(comments.status, http.logs()).toBe(200);
   expect(await comments.json()).toMatchObject({

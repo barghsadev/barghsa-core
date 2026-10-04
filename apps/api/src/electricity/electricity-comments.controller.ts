@@ -14,6 +14,7 @@ import {
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
+import { InputFieldException } from '../common/input-field.exception.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
@@ -28,6 +29,25 @@ function parse<T>(schema: z.ZodType<T>, value: unknown): T {
   const result = schema.safeParse(value);
   if (!result.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
   return result.data;
+}
+async function parseComment<T>(
+  schema: z.ZodType<T>,
+  value: unknown,
+  authorize: () => Promise<void>,
+  owned: readonly string[]
+): Promise<T> {
+  const result = schema.safeParse(value);
+  if (result.success) return result.data;
+  const fields = result.error.issues.map((issue) =>
+    issue.path.length === 1 && typeof issue.path[0] === 'string' && owned.includes(issue.path[0])
+      ? issue.path[0]
+      : null
+  );
+  if (fields.length && fields.every((field): field is string => field !== null)) {
+    await authorize();
+    throw new InputFieldException(fields);
+  }
+  throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
 }
 
 @ApiTags('Electricity order comments')
@@ -53,7 +73,7 @@ export class ElectricityCommentsController {
   @RateLimit({ namespace: 'electricity:comments-write:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Add an append-only comment to an electricity order' })
   @ApiZodBody(customerInput)
-  add(
+  async add(
     @Param('orderId', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
@@ -62,7 +82,15 @@ export class ElectricityCommentsController {
       id,
       req.session,
       false,
-      { ...parse(customerInput, body), visibility: 'public' },
+      {
+        ...(await parseComment(
+          customerInput,
+          body,
+          () => this.service.assertCanAdd(id, req.session, false),
+          ['body']
+        )),
+        visibility: 'public',
+      },
       req.ip ?? 'unknown'
     );
   }
@@ -92,11 +120,17 @@ export class StaffElectricityCommentsController {
   @RateLimit({ namespace: 'electricity:staff-comments-write:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Add a public reply or internal note to an electricity order' })
   @ApiZodBody(staffInput)
-  add(
+  async add(
     @Param('orderId', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.service.add(id, req.session, true, parse(staffInput, body), req.ip ?? 'unknown');
+    const input = await parseComment(
+      staffInput,
+      body,
+      () => this.service.assertCanAdd(id, req.session, true),
+      ['body', 'visibility']
+    );
+    return this.service.add(id, req.session, true, input, req.ip ?? 'unknown');
   }
 }

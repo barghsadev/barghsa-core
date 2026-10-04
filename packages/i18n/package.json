@@ -271,6 +271,11 @@
       "types": "./dist/assistant-chat-forms.d.ts",
       "import": "./dist/assistant-chat-forms.js",
       "default": "./dist/assistant-chat-forms.js"
+    },
+    "./order-comments": {
+      "types": "./dist/order-comments.d.ts",
+      "import": "./dist/order-comments.js",
+      "default": "./dist/order-comments.js"
     }
   },
   "scripts": {

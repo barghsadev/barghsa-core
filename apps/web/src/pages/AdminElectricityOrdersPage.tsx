@@ -1089,6 +1089,8 @@ export default function AdminElectricityOrdersPage({
                 <ElectricityOrderComments
                   key={detail.orderId}
                   orderId={detail.orderId}
+                  profileId={detail.profileId}
+                  sourceVersion={JSON.stringify([scope, detail.versionId])}
                   staff
                   formatTimestamp={time.format}
                 />

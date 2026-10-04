@@ -1002,6 +1002,8 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                 <SavingOrderComments
                   key={detail.id}
                   orderId={detail.id}
+                  profileId={detail.profileId}
+                  sourceVersion={JSON.stringify([lane, detail.versionId])}
                   staff
                   formatTimestamp={time.format}
                 />

@@ -14,6 +14,7 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
+import { InputFieldException } from '../common/input-field.exception.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
@@ -27,6 +28,22 @@ function parse<T>(schema: z.ZodType<T>, value: unknown): T {
   const result = schema.safeParse(value);
   if (!result.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
   return result.data;
+}
+async function parseComment<T>(
+  schema: z.ZodType<T>,
+  value: unknown,
+  authorize: () => Promise<void>
+): Promise<T> {
+  const result = schema.safeParse(value);
+  if (result.success) return result.data;
+  if (
+    result.error.issues.length &&
+    result.error.issues.every((issue) => issue.path.length === 1 && issue.path[0] === 'body')
+  ) {
+    await authorize();
+    throw new InputFieldException(['body']);
+  }
+  throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
 }
 
 @ApiTags('Saving order comments')
@@ -51,12 +68,15 @@ export class SavingCommentsController {
   @RateLimit({ namespace: 'saving:comments-write:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Add an append-only comment to a saving order' })
   @ApiZodBody(commentInput)
-  add(
+  async add(
     @Param('orderId', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.service.add(id, req.session, false, parse(commentInput, body), req.ip ?? 'unknown');
+    const input = await parseComment(commentInput, body, () =>
+      this.service.assertCanAdd(id, req.session, false)
+    );
+    return this.service.add(id, req.session, false, input, req.ip ?? 'unknown');
   }
 }
 
@@ -83,11 +103,14 @@ export class StaffSavingCommentsController {
   @RateLimit({ namespace: 'saving:staff-comments-write:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Add a staff reply and notify the saving order customer' })
   @ApiZodBody(commentInput)
-  add(
+  async add(
     @Param('orderId', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.service.add(id, req.session, true, parse(commentInput, body), req.ip ?? 'unknown');
+    const input = await parseComment(commentInput, body, () =>
+      this.service.assertCanAdd(id, req.session, true)
+    );
+    return this.service.add(id, req.session, true, input, req.ip ?? 'unknown');
   }
 }

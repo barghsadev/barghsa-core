@@ -2,6 +2,7 @@ import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
 import { ElectricityOrderDetailsPage } from './ElectricityOrderDetailsPage.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
 
 it('reviews the exact cancellation refund before submitting its hash', async () => {
   document.documentElement.lang = 'en';
@@ -169,12 +170,14 @@ it('loads an order confirmation with its invoice and contract references', async
             ? {
                 comments: [
                   {
-                    id: 'comment-1',
+                    id: '89000000-0000-4000-8000-000000000001',
+                    orderId: '11111111-1111-7111-8111-111111111111',
+                    authorUserId: 'reviewer',
                     authorName: 'Reviewer',
                     authorRole: 'staff',
                     visibility: 'public',
                     body: 'We are checking delivery.',
-                    createdAt: '2026-09-23T00:00:00Z',
+                    createdAt: '2026-09-23T00:00:00.000Z',
                   },
                 ],
                 nextBefore: null,
@@ -233,7 +236,11 @@ it('loads an order confirmation with its invoice and contract references', async
   const root = createRoot(container);
   try {
     await act(async () =>
-      root.render(<ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />)
+      root.render(
+        <AccountUserProvider value="buyer">
+          <ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />
+        </AccountUserProvider>
+      )
     );
     expect(request).toHaveBeenCalledWith(
       '/api/electricity/orders/11111111-1111-7111-8111-111111111111',

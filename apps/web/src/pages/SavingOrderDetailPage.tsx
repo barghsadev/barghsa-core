@@ -287,7 +287,12 @@ export function SavingOrderDetailPage() {
           </Card>
           <Card>
             <CardContent className="pt-6">
-              <SavingOrderComments orderId={detail.id} formatTimestamp={time.format} />
+              <SavingOrderComments
+                orderId={detail.id}
+                profileId={detail.profile_id}
+                sourceVersion={detail.contract_version_id}
+                formatTimestamp={time.format}
+              />
             </CardContent>
           </Card>
           <AcceptedSavingAgreement
