@@ -1,5 +1,7 @@
 import type { Locale } from './app.js';
 const en = {
+  tableDetails: 'Details',
+  tableActions: 'Actions',
   title: 'Enter an agent title from 1 to 120 characters.',
   description: 'Enter a description up to 2000 characters.',
   modelId: 'Select a currently available model.',
@@ -29,6 +31,8 @@ const en = {
   assignment: 'Assignment',
 };
 const fa: Record<keyof typeof en, string> = {
+  tableDetails: 'جزئیات',
+  tableActions: 'اقدامات',
   title: 'عنوان عامل را با ۱ تا ۱۲۰ نویسه وارد کنید.',
   description: 'توضیحات را حداکثر با ۲۰۰۰ نویسه وارد کنید.',
   modelId: 'یک مدل موجود را انتخاب کنید.',

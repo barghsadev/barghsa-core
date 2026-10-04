@@ -3,6 +3,8 @@ import { aiAgentFormText } from './ai-agent-forms.js';
 for (const locale of ['fa', 'en'] as const)
   it(`AI agent and slot feedback is translated in ${locale}`, () => {
     const fields: Parameters<typeof aiAgentFormText>[0][] = [
+      'tableDetails',
+      'tableActions',
       'title',
       'description',
       'modelId',

@@ -1,8 +1,9 @@
+import { AiModelRecordTable } from '../components/AiModelRecordTable.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useState, useRef, useCallback, lazy, Suspense, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Button, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
+import { Button, Input, Label, ListPage } from '@barghsa/ui';
 import type { TeamAction } from '../components/TeamActionDialog.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
@@ -696,172 +697,75 @@ export default function AdminAiModelsPage() {
               }
               emptyView={<p>{label('empty')}</p>}
             >
-              <ScrollArea
-                scrollbarOrientation="horizontal"
-                className="max-w-full min-w-0 rounded-lg border bg-background"
-                role="region"
-                aria-label={copy('list')}
-              >
-                <table className="w-full min-w-[760px] table-fixed text-start text-sm">
-                  <thead className="border-b bg-muted">
-                    <tr>
-                      {['name', 'provider', 'modelName', 'status', 'actions'].map((key) => (
-                        <th key={key} scope="col" className="p-4 text-start font-semibold">
-                          {label(key)}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {models.map((model) => (
-                      <tr
-                        key={model.id}
-                        aria-label={model.title}
-                        className="border-b align-top last:border-0"
-                      >
-                        <th scope="row" className="space-y-2 p-4 text-start font-normal">
-                          <p className="font-semibold break-words" dir="auto">
-                            {model.title}
-                          </p>
-                          <p className="break-all" dir="ltr">
-                            {model.baseUrl}
-                          </p>
-                        </th>
-                        <td className="space-y-2 p-4">
-                          <p>
-                            {model.providerType === 'anthropic' ? 'Anthropic' : label('openai')}
-                          </p>
-                          <p>
-                            {label('token')}:{' '}
-                            <span dir="ltr">{model.apiTokenMasked || label('noToken')}</span>
-                          </p>
-                        </td>
-                        <td className="break-all p-4" dir="ltr">
-                          {model.modelName}
-                        </td>
-                        <td className="space-y-2 p-4">
-                          <p className="font-medium">
-                            {label(model.isEnabled ? 'enabled' : 'disabled')}
-                          </p>
-                          <p>{label(model.status)}</p>
-                          {model.circuitOpen && (
-                            <p className="font-medium text-destructive" role="status">
-                              {label('circuitOpen')}
-                              {model.circuitCooldownUntil && (
-                                <span className="block font-normal">
-                                  {label('circuitRetry')}: {time.format(model.circuitCooldownUntil)}
-                                </span>
-                              )}
-                            </p>
-                          )}
-                          {model.lastTestedAt && (
-                            <p>
-                              {label('lastTest')}: {time.format(model.lastTestedAt)}
-                            </p>
-                          )}
-                          {model.lastTestLatencyMs !== null && (
-                            <p>
-                              {label('latency')}: {numbers.number(model.lastTestLatencyMs)} ms
-                            </p>
-                          )}
-                          {model.lastTestError && (
-                            <p className="break-words text-destructive" dir="auto">
-                              {model.lastTestError}
-                            </p>
-                          )}
-                          <div className="border-t pt-2 text-xs text-muted-foreground">
-                            <p className="font-medium text-foreground">{label('budgetTitle')}</p>
-                            {model.budget ? (
-                              <>
-                                {model.budget.monthlyTokenLimit !== null && (
-                                  <p>
-                                    {label('budgetTokens')}:{' '}
-                                    {numbers.number(
-                                      model.budget.usedInputTokens + model.budget.usedOutputTokens
-                                    )}{' '}
-                                    / {numbers.number(model.budget.monthlyTokenLimit)}
-                                  </p>
-                                )}
-                                {model.budget.monthlyCostLimitMicros !== null && (
-                                  <p>
-                                    {label('budgetCost')}:{' '}
-                                    {new Intl.NumberFormat(locale, {
-                                      style: 'currency',
-                                      currency: 'USD',
-                                    }).format(model.budget.usedCostMicros / 1_000_000)}{' '}
-                                    /{' '}
-                                    {new Intl.NumberFormat(locale, {
-                                      style: 'currency',
-                                      currency: 'USD',
-                                    }).format(model.budget.monthlyCostLimitMicros / 1_000_000)}
-                                  </p>
-                                )}
-                              </>
-                            ) : (
-                              <p>{label('budgetNone')}</p>
-                            )}
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          {' '}
-                          <div className="flex flex-wrap gap-2">
-                            <Button
-                              variant="outline"
-                              disabled={disabled || busy}
-                              onClick={() => {
-                                generation.current++;
-                                setBudgetDraft(null);
-                                setDraft(modelDraftFor(model));
-                                setChanged(false);
-                                setResult(null);
-                              }}
-                            >
-                              {label('edit')}
-                            </Button>
-                            <Button
-                              variant="outline"
-                              disabled={disabled || busy}
-                              onClick={() => perform(model, 'test')}
-                            >
-                              {label('test')}
-                            </Button>
-                            <Button
-                              variant="outline"
-                              disabled={disabled || busy}
-                              onClick={() => editBudget(model)}
-                            >
-                              {label('budgetEdit')}
-                            </Button>
-                            <Button
-                              variant="outline"
-                              disabled={
-                                disabled ||
-                                busy ||
-                                (!model.isEnabled && model.status !== 'reachable')
-                              }
-                              title={
-                                !model.isEnabled && model.status !== 'reachable'
-                                  ? label('testRequired')
-                                  : undefined
-                              }
-                              onClick={() => perform(model, model.isEnabled ? 'disable' : 'enable')}
-                            >
-                              {label(model.isEnabled ? 'disable' : 'enable')}
-                            </Button>
-                            <Button
-                              variant="outline"
-                              disabled={disabled || busy}
-                              onClick={() => perform(model, 'delete')}
-                            >
-                              {label('delete')}
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </ScrollArea>
+              <AiModelRecordTable
+                models={models}
+                locale={locale}
+                caption={copy('list')}
+                label={label}
+                numerals={
+                  numbers.numberStyle === 'western'
+                    ? 'latn'
+                    : numbers.numberStyle === 'persian'
+                      ? 'arabext'
+                      : locale === 'fa'
+                        ? 'arabext'
+                        : 'latn'
+                }
+                formatNumber={numbers.number}
+                formatTime={time.format}
+                renderActions={(model) => (
+                  <>
+                    <Button
+                      variant="outline"
+                      disabled={disabled || busy}
+                      onClick={() => {
+                        generation.current++;
+                        setBudgetDraft(null);
+                        setDraft(modelDraftFor(model));
+                        setChanged(false);
+                        setResult(null);
+                      }}
+                    >
+                      {label('edit')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled={disabled || busy}
+                      onClick={() => perform(model, 'test')}
+                    >
+                      {label('test')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled={disabled || busy}
+                      onClick={() => editBudget(model)}
+                    >
+                      {label('budgetEdit')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled={
+                        disabled || busy || (!model.isEnabled && model.status !== 'reachable')
+                      }
+                      title={
+                        !model.isEnabled && model.status !== 'reachable'
+                          ? label('testRequired')
+                          : undefined
+                      }
+                      onClick={() => perform(model, model.isEnabled ? 'disable' : 'enable')}
+                    >
+                      {label(model.isEnabled ? 'disable' : 'enable')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled={disabled || busy}
+                      onClick={() => perform(model, 'delete')}
+                    >
+                      {label('delete')}
+                    </Button>
+                  </>
+                )}
+              />
             </ListPage.Content>
           </>
         )}

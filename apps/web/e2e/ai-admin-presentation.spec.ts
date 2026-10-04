@@ -50,7 +50,10 @@ for (const locale of ['en', 'fa'] as const)
         return route.fulfill({ json: stored });
       });
       await page.goto('/admin/agents');
-      const item = page.locator('#admin-content li').filter({ hasText: aiAgent.title }).first();
+      const item = page
+        .getByRole('list', { name: agentText('title'), exact: true })
+        .getByRole('listitem')
+        .filter({ has: page.getByRole('heading', { name: aiAgent.title, exact: true }) });
       const count = item
         .locator('dl > div')
         .filter({ has: page.locator('dt').filter({ hasText: copy('linkedKbs') }) })

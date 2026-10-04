@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ScrollArea as ScrollAreaPrimitive } from '@base-ui/react/scroll-area';
 
 import { cn } from '../../lib/utils';
+import { scrollHorizontalViewport } from '../../lib/scroll-keyboard';
 
 function ScrollArea({
   className,
@@ -20,22 +21,7 @@ function ScrollArea({
       <ScrollAreaPrimitive.Viewport
         data-slot="scroll-area-viewport"
         className="size-full rounded-[inherit] transition-shadow outline-none focus-visible:border-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        onKeyDown={(event) => {
-          // Safari does not consistently scroll a focused div with horizontal arrow keys.
-          // Leave keys on nested controls, modified keys and vertical areas to the browser.
-          if (
-            scrollbarOrientation !== 'horizontal' ||
-            event.target !== event.currentTarget ||
-            event.altKey ||
-            event.ctrlKey ||
-            event.metaKey ||
-            event.shiftKey ||
-            (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')
-          )
-            return;
-          event.preventDefault();
-          event.currentTarget.scrollBy({ left: event.key === 'ArrowRight' ? 80 : -80 });
-        }}
+        onKeyDown={scrollbarOrientation === 'horizontal' ? scrollHorizontalViewport : undefined}
       >
         {children}
       </ScrollAreaPrimitive.Viewport>

@@ -146,7 +146,7 @@ for (const locale of ['en', 'fa'] as const)
           .violations
       ).toEqual([]);
     await page.goto('/admin/ai-models');
-    await expect(page.getByRole('row', { name: model.title })).toBeVisible();
+    await expect(page.getByRole('heading', { name: model.title, exact: true })).toBeVisible();
     await readable();
     await page.getByRole('button', { name: label('edit'), exact: true }).click();
     await expect(page.getByLabel(label('tokenChoice'), { exact: true })).toHaveValue('keep');
@@ -240,7 +240,10 @@ for (const locale of ['en', 'fa'] as const)
       inputPricePerMillionMicros: 300_000,
       outputPricePerMillionMicros: 900_000,
     });
-    await expect(page.getByRole('row', { name: model.title })).toContainText(
-      new Intl.NumberFormat(locale).format(10_000)
-    );
+    const title = page.getByRole('heading', { name: model.title, exact: true });
+    const record = page
+      .getByRole('row')
+      .filter({ has: title })
+      .or(page.getByRole('listitem').filter({ has: title }));
+    await expect(record).toContainText(new Intl.NumberFormat(locale).format(10_000));
   });

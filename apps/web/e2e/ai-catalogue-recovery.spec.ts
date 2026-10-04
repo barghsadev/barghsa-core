@@ -43,16 +43,19 @@ for (const locale of ['en', 'fa'] as const) {
               }
       )
     );
+    await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/admin/ai-models');
     await expect(page.locator('tbody tr')).toHaveCount(1);
-    const viewport = page
-      .getByRole('region', { name: aiModelFormText('list', locale), exact: true })
-      .locator('[data-slot="scroll-area-viewport"]');
+    const viewport = page.getByRole('region', {
+      name: aiModelFormText('list', locale),
+      exact: true,
+    });
     await viewport.focus();
     await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
     await expect
       .poll(() => viewport.evaluate((node) => Math.abs(node.scrollLeft)))
       .toBeGreaterThan(0);
+    await page.setViewportSize({ width: 390, height: 844 });
     await page.getByRole('button', { name: m('add'), exact: true }).click();
     await page.locator('#ai-model-title').fill('Draft model');
     await page.locator('#ai-model-token').fill('test-only-private-token');

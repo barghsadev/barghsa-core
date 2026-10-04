@@ -52,7 +52,8 @@ test('ESM and CommonJS consumers resolve strict public prop types', () => {
       import { createElement } from 'react';
       interface CatalogueRow { id: string; amount: string }
       const table: DataTableProps<CatalogueRow> = {
-        columns: [{ id: 'amount', header: 'Amount', accessorKey: 'amount' }], data: [], keyExtractor: row => row.id,
+        columns: [{ id: 'amount', header: 'Amount', accessorKey: 'amount', rowHeader: true }], data: [], keyExtractor: row => row.id,
+        scrollLabel: 'Invoice records',
         caption: 'Invoices', stickyHeader: true, rowLabel: row => row.id,
         renderCard: row => createElement(TextCell, { value: row.amount }),
         renderExpandedRow: row => row.id, canExpandRow: row => !!row.amount,

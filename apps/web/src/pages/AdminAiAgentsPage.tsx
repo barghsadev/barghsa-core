@@ -1,3 +1,4 @@
+import { CatalogueRecordTable } from '../components/CatalogueRecordTable.js';
 import {
   useEffect,
   useState,
@@ -785,61 +786,62 @@ export default function AdminAiAgentsPage() {
               }
               emptyView={<p>{label('empty')}</p>}
             >
-              <ul className="divide-y">
-                {rows.map((row) => (
-                  <li
-                    key={row.id}
-                    className="flex flex-col gap-3 py-4 sm:flex-row sm:items-start sm:justify-between"
-                  >
-                    <div className="min-w-0">
-                      <h2 className="break-words font-semibold">{row.title}</h2>
-                      <p className="whitespace-pre-wrap break-words text-sm">{row.description}</p>
-                      <p className="break-words text-sm">
-                        {label('model')}: {row.modelTitle}
-                      </p>
-                      <span className="text-sm">{label(row.enabled ? 'enabled' : 'disabled')}</span>
-                      <dl className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
-                        <div className="flex gap-2">
-                          <dt>{copy('linkedKbs')}</dt>
-                          <dd>{row.kbCount === undefined ? '—' : numbers.number(row.kbCount)}</dd>
-                        </div>
-                        <div className="flex gap-2">
-                          <dt>{copy('linkedPolicies')}</dt>
-                          <dd>
-                            {row.policyCount === undefined ? '—' : numbers.number(row.policyCount)}
-                          </dd>
-                        </div>
-                      </dl>
-                    </div>
-                    <div className="flex shrink-0 flex-wrap gap-2">
-                      <Button
-                        variant="outline"
-                        disabled={disabled || busy}
-                        aria-label={`${label('edit')} ${row.title}`}
-                        onClick={() => chooseEditor(row.id)}
-                      >
-                        {label('edit')}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        disabled={loading || error || changed || uncertain || busy}
-                        aria-label={`${label('delete')} ${row.title}`}
-                        onClick={() => {
-                          commandRow.current = row;
-                          propose(
-                            `/api/admin/agents/${row.id}`,
-                            'DELETE',
-                            label('delete'),
-                            `${row.title}. ${label('confirmDelete')}`
-                          );
-                        }}
-                      >
-                        {label('delete')}
-                      </Button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              <CatalogueRecordTable
+                rows={rows}
+                locale={locale}
+                caption={label('title')}
+                nameLabel={label('name')}
+                detailsLabel={copy('tableDetails')}
+                actionsLabel={copy('tableActions')}
+                renderDetails={(row) => (
+                  <div className="space-y-2 text-sm">
+                    <p className="break-words text-sm">
+                      {label('model')}: {row.modelTitle}
+                    </p>
+                    <span className="text-sm">{label(row.enabled ? 'enabled' : 'disabled')}</span>
+                    <dl className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
+                      <div className="flex gap-2">
+                        <dt>{copy('linkedKbs')}</dt>
+                        <dd>{row.kbCount === undefined ? '—' : numbers.number(row.kbCount)}</dd>
+                      </div>
+                      <div className="flex gap-2">
+                        <dt>{copy('linkedPolicies')}</dt>
+                        <dd>
+                          {row.policyCount === undefined ? '—' : numbers.number(row.policyCount)}
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
+                )}
+                renderActions={(row) => (
+                  <>
+                    <Button
+                      variant="outline"
+                      disabled={disabled || busy}
+                      aria-label={`${label('edit')} ${row.title}`}
+                      onClick={() => chooseEditor(row.id)}
+                    >
+                      {label('edit')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled={loading || error || changed || uncertain || busy}
+                      aria-label={`${label('delete')} ${row.title}`}
+                      onClick={() => {
+                        commandRow.current = row;
+                        propose(
+                          `/api/admin/agents/${row.id}`,
+                          'DELETE',
+                          label('delete'),
+                          `${row.title}. ${label('confirmDelete')}`
+                        );
+                      }}
+                    >
+                      {label('delete')}
+                    </Button>
+                  </>
+                )}
+              />
             </ListPage.Content>
             <AdminAgentTestChat
               agents={rows}

@@ -4,6 +4,7 @@ import * as React from 'react';
 import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon } from 'lucide-react';
 
 import { cn } from '../../lib/utils';
+import { scrollHorizontalViewport } from '../../lib/scroll-keyboard';
 import { Checkbox } from '../ui/checkbox';
 import { dataTableLabels } from './data-table.labels';
 
@@ -25,6 +26,8 @@ interface ColumnDef<T> {
   className?: string;
   headerClassName?: string;
   cellClassName?: string;
+  /** Identify a record with a native row header rather than an ordinary cell. */
+  rowHeader?: boolean;
   enableHiding?: boolean;
 }
 
@@ -48,6 +51,8 @@ interface DataTableProps<T> {
   headerClassName?: string;
   rowClassName?: string | ((row: T, index: number) => string);
   caption?: string;
+  /** Give an overflowing viewport a name and cross-browser keyboard scrolling. */
+  scrollLabel?: string;
   stickyHeader?: boolean;
   rowLabel?: (row: T, index: number) => string;
   renderExpandedRow?: (row: T) => React.ReactNode;
@@ -266,6 +271,7 @@ function DataTable<T extends object>({
   headerClassName,
   rowClassName,
   caption,
+  scrollLabel,
   stickyHeader = true,
   rowLabel,
   renderExpandedRow,
@@ -347,6 +353,10 @@ function DataTable<T extends object>({
       <div
         lang={locale}
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
+        role={scrollLabel ? 'region' : undefined}
+        aria-label={scrollLabel}
+        tabIndex={scrollLabel ? 0 : undefined}
+        onKeyDown={scrollLabel ? scrollHorizontalViewport : undefined}
         className={cn(
           'relative w-full overflow-auto rounded-lg border',
           renderCard && 'hidden md:block',
@@ -455,20 +465,24 @@ function DataTable<T extends object>({
                           />
                         </td>
                       )}
-                      {visibleColumns.map((col) => (
-                        <td
-                          key={col.id}
-                          className={cn('px-3 py-2 align-middle', col.cellClassName)}
-                        >
-                          {col.cell
-                            ? col.cell(row as T, index)
-                            : col.accessorKey
-                              ? (((row as Record<string, unknown>)[
-                                  col.accessorKey as string
-                                ] as React.ReactNode) ?? '-')
-                              : '-'}
-                        </td>
-                      ))}
+                      {visibleColumns.map((col) => {
+                        const Cell = col.rowHeader ? 'th' : 'td';
+                        return (
+                          <Cell
+                            key={col.id}
+                            scope={col.rowHeader ? 'row' : undefined}
+                            className={cn('px-3 py-2 align-middle', col.cellClassName)}
+                          >
+                            {col.cell
+                              ? col.cell(row as T, index)
+                              : col.accessorKey
+                                ? (((row as Record<string, unknown>)[
+                                    col.accessorKey as string
+                                  ] as React.ReactNode) ?? '-')
+                                : '-'}
+                          </Cell>
+                        );
+                      })}
                     </tr>
                     {canExpand(row) && expanded.has(key) && (
                       <tr>

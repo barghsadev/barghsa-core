@@ -90,6 +90,49 @@ it('does not reorder rows when table sorting is disabled, even with initial sort
   expect(container.querySelector('th')?.hasAttribute('aria-sort')).toBe(false);
 });
 
+it('keeps native row headers and an opt-in named keyboard scrolling viewport', async () => {
+  await act(async () =>
+    root.render(
+      <DataTable
+        data={[{ id: 'Model <script>literal</script>', value: 12 }]}
+        keyExtractor={keyExtractor}
+        scrollLabel="Model catalogue"
+        columns={[
+          { ...columns[0]!, rowHeader: true },
+          { id: 'amount', header: 'Amount', cell: (row) => <button>{String(row.value)}</button> },
+        ]}
+        sortable={false}
+      />
+    )
+  );
+  const region = container.querySelector<HTMLElement>('[role="region"]');
+  expect(region?.getAttribute('aria-label')).toBe('Model catalogue');
+  expect(region?.tabIndex).toBe(0);
+  region?.focus();
+  expect(document.activeElement).toBe(region);
+  const header = container.querySelector('tbody th');
+  expect(header?.getAttribute('scope')).toBe('row');
+  expect(header?.textContent).toBe('Model <script>literal</script>');
+  expect(container.querySelector('script')).toBeNull();
+  expect(container.querySelector('tbody td')?.textContent).toBe('12');
+  expect(container.querySelector('tbody td')?.hasAttribute('scope')).toBe(false);
+  const scroll = vi.fn();
+  Object.defineProperty(region, 'scrollBy', { value: scroll });
+  await act(async () => {
+    region!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+  });
+  expect(scroll).toHaveBeenCalledExactlyOnceWith({ left: 80 });
+  await act(async () => {
+    region!.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true, bubbles: true })
+    );
+    container
+      .querySelector('tbody button')!
+      .dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+  });
+  expect(scroll).toHaveBeenCalledTimes(1);
+});
+
 it('selects visible rows without removing selections on other pages', async () => {
   const data: Row[] = [
     { id: 'one', value: 1 },
