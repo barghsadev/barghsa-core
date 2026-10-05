@@ -73,11 +73,18 @@ async function fill(selector: string, value: string) {
   });
 }
 async function submit() {
-  await act(async () =>
+  await act(async () => {
     document
       .querySelector('form')!
-      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-  );
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await vi.waitFor(() =>
+      expect(
+        vi
+          .mocked(fetch)
+          .mock.calls.filter(([url]) => String(url).includes('/effective-permissions'))
+      ).toHaveLength(1)
+    );
+  });
 }
 function uploadsFetch(
   options: {

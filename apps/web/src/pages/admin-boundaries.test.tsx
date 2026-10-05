@@ -357,6 +357,15 @@ it.each(invalidEffective.map((data) => ({ data })))(
         .querySelector('form')!
         .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
     );
+    await act(async () => {
+      await vi.waitFor(() =>
+        expect(
+          vi
+            .mocked(fetch)
+            .mock.calls.filter(([url]) => String(url).endsWith('/effective-permissions'))
+        ).toHaveLength(1)
+      );
+    });
     expect(host.querySelector('[role=alert]')).not.toBeNull();
     expect(host.querySelectorAll('bdi').length).toBeLessThanOrEqual(1);
   }

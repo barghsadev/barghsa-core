@@ -15,7 +15,7 @@ This batch improves the existing staff-account interface for `02-auth-users-admi
 
 Root source review and failing/passing regressions corrected focus after disabled controls unlock. Visual review found a cramped mobile permissions lookup; its input now occupies a full row on narrow screens, with a new feedback-width assertion. The retained directory test helper waits for the newly asynchronous role validation without removing assertions.
 
-- Frontend: **409 cases pass** across `staff-access-native-forms.test.tsx`, `staff-directory-recovery.test.tsx` and `admin-boundaries.test.tsx`, including ten new bilingual form cases.
+- Frontend: **424 distinct cases pass** across `staff-access-native-forms.test.tsx`, `staff-directory-recovery.test.tsx`, `admin-boundaries.test.tsx` and `policy-catalogue-recovery.test.tsx`, including ten new bilingual form cases.
 - API: **35 cases pass** across staff creation, sensitive actions, effective permissions and the four new public-field/authorization cases. Existing HTTP suites use actual temporary PostgreSQL fixtures.
 - Dictionaries: **112 cases pass**.
 - Production browser checks: **24 distinct Chromium/mobile Safari cases pass with zero retries**. The final mobile layout adjustment passes all four affected lookup cases on the rebuilt assets; these overlap the 24. Retained creation, OTP/CSRF, history and activation-resend scenarios pass.
@@ -23,5 +23,7 @@ Root source review and failing/passing regressions corrected focus after disable
 - Selected original Persian/English desktop/mobile captures were inspected. Compact creation captures clip offscreen lower content, especially WebKit's tall element capture; they are excluded from release attachments. Complete role and final lookup captures provide the release screenshots. These use sample records, as disclosed in Persian release notes.
 
 Logs, initial failures, browser artifacts, source/asset hashes and review records are in `~/.local/state/barghsa-manual-batches/staff-access-native-forms`. `v0.1.1` is the batch release. Deployment uses the required `./deploy/staging/deploy.sh`, then confirmed Persian notes and selected screenshots are sent to Barghsa Release Radar.
+
+The first publication's [CI run 37327727242](https://github.com/barghsadev/barghsa-core/actions/runs/37327727242) found two retained permission-lookup tests asserting before deferred schema validation finished. Both failures reproduce in separate cold test processes. The tests now wait inside React `act` for the actual lookup request, then retain their existing malformed-response, privacy and accepted-result recovery assertions. The 380-case boundary suite and 15-case policy recovery suite pass separately; the focused malformed-response cases also pass in a fresh process. Web type checks and scoped lint pass. This test-only repair belongs to the same unshipped `0.1.1` release; final exact-commit CI remains an external publication gate.
 
 No existing domain engine is recounted. No schema/migration, dependency, CI configuration, generated backlog, historical loop state or supervisor state changes are included.
