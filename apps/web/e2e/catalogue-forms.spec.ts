@@ -158,7 +158,14 @@ for (const locale of ['en', 'fa'] as const)
       await confirm().click();
       await expect(dialog).toBeHidden();
       await expect(page.getByRole('alert')).toContainText(label('denied'));
-      await expect(page.locator('form')).toHaveCount(0);
+      await expect(
+        page.locator('form').filter({ hasNot: page.locator('#product-search') })
+      ).toHaveCount(0);
+      await expect(
+        page
+          .getByRole('form', { name: label('listFilters'), exact: true })
+          .getByLabel(label('search'), { exact: true })
+      ).toBeDisabled();
       await expect(page.locator('[data-slot="list-content"]')).not.toContainText('Sample product');
     });
   }

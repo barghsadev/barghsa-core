@@ -24,6 +24,7 @@ function CatalogueRoute() {
   return (
     <Page
       key={type}
+      queries={queries}
       initialType={type}
       focusCategory={focusCategory.current}
       onTypeChange={(value) => {

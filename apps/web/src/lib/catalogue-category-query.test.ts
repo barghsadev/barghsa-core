@@ -32,7 +32,7 @@ for (const [normalize, options, key, value, fallback] of catalogues) {
         page: 3,
         selected: 'private',
       })
-    ).toEqual({ [key]: value });
+    ).toEqual(key === 'type' ? { [key]: value, q: 'private', page: 3 } : { [key]: value });
     expect(
       normalize(writeListQuery({ [key]: value }, options, { filters: { [key]: fallback } }))
     ).toEqual({});
@@ -50,4 +50,46 @@ it.each(['hardware', 'saving_plan'])('accepts the remaining product category %s'
 it('keeps knowledge and policy catalogue scopes separate', () => {
   expect(knowledgeCatalogueSearch({ kind: 'policy-groups' })).toEqual({});
   expect(policyCatalogueSearch({ kind: 'kb-groups' })).toEqual({});
+});
+
+it('restores validated product criteria and resets the page only on an applied criterion change', () => {
+  expect(
+    productCatalogueSearch({
+      type: 'hardware',
+      q: '  inverter  ',
+      status: 'active',
+      sort: 'price',
+      order: 'asc',
+      page: 3,
+      pageSize: 50,
+      password: 'private',
+      title: 'draft',
+    })
+  ).toEqual({
+    type: 'hardware',
+    q: 'inverter',
+    status: 'active',
+    sort: 'price',
+    order: 'asc',
+    page: 3,
+    pageSize: 50,
+  });
+  expect(
+    productCatalogueSearch(
+      writeListQuery(
+        { type: 'hardware', status: 'active', page: 3 },
+        productCatalogueQueryOptions,
+        { search: 'new' }
+      )
+    )
+  ).toEqual({ type: 'hardware', status: 'active', q: 'new' });
+  expect(
+    productCatalogueSearch({
+      type: 'hardware',
+      q: 'x'.repeat(201),
+      status: 'bad',
+      sort: 'unsafe',
+      page: 0,
+    })
+  ).toEqual({ type: 'hardware' });
 });

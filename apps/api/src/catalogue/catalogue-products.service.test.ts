@@ -641,3 +641,55 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
     });
   });
 });
+
+describe('bounded product queries', () => {
+  it('binds literal wildcard text, stable effective-price sorting and page offsets; hides the sentinel', async () => {
+    const { pool, router } = makeDb();
+    router.on('WITH matched AS', () => ({
+      rows: [
+        productRow(),
+        productRow({ id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb' }),
+        productRow({ id: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc' }),
+      ],
+    }));
+    service = await loadService(pool);
+    const page = await service.listPage({
+      type: 'hardware',
+      search: '100%_\\',
+      status: 'active',
+      sort: 'price',
+      order: 'asc',
+      page: 3,
+      limit: 2,
+    });
+    expect(page.products).toHaveLength(2);
+    expect(page.hasNext).toBe(true);
+    const query = router.queries('WITH matched AS')[0]!;
+    expect(query.values).toEqual(['hardware', 'active', '%100\\%\\_\\\\%', 3, 4]);
+    expect(query.sql).toContain('ORDER BY effective_price ASC NULLS LAST, id ASC');
+    expect(query.sql).not.toContain('100%');
+    expect(page.products.map((product) => product.id)).not.toContain(
+      'cccccccc-cccc-4ccc-8ccc-cccccccccccc'
+    );
+  });
+  it('reports the terminal page and respects the requested title language', async () => {
+    const { pool, router } = makeDb();
+    router.on('WITH matched AS', () => ({ rows: [productRow()] }));
+    service = await loadService(pool);
+    expect(
+      (
+        await service.listPage({
+          search: '',
+          status: 'archived',
+          sort: 'titleFa',
+          order: 'desc',
+          page: 1,
+          limit: 25,
+        })
+      ).hasNext
+    ).toBe(false);
+    expect(router.queries('WITH matched AS')[0]!.sql).toContain(
+      "ORDER BY title->>'fa' DESC NULLS LAST, id ASC"
+    );
+  });
+});

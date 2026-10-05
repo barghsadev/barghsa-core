@@ -31,3 +31,7 @@ Publication preflight, exact remote SHA, immutable queued captures and healthy d
 `v0.1.19` completed at `2026-10-05T22:05:36.789912+00:00`, with healthy exact live commit `58a8a1d0aa5c40e7d2a6b2b299e596e947987671`. Persian Telegram note `58` and reviewed screenshots `59`, `60` are confirmed; its report and external completion receipt record that result.
 
 External evidence: `~/.local/state/barghsa-manual-batches/product-catalogue-tables/`.
+
+## Deployment outcome
+
+`v0.1.20` completed at `2026-10-05T22:30:36.531424+00:00`, with healthy exact live commit `0e2d02cc2aae76b855fbd5fa6b18e4bdf68bc32e`. Persian Telegram note `61` and reviewed screenshots `62`, `63` are confirmed. External receipt: `~/.local/state/barghsa-manual-batches/product-catalogue-tables/release-completed.json`.

@@ -249,6 +249,16 @@
         "types": "./dist/cjs/finance/invoices.d.ts",
         "default": "./dist/cjs/finance/invoices.js"
       }
+    },
+    "./catalogue-query": {
+      "import": {
+        "types": "./dist/catalogue-query/index.d.ts",
+        "default": "./dist/catalogue-query/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/catalogue-query/index.d.ts",
+        "default": "./dist/cjs/catalogue-query/index.js"
+      }
     }
   },
   "scripts": {

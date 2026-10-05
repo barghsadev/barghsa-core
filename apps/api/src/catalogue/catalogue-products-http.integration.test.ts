@@ -538,3 +538,89 @@ it('returns persisted saving-plan hardware in create/update/read receipts and le
     ).rows
   ).toHaveLength(1);
 });
+
+it('queries literal bilingual titles, effective exact prices and bounded pages through authenticated HTTP', async () => {
+  const read = async (response: Response) => {
+    expect(response.status).toBe(200);
+    const rows: unknown = await response.json();
+    expect(Array.isArray(rows)).toBe(true);
+    return rows as ProductDetailDto[];
+  };
+  const term = `query-${randomUUID()}%_\\`;
+  const add = async (status: string, price: string | null, language = 'en') => {
+    const title = {
+      en: language === 'en' ? term : 'Unrelated English',
+      fa: language === 'fa' ? term : 'نام دیگر',
+    };
+    return (
+      await http.pool.query(
+        'INSERT INTO products(type,title,price,status) VALUES ($1,$2,$3,$4) RETURNING id',
+        ['hardware', JSON.stringify(title), price, status]
+      )
+    ).rows[0].id as string;
+  };
+  const low = await add('active', '50'),
+    effective = await add('active', '1', 'fa'),
+    large = await add('active', '9007199254740993'),
+    unpriced = await add('active', null);
+  const inactive = await add('inactive', '20'),
+    archived = await add('archived', '10');
+  await http.pool.query(
+    "INSERT INTO product_price_versions(product_id,price,effective_from,effective_until,created_by) VALUES ($1,1000,NOW()-INTERVAL '1 day',NOW()+INTERVAL '1 day','operator'),($1,50000,NOW()+INTERVAL '1 day',NULL,'operator')",
+    [effective]
+  );
+  await http.pool.query('INSERT INTO products(type,title,price,status) VALUES ($1,$2,5,$3)', [
+    'hardware',
+    JSON.stringify({ en: term.replace('%_', 'XY'), fa: 'نام دیگر' }),
+    'active',
+  ]);
+  const url = new URLSearchParams({
+    type: 'hardware',
+    search: term,
+    status: 'active',
+    sort: 'price',
+    order: 'asc',
+    limit: '2',
+    page: '1',
+  });
+  const first = await request(`?${url}`);
+  expect(first.status).toBe(200);
+  expect(first.headers.get('X-Has-Next-Page')).toBe('true');
+  expect(
+    (await read(first)).map((product: ProductDetailDto) => [product.id, product.price])
+  ).toEqual([
+    [low, '50'],
+    [effective, '1000'],
+  ]);
+  url.set('page', '2');
+  const last = await request(`?${url}`);
+  expect(last.headers.get('X-Has-Next-Page')).toBe('false');
+  expect(
+    (await read(last)).map((product: ProductDetailDto) => [product.id, product.price])
+  ).toEqual([
+    [large, '9007199254740993'],
+    [unpriced, null],
+  ]);
+  url.set('page', '1');
+  url.set('limit', '100');
+  url.set('order', 'desc');
+  expect(
+    (await read(await request(`?${url}`))).map((product: ProductDetailDto) => product.id)
+  ).toEqual([large, effective, low, unpriced]);
+  url.set('status', 'inactive');
+  expect(
+    (await read(await request(`?${url}`))).map((product: ProductDetailDto) => product.id)
+  ).toEqual([inactive]);
+  url.set('status', 'archived');
+  expect(
+    (await read(await request(`?${url}`))).map((product: ProductDetailDto) => product.id)
+  ).toEqual([archived]);
+  expect((await request(`?${url}`, 'GET', undefined, 'other')).status).toBe(403);
+  expect((await request('?type=hardware&sort=price;DROP&limit=25')).status).toBe(400);
+  expect(
+    (await request('?type=hardware&search=' + encodeURIComponent('x'.repeat(201)))).status
+  ).toBe(400);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'")).rows
+  ).toHaveLength(0);
+});

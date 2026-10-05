@@ -5,6 +5,7 @@ import type { CatalogueProductsService } from './catalogue-products.service.js';
 // ─── Mock service ─────────────────────────────────────────────────────────
 
 const mockList = vi.fn();
+const mockListPage = vi.fn();
 const mockGet = vi.fn();
 const mockCreate = vi.fn();
 const mockUpdate = vi.fn();
@@ -13,6 +14,7 @@ const mockAddPrice = vi.fn();
 
 const mockService = {
   list: mockList,
+  listPage: mockListPage,
   get: mockGet,
   create: mockCreate,
   update: mockUpdate,
@@ -270,5 +272,60 @@ describe('CatalogueProductsController (T-09.12.01)', () => {
       expect(typeof call.effectiveFrom).toBe('string');
       expect(call.actorUserId).toBe('admin-1');
     });
+  });
+});
+
+describe('bounded catalogue list transport', () => {
+  it('keeps array transport and advertises the exact next-page result', async () => {
+    const controller = new CatalogueProductsController(mockService);
+    mockListPage.mockResolvedValue({ products: [baseProduct()], hasNext: true });
+    const setHeader = vi.fn();
+    await expect(
+      controller.list(
+        adminReq,
+        'hardware',
+        {
+          search: '  inverter  ',
+          status: 'active',
+          page: '2',
+          limit: '25',
+          sort: 'price',
+          order: 'asc',
+        },
+        { setHeader } as never
+      )
+    ).resolves.toEqual([baseProduct()]);
+    expect(mockListPage).toHaveBeenLastCalledWith({
+      type: 'hardware',
+      search: 'inverter',
+      status: 'active',
+      page: 2,
+      limit: 25,
+      sort: 'price',
+      order: 'asc',
+    });
+    expect(setHeader).toHaveBeenCalledWith('X-Has-Next-Page', 'true');
+  });
+  it.each([
+    { search: 'x'.repeat(201) },
+    { page: '0' },
+    { limit: '101' },
+    { status: 'invalid' },
+    { sort: 'price;DELETE FROM products' },
+    { order: ['asc', 'desc'] },
+  ])('rejects invalid controls: %j', async (query) => {
+    const controller = new CatalogueProductsController(mockService);
+    mockListPage.mockClear();
+    await expect(controller.list(adminReq, 'hardware', query)).rejects.toMatchObject({
+      status: 400,
+    });
+    expect(mockListPage).not.toHaveBeenCalled();
+  });
+  it('checks authority before processing paginated criteria', async () => {
+    mockListPage.mockClear();
+    await expect(
+      new CatalogueProductsController(mockService).list(nonAdminReq, 'hardware', { page: '1' })
+    ).rejects.toMatchObject({ status: 403 });
+    expect(mockListPage).not.toHaveBeenCalled();
   });
 });

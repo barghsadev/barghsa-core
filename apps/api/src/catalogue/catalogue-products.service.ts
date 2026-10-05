@@ -1,3 +1,4 @@
+import type { CatalogueListQuery } from '@barghsa/shared/catalogue-query';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -258,6 +259,34 @@ export class CatalogueProductsService {
 
     const withAggregates = await this.loadAggregates(pool, rows.rows);
     return withAggregates.map((row) => this.toDto(row));
+  }
+
+  /** Bounded catalogue pages; legacy list remains complete for hardware selection. */
+  async listPage(query: CatalogueListQuery): Promise<{ products: ProductDto[]; hasNext: boolean }> {
+    const pool = getDbPool();
+    const columns = {
+      createdAt: 'created_at',
+      titleFa: "title->>'fa'",
+      titleEn: "title->>'en'",
+      price: 'effective_price',
+    };
+    const pattern = query.search ? `%${query.search.replace(/[\\%_]/g, '\\$&')}%` : '';
+    const result = await pool.query<ProductRow>(
+      `WITH matched AS (
+        SELECT products.*, effective_product_price(id) AS effective_price FROM products
+        WHERE ($1::text IS NULL OR type::text=$1)
+          AND ($2::text='' OR status::text=$2)
+          AND ($3::text='' OR title->>'fa' ILIKE $3 OR title->>'en' ILIKE $3 OR system_key ILIKE $3)
+      ) SELECT matched.*, effective_price AS price FROM matched
+        ORDER BY ${columns[query.sort]} ${query.order === 'asc' ? 'ASC' : 'DESC'} NULLS LAST, id ASC
+        LIMIT $4 OFFSET $5`,
+      [query.type ?? null, query.status, pattern, query.limit + 1, (query.page - 1) * query.limit]
+    );
+    const products = await this.loadAggregates(pool, result.rows.slice(0, query.limit));
+    return {
+      products: products.map((row) => this.toDto(row)),
+      hasNext: result.rows.length > query.limit,
+    };
   }
 
   /** Fetch one product with its versioned price history. */

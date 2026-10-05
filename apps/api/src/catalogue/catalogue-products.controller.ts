@@ -1,3 +1,5 @@
+import { parseCatalogueListQuery } from '@barghsa/shared/catalogue-query';
+import type { Response } from 'express';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -12,9 +14,10 @@ import {
   Put,
   Query,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -190,13 +193,47 @@ export class CatalogueProductsController {
 
   @Get()
   @ApiOperation({ summary: 'List catalogue products (admin)' })
-  @ApiResponse({ status: 200, description: 'All products (optionally by type), newest first.' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Complete type-only lists, or bounded filtered/sorted pages when list controls are supplied.',
+    headers: {
+      'X-Has-Next-Page': {
+        description: 'Present for bounded list queries; true when another page exists.',
+        schema: { type: 'string', enum: ['true', 'false'] },
+      },
+    },
+  })
+  @ApiQuery({ name: 'search', required: false, type: String, maxLength: 200 })
+  @ApiQuery({ name: 'status', required: false, enum: ['active', 'inactive', 'archived'] })
+  @ApiQuery({ name: 'sort', required: false, enum: ['createdAt', 'titleFa', 'titleEn', 'price'] })
+  @ApiQuery({ name: 'order', required: false, enum: ['asc', 'desc'] })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    schema: { type: 'integer', minimum: 1, maximum: 1000000 },
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    schema: { type: 'integer', minimum: 1, maximum: 100 },
+  })
   async list(
     @Req() req: AuthenticatedRequest,
-    @Query('type') type?: string
+    @Query('type') type?: string,
+    @Query() raw: Record<string, unknown> = {},
+    @Res({ passthrough: true }) response?: Response
   ): Promise<ProductDto[]> {
     this.assertCataloguePermission(req);
-    return this.service.list(assertTypeFilter(type));
+    const selectedType = assertTypeFilter(type);
+    if (Object.keys(raw).some((key) => key !== 'type')) {
+      const query = parseCatalogueListQuery({ ...raw, type: selectedType });
+      if (!query) httpError('VALIDATION:CATALOGUE:QUERY', 'Invalid catalogue list query');
+      const page = await this.service.listPage(query);
+      response?.setHeader('X-Has-Next-Page', String(page.hasNext));
+      return page.products;
+    }
+    return this.service.list(selectedType);
   }
 
   @Get(':id')

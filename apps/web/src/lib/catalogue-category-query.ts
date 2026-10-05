@@ -1,4 +1,10 @@
-import { listChoice, type ListQueryOptions } from './list-query.js';
+import {
+  CATALOGUE_SEARCH_LIMIT,
+  CATALOGUE_SORT_FIELDS,
+  CATALOGUE_PAGE_SIZES,
+  CATALOGUE_STATUSES,
+} from '@barghsa/shared/catalogue-query';
+import { listChoice, parseListQuery, writeListQuery, type ListQueryOptions } from './list-query.js';
 
 export const productCatalogueTypes = [
   'consultation',
@@ -21,7 +27,14 @@ const base: ListQueryOptions = {
 };
 export const productCatalogueQueryOptions: ListQueryOptions = {
   ...base,
-  filters: { type: listChoice(productCatalogueTypes.slice(1)) },
+  searchLimit: CATALOGUE_SEARCH_LIMIT,
+  sortFields: CATALOGUE_SORT_FIELDS,
+  defaultSort: 'createdAt',
+  pageSizes: CATALOGUE_PAGE_SIZES,
+  filters: {
+    type: listChoice(productCatalogueTypes.slice(1)),
+    status: listChoice(CATALOGUE_STATUSES),
+  },
 };
 export const knowledgeCatalogueQueryOptions: ListQueryOptions = {
   ...base,
@@ -32,8 +45,14 @@ export const policyCatalogueQueryOptions: ListQueryOptions = {
   filters: { kind: listChoice(['policy-groups']) },
 };
 export function productCatalogueSearch(raw: Record<string, unknown>): Record<string, unknown> {
-  const type = productCatalogueQueryOptions.filters.type!(raw.type);
-  return type ? { type } : {};
+  const query = parseListQuery(raw, productCatalogueQueryOptions);
+  return Object.fromEntries(
+    Object.entries(writeListQuery(raw, productCatalogueQueryOptions, query)).filter(
+      ([key, value]) =>
+        ['q', 'sort', 'order', 'page', 'pageSize', 'type', 'status'].includes(key) &&
+        value !== undefined
+    )
+  );
 }
 export function knowledgeCatalogueSearch(raw: Record<string, unknown>): Record<string, unknown> {
   const kind = knowledgeCatalogueQueryOptions.filters.kind!(raw.kind);

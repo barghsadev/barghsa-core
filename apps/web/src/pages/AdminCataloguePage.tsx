@@ -1,3 +1,5 @@
+import { ProductCatalogueFilters } from '../components/ProductCatalogueFilters.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import type { ProductCatalogueType } from '../lib/catalogue-category-query.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -46,10 +48,12 @@ import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 const base = '/api/admin/catalogue/products';
 export default function AdminCataloguePage({
+  queries,
   initialType = 'consultation',
   onTypeChange,
   focusCategory = false,
 }: {
+  queries?: ListQueryBinding;
   initialType?: ProductCatalogueType;
   focusCategory?: boolean;
   onTypeChange?: (value: ProductCatalogueType) => void;
@@ -68,6 +72,11 @@ export default function AdminCataloguePage({
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'denied'>('loading'),
     [revision, setRevision] = useState(0);
   const [listRevision, setListRevision] = useState(0);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const listCriteria = new URLSearchParams(queries?.params);
+  listCriteria.set('type', type);
+  const listKey = listCriteria.toString();
+  const previousListKey = useRef(listKey);
   const [detailRevision, setDetailRevision] = useState(0);
   const [hardwareRevision, setHardwareRevision] = useState(0);
   const [detailState, setDetailState] = useState<'loading' | 'ready' | 'error'>('ready');
@@ -305,17 +314,38 @@ export default function AdminCataloguePage({
   useEffect(() => {
     const abort = new AbortController();
     accessDenied.current = false;
+    if (previousListKey.current !== listKey) {
+      setRows([]);
+      setHasNextPage(false);
+      previousListKey.current = listKey;
+    }
     setState('loading');
-    void fetch(`${base}?type=${type}`, { signal: abort.signal })
+    void fetch(`${base}?${listKey}`, { signal: abort.signal })
       .then(async (response) => {
         if (!response.ok) throw new Error(String(response.status));
         const data: unknown = await response.json();
         if (!validProducts(data, type)) throw new Error('Invalid catalogue');
-        return data;
+        const next = response.headers.get('X-Has-Next-Page');
+        if (
+          queries &&
+          (data.length > queries.query.pageSize ||
+            data.some(
+              (row) => queries.query.filters.status && row.status !== queries.query.filters.status
+            ) ||
+            (next !== null && next !== 'true' && next !== 'false') ||
+            (next === 'true' && data.length !== queries.query.pageSize))
+        )
+          throw new Error('Invalid catalogue page');
+        return {
+          products: data,
+          hasNext:
+            next === null ? !!queries && data.length === queries.query.pageSize : next === 'true',
+        };
       })
-      .then((products) => {
+      .then(({ products, hasNext }) => {
         if (abort.signal.aborted || accessDenied.current) return;
         setRows(products);
+        setHasNextPage(hasNext);
         setState('ready');
       })
       .catch((cause: unknown) => {
@@ -324,7 +354,7 @@ export default function AdminCataloguePage({
         else setState('error');
       });
     return () => abort.abort();
-  }, [type, revision, listRevision]);
+  }, [type, listKey, revision, listRevision]);
   useEffect(() => {
     const abort = new AbortController();
     if (type !== 'saving_plan' || !hasEditor || accessDenied.current) {
@@ -444,7 +474,8 @@ export default function AdminCataloguePage({
       return;
     const row = rows.find((value) => value.id === current.editor);
     if (!row) {
-      choose(null);
+      // A bounded or filtered page cannot establish that an independently loaded product was removed.
+      if (!queries) choose(null);
       return;
     }
     if (JSON.stringify(productBasis(row)) !== JSON.stringify(productBasis(current.detail))) {
@@ -717,6 +748,15 @@ export default function AdminCataloguePage({
             >
               <ListPage>
                 <ListPage.Toolbar
+                  filters={
+                    queries && (
+                      <ProductCatalogueFilters
+                        locale={locale}
+                        queries={queries}
+                        disabled={blocked || uncertainCreate || state === 'denied'}
+                      />
+                    )
+                  }
                   actions={
                     <>
                       <Button variant="outline" onClick={refresh}>
@@ -1393,6 +1433,21 @@ export default function AdminCataloguePage({
                     tableClassName="min-w-[60rem]"
                   />
                 </ListPage.Content>
+                {queries && (
+                  <ListPage.Pagination
+                    kind="cursor"
+                    hasMore={hasNextPage && queries.query.page < 1_000_000}
+                    loading={state !== 'ready' || blocked || uncertainCreate}
+                    label={`${label('page')} ${numbers.number(queries.query.page)}`}
+                    nextLabel={label('nextPage')}
+                    onNext={() => queries.setQuery({ page: queries.query.page + 1 })}
+                    previous={{
+                      enabled: queries.query.page > 1,
+                      label: label('previousPage'),
+                      onClick: () => queries.setQuery({ page: queries.query.page - 1 }),
+                    }}
+                  />
+                )}
               </ListPage>
             </div>
           ))}
