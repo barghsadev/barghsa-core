@@ -17,6 +17,15 @@ import {
   type BankReceiptOverpaymentSnapshot,
 } from './invoice-overpayment.js';
 import { BANK_RECEIPT_TOPUP_CHANNEL } from './wallet-bank-receipt-topup.js';
+export {
+  BANK_RECEIPT_REJECT_REASON_MIN_LENGTH,
+  BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
+  BANK_RECEIPT_CONFIRM_ERRORS,
+  parseBankReceiptRejectReason,
+  type ParseRejectReasonSuccess,
+  type ParseRejectReasonFailure,
+  type ParseRejectReasonResult,
+} from './receipt-rejection-fields.js';
 
 /** Capability gate documented on the staff API (mapped to isAdmin today). */
 export const BANK_RECEIPT_CONFIRM_PERMISSION = 'admin:finance:wallet:bank-receipt-confirm' as const;
@@ -27,25 +36,8 @@ export const BANK_RECEIPT_CONFIRMED_EVENT = 'wallet.bank_receipt.confirmed' as c
 /** Canonical audit event when staff reject a bank-receipt top-up. */
 export const BANK_RECEIPT_REJECTED_EVENT = 'wallet.bank_receipt.rejected' as const;
 
-/** Minimum trimmed length of the customer-visible rejection reason. */
-export const BANK_RECEIPT_REJECT_REASON_MIN_LENGTH = 1;
-
-/** Maximum trimmed length of the customer-visible rejection reason. */
-export const BANK_RECEIPT_REJECT_REASON_MAX_LENGTH = 2000;
-
 /** Human-readable description written on the Completed credit ledger row. */
 export const BANK_RECEIPT_CREDIT_DESCRIPTION = 'Bank receipt wallet top-up';
-
-export const BANK_RECEIPT_CONFIRM_ERRORS = {
-  BAD_REASON: () =>
-    `reason is required (${BANK_RECEIPT_REJECT_REASON_MIN_LENGTH}–${BANK_RECEIPT_REJECT_REASON_MAX_LENGTH} characters) and is customer-visible`,
-  NOT_PENDING: (state: string) => `Bank receipt top-up cannot be reviewed while it is ${state}`,
-  NOT_BANK_RECEIPT: () => 'Transaction is not a pending bank-receipt top-up',
-  ALREADY_CONFIRMED: () => 'Bank receipt top-up has already been confirmed',
-  ALREADY_REJECTED: () => 'Bank receipt top-up has already been rejected',
-  OWNER_UNNOTIFIABLE: () =>
-    'Bank receipt top-up cannot be rejected because the customer owner cannot be notified',
-} as const;
 
 /**
  * Customer notification events (E-05 registry). Distinct from the audit
@@ -74,18 +66,6 @@ export interface BankReceiptStaffDecisionSnapshot {
   creditTransactionId: string | null;
 }
 
-export interface ParseRejectReasonSuccess {
-  ok: true;
-  reason: string;
-}
-
-export interface ParseRejectReasonFailure {
-  ok: false;
-  message: string;
-}
-
-export type ParseRejectReasonResult = ParseRejectReasonSuccess | ParseRejectReasonFailure;
-
 /**
  * Stable credit idempotency key for a pending bank-receipt top-up.
  *
@@ -95,33 +75,6 @@ export type ParseRejectReasonResult = ParseRejectReasonSuccess | ParseRejectReas
  */
 export function bankReceiptCreditIdempotencyKey(pendingTransactionId: string): string {
   return `wallet-bank-receipt-topup-credit:${pendingTransactionId}`;
-}
-
-/**
- * Parse the customer-visible rejection reason. Blank / oversized /
- * control-character values are rejected.
- */
-export function parseBankReceiptRejectReason(raw: unknown): ParseRejectReasonResult {
-  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
-    return { ok: false, message: BANK_RECEIPT_CONFIRM_ERRORS.BAD_REASON() };
-  }
-  const body = raw as Record<string, unknown>;
-  const value = body.reason;
-  if (typeof value !== 'string') {
-    return { ok: false, message: BANK_RECEIPT_CONFIRM_ERRORS.BAD_REASON() };
-  }
-  const trimmed = value.trim();
-  if (
-    trimmed.length < BANK_RECEIPT_REJECT_REASON_MIN_LENGTH ||
-    trimmed.length > BANK_RECEIPT_REJECT_REASON_MAX_LENGTH
-  ) {
-    return { ok: false, message: BANK_RECEIPT_CONFIRM_ERRORS.BAD_REASON() };
-  }
-  // eslint-disable-next-line no-control-regex -- Reject control characters in untrusted receipt text.
-  if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(trimmed)) {
-    return { ok: false, message: BANK_RECEIPT_CONFIRM_ERRORS.BAD_REASON() };
-  }
-  return { ok: true, reason: trimmed };
 }
 
 export function isPendingBankReceiptTopUp(row: {

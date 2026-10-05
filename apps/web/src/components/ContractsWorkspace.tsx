@@ -2,7 +2,7 @@ import { HistoryTable, type HistoryColumn } from './HistoryTable.js';
 import { useListView } from '../hooks/useListView.js';
 import { ContractRefundQueue } from './ContractRefundQueue.js';
 import { ContractCancellationRequestQueue } from './ContractCancellationRequestQueue.js';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent, type MutableRefObject } from 'react';
 import { Link } from '@tanstack/react-router';
 import {
   Alert,
@@ -40,6 +40,8 @@ import {
 import { DEFAULT_CONTRACT_LIST_SORT } from '@barghsa/shared/validation';
 import { useCursorHistory } from '../hooks/useCursorHistory.js';
 import { useCursorPageRows } from '../hooks/useCursorPageRows.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import type { ContractFormCoordination } from '../lib/contract-review-signature-form.js';
 import { staffOrderId } from '../lib/staff-order-list-query.js';
 import type { RecordListQuery } from '../lib/record-list-query.js';
 
@@ -55,9 +57,10 @@ export function ContractsWorkspace({
   queries?: RecordListQuery | undefined;
 }) {
   const revision = useProfileContextRevision();
+  const actor = useAccountUser();
   return (
     <Workspace
-      key={`${staff}:${revision}`}
+      key={`${staff}:${revision}:${actor}`}
       staff={staff}
       initialState={initialState}
       customerHistory={customerHistory}
@@ -76,6 +79,27 @@ function Workspace({
   customerHistory?: CustomerContractHistoryControls | undefined;
   queries?: RecordListQuery | undefined;
 }) {
+  const owner = useRef<object | null>(null),
+    [locked, setLocked] = useState(false);
+  const readAbort = useRef<AbortController | null>(null),
+    readEpoch = useRef(0);
+  const coordination = useRef<ContractFormCoordination>({
+    blocked: () => !!owner.current,
+    acquire: (claim) => {
+      if (owner.current) return false;
+      owner.current = claim;
+      setLocked(true);
+      ++readEpoch.current;
+      readAbort.current?.abort();
+      return true;
+    },
+    release: (claim) => {
+      if (owner.current === claim) {
+        owner.current = null;
+        setLocked(false);
+      }
+    },
+  }).current;
   const locale = useLocale();
   const word = (key: string) => contractText(key, locale);
   const routeFilters = {
@@ -115,6 +139,7 @@ function Workspace({
   }
   function apply(event: FormEvent) {
     event.preventDefault();
+    if (coordination.blocked()) return;
     if (
       filters.profileId &&
       !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(filters.profileId)
@@ -152,6 +177,10 @@ function Workspace({
       {!staff ? (
         <nav className="flex gap-4 text-sm" aria-label={word('title')}>
           <Link
+            onClick={(event) => {
+              if (coordination.blocked()) event.preventDefault();
+            }}
+            aria-disabled={locked}
             to="/contracts"
             search={{ state: undefined }}
             className="text-primary underline underline-offset-4"
@@ -160,6 +189,10 @@ function Workspace({
             {word('all')}
           </Link>
           <Link
+            onClick={(event) => {
+              if (coordination.blocked()) event.preventDefault();
+            }}
+            aria-disabled={locked}
             to="/contracts"
             search={{ state: 'Active' }}
             className="text-primary underline underline-offset-4"
@@ -171,74 +204,95 @@ function Workspace({
       ) : null}
       {staff ? (
         <form onSubmit={apply} className="flex flex-col gap-4 rounded-xl border bg-card p-5">
-          <FieldGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Field>
-              <FieldLabel htmlFor="contracts-number">{word('contractNumber')}</FieldLabel>
-              <Input
-                id="contracts-number"
-                dir="ltr"
-                inputMode="numeric"
-                value={filters.contractNumber}
-                onChange={(e) => setFilters({ ...filters, contractNumber: e.target.value.trim() })}
-                aria-invalid={invalidNumber}
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="contracts-profile">{word('profile')}</FieldLabel>
-              <Input
-                id="contracts-profile"
-                dir="ltr"
-                value={filters.profileId}
-                onChange={(e) => setFilters({ ...filters, profileId: e.target.value.trim() })}
-                aria-invalid={invalid}
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="contracts-state">{word('state')}</FieldLabel>
-              <NativeSelect
-                id="contracts-state"
-                value={filters.state}
-                onChange={(e) => setFilters({ ...filters, state: e.target.value })}
-              >
-                <option value="">{word('all')}</option>
-                {contractStates.map((state) => (
-                  <option key={state} value={state}>
-                    {word(state)}
-                  </option>
-                ))}
-              </NativeSelect>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="contracts-service">{word('serviceType')}</FieldLabel>
-              <NativeSelect
-                id="contracts-service"
-                value={filters.serviceType}
-                onChange={(e) => setFilters({ ...filters, serviceType: e.target.value })}
-              >
-                <option value="">{word('all')}</option>
-                {['electricity', 'savings', 'solar'].map((type) => (
-                  <option key={type} value={type}>
-                    {word(type)}
-                  </option>
-                ))}
-              </NativeSelect>
-            </Field>
-          </FieldGroup>
+          <fieldset disabled={locked} className="contents">
+            <FieldGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <Field>
+                <FieldLabel htmlFor="contracts-number">{word('contractNumber')}</FieldLabel>
+                <Input
+                  id="contracts-number"
+                  dir="ltr"
+                  inputMode="numeric"
+                  value={filters.contractNumber}
+                  onChange={(e) =>
+                    setFilters({ ...filters, contractNumber: e.target.value.trim() })
+                  }
+                  aria-invalid={invalidNumber}
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="contracts-profile">{word('profile')}</FieldLabel>
+                <Input
+                  id="contracts-profile"
+                  dir="ltr"
+                  value={filters.profileId}
+                  onChange={(e) => setFilters({ ...filters, profileId: e.target.value.trim() })}
+                  aria-invalid={invalid}
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="contracts-state">{word('state')}</FieldLabel>
+                <NativeSelect
+                  id="contracts-state"
+                  value={filters.state}
+                  onChange={(e) => setFilters({ ...filters, state: e.target.value })}
+                >
+                  <option value="">{word('all')}</option>
+                  {contractStates.map((state) => (
+                    <option key={state} value={state}>
+                      {word(state)}
+                    </option>
+                  ))}
+                </NativeSelect>
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="contracts-service">{word('serviceType')}</FieldLabel>
+                <NativeSelect
+                  id="contracts-service"
+                  value={filters.serviceType}
+                  onChange={(e) => setFilters({ ...filters, serviceType: e.target.value })}
+                >
+                  <option value="">{word('all')}</option>
+                  {['electricity', 'savings', 'solar'].map((type) => (
+                    <option key={type} value={type}>
+                      {word(type)}
+                    </option>
+                  ))}
+                </NativeSelect>
+              </Field>
+            </FieldGroup>
+          </fieldset>
           {invalid ? <p role="alert">{word('invalidProfile')}</p> : null}
           {invalidNumber ? <p role="alert">{word('invalidContractNumber')}</p> : null}
-          <Button type="submit" className="self-start">
+          <Button type="submit" className="self-start" disabled={locked}>
             {word('apply')}
           </Button>
         </form>
       ) : null}
       {staff ? (
-        <ContractDraftEditor
-          onSaved={(id) => {
-            if (queries) queries.select(id, { resetCursor: true });
-            else setCreatedId(id);
-            setGeneration((value) => value + 1);
+        <fieldset
+          disabled={locked}
+          onClickCapture={(event) => {
+            if (coordination.blocked()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
           }}
-        />
+          onSubmitCapture={(event) => {
+            if (coordination.blocked()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+          }}
+        >
+          <ContractDraftEditor
+            onSaved={(id) => {
+              if (coordination.blocked()) return;
+              if (queries) queries.select(id, { resetCursor: true });
+              else setCreatedId(id);
+              setGeneration((value) => value + 1);
+            }}
+          />
+        </fieldset>
       ) : null}
       {staff ? <ContractRefundQueue /> : null}
       {staff ? <ContractCancellationRequestQueue /> : null}
@@ -250,6 +304,10 @@ function Workspace({
         customerHistory={customerHistory}
         queries={queries}
         initialSelected={createdId ?? new URLSearchParams(window.location.search).get('contractId')}
+        coordination={coordination}
+        locked={locked}
+        readAbort={readAbort}
+        readEpoch={readEpoch}
       />
     </div>
   );
@@ -260,11 +318,19 @@ function ContractResults({
   query,
   initialSelected,
   queries,
+  coordination,
+  locked,
+  readAbort,
+  readEpoch,
 }: {
   staff: boolean;
   query: string;
   customerHistory?: CustomerContractHistoryControls | undefined;
   initialSelected: string | null;
+  coordination: ContractFormCoordination;
+  locked: boolean;
+  readAbort: MutableRefObject<AbortController | null>;
+  readEpoch: MutableRefObject<number>;
   queries?: RecordListQuery | undefined;
 }) {
   const { view, setView } = useListView('contracts');
@@ -282,7 +348,7 @@ function ContractResults({
   const next = denied ? null : queries ? urlRows.next : legacy.nextBefore;
   const acceptPage = queries ? urlRows.acceptPage : legacy.acceptPage;
   const loadMore = () => {
-    if (!next) return;
+    if (coordination.blocked() || !next) return;
     if (queries) queries.queue.next(next);
     else legacy.loadMore();
   };
@@ -291,11 +357,25 @@ function ContractResults({
   const [localSelected, setLocalSelected] = useState<string | null>(initialSelected);
   const queryRef = useRef(queries);
   queryRef.current = queries;
-  const selected = denied ? null : queries ? queries.selected : localSelected;
-  const setSelected = (id: string | null, replace = false) =>
-    queryRef.current ? queryRef.current.select(id, { replace }) : setLocalSelected(id);
+  const offeredSelection = denied ? null : queries ? queries.selected : localSelected;
+  const acceptedSelection = useRef(offeredSelection);
+  if (!coordination.blocked()) acceptedSelection.current = offeredSelection;
+  const selected = acceptedSelection.current;
+  const setSelected = (id: string | null, replace = false) => {
+    if (coordination.blocked()) return;
+    if (queryRef.current) queryRef.current.select(id, { replace });
+    else setLocalSelected(id);
+  };
   useEffect(() => {
+    if (coordination.blocked()) {
+      setLoading(false);
+      return;
+    }
     const controller = new AbortController();
+    readAbort.current = controller;
+    const epoch = ++readEpoch.current;
+    const fresh = () =>
+      !controller.signal.aborted && epoch === readEpoch.current && !coordination.blocked();
     const params = new URLSearchParams(query);
     if (cursor) params.set('before', cursor);
     setLoading(true);
@@ -305,7 +385,7 @@ function ContractResults({
       { signal: controller.signal }
     )
       .then((page) => {
-        if (controller.signal.aborted) return;
+        if (!fresh()) return;
         setDenied(false);
         acceptPage(
           page.contracts,
@@ -313,7 +393,7 @@ function ContractResults({
         );
       })
       .catch((reason: unknown) => {
-        if (controller.signal.aborted) return;
+        if (!fresh()) return;
         setError(true);
         if (reason instanceof DocumentRequestError && [401, 403].includes(reason.status)) {
           setDenied(true);
@@ -322,17 +402,18 @@ function ContractResults({
         }
       })
       .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if (fresh()) setLoading(false);
       });
     return () => controller.abort();
-  }, [staff, query, cursor, reload, retryRevision, acceptPage]);
+  }, [staff, query, cursor, reload, retryRevision, acceptPage, locked]);
   function refresh() {
+    if (coordination.blocked()) return;
     if (queryRef.current) queryRef.current.queue.setQuery({ cursor: '' });
     setReload((value) => value + 1);
   }
   const renderIdentity = (item: ContractSummary) => (
     <>
-      <Button variant="link" onClick={() => setSelected(item.id)}>
+      <Button variant="link" disabled={locked} onClick={() => setSelected(item.id)}>
         {word(item.serviceType)} · {word('version')} {item.versionNumber.toLocaleString(locale)}
       </Button>
       <p className="text-sm text-muted-foreground">
@@ -552,7 +633,23 @@ function ContractResults({
       <ListPage.Toolbar
         filters={
           !staff && customerHistory ? (
-            <CustomerContractFilters history={customerHistory} />
+            <fieldset
+              disabled={locked}
+              onChangeCapture={(event) => {
+                if (coordination.blocked()) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+              }}
+              onSubmitCapture={(event) => {
+                if (coordination.blocked()) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+              }}
+            >
+              <CustomerContractFilters history={customerHistory} />
+            </fieldset>
           ) : undefined
         }
         actions={
@@ -568,7 +665,12 @@ function ContractResults({
                 }}
               />
             )}
-            <Button className="self-start" variant="outline" onClick={refresh} disabled={loading}>
+            <Button
+              className="self-start"
+              variant="outline"
+              onClick={refresh}
+              disabled={loading || locked}
+            >
               {word('refresh')}
             </Button>
           </>
@@ -576,11 +678,14 @@ function ContractResults({
       />
       {selected ? (
         <ContractDetailLoader
-          key={`${selected}:${reload}`}
+          key={selected}
           id={selected}
           staff={staff}
           onClose={() => setSelected(null)}
           onChanged={refresh}
+          refreshRevision={reload}
+          coordination={coordination}
+          onWithdrawal={() => setSelected(null, true)}
         />
       ) : null}
       <ListPage.Content
@@ -635,6 +740,7 @@ function ContractResults({
       <ListPage.Pagination
         kind="cursor"
         hasMore={
+          !locked &&
           !!next &&
           !error &&
           !denied &&
@@ -643,8 +749,10 @@ function ContractResults({
         loading={loading}
         onNext={loadMore}
         previous={{
-          enabled: !denied && (queries?.queue.hasPrevious ?? false),
-          onClick: () => queries?.queue.previous(),
+          enabled: !locked && !denied && (queries?.queue.hasPrevious ?? false),
+          onClick: () => {
+            if (!coordination.blocked()) queries?.queue.previous();
+          },
           label: appText('historyPagination.previous', locale),
         }}
         label={appText('historyPagination.label', locale)}

@@ -31,6 +31,7 @@ import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { ContractReviewService } from './contract-review.service.js';
+import { parseContractJourneyInput } from './contract-journey-input-fields.js';
 import {
   contractUuid,
   contractReviewSchema,
@@ -106,7 +107,7 @@ export class ContractReviewController {
     description: 'Updated staff contract. Matching retries return the original result.',
   })
   @ApiResponse({ status: 409, description: 'Stale version or invalid state transition.' })
-  act(
+  async act(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
     @Param('action') raw: string,
@@ -117,7 +118,13 @@ export class ContractReviewController {
     const action = parse(z.enum(['submit', 'request-changes', 'publish']), raw);
     const input =
       action === 'request-changes'
-        ? parse(contractChangesSchema, body)
+        ? await parseContractJourneyInput(contractChangesSchema, body, ['reason'], (value) =>
+            this.service.assertCanRequestChanges(
+              parse(contractUuid, id),
+              parse(contractUuid, value.expectedVersionId),
+              req.session
+            )
+          )
         : parse(contractReviewSchema, body);
     return this.service.act(
       parse(contractUuid, id),

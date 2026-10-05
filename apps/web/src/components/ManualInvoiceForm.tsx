@@ -516,7 +516,7 @@ export default function ManualInvoiceForm({
           parseManualInvoiceReview,
           parseInvoiceAdjustmentReview,
           parseInvoiceReplacementReview,
-        } = await import('@barghsa/shared/finance/invoices');
+        } = await import('@barghsa/shared/finance');
         if (!owns()) return;
         if (!correctionCommand) {
           const review = parseManualInvoiceReview(value);

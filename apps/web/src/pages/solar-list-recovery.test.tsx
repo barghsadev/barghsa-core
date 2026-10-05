@@ -1,8 +1,10 @@
-import { act } from 'react';
+import { act, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { AdminSolarDocumentsPage as Documents } from './AdminSolarDocumentsPage.js';
 import { AdminSolarPostalPage as Postal } from './AdminSolarPostalPage.js';
+import { useListQuery } from '../hooks/useListQuery.js';
+import { solarPostalQueryOptions } from '../lib/solar-staff-query.js';
 import {
   firstSolar,
   olderSolar,
@@ -256,13 +258,24 @@ it('successful guidance save clears its owned validation error', async () => {
 for (const kind of ['document-set', 'postal', 'final'] as const) {
   it(`discards a delayed ${kind} decision review after selecting another request`, async () => {
     let finish: ((response: Response) => void) | undefined;
+    const writes: string[] = [];
+    let restoreLane: (() => void) | undefined;
+    function PostalRoute() {
+      const [search, setSearch] = useState<Record<string, unknown>>({});
+      restoreLane = () => setSearch({ lane: 'all' });
+      const queries = useListQuery(solarPostalQueryOptions, search, (update) =>
+        setSearch((current) => update(current))
+      );
+      return <Postal queries={queries} />;
+    }
     vi.stubGlobal(
       'fetch',
-      vi.fn(async (url: string) => {
+      vi.fn(async (url: string, init?: RequestInit) => {
         if (url.endsWith('/review') || url.endsWith('/review-set-decision'))
           return new Promise<Response>((resolve) => {
             finish = resolve;
           });
+        if (init?.method === 'POST') writes.push(url);
         const data = defaultData(url);
         if (url.includes('postal-queue'))
           return Response.json({
@@ -287,7 +300,7 @@ for (const kind of ['document-set', 'postal', 'final'] as const) {
         return Response.json(data);
       })
     );
-    const { container, close } = await mount(kind === 'document-set' ? Documents : Postal);
+    const { container, close } = await mount(kind === 'document-set' ? Documents : PostalRoute);
     try {
       await act(async () => button(container, 'First solar buyer').click());
       await act(async () =>
@@ -302,6 +315,21 @@ for (const kind of ['document-set', 'postal', 'final'] as const) {
       );
       expect(finish).toBeDefined();
       await act(async () => button(container, 'Older solar buyer').click());
+      if (kind !== 'document-set') {
+        expect(button(container, 'First solar buyer').classList.contains('border-primary')).toBe(
+          true
+        );
+        expect(button(container, 'Older solar buyer').classList.contains('border-primary')).toBe(
+          false
+        );
+        expect(document.querySelector('[role="dialog"]')).toBeNull();
+        // A restored route scope cancels the read-only preparation before another row is chosen.
+        await act(async () => restoreLane!());
+        await act(async () => button(container, 'Older solar buyer').click());
+        expect(button(container, 'Older solar buyer').classList.contains('border-primary')).toBe(
+          true
+        );
+      }
       await act(async () =>
         finish!(
           Response.json({
@@ -329,6 +357,12 @@ for (const kind of ['document-set', 'postal', 'final'] as const) {
         )
       );
       expect(document.querySelector('[role="dialog"]')).toBeNull();
+      if (kind !== 'document-set') {
+        expect(button(container, 'Older solar buyer').classList.contains('border-primary')).toBe(
+          true
+        );
+        expect(writes).toEqual([]);
+      }
     } finally {
       await close();
     }

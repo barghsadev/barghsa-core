@@ -8,6 +8,8 @@ Both measurements must pass. The existing default-gzip check remains because Siz
 
 Interaction-phase rules measure code fetched after an explicit action. They exclude the already-loaded entry bootstrap and sibling dynamic imports with their own interaction budgets, while including every static dependency and unbudgeted nested dynamic import. Initial-route rules still count static imports and any dynamic imports not assigned their own interaction budget. The admin terms editor, publish preview and version viewer are loaded only after staff opens those controls and have separate limits.
 
+Contract review and signature schemas load on the first field validation or submit, with a separate 20 KB interaction limit. The contract detail limit remains 250 KB. Every static dependency of the schema counts toward its own limit; a static import from the detail also counts toward the detail limit.
+
 Toast feedback loads its renderer when the first success or error is requested. The pending message is shown after the renderer mounts, and the renderer has its own interaction budget. Customer purchase routes stay eager; their initial budgets include their route code.
 
 Size Limit and its file plugin are pinned to 12.1.0, which supports the project's Node 20 baseline as well as the current Node 22/24 tooling. The 13.x release requires a newer Node baseline and was not retained.

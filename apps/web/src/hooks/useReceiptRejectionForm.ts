@@ -2,7 +2,7 @@ import { z } from 'zod/mini';
 import {
   parseBankReceiptRejectReason,
   parseInvoiceBankReceiptRejectReason,
-} from '@barghsa/shared/finance';
+} from '@barghsa/shared/finance/browser';
 import { tWalletReceipts as walletText } from '@barghsa/i18n/wallet-receipts';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { useLocale } from './useLocale.js';

@@ -2,6 +2,8 @@ import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { ContractsWorkspace } from './ContractsWorkspace.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
+import { tContractReviewSignature } from '@barghsa/i18n/contract-review-signature';
 import { ContractDetail } from './ContractDetail.js';
 import { ContractTerms } from './ContractTerms.js';
 import ContractsPage from '../pages/ContractsPage.js';
@@ -112,7 +114,9 @@ afterEach(async () => {
   vi.restoreAllMocks();
 });
 async function render(node: ReactNode) {
-  await act(async () => root.render(node));
+  await act(async () =>
+    root.render(<AccountUserProvider value="legal-reviewer">{node}</AccountUserProvider>)
+  );
 }
 function button(text: string) {
   const match = [...container.querySelectorAll('button')].find((item) => item.textContent === text);
@@ -767,13 +771,17 @@ it('requires a changes reason and captures the current staff version for review'
   );
   await render(<ContractDetail id={ID} staff onClose={() => {}} onChanged={changed} />);
   await click(en['request-changes']);
-  expect(container.textContent).toContain(en.reasonRequired);
+  await vi.waitFor(() =>
+    expect(container.textContent).toContain(tContractReviewSignature('reasonInvalid', 'en'))
+  );
   expect(harness.action).toBeNull();
   await value('#contract-change-reason', 'Explain the revised price');
   await click(en['request-changes']);
-  expect(harness.action).toMatchObject({
-    body: { expectedVersionId: VERSION, reason: 'Explain the revised price' },
-  });
+  await vi.waitFor(() =>
+    expect(harness.action).toMatchObject({
+      body: { expectedVersionId: VERSION, reason: 'Explain the revised price' },
+    })
+  );
   await click('Close confirmation');
   await click(en.publish);
   expect(harness.action?.path).toBe(`/api/admin/contracts/${ID}/publish`);

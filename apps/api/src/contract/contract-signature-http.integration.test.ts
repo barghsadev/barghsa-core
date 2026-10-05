@@ -1,3 +1,4 @@
+import { contractJourneyEffects } from '../test/contract-journey-http-proof.js';
 import type { ContractFinancialReview } from '@barghsa/shared/finance';
 import { contractReviewConfirmation } from '../test/contract-review-confirmation.js';
 import { activateReadyContracts } from '@barghsa/db/contract-activation';
@@ -30,6 +31,7 @@ type Created = Awaited<ReturnType<DocumentService['create']>> & {
 };
 type DocumentDto = Awaited<ReturnType<DocumentService['confirm']>>;
 type ContractDto = Awaited<ReturnType<ContractService['get']>>;
+type FeedbackDto = { error: { fields?: readonly string[] } };
 
 beforeAll(async () => {
   minio = await new GenericContainer(
@@ -830,6 +832,94 @@ it('binds signing confirmation to the selected approved documents and saves its 
   const original = await documentFor(f, 'original');
   const base = `admin/contracts/${f.row.id}`;
   const input = requestInput(f, original.id);
+  const beforeFeedback = await contractJourneyEffects(http.pool, f.row.id, f.profile);
+  const invalidSelection = {
+    action: 'request',
+    expectedVersionId: input.expectedVersionId,
+    originalDocumentId: 'PRIVATE',
+    expectedRequestId: null,
+  };
+  for (const write of [false, true]) {
+    const path = `${base}/${write ? 'signature-request' : 'signature/review'}`;
+    const body = write
+      ? { ...input, originalDocumentId: 'PRIVATE', expectedReviewHash: 'a'.repeat(64) }
+      : invalidSelection;
+    const owned = await send(path, 'signature-legal', 'POST', body);
+    expect(owned.status).toBe(400);
+    expect(await owned.json()).toMatchObject({
+      error: { code: 'VALIDATION:INPUT:INVALID', fields: ['originalDocumentId'] },
+    });
+    for (const mixed of [
+      { ...body, expectedVersionId: 'PRIVATE' },
+      { ...body, expectedRequestId: 'PRIVATE' },
+      { ...body, secret: 'PRIVATE' },
+    ]) {
+      const response = await send(path, 'signature-legal', 'POST', mixed);
+      expect(response.status).toBe(400);
+      const error = (await response.json()) as FeedbackDto;
+      expect(error).toMatchObject({ error: { code: 'VALIDATION:PARSE:ZOD_ERROR' } });
+      expect(error.error.fields).toBeUndefined();
+      expect(JSON.stringify(error)).not.toContain('PRIVATE');
+    }
+    const missing = await send(
+      `admin/contracts/${randomUUID()}/${write ? 'signature-request' : 'signature/review'}`,
+      'signature-legal',
+      'POST',
+      body
+    );
+    expect(missing.status).toBe(404);
+    expect(((await missing.json()) as FeedbackDto).error.fields).toBeUndefined();
+    const role = (
+      await http.pool.query<{ permissions: string }>(
+        "SELECT permissions FROM staff_roles WHERE role_id='role-legal-contracts'"
+      )
+    ).rows[0]!;
+    const session = (
+      await http.pool.query<{ step_up_verified_at: Date | null }>(
+        "SELECT step_up_verified_at FROM sessions WHERE user_id='signature-legal'"
+      )
+    ).rows[0]!;
+    try {
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='signature-legal'"
+      );
+      const unverified = await send(path, 'signature-legal', 'POST', body);
+      expect(unverified.status).toBe(write ? 403 : 400);
+      if (!write)
+        expect(await unverified.json()).toMatchObject({
+          error: { fields: ['originalDocumentId'] },
+        });
+      else expect(((await unverified.json()) as FeedbackDto).error.fields).toBeUndefined();
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=$1 WHERE user_id='signature-legal'",
+        [session.step_up_verified_at]
+      );
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions='[]' WHERE role_id='role-legal-contracts'"
+      );
+      const denied = await send(path, 'signature-legal', 'POST', body);
+      expect(denied.status).toBe(403);
+      expect(((await denied.json()) as FeedbackDto).error.fields).toBeUndefined();
+    } finally {
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions=$1 WHERE role_id='role-legal-contracts'",
+        [role.permissions]
+      );
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=$1 WHERE user_id='signature-legal'",
+        [session.step_up_verified_at]
+      );
+    }
+  }
+  const privateRequest = await send(
+    `contracts/${f.row.id}/signature/review`,
+    f.user,
+    'POST',
+    invalidSelection
+  );
+  expect(privateRequest.status).toBe(404);
+  expect(((await privateRequest.json()) as FeedbackDto).error.fields).toBeUndefined();
+  expect(await contractJourneyEffects(http.pool, f.row.id, f.profile)).toEqual(beforeFeedback);
   const previewResponse = await send(`${base}/signature/review`, 'signature-legal', 'POST', {
     action: 'request',
     expectedVersionId: input.expectedVersionId,
@@ -892,6 +982,47 @@ it('binds signing confirmation to the selected approved documents and saves its 
   const signed = await documentFor(f, 'signed', false);
   const otherSigned = await documentFor(f, 'signed', false);
   const recordBody = recordInput(f, prepared.request!.id, signed.id);
+  const beforeSignedFeedback = await contractJourneyEffects(http.pool, f.row.id, f.profile);
+  for (const staff of [false, true])
+    for (const write of [false, true]) {
+      const path = `${staff ? 'admin/' : ''}contracts/${f.row.id}/signature${write ? '' : '/review'}`;
+      const user = staff ? 'signature-legal' : f.user;
+      const body = write
+        ? { ...recordBody, signedDocumentId: 'PRIVATE', expectedReviewHash: 'a'.repeat(64) }
+        : {
+            action: 'record',
+            expectedVersionId: recordBody.expectedVersionId,
+            signedDocumentId: 'PRIVATE',
+            requestId: prepared.request!.id,
+          };
+      const owned = await send(path, user, 'POST', body);
+      expect(owned.status).toBe(400);
+      expect(await owned.json()).toMatchObject({
+        error: { code: 'VALIDATION:INPUT:INVALID', fields: ['signedDocumentId'] },
+      });
+      const mixed = await send(path, user, 'POST', { ...body, requestId: 'PRIVATE' });
+      expect(mixed.status).toBe(400);
+      const generic = (await mixed.json()) as FeedbackDto;
+      expect(generic).toMatchObject({ error: { code: 'VALIDATION:PARSE:ZOD_ERROR' } });
+      expect(generic.error.fields).toBeUndefined();
+      expect(JSON.stringify(generic)).not.toContain('PRIVATE');
+      if (!staff) {
+        try {
+          await http.pool.query(
+            'UPDATE sessions SET revoked_at=clock_timestamp() WHERE user_id=$1',
+            [f.user]
+          );
+          const revoked = await send(path, user, 'POST', body);
+          expect(revoked.status).toBe(401);
+          expect(((await revoked.json()) as FeedbackDto).error.fields).toBeUndefined();
+        } finally {
+          await http.pool.query('UPDATE sessions SET revoked_at=NULL WHERE user_id=$1', [f.user]);
+        }
+      }
+    }
+  expect(await contractJourneyEffects(http.pool, f.row.id, f.profile)).toEqual(
+    beforeSignedFeedback
+  );
   const recordPreviewResponse = await send(
     `contracts/${f.row.id}/signature/review`,
     f.user,
@@ -923,4 +1054,27 @@ it('binds signing confirmation to the selected approved documents and saves its 
   ).rows.map((row) => row.metadata.financialReview);
   expect(audits).toContainEqual(currentPreview);
   expect(audits).toContainEqual(recordPreview);
+  const afterRecorded = await contractJourneyEffects(http.pool, f.row.id, f.profile);
+  expect(result.signature).toMatchObject({
+    requestId: prepared.request!.id,
+    signedDocumentId: signed.id,
+    recordedByType: 'customer',
+    uploadedByType: 'customer',
+  });
+  const progressedRequestReplay = await send(
+    `${base}/signature-request`,
+    'signature-legal',
+    'POST',
+    currentRequest
+  );
+  expect(progressedRequestReplay.status).toBe(200);
+  expect(await progressedRequestReplay.json()).toEqual(prepared);
+  const alteredHash = await send(`${base}/signature-request`, 'signature-legal', 'POST', {
+    ...currentRequest,
+    expectedReviewHash: 'b'.repeat(64),
+  });
+  expect(alteredHash.status).toBe(409);
+  const alteredCopy = await record(f, { ...confirmed, signedDocumentId: otherSigned.id });
+  expect(alteredCopy.status).toBe(409);
+  expect(await contractJourneyEffects(http.pool, f.row.id, f.profile)).toEqual(afterRecorded);
 });

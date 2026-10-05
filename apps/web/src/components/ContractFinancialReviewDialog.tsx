@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { ContractFinancialReview } from '@barghsa/shared/finance';
 import { contractText } from '@barghsa/i18n/contracts';
 import { PageLoading } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import type { useAccountTime } from '../hooks/useAccountTime.js';
+import { sameContractEvidence } from '../lib/contract-review-signature-form.js';
 import { documentRequest } from '../lib/documents.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { ContractFinancialReviewSummary } from './ContractFinancialReviewSummary.js';
@@ -16,8 +17,16 @@ export function ContractFinancialReviewDialog({
   time,
   onClose,
   onSuccess,
+  review: capturedReview,
+  onPendingChange,
+  onDenied,
+  onUnconfirmed,
 }: {
   action: TeamAction;
+  review?: ContractFinancialReview;
+  onPendingChange?: (pending: boolean) => void;
+  onDenied?: () => void;
+  onUnconfirmed?: () => void;
   profileId: string;
   contractId: string;
   time: ReturnType<typeof useAccountTime>;
@@ -29,8 +38,9 @@ export function ContractFinancialReviewDialog({
   const [error, setError] = useState(false);
   useEffect(() => {
     const controller = new AbortController();
-    setReview(null);
+    setReview(capturedReview ?? null);
     setError(false);
+    if (capturedReview) return () => controller.abort();
     const input = action.body as Record<string, unknown>;
     const acceptance = action.path.endsWith('/accept');
     const request = action.path.endsWith('/signature-request');
@@ -87,16 +97,23 @@ export function ContractFinancialReviewDialog({
         if (!controller.signal.aborted) setError(true);
       });
     return () => controller.abort();
-  }, [action, profileId, contractId]);
+  }, [action, profileId, contractId, capturedReview]);
+  const confirmedAction = useMemo(
+    () => ({
+      ...action,
+      body: {
+        ...(action.body as Record<string, unknown>),
+        ...(review ? { expectedReviewHash: review.hash } : {}),
+      },
+    }),
+    [action, review]
+  );
   return (
     <TeamActionDialog
-      action={{
-        ...action,
-        body: {
-          ...(action.body as Record<string, unknown>),
-          ...(review ? { expectedReviewHash: review.hash } : {}),
-        },
-      }}
+      action={confirmedAction}
+      {...(onPendingChange ? { onPendingChange } : {})}
+      {...(onDenied ? { onDenied } : {})}
+      {...(onUnconfirmed ? { onUnconfirmed } : {})}
       confirmationDisabled={!review || time.status !== 'ready'}
       summary={
         <>
@@ -116,7 +133,7 @@ export function ContractFinancialReviewDialog({
         const returned = parseContractFinancialReview(
           (result as { financialReview?: unknown } | null)?.financialReview
         );
-        if (!review || returned?.hash !== review.hash)
+        if (!review || !sameContractEvidence(returned, review))
           throw new Error('Missing confirmed contract review');
         await onSuccess(result);
       }}

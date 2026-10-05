@@ -18,11 +18,10 @@
 
 import type { NotificationChannel } from '../notifications/notification-transport.js';
 import type { BankReceiptOverpaymentSnapshot } from './invoice-overpayment.js';
-import {
-  BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
-  BANK_RECEIPT_REJECT_REASON_MIN_LENGTH,
-  type ParseRejectReasonResult,
-} from './wallet-bank-receipt-confirmation.js';
+export {
+  INVOICE_BANK_RECEIPT_REJECT_ERRORS,
+  parseInvoiceBankReceiptRejectReason,
+} from './receipt-rejection-fields.js';
 
 /** Capability gate documented on the staff API (mapped to isAdmin today). */
 export const INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION =
@@ -71,14 +70,6 @@ export const INVOICE_BANK_RECEIPT_CONFIRM_ERRORS = {
   CREDIT_NOTE: () => 'Credit notes cannot receive a bank-receipt allocation',
 } as const;
 
-export const INVOICE_BANK_RECEIPT_REJECT_ERRORS = {
-  BAD_REASON: () =>
-    `reason is required (${BANK_RECEIPT_REJECT_REASON_MIN_LENGTH}–${BANK_RECEIPT_REJECT_REASON_MAX_LENGTH} characters) and is customer-visible`,
-  NOT_REJECTABLE: (state: string) => `Invoice bank receipt cannot be rejected while it is ${state}`,
-  OWNER_UNNOTIFIABLE: () =>
-    'Invoice bank receipt cannot be rejected because the customer owner cannot be notified',
-} as const;
-
 /** Receipt states from which finance may reject (same as confirmable). */
 export const INVOICE_BANK_RECEIPT_REJECTABLE_STATES = INVOICE_BANK_RECEIPT_CONFIRMABLE_STATES;
 
@@ -94,33 +85,6 @@ export function isInvoiceBankReceiptRejectableState(
   state: string
 ): state is InvoiceBankReceiptRejectableState {
   return isInvoiceBankReceiptConfirmableState(state);
-}
-
-/**
- * Parse the customer-visible rejection reason. Blank / oversized /
- * control-character values are rejected.
- */
-export function parseInvoiceBankReceiptRejectReason(raw: unknown): ParseRejectReasonResult {
-  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
-    return { ok: false, message: INVOICE_BANK_RECEIPT_REJECT_ERRORS.BAD_REASON() };
-  }
-  const body = raw as Record<string, unknown>;
-  const value = body.reason;
-  if (typeof value !== 'string') {
-    return { ok: false, message: INVOICE_BANK_RECEIPT_REJECT_ERRORS.BAD_REASON() };
-  }
-  const trimmed = value.trim();
-  if (
-    trimmed.length < BANK_RECEIPT_REJECT_REASON_MIN_LENGTH ||
-    trimmed.length > BANK_RECEIPT_REJECT_REASON_MAX_LENGTH
-  ) {
-    return { ok: false, message: INVOICE_BANK_RECEIPT_REJECT_ERRORS.BAD_REASON() };
-  }
-  // eslint-disable-next-line no-control-regex -- Reject control characters in untrusted receipt text.
-  if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(trimmed)) {
-    return { ok: false, message: INVOICE_BANK_RECEIPT_REJECT_ERRORS.BAD_REASON() };
-  }
-  return { ok: true, reason: trimmed };
 }
 
 /** Outbox idempotency key: one logical customer notice per receipt. */

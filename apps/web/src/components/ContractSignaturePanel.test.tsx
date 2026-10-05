@@ -1,6 +1,14 @@
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
+import {
+  documentId,
+  signingReview,
+  signingReceipt,
+  signingDocument,
+  actor,
+} from '../test/contract-review-signature-fixtures.js';
 import { ContractSignaturePanel } from './ContractSignaturePanel.js';
 import type { TeamAction } from './TeamActionDialog.js';
 import { en, fa } from '@barghsa/i18n/contracts';
@@ -8,6 +16,10 @@ const harness = vi.hoisted(() => ({
   locale: 'en' as 'en' | 'fa',
   action: null as TeamAction | null,
   result: null as unknown,
+  staff: false,
+  view: null as ContractSignatureData | null,
+  docs: [] as ReturnType<typeof doc>[],
+  review: null as ReturnType<typeof signingReview> | null,
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => harness.locale }));
 vi.mock('../hooks/useAccountTime.js', () => ({
@@ -34,19 +46,76 @@ vi.mock('./TeamActionDialog.js', () => ({
     harness.action = action;
     return (
       <div role="dialog">
-        <button onClick={() => void onSuccess(harness.result)}>Confirm action</button>
+        <button
+          onClick={() =>
+            void onSuccess(
+              harness.result ??
+                signingReceipt(
+                  harness.view!,
+                  harness.docs.find(
+                    (doc) => doc.id === (action.body as Record<string, unknown>).signedDocumentId
+                  )!,
+                  harness.review!,
+                  harness.staff
+                )
+            )
+          }
+        >
+          Confirm action
+        </button>
         <button onClick={onClose}>Close confirmation</button>
       </div>
     );
   },
 }));
 import type { ContractSignatureData } from '../lib/contracts.js';
-const response = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status });
+const ids: Record<string, string> = Object.fromEntries(
+  [
+    'original',
+    'signed',
+    'image',
+    'wrong-version',
+    'wrong-contract',
+    'unapproved',
+    'amendment',
+    'base',
+    'first',
+    'second',
+  ].map((name, index) => [name, documentId(index + 1)])
+);
+const response = (data: unknown, status = 200) => {
+  if (data && typeof data === 'object' && Object.hasOwn(data, 'contractId')) {
+    const value = data as ContractSignatureData;
+    if (harness.staff && value.request) value.request = { ...value.request, requestedBy: actor };
+    harness.view = value;
+  }
+  if (data && typeof data === 'object' && Object.hasOwn(data, 'documents'))
+    harness.docs = (data as { documents: ReturnType<typeof doc>[] }).documents;
+  return new Response(JSON.stringify(data), { status });
+};
+function stubFetch(fetcher: (raw: string, options: RequestInit) => Promise<Response>) {
+  vi.stubGlobal('fetch', (raw: string, options: RequestInit = {}) => {
+    if (raw.includes('/signature/review')) {
+      const selection = JSON.parse(String(options.body)) as Record<string, unknown>,
+        request = selection.action === 'request';
+      const selected = harness.docs.find(
+        (doc) => doc.id === (request ? selection.originalDocumentId : selection.signedDocumentId)
+      )!;
+      harness.review = signingReview(harness.view!, selected, request);
+      return Promise.resolve(response(harness.review));
+    }
+    return fetcher(raw, options);
+  });
+}
 let container: HTMLDivElement, root: Root;
 beforeEach(() => {
   harness.locale = 'en';
   harness.action = null;
   harness.result = null;
+  harness.staff = false;
+  harness.view = null;
+  harness.docs = [];
+  harness.review = null;
   container = document.createElement('div');
   document.body.append(container);
   root = createRoot(container);
@@ -58,7 +127,9 @@ afterEach(async () => {
   vi.restoreAllMocks();
 });
 async function render(node: ReactNode) {
-  await act(async () => root.render(node));
+  await act(async () =>
+    root.render(<AccountUserProvider value={actor}>{node}</AccountUserProvider>)
+  );
 }
 function button(text: string) {
   const match = [...container.querySelectorAll('button')].find((item) => item.textContent === text);
@@ -79,7 +150,10 @@ async function value(selector: string, text: string) {
         ? HTMLTextAreaElement.prototype
         : HTMLInputElement.prototype;
   await act(async () => {
-    Object.getOwnPropertyDescriptor(prototype, 'value')!.set!.call(input, text);
+    Object.getOwnPropertyDescriptor(prototype, 'value')!.set!.call(
+      input,
+      input instanceof HTMLSelectElement ? (ids[text] ?? text) : text
+    );
     input.dispatchEvent(
       new Event(input instanceof HTMLSelectElement ? 'change' : 'input', { bubbles: true })
     );
@@ -95,13 +169,14 @@ function view(extra: Partial<ContractSignatureData> = {}): ContractSignatureData
     contractId: ID,
     versionId: VERSION,
     isCurrent: true,
+    isAmendment: false,
     state: 'AwaitingSignature',
     canRequest: false,
     canRecord: true,
     request: {
-      id: 'request-2',
+      id: documentId(90),
       requestNumber: 2,
-      originalDocumentId: 'original',
+      originalDocumentId: ids.original!,
       originalName: 'original.pdf',
       documentState: 'Approved',
       requestedAt: '2026-09-21T00:00:00Z',
@@ -111,18 +186,10 @@ function view(extra: Partial<ContractSignatureData> = {}): ContractSignatureData
   };
 }
 function doc(id: string, role = 'signed', extra = {}) {
-  return {
-    id,
-    businessRecordId: ID,
-    contractVersionId: VERSION,
-    state: 'Approved',
-    contractRole: role,
-    detectedMime: 'application/pdf',
-    originalName: id + '.pdf',
-    ...extra,
-  };
+  return signingDocument(1, role, { id: ids[id]!, originalName: id + '.pdf', ...extra });
 }
 function panel(staff = false, versionId = VERSION) {
+  harness.staff = staff;
   return (
     <ContractSignaturePanel
       id={ID}
@@ -135,8 +202,7 @@ function panel(staff = false, versionId = VERSION) {
 }
 it('publishes the current signature action for customer guidance', async () => {
   const onStatus = vi.fn();
-  vi.stubGlobal(
-    'fetch',
+  stubFetch(
     vi.fn(async (raw: string) =>
       raw.includes('/signature?') ? response(view()) : response({ documents: [], nextBefore: null })
     )
@@ -165,32 +231,34 @@ for (const locale of ['en', 'fa'] as const)
             documents: [
               doc('signed'),
               doc('original', 'original'),
-              doc('wrong-version', 'signed', { contractVersionId: 'old' }),
-              doc('wrong-contract', 'signed', { businessRecordId: 'other' }),
+              doc('wrong-version', 'signed', { contractVersionId: documentId(98) }),
+              doc('wrong-contract', 'signed', { businessRecordId: documentId(99) }),
               doc('unapproved', 'signed', { state: 'Available' }),
             ],
             nextBefore: null,
           })
     );
-    vi.stubGlobal('fetch', fetcher);
+    stubFetch(fetcher);
     await render(panel());
     expect(container.textContent).toContain('original.pdf');
     expect([...container.querySelectorAll('option')].map((item) => item.value)).toEqual([
       '',
-      'signed',
+      ids.signed!,
     ]);
-    expect(button(words.recordSignature).disabled).toBe(true);
+    expect(button(words.recordSignature).disabled).toBe(false);
     await value('#signature-signed', 'signed');
-    expect(button(words.recordSignature).disabled).toBe(true);
+    expect(button(words.recordSignature).disabled).toBe(false);
     await act(async () =>
       container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click()
     );
     await click(words.recordSignature);
+    await vi.waitFor(() => expect(harness.action).not.toBeNull());
     expect(harness.action?.path).toBe(`/api/contracts/${ID}/signature`);
+    await vi.waitFor(() => expect(harness.action).not.toBeNull());
     expect(harness.action?.body).toMatchObject({
       expectedVersionId: VERSION,
-      requestId: 'request-2',
-      signedDocumentId: 'signed',
+      requestId: documentId(90),
+      signedDocumentId: ids.signed!,
       idempotencyKey: expect.any(String),
     });
     await click('Close confirmation');
@@ -210,8 +278,7 @@ for (const locale of ['en', 'fa'] as const)
   });
 it('staff prepares the first request or a numbered replacement using only approved original PDFs', async () => {
   let request: ContractSignatureData['request'] = null;
-  vi.stubGlobal(
-    'fetch',
+  stubFetch(
     vi.fn(async (raw: string) =>
       raw.includes('/signature?')
         ? response(view({ canRequest: true, canRecord: false, request }))
@@ -227,12 +294,13 @@ it('staff prepares the first request or a numbered replacement using only approv
   );
   await render(panel(true));
   expect(container.textContent).toContain(en.noSignatureRequest);
-  expect(button(en.prepareSignature).disabled).toBe(true);
+  expect(button(en.prepareSignature).disabled).toBe(false);
   await value('#signature-original', 'original');
   await click(en.prepareSignature);
+  await vi.waitFor(() => expect(harness.action).not.toBeNull());
   expect(harness.action?.body).toMatchObject({
     expectedRequestId: null,
-    originalDocumentId: 'original',
+    originalDocumentId: ids.original!,
     expectedVersionId: VERSION,
   });
   expect(harness.action?.path).toBe(`/api/admin/contracts/${ID}/signature-request`);
@@ -241,17 +309,18 @@ it('staff prepares the first request or a numbered replacement using only approv
   await click(en.refresh);
   await value('#signature-original', 'original');
   await click(en.prepareSignature);
-  expect(harness.action?.body).toMatchObject({ expectedRequestId: 'request-2' });
+  await vi.waitFor(() => expect(harness.action).not.toBeNull());
+  expect(harness.action?.body).toMatchObject({ expectedRequestId: documentId(90) });
 });
 it('selects the pending amendment PDF for a new signing request', async () => {
-  vi.stubGlobal(
-    'fetch',
+  stubFetch(
     vi.fn(async (raw: string) =>
       raw.includes('/signature?')
         ? response(
             view({
               isCurrent: false,
               isAmendment: true,
+              state: 'Active',
               canRequest: true,
               canRecord: false,
               request: null,
@@ -268,12 +337,13 @@ it('selects the pending amendment PDF for a new signing request', async () => {
     [...container.querySelectorAll<HTMLOptionElement>('#signature-original option')].map(
       (item) => item.value
     )
-  ).toEqual(['', 'amendment']);
+  ).toEqual(['', ids.amendment]);
   await value('#signature-original', 'amendment');
   await click(en.prepareSignature);
+  await vi.waitFor(() => expect(harness.action).not.toBeNull());
   expect(harness.action).toMatchObject({
     path: `/api/admin/contracts/${ID}/signature-request`,
-    body: { originalDocumentId: 'amendment', expectedVersionId: VERSION },
+    body: { originalDocumentId: ids.amendment!, expectedVersionId: VERSION },
   });
 });
 it('shows historical evidence with separate recorder and uploader roles without mutation controls', async () => {
@@ -283,8 +353,8 @@ it('shows historical evidence with separate recorder and uploader roles without 
         isCurrent: false,
         canRecord: false,
         signature: {
-          requestId: 'request-2',
-          signedDocumentId: 'signed',
+          requestId: documentId(90),
+          signedDocumentId: ids.signed!,
           originalName: 'signed.pdf',
           documentState: 'Approved',
           recordedAt: '2026-09-21T01:00:00Z',
@@ -294,7 +364,7 @@ it('shows historical evidence with separate recorder and uploader roles without 
       })
     )
   );
-  vi.stubGlobal('fetch', fetcher);
+  stubFetch(fetcher);
   await render(panel());
   expect(container.textContent).toContain('Recorded by: Staff');
   expect(container.textContent).toContain('Uploaded by: Customer');
@@ -313,7 +383,7 @@ it('retries failed loads and paginated documents, deduplicating repeated rows', 
     }
     return response({ documents: [doc('first')], nextBefore: 'cursor' });
   });
-  vi.stubGlobal('fetch', fetcher);
+  stubFetch(fetcher);
   await render(panel());
   expect(container.querySelector('[role=alert]')).not.toBeNull();
   fail = false;
@@ -324,15 +394,14 @@ it('retries failed loads and paginated documents, deduplicating repeated rows', 
   await click(en.next);
   expect([...container.querySelectorAll('option')].map((item) => item.value)).toEqual([
     '',
-    'first',
-    'second',
+    ids.first!,
+    ids.second!,
   ]);
   expect(container.querySelector('[role=alert]')).toBeNull();
 });
 it('aborts old version loads and closes any confirmation when scope changes', async () => {
   const signals: AbortSignal[] = [];
-  vi.stubGlobal(
-    'fetch',
+  stubFetch(
     vi.fn(async (raw: string, options: RequestInit) => {
       signals.push(options.signal!);
       return raw.includes('/signature?')
@@ -344,9 +413,9 @@ it('aborts old version loads and closes any confirmation when scope changes', as
   await value('#signature-signed', 'signed');
   await act(async () => container.querySelector<HTMLInputElement>('input')!.click());
   await click(en.recordSignature);
-  expect(container.querySelector('[role=dialog]')).not.toBeNull();
+  await vi.waitFor(() => expect(container.querySelector('[role=dialog]')).not.toBeNull());
   const old = signals[0]!;
-  await render(panel(false, 'new-version'));
+  await render(panel(false, documentId(99)));
   expect(old.aborted).toBe(true);
   expect(container.querySelector('[role=dialog]')).toBeNull();
 });

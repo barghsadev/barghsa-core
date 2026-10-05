@@ -18,11 +18,8 @@ import {
 } from '@barghsa/ui';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
-import {
-  BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
-  parseBankReceiptConfirmationReview,
-  type BankReceiptConfirmationReview,
-} from '@barghsa/shared/finance';
+import { BANK_RECEIPT_REJECT_REASON_MAX_LENGTH } from '@barghsa/shared/finance/browser';
+import type { BankReceiptConfirmationReview } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -271,6 +268,7 @@ export function InvoiceBankReceiptQueue({
           }
         );
         if (!response.ok) throw new Error(String(response.status));
+        const { parseBankReceiptConfirmationReview } = await import('@barghsa/shared/finance');
         confirmation = parseBankReceiptConfirmationReview(await response.json());
         if (generation !== reviewGeneration.current || selectedIdRef.current !== detail.receiptId)
           return;

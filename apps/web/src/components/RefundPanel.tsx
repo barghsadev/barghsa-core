@@ -305,7 +305,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
             command,
             controller.signal
           );
-          const { parseRefundRequestReview } = await import('@barghsa/shared/finance/refunds');
+          const { parseRefundRequestReview } = await import('@barghsa/shared/finance');
           if (!owns(owner)) return;
           const review = parseRefundRequestReview(value);
           if (
@@ -379,7 +379,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
         reviewController.current = controller;
         try {
           const value = await requestRefundReview(actionPath + '/review', body, controller.signal);
-          const { parseRefundDecisionReview } = await import('@barghsa/shared/finance/refunds');
+          const { parseRefundDecisionReview } = await import('@barghsa/shared/finance');
           if (!owns(owner)) return;
           const review = parseRefundDecisionReview(value);
           if (

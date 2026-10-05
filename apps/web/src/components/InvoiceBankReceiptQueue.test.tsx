@@ -215,6 +215,7 @@ it.each(['en', 'fa'] as const)('reviews the allocation and receipt file in %s', 
     container.querySelector('a[href="https://storage.example.test/receipt.pdf"]')
   ).not.toBeNull();
   await click(locale === 'en' ? 'Confirm receipt' : 'تأیید رسید');
+  await act(async () => vi.dynamicImportSettled());
   expect(harness.action).toMatchObject({
     path: `/api/admin/invoices/bank-receipts/${RECEIPT}/confirm`,
     method: 'POST',

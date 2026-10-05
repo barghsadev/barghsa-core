@@ -18,6 +18,7 @@ import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { ContractSignatureService } from './contract-signature.service.js';
 import { contractUuid } from './contract-validation.js';
+import { parseContractJourneyInput } from './contract-journey-input-fields.js';
 import {
   signatureRequestConfirmationSchema,
   signatureRecordConfirmationSchema,
@@ -113,7 +114,7 @@ export class ContractSignatureController {
     summary: 'Review financial terms and selected signing documents before confirmation',
   })
   @ApiBody({ schema: previewBody })
-  financialReview(
+  async financialReview(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
     @Body() body: unknown
@@ -121,7 +122,26 @@ export class ContractSignatureController {
     this.authorize(req, true);
     return this.service.financialReview(
       parse(contractUuid, id),
-      parse(signatureFinancialReviewSchema, body),
+      await parseContractJourneyInput(
+        signatureFinancialReviewSchema,
+        body,
+        ['originalDocumentId', 'signedDocumentId'],
+        (value) =>
+          this.service.assertCanSelectDocument(
+            parse(contractUuid, id),
+            {
+              action: parse(z.enum(['request', 'record']), value.action),
+              versionId: parse(contractUuid, value.expectedVersionId),
+              requestId:
+                value.action === 'request'
+                  ? parse(contractUuid.nullable(), value.expectedRequestId)
+                  : parse(contractUuid, value.requestId),
+            },
+            req.session,
+            true,
+            false
+          )
+      ),
       req.session,
       true
     );
@@ -157,11 +177,27 @@ export class ContractSignatureController {
       },
     },
   })
-  request(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() body: unknown) {
+  async request(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() body: unknown) {
     this.authorize(req, true);
     return this.service.request(
       parse(contractUuid, id),
-      parse(signatureRequestConfirmationSchema, body),
+      await parseContractJourneyInput(
+        signatureRequestConfirmationSchema,
+        body,
+        ['originalDocumentId'],
+        (value) =>
+          this.service.assertCanSelectDocument(
+            parse(contractUuid, id),
+            {
+              action: 'request',
+              versionId: parse(contractUuid, value.expectedVersionId),
+              requestId: parse(contractUuid.nullable(), value.expectedRequestId),
+            },
+            req.session,
+            true,
+            true
+          )
+      ),
       req.session,
       req.ip ?? '127.0.0.1'
     );
@@ -175,11 +211,27 @@ export class ContractSignatureController {
       'Record an approved signed copy as staff without attributing the customer signature to staff',
   })
   @ApiBody({ schema: recordBody })
-  record(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() body: unknown) {
+  async record(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() body: unknown) {
     this.authorize(req, true);
     return this.service.record(
       parse(contractUuid, id),
-      parse(signatureRecordConfirmationSchema, body),
+      await parseContractJourneyInput(
+        signatureRecordConfirmationSchema,
+        body,
+        ['signedDocumentId'],
+        (value) =>
+          this.service.assertCanSelectDocument(
+            parse(contractUuid, id),
+            {
+              action: 'record',
+              versionId: parse(contractUuid, value.expectedVersionId),
+              requestId: parse(contractUuid, value.requestId),
+            },
+            req.session,
+            true,
+            true
+          )
+      ),
       req.session,
       req.ip ?? '127.0.0.1',
       true
@@ -199,14 +251,33 @@ export class CustomerContractSignatureController {
     summary: 'Review the published terms and signed copy before recording customer evidence',
   })
   @ApiBody({ schema: previewBody.oneOf[1]! })
-  financialReview(
+  async financialReview(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
     @Body() body: unknown
   ) {
     return this.service.financialReview(
       parse(contractUuid, id),
-      parse(signatureFinancialReviewSchema, body),
+      await parseContractJourneyInput(
+        signatureFinancialReviewSchema,
+        body,
+        ['originalDocumentId', 'signedDocumentId'],
+        (value) =>
+          this.service.assertCanSelectDocument(
+            parse(contractUuid, id),
+            {
+              action: parse(z.enum(['request', 'record']), value.action),
+              versionId: parse(contractUuid, value.expectedVersionId),
+              requestId:
+                value.action === 'request'
+                  ? parse(contractUuid.nullable(), value.expectedRequestId)
+                  : parse(contractUuid, value.requestId),
+            },
+            req.session,
+            false,
+            false
+          )
+      ),
       req.session,
       false
     );
@@ -237,10 +308,26 @@ export class CustomerContractSignatureController {
     summary: 'Record an approved signed copy for the exact accepted contract version',
   })
   @ApiBody({ schema: recordBody })
-  record(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() body: unknown) {
+  async record(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() body: unknown) {
     return this.service.record(
       parse(contractUuid, id),
-      parse(signatureRecordConfirmationSchema, body),
+      await parseContractJourneyInput(
+        signatureRecordConfirmationSchema,
+        body,
+        ['signedDocumentId'],
+        (value) =>
+          this.service.assertCanSelectDocument(
+            parse(contractUuid, id),
+            {
+              action: 'record',
+              versionId: parse(contractUuid, value.expectedVersionId),
+              requestId: parse(contractUuid, value.requestId),
+            },
+            req.session,
+            false,
+            true
+          )
+      ),
       req.session,
       req.ip ?? '127.0.0.1',
       false

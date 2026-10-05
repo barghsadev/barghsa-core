@@ -9,7 +9,7 @@ import {
 import {
   isAllowedInvoiceReceiptFile,
   normalizeIrrAmountDigits,
-} from './invoice-bank-receipt-upload.js';
+} from './invoice-bank-receipt-fields.js';
 
 export interface ReceiptFormValues {
   amount: string;

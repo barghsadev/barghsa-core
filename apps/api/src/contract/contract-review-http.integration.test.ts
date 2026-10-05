@@ -1,3 +1,4 @@
+import { contractJourneyEffects } from '../test/contract-journey-http-proof.js';
 import type { ContractFinancialReview } from '@barghsa/shared/finance';
 import { contractReviewConfirmation } from '../test/contract-review-confirmation.js';
 import { randomUUID } from 'node:crypto';
@@ -5,6 +6,7 @@ import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 import type { ContractService } from './contract.service.js';
 type ContractDto = Awaited<ReturnType<ContractService['get']>>;
+type FeedbackDto = { error: { fields?: readonly string[] } };
 type HistoryDto = Awaited<
   ReturnType<typeof import('./contract-status-history.js').contractStatusHistory>
 >;
@@ -603,6 +605,93 @@ it('keeps drafts private and publishes only the exact reviewed version', async (
 it('requests changes with a durable reason, revises, and publishes without exposing the old draft', async () => {
   const f = await fixture();
   await action(f.row.id, 'submit', command(f.row.currentVersionId));
+  const baseline = await contractJourneyEffects(http.pool, f.row.id, f.profile);
+  const path = `admin/contracts/${f.row.id}/request-changes`;
+  const invalid = { ...command(f.row.currentVersionId), reason: '  ' };
+  const owned = await send(path, 'POST', invalid);
+  expect(owned.status).toBe(400);
+  expect(await owned.json()).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['reason'] },
+  });
+  for (const body of [
+    null,
+    { ...invalid, reason: 'PRIVATE'.repeat(200) },
+    { ...invalid, expectedVersionId: 'PRIVATE' },
+    { ...invalid, idempotencyKey: 'PRIVATE' },
+    { ...invalid, secret: 'PRIVATE' },
+  ]) {
+    const response = await send(path, 'POST', body);
+    expect(response.status).toBe(400);
+    const receipt = (await response.json()) as FeedbackDto;
+    if (
+      body &&
+      typeof body === 'object' &&
+      'reason' in body &&
+      body.reason === 'PRIVATE'.repeat(200)
+    )
+      expect(receipt).toMatchObject({
+        error: { code: 'VALIDATION:INPUT:INVALID', fields: ['reason'] },
+      });
+    else {
+      expect(receipt).toMatchObject({ error: { code: 'VALIDATION:PARSE:ZOD_ERROR' } });
+      expect(receipt.error.fields).toBeUndefined();
+    }
+    expect(JSON.stringify(receipt)).not.toContain('PRIVATE');
+  }
+  for (const [target, user, status] of [
+    [`admin/contracts/${randomUUID()}/request-changes`, 'review-legal', 404],
+    [path, 'review-support', 403],
+  ] as const) {
+    const response = await send(target, 'POST', invalid, user);
+    expect(response.status).toBe(status);
+    expect(((await response.json()) as FeedbackDto).error.fields).toBeUndefined();
+  }
+  const role = (
+    await http.pool.query<{ permissions: string }>(
+      "SELECT permissions FROM staff_roles WHERE role_id='role-legal-contracts'"
+    )
+  ).rows[0]!;
+  const session = (
+    await http.pool.query<{ step_up_verified_at: Date | null }>(
+      "SELECT step_up_verified_at FROM sessions WHERE user_id='review-legal'"
+    )
+  ).rows[0]!;
+  try {
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='review-legal'"
+    );
+    const stepUp = await send(path, 'POST', invalid);
+    expect(stepUp.status).toBe(403);
+    expect(((await stepUp.json()) as FeedbackDto).error.fields).toBeUndefined();
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=$1 WHERE user_id='review-legal'",
+      [session.step_up_verified_at]
+    );
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions='[]' WHERE role_id='role-legal-contracts'"
+    );
+    const denied = await send(path, 'POST', invalid);
+    expect(denied.status).toBe(403);
+    expect(((await denied.json()) as FeedbackDto).error.fields).toBeUndefined();
+  } finally {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions=$1 WHERE role_id='role-legal-contracts'",
+      [role.permissions]
+    );
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=$1 WHERE user_id='review-legal'",
+      [session.step_up_verified_at]
+    );
+  }
+  try {
+    await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [f.profile]);
+    const archived = await send(path, 'POST', invalid);
+    expect(archived.status).toBe(409);
+    expect(((await archived.json()) as FeedbackDto).error.fields).toBeUndefined();
+  } finally {
+    await http.pool.query('UPDATE profiles SET archived=false WHERE id=$1', [f.profile]);
+  }
+  expect(await contractJourneyEffects(http.pool, f.row.id, f.profile)).toEqual(baseline);
   expect((await action(f.row.id, 'request-changes', command(f.row.currentVersionId))).status).toBe(
     400
   );
@@ -624,6 +713,29 @@ it('requests changes with a durable reason, revises, and publishes without expos
       })
     ).status
   ).toBe(409);
+  const savedChanges = (
+    await http.pool.query<{
+      idempotency_key: string;
+      request: { expectedVersionId: string; idempotencyKey: string; reason: string };
+      result: ContractDto;
+    }>(
+      "SELECT idempotency_key,response->'request' AS request,response->'result' AS result FROM idempotency_keys WHERE entity_type='contract_review' AND response->'request'->>'contractId'=$1 AND response->'request'->>'action'='request-changes'",
+      [f.row.id]
+    )
+  ).rows;
+  expect(savedChanges).toHaveLength(1);
+  const savedChange = savedChanges[0]!;
+  const captured = {
+    expectedVersionId: savedChange.request.expectedVersionId,
+    idempotencyKey: savedChange.request.idempotencyKey,
+    reason: savedChange.request.reason,
+  };
+  expect(savedChange.idempotency_key).toBe(`review-legal:${captured.idempotencyKey}`);
+  expect(savedChange.result).toMatchObject({
+    id: f.row.id,
+    state: 'ChangesRequested',
+    currentVersionId: f.row.currentVersionId,
+  });
   const changed = await send('admin/contracts/' + f.row.id, 'PATCH', {
     ...command(f.row.currentVersionId),
     content: { price: '200' },
@@ -661,6 +773,16 @@ it('requests changes with a durable reason, revises, and publishes without expos
         n.localized_content.en.body.includes(row.id) && n.localized_content.fa.body.includes(row.id)
     )
   ).toBe(true);
+  const progressed = await contractJourneyEffects(http.pool, f.row.id, f.profile);
+  const replay = await send(path, 'POST', captured);
+  expect(replay.status).toBe(200);
+  expect(await replay.json()).toEqual(savedChange.result);
+  const changedCommand = await send(path, 'POST', { ...captured, reason: 'Different correction' });
+  expect(changedCommand.status).toBe(409);
+  const staleFeedback = await send(path, 'POST', invalid);
+  expect(staleFeedback.status).toBe(409);
+  expect(((await staleFeedback.json()) as FeedbackDto).error.fields).toBeUndefined();
+  expect(await contractJourneyEffects(http.pool, f.row.id, f.profile)).toEqual(progressed);
 });
 it('accepts once with exact version, actor and timestamp evidence without activating or signing', async () => {
   const f = await fixture();

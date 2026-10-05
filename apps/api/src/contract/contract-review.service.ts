@@ -14,7 +14,7 @@ import { activeProfileSql } from '../profiles/profile-context.js';
 import { notifyContractReview } from './contract-review-notifications.js';
 import { readContractFinancialReview } from './contract-financial-review.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
-import { parseContractCommercialValue } from './contract-validation.js';
+import { contractUuid, parseContractCommercialValue } from './contract-validation.js';
 import {
   DEFAULT_CONTRACT_LIST_SORT,
   literalSearchPattern,
@@ -147,6 +147,30 @@ export class ContractReviewService {
       )
     );
   }
+  async assertCanRequestChanges(id: string, versionId: string, actor: ContractActor) {
+    if (!contractUuid.safeParse(id).success || !contractUuid.safeParse(versionId).success)
+      throw new NotFoundException();
+    const identity = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM contracts WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!identity) throw new NotFoundException();
+    await staffContractMutation(identity.profile_id, actor, async (client, archived) => {
+      if (archived) throw new ConflictException('Profile is archived');
+      const row = (
+        await client.query<{ state: string; current_version_id: string }>(
+          'SELECT state,current_version_id FROM contracts WHERE id=$1 AND profile_id=$2 FOR UPDATE',
+          [id, identity.profile_id]
+        )
+      ).rows[0];
+      if (!row) throw new NotFoundException();
+      if (row.state !== 'AwaitingStaffReview' || row.current_version_id !== versionId)
+        throw new ConflictException('Contract is not the expected review version');
+    });
+  }
+
   async act(
     id: string,
     action: ReviewAction,

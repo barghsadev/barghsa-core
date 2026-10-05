@@ -1,3 +1,4 @@
+import { SERVICE_DUE_PERIOD_TYPES } from '@barghsa/shared/finance/browser';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   Button,
@@ -11,11 +12,7 @@ import {
 } from '@barghsa/ui';
 import { tDuePeriods as t } from '@barghsa/i18n/invoice-due-periods';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
-import {
-  SERVICE_DUE_PERIOD_TYPES,
-  type ServiceDuePeriodSetting,
-  type ServiceDuePeriodType,
-} from '@barghsa/shared/finance';
+import { type ServiceDuePeriodSetting, type ServiceDuePeriodType } from '@barghsa/shared/finance';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';

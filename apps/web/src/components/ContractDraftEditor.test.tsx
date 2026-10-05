@@ -118,6 +118,7 @@ async function field(label: string, value: string) {
 async function render(existing?: { contract: ContractDetailData; version: ContractVersion }) {
   await act(async () => root.render(<ContractDraftEditor existing={existing} onSaved={onSaved} />));
   await click(words()[existing ? 'draftEdit' : 'draftCreate']);
+  await vi.waitFor(() => expect(container.querySelector('form')).not.toBeNull());
 }
 it.each(['en', 'fa'] as const)(
   'creates a selected draft with step-up and keeps input after cancellation in %s',
@@ -218,6 +219,7 @@ it.each(['en', 'fa'] as const)(
       )
     );
     await click(words().amendmentCreate);
+    await vi.waitFor(() => expect(container.querySelector('form')).not.toBeNull());
     expect(container.textContent).toContain(words().amendmentBaseNotice);
     await field(words().draftTerms, 'Replacement terms');
     await field(words().contextReason, 'Extend term');

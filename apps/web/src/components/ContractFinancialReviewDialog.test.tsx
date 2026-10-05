@@ -245,3 +245,43 @@ it('shows the exact linked invoice amount separately from the zero payment', asy
   expect(host.textContent).toContain('9007199254740993 IRR');
   expect(host.textContent).toContain('Payment collected now0 IRR');
 });
+
+it('uses the complete captured review without another preview and forwards exact-retry ownership callbacks', async () => {
+  const value = signing(true),
+    action = actionFor(value),
+    fetcher = vi.fn(),
+    pending = vi.fn(),
+    unknown = vi.fn(),
+    denied = vi.fn();
+  vi.stubGlobal('fetch', fetcher);
+  await act(async () =>
+    root.render(
+      <ContractFinancialReviewDialog
+        action={action}
+        review={value}
+        profileId={profileId}
+        contractId={contractId}
+        time={{ status: 'ready', timezone: 'UTC', retry: () => {}, format: String, notice: null }}
+        onClose={() => {}}
+        onSuccess={success}
+        onPendingChange={pending}
+        onUnconfirmed={unknown}
+        onDenied={denied}
+      />
+    )
+  );
+  expect(fetcher).not.toHaveBeenCalled();
+  const confirmed = harness.props!.action;
+  await act(async () => {
+    harness.props!.onPendingChange?.(true);
+    harness.props!.onUnconfirmed?.();
+    harness.props!.onDenied?.();
+  });
+  expect(pending).toHaveBeenCalledWith(true);
+  expect(unknown).toHaveBeenCalledOnce();
+  expect(denied).toHaveBeenCalledOnce();
+  expect(harness.props!.action).toBe(confirmed);
+  const changed = structuredClone(value);
+  changed.data.contract.content = { terms: ['different'] };
+  await expect(harness.props!.onSuccess({ financialReview: changed })).rejects.toThrow();
+});

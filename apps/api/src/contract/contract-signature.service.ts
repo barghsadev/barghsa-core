@@ -20,6 +20,7 @@ import type {
 } from './contract-signature-validation.js';
 import { readContractFinancialReview } from './contract-financial-review.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
+import { contractUuid } from './contract-validation.js';
 interface Parent {
   id: string;
   profile_id: string;
@@ -176,6 +177,53 @@ export class ContractSignatureService {
       ? staffDocumentRead(actor, 'contract', (client) => read(client))
       : customerContractAccess(actor, false, read);
   }
+  async assertCanSelectDocument(
+    id: string,
+    selection: { action: 'request' | 'record'; versionId: string; requestId: string | null },
+    actor: ContractActor,
+    staff: boolean,
+    write: boolean
+  ) {
+    if (
+      !contractUuid.safeParse(id).success ||
+      !contractUuid.safeParse(selection.versionId).success ||
+      (selection.requestId !== null && !contractUuid.safeParse(selection.requestId).success) ||
+      (!staff && selection.action !== 'record')
+    )
+      throw new NotFoundException();
+    const check = async (client: PoolClient, parent: Parent) => {
+      await this.visibleVersion(client, parent, false, selection.versionId);
+      const view = await this.view(client, parent, selection.versionId, staff, true);
+      if ((view.request?.id ?? null) !== selection.requestId)
+        throw new ConflictException('The signing request changed');
+      if (selection.action === 'request' ? !view.canRequest : !view.canRecord)
+        throw new ConflictException('Contract is not awaiting the selected signing action');
+    };
+    if (write) return this.mutation(id, actor, staff, check, true);
+    const read = async (client: PoolClient, profileId: string) => {
+      const parent = (
+        await client.query<Parent>(
+          'SELECT id,profile_id,current_version_id,state,signed_at FROM contracts WHERE id=$1 AND profile_id=$2 FOR SHARE',
+          [id, profileId]
+        )
+      ).rows[0];
+      if (!parent) throw new NotFoundException();
+      await check(client, parent);
+    };
+    if (!staff) return customerContractAccess(actor, false, read, { financialReview: true });
+    const identity = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM contracts WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!identity) throw new NotFoundException();
+    return staffContractFinancialReview(identity.profile_id, actor, (client, archived) => {
+      if (archived) throw new ConflictException('Profile is archived');
+      return read(client, identity.profile_id);
+    });
+  }
+
   async financialReview(
     id: string,
     input: SignatureFinancialReviewInput,

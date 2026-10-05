@@ -174,7 +174,7 @@ export function ContractRefundQueue() {
         reviewController.current = controller;
         try {
           const value = await requestRefundReview(actionPath + '/review', body, controller.signal);
-          const { parseRefundDecisionReview } = await import('@barghsa/shared/finance/refunds');
+          const { parseRefundDecisionReview } = await import('@barghsa/shared/finance');
           if (!owns()) return;
           const review = parseRefundDecisionReview(value);
           if (

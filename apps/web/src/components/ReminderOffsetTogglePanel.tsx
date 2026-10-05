@@ -1,4 +1,8 @@
 import {
+  INVOICE_REMINDER_OFFSETS,
+  SERVICE_DUE_PERIOD_TYPES,
+} from '@barghsa/shared/finance/browser';
+import {
   useState,
   useEffect,
   useCallback,
@@ -10,8 +14,6 @@ import { t } from '@barghsa/i18n/admin-ui';
 import type { Locale } from '@barghsa/i18n/app';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
-  INVOICE_REMINDER_OFFSETS,
-  SERVICE_DUE_PERIOD_TYPES,
   type InvoiceReminderOffset,
   type ReminderOffsetToggleDto,
   type ServiceDuePeriodType,
