@@ -176,6 +176,9 @@ for (const locale of ['en', 'fa'] as const) {
     await fill('city-import-rows', draft);
     await submit();
     await settled(() => expect(commands).toHaveLength(1));
+    await settled(() =>
+      expect(input('city-import-rows').getAttribute('aria-invalid')).toBe('true')
+    );
     await settled(() => expect(document.activeElement).toBe(input('city-import-rows')));
     expect(JSON.parse(String(commands[0]!.body))).toEqual({
       cities: [
@@ -185,6 +188,21 @@ for (const locale of ['en', 'fa'] as const) {
     });
     expect(input('city-import-rows').value).toBe(draft);
     expect(document.body.textContent).not.toContain('private server detail');
+    // Leaving unchanged rejected rows must not let local validation erase server feedback.
+    await act(async () => {
+      input('city-import-rows').dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+      await new Promise((done) => setTimeout(done, 0));
+    });
+    expect(input('city-import-rows').getAttribute('aria-invalid')).toBe('true');
+    expect(
+      document.getElementById(input('city-import-rows').getAttribute('aria-describedby')!)
+        ?.textContent
+    ).toBe(t('importInvalid'));
+    await fill('city-import-rows', `${draft}\n شهر سوم\t Third City`);
+    await settled(() =>
+      expect(input('city-import-rows').getAttribute('aria-invalid')).not.toBe('true')
+    );
+    expect(commands).toHaveLength(1);
   });
   it(`keeps unowned create status feedback as a generic form error (${locale})`, async () => {
     document.documentElement.lang = locale;

@@ -12,7 +12,13 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: responsive staff directory and role catalogue for v0.1.9 (October 5, 2026)
+## Latest manual batch: responsive province and city tables for v0.1.10 (October 5, 2026)
+
+Province and city management now use shared desktop tables and mobile cards, retaining both language names, status, server ordering/pagination and authorized actions. Native record headers, sticky headers, uniquely named keyboard-scrollable viewports and localized row counts reuse the existing foundation. A single selected-province city workspace preserves edit/import drafts across screen sizes without duplicate reads or editors; opening focuses its heading and closing restores visible disclosure focus. Import rejection remains linked to unchanged raw rows despite late local validation, until editing or deliberate resubmission. Failed reads retain accepted records with mutation locks, while current denial clears both presentations and private work.
+
+Related checks and release evidence are recorded in `kanban/batches/2026-10-05-geography-tables.md`. Reuse `02-auth-users-admin.md#T-09.02.01`, `#T-09.02.02` and `07-ui-ux-design.md#T-07.24.01.01` through `#T-07.24.01.04`; existing engines and shared foundations are not recounted. Wider domain table adoption and the global all-list task remain partial. v0.1.9 is deployed at `51d01ebe9d1b8d8a2a8236b0b4a8d561b98ad8a4`, with Persian Telegram notes and both screenshots confirmed. Continue direct-main batches with related local checks and independent deployment. Delivery-provider metadata tables are a next candidate; confirm actual gaps before selecting and reuse the existing native forms.
+
+## Previous manual batch: responsive staff directory and role catalogue for v0.1.9 (October 5, 2026)
 
 The staff directory and role catalogue now use shared desktop tables and mobile cards. Both presentations retain authorized actions, activation/login metadata, module permission comparison, current denial cleanup, captured confirmations and raw drafts. Native row headers, sticky headers, keyboard scrolling, localized row counts and isolated identity/date cells reuse the shared table foundation. Server ordering and pagination remain with each page.
 

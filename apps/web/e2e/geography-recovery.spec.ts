@@ -149,17 +149,29 @@ for (const [locale, darkMode] of [
     });
     await page.goto('/admin/geography');
     await page.getByRole('button', { name: word('cities'), exact: true }).click();
-    await expect(page.getByRole('cell', { name: 'Rey', exact: true })).toBeVisible();
-    const viewport = page.locator('[data-slot="scroll-area-viewport"]').first();
+    await expect(
+      page.locator('table:visible, ol[role=list]:visible').getByText('Rey', { exact: true })
+    ).toBeVisible();
+    await page.setViewportSize({ width: 800, height: 844 });
+    const viewport = page
+      .locator('[role=region][tabindex="0"]')
+      .filter({ has: page.getByRole('table', { name: word('title'), exact: true }) });
+    // Exercise keyboard overflow in a narrow desktop host; these short records otherwise fit.
+    await viewport.evaluate((node) => {
+      node.style.maxWidth = '24rem';
+    });
     await viewport.focus();
     await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
     await expect
       .poll(() => viewport.evaluate((node) => Math.abs(node.scrollLeft)))
       .toBeGreaterThan(0);
+    await page.setViewportSize({ width: 390, height: 844 });
     fail = true;
     await page.getByRole('button', { name: word('next'), exact: true }).click();
     await expect(page.getByRole('alert')).toBeVisible();
-    await expect(page.getByRole('cell', { name: 'Rey', exact: true })).toBeVisible();
+    await expect(
+      page.locator('table:visible, ol[role=list]:visible').getByText('Rey', { exact: true })
+    ).toBeVisible();
     const failed = queries.at(-1);
     expect(new URL(failed!).searchParams.get('page')).toBe('2');
     await inspect(page, `lists-${darkMode ? 'dark' : 'light'}`, locale, info.project.name);
@@ -168,13 +180,17 @@ for (const [locale, darkMode] of [
     await expect(page.getByRole('alert')).toHaveCount(0);
     expect(queries.at(-1)).toBe(failed);
     expect(cityReads).toBe(1);
-    await expect(page.getByRole('cell', { name: 'Other province', exact: true })).toBeVisible();
+    await expect(
+      page
+        .locator('table:visible, ol[role=list]:visible')
+        .getByText('Other province', { exact: true })
+    ).toBeVisible();
     denied = true;
     await page
       .getByRole('button', { name: word('refresh'), exact: true })
       .first()
       .click();
-    await expect(page.getByRole('table')).toHaveCount(0);
+    await expect(page.locator('table:visible, ol[role=list]:visible')).toHaveCount(0);
     await expect(page.getByRole('alert')).toContainText(word('denied'));
   });
   test(`province editor preserves drafts through local recovery and rejects fresh metadata (${locale}, dark=${darkMode})`, async ({
@@ -208,7 +224,11 @@ for (const [locale, darkMode] of [
     changed = true;
     await dialog.getByRole('button', { name: word('provinceRetry'), exact: true }).click();
     await expect(dialog).toHaveCount(0);
-    await expect(page.getByRole('cell', { name: 'Changed Province', exact: true })).toBeVisible();
+    await expect(
+      page
+        .locator('table:visible, ol[role=list]:visible')
+        .getByText('Changed Province', { exact: true })
+    ).toBeVisible();
   });
   test(`city import preserves rows through independent retries and permission denial (${locale}, dark=${darkMode})`, async ({
     page,
@@ -254,7 +274,7 @@ for (const [locale, darkMode] of [
     denied = true;
     await dialog.getByRole('button', { name: word('cityRetry'), exact: true }).click();
     await expect(dialog).toHaveCount(0);
-    await expect(page.getByRole('table')).toHaveCount(0);
+    await expect(page.locator('table:visible, ol[role=list]:visible')).toHaveCount(0);
     await expect(page.getByRole('alert')).toContainText(word('denied'));
   });
 }

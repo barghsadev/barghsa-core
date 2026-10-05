@@ -1,9 +1,10 @@
-import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, AlertDescription, Button, Input, ListPage, ScrollArea } from '@barghsa/ui';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Alert, AlertDescription, Button, Input, ListPage } from '@barghsa/ui';
 import { geographyText, type GeographyTextKey } from '@barghsa/i18n/geography';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { listProvinces } from '../lib/geography-api.js';
+import { GeographyRecordTable } from '../components/GeographyRecordTable.js';
 import { CitiesPanel } from './AdminCitiesPanel.js';
 import { GeographyDialog, type GeographyModal } from './AdminGeographyDialog.js';
 const selectClass =
@@ -127,6 +128,7 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
       {error && <p role="alert">{t('requestFailed')}</p>}
     </div>
   );
+  const expandedProvince = provinces.find((province) => province.id === expanded);
   const totalPages = Math.max(1, Math.ceil(total / 20));
   return (
     <section
@@ -202,95 +204,74 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
           }
         >
           {!scope.denied && list.data !== null && (
-            <ScrollArea
-              scrollbarOrientation="horizontal"
-              className="min-w-0 rounded-md border bg-card text-card-foreground"
-            >
-              <table className="w-full min-w-[42rem] text-sm">
-                <caption className="sr-only">{t('title')}</caption>
-                <thead>
-                  <tr>
-                    {(['nameFa', 'nameEn', 'status', 'actions'] as const).map((key) => (
-                      <th key={key} scope="col" className="p-3 text-start">
-                        {t(key)}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {!loading && !error && provinces.length === 0 && (
-                    <tr>
-                      <td colSpan={4} className="p-4 text-center">
-                        {t('empty')}
-                      </td>
-                    </tr>
-                  )}
-                  {provinces.map((province) => (
-                    <Fragment key={province.id}>
-                      <tr className="border-t">
-                        <td className="p-3" dir="rtl" lang="fa">
-                          {province.nameFa}
-                        </td>
-                        <td className="p-3" dir="ltr" lang="en">
-                          {province.nameEn}
-                        </td>
-                        <td className="p-3">{t(province.status)}</td>
-                        <td className="p-3">
-                          <div className="flex flex-wrap gap-2">
-                            <Button
-                              variant="outline"
-                              aria-expanded={expanded === province.id}
-                              aria-controls={`cities-${province.id}`}
-                              onClick={() =>
-                                setExpanded(expanded === province.id ? null : province.id)
-                              }
-                            >
-                              {t('cities')}
-                            </Button>
-                            <Button
-                              variant="outline"
-                              disabled={!ready}
-                              onClick={(event) =>
-                                openModal({ kind: 'edit', province, trigger: event.currentTarget })
-                              }
-                            >
-                              {t('edit')}
-                            </Button>
-                            <Button
-                              variant="outline"
-                              disabled={!ready}
-                              onClick={(event) =>
-                                openModal({
-                                  kind: province.status === 'active' ? 'deactivate' : 'edit',
-                                  province,
-                                  trigger: event.currentTarget,
-                                })
-                              }
-                            >
-                              {t(province.status === 'active' ? 'deactivate' : 'activate')}
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                      {expanded === province.id && (
-                        <tr>
-                          <td colSpan={4} className="border-t p-4">
-                            <CitiesPanel
-                              key={province.id}
-                              province={province}
-                              scope={scope}
-                              parentReady={ready}
-                              parentRecovery={recovery}
-                              {...(query ? { query: query.cities } : {})}
-                            />
-                          </td>
-                        </tr>
-                      )}
-                    </Fragment>
-                  ))}
-                </tbody>
-              </table>
-            </ScrollArea>
+            <>
+              <GeographyRecordTable
+                rows={provinces}
+                caption={t('title')}
+                emptyMessage={t('empty')}
+                tableClassName="min-w-[42rem]"
+                loading={loading}
+                error={error}
+                renderActions={(province) => (
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant="outline"
+                      data-city-disclosure={province.id}
+                      aria-expanded={expanded === province.id}
+                      aria-controls={expanded === province.id ? `cities-${province.id}` : undefined}
+                      onClick={() => setExpanded(expanded === province.id ? null : province.id)}
+                    >
+                      {t('cities')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled={!ready}
+                      onClick={(event) =>
+                        openModal({ kind: 'edit', province, trigger: event.currentTarget })
+                      }
+                    >
+                      {t('edit')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled={!ready}
+                      onClick={(event) =>
+                        openModal({
+                          kind: province.status === 'active' ? 'deactivate' : 'edit',
+                          province,
+                          trigger: event.currentTarget,
+                        })
+                      }
+                    >
+                      {t(province.status === 'active' ? 'deactivate' : 'activate')}
+                    </Button>
+                  </div>
+                )}
+              />
+              {expandedProvince && (
+                <div className="rounded-lg border bg-card p-4">
+                  <CitiesPanel
+                    key={expandedProvince.id}
+                    province={expandedProvince}
+                    scope={scope}
+                    parentReady={ready}
+                    parentRecovery={recovery}
+                    onClose={() => {
+                      setExpanded(null);
+                      const trigger = Array.from(
+                        document.querySelectorAll<HTMLButtonElement>('button[data-city-disclosure]')
+                      ).find(
+                        (button) =>
+                          button.dataset.cityDisclosure === expandedProvince.id &&
+                          button.getClientRects().length > 0
+                      );
+                      trigger?.focus();
+                    }}
+                    {...(query ? { query: query.cities } : {})}
+                  />
+                </div>
+              )}
+            </>
           )}
         </ListPage.Content>
         {totalPages > 1 && (

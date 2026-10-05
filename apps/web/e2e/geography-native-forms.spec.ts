@@ -69,7 +69,7 @@ for (const locale of ['en', 'fa'] as const) {
     await dialog.getByRole('button', { name: t('cancel'), exact: true }).click();
     await expect(add).toBeFocused();
     await page
-      .getByRole('row')
+      .locator('table:visible tbody tr, ol[role=list]:visible > li')
       .filter({ hasText: 'Tehran' })
       .getByRole('button', { name: t('edit'), exact: true })
       .click();
@@ -140,6 +140,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(rows).toBeFocused();
     await expect(rows).toHaveValue(draft);
     await expect(dialog).not.toContainText('private import detail');
+    await rows.blur();
+    await expect(rows).toHaveAttribute('aria-invalid', 'true');
+    await expect(dialog.locator('[role=alert]')).toContainText(t('importInvalid'));
     expect(writes[0]).toEqual({
       path: '/api/admin/geography/provinces/province-1/cities/import',
       body: {

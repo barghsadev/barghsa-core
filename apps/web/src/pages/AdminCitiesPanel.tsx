@@ -13,7 +13,6 @@ import {
   FieldLabel,
   Input,
   ListPage,
-  ScrollArea,
   Textarea,
 } from '@barghsa/ui';
 import { geographyText, type GeographyTextKey } from '@barghsa/i18n/geography';
@@ -25,6 +24,7 @@ import {
   listCities,
   type Province,
 } from '../lib/geography-api.js';
+import { GeographyRecordTable } from '../components/GeographyRecordTable.js';
 import { GeographyDialog, type GeographyModal } from './AdminGeographyDialog.js';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import {
@@ -70,6 +70,10 @@ function ImportCitiesDialog({
     t('validationUnavailable')
   );
   const [text, setText] = native.field('rows');
+  const [rejectedRows, setRejectedRows] = useState(false);
+  const rowsError = rejectedRows
+    ? { type: 'server', message: t('importInvalid') }
+    : native.errors.rows;
   const busy = native.pending;
   const fieldErrors = useActionFieldErrors(
     native.form,
@@ -113,6 +117,7 @@ function ImportCitiesDialog({
     const generation = latest.current.generation;
     native.setValidationPending(true);
     native.form.clearErrors();
+    setRejectedRows(false);
     setError(null);
     try {
       const valid = await native.form.trigger();
@@ -137,8 +142,12 @@ function ImportCitiesDialog({
         cause.fields.length > 0 &&
         cause.fields.every((name) => name === 'cities') &&
         fieldErrors(['rows'])
-      )
+      ) {
+        // A late local validation cannot retire feedback for an unchanged rejected proposal.
+        setRejectedRows(true);
+        invalidFocus.current = true;
         return;
+      }
       setError(
         cause instanceof GeographyRequestError && cause.code === 'conflict'
           ? 'cityConflict'
@@ -187,14 +196,22 @@ function ImportCitiesDialog({
               rows={8}
               maxLength={41000}
               disabled={busy}
+              onBlur={() => {
+                if (!native.isPending()) native.bind('rows').onBlur();
+              }}
+              aria-invalid={!!rowsError || undefined}
+              aria-describedby={rowsError ? native.errorId('rows') : undefined}
               value={text}
               onChange={(event) => {
-                if (!inFlight.current) setText(event.target.value);
+                if (!inFlight.current && event.target.value !== text) {
+                  setRejectedRows(false);
+                  setText(event.target.value);
+                }
               }}
             />
             <CatalogueFieldFeedback
               id={native.errorId('rows')}
-              error={native.errors.rows}
+              error={rowsError}
               message={t('importInvalid')}
             />
           </Field>
@@ -228,17 +245,25 @@ export function CitiesPanel({
   scope: outerScope,
   parentReady = true,
   parentRecovery,
+  onClose,
   query,
 }: {
   province: Province;
   scope?: GeographyScope;
   parentReady?: boolean;
   parentRecovery?: ReactNode;
+  onClose?: () => void;
   query?: ListQueryBinding;
 }) {
   const locale = useLocale();
   const { number } = useNumberFormatting(locale);
   const t = (key: GeographyTextKey) => geographyText(key, locale);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const isWorkspace = !!onClose;
+  useEffect(() => {
+    // The selected workspace follows the full province list, so bring it into view on open.
+    if (isWorkspace) heading.current?.focus();
+  }, [isWorkspace]);
   const [localPage, setLocalPage] = useState(1);
   const [localSearchInput, setLocalSearchInput] = useState('');
   const [localSearch, setLocalSearch] = useState('');
@@ -363,10 +388,15 @@ export function CitiesPanel({
       className="flex min-w-0 flex-col gap-4"
     >
       <header className="flex flex-wrap items-center justify-between gap-4">
-        <h2 className="text-lg font-semibold">
+        <h2 ref={heading} tabIndex={isWorkspace ? -1 : undefined} className="text-lg font-semibold">
           {t('cities')} — {locale === 'fa' ? province.nameFa : province.nameEn}
         </h2>
         <div className="flex flex-wrap gap-2">
+          {onClose && (
+            <Button variant="outline" onClick={onClose}>
+              {t('closeCities')}
+            </Button>
+          )}
           <Button
             disabled={!ready}
             onClick={(event) =>
@@ -440,73 +470,45 @@ export function CitiesPanel({
           }
         >
           {!scope.denied && list.data !== null && (
-            <ScrollArea
-              scrollbarOrientation="horizontal"
-              className="min-w-0 rounded-md border bg-card text-card-foreground"
-            >
-              <table className="w-full min-w-[34rem] text-sm" aria-busy={loading}>
-                <caption className="sr-only">{t('cities')}</caption>
-                <thead>
-                  <tr>
-                    {(['nameFa', 'nameEn', 'status', 'actions'] as const).map((key) => (
-                      <th key={key} scope="col" className="p-3 text-start">
-                        {t(key)}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {!loading && !error && cities.length === 0 && (
-                    <tr>
-                      <td colSpan={4} className="p-4 text-center">
-                        {t('cityEmpty')}
-                      </td>
-                    </tr>
-                  )}
-                  {cities.map((city) => (
-                    <tr key={city.id} className="border-t">
-                      <td className="p-3" lang="fa" dir="rtl">
-                        {city.nameFa}
-                      </td>
-                      <td className="p-3" lang="en" dir="ltr">
-                        {city.nameEn}
-                      </td>
-                      <td className="p-3">{t(city.status)}</td>
-                      <td className="p-3">
-                        <div className="flex flex-wrap gap-2">
-                          <Button
-                            variant="outline"
-                            disabled={!ready}
-                            onClick={(event) =>
-                              openModal({
-                                kind: 'edit',
-                                province: city,
-                                trigger: event.currentTarget,
-                              })
-                            }
-                          >
-                            {t('edit')}
-                          </Button>
-                          <Button
-                            variant="outline"
-                            disabled={!ready}
-                            onClick={(event) =>
-                              openModal({
-                                kind: city.status === 'active' ? 'deactivate' : 'edit',
-                                province: city,
-                                trigger: event.currentTarget,
-                              })
-                            }
-                          >
-                            {t(city.status === 'active' ? 'deactivate' : 'activate')}
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </ScrollArea>
+            <GeographyRecordTable
+              rows={cities}
+              headingLevel={3}
+              caption={t('cities')}
+              emptyMessage={t('cityEmpty')}
+              tableClassName="min-w-[34rem]"
+              loading={loading}
+              error={error}
+              renderActions={(city) => (
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant="outline"
+                    disabled={!ready}
+                    onClick={(event) =>
+                      openModal({
+                        kind: 'edit',
+                        province: city,
+                        trigger: event.currentTarget,
+                      })
+                    }
+                  >
+                    {t('edit')}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    disabled={!ready}
+                    onClick={(event) =>
+                      openModal({
+                        kind: city.status === 'active' ? 'deactivate' : 'edit',
+                        province: city,
+                        trigger: event.currentTarget,
+                      })
+                    }
+                  >
+                    {t(city.status === 'active' ? 'deactivate' : 'activate')}
+                  </Button>
+                </div>
+              )}
+            />
           )}
         </ListPage.Content>
         {total > 20 && (

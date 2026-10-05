@@ -26,3 +26,5 @@ Release **v0.1.9** updates the shared login version and `releases/0.1.9.md`. Val
 The preceding v0.1.8 release completed at `2026-10-05T18:20:27Z`, with exact live commit `d66f6eb94ed4d54f7ad4fa5295c81b3b6f8bc6ba` and Persian Telegram notes/screenshots confirmed. Its first Docker Hub fetch failed before rollout; the explicit exact-commit retry completed.
 
 Geography tables are a next candidate. Confirm the actual remaining gaps from current code and canonical criteria before choosing the next coherent batch; native settings forms already built should not be rebuilt.
+
+Release v0.1.9 completed at `2026-10-05T18:31:34Z`; staging reports exact commit `51d01ebe9d1b8d8a2a8236b0b4a8d561b98ad8a4`. Persian Telegram notes (message 29) and both screenshots (30, 31) are confirmed. The external `release-completed.json` retains the receipt.
