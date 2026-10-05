@@ -1,3 +1,4 @@
+import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { fullNavigation } from './navigation-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { dismissMessages } from './dismiss-messages';
@@ -1177,7 +1178,7 @@ for (const locale of ['en', 'fa']) {
   test(`notification editor and delivery window expose localized control names (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
+    await crmShell(page, locale);
     await page.route('**/api/admin/notifications/templates*', (route) =>
       route.fulfill({ json: [] })
     );
@@ -1201,8 +1202,9 @@ for (const locale of ['en', 'fa']) {
     await windowForm
       .getByRole('button', { name: locale === 'fa' ? 'ذخیره' : 'Save', exact: true })
       .click();
-    await expect(windowForm.getByRole('alert')).toContainText(
-      locale === 'fa' ? '۴ ساعت' : '4 hours'
+    await expect(windowForm.locator('#delivery-window-end')).toHaveAttribute(
+      'aria-invalid',
+      'true'
     );
     expect(writes).toBe(0);
     await page
@@ -1215,10 +1217,8 @@ for (const locale of ['en', 'fa']) {
       .getByRole('alert')
       .filter({ hasText: locale === 'fa' ? 'خطا در ذخیره' : 'Failed to save' });
     await expect(error).toBeVisible();
-    await error
-      .getByRole('button', { name: locale === 'fa' ? 'بستن پیام خطا' : 'Dismiss error' })
-      .press('Enter');
-    await expect(error).toHaveCount(0);
+    await expect(windowForm.locator('#delivery-window-start')).toHaveValue('09:00');
+    await expect(windowForm.locator('button[type=submit]')).toBeEnabled();
     expect(writes).toBe(1);
     await page
       .getByRole('button', { name: locale === 'fa' ? 'قالب جدید' : 'New Template', exact: true })
@@ -1230,9 +1230,7 @@ for (const locale of ['en', 'fa']) {
     for (const control of await editor.locator('select, input, textarea').all()) {
       await expect(control).toHaveAccessibleName(/.+/);
     }
-    const subject = page.getByLabel(locale === 'fa' ? 'موضوع ایمیل' : 'Subject Line', {
-      exact: true,
-    });
+    const subject = page.locator('#notification-template-subject');
     await page.locator('label[for="notification-template-subject"]').click();
     await expect(subject).toBeFocused();
     await subject.fill('Test subject');
@@ -2536,8 +2534,9 @@ for (const locale of ['en', 'fa']) {
   test(`notification version history stays read-only and copies into a new draft (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
+    await crmShell(page, locale);
     const versions = ['active', 'archived', 'draft'].map((status, index) => ({
+      ...notificationTemplate(),
       id: `version-${index}`,
       eventKey: 'profile_verified',
       channel: 'email',
@@ -2564,7 +2563,11 @@ for (const locale of ['en', 'fa']) {
       .locator('form')
       .filter({ has: page.locator('#notification-template-eventKey') });
     for (const [index, version] of versions.entries()) {
-      const row = page.getByRole('row').filter({ hasText: version.subject });
+      const row = page
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)'
+        )
+        .filter({ hasText: version.subject });
       await expect(
         row.getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
       ).toHaveCount(0);
@@ -2763,8 +2766,9 @@ for (const locale of ['en', 'fa']) {
   test(`notification tests confirm the actual channel and reject unsaved or invalid results (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
+    await crmShell(page, locale);
     const templates = ['email', 'sms', 'in_app'].map((channel) => ({
+      ...notificationTemplate(),
       id: channel,
       eventKey: `test.${channel}`,
       channel,
@@ -2801,7 +2805,9 @@ for (const locale of ['en', 'fa']) {
       .filter({ has: page.locator('#notification-template-eventKey') });
     for (const template of templates) {
       await page
-        .getByRole('row')
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)'
+        )
         .filter({ hasText: template.eventKey })
         .getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
         .click();
@@ -2863,7 +2869,9 @@ for (const locale of ['en', 'fa']) {
     response = { ok: true, destination: 'in_app', lastTestStatus: 'delivered' };
     const edit = (event: string) =>
       page
-        .getByRole('row')
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)'
+        )
         .filter({ hasText: event })
         .getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
         .click();

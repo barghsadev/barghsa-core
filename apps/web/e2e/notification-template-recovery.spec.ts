@@ -36,7 +36,11 @@ for (const locale of ['en', 'fa'] as const) {
       })
       .getByRole('button', { name: locale === 'fa' ? 'تلاش مجدد' : 'Retry', exact: true })
       .click();
-    await expect(page.getByRole('cell', { name: template.subject, exact: true })).toBeVisible();
+    await expect(
+      page
+        .getByRole('list', { name: t('admin.notifications.catalogue', locale), exact: true })
+        .getByText(template.subject, { exact: true })
+    ).toBeVisible();
   });
   test(`notification create preserves input until valid password-protected acknowledgement (${locale})`, async ({
     page,
@@ -91,7 +95,11 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#team-step-up-password').fill('Local-test-password!');
     await page.getByRole('dialog').locator('button[type=submit]').click();
     await expect(editor).toHaveCount(0);
-    await expect(page.getByRole('cell', { name: template.subject, exact: true })).toBeVisible();
+    await expect(
+      page
+        .getByRole('list', { name: t('admin.notifications.catalogue', locale), exact: true })
+        .getByText(template.subject, { exact: true })
+    ).toBeVisible();
     expect(bodies).toHaveLength(3);
     expect(bodies[0]).toEqual(bodies[1]);
     expect(bodies[1]).toEqual(bodies[2]);
@@ -156,7 +164,11 @@ for (const operation of ['publish', 'unpublish', 'delete', 'test-send', 'edit'] 
     await page.evaluate(() => {
       document.documentElement.lang = 'en';
     });
-    const row = page.getByRole('row').filter({ hasText: template.subject });
+    const row = page
+      .locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)'
+      )
+      .filter({ hasText: template.subject });
     if (operation === 'publish') {
       await row.getByRole('button', { name: 'Publish', exact: true }).click();
       await page
@@ -193,9 +205,7 @@ for (const operation of ['publish', 'unpublish', 'delete', 'test-send', 'edit'] 
       await expect(page.getByText('Test email sent.', { exact: false })).toBeVisible();
     else
       await expect(
-        row
-          .getByRole('cell', { name: operation === 'publish' ? 'Active' : 'Archived', exact: true })
-          .first()
+        row.getByText(operation === 'publish' ? 'Active' : 'Archived', { exact: true }).first()
       ).toBeVisible();
   });
 }
@@ -211,7 +221,7 @@ test('notification publication rejects a different template acknowledgement', as
   await page.goto('/admin/notifications');
 
   await page
-    .getByRole('row')
+    .locator('table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)')
     .filter({ hasText: template.subject })
     .getByRole('button', { name: 'Publish', exact: true })
     .click();
@@ -249,7 +259,7 @@ test('late notification test-send challenge does not reopen a closed editor', as
   await page.goto('/admin/notifications');
 
   await page
-    .getByRole('row')
+    .locator('table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)')
     .filter({ hasText: template.subject })
     .getByRole('button', { name: 'Edit', exact: true })
     .click();
@@ -268,7 +278,7 @@ test('late notification test-send challenge does not reopen a closed editor', as
   }
   await (await response).finished();
   await page
-    .getByRole('row')
+    .locator('table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)')
     .filter({ hasText: template.subject })
     .getByRole('button', { name: 'Edit', exact: true })
     .click();

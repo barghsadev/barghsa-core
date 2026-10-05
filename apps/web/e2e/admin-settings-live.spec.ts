@@ -2701,7 +2701,11 @@ for (const locale of ['en', 'fa'] as const)
       status: 'draft',
       version: 1,
     });
-    const row = page.getByRole('row').filter({ hasText: eventKey });
+    const row = page
+      .locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)'
+      )
+      .filter({ hasText: eventKey });
     await row.getByRole('button', { name: text('edit'), exact: true }).click();
     await editor.locator('#notification-template-bodyTemplate').fill('Updated {{name}}');
     await editor.locator('button[type=submit]').click();

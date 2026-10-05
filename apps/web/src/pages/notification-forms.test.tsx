@@ -10,6 +10,9 @@ const harness = vi.hoisted(() => ({
   release: null as (() => void) | null,
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
+vi.mock('../hooks/useTimezone.js', () => ({
+  useTimezone: () => ({ status: 'ready', timezone: 'UTC', retry: vi.fn() }),
+}));
 vi.mock('../components/DeadLetterPanel.js', () => ({ default: () => null }));
 vi.mock('../components/CustomerCorrectionsPanel.js', () => ({
   CustomerCorrectionsSection: () => null,

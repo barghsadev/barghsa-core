@@ -180,7 +180,7 @@ for (const locale of ['en', 'fa'] as const)
         has: page.getByRole('combobox', { name: word('allStatus'), exact: true }),
       });
       const content = root.locator(':scope > [data-slot="list-content"]');
-      const list = main.getByRole('region', { name: word('title'), exact: true });
+      const list = main.getByRole('list', { name: word('catalogue'), exact: true });
       const language = root.getByRole('combobox', { name: word('locale'), exact: true });
       const channel = root.getByRole('combobox', { name: word('channel'), exact: true });
       const status = root.getByRole('combobox', { name: word('allStatus'), exact: true });

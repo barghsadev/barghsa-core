@@ -70,7 +70,7 @@ for (const domain of ['templates', 'terms'] as const)
         const history =
           domain === 'terms'
             ? page.getByRole('list', { name: tos.history, exact: true })
-            : page.getByRole('region', { name: nt('title'), exact: true });
+            : page.getByRole('list', { name: nt('catalogue'), exact: true });
         await expect(history).toBeVisible();
         await history
           .getByRole('button', {
@@ -171,7 +171,7 @@ for (const domain of ['templates', 'terms'] as const)
         const keyboardTarget =
           domain === 'terms'
             ? history.getByRole('button', { name: tos.view, exact: true })
-            : history;
+            : history.getByRole('button', { name: nt('edit'), exact: true });
         await keyboardTarget.focus();
         await page.keyboard.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
         await expect(keyboardTarget).toBeFocused();

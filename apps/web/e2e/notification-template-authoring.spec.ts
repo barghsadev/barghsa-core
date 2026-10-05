@@ -60,7 +60,11 @@ for (const locale of ['en', 'fa'] as const) {
     await editor.locator('button[type=submit]').click();
     await expect(editor).toHaveCount(0);
     await expect(
-      page.getByRole('row').filter({ hasText: 'auth.refresh_token_reused' })
+      page
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)'
+        )
+        .filter({ hasText: 'auth.refresh_token_reused' })
     ).toBeVisible();
     expect(saved).not.toBeNull();
   });

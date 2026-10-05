@@ -3,7 +3,9 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Alert, Button, ListPage } from '@barghsa/ui';
+import { Alert, Button, ListPage, DateCell, TextCell } from '@barghsa/ui';
+import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { notificationFormText } from '@barghsa/i18n/notification-forms';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
@@ -109,6 +111,7 @@ export default function AdminNotificationsPage({
 } = {}) {
   const uiLocale = useLocale();
   const numbers = useNumberFormatting(uiLocale);
+  const time = useAccountTime(uiLocale);
   const channelLabels: Record<TemplateChannel, string> = {
     email: t('admin.notifications.channelEmail', uiLocale),
     sms: t('admin.notifications.channelSms', uiLocale),
@@ -826,6 +829,7 @@ export default function AdminNotificationsPage({
         )}
       </div>
 
+      {time.notice}
       {protectedAction && (
         <TeamActionDialog
           action={protectedAction.action}
@@ -1432,169 +1436,196 @@ export default function AdminNotificationsPage({
                 </div>
               )}
 
-              {/* Template list */}
-              <div
-                role="region"
-                aria-label={t('admin.notifications.title', uiLocale)}
-                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users must be able to focus and scroll this history.
-                tabIndex={0}
-                className="min-w-0 bg-card text-card-foreground rounded-lg border border-border overflow-x-auto"
-              >
-                <table className="min-w-full divide-y divide-border">
-                  <thead className="bg-muted/40">
-                    <tr>
-                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                        {t('admin.notifications.col.event', uiLocale)}
-                      </th>
-                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                        {t('admin.notifications.channel', uiLocale)}
-                      </th>
-                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                        {t('admin.notifications.locale', uiLocale)}
-                      </th>
-                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                        {t('admin.notifications.col.status', uiLocale)}
-                      </th>
-                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                        {t('admin.notifications.col.subject', uiLocale)}
-                      </th>
-                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                        {t('admin.notifications.col.active', uiLocale)}
-                      </th>
-                      <th className="px-4 py-3 text-end text-xs font-medium text-muted-foreground uppercase">
-                        {t('admin.notifications.col.actions', uiLocale)}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {templates.length === 0 && (
-                      <tr>
-                        <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
-                          {t('admin.notifications.empty', uiLocale)}
-                        </td>
-                      </tr>
+              {/* Saved versions share one catalogue and the existing editor/preview owners. */}
+              <OperationalQueueTable
+                locale={uiLocale}
+                rows={templates}
+                caption={t('admin.notifications.catalogue', uiLocale)}
+                scrollLabel={t('admin.notifications.catalogue', uiLocale)}
+                nameHeader={t('admin.notifications.col.event', uiLocale)}
+                cardHeading="h2"
+                tableClassName="min-w-[72rem]"
+                loading={loading}
+                emptyMessage={t('admin.notifications.empty', uiLocale)}
+                renderName={(template) => (
+                  <>
+                    <span className="block font-mono">
+                      <TextCell value={template.eventKey} />
+                    </span>
+                    <span className="block text-xs text-muted-foreground">
+                      {t('admin.notifications.preview.version', uiLocale)}{' '}
+                      {numbers.number(template.version)}
+                    </span>
+                  </>
+                )}
+                fields={[
+                  {
+                    id: 'channel',
+                    label: t('admin.notifications.channel', uiLocale),
+                    render: (template) => (
+                      <span
+                        className={`inline-block px-2 py-0.5 text-xs rounded ${
+                          template.channel === 'email'
+                            ? 'bg-blue-100 text-blue-800'
+                            : template.channel === 'sms'
+                              ? 'bg-purple-100 text-purple-800'
+                              : 'bg-muted text-foreground'
+                        }`}
+                      >
+                        {channelLabels[template.channel]}
+                      </span>
+                    ),
+                  },
+                  {
+                    id: 'locale',
+                    label: t('admin.notifications.locale', uiLocale),
+                    render: (template) => <TextCell value={LOCALE_LABELS[template.locale]} />,
+                  },
+                  {
+                    id: 'status',
+                    label: t('admin.notifications.col.status', uiLocale),
+                    render: (template) => (
+                      <span
+                        className={`inline-block px-2 py-0.5 text-xs rounded ${
+                          template.status === 'draft'
+                            ? 'bg-warning-soft text-warning'
+                            : template.status === 'active'
+                              ? 'bg-success-soft text-success'
+                              : 'bg-muted text-foreground'
+                        }`}
+                      >
+                        {t(`admin.notifications.${template.status}`, uiLocale)}
+                      </span>
+                    ),
+                  },
+                  {
+                    id: 'subject',
+                    label: t('admin.notifications.col.subject', uiLocale),
+                    render: (template) => (
+                      <span className="block whitespace-normal [overflow-wrap:anywhere]">
+                        <TextCell value={template.subject} />
+                      </span>
+                    ),
+                  },
+                  {
+                    id: 'active',
+                    label: t('admin.notifications.col.active', uiLocale),
+                    render: (template) =>
+                      template.isActive ? (
+                        <span className="text-success text-sm font-medium">
+                          ✓ {t('admin.notifications.active', uiLocale)}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      ),
+                  },
+                  {
+                    id: 'versionMetadata',
+                    label: t('admin.notifications.col.versionMetadata', uiLocale),
+                    render: (template) => (
+                      <dl className="space-y-2 whitespace-normal text-sm">
+                        <div>
+                          <dt className="text-muted-foreground">
+                            {t('admin.notifications.col.createdAt', uiLocale)}
+                          </dt>
+                          <dd>
+                            <DateCell
+                              value={template.createdAt}
+                              format={(value) => time.format(value)}
+                            />
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-muted-foreground">
+                            {t('admin.notifications.col.publishedAt', uiLocale)}
+                          </dt>
+                          <dd>
+                            <DateCell
+                              value={template.publishedAt}
+                              format={(value) => time.format(value)}
+                            />
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-muted-foreground">
+                            {t('admin.notifications.col.author', uiLocale)}
+                          </dt>
+                          <dd>
+                            <TextCell value={template.createdBy} />
+                          </dd>
+                        </div>
+                      </dl>
+                    ),
+                  },
+                ]}
+                actionHeader={t('admin.notifications.col.actions', uiLocale)}
+                renderActions={(template) => (
+                  <div className="flex flex-wrap gap-2">
+                    {template.status === 'draft' && template.publishedAt == null && (
+                      <>
+                        <Button
+                          disabled={!ready || !!protectedAction || editorForm.pending}
+                          onClick={() => openEdit(template)}
+                          variant="outline"
+                          className="text-foreground hover:underline"
+                        >
+                          {t('admin.notifications.edit', uiLocale)}
+                        </Button>
+                        <Button
+                          disabled={!ready || !!protectedAction || editorForm.pending}
+                          onClick={() => {
+                            if (!ready || protectedAction || editorForm.isPending()) return;
+                            publishBasis.current = templateBasis(template);
+                            setPublishId(template.id);
+                          }}
+                          variant="outline"
+                          className="text-foreground hover:underline"
+                        >
+                          {t('admin.notifications.publish', uiLocale)}
+                        </Button>
+                        <Button
+                          disabled={!ready || !!protectedAction || editorForm.pending}
+                          onClick={() => handleDelete(template.id)}
+                          variant="outline"
+                          className="text-destructive hover:underline"
+                        >
+                          {t('admin.notifications.delete', uiLocale)}
+                        </Button>
+                      </>
                     )}
-                    {templates.map((template) => (
-                      <tr key={template.id} className="hover:bg-muted">
-                        <td className="px-4 py-3 text-sm font-mono">
-                          {template.eventKey}
-                          <div className="text-xs text-muted-foreground">
-                            {t('admin.notifications.preview.version', uiLocale)}{' '}
-                            {numbers.number(template.version)}
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 text-sm">
-                          <span
-                            className={`inline-block px-2 py-0.5 text-xs rounded ${
-                              template.channel === 'email'
-                                ? 'bg-blue-100 text-blue-800'
-                                : template.channel === 'sms'
-                                  ? 'bg-purple-100 text-purple-800'
-                                  : 'bg-muted text-foreground'
-                            }`}
+                    {(template.status !== 'draft' || template.publishedAt != null) && (
+                      <>
+                        <Button
+                          disabled={!ready || !!protectedAction || editorForm.pending}
+                          onClick={() => openEdit(template)}
+                          variant="outline"
+                          className="text-foreground hover:underline"
+                        >
+                          {t('admin.notifications.view', uiLocale)}
+                        </Button>
+                        <Button
+                          disabled={!ready || !!protectedAction || editorForm.pending}
+                          onClick={() => openEdit(template, true)}
+                          variant="outline"
+                          className="text-foreground hover:underline"
+                        >
+                          {t('admin.notifications.newVersion', uiLocale)}
+                        </Button>
+                        {template.status === 'active' && (
+                          <Button
+                            disabled={!ready || !!protectedAction || editorForm.pending}
+                            onClick={() => handleUnpublish(template.id)}
+                            variant="outline"
+                            className="text-foreground hover:underline"
                           >
-                            {channelLabels[template.channel]}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-sm">
-                          <span className={template.locale === 'fa' ? 'font-medium' : ''}>
-                            {LOCALE_LABELS[template.locale]}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3">
-                          <span
-                            className={`inline-block px-2 py-0.5 text-xs rounded ${
-                              template.status === 'draft'
-                                ? 'bg-warning-soft text-warning'
-                                : 'bg-success-soft text-success'
-                            }`}
-                          >
-                            {template.status === 'archived'
-                              ? t('admin.notifications.archived', uiLocale)
-                              : t(`admin.notifications.${template.status}`, uiLocale)}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-sm text-muted-foreground max-w-[200px] truncate">
-                          {template.subject ?? '—'}
-                        </td>
-                        <td className="px-4 py-3">
-                          {template.isActive ? (
-                            <span className="text-success text-sm font-medium">
-                              ✓ {t('admin.notifications.active', uiLocale)}
-                            </span>
-                          ) : (
-                            <span className="text-muted-foreground text-sm">—</span>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-end text-sm space-x-2">
-                          {template.status === 'draft' && template.publishedAt == null && (
-                            <>
-                              <Button
-                                disabled={!ready || !!protectedAction || editorForm.pending}
-                                onClick={() => openEdit(template)}
-                                variant="outline"
-                                className="text-foreground hover:underline"
-                              >
-                                {t('admin.notifications.edit', uiLocale)}
-                              </Button>
-                              <Button
-                                disabled={!ready || !!protectedAction || editorForm.pending}
-                                onClick={() => {
-                                  if (!ready || protectedAction || editorForm.isPending()) return;
-                                  publishBasis.current = templateBasis(template);
-                                  setPublishId(template.id);
-                                }}
-                                variant="outline"
-                                className="text-foreground hover:underline"
-                              >
-                                {t('admin.notifications.publish', uiLocale)}
-                              </Button>
-                              <Button
-                                disabled={!ready || !!protectedAction || editorForm.pending}
-                                onClick={() => handleDelete(template.id)}
-                                variant="outline"
-                                className="text-destructive hover:underline"
-                              >
-                                {t('admin.notifications.delete', uiLocale)}
-                              </Button>
-                            </>
-                          )}
-                          {(template.status !== 'draft' || template.publishedAt != null) && (
-                            <>
-                              <Button
-                                disabled={!ready || !!protectedAction || editorForm.pending}
-                                onClick={() => openEdit(template)}
-                                variant="outline"
-                                className="text-foreground hover:underline"
-                              >
-                                {t('admin.notifications.view', uiLocale)}
-                              </Button>
-                              <Button
-                                disabled={!ready || !!protectedAction || editorForm.pending}
-                                onClick={() => openEdit(template, true)}
-                                variant="outline"
-                                className="text-foreground hover:underline"
-                              >
-                                {t('admin.notifications.newVersion', uiLocale)}
-                              </Button>
-                              {template.status === 'active' && (
-                                <Button
-                                  disabled={!ready || !!protectedAction || editorForm.pending}
-                                  onClick={() => handleUnpublish(template.id)}
-                                  variant="outline"
-                                  className="text-foreground hover:underline"
-                                >
-                                  {t('admin.notifications.unpublish', uiLocale)}
-                                </Button>
-                              )}
-                            </>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                            {t('admin.notifications.unpublish', uiLocale)}
+                          </Button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
+              />
             </>
           )}
         </ListPage.Content>
