@@ -1,3 +1,4 @@
+import { loginFormText } from '@barghsa/i18n/login-forms';
 import { test, expect } from './coverage-fixture';
 
 test('login retries a stale pre-login token once and uses the replacement header', async ({
@@ -38,5 +39,16 @@ test('bootstrap failure keeps login credentials out of outgoing requests and all
   await page.locator('button[type=submit]').click();
   await expect(page.getByRole('alert')).toBeVisible();
   expect(credentialsSent).toBe(0);
+  await expect(page.locator('button[type=submit]')).toBeDisabled();
+  const locale = await page.evaluate(() => (document.documentElement.lang === 'en' ? 'en' : 'fa'));
+  await page.getByRole('button', { name: loginFormText('restart', locale), exact: true }).click();
+  await expect(page.locator('#password')).toHaveValue('');
+  await expect(page.locator('#username')).toHaveValue('csrf@example.test');
+  await page.route('**/api/auth/csrf', (route) =>
+    route.fulfill({ json: { csrfToken: 'c'.repeat(64) } })
+  );
+  await page.locator('#password').fill('Browser-password-123!');
+  await page.locator('button[type=submit]').click();
+  await expect.poll(() => credentialsSent).toBe(1);
   await expect(page.locator('button[type=submit]')).toBeEnabled();
 });

@@ -27,7 +27,7 @@ function OtpVerifyPage() {
     { challengeId, destination } = useSearch({ from: '/register/verify' }),
     locale = useLocale(),
     numbers = useNumberFormatting(locale);
-  const model = useRegistrationNativeForm('verify', `verify|${locale}|${challengeId}`, locale),
+  const model = useRegistrationNativeForm('verify', `verify|${challengeId}`, locale),
     form = model.form;
   const otpRef = useRef<OtpInputHandle>(null),
     expiryRedirect = useRef<ReturnType<typeof setTimeout> | null>(null);

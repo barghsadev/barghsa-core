@@ -332,3 +332,29 @@ it('refuses retired password/consent controls in the same frame as explicit rest
   expect(host.querySelector<HTMLInputElement>('#password')?.value ?? '').toBe('');
   expect(host.querySelector('[role="checkbox"]')!.getAttribute('aria-checked')).toBe('false');
 });
+
+for (const verify of [false, true])
+  it(`keeps an unknown ${verify ? 'code verification' : 'registration'} owned across a display-language change`, async () => {
+    const state = fixture();
+    state.override = () => Response.json({}, { status: 503 });
+    await mount(verify);
+    if (verify) await fill('input[inputmode="numeric"]', '123456');
+    else {
+      await draft();
+      await submit();
+    }
+    const count = state.writes.length;
+    await act(async () => {
+      document.documentElement.lang = 'fa';
+      await Promise.resolve();
+    });
+    await vi.waitFor(() =>
+      expect(host.textContent).toContain(registrationFormText('restart', 'fa'))
+    );
+    expect(
+      host.querySelector<HTMLInputElement>(verify ? 'input[inputmode="numeric"]' : '#password')!
+        .disabled
+    ).toBe(true);
+    await submit();
+    expect(state.writes).toHaveLength(count);
+  });

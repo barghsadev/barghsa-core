@@ -1,82 +1,28 @@
-import { publicAuthFetch } from '../lib/public-auth-fetch.js';
-import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
+import { t, type Locale } from '@barghsa/i18n/auth';
+import { loginFormText } from '@barghsa/i18n/login-forms';
+import { Button, Input, Alert, AlertDescription } from '@barghsa/ui';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@barghsa/ui/form';
+import { AuthLayout } from '../components/AuthLayout.js';
+import { PasswordField } from '../components/PasswordField.js';
+import { OtpInput, type OtpInputHandle } from '../components/OtpInput.js';
 import { useLocale } from '../hooks/useLocale.js';
-import { rateLimitMessage, retryAfterSeconds, authErrorCode } from '../lib/auth-errors.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useLoginNativeForm } from '../hooks/useLoginNativeForm.js';
+import { publicAuthFetch } from '../lib/public-auth-fetch.js';
+import { authErrorCode, rateLimitMessage, retryAfterSeconds } from '../lib/auth-errors.js';
 import {
   hasSessionAcknowledgement,
   hasPasswordChangeAcknowledgement,
   hasResendAcknowledgement,
   parseLoginAcknowledgement,
 } from '../lib/auth-responses.js';
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
+import { normalizeRecoveryUsername as normalizeUsername } from '../lib/password-recovery-form.js';
+import { emptyLogin, type LoginStage } from '../lib/login-form.js';
 import { toast } from '../lib/toast-api.js';
 import { rememberAuthSuccess } from '../lib/auth-entry-feedback.js';
-import { t, type Locale } from '@barghsa/i18n/auth';
-import { Loader2Icon } from 'lucide-react';
-import { Button, Input, Label, Alert, AlertDescription } from '@barghsa/ui';
-import { AuthLayout } from '../components/AuthLayout.js';
-import { PasswordField } from '../components/PasswordField.js';
-import { OtpInput } from '../components/OtpInput.js';
-
-export const Route = createFileRoute('/login')({
-  component: LoginPage,
-});
-
-// ─── Iranian mobile number helpers ──────────────────────────────────────
-
-/** Regex: starts with 09, followed by exactly 9 digits (11 total) */
-const IRANIAN_MOBILE_RE = /^09\d{9}$/;
-
-/** Regex: basic email validation */
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-/** Regex: loose E.164 — starts with +, 7-15 digits */
-const E164_RE = /^\+[1-9]\d{6,14}$/;
-
-type UsernameType = 'email' | 'mobile' | 'international' | null;
-
-interface NormalizationResult {
-  type: UsernameType;
-  normalized: string;
-  formatted: string | null;
-}
-
-/**
- * Detect the type of the raw input and normalize it.
- * Returns { type, normalized, formatted }.
- * - type=null means invalid/unrecognised.
- * - formatted is the display-friendly version (e.g. "+98 912 123 4567").
- */
-function normalizeUsername(raw: string): NormalizationResult {
-  const trimmed = raw.trim();
-
-  // Iranian mobile: 09121234567 → +989****4567
-  if (IRANIAN_MOBILE_RE.test(trimmed)) {
-    const e164 = `+98${trimmed.slice(1)}`;
-    const groups = e164.match(/^(\+\d{2})(\d{3})(\d{3})(\d{4})$/);
-    const formatted = groups ? `${groups[1]} ${groups[2]} ${groups[3]} ${groups[4]}` : e164;
-    return { type: 'mobile', normalized: e164, formatted };
-  }
-
-  // International (already E.164)
-  if (trimmed.startsWith('+')) {
-    if (E164_RE.test(trimmed)) {
-      return { type: 'international', normalized: trimmed, formatted: null };
-    }
-    return { type: null, normalized: trimmed, formatted: null };
-  }
-
-  // Email
-  if (EMAIL_RE.test(trimmed)) {
-    return { type: 'email', normalized: trimmed.toLowerCase(), formatted: null };
-  }
-
-  return { type: null, normalized: trimmed, formatted: null };
-}
-
-// ─── Error code → i18n key mapping ────────────────────────────────────
-
+export const Route = createFileRoute('/login')({ component: LoginPage });
 const ERROR_CODE_I18N_MAP: Record<string, string> = {
   'AUTH:LOGIN:INVALID_CREDENTIALS': 'auth.login.error.invalidCredentials',
   'RATE_LIMIT:EXCEEDED': 'auth.register.error.rateLimited',
@@ -91,439 +37,314 @@ function resolveErrorMessage(errorCode: string | undefined, locale: Locale): str
   return t('auth.login.error.generic', locale);
 }
 
-// ─── Page component ──────────────────────────────────────────────────────
-
 function LoginPage() {
-  const router = useRouter();
-  const locale = useLocale();
-  const numbers = useNumberFormatting(locale);
-
-  // ── Login form state ──────────────────────────────────
-  const [username, setUsername] = useState('');
-  const [usernameError, setUsernameError] = useState<string | null>(null);
-  const [formattedHint, setFormattedHint] = useState<string | null>(null);
-  const [touched, setTouched] = useState(false);
-
-  // Submission state
-  const [password, setPassword] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
-
-  // ── OTP step state ─────────────────────────────────────
-  const [otpStep, setOtpStep] = useState(false);
-  const [challengeId, setChallengeId] = useState('');
-  const [otpDestination, setOtpDestination] = useState('');
-  const [trustDevice, setTrustDevice] = useState(false);
-  const [otpCode, setOtpCode] = useState('');
-  const [otpError, setOtpError] = useState<string | null>(null);
-  const [verifying, setVerifying] = useState(false);
-  const [resending, setResending] = useState(false);
-  const [resendTimer, setResendTimer] = useState(60);
-  const canResend = resendTimer === 0;
-  const otpRef = useRef<{ reset: () => void } | null>(null);
-
-  // ── Password change step state (T-02.01.04) ──────────────
-  const [passwordChangeStep, setPasswordChangeStep] = useState(false);
+  const router = useRouter(),
+    locale = useLocale(),
+    numbers = useNumberFormatting(locale);
+  const [stage, setStage] = useState<LoginStage>('credentials');
+  const [challenge, setChallenge] = useState<{ id: string; destination: string } | null>(null);
   const [passwordChangeToken, setPasswordChangeToken] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [changingPassword, setChangingPassword] = useState(false);
-  const [changeError, setChangeError] = useState<string | null>(null);
-
-  // Countdown timer for resend
+  const [error, setError] = useState<string | null>(null);
+  const [resendUntil, setResendUntil] = useState(0),
+    [attemptUntil, setAttemptUntil] = useState(0),
+    [now, setNow] = useState(Date.now),
+    [resending, setResending] = useState(false);
+  const expiryRedirect = useRef<ReturnType<typeof setTimeout> | null>(null),
+    otpRef = useRef<OtpInputHandle>(null);
+  const model = useLoginNativeForm(stage, stage, locale),
+    form = model.form;
+  const username = form.watch('username'),
+    normalized = normalizeUsername(username);
+  const touched = !!form.formState.touchedFields.username || form.formState.isSubmitted;
+  const cooldown = Math.max(0, Math.ceil((resendUntil - now) / 1000)),
+    attemptCooldown = Math.max(0, Math.ceil((attemptUntil - now) / 1000));
   useEffect(() => {
-    if (!otpStep || canResend) return;
-
-    const interval = setInterval(() => {
-      setResendTimer((previous) => Math.max(0, previous - 1));
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [otpStep, canResend]);
-
-  const isUsernameValid = normalizeUsername(username).type !== null;
-
-  const handleBlur = useCallback(() => {
-    setTouched(true);
-    const result = normalizeUsername(username);
-
-    if (!username.trim()) {
-      setUsernameError(t('error.validation.input.missing', locale));
-      setFormattedHint(null);
-      return;
-    }
-
-    if (result.type === null) {
-      setUsernameError(t('auth.register.invalidUsername', locale));
-      setFormattedHint(null);
-      return;
-    }
-
-    if (result.type === 'email' && !EMAIL_RE.test(result.normalized)) {
-      setUsernameError(t('auth.register.invalidEmail', locale));
-      setFormattedHint(null);
-      return;
-    }
-
-    // Valid
-    setUsernameError(null);
-    setFormattedHint(result.formatted);
-  }, [username, locale]);
-
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const val = e.target.value;
-      if (val.length > 255) return;
-      setUsername(val);
-      if (touched) {
-        // Re-validate on change after first blur
-        const result = normalizeUsername(val);
-        if (!val.trim()) {
-          setUsernameError(t('error.validation.input.missing', locale));
-          setFormattedHint(null);
-        } else if (result.type === null) {
-          setUsernameError(t('auth.register.invalidUsername', locale));
-          setFormattedHint(null);
-        } else {
-          setUsernameError(null);
-          setFormattedHint(result.formatted);
-        }
-      }
-    },
-    [touched, locale]
-  );
-
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      setFormError(null);
-
-      // ── Normalize username for the API ───────────────────────────────
-      const normalized = normalizeUsername(username);
-      if (!normalized.type) {
-        setFormError(t('auth.login.error.invalidCredentials', locale));
-        return;
-      }
-
-      setSubmitting(true);
-
-      try {
-        const response = await publicAuthFetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
-          body: JSON.stringify({
-            username: normalized.normalized,
-            password,
-          }),
-        });
-
-        const body: Record<string, unknown> = await response.json().catch(() => ({}));
-
-        if (!response.ok) {
-          const rawError = body?.error;
-          const errorCode =
-            typeof rawError === 'string'
-              ? rawError
-              : ((rawError as Record<string, unknown>)?.code as string | undefined);
-          const msg =
-            rateLimitMessage(response, locale, numbers.numberStyle) ??
-            resolveErrorMessage(errorCode, locale);
-          setFormError(msg);
-          return;
-        }
-
-        // ── Check if password change is required (T-02.01.04) ──
-        const acknowledged = parseLoginAcknowledgement(body);
-        if (!acknowledged) {
-          setFormError(t('auth.login.error.generic', locale));
-          return;
-        }
-        if (acknowledged.kind === 'password-change') {
-          setPasswordChangeToken(acknowledged.token);
-          setPasswordChangeStep(true);
-          setNewPassword('');
-          setConfirmPassword('');
-          setChangeError(null);
-          return;
-        }
-
-        // ── Check if OTP step-up is required ──────────────────
-        if (acknowledged.kind === 'otp') {
-          setChallengeId(acknowledged.challengeId);
-          setOtpDestination(normalized.formatted ?? normalized.normalized);
-          setOtpStep(true);
-          setResendTimer(60);
-          return;
-        }
-
-        // ── Success (direct login) ────────────────────────────
-        const msg = t('auth.login.success', locale);
-        rememberAuthSuccess(msg);
-        toast.success(msg);
-
-        router.navigate({ to: '/app', replace: true });
-      } catch (_err) {
-        // Network error or unexpected failure
-        const msg = t('auth.login.error.generic', locale);
-        setFormError(msg);
-      } finally {
-        setSubmitting(false);
-      }
-    },
-    [username, password, locale, router]
-  );
-
-  // ── Password change handlers (T-02.01.04) ─────────────────────────────
-
-  const handleForceChange = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (changingPassword) return;
-      setChangeError(null);
-
-      // Validate passwords match
-      if (newPassword !== confirmPassword) {
-        setChangeError(t('auth.register.error.passwordsDoNotMatch', locale));
-        return;
-      }
-
-      // Match the API policy; the strength meter is only a visual estimate.
-      if (
-        newPassword.length < 8 ||
-        newPassword.length > 128 ||
-        !/[a-z]/.test(newPassword) ||
-        !/[A-Z]/.test(newPassword) ||
-        !/[0-9]/.test(newPassword)
-      ) {
-        setChangeError(t('auth.register.error.weakPassword', locale));
-        return;
-      }
-
-      setChangingPassword(true);
-
-      try {
-        const response = await publicAuthFetch('/api/auth/force-change-password', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
-          body: JSON.stringify({
-            passwordChangeToken,
-            newPassword,
-          }),
-        });
-
-        if (!response.ok) {
-          const body: Record<string, unknown> = await response.json().catch(() => ({}));
-          const errorCode = authErrorCode(body);
-
-          const retry = rateLimitMessage(response, locale, numbers.numberStyle);
-          if (retry) {
-            setChangeError(retry);
-          } else if (errorCode === 'AUTH:LOGIN:PASSWORD_REUSED') {
-            setChangeError(t('auth.login.error.passwordReused', locale));
-          } else {
-            setChangeError(t('auth.login.error.passwordChangeFailed', locale));
-          }
-          return;
-        }
-
-        // Success — redirect back to login with message
-        if (!hasPasswordChangeAcknowledgement(await response.json().catch(() => null))) {
-          setChangeError(t('auth.login.error.generic', locale));
-          return;
-        }
-        toast.success(t('auth.login.passwordChanged', locale));
-        setPasswordChangeStep(false);
-        setPasswordChangeToken('');
-        setNewPassword('');
-        setConfirmPassword('');
-        setPassword('');
-        setFormError(null);
-      } catch {
-        setChangeError(t('auth.login.error.generic', locale));
-      } finally {
-        setChangingPassword(false);
-      }
-    },
-    [newPassword, confirmPassword, passwordChangeToken, locale, changingPassword]
-  );
-
-  // ── OTP verification callbacks ──────────────────────────────────────────
-
-  const handleOtpComplete = useCallback(
-    async (code: string) => {
-      setOtpCode(code);
-      setOtpError(null);
-      setVerifying(true);
-
-      try {
-        const response = await publicAuthFetch('/api/auth/login/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
-          body: JSON.stringify({ challengeId, otp: code, trustDevice }),
-        });
-
-        const body: Record<string, unknown> = await response.json().catch(() => ({}));
-
-        if (!response.ok) {
-          const errorCode =
-            typeof body?.error === 'string'
-              ? body.error
-              : ((body?.error as Record<string, unknown>)?.code as string | undefined);
-
-          let msg: string;
-          switch (errorCode) {
-            case 'AUTH:OTP:INVALID':
-              msg = t('auth.otp.error.invalid', locale);
-              break;
-            case 'AUTH:OTP:EXPIRED':
-              msg = t('auth.otp.error.expired', locale);
-              // On expiry, transition back to login form
-              setTimeout(() => {
-                toast.error(t('auth.login.otpExpired', locale));
-                setOtpStep(false);
-                setFormError(t('auth.login.otpExpired', locale));
-              }, 500);
-              break;
-            case 'AUTH:OTP:MAX_ATTEMPTS':
-              msg = t('auth.otp.error.maxAttempts', locale);
-              break;
-            default:
-              msg = t('auth.otp.error.generic', locale);
-          }
-
-          setOtpError(rateLimitMessage(response, locale, numbers.numberStyle) ?? msg);
-          setOtpCode('');
-          if (otpRef.current?.reset) {
-            otpRef.current.reset();
-          }
-          return;
-        }
-
-        // ── Success — OTP verified, session set ─────────────────
-        if (!hasSessionAcknowledgement(body)) {
-          setOtpError(t('auth.otp.error.generic', locale));
-          setOtpCode('');
-          otpRef.current?.reset();
-          return;
-        }
-        const message = t('auth.login.otpSuccess', locale);
-        rememberAuthSuccess(message);
-        toast.success(message);
-        router.navigate({ to: '/app', replace: true });
-      } catch {
-        setOtpError(t('auth.otp.error.generic', locale));
-        setOtpCode('');
-        if (otpRef.current?.reset) {
-          otpRef.current.reset();
-        }
-      } finally {
-        setVerifying(false);
-      }
-    },
-    [challengeId, trustDevice, locale, router]
-  );
-
-  const handleResend = useCallback(async () => {
-    if (!canResend || resending) return;
-
-    setResending(true);
-    setOtpError(null);
-
-    try {
-      const response = await publicAuthFetch('/api/auth/login/resend', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
-        body: JSON.stringify({ challengeId }),
-      });
-
-      if (!response.ok) {
-        const retry = rateLimitMessage(response, locale, numbers.numberStyle);
-        const message = retry ?? t('auth.otp.error.resend', locale);
-        setOtpError(message);
-        if (retry) {
-          setResendTimer(retryAfterSeconds(response) ?? 60);
-        }
-        return;
-      }
-
-      // Reset timer
-      if (!hasResendAcknowledgement(await response.json().catch(() => null), challengeId)) {
-        setOtpError(t('auth.otp.error.resend', locale));
-        return;
-      }
-      setResendTimer(60);
-      setOtpCode('');
-      if (otpRef.current?.reset) {
-        otpRef.current.reset();
-      }
-      toast.success(t('auth.otp.sentTo', locale).replace('{destination}', otpDestination));
-    } catch {
-      toast.error(t('auth.otp.error.resend', locale));
-    } finally {
-      setResending(false);
-    }
-  }, [challengeId, canResend, resending, locale, otpDestination]);
-
-  const handleBackToLogin = useCallback(() => {
-    setOtpStep(false);
-    setOtpError(null);
-    setFormError(null);
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
   }, []);
-
-  const handleBackToLoginFromChange = useCallback(() => {
-    if (changingPassword) return;
-    setPasswordChangeStep(false);
+  useEffect(
+    () => () => {
+      if (expiryRedirect.current !== null) clearTimeout(expiryRedirect.current);
+      expiryRedirect.current = null;
+    },
+    [stage, locale]
+  );
+  function returnToCredentials(message: string | null = null) {
+    if (model.busy) return;
+    const reset = model.uncertain
+      ? model.restart()
+      : model.replaceDraft({ ...emptyLogin, username: form.getValues('username') });
+    if (!reset) return;
+    setStage('credentials');
+    setChallenge(null);
     setPasswordChangeToken('');
-    setNewPassword('');
-    setConfirmPassword('');
-    setChangeError(null);
-    setFormError(null);
-    setPassword('');
-  }, [changingPassword]);
-
-  const handleOtpClearError = useCallback(() => {
-    setOtpError(null);
-  }, []);
-
-  const isFormReady = isUsernameValid && password.length > 0 && !submitting;
-
+    setError(message);
+    setResending(false);
+    otpRef.current?.reset();
+  }
+  async function complete(message: string) {
+    form.reset(emptyLogin);
+    otpRef.current?.reset();
+    rememberAuthSuccess(message);
+    toast.success(message);
+    await router.navigate({ to: '/app', replace: true });
+  }
+  function submit(event?: FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
+    if (
+      (stage === 'otp' &&
+        (!challenge || Date.now() < attemptUntil || expiryRedirect.current !== null)) ||
+      (stage === 'change' && !passwordChangeToken)
+    )
+      return;
+    void model.run(async (values, capture) => {
+      setError(null);
+      const unknown = () => {
+        if (capture.current()) {
+          capture.hold();
+          setError(loginFormText('uncertain', locale));
+        }
+      };
+      const payload =
+        stage === 'credentials'
+          ? { username: normalizeUsername(values.username).normalized, password: values.password }
+          : stage === 'change'
+            ? { passwordChangeToken, newPassword: values.newPassword }
+            : { challengeId: challenge!.id, otp: values.otp, trustDevice: values.trustDevice };
+      const endpoint =
+        stage === 'credentials'
+          ? 'login'
+          : stage === 'change'
+            ? 'force-change-password'
+            : 'login/verify';
+      try {
+        const response = await publicAuthFetch('/api/auth/' + endpoint, {
+          signal: capture.controller.signal,
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
+          body: JSON.stringify(payload),
+        });
+        const body = await response.json().catch(() => null);
+        if (!capture.current()) return;
+        if (response.status !== 200) {
+          if (![400, 401, 403, 404, 409, 422, 429].includes(response.status)) {
+            unknown();
+            return;
+          }
+          const code = authErrorCode(body),
+            retry = rateLimitMessage(response, locale, numbers.numberStyle);
+          if (stage === 'credentials') setError(retry ?? resolveErrorMessage(code, locale));
+          else if (stage === 'change')
+            setError(
+              retry ??
+                t(
+                  code === 'AUTH:LOGIN:PASSWORD_REUSED'
+                    ? 'auth.login.error.passwordReused'
+                    : 'auth.login.error.passwordChangeFailed',
+                  locale
+                )
+            );
+          else {
+            const keys: Record<string, string> = {
+              'AUTH:OTP:INVALID': 'auth.otp.error.invalid',
+              'AUTH:OTP:EXPIRED': 'auth.otp.error.expired',
+              'AUTH:OTP:MAX_ATTEMPTS': 'auth.otp.error.maxAttempts',
+              'AUTH:OTP:CONSUMED': 'auth.otp.error.consumed',
+            };
+            setError(retry ?? t(keys[code ?? ''] ?? 'auth.otp.error.generic', locale));
+            form.setValue('otp', '');
+            otpRef.current?.reset();
+            if (response.status === 429) {
+              setNow(Date.now());
+              setAttemptUntil(Date.now() + (retryAfterSeconds(response) ?? 60) * 1000);
+            }
+            if (code === 'AUTH:OTP:EXPIRED') {
+              capture.hold(false);
+              expiryRedirect.current = setTimeout(() => {
+                if (!capture.current()) return;
+                if (model.replaceDraft({ ...emptyLogin, username: values.username }, capture)) {
+                  setStage('credentials');
+                  setChallenge(null);
+                  setPasswordChangeToken('');
+                  const message = t('auth.login.otpExpired', locale);
+                  setError(message);
+                  toast.error(message);
+                }
+              }, 500);
+            }
+          }
+          return;
+        }
+        if (stage === 'credentials') {
+          const accepted = parseLoginAcknowledgement(body);
+          if (!accepted) {
+            unknown();
+            return;
+          }
+          if (accepted.kind === 'session') {
+            await complete(t('auth.login.success', locale));
+            return;
+          }
+          if (!model.replaceDraft({ ...emptyLogin, username: values.username }, capture)) return;
+          if (accepted.kind === 'password-change') {
+            setPasswordChangeToken(accepted.token);
+            setStage('change');
+          } else {
+            setChallenge({
+              id: accepted.challengeId,
+              destination:
+                normalizeUsername(values.username).formatted ??
+                normalizeUsername(values.username).normalized,
+            });
+            setNow(Date.now());
+            setResendUntil(Date.now() + 60_000);
+            setAttemptUntil(0);
+            setStage('otp');
+          }
+        } else if (stage === 'change') {
+          if (!hasPasswordChangeAcknowledgement(body)) {
+            unknown();
+            return;
+          }
+          if (model.replaceDraft({ ...emptyLogin, username: values.username }, capture)) {
+            setPasswordChangeToken('');
+            setStage('credentials');
+            toast.success(t('auth.login.passwordChanged', locale));
+          }
+        } else {
+          if (!hasSessionAcknowledgement(body)) {
+            unknown();
+            return;
+          }
+          await complete(t('auth.login.otpSuccess', locale));
+        }
+      } catch {
+        unknown();
+      }
+    }, event);
+  }
+  function resend() {
+    if (
+      stage !== 'otp' ||
+      !challenge ||
+      Date.now() < resendUntil ||
+      expiryRedirect.current !== null
+    )
+      return;
+    void model.run(
+      async (_values, capture) => {
+        setResending(true);
+        setError(null);
+        const unknown = () => {
+          if (capture.current()) {
+            capture.hold();
+            setError(loginFormText('uncertain', locale));
+          }
+        };
+        try {
+          const response = await publicAuthFetch('/api/auth/login/resend', {
+            signal: capture.controller.signal,
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
+            body: JSON.stringify({ challengeId: challenge.id }),
+          });
+          const body = await response.json().catch(() => null);
+          if (!capture.current()) return;
+          if (response.status !== 200) {
+            if (![400, 401, 403, 404, 409, 422, 429].includes(response.status)) {
+              unknown();
+              return;
+            }
+            setError(
+              rateLimitMessage(response, locale, numbers.numberStyle) ??
+                t('auth.otp.error.resend', locale)
+            );
+            if (response.status === 429) {
+              setNow(Date.now());
+              setResendUntil(Date.now() + (retryAfterSeconds(response) ?? 60) * 1000);
+            }
+            return;
+          }
+          if (!hasResendAcknowledgement(body, challenge.id)) {
+            unknown();
+            return;
+          }
+          setNow(Date.now());
+          setResendUntil(Date.now() + 60_000);
+          form.setValue('otp', '');
+          form.clearErrors('otp');
+          otpRef.current?.reset();
+          toast.success(
+            t('auth.otp.sentTo', locale).replace('{destination}', challenge.destination)
+          );
+        } catch {
+          unknown();
+        } finally {
+          if (capture.current()) setResending(false);
+        }
+      },
+      undefined,
+      false
+    );
+  }
+  const edit = (field: { onChange: (value: unknown) => void }, value: unknown) => {
+    if (model.canEdit()) field.onChange(value);
+  };
+  const passwordControl = (name: 'password' | 'newPassword', id: string, label: string) => (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field, fieldState }) => (
+        <div
+          onBlurCapture={() => {
+            if (model.canEdit()) field.onBlur();
+          }}
+        >
+          <PasswordField
+            id={id}
+            name={field.name}
+            locale={locale}
+            label={label}
+            value={field.value}
+            onChange={(value) => edit(field, value)}
+            disabled={model.locked}
+            error={fieldState.error?.message ?? null}
+            showStrength={name === 'newPassword'}
+            autoComplete={name === 'password' ? 'current-password' : 'new-password'}
+            autoFocus={name === 'newPassword'}
+          />
+        </div>
+      )}
+    />
+  );
   return (
     <AuthLayout
       locale={locale}
       footer={
-        otpStep ? (
-          <div className="space-y-2">
-            <p className="text-center text-sm">
-              <button
-                type="button"
-                onClick={handleBackToLogin}
-                className="text-muted-foreground underline-offset-4 hover:text-primary dark:hover:text-foreground hover:underline"
-                aria-label={t('auth.login.otpBackToLogin', locale)}
-              >
-                {t('auth.login.otpBackToLogin', locale)}
-              </button>
-            </p>
-          </div>
-        ) : passwordChangeStep ? (
-          <div className="space-y-2">
-            <p className="text-center text-sm">
-              <button
-                type="button"
-                onClick={handleBackToLoginFromChange}
-                disabled={changingPassword}
-                className="text-muted-foreground underline-offset-4 hover:text-primary dark:hover:text-foreground hover:underline"
-                aria-label={t('auth.login.backToLogin', locale)}
-              >
-                {t('auth.login.backToLogin', locale)}
-              </button>
-            </p>
-          </div>
+        stage !== 'credentials' ? (
+          <p className="text-center text-sm">
+            <button
+              type="button"
+              disabled={model.busy || (model.locked && !model.uncertain)}
+              onClick={() => returnToCredentials()}
+              className="text-muted-foreground underline-offset-4 hover:text-primary dark:hover:text-foreground hover:underline"
+              aria-label={t(
+                stage === 'otp' ? 'auth.login.otpBackToLogin' : 'auth.login.backToLogin',
+                locale
+              )}
+            >
+              {t(stage === 'otp' ? 'auth.login.otpBackToLogin' : 'auth.login.backToLogin', locale)}
+            </button>
+          </p>
         ) : (
           <div className="space-y-2">
             <p className="text-center text-sm text-muted-foreground">
               {t('auth.login.registerLink', locale)}{' '}
               <Link
                 to="/register"
+                onClick={(event) => {
+                  if (model.busy) event.preventDefault();
+                }}
                 className="font-medium text-primary dark:text-foreground underline-offset-4 hover:underline"
                 aria-label={t('auth.login.registerLinkLabel', locale)}
               >
@@ -533,6 +354,9 @@ function LoginPage() {
             <p className="text-center text-sm">
               <Link
                 to="/forgot-password"
+                onClick={(event) => {
+                  if (model.busy) event.preventDefault();
+                }}
                 className="text-muted-foreground underline-offset-4 hover:text-primary dark:hover:text-foreground hover:underline"
                 aria-label={t('auth.register.forgotPasswordLabel', locale)}
               >
@@ -543,248 +367,236 @@ function LoginPage() {
         )
       }
     >
-      {otpStep ? (
-        // ── OTP verification step ─────────────────────────────
-        <div className="space-y-6">
-          <div className="space-y-1.5 text-center">
-            <h1 className="text-3xl font-semibold tracking-tight">
-              {t('auth.login.otpTitle', locale)}
-            </h1>
+      <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+        <div className={'space-y-1.5' + (stage === 'otp' ? ' text-center' : '')}>
+          <h1 className="text-3xl font-semibold tracking-tight">
+            {t(
+              stage === 'credentials'
+                ? 'auth.login.title'
+                : stage === 'change'
+                  ? 'auth.login.forceChangeTitle'
+                  : 'auth.login.otpTitle',
+              locale
+            )}
+          </h1>
+          {stage !== 'credentials' && (
             <p className="text-sm text-muted-foreground">
-              {t('auth.login.otpSentTo', locale).replace('{destination}', otpDestination)}
+              {stage === 'change'
+                ? t('auth.login.forceChangeDescription', locale)
+                : t('auth.login.otpSentTo', locale).replace(
+                    '{destination}',
+                    challenge?.destination ?? ''
+                  )}
             </p>
-          </div>
-
-          <div className="space-y-6">
-            {/* OTP Input */}
-            <OtpInput
-              ref={otpRef}
-              locale={locale}
-              disabled={verifying}
-              error={otpError}
-              onComplete={handleOtpComplete}
-              onClearError={handleOtpClearError}
-            />
-
-            {/* Trust this device checkbox */}
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                className="size-4 shrink-0 accent-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-                id="trust-device"
-                checked={trustDevice}
-                onChange={(event) => setTrustDevice(event.target.checked)}
-                disabled={verifying}
-              />
-              <Label htmlFor="trust-device" className="text-sm text-muted-foreground">
-                {t('auth.login.trustDevice', locale)}
-              </Label>
-            </div>
-
-            {/* Verify button */}
-            <Button
-              type="button"
-              className="w-full hover:bg-primary"
-              disabled={!otpCode || verifying}
-              onClick={() => otpCode && handleOtpComplete(otpCode)}
-            >
-              {verifying ? (
-                <>
-                  <Loader2Icon className="me-2 h-4 w-4 animate-spin" aria-hidden="true" />
-                  {t('auth.otp.verifying', locale)}
-                </>
-              ) : (
-                t('auth.otp.verifyButton', locale)
-              )}
-            </Button>
-
-            {/* Resend section */}
-            <div className="text-center">
-              {canResend ? (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  disabled={resending}
-                  onClick={handleResend}
-                >
-                  {resending ? (
-                    <>
-                      <Loader2Icon className="me-2 h-3 w-3 animate-spin" aria-hidden="true" />
-                      {t('auth.otp.resending', locale)}
-                    </>
-                  ) : (
-                    t('auth.otp.resend', locale)
-                  )}
-                </Button>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  {t('auth.otp.resendTimer', locale).replace(
-                    '{seconds}',
-                    numbers.number(resendTimer, { useGrouping: false })
-                  )}
-                </p>
-              )}
-            </div>
-          </div>
+          )}
         </div>
-      ) : passwordChangeStep ? (
-        // ── Password change form (T-02.01.04) ─────────────────
-        <div className="space-y-6">
-          <div className="space-y-1.5">
-            <h1 className="text-3xl font-semibold tracking-tight">
-              {t('auth.login.forceChangeTitle', locale)}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              {t('auth.login.forceChangeDescription', locale)}
-            </p>
-          </div>
-
-          <form onSubmit={handleForceChange} className="space-y-4" noValidate>
-            {/* Form-level alert for server errors */}
-            {changeError && (
+        <Form {...form}>
+          <form
+            key={`${stage}|${model.draftKey}`}
+            ref={model.feedback.element}
+            className="space-y-4"
+            noValidate
+            aria-busy={model.busy}
+            onSubmit={submit}
+          >
+            {stage !== 'otp' && (error ?? form.formState.errors.root?.validation?.message) && (
               <Alert variant="destructive" role="alert">
-                <AlertDescription>{changeError}</AlertDescription>
+                <AlertDescription>
+                  {error ?? form.formState.errors.root?.validation?.message}
+                </AlertDescription>
               </Alert>
             )}
-
-            {/* New password with strength meter */}
-            <PasswordField
-              id="new-password"
-              label={t('auth.register.newPasswordLabel', locale)}
-              locale={locale}
-              autoFocus={true}
-              value={newPassword}
-              onChange={setNewPassword}
-              disabled={changingPassword}
-              showStrength={true}
-              autoComplete="new-password"
-            />
-
-            {/* Confirm password */}
-            <div className="space-y-2">
-              <Label htmlFor="confirm-password">
-                {t('auth.register.confirmPasswordLabel', locale)}
-              </Label>
-              <Input
-                id="confirm-password"
-                type="password"
-                autoComplete="new-password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                disabled={changingPassword}
-                aria-invalid={confirmPassword.length > 0 && newPassword !== confirmPassword}
-                aria-describedby={
-                  confirmPassword.length > 0 && newPassword !== confirmPassword
-                    ? 'confirm-password-error'
-                    : undefined
-                }
-              />
-              {confirmPassword.length > 0 && newPassword !== confirmPassword && (
-                <p id="confirm-password-error" className="text-sm text-destructive" role="alert">
-                  {t('auth.register.error.passwordsDoNotMatch', locale)}
-                </p>
-              )}
-            </div>
-
+            {stage === 'credentials' ? (
+              <>
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem id="username">
+                      <FormLabel>{t('auth.register.emailLabel', locale)}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="text"
+                          dir="ltr"
+                          autoComplete="username"
+                          autoFocus
+                          maxLength={255}
+                          placeholder={t('auth.register.usernamePlaceholder', locale)}
+                          disabled={model.locked}
+                          onChange={(event) => edit(field, event)}
+                          onBlur={() => {
+                            if (model.canEdit()) field.onBlur();
+                          }}
+                          aria-describedby={
+                            touched && !form.formState.errors.username && normalized.formatted
+                              ? 'username-hint'
+                              : undefined
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                      {touched && !form.formState.errors.username && normalized.formatted && (
+                        <p id="username-hint" dir="ltr" className="text-sm text-muted-foreground">
+                          {normalized.formatted}
+                        </p>
+                      )}
+                    </FormItem>
+                  )}
+                />
+                {passwordControl('password', 'password', t('auth.register.passwordLabel', locale))}
+              </>
+            ) : stage === 'change' ? (
+              <>
+                {passwordControl(
+                  'newPassword',
+                  'new-password',
+                  t('auth.register.newPasswordLabel', locale)
+                )}
+                <FormField
+                  control={form.control}
+                  name="confirmation"
+                  render={({ field }) => (
+                    <FormItem id="confirm-password">
+                      <FormLabel>{t('auth.register.confirmPasswordLabel', locale)}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="password"
+                          autoComplete="new-password"
+                          disabled={model.locked}
+                          onChange={(event) => edit(field, event)}
+                          onBlur={() => {
+                            if (model.canEdit()) field.onBlur();
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            ) : (
+              <>
+                <FormField
+                  control={form.control}
+                  name="otp"
+                  render={({ field, fieldState }) => (
+                    <OtpInput
+                      ref={otpRef}
+                      id="login-code"
+                      name={field.name}
+                      locale={locale}
+                      disabled={model.locked || attemptCooldown > 0}
+                      error={
+                        fieldState.error?.message ??
+                        error ??
+                        form.formState.errors.root?.validation?.message ??
+                        null
+                      }
+                      onChange={(value) => edit(field, value)}
+                      onComplete={() => submit()}
+                      onClearError={() => {
+                        if (model.canEdit()) {
+                          setError(null);
+                          form.clearErrors('otp');
+                        }
+                      }}
+                    />
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="trustDevice"
+                  render={({ field }) => (
+                    <FormItem id="trust-device">
+                      <div className="flex items-center gap-2">
+                        <FormControl>
+                          <input
+                            type="checkbox"
+                            name={field.name}
+                            ref={field.ref}
+                            checked={field.value}
+                            className="size-4 shrink-0 accent-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                            onChange={(event) => edit(field, event.target.checked)}
+                            disabled={model.locked}
+                          />
+                        </FormControl>
+                        <FormLabel className="text-sm text-muted-foreground">
+                          {t('auth.login.trustDevice', locale)}
+                        </FormLabel>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
+            {model.uncertain && (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                disabled={model.busy}
+                onClick={() => returnToCredentials()}
+              >
+                {loginFormText('restart', locale)}
+              </Button>
+            )}
             <Button
               type="submit"
               className="w-full hover:bg-primary"
-              disabled={
-                !newPassword ||
-                !confirmPassword ||
-                newPassword !== confirmPassword ||
-                changingPassword
-              }
+              disabled={model.locked || (stage === 'otp' && attemptCooldown > 0)}
             >
-              {changingPassword ? (
-                <>
-                  <Loader2Icon className="me-2 h-4 w-4 animate-spin" aria-hidden="true" />
-                  {t('auth.login.changingPassword', locale)}
-                </>
-              ) : (
-                t('auth.login.changePasswordButton', locale)
+              {t(
+                stage === 'credentials'
+                  ? model.busy
+                    ? 'auth.login.submitting'
+                    : 'auth.login.submit'
+                  : stage === 'change'
+                    ? model.busy
+                      ? 'auth.login.changingPassword'
+                      : 'auth.login.changePasswordButton'
+                    : model.busy && !resending
+                      ? 'auth.otp.verifying'
+                      : 'auth.otp.verifyButton',
+                locale
               )}
             </Button>
-          </form>
-        </div>
-      ) : (
-        // ── Login form ────────────────────────────────────────
-        <div className="space-y-6">
-          <div className="space-y-1.5">
-            <h1 className="text-3xl font-semibold tracking-tight">
-              {t('auth.login.title', locale)}
-            </h1>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-            {/* Form-level alert for server errors */}
-            {formError && (
-              <Alert variant="destructive" role="alert">
-                <AlertDescription>{formError}</AlertDescription>
-              </Alert>
+            {stage === 'otp' && (
+              <>
+                {attemptCooldown > 0 && (
+                  <p role="status">
+                    {t('auth.otp.resendTimer', locale).replace(
+                      '{seconds}',
+                      numbers.number(attemptCooldown, { useGrouping: false })
+                    )}
+                  </p>
+                )}
+                <div className="text-center">
+                  {cooldown === 0 ? (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      disabled={model.locked}
+                      onClick={resend}
+                    >
+                      {t(resending ? 'auth.otp.resending' : 'auth.otp.resend', locale)}
+                    </Button>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      {t('auth.otp.resendTimer', locale).replace(
+                        '{seconds}',
+                        numbers.number(cooldown, { useGrouping: false })
+                      )}
+                    </p>
+                  )}
+                </div>
+              </>
             )}
-
-            {/* Unified username field */}
-            <div className="space-y-2">
-              <Label htmlFor="username">{t('auth.register.emailLabel', locale)}</Label>
-              <Input
-                id="username"
-                type="text"
-                dir="ltr"
-                placeholder={t('auth.register.usernamePlaceholder', locale)}
-                autoComplete="username"
-                autoFocus
-                maxLength={255}
-                value={username}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                disabled={submitting}
-                aria-invalid={touched && usernameError !== null}
-                aria-describedby={
-                  usernameError ? 'username-error' : formattedHint ? 'username-hint' : undefined
-                }
-              />
-              {/* Error message */}
-              {touched && usernameError && (
-                <p id="username-error" className="text-sm text-destructive" role="alert">
-                  {usernameError}
-                </p>
-              )}
-              {/* Formatted mobile hint */}
-              {touched && !usernameError && formattedHint && (
-                <p id="username-hint" dir="ltr" className="text-sm text-muted-foreground">
-                  {formattedHint}
-                </p>
-              )}
-            </div>
-
-            {/* Password field with visibility toggle (no strength meter) */}
-            <PasswordField
-              id="password"
-              label={t('auth.register.passwordLabel', locale)}
-              locale={locale}
-              autoFocus={false}
-              value={password}
-              onChange={setPassword}
-              disabled={submitting}
-              showStrength={false}
-              autoComplete="current-password"
-            />
-
-            <Button type="submit" className="w-full hover:bg-primary" disabled={!isFormReady}>
-              {submitting ? (
-                <>
-                  <Loader2Icon className="me-2 h-4 w-4 animate-spin" aria-hidden="true" />
-                  {t('auth.login.submitting', locale)}
-                </>
-              ) : (
-                t('auth.login.submit', locale)
-              )}
-            </Button>
           </form>
-        </div>
-      )}
+        </Form>
+      </div>
     </AuthLayout>
   );
 }

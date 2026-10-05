@@ -1,4 +1,5 @@
 import { fulfillDashboard } from './dashboard-fixture';
+import { loginFormText } from '@barghsa/i18n/login-forms';
 import { mockPublicAuthCsrf } from './public-auth-fixture';
 import type { Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
@@ -13,10 +14,7 @@ const sessionAcknowledgement = {
   csrfToken: 'csrf',
   expiresAt: '2030-01-01T00:00:00.000Z',
 };
-const generic = {
-  en: 'An error occurred. Please try again',
-  fa: 'خطایی رخ داده است. لطفاً دوباره تلاش کنید',
-};
+const freshChallengeId = '11111111-2222-4333-8444-555555555556';
 async function mockApp(page: Page, hasProfile = true) {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await mockPublicAuthCsrf(page);
@@ -39,6 +37,7 @@ async function mockApp(page: Page, hasProfile = true) {
   );
 }
 async function openLogin(page: Page, locale: 'fa' | 'en', darkMode = false) {
+  await page.addInitScript((lang) => localStorage.setItem('barghsa-locale', lang), locale);
   await mockOppositeNumerals(page, locale);
   if (darkMode)
     await page.route('**/api/public/branding/config', (route) =>
@@ -74,12 +73,13 @@ for (const locale of ['en', 'fa'] as const) {
     test(`forced password change validates policy, protects the pending request and returns to login (${locale}, dark=${darkMode})`, async ({
       page,
     }) => {
+      let starts = 0;
       await page.route('**/api/auth/login', (route) =>
         route.fulfill({
           json: {
             requiresOtp: false,
             mustChangePassword: true,
-            passwordChangeToken: 'change-token',
+            passwordChangeToken: ++starts === 1 ? 'change-token' : 'fresh-change-token',
           },
         })
       );
@@ -129,7 +129,9 @@ for (const locale of ['en', 'fa'] as const) {
       }
       await password.fill('Fresh-browser-password-123!');
       await confirm.fill('Different-browser-password-123!');
-      await expect(submit).toBeDisabled();
+      await expect(submit).toBeEnabled();
+      await submit.click();
+      expect(attempts).toHaveLength(0);
       await expect(confirm).toHaveAttribute('aria-invalid', 'true');
       await confirm.fill('Fresh-browser-password-123!');
       await submit.click();
@@ -141,7 +143,7 @@ for (const locale of ['en', 'fa'] as const) {
       await page.keyboard.press('Enter');
       expect(attempts).toHaveLength(1);
       release!();
-      await expect(submit).toBeEnabled();
+      await expect(submit).toBeDisabled();
       await expect(page.getByRole('alert').first()).toBeVisible();
       await expect(password).toHaveValue('Fresh-browser-password-123!');
       await expect(confirm).toHaveValue('Fresh-browser-password-123!');
@@ -164,6 +166,14 @@ for (const locale of ['en', 'fa'] as const) {
         .analyze();
       expect(accessibility.violations).toEqual([]);
       expect(accessibility.incomplete.filter((item) => item.id === 'color-contrast')).toEqual([]);
+      await page
+        .getByRole('button', { name: loginFormText('restart', locale), exact: true })
+        .click();
+      await expect(page.locator('#password')).toHaveValue('');
+      await page.locator('#password').fill('Browser-password-123!');
+      await page.locator('button[type="submit"]').click();
+      await password.fill('Fresh-browser-password-123!');
+      await confirm.fill('Fresh-browser-password-123!');
       await submit.click();
       await expect(password).toHaveCount(0);
       await expect(page.locator('#password')).toHaveValue('');
@@ -173,22 +183,23 @@ for (const locale of ['en', 'fa'] as const) {
         locale === 'fa' ? 'لطفاً با رمز جدید وارد شوید' : 'Please log in with your new password'
       );
       expect(attempts).toEqual(
-        Array(2).fill({
-          passwordChangeToken: 'change-token',
+        ['change-token', 'fresh-change-token'].map((passwordChangeToken) => ({
+          passwordChangeToken,
           newPassword: 'Fresh-browser-password-123!',
-        })
+        }))
       );
     });
   }
-  test(`password change needs acknowledgement and preserves retry input (${locale})`, async ({
+  test(`password change needs acknowledgement and explicit fresh authorization (${locale})`, async ({
     page,
   }) => {
+    let starts = 0;
     await page.route('**/api/auth/login', (route) =>
       route.fulfill({
         json: {
           requiresOtp: false,
           mustChangePassword: true,
-          passwordChangeToken: 'change-token',
+          passwordChangeToken: ++starts === 1 ? 'change-token' : 'fresh-change-token',
         },
       })
     );
@@ -204,29 +215,43 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#new-password').fill('New-browser-password-123!');
     await page.locator('#confirm-password').fill('New-browser-password-123!');
     await page.locator('button[type="submit"]').click();
-    await expect(page.getByRole('alert').first()).toContainText(generic[locale]);
+    await expect(page.getByRole('alert').first()).toContainText(loginFormText('uncertain', locale));
     await expect(page.locator('#new-password')).toHaveValue('New-browser-password-123!');
     await expect(page.locator('#confirm-password')).toHaveValue('New-browser-password-123!');
+    await expect(page.locator('button[type="submit"]')).toBeDisabled();
+    await page.getByRole('button', { name: loginFormText('restart', locale), exact: true }).click();
+    await expect(page.locator('#password')).toHaveValue('');
+    await page.locator('#password').fill('Browser-password-123!');
+    await page.locator('button[type="submit"]').click();
+    await page.locator('#new-password').fill('New-browser-password-123!');
+    await page.locator('#confirm-password').fill('New-browser-password-123!');
     await page.locator('button[type="submit"]').click();
     await expect(page.locator('#password')).toHaveValue('');
     expect(attempts).toEqual(
-      Array(2).fill({
-        passwordChangeToken: 'change-token',
+      ['change-token', 'fresh-change-token'].map((passwordChangeToken) => ({
+        passwordChangeToken,
         newPassword: 'New-browser-password-123!',
-      })
+      }))
     );
     await expect(page.locator('[data-sonner-toast]')).toHaveCount(1);
   });
   test(`resend requires the same challenge acknowledgement (${locale})`, async ({ page }) => {
     await page.clock.install();
+    let starts = 0;
     await page.route('**/api/auth/login', (route) =>
-      route.fulfill({ json: { requiresOtp: true, challengeId } })
+      route.fulfill({
+        json: { requiresOtp: true, challengeId: ++starts === 1 ? challengeId : freshChallengeId },
+      })
     );
     let attempts = 0;
     await page.route('**/api/auth/login/resend', (route) => {
-      expect(route.request().postDataJSON()).toEqual({ challengeId });
+      expect(route.request().postDataJSON()).toEqual({
+        challengeId: starts === 1 ? challengeId : freshChallengeId,
+      });
       attempts++;
-      return route.fulfill({ json: { challengeId: attempts === 1 ? 'unrelated' : challengeId } });
+      return route.fulfill({
+        json: { challengeId: attempts === 1 ? 'unrelated' : freshChallengeId },
+      });
     });
     await openLogin(page, locale);
     await page.locator('button[type="submit"]').click();
@@ -238,8 +263,12 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await resend.click();
     await expect(page.getByRole('alert').first()).toBeVisible();
-    await expect(resend).toBeEnabled();
+    await expect(resend).toBeDisabled();
     await expect(page.locator('[data-sonner-toast]')).toHaveCount(0);
+    await page.getByRole('button', { name: loginFormText('restart', locale), exact: true }).click();
+    await page.locator('#password').fill('Browser-password-123!');
+    await page.locator('button[type="submit"]').click();
+    await page.clock.runFor(61_000);
     await resend.click();
     await expect(resend).toHaveCount(0);
     await expect(page.locator('[data-sonner-toast]')).toHaveCount(1);
@@ -284,19 +313,24 @@ for (const locale of ['en', 'fa'] as const) {
       await page.route('**/api/auth/login', (route) => route.fulfill({ json: response.body }));
       await openLogin(page, locale);
       await page.locator('button[type="submit"]').click();
-      await expect(page.getByRole('alert').first()).toContainText(generic[locale]);
+      await expect(page.getByRole('alert').first()).toContainText(
+        loginFormText('uncertain', locale)
+      );
       await expect(page).toHaveURL(/\/login$/);
       await expect(page.locator('#username')).toHaveValue('user@example.test');
       await expect(page.locator('#password')).toHaveValue('Browser-password-123!');
-      await expect(page.locator('button[type="submit"]')).toBeEnabled();
+      await expect(page.locator('button[type="submit"]')).toBeDisabled();
     });
   }
-  test(`OTP rejects an empty session acknowledgement and permits retry (${locale})`, async ({
+  test(`OTP rejects an empty session acknowledgement and requires fresh login (${locale})`, async ({
     page,
   }) => {
     await mockApp(page);
+    let starts = 0;
     await page.route('**/api/auth/login', (route) =>
-      route.fulfill({ json: { requiresOtp: true, challengeId } })
+      route.fulfill({
+        json: { requiresOtp: true, challengeId: ++starts === 1 ? challengeId : freshChallengeId },
+      })
     );
     const attempts: unknown[] = [];
     await page.route('**/api/auth/login/verify', (route) => {
@@ -308,17 +342,29 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#trust-device').check();
     const digits = page.locator('input[inputmode="numeric"]');
     for (let i = 0; i < 6; i++) await digits.nth(i).fill(String(i + 1));
-    await expect(page.getByRole('alert').first()).toContainText(generic[locale]);
-    await expect(digits.first()).toHaveValue('');
-    await expect(digits.first()).toBeEnabled();
+    await expect(page.getByRole('alert').first()).toContainText(loginFormText('uncertain', locale));
+    await expect(digits.first()).toHaveValue('1');
+    await expect(digits.first()).toBeDisabled();
     expect(attempts).toEqual([{ challengeId, otp: '123456', trustDevice: true }]);
     await expect(page).toHaveURL(/\/login$/);
+    await page.getByRole('button', { name: loginFormText('restart', locale), exact: true }).click();
+    await expect(page.locator('#password')).toHaveValue('');
+    await page.locator('#password').fill('Browser-password-123!');
+    await page.locator('button[type="submit"]').click();
+    await expect(page.locator('#trust-device')).not.toBeChecked();
+    await page.locator('#trust-device').check();
     for (let i = 0; i < 6; i++) await digits.nth(i).fill(String(i + 1));
     await expect(page).toHaveURL(/\/app$/);
     await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toContainText(
       'Profile'
     );
-    expect(attempts).toEqual(Array(2).fill({ challengeId, otp: '123456', trustDevice: true }));
+    expect(attempts).toEqual(
+      [challengeId, freshChallengeId].map((challengeId) => ({
+        challengeId,
+        otp: '123456',
+        trustDevice: true,
+      }))
+    );
   });
 }
 

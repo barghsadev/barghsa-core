@@ -344,7 +344,11 @@
       "types": "./dist/password-recovery-forms.d.ts",
       "default": "./dist/password-recovery-forms.js"
     },
-    "./registration-forms": "./src/registration-forms.ts"
+    "./registration-forms": "./src/registration-forms.ts",
+    "./login-forms": {
+      "types": "./dist/login-forms.d.ts",
+      "import": "./dist/login-forms.js"
+    }
   },
   "scripts": {
     "build": "tsc",

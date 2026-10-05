@@ -1,5 +1,13 @@
 # Development continuation status
 
+## Latest manual batch: login native forms and public-auth language ownership (October 5, 2026)
+
+Completed login credentials, required password change and OTP/trust/resend as one bilingual native family. Linked first-invalid validation, retained raw drafts, actual receipt predicates, synchronous ownership and elapsed deadlines protect captured public-auth commands. Unknown results require deliberate fresh login; transitions retire old controls and clear secrets. Language-only changes retain unresolved ownership, including two narrow registration/verification corrections with failing/passing regressions.
+
+All 44 distinct source/dictionary cases have passing evidence, and all 80 Chromium/mobile Safari cases pass in the first final-asset run with zero retries/skips/flakes. Sixteen original compact panels are reviewed with the documented strength-helper crop and mobile-toast framing limits. Build/types, lint/format, contracts/suppression, all 85 unchanged budgets and strict SAST pass (1,778 files; zero findings/errors; five fixtures). All 198 protected paths and 486 final assets retain their hashes. See `kanban/batches/2026-10-05-login-native-forms.md`.
+
+Reuse `02-auth-users-admin.md#T-02.01.01` through `#T-02.01.04`; do not recount engines. Global `07-ui-ux-design.md#T-07.10.01.02` through `#T-07.10.01.06` remain partial. Profile lifecycle export/closure request and staff closure-review forms are the next family to check against existing coverage. Continue coherent build/review/related-checks/direct-main batches using GitHub CLI and no PRs. The preceding registration commit's five CI jobs passed; this batch's own exact-commit CI is tracked separately.
+
 ## Latest manual batch: registration and verification native forms (October 5, 2026)
 
 Completed destination/password/explicit-consent and registration code/resend as one bilingual native-form batch. Raw and hidden drafts, linked first-invalid feedback, complete published terms, captured actual challenge/session receipts and synchronous ownership preserve the existing protocol. Unknown unkeyed results require deliberate fresh registration. Draft revision plus keyed forms prevent retired controls restoring secrets or consent after restart.

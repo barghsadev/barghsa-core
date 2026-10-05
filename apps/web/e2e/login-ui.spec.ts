@@ -9,6 +9,7 @@ for (const locale of ['fa', 'en'])
       async ({ page }, testInfo) => {
         await page.addInitScript((locale) => {
           localStorage.setItem('barghsa.locale', locale);
+          localStorage.setItem('barghsa-locale', locale);
         }, locale);
         await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
         await mockPublicAuthCsrf(page);
@@ -52,7 +53,10 @@ for (const locale of ['fa', 'en'])
         await expect(username).toHaveAttribute('dir', 'ltr');
         await expect(password).toBeVisible();
         await expect(password).toHaveAttribute('autocomplete', 'current-password');
-        await expect(submit).toBeDisabled();
+        await expect(submit).toBeEnabled();
+        await submit.click();
+        expect(requests).toHaveLength(0);
+        await expect(username).toHaveAttribute('aria-invalid', 'true');
         await expect(page.locator('a[href="/register"]')).toBeVisible();
         await expect(page.locator('a[href="/forgot-password"]')).toBeVisible();
         await password.fill('Saved-password-123!');

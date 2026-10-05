@@ -51,11 +51,7 @@ function RegisterPage() {
     [tosError, setTosError] = useState(false),
     [error, setError] = useState<string | null>(null);
   const termsTrigger = useRef<HTMLAnchorElement>(null);
-  const model = useRegistrationNativeForm(
-    'register',
-    `register|${locale}|${terms?.id ?? ''}`,
-    locale
-  );
+  const model = useRegistrationNativeForm('register', 'register', locale);
   const form = model.form,
     username = form.watch('username');
   const normalized = normalizeUsername(username);
