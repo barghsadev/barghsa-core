@@ -135,7 +135,10 @@ it('retries the exact next cursor without dropping loaded rows or duplicating ov
   expect(host.textContent).toContain('CODE00');
   failed = false;
   await click('Load more codes');
-  expect(host.querySelectorAll('button[aria-label="Edit CODE49"]')).toHaveLength(1);
+  const presentations = host.querySelectorAll('table, [role=list][aria-label="Gift codes"]');
+  expect(presentations).toHaveLength(2);
+  for (const presentation of presentations)
+    expect(presentation.querySelectorAll('button[aria-label="Edit CODE49"]')).toHaveLength(1);
   expect(host.textContent).toContain('CODE50');
   const urls = requests.mock.calls.map(([p]) => String(p)).filter((p) => p.includes('before='));
   expect(urls[0]).toBe(urls[1]);
@@ -261,7 +264,10 @@ it('repeated cursors fail without creating an endless page loop', async () => {
   await render(() => reply(first));
   await click('Load more codes');
   expect(host.querySelector('[role=alert]')!.textContent).toContain('Could not load more');
-  expect(host.querySelectorAll('button[aria-label^="Edit CODE"]')).toHaveLength(50);
+  const presentations = host.querySelectorAll('table, [role=list][aria-label="Gift codes"]');
+  expect(presentations).toHaveLength(2);
+  for (const presentation of presentations)
+    expect(presentation.querySelectorAll('button[aria-label^="Edit CODE"]')).toHaveLength(50);
 });
 it('old filter pages cannot mix into a replaced catalogue', async () => {
   let resolve!: (v: Response) => void;

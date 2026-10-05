@@ -12,7 +12,13 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: document and contract template catalogue tables for v0.1.14 (October 5, 2026)
+## Latest manual batch: gift-code list tables for v0.1.15 (October 5, 2026)
+
+The gift-code catalogue now uses shared desktop tables and mobile cards, retaining exact IRR/percentage/cap terms, status, eligibility, restoration policy, usage totals and authorized actions. Saved validity start/end use native account-zone dates. Native record headers, sticky headers, named keyboard scrolling, published numeral preferences and localized row counts reuse the existing foundation. One editor/raw draft/usage/command owner survives responsive changes and failed reads. Status review retains its captured payload and actual receipt, and closing restores the existing visible Refresh control. Current denial clears private work; existing URL/cursor/deduplication, step-up and uncertainty recovery remain.
+
+Related checks and release evidence are recorded in `kanban/batches/2026-10-05-gift-code-tables.md`. Reuse `03-core-business.md#T-03.02.02.05`, `02-auth-users-admin.md#T-09.12.03` and domain adoption of `07-ui-ux-design.md#T-07.24.01.01` through `#T-07.24.01.04`; existing engines and shared foundations are not recounted. Wider adoption/global all-list work remains partial. v0.1.14 is deployed at `86df33f7045cfa996f5738221602ffd6f22e972b`, with Persian Telegram note and both screenshots confirmed. Continue direct-main batches with related local checks and independent deployment. Select the next actual uncovered coherent family against current source and canonical criteria.
+
+## Previous manual batch: document and contract template catalogue tables for v0.1.14 (October 5, 2026)
 
 Both template catalogues now use shared desktop tables and mobile cards. Document records retain category/count and show description/update time; one full-width selected-template workspace owns metadata, files, explanation, history and links. Contract records retain status/count/guarded actions and show the latest file/version time. Account timezone, published numeral preference, native headers, sticky headers and named keyboard scrolling reuse the existing foundation. Editors and prepared files survive screen-size changes and failed reads. Delete review retains one dialog, restores visible eligible focus and retires its trigger on denial. Existing permissions, captured receipts, step-up and uncertainty recovery remain.
 

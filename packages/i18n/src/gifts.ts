@@ -1,5 +1,9 @@
 import { lookup } from './lookup.js';
 const fa: Record<string, string> = {
+  'admin.gifts.tableTitle': 'جدول کدهای تخفیف',
+  'admin.gifts.discount': 'تخفیف',
+  'admin.gifts.window': 'بازه اعتبار',
+  'admin.gifts.actions': 'عملیات',
   'admin.gifts.title': 'کدهای تخفیف',
   'admin.gifts.filters': 'فیلتر کدها',
   'admin.gifts.searchCode': 'جست‌وجوی کد',
@@ -112,6 +116,10 @@ const fa: Record<string, string> = {
   'admin.gifts.duplicate': 'این کد قبلاً ثبت شده است.',
 };
 const en: Record<string, string> = {
+  'admin.gifts.tableTitle': 'Gift-code table',
+  'admin.gifts.discount': 'Discount',
+  'admin.gifts.window': 'Validity window',
+  'admin.gifts.actions': 'Actions',
   'admin.gifts.title': 'Gift codes',
   'admin.gifts.filters': 'Gift-code filters',
   'admin.gifts.searchCode': 'Search code',

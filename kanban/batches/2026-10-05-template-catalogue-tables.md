@@ -21,3 +21,5 @@ No API, database, dependencies, supported-file policy, financial/retry policy, C
 Evidence: `/Users/majid/.local/state/barghsa-manual-batches/template-catalogue-tables/`. Related local validation, exact pushed commit and background deployment/Telegram receipts are separate. Validate notes/channel/screenshots on the clean committed HEAD, push normally to main, then enqueue the verified remote SHA with reviewed PNGs immediately. Continue building without waiting for CI/deployment.
 
 The preceding v0.1.13 release completed at `2026-10-05T19:40:09Z`, with exact healthy live commit `7a4500103a94cc4314b0296a3baf77d6551c269d`. Persian Telegram note (41) and screenshot (42) are confirmed in external receipts.
+
+Release v0.1.14 completed at `2026-10-05T19:50:52Z`, with exact healthy live commit `86df33f7045cfa996f5738221602ffd6f22e972b`. Persian Telegram note (message 43) and both reviewed screenshots (messages 44 and 45) are confirmed; external `release-completed.json` retains the receipts.

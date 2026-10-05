@@ -1,6 +1,7 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { Button, DatePicker, Input, Label, ListPage } from '@barghsa/ui';
+import { Button, DateCell, TextCell, DatePicker, Input, Label, ListPage } from '@barghsa/ui';
+import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { tGift } from '@barghsa/i18n/gifts';
 import { GIFT_CODE_CATEGORIES, type GiftCodeDto } from '@barghsa/shared/promotions';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
@@ -907,75 +908,149 @@ export default function AdminGiftCodesPage({
                   </div>
                 </section>
               )}
-              {!rows.length && <p>{label('empty')}</p>}
-              <ul className="divide-y">
-                {rows.map((row) => (
-                  <li key={row.id} className="flex flex-col gap-3 py-4">
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <h2 className="break-all font-semibold" dir="ltr">
-                        {row.code}
-                      </h2>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          disabled={!ready || locked}
-                          aria-label={`${label('edit')} ${row.code}`}
-                          onClick={() => choose(row.id)}
-                        >
-                          {label('edit')}
-                        </Button>
-                        <Button
-                          variant="outline"
-                          disabled={!ready || locked}
-                          aria-label={`${label(row.status === 'active' ? 'deactivate' : 'activate')} ${row.code}`}
-                          onClick={() =>
-                            propose(
-                              `/api/admin/promotions/gift-codes/${row.id}/toggle`,
-                              'POST',
-                              label(row.status === 'active' ? 'deactivate' : 'activate'),
-                              `${row.code}. ${label('confirmStatus')}`,
-                              { status: row.status === 'active' ? 'inactive' : 'active' },
-                              row
-                            )
-                          }
-                        >
-                          {label(row.status === 'active' ? 'deactivate' : 'activate')}
-                        </Button>
+              <OperationalQueueTable
+                locale={locale}
+                cardHeading="h2"
+                rows={rows}
+                caption={label('title')}
+                scrollLabel={label('tableTitle')}
+                nameHeader={label('code')}
+                loading={catalogue.loading || catalogue.pending}
+                emptyMessage={label('empty')}
+                renderName={(row) => (
+                  <span dir="ltr">
+                    <TextCell value={row.code} />
+                  </span>
+                )}
+                fields={[
+                  {
+                    id: 'status',
+                    label: label('status'),
+                    render: (row) => <>{label(row.status)}</>,
+                  },
+                  {
+                    id: 'eligibility',
+                    label: label('eligibility'),
+                    render: (row) => (
+                      <>{label(row.eligibility === 'profile' ? 'restricted' : 'public')}</>
+                    ),
+                  },
+                  {
+                    id: 'restoration',
+                    label: label('restorationPolicy'),
+                    render: (row) => (
+                      <>
+                        {label(
+                          !row.restoreOnCancel
+                            ? 'noRestoration'
+                            : row.restoreAfterPayment
+                              ? 'restorePaid'
+                              : 'restoreUnpaid'
+                        )}
+                      </>
+                    ),
+                  },
+                  {
+                    id: 'discount',
+                    label: label('discount'),
+                    render: (row) => (
+                      <div className="space-y-1">
+                        <span className="block text-xs text-muted-foreground">
+                          {label(row.discountType === 'percentage' ? 'percentage' : 'fixed')}
+                        </span>
+                        <bdi className="tabular-nums">
+                          {row.discountType === 'percentage'
+                            ? numbers.percent(Number(row.discountValue) / 10000)
+                            : money(row.discountValue)}
+                        </bdi>
+                        {row.discountType === 'percentage' && (
+                          <span className="block">
+                            {label('cap')}:{' '}
+                            <bdi className="tabular-nums">{money(row.maxCapIrr!)}</bdi>
+                          </span>
+                        )}
                       </div>
-                    </div>
-                    <p>
-                      {label(row.status)} ·{' '}
-                      {label(row.eligibility === 'profile' ? 'restricted' : 'public')}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {label(
-                        !row.restoreOnCancel
-                          ? 'noRestoration'
-                          : row.restoreAfterPayment
-                            ? 'restorePaid'
-                            : 'restoreUnpaid'
-                      )}
-                    </p>
-                    <p>
-                      {row.discountType === 'percentage'
-                        ? `${numbers.percent(Number(row.discountValue) / 10000)} · ${label('cap')}: ${money(row.maxCapIrr!)}`
-                        : money(row.discountValue)}
-                    </p>
-                    <dl className="grid gap-2 text-sm sm:grid-cols-3">
-                      {[
-                        ['consumed', numbers.number(row.usage.consumed)],
-                        ['released', numbers.number(row.usage.released)],
-                        ['totalDiscount', money(row.usage.totalDiscountIrr)],
-                      ].map(([key, value]) => (
-                        <div key={key}>
-                          <dt>{label(key!)}</dt>
-                          <dd>{value}</dd>
+                    ),
+                  },
+                  {
+                    id: 'window',
+                    label: label('window'),
+                    render: (row) => (
+                      <div className="space-y-1 text-sm">
+                        <div>
+                          {label('start')}:{' '}
+                          <DateCell
+                            value={row.validFrom}
+                            format={() => formatDate(row.validFrom)}
+                          />
                         </div>
-                      ))}
-                    </dl>
-                  </li>
-                ))}
-              </ul>
+                        <div>
+                          {label('end')}:{' '}
+                          {row.validUntil ? (
+                            <DateCell
+                              value={row.validUntil}
+                              format={() => formatDate(row.validUntil!)}
+                            />
+                          ) : (
+                            label('noExpiry')
+                          )}
+                        </div>
+                      </div>
+                    ),
+                  },
+                  {
+                    id: 'consumed',
+                    label: label('consumed'),
+                    render: (row) => (
+                      <bdi className="tabular-nums">{numbers.number(row.usage.consumed)}</bdi>
+                    ),
+                  },
+                  {
+                    id: 'released',
+                    label: label('released'),
+                    render: (row) => (
+                      <bdi className="tabular-nums">{numbers.number(row.usage.released)}</bdi>
+                    ),
+                  },
+                  {
+                    id: 'totalDiscount',
+                    label: label('totalDiscount'),
+                    render: (row) => (
+                      <bdi className="tabular-nums">{money(row.usage.totalDiscountIrr)}</bdi>
+                    ),
+                  },
+                ]}
+                actionHeader={label('actions')}
+                renderActions={(row) => (
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant="outline"
+                      disabled={!ready || locked}
+                      aria-label={`${label('edit')} ${row.code}`}
+                      onClick={() => choose(row.id)}
+                    >
+                      {label('edit')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled={!ready || locked}
+                      aria-label={`${label(row.status === 'active' ? 'deactivate' : 'activate')} ${row.code}`}
+                      onClick={() =>
+                        propose(
+                          `/api/admin/promotions/gift-codes/${row.id}/toggle`,
+                          'POST',
+                          label(row.status === 'active' ? 'deactivate' : 'activate'),
+                          `${row.code}. ${label('confirmStatus')}`,
+                          { status: row.status === 'active' ? 'inactive' : 'active' },
+                          row
+                        )
+                      }
+                    >
+                      {label(row.status === 'active' ? 'deactivate' : 'activate')}
+                    </Button>
+                  </div>
+                )}
+              />
               {catalogue.more === 'error' && <p role="alert">{label('moreError')}</p>}
               <ListPage.Pagination
                 kind="cursor"

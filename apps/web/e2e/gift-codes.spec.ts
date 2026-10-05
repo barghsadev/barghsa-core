@@ -52,7 +52,7 @@ for (const locale of ['en', 'fa'])
     await expect(dialog).toHaveCount(0);
     expect(attempts).toEqual(
       Array(2).fill({
-        code: 'local-code',
+        code: 'LOCAL-CODE',
         discountType: 'fixed_irr',
         discountValue: '1000',
         maxCapIrr: null,
