@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { AdminGeographyController } from './admin-geography.controller.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { InputFieldException } from '../common/input-field.exception.js';
 
 const id = '11111111-2222-4333-8444-555555555555';
 const names = { nameFa: 'تهران', nameEn: 'Tehran' };
@@ -20,6 +21,7 @@ function fixture() {
     createCity: call,
     updateCity: call,
     deleteCity: call,
+    importCities: call,
   };
   return { call, controller: new AdminGeographyController(service as never) };
 }
@@ -41,6 +43,7 @@ const operations: Operation[] = [
   { name: 'city list', run: (c, r) => c.listCities(r, id) },
   { name: 'city detail', missing: true, run: (c, r) => c.getCity(r, id) },
   { name: 'city creation', run: (c, r) => c.createCity(r, id, names) },
+  { name: 'city import', run: (c, r) => c.importCities(r, id, { cities: [names] }) },
   {
     name: 'city update',
     missing: true,
@@ -110,3 +113,28 @@ it('preserves search/status and numeric pagination in both lists', async () => {
     limit: 10,
   });
 });
+
+it.each(['createProvince', 'updateProvince', 'createCity', 'updateCity', 'importCities'] as const)(
+  '%s exposes only public input fields after validation rejection',
+  async (method) => {
+    const { controller, call } = fixture();
+    const req = request(['admin:geography:edit']);
+    const invalid = { nameFa: '<private-name>', nameEn: 'private 123', status: 'deleted' };
+    const input = method === 'importCities' ? { cities: [invalid] } : invalid;
+    const action =
+      method === 'createProvince'
+        ? controller.createProvince(req, input)
+        : controller[method](req, id, input);
+    const error = await action.catch((cause: unknown) => cause);
+    expect(error).toBeInstanceOf(InputFieldException);
+    const expected =
+      method === 'importCities'
+        ? ['cities']
+        : method.startsWith('update')
+          ? ['nameFa', 'nameEn', 'status']
+          : ['nameFa', 'nameEn'];
+    expect((error as InputFieldException).fields).toEqual(expected);
+    expect(JSON.stringify((error as InputFieldException).getResponse())).not.toContain('private');
+    expect(call).not.toHaveBeenCalled();
+  }
+);

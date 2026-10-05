@@ -1,4 +1,5 @@
 import { withCsrf } from './csrf.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 export interface Province {
   id: string;
@@ -7,7 +8,10 @@ export interface Province {
   status: 'active' | 'inactive';
 }
 export class GeographyRequestError extends Error {
-  constructor(readonly code: 'requestFailed' | 'conflict' | 'denied' = 'requestFailed') {
+  constructor(
+    readonly code: 'requestFailed' | 'conflict' | 'denied' = 'requestFailed',
+    readonly fields: readonly string[] = []
+  ) {
     super(code);
   }
 }
@@ -29,14 +33,35 @@ function isProvince(value: unknown): value is Province {
 }
 async function request(path: string, init?: RequestInit): Promise<unknown> {
   const response = await fetch(`/api/admin/geography/provinces${path}`, init);
-  if (!response.ok)
+  if (!response.ok) {
+    let fields: string[] = [];
+    if (response.status === 400) {
+      try {
+        const error = record(record(await response.json())?.error);
+        const names = error?.fields;
+        if (
+          error?.code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+          Array.isArray(names) &&
+          names.length <= 50 &&
+          names.every(
+            (name) =>
+              typeof name === 'string' && ['nameFa', 'nameEn', 'status', 'cities'].includes(name)
+          )
+        )
+          fields = names;
+      } catch {
+        // Malformed feedback retains the existing localized request error.
+      }
+    }
     throw new GeographyRequestError(
       [401, 403].includes(response.status)
         ? 'denied'
         : response.status === 409
           ? 'conflict'
-          : 'requestFailed'
+          : 'requestFailed',
+      fields
     );
+  }
   try {
     return await response.json();
   } catch {

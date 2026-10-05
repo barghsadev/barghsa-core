@@ -33,6 +33,14 @@ import {
   type GeographyScope,
 } from '../hooks/useGeographyList.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import { parseCityRows } from '../lib/geography-form-values.js';
+import {
+  CatalogueFieldFeedback,
+  CatalogueSaveButton,
+  catalogueRootMessage,
+} from '../components/CatalogueEditorFeedback.js';
 
 function ImportCitiesDialog({
   province,
@@ -55,57 +63,82 @@ function ImportCitiesDialog({
   const { number } = useNumberFormatting(locale);
   const t = (key: GeographyTextKey) => geographyText(key, locale);
   const field = useRef<HTMLTextAreaElement>(null);
-  const [text, setText] = useState('');
-  const [busy, setBusy] = useState(false);
+  const native = useWizardForm<{ rows: string }>(
+    async () =>
+      (await import('../lib/geography-form-schemas.js')).cityImportSchema(t('importInvalid')),
+    () => ({ rows: '' }),
+    t('validationUnavailable')
+  );
+  const [text, setText] = native.field('rows');
+  const busy = native.pending;
+  const fieldErrors = useActionFieldErrors(
+    native.form,
+    { rows: t('importInvalid') },
+    t('requestFailed')
+  );
+  const invalidFocus = useRef(false);
   const [error, setError] = useState<GeographyTextKey | null>(null);
   const mounted = useRef(false),
     inFlight = useRef(false);
+  const latest = useRef({ readReady, provinceId: province.id, locale, generation: 0 });
+  if (
+    latest.current.readReady !== readReady ||
+    latest.current.provinceId !== province.id ||
+    latest.current.locale !== locale
+  )
+    latest.current = {
+      readReady,
+      provinceId: province.id,
+      locale,
+      generation: latest.current.generation + 1,
+    };
   useEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
+      latest.current.generation += 1;
     };
   }, []);
-  const rows = text
-    .trim()
-    .split(/\r?\n/)
-    .filter((line) => line.trim())
-    .map((line) => line.split('\t').map((cell) => cell.trim()));
-  const valid =
-    rows.length > 0 &&
-    rows.length <= 200 &&
-    rows.every(
-      (row) =>
-        row.length === 2 &&
-        !!row[0] &&
-        row[0].length <= 100 &&
-        /^[\u0600-\u06FF\u200C\s]+$/.test(row[0]) &&
-        !!row[1] &&
-        row[1].length <= 100 &&
-        /^[a-zA-Z\s]+$/.test(row[1])
-    );
+  useEffect(() => {
+    if (!busy && invalidFocus.current && mounted.current) {
+      invalidFocus.current = false;
+      native.form.setFocus('rows');
+    }
+  }, [busy, native.errors, native.form]);
+  const rows = parseCityRows(text);
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     if (busy || inFlight.current || !readReady) return;
-    if (!valid) {
-      setError('importInvalid');
-      return;
-    }
     inFlight.current = true;
-    setBusy(true);
+    const generation = latest.current.generation;
+    native.setValidationPending(true);
+    native.form.clearErrors();
     setError(null);
     try {
-      await importCities(
-        province.id,
-        rows.map((row) => ({ nameFa: row[0]!, nameEn: row[1]! }))
-      );
-      if (mounted.current) onSaved();
+      const valid = await native.form.trigger();
+      if (!mounted.current || latest.current.generation !== generation || !latest.current.readReady)
+        return;
+      if (!valid) {
+        invalidFocus.current = native.form.getFieldState('rows').invalid;
+        return;
+      }
+      const cities = parseCityRows(native.form.getValues('rows'));
+      if (!cities) return;
+      await importCities(province.id, cities);
+      if (mounted.current && latest.current.provinceId === province.id) onSaved();
     } catch (cause) {
-      if (!mounted.current) return;
+      if (!mounted.current || latest.current.provinceId !== province.id) return;
       if (cause instanceof GeographyRequestError && cause.code === 'denied') {
         onDenied();
         return;
       }
+      if (
+        cause instanceof GeographyRequestError &&
+        cause.fields.length > 0 &&
+        cause.fields.every((name) => name === 'cities') &&
+        fieldErrors(['rows'])
+      )
+        return;
       setError(
         cause instanceof GeographyRequestError && cause.code === 'conflict'
           ? 'cityConflict'
@@ -113,14 +146,14 @@ function ImportCitiesDialog({
       );
     } finally {
       inFlight.current = false;
-      if (mounted.current) setBusy(false);
+      if (mounted.current) native.setValidationPending(false);
     }
   }
   return (
     <Dialog
       open
       onOpenChange={(open) => {
-        if (!open && !busy) onClose();
+        if (!open && !inFlight.current) onClose();
       }}
     >
       <DialogContent
@@ -133,35 +166,56 @@ function ImportCitiesDialog({
           <DialogTitle>{t('importCities')}</DialogTitle>
           <DialogDescription>{t('importDescription')}</DialogDescription>
         </DialogHeader>
-        <form onSubmit={submit} className="flex flex-col gap-4" aria-busy={busy}>
-          <Field>
-            <FieldLabel htmlFor="city-import-rows">{t('importRows')}</FieldLabel>
-            <Textarea
-              id="city-import-rows"
-              ref={field}
-              rows={8}
-              maxLength={41000}
-              disabled={busy}
-              value={text}
-              onChange={(event) => setText(event.target.value)}
-              aria-invalid={error === 'importInvalid'}
-              aria-describedby={error ? 'city-import-error' : undefined}
-            />
-          </Field>
-          {valid && <p role="status">{t('importCount').replace('{count}', number(rows.length))}</p>}
+        <form onSubmit={submit} noValidate className="flex flex-col gap-4" aria-busy={busy}>
           {error && (
             <Alert variant="destructive" role="alert" id="city-import-error">
               <AlertDescription>{t(error)}</AlertDescription>
             </Alert>
           )}
+          {catalogueRootMessage(native.errors) && (
+            <Alert variant="destructive">{catalogueRootMessage(native.errors)}</Alert>
+          )}
+          <Field>
+            <FieldLabel htmlFor="city-import-rows">{t('importRows')}</FieldLabel>
+            <Textarea
+              {...native.bind('rows')}
+              id="city-import-rows"
+              ref={(node) => {
+                field.current = node;
+                native.bind('rows').ref(node);
+              }}
+              rows={8}
+              maxLength={41000}
+              disabled={busy}
+              value={text}
+              onChange={(event) => {
+                if (!inFlight.current) setText(event.target.value);
+              }}
+            />
+            <CatalogueFieldFeedback
+              id={native.errorId('rows')}
+              error={native.errors.rows}
+              message={t('importInvalid')}
+            />
+          </Field>
+          {rows && <p role="status">{t('importCount').replace('{count}', number(rows.length))}</p>}
           {recovery}
           <DialogFooter>
-            <Button type="button" variant="outline" disabled={busy} onClick={onClose}>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={busy}
+              onClick={() => {
+                if (!inFlight.current) onClose();
+              }}
+            >
               {t('cancel')}
             </Button>
-            <Button type="submit" disabled={busy || !readReady}>
-              {t(busy ? 'saving' : 'importCities')}
-            </Button>
+            <CatalogueSaveButton
+              label={t(busy ? 'saving' : 'importCities')}
+              pending={busy}
+              disabled={busy || !readReady}
+            />
           </DialogFooter>
         </form>
       </DialogContent>
@@ -487,6 +541,7 @@ export function CitiesPanel({
       </ListPage>
       {modal && (
         <GeographyDialog
+          key={`${modal.kind}:${modal.province?.id ?? 'new'}`}
           provinceId={province.id}
           modal={modal}
           readReady={ready}

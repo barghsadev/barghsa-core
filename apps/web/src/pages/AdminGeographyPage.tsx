@@ -325,6 +325,7 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
       </ListPage>
       {modal && (
         <GeographyDialog
+          key={`${modal.kind}:${modal.province?.id ?? 'new'}`}
           modal={modal}
           readReady={ready}
           recovery={recovery}

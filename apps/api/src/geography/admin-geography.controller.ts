@@ -19,6 +19,7 @@ import { z } from 'zod';
 import { AdminGeographyService } from './admin-geography.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { InputFieldException } from '../common/input-field.exception.js';
 
 // ---------------------------------------------------------------------------
 // Zod validation schemas
@@ -26,6 +27,15 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 const nameFaRe = /^[\u0600-\u06FF\u200C\s]+$/;
 const nameEnRe = /^[a-zA-Z\s]+$/;
+
+function rejectInvalidGeography(issues: readonly { path: PropertyKey[] }[]): never {
+  const fields = ['nameFa', 'nameEn', 'status', 'cities'];
+  throw new InputFieldException(
+    issues.flatMap(({ path }) =>
+      typeof path[0] === 'string' && fields.includes(path[0]) ? [path[0]] : []
+    )
+  );
+}
 
 export const CreateProvinceSchema = z.object({
   nameFa: z
@@ -176,17 +186,7 @@ export class AdminGeographyController {
   async createProvince(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
     this.requireAdmin(req);
     const parsed = CreateProvinceSchema.safeParse(body);
-    if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0];
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: firstIssue?.message ?? 'VALIDATION_ERROR',
-          message: 'Invalid input',
-        },
-        400
-      );
-    }
+    if (!parsed.success) rejectInvalidGeography(parsed.error.issues);
     return this.adminGeographyService.createProvince(parsed.data, req.session, req.ip ?? 'unknown');
   }
 
@@ -207,17 +207,7 @@ export class AdminGeographyController {
   ) {
     this.requireAdmin(req);
     const parsed = UpdateProvinceSchema.safeParse(body);
-    if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0];
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: firstIssue?.message ?? 'VALIDATION_ERROR',
-          message: 'Invalid input',
-        },
-        400
-      );
-    }
+    if (!parsed.success) rejectInvalidGeography(parsed.error.issues);
     const province = await this.adminGeographyService.updateProvince(
       id,
       parsed.data as UpdateProvinceDto,
@@ -337,8 +327,7 @@ export class AdminGeographyController {
       .object({ cities: z.array(CreateCitySchema).min(1).max(200) })
       .strict()
       .safeParse(body);
-    if (!parsed.success)
-      throw new HttpException({ statusCode: 400, error: 'VALIDATION:INPUT' }, 400);
+    if (!parsed.success) rejectInvalidGeography(parsed.error.issues);
     return this.adminGeographyService.importCities(
       provinceId,
       parsed.data.cities,
@@ -361,17 +350,7 @@ export class AdminGeographyController {
   ) {
     this.requireAdmin(req);
     const parsed = CreateCitySchema.safeParse(body);
-    if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0];
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: firstIssue?.message ?? 'VALIDATION_ERROR',
-          message: 'Invalid input',
-        },
-        400
-      );
-    }
+    if (!parsed.success) rejectInvalidGeography(parsed.error.issues);
     return this.adminGeographyService.createCity(
       provinceId,
       parsed.data,
@@ -397,17 +376,7 @@ export class AdminGeographyController {
   ) {
     this.requireAdmin(req);
     const parsed = UpdateCitySchema.safeParse(body);
-    if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0];
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: firstIssue?.message ?? 'VALIDATION_ERROR',
-          message: 'Invalid input',
-        },
-        400
-      );
-    }
+    if (!parsed.success) rejectInvalidGeography(parsed.error.issues);
     const city = await this.adminGeographyService.updateCity(
       id,
       parsed.data as UpdateCityDto,

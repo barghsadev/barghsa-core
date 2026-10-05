@@ -52,6 +52,9 @@ const en = {
   deactivateDescription: 'Deactivate {name}? Existing records will be preserved.',
   invalidFa: 'Enter a Persian name using Persian characters.',
   invalidEn: 'Enter an English name using English letters.',
+  invalidStatus: 'Select an active or inactive status.',
+  nameLength: 'Use a name with no more than 100 characters.',
+  validationUnavailable: 'Validation could not be completed. Please try again.',
   requestFailed: 'The request could not be completed. Please try again.',
   conflict:
     'The change conflicts with existing data. The province may still be in use or its name may already exist.',
@@ -110,6 +113,9 @@ const fa: Record<keyof typeof en, string> = {
   deactivateDescription: 'استان {name} غیرفعال شود؟ سوابق موجود حفظ می‌شوند.',
   invalidFa: 'نام فارسی را با حروف فارسی وارد کنید.',
   invalidEn: 'نام انگلیسی را با حروف انگلیسی وارد کنید.',
+  invalidStatus: 'وضعیت فعال یا غیرفعال را انتخاب کنید.',
+  nameLength: 'نام را با حداکثر ۱۰۰ نویسه وارد کنید.',
+  validationUnavailable: 'اعتبارسنجی انجام نشد. لطفاً دوباره تلاش کنید.',
   requestFailed: 'درخواست انجام نشد. لطفاً دوباره تلاش کنید.',
   conflict:
     'این تغییر با اطلاعات موجود تداخل دارد. ممکن است استان همچنان در استفاده باشد یا نام آن تکراری باشد.',

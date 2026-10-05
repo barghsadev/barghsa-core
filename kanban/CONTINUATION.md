@@ -10,7 +10,17 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: staff account, role and permission lookup forms (October 5, 2026)
+## Latest manual batch: province, city and bulk-import native forms (October 5, 2026)
+
+Completed geography creation/editing and city import as one native-form batch. Bilingual linked feedback, post-unlock focus, retained raw drafts and synchronous submission reuse the existing engines. Safe API field identifiers follow permission checks; actual import receipts, atomicity, version/audit rules, conflict handling and catalogue recovery remain.
+
+All 75 selected API, 58 frontend and 112 dictionary cases pass. All 48 Chromium/mobile Safari cases pass on rebuilt production assets with zero retries, including eight new native cases and forty retained CRUD/recovery cases. Build/types/lint, contracts/suppression, all 85 unchanged budgets and strict SAST pass: 1,787 files, zero findings/errors, five fixtures. Selected complete Persian desktop/mobile captures are reviewed for release attachments. See `kanban/batches/2026-10-05-geography-native-forms.md`.
+
+Release v0.1.2 follows the mandatory direct-main/deploy/Persian-Telegram workflow. Publication, exact-commit CI and release confirmations are recorded externally. Reuse `02-auth-users-admin.md#T-09.02.01` and `#T-09.02.02`; shared UI form parents remain partial. Select the next uncovered coherent family from current code and canonical criteria, without recounting existing engines or changing historical supervisor state.
+
+The preceding v0.1.1 staff-access release is published at `f51a74a56802d41d320ffdb543cd384004dc6439`. All five jobs in [CI run 37330642348](https://github.com/barghsadev/barghsa-core/actions/runs/37330642348) passed. Staging metadata/login and the Telegram note plus two screenshots were confirmed; the external staff-access `release-completed.json` retains those results.
+
+## Previous manual batch: staff account, role and permission lookup forms (October 5, 2026)
 
 Completed staff creation, role/reason editing and blank-ID permission lookup as a coherent native-form batch. Bilingual linked feedback, post-unlock focus, retained raw drafts and synchronous proposal ownership reuse the existing engines. API public field identifiers follow existing permission checks; OTP, activation, CSRF, session revocation, audit and read recovery remain.
 

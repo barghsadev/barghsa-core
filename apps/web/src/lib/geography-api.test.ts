@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { deactivateProvince, listProvinces, saveProvince } from './geography-api.js';
+import {
+  deactivateProvince,
+  listProvinces,
+  saveProvince,
+  GeographyRequestError,
+} from './geography-api.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 const province = { id: 'province-1', nameFa: 'تهران', nameEn: 'Tehran', status: 'active' as const };
 afterEach(() => vi.unstubAllGlobals());
@@ -68,4 +74,41 @@ describe('geography response boundaries', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('invalid')));
     await expect(deactivateProvince(province.id)).rejects.toThrow('requestFailed');
   });
+  it.each([['nameEn'], ['cities'], ['status', 'nameFa']])(
+    'accepts only safe coded field feedback %j',
+    async (...fields) => {
+      response(
+        {
+          error: {
+            code: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            fields,
+            message: 'private detail',
+          },
+        },
+        400
+      );
+      const error = await saveProvince(province, province).catch((cause: unknown) => cause);
+      expect(error).toBeInstanceOf(GeographyRequestError);
+      expect((error as GeographyRequestError).fields).toEqual(fields);
+      expect((error as GeographyRequestError).message).toBe('requestFailed');
+    }
+  );
+  it.each([['secret'], ['nameEn', null], Array.from({ length: 51 }, () => 'nameEn')])(
+    'rejects malformed feedback without exposing details %j',
+    async (...fields) => {
+      response(
+        {
+          error: {
+            code: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            fields,
+            message: 'private detail',
+          },
+        },
+        400
+      );
+      const error = await saveProvince(province, province).catch((cause: unknown) => cause);
+      expect((error as GeographyRequestError).fields).toEqual([]);
+      expect((error as GeographyRequestError).message).toBe('requestFailed');
+    }
+  );
 });

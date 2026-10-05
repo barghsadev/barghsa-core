@@ -71,12 +71,12 @@ for (const locale of ['en', 'fa'] as const) {
     const dialog = page.getByRole('dialog');
     const create = dialog.getByRole('button', { name: fa ? 'ایجاد' : 'Create', exact: true });
     await create.click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(dialog.getByRole('alert').first()).toBeVisible();
     expect(creates).toBe(0);
     await dialog.getByLabel(fa ? 'نام فارسی' : 'Persian Name').fill('تهران');
     await dialog.getByLabel(fa ? 'نام انگلیسی' : 'English Name').fill('Tehran');
     await create.click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(dialog.getByRole('alert').first()).toBeVisible();
     await expect(dialog).not.toContainText('private database error');
     await expect(dialog.getByLabel(fa ? 'نام انگلیسی' : 'English Name')).toHaveValue('Tehran');
     await create.click();
@@ -284,11 +284,11 @@ for (const locale of ['en', 'fa'] as const) {
     const input = dialog.getByLabel(fa ? 'ردیف‌های شهر' : 'City rows');
     await expect(input).toBeFocused();
     await dialog.getByRole('button', { name: importName, exact: true }).click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(dialog.getByRole('alert').first()).toBeVisible();
     expect(imports).toBe(0);
     await input.fill('اسلامشهر\tEslamshahr\nورامین\tVaramin');
     await dialog.getByRole('button', { name: importName, exact: true }).click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(dialog.getByRole('alert').first()).toBeVisible();
     await expect(input).toContainText('Eslamshahr');
     await dialog.getByRole('button', { name: importName, exact: true }).click();
     await expect(dialog).toHaveCount(0);

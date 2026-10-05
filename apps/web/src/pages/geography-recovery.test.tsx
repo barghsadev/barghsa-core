@@ -64,12 +64,16 @@ async function fill(selector: string, value: string) {
     input.dispatchEvent(new Event('input', { bubbles: true }));
   });
 }
-async function submit() {
-  await act(async () =>
+async function submit(waitForWrite = false) {
+  const writes = () =>
+    vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method && init.method !== 'GET');
+  const before = writes().length;
+  await act(async () => {
     document
       .querySelector('[role=dialog] form')!
-      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-  );
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    if (waitForWrite) await vi.waitFor(() => expect(writes()).toHaveLength(before + 1));
+  });
 }
 function submitButton() {
   return document.querySelector<HTMLButtonElement>('[role=dialog] button[type=submit]')!;
@@ -254,7 +258,7 @@ it('a changed city invalidates an in-flight edit and old completion cannot erase
     .at(-1)!;
   await act(async () => edit.click());
   await fill('#province-name-en', 'Updated');
-  await submit();
+  await submit(true);
   changed = true;
   await click('Retry cities', true);
   expect(document.querySelector('[role=dialog]')).toBeNull();
@@ -270,12 +274,12 @@ it('import command failure retains rows and denied write clears them', async () 
   await click('Cities');
   await click('Import Cities');
   await fill('#city-import-rows', 'اسلامشهر\tEslamshahr');
-  await submit();
+  await submit(true);
   expect(document.querySelector<HTMLTextAreaElement>('#city-import-rows')!.value).toContain(
     'Eslamshahr'
   );
   deny = true;
-  await submit();
+  await submit(true);
   expect(document.querySelector('[role=dialog]')).toBeNull();
   expect(host.querySelector('table')).toBeNull();
 });
