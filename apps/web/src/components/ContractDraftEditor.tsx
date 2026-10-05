@@ -1,23 +1,43 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import type { ContractFormCoordination } from '../lib/contract-review-signature-form.js';
 import { Alert, AlertDescription, Button, PageLoading } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
 import type { ContractDetailData, ContractVersion } from '../lib/contracts.js';
+import { contractAuthoringSource } from '../lib/contract-authoring-form.js';
 import type DraftForm from './ContractDraftForm.js';
 
 type ExistingDraft = { contract: ContractDetailData; version: ContractVersion };
-export function ContractDraftEditor({
-  existing,
-  amendment = false,
-  onSaved,
-}: {
+type Props = {
   existing?: ExistingDraft | undefined;
   amendment?: boolean;
   onSaved: (id: string) => void;
-}) {
+  coordination?: ContractFormCoordination | undefined;
+  onDenied?: (() => void) | undefined;
+};
+export function ContractDraftEditor(props: Props) {
+  const actor = useAccountUser(),
+    revision = useProfileContextRevision();
+  return (
+    <DraftEditor
+      key={JSON.stringify([
+        actor,
+        revision,
+        contractAuthoringSource(props.existing),
+        props.amendment,
+      ])}
+      {...props}
+    />
+  );
+}
+function DraftEditor({ existing, amendment = false, onSaved, coordination, onDenied }: Props) {
   const locale = useLocale(),
     word = (key: string) => contractText(key, locale);
   const [open, setOpen] = useState(false);
+  const owner = useRef(false),
+    [locked, setLocked] = useState(false);
   const [Form, setForm] = useState<typeof DraftForm | null>(null);
   const [failed, setFailed] = useState(false);
   const [retry, setRetry] = useState(0);
@@ -43,7 +63,10 @@ export function ContractDraftEditor({
         variant="outline"
         className="self-start"
         aria-expanded={open}
-        onClick={() => setOpen(!open)}
+        disabled={locked || !!coordination?.blocked()}
+        onClick={() => {
+          if (!owner.current && !coordination?.blocked()) setOpen(!open);
+        }}
       >
         {word(amendment ? 'amendmentCreate' : existing ? 'draftEdit' : 'draftCreate')}
       </Button>
@@ -52,6 +75,12 @@ export function ContractDraftEditor({
           <Form
             existing={existing}
             amendment={amendment}
+            coordination={coordination}
+            onDenied={onDenied}
+            onLocked={(value) => {
+              owner.current = value;
+              setLocked(value);
+            }}
             onSaved={(id) => {
               setOpen(false);
               onSaved(id);

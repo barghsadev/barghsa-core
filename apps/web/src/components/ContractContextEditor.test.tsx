@@ -4,6 +4,8 @@ import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { en, fa } from '@barghsa/i18n/contracts';
 import { ContractContextEditor } from './ContractContextEditor.js';
 import type { ContractActivationData, ContractVersion } from '../lib/contracts.js';
+import { authoringReceipt, PROFILE, actor } from '../lib/contract-authoring-form.fixtures.js';
+import { tContractAuthoring } from '@barghsa/i18n/contract-authoring';
 import type { TeamAction } from './TeamActionDialog.js';
 const harness = vi.hoisted(() => ({
   locale: 'en' as 'en' | 'fa',
@@ -11,6 +13,8 @@ const harness = vi.hoisted(() => ({
   status: 'ready',
   action: null as TeamAction | null,
 }));
+vi.mock('../hooks/useAccountUser.js', () => ({ useAccountUser: () => 'builder' }));
+vi.mock('../lib/profile-context.js', () => ({ useProfileContextRevision: () => 0 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => harness.locale }));
 vi.mock('../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ timezone: harness.timezone, status: harness.status, notice: null }),
@@ -23,13 +27,34 @@ vi.mock('./TeamActionDialog.js', () => ({
   }: {
     action: TeamAction;
     onClose: () => void;
-    onSuccess: () => Promise<void>;
+    onSuccess: (result: unknown) => Promise<void>;
   }) => {
     harness.action = action;
     return (
       <div role="dialog">
         <button onClick={onClose}>Cancel</button>
-        <button onClick={() => void onSuccess()}>Confirm</button>
+        <button
+          onClick={() =>
+            void onSuccess(
+              authoringReceipt({
+                kind: 'context',
+                actor,
+                body: action.body as Record<string, unknown>,
+                existing: {
+                  contract: {
+                    id: context.contractId,
+                    profileId: PROFILE,
+                    serviceType: 'solar',
+                    state: 'Draft',
+                  },
+                  version,
+                },
+              })
+            )
+          }
+        >
+          Confirm
+        </button>
       </div>
     );
   },
@@ -79,7 +104,9 @@ async function click(text: string) {
     expect(button).toBeDefined();
     button!.click();
   });
+  await vi.waitFor(() => expect(container.querySelector('button[aria-busy=true]')).toBeNull());
 }
+
 async function change(id: string, value: string) {
   await act(async () => {
     const input = container.querySelector<HTMLInputElement | HTMLTextAreaElement>(
@@ -100,6 +127,12 @@ async function render(extra: Partial<ContractActivationData> = {}) {
       <ContractContextEditor
         context={{ ...context, ...extra }}
         version={version}
+        source={{
+          id: context.contractId,
+          profileId: PROFILE,
+          serviceType: 'solar',
+          state: extra.state === 'ChangesRequested' ? 'ChangesRequested' : 'Draft',
+        }}
         onChanged={onChanged}
       />
     )
@@ -157,7 +190,9 @@ it('rejects invalid invoice references and reversed date ranges', async () => {
   await change('invoice', 'not-an-invoice');
   await change('reason', 'Change');
   await click(en.saveContext);
-  expect(container.querySelector('[role=alert]')?.textContent).toBe(en.contextInvalid);
+  expect(container.querySelector('[role=alert]')?.textContent).toBe(
+    tContractAuthoring('invoiceInvalid', 'en')
+  );
   expect(harness.action).toBeNull();
   await change('invoice', '');
   await change('end', '2026-09-21T03:30');

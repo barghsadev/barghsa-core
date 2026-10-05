@@ -136,7 +136,13 @@ async function value(label: string, raw: string) {
 it('loads only after opening, cancels a held load and seeds the current source when reopened', async () => {
   const first = signingSource({ state: 'Draft' }),
     saved = vi.fn();
-  await act(async () => root.render(<ContractDraftEditor existing={first} onSaved={saved} />));
+  await act(async () =>
+    root.render(
+      <AccountUserProvider value={actor}>
+        <ContractDraftEditor existing={first} onSaved={saved} />
+      </AccountUserProvider>
+    )
+  );
   expect(harness.release).toBeNull();
   expect(host.querySelector('form')).toBeNull();
   await click(en.draftEdit);
@@ -146,7 +152,16 @@ it('loads only after opening, cancels a held load and seeds the current source w
     ...first,
     version: { ...first.version, content: { title: 'New source title', text: 'New source terms' } },
   };
-  await act(async () => root.render(<ContractDraftEditor existing={fresh} onSaved={saved} />));
+  await act(async () =>
+    root.render(
+      <AccountUserProvider value={actor}>
+        <ContractDraftEditor existing={fresh} onSaved={saved} />
+      </AccountUserProvider>
+    )
+  );
+  // The material source key remounts the editor closed; cancel its new held load explicitly.
+  expect(host.querySelector('form')).toBeNull();
+  await click(en.draftEdit);
   await click(en.draftEdit);
   await act(async () => harness.release!());
   expect(host.querySelector('form')).toBeNull();
@@ -166,7 +181,11 @@ it('shows a load error and retries without changing the current amendment source
   const source = signingSource({ state: 'Active' }),
     saved = vi.fn();
   await act(async () =>
-    root.render(<ContractDraftEditor existing={source} amendment onSaved={saved} />)
+    root.render(
+      <AccountUserProvider value={actor}>
+        <ContractDraftEditor existing={source} amendment onSaved={saved} />
+      </AccountUserProvider>
+    )
   );
   await click(en.amendmentCreate);
   await releaseFormLoad();
@@ -180,6 +199,7 @@ it('shows a load error and retries without changing the current amendment source
   await value(en.draftTerms, 'Replacement terms');
   await value(en.contextReason, 'Extend term');
   await click(en.amendmentReview);
+  await act(async () => vi.dynamicImportSettled());
   expect(harness.team?.action?.body).toMatchObject({
     expectedVersionId: source.version.id,
     content: { ...source.version.content, text: 'Replacement terms' },

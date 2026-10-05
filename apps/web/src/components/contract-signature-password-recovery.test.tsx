@@ -81,6 +81,7 @@ it('actual password step-up and unknown recovery resend the same immutable comma
       host.querySelector<HTMLInputElement>('#signature-acknowledgement')!.click();
     });
     await act(async () => button('Record signed copy').click());
+    await act(async () => vi.dynamicImportSettled());
     await vi.waitFor(() => expect(document.querySelector('[role=dialog]')).not.toBeNull());
     await act(async () =>
       document

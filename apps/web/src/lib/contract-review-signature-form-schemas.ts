@@ -42,3 +42,10 @@ export function signatureRecordSchema(message: string, acknowledgement: string, 
       });
   });
 }
+
+export {
+  contractDraftSchema,
+  contractContextSchema,
+  inactiveContractDraftSchema,
+  inactiveContractContextSchema,
+} from './contract-authoring-form-schemas.js';

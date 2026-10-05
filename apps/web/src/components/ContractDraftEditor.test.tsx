@@ -4,12 +4,15 @@ import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { en, fa } from '@barghsa/i18n/contracts';
 import { ContractDraftEditor } from './ContractDraftEditor.js';
 import type { ContractDetailData, ContractVersion } from '../lib/contracts.js';
+import { authoringReceipt, actor } from '../lib/contract-authoring-form.fixtures.js';
 import type { TeamAction } from './TeamActionDialog.js';
 const harness = vi.hoisted(() => ({
   locale: 'en' as 'en' | 'fa',
   action: null as TeamAction | null,
   result: null as unknown,
 }));
+vi.mock('../hooks/useAccountUser.js', () => ({ useAccountUser: () => 'builder' }));
+vi.mock('../lib/profile-context.js', () => ({ useProfileContextRevision: () => 0 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => harness.locale }));
 vi.mock('./TeamActionDialog.js', () => ({
   TeamActionDialog: ({
@@ -25,7 +28,20 @@ vi.mock('./TeamActionDialog.js', () => ({
     return (
       <div role="dialog">
         <button onClick={onClose}>Cancel confirmation</button>
-        <button onClick={() => void onSuccess(harness.result)}>Confirm</button>
+        <button
+          onClick={() =>
+            void onSuccess(
+              harness.result ??
+                authoringReceipt({
+                  kind: 'create',
+                  actor,
+                  body: action.body as Record<string, unknown>,
+                })
+            )
+          }
+        >
+          Confirm
+        </button>
       </div>
     );
   },
@@ -59,7 +75,7 @@ const onSaved = vi.fn();
 beforeEach(() => {
   harness.locale = 'en';
   harness.action = null;
-  harness.result = { id: ID, currentVersion: { id: version.id } };
+  harness.result = null;
   onSaved.mockReset();
   container = document.createElement('div');
   document.body.append(container);
@@ -71,7 +87,16 @@ beforeEach(() => {
         new Response(
           JSON.stringify(
             url.includes('profileId=')
-              ? { orders: [{ id: ORDER, serviceType: 'electricity' }], nextBefore: null }
+              ? {
+                  orders: [
+                    {
+                      id: ORDER,
+                      serviceType: 'electricity',
+                      createdAt: '2026-09-21T00:00:00.000Z',
+                    },
+                  ],
+                  nextBefore: null,
+                }
               : {
                   profiles: [{ id: PROFILE, title: 'Acme', profileType: 'LEGAL' }],
                   nextBefore: null,
@@ -95,7 +120,9 @@ async function click(label: string) {
     expect(button).toBeDefined();
     button!.click();
   });
+  await vi.waitFor(() => expect(container.querySelector('button[aria-busy=true]')).toBeNull());
 }
+
 async function field(label: string, value: string) {
   await act(async () => {
     const node = [...container.querySelectorAll('label')].find(
@@ -294,7 +321,14 @@ it('recovers option failures and appends distinct pagination results', async () 
   fetcher.mockResolvedValueOnce(
     new Response(
       JSON.stringify({
-        profiles: [{ id: PROFILE, title: 'Acme', profileType: 'LEGAL' }],
+        profiles: [
+          ...Array.from({ length: 49 }, (_, index) => ({
+            id: `019a0000-0000-7000-8000-${String(index + 100).padStart(12, '0')}`,
+            title: 'Earlier',
+            profileType: 'LEGAL',
+          })),
+          { id: PROFILE, title: 'Acme', profileType: 'LEGAL' },
+        ],
         nextBefore: PROFILE,
       })
     )
@@ -303,16 +337,15 @@ it('recovers option failures and appends distinct pagination results', async () 
   fetcher.mockResolvedValueOnce(
     new Response(
       JSON.stringify({
-        profiles: [
-          { id: PROFILE, title: 'Acme', profileType: 'LEGAL' },
-          { id: ID, title: 'New', profileType: 'INDIVIDUAL' },
-        ],
+        profiles: [{ id: ID, title: 'New', profileType: 'INDIVIDUAL' }],
         nextBefore: null,
       })
     )
   );
   await click(en.next);
-  expect(container.querySelectorAll('select')[0]!.options).toHaveLength(3);
+  expect(container.querySelectorAll('select')[0]!.options).toHaveLength(52);
+  expect(container.querySelectorAll(`option[value="${PROFILE}"]`)).toHaveLength(1);
+  expect(container.querySelector(`option[value="${ID}"]`)).not.toBeNull();
   expect(fetcher).toHaveBeenLastCalledWith(
     expect.stringContaining('before=' + PROFILE),
     expect.any(Object)

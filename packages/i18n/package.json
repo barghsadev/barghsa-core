@@ -307,6 +307,11 @@
       "import": "./dist/solar-contract.js",
       "default": "./dist/solar-contract.js"
     },
+    "./contract-authoring": {
+      "types": "./dist/contract-authoring.d.ts",
+      "import": "./dist/contract-authoring.js",
+      "default": "./dist/contract-authoring.js"
+    },
     "./contract-review-signature": {
       "types": "./dist/contract-review-signature.d.ts",
       "import": "./dist/contract-review-signature.js",

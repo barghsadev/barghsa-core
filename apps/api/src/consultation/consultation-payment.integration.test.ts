@@ -535,6 +535,12 @@ it('charges or credits a paid consultation without changing the paid invoice', a
   });
   expect(body.refunds.map((refund) => refund.id).sort()).toEqual([...creditBody.refundIds].sort());
   expect(body.refunds.reduce((sum, refund) => sum + BigInt(refund.amount), 0n)).toBe(150000n);
+  // Earlier fixture requests must not consume this additional probe's submission window.
+  // Keep the current financial-proof request and all of its captured snapshots unchanged.
+  await http.pool.query(
+    "UPDATE consultation_requests SET submitted_at=clock_timestamp()-INTERVAL '2 minutes' WHERE profile_id=$1 AND id<>$2",
+    [profileId, requestId]
+  );
   const expiring = await offer();
   expect(
     (await decide(`/api/consultations/requests/${expiring.requestId}/accept`, 'consultation-payer'))

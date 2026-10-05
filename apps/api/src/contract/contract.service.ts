@@ -326,6 +326,81 @@ export class ContractService {
     });
   }
 
+  async assertCanAuthorDraft(
+    action: 'create' | 'update' | 'amendment',
+    id: string | null,
+    body: Record<string, unknown>,
+    actor: Actor
+  ): Promise<void> {
+    const profile = action === 'create' ? contractUuid.safeParse(body.profileId) : null;
+    const contract = action !== 'create' ? contractUuid.safeParse(id) : null;
+    const version = action !== 'create' ? contractUuid.safeParse(body.expectedVersionId) : null;
+    const order = body.orderId === undefined ? null : contractUuid.safeParse(body.orderId);
+    const contractId = contract?.success ? contract.data : null;
+    const versionId = version?.success ? version.data : null;
+    if (
+      (action === 'create' &&
+        (!profile?.success ||
+          typeof body.serviceType !== 'string' ||
+          !['electricity', 'savings', 'solar'].includes(body.serviceType))) ||
+      (action !== 'create' && (!contractId || !versionId)) ||
+      (order && !order.success)
+    )
+      throw new NotFoundException();
+    const profileId = profile?.success
+      ? profile.data
+      : (
+          await getDbPool().query<{ profile_id: string }>(
+            'SELECT profile_id FROM contracts WHERE id=$1',
+            [contractId]
+          )
+        ).rows[0]?.profile_id;
+    if (!profileId) throw new NotFoundException();
+    await staffContractMutation(profileId, actor, async (client, archived) => {
+      if (archived) throw new ConflictException('Profile is archived');
+      if (action === 'create') {
+        if (order?.success) {
+          const row = (
+            await client.query<{ profile_id: string; order_type: string; status: string }>(
+              'SELECT profile_id,order_type,status FROM orders WHERE id=$1 FOR SHARE',
+              [order.data]
+            )
+          ).rows[0];
+          if (
+            !row ||
+            row.profile_id !== profileId ||
+            row.order_type !== body.serviceType ||
+            row.status === 'CANCELLED'
+          )
+            throw new ConflictException('Order is unavailable or does not match the contract');
+        }
+        return;
+      }
+      const row = (
+        await client.query<{ state: string; current_version_id: string }>(
+          'SELECT state,current_version_id FROM contracts WHERE id=$1 AND profile_id=$2 FOR SHARE',
+          [contractId, profileId]
+        )
+      ).rows[0];
+      if (!row) throw new NotFoundException();
+      const states =
+        action === 'update' ? ['Draft', 'ChangesRequested'] : ['Accepted', 'Signed', 'Active'];
+      if (!states.includes(row.state) || row.current_version_id !== versionId)
+        throw new ConflictException('Contract is no longer the expected authoring version');
+      if (
+        action === 'amendment' &&
+        (
+          await client.query(
+            `SELECT 1 FROM contract_amendments WHERE contract_id=$1
+             AND state IN ('Draft','AwaitingCustomerAcceptance','AwaitingSignature')`,
+            [contractId]
+          )
+        ).rowCount
+      )
+        throw new ConflictException('A pending amendment already exists');
+    });
+  }
+
   private async solarContractReview(client: PoolClient, input: SolarContractReviewInput) {
     const request = (
       await client.query<{ status: string; contract_id: string | null }>(

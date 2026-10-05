@@ -39,12 +39,17 @@ function fixture() {
     paidResolutionReview: vi.fn(),
     recoverRefund: vi.fn(),
   };
+  const paidAuthority = vi.fn(async () => undefined);
   return {
     creation,
     workflow,
+    paidAuthority,
     intake: new ConsultationRequestController(creation as never),
     customer: new CustomerConsultationWorkflowController(workflow as never),
-    staff: new StaffConsultationWorkflowController(workflow as never),
+    staff: new StaffConsultationWorkflowController({
+      ...workflow,
+      assertCanEditPaidResolution: paidAuthority,
+    } as never),
   };
 }
 function failure(call: () => unknown) {
@@ -166,14 +171,34 @@ it('passes normalized exact nonfinancial limits and retains the creation key and
   }
 });
 
-it('preserves the separate paid-reason limit and protected hash/idempotency parsing', () => {
+it('preserves the separate paid-reason limit and protected hash/idempotency parsing', async () => {
   const value = fixture();
+  const rejection = async (result: Promise<unknown>, field?: string) => {
+    let error: unknown;
+    try {
+      await result;
+    } catch (caught) {
+      error = caught;
+    }
+    expect(error).toBeInstanceOf(HttpException);
+    if (!(error instanceof HttpException)) throw new Error('Expected validation rejection');
+    expect(error.getStatus()).toBe(400);
+    if (field) {
+      expect(error).toBeInstanceOf(InputFieldException);
+      if (!(error instanceof InputFieldException)) throw new Error('Expected owned rejection');
+      expect(error.fields).toEqual([field]);
+      expect(JSON.stringify(error.getResponse())).not.toMatch(/PRIVATE|submissionKey/);
+    } else {
+      expect(error).not.toBeInstanceOf(InputFieldException);
+      expect(JSON.stringify(error.getResponse())).not.toMatch(/PRIVATE|fields|submissionKey/);
+    }
+  };
   const paid = {
     idempotencyKey: input.submissionKey,
     expectedReviewHash: 'a'.repeat(64),
     reason: 'r'.repeat(1000),
   };
-  value.staff.paidCancel(requestId, paid, request);
+  await value.staff.paidCancel(requestId, paid, request);
   expect(value.workflow.closePaid).toHaveBeenCalledWith(
     request.session,
     requestId,
@@ -181,21 +206,30 @@ it('preserves the separate paid-reason limit and protected hash/idempotency pars
     paid,
     request.ip
   );
+  expect(value.paidAuthority).not.toHaveBeenCalled();
   value.workflow.closePaid.mockClear();
   for (const method of ['paidCancel', 'paidReject', 'refundRecovery'] as const) {
-    generic(() =>
-      value.staff[method](requestId, { ...paid, reason: 'PRIVATE'.repeat(143) }, request)
+    await rejection(
+      value.staff[method](requestId, { ...paid, reason: 'PRIVATE'.repeat(143) }, request),
+      'reason'
     );
-    generic(() =>
+    await rejection(
       value.staff[method](requestId, { ...paid, expectedReviewHash: 'PRIVATE' }, request)
     );
   }
-  generic(() =>
+  await rejection(
     value.staff.paidResolutionReview(
       requestId,
       { action: 'cancel', reason: 'PRIVATE'.repeat(143) },
       request
-    )
+    ),
+    'reason'
   );
   noCalls(value);
+  expect(value.paidAuthority.mock.calls).toEqual([
+    [request.session, requestId, false, true],
+    [request.session, requestId, false, true],
+    [request.session, requestId, true, true],
+    [request.session, requestId, false, false],
+  ]);
 });

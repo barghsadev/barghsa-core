@@ -6,6 +6,7 @@ import { ContractDetail } from './ContractDetail.js';
 import { ContractsWorkspace } from './ContractsWorkspace.js';
 import type { ContractFinancialReviewDialog } from './ContractFinancialReviewDialog.js';
 import type { TeamActionDialog } from './TeamActionDialog.js';
+import type { ContractActivationPanel } from './ContractActivationPanel.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { en, fa } from '@barghsa/i18n/contracts';
 import {
@@ -65,9 +66,11 @@ vi.mock('./ContractCancellationPanel.js', () => ({
   ),
 }));
 vi.mock('./ContractActivationPanel.js', () => ({
-  ContractActivationPanel: () => (
+  ContractActivationPanel: ({ coordination }: ComponentProps<typeof ContractActivationPanel>) => (
     <button
+      disabled={!!coordination?.blocked()}
       onClick={() => {
+        if (coordination?.blocked()) return;
         ++harness.legacyCalls;
       }}
     >
@@ -88,11 +91,30 @@ vi.mock('./DocumentsWorkspace.js', () => ({
     </button>
   ),
 }));
-vi.mock('./ContractRefundQueue.js', () => ({ ContractRefundQueue: () => null }));
-vi.mock('./ContractCancellationRequestQueue.js', () => ({
-  ContractCancellationRequestQueue: () => null,
+function LegacyWorkspaceCompanion({ name }: { name: string }) {
+  return (
+    <form
+      data-testid={'legacy-' + name}
+      onSubmit={(event) => {
+        event.preventDefault();
+        ++harness.legacyCalls;
+      }}
+    >
+      <button type="button" onClick={() => ++harness.legacyCalls}>
+        Legacy {name} refresh
+      </button>
+    </form>
+  );
+}
+vi.mock('./ContractRefundQueue.js', () => ({
+  ContractRefundQueue: () => <LegacyWorkspaceCompanion name="refund" />,
 }));
-vi.mock('./ContractActivationRules.js', () => ({ ContractActivationRules: () => null }));
+vi.mock('./ContractCancellationRequestQueue.js', () => ({
+  ContractCancellationRequestQueue: () => <LegacyWorkspaceCompanion name="cancellation-request" />,
+}));
+vi.mock('./ContractActivationRules.js', () => ({
+  ContractActivationRules: () => <LegacyWorkspaceCompanion name="activation-rules" />,
+}));
 vi.mock('./ContractDetailLoader.js', () => ({
   ContractDetailLoader: (props: ComponentProps<typeof ContractDetail>) => {
     const [claim] = useState({});
@@ -479,8 +501,21 @@ it('claims the actual outer workspace synchronously before another row or filter
   );
   await render(<ContractsWorkspace staff />);
   await click(`${en.electricity} · ${en.version} 2`);
+  const companions = ['refund', 'cancellation-request', 'activation-rules'];
+  await act(async () => {
+    for (const name of companions) button(`Legacy ${name} refresh`).click();
+  });
+  expect(harness.legacyCalls).toBe(3);
   await act(async () => {
     button('Claim immediately').click();
+    for (const name of companions) {
+      button(`Legacy ${name} refresh`).dispatchEvent(
+        new MouseEvent('click', { bubbles: true, cancelable: true })
+      );
+      host
+        .querySelector(`[data-testid="legacy-${name}"]`)!
+        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    }
     button(`${en.electricity} · ${en.version} 3`).click();
     host
       .querySelector('form')!
@@ -491,6 +526,19 @@ it('claims the actual outer workspace synchronously before another row or filter
   expect(button(`${en.electricity} · ${en.version} 3`).disabled).toBe(true);
   expect(button(en.apply).disabled).toBe(true);
   expect(button(en.refresh).disabled).toBe(true);
+  expect(harness.legacyCalls).toBe(3);
+  for (const name of companions)
+    expect(button(`Legacy ${name} refresh`).matches(':disabled')).toBe(true);
+  await click('Release preparation');
+  await act(async () => {
+    for (const name of companions) {
+      expect(button(`Legacy ${name} refresh`).matches(':disabled')).toBe(false);
+      host
+        .querySelector(`[data-testid="legacy-${name}"]`)!
+        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    }
+  });
+  expect(harness.legacyCalls).toBe(6);
 });
 
 it('resumes an interrupted actual query-bound More page after read-only preparation releases its owner', async () => {

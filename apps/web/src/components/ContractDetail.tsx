@@ -696,46 +696,36 @@ function ContractDetailContent({
           </div>
           <ContractTerms value={data.version.content} />
           {staff && isCurrent && ['Draft', 'ChangesRequested'].includes(data.contract.state) ? (
-            <fieldset
-              disabled={locked || preparing}
-              onClickCapture={blockSibling}
-              onSubmitCapture={blockSibling}
-              className="contents"
-            >
-              <ContractDraftEditor
-                key={data.version.id}
-                existing={data}
-                onSaved={() => {
-                  if (blocked()) return;
-                  setSelectedVersion(null);
-                  setReload((value) => value + 1);
-                  onChanged();
-                }}
-              />
-            </fieldset>
+            <ContractDraftEditor
+              key={data.version.id}
+              existing={data}
+              coordination={shared}
+              onDenied={withdraw}
+              onSaved={() => {
+                if (blocked()) return;
+                setSelectedVersion(null);
+                setReload((value) => value + 1);
+                onChanged();
+              }}
+            />
           ) : null}
           {staff &&
           isCurrent &&
           data.contract.amendmentSupported &&
           !data.contract.pendingAmendment &&
           ['Accepted', 'Signed', 'Active'].includes(data.contract.state) ? (
-            <fieldset
-              disabled={locked || preparing}
-              onClickCapture={blockSibling}
-              onSubmitCapture={blockSibling}
-              className="contents"
-            >
-              <ContractDraftEditor
-                key={'amendment:' + data.version.id}
-                existing={data}
-                amendment
-                onSaved={() => {
-                  if (blocked()) return;
-                  setReload((value) => value + 1);
-                  onChanged();
-                }}
-              />
-            </fieldset>
+            <ContractDraftEditor
+              key={'amendment:' + data.version.id}
+              existing={data}
+              coordination={shared}
+              onDenied={withdraw}
+              amendment
+              onSaved={() => {
+                if (blocked()) return;
+                setReload((value) => value + 1);
+                onChanged();
+              }}
+            />
           ) : null}
           {data.version.acceptedAt ? (
             <p role="status">
@@ -900,22 +890,26 @@ function ContractDetailContent({
                 }}
               />
             ) : null}
-            {!isPendingAmendment ? (
-              <ContractActivationPanel
-                key={'activation:' + data.version.id + ':' + reload}
-                id={id}
-                versionId={data.version.id}
-                staff={staff}
-                editableVersion={staff && isCurrent ? data.version : undefined}
-                onChanged={() => {
-                  if (blocked()) return;
-                  setSelectedVersion(null);
-                  setReload((value) => value + 1);
-                  onChanged();
-                }}
-              />
-            ) : null}
           </fieldset>
+          {!isPendingAmendment ? (
+            <ContractActivationPanel
+              key={'activation:' + data.version.id}
+              refreshRevision={reload + (refreshRevision ?? 0)}
+              source={data.contract}
+              coordination={shared}
+              onDenied={withdraw}
+              id={id}
+              versionId={data.version.id}
+              staff={staff}
+              editableVersion={staff && isCurrent ? data.version : undefined}
+              onChanged={() => {
+                if (blocked()) return;
+                setSelectedVersion(null);
+                setReload((value) => value + 1);
+                onChanged();
+              }}
+            />
+          ) : null}
           {!isPendingAmendment || pendingState === 'AwaitingSignature' ? (
             <ContractSignaturePanel
               key={'signature:' + data.version.id}

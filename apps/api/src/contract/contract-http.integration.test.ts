@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 import type { ContractService } from './contract.service.js';
+import { contractJourneyEffects } from '../test/contract-journey-http-proof.js';
 type ProfileOptions = {
   profiles: Array<{ id: string; title: string; profileType: string }>;
   nextBefore: string | null;
@@ -85,6 +86,134 @@ function edit(row: ContractDto) {
     changeDescription: 'Reprice draft',
     idempotencyKey: randomUUID(),
   };
+}
+type FeedbackDto = {
+  error: { code: string; message: string; correlationId: string; fields?: string[] };
+};
+async function feedback(response: Response, status: number, fields?: string[], code?: string) {
+  expect(response.status).toBe(status);
+  const body = (await response.json()) as FeedbackDto;
+  expect(body.error.message).toEqual(expect.any(String));
+  expect(body.error.correlationId).toBe(response.headers.get('x-correlation-id'));
+  if (fields) expect(body.error).toMatchObject({ code: 'VALIDATION:INPUT:INVALID', fields });
+  else expect(body.error.fields).toBeUndefined();
+  if (code) expect(body.error.code).toBe(code);
+  expect(JSON.stringify(body)).not.toContain('PRIVATE');
+}
+async function authoringEffects(contractId: string, profileId: string) {
+  return {
+    journey: await contractJourneyEffects(http.pool, contractId, profileId),
+    profileContracts: (
+      await http.pool.query('SELECT * FROM contracts WHERE profile_id=$1 ORDER BY id', [profileId])
+    ).rows,
+    amendments: (
+      await http.pool.query(
+        'SELECT * FROM contract_amendments WHERE contract_id=$1 ORDER BY version_id',
+        [contractId]
+      )
+    ).rows,
+    createKeys: (
+      await http.pool.query(
+        "SELECT * FROM idempotency_keys WHERE entity_type='contract_create' AND response->'request'->>'profileId'=$1::text ORDER BY idempotency_key",
+        [profileId]
+      )
+    ).rows,
+  };
+}
+async function authoringFeedback(
+  path: string,
+  method: 'POST' | 'PATCH',
+  body: Record<string, unknown>,
+  profileId: string,
+  contractId: string | null
+) {
+  const resource = contractId ?? randomUUID();
+  const before = await authoringEffects(resource, profileId);
+  const invalid = { ...body, changeDescription: ' ' };
+  const context = { initialInvoiceId: null, serviceStartsAt: null };
+  for (const [value, fields] of [
+    [invalid, ['changeDescription']],
+    [
+      { ...body, activationContext: { ...context, initialInvoiceId: 'PRIVATE' } },
+      ['initialInvoiceId'],
+    ],
+    [
+      { ...body, activationContext: { ...context, serviceStartsAt: 'PRIVATE' } },
+      ['serviceStartsAt'],
+    ],
+    [{ ...body, activationContext: { ...context, serviceEndsAt: 'PRIVATE' } }, ['serviceEndsAt']],
+    [
+      { ...body, content: { commercialValue: { kind: 'fixed', amountIrr: '1.5' } } },
+      ['commercialValueAmountIrr'],
+    ],
+    [
+      { ...body, content: { commercialValue: { kind: 'variable', description: ' ' } } },
+      ['commercialValueDescription'],
+    ],
+  ] as const)
+    await feedback(await send(path, method, value), 400, [...fields]);
+  for (const value of [
+    { ...invalid, idempotencyKey: 'PRIVATE' },
+    { ...invalid, privateExtra: 'PRIVATE' },
+    { ...invalid, content: { commercialValue: { kind: 'PRIVATE', privateExtra: 'PRIVATE' } } },
+    { ...invalid, ...(contractId ? { expectedVersionId: 'PRIVATE' } : { profileId: 'PRIVATE' }) },
+  ])
+    await feedback(await send(path, method, value), 400, undefined, 'VALIDATION:PARSE:ZOD_ERROR');
+  await feedback(await send(path, method, invalid, 'contract-support'), 403);
+  await feedback(
+    await send(
+      contractId ? path.replace(contractId, randomUUID()) : path,
+      method,
+      contractId ? invalid : { ...invalid, profileId: randomUUID() }
+    ),
+    404
+  );
+  try {
+    await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [profileId]);
+    await feedback(await send(path, method, invalid), 409);
+  } finally {
+    await http.pool.query('UPDATE profiles SET archived=false WHERE id=$1', [profileId]);
+  }
+  const role = (
+    await http.pool.query<{ permissions: string }>(
+      "SELECT permissions FROM staff_roles WHERE role_id='role-legal-contracts'"
+    )
+  ).rows[0]!;
+  const session = (
+    await http.pool.query<{ step_up_verified_at: Date | null }>(
+      "SELECT step_up_verified_at FROM sessions WHERE user_id='contract-legal'"
+    )
+  ).rows[0]!;
+  try {
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='contract-legal'"
+    );
+    await feedback(await send(path, method, invalid), 403);
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=$1 WHERE user_id='contract-legal'",
+      [session.step_up_verified_at]
+    );
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions=$1 WHERE role_id='role-legal-contracts'",
+      [JSON.stringify(['contracts:read'])]
+    );
+    await feedback(await send(path, method, invalid), 403);
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions=$1 WHERE role_id='role-legal-contracts'",
+      [JSON.stringify(['contracts:write'])]
+    );
+    await feedback(await send(path, method, invalid), 400, ['changeDescription']);
+  } finally {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions=$1 WHERE role_id='role-legal-contracts'",
+      [role.permissions]
+    );
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=$1 WHERE user_id='contract-legal'",
+      [session.step_up_verified_at]
+    );
+  }
+  expect(await authoringEffects(resource, profileId)).toEqual(before);
 }
 it('limits draft profile lookup to contract writers, active names and stable pages', async () => {
   const prefix = 'DraftLookup-' + randomUUID();
@@ -226,6 +355,23 @@ it('blocks inconsistent cross-profile invoice associations without exposing thos
   });
 });
 it('creates and reads exact full snapshots and immutable version metadata', async () => {
+  const capturedCreate = await input();
+  await authoringFeedback('', 'POST', capturedCreate, capturedCreate.profileId, null);
+  const createdResponse = await send('', 'POST', capturedCreate);
+  expect(createdResponse.status).toBe(201);
+  const savedCreate = (await createdResponse.json()) as ContractDto;
+  const createEffects = await authoringEffects(savedCreate.id, savedCreate.profileId);
+  try {
+    await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [savedCreate.profileId]);
+    const replay = await send('', 'POST', capturedCreate);
+    expect(replay.status).toBe(201);
+    expect(await replay.json()).toEqual(savedCreate);
+    expect(await authoringEffects(savedCreate.id, savedCreate.profileId)).toEqual(createEffects);
+  } finally {
+    await http.pool.query('UPDATE profiles SET archived=false WHERE id=$1', [
+      savedCreate.profileId,
+    ]);
+  }
   const row = await create();
   expect(row).toMatchObject({
     state: 'Draft',
@@ -236,6 +382,7 @@ it('creates and reads exact full snapshots and immutable version metadata', asyn
     },
   });
   expect((await send('/' + row.id)).status).toBe(200);
+  await authoringFeedback('/' + row.id, 'PATCH', edit(row), row.profileId, row.id);
   const changed = await send('/' + row.id, 'PATCH', edit(row));
   expect(changed.status).toBe(200);
   const next = (await changed.json()) as ContractDto;
@@ -288,6 +435,7 @@ it('drafts one idempotent amendment without replacing the active accepted versio
     changeDescription: 'Extend term',
     idempotencyKey: randomUUID(),
   };
+  await authoringFeedback('/' + base.id + '/amendments', 'POST', draft, base.profileId, base.id);
   const response = await send('/' + base.id + '/amendments', 'POST', draft);
   expect(response.status).toBe(201);
   const result = (await response.json()) as ContractDto;
@@ -743,6 +891,30 @@ it('versions activation-context changes even when terms stay the same, and prese
     idempotencyKey: randomUUID(),
     activationContext: { initialInvoiceId: invoice, serviceStartsAt: '2026-10-01T03:30:00+03:30' },
   };
+  const beforeContextFeedback = await authoringEffects(row.id, row.profileId);
+  await feedback(
+    await send('/' + row.id, 'PATCH', {
+      ...body,
+      activationContext: {
+        ...body.activationContext,
+        initialInvoiceId: 'PRIVATE',
+        serviceStartsAt: 'PRIVATE',
+        serviceEndsAt: null,
+      },
+    }),
+    400,
+    ['initialInvoiceId', 'serviceStartsAt']
+  );
+  await feedback(
+    await send('/' + row.id, 'PATCH', {
+      ...body,
+      activationContext: { ...body.activationContext, serviceEndsAt: '2026-09-01T00:00:00Z' },
+    }),
+    400,
+    undefined,
+    'VALIDATION:PARSE:ZOD_ERROR'
+  );
+  expect(await authoringEffects(row.id, row.profileId)).toEqual(beforeContextFeedback);
   const response = await send('/' + row.id, 'PATCH', body);
   expect(response.status).toBe(200);
   const revised = (await response.json()) as ContractDto;
@@ -774,6 +946,12 @@ it('versions activation-context changes even when terms stay the same, and prese
   expect(contentEdit.status).toBe(200);
   const edited = (await contentEdit.json()) as ContractDto;
   expect(await read(edited.currentVersionId)).toEqual(await read(revised.currentVersionId));
+  const beforeContextReplay = await authoringEffects(row.id, row.profileId);
+  const originalContextReplay = await send('/' + row.id, 'PATCH', body);
+  expect(originalContextReplay.status).toBe(200);
+  expect(await originalContextReplay.json()).toEqual(revised);
+  expect(revised.currentVersionId).not.toBe(edited.currentVersionId);
+  expect(await authoringEffects(row.id, row.profileId)).toEqual(beforeContextReplay);
 });
 it('rejects foreign or missing activation invoices and rolls back the new version', async () => {
   const row = await create(),

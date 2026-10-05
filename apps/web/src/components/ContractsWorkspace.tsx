@@ -2,7 +2,14 @@ import { HistoryTable, type HistoryColumn } from './HistoryTable.js';
 import { useListView } from '../hooks/useListView.js';
 import { ContractRefundQueue } from './ContractRefundQueue.js';
 import { ContractCancellationRequestQueue } from './ContractCancellationRequestQueue.js';
-import { useEffect, useRef, useState, type FormEvent, type MutableRefObject } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type MutableRefObject,
+  type SyntheticEvent,
+} from 'react';
 import { Link } from '@tanstack/react-router';
 import {
   Alert,
@@ -85,6 +92,7 @@ function Workspace({
     readEpoch = useRef(0);
   const coordination = useRef<ContractFormCoordination>({
     blocked: () => !!owner.current,
+    revision: () => readEpoch.current,
     acquire: (claim) => {
       if (owner.current) return false;
       owner.current = claim;
@@ -166,6 +174,12 @@ function Workspace({
     } else {
       setQuery(params.toString());
       setGeneration((value) => value + 1);
+    }
+  }
+  function blockCompanion(event: SyntheticEvent) {
+    if (coordination.blocked()) {
+      event.preventDefault();
+      event.stopPropagation();
     }
   }
   return (
@@ -269,34 +283,28 @@ function Workspace({
         </form>
       ) : null}
       {staff ? (
+        <ContractDraftEditor
+          coordination={coordination}
+          onSaved={(id) => {
+            if (coordination.blocked()) return;
+            if (queries) queries.select(id, { resetCursor: true });
+            else setCreatedId(id);
+            setGeneration((value) => value + 1);
+          }}
+        />
+      ) : null}
+      {staff ? (
         <fieldset
           disabled={locked}
-          onClickCapture={(event) => {
-            if (coordination.blocked()) {
-              event.preventDefault();
-              event.stopPropagation();
-            }
-          }}
-          onSubmitCapture={(event) => {
-            if (coordination.blocked()) {
-              event.preventDefault();
-              event.stopPropagation();
-            }
-          }}
+          className="contents"
+          onClickCapture={blockCompanion}
+          onSubmitCapture={blockCompanion}
         >
-          <ContractDraftEditor
-            onSaved={(id) => {
-              if (coordination.blocked()) return;
-              if (queries) queries.select(id, { resetCursor: true });
-              else setCreatedId(id);
-              setGeneration((value) => value + 1);
-            }}
-          />
+          <ContractRefundQueue />
+          <ContractCancellationRequestQueue />
+          <ContractActivationRules />
         </fieldset>
       ) : null}
-      {staff ? <ContractRefundQueue /> : null}
-      {staff ? <ContractCancellationRequestQueue /> : null}
-      {staff ? <ContractActivationRules /> : null}
       <ContractResults
         key={generation}
         staff={staff}

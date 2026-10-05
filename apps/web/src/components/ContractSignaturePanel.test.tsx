@@ -138,6 +138,7 @@ function button(text: string) {
 }
 async function click(text: string) {
   await act(async () => button(text).click());
+  await act(async () => vi.dynamicImportSettled());
 }
 async function value(selector: string, text: string) {
   const input = container.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(

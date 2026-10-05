@@ -660,24 +660,48 @@ export async function setupContractReviewSignatures(
       json: { verified: true },
     });
   });
-  await page.route(`**${base}/${contractId}/activation?*`, (route) => {
-    state.reads.push(route.request().url());
-    return route.fulfill({
-      json: {
-        contractId,
-        versionId: state.currentVersion,
-        state: state.status,
-        isCurrent: true,
-        ready: false,
-        ruleRevision: 1,
-        initialInvoiceId: null,
-        serviceStartsAt: null,
-        serviceEndsAt: null,
-        evaluatedAt: instant,
-        checks: [],
-      },
+  for (const resourceId of [contractId, otherContract]) {
+    await page.route(`**${base}/${resourceId}/activation?*`, (route) => {
+      state.reads.push(route.request().url());
+      const main = resourceId === contractId,
+        currentVersionId = main ? state.currentVersion : otherVersion,
+        versionId =
+          new URL(route.request().url()).searchParams.get('versionId') ?? currentVersionId,
+        status = main ? state.status : staff ? 'AwaitingStaffReview' : 'Accepted',
+        accepted = main ? versionId !== reviewVersion : !staff,
+        isCurrent = versionId === currentVersionId;
+      const check = (key: string, required: boolean, met: boolean) => ({
+        key,
+        required,
+        status: !required ? 'not_required' : met ? 'met' : 'unmet',
+      });
+      const checks = [
+        check('staffApproval', true, accepted),
+        check('customerAcceptance', true, accepted),
+        check('signature', true, main && state.signatures.has(versionId)),
+        check('initialPayment', true, false),
+        check('serviceStart', false, false),
+      ];
+      return route.fulfill({
+        json: {
+          contractId: resourceId,
+          versionId,
+          state: status,
+          isCurrent,
+          ready:
+            isCurrent &&
+            ['Accepted', 'Signed'].includes(status) &&
+            checks.every((item) => item.status !== 'unmet'),
+          ruleRevision: 1,
+          initialInvoiceId: null,
+          serviceStartsAt: null,
+          serviceEndsAt: null,
+          evaluatedAt: instant,
+          checks,
+        },
+      });
     });
-  });
+  }
   await page.route(`**${base}/${contractId}/cancellation-status`, (route) => {
     state.reads.push(route.request().url());
     return route.fulfill({

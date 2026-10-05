@@ -27,6 +27,7 @@ import { hasStaffPermission } from '../session/staff-permissions.js';
 import { authoringQuery, contractAuthoringOptions } from './contract-authoring.js';
 import { ContractService } from './contract.service.js';
 import { ContractPdfService } from './contract-pdf.service.js';
+import { parseContractAuthoringInput } from './contract-journey-input-fields.js';
 import {
   contractUuid,
   createContractSchema,
@@ -121,13 +122,12 @@ export class ContractController {
     description:
       'Draft contract and full current version. Matching retries return the original result.',
   })
-  create(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+  async create(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
     this.authorize(req, true);
-    return this.service.create(
-      parse(createContractSchema, body),
-      req.session,
-      req.ip ?? '127.0.0.1'
+    const input = await parseContractAuthoringInput(createContractSchema, body, (raw) =>
+      this.service.assertCanAuthorDraft('create', null, raw, req.session)
     );
+    return this.service.create(input, req.session, req.ip ?? '127.0.0.1');
   }
   @Post(':id/amendments')
   @RequiresStepUp()
@@ -144,18 +144,17 @@ export class ContractController {
     },
   })
   @ApiResponse({ status: 201, description: 'Contract with the pending amendment metadata.' })
-  createAmendment(
+  async createAmendment(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
     @Body() body: unknown
   ) {
     this.authorize(req, true);
-    return this.service.createAmendment(
-      parse(contractUuid, id),
-      parse(updateContractSchema, body),
-      req.session,
-      req.ip ?? '127.0.0.1'
+    const contractId = parse(contractUuid, id);
+    const input = await parseContractAuthoringInput(updateContractSchema, body, (raw) =>
+      this.service.assertCanAuthorDraft('amendment', contractId, raw, req.session)
     );
+    return this.service.createAmendment(contractId, input, req.session, req.ip ?? '127.0.0.1');
   }
   @Patch(':id')
   @RequiresStepUp()
@@ -180,14 +179,13 @@ export class ContractController {
     status: 409,
     description: 'Stale version, non-draft state, archived profile or conflicting idempotency key.',
   })
-  update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() body: unknown) {
+  async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() body: unknown) {
     this.authorize(req, true);
-    return this.service.updateContract(
-      parse(contractUuid, id),
-      parse(updateContractSchema, body),
-      req.session,
-      req.ip ?? '127.0.0.1'
+    const contractId = parse(contractUuid, id);
+    const input = await parseContractAuthoringInput(updateContractSchema, body, (raw) =>
+      this.service.assertCanAuthorDraft('update', contractId, raw, req.session)
     );
+    return this.service.updateContract(contractId, input, req.session, req.ip ?? '127.0.0.1');
   }
   @Get(':id/cancellation-preview')
   @ApiParam({ name: 'id', format: 'uuid' })

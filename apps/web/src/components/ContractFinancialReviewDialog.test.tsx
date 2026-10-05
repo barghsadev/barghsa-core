@@ -141,6 +141,7 @@ async function render(action: TeamAction, status = 'ready') {
       />
     )
   );
+  await act(async () => vi.dynamicImportSettled());
   await vi.waitFor(() =>
     expect(host.textContent).not.toContain((harness.locale === 'fa' ? fa : en).loading)
   );

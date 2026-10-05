@@ -48,6 +48,11 @@ vi.mock('./TeamActionDialog.js', () => ({
     );
   },
 }));
+const CONTRACT = '11111111-1111-4111-8111-111111111111',
+  VERSION = '22222222-2222-4222-8222-222222222222',
+  OLD = '33333333-3333-4333-8333-333333333333',
+  NEXT = '44444444-4444-4444-8444-444444444444',
+  INVOICE = '55555555-5555-4555-8555-555555555555';
 const response = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status });
 let container: HTMLDivElement, root: Root;
 beforeEach(() => {
@@ -77,14 +82,15 @@ async function click(text: string) {
 }
 function data(extra = {}) {
   return {
-    contractId: 'contract',
-    versionId: 'version',
+    contractId: CONTRACT,
+    versionId: VERSION,
     state: 'Accepted',
     isCurrent: true,
     ready: false,
     ruleRevision: 2,
     initialInvoiceId: null,
     serviceStartsAt: null,
+    serviceEndsAt: null,
     evaluatedAt: '2026-09-21T12:00:00Z',
     checks: [
       { key: 'staffApproval', required: true, status: 'met' },
@@ -134,7 +140,7 @@ it('opens the linked invoice in the staff ledger from activation requirements', 
     'fetch',
     vi.fn(async () => response(data({ initialInvoiceId: invoiceId })))
   );
-  await render(<ContractActivationPanel id="contract" versionId="version" staff />);
+  await render(<ContractActivationPanel id={CONTRACT} versionId={VERSION} staff />);
   expect(
     container.querySelector(`a[href="/admin/invoices?invoiceId=${invoiceId}"]`)?.textContent
   ).toBe(en.openInitialInvoice);
@@ -146,9 +152,9 @@ for (const locale of ['en', 'fa'] as const)
     let result = data();
     const fetcher = vi.fn(async () => response(result));
     vi.stubGlobal('fetch', fetcher);
-    await render(<ContractActivationPanel id="contract" versionId="version" staff={false} />);
+    await render(<ContractActivationPanel id={CONTRACT} versionId={VERSION} staff={false} />);
     expect(fetcher.mock.calls[0]).toEqual([
-      expect.stringContaining('/api/contracts/contract/activation?versionId=version'),
+      expect.stringContaining(`/api/contracts/${CONTRACT}/activation?versionId=${VERSION}`),
       expect.objectContaining({ signal: expect.any(AbortSignal) }),
     ]);
     expect(container.querySelectorAll('li')).toHaveLength(5);
@@ -158,17 +164,17 @@ for (const locale of ['en', 'fa'] as const)
     expect(container.textContent).not.toContain(words.prerequisitesReady);
     result = data({
       isCurrent: false,
-      initialInvoiceId: 'invoice',
+      initialInvoiceId: INVOICE,
       serviceStartsAt: '2026-09-22T00:00:00Z',
     });
     await click(words.refresh);
     expect(container.textContent).toContain(words.historicalRequirements);
     expect(container.textContent).toContain(words.initialInvoiceLinked);
-    expect(container.querySelector('a[href="/invoices/invoice"]')?.textContent).toBe(
+    expect(container.querySelector(`a[href="/invoices/${INVOICE}"]`)?.textContent).toBe(
       words.openInitialInvoice
     );
     expect(container.textContent).toContain('2026-09-22T00:00:00Z');
-    result = data({ ready: true, checks: [] });
+    result = data({ ready: true });
     await click(words.refresh);
     expect(container.querySelector('[role=status]')?.textContent).toContain(
       words.prerequisitesReady
@@ -192,18 +198,18 @@ it('retries failures and ignores aborted version responses', async () => {
         finish = resolve;
       });
     })
-    .mockResolvedValue(response(data({ ready: true })));
+    .mockResolvedValue(response(data({ ready: true, versionId: NEXT })));
   vi.stubGlobal('fetch', fetcher);
-  await render(<ContractActivationPanel id="contract" versionId="old" staff />);
+  await render(<ContractActivationPanel id={CONTRACT} versionId={OLD} staff />);
   expect(container.querySelector('[role=alert]')).not.toBeNull();
   await click(en.refresh);
   expect(container.textContent).toContain(en.loading);
-  await render(<ContractActivationPanel id="contract" versionId="new" staff />);
+  await render(<ContractActivationPanel id={CONTRACT} versionId={NEXT} staff />);
   expect(oldSignal?.aborted).toBe(true);
   await act(async () => finish(response(data())));
   expect(container.textContent).toContain(en.prerequisitesReady);
   expect(fetcher.mock.calls.at(-1)?.[0]).toContain(
-    '/api/admin/contracts/contract/activation?versionId=new'
+    `/api/admin/contracts/${CONTRACT}/activation?versionId=${NEXT}`
   );
 });
 for (const locale of ['en', 'fa'] as const)

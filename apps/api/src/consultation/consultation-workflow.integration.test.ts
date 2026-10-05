@@ -739,6 +739,11 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
 }, 30_000);
 
 it('projects owned consultation reasons while retaining exact bounds, live authority and invoice step-up guards', async () => {
+  // Completed fixture journeys must not consume this additional case's submission window.
+  await http.pool.query(
+    "UPDATE consultation_requests SET submitted_at=clock_timestamp()-INTERVAL '2 minutes' WHERE profile_id=$1",
+    [profileId]
+  );
   const submitted = await post('/api/consultations/requests', 'customer', {
     profileId,
     productId,
