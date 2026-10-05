@@ -2,7 +2,7 @@
 
 ## Manual batch release workflow (October 5, 2026)
 
-The user now requires a staging deployment and a Telegram release summary after every coherent manual task batch. The shared root package version starts at `0.1.0` and is displayed on public authentication pages. For each subsequent batch, bump the Semantic Version, add `releases/<version>.md`, build/review/pass related checks, commit and normally push to `main`, run `./deploy/staging/deploy.sh`, verify the exact live version/commit and retain its Telegram confirmation. Use GitHub CLI and no PRs. Do not reuse a published version for a different batch.
+The user requires a staging deployment and a Telegram release summary after every coherent manual task batch. The shared root package version starts at `0.1.0` and is displayed on public authentication pages. For each subsequent batch, bump the Semantic Version, add `releases/<version>.md`, build/review/pass related local checks, commit and normally push to `main`, then run `python3 deploy/staging/release-queue.py enqueue --commit <full-pushed-sha>` with selected reviewed screenshots. Continue building immediately. CI is informational for this disposable staging environment; do not wait for CI or deployment before the next build. The detached worker serializes releases in isolated exact-commit checkouts, invokes `./deploy/staging/deploy.sh`, verifies the live version/commit and confirms Persian Telegram notes/images after successful deployment. Use GitHub CLI and no PRs. Do not reuse a published version for a different batch.
 
 Release notes and screenshot captions must be in Persian. Attach relevant screenshots when possible using `notify-release.py --screenshot`; confirmed notes and images are not posted twice.
 
@@ -10,7 +10,13 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: province, city and bulk-import native forms (October 5, 2026)
+## Latest manual batch: asynchronous staging releases (October 5, 2026)
+
+The user removed CI as a staging deployment gate and asked for deployment to run in a separate process. `release-queue.py enqueue` now freezes the pushed commit, runner and reviewed PNGs, starts a detached worker and returns immediately. Worker locking serializes deployments and Telegram confirmations while builders keep editing and pushing. Queue state/logs live outside the repository. Failed/interrupted work requires explicit recovery; existing health/live-identity and uncertain Telegram guards remain.
+
+Release v0.1.3 contains this operational change. The preceding v0.1.2 geography release was started immediately in a separate exact-commit checkout, independently of its still-running CI. Local related checks, source review and publication/release receipts are recorded in `kanban/batches/2026-10-05-asynchronous-staging-releases.md` and external evidence. Resume the next uncovered coherent product batch without waiting for the release worker or GitHub test completion. This changes the manual release workflow only; historical supervisor/PR protocols remain historical.
+
+## Previous manual batch: province, city and bulk-import native forms (October 5, 2026)
 
 Completed geography creation/editing and city import as one native-form batch. Bilingual linked feedback, post-unlock focus, retained raw drafts and synchronous submission reuse the existing engines. Safe API field identifiers follow permission checks; actual import receipts, atomicity, version/audit rules, conflict handling and catalogue recovery remain.
 

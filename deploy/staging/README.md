@@ -41,8 +41,32 @@ access to the VPS:
 deploy/staging/deploy.sh
 ```
 
-Every manual task batch ends with this deployment after its related checks and
-direct push to `main`. Increment the root `package.json` version and add
+After a batch's related local checks and direct push to `main`, enqueue its release:
+
+```sh
+python3 deploy/staging/release-queue.py enqueue --commit "$(git rev-parse HEAD)" \
+  --screenshot /absolute/path/reviewed-persian.png
+```
+
+Screenshots are optional. This command returns immediately and starts a detached
+worker. Continue building the next batch. CI remains informational for this disposable
+test environment; neither CI results nor deployment completion block building.
+The worker runs `./deploy/staging/deploy.sh` from an isolated checkout of the exact
+pushed commit, then attaches the captured screenshots. It serializes releases through
+the Telegram confirmation, so a newer rollout cannot replace an older release mid-post.
+The caller's branch, working files and subsequent commits do not affect the release.
+
+Queue jobs, frozen screenshots, worker code and logs live outside the checkout in
+`~/.local/state/barghsa-staging-queue`. Run `python3 deploy/staging/release-queue.py status`
+to inspect them. A failed or interrupted job stops the deployment queue while building
+can continue. Inspect that job's `deploy.log`, resolve the failure and explicitly run
+`python3 deploy/staging/release-queue.py retry --commit <full-sha>`. Unknown Telegram
+results still require channel inspection and the notifier's explicit recovery before
+retrying; the queue never bypasses that guard. A restarted machine resumes queued work
+with `python3 deploy/staging/release-queue.py work`. It does not auto-replay interrupted
+deployments. The worker uses lower CPU priority to favor ongoing builds.
+
+Increment the root `package.json` version and add
 `releases/<version>.md` in the same batch commit. Use Semantic Versioning:
 PATCH for fixes and small compatible batches, MINOR for new functionality,
 and MAJOR for breaking changes. The initial numbered release is `0.1.0`.
