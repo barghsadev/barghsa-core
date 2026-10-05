@@ -57,3 +57,9 @@ export {
   ticketAssignmentSchema,
   inactiveTicketSchema,
 } from './ticket-form-schemas.js';
+
+export {
+  profileSettingsSchema,
+  savedAddressSchema,
+  settingsInactiveSchema,
+} from './settings-form-schemas.js';

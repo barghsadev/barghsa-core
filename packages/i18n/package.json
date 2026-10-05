@@ -317,6 +317,11 @@
       "import": "./dist/contract-review-signature.js",
       "default": "./dist/contract-review-signature.js"
     },
+    "./settings-forms": {
+      "types": "./dist/settings-forms.d.ts",
+      "import": "./dist/settings-forms.js",
+      "default": "./dist/settings-forms.js"
+    },
     "./ticket-forms": {
       "types": "./dist/ticket-forms.d.ts",
       "import": "./dist/ticket-forms.js",

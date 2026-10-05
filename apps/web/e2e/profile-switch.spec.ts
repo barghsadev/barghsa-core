@@ -2,6 +2,7 @@ import { fullNavigation } from './navigation-fixture';
 import { fulfillDashboard } from './dashboard-fixture';
 import { cookieResponse } from './cookie-response';
 import { test, expect, type Page } from './coverage-fixture';
+import { tSettingsForms } from '@barghsa/i18n/settings-forms';
 
 const profile = (id: string) => ({
   id,
@@ -58,29 +59,61 @@ for (const locale of ['fa', 'en'] as const) {
     await page
       .context()
       .addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: 'settings-token' }]);
-    let active = 'first';
+    const first = '99111111-1111-4111-8111-111111111111';
+    const second = '99222222-2222-4222-8222-222222222222';
+    const storedDefault = first;
+    const savedProfile = (id: string) => ({
+      ...profile(id),
+      isDefault: id === storedDefault,
+      createdAt: '2026-10-01T00:00:00Z',
+      updatedAt: '2026-10-01T00:00:00Z',
+    });
+    let active = first;
     let attempts = 0;
     await page.route('**/api/profiles', (route) =>
       route.fulfill({
         json: {
-          profiles: [profile('first'), profile('second')],
+          profiles: [savedProfile(first), savedProfile(second)],
           activeProfileId: active,
           hasDefault: true,
         },
       })
     );
-    await page.route(/\/api\/profiles\/(first|second)$/, (route) => {
+    await page.route(/\/api\/profiles\/99[0-9a-f-]{34}$/, (route) => {
       const id = route.request().url().split('/').at(-1)!;
-      return route.fulfill({ json: { ...profile(id), addresses: [], legalInfo: null } });
+      return route.fulfill({
+        json: {
+          ...savedProfile(id),
+          addresses: [],
+          canEditIdentity: false,
+          legalInfo: {
+            legalName: 'Example Company',
+            nationalIdentifier: '12345678901',
+            registrationNumber: '123',
+            companyTypeId: 'private-joint-stock',
+            economicCode: null,
+            representativeFirstName: 'Sara',
+            representativeLastName: 'Example',
+            representativeNationalId: '0010350829',
+            representativeFullAddress: 'Representative address',
+            representativePostalCode: '1234567890',
+            representativeTitle: 'Director',
+            representativeRelationship: 'Authorized representative',
+          },
+        },
+      });
     });
     await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
-    await page.route('**/api/profiles/default/second', (route) => {
+    await page.route('**/api/onboarding/documents/*', (route) =>
+      route.fulfill({ json: { documents: [] } })
+    );
+    await page.route(`**/api/profiles/default/${second}`, (route) => {
       expect(route.request().method()).toBe('POST');
       expect(route.request().headers()['x-csrf-token']).toBe('settings-token');
       attempts++;
       if (attempts === 1) return route.fulfill({ status: 503, json: {} });
       if (attempts === 2) return route.fulfill({ json: { activeProfileId: 'wrong-profile' } });
-      active = 'second';
+      active = second;
       return route.fulfill({ json: { activeProfileId: active } });
     });
     await page.goto('/settings/profile');
@@ -88,21 +121,34 @@ for (const locale of ['fa', 'en'] as const) {
       name: locale === 'fa' ? 'انتخاب پروفایل پیش‌فرض' : 'Select Default Profile',
     });
     const selector = preferences.getByRole('combobox');
-    await expect(selector).toHaveValue('first');
+    await expect(selector).toHaveValue(first);
     await page.evaluate(() => {
       document.documentElement.dataset.profileSettingsSentinel = 'retained';
     });
     for (let attempt = 1; attempt <= 2; attempt++) {
-      await selector.selectOption('second');
+      await selector.selectOption(second);
       await expect.poll(() => attempts).toBe(attempt);
-      await expect(preferences.getByRole('alert')).toHaveText(
-        locale === 'fa' ? 'تغییر پروفایل با خطا مواجه شد' : 'Failed to switch profile'
-      );
+      await expect(
+        preferences.getByRole('alert').filter({
+          hasText: locale === 'fa' ? 'تغییر پروفایل با خطا مواجه شد' : 'Failed to switch profile',
+        })
+      ).toHaveText(locale === 'fa' ? 'تغییر پروفایل با خطا مواجه شد' : 'Failed to switch profile');
+      await expect(selector).toBeDisabled();
+      await page
+        .getByRole('button', { name: tSettingsForms('refreshConfirmation', locale), exact: true })
+        .click();
+      await expect(
+        page.getByRole('alert').filter({ hasText: tSettingsForms('confirmationMismatch', locale) })
+      ).toBeVisible();
+      expect(attempts).toBe(attempt);
+      await page
+        .getByRole('button', { name: tSettingsForms('resetCapture', locale), exact: true })
+        .click();
       await expect(selector).toBeEnabled();
-      await expect(selector).toHaveValue('first');
+      await expect(selector).toHaveValue(first);
     }
-    await selector.selectOption('second');
-    await expect(selector).toHaveValue('second');
+    await selector.selectOption(second);
+    await expect(selector).toHaveValue(second);
     await expect(preferences.getByRole('alert')).toHaveCount(0);
     expect(attempts).toBe(3);
     await expect(page.locator('html')).toHaveAttribute(
@@ -112,10 +158,10 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(page).toHaveURL(/\/settings\/profile$/);
     await openProfileMenu(page);
     const sidebarSelector = page.locator('#profile-switcher');
-    await expect(sidebarSelector).toHaveValue('second');
+    await expect(sidebarSelector).toHaveValue(second);
     expect(await selector.getAttribute('id')).not.toBe(await sidebarSelector.getAttribute('id'));
     await page.reload();
-    await expect(selector).toHaveValue('second');
+    await expect(selector).toHaveValue(second);
   });
 }
 

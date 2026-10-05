@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useRef } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { toast } from '../../../lib/toast-api.js';
+import { useSavedAddressSettingsEditor } from '../../../hooks/useSavedAddressSettingsEditor.js';
+import type { SavedAddress as Address } from '../../../lib/settings-form.js';
 import { t } from '@barghsa/i18n/app';
 import { addressesText } from '@barghsa/i18n/addresses';
 import {
@@ -24,7 +25,7 @@ import {
   Alert,
   AlertDescription,
 } from '@barghsa/ui';
-import { z } from 'zod';
+
 import {
   Form,
   FormField,
@@ -35,12 +36,8 @@ import {
   FormInput,
   FormTextarea,
   FormSubmit,
-  useZodForm,
-  useWatch,
-  setServerFieldErrors,
 } from '@barghsa/ui/form';
-import { withCsrf } from '../../../lib/csrf.js';
-import { useGeographyOptions } from '../../../hooks/useGeographyOptions.js';
+
 import { useLocale } from '../../../hooks/useLocale.js';
 
 export const Route = createFileRoute('/_app/settings/addresses')({
@@ -53,278 +50,82 @@ export const Route = createFileRoute('/_app/settings/addresses')({
   component: SettingsAddressesPage,
 });
 
-// ─── Types ────────────────────────────────────────────────────────────
-
-interface Address {
-  id: string;
-  profileId: string;
-  provinceId: string;
-  cityId: string;
-  provinceNameFa?: string;
-  provinceNameEn?: string;
-  cityNameFa?: string;
-  cityNameEn?: string;
-  fullAddress: string;
-  postalCode: string;
-  mainAddress: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-const addressFormFields = ['provinceId', 'cityId', 'fullAddress', 'postalCode'] as const;
-const emptyAddress = { provinceId: '', cityId: '', fullAddress: '', postalCode: '' };
-type AddressFormValues = typeof emptyAddress;
-
 // ─── Page Component ────────────────────────────────────────────────────
 
 function SettingsAddressesPage() {
-  const locale = useLocale();
-  const { returnTo } = Route.useSearch();
-
-  const [addresses, setAddresses] = useState<Address[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(false);
-  const [profileId, setProfileId] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const [editingAddress, setEditingAddress] = useState<Address | null>(null);
-  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState(false);
-  const deletingRef = useRef(false);
-  const deleteTriggerRef = useRef<HTMLButtonElement | null>(null);
-  const cancelDeleteRef = useRef<HTMLButtonElement | null>(null);
-  const headingRef = useRef<HTMLHeadingElement | null>(null);
-
-  const validationMessages = {
-    provinceId: t('settings.addresses.validation.province', locale),
-    cityId: t('settings.addresses.validation.city', locale),
-    fullAddress: t('settings.addresses.validation.fullAddress', locale),
-    postalCode: t('settings.addresses.validation.postalCode', locale),
-  };
-  const form = useZodForm(
-    z.object({
-      provinceId: z.string().uuid(validationMessages.provinceId),
-      cityId: z.string().uuid(validationMessages.cityId),
-      fullAddress: z
-        .string()
-        .trim()
-        .min(1, validationMessages.fullAddress)
-        .max(500, validationMessages.fullAddress),
-      postalCode: z
-        .string()
-        .trim()
-        .regex(/^[1-9]\d{9}$/, validationMessages.postalCode),
-    }),
-    { defaultValues: emptyAddress }
-  );
-  const saving = form.formState.isSubmitting;
-  const formProvinceId = useWatch({ control: form.control, name: 'provinceId' });
-  const provinceOptions = useGeographyOptions('/api/geography/provinces');
-  const cityOptions = useGeographyOptions(
-    showForm && formProvinceId
-      ? `/api/geography/provinces/${encodeURIComponent(formProvinceId)}/cities`
-      : null,
-    formProvinceId || undefined
-  );
-  const provinces = provinceOptions.options;
-  const cities = cityOptions.options;
-
-  // ── Fetch addresses ────────────────────────────────────────────────
-
-  const fetchAddresses = useCallback(async () => {
-    setLoading(true);
-    setLoadError(false);
-    setProfileId(null);
-    try {
-      // First get the active profile
-      const profileRes = await fetch('/api/profiles');
-      if (!profileRes.ok) {
-        throw new Error('Failed to load profiles');
-      }
-      const profileData: { activeProfileId: string | null } = await profileRes.json();
-      if (!profileData.activeProfileId) {
-        setAddresses([]);
-        return;
-      }
-
-      const res = await fetch(`/api/profiles/${profileData.activeProfileId}/addresses`);
-      if (!res.ok) throw new Error('Failed to load addresses');
-      const data: { addresses: Address[] } = await res.json();
-      if (!Array.isArray(data.addresses)) throw new Error('Invalid address list');
-      setAddresses(data.addresses);
-      setProfileId(profileData.activeProfileId);
-    } catch {
-      setLoadError(true);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchAddresses();
-  }, [fetchAddresses]);
-
-  // ── Open form for add ──────────────────────────────────────────────
-
-  const openAddForm = () => {
-    setEditingAddress(null);
-    form.reset(emptyAddress);
-    setShowForm(true);
-  };
-
-  // ── Open form for edit ─────────────────────────────────────────────
-
-  const openEditForm = (address: Address) => {
-    setEditingAddress(address);
-    form.reset({
-      provinceId: address.provinceId,
-      cityId: address.cityId,
-      fullAddress: address.fullAddress,
-      postalCode: address.postalCode,
-    });
-    setShowForm(true);
-  };
-
-  // ── Close form ─────────────────────────────────────────────────────
-
-  const closeForm = () => {
-    if (form.isSubmissionPending()) return;
-    setShowForm(false);
-    setEditingAddress(null);
-  };
-
-  // ── Save handler (create or update) ────────────────────────────────
-
-  const handleSave = async (values: AddressFormValues) => {
-    const fallbackMessage = t(
-      editingAddress ? 'settings.addresses.error.update' : 'settings.addresses.error.create',
-      locale
+  const locale = useLocale(),
+    { returnTo } = Route.useSearch(),
+    editor = useSavedAddressSettingsEditor(locale);
+  const {
+    addresses,
+    loading,
+    loadError,
+    denied,
+    profileId,
+    showForm,
+    editingAddress,
+    deleteConfirmId,
+    form,
+    feedback,
+    command,
+    locked,
+    saving,
+    copy,
+    formProvinceId,
+    provinceOptions,
+    cityOptions,
+    fetchAddresses,
+    openAddForm,
+    openEditForm,
+    closeForm,
+    prepareSave,
+    handleSetMain,
+    confirmDelete,
+    handleDelete,
+  } = editor;
+  const deleteTriggerRef = useRef<HTMLButtonElement | null>(null),
+    cancelDeleteRef = useRef<HTMLButtonElement | null>(null),
+    headingRef = useRef<HTMLHeadingElement | null>(null);
+  const provinces = provinceOptions.options,
+    cities = cityOptions.options;
+  const historicalPair =
+    !!editingAddress &&
+    formProvinceId === editingAddress.provinceId &&
+    form.watch('cityId') === editingAddress.cityId;
+  function recovery() {
+    return (
+      command.phase !== 'ready' && (
+        <div role="alert" className="space-y-2">
+          <p>
+            {copy(command.error === 'confirmationMismatch' ? 'confirmationMismatch' : 'uncertain')}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              data-settings-recovery
+              disabled={command.busy}
+              onClick={() =>
+                void (command.phase === 'confirmation'
+                  ? command.refreshConfirmation()
+                  : command.send())
+              }
+            >
+              {copy(command.phase === 'confirmation' ? 'refreshConfirmation' : 'retryOriginal')}
+            </Button>
+            <Button
+              type="button"
+              data-settings-recovery
+              variant="outline"
+              disabled={command.busy}
+              onClick={() => command.resetCapture()}
+            >
+              {copy('resetCapture')}
+            </Button>
+          </div>
+        </div>
+      )
     );
-    if (
-      !provinceOptions.ready ||
-      !cityOptions.ready ||
-      !provinces.some((province) => province.id === values.provinceId) ||
-      !cities.some((city) => city.id === values.cityId)
-    ) {
-      setServerFieldErrors(
-        form,
-        {
-          provinceId: validationMessages.provinceId,
-          cityId: validationMessages.cityId,
-        },
-        addressFormFields,
-        fallbackMessage
-      );
-      return;
-    }
-    try {
-      if (!profileId) throw new Error();
-      const res = await fetch(
-        editingAddress
-          ? `/api/profiles/${profileId}/addresses/${editingAddress.id}`
-          : `/api/profiles/${profileId}/addresses`,
-        {
-          method: editingAddress ? 'PUT' : 'POST',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify(values),
-        }
-      );
-      if (!res.ok) {
-        const body: unknown = await res.json().catch(() => null);
-        const error = body && typeof body === 'object' && 'error' in body ? body.error : null;
-        const fields =
-          res.status === 400 &&
-          error &&
-          typeof error === 'object' &&
-          'code' in error &&
-          error.code === 'VALIDATION:INPUT:INVALID' &&
-          'fields' in error &&
-          Array.isArray(error.fields)
-            ? error.fields
-            : [];
-        const messages = Object.fromEntries(
-          fields.map((field: unknown) => [
-            typeof field === 'string' ? field : '',
-            typeof field === 'string' && Object.hasOwn(validationMessages, field)
-              ? validationMessages[field as keyof typeof validationMessages]
-              : null,
-          ])
-        );
-        setServerFieldErrors(form, messages, addressFormFields, fallbackMessage);
-        return;
-      }
-      toast.success(
-        t(
-          editingAddress
-            ? 'settings.addresses.success.update'
-            : 'settings.addresses.success.create',
-          locale
-        )
-      );
-      setShowForm(false);
-      setEditingAddress(null);
-      await fetchAddresses();
-    } catch {
-      form.setError('root.server', { type: 'server', message: fallbackMessage });
-    }
-  };
-
-  // ── Set as main address ────────────────────────────────────────────
-
-  const handleSetMain = useCallback(
-    async (addressId: string) => {
-      try {
-        if (!profileId) throw new Error();
-
-        const res = await fetch(`/api/profiles/${profileId}/addresses/${addressId}/set-main`, {
-          method: 'POST',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-        });
-
-        if (!res.ok) {
-          toast.error(t('settings.addresses.error.setMain', locale));
-          return;
-        }
-
-        toast.success(t('settings.addresses.success.setMain', locale));
-        fetchAddresses();
-      } catch {
-        toast.error(t('settings.addresses.error.setMain', locale));
-      }
-    },
-    [locale, profileId, fetchAddresses]
-  );
-
-  // ── Delete address ─────────────────────────────────────────────────
-
-  const handleDelete = useCallback(
-    async (addressId: string) => {
-      if (deletingRef.current || !profileId) return;
-      deletingRef.current = true;
-      setDeleting(true);
-      try {
-        const res = await fetch(`/api/profiles/${profileId}/addresses/${addressId}`, {
-          method: 'DELETE',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-        });
-
-        if (!res.ok) {
-          toast.error(t('settings.addresses.error.delete', locale));
-          return;
-        }
-
-        toast.success(t('settings.addresses.success.delete', locale));
-        setDeleteConfirmId(null);
-        fetchAddresses();
-      } catch {
-        toast.error(t('settings.addresses.error.delete', locale));
-      } finally {
-        deletingRef.current = false;
-        setDeleting(false);
-      }
-    },
-    [locale, profileId, fetchAddresses]
-  );
-
+  }
   // ── Helpers ────────────────────────────────────────────────────────
 
   const getProvinceName = (address: Address): string => {
@@ -345,12 +146,36 @@ function SettingsAddressesPage() {
   const deletingAddress = addresses.find((address) => address.id === deleteConfirmId);
 
   return (
-    <div className="container mx-auto max-w-2xl py-8 px-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div
+      className="container mx-auto max-w-2xl py-8 px-4"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+      onClickCapture={(event) => {
+        if (
+          command.coordination.isLocked() &&
+          !(event.target instanceof Element && event.target.closest('[data-settings-recovery]'))
+        ) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }}
+      onAuxClickCapture={(event) => {
+        if (command.coordination.isLocked()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }}
+      onChangeCapture={(event) => {
+        if (command.coordination.isLocked()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }}
+    >
       <div className="flex items-center justify-between mb-6">
         <h1 ref={headingRef} tabIndex={-1} className="text-2xl font-bold">
           {t('settings.addresses.title', locale)}
         </h1>
-        <Button disabled={loading || !profileId} onClick={openAddForm} className="gap-2">
+        <Button disabled={loading || !profileId || locked} onClick={openAddForm} className="gap-2">
           <PlusIcon className="h-4 w-4" />
           {t('settings.addresses.add', locale)}
         </Button>
@@ -381,11 +206,13 @@ function SettingsAddressesPage() {
         </div>
       )}
 
+      {denied && <p role="alert">{copy('forbidden')}</p>}
+      {command.locked === 'main' && recovery()}
       {/* Address list */}
       {!loading && loadError && (
         <div role="alert">
           <p>{t('settings.addresses.error.load', locale)}</p>
-          <Button variant="outline" onClick={fetchAddresses}>
+          <Button variant="outline" disabled={locked} onClick={() => void fetchAddresses(true)}>
             {t('settings.addresses.retry', locale)}
           </Button>
         </div>
@@ -432,7 +259,8 @@ function SettingsAddressesPage() {
                     {!address.mainAddress && (
                       <button
                         type="button"
-                        onClick={() => handleSetMain(address.id)}
+                        disabled={locked}
+                        onClick={() => void handleSetMain(address.id)}
                         className="rounded p-1.5 text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
                         title={t('settings.addresses.setMain', locale)}
                         aria-label={t('settings.addresses.setMain', locale)}
@@ -442,6 +270,7 @@ function SettingsAddressesPage() {
                     )}
                     <button
                       type="button"
+                      disabled={locked}
                       onClick={() => openEditForm(address)}
                       className="rounded p-1.5 text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
                       title={t('settings.addresses.edit', locale)}
@@ -451,9 +280,11 @@ function SettingsAddressesPage() {
                     </button>
                     <button
                       type="button"
+                      disabled={locked}
                       onClick={(event) => {
+                        if (command.coordination.isLocked()) return;
                         deleteTriggerRef.current = event.currentTarget;
-                        setDeleteConfirmId(address.id);
+                        confirmDelete(address.id);
                       }}
                       className="rounded p-1.5 text-muted-foreground hover:text-destructive hover:bg-muted transition-colors"
                       title={t('settings.addresses.delete', locale)}
@@ -472,7 +303,7 @@ function SettingsAddressesPage() {
       <Dialog
         open={Boolean(deletingAddress)}
         onOpenChange={(open) => {
-          if (!open && !deletingRef.current) setDeleteConfirmId(null);
+          if (!open) confirmDelete(null);
         }}
       >
         <DialogContent
@@ -490,20 +321,23 @@ function SettingsAddressesPage() {
               ? t('settings.addresses.deleteConfirmMain', locale)
               : addressesText('removalHistory', locale)}
           </DialogDescription>
+          {command.locked === 'delete' && recovery()}
           <div className="flex justify-end gap-2">
             <Button
               ref={cancelDeleteRef}
               variant="outline"
-              disabled={deleting}
-              onClick={() => setDeleteConfirmId(null)}
+              disabled={locked}
+              onClick={() => confirmDelete(null)}
             >
               {t('settings.addresses.form.cancel', locale)}
             </Button>
             {!deletingAddress?.mainAddress && (
               <Button
                 variant="destructive"
-                disabled={deleting || !profileId}
-                onClick={() => deletingAddress && handleDelete(deletingAddress.id)}
+                disabled={locked || !profileId}
+                onClick={() => {
+                  if (deletingAddress) void handleDelete(deletingAddress.id);
+                }}
               >
                 {t('settings.addresses.delete', locale)}
               </Button>
@@ -517,7 +351,7 @@ function SettingsAddressesPage() {
         <Dialog
           open
           onOpenChange={(open) => {
-            if (!open && !saving) closeForm();
+            if (!open) closeForm();
           }}
         >
           <DialogContent
@@ -534,7 +368,7 @@ function SettingsAddressesPage() {
               <button
                 type="button"
                 onClick={closeForm}
-                disabled={saving}
+                disabled={locked}
                 className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 aria-label={t('settings.addresses.form.cancel', locale)}
               >
@@ -548,7 +382,10 @@ function SettingsAddressesPage() {
             <Form {...form}>
               <form
                 noValidate
-                onSubmit={form.handleSubmit(handleSave)}
+                ref={feedback.element}
+                data-slot="settings-address-form"
+                aria-label={t('settings.addresses.form.save', locale)}
+                onSubmit={(event) => void prepareSave(event)}
                 className="flex flex-col gap-4"
               >
                 {form.formState.errors.root?.server?.message && (
@@ -556,7 +393,11 @@ function SettingsAddressesPage() {
                     <AlertDescription>{form.formState.errors.root.server.message}</AlertDescription>
                   </Alert>
                 )}
-                <div className="flex flex-col gap-3">
+                {form.formState.errors.root && !form.formState.errors.root.server && (
+                  <p role="alert">{copy('validationUnavailable')}</p>
+                )}
+                {recovery()}
+                <fieldset disabled={locked} className="flex flex-col gap-3">
                   <FormField
                     control={form.control}
                     name="provinceId"
@@ -567,19 +408,27 @@ function SettingsAddressesPage() {
                           <select
                             {...field}
                             onChange={(event) => {
+                              if (command.coordination.isLocked()) return;
                               form.setValue('cityId', '', {
                                 shouldDirty: true,
                                 shouldValidate: Boolean(form.formState.touchedFields.cityId),
                               });
                               field.onChange(event);
                             }}
-                            disabled={saving || !provinceOptions.ready}
+                            disabled={locked || !provinceOptions.ready}
                             className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive"
                             dir={locale === 'fa' ? 'rtl' : 'ltr'}
                           >
                             <option value="">
                               {t('settings.addresses.form.provincePlaceholder', locale)}
                             </option>
+                            {editingAddress &&
+                              formProvinceId === editingAddress.provinceId &&
+                              !provinces.some((row) => row.id === editingAddress.provinceId) && (
+                                <option value={editingAddress.provinceId}>
+                                  {getProvinceName(editingAddress)}
+                                </option>
+                              )}
                             {provinces.map((province) => (
                               <option key={province.id} value={province.id}>
                                 {locale === 'fa' ? province.nameFa : province.nameEn}
@@ -609,7 +458,16 @@ function SettingsAddressesPage() {
                               dependencyValue: city.provinceId ?? '',
                             }))}
                             placeholder={t('settings.addresses.form.cityPlaceholder', locale)}
-                            disabled={saving}
+                            {...(editingAddress
+                              ? {
+                                  savedOption: {
+                                    value: editingAddress.cityId,
+                                    dependencyValue: editingAddress.provinceId,
+                                    label: getCityName(editingAddress),
+                                  },
+                                }
+                              : {})}
+                            disabled={locked}
                             className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive"
                             dir={locale === 'fa' ? 'rtl' : 'ltr'}
                           />
@@ -631,7 +489,11 @@ function SettingsAddressesPage() {
                       <Button
                         type="button"
                         variant="outline"
-                        onClick={provinceOptions.error ? provinceOptions.retry : cityOptions.retry}
+                        disabled={locked}
+                        onClick={() => {
+                          if (!command.coordination.isLocked())
+                            (provinceOptions.error ? provinceOptions.retry : cityOptions.retry)();
+                        }}
                       >
                         {t('settings.addresses.retry', locale)}
                       </Button>
@@ -664,17 +526,22 @@ function SettingsAddressesPage() {
                       maxLength: 10,
                     }}
                   />
-                </div>
-                <div className="flex justify-end gap-2 pt-2">
-                  <Button type="button" variant="outline" onClick={closeForm} disabled={saving}>
-                    {t('settings.addresses.form.cancel', locale)}
-                  </Button>
-                  <FormSubmit disabled={!provinceOptions.ready || !cityOptions.ready}>
-                    {saving
-                      ? t('settings.addresses.form.saving', locale)
-                      : t('settings.addresses.form.save', locale)}
-                  </FormSubmit>
-                </div>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <Button type="button" variant="outline" onClick={closeForm} disabled={locked}>
+                      {t('settings.addresses.form.cancel', locale)}
+                    </Button>
+                    <FormSubmit
+                      disabled={
+                        locked ||
+                        ((!provinceOptions.ready || !cityOptions.ready) && !historicalPair)
+                      }
+                    >
+                      {saving
+                        ? t('settings.addresses.form.saving', locale)
+                        : t('settings.addresses.form.save', locale)}
+                    </FormSubmit>
+                  </div>
+                </fieldset>
               </form>
             </Form>
           </DialogContent>

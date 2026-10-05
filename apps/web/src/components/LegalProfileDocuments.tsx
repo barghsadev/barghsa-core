@@ -3,7 +3,17 @@ import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { Button } from '@barghsa/ui';
 
-export function LegalProfileDocuments({ profileId }: { profileId: string }) {
+export function LegalProfileDocuments({
+  profileId,
+  disabled = false,
+  canInteract = () => true,
+  onAccessDenied,
+}: {
+  profileId: string;
+  disabled?: boolean;
+  canInteract?: () => boolean;
+  onAccessDenied?: () => void;
+}) {
   const locale = useLocale();
   const [documents, setDocuments] = useState<Array<{ key: string; name: string; url: string }>>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
@@ -17,7 +27,11 @@ export function LegalProfileDocuments({ profileId }: { profileId: string }) {
       signal: controller.signal,
     })
       .then(async (response) => {
-        if (!response.ok) throw new Error('Documents unavailable');
+        if (!response.ok) {
+          if (!controller.signal.aborted && [401, 403, 404].includes(response.status))
+            onAccessDenied?.();
+          throw new Error('Documents unavailable');
+        }
         return response.json() as Promise<{
           documents: Array<{ key: string; name: string; url: string }>;
         }>;
@@ -64,8 +78,10 @@ export function LegalProfileDocuments({ profileId }: { profileId: string }) {
       <Button
         type="button"
         variant="outline"
-        onClick={() => setRetry((value) => value + 1)}
-        disabled={status === 'loading'}
+        onClick={() => {
+          if (canInteract()) setRetry((value) => value + 1);
+        }}
+        disabled={disabled || status === 'loading'}
       >
         {t('onboarding.documents.refresh', locale)}
       </Button>

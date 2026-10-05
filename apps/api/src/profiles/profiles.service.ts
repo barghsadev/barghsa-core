@@ -19,6 +19,7 @@ import { NotificationsService } from '../notifications/notifications.service.js'
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import { idempotentMutation } from '../database/idempotency.js';
 
 type AddressActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
@@ -689,6 +690,7 @@ export class ProfilesService {
       fullAddress: string;
       postalCode: string;
       mainAddress?: boolean | undefined;
+      idempotencyKey?: string | undefined;
     }
   ): Promise<AddressRow> {
     const { userId } = actor;
@@ -713,47 +715,59 @@ export class ProfilesService {
       await client.query('BEGIN');
       await this.lockAddressActor(client, actor);
       await this.requireAddressEditor(userId, profileId, client);
+      const { idempotencyKey, ...command } = data;
+      const work = async (): Promise<AddressRow> => {
+        await requireAddressGeography(client, data.provinceId, data.cityId);
 
-      await requireAddressGeography(client, data.provinceId, data.cityId);
-
-      // Check if there's an existing main address
-      const existingMain = await client.query(
-        `SELECT id FROM addresses WHERE profile_id = $1 AND main_address = true LIMIT 1`,
-        [profileId]
-      );
-      const hasMainAddress = existingMain.rows.length > 0;
-
-      const isMain = !hasMainAddress;
-
-      // If user explicitly requested main but one already exists, error
-      if (data.mainAddress === true && hasMainAddress) {
-        throw new HttpException(
-          {
-            statusCode: 400,
-            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-            message:
-              'A main address already exists. Use the set-main endpoint to change the main address.',
-          },
-          400
+        // Check if there's an existing main address
+        const existingMain = await client.query(
+          `SELECT id FROM addresses WHERE profile_id = $1 AND main_address = true LIMIT 1`,
+          [profileId]
         );
-      }
+        const hasMainAddress = existingMain.rows.length > 0;
 
-      const result = await client.query(
-        `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
+        const isMain = !hasMainAddress;
+
+        // If user explicitly requested main but one already exists, error
+        if (data.mainAddress === true && hasMainAddress) {
+          throw new HttpException(
+            {
+              statusCode: 400,
+              error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+              message:
+                'A main address already exists. Use the set-main endpoint to change the main address.',
+            },
+            400
+          );
+        }
+
+        const result = await client.query(
+          `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
          VALUES ($1, $2, $3, $4, $5, $6)
          RETURNING id, profile_id, province_id, city_id, full_address, postal_code, main_address, created_at, updated_at`,
-        [profileId, data.provinceId, data.cityId, data.fullAddress, data.postalCode, isMain]
-      );
+          [profileId, data.provinceId, data.cityId, data.fullAddress, data.postalCode, isMain]
+        );
 
-      await client.query(
-        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
         VALUES (uuid_generate_v7(),$1,'address_created',jsonb_build_object('profileId',$2::text,'addressId',$3::text),COALESCE($4::uuid,uuid_generate_v7()),NOW())`,
-        [userId, profileId, result.rows[0].id, correlationIdStorage.getStore() ?? null]
-      );
+          [userId, profileId, result.rows[0].id, correlationIdStorage.getStore() ?? null]
+        );
+        return mapAddressRow(result.rows[0]);
+      };
+      const address = idempotencyKey
+        ? await idempotentMutation(
+            client,
+            'address:create',
+            { idempotencyKey, profileId, ...command },
+            actor,
+            work
+          )
+        : await work();
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      this.logger.log(`Address ${result.rows[0].id} created for profile ${profileId}`);
-      return mapAddressRow(result.rows[0]);
+      this.logger.log(`Address ${address.id} created for profile ${profileId}`);
+      return address;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       // Check foreign key violation on province or city
@@ -789,6 +803,7 @@ export class ProfilesService {
       cityId?: string | undefined;
       fullAddress?: string | undefined;
       postalCode?: string | undefined;
+      idempotencyKey?: string | undefined;
     }
   ): Promise<AddressRow> {
     const { userId } = actor;
@@ -827,88 +842,101 @@ export class ProfilesService {
       await client.query('BEGIN');
       await this.lockAddressActor(client, actor);
       await this.requireAddressEditor(userId, profileId, client);
+      const { idempotencyKey, ...command } = data;
+      await this.lockCurrentAddress(client, profileId, addressId);
+      const work = async (): Promise<AddressRow> => {
+        if (data.provinceId !== undefined || data.cityId !== undefined) {
+          const current = (
+            await client.query(
+              'SELECT province_id,city_id FROM addresses WHERE id=$1 AND profile_id=$2 AND deleted_at IS NULL FOR UPDATE',
+              [addressId, profileId]
+            )
+          ).rows[0];
+          if (!current)
+            throw new HttpException(
+              { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+              404
+            );
+          await requireAddressGeography(
+            client,
+            data.provinceId ?? current.province_id,
+            data.cityId ?? current.city_id
+          );
+        }
 
-      if (data.provinceId !== undefined || data.cityId !== undefined) {
-        const current = (
-          await client.query(
-            'SELECT province_id,city_id FROM addresses WHERE id=$1 AND profile_id=$2 AND deleted_at IS NULL FOR UPDATE',
-            [addressId, profileId]
-          )
-        ).rows[0];
-        if (!current)
+        const updates: string[] = [];
+        const params: unknown[] = [];
+        let paramIndex = 1;
+
+        if (data.provinceId !== undefined) {
+          updates.push(`province_id = $${paramIndex++}`);
+          params.push(data.provinceId);
+        }
+        if (data.cityId !== undefined) {
+          updates.push(`city_id = $${paramIndex++}`);
+          params.push(data.cityId);
+        }
+        if (data.fullAddress !== undefined) {
+          updates.push(`full_address = $${paramIndex++}`);
+          params.push(data.fullAddress);
+        }
+        if (data.postalCode !== undefined) {
+          updates.push(`postal_code = $${paramIndex++}`);
+          params.push(data.postalCode);
+        }
+
+        if (updates.length === 0) {
           throw new HttpException(
-            { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+            {
+              statusCode: 400,
+              error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+              message: 'No fields to update',
+            },
+            400
+          );
+        }
+
+        updates.push(`updated_at = NOW()`);
+        params.push(addressId, profileId);
+
+        const result = await client.query(
+          `UPDATE addresses SET ${updates.join(', ')} WHERE id = $${paramIndex++} AND profile_id = $${paramIndex++} AND deleted_at IS NULL
+         RETURNING id, profile_id, province_id, city_id, full_address, postal_code, main_address, created_at, updated_at`,
+          params
+        );
+
+        if (result.rows.length === 0) {
+          await client.query('ROLLBACK');
+          throw new HttpException(
+            {
+              statusCode: 404,
+              error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+              message: 'Address not found',
+            },
             404
           );
-        await requireAddressGeography(
-          client,
-          data.provinceId ?? current.province_id,
-          data.cityId ?? current.city_id
-        );
-      }
+        }
 
-      const updates: string[] = [];
-      const params: unknown[] = [];
-      let paramIndex = 1;
-
-      if (data.provinceId !== undefined) {
-        updates.push(`province_id = $${paramIndex++}`);
-        params.push(data.provinceId);
-      }
-      if (data.cityId !== undefined) {
-        updates.push(`city_id = $${paramIndex++}`);
-        params.push(data.cityId);
-      }
-      if (data.fullAddress !== undefined) {
-        updates.push(`full_address = $${paramIndex++}`);
-        params.push(data.fullAddress);
-      }
-      if (data.postalCode !== undefined) {
-        updates.push(`postal_code = $${paramIndex++}`);
-        params.push(data.postalCode);
-      }
-
-      if (updates.length === 0) {
-        throw new HttpException(
-          {
-            statusCode: 400,
-            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-            message: 'No fields to update',
-          },
-          400
-        );
-      }
-
-      updates.push(`updated_at = NOW()`);
-      params.push(addressId, profileId);
-
-      const result = await client.query(
-        `UPDATE addresses SET ${updates.join(', ')} WHERE id = $${paramIndex++} AND profile_id = $${paramIndex++} AND deleted_at IS NULL
-         RETURNING id, profile_id, province_id, city_id, full_address, postal_code, main_address, created_at, updated_at`,
-        params
-      );
-
-      if (result.rows.length === 0) {
-        await client.query('ROLLBACK');
-        throw new HttpException(
-          {
-            statusCode: 404,
-            error: ErrorCodes.NOT_FOUND_RESOURCE.code,
-            message: 'Address not found',
-          },
-          404
-        );
-      }
-
-      await client.query(
-        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
         VALUES (uuid_generate_v7(),$1,'address_updated',jsonb_build_object('profileId',$2::text,'addressId',$3::text),COALESCE($4::uuid,uuid_generate_v7()),NOW())`,
-        [userId, profileId, result.rows[0].id, correlationIdStorage.getStore() ?? null]
-      );
+          [userId, profileId, result.rows[0].id, correlationIdStorage.getStore() ?? null]
+        );
+        return mapAddressRow(result.rows[0]);
+      };
+      const address = idempotencyKey
+        ? await idempotentMutation(
+            client,
+            'address:update',
+            { idempotencyKey, profileId, addressId, ...command },
+            actor,
+            work
+          )
+        : await work();
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       this.logger.log(`Address ${addressId} updated for profile ${profileId}`);
-      return mapAddressRow(result.rows[0]);
+      return address;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
@@ -1173,6 +1201,109 @@ export class ProfilesService {
    * and address fields. Address changes create a new address record (historical
    * addresses retained). Identity fields are protected after verification.
    */
+  private async lockProfileEditor(
+    client: PoolClient,
+    actor: AddressActor,
+    profileId: string,
+    data: Record<string, unknown>
+  ): Promise<void> {
+    const { userId } = actor;
+    const account = (
+      await client.query(
+        'SELECT is_staff,is_admin,disabled_at FROM users WHERE user_id=$1 FOR UPDATE',
+        [userId]
+      )
+    ).rows[0];
+    if (!account || account.disabled_at)
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+    await requireCurrentSession(client, actor);
+    // Recheck ownership and verification while holding the profile lock.
+    // Controller prechecks cannot authorize a write after a concurrent change.
+    const current = (
+      await client.query(
+        'SELECT profile_type,status FROM profiles WHERE id=$1 AND user_id=$2 AND NOT archived FOR UPDATE',
+        [profileId, userId]
+      )
+    ).rows[0];
+    if (!current)
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+    const individualIdentityChanged =
+      data.firstName !== undefined || data.lastName !== undefined || data.nationalId !== undefined;
+    const legalIdentityChanged =
+      data.legalName !== undefined || data.nationalIdentifier !== undefined;
+    if (
+      (individualIdentityChanged && current.profile_type !== 'INDIVIDUAL') ||
+      (legalIdentityChanged && current.profile_type !== 'LEGAL')
+    )
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
+    const identityChanged = individualIdentityChanged || legalIdentityChanged;
+    if (identityChanged && current.status === 'VERIFIED') {
+      const ownStaffIndividual =
+        current.profile_type === 'INDIVIDUAL' &&
+        account &&
+        !account.disabled_at &&
+        (account.is_staff || account.is_admin);
+      if (!ownStaffIndividual)
+        throw new HttpException({ statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+    }
+  }
+
+  async assertProfileFormAuthority(
+    actor: AddressActor,
+    profileId: string,
+    data: Record<string, unknown>
+  ): Promise<void> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.lockProfileEditor(client, actor, profileId, data);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async assertAddressFormAuthority(
+    actor: AddressActor,
+    profileId: string,
+    addressId?: string
+  ): Promise<void> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.lockAddressActor(client, actor);
+      await this.requireAddressEditor(actor.userId, profileId, client);
+      if (addressId) await this.lockCurrentAddress(client, profileId, addressId);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  private async lockCurrentAddress(
+    client: PoolClient,
+    profileId: string,
+    addressId: string
+  ): Promise<void> {
+    const current = await client.query(
+      'SELECT id FROM addresses WHERE id=$1 AND profile_id=$2 AND deleted_at IS NULL FOR UPDATE',
+      [addressId, profileId]
+    );
+    if (!current.rows.length)
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+  }
+
   async updateProfile(
     actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     profileId: string,
@@ -1187,6 +1318,7 @@ export class ProfilesService {
       cityId?: string | undefined;
       fullAddress?: string | undefined;
       postalCode?: string | undefined;
+      idempotencyKey?: string | undefined;
     }
   ): Promise<ProfileRow> {
     const { userId } = actor;
@@ -1195,173 +1327,138 @@ export class ProfilesService {
 
     try {
       await client.query('BEGIN');
-      const account = (
-        await client.query(
-          'SELECT is_staff,is_admin,disabled_at FROM users WHERE user_id=$1 FOR UPDATE',
-          [userId]
-        )
-      ).rows[0];
-      if (!account || account.disabled_at)
-        throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
-      await requireCurrentSession(client, actor);
-      // Recheck ownership and verification while holding the profile lock.
-      // Controller prechecks cannot authorize a write after a concurrent change.
-      const current = (
-        await client.query(
-          'SELECT profile_type,status FROM profiles WHERE id=$1 AND user_id=$2 AND NOT archived FOR UPDATE',
-          [profileId, userId]
-        )
-      ).rows[0];
-      if (!current)
-        throw new HttpException(
-          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-          404
-        );
-      const individualIdentityChanged =
-        data.firstName !== undefined ||
-        data.lastName !== undefined ||
-        data.nationalId !== undefined;
-      const legalIdentityChanged =
-        data.legalName !== undefined || data.nationalIdentifier !== undefined;
-      if (
-        (individualIdentityChanged && current.profile_type !== 'INDIVIDUAL') ||
-        (legalIdentityChanged && current.profile_type !== 'LEGAL')
-      )
-        throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-          400
-        );
-      const identityChanged = individualIdentityChanged || legalIdentityChanged;
-      if (identityChanged && current.status === 'VERIFIED') {
-        const ownStaffIndividual =
-          current.profile_type === 'INDIVIDUAL' &&
-          account &&
-          !account.disabled_at &&
-          (account.is_staff || account.is_admin);
-        if (!ownStaffIndividual)
-          throw new HttpException({ statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
-      }
+      await this.lockProfileEditor(client, actor, profileId, data);
+      const { idempotencyKey, ...command } = data;
+      const work = async (): Promise<ProfileRow> => {
+        const legalIdentityChanged =
+          data.legalName !== undefined || data.nationalIdentifier !== undefined;
+        // Build dynamic SET clause for profile fields
+        const profileUpdates: string[] = [];
+        const profileParams: unknown[] = [];
+        let paramIndex = 1;
 
-      // Build dynamic SET clause for profile fields
-      const profileUpdates: string[] = [];
-      const profileParams: unknown[] = [];
-      let paramIndex = 1;
-
-      if (data.title !== undefined) {
-        profileUpdates.push(`title = $${paramIndex++}`);
-        profileParams.push(data.title || null);
-      }
-      if (data.firstName !== undefined) {
-        profileUpdates.push(`first_name = $${paramIndex++}`);
-        profileParams.push(data.firstName);
-      }
-      if (data.lastName !== undefined) {
-        profileUpdates.push(`last_name = $${paramIndex++}`);
-        profileParams.push(data.lastName);
-      }
-      if (data.nationalId !== undefined) {
-        profileUpdates.push(`national_id = $${paramIndex++}`);
-        profileParams.push(data.nationalId);
-      }
-
-      if (profileUpdates.length > 0) {
-        profileUpdates.push(`updated_at = NOW()`);
-        const profileQuery = `UPDATE profiles SET ${profileUpdates.join(', ')} WHERE id = $${paramIndex++} AND user_id = $${paramIndex++} RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at`;
-        const profileResult = await client.query(profileQuery, [
-          ...profileParams,
-          profileId,
-          userId,
-        ]);
-
-        if (profileResult.rows.length === 0) {
-          await client.query('ROLLBACK');
-          throw new HttpException(
-            {
-              statusCode: 404,
-              error: ErrorCodes.NOT_FOUND_RESOURCE.code,
-              message: 'Profile not found',
-            },
-            404
-          );
+        if (data.title !== undefined) {
+          profileUpdates.push(`title = $${paramIndex++}`);
+          profileParams.push(data.title || null);
         }
-      }
+        if (data.firstName !== undefined) {
+          profileUpdates.push(`first_name = $${paramIndex++}`);
+          profileParams.push(data.firstName);
+        }
+        if (data.lastName !== undefined) {
+          profileUpdates.push(`last_name = $${paramIndex++}`);
+          profileParams.push(data.lastName);
+        }
+        if (data.nationalId !== undefined) {
+          profileUpdates.push(`national_id = $${paramIndex++}`);
+          profileParams.push(data.nationalId);
+        }
 
-      if (legalIdentityChanged) {
-        const result = await client.query(
-          `UPDATE legal_profiles SET legal_name=COALESCE($2,legal_name),
+        if (profileUpdates.length > 0) {
+          profileUpdates.push(`updated_at = NOW()`);
+          const profileQuery = `UPDATE profiles SET ${profileUpdates.join(', ')} WHERE id = $${paramIndex++} AND user_id = $${paramIndex++} RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at`;
+          const profileResult = await client.query(profileQuery, [
+            ...profileParams,
+            profileId,
+            userId,
+          ]);
+
+          if (profileResult.rows.length === 0) {
+            await client.query('ROLLBACK');
+            throw new HttpException(
+              {
+                statusCode: 404,
+                error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+                message: 'Profile not found',
+              },
+              404
+            );
+          }
+        }
+
+        if (legalIdentityChanged) {
+          const result = await client.query(
+            `UPDATE legal_profiles SET legal_name=COALESCE($2,legal_name),
            national_identifier=COALESCE($3,national_identifier),updated_at=NOW()
            WHERE id=$1 RETURNING id`,
-          [profileId, data.legalName ?? null, data.nationalIdentifier ?? null]
-        );
-        if (result.rows.length === 0)
-          throw new HttpException(
-            { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-            404
+            [profileId, data.legalName ?? null, data.nationalIdentifier ?? null]
           );
-      }
-
-      // If address fields are provided, create a new address record
-      if (
-        data.provinceId !== undefined ||
-        data.cityId !== undefined ||
-        data.fullAddress !== undefined ||
-        data.postalCode !== undefined
-      ) {
-        const existingMain = (
-          await client.query(
-            `SELECT id,province_id,city_id,full_address,postal_code FROM addresses
-           WHERE profile_id=$1 AND main_address FOR UPDATE`,
-            [profileId]
-          )
-        ).rows[0];
-        const unchanged =
-          existingMain &&
-          existingMain.province_id === data.provinceId &&
-          existingMain.city_id === data.cityId &&
-          existingMain.full_address === data.fullAddress &&
-          existingMain.postal_code === data.postalCode;
-        if (!unchanged && data.provinceId && data.cityId && data.fullAddress && data.postalCode) {
-          await requireAddressGeography(client, data.provinceId, data.cityId);
-          await client.query(
-            'UPDATE addresses SET main_address=false,updated_at=NOW() WHERE profile_id=$1 AND main_address',
-            [profileId]
-          );
-          await client.query(
-            `INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address)
-             VALUES($1,$2,$3,$4,$5,true)`,
-            [profileId, data.provinceId, data.cityId, data.fullAddress, data.postalCode]
-          );
+          if (result.rows.length === 0)
+            throw new HttpException(
+              { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+              404
+            );
         }
-      }
 
-      // If only profile updates were made, update_at was already set
-      if (profileUpdates.length === 0) {
-        await client.query(`UPDATE profiles SET updated_at = NOW() WHERE id = $1`, [profileId]);
-      }
+        // If address fields are provided, create a new address record
+        if (
+          data.provinceId !== undefined ||
+          data.cityId !== undefined ||
+          data.fullAddress !== undefined ||
+          data.postalCode !== undefined
+        ) {
+          const existingMain = (
+            await client.query(
+              `SELECT id,province_id,city_id,full_address,postal_code FROM addresses
+           WHERE profile_id=$1 AND main_address FOR UPDATE`,
+              [profileId]
+            )
+          ).rows[0];
+          const unchanged =
+            existingMain &&
+            existingMain.province_id === data.provinceId &&
+            existingMain.city_id === data.cityId &&
+            existingMain.full_address === data.fullAddress &&
+            existingMain.postal_code === data.postalCode;
+          if (!unchanged && data.provinceId && data.cityId && data.fullAddress && data.postalCode) {
+            await requireAddressGeography(client, data.provinceId, data.cityId);
+            await client.query(
+              'UPDATE addresses SET main_address=false,updated_at=NOW() WHERE profile_id=$1 AND main_address',
+              [profileId]
+            );
+            await client.query(
+              `INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address)
+             VALUES($1,$2,$3,$4,$5,true)`,
+              [profileId, data.provinceId, data.cityId, data.fullAddress, data.postalCode]
+            );
+          }
+        }
 
-      await client.query(
-        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        // If only profile updates were made, update_at was already set
+        if (profileUpdates.length === 0) {
+          await client.query(`UPDATE profiles SET updated_at = NOW() WHERE id = $1`, [profileId]);
+        }
+
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
          VALUES (uuid_generate_v7(),$1,'profile_self_updated',$2::jsonb,COALESCE($3::uuid,uuid_generate_v7()),NOW())`,
-        [
-          userId,
-          JSON.stringify({
-            profileId,
-            fields: Object.entries(data)
-              .filter(([, value]) => value !== undefined)
-              .map(([key]) => key),
-          }),
-          correlationIdStorage.getStore() ?? null,
-        ]
-      );
-      const updated = await this.getProfileById(profileId, client);
+          [
+            userId,
+            JSON.stringify({
+              profileId,
+              fields: Object.entries(command)
+                .filter(([, value]) => value !== undefined)
+                .map(([key]) => key),
+            }),
+            correlationIdStorage.getStore() ?? null,
+          ]
+        );
+        const updated = await this.getProfileById(profileId, client);
+        if (!updated) throw new Error('Profile not found after update');
+        return updated;
+      };
+      const updated = idempotencyKey
+        ? await idempotentMutation(
+            client,
+            'profile:update',
+            { idempotencyKey, profileId, ...command },
+            actor,
+            work
+          )
+        : await work();
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return (
-        updated ??
-        (() => {
-          throw new Error('Profile not found after update');
-        })()
-      );
+      return updated;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
 

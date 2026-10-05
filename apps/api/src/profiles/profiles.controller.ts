@@ -23,7 +23,7 @@ import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import { InputFieldException } from '../common/input-field.exception.js';
+import { parseProfileFormInput } from './profile-form-input-fields.js';
 import {
   validateNationalId,
   validatePostalCode,
@@ -36,8 +36,16 @@ const addressFields = z.object({
   fullAddress: z.string().trim().min(1).max(500),
   postalCode: z.string().trim().refine(validatePostalCode),
 });
-const createAddressInput = addressFields.extend({ mainAddress: z.boolean().optional() });
-const updateAddressInput = addressFields.partial().refine((data) => Object.keys(data).length > 0);
+const commandKey = z.string().uuid().optional();
+const addressFieldNames = Object.keys(addressFields.shape);
+const createAddressInput = addressFields.extend({
+  mainAddress: z.boolean().optional(),
+  idempotencyKey: commandKey,
+});
+const updateAddressInput = addressFields
+  .partial()
+  .extend({ idempotencyKey: commandKey })
+  .refine((data) => Object.keys(data).some((field) => field !== 'idempotencyKey'));
 
 const updateProfileInput = addressFields
   .partial()
@@ -48,14 +56,24 @@ const updateProfileInput = addressFields
     nationalId: z.string().trim().refine(validateNationalId).optional(),
     legalName: z.string().trim().min(1).max(200).optional(),
     nationalIdentifier: z.string().trim().refine(validateLegalNationalIdentifier).optional(),
+    idempotencyKey: commandKey,
   })
-  .refine((data) => Object.keys(data).length > 0)
+  .refine((data) => Object.keys(data).some((field) => field !== 'idempotencyKey'))
   .refine((data) => {
     const values = [data.provinceId, data.cityId, data.fullAddress, data.postalCode];
     return (
       values.every((value) => value === undefined) || values.every((value) => value !== undefined)
     );
   });
+const profileFieldNames = [
+  ...addressFieldNames,
+  'title',
+  'firstName',
+  'lastName',
+  'nationalId',
+  'legalName',
+  'nationalIdentifier',
+];
 
 @ApiTags('Profiles')
 @Controller('api/profiles')
@@ -440,13 +458,14 @@ export class ProfilesController {
   ) {
     const userId = req.session.userId;
 
-    const parsed = updateProfileInput.safeParse(body);
-    if (!parsed.success)
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400
-      );
-    const updated = await this.profilesService.updateProfile(req.session, profileId, parsed.data);
+    const parsed = await parseProfileFormInput(
+      updateProfileInput,
+      body,
+      profileFieldNames,
+      [...profileFieldNames, 'idempotencyKey'],
+      (input) => this.profilesService.assertProfileFormAuthority(req.session, profileId, input)
+    );
+    const updated = await this.profilesService.updateProfile(req.session, profileId, parsed);
 
     this.logger.log(`Profile ${profileId} updated for user ${userId}`);
 
@@ -495,6 +514,7 @@ export class ProfilesController {
    * main address, the new address is automatically set as main.
    */
   @Post(':profileId/addresses')
+  @ApiZodBody(createAddressInput)
   @HttpCode(201)
   @RateLimit({ namespace: 'profiles:addresses:create:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Create a new address for a profile' })
@@ -515,21 +535,20 @@ export class ProfilesController {
       fullAddress: string;
       postalCode: string;
       mainAddress?: boolean;
+      idempotencyKey?: string;
     },
     @Req() req: AuthenticatedRequest
   ) {
     const userId = req.session.userId;
 
-    const parsed = createAddressInput.safeParse(body);
-    if (!parsed.success)
-      throw new InputFieldException(
-        parsed.error.issues.flatMap((issue) =>
-          typeof issue.path[0] === 'string' && Object.hasOwn(addressFields.shape, issue.path[0])
-            ? [issue.path[0]]
-            : []
-        )
-      );
-    const address = await this.profilesService.createAddress(req.session, profileId, parsed.data);
+    const parsed = await parseProfileFormInput(
+      createAddressInput,
+      body,
+      addressFieldNames,
+      [...addressFieldNames, 'mainAddress', 'idempotencyKey'],
+      () => this.profilesService.assertAddressFormAuthority(req.session, profileId)
+    );
+    const address = await this.profilesService.createAddress(req.session, profileId, parsed);
 
     this.logger.log(`Address ${address.id} created for profile ${profileId} by user ${userId}`);
     return address;
@@ -543,6 +562,7 @@ export class ProfilesController {
    * address flag, use POST set-main.
    */
   @Put(':profileId/addresses/:addressId')
+  @ApiZodBody(updateAddressInput)
   @HttpCode(200)
   @RateLimit({ namespace: 'profiles:addresses:update:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Update an address' })
@@ -563,25 +583,24 @@ export class ProfilesController {
       cityId?: string;
       fullAddress?: string;
       postalCode?: string;
+      idempotencyKey?: string;
     },
     @Req() req: AuthenticatedRequest
   ) {
     const userId = req.session.userId;
 
-    const parsed = updateAddressInput.safeParse(body);
-    if (!parsed.success)
-      throw new InputFieldException(
-        parsed.error.issues.flatMap((issue) =>
-          typeof issue.path[0] === 'string' && Object.hasOwn(addressFields.shape, issue.path[0])
-            ? [issue.path[0]]
-            : []
-        )
-      );
+    const parsed = await parseProfileFormInput(
+      updateAddressInput,
+      body,
+      addressFieldNames,
+      [...addressFieldNames, 'idempotencyKey'],
+      () => this.profilesService.assertAddressFormAuthority(req.session, profileId, addressId)
+    );
     const address = await this.profilesService.updateAddress(
       req.session,
       profileId,
       addressId,
-      parsed.data
+      parsed
     );
 
     this.logger.log(`Address ${addressId} updated for profile ${profileId} by user ${userId}`);

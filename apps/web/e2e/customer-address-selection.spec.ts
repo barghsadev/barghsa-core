@@ -3,6 +3,7 @@ import { test, expect, type Page } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { t } from '@barghsa/i18n/app';
 import { t as crmText } from '@barghsa/i18n/crm';
+import { tSettingsForms } from '@barghsa/i18n/settings-forms';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const p1 = '22222222-2222-4222-8222-222222222222';
@@ -18,6 +19,7 @@ async function fixture(page: Page, locale: Locale) {
     validationFields: [] as string[],
     writeGate: null as Promise<void> | null,
     writes: [] as Record<string, string>[],
+    keyedWrites: [] as { raw: string; key: unknown }[],
   };
   let address = {
     id: '66666666-6666-4666-8666-666666666666',
@@ -34,6 +36,8 @@ async function fixture(page: Page, locale: Locale) {
     createdAt: '2026-10-01T00:00:00Z',
     updatedAt: '2026-10-01T00:00:00Z',
   };
+  const addresses = [address];
+  let profileUpdatedAt = '2026-10-01T00:00:00Z';
   const profile = () => ({
     id: profileId,
     profileType: 'INDIVIDUAL',
@@ -44,9 +48,10 @@ async function fixture(page: Page, locale: Locale) {
     status: 'ACTIVE',
     isDefault: true,
     createdAt: '2026-10-01T00:00:00Z',
-    updatedAt: '2026-10-01T00:00:00Z',
-    addresses: [address],
+    updatedAt: profileUpdatedAt,
+    addresses,
     legalInfo: null,
+    canEditIdentity: false,
   });
   await page.addInitScript((language) => {
     localStorage.setItem('barghsa.locale', language);
@@ -93,7 +98,11 @@ async function fixture(page: Page, locale: Locale) {
     route.fulfill({ json: { profiles: [profile()], activeProfileId: profileId, hasDefault: true } })
   );
   async function write(route: import('@playwright/test').Route) {
-    const body = route.request().postDataJSON();
+    const captured = route.request().postDataJSON();
+    state.keyedWrites.push({ raw: route.request().postData()!, key: captured.idempotencyKey });
+    const body = Object.fromEntries(
+      Object.entries(captured).filter(([key]) => key !== 'idempotencyKey')
+    ) as Record<string, string>;
     state.writes.push(body);
     if (state.writeGate) await state.writeGate;
     if (state.validationFields.length)
@@ -108,18 +117,49 @@ async function fixture(page: Page, locale: Locale) {
         },
       });
     if (state.writeFailed) return route.fulfill({ status: 503, json: {} });
-    address = { ...address, ...body };
+    const addressWrite = route.request().url().includes('/addresses');
+    if (!addressWrite || route.request().method() === 'POST') {
+      if (!addressWrite) for (const previous of addresses) previous.mainAddress = false;
+      address = {
+        ...address,
+        ...body,
+        id: '77777777-7777-4777-8777-777777777777',
+        mainAddress: !addressWrite,
+        updatedAt: '2026-10-01T00:01:00Z',
+      };
+      addresses.push(address);
+    } else Object.assign(address, body, { updatedAt: '2026-10-01T00:01:00Z' });
+    if (body.provinceId === p2)
+      Object.assign(address, {
+        provinceNameFa: 'فارس',
+        provinceNameEn: 'Fars',
+        cityNameFa: 'شیراز',
+        cityNameEn: 'Shiraz',
+      });
+    if (!addressWrite) profileUpdatedAt = address.updatedAt;
+    const current = profile();
     return route.fulfill({
-      json: route.request().url().includes('/addresses') ? address : profile(),
+      status: addressWrite && route.request().method() === 'POST' ? 201 : 200,
+      json: addressWrite
+        ? address
+        : {
+            id: current.id,
+            profileType: current.profileType,
+            isDefault: current.isDefault,
+            status: current.status,
+            title: current.title,
+            firstName: current.firstName,
+            lastName: current.lastName,
+            nationalId: current.nationalId,
+            updatedAt: address.updatedAt,
+          },
     });
   }
   await page.route(`**/api/profiles/${profileId}`, (route) =>
     route.request().method() === 'PUT' ? write(route) : route.fulfill({ json: profile() })
   );
   await page.route(`**/api/profiles/${profileId}/addresses`, (route) =>
-    route.request().method() === 'POST'
-      ? write(route)
-      : route.fulfill({ json: { addresses: [address] } })
+    route.request().method() === 'POST' ? write(route) : route.fulfill({ json: { addresses } })
   );
   await page.route(`**/api/profiles/${profileId}/addresses/${address.id}`, (route) => write(route));
   await page.route('**/api/geography/provinces', (route) =>
@@ -201,15 +241,11 @@ for (const locale of ['en', 'fa'] as const)
       if (surface === 'addresses') await expect(save()).toBeDisabled();
       else {
         await save().click();
-        await page
-          .getByRole('dialog')
-          .getByRole('button', { name: crmText('settings.profile.save', locale), exact: true })
-          .click();
-        await expect(page.getByRole('dialog').getByRole('alert')).toBeVisible();
-        await page
-          .getByRole('dialog')
-          .getByRole('button', { name: crmText('crm.profile.edit.cancel', locale), exact: true })
-          .click();
+        await expect(page.getByRole('dialog')).toHaveCount(0);
+        await expect(city).toHaveAttribute('aria-invalid', 'true');
+        await expect(
+          page.getByRole('alert').filter({ hasText: tSettingsForms('cityIdInvalid', locale) })
+        ).toBeVisible();
       }
       expect(state.writes).toHaveLength(0);
       state.cityInvalid = false;
@@ -244,7 +280,7 @@ for (const locale of ['en', 'fa'] as const)
           page
             .getByRole('dialog')
             .getByRole('alert')
-            .filter({ hasText: t('settings.addresses.error.create', locale) })
+            .filter({ hasText: tSettingsForms('uncertain', locale) })
         ).toBeVisible();
         expect(
           await page.getByRole('dialog').evaluate((dialog) => {
@@ -255,13 +291,9 @@ for (const locale of ['en', 'fa'] as const)
       }
       await expect(full).toHaveValue('Retained address draft');
       state.writeFailed = false;
-      await (
-        surface === 'addresses'
-          ? save()
-          : page
-              .getByRole('dialog')
-              .getByRole('button', { name: crmText('settings.profile.save', locale), exact: true })
-      ).click();
+      await page
+        .getByRole('button', { name: tSettingsForms('retryOriginal', locale), exact: true })
+        .click();
       await expect.poll(() => state.writes.length).toBe(2);
       await expect(page.getByRole('dialog')).toHaveCount(0);
       expect(state.writes).toEqual(
@@ -272,6 +304,8 @@ for (const locale of ['en', 'fa'] as const)
           postalCode: '2345678901',
         })
       );
+      expect(state.keyedWrites[0]!.key).toMatch(/^[0-9a-f-]{36}$/i);
+      expect(state.keyedWrites[1]).toEqual(state.keyedWrites[0]);
       if (surface === 'profile') await expect(city).toHaveValue(c2);
       else await expect(page.locator('.container').last()).toContainText('Retained address draft');
     });

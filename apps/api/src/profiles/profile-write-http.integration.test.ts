@@ -978,3 +978,252 @@ it('rolls back a missing default assignment on audit failure and never completes
   expect((await complete()).status).toBe(404);
   expect((await snapshot()).is_default).toBe(false);
 });
+
+type ProfileFormReceipt = Omit<
+  Pick<
+    import('./profiles.service.js').ProfileRow,
+    | 'id'
+    | 'profileType'
+    | 'isDefault'
+    | 'status'
+    | 'title'
+    | 'firstName'
+    | 'lastName'
+    | 'nationalId'
+    | 'updatedAt'
+  >,
+  'updatedAt'
+> & { updatedAt: string };
+type ProfileFormError = { error: { code: string; fields?: readonly string[] } };
+
+it('profile forms serialize exact retries and preserve original receipts without repeating later history or geography', async () => {
+  const command = {
+    title: 'Captured title',
+    firstName: 'Captured owner',
+    provinceId,
+    cityId,
+    fullAddress: 'Captured main',
+    postalCode: '1234567890',
+    idempotencyKey: randomUUID(),
+  };
+  const pair = await Promise.all([update(command), update(command)]);
+  for (const response of pair) expect(response.status, await response.clone().text()).toBe(200);
+  const original = (await pair[0]!.json()) as ProfileFormReceipt;
+  expect(await pair[1]!.json()).toEqual(original);
+  expect(original).toMatchObject({
+    id: profileId,
+    title: command.title,
+    firstName: command.firstName,
+  });
+  expect(original).not.toHaveProperty('addresses');
+  expect(original).not.toHaveProperty('legalInfo');
+  expect(original).not.toHaveProperty('idempotencyKey');
+  expect(
+    (await http.pool.query('SELECT id FROM addresses WHERE profile_id=$1', [profileId])).rows
+  ).toHaveLength(1);
+  const audits = await http.pool.query(
+    "SELECT metadata FROM audit_log WHERE event='profile_self_updated'"
+  );
+  expect(audits.rows).toHaveLength(1);
+  expect(JSON.parse(audits.rows[0].metadata).fields).not.toContain('idempotencyKey');
+  expect(
+    (
+      await http.pool.query(
+        "SELECT idempotency_key FROM idempotency_keys WHERE entity_type='profile:update'"
+      )
+    ).rows
+  ).toHaveLength(1);
+
+  const later = { ...command, idempotencyKey: undefined };
+  expect((await update({ ...later, title: 'Later title', fullAddress: 'Later main' })).status).toBe(
+    200
+  );
+  await http.pool.query("UPDATE cities SET status='inactive' WHERE id=$1", [cityId]);
+  const replay = await update(command);
+  expect(replay.status).toBe(200);
+  expect(await replay.json()).toEqual(original);
+  expect((await snapshot()).title).toBe('Later title');
+  expect(
+    (
+      await http.pool.query(
+        'SELECT full_address FROM addresses WHERE profile_id=$1 AND main_address',
+        [profileId]
+      )
+    ).rows
+  ).toEqual([{ full_address: 'Later main' }]);
+  expect(
+    (await http.pool.query('SELECT id FROM addresses WHERE profile_id=$1', [profileId])).rows
+  ).toHaveLength(2);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='profile_self_updated'")).rows
+  ).toHaveLength(2);
+  const conflict = await update({ ...command, title: 'PRIVATE altered command' });
+  expect(conflict.status).toBe(409);
+  expect(await conflict.text()).not.toContain('PRIVATE');
+  await http.pool.query("UPDATE profiles SET status='VERIFIED' WHERE id=$1", [profileId]);
+  const denied = await update(command);
+  expect(denied.status).toBe(403);
+  expect(await denied.text()).not.toContain(command.firstName);
+  await http.pool.query("UPDATE users SET is_staff=true WHERE user_id='profile-owner'");
+  const staffReplay = await update(command);
+  expect(staffReplay.status).toBe(200);
+  expect(await staffReplay.json()).toEqual(original);
+  await http.pool.query("UPDATE users SET is_staff=false WHERE user_id='profile-owner'");
+  expect((await update(command)).status).toBe(403);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='profile_self_updated'")).rows
+  ).toHaveLength(2);
+});
+
+it('profile forms replay title receipts after verification with current CSRF and deny expired sessions', async () => {
+  const command = { title: 'Original title', idempotencyKey: randomUUID() };
+  const saved = await update(command);
+  expect(saved.status).toBe(200);
+  const original = (await saved.json()) as ProfileFormReceipt;
+  await http.pool.query("UPDATE profiles SET title='Later title',status='VERIFIED' WHERE id=$1", [
+    profileId,
+  ]);
+  const csrf = randomUUID();
+  await http.pool.query("UPDATE sessions SET csrf_token=$1 WHERE user_id='profile-owner'", [csrf]);
+  expect((await update(command)).status).toBe(403);
+  headers['X-CSRF-Token'] = csrf;
+  const replay = await update(command);
+  expect(replay.status).toBe(200);
+  expect(await replay.json()).toEqual(original);
+  expect((await snapshot()).title).toBe('Later title');
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='profile_self_updated'")).rows
+  ).toHaveLength(1);
+  await http.pool.query(
+    "UPDATE sessions SET expires_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='profile-owner'"
+  );
+  const denied = await update(command);
+  expect(denied.status).toBe(401);
+  expect(await denied.text()).not.toContain(command.title);
+});
+
+it('profile forms roll back durable receipts with failed profile and address audits and allow the same captured retry', async () => {
+  const before = await snapshot();
+  const command = {
+    title: 'Captured title',
+    provinceId,
+    cityId,
+    fullAddress: 'Captured main',
+    postalCode: '1234567890',
+    idempotencyKey: randomUUID(),
+  };
+  await http.pool.query(
+    "CREATE FUNCTION fail_keyed_profile_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test keyed profile audit failure'; END $$; CREATE TRIGGER fail_keyed_profile_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='profile_self_updated') EXECUTE FUNCTION fail_keyed_profile_audit()"
+  );
+  expect((await update(command)).status).toBe(500);
+  expect(await snapshot()).toEqual(before);
+  expect((await http.pool.query('SELECT id FROM addresses')).rows).toHaveLength(0);
+  expect((await http.pool.query('SELECT idempotency_key FROM idempotency_keys')).rows).toHaveLength(
+    0
+  );
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='profile_self_updated'")).rows
+  ).toHaveLength(0);
+  await http.pool.query('DROP TRIGGER fail_keyed_profile_audit ON audit_log');
+  const retry = await update(command);
+  expect(retry.status).toBe(200);
+  expect((await retry.json()) as ProfileFormReceipt).toMatchObject({
+    id: profileId,
+    title: command.title,
+  });
+  expect((await http.pool.query('SELECT id FROM addresses')).rows).toHaveLength(1);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='profile_self_updated'")).rows
+  ).toHaveLength(1);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT idempotency_key FROM idempotency_keys WHERE entity_type='profile:update'"
+      )
+    ).rows
+  ).toHaveLength(1);
+});
+
+it('profile forms expose only current-authorized owned string feedback after identity lock waits', async () => {
+  const client = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query("UPDATE profiles SET status='VERIFIED' WHERE id=$1", [profileId]);
+    pending = update({ firstName: '' });
+    await waitForWrite();
+    await client.query('COMMIT');
+    const denied = await pending;
+    expect(denied.status).toBe(403);
+    expect((await denied.json()) as ProfileFormError).toMatchObject({
+      error: expect.not.objectContaining({ fields: expect.anything() }),
+    });
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await pending;
+  }
+  const invalidTitle = 'PRIVATE'.repeat(10);
+  const owned = await update({ title: invalidTitle });
+  expect(owned.status).toBe(400);
+  expect((await owned.json()) as ProfileFormError).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['title'] },
+  });
+  for (const body of [
+    { title: invalidTitle, profileId: 'PRIVATE' },
+    { title: invalidTitle, idempotencyKey: 'PRIVATE' },
+    { firstName: [] },
+    { provinceId },
+  ]) {
+    const response = await update(body);
+    expect(response.status).toBe(400);
+    const text = await response.text();
+    expect(text).not.toContain('PRIVATE');
+    expect(JSON.parse(text) as ProfileFormError).toMatchObject({
+      error: expect.not.objectContaining({ fields: expect.anything() }),
+    });
+  }
+  await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [profileId]);
+  const hidden = await update({ title: invalidTitle });
+  expect(hidden.status).toBe(404);
+  expect((await hidden.json()) as ProfileFormError).toMatchObject({
+    error: expect.not.objectContaining({ fields: expect.anything() }),
+  });
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='profile_self_updated'")).rows
+  ).toHaveLength(0);
+  expect((await http.pool.query('SELECT idempotency_key FROM idempotency_keys')).rows).toHaveLength(
+    0
+  );
+});
+
+it('profile forms roll back keyed receipts when the session expires after audit persistence', async () => {
+  const before = await snapshot();
+  await http.pool.query(
+    "CREATE SEQUENCE keyed_profile_audit_reached; CREATE FUNCTION delay_keyed_profile_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN PERFORM nextval('keyed_profile_audit_reached'); PERFORM pg_sleep(2.2); RETURN NEW; END $$; CREATE TRIGGER delay_keyed_profile_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='profile_self_updated') EXECUTE FUNCTION delay_keyed_profile_audit()"
+  );
+  await http.pool.query(
+    "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE user_id='profile-owner'"
+  );
+  const response = await update({
+    title: 'Private captured title',
+    provinceId,
+    cityId,
+    fullAddress: 'Private captured main',
+    postalCode: '1234567890',
+    idempotencyKey: randomUUID(),
+  });
+  expect(
+    (await http.pool.query('SELECT is_called FROM keyed_profile_audit_reached')).rows[0].is_called
+  ).toBe(true);
+  expect(response.status).toBe(401);
+  expect(await response.text()).not.toContain('Private captured');
+  expect(await snapshot()).toEqual(before);
+  expect((await http.pool.query('SELECT id FROM addresses')).rows).toHaveLength(0);
+  expect((await http.pool.query('SELECT idempotency_key FROM idempotency_keys')).rows).toHaveLength(
+    0
+  );
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='profile_self_updated'")).rows
+  ).toHaveLength(0);
+});
