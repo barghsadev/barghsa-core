@@ -63,6 +63,73 @@ beforeEach(async () => {
   ]);
 });
 
+it('lists all saved statuses and applies exact event/locale/channel/status filters in PostgreSQL', async () => {
+  const event = `fix.template.literal'_%${randomUUID()}`;
+  const records = [
+    { event, channel: 'email', locale: 'en', status: 'draft', version: 3 },
+    { event, channel: 'email', locale: 'en', status: 'active', version: 2 },
+    { event, channel: 'email', locale: 'en', status: 'archived', version: 1 },
+    { event, channel: 'sms', locale: 'fa', status: 'draft', version: 1 },
+    {
+      event: event.replace('_%', 'xy'),
+      channel: 'email',
+      locale: 'en',
+      status: 'draft',
+      version: 1,
+    },
+  ].map((row) => ({ ...row, id: randomUUID() }));
+  for (const row of records) {
+    await http.pool.query(
+      `INSERT INTO notification_templates(id,event_key,channel,locale,body_template,variables,status,is_active,version,created_by,published_at)
+      VALUES ($1,$2,$3,$4,'Saved version','[]',$5,$6,$7,'template-editor',CASE WHEN $6 THEN NOW() END)`,
+      [row.id, row.event, row.channel, row.locale, row.status, row.status === 'active', row.version]
+    );
+  }
+  const read = async (query: Record<string, string> = {}) => {
+    const response = await fetch(
+      `${http.base}/api/admin/notifications/templates?${new URLSearchParams(query)}`,
+      { headers: headers.editor! }
+    );
+    expect(response.status).toBe(200);
+    return (await response.json()) as NotificationTemplateResult[];
+  };
+  const all = await read();
+  expect(all.filter((row) => row.eventKey === event).map((row) => row.id)).toEqual(
+    records.slice(0, 4).map((row) => row.id)
+  );
+  expect((await read({ eventKey: event })).map((row) => row.id)).toEqual(
+    records.slice(0, 4).map((row) => row.id)
+  );
+  for (const status of ['draft', 'active', 'archived']) {
+    const selected = records.find((row) => row.status === status && row.channel === 'email')!;
+    expect(
+      (await read({ eventKey: event, locale: 'en', channel: 'email', status })).map((row) => row.id)
+    ).toEqual([selected.id]);
+  }
+  expect(
+    (await read({ eventKey: event, locale: 'fa', channel: 'sms' })).map((row) => row.id)
+  ).toEqual([records[3]!.id]);
+  expect(await read({ eventKey: event, locale: 'en', channel: 'sms' })).toEqual([]);
+  expect(await read({ eventKey: 'fix.template.missing' })).toEqual([]);
+});
+it.each(['eventKey=invoice%20issued', `eventKey=${'x'.repeat(101)}`, 'eventKey=a&eventKey=b'])(
+  'rejects malformed event-key HTTP queries: %s',
+  async (query) => {
+    const response = await fetch(`${http.base}/api/admin/notifications/templates?${query}`, {
+      headers: headers.editor!,
+    });
+    expect(response.status).toBe(400);
+    const payload = await response.json();
+    expect(JSON.stringify(payload)).toContain('eventKey');
+  }
+);
+it('denies filtered template reads after permission revocation', async () => {
+  const url = `${http.base}/api/admin/notifications/templates?eventKey=fix.template.private&status=archived`;
+  expect((await fetch(url, { headers: headers.viewer! })).status).toBe(403);
+  await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='template-editor'");
+  expect((await fetch(url, { headers: headers.editor! })).status).toBe(403);
+});
+
 async function seed(action: Action, event = `fix.template.${randomUUID()}`) {
   const id = randomUUID();
   if (action !== 'create')

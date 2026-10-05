@@ -10821,7 +10821,58 @@
     "/api/admin/notifications/templates": {
       "get": {
         "operationId": "AdminController_listNotificationTemplates",
-        "parameters": [],
+        "parameters": [
+          {
+            "description": "Omit to include all statuses.",
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "enum": [
+                "draft",
+                "active",
+                "archived"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "channel",
+            "required": false,
+            "schema": {
+              "enum": [
+                "email",
+                "sms",
+                "in_app"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "locale",
+            "required": false,
+            "schema": {
+              "enum": [
+                "fa",
+                "en"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Exact event key; whitespace around a key is trimmed.",
+            "in": "query",
+            "name": "eventKey",
+            "required": false,
+            "schema": {
+              "maxLength": 100,
+              "pattern": "^\\s*\\S+\\s*$",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -10836,11 +10887,14 @@
             },
             "description": "List of notification templates."
           },
+          "400": {
+            "description": "Invalid event key."
+          },
           "403": {
             "description": "Admin role required"
           }
         },
-        "summary": "List notification templates",
+        "summary": "List all notification template versions",
         "tags": [
           "Admin"
         ]

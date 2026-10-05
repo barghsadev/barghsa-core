@@ -39,3 +39,7 @@ External evidence is preserved at `~/.local/state/barghsa-manual-batches/admin-p
 ## Preceding release
 
 `v0.1.15` completed at `2026-10-05T20:02:55.082275+00:00`, with healthy exact live commit `2abfc6d4a565ac7614f44dccd9d4f8f82e070d24`. Persian Telegram note `46` and reviewed screenshot `47` were confirmed. Its report and external completion receipt now record that outcome.
+
+## Deployment outcome
+
+Exact release `v0.1.16` completed at `2026-10-05T20:44:32.882953+00:00`, with healthy live commit `c5f2778628e492189549da9ba29a1fd5f3838d57`. Persian Telegram note `48` and all three reviewed screenshots (`49`, `50`, `51`) were confirmed. The external `release-completed.json` binds this outcome to the published batch.

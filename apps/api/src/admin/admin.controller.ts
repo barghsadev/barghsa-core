@@ -1,3 +1,4 @@
+import { parseTemplateEventKey } from '@barghsa/shared/notifications';
 import { rejectContentFields } from './content-input-fields.js';
 import { assertStaffTeamFields, assertStaffRoutingFields } from './staff-team-fields.js';
 import { assertServiceSettingsFields } from './service-settings-fields.js';
@@ -1437,11 +1438,26 @@ export class AdminController {
    * GET /api/admin/notifications/templates
    *
    * Lists all notification templates with optional filtering by
-   * locale, channel, or status.
+   * event key, locale, channel, or status. Unfiltered reads include archived versions.
    * Permission: admin:notifications:edit.
    */
   @Get('notifications/templates')
-  @ApiOperation({ summary: 'List notification templates' })
+  @ApiOperation({ summary: 'List all notification template versions' })
+  @ApiQuery({
+    name: 'eventKey',
+    required: false,
+    description: 'Exact event key; whitespace around a key is trimmed.',
+    schema: { type: 'string', maxLength: 100, pattern: '^\\s*\\S+\\s*$' },
+  })
+  @ApiQuery({ name: 'locale', required: false, enum: ['fa', 'en'] })
+  @ApiQuery({ name: 'channel', required: false, enum: ['email', 'sms', 'in_app'] })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    enum: ['draft', 'active', 'archived'],
+    description: 'Omit to include all statuses.',
+  })
+  @ApiResponse({ status: 400, description: 'Invalid event key.' })
   @ApiResponse({
     status: 200,
     description: 'List of notification templates.',
@@ -1452,14 +1468,20 @@ export class AdminController {
     @Query('locale') locale: string | undefined,
     @Query('channel') channel: string | undefined,
     @Query('status') status: string | undefined,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Query('eventKey') eventKey?: unknown
   ): Promise<NotificationTemplateResult[]> {
     this.assertNotificationPermission(req);
 
     const options: PageTemplatesOptions = {};
+    if (eventKey !== undefined && eventKey !== '') {
+      const key = parseTemplateEventKey(eventKey);
+      if (!key) throw new InputFieldException(['eventKey']);
+      options.eventKey = key;
+    }
     if (locale === 'fa' || locale === 'en') options.locale = locale;
     if (channel === 'email' || channel === 'sms' || channel === 'in_app') options.channel = channel;
-    if (status === 'draft' || status === 'active') options.status = status;
+    if (status === 'draft' || status === 'active' || status === 'archived') options.status = status;
 
     return this.notificationTemplateService.list(options);
   }

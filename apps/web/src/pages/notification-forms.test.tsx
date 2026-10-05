@@ -83,8 +83,8 @@ async function fill(name: string, value: string) {
 }
 async function submit() {
   await act(async () =>
-    host
-      .querySelector('form')!
+    field('eventKey')
+      .closest('form')!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
 }
@@ -124,7 +124,7 @@ it('keeps drafts and blocks writes while validation is unavailable, then retries
   harness.fail = false;
   receipt = { ...notificationTemplate(), bodyTemplate: 'Local body' };
   await submit();
-  await vi.waitFor(() => expect(host.querySelector('form')).toBeNull());
+  await vi.waitFor(() => expect(host.querySelector('#notification-template-eventKey')).toBeNull());
   expect(writes()).toHaveLength(1);
 });
 it('locks before deferred validation and cancels obsolete work after a changed catalogue', async () => {
@@ -202,4 +202,43 @@ it('blocks another protected write when the retried save receipt cannot be verif
   );
   expect(attempts).toBe(2);
   expect(field('bodyTemplate').value).toBe('Local body');
+});
+
+it('keeps a saved template outside the applied event scope out of the catalogue when refresh fails', async () => {
+  await act(async () => root.render(<Page />));
+  const event = host.querySelector<HTMLInputElement>('#notification-event-filter')!;
+  event.value = notificationTemplate().eventKey;
+  await act(async () =>
+    event.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  );
+  await click('New Template');
+  await fill('eventKey', 'another.event');
+  await fill('subject', 'Other saved subject');
+  await fill('bodyTemplate', 'Other saved body');
+  let saved = false;
+  vi.mocked(fetch).mockImplementation(async (_, init) => {
+    if (init?.method) {
+      saved = true;
+      return Response.json(
+        {
+          ...notificationTemplate(),
+          id: 'other-template',
+          eventKey: 'another.event',
+          subject: 'Other saved subject',
+          bodyTemplate: 'Other saved body',
+        },
+        { status: 201 }
+      );
+    }
+    return Response.json(saved ? {} : items, { status: saved ? 503 : 200 });
+  });
+  await submit();
+  await vi.waitFor(() =>
+    expect(host.querySelector('#notification-template-bodyTemplate')).toBeNull()
+  );
+  expect(writes()).toHaveLength(1);
+  expect(host.textContent).toContain('Failed to load notification templates');
+  const catalogue = host.querySelector('table')!;
+  expect(catalogue.textContent).toContain(notificationTemplate().eventKey);
+  expect(catalogue.textContent).not.toContain('another.event');
 });

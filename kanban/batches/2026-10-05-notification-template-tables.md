@@ -40,3 +40,7 @@ Clean committed-head preflight, remote SHA verification, independent enqueue and
 The canonical template-page criteria include an event-key filter. The current catalogue query and service options have no event-key filter, and the controller accepts only draft/active status despite the UI offering archived. Address that bounded read/filter gap next under `02-auth-users-admin.md#T-09.04.01`, `05-notifications-documents-ai.md#T-05.04.01` and `07-ui-ux-design.md#T-07.30.02.05`. Whole-task/global completion is not inferred from this presentation batch.
 
 External evidence: `~/.local/state/barghsa-manual-batches/notification-template-tables/`.
+
+## Deployment outcome
+
+Exact release `v0.1.17` completed at `2026-10-05T20:52:44.305169+00:00`, with healthy live commit `114d397416731589af624cc6d057b1a93b4913a3`. Persian Telegram note `52` and both reviewed screenshots (`53`, `54`) were confirmed. The external `release-completed.json` binds this outcome to the published batch. Its previously recorded event/archive filter gap is closed by `v0.1.18`, documented in `2026-10-05-notification-template-filters.md`.

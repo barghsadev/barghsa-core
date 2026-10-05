@@ -16,3 +16,4 @@ export * from './template-engine.js';
 export * from './navigation.js';
 export * from './inbox-content.js';
 export * from './email-branding.js';
+export * from './template-catalogue-filter.js';

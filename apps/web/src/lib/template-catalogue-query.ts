@@ -1,3 +1,4 @@
+import { parseTemplateEventKey } from '@barghsa/shared/notifications';
 import { listChoice, parseListQuery, type ListQueryOptions } from './list-query.js';
 import { notificationPanelSearch } from './notification-panel-query.js';
 
@@ -18,6 +19,7 @@ export const documentTemplateQueryOptions: ListQueryOptions = {
 export const notificationTemplateQueryOptions: ListQueryOptions = {
   ...base,
   filters: {
+    eventKey: parseTemplateEventKey,
     locale: listChoice(['fa', 'en']),
     channel: listChoice(['email', 'sms', 'in_app']),
     status: listChoice(['draft', 'active', 'archived']),

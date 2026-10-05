@@ -84,7 +84,7 @@ async function fill(selector: string, value: string) {
 async function submit(dialog = false) {
   await act(async () =>
     document
-      .querySelector(dialog ? '[role=dialog] form' : 'form')!
+      .querySelector(dialog ? '[role=dialog] form' : 'form:not(:has(#notification-event-filter))')!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
 }
@@ -148,11 +148,19 @@ it.each(domains)(
     await click(refresh(domain));
     expect(host.querySelector<HTMLInputElement>(input(domain))!.value).toBe('Local text');
     expect(host.textContent).toContain(domain === 'templates' ? 'Recovery subject' : 'v2');
-    expect(host.querySelector<HTMLButtonElement>('form button[type=submit]')!.disabled).toBe(true);
+    expect(
+      host.querySelector<HTMLButtonElement>(
+        'form:not(:has(#notification-event-filter)) button[type=submit]'
+      )!.disabled
+    ).toBe(true);
     failed = false;
     await click(refresh(domain));
     expect(host.querySelector<HTMLInputElement>(input(domain))!.value).toBe('Local text');
-    expect(host.querySelector<HTMLButtonElement>('form button[type=submit]')!.disabled).toBe(false);
+    expect(
+      host.querySelector<HTMLButtonElement>(
+        'form:not(:has(#notification-event-filter)) button[type=submit]'
+      )!.disabled
+    ).toBe(false);
   }
 );
 for (const domain of domains)
@@ -165,7 +173,7 @@ for (const domain of domains)
       await fill(input(domain), 'Private text');
       denied = true;
       await click(refresh(domain));
-      expect(host.querySelector('form')).toBeNull();
+      expect(host.querySelector('form:not(:has(#notification-event-filter))')).toBeNull();
       expect(host.textContent).not.toContain('Private text');
       expect(host.textContent).not.toContain(domain === 'templates' ? 'Recovery subject' : 'v2');
       denied = false;
@@ -207,7 +215,11 @@ it.each(domains)(
     changed = true;
     await click(refresh(domain));
     expect(host.querySelector<HTMLInputElement>(input(domain))!.value).toBe('Local text');
-    expect(host.querySelector<HTMLButtonElement>('form button[type=submit]')!.disabled).toBe(true);
+    expect(
+      host.querySelector<HTMLButtonElement>(
+        'form:not(:has(#notification-event-filter)) button[type=submit]'
+      )!.disabled
+    ).toBe(true);
     await click(domain === 'templates' ? 'Reset to saved template' : 'Reload saved draft');
     expect(host.querySelector<HTMLInputElement>(input(domain))!.value).toBe('Fresh text');
   }
@@ -237,7 +249,7 @@ it.each(domains)('%s late successful command cannot restore denied content', asy
       )
     )
   );
-  expect(host.querySelector('form')).toBeNull();
+  expect(host.querySelector('form:not(:has(#notification-event-filter))')).toBeNull();
   expect(host.textContent).not.toContain('Local text');
 });
 it.each(domains)('%s malformed save acknowledgement preserves local editor', async (domain) => {
@@ -264,7 +276,7 @@ it.each(domains)('%s accepted receipt survives failed authoritative reload', asy
   await click(edit(domain));
   await fill(input(domain), 'Saved text');
   await submit();
-  expect(host.querySelector('form')).toBeNull();
+  expect(host.querySelector('form:not(:has(#notification-event-filter))')).toBeNull();
   expect(host.querySelector('[role=alert]')).not.toBeNull();
   expect(host.querySelector('table')).not.toBeNull();
 });
@@ -389,7 +401,7 @@ it('template filtering clears replaced work and discards older pages', async () 
     select.dispatchEvent(new Event('change', { bubbles: true }));
   });
   await act(async () => resolve(reply([notificationTemplate()])));
-  expect(host.querySelector('form')).toBeNull();
+  expect(host.querySelector('form:not(:has(#notification-event-filter))')).toBeNull();
   expect(host.textContent).toContain('Archived');
 });
 it.each(domains)('%s old command cannot block or unlock recovered editor work', async (domain) => {
@@ -419,9 +431,13 @@ it.each(domains)('%s old command cannot block or unlock recovered editor work', 
     );
   await act(async () => pending[0]!(receipt('Old text')));
   expect(host.querySelector<HTMLInputElement>(input(domain))!.value).toBe('New text');
-  expect(host.querySelector<HTMLButtonElement>('form button[type=submit]')!.disabled).toBe(true);
+  expect(
+    host.querySelector<HTMLButtonElement>(
+      'form:not(:has(#notification-event-filter)) button[type=submit]'
+    )!.disabled
+  ).toBe(true);
   await act(async () => pending[1]!(receipt('New text')));
-  expect(host.querySelector('form')).toBeNull();
+  expect(host.querySelector('form:not(:has(#notification-event-filter))')).toBeNull();
 });
 it('old template test-send cannot unlock a replacement editor request', async () => {
   const pending: ((response: Response) => void)[] = [];

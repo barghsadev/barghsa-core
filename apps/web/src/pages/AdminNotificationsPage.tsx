@@ -1,3 +1,4 @@
+import { parseTemplateEventKey } from '@barghsa/shared/notifications';
 import { renderTemplatePreview } from '../lib/template-preview.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -138,13 +139,16 @@ export default function AdminNotificationsPage({
   } | null>(null);
 
   // Filters
+  const [localEventKey, setFilterEventKey] = useState('');
+  const [eventFilterInvalid, setEventFilterInvalid] = useState(false);
+  const filterEventKey = queries ? queries.query.filters.eventKey || '' : localEventKey;
   const [localLocale, setFilterLocale] = useState<string>('');
   const [localChannel, setFilterChannel] = useState<string>('');
   const [localStatus, setFilterStatus] = useState<string>('');
   const filterLocale = queries ? queries.query.filters.locale || '' : localLocale;
   const filterChannel = queries ? queries.query.filters.channel || '' : localChannel;
   const filterStatus = queries ? queries.query.filters.status || '' : localStatus;
-  const criteria = JSON.stringify([filterLocale, filterChannel, filterStatus]);
+  const criteria = JSON.stringify([filterEventKey, filterLocale, filterChannel, filterStatus]);
   const previousCriteria = useRef(criteria);
 
   // Editor state
@@ -260,6 +264,7 @@ export default function AdminNotificationsPage({
     };
   }, []);
   const clearFilterWork = useCallback(() => {
+    setEventFilterInvalid(false);
     editorGeneration.current++;
     resetEditorBusy();
     resetCatalogueBusy();
@@ -290,6 +295,7 @@ export default function AdminNotificationsPage({
     setLoading(true);
     try {
       const params = new URLSearchParams();
+      if (filterEventKey) params.set('eventKey', filterEventKey);
       if (filterLocale) params.set('locale', filterLocale);
       if (filterChannel) params.set('channel', filterChannel);
       if (filterStatus) params.set('status', filterStatus);
@@ -306,7 +312,9 @@ export default function AdminNotificationsPage({
       const data: unknown = await res.json();
       if (
         !Array.isArray(data) ||
-        !data.every(validTemplate) ||
+        !data.every(
+          (row) => validTemplate(row) && (!filterEventKey || row.eventKey === filterEventKey)
+        ) ||
         new Set(data.map((r) => r.id)).size !== data.length
       )
         throw new Error();
@@ -351,6 +359,7 @@ export default function AdminNotificationsPage({
       if (!request.signal.aborted && scope.live.current === epoch) setLoading(false);
     }
   }, [
+    filterEventKey,
     filterLocale,
     filterChannel,
     filterStatus,
@@ -370,7 +379,7 @@ export default function AdminNotificationsPage({
   const acceptReceipt = (row: NotificationTemplate | null, id?: string) => {
     listRequest.current?.abort();
     const next = templatesRef.current.filter((r) => r.id !== (id ?? row?.id));
-    if (row) next.unshift(row);
+    if (row && (!filterEventKey || row.eventKey === filterEventKey)) next.unshift(row);
     templatesRef.current = next;
     setTemplates(next);
     setAccepted(true);
@@ -891,6 +900,72 @@ export default function AdminNotificationsPage({
           >
             {t('admin.notifications.refresh', uiLocale)}
           </Button>
+          <form
+            className="flex min-w-0 flex-wrap items-end gap-2"
+            noValidate
+            onSubmit={(event) => {
+              event.preventDefault();
+              const value = new FormData(event.currentTarget).get('eventKey');
+              const key = parseTemplateEventKey(value);
+              if (!key && typeof value === 'string' && value.trim()) {
+                setEventFilterInvalid(true);
+                event.currentTarget.querySelector('input')?.focus();
+                return;
+              }
+              setEventFilterInvalid(false);
+              if (key === filterEventKey) return;
+              changeFilter(() =>
+                queries ? queries.setQuery({ filters: { eventKey: key } }) : setFilterEventKey(key)
+              );
+            }}
+          >
+            <div className="min-w-0 flex-1">
+              <label htmlFor="notification-event-filter" className="mb-1 block text-sm font-medium">
+                {t('admin.notifications.filterEvent', uiLocale)}
+              </label>
+              <input
+                key={filterEventKey}
+                id="notification-event-filter"
+                name="eventKey"
+                type="text"
+                dir="ltr"
+                autoComplete="off"
+                maxLength={100}
+                defaultValue={filterEventKey}
+                list="notification-event-filter-options"
+                aria-invalid={eventFilterInvalid || undefined}
+                aria-describedby="notification-event-filter-hint"
+                onChange={() => setEventFilterInvalid(false)}
+                placeholder={t('admin.notifications.allEvents', uiLocale)}
+                className="w-full min-w-0 rounded border border-input bg-background px-3 py-1.5 text-sm"
+              />
+              <datalist id="notification-event-filter-options">
+                {[
+                  ...new Set([
+                    ...KNOWN_EVENT_KEYS,
+                    ...templates.map((row) => row.eventKey),
+                    filterEventKey,
+                  ]),
+                ]
+                  .filter(Boolean)
+                  .sort()
+                  .map((key) => (
+                    <option key={key} value={key} />
+                  ))}
+              </datalist>
+              <p id="notification-event-filter-hint" className="mt-1 text-xs text-muted-foreground">
+                {t(
+                  eventFilterInvalid
+                    ? 'admin.notifications.invalidEventFilter'
+                    : 'admin.notifications.eventFilterHint',
+                  uiLocale
+                )}
+              </p>
+            </div>
+            <Button type="submit" variant="outline">
+              {t('admin.notifications.applyEventFilter', uiLocale)}
+            </Button>
+          </form>
           {/* Filters */}
           <div className="flex flex-wrap gap-4 items-center">
             <select

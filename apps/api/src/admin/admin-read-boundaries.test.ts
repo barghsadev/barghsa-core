@@ -110,3 +110,44 @@ describe('staff and template list filters', () => {
     expect(templates).toHaveBeenCalledWith({});
   });
 });
+
+it('passes an exact trimmed event key alongside every independent filter', async () => {
+  const { controller, templates } = fixture();
+  await controller.listNotificationTemplates(
+    'fa',
+    'sms',
+    'archived',
+    request(['admin:notifications:edit']),
+    " literal'_% "
+  );
+  expect(templates).toHaveBeenCalledWith({
+    eventKey: "literal'_%",
+    locale: 'fa',
+    channel: 'sms',
+    status: 'archived',
+  });
+});
+it.each(
+  [['invoice.issued'], 'invoice issued', 'x'.repeat(101), '   ', 42, { key: 'invoice.issued' }].map(
+    (eventKey) => ({ eventKey })
+  )
+)('rejects invalid event-key query inputs before reading data', async ({ eventKey }) => {
+  const { controller, templates } = fixture();
+  await expect(
+    controller.listNotificationTemplates(
+      undefined,
+      undefined,
+      undefined,
+      request(['admin:notifications:edit']),
+      eventKey
+    )
+  ).rejects.toMatchObject({ status: 400, fields: ['eventKey'] });
+  expect(templates).not.toHaveBeenCalled();
+});
+it('checks template-read permission before validating a private query', async () => {
+  const { controller, templates } = fixture();
+  await expect(
+    controller.listNotificationTemplates(undefined, undefined, 'archived', request([]), ['invalid'])
+  ).rejects.toMatchObject({ status: 403 });
+  expect(templates).not.toHaveBeenCalled();
+});

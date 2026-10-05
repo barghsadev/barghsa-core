@@ -78,6 +78,7 @@ export interface UpdateNotificationTemplateInput {
 }
 
 export interface PageTemplatesOptions {
+  eventKey?: string;
   locale?: TemplateLocale;
   channel?: TemplateChannel;
   status?: TemplateStatus;
@@ -301,8 +302,9 @@ export class NotificationTemplateService {
     const params: unknown[] = [];
     let paramIndex = 1;
 
-    if (!options?.status) {
-      sql += ` AND status != 'archived'`;
+    if (options?.eventKey) {
+      sql += ` AND event_key = $${paramIndex++}`;
+      params.push(options.eventKey);
     }
     if (options?.locale) {
       sql += ` AND locale = $${paramIndex++}`;

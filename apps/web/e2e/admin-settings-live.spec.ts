@@ -2701,6 +2701,9 @@ for (const locale of ['en', 'fa'] as const)
       status: 'draft',
       version: 1,
     });
+    await page.locator('#notification-event-filter').fill(eventKey);
+    await page.getByRole('button', { name: text('applyEventFilter'), exact: true }).click();
+    await expect.poll(() => new URL(page.url()).searchParams.get('eventKey')).toBe(eventKey);
     const row = page
       .locator(
         'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)'
@@ -2718,6 +2721,36 @@ for (const locale of ['en', 'fa'] as const)
     saved = templates.find((item: { eventKey: string }) => item.eventKey === eventKey);
     expect(saved.bodyTemplate).toBe('Updated {{name}}');
     expect(saved.version).toBe(1);
+
+    const headers = {
+      ...apiHeaders,
+      'x-csrf-token': http.csrf,
+      origin: 'https://app.example.test',
+    };
+    for (const operation of ['publish', 'unpublish']) {
+      const response = await page.request.post(
+        `${http.base}/api/admin/notifications/templates/${saved.id}/${operation}`,
+        { headers, data: {} }
+      );
+      expect(response.status()).toBe(200);
+    }
+    await page.getByRole('button', { name: text('refresh'), exact: true }).click();
+    await expect(row.getByRole('button', { name: text('view'), exact: true })).toBeVisible();
+    await expect(row.getByRole('button', { name: text('edit'), exact: true })).toHaveCount(0);
+    await page
+      .getByRole('combobox', { name: text('allStatus'), exact: true })
+      .selectOption('archived');
+    await expect(row).toHaveCount(1);
+    await row.getByRole('button', { name: text('view'), exact: true }).click();
+    await expect(editor.locator('#notification-template-bodyTemplate')).toHaveAttribute(
+      'readonly',
+      ''
+    );
+    await expect(editor.locator('#notification-template-bodyTemplate')).toHaveValue(
+      'Updated {{name}}'
+    );
+    await editor.getByRole('button', { name: text('cancel'), exact: true }).click();
+
     const windowForm = page.locator('form').filter({ has: page.locator('#delivery-window-start') });
     await page.locator('#delivery-window-timezone').selectOption('UTC');
     await page.locator('#delivery-window-start').fill('10:15');
