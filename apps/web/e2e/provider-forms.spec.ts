@@ -78,7 +78,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/providers');
       const emailText = (key: string) => providerText(`admin.providers.${key}`, locale);
       await page
-        .getByRole('row')
+        .locator('table:visible tbody tr, ol[role=list]:visible > li')
         .filter({ hasText: 'Saved email' })
         .getByRole('button', { name: emailText('update'), exact: true })
         .click();

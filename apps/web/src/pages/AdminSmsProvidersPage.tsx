@@ -5,10 +5,11 @@ import {
   useProviderCommandGuard,
 } from '../hooks/useProviderCatalogue.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
+import { Button, DateCell, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
 import { buildSmsTestParameters } from '@barghsa/shared/notifications';
 import { smsProviderText } from '@barghsa/i18n/providers';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { DeliveryProviderTable } from '../components/DeliveryProviderTable.js';
 import { ProviderHealthMetrics } from '../components/ProviderHealthMetrics.js';
 import { ProviderAlertHistory } from '../components/ProviderAlertHistory.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
@@ -29,6 +30,7 @@ import {
 } from '../lib/provider-form.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import {
   ProviderStepUpError,
   ProviderRequestError,
@@ -46,6 +48,7 @@ import {
 export default function AdminSmsProvidersPage() {
   const locale = useLocale(),
     time = useAccountTime();
+  const { number } = useNumberFormatting(locale);
   const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
   const healthLabel = (provider: SmsProvider) => {
     if (!provider.degraded) return text('healthHealthy');
@@ -413,6 +416,121 @@ export default function AdminSmsProvidersPage() {
     setNotice(null);
   }
 
+  const providerFields = [
+    {
+      id: 'status',
+      label: text('status'),
+      render: (p: SmsProvider) => (
+        <>
+          {text(p.status)}
+          {p.status === 'active' && (
+            <>
+              <p className={`text-xs ${p.degraded ? 'text-destructive' : 'text-muted-foreground'}`}>
+                {healthLabel(p)}
+              </p>
+              {p.degraded && p.lastFailureAt && (
+                <p className="text-xs text-muted-foreground">
+                  {text('healthLastFailure')}:{' '}
+                  <DateCell value={p.lastFailureAt} format={(value) => time.format(value)} />
+                </p>
+              )}
+              {p.creditCheckedAt && p.lowCreditBalance !== null && (
+                <p
+                  className={`text-xs ${p.lowCreditAlertActive ? 'text-destructive' : 'text-muted-foreground'}`}
+                >
+                  {text('creditBalance')}:{' '}
+                  <bdi className="tabular-nums">{number(p.lowCreditBalance)}</bdi> ·{' '}
+                  {text('creditChecked')}:{' '}
+                  <DateCell value={p.creditCheckedAt} format={(value) => time.format(value)} />
+                </p>
+              )}
+              {p.lowCreditAlertActive && (
+                <p className="text-xs font-medium text-destructive">{text('creditLow')}</p>
+              )}
+            </>
+          )}
+          <ProviderHealthMetrics metrics={p.healthMetrics} active={p.status === 'active'} />
+          <ProviderAlertHistory events={p.alertHistory} />
+        </>
+      ),
+    },
+    {
+      id: 'lastTest',
+      label: text('lastTest'),
+      render: (p: SmsProvider) => (
+        <>
+          {text(
+            p.lastTestStatus === 'passed'
+              ? 'testPassed'
+              : p.lastTestStatus === 'failed'
+                ? 'testFailed'
+                : 'pending'
+          )}
+        </>
+      ),
+    },
+    {
+      id: 'version',
+      label: text('version'),
+      render: (p: SmsProvider) => (
+        <>
+          <DateCell value={p.createdAt} format={(value) => time.format(value)} />
+        </>
+      ),
+    },
+  ];
+  const providerActions = (p: SmsProvider) => (
+    <div className="flex flex-wrap gap-2">
+      {p.status === 'draft' ? (
+        <>
+          <Button variant="outline" disabled={disabled || !!editor} onClick={() => open(p)}>
+            {text('edit')}
+          </Button>
+          <Button
+            variant="outline"
+            disabled={disabled || !!editor || !p.config.template_mappings.length}
+            onClick={() => {
+              setSelected(p.id);
+              setFirstEvent(p.config.template_mappings[0]?.event_key ?? '');
+              setNotice(null);
+              setError(null);
+            }}
+          >
+            {text('preview')}
+          </Button>
+          <Button
+            disabled={disabled || !eventsReady || !!editor || p.lastTestStatus !== 'passed'}
+            onClick={() => lifecycle(p, 'activate')}
+          >
+            {text('activate')}
+          </Button>
+        </>
+      ) : (
+        <Button variant="outline" disabled={disabled || !!editor} onClick={() => open(p, true)}>
+          {text('clone')}
+        </Button>
+      )}
+      {p.status === 'active' && (
+        <Button
+          variant="outline"
+          disabled={disabled || !eventsReady || !!editor}
+          onClick={() => lifecycle(p, 'disable')}
+        >
+          {text('disable')}
+        </Button>
+      )}
+      {(p.status === 'superseded' || p.status === 'disabled') && (
+        <Button
+          variant="outline"
+          disabled={disabled || !eventsReady || !!editor}
+          onClick={() => lifecycle(p, 'rollback')}
+        >
+          {text('rollback')}
+        </Button>
+      )}
+    </div>
+  );
+
   return (
     <section
       aria-labelledby="sms-title"
@@ -478,131 +596,18 @@ export default function AdminSmsProvidersPage() {
           empty={!providers.length}
           emptyView={<p>{text('empty')}</p>}
         >
-          <ScrollArea scrollbarOrientation="horizontal" aria-label={text('title')}>
-            <table className="w-full text-start text-sm">
-              <caption className="sr-only">{text('title')}</caption>
-              <thead>
-                <tr>
-                  {['label', 'status', 'lastTest', 'version', 'actions'].map((k) => (
-                    <th key={k} className="p-2 text-start">
-                      {text(k as 'label' | 'status' | 'lastTest' | 'version' | 'actions')}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {providers.map((p) => (
-                  <tr key={p.id} className="border-t">
-                    <td className="p-2">{p.label}</td>
-                    <td className="p-2">
-                      {text(p.status)}
-                      {p.status === 'active' && (
-                        <>
-                          <p
-                            className={`text-xs ${p.degraded ? 'text-destructive' : 'text-muted-foreground'}`}
-                          >
-                            {healthLabel(p)}
-                          </p>
-                          {p.degraded && p.lastFailureAt && (
-                            <p className="text-xs text-muted-foreground">
-                              {text('healthLastFailure')}: {time.format(p.lastFailureAt)}
-                            </p>
-                          )}
-                          {p.creditCheckedAt && p.lowCreditBalance !== null && (
-                            <p
-                              className={`text-xs ${p.lowCreditAlertActive ? 'text-destructive' : 'text-muted-foreground'}`}
-                            >
-                              {text('creditBalance')}: {p.lowCreditBalance.toLocaleString(locale)} ·{' '}
-                              {text('creditChecked')}: {time.format(p.creditCheckedAt)}
-                            </p>
-                          )}
-                          {p.lowCreditAlertActive && (
-                            <p className="text-xs font-medium text-destructive">
-                              {text('creditLow')}
-                            </p>
-                          )}
-                        </>
-                      )}
-                      <ProviderHealthMetrics
-                        metrics={p.healthMetrics}
-                        active={p.status === 'active'}
-                      />
-                      <ProviderAlertHistory events={p.alertHistory} />
-                    </td>
-                    <td>
-                      {text(
-                        p.lastTestStatus === 'passed'
-                          ? 'testPassed'
-                          : p.lastTestStatus === 'failed'
-                            ? 'testFailed'
-                            : 'pending'
-                      )}
-                    </td>
-                    <td>{time.format(p.createdAt)}</td>
-                    <td className="flex flex-wrap gap-2 p-2">
-                      {p.status === 'draft' ? (
-                        <>
-                          <Button
-                            variant="outline"
-                            disabled={disabled || !!editor}
-                            onClick={() => open(p)}
-                          >
-                            {text('edit')}
-                          </Button>
-                          <Button
-                            variant="outline"
-                            disabled={disabled || !!editor || !p.config.template_mappings.length}
-                            onClick={() => {
-                              setSelected(p.id);
-                              setFirstEvent(p.config.template_mappings[0]?.event_key ?? '');
-                              setNotice(null);
-                              setError(null);
-                            }}
-                          >
-                            {text('preview')}
-                          </Button>
-                          <Button
-                            disabled={
-                              disabled || !eventsReady || !!editor || p.lastTestStatus !== 'passed'
-                            }
-                            onClick={() => lifecycle(p, 'activate')}
-                          >
-                            {text('activate')}
-                          </Button>
-                        </>
-                      ) : (
-                        <Button
-                          variant="outline"
-                          disabled={disabled || !!editor}
-                          onClick={() => open(p, true)}
-                        >
-                          {text('clone')}
-                        </Button>
-                      )}
-                      {p.status === 'active' && (
-                        <Button
-                          variant="outline"
-                          disabled={disabled || !eventsReady || !!editor}
-                          onClick={() => lifecycle(p, 'disable')}
-                        >
-                          {text('disable')}
-                        </Button>
-                      )}
-                      {(p.status === 'superseded' || p.status === 'disabled') && (
-                        <Button
-                          variant="outline"
-                          disabled={disabled || !eventsReady || !!editor}
-                          onClick={() => lifecycle(p, 'rollback')}
-                        >
-                          {text('rollback')}
-                        </Button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </ScrollArea>
+          <DeliveryProviderTable
+            rows={providers}
+            caption={text('title')}
+            scrollLabel={text('table')}
+            labelHeader={text('label')}
+            actionHeader={text('actions')}
+            fields={providerFields}
+            renderActions={providerActions}
+            loading={loading}
+            emptyMessage=""
+            tableClassName="min-w-[52rem]"
+          />
         </ListPage.Content>
       </ListPage>
       {editor && (

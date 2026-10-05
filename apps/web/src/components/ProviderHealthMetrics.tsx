@@ -2,6 +2,8 @@ import { providerText } from '@barghsa/i18n/providers';
 import type { ProviderHealthMetrics as Metrics } from '../lib/email-providers-api.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { DateCell } from '@barghsa/ui';
 
 export function ProviderHealthMetrics({
   metrics,
@@ -12,22 +14,19 @@ export function ProviderHealthMetrics({
 }) {
   const locale = useLocale();
   const time = useAccountTime();
+  const { number, percent } = useNumberFormatting(locale);
   if (!metrics) return null;
   const label = (key: Parameters<typeof providerText>[0]) => providerText(key, locale);
-  const number = new Intl.NumberFormat(locale);
-  const milliseconds = (value: number | null) =>
-    value === null ? '—' : `${number.format(value)} ms`;
+  const milliseconds = (value: number | null) => (value === null ? '—' : `${number(value)} ms`);
   const rate =
     metrics.attemptCount === 0
       ? '—'
-      : new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 1 }).format(
-          metrics.failureCount / metrics.attemptCount
-        );
+      : percent(metrics.failureCount / metrics.attemptCount, { maximumFractionDigits: 1 });
   return (
     <div className="mt-2 space-y-0.5 text-xs text-muted-foreground">
       <p className="font-medium">{label('admin.providers.health.lastHour')}</p>
       <p>
-        {label('admin.providers.health.attempts')}: {number.format(metrics.attemptCount)}
+        {label('admin.providers.health.attempts')}: {number(metrics.attemptCount)}
       </p>
       <p>
         {label('admin.providers.health.failureRate')}: {rate}
@@ -43,12 +42,13 @@ export function ProviderHealthMetrics({
       </p>
       {active && (
         <p>
-          {label('admin.providers.health.queueDepth')}: {number.format(metrics.queueDepth)}
+          {label('admin.providers.health.queueDepth')}: {number(metrics.queueDepth)}
         </p>
       )}
       {active && metrics.oldestQueuedAt && (
         <p>
-          {label('admin.providers.health.oldestQueued')}: {time.format(metrics.oldestQueuedAt)}
+          {label('admin.providers.health.oldestQueued')}:{' '}
+          <DateCell value={metrics.oldestQueuedAt} format={(value) => time.format(value)} />
         </p>
       )}
     </div>

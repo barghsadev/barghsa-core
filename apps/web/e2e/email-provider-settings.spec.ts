@@ -41,7 +41,9 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/sms-providers', (route) => route.fulfill({ json: [] }));
     await page.goto('/admin/providers');
 
-    const row = page.getByRole('row').filter({ hasText: 'Active email' });
+    const row = page
+      .locator('table:visible tbody tr, ol[role=list]:visible > li')
+      .filter({ hasText: 'Active email' });
     await expect(page.getByRole('link', { name: text('runbook') })).toHaveAttribute(
       'href',
       `https://github.com/barghsadev/barghsa-core/blob/main/kanban/runbooks/provider-delivery${locale === 'fa' ? '.fa' : ''}.md`
@@ -117,7 +119,9 @@ for (const locale of ['en', 'fa'] as const) {
       });
       await page.goto('/admin/providers');
 
-      const providerRow = page.getByRole('row').filter({ hasText: 'Saved email' });
+      const providerRow = page
+        .locator('table:visible tbody tr, ol[role=list]:visible > li')
+        .filter({ hasText: 'Saved email' });
       const send = providerRow.getByRole('button', { name: text('test.run'), exact: false });
       await expect(send).toBeDisabled();
       await providerRow.locator('input[type=email]').fill('staff@example.test');
@@ -128,7 +132,7 @@ for (const locale of ['en', 'fa'] as const) {
       ).toBeVisible();
       const edit = () =>
         page
-          .getByRole('row')
+          .locator('table:visible tbody tr, ol[role=list]:visible > li')
           .filter({ hasText: 'Saved email' })
           .getByRole('button', { name: text('update'), exact: true })
           .click();
@@ -186,7 +190,11 @@ for (const locale of ['en', 'fa'] as const) {
         await form.getByLabel(text('field.connectionTimeout'), { exact: false }).fill('31');
       await form.locator('button[type=submit]').click();
       await expect(form).toHaveCount(0);
-      await expect(page.getByRole('cell', { name: 'Renamed email', exact: true })).toBeVisible();
+      await expect(
+        page
+          .locator('table:visible, ol[role=list]:visible')
+          .getByText('Renamed email', { exact: true })
+      ).toBeVisible();
       await expect(page.getByText(text('test.passed'), { exact: true })).toHaveCount(0);
       await expect(
         page.getByRole('button', { name: text('activate'), exact: true })
@@ -225,7 +233,7 @@ for (const locale of ['en', 'fa'] as const) {
     ]) {
       config = bad;
       await page
-        .getByRole('row')
+        .locator('table:visible tbody tr, ol[role=list]:visible > li')
         .filter({ hasText: 'Bad email' })
         .getByRole('button', { name: text('update'), exact: true })
         .click();
@@ -239,7 +247,7 @@ for (const locale of ['en', 'fa'] as const) {
       await alert.getByRole('button', { name: text('retry'), exact: true }).click();
     }
     await page
-      .getByRole('row')
+      .locator('table:visible tbody tr, ol[role=list]:visible > li')
       .filter({ hasText: 'Bad email' })
       .getByRole('button', { name: text('update'), exact: true })
       .click();

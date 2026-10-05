@@ -2,6 +2,7 @@ import { providerText } from '@barghsa/i18n/providers';
 import type { ProviderAlertEvent } from '../lib/email-providers-api.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
+import { DateCell } from '@barghsa/ui';
 
 export function ProviderAlertHistory({ events }: { events: ProviderAlertEvent[] | undefined }) {
   const locale = useLocale();
@@ -14,7 +15,7 @@ export function ProviderAlertHistory({ events }: { events: ProviderAlertEvent[] 
         {events.map((event, index) => (
           <li key={`${event.kind}-${event.createdAt}-${index}`}>
             {providerText(`admin.providers.health.alert.${event.kind}`, locale)} ·{' '}
-            {time.format(event.createdAt)}
+            <DateCell value={event.createdAt} format={(value) => time.format(value)} />
           </li>
         ))}
       </ol>

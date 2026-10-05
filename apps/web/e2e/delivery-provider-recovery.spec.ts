@@ -69,7 +69,9 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/providers');
       await expect(page.locator('html')).toHaveClass(theme === 'dark' ? /dark/ : /^(?!.*dark).*$/);
       const text = (key: string) => providerText(`admin.providers.${key}`, locale);
-      const row = page.getByRole('row').filter({ hasText: 'Saved provider' });
+      const row = page
+        .locator('table:visible tbody tr, ol[role=list]:visible > li')
+        .filter({ hasText: 'Saved provider' });
       await row.locator('input[type=email]').fill('staff@example.test');
       await row.getByRole('button', { name: text('update'), exact: true }).click();
       await page.locator('#email-provider-label').fill('Local draft');

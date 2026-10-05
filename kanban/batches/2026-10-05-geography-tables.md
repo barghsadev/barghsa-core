@@ -27,3 +27,5 @@ Release **v0.1.10** updates the shared login version and `releases/0.1.10.md`. V
 The preceding v0.1.9 release completed at `2026-10-05T18:31:34Z`, with exact live commit `51d01ebe9d1b8d8a2a8236b0b4a8d561b98ad8a4`. Persian Telegram notes (29) and both screenshots (30, 31) are confirmed.
 
 Delivery-provider metadata tables are a next candidate. Confirm remaining gaps against current source and canonical criteria before selecting; the existing Email/SMS native forms and provider engines should not be rebuilt.
+
+Release v0.1.10 completed at `2026-10-05T18:55:02Z`; staging reports exact commit `220bec684e14b4db68ad3fa4fb213a4cd688b757`. Persian Telegram notes (32) and both screenshots (33, 34) are confirmed. The external `release-completed.json` retains the receipt.

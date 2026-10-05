@@ -71,7 +71,9 @@ for (const locale of ['en', 'fa'] as const) {
       })
     );
     await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
-    const row = page.getByRole('row').filter({ hasText: 'sms-active' });
+    const row = page
+      .locator('table:visible tbody tr, ol[role=list]:visible > li')
+      .filter({ hasText: 'sms-active' });
     await expect(row).toContainText(text('healthPaused'));
     await expect(row).toContainText(text('healthLastFailure'));
     await expect(row).toContainText(providerText('admin.providers.health.failureRate', locale));

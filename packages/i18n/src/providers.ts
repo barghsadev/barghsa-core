@@ -7,6 +7,7 @@ const fa = {
   'admin.providers.stale':
     'نسخه ذخیره‌شده تغییر کرده است. پیش‌نویس شما حفظ شده؛ پیش از ذخیره، ویرایش را ببندید و نسخه جدید را باز کنید.',
   'admin.providers.title': 'ارائه‌دهنده‌های ایمیل',
+  'admin.providers.table': 'جدول ارائه‌دهنده‌های ایمیل',
   'admin.providers.subtitle': 'پیکربندی و چرخه‌ی حیات ارائه‌دهنده‌های ایمیل (SMTP / Resend).',
   'admin.providers.new': 'ارائه‌دهنده جدید',
   'admin.providers.loading': 'در حال بارگذاری ارائه‌دهنده‌ها…',
@@ -104,6 +105,7 @@ const en: Record<keyof typeof fa, string> = {
     'The saved version changed. Your draft is retained; close the editor and reopen the latest version before saving.',
 
   'admin.providers.title': 'Email Providers',
+  'admin.providers.table': 'Email provider records',
   'admin.providers.subtitle': 'Configure and manage email provider (SMTP / Resend) lifecycle.',
   'admin.providers.new': 'New provider',
   'admin.providers.loading': 'Loading providers…',
@@ -215,6 +217,7 @@ const smsEn = {
   email: 'Email',
   sms: 'SMS.ir',
   title: 'SMS.ir configuration',
+  table: 'Saved SMS provider records',
   subtitle: 'Manage saved configurations and test every mapping before activation.',
   empty: 'No SMS provider configured.',
   new: 'New configuration',
@@ -299,6 +302,7 @@ const smsFa: Record<keyof typeof smsEn, string> = {
   email: 'ایمیل',
   sms: 'SMS.ir',
   title: 'پیکربندی SMS.ir',
+  table: 'جدول تنظیمات ذخیره‌شده پیامک',
   subtitle: 'پیکربندی‌های ذخیره‌شده را مدیریت کنید و پیش از فعال‌سازی همه نگاشت‌ها را آزمایش کنید.',
   empty: 'هنوز ارائه‌دهنده پیامک پیکربندی نشده است.',
   new: 'پیکربندی جدید',

@@ -142,7 +142,9 @@ for (const locale of ['en', 'fa'] as const) {
     page.on('dialog', (dialog) => dialog.accept());
     await page.goto('/admin/providers');
 
-    const row = page.getByRole('row').filter({ hasText: 'Lifecycle provider' });
+    const row = page
+      .locator('table:visible tbody tr, ol[role=list]:visible > li')
+      .filter({ hasText: 'Lifecycle provider' });
     const activate = row.getByRole('button', { name: fa ? 'فعال‌سازی' : 'Activate', exact: true });
     const connection = row.getByRole('button', {
       name: fa ? 'ارسال ایمیل آزمایشی' : 'Send test email',
@@ -311,7 +313,9 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
       disable: 'Disable',
       rollback: 'Rollback to this version',
     };
-    const row = page.getByRole('row').filter({ hasText: 'Protected row' });
+    const row = page
+      .locator('table:visible tbody tr, ol[role=list]:visible > li')
+      .filter({ hasText: 'Protected row' });
     if (operation === 'test-connection')
       await row.locator('input[type=email]').fill('staff@example.test');
     await row
@@ -368,7 +372,7 @@ test('provider draft edit preserves its stored secret through step-up', async ({
   await page.goto('/admin/providers');
 
   await page
-    .getByRole('row')
+    .locator('table:visible tbody tr, ol[role=list]:visible > li')
     .filter({ hasText: 'Existing provider' })
     .getByRole('button', { name: 'Save', exact: true })
     .click();
