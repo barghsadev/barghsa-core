@@ -64,6 +64,15 @@ Direct-main publication, exact-commit GitHub CI and the actual deployment/Telegr
 outcome must be read from their external receipts rather than inferred from this
 pre-publication report.
 
+The first deployment attempt failed before migrations while pulling an already
+installed pinned Redis digest: the VPS could not resolve Docker Hub. The existing
+rollback ran and no Telegram message was sent. Both pinned infrastructure digests
+were verified installed, and the host's Compose CLI supports `--policy missing`.
+The release now uses that native policy, avoiding redundant registry requests for
+installed exact digests while retaining failed-pull blocking for missing images.
+The installed-image path was verified on the VPS. This is a repair within the
+same initially unshipped `0.1.0` batch, not a separate completed release.
+
 For every subsequent coherent batch: bump the shared Semantic Version, add its
 release notes, build and review, pass related checks, commit and normally push to
 `main`, run `./deploy/staging/deploy.sh`, verify the deployed identity and retain

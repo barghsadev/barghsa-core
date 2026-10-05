@@ -90,6 +90,9 @@ Compose and NGINX configuration, initializes root-only random staging secrets
 on first deployment, runs the release script, and checks HTTPS plus a private
 S3 write and public signed read. Subsequent
 releases preserve `/etc/barghsa/staging/runtime.env` and Docker volumes.
+Redis and object-store images are pinned by digest. Already installed exact
+images are reused with Compose's `--policy missing`; missing images are still
+pulled and a failed pull blocks the release.
 
 On the server, view status and logs with:
 

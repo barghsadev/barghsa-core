@@ -61,7 +61,8 @@ rollback() {
 }
 trap rollback ERR
 
-"${dc[@]}" pull redis objectstore
+# These images are pinned by digest; a cached exact image needs no registry round trip.
+"${dc[@]}" pull --policy missing redis objectstore
 "${dc[@]}" up -d --no-recreate --wait --wait-timeout 900 postgres redis objectstore clamav
 
 # Host NGINX enters the API through the Docker bridge gateway.
