@@ -21,7 +21,7 @@ export interface OtpInputProps {
   onChange?: (value: string) => void;
   disabled?: boolean;
   error?: string | null;
-  onComplete: (otp: string) => void;
+  onComplete?: (otp: string) => void;
   onClearError: () => void;
 }
 
@@ -91,7 +91,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
           // Auto-submit
           const otp = newDigits.join('');
           if (otp.length === DIGIT_COUNT) {
-            onComplete(otp);
+            onComplete?.(otp);
           }
         }
         return;
@@ -111,7 +111,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
       // Auto-submit when all 6 digits filled
       const otp = newDigits.join('');
       if (otp.length === DIGIT_COUNT && newDigits.every((d) => d)) {
-        onComplete(otp);
+        onComplete?.(otp);
       }
     },
     [digits, error, onClearError, focusInput, onComplete, onChange]
@@ -163,7 +163,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
         focusInput(DIGIT_COUNT - 1);
         const otp = newDigits.join('');
         if (otp.length === DIGIT_COUNT) {
-          onComplete(otp);
+          onComplete?.(otp);
         }
       } else {
         focusInput(pasted.length);

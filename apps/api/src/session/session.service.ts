@@ -166,7 +166,6 @@ export class SessionService {
 
       if (requiredTrust) {
         const isStaff = account.rows[0].is_admin === true || account.rows[0].is_staff === true;
-        if (isStaff) throw new DeviceTrustRequired(true);
         // Account -> sessions -> trust is the same lock order as OTP completion.
         // Hold the trust row through commit so deletion cannot invalidate a
         // password-only authorization between this check and session insertion.
@@ -175,7 +174,7 @@ export class SessionService {
            WHERE user_id=$1 AND device_fingerprint=$2 FOR SHARE`,
           [userId, requiredTrust.fingerprint]
         );
-        if (!trust.rows[0]) throw new DeviceTrustRequired(false);
+        if (!trust.rows[0]) throw new DeviceTrustRequired(isStaff);
         // A separate statement checks the wall clock after any lock wait.
         // Transaction-start NOW() could accept trust that expired while waiting.
         const active = await client.query(
@@ -183,7 +182,7 @@ export class SessionService {
            WHERE id=$1 AND expires_at>clock_timestamp() AND ip_address=$2::inet`,
           [trust.rows[0].id, requiredTrust.ip]
         );
-        if (!active.rows.length) throw new DeviceTrustRequired(false);
+        if (!active.rows.length) throw new DeviceTrustRequired(isStaff);
       }
 
       if (currentCount >= MAX_SESSIONS_PER_USER) {

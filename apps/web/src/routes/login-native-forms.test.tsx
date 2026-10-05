@@ -311,9 +311,12 @@ it('captures device trust with normalized digits and serializes pending OTP writ
   await mount();
   await credentials();
   await submit();
-  await act(async () => host.querySelector<HTMLInputElement>('#trust-device')!.click());
   state.override = () => pending.promise;
   await fill('input[inputmode="numeric"]', '۱۲۳۴۵۶');
+  expect(state.writes).toHaveLength(1);
+  expect(host.querySelector<HTMLInputElement>('#trust-device')!.disabled).toBe(false);
+  await act(async () => host.querySelector<HTMLInputElement>('#trust-device')!.click());
+  await submit();
   await submit();
   expect(state.writes).toHaveLength(2);
   expect(state.writes.at(-1)!.body).toEqual({ challengeId: id, otp: '123456', trustDevice: true });
@@ -396,6 +399,7 @@ it('retires an expired OTP grant and returns to clean credentials after its owne
   try {
     state.override = () => Response.json({ error: 'AUTH:OTP:EXPIRED' }, { status: 401 });
     await fill('input[inputmode="numeric"]', '123456');
+    await submit();
     expect(host.querySelector<HTMLInputElement>('input[inputmode="numeric"]')!.disabled).toBe(true);
     await act(async () => vi.advanceTimersByTimeAsync(500));
     expect(host.querySelector('input[inputmode="numeric"]')).toBeNull();
@@ -415,6 +419,7 @@ it('cancels its owned OTP expiry redirect when the page unmounts', async () => {
   try {
     state.override = () => Response.json({ error: 'AUTH:OTP:EXPIRED' }, { status: 401 });
     await fill('input[inputmode="numeric"]', '123456');
+    await submit();
     await act(async () => root.render(null));
     await act(async () => vi.advanceTimersByTimeAsync(500));
     expect(host.textContent).toBe('');

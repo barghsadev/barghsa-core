@@ -345,7 +345,7 @@ export class AuthService {
       const trustedIp = deviceTrustIp(ip);
 
       let session: CreatedSession | undefined;
-      if (deviceFingerprint && trustedIp && !isStaff) {
+      if (deviceFingerprint && trustedIp) {
         try {
           session = await this.sessionService.createSession(
             userId,

@@ -189,9 +189,17 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(digits.first()).toHaveAttribute('aria-invalid', 'true');
     await expect(digits.first()).toBeFocused();
     expect(state.writes.filter((x) => x.path.endsWith('/verify'))).toHaveLength(0);
-    await page.locator('#trust-device').check();
     state.mode = 'holdVerify';
     await digits.first().fill('۱۲۳۴۵۶');
+    // Completing the code must leave time to opt into device trust.
+    await expect(page.locator('#trust-device')).toBeEnabled();
+    expect(state.writes.filter((x) => x.path.endsWith('/verify'))).toHaveLength(0);
+    await page.locator('#trust-device').check();
+    await page.screenshot({
+      path: `test-results/login-trust-ready-${locale}-${info.project.name}.png`,
+      fullPage: true,
+    });
+    await page.locator('button[type=submit]').click();
     await expect.poll(() => !!state.held).toBe(true);
     await expect(page.locator('#trust-device')).toBeDisabled();
     await expect(resend).toBeDisabled();

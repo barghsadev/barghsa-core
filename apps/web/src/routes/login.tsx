@@ -495,7 +495,6 @@ function LoginPage() {
                         null
                       }
                       onChange={(value) => edit(field, value)}
-                      onComplete={() => submit()}
                       onClearError={() => {
                         if (model.canEdit()) {
                           setError(null);

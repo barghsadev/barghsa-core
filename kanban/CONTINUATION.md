@@ -10,7 +10,13 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: asynchronous staging releases (October 5, 2026)
+## Latest manual batch: trusted-device hotfix for v0.1.3 (October 5, 2026)
+
+Login OTP confirmation now uses the existing explicit submit button, allowing the trust checkbox to be changed after typing or pasting the code. Customer, staff and admin logins accept the same unexpired, unrevoked browser proof on the same observed network. New devices and changed networks still require OTP; password/account invalidation, row locking, audit and sensitive-action step-up remain.
+
+This hotfix joins the asynchronous deployment work in the first v0.1.3 release. Its earlier deployment was cancelled before service rollout, so staging remained on v0.1.2 and no v0.1.3 announcement was sent. Related local checks and publication/release status are recorded in `kanban/batches/2026-10-05-trusted-device-hotfix.md` and external receipts. Use coherent product batches, one focused review and related checks; keep CI/deployment independent.
+
+## Previous manual batch: asynchronous staging releases (October 5, 2026)
 
 The user removed CI as a staging deployment gate and asked for deployment to run in a separate process. `release-queue.py enqueue` now freezes the pushed commit, runner and reviewed PNGs, starts a detached worker and returns immediately. Worker locking serializes deployments and Telegram confirmations while builders keep editing and pushing. Queue state/logs live outside the repository. Failed/interrupted work requires explicit recovery; existing health/live-identity and uncertain Telegram guards remain.
 

@@ -380,7 +380,7 @@ it('allows only one password reset across two previously issued codes', async ()
   ).toBe(1);
 });
 
-it('requires staff OTP even on a trusted device', async () => {
+it('requires staff OTP on an untrusted device', async () => {
   await fixture.pool.query(
     "UPDATE users SET password_hash=$1,is_staff=true WHERE user_id='provider-admin'",
     [await argon2.hash(password)]
@@ -398,7 +398,7 @@ it('requires staff OTP even on a trusted device', async () => {
       password,
       deviceInfo: { fingerprint: 'ignored-client-input' },
     },
-    { Cookie: `barghsa_device=${fingerprint}` }
+    { Cookie: `barghsa_device=${'a'.repeat(64)}` }
   );
   expect(response.status).toBe(200);
   expect(await response.json()).toMatchObject({
@@ -468,17 +468,27 @@ it.each(['password', 'revoke', 'expire', 'address', 'staff'])(
       expect(response.status, await response.clone().text()).toBe(
         change === 'password' ? 401 : 200
       );
-      if (change !== 'password') expect(await response.json()).toMatchObject({ requiresOtp: true });
-      expect(response.headers.getSetCookie()).toEqual([
-        expect.stringMatching(/^barghsa_preauth=;/),
-      ]);
+      if (change !== 'password')
+        expect(await response.json()).toMatchObject({ requiresOtp: change !== 'staff' });
+      if (change !== 'staff')
+        expect(response.headers.getSetCookie()).toEqual([
+          expect.stringMatching(/^barghsa_preauth=;/),
+        ]);
       expect(
         (
           await fixture.pool.query(
             "SELECT count(*)::int AS count FROM sessions WHERE user_id='provider-admin'"
           )
         ).rows[0].count
-      ).toBe(0);
+      ).toBe(change === 'staff' ? 1 : 0);
+      if (change === 'staff')
+        expect(
+          (
+            await fixture.pool.query(
+              "SELECT operating_context FROM sessions WHERE user_id='provider-admin'"
+            )
+          ).rows
+        ).toEqual([{ operating_context: 'staff' }]);
     } finally {
       await client.query('ROLLBACK');
       client.release();
@@ -799,131 +809,151 @@ it('changes username only with both codes delivered to the old and new mailboxes
   ).toBe(2);
 });
 
-it('trusts only the opaque browser cookie after OTP and rejects public fingerprint imitation, expiry and revocation', async () => {
-  await fixture.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='provider-admin'", [
-    await argon2.hash(password),
-  ]);
-  const userAgent = 'Common browser string';
-  await fixture.pool.query(
-    `INSERT INTO device_trusts(id,user_id,device_fingerprint,expires_at)
-    VALUES ($1,'provider-admin',$2,NOW()+INTERVAL '1 day')`,
-    [randomUUID(), createHash('sha256').update(userAgent).digest('hex')]
-  );
-  const credentials = {
-    username: 'provider@example.test',
-    password,
-    deviceInfo: { fingerprint: userAgent },
-  };
-  const first = await post('auth/login', credentials, { 'User-Agent': userAgent });
-  const challenge = (await first.json()) as { requiresOtp: boolean; challengeId: string };
-  expect(first.status).toBe(200);
-  expect(challenge.requiresOtp).toBe(true);
-  const cookie = first.headers
-    .getSetCookie()
-    .find((cookie) => cookie.startsWith('barghsa_device='))!
-    .split(';')[0]!;
-  expect(cookie).toMatch(/^barghsa_device=[a-f0-9]{64}$/);
-  expect(first.headers.get('set-cookie')).toContain('HttpOnly');
-  const token = cookie.split('=')[1]!;
-  expect(await deliver()).toBe('sent');
-  const otp = received.at(-1)!.text.match(/\d{6}/)?.[0];
-  const verified = await post(
-    'auth/login/verify',
-    { challengeId: challenge.challengeId, otp, trustDevice: true },
-    { Cookie: cookie, 'User-Agent': userAgent }
-  );
-  expect(verified.status, await verified.clone().text()).toBe(200);
-  expect(await verified.text()).not.toContain(token);
-  const trustedHash = createHash('sha256').update(token).digest('hex');
-  const grants = (
+it.each(['customer', 'staff', 'admin'] as const)(
+  'trusts the opaque browser cookie after OTP and logout for %s and rejects imitation, expiry and revocation',
+  async (role) => {
     await fixture.pool.query(
-      "SELECT user_id,metadata::jsonb AS metadata,correlation_id,ip FROM audit_log WHERE event='device_trust_granted'"
-    )
-  ).rows;
-  const trustedId = (
-    await fixture.pool.query('SELECT id FROM device_trusts WHERE device_fingerprint=$1', [
-      trustedHash,
-    ])
-  ).rows[0].id;
-  expect(grants).toEqual([
-    {
-      user_id: 'provider-admin',
-      metadata: { deviceId: trustedId },
-      correlation_id: expect.any(String),
-      ip: expect.any(String),
-    },
-  ]);
-  expect(JSON.stringify(grants)).not.toContain(token);
-  expect(JSON.stringify(grants)).not.toContain(trustedHash);
-  expect(
-    (
+      "UPDATE users SET password_hash=$1,is_staff=$2,is_admin=$3 WHERE user_id='provider-admin'",
+      [await argon2.hash(password), role === 'staff', role === 'admin']
+    );
+    const userAgent = 'Common browser string';
+    await fixture.pool.query(
+      `INSERT INTO device_trusts(id,user_id,device_fingerprint,expires_at)
+    VALUES ($1,'provider-admin',$2,NOW()+INTERVAL '1 day')`,
+      [randomUUID(), createHash('sha256').update(userAgent).digest('hex')]
+    );
+    const credentials = {
+      username: 'provider@example.test',
+      password,
+      deviceInfo: { fingerprint: userAgent },
+    };
+    const first = await post('auth/login', credentials, { 'User-Agent': userAgent });
+    const challenge = (await first.json()) as { requiresOtp: boolean; challengeId: string };
+    expect(first.status).toBe(200);
+    expect(challenge.requiresOtp).toBe(true);
+    const cookie = first.headers
+      .getSetCookie()
+      .find((cookie) => cookie.startsWith('barghsa_device='))!
+      .split(';')[0]!;
+    expect(cookie).toMatch(/^barghsa_device=[a-f0-9]{64}$/);
+    expect(first.headers.get('set-cookie')).toContain('HttpOnly');
+    const token = cookie.split('=')[1]!;
+    expect(await deliver()).toBe('sent');
+    const otp = received.at(-1)!.text.match(/\d{6}/)?.[0];
+    const verified = await post(
+      'auth/login/verify',
+      { challengeId: challenge.challengeId, otp, trustDevice: true },
+      { Cookie: cookie, 'User-Agent': userAgent }
+    );
+    expect(verified.status, await verified.clone().text()).toBe(200);
+    const receipt = (await verified.clone().json()) as { sessionId: string; csrfToken: string };
+    expect(await verified.text()).not.toContain(token);
+    const trustedHash = createHash('sha256').update(token).digest('hex');
+    const grants = (
       await fixture.pool.query(
-        'SELECT count(*)::int AS count FROM device_trusts WHERE device_fingerprint=$1',
-        [trustedHash]
+        "SELECT user_id,metadata::jsonb AS metadata,correlation_id,ip FROM audit_log WHERE event='device_trust_granted'"
       )
-    ).rows[0].count
-  ).toBe(1);
-  const returning = await post('auth/login', credentials, {
-    Cookie: cookie,
-    'User-Agent': 'Updated browser version',
-  });
-  expect(returning.status).toBe(200);
-  expect(await returning.json()).toMatchObject({ requiresOtp: false });
-  const sessionCount = async () =>
-    (await fixture.pool.query('SELECT count(*)::int AS count FROM sessions')).rows[0].count;
-  const beforeRiskChecks = await sessionCount();
-  for (const address of ['192.0.2.44', '2001:db8::4', null]) {
-    await fixture.pool.query('UPDATE device_trusts SET ip_address=$1 WHERE device_fingerprint=$2', [
-      address,
+    ).rows;
+    const trustedId = (
+      await fixture.pool.query('SELECT id FROM device_trusts WHERE device_fingerprint=$1', [
+        trustedHash,
+      ])
+    ).rows[0].id;
+    expect(grants).toEqual([
+      {
+        user_id: 'provider-admin',
+        metadata: { deviceId: trustedId },
+        correlation_id: expect.any(String),
+        ip: expect.any(String),
+      },
+    ]);
+    expect(JSON.stringify(grants)).not.toContain(token);
+    expect(JSON.stringify(grants)).not.toContain(trustedHash);
+    expect(
+      (
+        await fixture.pool.query(
+          'SELECT count(*)::int AS count FROM device_trusts WHERE device_fingerprint=$1',
+          [trustedHash]
+        )
+      ).rows[0].count
+    ).toBe(1);
+    const logout = await post(
+      'auth/logout',
+      {},
+      {
+        Cookie: `${cookie}; barghsa_session=${receipt.sessionId}`,
+        'X-CSRF-Token': receipt.csrfToken,
+      }
+    );
+    expect(logout.status, await logout.clone().text()).toBe(200);
+    expect(logout.headers.getSetCookie().some((value) => value.startsWith('barghsa_device='))).toBe(
+      false
+    );
+    const returning = await post('auth/login', credentials, {
+      Cookie: cookie,
+      'User-Agent': 'Updated browser version',
+    });
+    expect(returning.status).toBe(200);
+    expect(await returning.json()).toMatchObject({ requiresOtp: false });
+    const sessionCount = async () =>
+      (await fixture.pool.query('SELECT count(*)::int AS count FROM sessions')).rows[0].count;
+    const beforeRiskChecks = await sessionCount();
+    for (const address of ['192.0.2.44', '2001:db8::4', null]) {
+      await fixture.pool.query(
+        'UPDATE device_trusts SET ip_address=$1 WHERE device_fingerprint=$2',
+        [address, trustedHash]
+      );
+      await fixture.pool.query(
+        'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
+      );
+      const changedNetwork = await post('auth/login', credentials, {
+        Cookie: cookie,
+        // Untrusted forwarded headers cannot supply the address recorded after OTP.
+        'X-Forwarded-For': address ?? '127.0.0.1',
+      });
+      expect(changedNetwork.status, await changedNetwork.clone().text()).toBe(200);
+      expect(await changedNetwork.json()).toMatchObject({ requiresOtp: true });
+      expect(changedNetwork.headers.getSetCookie()).toEqual([
+        expect.stringMatching(/^barghsa_preauth=;/),
+      ]);
+      expect(await sessionCount()).toBe(beforeRiskChecks);
+    }
+    await fixture.pool.query(
+      "UPDATE device_trusts SET ip_address='127.0.0.1' WHERE device_fingerprint=$1",
+      [trustedHash]
+    );
+    // Reset only isolated send quotas between independent new-device/expiry checks.
+    await fixture.pool.query(
+      'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
+    );
+    const imitation = await post(
+      'auth/login',
+      { ...credentials, deviceInfo: { fingerprint: token } },
+      { 'User-Agent': userAgent }
+    );
+    expect(imitation.status).toBe(200);
+    expect(await imitation.json()).toMatchObject({ requiresOtp: true });
+    expect(imitation.headers.get('set-cookie')).not.toContain(token);
+    await fixture.pool.query(
+      "UPDATE device_trusts SET expires_at=NOW()-INTERVAL '1 second' WHERE device_fingerprint=$1",
+      [trustedHash]
+    );
+    await fixture.pool.query(
+      'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
+    );
+    const expired = await post('auth/login', credentials, { Cookie: cookie });
+    expect(await expired.json()).toMatchObject({ requiresOtp: true });
+    await fixture.pool.query('DELETE FROM device_trusts WHERE device_fingerprint=$1', [
       trustedHash,
     ]);
     await fixture.pool.query(
       'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
     );
-    const changedNetwork = await post('auth/login', credentials, {
-      Cookie: cookie,
-      // Untrusted forwarded headers cannot supply the address recorded after OTP.
-      'X-Forwarded-For': address ?? '127.0.0.1',
-    });
-    expect(changedNetwork.status, await changedNetwork.clone().text()).toBe(200);
-    expect(await changedNetwork.json()).toMatchObject({ requiresOtp: true });
-    expect(changedNetwork.headers.getSetCookie()).toEqual([
-      expect.stringMatching(/^barghsa_preauth=;/),
-    ]);
-    expect(await sessionCount()).toBe(beforeRiskChecks);
-  }
-  await fixture.pool.query(
-    "UPDATE device_trusts SET ip_address='127.0.0.1' WHERE device_fingerprint=$1",
-    [trustedHash]
-  );
-  // Reset only isolated send quotas between independent new-device/expiry checks.
-  await fixture.pool.query(
-    'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
-  );
-  const imitation = await post(
-    'auth/login',
-    { ...credentials, deviceInfo: { fingerprint: token } },
-    { 'User-Agent': userAgent }
-  );
-  expect(imitation.status).toBe(200);
-  expect(await imitation.json()).toMatchObject({ requiresOtp: true });
-  expect(imitation.headers.get('set-cookie')).not.toContain(token);
-  await fixture.pool.query(
-    "UPDATE device_trusts SET expires_at=NOW()-INTERVAL '1 second' WHERE device_fingerprint=$1",
-    [trustedHash]
-  );
-  await fixture.pool.query(
-    'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
-  );
-  const expired = await post('auth/login', credentials, { Cookie: cookie });
-  expect(await expired.json()).toMatchObject({ requiresOtp: true });
-  await fixture.pool.query('DELETE FROM device_trusts WHERE device_fingerprint=$1', [trustedHash]);
-  await fixture.pool.query(
-    'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
-  );
-  const revoked = await post('auth/login', credentials, { Cookie: cookie });
-  expect(await revoked.json()).toMatchObject({ requiresOtp: true });
-}, 20000);
+    const revoked = await post('auth/login', credentials, { Cookie: cookie });
+    expect(await revoked.json()).toMatchObject({ requiresOtp: true });
+  },
+  20000
+);
 
 it.each([true, false])(
   'refreshes existing device context only when OTP trust opt-in is %s',

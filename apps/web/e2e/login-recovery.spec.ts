@@ -342,6 +342,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#trust-device').check();
     const digits = page.locator('input[inputmode="numeric"]');
     for (let i = 0; i < 6; i++) await digits.nth(i).fill(String(i + 1));
+    await page.locator('button[type="submit"]').click();
     await expect(page.getByRole('alert').first()).toContainText(loginFormText('uncertain', locale));
     await expect(digits.first()).toHaveValue('1');
     await expect(digits.first()).toBeDisabled();
@@ -354,6 +355,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#trust-device')).not.toBeChecked();
     await page.locator('#trust-device').check();
     for (let i = 0; i < 6; i++) await digits.nth(i).fill(String(i + 1));
+    await page.locator('button[type="submit"]').click();
     await expect(page).toHaveURL(/\/app$/);
     await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toContainText(
       'Profile'
