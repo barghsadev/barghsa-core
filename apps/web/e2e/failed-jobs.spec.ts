@@ -1,3 +1,4 @@
+import { t } from '@barghsa/i18n/admin-ui';
 import { crmShell } from './crm-shell-fixture';
 import { formatBrowserDate } from './browser-date';
 import { mockOppositeNumerals } from './number-preference-fixture';
@@ -70,6 +71,12 @@ for (const locale of ['en', 'fa'])
       canRetry = false;
       return route.fulfill({ json: [{ ...jobs[0], status: 'retrying' }] });
     });
+    await page.route('**/api/admin/failed-jobs/*', (route) => {
+      if (route.request().method() !== 'GET') return route.fallback();
+      const id = new URL(route.request().url()).pathname.split('/').at(-1);
+      const selected = jobs.find((row) => row.id === id);
+      return selected ? route.fulfill({ json: selected }) : route.fallback();
+    });
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct-password';
       return route.fulfill({ status: verified ? 200 : 401, json: {} });
@@ -130,9 +137,17 @@ for (const locale of ['en', 'fa'])
     await expect(dialog.getByRole('alert')).toBeVisible();
     await password.fill('correct-password');
     await confirm.click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(dialog).toContainText(t('admin.operationalReview.title', locale));
+    await expect(confirm).toHaveCount(0);
+    await dialog
+      .getByRole('button', { name: t('admin.operationalReview.reviewed', locale), exact: true })
+      .click();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.locator('tbody tr').nth(1).getByRole('checkbox')).toBeEnabled();
+    await page.locator('tbody tr').nth(0).getByRole('checkbox').check();
+    await page.locator('tbody tr').nth(1).getByRole('checkbox').check();
+    await page.getByRole('button', { name: t('admin.jobs.bulk', locale) }).click();
     failSave = false;
-    await password.fill('correct-password');
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     await expect(

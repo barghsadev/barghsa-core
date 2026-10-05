@@ -1,3 +1,4 @@
+import { OperationalCommandReview } from '../components/OperationalCommandReview.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -57,6 +58,7 @@ const jobBasis = (row: Job) =>
     row.maxAttempts,
     row.lastRunAt,
   ]);
+const jobIdentity = (row: Job) => JSON.stringify([row.id, row.jobType]);
 const statuses = ['failed', 'retrying', 'dead_letter', 'resolved', 'all'];
 const pageSize = 25;
 export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBinding } = {}) {
@@ -86,10 +88,23 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
       })
     | null
   >(null);
+  const [unconfirmed, setUnconfirmed] = useState<NonNullable<typeof action> | null>(null);
+  const [pending, setPending] = useState(false);
+  const [reviewReload, setReviewReload] = useState(false);
+  const owned = useRef(false);
+  const sending = useRef(false);
+  const reloadBase = useRef<object | null>(null);
+  const locked = pending || !!unconfirmed || reviewReload;
   const savedTrigger = useRef<HTMLElement | null>(null);
   const refreshButton = useRef<HTMLButtonElement>(null);
   const clearPrivate = useCallback(() => {
     actionGeneration.current++;
+    owned.current = false;
+    sending.current = false;
+    reloadBase.current = null;
+    setUnconfirmed(null);
+    setPending(false);
+    setReviewReload(false);
     setSelected([]);
     setAction(null);
     setNotice(null);
@@ -109,6 +124,22 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
   const { access, loading, error } = queue;
   const jobs = queue.data?.rows ?? [],
     hasMore = queue.data?.hasMore ?? false;
+  useEffect(() => {
+    if (reviewReload && queue.ready && queue.data !== reloadBase.current) {
+      reloadBase.current = null;
+      owned.current = false;
+      setReviewReload(false);
+    }
+  }, [reviewReload, queue.ready, queue.data]);
+  function returnToQueue() {
+    ++actionGeneration.current;
+    setUnconfirmed(null);
+    setAction(null);
+    reloadBase.current = queue.data;
+    setReviewReload(true);
+    setSelected([]);
+    queue.refresh();
+  }
   const previousCriteria = useRef(criteria);
   const actionScope = `${criteria}:${offset}`;
   const previousActionScope = useRef(actionScope);
@@ -125,6 +156,12 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
   );
   useEffect(() => {
     setAction(null);
+    setUnconfirmed(null);
+    setPending(false);
+    setReviewReload(false);
+    owned.current = false;
+    sending.current = false;
+    reloadBase.current = null;
     setNotice(null);
     savedTrigger.current = null;
   }, [offset]);
@@ -134,7 +171,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
     clearPrivate();
   }, [criteria, clearPrivate]);
   useEffect(() => {
-    if (!queue.data || loading || error) return;
+    if (!queue.data || loading || error || unconfirmed) return;
     const eligible = queue.data.rows.filter((row) =>
       ['failed', 'dead_letter'].includes(row.status)
     );
@@ -145,15 +182,24 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
         (row) =>
           !queue.data!.rows.some((next) => next.id === row.id && jobBasis(next) === jobBasis(row))
       )
-    )
-      setAction(null);
-  }, [queue.data, loading, error, action]);
-  useEffect(() => {
-    if (access.data && !access.data.canRetry) {
-      setSelected([]);
+    ) {
+      ++actionGeneration.current;
+      owned.current = false;
+      sending.current = false;
+      setPending(false);
       setAction(null);
     }
-  }, [access.data]);
+  }, [queue.data, loading, error, action, unconfirmed]);
+  useEffect(() => {
+    if (access.data && !access.data.canRetry && !unconfirmed) {
+      ++actionGeneration.current;
+      setSelected([]);
+      setAction(null);
+      setPending(false);
+      sending.current = false;
+      owned.current = false;
+    }
+  }, [access.data, unconfirmed]);
   useEffect(() => {
     if (!queue.ready || action || !savedTrigger.current) return;
     const target = savedTrigger.current;
@@ -188,7 +234,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
   };
   const date = (value: string | null) => (value ? time.format(value) : label('none'));
   function act(kind: 'retry' | 'resolve', ids: string[]) {
-    if (!queue.canRetry) return;
+    if (!queue.canRetry || owned.current) return;
     const rows = jobs.filter((row) => ids.includes(row.id));
     if (
       !rows.length ||
@@ -200,6 +246,8 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
       )
     )
       return;
+    owned.current = true;
+    ++actionGeneration.current;
     savedTrigger.current = null;
     const bulk = ids.length > 1;
     setAction({
@@ -217,6 +265,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
         ids.map((id) => jobName(jobs.find((job) => job.id === id)!.jobType)).join(', '),
       path: bulk ? '/api/admin/failed-jobs/retry-bulk' : `/api/admin/failed-jobs/${ids[0]}/${kind}`,
       method: 'POST',
+      successStatus: 200,
       ...(bulk ? { body: { ids } } : {}),
       conflictMessage: label('conflict'),
       forbiddenMessage: label('forbidden'),
@@ -232,7 +281,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
         </div>
         <Button
           variant="outline"
-          disabled={loading || access.loading}
+          disabled={pending || !!unconfirmed || loading || access.loading}
           ref={refreshButton}
           onClick={queue.refresh}
         >
@@ -258,6 +307,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
                   key={value}
                   variant={status === value ? 'default' : 'outline'}
                   aria-pressed={status === value}
+                  disabled={locked}
                   onClick={() => {
                     if (queries) queries.setQuery({ filters: { status: value } });
                     else {
@@ -300,7 +350,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
           </p>
           {access.data?.canRetry && (
             <Button
-              disabled={!queue.canRetry || !selected.length}
+              disabled={!!action || locked || !queue.canRetry || !selected.length}
               onClick={() => act('retry', selected)}
             >
               {label('bulk')} ({numbers.number(selected.length)})
@@ -345,7 +395,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
                           ['failed', 'dead_letter'].includes(job.status) && (
                             <input
                               type="checkbox"
-                              disabled={!queue.canRetry}
+                              disabled={!!action || locked || !queue.canRetry}
                               aria-label={label('selectJob').replace(
                                 '{type}',
                                 jobName(job.jobType)
@@ -417,7 +467,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
                             ['failed', 'dead_letter'].includes(job.status) && (
                               <Button
                                 size="sm"
-                                disabled={!queue.canRetry}
+                                disabled={!!action || locked || !queue.canRetry}
                                 variant="outline"
                                 onClick={() => act('retry', [job.id])}
                               >
@@ -427,7 +477,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
                           {access.data?.canRetry && job.status !== 'resolved' && (
                             <Button
                               size="sm"
-                              disabled={!queue.canRetry}
+                              disabled={!!action || locked || !queue.canRetry}
                               variant="outline"
                               onClick={() => act('resolve', [job.id])}
                             >
@@ -446,7 +496,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
         <nav aria-label={label('pagination')} className="flex items-center gap-3">
           <Button
             variant="outline"
-            disabled={!queue.canView || loading || error || !offset}
+            disabled={locked || !queue.canView || loading || error || !offset}
             onClick={() =>
               queries
                 ? queries.setQuery({ page: Math.max(1, queries.query.page - 1) })
@@ -463,7 +513,9 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
           </span>
           <Button
             variant="outline"
-            disabled={!queue.canView || loading || error || !hasMore || offset >= 1_000_000}
+            disabled={
+              locked || !queue.canView || loading || error || !hasMore || offset >= 1_000_000
+            }
             onClick={() =>
               queries
                 ? queries.setQuery({ page: queries.query.page + 1 })
@@ -474,6 +526,31 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
           </Button>
         </nav>
       </ListPage>
+      {unconfirmed && !queue.denied && (
+        <OperationalCommandReview
+          locale={locale}
+          endpoint="/api/admin/failed-jobs"
+          rows={unconfirmed.rows}
+          validate={isJob}
+          identity={jobIdentity}
+          onDenied={queue.deny}
+          onReviewed={returnToQueue}
+          renderRecord={(row, available) => (
+            <>
+              <p className="font-semibold">{jobName(row.jobType)}</p>
+              {available && (
+                <p>
+                  {label(`status.${row.status}`)} ·{' '}
+                  <bdi dir="ltr">
+                    {numbers.number(row.attempts)} / {numbers.number(row.maxAttempts)}
+                  </bdi>
+                </p>
+              )}
+              <p className="text-muted-foreground">{date(row.lastRunAt)}</p>
+            </>
+          )}
+        />
+      )}
       {action && !queue.denied && (
         <TeamActionDialog
           action={action}
@@ -485,7 +562,28 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
               ? action.trigger
               : refreshButton.current
           }
-          onClose={() => setAction(null)}
+          onPendingChange={(value) => {
+            if (receiptGeneration !== actionGeneration.current) return;
+            sending.current = value;
+            setPending(value);
+          }}
+          onUnconfirmed={() => {
+            if (receiptGeneration !== actionGeneration.current) return;
+            ++actionGeneration.current;
+            setUnconfirmed(action);
+            setAction(null);
+            setNotice(null);
+            sending.current = false;
+            setPending(false);
+          }}
+          onClose={() => {
+            if (receiptGeneration !== actionGeneration.current) return;
+            ++actionGeneration.current;
+            owned.current = false;
+            sending.current = false;
+            setPending(false);
+            setAction(null);
+          }}
           onSuccess={async (result) => {
             if (receiptGeneration !== actionGeneration.current) return;
             const acknowledged = Array.isArray(result) ? result : [result];

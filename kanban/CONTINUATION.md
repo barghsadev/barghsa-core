@@ -12,7 +12,13 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: reconciliation exception review for v0.1.7 (October 5, 2026)
+## Latest manual batch: failed-job and notification command recovery for v0.1.8 (October 5, 2026)
+
+Failed-job and notification commands now retire unconfirmed proposals, read every exact selected target and require deliberate saved-state review before another command. Fresh queue read success is required after returning from review; read failure preserves the barrier with working recovery controls. Current denial clears private work, notification payload masking remains, and bulk target/subset, step-up, idempotency and audit engines are reused.
+
+Related checks and release evidence are recorded in `kanban/batches/2026-10-05-operational-command-review.md`. Reuse `02-auth-users-admin.md#T-09.09.02`, `#T-09.09.03` and `07-ui-ux-design.md#T-07.18.01.06`; the global all-list task remains partial. v0.1.7 is deployed at `e89744798d8de0b7a575d1ec86e7e15e92d1f972`, with Persian Telegram notes and screenshots confirmed. Continue coherent direct-main batches with related local checks and independent deployment; validate release preflight before push/enqueue and do not wait for CI.
+
+## Previous manual batch: reconciliation exception review for v0.1.7 (October 5, 2026)
 
 Reconciliation filters and explanation forms now use native shared validation with linked bilingual errors, account-zone dates and preserved exact UTC bounds. Captured lifecycle confirmations prevent duplicate proposals and check actual receipts before reset. Unknown outcomes retain a locked raw draft and read the exact authorized exception independently of queue filters; another action requires deliberate saved-state review. Related validated profile/invoice links and exact mismatch data are available. Closing a resolved exception preserves its original resolution and records the new closure explanation in the existing audit engine.
 

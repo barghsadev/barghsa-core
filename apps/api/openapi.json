@@ -7669,6 +7669,44 @@
         ]
       }
     },
+    "/api/admin/failed-jobs/{id}": {
+      "get": {
+        "operationId": "FailedJobsController_detail",
+        "parameters": [
+          {
+            "description": "Background job ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Current background job"
+          },
+          "403": {
+            "description": "View permission required"
+          },
+          "404": {
+            "description": "Job not found"
+          }
+        },
+        "summary": "Read a selected background job independently of queue filters",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/failed-jobs/{id}/resolve": {
       "post": {
         "operationId": "FailedJobsController_resolveJob",
@@ -7853,6 +7891,44 @@
             "description": ""
           }
         },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/failed-notifications/{id}": {
+      "get": {
+        "operationId": "FailedNotificationsController_detail[0]",
+        "parameters": [
+          {
+            "description": "Dead-letter notification ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Current masked notification"
+          },
+          "403": {
+            "description": "View permission required"
+          },
+          "404": {
+            "description": "Notification not found"
+          }
+        },
+        "summary": "Read a selected masked notification independently of queue filters",
         "tags": [
           "Admin"
         ]
@@ -10489,6 +10565,44 @@
             "description": ""
           }
         },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/notifications/dead-letters/{id}": {
+      "get": {
+        "operationId": "FailedNotificationsController_detail[1]",
+        "parameters": [
+          {
+            "description": "Dead-letter notification ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Current masked notification"
+          },
+          "403": {
+            "description": "View permission required"
+          },
+          "404": {
+            "description": "Notification not found"
+          }
+        },
+        "summary": "Read a selected masked notification independently of queue filters",
         "tags": [
           "Admin"
         ]

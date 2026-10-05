@@ -88,6 +88,20 @@ const MAX_LIST_LIMIT = 200;
 export class FailedNotificationsService {
   private readonly logger = new Logger(FailedNotificationsService.name);
 
+  /** Exact saved-state read with the same payload masking as the triage list. */
+  async getFailedNotification(id: string): Promise<FailedNotificationDto> {
+    const result = await getDbPool().query(
+      `SELECT dl.*, ob.payload
+         FROM notification_dead_letter dl
+         LEFT JOIN notification_outbox ob ON ob.id = dl.outbox_id
+        WHERE dl.id = $1`,
+      [id]
+    );
+    if (!result.rows[0])
+      throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+    return toFailedNotificationDto(result.rows[0]);
+  }
+
   /**
    * List dead-lettered notifications, newest-first.
    *

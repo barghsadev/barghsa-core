@@ -67,6 +67,20 @@ const MAX_BULK_RETRY_IDS = 200;
 export class FailedJobsService {
   private readonly logger = new Logger(FailedJobsService.name);
 
+  /** Exact saved-state read; the controller enforces current view authority. */
+  async getFailedJob(id: string): Promise<FailedJobDto> {
+    const result = await getDbPool().query(
+      `SELECT bj.*, resolver.username AS resolved_by_username
+         FROM background_jobs bj
+         LEFT JOIN users resolver ON resolver.user_id = bj.resolved_by_id
+        WHERE bj.id = $1`,
+      [id]
+    );
+    if (!result.rows[0])
+      throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+    return toFailedJobDto(result.rows[0]);
+  }
+
   /**
    * List background-job failures, optionally filtered by status/jobType,
    * most-recently-failed first.

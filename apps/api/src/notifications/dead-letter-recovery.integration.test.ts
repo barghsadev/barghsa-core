@@ -85,6 +85,60 @@ async function seed() {
   return { outbox, job, dead };
 }
 
+it('reads exact masked saved status outside the open queue without step-up or state changes', async () => {
+  const row = await seed();
+  await db.pool.query(`UPDATE notification_outbox SET payload=$2 WHERE id=$1`, [
+    row.outbox,
+    JSON.stringify({
+      email: 'private@example.test',
+      token: 'private-token',
+      nested: { password: 'private-password' },
+    }),
+  ]);
+  await service.deadLetterAction(row.dead, 'resolve', 'triage-staff');
+  await db.pool.query(
+    `UPDATE staff_roles SET permissions='["admin:jobs:view"]' WHERE role_id='triage-role'`
+  );
+  await db.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE session_id=$1', [
+    actor.sessionId,
+  ]);
+  const endpoint = `${fixture.base}/api/admin/failed-notifications`;
+  const before = (
+    await db.pool.query('SELECT * FROM notification_dead_letter WHERE id=$1', [row.dead])
+  ).rows[0];
+  const audits = (await db.pool.query('SELECT count(*) FROM audit_log')).rows[0].count;
+  const list = await (await fetch(`${endpoint}?status=open`, { headers })).json();
+  if (!Array.isArray(list)) throw new Error('Invalid dead-letter list');
+  expect(list.some((value: { id: string }) => value.id === row.dead)).toBe(false);
+  const result = await fetch(`${endpoint}/${row.dead}`, { headers });
+  expect(result.status).toBe(200);
+  const body = await result.json();
+  expect(body).toMatchObject({
+    id: row.dead,
+    outboxId: row.outbox,
+    jobId: row.job,
+    channel: 'email',
+    status: 'resolved',
+    data: { token: '***', nested: { password: '***' } },
+  });
+  for (const privateValue of [
+    'private@example.test',
+    'private-token',
+    'private-password',
+    profileId,
+  ])
+    expect(JSON.stringify(body)).not.toContain(privateValue);
+  expect(
+    (await db.pool.query('SELECT * FROM notification_dead_letter WHERE id=$1', [row.dead])).rows[0]
+  ).toEqual(before);
+  expect((await db.pool.query('SELECT count(*) FROM audit_log')).rows[0].count).toBe(audits);
+  expect((await fetch(`${endpoint}/${row.dead}`)).status).toBe(401);
+  expect((await fetch(`${endpoint}/bad`, { headers })).status).toBe(400);
+  expect((await fetch(`${endpoint}/${randomUUID()}`, { headers })).status).toBe(404);
+  await db.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='triage-role'");
+  expect((await fetch(`${endpoint}/${row.dead}`, { headers })).status).toBe(403);
+});
+
 it('serves scoped stable delivery-history pages and honors revoked read permission', async () => {
   const row = await seed();
   const ids = Array.from({ length: 30 }, () => randomUUID())

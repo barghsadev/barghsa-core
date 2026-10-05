@@ -20,3 +20,5 @@ API validation returns only editable public note field identifiers after resolve
 - Focused source review repaired late note/pending callbacks and background queue retirement during uncertain writes. Browser review found and repaired dialog autofocus overriding first-invalid focus after server feedback. Related-ID normalization is covered by a regression. Persian desktop validation/confirmation captures use fixture data and are reviewed before release.
 
 Evidence: `/Users/majid/.local/state/barghsa-manual-batches/reconciliation-review-forms/`. Publication and deployment receipts are external and separate from local validation. Push normally to `main`, then enqueue the exact pushed SHA with reviewed fixture-data screenshots immediately; continue without waiting for CI/deployment.
+
+Release v0.1.7 completed at `2026-10-05T18:01:19Z`: staging reports exact commit `e89744798d8de0b7a575d1ec86e7e15e92d1f972`, and its Persian Telegram notes plus both screenshots are confirmed in the terminal release receipt.

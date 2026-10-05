@@ -1,3 +1,4 @@
+import { t } from '@barghsa/i18n/admin-ui';
 import { crmShell } from './crm-shell-fixture';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -28,6 +29,9 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await crmShell(page, locale);
+    await page.route('**/api/admin/notifications/templates**', (route) =>
+      route.fulfill({ json: [] })
+    );
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'UTC' } })
     );
@@ -179,6 +183,9 @@ for (const locale of ['en', 'fa'] as const) {
       await page.route('**/api/admin/failed-notifications?*', (route) =>
         route.fulfill({ json: saved ? [] : [row] })
       );
+      await page.route(`**/api/admin/failed-notifications/${row.id}`, (route) =>
+        route.fulfill({ json: row })
+      );
       const responses = [
         null,
         { ...acknowledged, id: row.outboxId },
@@ -202,8 +209,20 @@ for (const locale of ['en', 'fa'] as const) {
       const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
       for (let index = 0; index < responses.length - 1; index++) {
         await confirm.click();
-        await expect(dialog.getByRole('alert')).toBeVisible();
+        await expect(dialog).toContainText(t('admin.operationalReview.title', locale));
+        await expect(confirm).toHaveCount(0);
         await expect(page.locator('tbody tr')).toHaveCount(1);
+        expect(calls).toBe(index + 1);
+        await dialog
+          .getByRole('button', { name: t('admin.operationalReview.reviewed', locale), exact: true })
+          .click();
+        await expect(dialog).toHaveCount(0);
+        const decision = page.getByRole('button', {
+          name: `${label} ${row.eventKey}`,
+          exact: true,
+        });
+        await expect(decision).toBeEnabled();
+        await decision.click();
       }
       await confirm.click();
       await expect(dialog).toHaveCount(0);

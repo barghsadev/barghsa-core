@@ -1,3 +1,4 @@
+import { OperationalCommandReview } from './OperationalCommandReview.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useState, useEffect, useId, useRef, useMemo } from 'react';
@@ -74,6 +75,8 @@ function isDeadLetterRow(value: unknown): value is DeadLetterRow {
   );
 }
 
+const deadLetterIdentity = (row: DeadLetterRow) =>
+  JSON.stringify([row.id, row.outboxId, row.jobId, row.channel]);
 function channelLabel(channel: DeadLetterRow['channel'], uiLocale: Locale): string {
   const key = `admin.notifications.deadLetter.channel${
     channel === 'email' ? 'Email' : channel === 'sms' ? 'Sms' : 'InApp'
@@ -131,10 +134,24 @@ export default function DeadLetterPanel({
     | null
   >(null);
   const [notice, setNotice] = useState<'retry' | 'resolve' | 'dismiss' | null>(null);
+  const [unconfirmed, setUnconfirmed] = useState<NonNullable<typeof action> | null>(null);
+  const reviewRows = useMemo(() => (unconfirmed ? [unconfirmed.row] : []), [unconfirmed]);
+  const [pending, setPending] = useState(false);
+  const [reviewReload, setReviewReload] = useState(false);
+  const owned = useRef(false);
+  const sending = useRef(false);
+  const reloadBase = useRef<object | null>(null);
+  const locked = pending || !!unconfirmed || reviewReload;
   const savedTrigger = useRef<HTMLElement | null>(null);
   const refreshButton = useRef<HTMLButtonElement>(null);
   const clearPrivate = useCallback(() => {
     actionGeneration.current++;
+    owned.current = false;
+    sending.current = false;
+    reloadBase.current = null;
+    setUnconfirmed(null);
+    setPending(false);
+    setReviewReload(false);
     setHistory(null);
     setAllHistory(false);
     setAction(null);
@@ -156,6 +173,21 @@ export default function DeadLetterPanel({
   const { access, loading, error } = queue;
   const rows = queue.data?.rows ?? [],
     hasMore = queue.data?.hasMore ?? false;
+  useEffect(() => {
+    if (reviewReload && queue.ready && queue.data !== reloadBase.current) {
+      reloadBase.current = null;
+      owned.current = false;
+      setReviewReload(false);
+    }
+  }, [reviewReload, queue.ready, queue.data]);
+  function returnToQueue() {
+    ++actionGeneration.current;
+    setUnconfirmed(null);
+    setAction(null);
+    reloadBase.current = queue.data;
+    setReviewReload(true);
+    queue.refresh();
+  }
   const historyMode = historyQueries?.query.filters.mode;
   const historyId = historyQueries?.query.filters.notificationId || '';
   const historyChannel = historyQueries?.query.filters.channel || '';
@@ -205,19 +237,35 @@ export default function DeadLetterPanel({
     ]);
   useEffect(() => {
     setAction(null);
+    setUnconfirmed(null);
+    setPending(false);
+    setReviewReload(false);
+    owned.current = false;
+    sending.current = false;
+    reloadBase.current = null;
     setNotice(null);
     savedTrigger.current = null;
   }, [criteria, offset]);
   useEffect(() => {
-    if (!queue.data || loading || error) return;
-    if (action && !queue.data.rows.some((row) => basis(row) === basis(action.row))) setAction(null);
+    if (!queue.data || loading || error || unconfirmed) return;
+    if (action && !queue.data.rows.some((row) => basis(row) === basis(action.row))) {
+      ++actionGeneration.current;
+      owned.current = false;
+      setAction(null);
+    }
     const latest = history && queue.data.rows.find((row) => row.id === history.id);
     if (latest && (latest.outboxId !== history?.outboxId || latest.channel !== history?.channel))
       setHistory(null);
-  }, [queue.data, loading, error, action, history]);
+  }, [queue.data, loading, error, action, history, unconfirmed]);
   useEffect(() => {
-    if (access.data && !access.data.canRetry) setAction(null);
-  }, [access.data]);
+    if (access.data && !access.data.canRetry && !unconfirmed) {
+      ++actionGeneration.current;
+      setAction(null);
+      setPending(false);
+      sending.current = false;
+      owned.current = false;
+    }
+  }, [access.data, unconfirmed]);
   useEffect(() => {
     if (!queue.ready || action || !savedTrigger.current) return;
     const target = savedTrigger.current;
@@ -246,17 +294,20 @@ export default function DeadLetterPanel({
     </div>
   );
   function act(row: DeadLetterRow, kind: 'retry' | 'resolve' | 'dismiss') {
-    if (!queue.canRetry || row.status !== 'open') return;
+    if (!queue.canRetry || owned.current || row.status !== 'open') return;
+    owned.current = true;
+    ++actionGeneration.current;
     savedTrigger.current = null;
     setNotice(null);
     setAction({
-      row,
+      row: structuredClone(row),
       trigger: document.activeElement instanceof HTMLElement ? document.activeElement : null,
       kind,
       title: label(kind),
       description: `${label(`${kind}Confirm`)} ${row.eventKey} · ${channelLabel(row.channel, uiLocale)} · ${row.recipientKey ?? ''}`,
       path: `/api/admin/failed-notifications/${row.id}/${kind}`,
       method: 'POST',
+      successStatus: 200,
       conflictMessage: label('conflict'),
       forbiddenMessage: label('accessDenied'),
     });
@@ -289,7 +340,7 @@ export default function DeadLetterPanel({
         )}
         <Button
           variant="outline"
-          disabled={loading || access.loading}
+          disabled={pending || !!unconfirmed || loading || access.loading}
           ref={refreshButton}
           onClick={queue.refresh}
         >
@@ -304,6 +355,7 @@ export default function DeadLetterPanel({
               <label htmlFor={`${filterId}-status`}>{label('status')}</label>
               <select
                 id={`${filterId}-status`}
+                disabled={locked}
                 className="block rounded border p-2"
                 value={status}
                 onChange={(e) => {
@@ -326,6 +378,7 @@ export default function DeadLetterPanel({
               <label htmlFor={`${filterId}-channel`}>{label('channel')}</label>
               <select
                 id={`${filterId}-channel`}
+                disabled={locked}
                 className="block rounded border p-2"
                 value={channel}
                 onChange={(e) => {
@@ -348,6 +401,7 @@ export default function DeadLetterPanel({
               <label htmlFor={`${filterId}-severity`}>{label('severity')}</label>
               <select
                 id={`${filterId}-severity`}
+                disabled={locked}
                 className="block rounded border p-2"
                 value={severity}
                 onChange={(e) => {
@@ -494,7 +548,7 @@ export default function DeadLetterPanel({
                               size="sm"
                               variant="outline"
                               onClick={() => act(row, 'retry')}
-                              disabled={action !== null || !queue.canRetry}
+                              disabled={action !== null || locked || !queue.canRetry}
                               aria-label={`${t('admin.notifications.deadLetter.retry', uiLocale)} ${row.eventKey}`}
                             >
                               {t('admin.notifications.deadLetter.retry', uiLocale)}
@@ -503,7 +557,7 @@ export default function DeadLetterPanel({
                               size="sm"
                               variant="outline"
                               onClick={() => act(row, 'resolve')}
-                              disabled={action !== null || !queue.canRetry}
+                              disabled={action !== null || locked || !queue.canRetry}
                               aria-label={`${t('admin.notifications.deadLetter.resolve', uiLocale)} ${row.eventKey}`}
                             >
                               {t('admin.notifications.deadLetter.resolve', uiLocale)}
@@ -512,7 +566,7 @@ export default function DeadLetterPanel({
                               size="sm"
                               variant="outline"
                               onClick={() => act(row, 'dismiss')}
-                              disabled={action !== null || !queue.canRetry}
+                              disabled={action !== null || locked || !queue.canRetry}
                               aria-label={`${t('admin.notifications.deadLetter.dismiss', uiLocale)} ${row.eventKey}`}
                             >
                               {t('admin.notifications.deadLetter.dismiss', uiLocale)}
@@ -533,7 +587,7 @@ export default function DeadLetterPanel({
           <nav aria-label={label('pagination')} className="flex items-center gap-3">
             <Button
               variant="outline"
-              disabled={!queue.canView || loading || error || offset === 0}
+              disabled={locked || !queue.canView || loading || error || offset === 0}
               onClick={() =>
                 queries
                   ? queries.setQuery({ page: Math.max(1, queries.query.page - 1) })
@@ -545,7 +599,9 @@ export default function DeadLetterPanel({
             <span>{numbers.number((queue.data?.offset ?? offset) / 25 + 1)}</span>
             <Button
               variant="outline"
-              disabled={!queue.canView || loading || error || !hasMore || offset >= 1_000_000}
+              disabled={
+                locked || !queue.canView || loading || error || !hasMore || offset >= 1_000_000
+              }
               onClick={() =>
                 queries
                   ? queries.setQuery({ page: queries.query.page + 1 })
@@ -576,6 +632,33 @@ export default function DeadLetterPanel({
           onClose={() => setHistory(null)}
         />
       )}
+      {unconfirmed && !queue.denied && (
+        <OperationalCommandReview
+          locale={uiLocale}
+          endpoint="/api/admin/failed-notifications"
+          rows={reviewRows}
+          validate={isDeadLetterRow}
+          identity={deadLetterIdentity}
+          onDenied={queue.deny}
+          onReviewed={returnToQueue}
+          renderRecord={(row, available) => (
+            <>
+              <p className="font-semibold">
+                {row.eventKey} · {channelLabel(row.channel, uiLocale)}
+              </p>
+              {available && (
+                <p>
+                  {statusLabel(row.status, uiLocale)} ·{' '}
+                  <bdi dir="ltr">
+                    {numbers.number(row.attempts)} / {numbers.number(row.maxAttempts)}
+                  </bdi>
+                </p>
+              )}
+              <p className="text-muted-foreground">{row.recipientKey}</p>
+            </>
+          )}
+        />
+      )}
       {action && !queue.denied && (
         <TeamActionDialog
           action={action}
@@ -587,7 +670,28 @@ export default function DeadLetterPanel({
               ? action.trigger
               : refreshButton.current
           }
-          onClose={() => setAction(null)}
+          onPendingChange={(value) => {
+            if (receiptGeneration !== actionGeneration.current) return;
+            sending.current = value;
+            setPending(value);
+          }}
+          onUnconfirmed={() => {
+            if (receiptGeneration !== actionGeneration.current) return;
+            ++actionGeneration.current;
+            setUnconfirmed(action);
+            setAction(null);
+            setNotice(null);
+            sending.current = false;
+            setPending(false);
+          }}
+          onClose={() => {
+            if (receiptGeneration !== actionGeneration.current) return;
+            ++actionGeneration.current;
+            owned.current = false;
+            sending.current = false;
+            setPending(false);
+            setAction(null);
+          }}
           onSuccess={async (result) => {
             if (receiptGeneration !== actionGeneration.current) return;
             const expectedStatus = { retry: 'retried', resolve: 'resolved', dismiss: 'dismissed' }[

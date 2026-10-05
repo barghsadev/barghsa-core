@@ -9,6 +9,7 @@ vi.mock('../hooks/useTimezone.js', () => ({
 }));
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {
+  (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   document.documentElement.lang = 'en';
   host = document.createElement('div');
   document.body.append(host);
@@ -61,6 +62,7 @@ for (const scenario of cases) {
       access?: () => Response | Promise<Response>;
       list?: (url: URL) => Response | Promise<Response>;
       write?: () => Response | Promise<Response>;
+      detail?: () => Response | Promise<Response>;
     } = {}
   ) {
     const requests = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -70,6 +72,8 @@ for (const scenario of cases) {
       if (init?.method && init.method !== 'GET') return options.write?.() ?? response({});
       if (url.pathname === scenario.endpoint)
         return options.list?.(url) ?? response([scenario.row]);
+      if (url.pathname === `${scenario.endpoint}/${scenario.row.id}`)
+        return options.detail?.() ?? response(scenario.row);
       return response([]);
     });
     vi.stubGlobal('fetch', requests);
@@ -78,6 +82,50 @@ for (const scenario of cases) {
   const render = async () => {
     await act(async () => root.render(scenario.page));
   };
+  it(`${scenario.name}: uncertain saves require exact-record review and a fresh queue before another command`, async () => {
+    let detailFails = true,
+      queueFails = false,
+      writes = 0;
+    const requests = reads({
+      detail: () => response(scenario.row, detailFails ? 503 : 200),
+      list: () => response([scenario.row], queueFails ? 503 : 200),
+      write: () => {
+        writes++;
+        return response({}, 503);
+      },
+    });
+    await render();
+    await click('Retry');
+    await submit();
+    expect(writes).toBe(1);
+    expect(document.querySelector('[role=dialog]')?.textContent).toContain('Review action outcome');
+    expect(document.querySelector('[role=dialog] button[type=submit]')).toBeNull();
+    expect(
+      requests.mock.calls.filter(
+        ([input]) => String(input) === `${scenario.endpoint}/${scenario.row.id}`
+      )
+    ).toHaveLength(1);
+    detailFails = false;
+    await click('Read selected records again', true);
+    queueFails = true;
+    await click('I reviewed the state; return to queue', true);
+    await click('Retry');
+    expect(writes).toBe(1);
+    expect(document.querySelector('[role=dialog]')).toBeNull();
+    queueFails = false;
+    await click('Refresh');
+    await click('Retry');
+    expect(document.querySelector('[role=dialog] form')).not.toBeNull();
+    expect(writes).toBe(1);
+  });
+  it(`${scenario.name}: exact-record denial clears captured work and cached rows`, async () => {
+    reads({ write: () => response({}, 503), detail: () => response({}, 403) });
+    await render();
+    await click('Retry');
+    await submit();
+    expect(document.querySelector('[role=dialog]')).toBeNull();
+    expect(host.querySelectorAll('tbody tr')).toHaveLength(0);
+  });
   it(`${scenario.name}: independent read retry preserves review and pauses confirmation`, async () => {
     let fail = false,
       accessFail = false;
@@ -290,16 +338,20 @@ it('bulk job selection survives read failure and accepts only a unique acknowled
     vi.fn(async (input: RequestInfo | URL, init?: RequestInit) =>
       String(input).endsWith('/access')
         ? response({ canView: true, canRetry: true })
-        : init?.method === 'POST'
-          ? response(
-              valid
-                ? [{ ...failedJob, status: 'retrying' }]
-                : [
-                    { ...failedJob, status: 'retrying' },
-                    { ...failedJob, status: 'retrying' },
-                  ]
-            )
-          : response([failedJob, other], fail ? 503 : 200)
+        : new URL(String(input), 'http://localhost').pathname.startsWith(
+              '/api/admin/failed-jobs/'
+            ) && !init?.method
+          ? response(String(input).endsWith(other.id) ? other : failedJob, fail ? 503 : 200)
+          : init?.method === 'POST'
+            ? response(
+                valid
+                  ? [{ ...failedJob, status: 'retrying' }]
+                  : [
+                      { ...failedJob, status: 'retrying' },
+                      { ...failedJob, status: 'retrying' },
+                    ]
+              )
+            : response([failedJob, other], fail ? 503 : 200)
     )
   );
   await act(async () => root.render(<Jobs />));
@@ -314,8 +366,14 @@ it('bulk job selection survives read failure and accepts only a unique acknowled
   await click('Retry queue', true);
   await submit();
   expect(document.querySelector('[role=dialog]')).not.toBeNull();
-  expect(document.querySelector('[role=dialog] [role=alert]')).not.toBeNull();
+  expect(document.querySelector('[role=dialog]')?.textContent).toContain('Review action outcome');
+  expect(document.querySelector('[role=dialog] button[type=submit]')).toBeNull();
+  await click('I reviewed the state; return to queue', true);
+  await act(async () => {
+    host.querySelectorAll<HTMLInputElement>('input[type=checkbox]').forEach((n) => n.click());
+  });
   valid = true;
+  await click('Retry selected (2)');
   await submit();
   expect(document.querySelector('[role=dialog]')).toBeNull();
   expect(host.textContent).toContain('1 selections were skipped');

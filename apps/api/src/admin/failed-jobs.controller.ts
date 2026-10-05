@@ -167,6 +167,17 @@ export class FailedJobsController {
     return this.failedJobsService.listFailedJobs(options);
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Read a selected background job independently of queue filters' })
+  @ApiParam({ name: 'id', description: 'Background job ID' })
+  @ApiResponse({ status: 200, description: 'Current background job', type: Object })
+  @ApiResponse({ status: 403, description: 'View permission required' })
+  @ApiResponse({ status: 404, description: 'Job not found' })
+  detail(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
+    this.assertViewPermission(req);
+    return this.failedJobsService.getFailedJob(id);
+  }
+
   /**
    * POST /api/admin/failed-jobs/:id/retry
    *

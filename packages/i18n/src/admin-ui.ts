@@ -3,6 +3,15 @@ import type { I18nDictionary, Locale } from './index.js';
 import { t as sharedText } from './crm.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'admin.operationalReview.title': 'بررسی نتیجه اقدام',
+  'admin.operationalReview.description':
+    'نتیجه اقدام تأیید نشد. پیش از اقدام دوباره، وضعیت فعلی رکوردهای انتخاب‌شده را بررسی کنید.',
+  'admin.operationalReview.loading': 'در حال بازخوانی وضعیت رکوردهای انتخاب‌شده…',
+  'admin.operationalReview.error': 'بازخوانی وضعیت انجام نشد. هیچ اقدام دوباره‌ای ارسال نشده است.',
+  'admin.operationalReview.saved': 'وضعیت فعلی رکوردهای انتخاب‌شده',
+  'admin.operationalReview.missing': 'این رکورد دیگر در دسترس نیست.',
+  'admin.operationalReview.retry': 'بازخوانی وضعیت انتخاب‌شده‌ها',
+  'admin.operationalReview.reviewed': 'وضعیت را بررسی کردم؛ بازگشت به صف',
   'admin.staff.invalidUsername': 'ایمیل معتبر یا شماره موبایل با کد کشور وارد کنید.',
   'admin.staff.invalidName': 'نام را بین ۱ تا ۱۰۰ نویسه وارد کنید.',
   'admin.staff.invalidRoles': 'فقط نقش‌های موجود را انتخاب کنید.',
@@ -1728,6 +1737,16 @@ export const fa: I18nDictionary = {
   'admin.approvals.walletReceipts': 'نمایش رسیدهای کیف پول',
 };
 export const en: I18nDictionary = {
+  'admin.operationalReview.title': 'Review action outcome',
+  'admin.operationalReview.description':
+    'The action could not be confirmed. Review the current state of the selected records before another action.',
+  'admin.operationalReview.loading': 'Reading the selected records…',
+  'admin.operationalReview.error':
+    'The selected records could not be loaded. No action was sent again.',
+  'admin.operationalReview.saved': 'Current state of selected records',
+  'admin.operationalReview.missing': 'This record is no longer available.',
+  'admin.operationalReview.retry': 'Read selected records again',
+  'admin.operationalReview.reviewed': 'I reviewed the state; return to queue',
   'admin.staff.invalidUsername': 'Enter a valid email or mobile number with country code.',
   'admin.staff.invalidName': 'Enter a name between 1 and 100 characters.',
   'admin.staff.invalidRoles': 'Select only available roles.',

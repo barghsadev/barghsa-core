@@ -58,6 +58,33 @@ async function seed(type = 'storage_cleanup', status = 'failed', id = randomUUID
 async function row(id: string) {
   return (await http.pool.query('SELECT * FROM background_jobs WHERE id=$1', [id])).rows[0];
 }
+it('reads an exact job outside its former queue with current view authority and no mutation', async () => {
+  const id = await seed();
+  expect((await request(`/${id}/resolve`, 'POST', {})).status).toBe(200);
+  expect(await (await request('?status=failed')).json()).toEqual([]);
+  const before = await row(id);
+  const audits = (await http.pool.query('SELECT count(*) FROM audit_log')).rows[0].count;
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='viewer'");
+  const result = await request(`/${id}`, 'GET', undefined, 'viewer');
+  expect(result.status).toBe(200);
+  expect(await result.json()).toMatchObject({
+    id,
+    jobType: 'storage_cleanup',
+    status: 'resolved',
+    resolvedByUsername: 'operator@example.test',
+  });
+  expect(await row(id)).toEqual(before);
+  expect((await http.pool.query('SELECT count(*) FROM audit_log')).rows[0].count).toBe(audits);
+  expect((await fetch(`${http.base}/api/admin/failed-jobs/${id}`)).status).toBe(401);
+  expect((await request(`/${id}`, 'GET', undefined, 'other')).status).toBe(403);
+  expect((await request('/bad', 'GET', undefined, 'viewer')).status).toBe(400);
+  expect((await request(`/${randomUUID()}`, 'GET', undefined, 'viewer')).status).toBe(404);
+  await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='test-jobs-view'");
+  expect((await request(`/${id}`, 'GET', undefined, 'viewer')).status).toBe(403);
+  await http.pool.query(
+    `UPDATE staff_roles SET permissions='["admin:jobs:view"]' WHERE role_id='test-jobs-view'`
+  );
+});
 it('reports current independent view/retry capabilities and enforces authorization and step-up', async () => {
   expect((await fetch(`${http.base}/api/admin/failed-jobs`)).status).toBe(401);
   expect(await (await request('/access', 'GET', undefined, 'viewer')).json()).toEqual({

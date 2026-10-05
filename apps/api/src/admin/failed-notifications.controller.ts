@@ -161,6 +161,17 @@ export class FailedNotificationsController {
     return this.failedNotificationsService.listFailedNotifications(options);
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Read a selected masked notification independently of queue filters' })
+  @ApiParam({ name: 'id', description: 'Dead-letter notification ID' })
+  @ApiResponse({ status: 200, description: 'Current masked notification', type: Object })
+  @ApiResponse({ status: 403, description: 'View permission required' })
+  @ApiResponse({ status: 404, description: 'Notification not found' })
+  detail(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
+    this.assertViewPermission(req);
+    return this.failedNotificationsService.getFailedNotification(id);
+  }
+
   /**
    * POST /api/admin/failed-notifications/:id/retry
    *

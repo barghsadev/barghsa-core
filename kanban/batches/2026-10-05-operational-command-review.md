@@ -1,0 +1,21 @@
+# Failed-job and notification command recovery — v0.1.8
+
+Canonical scope: `02-auth-users-admin.md#T-09.09.02`, `#T-09.09.03` and the operational-list contribution to `07-ui-ux-design.md#T-07.18.01.06`. Existing lifecycle, retry budget, provider idempotency, step-up and atomic audit engines are reused and are not counted again as newly built tasks. The global all-list parent remains partial.
+
+Previously an uncertain command or invalid acknowledgment left Confirm available for the same request. Both queues now capture one owned proposal and retire its confirmation after an unknown response. Authorized exact-record reads establish the current status independently of queue filters; bulk retries inspect every selected job. Missing records are distinguished from unavailable or mismatched reads. Notification reads use the same masking as the existing triage list.
+
+No command replays automatically. Failed exact reads expose read-only retry, and another command requires deliberate review followed by a successful fresh queue read. The read barrier survives queue failure without stranding the Refresh/reload controls. Permission denial clears captured work and accepted private rows. Stale callbacks cannot dismiss or acknowledge newer commands. Existing selection retention, password verification, history, unique bulk subsets/skipped counts and focus restoration remain.
+
+The new GET detail routes have current view-permission checks and are documented in OpenAPI, including the existing notification alias. They do not require mutation step-up or change records/audit. No migrations, dependencies, money movement, retry policy, CI gates, budgets or historical supervisor state changed.
+
+## Validation and review
+
+- Web: `pnpm --filter @barghsa/web exec vitest run src/pages/operational-queue-recovery.test.tsx` — all 27 cases pass, including four new unknown-result/read-barrier/denial regressions. The existing bulk test retains every duplicate/subset assertion and now performs explicit exact-state review before another proposal.
+- API: `BARGHSA_TEST_PREBUILT=1 pnpm --filter @barghsa/api exec vitest run src/admin/failed-jobs-http.integration.test.ts src/admin/failed-jobs.controller.test.ts src/admin/failed-jobs.service.test.ts src/admin/failed-notifications.controller.test.ts src/admin/failed-notifications.service.test.ts src/notifications/dead-letter-recovery.integration.test.ts` — all 98 cases pass. New real HTTP/database checks cover exact reads outside the old queue, revoked permission, no mutation/audit side effects, step-up-independent viewing and payload masking.
+- Browser: 52 distinct Chromium/mobile Safari cases have passing evidence across selective runs: 20 new command-recovery cases, 28 retained triage/history/acknowledgment cases and four version-badge cases. The retained run passed 30/32; two Persian embedded-history cases needed a valid authorized parent-template fixture. All 12 affected history/bulk/notification cases pass on rebuilt final assets after that fixture repair and the RTL attempt-count adjustment. No retries, skipped required scenarios or disabled accessibility rules. Existing malformed receipt targets and all success/permission/count assertions remain.
+- API/web builds, root types, changed-file lint/format, OpenAPI contract, suppression, canonical backlog/diff checks and all 85 unchanged gzip budgets pass. Strict SAST: 1,792 files, zero findings/errors and five rule fixtures pass.
+- Focused source review checks immutable target identity, current permission, complete bulk reads, stale callback retirement and the fresh-queue barrier. Visual review approves two complete original Persian fixture-data dialogs; attempt ratios keep a fixed order in RTL. Screenshots do not contain live customer data.
+
+Evidence: `/Users/majid/.local/state/barghsa-manual-batches/operational-command-review/`. Local validation, pushed SHA and deployment/Telegram receipts are recorded separately. Validate release preflight on the clean committed HEAD, push normally to `main`, then enqueue the verified remote SHA with both reviewed screenshots immediately. Continue building without waiting for CI/deployment.
+
+The preceding v0.1.7 release completed at `2026-10-05T18:01:19Z`; staging reports exact commit `e89744798d8de0b7a575d1ec86e7e15e92d1f972` and its Persian Telegram notes/screenshots are confirmed.
