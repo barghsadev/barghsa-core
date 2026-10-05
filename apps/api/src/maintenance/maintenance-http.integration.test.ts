@@ -114,11 +114,43 @@ it('requires staff authority and step-up, versions changes, and records the audi
     fetch(path, { method: 'PUT', headers, body: JSON.stringify(value) });
 
   expect((await fetch(path, { method: 'PUT', body: JSON.stringify(body) })).status).toBe(401);
-  expect((await put({ ...body, reason: null })).status).toBe(400);
+  const invalid = await put({ ...body, reason: null });
+  expect(invalid.status).toBe(400);
+  expect(await invalid.json()).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['reasonFa', 'reasonEn'] },
+  });
+  const past = await put({ ...body, estimatedUntil: '2020-01-01T00:00:00Z', owner: ' ' });
+  expect(past.status).toBe(400);
+  const pastBody = await past.json();
+  expect(pastBody).toMatchObject({ error: { fields: expect.arrayContaining(['owner']) } });
+  expect(JSON.stringify(pastBody)).not.toContain('2020-01-01');
+  const deadline = await put({ ...body, estimatedUntil: '2020-01-01T00:00:00Z' });
+  expect(deadline.status).toBe(400);
+  expect(await deadline.json()).toMatchObject({ error: { fields: ['estimatedUntil'] } });
+  const nested = await put({ ...body, reason: { fa: ' ', en: 'private submitted message' } });
+  expect(nested.status).toBe(400);
+  const nestedBody = await nested.json();
+  expect(nestedBody).toMatchObject({ error: { fields: ['reasonFa'] } });
+  expect(JSON.stringify(nestedBody)).not.toContain('private submitted message');
+  const mixed = await put({ ...body, owner: ' ', expectedVersion: 'private version' });
+  expect(mixed.status).toBe(400);
+  const mixedBody = await mixed.json();
+  expect(mixedBody).not.toHaveProperty('error.fields');
+  expect(JSON.stringify(mixedBody)).not.toContain('private version');
+  const unknown = await put({
+    ...body,
+    reason: { ...body.reason, privateField: 'private submitted value' },
+  });
+  expect(unknown.status).toBe(400);
+  const unknownBody = await unknown.json();
+  expect(unknownBody).not.toHaveProperty('error.fields');
+  expect(JSON.stringify(unknownBody)).not.toContain('private submitted value');
   await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE session_id=$1', [
     session,
   ]);
-  expect((await put(body)).status).toBe(403);
+  const stepUpDenied = await put({ ...body, reason: null });
+  expect(stepUpDenied.status).toBe(403);
+  expect(await stepUpDenied.json()).not.toHaveProperty('error.fields');
   await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW() WHERE session_id=$1', [
     session,
   ]);
@@ -140,4 +172,8 @@ it('requires staff authority and step-up, versions changes, and records the audi
     previous: { active: false, version: 0 },
     next: { active: true, version: 1 },
   });
+  await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='test-maintenance'");
+  const forbidden = await put({ ...body, reason: null });
+  expect(forbidden.status).toBe(403);
+  expect(await forbidden.json()).not.toHaveProperty('error.fields');
 });

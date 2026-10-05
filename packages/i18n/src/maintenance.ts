@@ -32,6 +32,21 @@ const en: Record<string, string> = {
   denied: 'You cannot manage maintenance settings.',
   loadError: 'Maintenance settings could not be loaded.',
   versionConflict: 'This setting changed. Refresh before saving.',
+  accountTime: 'Account time zone',
+  returnDate: 'Estimated return date',
+  returnTime: 'Estimated return clock time',
+  service: 'Service',
+  invalidField: 'Choose a valid setting.',
+  invalidReason: 'Enter a customer message of 1–500 characters.',
+  invalidOwner: 'Enter a responsible team or person of 1–100 characters.',
+  invalidDeadline: 'Choose a valid future date and time in the account time zone.',
+  validationUnavailable: 'Validation could not load. Your draft is preserved; retry.',
+  unconfirmed:
+    'The save could not be confirmed. Your draft is preserved. Review the refreshed service status before making another change.',
+  returnToEditing: 'I reviewed the saved status; return to editing',
+  reset: 'Replace draft with saved settings',
+  zoneChanged:
+    'Your account time zone changed. Review and reload the saved settings before editing the deadline.',
 };
 
 const fa: Record<string, string> = {
@@ -66,6 +81,21 @@ const fa: Record<string, string> = {
   denied: 'دسترسی مدیریت وضعیت خدمات را ندارید.',
   loadError: 'وضعیت خدمات بارگذاری نشد.',
   versionConflict: 'وضعیت تغییر کرده است. پیش از ذخیره دوباره بارگذاری کنید.',
+  accountTime: 'منطقه زمانی حساب',
+  returnDate: 'تاریخ تخمینی بازگشت',
+  returnTime: 'ساعت تخمینی بازگشت',
+  service: 'خدمت',
+  invalidField: 'تنظیم معتبر را انتخاب کنید.',
+  invalidReason: 'پیام مشتری را با ۱ تا ۵۰۰ نویسه وارد کنید.',
+  invalidOwner: 'نام فرد یا تیم مسئول را با ۱ تا ۱۰۰ نویسه وارد کنید.',
+  invalidDeadline: 'تاریخ و ساعت معتبر در آینده را با منطقه زمانی حساب انتخاب کنید.',
+  validationUnavailable: 'اعتبارسنجی بارگذاری نشد. پیش‌نویس حفظ شده است؛ دوباره تلاش کنید.',
+  unconfirmed:
+    'ذخیره تغییر تأیید نشد. پیش‌نویس حفظ شده است. پیش از تغییر دوباره، وضعیت بازخوانی‌شده خدمت را بررسی کنید.',
+  returnToEditing: 'وضعیت ذخیره‌شده را بررسی کردم؛ بازگشت به ویرایش',
+  reset: 'جایگزینی پیش‌نویس با تنظیمات ذخیره‌شده',
+  zoneChanged:
+    'منطقه زمانی حساب تغییر کرده است. پیش از ویرایش زمان بازگشت، تنظیمات ذخیره‌شده را بررسی و دوباره بارگذاری کنید.',
 };
 
 export function tMaintenance(key: string, locale: 'fa' | 'en'): string {

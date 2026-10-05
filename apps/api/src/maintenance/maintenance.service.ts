@@ -32,15 +32,19 @@ const settingSchema = z
   .strict();
 export const updateSchema = settingSchema
   .extend({ expectedVersion: z.number().int().nonnegative() })
-  .refine(
-    (value) =>
-      !value.active ||
-      (Boolean(value.reason && value.owner && value.estimatedUntil) &&
-        Date.parse(value.estimatedUntil!) > Date.now()),
-    {
-      message: 'Reason, owner, and a future estimated return are required during maintenance',
-    }
-  );
+  .superRefine((value, context) => {
+    if (!value.active) return;
+    for (const field of ['reason', 'owner', 'estimatedUntil'] as const)
+      if (
+        value[field] === null ||
+        (field === 'estimatedUntil' && Date.parse(value.estimatedUntil!) <= Date.now())
+      )
+        context.addIssue({
+          code: 'custom',
+          path: [field],
+          message: 'Required maintenance field is invalid',
+        });
+  });
 
 export interface MaintenanceSetting extends z.infer<typeof settingSchema> {
   capability: Capability;

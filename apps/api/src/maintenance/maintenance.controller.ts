@@ -5,6 +5,7 @@ import { hasStaffPermission } from '../session/staff-permissions.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { MaintenanceService, capabilities, updateSchema } from './maintenance.service.js';
+import { InputFieldException } from '../common/input-field.exception.js';
 
 const capabilitySchema = z.enum(capabilities);
 
@@ -64,8 +65,27 @@ export class AdminMaintenanceController {
       throw new HttpException({ error: 'AUTHZ_FORBIDDEN' }, 403);
     const capability = capabilitySchema.safeParse(rawCapability);
     const input = updateSchema.safeParse(body);
-    if (!capability.success || !input.success)
+    if (!capability.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    if (!input.success) {
+      const fields = input.error.issues.flatMap((issue) => {
+        if (issue.code === 'unrecognized_keys') return [''];
+        const root = String(issue.path[0] ?? '');
+        if (root === 'reason') {
+          if (issue.path[1] === 'fa') return ['reasonFa'];
+          if (issue.path[1] === 'en') return ['reasonEn'];
+          return issue.path.length === 1 ? ['reasonFa', 'reasonEn'] : [''];
+        }
+        return [root];
+      });
+      if (
+        fields.length &&
+        fields.every((field) =>
+          ['active', 'reasonFa', 'reasonEn', 'owner', 'estimatedUntil'].includes(field)
+        )
+      )
+        throw new InputFieldException(fields);
       throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    }
     return this.maintenance.update(
       capability.data,
       input.data,

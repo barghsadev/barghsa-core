@@ -10,7 +10,13 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: gift-code authoring for v0.1.5 (October 5, 2026)
+## Latest manual batch: maintenance settings forms for v0.1.6 (October 5, 2026)
+
+The maintenance editor now uses shared native forms with bilingual linked validation, account-zone calendar/clock deadlines, preserved raw drafts and synchronous read/submission ownership. Confirmation shows captured terms; matching capability/content/next-version receipts precede reset. Unconfirmed saves retain the draft and require fresh saved-state review before deliberate resubmission. Existing capability gating, permission, step-up, audit and expected-version engines remain.
+
+Related checks and release evidence are recorded in `kanban/batches/2026-10-05-maintenance-settings-forms.md`. Reuse `06-security-testing-observability.md#T-06.17.02.03`; global shared-form tasks remain partial. v0.1.5 is deployed and its release notification is confirmed. Continue coherent direct-main batches with independent deployment and Persian release notes/screenshots.
+
+## Previous manual batch: gift-code authoring for v0.1.5 (October 5, 2026)
 
 Gift-code creation/editing now uses shared native forms with bilingual linked validation, raw-input preservation and synchronous submission ownership. Persian/Arabic/Western integer amounts remain exact; percentages are parsed into exact basis points without silent rounding. Profiles, usage limits, account-zone dates and restoration settings validate together. Confirmation shows captured terms; matching receipts precede draft reset, while an unconfirmed result retains the draft and requires saved-state review before deliberate resubmission.
 
