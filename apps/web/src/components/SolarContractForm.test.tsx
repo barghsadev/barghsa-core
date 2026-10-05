@@ -3,6 +3,9 @@ import { createRoot, type Root } from 'react-dom/client';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { SolarContractForm } from './SolarContractForm.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
+import { contractReview } from '../test/solar-contract-fixtures.js';
+import type { SolarContractBody } from '../lib/solar-contract-form.js';
 import type { TeamAction } from './TeamActionDialog.js';
 
 const harness = vi.hoisted(() => ({
@@ -35,9 +38,11 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 async function input(label: string, value: string) {
-  const control = [...container.querySelectorAll('input,textarea,select')].find((item) =>
-    item.closest('label')?.textContent?.includes(label)
-  ) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+  const linked = [...container.querySelectorAll('label')].find((item) =>
+    item.textContent?.includes(label)
+  );
+  const control = container.querySelector('[id="' + linked?.htmlFor + '"]') as
+    HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
   expect(control, label).toBeDefined();
   const prototype =
     control instanceof HTMLSelectElement
@@ -60,30 +65,7 @@ function stubRequests() {
       if (url.endsWith('/review')) {
         const body = JSON.parse(String(options?.body)) as Record<string, unknown>;
         harness.reviewedBody = body;
-        const lines = body.invoiceLines as Array<{
-          description: string;
-          quantity: number;
-          unitPrice: string;
-        }>;
-        return new Response(
-          JSON.stringify({
-            hash: 'a'.repeat(64),
-            data: {
-              title: body.title,
-              text: body.text,
-              changeDescription: body.changeDescription,
-              commercialValue: body.commercialValue,
-              source: { kind: 'template', label: 'Solar agreement', versionNumber: 2 },
-              invoiceLines: lines.map((line) => ({
-                ...line,
-                lineTotal: line.unitPrice,
-                vatAmount: '0',
-              })),
-              totals: { subtotal: '100000', vat: '0', total: '100000' },
-              dueRule: { configDays: 7 },
-            },
-          })
-        );
+        return Response.json(contractReview(body as unknown as SolarContractBody));
       }
       return new Response(
         JSON.stringify({
@@ -100,7 +82,9 @@ it('uses a selected immutable source and invoice lines in the create command', a
   stubRequests();
   await act(async () =>
     root.render(
-      <SolarContractForm requestId={requestId} profileId={profileId} onCreated={() => {}} />
+      <AccountUserProvider value="staff-opaque">
+        <SolarContractForm requestId={requestId} profileId={profileId} onCreated={() => {}} />
+      </AccountUserProvider>
     )
   );
   await input('Contract source', `template:${versionId}`);
@@ -115,6 +99,10 @@ it('uses a selected immutable source and invoice lines in the create command', a
     container
       .querySelector('form')!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  });
+  await vi.waitFor(async () => {
+    await act(async () => {});
+    expect(harness.action).not.toBeNull();
   });
   expect(harness.action?.path).toBe(`/api/admin/solar/requests/${requestId}/create-contract`);
   expect(harness.reviewedBody).toMatchObject({ profileId, title: 'Solar agreement' });
@@ -132,7 +120,9 @@ it('requires an explicit full value and supports a variable pricing rule', async
   stubRequests();
   await act(async () =>
     root.render(
-      <SolarContractForm requestId={requestId} profileId={profileId} onCreated={() => {}} />
+      <AccountUserProvider value="staff-opaque">
+        <SolarContractForm requestId={requestId} profileId={profileId} onCreated={() => {}} />
+      </AccountUserProvider>
     )
   );
   await input('Contract source', `template:${versionId}`);
@@ -153,6 +143,10 @@ it('requires an explicit full value and supports a variable pricing rule', async
     container
       .querySelector('form')!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  });
+  await vi.waitFor(async () => {
+    await act(async () => {});
+    expect(harness.action).not.toBeNull();
   });
   expect(harness.action?.body).toMatchObject({
     commercialValue: { kind: 'variable', description: 'Final cost follows inspected capacity' },

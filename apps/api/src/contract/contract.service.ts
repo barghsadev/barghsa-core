@@ -23,7 +23,7 @@ import type {
   UpdateContractInput,
   ContractListInput,
 } from './contract-validation.js';
-import { parseContractCommercialValue } from './contract-validation.js';
+import { contractUuid, parseContractCommercialValue } from './contract-validation.js';
 import { contractStatusHistory } from './contract-status-history.js';
 
 import {
@@ -414,6 +414,33 @@ export class ContractService {
         outcome: 'draft_contract_and_unpaid_invoice' as const,
       }
     );
+  }
+
+  async assertCanEditSolarContract(
+    requestId: string,
+    profileId: string,
+    actor: Actor,
+    mutation: boolean
+  ) {
+    if (!contractUuid.safeParse(requestId).success || !contractUuid.safeParse(profileId).success)
+      throw new BadRequestException('Invalid solar contract');
+    const work = async (client: PoolClient, archived: boolean) => {
+      if (archived) throw new ConflictException('Profile is archived');
+      const request = (
+        await client.query<{ status: string; contract_id: string | null }>(
+          `SELECT status,contract_id FROM solar_construction_requests
+           WHERE id=$1 AND profile_id=$2 FOR ${mutation ? 'UPDATE' : 'SHARE'}`,
+          [requestId, profileId]
+        )
+      ).rows[0];
+      if (!request) throw new NotFoundException('Solar request not found');
+      if (request.status !== 'approved' || request.contract_id)
+        throw new ConflictException('Solar request is not awaiting a contract');
+      if (mutation) await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+    };
+    return mutation
+      ? staffContractMutation(profileId, actor, work, { financialReview: true })
+      : staffContractFinancialReview(profileId, actor, work);
   }
 
   async reviewSolar(input: SolarContractReviewInput, actor: Actor) {

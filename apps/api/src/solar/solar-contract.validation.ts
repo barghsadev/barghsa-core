@@ -5,7 +5,7 @@ const uuid = z.string().uuid();
 const irr = z
   .string()
   .regex(/^\d{1,19}$/)
-  .refine((value) => BigInt(value) <= 9_223_372_036_854_775_807n);
+  .refine((value) => /^\d{1,19}$/.test(value) && BigInt(value) <= 9_223_372_036_854_775_807n);
 export const solarContractSchema = z
   .object({
     profileId: uuid,

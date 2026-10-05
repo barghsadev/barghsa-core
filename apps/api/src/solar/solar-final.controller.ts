@@ -23,6 +23,7 @@ import {
 } from './solar-contract.validation.js';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
+import { parseSolarContractInput } from './solar-contract-input-fields.js';
 
 const close = z.object({ reason: z.string().trim().min(1).max(1000) }).strict();
 const reviewHash = z.string().regex(/^[a-f0-9]{64}$/);
@@ -73,29 +74,35 @@ export class StaffSolarFinalController {
   @HttpCode(200)
   @ApiOperation({ summary: 'Review the solar contract and initial invoice before issuance' })
   @ApiZodBody(solarContractSchema)
-  reviewContract(
+  async reviewContract(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const parsed = solarContractSchema.safeParse(body);
-    if (!parsed.success) throw new BadRequestException('Invalid solar contract');
-    return this.contracts.reviewSolar({ ...parsed.data, requestId: id }, req.session);
+    requireFormPermission(req, 'contracts:write');
+    const input = await parseSolarContractInput(solarContractSchema, body, (profileId) =>
+      this.contracts.assertCanEditSolarContract(id, profileId, req.session, false)
+    );
+    return this.contracts.reviewSolar({ ...input, requestId: id }, req.session);
   }
 
   @Post('create-contract')
   @HttpCode(200)
   @ApiOperation({ summary: 'Create a linked solar draft contract and issue its initial invoice' })
   @ApiZodBody(solarContractConfirmationSchema)
-  createContract(
+  async createContract(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    const parsed = solarContractConfirmationSchema.safeParse(body);
-    if (!parsed.success) throw new BadRequestException('Invalid solar contract');
+    requireFormPermission(req, 'contracts:write');
+    const input = await parseSolarContractInput(
+      solarContractConfirmationSchema,
+      body,
+      (profileId) => this.contracts.assertCanEditSolarContract(id, profileId, req.session, true)
+    );
     return this.contracts.createSolar(
-      { ...parsed.data, requestId: id },
+      { ...input, requestId: id },
       req.session,
       req.ip ?? '127.0.0.1'
     );

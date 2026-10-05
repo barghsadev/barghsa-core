@@ -301,6 +301,11 @@
       "types": "./dist/consultation-resolution.d.ts",
       "import": "./dist/consultation-resolution.js",
       "default": "./dist/consultation-resolution.js"
+    },
+    "./solar-contract": {
+      "types": "./dist/solar-contract.d.ts",
+      "import": "./dist/solar-contract.js",
+      "default": "./dist/solar-contract.js"
     }
   },
   "scripts": {

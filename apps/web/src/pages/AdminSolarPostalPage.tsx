@@ -22,6 +22,7 @@ import {
   validPostalGuidance,
   type PostalGuidanceDraft,
 } from '../lib/solar-postal-form.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
@@ -84,6 +85,10 @@ interface PostalReview {
 }
 
 export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding } = {}) {
+  const actor = useAccountUser();
+  return <AdminSolarPostalWorkspace key={actor ?? ''} {...(queries ? { queries } : {})} />;
+}
+function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } = {}) {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
@@ -137,6 +142,10 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
     guidanceRead = useRef(0),
     decisionRecoverAfter = useRef(0),
     guidanceRecoverAfter = useRef(0);
+  const contractOwner = useRef<object | null>(null);
+  const [contractLocked, setContractLocked] = useState(false);
+  const queueAbort = useRef<AbortController | null>(null);
+  const currentQueryScope = useRef('');
   const [selected, setSelected] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -157,6 +166,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
   const commandGeneration = useRef(0);
   function busy() {
     return (
+      !!contractOwner.current ||
       !!actionRef.current ||
       commandPendingRef.current ||
       preparingRef.current ||
@@ -165,7 +175,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
     );
   }
   function propose(next: NonNullable<typeof action>) {
-    if (actionRef.current || commandPendingRef.current) return;
+    if (contractOwner.current || actionRef.current || commandPendingRef.current) return;
     commandGeneration.current = ++reviewRequest.current;
     preparingRef.current = false;
     setPreparingDecision(false);
@@ -187,6 +197,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
   const acceptedCursor = useRef<string | null>(null);
   const extendingCursor = useRef<string | null>(null);
   const queryScope = JSON.stringify([lane, before]);
+  currentQueryScope.current = queryScope;
   const previousScope = useRef(queryScope);
   if (previousScope.current !== queryScope) {
     previousScope.current = queryScope;
@@ -211,6 +222,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
   const [queueLoading, setQueueLoading] = useState(true);
   const [createdContractId, setCreatedContractId] = useState<string | null>(null);
   const refresh = () => {
+    if (contractOwner.current) return;
     invalidateReview();
     if (queries) {
       queries.setQuery({ cursor: '' });
@@ -223,6 +235,12 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
   useEffect(() => {
     const controller = new AbortController();
     const read = ++queueRead.current;
+    queueAbort.current = controller;
+    const fresh = () =>
+      !controller.signal.aborted &&
+      read === queueRead.current &&
+      currentQueryScope.current === queryScope &&
+      !contractOwner.current;
     trackingAccessDenied.current = false;
     setQueueLoading(true);
     setQueueError(false);
@@ -234,11 +252,12 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
       signal: controller.signal,
     })
       .then(async (response) => {
+        if (!fresh()) return null;
         if (!response.ok) throw new Error(String(response.status));
         return response.json() as Promise<{ requests: Row[]; nextBefore: string | null }>;
       })
       .then((value) => {
-        if (controller.signal.aborted || trackingAccessDenied.current) return;
+        if (!fresh() || trackingAccessDenied.current || !value) return;
         const extending =
           !!before &&
           nextBefore === before &&
@@ -255,7 +274,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
         setNextBefore(value.nextBefore);
       })
       .catch((cause: unknown) => {
-        if (controller.signal.aborted) return;
+        if (!fresh()) return;
         if (cause instanceof Error && ['401', '403'].includes(cause.message)) {
           invalidateReview();
           setRows([]);
@@ -266,7 +285,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
         } else setQueueError(true);
       })
       .finally(() => {
-        if (!controller.signal.aborted) setQueueLoading(false);
+        if (fresh()) setQueueLoading(false);
       });
     return () => controller.abort();
   }, [before, lane, revision, queueRevision]);
@@ -424,6 +443,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
   const viewGeneration = reviewRequest.current;
   const guidanceAction = action?.path === '/api/admin/solar/postal-guidance';
   const editorLocked =
+    contractLocked ||
     !!action ||
     commandPending ||
     preparingDecision ||
@@ -445,7 +465,9 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
           type="button"
           variant="outline"
           disabled={editorLocked}
-          onClick={() => setQueueRevision((value) => value + 1)}
+          onClick={() => {
+            if (!contractOwner.current) setQueueRevision((value) => value + 1);
+          }}
         >
           {copy('postalDecisionReload')}
         </Button>
@@ -472,8 +494,10 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
                   id="solar-postal-lane"
                   className="w-full rounded-md border bg-background p-2"
                   value={lane}
-                  disabled={commandPending}
+                  disabled={commandPending || contractLocked}
                   onChange={(event) => {
+                    if (contractOwner.current || preparingRef.current || commandPendingRef.current)
+                      return;
                     if (queries) {
                       queries.setQuery({ filters: { lane: event.target.value } });
                       return;
@@ -494,7 +518,7 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
             }
           />
           <ListPage.Content
-            loading={queueLoading}
+            loading={queueLoading || contractLocked}
             error={queueError || queueDenied}
             empty={!visibleRows.length}
             retainContent={!!visibleRows.length && !queueDenied}
@@ -505,7 +529,13 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
               ) : (
                 <div className="space-y-2">
                   <p role="alert">{copy('staffQueueLoadError')}</p>
-                  <Button variant="outline" onClick={() => setQueueRevision((v) => v + 1)}>
+                  <Button
+                    variant="outline"
+                    disabled={contractLocked}
+                    onClick={() => {
+                      if (!contractOwner.current) setQueueRevision((v) => v + 1);
+                    }}
+                  >
                     {copy('retry')}
                   </Button>
                 </div>
@@ -528,10 +558,15 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
                 <li key={item.id}>
                   <button
                     type="button"
-                    disabled={commandPending}
+                    disabled={commandPending || contractLocked}
                     className={`w-full rounded-md border p-3 text-start ${selected === item.id ? 'border-primary' : ''}`}
                     onClick={() => {
-                      if (commandPendingRef.current) return;
+                      if (
+                        contractOwner.current ||
+                        commandPendingRef.current ||
+                        preparingRef.current
+                      )
+                        return;
                       invalidateReview();
                       setSelected(item.id);
                       setPreview(null);
@@ -560,10 +595,16 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
               (acceptedCursor.current !== before ||
                 (nextBefore !== before && (!queries || queries.canAdvance(nextBefore))))
             }
-            loading={queueLoading}
+            loading={queueLoading || contractLocked}
             label={copy('postalStaffQueue')}
             nextLabel={copy('moreRequests')}
             onNext={() => {
+              if (contractOwner.current || commandPendingRef.current || preparingRef.current)
+                return;
+              if (nextBefore === before && acceptedCursor.current !== before) {
+                setQueueRevision((value) => value + 1);
+                return;
+              }
               extendingCursor.current = nextBefore;
               if (queries && nextBefore) queries.next(nextBefore);
               else setBefore(nextBefore);
@@ -796,6 +837,44 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
               key={row.id}
               requestId={row.id}
               profileId={row.profile_id}
+              scopeKey={JSON.stringify([queryScope, row])}
+              coordination={{
+                blocked: () =>
+                  busy() || decisionUnconfirmed || guidanceUnconfirmed || guidanceDenied,
+                acquire: (owner) => {
+                  if (
+                    viewGeneration !== reviewRequest.current ||
+                    busy() ||
+                    decisionUnconfirmed ||
+                    guidanceUnconfirmed ||
+                    guidanceDenied
+                  )
+                    return false;
+                  contractOwner.current = owner;
+                  setContractLocked(true);
+                  ++queueRead.current;
+                  queueAbort.current?.abort();
+                  setQueueLoading(false);
+                  return true;
+                },
+                release: (owner) => {
+                  if (contractOwner.current !== owner) return;
+                  contractOwner.current = null;
+                  setContractLocked(false);
+                },
+              }}
+              onDenied={() => {
+                if (viewGeneration !== reviewRequest.current) return;
+                ++queueRead.current;
+                queueAbort.current?.abort();
+                invalidateReview();
+                setRows((current) => current.filter((item) => item.id !== row.id));
+                setSelected(null);
+                setPreview(null);
+                reasonForm.reset({ reason: '' });
+                setQueueError(true);
+                setQueueLoading(false);
+              }}
               onCreated={(contractId) => {
                 if (viewGeneration !== reviewRequest.current) return;
                 setCreatedContractId(contractId);
@@ -809,7 +888,13 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
       {guidanceError && (
         <div role="alert" className="space-y-2">
           <p>{copy('staffGuidanceLoadError')}</p>
-          <Button variant="outline" onClick={() => setGuidanceRevision((v) => v + 1)}>
+          <Button
+            variant="outline"
+            disabled={contractLocked}
+            onClick={() => {
+              if (!contractOwner.current) setGuidanceRevision((v) => v + 1);
+            }}
+          >
             {copy('retry')}
           </Button>
         </div>
@@ -907,7 +992,9 @@ export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding }
                     type="button"
                     variant="outline"
                     disabled={editorLocked}
-                    onClick={() => setGuidanceRevision((value) => value + 1)}
+                    onClick={() => {
+                      if (!contractOwner.current) setGuidanceRevision((value) => value + 1);
+                    }}
                   >
                     {copy('postalGuidanceReload')}
                   </Button>

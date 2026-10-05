@@ -553,6 +553,228 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
   const options = await send('postal-reviewer', `admin/solar/requests/${id}/contract-options`);
   expect(options.status, http.logs()).toBe(200);
   expect(await options.json()).toMatchObject({ templates: [{ version_id: versionId }] });
+  const solarContractEffects = async () => ({
+    request: (await http.pool.query('SELECT * FROM solar_construction_requests WHERE id=$1', [id]))
+      .rows,
+    contracts: (
+      await http.pool.query(
+        "SELECT * FROM contracts WHERE profile_id=$1 AND service_type='solar' ORDER BY id",
+        [profileId]
+      )
+    ).rows,
+    versions: (
+      await http.pool.query(
+        "SELECT v.* FROM contract_versions v JOIN contracts c ON c.id=v.contract_id WHERE c.profile_id=$1 AND c.service_type='solar' ORDER BY v.id",
+        [profileId]
+      )
+    ).rows,
+    invoices: (
+      await http.pool.query('SELECT * FROM invoices WHERE profile_id=$1 ORDER BY id', [profileId])
+    ).rows,
+    keys: (
+      await http.pool.query(
+        "SELECT * FROM idempotency_keys WHERE entity_type='solar_contract_create' ORDER BY idempotency_key"
+      )
+    ).rows,
+    audit: (
+      await http.pool.query(
+        "SELECT id,event,metadata FROM audit_log WHERE metadata::jsonb->>'requestId'=$1 OR metadata::jsonb->>'solarRequestId'=$1 OR metadata::jsonb->>'contractId' IN (SELECT id::text FROM contracts WHERE profile_id=$2 AND service_type='solar') OR metadata::jsonb->>'invoiceId' IN (SELECT id::text FROM invoices WHERE profile_id=$2) ORDER BY id",
+        [id, profileId]
+      )
+    ).rows,
+    notices: (
+      await http.pool.query('SELECT * FROM in_app_notifications WHERE profile_id=$1 ORDER BY id', [
+        profileId,
+      ])
+    ).rows,
+  });
+  const beforeRejectedContract = await solarContractEffects();
+  const contractBase = `admin/solar/requests/${id}/create-contract`;
+  for (const write of [false, true]) {
+    const path = contractBase + (write ? '' : '/review');
+    const body = { ...input, ...(write ? { expectedReviewHash: 'a'.repeat(64) } : {}) };
+    for (const [patch, fields] of [
+      [
+        { title: '', text: null, changeDescription: 'PRIVATE'.repeat(200) },
+        ['title', 'text', 'changeDescription'],
+      ],
+      [
+        { commercialValue: { kind: 'fixed', amountIrr: '9223372036854775808' } },
+        ['commercialValueAmountIrr'],
+      ],
+      [
+        { commercialValue: { kind: 'variable', description: '  ' } },
+        ['commercialValueDescription'],
+      ],
+      [{ source: { kind: 'template', templateVersionId: 'PRIVATE' } }, ['sourceTemplateVersionId']],
+      [{ source: { kind: 'document', documentId: 'PRIVATE' } }, ['sourceDocumentId']],
+      [
+        { invoiceLines: [{ ...input.invoiceLines[0], unitPrice: 'PRIVATE' }] },
+        ['invoiceLine0UnitPrice'],
+      ],
+      [
+        { invoiceLines: [{ ...input.invoiceLines[0], unitPrice: '1.25' }] },
+        ['invoiceLine0UnitPrice'],
+      ],
+      [
+        { invoiceLines: [{ ...input.invoiceLines[0], unitPrice: '۱۲۳' }] },
+        ['invoiceLine0UnitPrice'],
+      ],
+      [{ invoiceLines: [] }, ['invoiceLines']],
+    ] as const) {
+      const response = await send('postal-reviewer', path, 'POST', { ...body, ...patch });
+      expect(response.status, http.logs()).toBe(400);
+      const error = await response.json();
+      expect(error).toMatchObject({
+        error: { code: ErrorCodes.VALIDATION_INPUT_INVALID.code, fields },
+      });
+      expect(JSON.stringify(error)).not.toContain('PRIVATE');
+    }
+    for (const rejected of [
+      null,
+      { ...body, title: '', profileId: 'PRIVATE' },
+      { ...body, commercialValue: { kind: 'PRIVATE', secret: 'PRIVATE' } },
+      { ...body, commercialValue: { kind: 'PRIVATE', amountIrr: '0', description: 'PRIVATE' } },
+      { ...body, source: { kind: 'PRIVATE', expectedReviewHash: 'PRIVATE' } },
+      { ...body, source: { kind: 'PRIVATE', templateVersionId: versionId, documentId: versionId } },
+      { ...body, title: '', secret: 'PRIVATE' },
+      {
+        ...body,
+        invoiceLines: [{ ...input.invoiceLines[0], unitPrice: 'PRIVATE', secret: 'PRIVATE' }],
+      },
+      ...(write ? [{ ...body, title: '', expectedReviewHash: 'PRIVATE' }] : []),
+    ]) {
+      const response = await send('postal-reviewer', path, 'POST', rejected);
+      expect(response.status, http.logs()).toBe(400);
+      const error = await response.json();
+      expect(error).not.toHaveProperty('error.fields');
+      expect(JSON.stringify(error)).not.toContain('PRIVATE');
+    }
+    for (const [user, target, status] of [
+      ['postal-buyer', path, 403],
+      [
+        'postal-reviewer',
+        `admin/solar/requests/${randomUUID()}/create-contract${write ? '' : '/review'}`,
+        404,
+      ],
+    ] as const) {
+      const response = await send(user, target, 'POST', { ...body, title: '' });
+      expect(response.status, http.logs()).toBe(status);
+      expect(await response.json()).not.toHaveProperty('error.fields');
+    }
+  }
+  const originalContractPermissions = (
+    await http.pool.query<{ permissions: string }>(
+      "SELECT permissions FROM staff_roles WHERE role_id='postal-review-staff'"
+    )
+  ).rows[0]!.permissions;
+  const originalContractStepUp = (
+    await http.pool.query<{ verified_at: string }>(
+      "SELECT step_up_verified_at::text AS verified_at FROM sessions WHERE user_id='postal-reviewer'"
+    )
+  ).rows[0]!.verified_at;
+  try {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions='[\"contracts:write\"]' WHERE role_id='postal-review-staff'"
+    );
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='postal-reviewer'"
+    );
+    // Actual preview remains contracts-only/current-session, including its invalid-owned branch.
+    const contractsOnlyPreview = await send(
+      'postal-reviewer',
+      `${contractBase}/review`,
+      'POST',
+      input
+    );
+    expect(contractsOnlyPreview.status, http.logs()).toBe(200);
+    const contractsOnlyOwned = await send('postal-reviewer', `${contractBase}/review`, 'POST', {
+      ...input,
+      title: '',
+    });
+    expect(contractsOnlyOwned.status, http.logs()).toBe(400);
+    expect(await contractsOnlyOwned.json()).toMatchObject({ error: { fields: ['title'] } });
+    const stepUpDenied = await send('postal-reviewer', contractBase, 'POST', {
+      ...input,
+      title: '',
+      expectedReviewHash: 'a'.repeat(64),
+    });
+    expect(stepUpDenied.status, http.logs()).toBe(403);
+    expect(await stepUpDenied.json()).toMatchObject({
+      requiresStepUp: true,
+      error: { code: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code },
+    });
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=$1::timestamptz WHERE user_id='postal-reviewer'",
+      [originalContractStepUp]
+    );
+    const invoiceDenied = await send('postal-reviewer', contractBase, 'POST', {
+      ...input,
+      title: '',
+      expectedReviewHash: 'a'.repeat(64),
+    });
+    expect(invoiceDenied.status, http.logs()).toBe(403);
+    expect(await invoiceDenied.json()).not.toHaveProperty('error.fields');
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions='[\"invoices:write\"]' WHERE role_id='postal-review-staff'"
+    );
+    for (const suffix of ['', '/review']) {
+      const denied = await send('postal-reviewer', contractBase + suffix, 'POST', {
+        ...input,
+        title: '',
+        ...(suffix ? {} : { expectedReviewHash: 'a'.repeat(64) }),
+      });
+      expect(denied.status, http.logs()).toBe(403);
+      expect(await denied.json()).not.toHaveProperty('error.fields');
+    }
+  } finally {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions=$1 WHERE role_id='postal-review-staff'",
+      [originalContractPermissions]
+    );
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=$1::timestamptz WHERE user_id='postal-reviewer'",
+      [originalContractStepUp]
+    );
+  }
+  try {
+    await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [profileId]);
+    const archived = await send('postal-reviewer', `${contractBase}/review`, 'POST', {
+      ...input,
+      title: '',
+    });
+    expect(archived.status, http.logs()).toBe(409);
+    expect(await archived.json()).not.toHaveProperty('error.fields');
+  } finally {
+    await http.pool.query('UPDATE profiles SET archived=false WHERE id=$1', [profileId]);
+  }
+  const otherContractProfile = (
+    await http.pool.query<{ id: string }>(
+      "INSERT INTO profiles(user_id,profile_type,status) VALUES('postal-other','INDIVIDUAL','ACTIVE') RETURNING id"
+    )
+  ).rows[0]!.id;
+  const foreignScope = await send('postal-reviewer', `${contractBase}/review`, 'POST', {
+    ...input,
+    profileId: otherContractProfile,
+    title: '',
+  });
+  expect(foreignScope.status, http.logs()).toBe(404);
+  expect(await foreignScope.json()).not.toHaveProperty('error.fields');
+  try {
+    await http.pool.query("UPDATE sessions SET revoked_at=NOW() WHERE user_id='postal-reviewer'");
+    for (const suffix of ['', '/review']) {
+      const revoked = await send('postal-reviewer', contractBase + suffix, 'POST', {
+        ...input,
+        title: '',
+        ...(suffix ? {} : { expectedReviewHash: 'a'.repeat(64) }),
+      });
+      expect(revoked.status, http.logs()).toBe(401);
+      expect(await revoked.json()).not.toHaveProperty('error.fields');
+    }
+  } finally {
+    await http.pool.query("UPDATE sessions SET revoked_at=NULL WHERE user_id='postal-reviewer'");
+  }
+  expect(await solarContractEffects()).toEqual(beforeRejectedContract);
   const bad = await send(
     'postal-reviewer',
     `admin/solar/requests/${id}/create-contract/review`,
@@ -650,6 +872,24 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
   };
   expect(result.status).toBe('contract_created');
   expect(result.invoiceIds).toHaveLength(1);
+  expect(Object.keys(result).sort()).toEqual(['contractId', 'invoiceIds', 'status']);
+  expect(result.contractId).toMatch(
+    /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+  );
+  expect(result.invoiceIds[0]).toMatch(
+    /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+  );
+  const storedSolarCommand = (
+    await http.pool.query<{
+      idempotency_key: string;
+      response: { request: unknown; result: unknown };
+    }>(
+      "SELECT idempotency_key,response FROM idempotency_keys WHERE entity_type='solar_contract_create' AND idempotency_key=$1",
+      [`postal-reviewer:${input.idempotencyKey}`]
+    )
+  ).rows[0]!;
+  expect(storedSolarCommand.response.request).toEqual({ ...command, requestId: id });
+  expect(storedSolarCommand.response.result).toEqual(result);
   const recordedReview = (
     await http.pool.query<{ review: { hash: string; data: { totals: { total: string } } } }>(
       "SELECT metadata::jsonb->'financialReview' AS review FROM audit_log WHERE event='solar.contract.created' AND metadata::jsonb->>'requestId'=$1",
@@ -770,6 +1010,39 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
   expect(await (await send('postal-buyer', `solar/requests/${id}`)).json()).toMatchObject({
     request: { contract_published: true },
   });
+  const afterPublishedContract = await solarContractEffects();
+  // A real lifecycle advance cannot recreate or change the saved original creation receipt.
+  const progressedReplay = await send('postal-reviewer', contractBase, 'POST', command);
+  expect(progressedReplay.status, http.logs()).toBe(200);
+  expect(await progressedReplay.json()).toEqual(result);
+  const alteredReplay = await send('postal-reviewer', contractBase, 'POST', {
+    ...command,
+    text: 'Changed captured terms',
+  });
+  expect(alteredReplay.status, http.logs()).toBe(409);
+  const otherStaff = 'solar-contract-other-staff',
+    otherSession = randomUUID(),
+    otherCsrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES($1,$2,'test-only',true)",
+    [otherStaff, `${otherStaff}@example.test`]
+  );
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES($1,'postal-review-staff')",
+    [otherStaff]
+  );
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())",
+    [otherSession, otherStaff, otherCsrf, randomUUID()]
+  );
+  headers[otherStaff] = {
+    Cookie: `barghsa_session=${otherSession}`,
+    'X-CSRF-Token': otherCsrf,
+    'Content-Type': 'application/json',
+  };
+  const foreignActorReplay = await send(otherStaff, contractBase, 'POST', command);
+  expect(foreignActorReplay.status, http.logs()).toBe(409);
+  expect(await solarContractEffects()).toEqual(afterPublishedContract);
 }, 90_000);
 
 afterAll(async () => {
