@@ -67,10 +67,10 @@ for (const domain of ['templates', 'terms'] as const)
         );
         await page.goto(domain === 'templates' ? '/admin/notifications' : '/admin/tos');
         const refresh = domain === 'templates' ? nt('refresh') : tos.refresh;
-        const history = page.getByRole('region', {
-          name: domain === 'templates' ? nt('title') : tos.history,
-          exact: true,
-        });
+        const history =
+          domain === 'terms'
+            ? page.getByRole('list', { name: tos.history, exact: true })
+            : page.getByRole('region', { name: nt('title'), exact: true });
         await expect(history).toBeVisible();
         await history
           .getByRole('button', {
@@ -168,9 +168,13 @@ for (const domain of ['templates', 'terms'] as const)
           await page.getByRole('button', { name: refresh, exact: true }).click();
           await expect(preview).toHaveCount(0);
         }
-        await history.focus();
+        const keyboardTarget =
+          domain === 'terms'
+            ? history.getByRole('button', { name: tos.view, exact: true })
+            : history;
+        await keyboardTarget.focus();
         await page.keyboard.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
-        await expect(history).toBeFocused();
+        await expect(keyboardTarget).toBeFocused();
         denied = true;
         await page.getByRole('button', { name: refresh, exact: true }).click();
         await expect(history).toHaveCount(0);

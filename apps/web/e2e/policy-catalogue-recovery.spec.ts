@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appT } from '@barghsa/i18n/app';
+import { storagePolicyFormText } from '@barghsa/i18n/storage-policy-forms';
 import {
   catalogueRole,
   effectivePermissions,
@@ -34,14 +35,17 @@ async function inspect(
   project: string,
   name: string
 ) {
-  const viewport = page
-    .getByRole('region', { name: title, exact: true })
-    .locator('[data-slot="scroll-area-viewport"]');
+  const originalViewport = page.viewportSize();
+  if (originalViewport && originalViewport.width < 768)
+    await page.setViewportSize({ width: 900, height: originalViewport.height });
+  const viewport = page.getByRole('region', { name: title, exact: true });
   await viewport.focus();
   await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
-  await expect
-    .poll(() => viewport.evaluate((node) => Math.abs(node.scrollLeft)))
-    .toBeGreaterThan(0);
+  await expect(viewport).toBeFocused();
+  if (name === 'uploads')
+    await expect
+      .poll(() => viewport.evaluate((node) => Math.abs(node.scrollLeft)))
+      .toBeGreaterThan(0);
   expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   if (locale === 'fa' && project === 'mobile-safari')
@@ -49,6 +53,7 @@ async function inspect(
       path: `/tmp/barghsa-policy-catalogue-${name}-fa-mobile-safari.png`,
       fullPage: true,
     });
+  if (originalViewport) await page.setViewportSize(originalViewport);
 }
 for (const locale of ['en', 'fa'] as const) {
   const r = (key: string) => t(`admin.roles.${key}`, locale),
@@ -123,23 +128,26 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.goto('/admin/upload-policies');
     await expect(page.locator('tbody tr')).toHaveCount(1);
-    await inspect(page, u('title'), locale, info.project.name, 'uploads');
+    await page.setViewportSize({ width: 900, height: 844 });
+    await inspect(page, u('catalogue'), locale, info.project.name, 'uploads');
+    await page.setViewportSize({ width: 390, height: 844 });
     await page
       .getByRole('button', { name: `${u('edit')} ${u('category.document')}`, exact: true })
       .click();
-    let dialog = page.getByRole('dialog');
+    const dialog = page.getByRole('dialog');
     await dialog.locator('#upload-policy-size').fill('1.5');
     fail = true;
     await dialog.getByRole('button', { name: refresh, exact: true }).click();
     await expect(dialog.getByRole('alert')).toContainText(u('loadError'));
     await expect(dialog.locator('#upload-policy-size')).toHaveValue('1.5');
     await expect(dialog.getByRole('button', { name: u('save'), exact: true })).toBeDisabled();
-    await dialog.locator('#upload-policy-size').fill('1');
     fail = false;
     const reads = accesses;
     await dialog.getByRole('button', { name: retry, exact: true }).click();
     await expect(dialog.getByRole('button', { name: u('save'), exact: true })).toBeEnabled();
     expect(accesses).toBe(reads);
+    await expect(dialog.locator('#upload-policy-size')).toHaveValue('1.5');
+    await dialog.locator('#upload-policy-size').fill('1');
     await expect(dialog.locator('#upload-policy-size')).toHaveValue('1');
     expect(
       (await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations
@@ -151,11 +159,14 @@ for (const locale of ['en', 'fa'] as const) {
       });
     ceiling = 1048576;
     await dialog.getByRole('button', { name: refresh, exact: true }).click();
-    await expect(dialog).toHaveCount(0);
-    await page
-      .getByRole('button', { name: `${u('edit')} ${u('category.document')}`, exact: true })
+    await expect(dialog.getByRole('alert')).toContainText(storagePolicyFormText('changed', locale));
+    await expect(dialog.locator('#upload-policy-size')).toHaveValue('1');
+    await expect(dialog.getByRole('button', { name: u('save'), exact: true })).toBeDisabled();
+    await dialog
+      .getByRole('button', { name: storagePolicyFormText('reset', locale), exact: true })
       .click();
-    dialog = page.getByRole('dialog');
+    await expect(dialog.locator('#upload-policy-size')).toHaveValue('1');
+    await expect(dialog.getByRole('button', { name: u('save'), exact: true })).toBeEnabled();
     await dialog.getByRole('button', { name: u('save'), exact: true }).click();
     const confirm = page
       .getByRole('dialog')

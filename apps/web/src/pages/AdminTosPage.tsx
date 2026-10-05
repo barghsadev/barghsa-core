@@ -11,7 +11,16 @@ import { adminTosText } from './admin-tos-text.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { adminControlsText } from '@barghsa/i18n/admin-controls';
 import { useLocale } from '../hooks/useLocale.js';
-import { Button, ListPage, Dialog, DialogContent, DialogTitle } from '@barghsa/ui';
+import {
+  Button,
+  ListPage,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DateCell,
+  TextCell,
+} from '@barghsa/ui';
+import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
@@ -904,6 +913,8 @@ export default function AdminTosPage() {
                 >
                   <DialogContent
                     showCloseButton={false}
+                    finalFocus={() => refreshButton.current}
+                    dir={locale === 'fa' ? 'rtl' : 'ltr'}
                     className="bg-card text-card-foreground rounded-lg shadow-xl sm:max-w-3xl w-full max-h-[85vh] flex flex-col p-0 gap-0"
                   >
                     {time.notice}
@@ -1002,170 +1013,140 @@ export default function AdminTosPage() {
                 </Dialog>
               )}
 
-              {/* Version list */}
-              <div
-                role="region"
-                aria-label={text.history}
-                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users must be able to focus and scroll this history.
-                tabIndex={0}
-                className="min-w-0 bg-card text-card-foreground rounded-lg border border-border overflow-x-auto"
-              >
-                <table className="min-w-full divide-y divide-border">
-                  <caption className="sr-only">{text.history}</caption>
-                  <thead className="bg-muted/40">
-                    <tr>
-                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                        {text.version}
-                      </th>
-                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                        {text.status}
-                      </th>
-                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                        {text.change}
-                      </th>
-                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                        {text.active}
-                      </th>
-                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                        {text.published}
-                      </th>
-                      <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
-                        {text.author}
-                      </th>
-                      <th className="px-4 py-3 text-end text-xs font-medium text-muted-foreground uppercase">
-                        {text.actions}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {historyReady && versions.length === 0 && (
-                      <tr>
-                        <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
-                          {text.empty}
-                        </td>
-                      </tr>
-                    )}
-                    {versions.map((v) => (
-                      <tr key={v.id} className="hover:bg-muted">
-                        <td className="px-4 py-3 text-sm font-medium [overflow-wrap:anywhere]">
-                          {v.versionId}
-                        </td>
-                        <td className="px-4 py-3">
+              <OperationalQueueTable
+                locale={locale}
+                rows={versions}
+                caption={text.history}
+                scrollLabel={text.history}
+                nameHeader={text.version}
+                renderName={(v) => <TextCell value={v.versionId} />}
+                fields={[
+                  {
+                    id: 'status',
+                    label: text.status,
+                    render: (v) => (
+                      <span
+                        className={`inline-block px-2 py-0.5 text-xs rounded ${
+                          v.status === 'draft'
+                            ? 'bg-warning-soft text-warning'
+                            : 'bg-success-soft text-success'
+                        }`}
+                      >
+                        {text[v.status]}
+                      </span>
+                    ),
+                  },
+                  {
+                    id: 'change',
+                    label: text.change,
+                    render: (v) => (
+                      <>
+                        {v.status === 'published' ? (
                           <span
                             className={`inline-block px-2 py-0.5 text-xs rounded ${
-                              v.status === 'draft'
-                                ? 'bg-warning-soft text-warning'
-                                : 'bg-success-soft text-success'
+                              v.changeType === 'major'
+                                ? 'bg-danger-soft text-destructive'
+                                : 'bg-muted text-foreground'
                             }`}
                           >
-                            {text[v.status]}
+                            {v.changeType ? text[v.changeType] : text.notRecorded}
                           </span>
-                        </td>
-                        <td className="px-4 py-3 text-sm">
-                          {v.status === 'published' ? (
-                            <span
-                              className={`inline-block px-2 py-0.5 text-xs rounded ${
-                                v.changeType === 'major'
-                                  ? 'bg-danger-soft text-destructive'
-                                  : 'bg-muted text-foreground'
-                              }`}
-                            >
-                              {v.changeType ? text[v.changeType] : text.notRecorded}
-                            </span>
-                          ) : (
-                            <span className="text-muted-foreground">—</span>
-                          )}
-                        </td>
-                        <td className="px-4 py-3">
-                          {v.isActive ? (
-                            <span className="text-success text-sm font-medium">
-                              ✓ {text.active}
-                            </span>
-                          ) : (
-                            <span className="text-muted-foreground text-sm">—</span>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-muted-foreground">
-                          {time.format(v.publishedAt)}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-muted-foreground">
-                          {v.createdBy ? (
-                            <span className="font-mono text-xs" title={v.createdBy}>
-                              {v.createdBy}
-                            </span>
-                          ) : (
-                            <span className="text-muted-foreground">—</span>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-end text-sm [&_button]:ms-2">
-                          <Button
-                            onClick={() => openView(v)}
-                            variant="outline"
-                            className="text-foreground hover:underline"
-                          >
-                            {text.view}
-                          </Button>
-                          {v.status === 'draft' && (
-                            <>
-                              <Button
-                                onClick={() => openEdit(v)}
-                                disabled={
-                                  !historyReady ||
-                                  loading ||
-                                  showEditor ||
-                                  !!publishVersion ||
-                                  discarding
-                                }
-                                variant="outline"
-                                className="text-foreground hover:underline disabled:opacity-40"
-                              >
-                                {text.edit}
-                              </Button>
-                              <Button
-                                onClick={() => {
-                                  publishBaseline.current =
-                                    versions.find((v) => v.isActive)?.revision ?? null;
-                                  publishGeneration.current++;
-                                  setPublishVersion(v);
-                                  setPreviewLocale(locale);
-                                  setChangeType('minor');
-                                  setPreviewReady(false);
-                                  if (!v.revision) setError({ key: 'previewRequired' });
-                                }}
-                                disabled={
-                                  !historyReady ||
-                                  loading ||
-                                  showEditor ||
-                                  !!publishVersion ||
-                                  discarding
-                                }
-                                variant="outline"
-                                className="text-foreground hover:underline disabled:opacity-40"
-                              >
-                                {text.publish}
-                              </Button>
-                              <Button
-                                onClick={() => handleDiscard(v)}
-                                disabled={
-                                  !historyReady ||
-                                  loading ||
-                                  showEditor ||
-                                  !!publishVersion ||
-                                  discarding
-                                }
-                                variant="outline"
-                                className="text-destructive hover:underline disabled:opacity-40"
-                              >
-                                {text.discard}
-                              </Button>
-                            </>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
+                      </>
+                    ),
+                  },
+                  {
+                    id: 'active',
+                    label: text.active,
+                    render: (v) => (
+                      <>
+                        {v.isActive ? (
+                          <span className="text-success text-sm font-medium">✓ {text.active}</span>
+                        ) : (
+                          <span className="text-muted-foreground text-sm">—</span>
+                        )}
+                      </>
+                    ),
+                  },
+                  {
+                    id: 'published',
+                    label: text.published,
+                    render: (v) => (
+                      <DateCell value={v.publishedAt} format={() => time.format(v.publishedAt)} />
+                    ),
+                  },
+                  {
+                    id: 'author',
+                    label: text.author,
+                    render: (v) => (
+                      <span dir="ltr" className="font-mono text-xs">
+                        <TextCell value={v.createdBy} />
+                      </span>
+                    ),
+                  },
+                ]}
+                actionHeader={text.actions}
+                renderActions={(v) => (
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      onClick={() => openView(v)}
+                      variant="outline"
+                      className="text-foreground hover:underline"
+                    >
+                      {text.view}
+                    </Button>
+                    {v.status === 'draft' && (
+                      <>
+                        <Button
+                          onClick={() => openEdit(v)}
+                          disabled={
+                            !historyReady || loading || showEditor || !!publishVersion || discarding
+                          }
+                          variant="outline"
+                          className="text-foreground hover:underline disabled:opacity-40"
+                        >
+                          {text.edit}
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            publishBaseline.current =
+                              versions.find((v) => v.isActive)?.revision ?? null;
+                            publishGeneration.current++;
+                            setPublishVersion(v);
+                            setPreviewLocale(locale);
+                            setChangeType('minor');
+                            setPreviewReady(false);
+                            if (!v.revision) setError({ key: 'previewRequired' });
+                          }}
+                          disabled={
+                            !historyReady || loading || showEditor || !!publishVersion || discarding
+                          }
+                          variant="outline"
+                          className="text-foreground hover:underline disabled:opacity-40"
+                        >
+                          {text.publish}
+                        </Button>
+                        <Button
+                          onClick={() => handleDiscard(v)}
+                          disabled={
+                            !historyReady || loading || showEditor || !!publishVersion || discarding
+                          }
+                          variant="outline"
+                          className="text-destructive hover:underline disabled:opacity-40"
+                        >
+                          {text.discard}
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                )}
+                cardHeading="h2"
+                loading={loading}
+                emptyMessage={text.empty}
+                tableClassName="min-w-[64rem]"
+              />
             </>
           )}
         </ListPage.Content>

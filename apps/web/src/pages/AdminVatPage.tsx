@@ -7,8 +7,10 @@ import {
   Input,
   Label,
   ListPage,
-  ScrollArea,
+  DateCell,
+  TextCell,
 } from '@barghsa/ui';
+import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { ConfigPreviewCard } from '../components/ConfigPreviewCard.js';
 import { t as settingsText } from '@barghsa/i18n/admin-ui';
 import { tVat } from '@barghsa/i18n/vat';
@@ -532,6 +534,37 @@ export default function AdminVatPage() {
       draft.setValidationPending(false);
     }
   }
+  const windowFields = [
+    {
+      id: 'percent',
+      label: label('percent'),
+      render: (row: VatConfigDto | VatProductOverrideDto) =>
+        numbers.percent(row.rateBasisPoints / 10000),
+    },
+    {
+      id: 'from',
+      label: label('from'),
+      render: (row: VatConfigDto | VatProductOverrideDto) => (
+        <DateCell value={row.effectiveFrom} format={() => dateText(row.effectiveFrom)} />
+      ),
+    },
+    {
+      id: 'until',
+      label: label('until'),
+      render: (row: VatConfigDto | VatProductOverrideDto) =>
+        row.effectiveUntil ? (
+          <DateCell value={row.effectiveUntil} format={(value) => dateText(String(value))} />
+        ) : (
+          label('openEnded')
+        ),
+    },
+    {
+      id: 'status',
+      label: label('status'),
+      render: (row: VatConfigDto | VatProductOverrideDto) =>
+        label(`status.${'productId' in row ? overrideStatus(row) : row.status}`),
+    },
+  ];
   return (
     <div
       className="mx-auto flex w-full max-w-5xl min-w-0 flex-col gap-6 p-4 md:p-8"
@@ -828,72 +861,38 @@ export default function AdminVatPage() {
                 }
               >
                 {rates.length > 0 && (
-                  <ScrollArea
-                    scrollbarOrientation="horizontal"
-                    className="mt-3 max-w-full min-w-0 rounded-md border"
-                    role="region"
-                    aria-label={label('rates')}
-                  >
-                    <table
-                      className="w-full min-w-[680px] text-start text-sm"
-                      aria-label={label('rates')}
-                    >
-                      <thead className="bg-muted">
-                        <tr>
-                          {['category', 'percent', 'from', 'until', 'status', 'actions'].map(
-                            (column) => (
-                              <th key={column} scope="col" className="p-3 text-start">
-                                {label(column)}
-                              </th>
-                            )
-                          )}
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y">
-                        {rates.map((rate) => (
-                          <tr key={rate.id}>
-                            <th scope="row" className="p-3 text-start font-medium">
-                              {label(`category.${rate.category}`)}
-                            </th>
-                            <td className="p-3">{numbers.percent(rate.rateBasisPoints / 10000)}</td>
-                            <td className="p-3">
-                              <time dateTime={rate.effectiveFrom}>
-                                {dateText(rate.effectiveFrom)}
-                              </time>
-                            </td>
-                            <td className="p-3">
-                              {rate.effectiveUntil ? (
-                                <time dateTime={rate.effectiveUntil}>
-                                  {dateText(rate.effectiveUntil)}
-                                </time>
-                              ) : (
-                                label('openEnded')
-                              )}
-                            </td>
-                            <td className="p-3">{label(`status.${rate.status}`)}</td>
-                            <td className="p-3">
-                              {rate.effectiveUntil === null && (
-                                <Button
-                                  variant="outline"
-                                  aria-label={`${label('end')} ${label(`category.${rate.category}`)}`}
-                                  disabled={rateDisabled || locked || action !== null}
-                                  onClick={() =>
-                                    open({
-                                      kind: 'endRate',
-                                      id: rate.id,
-                                      title: label(`category.${rate.category}`),
-                                    })
-                                  }
-                                >
-                                  {label('end')}
-                                </Button>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </ScrollArea>
+                  <OperationalQueueTable
+                    locale={locale}
+                    rows={rates}
+                    caption={label('rates')}
+                    scrollLabel={label('rates')}
+                    nameHeader={label('category')}
+                    renderName={(rate) => <TextCell value={label(`category.${rate.category}`)} />}
+                    fields={windowFields}
+                    actionHeader={label('actions')}
+                    renderActions={(rate) => (
+                      <>
+                        {rate.effectiveUntil === null && (
+                          <Button
+                            variant="outline"
+                            aria-label={`${label('end')} ${label(`category.${rate.category}`)}`}
+                            disabled={rateDisabled || locked || action !== null}
+                            onClick={() =>
+                              open({
+                                kind: 'endRate',
+                                id: rate.id,
+                                title: label(`category.${rate.category}`),
+                              })
+                            }
+                          >
+                            {label('end')}
+                          </Button>
+                        )}
+                      </>
+                    )}
+                    loading={rateRead.loading}
+                    emptyMessage={label('empty')}
+                  />
                 )}
               </ListPage.Content>
             </ListPage>
@@ -916,72 +915,38 @@ export default function AdminVatPage() {
                 }
               >
                 {overrides.length > 0 && (
-                  <ScrollArea
-                    scrollbarOrientation="horizontal"
-                    className="mt-3 max-w-full min-w-0 rounded-md border"
-                    role="region"
-                    aria-label={label('overrides')}
-                  >
-                    <table
-                      className="w-full min-w-[680px] text-start text-sm"
-                      aria-label={label('overrides')}
-                    >
-                      <thead className="bg-muted">
-                        <tr>
-                          {['product', 'percent', 'from', 'until', 'status', 'actions'].map(
-                            (column) => (
-                              <th key={column} scope="col" className="p-3 text-start">
-                                {label(column)}
-                              </th>
-                            )
-                          )}
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y">
-                        {overrides.map((row) => (
-                          <tr key={row.id}>
-                            <th scope="row" className="p-3 text-start font-medium">
-                              {productTitle(row.productId)}
-                            </th>
-                            <td className="p-3">{numbers.percent(row.rateBasisPoints / 10000)}</td>
-                            <td className="p-3">
-                              <time dateTime={row.effectiveFrom}>
-                                {dateText(row.effectiveFrom)}
-                              </time>
-                            </td>
-                            <td className="p-3">
-                              {row.effectiveUntil ? (
-                                <time dateTime={row.effectiveUntil}>
-                                  {dateText(row.effectiveUntil)}
-                                </time>
-                              ) : (
-                                label('openEnded')
-                              )}
-                            </td>
-                            <td className="p-3">{label(`status.${overrideStatus(row)}`)}</td>
-                            <td className="p-3">
-                              {row.effectiveUntil === null && (
-                                <Button
-                                  variant="outline"
-                                  aria-label={`${label('endOverride')} ${productTitle(row.productId)}`}
-                                  disabled={overrideDisabled || locked || action !== null}
-                                  onClick={() =>
-                                    open({
-                                      kind: 'endOverride',
-                                      id: row.id,
-                                      title: productTitle(row.productId),
-                                    })
-                                  }
-                                >
-                                  {label('endOverride')}
-                                </Button>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </ScrollArea>
+                  <OperationalQueueTable
+                    locale={locale}
+                    rows={overrides}
+                    caption={label('overrides')}
+                    scrollLabel={label('overrides')}
+                    nameHeader={label('product')}
+                    renderName={(row) => <TextCell value={productTitle(row.productId)} />}
+                    fields={windowFields}
+                    actionHeader={label('actions')}
+                    renderActions={(row) => (
+                      <>
+                        {row.effectiveUntil === null && (
+                          <Button
+                            variant="outline"
+                            aria-label={`${label('endOverride')} ${productTitle(row.productId)}`}
+                            disabled={overrideDisabled || locked || action !== null}
+                            onClick={() =>
+                              open({
+                                kind: 'endOverride',
+                                id: row.id,
+                                title: productTitle(row.productId),
+                              })
+                            }
+                          >
+                            {label('endOverride')}
+                          </Button>
+                        )}
+                      </>
+                    )}
+                    loading={overrideRead.loading}
+                    emptyMessage={label('empty')}
+                  />
                 )}
               </ListPage.Content>
             </ListPage>

@@ -19,3 +19,7 @@ No API, database, dependency, discount/redemption/restoration policy, financial/
 Evidence: `/Users/majid/.local/state/barghsa-manual-batches/gift-code-tables/`. Related local validation, pushed commit and background deployment/Telegram receipts are separate. Validate notes/channel/screenshots on the clean committed HEAD, push normally to main, then enqueue the verified remote SHA with reviewed PNGs immediately. Continue building without waiting for CI/deployment.
 
 The preceding v0.1.14 release completed at `2026-10-05T19:50:52Z`, with exact healthy live commit `86df33f7045cfa996f5738221602ffd6f22e972b`. Persian Telegram note (43) and screenshots (44, 45) are confirmed in external receipts.
+
+## Confirmed staging publication
+
+Release `v0.1.15` completed at `2026-10-05T20:02:55.082275+00:00` with healthy live version `0.1.15` and commit `2abfc6d4a565ac7614f44dccd9d4f8f82e070d24`. Persian Telegram note `46` and the reviewed screenshot `47` were confirmed. The exact worker receipt is preserved outside the checkout at `~/.local/state/barghsa-manual-batches/gift-code-tables/release-completed.json`.

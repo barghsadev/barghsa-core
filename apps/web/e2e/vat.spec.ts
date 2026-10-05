@@ -137,6 +137,7 @@ for (const skippedTime of [false, true]) {
 
 for (const locale of ['en', 'fa'] as const) {
   test(`VAT tables retain history and manage product overrides (${locale})`, async ({ page }) => {
+    await page.setViewportSize({ width: 900, height: 844 });
     const label = (key: string) => tVat(`admin.vat.${key}`, locale);
     await page.addInitScript((value) => {
       localStorage.setItem('theme', 'dark');
@@ -262,9 +263,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
     ).toBe(true);
-    const scrollRegion = page
-      .getByRole('region', { name: label('rates'), exact: true })
-      .locator('[data-slot="scroll-area-viewport"]');
+    const scrollRegion = page.getByRole('region', { name: label('rates'), exact: true });
     await scrollRegion.focus();
     await expect(scrollRegion).toBeFocused();
     await page.keyboard.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');

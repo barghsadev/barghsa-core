@@ -66,10 +66,9 @@ for (const locale of ['en', 'fa'] as const) {
       productReads++;
       return route.fulfill({ json: [vatProduct] });
     });
+    await page.setViewportSize({ width: 900, height: 844 });
     await page.goto('/admin/vat');
-    const region = page
-      .getByRole('region', { name: label('rates'), exact: true })
-      .locator('[data-slot="scroll-area-viewport"]');
+    const region = page.getByRole('region', { name: label('rates'), exact: true });
     await region.focus();
     await region.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
     await expect

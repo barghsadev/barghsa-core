@@ -28,9 +28,11 @@ import {
   Input,
   Label,
   ListPage,
-  ScrollArea,
+  DateCell,
+  TextCell,
   Alert,
 } from '@barghsa/ui';
+import { OperationalQueueTable, QueueRecordDetails } from '../components/OperationalQueueTable.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 interface Limit {
@@ -103,6 +105,9 @@ export default function AdminUploadPoliciesPage() {
   const label = (key: string) => t(`admin.uploadPolicies.${key}`, locale);
   const text = (key: Parameters<typeof storagePolicyFormText>[0]) =>
     storagePolicyFormText(key, locale);
+  const refreshButton = useRef<HTMLButtonElement>(null);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const [expandedHistory, setExpandedHistory] = useState<string[]>([]);
   const limitRef = useRef<Limit | null>(null);
   const form = useWizardForm<UploadPolicyDraft>(
     async () => {
@@ -188,6 +193,7 @@ export default function AdminUploadPoliciesPage() {
     setCanEdit(false);
     setLimits([]);
     setPolicies([]);
+    setExpandedHistory([]);
     setAccessLoading(false);
     setAccessError(false);
     setLoading(false);
@@ -450,7 +456,9 @@ export default function AdminUploadPoliciesPage() {
       {time.notice}
       <header className="flex flex-wrap justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">{label('title')}</h1>
+          <h1 ref={heading} tabIndex={-1} className="text-2xl font-semibold outline-none">
+            {label('title')}
+          </h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{label('description')}</p>
         </div>
       </header>
@@ -471,6 +479,7 @@ export default function AdminUploadPoliciesPage() {
       <ListPage>
         <ListPage.Toolbar>
           <Button
+            ref={refreshButton}
             variant="outline"
             disabled={accessLoading || loading || dialogPending}
             onClick={refresh}
@@ -503,105 +512,123 @@ export default function AdminUploadPoliciesPage() {
             }
             emptyView={<p>{label('empty')}</p>}
           >
-            <ScrollArea
-              scrollbarOrientation="horizontal"
-              role="region"
-              aria-label={label('title')}
-              className="max-w-full min-w-0 rounded-lg border bg-card text-card-foreground"
-            >
-              <table className="w-full min-w-[48rem] text-start text-sm">
-                <caption className="sr-only">{label('title')}</caption>
-                <thead>
-                  <tr>
-                    {['category', 'formats', 'maxSize', 'source', 'actions'].map((key) => (
-                      <th scope="col" className="p-3 text-start" key={key}>
-                        {label(key)}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {limits.map((limit) => {
-                    const current = policies.find(
-                      (policy) => policy.category === limit.category && policy.status === 'current'
-                    );
-                    return (
-                      <tr key={limit.category} className="border-t align-top">
-                        <th scope="row" className="p-3 text-start">
-                          {label(`category.${limit.category}`)}
-                        </th>
-                        <td className="p-3">
-                          <bdi>
-                            {(current?.allowedExtensions ?? limit.allowedExtensions)
-                              .filter((ext) => limit.allowedExtensions.includes(ext))
-                              .join(', ')}
-                          </bdi>
-                        </td>
-                        <td className="p-3 whitespace-nowrap">
-                          {size(
-                            Math.min(
-                              current?.maxSizeBytes ?? limit.maxSizeBytes,
-                              limit.maxSizeBytes
-                            )
-                          )}
-                        </td>
-                        <td className="p-3">{label(current ? 'configured' : 'deployment')}</td>
-                        <td className="p-3">
-                          <div className="flex flex-wrap gap-2">
-                            <Button
-                              variant="outline"
-                              disabled={disabled || uncertain || form.pending || !!action}
-                              onClick={() => edit(limit, current)}
-                              aria-label={`${label('edit')} ${label(`category.${limit.category}`)}`}
-                            >
-                              {label('edit')}
-                            </Button>
-                            {current?.effectiveUntil === null && (
-                              <Button
-                                variant="outline"
-                                disabled={disabled || uncertain || form.pending || !!action}
-                                onClick={() => end(current, limit)}
-                                aria-label={`${label('end')} ${label(`category.${limit.category}`)}`}
-                              >
-                                {label('end')}
-                              </Button>
-                            )}
-                          </div>
-                          <details className="mt-3">
-                            <summary className="cursor-pointer">{label('history')}</summary>
-                            <ol className="mt-2 space-y-3">
-                              {policies
-                                .filter((policy) => policy.category === limit.category)
-                                .map((policy) => (
-                                  <li key={policy.id} className="rounded border p-2">
-                                    <p>
-                                      {label(`status.${policy.status}`)} ·{' '}
-                                      <bdi>{policy.allowedExtensions.join(', ')}</bdi> ·{' '}
-                                      {size(policy.maxSizeBytes)}
-                                    </p>
-                                    <p>
-                                      {label('from')}: {date(policy.effectiveFrom)}
-                                    </p>
-                                    <p>
-                                      {label('until')}: {date(policy.effectiveUntil)}
-                                    </p>
-                                    <p>
-                                      {label('actor')}: <bdi>{policy.createdBy}</bdi>
-                                    </p>
-                                  </li>
-                                ))}
-                            </ol>
-                            {!policies.some((policy) => policy.category === limit.category) && (
-                              <p>{label('noHistory')}</p>
-                            )}
-                          </details>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </ScrollArea>
+            <OperationalQueueTable
+              locale={locale}
+              rows={limits.map((limit) => ({
+                limit,
+                id: limit.category,
+                current: policies.find(
+                  (policy) => policy.category === limit.category && policy.status === 'current'
+                ),
+              }))}
+              caption={label('catalogue')}
+              scrollLabel={label('catalogue')}
+              nameHeader={label('category')}
+              renderName={({ limit }) => <TextCell value={label(`category.${limit.category}`)} />}
+              fields={[
+                {
+                  id: 'formats',
+                  label: label('formats'),
+                  render: ({ current, limit }) => (
+                    <span dir="ltr">
+                      <TextCell
+                        value={(current?.allowedExtensions ?? limit.allowedExtensions)
+                          .filter((ext) => limit.allowedExtensions.includes(ext))
+                          .join(', ')}
+                      />
+                    </span>
+                  ),
+                },
+                {
+                  id: 'maxSize',
+                  label: label('maxSize'),
+                  render: ({ current, limit }) =>
+                    size(Math.min(current?.maxSizeBytes ?? limit.maxSizeBytes, limit.maxSizeBytes)),
+                },
+                {
+                  id: 'source',
+                  label: label('source'),
+                  render: ({ current }) => label(current ? 'configured' : 'deployment'),
+                },
+              ]}
+              actionHeader={label('actions')}
+              renderActions={({ current, limit }) => (
+                <>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant="outline"
+                      disabled={disabled || uncertain || form.pending || !!action}
+                      onClick={() => edit(limit, current)}
+                      aria-label={`${label('edit')} ${label(`category.${limit.category}`)}`}
+                    >
+                      {label('edit')}
+                    </Button>
+                    {current?.effectiveUntil === null && (
+                      <Button
+                        variant="outline"
+                        disabled={disabled || uncertain || form.pending || !!action}
+                        onClick={() => end(current, limit)}
+                        aria-label={`${label('end')} ${label(`category.${limit.category}`)}`}
+                      >
+                        {label('end')}
+                      </Button>
+                    )}
+                  </div>
+                  <QueueRecordDetails
+                    label={label('history')}
+                    open={expandedHistory.includes(limit.category)}
+                    onToggle={() =>
+                      setExpandedHistory((values) =>
+                        values.includes(limit.category)
+                          ? values.filter((value) => value !== limit.category)
+                          : [...values, limit.category]
+                      )
+                    }
+                  >
+                    <ol className="mt-2 space-y-3">
+                      {policies
+                        .filter((policy) => policy.category === limit.category)
+                        .map((policy) => (
+                          <li key={policy.id} className="rounded border p-2">
+                            <p>
+                              {label(`status.${policy.status}`)} ·{' '}
+                              <bdi>{policy.allowedExtensions.join(', ')}</bdi> ·{' '}
+                              {size(policy.maxSizeBytes)}
+                            </p>
+                            <p>
+                              {label('from')}:{' '}
+                              <DateCell
+                                value={policy.effectiveFrom}
+                                format={() => date(policy.effectiveFrom)}
+                              />
+                            </p>
+                            <p>
+                              {label('until')}:{' '}
+                              {policy.effectiveUntil ? (
+                                <DateCell
+                                  value={policy.effectiveUntil}
+                                  format={() => date(policy.effectiveUntil)}
+                                />
+                              ) : (
+                                label('openEnded')
+                              )}
+                            </p>
+                            <p>
+                              {label('actor')}: <bdi>{policy.createdBy}</bdi>
+                            </p>
+                          </li>
+                        ))}
+                    </ol>
+                    {!policies.some((policy) => policy.category === limit.category) && (
+                      <p>{label('noHistory')}</p>
+                    )}
+                  </QueueRecordDetails>
+                </>
+              )}
+              cardHeading="h2"
+              loading={loading}
+              emptyMessage={label('empty')}
+            />
           </ListPage.Content>
         )}
       </ListPage>
@@ -612,7 +639,10 @@ export default function AdminUploadPoliciesPage() {
             if (!open) cancelEditor();
           }}
         >
-          <DialogContent dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+          <DialogContent
+            dir={locale === 'fa' ? 'rtl' : 'ltr'}
+            finalFocus={() => (accessLoading || loading ? heading.current : refreshButton.current)}
+          >
             <form
               noValidate
               aria-busy={form.pending || undefined}

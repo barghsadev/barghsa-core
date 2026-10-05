@@ -97,7 +97,9 @@ test('VAT delayed validation locks duplicate submits and rejects a changed finan
   });
   changed = true;
   await page.getByRole('button', { name: 'Refresh', exact: true }).click();
-  await expect(page.getByRole('table', { name: 'Category rate history' })).toContainText('7%');
+  await expect(
+    page.locator('table:visible,ol[role=list]:visible').filter({ hasText: 'Electricity' })
+  ).toContainText('7%');
   release();
   await expect(page.locator('#vat-percent')).toBeEnabled();
   await expect(page.getByRole('dialog')).toHaveCount(0);
