@@ -71,14 +71,14 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/users');
     await page.getByRole('button', { name: u('create'), exact: true }).click();
     await page.locator('#staff-firstName').fill('Retained name');
-    const viewport = page
-      .getByRole('region', { name: u('table'), exact: true })
-      .locator('[data-slot="scroll-area-viewport"]');
+    await page.setViewportSize({ width: 800, height: 844 });
+    const viewport = page.getByRole('region', { name: u('table'), exact: true });
     await viewport.focus();
     await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
     await expect
       .poll(() => viewport.evaluate((node) => Math.abs(node.scrollLeft)))
       .toBeGreaterThan(0);
+    await page.setViewportSize({ width: 390, height: 844 });
     fail = true;
     await page.getByRole('button', { name: u('next'), exact: true }).click();
     await expect(page.getByRole('button', { name: u('retry'), exact: true })).toBeVisible();
@@ -96,7 +96,7 @@ for (const locale of ['en', 'fa'] as const) {
     await inspect(page, 'users', locale, info.project.name);
     deny = true;
     await page.getByRole('button', { name: u('next'), exact: true }).click();
-    await expect(page.getByRole('table')).toHaveCount(0);
+    await expect(page.locator('table:visible, ol[role=list]:visible')).toHaveCount(0);
     await expect(page.locator('#staff-firstName')).toHaveCount(0);
   });
   test(`staff access and role choices recover without discarding drafts (${locale})`, async ({
@@ -146,7 +146,7 @@ for (const locale of ['en', 'fa'] as const) {
     canCreate = false;
     await page.getByRole('button', { name: u('accessRetry'), exact: true }).click();
     await expect(page.locator('#staff-firstName')).toHaveCount(0);
-    await expect(page.getByRole('table')).toBeVisible();
+    await expect(page.locator('table:visible, ol[role=list]:visible')).toBeVisible();
     await page.getByRole('button', { name: u('editRoles'), exact: true }).click();
     await page.locator('#staff-role-reason').fill('Remove withdrawn role');
     withdrawnRoles = true;

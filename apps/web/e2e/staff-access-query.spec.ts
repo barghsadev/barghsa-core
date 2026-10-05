@@ -70,42 +70,56 @@ for (const locale of ['en', 'fa'] as const)
         });
       });
       await page.goto('/admin/users?page=2');
-      await expect(page.getByRole('table')).toContainText('Second Alice');
+      await expect(page.locator('table:visible, ol[role=list]:visible')).toContainText(
+        'Second Alice'
+      );
       expect(Object.fromEntries(reads.at(-1)!.searchParams)).toEqual({ limit: '25', offset: '25' });
       await page.getByRole('button', { name: word('create'), exact: true }).click();
       await page.locator('#staff-firstName').fill('LOCAL-DRAFT');
       await page.getByRole('button', { name: word('next'), exact: true }).click();
       await expect(page.getByRole('button', { name: word('retry'), exact: true })).toBeVisible();
-      await expect(page.getByRole('table')).toContainText('Second Alice');
+      await expect(page.locator('table:visible, ol[role=list]:visible')).toContainText(
+        'Second Alice'
+      );
       await expect(page.locator('#staff-firstName')).toHaveValue('LOCAL-DRAFT');
       expect(params(page).get('page')).toBe('3');
       expect(page.url()).not.toContain('LOCAL-DRAFT');
       const failed = reads.at(-1)!.search;
       fail = false;
       await page.getByRole('button', { name: word('retry'), exact: true }).click();
-      await expect(page.getByRole('table')).toContainText('Third Alice');
+      await expect(page.locator('table:visible, ol[role=list]:visible')).toContainText(
+        'Third Alice'
+      );
       expect(reads.at(-1)!.search).toBe(failed);
       await expect(page.locator('#staff-firstName')).toHaveValue('LOCAL-DRAFT');
       await page.reload();
-      await expect(page.getByRole('table')).toContainText('Third Alice');
+      await expect(page.locator('table:visible, ol[role=list]:visible')).toContainText(
+        'Third Alice'
+      );
       expect(reads.at(-1)!.search).toBe(failed);
       await expect(page.locator('#staff-firstName')).toHaveCount(0);
       await page.goBack();
-      await expect(page.getByRole('table')).toContainText('Second Alice');
+      await expect(page.locator('table:visible, ol[role=list]:visible')).toContainText(
+        'Second Alice'
+      );
       await page.goForward();
-      await expect(page.getByRole('table')).toContainText('Third Alice');
+      await expect(page.locator('table:visible, ol[role=list]:visible')).toContainText(
+        'Third Alice'
+      );
       await page.getByRole('button', { name: word('disable'), exact: true }).click();
       await expect(page.getByRole('dialog')).toBeVisible();
       await page.goBack();
       await expect(page.getByRole('dialog')).toHaveCount(0);
-      await expect(page.getByRole('table')).toContainText('Second Alice');
+      await expect(page.locator('table:visible, ol[role=list]:visible')).toContainText(
+        'Second Alice'
+      );
       await page.getByRole('button', { name: word('previous'), exact: true }).click();
       await expect.poll(() => reads.at(-1)?.searchParams.get('offset')).toBe('0');
       expect(params(page).has('page')).toBe(false);
       await inspect(page, locale, info.project.name, 'directory', dark);
       denied = true;
       await page.getByRole('button', { name: word('next'), exact: true }).click();
-      await expect(page.getByRole('table')).toHaveCount(0);
+      await expect(page.locator('table:visible, ol[role=list]:visible')).toHaveCount(0);
       await expect(page.getByRole('alert')).toContainText(word('forbidden'));
     });
     test(`role filters restore module comparison through reload and navigation (${locale}, ${dark})`, async ({
@@ -135,7 +149,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/roles?module=finance');
       const module = page.getByRole('combobox', { name: word('compare.module'), exact: true });
       await expect(module).toHaveValue('finance');
-      const rows = page.locator('tbody tr');
+      const rows = page.locator('table:visible tbody tr, ol[role=list]:visible > li');
       await expect(rows).toHaveCount(3);
       for (const [index, grants] of [
         [0, [true, false]],
@@ -176,6 +190,6 @@ for (const locale of ['en', 'fa'] as const)
       await page
         .getByRole('button', { name: t('admin.jobs.refresh', locale), exact: true })
         .click();
-      await expect(page.getByRole('table')).toHaveCount(0);
+      await expect(page.locator('table:visible, ol[role=list]:visible')).toHaveCount(0);
     });
   }

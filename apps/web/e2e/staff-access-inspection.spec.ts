@@ -101,7 +101,9 @@ for (const locale of ['en', 'fa'] as const)
         .click();
       await expect(dialog).toHaveCount(0);
       await expect(trigger).toHaveCount(0);
-      await expect(page.getByRole('table')).toContainText('Finance Alice');
+      await expect(page.locator('table:visible, ol[role=list]:visible')).toContainText(
+        'Finance Alice'
+      );
       await expect(page.locator('main [data-testid=effective-permissions]')).toHaveCount(0);
     });
     test(`role module comparison shows read-only granted and ungranted permissions (${locale}, ${theme})`, async ({
@@ -125,7 +127,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/roles');
       const module = page.getByLabel(text('compare.module'), { exact: true });
       await module.selectOption('finance');
-      const rows = page.locator('tbody tr');
+      const rows = page.locator('table:visible tbody tr, ol[role=list]:visible > li');
       await expect(rows).toHaveCount(3);
       for (const [index, values] of [
         [0, [true, false]],

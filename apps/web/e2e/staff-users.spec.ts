@@ -131,7 +131,7 @@ for (const locale of ['en', 'fa'] as const) {
     await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
     await expect(dialog).toHaveCount(0);
     expect(attempts).toEqual(Array(2).fill({ roleIds: ['role-finance'], reason: 'New duties' }));
-    await expect(page.getByRole('table')).toHaveCount(0);
+    await expect(page.locator('table:visible, ol[role=list]:visible')).toHaveCount(0);
     await expect(
       page.getByRole('button', { name: fa ? 'ویرایش نقش‌ها' : 'Edit roles', exact: true })
     ).toHaveCount(0);
@@ -220,7 +220,7 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.goto('/admin/users');
     await page
-      .getByRole('row')
+      .locator('table:visible tbody tr, ol[role=list]:visible > li')
       .filter({ hasText: 'history@example.test' })
       .getByRole('button', { name: fa ? 'تاریخچه مجوزها' : 'Permission history', exact: true })
       .click();

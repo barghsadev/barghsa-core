@@ -19,3 +19,5 @@ The new GET detail routes have current view-permission checks and are documented
 Evidence: `/Users/majid/.local/state/barghsa-manual-batches/operational-command-review/`. Local validation, pushed SHA and deployment/Telegram receipts are recorded separately. Validate release preflight on the clean committed HEAD, push normally to `main`, then enqueue the verified remote SHA with both reviewed screenshots immediately. Continue building without waiting for CI/deployment.
 
 The preceding v0.1.7 release completed at `2026-10-05T18:01:19Z`; staging reports exact commit `e89744798d8de0b7a575d1ec86e7e15e92d1f972` and its Persian Telegram notes/screenshots are confirmed.
+
+Release v0.1.8 completed at `2026-10-05T18:20:27Z`; staging reports exact commit `d66f6eb94ed4d54f7ad4fa5295c81b3b6f8bc6ba`. Telegram Persian notes (message 26) and both screenshots (27, 28) are confirmed. The first Docker Hub fetch failed before rollout; an explicit retry of the same frozen commit completed. Receipt: `release-completed.json` in the external evidence directory.

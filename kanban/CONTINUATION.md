@@ -12,7 +12,13 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: failed-job and notification command recovery for v0.1.8 (October 5, 2026)
+## Latest manual batch: responsive staff directory and role catalogue for v0.1.9 (October 5, 2026)
+
+The staff directory and role catalogue now use shared desktop tables and mobile cards. Both presentations retain authorized actions, activation/login metadata, module permission comparison, current denial cleanup, captured confirmations and raw drafts. Native row headers, sticky headers, keyboard scrolling, localized row counts and isolated identity/date cells reuse the shared table foundation. Server ordering and pagination remain with each page.
+
+Related checks and release evidence are recorded in `kanban/batches/2026-10-05-staff-directory-tables.md`. Reuse `02-auth-users-admin.md#T-05.03.01`, `#T-05.03.02`, `#T-09.05.01` and `07-ui-ux-design.md#T-07.24.01.01` through `#T-07.24.01.04`; existing engines and shared foundations are not recounted. Domain table adoption and the global all-list task remain partial. v0.1.8 is deployed at `d66f6eb94ed4d54f7ad4fa5295c81b3b6f8bc6ba`; Persian Telegram notes and two screenshots are confirmed after an explicit recovery from a pre-rollout Docker Hub fetch failure. Continue direct-main batches with related local checks and independent deployment. Geography tables are a next candidate; confirm actual gaps against current source before selecting.
+
+## Previous manual batch: failed-job and notification command recovery for v0.1.8 (October 5, 2026)
 
 Failed-job and notification commands now retire unconfirmed proposals, read every exact selected target and require deliberate saved-state review before another command. Fresh queue read success is required after returning from review; read failure preserves the barrier with working recovery controls. Current denial clears private work, notification payload masking remains, and bulk target/subset, step-up, idempotency and audit engines are reused.
 

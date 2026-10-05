@@ -1,9 +1,10 @@
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import type { FormEvent } from 'react';
-import { Alert, Button, Label, ListPage, ScrollArea } from '@barghsa/ui';
+import { Alert, Button, DataTable, Label, ListPage, TextCell } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import {
   groupPermissions,
   validEffective,
@@ -59,6 +60,7 @@ function validRoles(value: unknown): value is StaffRole[] {
 
 export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding } = {}) {
   const locale = useLocale();
+  const { numberStyle } = useNumberFormatting(locale);
   const roleText = (id: string, field: 'name' | 'description', fallback: string) => {
     const key = `admin.staff.role.${id}.${field}`;
     const translated = t(key, locale);
@@ -210,6 +212,62 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
     [staffUserId, forbidden, isLoading, isError, roles, deny, lookupForm]
   );
 
+  const roleIdentity = (role: StaffRole) => (
+    <div className="min-w-0 [overflow-wrap:anywhere]">
+      <div className="flex items-center gap-2">
+        <h2 className="font-medium">
+          <TextCell value={roleText(role.roleId, 'name', role.name)} />
+        </h2>
+        {role.predefined && (
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-muted">
+            {t('admin.roles.predefined', locale)}
+          </span>
+        )}
+      </div>
+      <p className="mt-1 text-xs text-muted-foreground">
+        <TextCell value={roleText(role.roleId, 'description', role.description)} />
+      </p>
+    </div>
+  );
+  const rolePermissions = (role: StaffRole) => {
+    const groups = selectedGroup ? [selectedGroup] : groupPermissions(role.permissions);
+    return (
+      <>
+        {groups.length === 0 ? (
+          <span className="text-xs text-muted-foreground">
+            {t('admin.roles.no.permissions', locale)}
+          </span>
+        ) : (
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            {groups.map((g) => (
+              <fieldset key={g.group}>
+                <legend className="text-xs font-semibold text-muted-foreground">
+                  {groupName(g.group)}
+                </legend>
+                <ul className="mt-1 space-y-0.5">
+                  {g.permissions.map((p) => (
+                    <li key={p} className="text-xs">
+                      <label className="flex items-start gap-2">
+                        <input
+                          type="checkbox"
+                          checked={role.permissions.includes('*') || role.permissions.includes(p)}
+                          disabled
+                          className="mt-0.5 shrink-0"
+                        />
+                        <bdi dir="ltr" className="font-mono break-all">
+                          {p === '*' ? t('admin.roles.all.permissions', locale) : p}
+                        </bdi>
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </fieldset>
+            ))}
+          </div>
+        )}
+      </>
+    );
+  };
   return (
     <div className="min-w-0 space-y-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header>
@@ -269,90 +327,51 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
               }
               emptyView={<p>{t('admin.roles.empty', locale)}</p>}
             >
-              <ScrollArea
-                scrollbarOrientation="horizontal"
-                role="region"
-                aria-label={t('admin.roles.catalogue', locale)}
-                className="max-w-full min-w-0 rounded-lg border bg-card"
-              >
-                <table className="w-full min-w-[44rem] divide-y divide-border">
-                  <thead className="bg-muted">
-                    <tr>
-                      <th scope="col" className="px-4 py-3 text-start text-xs font-semibold">
-                        {t('admin.roles.role', locale)}
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-start text-xs font-semibold">
+              <DataTable
+                locale={locale}
+                numerals={
+                  numberStyle === 'western'
+                    ? 'latn'
+                    : numberStyle === 'persian'
+                      ? 'arabext'
+                      : locale === 'fa'
+                        ? 'arabext'
+                        : 'latn'
+                }
+                data={roles ?? []}
+                keyExtractor={(role) => role.roleId}
+                caption={t('admin.roles.catalogue', locale)}
+                scrollLabel={t('admin.roles.catalogue', locale)}
+                sortable={false}
+                className="max-h-[32rem] bg-card"
+                tableClassName="min-w-[44rem]"
+                columns={[
+                  {
+                    id: 'role',
+                    header: t('admin.roles.role', locale),
+                    cell: roleIdentity,
+                    rowHeader: true,
+                    cellClassName: 'p-4 align-top',
+                  },
+                  {
+                    id: 'permissions',
+                    header: t('admin.roles.permissions', locale),
+                    cell: rolePermissions,
+                    cellClassName: 'p-4 align-top',
+                  },
+                ]}
+                renderCard={(role) => (
+                  <div className="min-w-0 space-y-4 [overflow-wrap:anywhere]">
+                    {roleIdentity(role)}
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium text-muted-foreground">
                         {t('admin.roles.permissions', locale)}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {roles?.map((role) => {
-                      const groups = selectedGroup
-                        ? [selectedGroup]
-                        : groupPermissions(role.permissions);
-                      return (
-                        <tr key={role.roleId}>
-                          <th scope="row" className="px-4 py-4 align-top text-start font-normal">
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">
-                                {roleText(role.roleId, 'name', role.name)}
-                              </span>
-                              {role.predefined && (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-muted">
-                                  {t('admin.roles.predefined', locale)}
-                                </span>
-                              )}
-                            </div>
-                            <p className="mt-1 text-xs text-muted-foreground">
-                              {roleText(role.roleId, 'description', role.description)}
-                            </p>
-                          </th>
-                          <td className="px-4 py-4">
-                            {groups.length === 0 ? (
-                              <span className="text-xs text-muted-foreground">
-                                {t('admin.roles.no.permissions', locale)}
-                              </span>
-                            ) : (
-                              <div className="flex flex-wrap gap-x-6 gap-y-2">
-                                {groups.map((g) => (
-                                  <fieldset key={g.group}>
-                                    <legend className="text-xs font-semibold text-muted-foreground">
-                                      {groupName(g.group)}
-                                    </legend>
-                                    <ul className="mt-1 space-y-0.5">
-                                      {g.permissions.map((p) => (
-                                        <li key={p} className="text-xs">
-                                          <label className="flex items-start gap-2">
-                                            <input
-                                              type="checkbox"
-                                              checked={
-                                                role.permissions.includes('*') ||
-                                                role.permissions.includes(p)
-                                              }
-                                              disabled
-                                              className="mt-0.5 shrink-0"
-                                            />
-                                            <bdi dir="ltr" className="font-mono break-all">
-                                              {p === '*'
-                                                ? t('admin.roles.all.permissions', locale)
-                                                : p}
-                                            </bdi>
-                                          </label>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </fieldset>
-                                ))}
-                              </div>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </ScrollArea>
+                      </p>
+                      {rolePermissions(role)}
+                    </div>
+                  </div>
+                )}
+              />
             </ListPage.Content>
 
             {/* Effective permissions lookup */}

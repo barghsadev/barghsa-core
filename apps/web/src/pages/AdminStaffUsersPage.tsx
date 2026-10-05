@@ -5,7 +5,7 @@ import { StaffEffectivePermissions } from '../components/StaffEffectivePermissio
 import { StaffPermissionHistory } from '../components/StaffPermissionHistory.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Alert, Button, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
+import { Alert, Button, DataTable, DateCell, Input, Label, ListPage, TextCell } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
@@ -542,6 +542,151 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
       />
     </fieldset>
   );
+  const staffName = (staff: Staff) => (
+    <>
+      <h2 className="font-semibold">
+        <TextCell value={name(staff)} />
+      </h2>
+    </>
+  );
+  const staffUsername = (staff: Staff) => (
+    <>
+      <TextCell value={staff.username} />
+    </>
+  );
+  const staffRoles = (staff: Staff) => (
+    <>
+      <div className="flex flex-wrap gap-1">
+        {staff.isAdmin && (
+          <span className="rounded bg-muted px-2 py-1">{label('administrator')}</span>
+        )}
+        {staff.roles.map((role) => (
+          <span key={role.roleId} className="rounded bg-muted px-2 py-1">
+            {roleText(role, 'name')}
+          </span>
+        ))}
+        {!staff.isAdmin && !staff.roles.length && label('noRoles')}
+      </div>
+    </>
+  );
+  const staffStatus = (staff: Staff) => (
+    <>
+      {label(staff.status)}
+      {staff.activationPending && (
+        <p className="text-xs">
+          {label('activationPending')}
+          {staff.activationExpiresAt && (
+            <>
+              {' '}
+              · {label('expires')}: {time.format(staff.activationExpiresAt)}
+            </>
+          )}
+        </p>
+      )}
+    </>
+  );
+  const staffLastLogin = (staff: Staff) => (
+    <>
+      {staff.lastLoginAt ? (
+        <DateCell
+          value={staff.lastLoginAt}
+          format={(value) => time.format(new Date(value).toISOString())}
+        />
+      ) : (
+        label('never')
+      )}
+    </>
+  );
+  const staffActions = (staff: Staff) => {
+    if (!access?.canView) return null;
+    return (
+      <>
+        <div className="flex flex-wrap gap-2">
+          {access.canEditRoles && (
+            <Button
+              variant="outline"
+              disabled={disabled}
+              onClick={(event) => {
+                permissionTrigger.current = event.currentTarget;
+                setPermissionTarget(staff);
+              }}
+            >
+              {t('admin.roles.effective.inspect', locale)}
+            </Button>
+          )}
+          <Button
+            variant="outline"
+            disabled={disabled}
+            onClick={() => setHistory({ userId: staff.userId, username: staff.username })}
+          >
+            {label('audit.title')}
+          </Button>
+          {access.canCreate && staff.activationPending && staff.status === 'active' && (
+            <Button
+              variant="outline"
+              disabled={disabled}
+              onClick={() => {
+                setActivationNotice(false);
+                setSaved(false);
+                openAction({
+                  pageOffset: offset,
+                  title: label('resendActivation'),
+                  description: `${staff.username}. ${label('resendHelp')}`,
+                  path: `/api/admin/users/${encodeURIComponent(staff.userId)}/resend-activation`,
+                  method: 'POST',
+                  forbiddenMessage: label('forbidden'),
+                  conflictMessage: label('activationNotPending'),
+                  errorMessages: {
+                    'AUTH:DELIVERY:UNAVAILABLE': label('deliveryUnavailable'),
+                  },
+                });
+              }}
+            >
+              {label('resendActivation')}
+            </Button>
+          )}
+          {access.canEditRoles && (
+            <Button
+              variant="outline"
+              disabled={rolesDisabled}
+              onClick={() => {
+                if (validationOwner.current || actionRef.current) return;
+                setEditing(staff);
+                roleForm.form.reset({
+                  roleIds: staff.roles.map((role) => role.roleId),
+                  reason: '',
+                });
+                setShowCreate(false);
+                setSaved(false);
+              }}
+            >
+              {label('editRoles')}
+            </Button>
+          )}
+          {access.canDisable && staff.status === 'active' && (
+            <Button
+              variant="outline"
+              disabled={disabled || staff.userId === access.userId}
+              onClick={() => {
+                setSaved(false);
+                openAction({
+                  pageOffset: offset,
+                  title: label('disable'),
+                  description: `${name(staff)} (${staff.username}). ${label('disableHelp')}`,
+                  path: `/api/admin/staff/${encodeURIComponent(staff.userId)}/disable`,
+                  method: 'POST',
+                  forbiddenMessage: label('forbidden'),
+                  conflictMessage: label('conflict'),
+                });
+              }}
+            >
+              {label('disable')}
+            </Button>
+          )}
+        </div>
+      </>
+    );
+  };
   return (
     <section className="mx-auto max-w-5xl min-w-0 space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       {time.notice}
@@ -646,160 +791,85 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
                 }
                 emptyView={<p>{label('empty')}</p>}
               >
-                <ScrollArea
-                  scrollbarOrientation="horizontal"
-                  role="region"
-                  aria-label={label('table')}
-                  className="min-w-0 max-w-full rounded border bg-card"
-                >
-                  <table className="w-full min-w-[52rem] text-sm text-start">
-                    <caption className="sr-only">{label('title')}</caption>
-                    <thead>
-                      <tr>
-                        {['name', 'username', 'roles', 'status', 'lastLogin', 'actions'].map(
-                          (key) => (
-                            <th key={key} scope="col" className="p-3 text-start">
-                              {label(key)}
-                            </th>
-                          )
-                        )}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {list.items.map((staff) => (
-                        <tr key={staff.userId} className="border-t">
-                          <th scope="row" className="p-3 text-start font-medium">
-                            {name(staff)}
-                          </th>
-                          <td className="p-3" dir="ltr">
-                            {staff.username}
-                          </td>
-                          <td className="p-3">
-                            <div className="flex flex-wrap gap-1">
-                              {staff.isAdmin && (
-                                <span className="rounded bg-muted px-2 py-1">
-                                  {label('administrator')}
-                                </span>
-                              )}
-                              {staff.roles.map((role) => (
-                                <span key={role.roleId} className="rounded bg-muted px-2 py-1">
-                                  {roleText(role, 'name')}
-                                </span>
-                              ))}
-                              {!staff.isAdmin && !staff.roles.length && label('noRoles')}
-                            </div>
-                          </td>
-                          <td className="p-3">
-                            {label(staff.status)}
-                            {staff.activationPending && (
-                              <p className="text-xs">
-                                {label('activationPending')}
-                                {staff.activationExpiresAt && (
-                                  <>
-                                    {' '}
-                                    · {label('expires')}: {time.format(staff.activationExpiresAt)}
-                                  </>
-                                )}
-                              </p>
-                            )}
-                          </td>
-                          <td className="p-3">
-                            {staff.lastLoginAt ? time.format(staff.lastLoginAt) : label('never')}
-                          </td>
-                          <td className="p-3">
-                            <div className="flex flex-wrap gap-2">
-                              {access.canEditRoles && (
-                                <Button
-                                  variant="outline"
-                                  disabled={disabled}
-                                  onClick={(event) => {
-                                    permissionTrigger.current = event.currentTarget;
-                                    setPermissionTarget(staff);
-                                  }}
-                                >
-                                  {t('admin.roles.effective.inspect', locale)}
-                                </Button>
-                              )}
-                              <Button
-                                variant="outline"
-                                disabled={disabled}
-                                onClick={() =>
-                                  setHistory({ userId: staff.userId, username: staff.username })
-                                }
-                              >
-                                {label('audit.title')}
-                              </Button>
-                              {access.canCreate &&
-                                staff.activationPending &&
-                                staff.status === 'active' && (
-                                  <Button
-                                    variant="outline"
-                                    disabled={disabled}
-                                    onClick={() => {
-                                      setActivationNotice(false);
-                                      setSaved(false);
-                                      openAction({
-                                        pageOffset: offset,
-                                        title: label('resendActivation'),
-                                        description: `${staff.username}. ${label('resendHelp')}`,
-                                        path: `/api/admin/users/${encodeURIComponent(staff.userId)}/resend-activation`,
-                                        method: 'POST',
-                                        forbiddenMessage: label('forbidden'),
-                                        conflictMessage: label('activationNotPending'),
-                                        errorMessages: {
-                                          'AUTH:DELIVERY:UNAVAILABLE': label('deliveryUnavailable'),
-                                        },
-                                      });
-                                    }}
-                                  >
-                                    {label('resendActivation')}
-                                  </Button>
-                                )}
-                              {access.canEditRoles && (
-                                <Button
-                                  variant="outline"
-                                  disabled={rolesDisabled}
-                                  onClick={() => {
-                                    if (validationOwner.current || actionRef.current) return;
-                                    setEditing(staff);
-                                    roleForm.form.reset({
-                                      roleIds: staff.roles.map((role) => role.roleId),
-                                      reason: '',
-                                    });
-                                    setShowCreate(false);
-                                    setSaved(false);
-                                  }}
-                                >
-                                  {label('editRoles')}
-                                </Button>
-                              )}
-                              {access.canDisable && staff.status === 'active' && (
-                                <Button
-                                  variant="outline"
-                                  disabled={disabled || staff.userId === access.userId}
-                                  onClick={() => {
-                                    setSaved(false);
-                                    openAction({
-                                      pageOffset: offset,
-                                      title: label('disable'),
-                                      description: `${name(staff)} (${staff.username}). ${label('disableHelp')}`,
-                                      path: `/api/admin/staff/${encodeURIComponent(staff.userId)}/disable`,
-                                      method: 'POST',
-                                      forbiddenMessage: label('forbidden'),
-                                      conflictMessage: label('conflict'),
-                                    });
-                                  }}
-                                >
-                                  {label('disable')}
-                                </Button>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </ScrollArea>
+                <DataTable
+                  locale={locale}
+                  numerals={
+                    numbers.numberStyle === 'western'
+                      ? 'latn'
+                      : numbers.numberStyle === 'persian'
+                        ? 'arabext'
+                        : locale === 'fa'
+                          ? 'arabext'
+                          : 'latn'
+                  }
+                  caption={label('title')}
+                  scrollLabel={label('table')}
+                  data={list.items}
+                  keyExtractor={(staff) => staff.userId}
+                  sortable={false}
+                  className="max-h-[32rem] bg-card"
+                  tableClassName="min-w-[52rem]"
+                  columns={[
+                    {
+                      id: 'name',
+                      header: label('name'),
+                      cell: staffName,
+                      rowHeader: true,
+                      cellClassName: 'align-top p-3 [overflow-wrap:anywhere]',
+                    },
+                    {
+                      id: 'username',
+                      header: label('username'),
+                      cell: staffUsername,
+                      cellClassName: 'align-top p-3 [overflow-wrap:anywhere]',
+                    },
+                    {
+                      id: 'roles',
+                      header: label('roles'),
+                      cell: staffRoles,
+                      cellClassName: 'align-top p-3 [overflow-wrap:anywhere]',
+                    },
+                    {
+                      id: 'status',
+                      header: label('status'),
+                      cell: staffStatus,
+                      cellClassName: 'align-top p-3 [overflow-wrap:anywhere]',
+                    },
+                    {
+                      id: 'lastLogin',
+                      header: label('lastLogin'),
+                      cell: staffLastLogin,
+                      cellClassName: 'align-top p-3 [overflow-wrap:anywhere]',
+                    },
+                    {
+                      id: 'actions',
+                      header: label('actions'),
+                      cell: staffActions,
+                      cellClassName: 'align-top p-3 [overflow-wrap:anywhere]',
+                    },
+                  ]}
+                  renderCard={(staff) => (
+                    <div className="min-w-0 space-y-4 [overflow-wrap:anywhere]">
+                      {staffName(staff)}
+                      <dl className="space-y-3 text-sm">
+                        {(
+                          [
+                            ['username', staffUsername],
+                            ['roles', staffRoles],
+                            ['status', staffStatus],
+                            ['lastLogin', staffLastLogin],
+                          ] as const
+                        ).map(([key, render]) => (
+                          <div key={key}>
+                            <dt className="font-medium text-muted-foreground">{label(key)}</dt>
+                            <dd>{render(staff)}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                      {staffActions(staff)}
+                    </div>
+                  )}
+                />
               </ListPage.Content>
               <p>{label('total').replace('{count}', numbers.number(list.total))}</p>
               <ListPage.Pagination
