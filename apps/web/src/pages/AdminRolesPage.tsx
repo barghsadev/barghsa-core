@@ -1,7 +1,7 @@
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import type { FormEvent } from 'react';
-import { Button, Label, ListPage, ScrollArea } from '@barghsa/ui';
+import { Alert, Button, Label, ListPage, ScrollArea } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
 import {
@@ -10,6 +10,12 @@ import {
   type EffectivePermissions,
 } from '../lib/staff-permissions.js';
 import { EffectivePermissionsView } from '../components/EffectivePermissionsView.js';
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import {
+  CatalogueFieldFeedback,
+  CatalogueSaveButton,
+  catalogueRootMessage,
+} from '../components/CatalogueEditorFeedback.js';
 
 /**
  * Staff role management page (T-09.05.01).
@@ -79,7 +85,24 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
     ),
   ]);
   const selectedGroup = catalogueGroups.find((group) => group.group === module);
-  const [staffUserId, setStaffUserId] = useState('');
+  const lookupForm = useWizardForm<{ staffUserId: string }>(
+    async () =>
+      (await import('../lib/staff-access-form-schemas.js')).staffLookupSchema(
+        t('admin.roles.effective.invalidUserId', locale)
+      ),
+    () => ({ staffUserId: '' }),
+    t('admin.roles.effective.validationUnavailable', locale)
+  );
+  const [staffUserId, setStaffUserId] = lookupForm.field('staffUserId');
+  const lookupOwner = useRef<object | null>(null);
+  const invalidFocus = useRef<string | null>(null);
+  useEffect(() => {
+    const value = invalidFocus.current;
+    if (value === null || lookupForm.pending) return;
+    invalidFocus.current = null;
+    if (!lookupOwner.current && lookupForm.form.getValues('staffUserId') === value)
+      lookupForm.form.setFocus('staffUserId');
+  }, [lookupForm.pending, lookupForm.errors, lookupForm.form]);
   const [effective, setEffective] = useState<EffectivePermissions | null>(null);
   const [permLoading, setPermLoading] = useState(false);
   const [permError, setPermError] = useState<string | null>(null);
@@ -87,9 +110,10 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
   const deny = useCallback(() => {
     catalogueRequest.current?.abort();
     lookupRequest.current?.abort();
+    lookupOwner.current = null;
     setForbidden(true);
     setRoles(null);
-    setStaffUserId('');
+    lookupForm.form.reset({ staffUserId: '' });
     setModule('');
     setEffective(null);
     setPermError(null);
@@ -99,6 +123,9 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
   }, []);
 
   useEffect(() => {
+    lookupRequest.current?.abort();
+    lookupOwner.current = null;
+    setPermLoading(false);
     const request = new AbortController();
     catalogueRequest.current = request;
     setForbidden(false);
@@ -130,8 +157,23 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
   const lookupEffective = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
+      if (lookupOwner.current || forbidden || isLoading || isError || !roles) return;
+      const owner = {};
+      lookupOwner.current = owner;
+      lookupForm.setValidationPending(true);
+      let valid = false;
+      try {
+        valid = await lookupForm.form.trigger();
+      } finally {
+        lookupForm.setValidationPending(false);
+      }
+      if (lookupOwner.current !== owner) return;
+      if (!valid) {
+        lookupOwner.current = null;
+        invalidFocus.current = staffUserId;
+        return;
+      }
       const id = staffUserId.trim();
-      if (!id || forbidden || isLoading || isError || !roles) return;
       lookupRequest.current?.abort();
       const request = new AbortController();
       lookupRequest.current = request;
@@ -161,10 +203,11 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
       } catch {
         if (!request.signal.aborted) setPermError(failureKey);
       } finally {
+        if (lookupOwner.current === owner) lookupOwner.current = null;
         if (!request.signal.aborted) setPermLoading(false);
       }
     },
-    [staffUserId, forbidden, isLoading, isError, roles, deny]
+    [staffUserId, forbidden, isLoading, isError, roles, deny, lookupForm]
   );
 
   return (
@@ -318,17 +361,24 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
               <p className="mt-1 text-sm text-muted-foreground">
                 {t('admin.roles.effective.subtitle', locale)}
               </p>
-              <form onSubmit={lookupEffective} className="mt-4 flex flex-wrap items-end gap-3">
-                <div className="flex-1 min-w-0 max-w-md">
+              <form
+                noValidate
+                onSubmit={lookupEffective}
+                className="mt-4 flex flex-wrap items-end gap-3"
+              >
+                <div className="basis-full min-w-0 max-w-md sm:basis-0 sm:flex-1">
                   <label htmlFor="staffUserId" className="block text-sm font-medium mb-1">
                     {t('admin.roles.effective.userId', locale)}
                   </label>
                   <input
                     id="staffUserId"
+                    {...lookupForm.bind('staffUserId')}
                     type="text"
+                    disabled={lookupForm.pending}
                     value={staffUserId}
                     onChange={(e) => {
                       lookupRequest.current?.abort();
+                      lookupOwner.current = null;
                       setStaffUserId(e.target.value);
                       setEffective(null);
                       setPermError(null);
@@ -338,17 +388,21 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
                     dir="ltr"
                     className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                   />
+                  <CatalogueFieldFeedback
+                    id={lookupForm.errorId('staffUserId')}
+                    error={lookupForm.errors.staffUserId}
+                    message={t('admin.roles.effective.invalidUserId', locale)}
+                  />
                 </div>
-                <button
-                  type="submit"
-                  disabled={permLoading || isLoading || isError || !roles || !staffUserId.trim()}
-                  className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {permLoading
-                    ? t('common.loading', locale)
-                    : t('admin.roles.effective.lookup', locale)}
-                </button>
+                <CatalogueSaveButton
+                  label={t('admin.roles.effective.lookup', locale)}
+                  pending={lookupForm.pending || permLoading}
+                  disabled={lookupForm.pending || permLoading || isLoading || isError || !roles}
+                />
               </form>
+              {catalogueRootMessage(lookupForm.errors) && (
+                <Alert variant="destructive">{catalogueRootMessage(lookupForm.errors)}</Alert>
+              )}
 
               {permError && (
                 <p role="alert" className="mt-3 text-sm text-destructive">

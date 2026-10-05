@@ -10,6 +10,14 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
+## Latest manual batch: staff account, role and permission lookup forms (October 5, 2026)
+
+Completed staff creation, role/reason editing and blank-ID permission lookup as a coherent native-form batch. Bilingual linked feedback, post-unlock focus, retained raw drafts and synchronous proposal ownership reuse the existing engines. API public field identifiers follow existing permission checks; OTP, activation, CSRF, session revocation, audit and read recovery remain.
+
+All 409 selected frontend, 35 API and 112 dictionary cases pass. All 24 distinct Chromium/mobile Safari cases have zero-retry passing evidence, with the final four affected lookup cases passing on rebuilt assets after a visual mobile layout correction. Build/types/lint, contracts/suppression, all 85 unchanged budgets and strict SAST pass: 1,784 files, zero findings/errors, five fixtures. Selected original captures are reviewed; clipped tall creation captures are excluded from Telegram attachments. See kanban/batches/2026-10-05-staff-access-native-forms.md.
+
+Release v0.1.1 follows the mandatory direct-main/deploy/Persian-Telegram workflow. Publication, exact-commit CI and release receipts are recorded externally. Global shared-form parents remain partial; choose the next uncovered coherent family from current code and canonical acceptance criteria. Do not recount the staff engines.
+
 ## Latest manual batch: profile lifecycle request ownership and staff closure forms (October 5, 2026)
 
 Completed customer export/closure ownership and staff native confirmation/password as one lifecycle batch. The actual eleven-blocker preview is accepted, captured request keys/locales survive uncertainty, and known export creation advances to saved-ticket/job/read retries. Staff complete dry-run/step-up/closure proof and ticket-page retry markers retain the original approval version while blocking companion writes; changed reviews require renewed consent.

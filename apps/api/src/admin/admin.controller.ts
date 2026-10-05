@@ -455,6 +455,16 @@ export class AdminController {
         throw new HttpException({ statusCode: 400, error: message }, 400);
       }
 
+      const names = ['username', 'firstName', 'lastName', 'roleIds', 'activationMethod'];
+      const fields = [
+        ...new Set(
+          parsed.error.issues
+            .map((issue) => issue.path[0])
+            .filter((name): name is string => typeof name === 'string' && names.includes(name))
+        ),
+      ];
+      if (fields.length) throw new InputFieldException(fields);
+
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400
@@ -558,6 +568,14 @@ export class AdminController {
     const parsed = UpdateStaffRolesSchema.safeParse(rawBody);
 
     if (!parsed.success) {
+      const fields = [
+        ...new Set(
+          parsed.error.issues
+            .map((issue) => issue.path[0])
+            .filter((name): name is string => name === 'roleIds' || name === 'reason')
+        ),
+      ];
+      if (fields.length) throw new InputFieldException(fields);
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400

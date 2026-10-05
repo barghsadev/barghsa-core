@@ -3,11 +3,19 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { StaffEffectivePermissions } from '../components/StaffEffectivePermissions.js';
 import { StaffPermissionHistory } from '../components/StaffPermissionHistory.js';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Button, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
+import { Alert, Button, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useWizardForm } from '../hooks/useWizardForm.js';
+import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import {
+  CatalogueFieldFeedback,
+  CatalogueSaveButton,
+  catalogueRootMessage,
+} from '../components/CatalogueEditorFeedback.js';
+import type { StaffCreationDraft, StaffRoleDraft } from '../lib/staff-access-form-schemas.js';
 
 type StaffAction = TeamAction & { pageOffset: number };
 
@@ -61,11 +69,46 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     [loading, setLoading] = useState(true),
     [error, setError] = useState(false);
   const offset = queries ? (queries.query.page - 1) * 25 : localOffset;
-  const [draft, setDraft] = useState(blank),
-    [showCreate, setShowCreate] = useState(false);
-  const [editing, setEditing] = useState<Staff | null>(null),
-    [roleIds, setRoleIds] = useState<string[]>([]),
-    [reason, setReason] = useState('');
+  const createMessages = {
+    username: label('invalidUsername'),
+    firstName: label('invalidName'),
+    lastName: label('invalidName'),
+    roleIds: label('invalidRoles'),
+    activationMethod: label('invalidActivation'),
+  };
+  const roleMessages = { roleIds: label('invalidRoles'), reason: label('invalidReason') };
+  const createForm = useWizardForm<StaffCreationDraft>(
+    async () =>
+      (await import('../lib/staff-access-form-schemas.js')).staffCreationSchema(
+        createMessages,
+        roles.map((role) => role.roleId)
+      ),
+    blank,
+    label('validationUnavailable')
+  );
+  const roleForm = useWizardForm<StaffRoleDraft>(
+    async () =>
+      (await import('../lib/staff-access-form-schemas.js')).staffRoleSchema(
+        roleMessages,
+        roles.map((role) => role.roleId)
+      ),
+    () => ({ roleIds: [], reason: '' }),
+    label('validationUnavailable')
+  );
+  const draft = createForm.values;
+  const setDraft = (value: StaffCreationDraft) => createForm.form.reset(value);
+  const [roleIds, setRoleIds] = roleForm.field('roleIds');
+  const [reason, setReason] = roleForm.field('reason');
+  const [showCreate, setShowCreate] = useState(false);
+  const [editing, setEditing] = useState<Staff | null>(null);
+  const createErrors = useActionFieldErrors(createForm.form, createMessages, label('invalidName'));
+  const roleErrors = useActionFieldErrors(roleForm.form, roleMessages, label('invalidReason'));
+  const validationOwner = useRef<object | null>(null);
+  const validationFocus = useRef<{
+    kind: 'create' | 'roles';
+    field: string;
+    generation: number;
+  } | null>(null);
   const [action, setAction] = useState<StaffAction | null>(null);
   const [created, setCreated] = useState<{ username: string; password?: string } | null>(null);
   const [saved, setSaved] = useState(false);
@@ -107,7 +150,12 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
   actionRef.current = action;
   function clearAction() {
     ++workGeneration.current;
+    actionRef.current = null;
     setAction(null);
+  }
+  function openAction(value: StaffAction) {
+    actionRef.current = value;
+    setAction(value);
   }
   function denyAccess() {
     accessRef.current = null;
@@ -136,6 +184,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     []
   );
   function refreshAccess() {
+    if (validationOwner.current) return;
     setAccessLoading(true);
     setAccessRevision((v) => v + 1);
   }
@@ -321,16 +370,125 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
         return role ? roleText(role, 'name') : id;
       })
       .join(', ') || label('noRoles');
+  const validationPending = createForm.pending || roleForm.pending;
   const disabled =
-    loading || error || accessLoading || accessError || !!action || !!permissionTarget;
+    loading ||
+    error ||
+    accessLoading ||
+    accessError ||
+    !!action ||
+    !!permissionTarget ||
+    validationPending;
   const rolesDisabled = disabled || optionsLoading || optionsError;
+  useEffect(() => {
+    const target = validationFocus.current;
+    if (!target || validationPending) return;
+    validationFocus.current = null;
+    if (
+      target.generation !== workGeneration.current ||
+      validationOwner.current ||
+      actionRef.current
+    )
+      return;
+    if (target.kind === 'create')
+      createForm.form.setFocus(target.field as keyof StaffCreationDraft);
+    else roleForm.form.setFocus(target.field as keyof StaffRoleDraft);
+  }, [validationPending, createForm.errors, roleForm.errors, createForm.form, roleForm.form]);
   const name = (staff: Staff) =>
     [staff.firstName, staff.lastName].filter(Boolean).join(' ') || staff.username;
-  const selectRoles = (selected: string[], change: (value: string[]) => void) => (
+  async function propose(kind: 'create' | 'roles', event: FormEvent) {
+    event.preventDefault();
+    if (rolesDisabled || actionRef.current || validationOwner.current) return;
+    const owner = {};
+    validationOwner.current = owner;
+    const generation = workGeneration.current;
+    const actor = accessRef.current;
+    const target = editingRef.current;
+    const form = kind === 'create' ? createForm : roleForm;
+    let invalidField: string | null = null;
+    form.setValidationPending(true);
+    try {
+      const valid = await form.form.trigger();
+      if (!valid) {
+        invalidField =
+          (kind === 'create' ? Object.keys(createMessages) : Object.keys(roleMessages)).find(
+            (field) =>
+              kind === 'create'
+                ? createForm.form.getFieldState(field as keyof StaffCreationDraft).invalid
+                : roleForm.form.getFieldState(field as keyof StaffRoleDraft).invalid
+          ) ?? null;
+      }
+      if (
+        !valid ||
+        validationOwner.current !== owner ||
+        generation !== workGeneration.current ||
+        accessRef.current !== actor ||
+        !actor ||
+        accessLoading ||
+        accessError ||
+        (kind === 'create'
+          ? !actor.canCreate
+          : !actor.canEditRoles || editingRef.current !== target)
+      )
+        return;
+      if (kind === 'create') {
+        const value = createForm.form.getValues();
+        setSaved(false);
+        setCreated(null);
+        openAction({
+          pageOffset: offset,
+          title: label('create'),
+          description: `${value.firstName} ${value.lastName} (${value.username}). ${label('roles')}: ${roleSummary(value.roleIds)}. ${label(value.activationMethod === 'link' ? 'linkHelp' : 'passwordOnce')}`,
+          path: '/api/admin/users/create-staff',
+          method: 'POST',
+          body: {
+            ...value,
+            username: value.username.trim().toLowerCase(),
+            firstName: value.firstName.trim(),
+            lastName: value.lastName.trim(),
+            roleIds: [...value.roleIds],
+          },
+          conflictMessage: label('usernameTaken'),
+          forbiddenMessage: label('forbidden'),
+          errorMessages: { 'AUTH:DELIVERY:UNAVAILABLE': label('deliveryUnavailable') },
+        });
+      } else if (target) {
+        const value = roleForm.form.getValues();
+        openAction({
+          pageOffset: offset,
+          title: label('editRoles'),
+          description: `${name(target)} (${target.username}). ${label('roles')}: ${roleSummary(value.roleIds)}. ${label('reason')}: ${value.reason.trim()}. ${label('rolesHelp')}`,
+          path: `/api/admin/users/${encodeURIComponent(target.userId)}/roles`,
+          method: 'PUT',
+          requiresOtp: true,
+          body: { roleIds: [...value.roleIds], reason: value.reason.trim() },
+          signsOut: target.userId === actor.userId,
+          forbiddenMessage: label('forbidden'),
+        });
+      }
+    } finally {
+      if (validationOwner.current === owner) validationOwner.current = null;
+      form.setValidationPending(false);
+      if (invalidField) {
+        validationFocus.current = { kind, field: invalidField, generation };
+      }
+    }
+  }
+  const selectRoles = (
+    selected: string[],
+    change: (value: string[]) => void,
+    form: typeof roleForm | typeof createForm
+  ) => (
     <fieldset className="space-y-2">
       <legend className="font-medium">{label('roles')}</legend>
       <details className="rounded border">
-        <summary className="cursor-pointer p-3 focus-visible:outline focus-visible:outline-2">
+        <summary
+          ref={form.bind('roleIds').ref}
+          onBlur={form.bind('roleIds').onBlur}
+          aria-invalid={form.bind('roleIds')['aria-invalid']}
+          aria-describedby={form.bind('roleIds')['aria-describedby']}
+          className="cursor-pointer p-3 focus-visible:outline focus-visible:outline-2"
+        >
           {roleSummary(selected)}
         </summary>
         <div className="space-y-2 border-t p-3">
@@ -338,17 +496,16 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
             <label key={role.roleId} className="flex items-start gap-2 rounded border p-3">
               <input
                 type="checkbox"
-                disabled={
-                  optionsLoading || optionsError || accessLoading || accessError || !!action
-                }
+                disabled={rolesDisabled}
                 checked={selected.includes(role.roleId)}
-                onChange={(event) =>
+                onChange={(event) => {
+                  if (validationOwner.current || actionRef.current) return;
                   change(
                     event.target.checked
                       ? [...selected, role.roleId]
                       : selected.filter((id) => id !== role.roleId)
-                  )
-                }
+                  );
+                }}
               />
               <span>
                 <span className="block font-medium">{roleText(role, 'name')}</span>
@@ -365,10 +522,11 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
                 <input
                   type="checkbox"
                   checked
-                  disabled={
-                    optionsLoading || optionsError || accessLoading || accessError || !!action
-                  }
-                  onChange={() => change(selected.filter((value) => value !== id))}
+                  disabled={rolesDisabled}
+                  onChange={() => {
+                    if (!validationOwner.current && !actionRef.current)
+                      change(selected.filter((value) => value !== id));
+                  }}
                 />
                 <span>
                   {label('unavailableRole')}: <span dir="ltr">{id}</span>
@@ -377,6 +535,11 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
             ))}
         </div>
       </details>
+      <CatalogueFieldFeedback
+        id={form.errorId('roleIds')}
+        error={form.errors.roleIds}
+        message={label('invalidRoles')}
+      />
     </fieldset>
   );
   return (
@@ -396,6 +559,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
           <Button
             disabled={rolesDisabled}
             onClick={() => {
+              if (validationOwner.current || actionRef.current) return;
               setShowCreate(true);
               setEditing(null);
               setCreated(null);
@@ -436,7 +600,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
         <ListPage.Toolbar>
           <Button
             variant="outline"
-            disabled={loading || accessLoading || !!action}
+            disabled={loading || accessLoading || !!action || validationPending}
             onClick={refreshAccess}
           >
             {label('refresh')}
@@ -574,7 +738,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
                                     onClick={() => {
                                       setActivationNotice(false);
                                       setSaved(false);
-                                      setAction({
+                                      openAction({
                                         pageOffset: offset,
                                         title: label('resendActivation'),
                                         description: `${staff.username}. ${label('resendHelp')}`,
@@ -596,9 +760,12 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
                                   variant="outline"
                                   disabled={rolesDisabled}
                                   onClick={() => {
+                                    if (validationOwner.current || actionRef.current) return;
                                     setEditing(staff);
-                                    setRoleIds(staff.roles.map((role) => role.roleId));
-                                    setReason('');
+                                    roleForm.form.reset({
+                                      roleIds: staff.roles.map((role) => role.roleId),
+                                      reason: '',
+                                    });
                                     setShowCreate(false);
                                     setSaved(false);
                                   }}
@@ -612,7 +779,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
                                   disabled={disabled || staff.userId === access.userId}
                                   onClick={() => {
                                     setSaved(false);
-                                    setAction({
+                                    openAction({
                                       pageOffset: offset,
                                       title: label('disable'),
                                       description: `${name(staff)} (${staff.username}). ${label('disableHelp')}`,
@@ -638,7 +805,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
               <ListPage.Pagination
                 kind="cursor"
                 label={label('pages')}
-                loading={loading || accessLoading}
+                loading={loading || accessLoading || validationPending}
                 hasMore={
                   !error &&
                   !accessError &&
@@ -692,82 +859,83 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
           {showCreate && access?.canCreate && (
             <form
               className="space-y-4 rounded-lg border bg-card p-4"
-              onSubmit={(event) => {
-                event.preventDefault();
-                if (rolesDisabled) return;
-                setSaved(false);
-                setCreated(null);
-                setAction({
-                  pageOffset: offset,
-                  title: label('create'),
-                  description: `${draft.firstName} ${draft.lastName} (${draft.username}). ${label('roles')}: ${roleSummary(draft.roleIds)}. ${label(draft.activationMethod === 'link' ? 'linkHelp' : 'passwordOnce')}`,
-                  path: '/api/admin/users/create-staff',
-                  method: 'POST',
-                  body: {
-                    ...draft,
-                    username: draft.username.trim().toLowerCase(),
-                    firstName: draft.firstName.trim(),
-                    lastName: draft.lastName.trim(),
-                    roleIds: [...draft.roleIds],
-                  },
-                  conflictMessage: label('usernameTaken'),
-                  forbiddenMessage: label('forbidden'),
-                  errorMessages: { 'AUTH:DELIVERY:UNAVAILABLE': label('deliveryUnavailable') },
-                });
-              }}
+              noValidate
+              onSubmit={(event) => void propose('create', event)}
             >
               <h2 className="text-lg font-semibold">{label('create')}</h2>
-              <fieldset disabled={!!action} className="space-y-4">
+              {catalogueRootMessage(createForm.errors) && (
+                <Alert variant="destructive">{catalogueRootMessage(createForm.errors)}</Alert>
+              )}
+              <fieldset disabled={!!action || validationPending} className="space-y-4">
                 {(['username', 'firstName', 'lastName'] as const).map((field) => (
                   <div key={field}>
                     <Label htmlFor={`staff-${field}`}>{label(field)}</Label>
                     <Input
                       id={`staff-${field}`}
                       required
-                      maxLength={field === 'username' ? 254 : 100}
+                      {...createForm.bind(field)}
+                      maxLength={field === 'username' ? 255 : 100}
                       value={draft[field]}
                       dir={field === 'username' ? 'ltr' : undefined}
-                      onChange={(event) => setDraft({ ...draft, [field]: event.target.value })}
+                      onChange={(event) => {
+                        if (!validationOwner.current && !actionRef.current)
+                          createForm.field(field)[1](event.target.value);
+                      }}
+                    />
+                    <CatalogueFieldFeedback
+                      id={createForm.errorId(field)}
+                      error={createForm.errors[field]}
+                      message={createMessages[field]}
                     />
                   </div>
                 ))}
-                {selectRoles(draft.roleIds, (value) => setDraft({ ...draft, roleIds: value }))}
+                {selectRoles(
+                  draft.roleIds,
+                  (value) => createForm.field('roleIds')[1](value),
+                  createForm
+                )}
                 <fieldset className="space-y-2">
                   <legend>{label('activation')}</legend>
                   {(['link', 'tempPassword'] as const).map((method) => (
                     <label key={method} className="flex gap-2">
                       <input
                         type="radio"
-                        name="staff-activation"
+                        {...(method === 'link'
+                          ? createForm.bind('activationMethod')
+                          : {
+                              name: 'activationMethod',
+                              onBlur: createForm.bind('activationMethod').onBlur,
+                            })}
                         value={method}
                         checked={draft.activationMethod === method}
-                        onChange={() => setDraft({ ...draft, activationMethod: method })}
+                        onChange={() => {
+                          if (!validationOwner.current && !actionRef.current)
+                            createForm.field('activationMethod')[1](method);
+                        }}
                       />
                       {label(method)}
                     </label>
                   ))}
                 </fieldset>
+                <CatalogueFieldFeedback
+                  id={createForm.errorId('activationMethod')}
+                  error={createForm.errors.activationMethod}
+                  message={createMessages.activationMethod}
+                />
                 {draft.activationMethod === 'link' && (
                   <p className="text-sm">{label('linkHelp')}</p>
                 )}
                 <div className="flex gap-2">
-                  <Button
-                    type="submit"
-                    disabled={
-                      rolesDisabled ||
-                      draft.roleIds.some((id) => !roles.some((role) => role.roleId === id)) ||
-                      !draft.username.trim() ||
-                      !draft.firstName.trim() ||
-                      !draft.lastName.trim() ||
-                      (draft.activationMethod === 'link' && !draft.username.includes('@'))
-                    }
-                  >
-                    {label('create')}
-                  </Button>
+                  <CatalogueSaveButton
+                    label={label('create')}
+                    pending={createForm.pending}
+                    disabled={rolesDisabled}
+                  />
                   <Button
                     type="button"
                     variant="outline"
                     onClick={() => {
+                      if (validationOwner.current || actionRef.current) return;
                       setShowCreate(false);
                       setDraft(blank());
                     }}
@@ -781,47 +949,41 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
           {editing && access?.canEditRoles && (
             <form
               className="space-y-4 rounded-lg border bg-card p-4"
-              onSubmit={(event) => {
-                event.preventDefault();
-                if (rolesDisabled) return;
-                setAction({
-                  pageOffset: offset,
-                  title: label('editRoles'),
-                  description: `${name(editing)} (${editing.username}). ${label('roles')}: ${roleSummary(roleIds)}. ${label('reason')}: ${reason.trim()}. ${label('rolesHelp')}`,
-                  path: `/api/admin/users/${encodeURIComponent(editing.userId)}/roles`,
-                  method: 'PUT',
-                  requiresOtp: true,
-                  body: { roleIds: [...roleIds], reason: reason.trim() },
-                  signsOut: editing.userId === access.userId,
-                  forbiddenMessage: label('forbidden'),
-                });
-              }}
+              noValidate
+              onSubmit={(event) => void propose('roles', event)}
             >
               <h2 className="text-lg font-semibold">
                 {label('editRoles')}: {name(editing)}
               </h2>
-              <fieldset disabled={!!action} className="space-y-4">
-                {selectRoles(roleIds, setRoleIds)}
+              {catalogueRootMessage(roleForm.errors) && (
+                <Alert variant="destructive">{catalogueRootMessage(roleForm.errors)}</Alert>
+              )}
+              <fieldset disabled={!!action || validationPending} className="space-y-4">
+                {selectRoles(roleIds, setRoleIds, roleForm)}
                 <p>{label('rolesHelp')}</p>
                 <Label htmlFor="staff-role-reason">{label('reason')}</Label>
                 <Input
                   id="staff-role-reason"
+                  {...roleForm.bind('reason')}
                   required
                   maxLength={500}
                   value={reason}
-                  onChange={(event) => setReason(event.target.value)}
+                  onChange={(event) => {
+                    if (!validationOwner.current && !actionRef.current)
+                      setReason(event.target.value);
+                  }}
+                />
+                <CatalogueFieldFeedback
+                  id={roleForm.errorId('reason')}
+                  error={roleForm.errors.reason}
+                  message={roleMessages.reason}
                 />
                 <div className="flex gap-2">
-                  <Button
-                    type="submit"
-                    disabled={
-                      rolesDisabled ||
-                      !reason.trim() ||
-                      roleIds.some((id) => !roles.some((role) => role.roleId === id))
-                    }
-                  >
-                    {label('saveRoles')}
-                  </Button>
+                  <CatalogueSaveButton
+                    label={label('saveRoles')}
+                    pending={roleForm.pending}
+                    disabled={rolesDisabled}
+                  />
                   <Button type="button" variant="outline" onClick={() => setEditing(null)}>
                     {label('cancel')}
                   </Button>
@@ -843,6 +1005,16 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
             ((action.path === '/api/admin/users/create-staff' || action.path.endsWith('/roles')) &&
               (optionsLoading || optionsError))
           }
+          onDenied={() => denyAccess()}
+          onValidationError={(fields) => {
+            if (actionGeneration !== workGeneration.current || actionRef.current !== action)
+              return false;
+            return action.path === '/api/admin/users/create-staff'
+              ? createErrors(fields)
+              : action.path.endsWith('/roles')
+                ? roleErrors(fields)
+                : false;
+          }}
           onClose={() => {
             if (actionGeneration === workGeneration.current && actionRef.current === action)
               clearAction();

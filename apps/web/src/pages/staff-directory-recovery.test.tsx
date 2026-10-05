@@ -68,7 +68,7 @@ async function click(label: string) {
   );
   expect(button, label).toBeDefined();
   await act(async () => button!.click());
-  if (label === 'Save team' || label === 'Save assignment rules') {
+  if (label === 'Save team' || label === 'Save assignment rules' || label === 'Save roles') {
     await vi.dynamicImportSettled();
     await act(async () => {});
   }

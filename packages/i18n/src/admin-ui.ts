@@ -3,6 +3,15 @@ import type { I18nDictionary, Locale } from './index.js';
 import { t as sharedText } from './crm.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'admin.staff.invalidUsername': 'ایمیل معتبر یا شماره موبایل با کد کشور وارد کنید.',
+  'admin.staff.invalidName': 'نام را بین ۱ تا ۱۰۰ نویسه وارد کنید.',
+  'admin.staff.invalidRoles': 'فقط نقش‌های موجود را انتخاب کنید.',
+  'admin.staff.invalidActivation': 'ارسال پیوند فعال‌سازی به ایمیل معتبر نیاز دارد.',
+  'admin.staff.invalidReason': 'دلیل تغییر نقش را بین ۱ تا ۵۰۰ نویسه وارد کنید.',
+  'admin.staff.validationUnavailable': 'اعتبارسنجی فرم در دسترس نیست. دوباره تلاش کنید.',
+  'admin.roles.effective.invalidUserId': 'شناسه کارمند را وارد کنید.',
+  'admin.roles.effective.validationUnavailable':
+    'اعتبارسنجی شناسه در دسترس نیست. دوباره تلاش کنید.',
   'admin.stepUp.required': 'این اقدام حساس نیاز به تأیید دوباره هویت دارد.',
   'admin.stepUp.help':
     'کد یک‌بارمصرف را به راه ارتباطی ثبت‌شده شما می‌فرستیم. پس از تأیید، همین اقدام انجام می‌شود.',
@@ -1703,6 +1712,14 @@ export const fa: I18nDictionary = {
   'admin.approvals.walletReceipts': 'نمایش رسیدهای کیف پول',
 };
 export const en: I18nDictionary = {
+  'admin.staff.invalidUsername': 'Enter a valid email or mobile number with country code.',
+  'admin.staff.invalidName': 'Enter a name between 1 and 100 characters.',
+  'admin.staff.invalidRoles': 'Select only available roles.',
+  'admin.staff.invalidActivation': 'Activation links require a valid email address.',
+  'admin.staff.invalidReason': 'Enter a role change reason between 1 and 500 characters.',
+  'admin.staff.validationUnavailable': 'Form validation is unavailable. Please try again.',
+  'admin.roles.effective.invalidUserId': 'Enter the staff user ID.',
+  'admin.roles.effective.validationUnavailable': 'ID validation is unavailable. Please try again.',
   'admin.stepUp.required': 'Sensitive action requires re-authentication.',
   'admin.stepUp.help':
     'We will send a one-time code to your registered contact. Verification continues this action.',
