@@ -1,3 +1,4 @@
+import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import {
@@ -14,6 +15,11 @@ import {
   ListPage,
   ScrollArea,
   StatusTimeline,
+  TextCell,
+  DateCell,
+  NumberCell,
+  CurrencyCell,
+  StatusCell,
 } from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { type ElectricityStaffDecisionReview } from '@barghsa/shared/finance';
@@ -710,9 +716,9 @@ export default function AdminElectricityOrdersPage({
           }
         />
         {time.notice}
-        <div className="grid gap-5 xl:grid-cols-[minmax(16rem,1fr)_minmax(24rem,2fr)]">
+        <div className="grid min-w-0 gap-5">
           <div
-            className="space-y-3"
+            className="min-w-0 space-y-3"
             aria-label={copy(queueView === 'conversations' ? 'conversationView' : 'queue')}
           >
             <ListPage.Content
@@ -737,25 +743,165 @@ export default function AdminElectricityOrdersPage({
                 <p>{copy(queueView === 'conversations' ? 'emptyConversations' : 'empty')}</p>
               }
             >
-              {orders.map((order) => (
-                <Button
-                  key={order.orderId}
-                  variant={selectedId === order.orderId ? 'secondary' : 'outline'}
-                  className="h-auto w-full justify-start whitespace-normal p-4 text-start"
-                  disabled={pending.current || !!action || uncertain}
-                  onClick={() => selectOrder(order.orderId)}
-                >
-                  <span className="space-y-1">
-                    <strong className="block">{order.customerName}</strong>
-                    <span className="block text-xs">{order.orderId}</span>
-                    <span className="block text-xs">
-                      {queueView === 'conversations' && order.latestCommentAt
-                        ? time.format(order.latestCommentAt)
-                        : `${copy(`priority.${order.priority ?? 'normal'}`)} · ${numbers.number(order.ageHours ?? 0)} ${copy('hours')}`}
-                    </span>
-                  </span>
-                </Button>
-              ))}
+              {orders.length > 0 && (
+                <OperationalQueueTable
+                  locale={locale}
+                  rows={orders.map((order) => ({ ...order, id: order.orderId }))}
+                  caption={copy(
+                    queueView === 'conversations' ? 'conversationDirectory' : 'reviewDirectory'
+                  )}
+                  scrollLabel={copy(
+                    queueView === 'conversations' ? 'conversationDirectory' : 'reviewDirectory'
+                  )}
+                  nameHeader={copy('customer')}
+                  renderName={(order) => (
+                    <>
+                      <TextCell value={order.customerName} />
+                      <span className="block font-mono text-xs font-normal">
+                        <TextCell value={order.orderId} />
+                      </span>
+                    </>
+                  )}
+                  fields={[
+                    ...(queueView === 'conversations'
+                      ? [
+                          {
+                            id: 'comment',
+                            label: copy('latestComment'),
+                            render: (order: ReviewOrder) => (
+                              <DateCell
+                                value={order.latestCommentAt}
+                                format={(value) => time.format(value)}
+                              />
+                            ),
+                          },
+                        ]
+                      : [
+                          {
+                            id: 'priority',
+                            label: copy('priorityLabel'),
+                            render: (order: ReviewOrder) => (
+                              <TextCell value={copy(`priority.${order.priority ?? 'normal'}`)} />
+                            ),
+                          },
+                          {
+                            id: 'age',
+                            label: copy('ageLabel'),
+                            render: (order: ReviewOrder) => (
+                              <NumberCell
+                                value={order.ageHours}
+                                locale={locale}
+                                numerals={
+                                  numbers.numberStyle === 'western'
+                                    ? 'latn'
+                                    : numbers.numberStyle === 'persian'
+                                      ? 'arabext'
+                                      : locale === 'fa'
+                                        ? 'arabext'
+                                        : 'latn'
+                                }
+                              />
+                            ),
+                          },
+                        ]),
+                    {
+                      id: 'commercial',
+                      label: copy('commercial'),
+                      render: (order) =>
+                        order.commercialStatus ? (
+                          <StatusCell
+                            state={order.commercialStatus}
+                            label={statusLabel(order.commercialStatus, 'commercial')}
+                            tone={commercialStatusTone(order.commercialStatus)}
+                          />
+                        ) : (
+                          <TextCell value={null} />
+                        ),
+                    },
+                    {
+                      id: 'financial',
+                      label: copy('financial'),
+                      render: (order) =>
+                        order.financialStatus ? (
+                          <StatusCell
+                            state={order.financialStatus}
+                            label={statusLabel(order.financialStatus, 'financial')}
+                            tone={financialStatusTone(order.financialStatus)}
+                          />
+                        ) : (
+                          <TextCell value={null} />
+                        ),
+                    },
+                    {
+                      id: 'period',
+                      label: copy('period'),
+                      render: (order) => (
+                        <TextCell
+                          value={
+                            order.periodStart && order.periodEnd
+                              ? periodText(order.periodStart, order.periodEnd)
+                              : null
+                          }
+                        />
+                      ),
+                    },
+                    {
+                      id: 'quantity',
+                      label: copy('quantity'),
+                      render: (order) => (
+                        <TextCell
+                          value={order.totalKwh ? `${numbers.irrDigits(order.totalKwh)} kWh` : null}
+                        />
+                      ),
+                    },
+                    {
+                      id: 'total',
+                      label: copy('price'),
+                      render: (order) => (
+                        <CurrencyCell amount={order.totalIrR} format={numbers.money} />
+                      ),
+                    },
+                    {
+                      id: 'paid',
+                      label: copy('paid'),
+                      render: (order) => (
+                        <CurrencyCell amount={order.paidIrR} format={numbers.money} />
+                      ),
+                    },
+                    {
+                      id: 'submitted',
+                      label: copy('submitted'),
+                      render: (order) => (
+                        <DateCell
+                          value={order.submittedAt}
+                          format={(value) => time.format(value)}
+                        />
+                      ),
+                    },
+                  ]}
+                  actionHeader={copy('actions')}
+                  renderActions={(order) => (
+                    <Button
+                      variant={selectedId === order.orderId ? 'secondary' : 'outline'}
+                      className="min-h-11"
+                      disabled={pending.current || !!action || uncertain}
+                      aria-pressed={selectedId === order.orderId}
+                      onClick={() => selectOrder(order.orderId)}
+                    >
+                      {copy('openOrder')}
+                      <span className="sr-only">
+                        : {order.customerName} · {order.orderId}
+                      </span>
+                    </Button>
+                  )}
+                  cardHeading="h2"
+                  loading={loading}
+                  emptyMessage={copy(
+                    queueView === 'conversations' ? 'emptyConversations' : 'empty'
+                  )}
+                  tableClassName="min-w-[76rem]"
+                />
+              )}
             </ListPage.Content>
             <ListPage.Pagination
               kind="cursor"

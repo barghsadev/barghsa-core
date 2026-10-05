@@ -5,7 +5,12 @@ import AdminElectricityOrdersPage from './AdminElectricityOrdersPage.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ money: String, number: String }),
+  useNumberFormatting: () => ({
+    money: String,
+    number: String,
+    irrDigits: String,
+    numberStyle: 'western',
+  }),
 }));
 
 it('shows the staff queue, order financial facts, product lines and decisions', async () => {
@@ -167,9 +172,16 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
       '/api/staff/electricity/orders/84000000-0000-4000-8000-000000000001',
       expect.any(Object)
     );
-    const statusLabels = [...container.querySelectorAll('dl dt')].map((item) => item.textContent);
+    const detailContent = [...container.querySelectorAll('h2')]
+      .find((heading) => heading.textContent === 'Order detail')!
+      .closest('[data-slot=card-content]')!;
+    const statusLabels = [...detailContent.querySelectorAll('dl dt')].map(
+      (item) => item.textContent
+    );
     expect(statusLabels.slice(0, 2)).toEqual(['Order status', 'Financial status']);
-    const statusValues = [...container.querySelectorAll('dl dd')].map((item) => item.textContent);
+    const statusValues = [...detailContent.querySelectorAll('dl dd')].map(
+      (item) => item.textContent
+    );
     expect(statusValues.slice(0, 2)).toEqual(['Awaiting staff review', 'Unpaid']);
     expect(container.textContent).toContain('Thermal electricity');
     const thermalRow = [...container.querySelectorAll('tr')].find((row) =>

@@ -32,3 +32,7 @@ Publication, exact remote SHA, immutable queued captures and deployment/Telegram
 `v0.1.20` completed at `2026-10-05T22:30:36.531424+00:00`, with healthy exact live commit `0e2d02cc2aae76b855fbd5fa6b18e4bdf68bc32e`. Persian Telegram note `61` and reviewed screenshots `62`, `63` are confirmed. Its report and external receipt record completion.
 
 External evidence: `~/.local/state/barghsa-manual-batches/product-catalogue-query/`.
+
+## Deployment confirmed
+
+`v0.1.21` completed at `2026-10-05T23:05:01.590678+00:00`, with healthy exact live commit `10b4172839e54b76a4023e6f33740dd73725bfde`. Persian Telegram note `64` and reviewed screenshots `65`, `66` are confirmed. External `deployment-completed.json` records the readback.

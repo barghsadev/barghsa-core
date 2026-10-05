@@ -26,7 +26,12 @@ vi.mock('../components/SavingOrderComments.js', () => ({
   ElectricityOrderComments: () => null,
 }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ money: String, number: String }),
+  useNumberFormatting: () => ({
+    money: String,
+    number: String,
+    irrDigits: String,
+    numberStyle: 'western',
+  }),
 }));
 vi.mock('../components/TeamActionDialog.js', () => ({
   TeamActionDialog: () => <div role="dialog" />,

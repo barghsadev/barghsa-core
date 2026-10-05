@@ -120,7 +120,7 @@ for (const [locale, theme] of [
     await expect(page.locator('#admin-content')).not.toContainText(
       'Captured <script> delivery correction'
     );
-    await page.getByRole('button', { name: /^Correction Buyer/ }).click();
+    await page.getByRole('button', { name: new RegExp(correctionOrder) }).click();
     await expect(
       page.locator('#admin-content dd').filter({ hasText: /^Correction Buyer$/ })
     ).toBeVisible();
