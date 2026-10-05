@@ -8,6 +8,7 @@ import json
 import os
 from pathlib import Path
 import re
+import secrets
 import subprocess
 import sys
 import urllib.error
@@ -24,9 +25,9 @@ def release_details(root, commit):
     if not re.fullmatch(r"[a-f0-9]{40}", commit):
         raise ValueError("Release commit must be a complete Git SHA")
     notes = (root / "releases" / f"{version}.md").read_text().strip()
-    if not notes.startswith(f"Barghsa v{version}\n") or not re.search(r"(?m)^- \S", notes):
+    if not notes.startswith(f"برقسا نسخه {version}\n") or not re.search(r"(?m)^- \S", notes):
         raise ValueError("Release notes need the matching version heading and a list of changes")
-    text = f"{notes}\n\nCommit: {commit}"
+    text = f"{notes}\n\nشناسه کد: {commit}"
     if len(text.encode("utf-16-le")) // 2 > 4096:
         raise ValueError("Release notes exceed Telegram's message length limit")
     return {"version": version, "commit": commit}, text
@@ -50,9 +51,17 @@ def telegram_config():
     return token, chat
 
 
-def request_json(url, payload=None):
+def request_json(url, payload=None, photo=None):
     request = urllib.request.Request(url, headers={"Cache-Control": "no-cache"})
-    if payload is not None:
+    if photo is not None:
+        boundary = "barghsa-" + secrets.token_hex(16)
+        parts = []
+        for key, value in payload.items():
+            parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"\r\n\r\n{value}\r\n'.encode())
+        parts.extend([f'--{boundary}\r\nContent-Disposition: form-data; name="photo"; filename="screenshot.png"\r\nContent-Type: image/png\r\n\r\n'.encode(), photo, f'\r\n--{boundary}--\r\n'.encode()])
+        request.data = b"".join(parts)
+        request.add_header("Content-Type", f"multipart/form-data; boundary={boundary}")
+    elif payload is not None:
         request.data = json.dumps(payload).encode()
         request.add_header("Content-Type", "application/json")
     try:
@@ -65,8 +74,8 @@ def request_json(url, payload=None):
         raise ValueError("Remote request did not return a verifiable JSON response") from None
 
 
-def telegram_call(token, method, payload):
-    result = request_json(f"https://api.telegram.org/bot{token}/{method}", payload)
+def telegram_call(token, method, payload, photo=None):
+    result = request_json(f"https://api.telegram.org/bot{token}/{method}", payload, photo)
     if not isinstance(result, dict) or result.get("ok") is not True or not isinstance(result.get("result"), dict):
         raise ValueError("Telegram did not confirm the request")
     return result["result"]
@@ -113,11 +122,48 @@ def announce(metadata, text, token, destination, state_dir, retry_unknown=False)
         print(f"Staging v{metadata['version']} verified; Telegram message {sent['message_id']} confirmed")
 
 
+def screenshot_bytes(path):
+    data = path.read_bytes()
+    if not data.startswith(b"\x89PNG\r\n\x1a\n") or len(data) > 10 * 1024 * 1024:
+        raise ValueError("Screenshots must be PNG images no larger than 10 MB")
+    return data
+
+
+def announce_screenshots(metadata, token, destination, state_dir, images, retry_unknown=False):
+    channel = telegram_call(token, "getChat", {"chat_id": destination})
+    verify_channel(channel, destination)
+    if request_json(f"{SITE}/release.json?commit={metadata['commit']}") != metadata:
+        raise ValueError("Deployed release changed; screenshots were not announced")
+    state_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+    with (state_dir / ".notification.lock").open("a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        for data in images:
+            receipt = {**metadata, "chat_id": channel["id"], "photo_sha256": hashlib.sha256(data).hexdigest()}
+            key = hashlib.sha256(json.dumps(receipt, sort_keys=True).encode()).hexdigest()
+            path = state_dir / f"photo-{key}.json"
+            if path.exists():
+                prior = json.loads(path.read_text())
+                if any(prior.get(field) != value for field, value in receipt.items()):
+                    raise ValueError("Saved screenshot receipt differs from this release")
+                if prior.get("status") == "sent":
+                    continue
+                if not retry_unknown:
+                    raise ValueError("Previous screenshot outcome is unknown; inspect the channel before using --retry-unknown")
+            path.write_text(json.dumps({**receipt, "status": "unknown"}) + "\n")
+            caption = f"تصویر محیط آزمایشی برقسا، نسخه {metadata['version']}"
+            sent = telegram_call(token, "sendPhoto", {"chat_id": channel["id"], "caption": caption}, data)
+            if type(sent.get("message_id")) is not int or sent["message_id"] <= 0 or sent.get("caption") != caption or sent.get("chat", {}).get("id") != channel["id"] or not sent.get("photo"):
+                raise ValueError("Telegram screenshot receipt did not match this release")
+            path.write_text(json.dumps({**receipt, "status": "sent", "message_id": sent["message_id"]}) + "\n")
+            print(f"Release screenshot confirmed as Telegram message {sent['message_id']}")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--commit", required=True)
     parser.add_argument("--check", action="store_true", help="Validate release notes and Telegram channel before deploying")
     parser.add_argument("--retry-unknown", action="store_true", help="Retry only after manually checking the channel for a prior message")
+    parser.add_argument("--screenshot", action="append", type=Path, default=[], help="Attach a PNG screenshot after the Persian release notes; repeat for multiple images")
     args = parser.parse_args()
     metadata, text = release_details(ROOT, args.commit)
     current = subprocess.check_output(["rtk", "proxy", "git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
@@ -125,12 +171,15 @@ def main():
     if current != args.commit or dirty:
         raise ValueError("Release checkout changed; commit the batch and retry from its exact HEAD")
     token, destination = telegram_config()
+    images = [screenshot_bytes(path) for path in args.screenshot]
     if args.check:
         verify_channel(telegram_call(token, "getChat", {"chat_id": destination}), destination)
         print(f"Release preflight passed for v{metadata['version']}")
         return
     state = Path(os.environ.get("BARGHSA_RELEASE_STATE_DIR", "~/.local/state/barghsa-staging-releases")).expanduser()
     announce(metadata, text, token, destination, state, args.retry_unknown)
+    if images:
+        announce_screenshots(metadata, token, destination, state, images, args.retry_unknown)
 
 
 if __name__ == "__main__":

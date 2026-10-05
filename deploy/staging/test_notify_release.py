@@ -1,4 +1,5 @@
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path
@@ -21,7 +22,7 @@ class ReleaseNotificationTests(unittest.TestCase):
         self.addCleanup(self.directory.cleanup)
         self.metadata = {"version": "0.1.0", "commit": "a" * 40}
         self.channel = {"id": -100123, "type": "channel", "username": "barghsa_releases"}
-        self.text = "Barghsa v0.1.0\n\n- A verified batch change."
+        self.text = "برقسا نسخه 0.1.0\n\n- A verified batch change."
 
     def call(self, method, payload):
         if method == "getChat":
@@ -81,11 +82,11 @@ class ReleaseNotificationTests(unittest.TestCase):
         (self.root / "releases").mkdir()
         (self.root / "package.json").write_text(json.dumps({"version": "0.1.0"}))
         notes = self.root / "releases/0.1.0.md"
-        notes.write_text("Barghsa v0.1.0\n\n- Verified change.")
+        notes.write_text("برقسا نسخه 0.1.0\n\n- Verified change.")
         metadata, text = release.release_details(self.root, "a" * 40)
         self.assertEqual(metadata, self.metadata)
         self.assertIn("- Verified change.", text)
-        for invalid in ["Barghsa v0.0.9\n\n- Stale notes.", "Barghsa v0.1.0\nNo changes", "Barghsa v0.1.0\n- " + "x" * 4096]:
+        for invalid in ["برقسا نسخه 0.0.9\n\n- Stale notes.", "برقسا نسخه 0.1.0\nNo changes", "برقسا نسخه 0.1.0\n- " + "x" * 4096]:
             notes.write_text(invalid)
             with self.assertRaises(ValueError):
                 release.release_details(self.root, "a" * 40)
@@ -106,6 +107,38 @@ class ReleaseNotificationTests(unittest.TestCase):
             config.write_text(json.dumps({"bot_token": "malformed", "chat_id": "@barghsa_releases"}))
             with self.assertRaisesRegex(ValueError, "missing or malformed"):
                 release.telegram_config()
+
+    def test_screenshot_multipart_preserves_bytes_and_persian_caption(self):
+        data = b"\x89PNG\r\n\x1a\n" + b"synthetic image bytes"
+        caption = "تصویر محیط آزمایشی برقسا، نسخه 0.1.0"
+        with patch.object(release.urllib.request, "urlopen", return_value=io.BytesIO(b'{"ok":true}')) as send:
+            self.assertEqual(release.request_json("https://example.test", {"chat_id": -100123, "caption": caption}, data), {"ok": True})
+        request = send.call_args.args[0]
+        self.assertIn(data, request.data)
+        self.assertIn(caption.encode(), request.data)
+        self.assertIn(b'name="photo"; filename="screenshot.png"', request.data)
+        self.assertTrue(request.get_header("Content-type").startswith("multipart/form-data; boundary="))
+
+    def test_screenshots_confirm_once_and_reject_a_wrong_receipt(self):
+        data = b"\x89PNG\r\n\x1a\n" + b"synthetic image bytes"
+        def send(token, method, payload, photo=None):
+            if method == "getChat":
+                return self.channel
+            self.assertEqual(method, "sendPhoto")
+            self.assertEqual(photo, data)
+            return {"message_id": 13, "caption": payload["caption"], "chat": self.channel, "photo": [{"file_id": "synthetic"}]}
+        with patch.object(release, "telegram_call", side_effect=send) as api, patch.object(release, "request_json", return_value=self.metadata):
+            for _ in range(2):
+                release.announce_screenshots(self.metadata, "synthetic", "@barghsa_releases", self.root, [data])
+            self.assertEqual([call.args[1] for call in api.call_args_list].count("sendPhoto"), 1)
+        other = self.root / "unknown"
+        with patch.object(release, "telegram_call", side_effect=[self.channel, {"message_id": 13}]), patch.object(release, "request_json", return_value=self.metadata):
+            with self.assertRaisesRegex(ValueError, "screenshot receipt did not match"):
+                release.announce_screenshots(self.metadata, "synthetic", "@barghsa_releases", other, [data])
+        with patch.object(release, "telegram_call", return_value=self.channel) as api, patch.object(release, "request_json", return_value=self.metadata):
+            with self.assertRaisesRegex(ValueError, "screenshot outcome is unknown"):
+                release.announce_screenshots(self.metadata, "synthetic", "@barghsa_releases", other, [data])
+            self.assertEqual(api.call_count, 1)
 
     def test_deployment_announces_only_after_success_and_preflight_precedes_images(self):
         # Execute the real deployment script against subprocess stubs, with no network or Docker writes.

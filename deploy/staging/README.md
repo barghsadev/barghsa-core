@@ -46,8 +46,8 @@ direct push to `main`. Increment the root `package.json` version and add
 `releases/<version>.md` in the same batch commit. Use Semantic Versioning:
 PATCH for fixes and small compatible batches, MINOR for new functionality,
 and MAJOR for breaking changes. The initial numbered release is `0.1.0`.
-Never reuse a published version for a different batch. The release notes start
-with `Barghsa v<version>` and list the concrete changes as Markdown bullets.
+Never reuse a published version for a different batch. The release notes are in Persian, start with `برقسا نسخه <version>` and list
+concrete changes as Markdown bullets. Screenshot captions are also Persian.
 
 The login page reads the root version at build time. Both web builds emit
 `release.json` with that version and the exact commit. Deployment passes the
@@ -126,3 +126,16 @@ Check resource use with `docker stats`, `df -h`, and `docker system df`.
 ClamAV may take several minutes to download signatures on first boot. Keep
 one instance of each stateful service; do not scale PostgreSQL or SeaweedFS
 with this single-host Compose file.
+
+Attach relevant screenshots when available after the deployment has been verified:
+
+```sh
+python3 deploy/staging/notify-release.py --commit "$(git rev-parse HEAD)" \
+  --screenshot /absolute/path/login-desktop.png \
+  --screenshot /absolute/path/login-mobile.png
+```
+
+The confirmed release text is not reposted. Each PNG image receives a Persian
+caption with the same release version, a verified Telegram receipt and its own
+duplicate/uncertain-outcome guard. Capture the deployed public UI or already
+reviewed task screenshots; keep image files outside the committed checkout.

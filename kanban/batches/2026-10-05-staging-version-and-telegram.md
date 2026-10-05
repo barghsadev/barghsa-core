@@ -36,10 +36,10 @@ Validation completed before publication:
 
 - Root build: seven successful tasks; root typecheck: eleven successful tasks.
 - Web server, shutdown and retained login source tests: 48 cases pass.
-- Notification and real deployment-script subprocess tests: eight cases pass,
+- Notification and real deployment-script subprocess tests: ten cases pass,
   covering failed preflight, failed rollout, verified announcement, duplicate
   suppression, wrong live identity, wrong receipt, uncertain outcomes, channel
-  validation, private configuration and release-note validation.
+  validation, private configuration, Persian release-note validation, multipart PNG upload and screenshot receipt/duplicate/unknown gates.
 - CI compatibility repair: all 14 complete-file tests pass; web typecheck and
   scoped lint pass after the test-only repair.
 - Browser: eight Chromium/mobile Safari cases pass with zero retries, including
@@ -79,3 +79,11 @@ release notes, build and review, pass related checks, commit and normally push t
 the confirmed Telegram receipt. Use GitHub CLI and no PRs. Do not reuse a published
 version for a different batch. Existing scheduler/supervisor state and generated
 kanban files are unchanged.
+
+The user then requested Persian release notes and screenshots before the first
+announcement. The second rollout became healthy at `99d15a240fb0`, but notification
+correctly stopped because the checkout was changing to incorporate that request.
+No English announcement was sent. The same unshipped version now uses Persian
+notes and supports optional PNG screenshots with matching Persian version captions,
+per-image receipt validation, duplicate suppression and uncertainty retention.
+Final production screenshot and publication outcomes are recorded externally.
