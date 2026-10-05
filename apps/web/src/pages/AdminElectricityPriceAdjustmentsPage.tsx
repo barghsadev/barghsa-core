@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
@@ -242,6 +243,10 @@ function PriceWorkspace({
   const locale = useLocale();
   const actor = useAccountUser();
   const numbers = useNumberFormatting(locale);
+  const time = useAccountTime(locale);
+  const timezone = time.status === 'ready' ? time.timezone : null;
+  const currentTimezone = useRef(timezone);
+  currentTimezone.current = timezone;
   const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
   const formCopy = (key: string) => appText(`electricity.priceForm.${key}`, locale);
   const scope = JSON.stringify([actor, contractId]);
@@ -281,8 +286,9 @@ function PriceWorkspace({
       const schemas = await import('../lib/electricity-price-form-schemas.js');
       return generation === reviewGeneration.current &&
         currentScope.current === scope &&
-        JSON.stringify(form.getValues()) === raw
-        ? schemas.priceProposalSchema(messages)
+        JSON.stringify(form.getValues()) === raw &&
+        currentTimezone.current === timezone
+        ? schemas.priceProposalSchema(messages, timezone)
         : schemas.inactivePriceSchema;
     },
     { defaultValues: emptyDraft, validationUnavailableMessage: formCopy('validationUnavailable') }
@@ -502,6 +508,7 @@ function PriceWorkspace({
   function propose() {
     if (
       !data ||
+      !timezone ||
       !data.canPropose ||
       data.adjustments.some((row) => row.status === 'proposed') ||
       loading ||
@@ -533,11 +540,14 @@ function PriceWorkspace({
       currentScope.current === scope &&
       generation === reviewGeneration.current &&
       owner.current === token;
-    const fresh = () => authorized() && raw === JSON.stringify(form.getValues());
+    const fresh = () =>
+      authorized() &&
+      raw === JSON.stringify(form.getValues()) &&
+      currentTimezone.current === timezone;
     void form
       .handleSubmit(async (draft) => {
         if (!fresh() || JSON.stringify(draft) !== raw) return;
-        const effectiveFrom = priceEffectiveFrom(draft.effectiveFrom);
+        const effectiveFrom = priceEffectiveFrom(draft.effectiveFrom, timezone);
         const percentageBps = percentToBps(draft.percentage);
         if (!effectiveFrom || !percentageBps) return;
         const proposal = {
@@ -676,6 +686,7 @@ function PriceWorkspace({
     data?.adjustments.some((adjustment) => adjustment.status === 'proposed') ?? false;
   return (
     <ListPage role="region" aria-label={copy('listTitle')}>
+      {time.notice}
       <ListPage.Toolbar>
         <Button
           variant="outline"
@@ -719,7 +730,7 @@ function PriceWorkspace({
         <div className="space-y-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-sm text-muted-foreground">
-              {copy('termEnds')}: {new Date(data.periodEnd).toLocaleString(locale)}
+              {copy('termEnds')}: {time.format(data.periodEnd)}
             </p>
           </div>
           {!data.canPropose && !proposed ? (
@@ -751,7 +762,12 @@ function PriceWorkspace({
                           name: 'effectiveFrom',
                           id: 'price-effective',
                           label: 'effective',
-                          help: formCopy('dateHelp'),
+                          help: (
+                            <>
+                              {formCopy('dateHelp')} {copy('dateZone')}:{' '}
+                              <bdi dir="ltr">{timezone ?? '—'}</bdi>
+                            </>
+                          ),
                         },
                         {
                           name: 'reason',
@@ -779,7 +795,7 @@ function PriceWorkspace({
                                 {...field}
                                 type={name === 'effectiveFrom' ? 'datetime-local' : 'text'}
                                 inputMode={name === 'percentage' ? 'decimal' : undefined}
-                                disabled={frozen}
+                                disabled={frozen || (name === 'effectiveFrom' && !timezone)}
                               />
                             </FormControl>
                             <FormDescription>{help}</FormDescription>
@@ -793,6 +809,7 @@ function PriceWorkspace({
                       <Button
                         type="submit"
                         disabled={
+                          !timezone ||
                           saving ||
                           loading ||
                           !!loadError ||
@@ -839,8 +856,7 @@ function PriceWorkspace({
                       <span>{copy(`status.${adjustment.status}`)}</span>
                     </div>
                     <p>
-                      {copy('effective')}:{' '}
-                      {new Date(adjustment.effectiveFrom).toLocaleString(locale)}
+                      {copy('effective')}: {time.format(adjustment.effectiveFrom)}
                     </p>
                     <p>
                       {copy('reason')}: {adjustment.reason}
@@ -908,6 +924,7 @@ function PriceWorkspace({
           summary={
             review ? (
               <PriceAdjustmentFinancialReview
+                formatTime={(value) => time.format(value)}
                 calculation={review.data.calculation}
                 profileId={review.data.profileId}
                 periodStart={review.data.periodStart}
@@ -916,6 +933,7 @@ function PriceWorkspace({
               />
             ) : selectedAdjustment && data ? (
               <PriceAdjustmentFinancialReview
+                formatTime={(value) => time.format(value)}
                 calculation={selectedAdjustment.calculation}
                 profileId={data.profileId}
                 periodEnd={data.periodEnd}
@@ -974,7 +992,9 @@ function PriceAdjustmentFinancialReview({
   periodStart,
   periodEnd,
   locale,
+  formatTime,
 }: {
+  formatTime: (value: string) => string;
   calculation: ElectricityPriceAdjustmentCalculation;
   profileId: string;
   periodStart?: string;
@@ -997,15 +1017,15 @@ function PriceAdjustmentFinancialReview({
               {
                 id: 'start',
                 label: copy('termStarts'),
-                value: new Date(periodStart).toLocaleString(locale),
+                value: formatTime(periodStart),
               },
             ]
           : []),
-        { id: 'end', label: copy('termEnds'), value: new Date(periodEnd).toLocaleString(locale) },
+        { id: 'end', label: copy('termEnds'), value: formatTime(periodEnd) },
         {
           id: 'effective',
           label: copy('effective'),
-          value: new Date(quote.effectiveFrom).toLocaleString(locale),
+          value: formatTime(quote.effectiveFrom),
         },
         {
           id: 'percentage',

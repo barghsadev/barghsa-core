@@ -14,8 +14,21 @@ import {
   priceState,
 } from '../test/electricity-change-fixtures.js';
 
+vi.mock('../hooks/useAccountTime.js', () => ({
+  useAccountTime: () => ({
+    status: 'ready',
+    timezone: 'Asia/Tehran',
+    format: String,
+    notice: null,
+  }),
+}));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ irrDigits: String, number: String }),
+  useNumberFormatting: () => ({
+    irrDigits: String,
+    number: String,
+    money: String,
+    numberStyle: 'western',
+  }),
 }));
 const captured = vi.hoisted(() => ({
   action: null as TeamAction | null,

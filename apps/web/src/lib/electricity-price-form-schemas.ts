@@ -15,7 +15,10 @@ export function priceContractSchema(message: string) {
       ctx.issues.push({ code: 'custom', input: value, path: ['contractId'], message });
   });
 }
-export function priceProposalSchema(messages: Record<keyof PriceDraft, string>) {
+export function priceProposalSchema(
+  messages: Record<keyof PriceDraft, string>,
+  timezone: string | null
+) {
   return z.custom<PriceDraft>().check((ctx) => {
     const values = ctx.value;
     const invalid = (name: keyof PriceDraft) =>
@@ -27,7 +30,10 @@ export function priceProposalSchema(messages: Record<keyof PriceDraft, string>) 
       });
     if (typeof values?.percentage !== 'string' || percentToBps(values.percentage) === null)
       invalid('percentage');
-    if (typeof values?.effectiveFrom !== 'string' || !priceEffectiveFrom(values.effectiveFrom))
+    if (
+      typeof values?.effectiveFrom !== 'string' ||
+      !priceEffectiveFrom(values.effectiveFrom, timezone)
+    )
       invalid('effectiveFrom');
     if (
       typeof values?.reason !== 'string' ||

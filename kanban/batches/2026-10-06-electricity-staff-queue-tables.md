@@ -38,3 +38,7 @@ External evidence: `~/.local/state/barghsa-manual-batches/electricity-staff-queu
 ## Following repair
 
 The separate customer contract-link defect is repaired in `v0.1.23`; see `2026-10-06-customer-contract-deep-links.md` for passing source/journey evidence. Its customer fixture repairs belong to that batch.
+
+## Deployment confirmed
+
+`v0.1.22` completed at `2026-10-05T23:28:21.385967+00:00`, with healthy exact live commit `824075a5279d02e6d15e80b944fe85a132ae28e3`. Persian Telegram note `67` and captures `68`, `69` are confirmed. External `deployment-completed.json` records the readback.

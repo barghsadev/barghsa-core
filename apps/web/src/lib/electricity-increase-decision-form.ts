@@ -1,3 +1,4 @@
+import { datetimeLocalToIso } from './due-at-override.js';
 import { parseElectricityIncreaseStaffDecisionReview } from '@barghsa/shared/finance';
 import { ErrorCodes } from '@barghsa/shared/errors';
 export { definitiveStaffDecisionRejection } from './electricity-staff-reason-form.js';
@@ -31,23 +32,21 @@ export interface IncreaseDecisionContext {
   contractState: string;
 }
 
-/** datetime-local keeps the existing browser-local timezone interpretation. */
-export function increaseEffectiveFrom(raw: string): string | undefined | null {
+/** Resolve the staff account's wall time; an empty field keeps the server-selected date. */
+export function increaseEffectiveFrom(
+  raw: string,
+  timezone: string | null
+): string | undefined | null {
   if (!raw) return undefined;
-  const parts = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{1,3}))?)?$/.exec(raw);
-  if (!parts) return null;
-  const date = new Date(raw);
-  if (
-    !Number.isFinite(date.getTime()) ||
-    date.getFullYear() !== Number(parts[1]) ||
-    date.getMonth() + 1 !== Number(parts[2]) ||
-    date.getDate() !== Number(parts[3]) ||
-    date.getHours() !== Number(parts[4]) ||
-    date.getMinutes() !== Number(parts[5]) ||
-    date.getSeconds() !== Number(parts[6] ?? 0)
-  )
-    return null;
-  return date.toISOString();
+  if (!timezone) return null;
+  const parts = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})(?::(\d{2})(?:\.(\d{1,3}))?)?$/.exec(raw);
+  if (!parts || Number(parts[2] ?? 0) > 59) return null;
+  const minute = datetimeLocalToIso(parts[1]!, timezone);
+  return minute
+    ? new Date(
+        Date.parse(minute) + Number(parts[2] ?? 0) * 1000 + Number((parts[3] ?? '').padEnd(3, '0'))
+      ).toISOString()
+    : null;
 }
 
 const sameTime = (left: unknown, right: string) =>

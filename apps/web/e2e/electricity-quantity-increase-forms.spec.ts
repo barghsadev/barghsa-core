@@ -189,7 +189,7 @@ for (const [locale, theme] of [
     await expect(date).toHaveValue('2026-10-13T12:00');
     expect(state.decisionPreviews).toHaveLength(1);
     expect(state.decisionPreviews[0]!.body).toEqual({
-      effectiveFrom: await page.evaluate(() => new Date('2026-10-13T12:00').toISOString()),
+      effectiveFrom: '2026-10-13T08:30:00.000Z',
     });
     await expect(rejectForm.locator('input,textarea')).toHaveValue('');
     await expect(approveForm).not.toContainText('PRIVATE_SERVER_VALIDATION_TEXT');

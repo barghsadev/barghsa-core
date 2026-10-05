@@ -62,8 +62,21 @@ vi.mock('../components/TeamActionDialog.js', async (importOriginal) => {
     },
   };
 });
+vi.mock('../hooks/useAccountTime.js', () => ({
+  useAccountTime: () => ({
+    status: 'ready',
+    timezone: 'Asia/Tehran',
+    format: String,
+    notice: null,
+  }),
+}));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ irrDigits: String, number: String }),
+  useNumberFormatting: () => ({
+    irrDigits: String,
+    number: String,
+    money: String,
+    numberStyle: 'western',
+  }),
 }));
 let root: Root | undefined;
 let host: HTMLDivElement;
@@ -168,7 +181,7 @@ it('focuses a touched invalid contract picker without making a private read', as
   const input = await fill('electricity-price-contract', 'not a UUID');
   await click('Open contract');
   await settled(() => expect(input.getAttribute('aria-invalid')).toBe('true'));
-  expect(document.activeElement).toBe(input);
+  await settled(() => expect(document.activeElement).toBe(input));
   expect(input.getAttribute('aria-describedby')).toContain('electricity-price-contract-message');
   expect(fetchMock).not.toHaveBeenCalled();
 });

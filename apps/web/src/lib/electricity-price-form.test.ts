@@ -30,7 +30,7 @@ it('validates the picker and four proposal inputs while preserving raw companion
     reason: 'reason',
     basis: 'basis',
   };
-  const schema = priceProposalSchema(messages);
+  const schema = priceProposalSchema(messages, 'Asia/Tehran');
   const raw = {
     percentage: '-2.50',
     effectiveFrom: '2026-10-06T12:00',

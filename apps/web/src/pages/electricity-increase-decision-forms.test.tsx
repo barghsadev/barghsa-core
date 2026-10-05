@@ -73,8 +73,17 @@ vi.mock('../components/TeamActionDialog.js', async (importOriginal) => {
     },
   };
 });
+const accountClock = vi.hoisted(() => ({ status: 'ready', timezone: 'Asia/Tehran' }));
+vi.mock('../hooks/useAccountTime.js', () => ({
+  useAccountTime: () => ({ ...accountClock, format: String, notice: null }),
+}));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ irrDigits: String, number: String }),
+  useNumberFormatting: () => ({
+    irrDigits: String,
+    number: String,
+    money: String,
+    numberStyle: 'western',
+  }),
 }));
 
 const publicError = (
@@ -108,6 +117,8 @@ afterEach(async () => {
   dialogs.length = 0;
   retryHandlers.length = 0;
   actorSnapshots.length = 0;
+  accountClock.status = 'ready';
+  accountClock.timezone = 'Asia/Tehran';
   vi.unstubAllGlobals();
 });
 async function render(fetchMock: ReturnType<typeof vi.fn>, actor = 'staff-1') {
@@ -178,7 +189,7 @@ it('links local rejection feedback, focuses it, and preserves the independent ap
   );
   const reason = container.querySelector<HTMLInputElement>('[id^="increase-reason-"]')!;
   expect(reason.getAttribute('aria-describedby')).toContain(`${reason.id}-message`);
-  expect(document.activeElement).toBe(reason);
+  await settled(() => expect(document.activeElement).toBe(reason));
   expect(date.value).toBe('2026-10-01T12:00');
   expect(fetchMock).toHaveBeenCalledTimes(1);
 });
@@ -274,7 +285,7 @@ it.each([200, 400])(
     await act(async () =>
       held.resolve(
         status === 200
-          ? Response.json(decisionReview('approve', '', new Date('2026-10-01T12:00').toISOString()))
+          ? Response.json(decisionReview('approve', '', '2026-10-01T08:30:00.000Z'))
           : Response.json(publicError(['effectiveFrom']), { status: 400 })
       )
     );
@@ -596,4 +607,59 @@ it('rejects a stale retry entry from the previous cursor without rebinding its c
   expect(container.querySelector('[role="dialog"]')).toBeNull();
   await click('Retry captured decision');
   expect(container.querySelector('[role="dialog"]')).not.toBeNull();
+});
+
+it('blocks unavailable approval time and rejects a preview resolved for an obsolete account zone', async () => {
+  accountClock.status = 'loading';
+  const { request, decisionReview } = increaseDecisionFixture();
+  const inputs: Array<{ effectiveFrom: string }> = [];
+  let finish!: (response: Response) => void;
+  const held = new Promise<Response>((resolve) => {
+    finish = resolve;
+  });
+  const fetchMock = vi.fn(async (path: string, init?: RequestInit) => {
+    if (path.endsWith('/approve/review')) {
+      const body = JSON.parse(String(init?.body)) as { effectiveFrom: string };
+      inputs.push(body);
+      return inputs.length === 1
+        ? held
+        : Response.json(decisionReview('approve', '', body.effectiveFrom));
+    }
+    return Response.json({ requests: [request], nextBefore: null });
+  });
+  await render(fetchMock);
+  const date = container.querySelector<HTMLInputElement>('[id^="increase-effective-"]')!;
+  const approveForm = container.querySelector<HTMLFormElement>(
+    '[data-testid="electricity-increase-approve-form"]'
+  )!;
+  expect(date.disabled).toBe(true);
+  await act(async () => {
+    approveForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  });
+  expect(inputs).toEqual([]);
+  const update = async () =>
+    act(async () =>
+      root!.render(
+        <AccountUserProvider value="staff-1">
+          <AdminElectricityIncreasesPage />
+          <ActorRenderProbe actor="staff-1" />
+        </AccountUserProvider>
+      )
+    );
+  accountClock.status = 'ready';
+  await update();
+  await change('effective', '2026-10-01T12:00');
+  await click('Approve and issue amendment');
+  await settled(() => expect(inputs).toEqual([{ effectiveFrom: '2026-10-01T08:30:00.000Z' }]));
+  accountClock.timezone = 'America/New_York';
+  await update();
+  await act(async () =>
+    finish(Response.json(decisionReview('approve', '', inputs[0]!.effectiveFrom)))
+  );
+  await settled(() => expect(container.querySelector('[role="dialog"]')).toBeNull());
+  expect(date.value).toBe('2026-10-01T12:00');
+  await click('Approve and issue amendment');
+  await settled(() => expect(dialogs.length).toBeGreaterThan(0));
+  expect(inputs[1]).toEqual({ effectiveFrom: '2026-10-01T16:00:00.000Z' });
+  expect(date.value).toBe('2026-10-01T12:00');
 });

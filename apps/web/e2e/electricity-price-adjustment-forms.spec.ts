@@ -105,7 +105,7 @@ for (const [locale, theme] of [
     await expect(date).toHaveValue('2026-10-09T12:00');
     await expect(reason).toHaveValue('  Draft <script> tariff  ');
     await expect(basis).toHaveValue('  Contract clause 7  ');
-    const effectiveFrom = await page.evaluate(() => new Date('2026-10-09T12:00').toISOString());
+    const effectiveFrom = '2026-10-09T08:30:00.000Z';
     expect(state.previews[0]).toEqual({
       expectedVersionId: versionId,
       effectiveFrom,

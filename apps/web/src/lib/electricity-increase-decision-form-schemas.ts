@@ -6,14 +6,18 @@ import {
 } from './electricity-increase-decision-form.js';
 
 export const inactiveIncreaseDecisionSchema = z.custom<IncreaseDecisionDraft>();
-export function increaseDecisionSchema(decision: IncreaseDecision, message: string) {
+export function increaseDecisionSchema(
+  decision: IncreaseDecision,
+  message: string,
+  timezone: string | null
+) {
   return z.custom<IncreaseDecisionDraft>().check((ctx) => {
     const name = decision === 'approve' ? 'effectiveDate' : 'reason';
     const value = ctx.value[name];
     if (
       typeof value !== 'string' ||
       (decision === 'approve'
-        ? increaseEffectiveFrom(value) === null
+        ? increaseEffectiveFrom(value, timezone) === null
         : !value.trim() || value.trim().length > 1000)
     )
       ctx.issues.push({ code: 'custom', input: value, path: [name], message });

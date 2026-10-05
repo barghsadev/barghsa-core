@@ -4,8 +4,21 @@ import { afterEach, expect, it, vi } from 'vitest';
 import AdminElectricityIncreasesPage from './AdminElectricityIncreasesPage.js';
 import { increaseDecisionFixture } from '../test/electricity-increase-decision-fixtures.js';
 
+vi.mock('../hooks/useAccountTime.js', () => ({
+  useAccountTime: () => ({
+    status: 'ready',
+    timezone: 'Asia/Tehran',
+    format: String,
+    notice: null,
+  }),
+}));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ irrDigits: String, number: String }),
+  useNumberFormatting: () => ({
+    irrDigits: String,
+    number: String,
+    money: String,
+    numberStyle: 'western',
+  }),
 }));
 
 afterEach(() => vi.unstubAllGlobals());

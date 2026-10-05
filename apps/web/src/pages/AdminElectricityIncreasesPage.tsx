@@ -1,3 +1,5 @@
+import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState } from 'react';
 import { t as appText } from '@barghsa/i18n/app';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -23,7 +25,19 @@ import {
   type IncreaseDecisionDraft,
 } from '../lib/electricity-increase-decision-form.js';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Button, Card, CardContent, FinancialReviewSummary, Input, ListPage } from '@barghsa/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  FinancialReviewSummary,
+  Input,
+  ListPage,
+  TextCell,
+  DateCell,
+  CurrencyCell,
+  LinkCell,
+  StatusCell,
+} from '@barghsa/ui';
 import { type ElectricityIncreaseStaffDecisionReview } from '@barghsa/shared/finance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -68,6 +82,7 @@ function IncreaseDecisionEditor({
   request,
   decision,
   locale,
+  timezone,
   draft,
   disabled,
   busy,
@@ -78,6 +93,7 @@ function IncreaseDecisionEditor({
   request: IncreaseRequest;
   decision: IncreaseDecision;
   locale: 'en' | 'fa';
+  timezone: string | null;
   draft: string;
   disabled: boolean;
   busy: boolean;
@@ -87,14 +103,17 @@ function IncreaseDecisionEditor({
 }) {
   const copy = (key: string) => t(`admin.electricityIncreases.${key}`, locale);
   const formCopy = (key: string) => appText(`electricity.increaseDecisionForm.${key}`, locale);
+  const currentTimezone = useRef(timezone);
+  currentTimezone.current = timezone;
+  const dateUnavailable = decision === 'approve' && !timezone;
   const name = decision === 'approve' ? 'effectiveDate' : 'reason';
   const message = formCopy(decision === 'approve' ? 'dateInvalid' : 'reasonInvalid');
   const form: DecisionForm = useZodForm<IncreaseDecisionDraft>(
     async () => {
       const raw = form.getValues(name);
       const schemas = await import('../lib/electricity-increase-decision-form-schemas.js');
-      return form.getValues(name) === raw
-        ? schemas.increaseDecisionSchema(decision, message)
+      return form.getValues(name) === raw && currentTimezone.current === timezone
+        ? schemas.increaseDecisionSchema(decision, message, timezone)
         : schemas.inactiveIncreaseDecisionSchema;
     },
     {
@@ -144,7 +163,7 @@ function IncreaseDecisionEditor({
                 <Input
                   {...field}
                   type={decision === 'approve' ? 'datetime-local' : 'text'}
-                  disabled={disabled}
+                  disabled={disabled || dateUnavailable}
                   onChange={(event) => {
                     field.onChange(event);
                     onDraft(event.target.value);
@@ -152,7 +171,14 @@ function IncreaseDecisionEditor({
                 />
               </FormControl>
               <FormDescription>
-                {decision === 'approve' ? copy('approveDateHelp') : formCopy('reasonHelp')}
+                {decision === 'approve' ? (
+                  <>
+                    {copy('approveDateHelp')} {copy('dateZone')}:{' '}
+                    <bdi dir="ltr">{timezone ?? '—'}</bdi>
+                  </>
+                ) : (
+                  formCopy('reasonHelp')
+                )}
               </FormDescription>
               <FormMessage reserveSpace />
             </FormItem>
@@ -169,7 +195,7 @@ function IncreaseDecisionEditor({
               ? 'dark:bg-destructive/10 dark:hover:bg-destructive/20'
               : undefined
           }
-          disabled={disabled || blocked || busy}
+          disabled={disabled || dateUnavailable || blocked || busy}
           aria-busy={busy || undefined}
         >
           {busy ? (
@@ -192,6 +218,10 @@ export default function AdminElectricityIncreasesPage({
   const actor = useAccountUser();
   const formCopy = (key: string) => appText(`electricity.increaseDecisionForm.${key}`, locale);
   const numbers = useNumberFormatting(locale);
+  const time = useAccountTime(locale);
+  const timezone = time.status === 'ready' ? time.timezone : null;
+  const currentTimezone = useRef(timezone);
+  currentTimezone.current = timezone;
   const copy = (key: string) => t(`admin.electricityIncreases.${key}`, locale);
   const [requests, setRequests] = useState<IncreaseRequest[] | null>(null);
   const [nextBefore, setNextBefore] = useState<string | null>(null);
@@ -493,6 +523,7 @@ export default function AdminElectricityIncreasesPage({
   ) {
     if (
       locked() ||
+      (decision === 'approve' && !timezone) ||
       loading ||
       error ||
       accessDenied.current ||
@@ -516,11 +547,15 @@ export default function AdminElectricityIncreasesPage({
       !accessDenied.current &&
       generation === reviewRequest.current &&
       currentScope.current === scope;
-    const fresh = () => authorized() && form.getValues(name) === raw;
+    const fresh = () =>
+      authorized() &&
+      form.getValues(name) === raw &&
+      (decision === 'reject' || currentTimezone.current === timezone);
     void form
       .handleSubmit(async (draft) => {
         if (!fresh() || draft[name] !== raw) return;
-        const effectiveFrom = decision === 'approve' ? increaseEffectiveFrom(raw) : undefined;
+        const effectiveFrom =
+          decision === 'approve' ? increaseEffectiveFrom(raw, timezone) : undefined;
         if (effectiveFrom === null) return;
         const previewInput =
           decision === 'approve'
@@ -622,6 +657,7 @@ export default function AdminElectricityIncreasesPage({
           {copy('refresh')}
         </Button>
       </header>
+      {time.notice}
       <ListPage role="region" aria-label={copy('listTitle')}>
         <ListPage.Toolbar>
           <div className="flex flex-wrap gap-2" role="group" aria-label={copy('viewLabel')}>
@@ -663,119 +699,253 @@ export default function AdminElectricityIncreasesPage({
           }
           emptyView={<p>{copy(view === 'pending' ? 'empty' : 'emptyExpired')}</p>}
         >
-          <div className="grid gap-4 lg:grid-cols-2">
-            {visibleRequests?.map((request) => (
-              <Card key={request.requestId}>
-                <CardContent className="space-y-3 pt-6 text-sm">
-                  <h2 className="font-semibold">{copy('request')}</h2>
-                  <p>
-                    {copy('contract')}:{' '}
-                    <a className="break-all text-primary underline" href="/admin/contracts">
-                      <bdi dir="ltr">{request.contractId}</bdi>
-                    </a>
-                  </p>
-                  <p>
-                    {copy('order')}:{' '}
-                    <bdi dir="ltr" className="break-all">
+          {!!visibleRequests?.length && (
+            <OperationalQueueTable
+              locale={locale}
+              rows={visibleRequests.map((request) => ({ ...request, id: request.requestId }))}
+              caption={copy(view === 'pending' ? 'pendingDirectory' : 'expiredDirectory')}
+              scrollLabel={copy(view === 'pending' ? 'pendingDirectory' : 'expiredDirectory')}
+              nameHeader={copy('request')}
+              renderName={(request) => <TextCell value={request.requestId} />}
+              fields={[
+                {
+                  id: 'contract',
+                  label: copy('contract'),
+                  render: (request) => (
+                    <LinkCell
+                      href={`/admin/contracts?contractId=${encodeURIComponent(request.contractId)}`}
+                    >
+                      {request.contractId}
+                    </LinkCell>
+                  ),
+                },
+                {
+                  id: 'order',
+                  label: copy('order'),
+                  render: (request) => (
+                    <LinkCell
+                      href={`/admin/electricity-orders?orderId=${encodeURIComponent(request.orderId)}`}
+                    >
                       {request.orderId}
-                    </bdi>
-                  </p>
-                  <p>
-                    {copy('quantity')}: {numbers.irrDigits(request.originalKwh)} →{' '}
-                    {numbers.irrDigits(request.requestedKwh)} kWh
-                  </p>
-                  <p>
-                    {copy('change')}:{' '}
-                    {numbers.number(
-                      Number(
-                        ((BigInt(request.requestedKwh) - BigInt(request.originalKwh)) * 10000n) /
-                          BigInt(request.originalKwh)
-                      ) / 100
-                    )}
-                    %
-                  </p>
-                  <p>
-                    {copy('effective')}: {new Date(request.effectiveFrom).toLocaleString(locale)}
-                  </p>
-                  <p>
-                    {copy('end')}: {new Date(request.periodEnd).toLocaleString(locale)}
-                  </p>
-                  <p>
-                    {copy('status')}:{' '}
-                    {copy(
-                      `state.${['Active', 'Completed', 'Cancelled'].includes(request.contractState) ? request.contractState : 'other'}`
-                    )}
-                  </p>
-                  {view === 'expired' ? (
-                    <div className="space-y-1 rounded-md border p-3">
-                      <p>
-                        {copy('invoiceState')}:{' '}
-                        {request.adjustmentInvoiceState
-                          ? copy(`invoice.${request.adjustmentInvoiceState}`)
-                          : copy('notIssued')}
-                      </p>
-                      {request.adjustmentInvoiceId ? (
-                        <p className="break-all">
-                          <a
-                            className="text-primary underline underline-offset-2"
-                            href={`/admin/invoices?invoiceId=${encodeURIComponent(request.adjustmentInvoiceId)}`}
-                          >
-                            <bdi dir="ltr">{request.adjustmentInvoiceId}</bdi>
-                          </a>
-                        </p>
-                      ) : null}
-                      {request.adjustmentPaidAmount ? (
-                        <p>
-                          {copy('paidAmount')}: {numbers.irrDigits(request.adjustmentPaidAmount)}{' '}
-                          IRR
-                        </p>
-                      ) : null}
-                      <p>{copy(request.financialFollowUp ? 'financeFollowUp' : 'expiredClosed')}</p>
-                    </div>
-                  ) : null}
-                  {view === 'pending' ? (
-                    <>
-                      <IncreaseDecisionEditor
-                        key={`approve-${actor}-${request.requestId}`}
-                        request={request}
-                        decision="approve"
-                        locale={locale}
-                        draft={effectiveDate[request.requestId] ?? ''}
-                        disabled={frozen}
-                        blocked={loading || error || reviewLoading}
-                        busy={busyRow === request.requestId && busyDecision === 'approve'}
-                        onDraft={(draft) =>
-                          setEffectiveDate((current) => ({
-                            ...current,
-                            [request.requestId]: draft,
-                          }))
-                        }
-                        onPrepare={(form, fields) =>
-                          reviewDecision(request, 'approve', form, fields)
-                        }
-                      />
-                      <IncreaseDecisionEditor
-                        key={`reject-${actor}-${request.requestId}`}
-                        request={request}
-                        decision="reject"
-                        locale={locale}
-                        draft={reason[request.requestId] ?? ''}
-                        disabled={frozen}
-                        blocked={loading || error || reviewLoading}
-                        busy={busyRow === request.requestId && busyDecision === 'reject'}
-                        onDraft={(draft) =>
-                          setReason((current) => ({ ...current, [request.requestId]: draft }))
-                        }
-                        onPrepare={(form, fields) =>
-                          reviewDecision(request, 'reject', form, fields)
-                        }
-                      />
-                    </>
-                  ) : null}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                    </LinkCell>
+                  ),
+                },
+                {
+                  id: 'quantity',
+                  label: copy('quantity'),
+                  render: (request) => (
+                    <TextCell
+                      value={`${numbers.irrDigits(request.originalKwh)} → ${numbers.irrDigits(request.requestedKwh)} kWh`}
+                    />
+                  ),
+                },
+                {
+                  id: 'change',
+                  label: copy('change'),
+                  render: (request) => (
+                    <TextCell
+                      value={`${numbers.number(Number(((BigInt(request.requestedKwh) - BigInt(request.originalKwh)) * 10000n) / BigInt(request.originalKwh)) / 100)}%`}
+                    />
+                  ),
+                },
+                {
+                  id: 'effective',
+                  label: copy('effective'),
+                  render: (request) => (
+                    <DateCell
+                      value={request.effectiveFrom}
+                      format={(value) => time.format(value)}
+                    />
+                  ),
+                },
+                {
+                  id: 'end',
+                  label: copy('end'),
+                  render: (request) => (
+                    <DateCell value={request.periodEnd} format={(value) => time.format(value)} />
+                  ),
+                },
+                {
+                  id: 'created',
+                  label: copy('created'),
+                  render: (request) => (
+                    <DateCell value={request.createdAt} format={(value) => time.format(value)} />
+                  ),
+                },
+                {
+                  id: 'status',
+                  label: copy('status'),
+                  render: (request) => (
+                    <StatusCell
+                      state={request.contractState}
+                      label={copy(
+                        `state.${['Active', 'Completed', 'Cancelled'].includes(request.contractState) ? request.contractState : 'other'}`
+                      )}
+                    />
+                  ),
+                },
+                ...(view === 'expired'
+                  ? [
+                      {
+                        id: 'invoice',
+                        label: copy('invoiceState'),
+                        render: (request: IncreaseRequest) => (
+                          <div className="space-y-1">
+                            {request.adjustmentInvoiceState ? (
+                              <div>
+                                <StatusCell
+                                  state={request.adjustmentInvoiceState}
+                                  label={copy(`invoice.${request.adjustmentInvoiceState}`)}
+                                />
+                              </div>
+                            ) : (
+                              <TextCell value={copy('notIssued')} />
+                            )}
+                            {request.adjustmentInvoiceId ? (
+                              <div className="break-all">
+                                <LinkCell
+                                  href={`/admin/invoices?invoiceId=${encodeURIComponent(request.adjustmentInvoiceId)}`}
+                                >
+                                  {request.adjustmentInvoiceId}
+                                </LinkCell>
+                              </div>
+                            ) : null}
+                          </div>
+                        ),
+                      },
+                      {
+                        id: 'paid',
+                        label: copy('paidAmount'),
+                        render: (request: IncreaseRequest) => (
+                          <CurrencyCell
+                            amount={request.adjustmentPaidAmount}
+                            format={numbers.money}
+                          />
+                        ),
+                      },
+                      {
+                        id: 'finance',
+                        label: copy('finance'),
+                        render: (request: IncreaseRequest) => (
+                          <TextCell
+                            value={copy(
+                              request.financialFollowUp ? 'financeFollowUp' : 'expiredClosed'
+                            )}
+                          />
+                        ),
+                      },
+                    ]
+                  : []),
+              ]}
+              {...(view === 'pending'
+                ? {
+                    actionHeader: copy('actions'),
+                    renderActions: (request: IncreaseRequest) => (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="min-h-11"
+                        disabled={loading || error || locked()}
+                        onClick={() => {
+                          if (loading || error || locked()) return;
+                          document
+                            .getElementById(`increase-decision-${request.requestId}`)
+                            ?.focus();
+                        }}
+                      >
+                        {copy('reviewRequest')}
+                        <span className="sr-only">: {request.requestId}</span>
+                      </Button>
+                    ),
+                  }
+                : {})}
+              cardHeading="h2"
+              loading={loading}
+              emptyMessage={copy(view === 'pending' ? 'empty' : 'emptyExpired')}
+              tableClassName="min-w-[80rem]"
+            />
+          )}
+          {view === 'pending' ? (
+            <div className="mt-5 grid gap-4 lg:grid-cols-2">
+              {visibleRequests?.map((request) => (
+                <Card
+                  key={request.requestId}
+                  id={`increase-decision-${request.requestId}`}
+                  tabIndex={-1}
+                  aria-labelledby={`increase-decision-title-${request.requestId}`}
+                  className="focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <CardContent className="space-y-3 pt-6 text-sm">
+                    <h2
+                      id={`increase-decision-title-${request.requestId}`}
+                      className="font-semibold"
+                    >
+                      {copy('request')}
+                      <span className="block font-mono text-xs font-normal">
+                        <TextCell value={request.requestId} />
+                      </span>
+                    </h2>
+                    <p>
+                      {copy('contract')}:{' '}
+                      <LinkCell
+                        href={`/admin/contracts?contractId=${encodeURIComponent(request.contractId)}`}
+                      >
+                        {request.contractId}
+                      </LinkCell>
+                    </p>
+                    <p>
+                      {copy('quantity')}:{' '}
+                      <bdi>
+                        {numbers.irrDigits(request.originalKwh)} →{' '}
+                        {numbers.irrDigits(request.requestedKwh)} kWh
+                      </bdi>
+                    </p>
+                    {view === 'pending' ? (
+                      <>
+                        <IncreaseDecisionEditor
+                          key={`approve-${actor}-${request.requestId}`}
+                          request={request}
+                          decision="approve"
+                          timezone={timezone}
+                          locale={locale}
+                          draft={effectiveDate[request.requestId] ?? ''}
+                          disabled={frozen}
+                          blocked={loading || error || reviewLoading}
+                          busy={busyRow === request.requestId && busyDecision === 'approve'}
+                          onDraft={(draft) =>
+                            setEffectiveDate((current) => ({
+                              ...current,
+                              [request.requestId]: draft,
+                            }))
+                          }
+                          onPrepare={(form, fields) =>
+                            reviewDecision(request, 'approve', form, fields)
+                          }
+                        />
+                        <IncreaseDecisionEditor
+                          key={`reject-${actor}-${request.requestId}`}
+                          request={request}
+                          decision="reject"
+                          timezone={timezone}
+                          locale={locale}
+                          draft={reason[request.requestId] ?? ''}
+                          disabled={frozen}
+                          blocked={loading || error || reviewLoading}
+                          busy={busyRow === request.requestId && busyDecision === 'reject'}
+                          onDraft={(draft) =>
+                            setReason((current) => ({ ...current, [request.requestId]: draft }))
+                          }
+                          onPrepare={(form, fields) =>
+                            reviewDecision(request, 'reject', form, fields)
+                          }
+                        />
+                      </>
+                    ) : null}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : null}
         </ListPage.Content>
         {reviewLoading ? <p role="status">{copy('reviewLoading')}</p> : null}
         {uncertain ? (
@@ -856,13 +1026,13 @@ export default function AdminElectricityIncreasesPage({
                     id: 'effective',
                     label: copy('effective'),
                     value: decisionReview.data.effectiveFrom
-                      ? new Date(decisionReview.data.effectiveFrom).toLocaleString(locale)
+                      ? time.format(decisionReview.data.effectiveFrom)
                       : copy('notApplicable'),
                   },
                   {
                     id: 'end',
                     label: copy('end'),
-                    value: new Date(decisionReview.data.periodEnd).toLocaleString(locale),
+                    value: time.format(decisionReview.data.periodEnd),
                   },
                   {
                     id: 'invoice',

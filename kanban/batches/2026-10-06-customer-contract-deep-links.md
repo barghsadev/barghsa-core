@@ -24,3 +24,7 @@ Failed runs remain external. Old profile/address fixtures needed required status
 Publication and exact deployment/Telegram outcomes remain separate external receipts. `v0.1.22` was pushed at `824075a5279d02e6d15e80b944fe85a132ae28e3` and queued with both reviewed Persian captures; its independent deployment outcome is not inferred from publication.
 
 External evidence: `~/.local/state/barghsa-manual-batches/customer-contract-deep-links/`.
+
+## Deployment confirmed
+
+`v0.1.23` completed at `2026-10-05T23:37:56.723877+00:00`, with healthy exact live commit `5757a0b600db101d7cefb2504fdb566364bc19e3`. Persian Telegram note `70` and capture `71` are confirmed. External `deployment-completed.json` records the readback.
