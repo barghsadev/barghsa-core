@@ -1,8 +1,12 @@
+import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import type { ProductCatalogueType } from '../lib/catalogue-category-query.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   Button,
+  Badge,
+  CurrencyCell,
+  TextCell,
   DatePicker,
   datePickerAtTime,
   Input,
@@ -1282,29 +1286,112 @@ export default function AdminCataloguePage({
                   }
                   emptyView={<p>{label('empty')}</p>}
                 >
-                  <ul className="divide-y">
-                    {rows.map((row) => (
-                      <li
-                        key={row.id}
-                        className="flex flex-wrap items-start justify-between gap-3 py-4"
+                  <OperationalQueueTable
+                    locale={locale}
+                    rows={rows}
+                    caption={`${label(type)} · ${label('title')}`}
+                    scrollLabel={`${label(type)} · ${label('title')}`}
+                    nameHeader={label('productName')}
+                    renderName={(row) => (
+                      <>
+                        <TextCell value={title(row)} />
+                        {row.systemKey && (
+                          <span className="mt-1 block text-xs font-normal text-muted-foreground">
+                            {label('systemKey')}: <TextCell value={row.systemKey} />
+                          </span>
+                        )}
+                      </>
+                    )}
+                    fields={[
+                      {
+                        id: 'description',
+                        label: label('description'),
+                        render: (row) => (
+                          <span className="whitespace-pre-wrap">
+                            <TextCell value={row.description?.[locale]} />
+                          </span>
+                        ),
+                      },
+                      {
+                        id: 'status',
+                        label: label('status'),
+                        render: (row) => (
+                          <Badge variant={row.status === 'active' ? 'secondary' : 'outline'}>
+                            {label(row.status)}
+                          </Badge>
+                        ),
+                      },
+                      {
+                        id: 'price',
+                        label: label('price'),
+                        render: (row) =>
+                          row.price === null ? (
+                            <TextCell value={label('unset')} />
+                          ) : (
+                            <CurrencyCell amount={row.price} format={numbers.money} />
+                          ),
+                      },
+                      ...(categoryOptions[type].length
+                        ? [
+                            {
+                              id: 'categories',
+                              label: label('categories'),
+                              render: (row: Product) => (
+                                <TextCell value={row.categories.map(label).join(', ') || null} />
+                              ),
+                            },
+                          ]
+                        : []),
+                      ...(type === 'electricity'
+                        ? [
+                            {
+                              id: 'minimum',
+                              label: label('minKwh'),
+                              render: (row: Product) => (
+                                <TextCell
+                                  value={
+                                    row.electricityLimits
+                                      ? numbers.irrDigits(row.electricityLimits.minKwh)
+                                      : null
+                                  }
+                                />
+                              ),
+                            },
+                            {
+                              id: 'maximum',
+                              label: label('maxKwh'),
+                              render: (row: Product) => (
+                                <TextCell
+                                  value={
+                                    row.electricityLimits
+                                      ? row.electricityLimits.maxKwh === '0'
+                                        ? label('noUpperLimit')
+                                        : numbers.irrDigits(row.electricityLimits.maxKwh)
+                                      : null
+                                  }
+                                />
+                              ),
+                            },
+                          ]
+                        : []),
+                    ]}
+                    actionHeader={label('actions')}
+                    renderActions={(row) => (
+                      <Button
+                        variant="outline"
+                        className="min-h-11"
+                        aria-label={`${label('edit')} ${title(row)}`}
+                        disabled={blocked}
+                        onClick={() => choose(row.id)}
                       >
-                        <div className="min-w-0">
-                          <h2 className="break-words font-semibold">{title(row)}</h2>
-                          <p>
-                            {label(row.status)} · {money(row.price)}
-                          </p>
-                        </div>
-                        <Button
-                          variant="outline"
-                          aria-label={`${label('edit')} ${title(row)}`}
-                          disabled={blocked}
-                          onClick={() => choose(row.id)}
-                        >
-                          {label('edit')}
-                        </Button>
-                      </li>
-                    ))}
-                  </ul>
+                        {label('edit')}
+                      </Button>
+                    )}
+                    cardHeading="h2"
+                    loading={state === 'loading'}
+                    emptyMessage={label('empty')}
+                    tableClassName="min-w-[60rem]"
+                  />
                 </ListPage.Content>
               </ListPage>
             </div>
