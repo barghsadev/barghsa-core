@@ -1,6 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import { toast } from '../../../lib/toast-api.js';
 import { t } from '@barghsa/i18n/app';
 import {
   UserIcon,
@@ -14,664 +12,408 @@ import {
   CheckIcon,
   XIcon,
 } from 'lucide-react';
-import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
-import { withCsrf } from '../../../lib/csrf.js';
+import { Button, Input, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  type FieldValues,
+  type FieldPath,
+  type UseFormReturn,
+} from '@barghsa/ui/form';
 import { useLocale } from '../../../hooks/useLocale.js';
+import { useAccountSettingsEditor } from '../../../hooks/useAccountSettingsEditor.js';
 
 export const Route = createFileRoute('/_app/settings/username')({
   component: SettingsUsernamePage,
 });
-
-// ─── Types ────────────────────────────────────────────────────────────
-
-interface UserInfo {
-  userId: string;
-  username: string;
-  email: string | null;
-  mobile: string | null;
-  emailVerified: boolean;
-  mobileVerified: boolean;
-}
-
-// ─── Helpers ──────────────────────────────────────────────────────────
-
-/**
- * Mask a username for display. Shows first 3 chars and last 3 chars with dots.
- */
 function maskUsername(username: string): string {
-  if (username.length <= 8) {
-    return username.slice(0, 3) + '***' + username.slice(-3);
-  }
-  return username.slice(0, 3) + '...' + username.slice(-3);
+  return username.slice(0, 3) + (username.length <= 8 ? '***' : '...') + username.slice(-3);
 }
-
-// ─── Page Component ────────────────────────────────────────────────────
-
+function AccountField<Values extends FieldValues>({
+  form,
+  name,
+  id,
+  label,
+  locked,
+  canEdit,
+  otp = false,
+  type = 'text',
+  placeholder,
+}: {
+  form: UseFormReturn<Values>;
+  name: FieldPath<Values>;
+  id: string;
+  label: string;
+  locked: boolean;
+  canEdit: () => boolean;
+  otp?: boolean;
+  type?: 'text' | 'email' | 'tel';
+  placeholder?: string;
+}) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem id={id} className="space-y-1.5">
+          <FormLabel htmlFor={id} className="text-xs">
+            {label}
+          </FormLabel>
+          <FormControl>
+            <Input
+              {...field}
+              id={id}
+              type={type === 'email' ? 'text' : type}
+              inputMode={type === 'email' ? 'email' : undefined}
+              placeholder={placeholder}
+              disabled={locked}
+              onChange={(event) => {
+                if (canEdit()) field.onChange(event);
+              }}
+              {...(otp
+                ? { inputMode: 'numeric' as const, autoComplete: 'one-time-code', maxLength: 6 }
+                : {})}
+              className={otp ? 'text-sm font-mono w-40' : 'text-sm'}
+              dir="ltr"
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
 function SettingsUsernamePage() {
-  const locale = useLocale();
-
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Change username state
-  const [showChangeUsername, setShowChangeUsername] = useState(false);
-  const [newUsername, setNewUsername] = useState('');
-  const [changeOtpSent, setChangeOtpSent] = useState(false);
-  const [changeChallengeId, setChangeChallengeId] = useState('');
-  const [changeOtp, setChangeOtp] = useState('');
-  const [previousOtp, setPreviousOtp] = useState('');
-  const [previousDestination, setPreviousDestination] = useState('');
-  const [sendingChangeOtp, setSendingChangeOtp] = useState(false);
-  const [verifyingChange, setVerifyingChange] = useState(false);
-
-  // Add contact state
-  const [showAddContact, setShowAddContact] = useState<'email' | 'mobile' | null>(null);
-  const [newContactValue, setNewContactValue] = useState('');
-  const [contactOtpSent, setContactOtpSent] = useState(false);
-  const [contactChallengeId, setContactChallengeId] = useState('');
-  const [contactOtp, setContactOtp] = useState('');
-  const [sendingContactOtp, setSendingContactOtp] = useState(false);
-  const [verifyingContact, setVerifyingContact] = useState(false);
-
-  // ── Fetch user info ──────────────────────────────────────────────────
-
-  const fetchUserInfo = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch('/api/auth/user');
-      if (!response.ok) {
-        setError(t('settings.profile.error.load', locale));
-        return;
-      }
-
-      const data: UserInfo = await response.json();
-      setUserInfo(data);
-    } catch {
-      setError(t('settings.profile.error.loadRetry', locale));
-    } finally {
-      setLoading(false);
-    }
-  }, [locale]);
-
-  useEffect(() => {
-    fetchUserInfo();
-  }, [fetchUserInfo]);
-
-  // ── Change username OTP send ─────────────────────────────────────────
-
-  const handleSendChangeOtp = useCallback(async () => {
-    if (!newUsername.trim()) return;
-
-    setSendingChangeOtp(true);
-
-    try {
-      const response = await fetch('/api/auth/change-username/send-otp', {
-        method: 'POST',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ newUsername: newUsername.trim() }),
-      });
-
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        const code = (body as { error?: string }).error;
-
-        if (code === 'AUTH:CHANGE_USERNAME:SAME') {
-          toast.error(t('settings.username.error.same', locale));
-        } else if (code === 'AUTH:CHANGE_USERNAME:TAKEN') {
-          toast.error(t('settings.username.error.taken', locale));
-        } else if (code === 'AUTH:CHANGE_USERNAME:INVALID') {
-          toast.error(t('settings.username.error.invalid', locale));
-        } else {
-          toast.error(t('settings.username.error.generic', locale));
-        }
-        return;
-      }
-
-      const data = await response.json();
-      setChangeChallengeId(data.challengeId);
-      setNewUsername(data.destination);
-      setPreviousDestination(data.previousDestination);
-      setChangeOtpSent(true);
-      toast.success(t('settings.username.pairSent', locale));
-    } catch {
-      toast.error(t('settings.username.error.generic', locale));
-    } finally {
-      setSendingChangeOtp(false);
-    }
-  }, [newUsername, locale]);
-
-  // ── Change username OTP verify ───────────────────────────────────────
-
-  const handleVerifyChange = useCallback(async () => {
-    if (!/^\d{6}$/.test(changeOtp) || !/^\d{6}$/.test(previousOtp)) return;
-
-    setVerifyingChange(true);
-
-    try {
-      const response = await fetch('/api/auth/change-username', {
-        method: 'POST',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          newUsername: newUsername.trim(),
-          otpChallengeId: changeChallengeId,
-          otp: changeOtp.trim(),
-          previousOtp,
-        }),
-      });
-
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        const code = (body as { error?: string }).error;
-
-        if (code === 'AUTH:CHANGE_USERNAME:TAKEN') {
-          toast.error(t('settings.username.error.taken', locale));
-        } else {
-          toast.error(t('settings.username.error.generic', locale));
-        }
-        return;
-      }
-
-      toast.success(t('settings.username.success', locale));
-
-      // Reset form
-      setShowChangeUsername(false);
-      setNewUsername('');
-      setChangeOtpSent(false);
-      setChangeChallengeId('');
-      setChangeOtp('');
-      setPreviousOtp('');
-      setPreviousDestination('');
-
-      // Refresh user info
-      fetchUserInfo();
-    } catch {
-      toast.error(t('settings.username.error.generic', locale));
-    } finally {
-      setVerifyingChange(false);
-    }
-  }, [newUsername, changeChallengeId, changeOtp, previousOtp, locale, fetchUserInfo]);
-
-  // ── Add contact OTP send ─────────────────────────────────────────────
-
-  const handleSendContactOtp = useCallback(async () => {
-    if (!showAddContact || !newContactValue.trim()) return;
-
-    setSendingContactOtp(true);
-
-    try {
-      const response = await fetch('/api/auth/add-contact/send-otp', {
-        method: 'POST',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          contactType: showAddContact,
-          contactValue: newContactValue.trim(),
-        }),
-      });
-
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        const code = (body as { error?: string }).error;
-
-        if (code === 'AUTH:CHANGE_USERNAME:ALREADY_HAS_EMAIL') {
-          toast.error(t('settings.contact.error.alreadyHasEmail', locale));
-        } else if (code === 'AUTH:CHANGE_USERNAME:ALREADY_HAS_MOBILE') {
-          toast.error(t('settings.contact.error.alreadyHasMobile', locale));
-        } else {
-          toast.error(t('settings.contact.error.generic', locale));
-        }
-        return;
-      }
-
-      const data = await response.json();
-      setContactChallengeId(data.challengeId);
-      setContactOtpSent(true);
-      toast.success(
-        t('settings.contact.otpSent', locale).replace('{destination}', newContactValue.trim())
-      );
-    } catch {
-      toast.error(t('settings.contact.error.generic', locale));
-    } finally {
-      setSendingContactOtp(false);
-    }
-  }, [showAddContact, newContactValue, locale]);
-
-  // ── Add contact OTP verify ───────────────────────────────────────────
-
-  const handleVerifyContact = useCallback(async () => {
-    if (!showAddContact || !contactOtp.trim() || contactOtp.length !== 6) return;
-
-    setVerifyingContact(true);
-
-    try {
-      const response = await fetch('/api/auth/add-contact', {
-        method: 'POST',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          contactType: showAddContact,
-          contactValue: newContactValue.trim(),
-          otpChallengeId: contactChallengeId,
-          otp: contactOtp.trim(),
-        }),
-      });
-
-      if (!response.ok) {
-        toast.error(t('settings.contact.error.generic', locale));
-        return;
-      }
-
-      toast.success(t('settings.contact.success', locale));
-
-      // Reset form
-      setShowAddContact(null);
-      setNewContactValue('');
-      setContactOtpSent(false);
-      setContactChallengeId('');
-      setContactOtp('');
-
-      // Refresh user info
-      fetchUserInfo();
-    } catch {
-      toast.error(t('settings.contact.error.generic', locale));
-    } finally {
-      setVerifyingContact(false);
-    }
-  }, [showAddContact, newContactValue, contactChallengeId, contactOtp, locale, fetchUserInfo]);
-
-  // ── Cancel change username ───────────────────────────────────────────
-
-  const handleCancelChange = useCallback(() => {
-    setShowChangeUsername(false);
-    setNewUsername('');
-    setChangeOtpSent(false);
-    setChangeChallengeId('');
-    setChangeOtp('');
-    setPreviousOtp('');
-    setPreviousDestination('');
-  }, []);
-
-  // ── Cancel add contact ───────────────────────────────────────────────
-
-  const handleCancelContact = useCallback(() => {
-    setShowAddContact(null);
-    setNewContactValue('');
-    setContactOtpSent(false);
-    setContactChallengeId('');
-    setContactOtp('');
-  }, []);
-
-  // ── Render ──────────────────────────────────────────────────────────
-
+  const locale = useLocale(),
+    editor = useAccountSettingsEditor(locale);
+  const {
+    user,
+    loading,
+    locked,
+    busy,
+    error,
+    copy,
+    usernameForm,
+    contactForm,
+    usernameValues,
+    contactValues,
+    usernameChallenge,
+    contactChallenge,
+    contactType,
+    showUsername,
+  } = editor;
+  function cancel(family: 'username' | 'contact') {
+    return (
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        disabled={locked}
+        onClick={() => editor.cancel(family)}
+        className="gap-1"
+      >
+        <XIcon aria-hidden="true" className="h-3.5 w-3.5" />
+        {t('settings.contact.cancel', locale)}
+      </Button>
+    );
+  }
+  function submit(verify: boolean, disabled: boolean) {
+    return (
+      <Button type="submit" size="sm" disabled={locked || disabled} className="gap-1">
+        {busy ? (
+          <Loader2Icon aria-hidden="true" className="h-3.5 w-3.5 animate-spin" />
+        ) : verify ? (
+          <CheckIcon aria-hidden="true" className="h-3.5 w-3.5" />
+        ) : (
+          <SendIcon aria-hidden="true" className="h-3.5 w-3.5" />
+        )}
+        {t(verify ? 'settings.contact.verify' : 'settings.contact.sendOtp', locale)}
+      </Button>
+    );
+  }
   return (
     <div className="container mx-auto max-w-2xl py-8 px-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      {/* Title */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold">{t('settings.username.title', locale)}</h1>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={loading || locked || !editor.canRead()}
+          onClick={() => void editor.refresh()}
+        >
+          {copy('refresh')}
+        </Button>
       </div>
-
-      {/* Loading */}
       {loading && (
         <div className="text-center py-8 text-muted-foreground">
-          <UserIcon className="mx-auto h-6 w-6 animate-pulse mb-2" />
+          <UserIcon aria-hidden="true" className="mx-auto h-6 w-6 animate-pulse mb-2" />
           <p className="text-sm">{t('settings.profile.loading', locale)}</p>
         </div>
       )}
-
-      {/* Error */}
       {!loading && error && (
-        <Alert variant="destructive">
-          <AlertCircleIcon className="h-4 w-4" />
+        <Alert variant="destructive" className="mb-6" data-slot="account-settings-feedback">
+          <AlertCircleIcon aria-hidden="true" className="h-4 w-4" />
           <AlertTitle>{t('settings.security.error.title', locale)}</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
+          {editor.uncertain && (
+            <div className="mt-3 space-y-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={busy}
+                onClick={() => void editor.confirm()}
+              >
+                {copy('confirm')}
+              </Button>
+              {editor.canRestart && (
+                <>
+                  <p className="text-sm">{copy('restartHelp')}</p>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    disabled={busy}
+                    onClick={editor.restart}
+                  >
+                    {copy('restart')}
+                  </Button>
+                </>
+              )}
+            </div>
+          )}
         </Alert>
       )}
-
-      {/* Content */}
-      {!loading && !error && userInfo && (
+      {!loading && user && (
         <div className="space-y-8">
-          {/* ── Current Username Section ──────────────────────────────── */}
-          <div className="rounded-lg border p-4 space-y-4">
-            <div className="flex items-center justify-between">
+          <section
+            className="rounded-lg border p-4 space-y-4"
+            aria-labelledby="username-section-title"
+          >
+            <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <KeyIcon className="h-4 w-4 text-muted-foreground" />
-                <h2 className="text-base font-semibold">
+                <KeyIcon aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
+                <h2 id="username-section-title" className="text-base font-semibold">
                   {t('settings.username.current', locale)}
                 </h2>
               </div>
-              {!showChangeUsername && (
+              {!showUsername && (
                 <Button
+                  type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => setShowChangeUsername(true)}
+                  disabled={locked}
+                  onClick={editor.openUsername}
                   className="gap-1"
                 >
-                  <KeyIcon className="h-3.5 w-3.5" />
+                  <KeyIcon aria-hidden="true" className="h-3.5 w-3.5" />
                   {t('settings.username.change', locale)}
                 </Button>
               )}
             </div>
-
-            <p className="text-sm font-mono text-muted-foreground">
-              {maskUsername(userInfo.username)}
+            <p className="text-sm font-mono text-muted-foreground" dir="ltr">
+              {maskUsername(user.username)}
             </p>
-
-            {/* Change Username Form */}
-            {showChangeUsername && (
-              <div className="space-y-3 pt-2 border-t">
-                {!changeOtpSent ? (
-                  <>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="new-username" className="text-xs">
-                        {t('settings.username.newLabel', locale)}
-                      </Label>
-                      <Input
-                        id="new-username"
-                        placeholder={t('settings.username.newPlaceholder', locale)}
-                        value={newUsername}
-                        onChange={(e) => setNewUsername(e.target.value)}
-                        className="text-sm"
-                        dir="ltr"
-                      />
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleCancelChange}
-                        className="gap-1"
-                      >
-                        <XIcon className="h-3.5 w-3.5" />
-                        {t('settings.contact.cancel', locale)}
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={handleSendChangeOtp}
-                        disabled={sendingChangeOtp || !newUsername.trim()}
-                        className="gap-1"
-                      >
-                        {sendingChangeOtp ? (
-                          <Loader2Icon className="h-3.5 w-3.5 animate-spin" />
-                        ) : (
-                          <SendIcon className="h-3.5 w-3.5" />
-                        )}
-                        {t('settings.contact.sendOtp', locale)}
-                      </Button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-xs text-muted-foreground">
-                      {t('settings.username.pairSent', locale)}
-                    </p>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="previous-otp" className="text-xs">
-                        {t('settings.username.previousOtp', locale).replace(
-                          '{destination}',
-                          maskUsername(previousDestination)
-                        )}
-                      </Label>
-                      <Input
+            {showUsername && (
+              <Form {...usernameForm}>
+                <form
+                  noValidate
+                  data-slot="account-username-form"
+                  ref={editor.usernameFeedback.element}
+                  onSubmit={(event) => void editor.prepareUsername(event)}
+                  aria-busy={busy || usernameForm.formState.isSubmitting}
+                  className="space-y-3 pt-2 border-t"
+                >
+                  {!usernameChallenge ? (
+                    <AccountField
+                      form={usernameForm}
+                      name="newUsername"
+                      id="new-username"
+                      label={t('settings.username.newLabel', locale)}
+                      placeholder={t('settings.username.newPlaceholder', locale)}
+                      locked={locked}
+                      canEdit={editor.canEdit}
+                    />
+                  ) : (
+                    <>
+                      <p className="text-xs text-muted-foreground">
+                        {t('settings.username.pairSent', locale)}
+                      </p>
+                      <AccountField
+                        form={usernameForm}
+                        name="previousOtp"
                         id="previous-otp"
-                        value={previousOtp}
-                        onChange={(e) => setPreviousOtp(e.target.value.replace(/[^0-9]/g, ''))}
-                        inputMode="numeric"
-                        autoComplete="one-time-code"
-                        maxLength={6}
-                        className="text-sm font-mono w-40"
-                        dir="ltr"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="change-otp" className="text-xs">
-                        {t('settings.username.newOtp', locale).replace(
+                        otp
+                        label={t('settings.username.previousOtp', locale).replace(
                           '{destination}',
-                          maskUsername(newUsername)
+                          maskUsername(usernameChallenge.previousDestination!)
                         )}
-                      </Label>
-                      <Input
-                        id="change-otp"
-                        placeholder={t('settings.username.otpPlaceholder', locale)}
-                        value={changeOtp}
-                        onChange={(e) => setChangeOtp(e.target.value.replace(/[^0-9]/g, ''))}
-                        inputMode="numeric"
-                        autoComplete="one-time-code"
-                        maxLength={6}
-                        className="text-sm font-mono w-40"
-                        dir="ltr"
+                        locked={locked}
+                        canEdit={editor.canEdit}
                       />
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleCancelChange}
-                        className="gap-1"
-                      >
-                        <XIcon className="h-3.5 w-3.5" />
-                        {t('settings.contact.cancel', locale)}
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={handleVerifyChange}
-                        disabled={
-                          verifyingChange || changeOtp.length !== 6 || previousOtp.length !== 6
-                        }
-                        className="gap-1"
-                      >
-                        {verifyingChange ? (
-                          <Loader2Icon className="h-3.5 w-3.5 animate-spin" />
-                        ) : (
-                          <CheckIcon className="h-3.5 w-3.5" />
+                      <AccountField
+                        form={usernameForm}
+                        name="otp"
+                        id="change-otp"
+                        otp
+                        label={t('settings.username.newOtp', locale).replace(
+                          '{destination}',
+                          maskUsername(usernameChallenge.destination)
                         )}
-                        {t('settings.contact.verify', locale)}
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </div>
+                        placeholder={t('settings.username.otpPlaceholder', locale)}
+                        locked={locked}
+                        canEdit={editor.canEdit}
+                      />
+                    </>
+                  )}
+                  {usernameForm.formState.errors.root && (
+                    <p role="alert" className="text-sm text-destructive">
+                      {copy('validationUnavailable')}
+                    </p>
+                  )}
+                  <div className="flex gap-2">
+                    {cancel('username')}
+                    {submit(
+                      !!usernameChallenge,
+                      !!usernameChallenge &&
+                        (usernameValues.otp.length !== 6 || usernameValues.previousOtp.length !== 6)
+                    )}
+                  </div>
+                </form>
+              </Form>
             )}
-          </div>
-
-          {/* ── Contact Information Section ───────────────────────────── */}
-          <div className="rounded-lg border p-4 space-y-4">
+          </section>
+          <section
+            className="rounded-lg border p-4 space-y-4"
+            aria-labelledby="contact-section-title"
+          >
             <div className="flex items-center gap-2">
-              <MailIcon className="h-4 w-4 text-muted-foreground" />
-              <h2 className="text-base font-semibold">{t('settings.contact.title', locale)}</h2>
+              <MailIcon aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
+              <h2 id="contact-section-title" className="text-base font-semibold">
+                {t('settings.contact.title', locale)}
+              </h2>
             </div>
             <p className="text-sm text-muted-foreground">
               {t('settings.contact.loginHelp', locale)}
             </p>
-
-            {/* Email */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <MailIcon className="h-3.5 w-3.5 text-muted-foreground" />
-                <span className="text-sm">{t('settings.contact.email', locale)}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-mono text-muted-foreground">
-                  {userInfo.email ?? (locale === 'fa' ? 'ثبت نشده' : 'Not set')}
-                </span>
-                {userInfo.email && (
-                  <span className="text-xs text-muted-foreground">
-                    {t(
-                      userInfo.emailVerified
-                        ? 'settings.contact.verified'
-                        : 'settings.contact.unverified',
-                      locale
-                    )}
-                  </span>
-                )}
-                {!userInfo.emailVerified && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    disabled={showAddContact !== null}
-                    onClick={() => {
-                      setShowAddContact('email');
-                      setNewContactValue(userInfo.email ?? '');
-                    }}
-                    className="gap-1 text-xs"
-                  >
-                    <PlusIcon className="h-3 w-3" />
-                    {t(
-                      userInfo.email ? 'settings.contact.verifyEmail' : 'settings.contact.addEmail',
-                      locale
-                    )}
-                  </Button>
-                )}
-              </div>
-            </div>
-
-            {/* Mobile */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <PhoneIcon className="h-3.5 w-3.5 text-muted-foreground" />
-                <span className="text-sm">{t('settings.contact.mobile', locale)}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-mono text-muted-foreground">
-                  {userInfo.mobile ?? (locale === 'fa' ? 'ثبت نشده' : 'Not set')}
-                </span>
-                {userInfo.mobile && (
-                  <span className="text-xs text-muted-foreground">
-                    {t(
-                      userInfo.mobileVerified
-                        ? 'settings.contact.verified'
-                        : 'settings.contact.unverified',
-                      locale
-                    )}
-                  </span>
-                )}
-                {!userInfo.mobileVerified && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    disabled={showAddContact !== null}
-                    onClick={() => {
-                      setShowAddContact('mobile');
-                      setNewContactValue(userInfo.mobile ?? '');
-                    }}
-                    className="gap-1 text-xs"
-                  >
-                    <PlusIcon className="h-3 w-3" />
-                    {t(
-                      userInfo.mobile
-                        ? 'settings.contact.verifyMobile'
-                        : 'settings.contact.addMobile',
-                      locale
-                    )}
-                  </Button>
-                )}
-              </div>
-            </div>
-
-            {/* Add Contact Form */}
-            {showAddContact && (
-              <div className="space-y-3 pt-2 border-t">
-                {!contactOtpSent ? (
-                  <>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="new-contact" className="text-xs">
-                        {showAddContact === 'email'
-                          ? t('settings.contact.email', locale)
-                          : t('settings.contact.mobile', locale)}
-                      </Label>
-                      <Input
-                        id="new-contact"
-                        type={showAddContact === 'email' ? 'email' : 'tel'}
-                        disabled={sendingContactOtp}
-                        placeholder={
-                          showAddContact === 'email'
-                            ? t('settings.contact.newEmailPlaceholder', locale)
-                            : t('settings.contact.newMobilePlaceholder', locale)
-                        }
-                        value={newContactValue}
-                        onChange={(e) => setNewContactValue(e.target.value)}
-                        className="text-sm"
-                        dir="ltr"
-                      />
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleCancelContact}
-                        disabled={sendingContactOtp || verifyingContact}
-                        className="gap-1"
-                      >
-                        <XIcon className="h-3.5 w-3.5" />
-                        {t('settings.contact.cancel', locale)}
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={handleSendContactOtp}
-                        disabled={sendingContactOtp || !newContactValue.trim()}
-                        className="gap-1"
-                      >
-                        {sendingContactOtp ? (
-                          <Loader2Icon className="h-3.5 w-3.5 animate-spin" />
-                        ) : (
-                          <SendIcon className="h-3.5 w-3.5" />
+            {(['email', 'mobile'] as const).map((type) => {
+              const value = user[type],
+                verified = type === 'email' ? user.emailVerified : user.mobileVerified;
+              const Icon = type === 'email' ? MailIcon : PhoneIcon;
+              return (
+                <div key={type} className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <Icon aria-hidden="true" className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span className="text-sm">{t('settings.contact.' + type, locale)}</span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span
+                      className="text-sm font-mono text-muted-foreground"
+                      dir={value ? 'ltr' : undefined}
+                    >
+                      {value ?? (locale === 'fa' ? 'ثبت نشده' : 'Not set')}
+                    </span>
+                    {value && (
+                      <span className="text-xs text-muted-foreground">
+                        {t(
+                          verified ? 'settings.contact.verified' : 'settings.contact.unverified',
+                          locale
                         )}
-                        {t('settings.contact.sendOtp', locale)}
+                      </span>
+                    )}
+                    {!verified && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        disabled={locked || contactType !== null}
+                        onClick={() => editor.openContact(type)}
+                        className="gap-1 text-xs"
+                      >
+                        <PlusIcon aria-hidden="true" className="h-3 w-3" />
+                        {t(
+                          value
+                            ? type === 'email'
+                              ? 'settings.contact.verifyEmail'
+                              : 'settings.contact.verifyMobile'
+                            : type === 'email'
+                              ? 'settings.contact.addEmail'
+                              : 'settings.contact.addMobile',
+                          locale
+                        )}
                       </Button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-xs text-muted-foreground">
-                      {t('settings.contact.otpSent', locale).replace(
-                        '{destination}',
-                        newContactValue
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+            {contactType && (
+              <Form {...contactForm}>
+                <form
+                  noValidate
+                  data-slot="account-contact-form"
+                  ref={editor.contactFeedback.element}
+                  onSubmit={(event) => void editor.prepareContact(event)}
+                  aria-busy={busy || contactForm.formState.isSubmitting}
+                  className="space-y-3 pt-2 border-t"
+                >
+                  {!contactChallenge ? (
+                    <AccountField
+                      form={contactForm}
+                      name="contactValue"
+                      id="new-contact"
+                      type={contactType === 'email' ? 'email' : 'tel'}
+                      label={t('settings.contact.' + contactType, locale)}
+                      placeholder={t(
+                        contactType === 'email'
+                          ? 'settings.contact.newEmailPlaceholder'
+                          : 'settings.contact.newMobilePlaceholder',
+                        locale
                       )}
-                    </p>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="contact-otp" className="text-xs">
-                        {t('settings.contact.otpLabel', locale)}
-                      </Label>
-                      <Input
-                        id="contact-otp"
-                        placeholder={t('settings.contact.otpPlaceholder', locale)}
-                        value={contactOtp}
-                        onChange={(e) => setContactOtp(e.target.value)}
-                        maxLength={6}
-                        className="text-sm font-mono w-40"
-                        dir="ltr"
-                      />
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleCancelContact}
-                        disabled={sendingContactOtp || verifyingContact}
-                        className="gap-1"
-                      >
-                        <XIcon className="h-3.5 w-3.5" />
-                        {t('settings.contact.cancel', locale)}
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={handleVerifyContact}
-                        disabled={verifyingContact || contactOtp.length !== 6}
-                        className="gap-1"
-                      >
-                        {verifyingContact ? (
-                          <Loader2Icon className="h-3.5 w-3.5 animate-spin" />
-                        ) : (
-                          <CheckIcon className="h-3.5 w-3.5" />
+                      locked={locked}
+                      canEdit={editor.canEdit}
+                    />
+                  ) : (
+                    <>
+                      <p className="text-xs text-muted-foreground">
+                        {t('settings.contact.otpSent', locale).replace(
+                          '{destination}',
+                          contactChallenge.destination
                         )}
-                        {t('settings.contact.verify', locale)}
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </div>
+                      </p>
+                      <AccountField
+                        form={contactForm}
+                        name="otp"
+                        id="contact-otp"
+                        otp
+                        label={t('settings.contact.otpLabel', locale)}
+                        placeholder={t('settings.contact.otpPlaceholder', locale)}
+                        locked={locked}
+                        canEdit={editor.canEdit}
+                      />
+                    </>
+                  )}
+                  {contactForm.formState.errors.root && (
+                    <p role="alert" className="text-sm text-destructive">
+                      {copy('validationUnavailable')}
+                    </p>
+                  )}
+                  <div className="flex gap-2">
+                    {cancel('contact')}
+                    {submit(
+                      !!contactChallenge,
+                      !!contactChallenge && contactValues.otp.length !== 6
+                    )}
+                  </div>
+                </form>
+              </Form>
             )}
-          </div>
+          </section>
         </div>
       )}
     </div>

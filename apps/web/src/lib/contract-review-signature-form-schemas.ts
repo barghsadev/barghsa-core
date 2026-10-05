@@ -63,3 +63,9 @@ export {
   savedAddressSchema,
   settingsInactiveSchema,
 } from './settings-form-schemas.js';
+
+export {
+  usernameSettingsSchema,
+  contactSettingsSchema,
+  inactiveAccountSettingsSchema,
+} from './account-settings-form-schemas.js';

@@ -6,6 +6,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await page.addInitScript((value) => {
+      localStorage.setItem('barghsa.locale', value);
       if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
@@ -101,6 +102,7 @@ for (const locale of ['en', 'fa'] as const) {
       page,
     }) => {
       await page.addInitScript((value) => {
+        localStorage.setItem('barghsa.locale', value);
         if (document.documentElement) document.documentElement.lang = value;
         new MutationObserver(() => {
           if (document.documentElement) document.documentElement.lang = value;

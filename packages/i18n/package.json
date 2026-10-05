@@ -326,6 +326,11 @@
       "types": "./dist/ticket-forms.d.ts",
       "import": "./dist/ticket-forms.js",
       "default": "./dist/ticket-forms.js"
+    },
+    "./account-settings-forms": {
+      "types": "./dist/account-settings-forms.d.ts",
+      "import": "./dist/account-settings-forms.js",
+      "default": "./dist/account-settings-forms.js"
     }
   },
   "scripts": {

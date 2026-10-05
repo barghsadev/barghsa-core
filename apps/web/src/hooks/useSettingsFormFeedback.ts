@@ -6,12 +6,11 @@ import {
   type FieldValues,
   type UseFormReturn,
 } from '@barghsa/ui/form';
-import type { SettingsCoordination } from '../lib/settings-form.js';
 export function useSettingsFormFeedback<Values extends FieldValues>(
   form: UseFormReturn<Values>,
   scope: string,
   locked: boolean,
-  coordination: SettingsCoordination,
+  coordination: { isLocked: () => boolean; isCurrent: () => boolean },
   messages: Partial<Record<FieldPath<Values>, string>>,
   fallback: string,
   enabled = true
