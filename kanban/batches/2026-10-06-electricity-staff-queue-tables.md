@@ -34,3 +34,7 @@ Publication and exact deployment/Telegram results remain separate external recei
 `v0.1.21` completed at `2026-10-05T23:05:01.590678+00:00`, with healthy exact live commit `10b4172839e54b76a4023e6f33740dd73725bfde`. Persian Telegram note `64` and reviewed screenshots `65`, `66` are confirmed. Its report and external receipt record completion.
 
 External evidence: `~/.local/state/barghsa-manual-batches/electricity-staff-queue-tables/`.
+
+## Following repair
+
+The separate customer contract-link defect is repaired in `v0.1.23`; see `2026-10-06-customer-contract-deep-links.md` for passing source/journey evidence. Its customer fixture repairs belong to that batch.

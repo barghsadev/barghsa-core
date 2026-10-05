@@ -911,3 +911,31 @@ it('refreshes the open contract after a system lifecycle transition', async () =
     en.Active
   );
 });
+
+it('uses the routed customer selection on SPA entry, change and close without rereading the queue', async () => {
+  const base = api();
+  const fetcher = vi.fn(async (raw: string) => {
+    if (new URL(raw, 'https://app.test').pathname === '/api/contracts/' + OLD)
+      return response(
+        detail({ id: OLD, version: version({ content: { text: 'Off-page linked terms' } }) })
+      );
+    return base(raw);
+  });
+  vi.stubGlobal('fetch', fetcher);
+  const select = vi.fn();
+  await render(<ContractsPage selection={{ selected: ID, select }} />);
+  expect(container.textContent).toContain('<script>never execute</script>');
+  const reads = () =>
+    fetcher.mock.calls.filter(
+      ([raw]) => new URL(raw, 'https://app.test').pathname === '/api/contracts'
+    ).length;
+  expect(reads()).toBe(1);
+  await render(<ContractsPage selection={{ selected: OLD, select }} />);
+  expect(container.textContent).toContain('Off-page linked terms');
+  expect(container.textContent).not.toContain('<script>never execute</script>');
+  expect(reads()).toBe(1);
+  await render(<ContractsPage selection={{ selected: null, select }} />);
+  expect(container.textContent).not.toContain('Off-page linked terms');
+  expect(reads()).toBe(1);
+  expect(select).not.toHaveBeenCalled();
+});

@@ -12,13 +12,21 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: electricity staff queue tables for v0.1.22 (October 6, 2026)
+## Latest manual batch: customer contract deep links for v0.1.23 (October 6, 2026)
+
+The customer contract workspace now uses the router's validated selection. Electricity-order links open the intended contract during client navigation; reload and Back/Forward restore or close it. Opening and closing preserve list criteria. Exact null closure and the existing shared coordination guard prevent stale local fallback or replacing a detail during protected commands. Staff query selection, actor/profile scopes and acceptance/signature/document engines retain their ownership.
+
+All **84** related source cases and **18 distinct** Chromium/mobile Safari cases pass, nine per engine, with zero retries. Two final Persian journey/capture cases also pass. Complete bilingual electricity address/order/payment/contract journeys, acceptance/upload, publication and customer filters are covered. Build/types/lint, contract/suppression, strict SAST with 1,798 files and zero findings/errors, five fixtures and all 85 unchanged budgets pass. One original Persian capture of linked terms/acceptance controls is reviewed. See `kanban/batches/2026-10-06-customer-contract-deep-links.md` and external evidence for scope, fixture repairs and the retained/final case ledger.
+
+This repairs `07-ui-ux-design.md#T-07.18.03.01` and `#T-07.18.03.04` while retaining E-04 contract engines; no new broad-task completion count. No API, migration, dependency, CI, budget or supervisor-state change. Publication and deployment outcomes remain separate exact-SHA receipts. Continue coherent direct-main batches and immediate independent release enqueue.
+
+## Previous manual batch: electricity staff queue tables for v0.1.22 (October 6, 2026)
 
 Review and conversation queues now use shared full-width desktop tables and mobile cards. Records show saved commercial/financial status, period, exact quantity and total/paid amounts, with account-zone submission dates. Review records include priority/age; conversations show latest-comment dates. Exact Open order actions retain one detail/form/decision owner across responsive changes. Linked-order empty states, cursors, permission denial, captured financial commands and uncertain-result locks retain their existing semantics.
 
 All **149** related source/dictionary cases and **32 distinct** Chromium/mobile Safari cases pass, **16 per engine**, with zero retries. Two final capture cases also pass. Build/types/lint, contract/suppression, strict SAST with 1,798 files and zero findings/errors, five fixtures and all 85 unchanged budgets pass. Two full original Persian light/dark captures are reviewed. See `kanban/batches/2026-10-06-electricity-staff-queue-tables.md` and external evidence for exact scope and retained/final reports.
 
-This advances `03-core-business.md#T-03.07.02.04` and domain adoption under `07-ui-ux-design.md#T-07.24.01.01` through `#T-07.24.01.04`, retaining `03-core-business.md#T-03.07.02.05`. Global tasks remain partial. No API, migration, dependency, CI, budget or supervisor-state change. An extra customer journey check exposed a separate existing contract deep-link defect after repairing old fixtures temporarily; it is documented for the next batch and not counted green. Publication/deployment results remain separate exact-SHA receipts. Continue direct-main batches and independent deployments.
+This advances `03-core-business.md#T-03.07.02.04` and domain adoption under `07-ui-ux-design.md#T-07.24.01.01` through `#T-07.24.01.04`, retaining `03-core-business.md#T-03.07.02.05`. Global tasks remain partial. No API, migration, dependency, CI, budget or supervisor-state change. An extra customer journey check exposed a separate existing contract deep-link defect after repairing old fixtures temporarily; those failed runs were not counted green. The following v0.1.23 batch repairs that defect and provides passing journey evidence. Publication/deployment results remain separate exact-SHA receipts. Continue direct-main batches and independent deployments.
 
 ## Previous manual batch: product catalogue query controls for v0.1.21 (October 6, 2026)
 

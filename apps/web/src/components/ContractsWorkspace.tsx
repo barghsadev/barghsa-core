@@ -56,11 +56,13 @@ export function ContractsWorkspace({
   staff = false,
   initialState,
   customerHistory,
+  selection,
   queries,
 }: {
   staff?: boolean;
   initialState?: 'Active' | undefined;
   customerHistory?: CustomerContractHistoryControls | undefined;
+  selection?: Pick<RecordListQuery, 'selected' | 'select'> | undefined;
   queries?: RecordListQuery | undefined;
 }) {
   const revision = useProfileContextRevision();
@@ -71,6 +73,7 @@ export function ContractsWorkspace({
       staff={staff}
       initialState={initialState}
       customerHistory={customerHistory}
+      selection={selection}
       queries={queries}
     />
   );
@@ -79,11 +82,13 @@ function Workspace({
   staff,
   initialState,
   customerHistory,
+  selection,
   queries,
 }: {
   staff: boolean;
   initialState?: 'Active' | undefined;
   customerHistory?: CustomerContractHistoryControls | undefined;
+  selection?: Pick<RecordListQuery, 'selected' | 'select'> | undefined;
   queries?: RecordListQuery | undefined;
 }) {
   const owner = useRef<object | null>(null),
@@ -310,6 +315,7 @@ function Workspace({
         staff={staff}
         query={staff ? query : customerParams.toString()}
         customerHistory={customerHistory}
+        selection={selection}
         queries={queries}
         initialSelected={createdId ?? new URLSearchParams(window.location.search).get('contractId')}
         coordination={coordination}
@@ -325,6 +331,7 @@ function ContractResults({
   customerHistory,
   query,
   initialSelected,
+  selection,
   queries,
   coordination,
   locked,
@@ -334,6 +341,7 @@ function ContractResults({
   staff: boolean;
   query: string;
   customerHistory?: CustomerContractHistoryControls | undefined;
+  selection?: Pick<RecordListQuery, 'selected' | 'select'> | undefined;
   initialSelected: string | null;
   coordination: ContractFormCoordination;
   locked: boolean;
@@ -365,13 +373,16 @@ function ContractResults({
   const [localSelected, setLocalSelected] = useState<string | null>(initialSelected);
   const queryRef = useRef(queries);
   queryRef.current = queries;
-  const offeredSelection = denied ? null : queries ? queries.selected : localSelected;
+  const selectionQuery = queries ?? selection;
+  const selectionRef = useRef(selectionQuery);
+  selectionRef.current = selectionQuery;
+  const offeredSelection = denied ? null : selectionQuery ? selectionQuery.selected : localSelected;
   const acceptedSelection = useRef(offeredSelection);
   if (!coordination.blocked()) acceptedSelection.current = offeredSelection;
   const selected = acceptedSelection.current;
   const setSelected = (id: string | null, replace = false) => {
     if (coordination.blocked()) return;
-    if (queryRef.current) queryRef.current.select(id, { replace });
+    if (selectionRef.current) selectionRef.current.select(id, { replace });
     else setLocalSelected(id);
   };
   useEffect(() => {

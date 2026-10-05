@@ -17,6 +17,8 @@ const address = {
   fullAddress: 'Electricity Street',
   postalCode: '1234567890',
   mainAddress: true,
+  createdAt: submittedAt,
+  updatedAt: submittedAt,
 };
 const addedAddress = {
   ...address,
@@ -55,7 +57,18 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/profiles', (route) =>
       route.fulfill({
         json: {
-          profiles: [{ id: profileId, profileType: 'LEGAL', title: 'Buyer' }],
+          profiles: [
+            {
+              id: profileId,
+              profileType: 'LEGAL',
+              title: 'Buyer',
+              isDefault: true,
+              status: 'ACTIVE',
+              firstName: null,
+              lastName: null,
+              nationalId: null,
+            },
+          ],
           activeProfileId: profileId,
           hasDefault: true,
         },
@@ -349,6 +362,38 @@ for (const locale of ['en', 'fa'] as const) {
         },
       })
     );
+    await page.route(`**/api/contracts/${contractId}/signature?*`, (route) =>
+      route.fulfill({
+        json: {
+          contractId,
+          versionId,
+          state: 'AwaitingCustomerAcceptance',
+          isCurrent: true,
+          isAmendment: false,
+          canRequest: false,
+          canRecord: false,
+          request: null,
+          signature: null,
+        },
+      })
+    );
+    await page.route(`**/api/contracts/${contractId}/activation?*`, (route) =>
+      route.fulfill({
+        json: {
+          contractId,
+          versionId,
+          state: 'AwaitingCustomerAcceptance',
+          isCurrent: true,
+          ready: false,
+          ruleRevision: 1,
+          initialInvoiceId: invoiceId,
+          serviceStartsAt: null,
+          serviceEndsAt: null,
+          evaluatedAt: submittedAt,
+          checks: [],
+        },
+      })
+    );
     await page.route(`**/api/contracts/${contractId}/versions`, (route) =>
       route.fulfill({ json: { versions: [contractVersion()], nextBefore: null } })
     );
@@ -388,6 +433,10 @@ for (const locale of ['en', 'fa'] as const) {
       .fill('POWER');
     await expect.poll(() => previews.at(-1)?.giftCode).toBe('POWER');
     await expect(wizard).toContainText(address.fullAddress);
+    // The fixed-date fixture can leave draft notifications over the mobile form footer.
+    for (const dismiss of await page.locator('[data-sonner-toast] [data-close-button]').all())
+      await dismiss.click();
+
     await page
       .getByRole('button', {
         name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
@@ -480,6 +529,39 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     await expect(page).toHaveURL(new RegExp(`/contracts\\?contractId=${contractId}$`));
     await expect(page.getByText('Published advanced electricity terms')).toBeVisible();
+    await page.reload();
+    await expect(page.getByText('Published advanced electricity terms')).toBeVisible();
+    if (locale === 'fa' && process.env.BARGHSA_SCREENSHOT_DIR) {
+      const previousViewport = page.viewportSize()!;
+      await page.setViewportSize({ width: 1280, height: 1800 });
+      const main = await page.locator('main').boundingBox();
+      const acceptance = await page
+        .getByRole('button', { name: 'پذیرش این نسخه', exact: true })
+        .boundingBox();
+      expect(main).not.toBeNull();
+      expect(acceptance).not.toBeNull();
+      await page.screenshot({
+        path: `${process.env.BARGHSA_SCREENSHOT_DIR}/customer-contract-link-fa.png`,
+        clip: {
+          x: main!.x,
+          y: main!.y,
+          width: main!.width,
+          height: acceptance!.y + acceptance!.height - main!.y + 32,
+        },
+      });
+      await page.setViewportSize(previousViewport);
+    }
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'بستن جزئیات' : 'Close details', exact: true })
+      .click();
+    await expect(page).not.toHaveURL(/contractId=/);
+    await expect(page.getByText('Published advanced electricity terms')).toHaveCount(0);
+    await page.goBack();
+    await expect(page).toHaveURL(new RegExp(`/contracts\\?contractId=${contractId}$`));
+    await expect(page.getByText('Published advanced electricity terms')).toBeVisible();
+    await page.goForward();
+    await expect(page).not.toHaveURL(/contractId=/);
+    await expect(page.getByText('Published advanced electricity terms')).toHaveCount(0);
   });
 }
 
@@ -494,7 +576,18 @@ test('electricity order, paid invoice and published contract keep the selected l
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
       json: {
-        profiles: [{ id: profileId, profileType: 'LEGAL', title: 'Buyer' }],
+        profiles: [
+          {
+            id: profileId,
+            profileType: 'LEGAL',
+            title: 'Buyer',
+            isDefault: true,
+            status: 'ACTIVE',
+            firstName: null,
+            lastName: null,
+            nationalId: null,
+          },
+        ],
         activeProfileId: profileId,
         hasDefault: true,
       },

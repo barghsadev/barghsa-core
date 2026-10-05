@@ -82,6 +82,21 @@ for (const locale of ['en', 'fa'] as const)
       await page.route(`**${base}/${ID}/versions`, (route) =>
         route.fulfill({ json: { versions: [version], nextBefore: null } })
       );
+      await page.route(`**${base}/${ID}/signature?*`, (route) =>
+        route.fulfill({
+          json: {
+            contractId: ID,
+            versionId: VERSION,
+            state,
+            isCurrent: true,
+            isAmendment: false,
+            canRequest: false,
+            canRecord: false,
+            request: null,
+            signature: null,
+          },
+        })
+      );
       let uploaded = false;
       const document = {
         id: DOCUMENT,

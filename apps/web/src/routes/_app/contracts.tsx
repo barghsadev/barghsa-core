@@ -11,11 +11,20 @@ import { RouteSkeleton } from '../../components/RouteSkeleton.js';
 import { RouteErrorBoundary } from '../../components/RouteErrorBoundary.js';
 const ContractsPage = lazyRouteComponent(() => import('../../pages/ContractsPage.js'));
 function ContractsRoute() {
-  const { state, statuses, from, to, q, sort, serviceType } = Route.useSearch();
+  const { state, statuses, from, to, q, sort, serviceType, contractId } = Route.useSearch();
   const navigate = Route.useNavigate();
   return (
     <ContractsPage
       activeOnly={state === 'Active'}
+      selection={{
+        selected: contractId ?? null,
+        select: (id, options = {}) =>
+          void navigate({
+            search: (current) => ({ ...current, contractId: id ?? undefined }),
+            replace: options.replace ?? false,
+            resetScroll: false,
+          }),
+      }}
       history={{
         onApply: (selection) =>
           void navigate({
