@@ -7,10 +7,6 @@ import {
   Button,
   ListPage,
   ScrollArea,
-  datePickerAtTime,
-  datePickerCalendarDate,
-  Input,
-  Label,
   Dialog,
   DialogContent,
   DialogHeader,
@@ -19,18 +15,31 @@ import {
 } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
-interface Item {
-  id: string;
-  exceptionType: string;
-  severity: string;
-  status: string;
-  description: string;
-  details: Record<string, unknown> | null;
-  assignedToUsername: string | null;
-  resolvedByUsername: string | null;
-  resolutionNote: string | null;
-  createdAt: string;
-}
+import {
+  Form,
+  FormInput,
+  FormTextarea,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  FormSubmit,
+  useZodForm,
+} from '@barghsa/ui/form';
+import {
+  reconciliationBounds,
+  reconciliationFilterErrors,
+  reconciliationNoteErrors,
+  reconciliationAllowed,
+  isReconciliationItem,
+  matchesReconciliationReceipt,
+  reconciliationLinks,
+  type ReconciliationItem as Item,
+  type ReconciliationVerb,
+  type ReconciliationFilterDraft,
+  type ReconciliationNoteDraft,
+} from '../lib/reconciliation-form.js';
 const statuses = ['open', 'investigating', 'resolved', 'closed'];
 const severities = ['low', 'medium', 'high', 'critical'];
 const pageSize = 25;
@@ -39,13 +48,54 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
   const locale = useLocale(),
     label = (key: string) => t(`admin.reconciliation.${key}`, locale);
   const initialFilters = useRef(queries?.query.filters).current;
-  const [status, setStatus] = useState(
-      initialFilters?.status === 'all' ? '' : initialFilters?.status || 'open'
-    ),
-    [severity, setSeverity] = useState(initialFilters?.severity || '');
-  const [from, setFrom] = useState(''),
-    [before, setBefore] = useState(''),
-    [invalid, setInvalid] = useState(false);
+  const filters = useZodForm<ReconciliationFilterDraft>(
+    async () => {
+      const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return contentFormSchema<ReconciliationFilterDraft>(
+        {
+          status: label('invalidChoice'),
+          severity: label('invalidChoice'),
+          from: label('invalidDates'),
+          before: label('invalidDates'),
+        },
+        (value) => reconciliationFilterErrors(value, time.timezone, initialFilters)
+      );
+    },
+    {
+      defaultValues: {
+        status: initialFilters?.status === 'all' ? '' : initialFilters?.status || 'open',
+        severity: initialFilters?.severity || '',
+        from: '',
+        before: '',
+      },
+      validationUnavailableMessage: label('validationUnavailable'),
+    }
+  );
+  const notes = useZodForm<ReconciliationNoteDraft>(
+    async () => {
+      const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return contentFormSchema<ReconciliationNoteDraft>(
+        { note: label('invalidNote') },
+        reconciliationNoteErrors
+      );
+    },
+    { defaultValues: { note: '' }, validationUnavailableMessage: label('validationUnavailable') }
+  );
+  const [validating, setValidating] = useState<'filter' | 'note' | null>(null);
+  const owned = useRef<'filter' | 'note' | 'command' | 'uncertain' | null>(null);
+  const sending = useRef(false);
+  const [pending, setPending] = useState(false);
+  const [uncertain, setUncertain] = useState(false);
+  const [fresh, setFresh] = useState<Item | null>(null);
+  const [freshState, setFreshState] = useState<'loading' | 'ready' | 'error'>('ready');
+  const [freshRevision, setFreshRevision] = useState(0);
+  const refreshOnDismiss = useRef(false);
+  const captured = useRef<{
+    before: Item;
+    verb: ReconciliationVerb;
+    note: string;
+    generation: number;
+  } | null>(null);
   const [query, setQuery] = useState(
       initialFilters ? reconciliationApiQuery(initialFilters) : 'status=open'
     ),
@@ -57,8 +107,14 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
     if (!initialFilters || time.status !== 'ready' || hydratedZone.current === time.timezone)
       return;
     hydratedZone.current = time.timezone;
-    setFrom(reconciliationLocalTime(initialFilters.createdFrom || '', time.timezone));
-    setBefore(reconciliationLocalTime(initialFilters.createdBefore || '', time.timezone));
+    filters.setValue(
+      'from',
+      reconciliationLocalTime(initialFilters.createdFrom || '', time.timezone)
+    );
+    filters.setValue(
+      'before',
+      reconciliationLocalTime(initialFilters.createdBefore || '', time.timezone)
+    );
   }, [initialFilters, time.status, time.timezone]);
   const [items, setItems] = useState<Item[]>([]),
     [loading, setLoading] = useState(true),
@@ -66,7 +122,6 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
   const [canView, setCanView] = useState(false),
     [canResolve, setCanResolve] = useState(false);
   const [selected, setSelected] = useState<Item | null>(null),
-    [note, setNote] = useState(''),
     [action, setAction] = useState<TeamAction | null>(null),
     [saved, setSaved] = useState(false);
   const [accessLoading, setAccessLoading] = useState(true),
@@ -89,12 +144,21 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
   }, [offset]);
   const reviewed = useRef<Item | null>(null);
   const visibleItems = acceptedScope === query ? items : [];
+  const locked = validating !== null || !!action || uncertain;
   function clearWork() {
     ++workGeneration.current;
     reviewed.current = null;
     setSelected(null);
-    setNote('');
+    notes.reset({ note: '' });
     setAction(null);
+    owned.current = null;
+    sending.current = false;
+    setPending(false);
+    captured.current = null;
+    refreshOnDismiss.current = false;
+    setUncertain(false);
+    setFresh(null);
+    setValidating(null);
   }
   function denyAccess() {
     accessValid.current = false;
@@ -174,6 +238,8 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
         if (controller.signal.aborted || !accessValid.current) return;
         if (
           reviewed.current &&
+          !sending.current &&
+          owned.current !== 'uncertain' &&
           !rows.some((row) => JSON.stringify(row) === JSON.stringify(reviewed.current))
         )
           clearWork();
@@ -188,95 +254,152 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
     return () => controller.abort();
   }, [query, offset, revision, canView, accessVersion, accessLoading]);
   function refreshAccess() {
+    if (
+      sending.current ||
+      owned.current === 'filter' ||
+      owned.current === 'note' ||
+      owned.current === 'uncertain'
+    )
+      return;
     accessValid.current = false;
     setAccessLoading(true);
     setAccessError(false);
     setAccessRevision((v) => v + 1);
   }
-  function filterInstant(value: string): Date | undefined {
-    if (time.status !== 'ready') return undefined;
-    const match = /^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2})$/.exec(value);
-    if (!match) return undefined;
-    const date = datePickerCalendarDate(match[1]!, time.timezone);
-    return date && datePickerAtTime(date, Number(match[2]), Number(match[3]), time.timezone);
-  }
-  function filter(event: FormEvent) {
+  async function filter(event: FormEvent) {
     event.preventDefault();
-    const retainedInstant = (value: string, key: string) => {
-      const applied = initialFilters?.[key];
-      if (
-        applied &&
-        time.status === 'ready' &&
-        value === reconciliationLocalTime(applied, time.timezone)
-      )
-        return new Date(applied);
-      return value ? filterInstant(value) : undefined;
-    };
-    const fromInstant = retainedInstant(from, 'createdFrom');
-    const beforeInstant = retainedInstant(before, 'createdBefore');
-    if (
-      (from && !fromInstant) ||
-      (before && !beforeInstant) ||
-      (fromInstant && beforeInstant && fromInstant >= beforeInstant)
-    ) {
-      setInvalid(true);
-      return;
+    if (owned.current || time.status !== 'ready') return;
+    owned.current = 'filter';
+    setValidating('filter');
+    const current = workGeneration.current;
+    try {
+      await filters.handleSubmit((value) => {
+        if (current !== workGeneration.current) return;
+        const bounds = reconciliationBounds(value, time.timezone, initialFilters);
+        setSaved(false);
+        const params = new URLSearchParams();
+        if (value.status) params.set('status', value.status);
+        if (value.severity) params.set('severity', value.severity);
+        if (bounds.from) params.set('createdFrom', bounds.from.toISOString());
+        if (bounds.before) params.set('createdBefore', bounds.before.toISOString());
+        const nextQuery = params.toString();
+        if (queries) {
+          queries.setQuery({
+            filters: {
+              status: value.status || 'all',
+              severity: value.severity,
+              createdFrom: bounds.from?.toISOString() || '',
+              createdBefore: bounds.before?.toISOString() || '',
+            },
+            page: 1,
+          });
+          if (nextQuery === query && offset === 0) setRevision((v) => v + 1);
+        } else {
+          setOffset(0);
+          if (nextQuery !== query) clearWork();
+          setQuery(nextQuery);
+          setRevision((v) => v + 1);
+        }
+      })(event);
+    } finally {
+      if (owned.current === 'filter' && current === workGeneration.current) {
+        owned.current = null;
+        setValidating(null);
+      }
     }
-    setInvalid(false);
-    setSaved(false);
-    const params = new URLSearchParams();
-    if (status) params.set('status', status);
-    if (severity) params.set('severity', severity);
-    if (fromInstant) params.set('createdFrom', fromInstant.toISOString());
-    if (beforeInstant) params.set('createdBefore', beforeInstant.toISOString());
-    const nextQuery = params.toString();
-    if (queries) {
-      queries.setQuery({
-        filters: {
-          status: status || 'all',
-          severity,
-          createdFrom: fromInstant?.toISOString() || '',
-          createdBefore: beforeInstant?.toISOString() || '',
-        },
-        page: 1,
-      });
-      if (nextQuery === query && offset === 0) setRevision((v) => v + 1);
-      return;
-    }
-    setOffset(0);
-    if (nextQuery !== query) clearWork();
-    setQuery(nextQuery);
-    setRevision((v) => v + 1);
   }
-  function prepare(verb: string) {
+  async function prepare(verb: ReconciliationVerb, event?: FormEvent) {
+    event?.preventDefault();
     if (
       !selected ||
+      owned.current ||
       loading ||
       error ||
+      accessLoading ||
+      accessError ||
       !accessValid.current ||
       !resolveAllowed.current ||
-      !(verb === 'investigate'
-        ? selected.status === 'open'
-        : verb === 'resolve'
-          ? ['open', 'investigating'].includes(selected.status)
-          : selected.status !== 'closed') ||
-      (verb !== 'investigate' && !note.trim())
+      !reconciliationAllowed(selected.status, verb)
     )
       return;
-    ++workGeneration.current;
-    reviewed.current = selected;
-    commandGeneration.current = workGeneration.current;
-    setAction({
-      title: label(verb),
-      description: `${selected.description}. ${label('confirm')}${verb === 'investigate' ? '' : ` ${note.trim()}`}`,
-      path: `/api/admin/reconciliation/items/${selected.id}/${verb}`,
-      method: 'POST',
-      body: verb === 'investigate' ? {} : { note: note.trim() },
-      conflictMessage: label('changed'),
-      forbiddenMessage: label('denied'),
-    });
-    setSelected(null);
+    owned.current = 'note';
+    setValidating('note');
+    const current = workGeneration.current;
+    const capture = (value: ReconciliationNoteDraft) => {
+      if (current !== workGeneration.current || !accessValid.current || !resolveAllowed.current)
+        return;
+      commandGeneration.current = ++workGeneration.current;
+      const note = verb === 'investigate' ? '' : value.note.trim();
+      captured.current = {
+        before: structuredClone(selected),
+        verb,
+        note,
+        generation: commandGeneration.current,
+      };
+      reviewed.current = selected;
+      owned.current = 'command';
+      setValidating(null);
+      setAction({
+        title: label(verb),
+        description: label('confirm'),
+        path: `/api/admin/reconciliation/items/${selected.id}/${verb}`,
+        method: 'POST',
+        body: verb === 'investigate' ? {} : { note },
+        successStatus: 200,
+        conflictMessage: label('changed'),
+        forbiddenMessage: label('denied'),
+      });
+    };
+    try {
+      if (verb === 'investigate') capture({ note: '' });
+      else await notes.handleSubmit(capture)(event);
+    } finally {
+      if (owned.current === 'note' && current === workGeneration.current) {
+        owned.current = null;
+        setValidating(null);
+      }
+    }
   }
+  function closeAction() {
+    setAction(null);
+    sending.current = false;
+    setPending(false);
+    if (!uncertain) {
+      owned.current = null;
+      captured.current = null;
+    }
+  }
+  function dismiss() {
+    const refresh = refreshOnDismiss.current;
+    clearWork();
+    if (refresh) setRevision((v) => v + 1);
+  }
+  useEffect(() => {
+    if (!uncertain || !selected) return;
+    const controller = new AbortController();
+    const current = workGeneration.current;
+    setFreshState('loading');
+    setFresh(null);
+    void fetch(`/api/admin/reconciliation/items/${selected.id}`, { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok)
+          throw new Error([401, 403].includes(response.status) ? 'denied' : 'error');
+        const value: unknown = await response.json();
+        if (!isReconciliationItem(value) || value.id !== selected.id)
+          throw new Error('Invalid saved exception');
+        if (controller.signal.aborted || current !== workGeneration.current || !accessValid.current)
+          return;
+        refreshOnDismiss.current = true;
+        setFresh(value);
+        setFreshState('ready');
+      })
+      .catch((reason: unknown) => {
+        if (controller.signal.aborted || current !== workGeneration.current) return;
+        if (reason instanceof Error && reason.message === 'denied') denyAccess();
+        else setFreshState('error');
+      });
+    return () => controller.abort();
+  }, [uncertain, selected?.id, freshRevision]);
   const recoveryView = (accessError || error) && (
     <div role="alert" className="space-y-2">
       <p>{label(accessError ? 'accessError' : 'error')}</p>
@@ -301,7 +424,7 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
         <ListPage.Toolbar>
           <Button
             variant="outline"
-            disabled={loading || accessLoading}
+            disabled={loading || accessLoading || validating !== null || pending || uncertain}
             onClick={() => {
               if (queries) queries.setQuery({ page: 1 });
               else setOffset(0);
@@ -310,61 +433,78 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
           >
             {label('refresh')}
           </Button>
-          <form
-            onSubmit={filter}
-            className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5 rounded-lg border bg-card text-card-foreground p-4"
-          >
-            {[
-              ['status', status, setStatus, statuses],
-              ['severity', severity, setSeverity, severities],
-            ].map(([key, value, setter, values]) => (
-              <div className="min-w-0 space-y-1" key={String(key)}>
-                <Label htmlFor={`rex-${key}`}>{label(String(key))}</Label>
-                <select
-                  id={`rex-${key}`}
-                  className="block w-full min-w-0 rounded border bg-card p-2"
-                  value={String(value)}
-                  onChange={(e) => (setter as typeof setStatus)(e.target.value)}
+          <Form {...filters}>
+            <form
+              onSubmit={filter}
+              noValidate
+              onChangeCapture={(event) => {
+                if (owned.current) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+              }}
+              className="rounded-lg border bg-card text-card-foreground p-4"
+            >
+              <fieldset disabled={locked} className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                {(['status', 'severity'] as const).map((name) => (
+                  <FormField
+                    key={name}
+                    control={filters.control}
+                    name={name}
+                    render={({ field }) => (
+                      <FormItem id={`rex-${name}`} className="min-w-0">
+                        <FormLabel>{label(name)}</FormLabel>
+                        <FormControl>
+                          <select
+                            {...field}
+                            className="block w-full min-w-0 rounded border bg-card p-2"
+                          >
+                            <option value="">{label('all')}</option>
+                            {(name === 'status' ? statuses : severities).map((value) => (
+                              <option key={value} value={value}>
+                                {label(value)}
+                              </option>
+                            ))}
+                          </select>
+                        </FormControl>
+                        <FormMessage reserveSpace />
+                      </FormItem>
+                    )}
+                  />
+                ))}
+                <FormInput
+                  control={filters.control}
+                  name="from"
+                  id="rex-from"
+                  label={label('from')}
+                  disabled={time.status !== 'ready'}
+                  inputProps={{ type: 'datetime-local', className: 'min-w-0 w-full' }}
+                  itemClassName="min-w-0"
+                />
+                <FormInput
+                  control={filters.control}
+                  name="before"
+                  id="rex-before"
+                  label={label('before')}
+                  disabled={time.status !== 'ready'}
+                  inputProps={{ type: 'datetime-local', className: 'min-w-0 w-full' }}
+                  itemClassName="min-w-0"
+                />
+                <FormSubmit
+                  loading={validating === 'filter'}
+                  disabled={locked || time.status !== 'ready'}
                 >
-                  <option value="">{label('all')}</option>
-                  {(values as string[]).map((v) => (
-                    <option key={v} value={v}>
-                      {label(v)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ))}
-            <div className="min-w-0">
-              <Label htmlFor="rex-from">{label('from')}</Label>
-              <Input
-                id="rex-from"
-                type="datetime-local"
-                disabled={!!queries && time.status !== 'ready'}
-                className="min-w-0 w-full"
-                value={from}
-                onChange={(e) => setFrom(e.target.value)}
-              />
-            </div>
-            <div className="min-w-0">
-              <Label htmlFor="rex-before">{label('before')}</Label>
-              <Input
-                id="rex-before"
-                type="datetime-local"
-                disabled={!!queries && time.status !== 'ready'}
-                className="min-w-0 w-full"
-                value={before}
-                onChange={(e) => setBefore(e.target.value)}
-              />
-            </div>
-            <Button type="submit" disabled={!!queries && time.status !== 'ready'}>
-              {label('apply')}
-            </Button>
-            <p className="sm:col-span-2 xl:col-span-5 text-sm text-muted-foreground">
-              {time.status === 'ready' && label('timeHint').replace('{zone}', time.timezone)}
-            </p>
-            {invalid && <p role="alert">{label('invalidDates')}</p>}
-          </form>
+                  {label('apply')}
+                </FormSubmit>
+                <p className="sm:col-span-2 xl:col-span-5 text-sm text-muted-foreground">
+                  {time.status === 'ready' && label('timeHint').replace('{zone}', time.timezone)}
+                </p>
+                {filters.formState.errors.root?.validation?.message && (
+                  <p role="alert">{filters.formState.errors.root.validation.message}</p>
+                )}
+              </fieldset>
+            </form>
+          </Form>
         </ListPage.Toolbar>
         {accessError && (
           <div role="alert" className="space-y-2">
@@ -416,11 +556,13 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
                     <td className="p-3">
                       <Button
                         variant="link"
+                        disabled={locked}
                         onClick={() => {
+                          if (owned.current) return;
                           ++workGeneration.current;
                           reviewed.current = item;
                           setSelected(item);
-                          setNote('');
+                          notes.reset({ note: '' });
                           setSaved(false);
                         }}
                       >
@@ -441,7 +583,7 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
         <ListPage.Pagination
           kind="cursor"
           label={label('pages')}
-          loading={loading || accessLoading}
+          loading={loading || accessLoading || locked}
           hasMore={
             canView &&
             !error &&
@@ -465,15 +607,18 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
           }}
         />
       </ListPage>
-      {selected && (
+      {selected && !action && (
         <Dialog
           open
           onOpenChange={(open) => {
-            if (!open) clearWork();
+            if (!open && owned.current !== 'filter' && owned.current !== 'note') dismiss();
           }}
         >
           <DialogContent
             className="max-h-[85dvh] overflow-y-auto"
+            initialFocus={
+              notes.formState.errors.note ? () => document.getElementById('rex-note') : undefined
+            }
             dir={locale === 'fa' ? 'rtl' : 'ltr'}
           >
             <DialogHeader>
@@ -497,44 +642,119 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
               </div>
             )}
             {recoveryView}
-            {canResolve && selected.status !== 'closed' && (
-              <div className="space-y-3">
-                {selected.status === 'open' && (
-                  <Button
-                    disabled={loading || error || accessLoading || accessError}
-                    onClick={() => prepare('investigate')}
-                  >
-                    {label('investigate')}
-                  </Button>
-                )}
-                <Label htmlFor="rex-note">{label('note')}</Label>
-                <textarea
-                  id="rex-note"
-                  className="block min-h-24 w-full rounded border p-2"
-                  maxLength={1000}
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                />
-                <div className="flex gap-3">
-                  {['open', 'investigating'].includes(selected.status) && (
-                    <Button
-                      disabled={!note.trim() || loading || error || accessLoading || accessError}
-                      onClick={() => prepare('resolve')}
-                    >
-                      {label('resolve')}
+            {reconciliationLinks(selected.details).length > 0 && (
+              <nav aria-label={label('related')} className="flex flex-wrap gap-3">
+                {reconciliationLinks(selected.details).map((link) => (
+                  <a key={link.href} className="underline underline-offset-4" href={link.href}>
+                    {label(link.label)}
+                  </a>
+                ))}
+              </nav>
+            )}
+            {uncertain && (
+              <div role="alert" className="space-y-3">
+                <p>{label('unconfirmed')}</p>
+                {freshState === 'loading' && <p role="status">{label('reviewLoading')}</p>}
+                {freshState === 'error' && (
+                  <>
+                    <p>{label('reviewError')}</p>
+                    <Button variant="outline" onClick={() => setFreshRevision((v) => v + 1)}>
+                      {label('reviewRetry')}
                     </Button>
-                  )}
-                  <Button
-                    variant="outline"
-                    disabled={!note.trim() || loading || error || accessLoading || accessError}
-                    onClick={() => prepare('close')}
-                  >
-                    {label('close')}
-                  </Button>
-                </div>
+                  </>
+                )}
+                {fresh && (
+                  <p>
+                    {label('savedStatus')}: <strong>{label(fresh.status)}</strong>
+                    {fresh.resolutionNote && <> · {fresh.resolutionNote}</>}
+                  </p>
+                )}
+                <Button
+                  variant="outline"
+                  disabled={freshState !== 'ready' || !fresh || !accessValid.current}
+                  onClick={() => {
+                    if (!fresh || freshState !== 'ready' || !accessValid.current) return;
+                    ++workGeneration.current;
+                    reviewed.current = fresh;
+                    setSelected(fresh);
+                    captured.current = null;
+                    owned.current = null;
+                    setUncertain(false);
+                    notes.clearErrors();
+                  }}
+                >
+                  {label('returnToEditing')}
+                </Button>
               </div>
             )}
-            <Button variant="outline" onClick={clearWork}>
+            {canResolve && selected.status !== 'closed' && (
+              <Form {...notes}>
+                <form
+                  noValidate
+                  onSubmit={(event) => {
+                    const submitter = (event.nativeEvent as SubmitEvent).submitter;
+                    const verb =
+                      submitter instanceof HTMLButtonElement && submitter.value === 'close'
+                        ? 'close'
+                        : selected.status === 'resolved'
+                          ? 'close'
+                          : 'resolve';
+                    void prepare(verb, event);
+                  }}
+                  onChangeCapture={(event) => {
+                    if (owned.current) {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }
+                  }}
+                  className="space-y-3"
+                >
+                  <fieldset disabled={locked} className="space-y-3">
+                    {selected.status === 'open' && (
+                      <Button
+                        type="button"
+                        disabled={locked || loading || error || accessLoading || accessError}
+                        onClick={() => void prepare('investigate')}
+                      >
+                        {label('investigate')}
+                      </Button>
+                    )}
+                    <FormTextarea
+                      control={notes.control}
+                      name="note"
+                      id="rex-note"
+                      label={label('note')}
+                      inputProps={{ maxLength: 1000, className: 'min-h-24' }}
+                    />
+                    {notes.formState.errors.root?.validation?.message && (
+                      <p role="alert">{notes.formState.errors.root.validation.message}</p>
+                    )}
+                    <div className="flex flex-wrap gap-3">
+                      {['open', 'investigating'].includes(selected.status) && (
+                        <FormSubmit
+                          name="decision"
+                          value="resolve"
+                          loading={validating === 'note'}
+                          disabled={locked || loading || error || accessLoading || accessError}
+                        >
+                          {label('resolve')}
+                        </FormSubmit>
+                      )}
+                      <FormSubmit
+                        name="decision"
+                        value="close"
+                        variant="outline"
+                        loading={validating === 'note'}
+                        disabled={locked || loading || error || accessLoading || accessError}
+                      >
+                        {label('close')}
+                      </FormSubmit>
+                    </div>
+                  </fieldset>
+                </form>
+              </Form>
+            )}
+            <Button variant="outline" disabled={validating !== null} onClick={dismiss}>
               {label('dismiss')}
             </Button>
           </DialogContent>
@@ -543,18 +763,85 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
       {action && (
         <TeamActionDialog
           action={action}
-          summary={recoveryView}
+          summary={
+            <div className="space-y-3">
+              {captured.current && (
+                <dl className="space-y-2 break-words text-sm">
+                  <div>
+                    <dt className="font-semibold">{label('details')}</dt>
+                    <dd>{captured.current.before.description}</dd>
+                  </div>
+                  <div>
+                    <dt className="font-semibold">{label('status')}</dt>
+                    <dd>
+                      {label(captured.current.before.status)} →{' '}
+                      {label(
+                        captured.current.verb === 'investigate'
+                          ? 'investigating'
+                          : captured.current.verb === 'resolve'
+                            ? 'resolved'
+                            : 'closed'
+                      )}
+                    </dd>
+                  </div>
+                  {captured.current.verb !== 'investigate' && (
+                    <div>
+                      <dt className="font-semibold">{label('note')}</dt>
+                      <dd className="whitespace-pre-wrap">{captured.current.note}</dd>
+                    </div>
+                  )}
+                  {captured.current.verb === 'close' && captured.current.before.resolutionNote && (
+                    <div>
+                      <dt className="font-semibold">{label('retainedResolution')}</dt>
+                      <dd className="whitespace-pre-wrap">
+                        {captured.current.before.resolutionNote}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              )}
+              {recoveryView}
+            </div>
+          }
           confirmationDisabled={loading || error || accessLoading || accessError || !canResolve}
-          onClose={() => {
-            if (actionGeneration === workGeneration.current) clearWork();
+          onPendingChange={(value) => {
+            if (actionGeneration !== workGeneration.current) return;
+            sending.current = value;
+            setPending(value);
           }}
-          onSuccess={async () => {
+          onClose={() => {
+            if (actionGeneration === workGeneration.current) closeAction();
+          }}
+          onDenied={denyAccess}
+          onValidationError={(fields) => {
+            if (actionGeneration !== workGeneration.current || !fields.includes('note'))
+              return false;
+            notes.setError('note', { type: 'server', message: label('invalidNote') });
+            return true;
+          }}
+          onUnconfirmed={() => {
+            if (actionGeneration !== workGeneration.current || !captured.current) return;
+            owned.current = 'uncertain';
+            sending.current = false;
+            setPending(false);
+            setAction(null);
+            setUncertain(true);
+            setSaved(false);
+            setFresh(null);
+          }}
+          onSuccess={async (data) => {
             if (
               actionGeneration !== workGeneration.current ||
               !accessValid.current ||
               !resolveAllowed.current
             )
               return;
+            const command = captured.current;
+            if (
+              !command ||
+              !matchesReconciliationReceipt(data, command.before, command.verb, command.note)
+            )
+              throw new Error('Unconfirmed reconciliation receipt');
             clearWork();
             setSaved(true);
             setRevision((v) => v + 1);

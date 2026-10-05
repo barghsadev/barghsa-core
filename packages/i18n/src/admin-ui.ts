@@ -878,6 +878,21 @@ export const fa: I18nDictionary = {
   'admin.reconciliation.accessError': 'دسترسی شما به مغایرت‌ها بررسی نشد. کار باز شما حفظ شده است.',
   'admin.reconciliation.accessRetry': 'تلاش دوباره برای بررسی دسترسی',
   'admin.reconciliation.tableTitle': 'نتیجه‌های مغایرت مالی',
+  'admin.reconciliation.invalidChoice': 'گزینه معتبر را انتخاب کنید.',
+  'admin.reconciliation.invalidNote': 'توضیح را با ۱ تا ۱۰۰۰ نویسه وارد کنید.',
+  'admin.reconciliation.validationUnavailable':
+    'اعتبارسنجی بارگذاری نشد. پیش‌نویس حفظ شده است؛ دوباره تلاش کنید.',
+  'admin.reconciliation.unconfirmed':
+    'نتیجه اقدام تأیید نشد. پیش‌نویس حفظ شده است. پیش از اقدام دوباره، وضعیت فعلی همین مغایرت را بررسی کنید.',
+  'admin.reconciliation.reviewLoading': 'در حال بازخوانی وضعیت ذخیره‌شده مغایرت…',
+  'admin.reconciliation.reviewError': 'وضعیت ذخیره‌شده مغایرت بازخوانی نشد.',
+  'admin.reconciliation.reviewRetry': 'بازخوانی وضعیت همین مغایرت',
+  'admin.reconciliation.returnToEditing': 'وضعیت ذخیره‌شده را بررسی کردم؛ بازگشت به ویرایش',
+  'admin.reconciliation.savedStatus': 'وضعیت ذخیره‌شده',
+  'admin.reconciliation.retainedResolution': 'نتیجه قبلی که حفظ می‌شود',
+  'admin.reconciliation.related': 'سوابق مرتبط',
+  'admin.reconciliation.walletLink': 'مشاهده پروفایل کیف پول',
+  'admin.reconciliation.invoiceLink': 'مشاهده فاکتور',
   'admin.reconciliation.title': 'مغایرت‌های مالی',
   'admin.reconciliation.description': 'مغایرت‌های گزارش‌شده را بررسی و نتیجه رسیدگی را ثبت کنید.',
   'admin.reconciliation.status': 'وضعیت',
@@ -896,7 +911,8 @@ export const fa: I18nDictionary = {
   'admin.reconciliation.timeHint':
     'تاریخ‌ها بر پایه منطقه زمانی حساب هستند: {zone}. زمان پایان در بازه نیست.',
   'admin.reconciliation.apply': 'اعمال فیلترها',
-  'admin.reconciliation.invalidDates': 'زمان شروع باید پیش از زمان پایان باشد.',
+  'admin.reconciliation.invalidDates':
+    'زمان معتبر در منطقه زمانی حساب انتخاب کنید؛ شروع باید پیش از پایان باشد.',
   'admin.reconciliation.loading': 'در حال دریافت مغایرت‌ها…',
   'admin.reconciliation.error': 'دریافت مغایرت‌ها انجام نشد.',
   'admin.reconciliation.retry': 'تلاش مجدد',
@@ -2595,6 +2611,21 @@ export const en: I18nDictionary = {
     'Your reconciliation access could not be checked. Your open work is kept.',
   'admin.reconciliation.accessRetry': 'Retry access check',
   'admin.reconciliation.tableTitle': 'Reconciliation results',
+  'admin.reconciliation.invalidChoice': 'Choose a valid option.',
+  'admin.reconciliation.invalidNote': 'Enter an explanation of 1–1000 characters.',
+  'admin.reconciliation.validationUnavailable':
+    'Validation could not load. Your draft is preserved; retry.',
+  'admin.reconciliation.unconfirmed':
+    'The action could not be confirmed. Your draft is preserved. Review the current status of this exception before another action.',
+  'admin.reconciliation.reviewLoading': 'Reading the saved exception status…',
+  'admin.reconciliation.reviewError': 'The saved exception status could not be loaded.',
+  'admin.reconciliation.reviewRetry': 'Read this exception status again',
+  'admin.reconciliation.returnToEditing': 'I reviewed the saved status; return to editing',
+  'admin.reconciliation.savedStatus': 'Saved status',
+  'admin.reconciliation.retainedResolution': 'Previous resolution that will be preserved',
+  'admin.reconciliation.related': 'Related records',
+  'admin.reconciliation.walletLink': 'Open wallet profile',
+  'admin.reconciliation.invoiceLink': 'Open invoice',
   'admin.reconciliation.title': 'Reconciliation exceptions',
   'admin.reconciliation.description':
     'Review reported mismatches and record each investigation outcome.',

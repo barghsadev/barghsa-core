@@ -1,0 +1,22 @@
+# Reconciliation exception review — v0.1.7
+
+Canonical scope: `02-auth-users-admin.md#T-09.09.01`. Reuse the existing exception lifecycle, current-session authority, row locks and audit transactions. Shared-form parents `07-ui-ux-design.md#T-07.10.01.02`, `#T-07.10.01.04`, `#T-07.10.01.05` and `#T-07.10.01.06` remain partial across the application.
+
+The previous editor silently rejected invalid input, discarded the explanation when opening confirmation and treated any successful response as a saved decision. Native shared filter/note forms now link bilingual feedback to the invalid field and preserve raw drafts. Date filters use the account zone, reject DST gaps and inverted intervals, and retain untouched precise UTC bounds. Details preserve exact mismatch values and link only validated identifiers to actual profile and invoice routes.
+
+An owned immutable proposal shows the exception, transition and normalized explanation before Investigate, Resolve or Close. Cancel restores the raw draft. Reset requires a receipt matching the exception, intended status and actual note-preservation semantics. Closing an already resolved exception preserves the original resolution; the new closure explanation is recorded in the existing audit transaction.
+
+Unknown responses retain a locked draft, read `GET /api/admin/reconciliation/items/:id` with current view authority independently of queue filters, and require deliberate saved-state review before another command. Read failures expose an exact retry; denied authority clears protected work. Late callbacks cannot mark a newer draft as saved or invalid, and background queue results cannot discard an uncertain or pending command.
+
+API validation returns only editable public note field identifiers after resolve authority checks. Unknown/protected fields retain general errors and submitted values are never echoed. The new authorized detail endpoint is reflected in OpenAPI. No migrations, dependencies, money movement, permission policy, budgets, CI gates or historical supervisor state changed.
+
+## Validation and review
+
+- Web: `pnpm --filter @barghsa/web exec vitest run src/lib/reconciliation-form.test.ts src/lib/decision-queue-query.test.ts src/pages/decision-queue-navigation.test.tsx src/pages/payment-review-recovery.test.tsx` — all 43 cases pass on final source. Covers precise dates, transitions, actual receipt semantics, validated links, late callbacks and read/access recovery without draft loss.
+- API: `BARGHSA_TEST_PREBUILT=1 pnpm --filter @barghsa/api exec vitest run src/admin/reconciliation-exceptions-http.integration.test.ts src/admin/reconciliation-exceptions.controller.test.ts src/admin/reconciliation-exceptions.service.test.ts` — all 41 cases pass. Real HTTP/database cases cover authorized exact reads outside queue filters, public-field privacy, current authority, concurrent changes, atomic audit rollback and close preserving the original resolution.
+- Browser: all 20 new `reconciliation-forms.spec.ts` Chromium/mobile Safari cases pass in one final run on rebuilt assets, with zero retries. Covers EN/FA, account zone differing from device zone, native linked feedback/focus, immutable duplicate submissions, full lifecycle, server note errors, mismatched/lost receipts, exact-read retry and denied-read privacy. Sixteen retained paging/URL/version cases passed in the preceding selective run; final changes affect field-error focus and link normalization, covered by the new cases. No accessibility rules or assertions were removed.
+- API/web builds, root `pnpm typecheck`, changed-file ESLint, OpenAPI contract, suppression check and all 85 unchanged bundle budgets pass. Canonical queue check validates 1,355 tasks and 116 traceability entries.
+- Strict SAST: 1,791 files, zero findings/errors and five rule fixtures pass.
+- Focused source review repaired late note/pending callbacks and background queue retirement during uncertain writes. Browser review found and repaired dialog autofocus overriding first-invalid focus after server feedback. Related-ID normalization is covered by a regression. Persian desktop validation/confirmation captures use fixture data and are reviewed before release.
+
+Evidence: `/Users/majid/.local/state/barghsa-manual-batches/reconciliation-review-forms/`. Publication and deployment receipts are external and separate from local validation. Push normally to `main`, then enqueue the exact pushed SHA with reviewed fixture-data screenshots immediately; continue without waiting for CI/deployment.

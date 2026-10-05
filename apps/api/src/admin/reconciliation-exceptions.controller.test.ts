@@ -127,9 +127,8 @@ describe('reconciliation-exceptions body validation', () => {
   it('rejects a missing note on resolve with 400', async () => {
     const { controller, service } = makeController();
     const rejection = await controller.resolveItem('ex-1', {}, adminReq).catch((e: unknown) => e);
-    expect(rejection).toMatchObject({ status: 400 });
+    expect(rejection).toMatchObject({ status: 400, fields: ['note'] });
     expect(rejectionBody(rejection)).toMatchObject({
-      statusCode: 400,
       error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
     });
     expect(service.resolveReconciliationException).not.toHaveBeenCalled();

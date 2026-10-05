@@ -14,6 +14,7 @@ import { reconciliationItem } from '../test/payment-review-fixtures.js';
 let confirmation: {
   action: { title: string };
   onSuccess: (result?: unknown) => Promise<void>;
+  onValidationError: (fields: unknown[]) => boolean;
   onClose: () => void;
 } | null = null;
 vi.mock('../components/TeamActionDialog.js', () => ({
@@ -76,7 +77,10 @@ afterEach(async () => {
 async function click(name: string) {
   const b = [...document.querySelectorAll('button')].find((b) => b.textContent?.trim() === name);
   expect(b, name).toBeDefined();
-  await act(async () => b!.click());
+  await act(async () => {
+    b!.click();
+    await vi.dynamicImportSettled();
+  });
 }
 it('restores UTC filters after timezone recovery and preserves untouched seconds on Apply', async () => {
   let finish!: (value: Response) => void;
@@ -138,6 +142,7 @@ for (const kind of ['approval', 'reconciliation'] as const)
     } else await click('Approve');
     const before = calls.length;
     await act(async () => {
+      if (kind === 'reconciliation') expect(old.onValidationError(['note'])).toBe(false);
       await old.onSuccess();
       old.onClose();
     });

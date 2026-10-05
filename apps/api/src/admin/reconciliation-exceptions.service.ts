@@ -381,8 +381,8 @@ export class ReconciliationExceptionsService {
     return this.getExceptionDto(exceptionId);
   }
 
-  /** Fetch a single exception by id (post-commit read for the DTO). */
-  private async getExceptionDto(id: string): Promise<ReconciliationExceptionDto> {
+  /** Fetch a single exception by id; callers enforce the view permission. */
+  async getExceptionDto(id: string): Promise<ReconciliationExceptionDto> {
     const pool = getDbPool();
     const result = await pool.query(
       `SELECT exc.*, assignee.username AS assigned_to_username, resolver.username AS resolved_by_username

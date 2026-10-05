@@ -199,3 +199,52 @@ it('filters an exact time interval, pages results, and rejects malformed dates a
     canResolve: false,
   });
 });
+
+it('reads a current exception outside its filtered queue with current view authority', async () => {
+  const id = await seed();
+  const path = `/${id}`;
+  expect((await fetch(`${http.base}/api/admin/reconciliation/items${path}`)).status).toBe(401);
+  expect((await request(path, 'GET', undefined, 'other')).status).toBe(403);
+  expect((await request('/bad', 'GET', undefined, 'viewer')).status).toBe(400);
+  expect((await request(`/${randomUUID()}`, 'GET', undefined, 'viewer')).status).toBe(404);
+  expect(await (await request(path, 'GET', undefined, 'viewer')).json()).toMatchObject({
+    id,
+    status: 'open',
+    resolutionNote: null,
+  });
+  expect((await request(`/${id}/resolve`, 'POST', { note: 'Saved resolution' })).status).toBe(200);
+  expect(await (await request('?status=open')).json()).toEqual([]);
+  expect(await (await request(path, 'GET', undefined, 'viewer')).json()).toMatchObject({
+    id,
+    status: 'resolved',
+    resolutionNote: 'Saved resolution',
+  });
+});
+it.each(['resolve', 'close'])(
+  'returns safe explanation fields for %s after permission checks',
+  async (action) => {
+    const id = await seed();
+    const path = `/${id}/${action}`;
+    for (const note of [' ', 'private submitted text'.repeat(60)]) {
+      const result = await request(path, 'POST', { note });
+      expect(result.status).toBe(400);
+      const body = await result.json();
+      expect(body).toMatchObject({
+        error: { code: 'VALIDATION:INPUT:INVALID', fields: ['note'] },
+      });
+      expect(JSON.stringify(body)).not.toContain('private submitted text');
+    }
+    const mixed = await request(path, 'POST', {
+      note: ' ',
+      privateField: 'private submitted text',
+    });
+    expect(mixed.status).toBe(400);
+    const mixedBody = await mixed.json();
+    expect(mixedBody).not.toHaveProperty('error.fields');
+    expect(JSON.stringify(mixedBody)).not.toContain('private submitted text');
+    const denied = await request(path, 'POST', { note: ' ' }, 'viewer');
+    expect(denied.status).toBe(403);
+    expect(await denied.json()).not.toHaveProperty('error.fields');
+    expect(await row(id)).toMatchObject({ status: 'open', resolution_note: null });
+  }
+);

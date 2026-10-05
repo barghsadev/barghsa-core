@@ -23,6 +23,7 @@ import {
   type ReconciliationExceptionDto,
 } from './reconciliation-exceptions.service.js';
 import { RECONCILIATION_STATUSES, RECONCILIATION_SEVERITIES } from '@barghsa/shared/admin';
+import { InputFieldException } from '../common/input-field.exception.js';
 
 /** Zod schema for the resolution/close note body (mandatory, bounded). */
 export const ResolutionNoteSchema = z
@@ -182,6 +183,17 @@ export class ReconciliationExceptionsController {
     return this.reconciliationService.listReconciliationExceptions(options);
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Read a reconciliation exception independently of queue filters' })
+  @ApiParam({ name: 'id', description: 'Reconciliation exception ID' })
+  @ApiResponse({ status: 200, description: 'Current reconciliation exception', type: Object })
+  @ApiResponse({ status: 403, description: 'View permission required' })
+  @ApiResponse({ status: 404, description: 'Exception not found' })
+  detail(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
+    this.assertViewPermission(req);
+    return this.reconciliationService.getExceptionDto(id);
+  }
+
   /**
    * POST /api/admin/reconciliation/items/:id/investigate
    *
@@ -236,6 +248,12 @@ export class ReconciliationExceptionsController {
     this.assertResolvePermission(req);
     const parsed = ResolutionNoteSchema.safeParse(rawBody);
     if (!parsed.success) {
+      if (
+        parsed.error.issues.every(
+          (issue) => issue.path[0] === 'note' && issue.code !== 'unrecognized_keys'
+        )
+      )
+        throw new InputFieldException(['note']);
       throw new HttpException(
         {
           statusCode: 400,
@@ -285,6 +303,12 @@ export class ReconciliationExceptionsController {
     this.assertResolvePermission(req);
     const parsed = ResolutionNoteSchema.safeParse(rawBody);
     if (!parsed.success) {
+      if (
+        parsed.error.issues.every(
+          (issue) => issue.path[0] === 'note' && issue.code !== 'unrecognized_keys'
+        )
+      )
+        throw new InputFieldException(['note']);
       throw new HttpException(
         {
           statusCode: 400,

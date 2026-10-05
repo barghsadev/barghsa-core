@@ -125,6 +125,9 @@ for (const locale of ['en', 'fa'])
       .getByRole('dialog')
       .getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true })
       .click();
+    await page
+      .getByRole('button', { name: fa ? 'بستن جزئیات' : 'Close details', exact: true })
+      .click();
     canView = false;
     await page
       .getByRole('button', { name: fa ? 'تازه‌سازی مغایرت‌ها' : 'Refresh exceptions', exact: true })

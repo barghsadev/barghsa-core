@@ -11813,6 +11813,44 @@
         ]
       }
     },
+    "/api/admin/reconciliation/items/{id}": {
+      "get": {
+        "operationId": "ReconciliationExceptionsController_detail",
+        "parameters": [
+          {
+            "description": "Reconciliation exception ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Current reconciliation exception"
+          },
+          "403": {
+            "description": "View permission required"
+          },
+          "404": {
+            "description": "Exception not found"
+          }
+        },
+        "summary": "Read a reconciliation exception independently of queue filters",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/reconciliation/items/{id}/close": {
       "post": {
         "operationId": "ReconciliationExceptionsController_closeItem",
