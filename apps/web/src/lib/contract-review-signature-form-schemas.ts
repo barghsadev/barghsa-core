@@ -76,3 +76,8 @@ export {
   marketingSettingsSchema,
   timezoneSettingsSchema,
 } from './preference-settings-form-schemas.js';
+
+export {
+  securityPasswordSchema,
+  inactiveSecurityPasswordSchema,
+} from './security-settings-form-schemas.js';

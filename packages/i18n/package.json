@@ -335,6 +335,10 @@
     "./preference-settings-forms": {
       "types": "./dist/preference-settings-forms.d.ts",
       "default": "./dist/preference-settings-forms.js"
+    },
+    "./security-settings-forms": {
+      "types": "./dist/security-settings-forms.d.ts",
+      "default": "./dist/security-settings-forms.js"
     }
   },
   "scripts": {
