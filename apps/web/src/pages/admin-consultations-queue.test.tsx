@@ -237,6 +237,7 @@ it('confirms the reviewed paid-fee charge before sending the staff adjustment', 
   };
   const submitted: Array<Record<string, unknown>> = [];
   let reviewedFee: unknown;
+  let reviewedResolution: unknown;
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string, init?: RequestInit) => {
@@ -316,10 +317,18 @@ it('confirms the reviewed paid-fee charge before sending the staff adjustment', 
           },
           hash: 'c'.repeat(64),
         };
+        reviewedResolution = data;
       } else {
         submitted.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
         data = url.endsWith('/paid-cancel')
-          ? { financialReview: { hash: 'c'.repeat(64) } }
+          ? {
+              requestId,
+              status: 'cancelled',
+              cancelledInvoiceId: null,
+              creditInvoiceIds: ['77777777-7777-4777-8777-777777777778'],
+              refundIds: ['77777777-7777-4777-8777-777777777779'],
+              financialReview: reviewedResolution,
+            }
           : {
               requestId,
               status: 'offer_pending',

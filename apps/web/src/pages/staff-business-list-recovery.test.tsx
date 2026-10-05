@@ -270,7 +270,10 @@ it('discards a delayed consultation fee review after selecting another request',
   try {
     await act(async () => button(container, 'First buyer').click());
     await act(async () => button(container, 'Issue fee offer and invoice').click());
-    expect(finish).toBeDefined();
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(finish).toBeDefined();
+    });
     await act(async () => button(container, 'Older buyer').click());
     await act(async () => finish!(Response.json(review)));
     expect(document.querySelector('[role="dialog"]')).toBeNull();

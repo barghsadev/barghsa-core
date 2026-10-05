@@ -426,10 +426,18 @@ export async function setupConsultationFeeOffers(page: Page, locale: 'en' | 'fa'
     if (state.writeMode === 'rejected') return error(route, 409, ErrorCodes.CONFLICT_STATE.code);
     return route.fulfill({ json: jsonbOrder(persist(command)) });
   });
-  await page.route('**/api/auth/step-up', (route) => {
+  await page.route('**/api/auth/step-up', async (route) => {
     state.verifications.push(route.request().postDataJSON());
     state.needsStepUp = false;
     state.csrf = 'consultation-fee-rotated';
+    // Install the intercepted response cookie before WebKit resumes the verified command.
+    await page.context().addCookies([
+      {
+        name: 'barghsa_csrf',
+        value: state.csrf,
+        url: new URL(route.request().url()).origin,
+      },
+    ]);
     return route.fulfill({
       headers: { 'set-cookie': `barghsa_csrf=${state.csrf}; Path=/; SameSite=Lax` },
       json: { verified: true },

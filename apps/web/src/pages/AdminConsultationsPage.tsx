@@ -22,6 +22,13 @@ import {
   useZodForm,
 } from '@barghsa/ui/form';
 import { tConsultationFee } from '@barghsa/i18n/consultation-fee';
+import { tConsultationResolution } from '@barghsa/i18n/consultation-resolution';
+import {
+  matchedConsultationResolutionReview,
+  matchedConsultationResolutionReceipt,
+  type ConsultationResolutionIntent,
+  type ConsultationResolutionSource,
+} from '../lib/consultation-resolution-form.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import {
@@ -38,7 +45,6 @@ import {
 } from '../lib/consultation-fee-form.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import {
-  parseConsultationPaidResolutionReview,
   type ConsultationFeeReview,
   type ConsultationPaidFeeReview,
   type ConsultationPaidResolutionReview,
@@ -103,6 +109,16 @@ interface FeeCommand {
   action: TeamAction;
   source: ConsultationFeeSource;
   review: ConsultationFeeReviewValue;
+  scope: string;
+  generation: number;
+  attempted: boolean;
+  uncertain: boolean;
+  rejected: boolean;
+}
+interface ResolutionCommand {
+  action: TeamAction;
+  source: ConsultationResolutionSource;
+  review: ConsultationPaidResolutionReview;
   scope: string;
   generation: number;
   attempted: boolean;
@@ -214,6 +230,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   const time = useAccountTime(locale);
   const copy = (key: string) => tConsultation(key, locale);
   const feeCopy = (key: string) => tConsultationFee(key, locale);
+  const resolutionCopy = (key: string) => tConsultationResolution(key, locale);
   const [accepted, setAccepted] = useState<{
     criteria: string;
     cursor: string | null;
@@ -266,8 +283,9 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   const reasonForm = useZodForm<ConsultationReasonDraft>(
     async () => {
       const generation = work.current.generation;
-      const paid = reasonPaidRef.current;
       const schemas = await import('../lib/consultation-form-schemas.js');
+      // Touched validation uses the intent selected while the schema was loading.
+      const paid = reasonPaidRef.current;
       return generation === work.current.generation
         ? schemas.reasonSchema(
             copy(paid ? 'paidReasonInvalid1000' : 'reasonInvalid2000'),
@@ -282,7 +300,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     { reason: copy(reasonPaid ? 'paidReasonInvalid1000' : 'reasonInvalid2000') },
     copy('actionError')
   );
-  const feeSource = useRef<ConsultationFeeSource | null>(null);
+  const feeSource = useRef<Detail['request'] | null>(null);
   feeSource.current = detail?.request ?? null;
   const feeZone = useRef<string | null>(null);
   feeZone.current = time.status === 'ready' ? time.timezone : null;
@@ -324,6 +342,8 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   const setOfferReason = (value: string) => feeForm.setValue('reason', value);
   const feeCommand = useRef<FeeCommand | null>(null);
   const [feeUncertain, setFeeUncertain] = useState(false);
+  const resolutionCommand = useRef<ResolutionCommand | null>(null);
+  const [resolutionUncertain, setResolutionUncertain] = useState(false);
   const readGeneration = useRef(0);
   const detailAbort = useRef<AbortController | null>(null);
   const queueAbort = useRef<AbortController | null>(null);
@@ -437,12 +457,21 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   function busy() {
     return (
       !!feeCommand.current ||
+      !!resolutionCommand.current ||
       feeForm.isSubmissionPending() ||
       !!actionRef.current ||
       preparingRef.current ||
       commandPendingRef.current ||
       reasonForm.isSubmissionPending() ||
       unconfirmedRef.current
+    );
+  }
+  function navigationBlocked() {
+    return (
+      commandPendingRef.current ||
+      !!feeCommand.current ||
+      !!resolutionCommand.current ||
+      (reasonPaidRef.current && preparingRef.current)
     );
   }
   function clearAction() {
@@ -462,6 +491,8 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     clearAction();
     feeCommand.current = null;
     setFeeUncertain(false);
+    resolutionCommand.current = null;
+    setResolutionUncertain(false);
     feeForm.reset(emptyConsultationFee);
     invalidateFeeReads();
     recoveringReason.current = null;
@@ -485,7 +516,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     if (clearSelection) setSelectedId(null);
   }
   function refresh() {
-    if (feeCommand.current) return;
+    if (navigationBlocked()) return;
     resetQueue();
     setRevision((value) => value + 1);
   }
@@ -606,6 +637,8 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   useEffect(() => {
     feeCommand.current = null;
     setFeeUncertain(false);
+    resolutionCommand.current = null;
+    setResolutionUncertain(false);
     feeForm.reset(emptyConsultationFee);
     clearAction();
     preparingRef.current = false;
@@ -628,7 +661,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   }, [workScope]);
 
   useEffect(() => {
-    if (feeCommand.current) return;
+    if (feeCommand.current || resolutionCommand.current) return;
     reviewRequest.current += 1;
     setFeeReview(null);
     setPaidFeeReview(null);
@@ -707,7 +740,13 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   }, [selectedId, criteria, revision, detailRevision, workScope]);
 
   useEffect(() => {
-    if (detail && time.status === 'ready' && !offerDirty.current && !feeCommand.current) {
+    if (
+      detail &&
+      time.status === 'ready' &&
+      !offerDirty.current &&
+      !feeCommand.current &&
+      !resolutionCommand.current
+    ) {
       setValidUntil(offerInputFromInstant(detail.request.offer_valid_until, time.timezone));
     }
   }, [detail, time.status, time.timezone]);
@@ -739,40 +778,61 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     setAction(next);
   }
   function prepareReason(intent: ReasonIntent, title: string, paid = false) {
-    if (!selectedId || !detail || busy()) return;
+    if (work.current.scope !== workScope || !selectedId || !detail || busy()) return;
     reasonPaidRef.current = paid;
     setReasonPaid(paid);
     reasonForm.clearErrors();
     const generation = work.current.generation;
     const captured = detail;
-    void reasonForm.handleSubmit(async (draft) => {
-      if (generation !== work.current.generation || work.current.scope !== workScope) return;
-      const reason = draft.reason.trim();
-      reasonCommand.current = {
-        requestId: captured.request.id,
-        profileId: captured.request.profile_id,
-        reason,
-        expectedStatus:
-          intent === 'request-info'
-            ? 'awaiting_customer_info'
-            : intent === 'complete'
-              ? 'completed'
-              : intent === 'reject'
-                ? 'rejected'
-                : intent === 'cancel'
-                  ? 'cancelled'
-                  : captured.request.status,
-        history: captured.history.map((event) => ({ ...event })),
-        paid,
-      };
-      if (paid)
-        await preparePaidResolution(
-          intent as 'cancel' | 'reject' | 'recover_refund',
-          title,
-          reason
-        );
-      else propose(intent, title, { reason });
-    })();
+    const raw = reasonForm.getValues().reason;
+    if (paid) {
+      preparingRef.current = true;
+      invalidateFeeReads();
+    }
+    void reasonForm
+      .handleSubmit(async (draft) => {
+        if (
+          generation !== work.current.generation ||
+          work.current.scope !== workScope ||
+          captured.request !== feeSource.current ||
+          raw !== reasonForm.getValues().reason
+        )
+          return;
+        const reason = draft.reason.trim();
+        reasonCommand.current = {
+          requestId: captured.request.id,
+          profileId: captured.request.profile_id,
+          reason,
+          expectedStatus:
+            intent === 'request-info'
+              ? 'awaiting_customer_info'
+              : intent === 'complete'
+                ? 'completed'
+                : intent === 'reject'
+                  ? 'rejected'
+                  : intent === 'cancel'
+                    ? 'cancelled'
+                    : captured.request.status,
+          history: captured.history.map((event) => ({ ...event })),
+          paid,
+        };
+        if (paid)
+          await preparePaidResolution(
+            intent as ConsultationResolutionIntent,
+            title,
+            reason,
+            raw,
+            captured.request,
+            generation
+          );
+        else propose(intent, title, { reason });
+      })()
+      .finally(() => {
+        if (paid && generation === work.current.generation && work.current.scope === workScope) {
+          preparingRef.current = false;
+          setReviewLoading(false);
+        }
+      });
   }
 
   function prepareFeeOffer() {
@@ -893,63 +953,166 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
       });
   }
 
+  function resolutionActive(command: ResolutionCommand) {
+    return (
+      work.current.scope === workScope &&
+      resolutionCommand.current === command &&
+      command.scope === work.current.scope &&
+      command.generation === work.current.generation
+    );
+  }
+  function resolutionUnknown(command: ResolutionCommand) {
+    if (!resolutionActive(command)) return;
+    command.uncertain = true;
+    setResolutionUncertain(true);
+    commandPendingRef.current = false;
+    setCommandPending(false);
+    actionRef.current = null;
+    setAction(null);
+  }
+  function resolutionRelease(command: ResolutionCommand) {
+    if (!resolutionActive(command)) return;
+    resolutionCommand.current = null;
+    setResolutionUncertain(false);
+    clearAction();
+  }
+  function showResolutionFields(value: unknown) {
+    const error = definitiveConsultationFeeRejection(value);
+    return (
+      error?.code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
+      Array.isArray(error.fields) &&
+      error.fields.length > 0 &&
+      error.fields.every((field) => field === 'reason') &&
+      reasonFields(error.fields)
+    );
+  }
+  function decorateResolutionAction(command: ResolutionCommand, ownedAction: TeamAction) {
+    ownedAction.errorMessages = Object.fromEntries(
+      [
+        ErrorCodes.VALIDATION_INPUT_INVALID.code,
+        'VALIDATION:INPUT_INVALID',
+        ErrorCodes.CONFLICT_STATE.code,
+        ErrorCodes.CONFLICT_VERSION.code,
+        ErrorCodes.NOT_FOUND_RESOURCE.code,
+      ].map((code) => [
+        code,
+        (result: unknown) => {
+          if (
+            !resolutionActive(command) ||
+            command.action !== ownedAction ||
+            actionRef.current !== ownedAction
+          )
+            return copy('actionError');
+          if (publicConsultationFeeError(result)?.code === ErrorCodes.NOT_FOUND_RESOURCE.code) {
+            denyAction();
+            return copy('actionError');
+          }
+          if (definitiveConsultationFeeRejection(result)) {
+            command.rejected = true;
+            if (!command.uncertain && showResolutionFields(result)) resolutionRelease(command);
+          }
+          return copy('actionError');
+        },
+      ])
+    );
+  }
+  function retryResolution() {
+    const command = resolutionCommand.current;
+    if (!command || !resolutionActive(command) || commandPendingRef.current) return;
+    const next = { ...command.action };
+    command.action = next;
+    decorateResolutionAction(command, next);
+    setResolutionReview(command.review);
+    actionScope.current = workScope;
+    actionGeneration.current = work.current.generation;
+    actionRef.current = next;
+    setAction(next);
+  }
   async function preparePaidResolution(
-    action: 'cancel' | 'reject' | 'recover_refund',
+    intent: ConsultationResolutionIntent,
     title: string,
-    reason: string
+    reason: string,
+    raw: string,
+    source: ConsultationResolutionSource,
+    generation: number
   ) {
     if (
-      !selectedId ||
-      !current ||
-      preparingRef.current ||
-      commandPendingRef.current ||
-      actionRef.current ||
-      unconfirmedRef.current
+      work.current.scope !== workScope ||
+      generation !== work.current.generation ||
+      source !== feeSource.current ||
+      raw !== reasonForm.getValues().reason
     )
       return;
     const request = ++reviewRequest.current;
-    const generation = work.current.generation;
-    preparingRef.current = true;
     setReviewLoading(true);
     setError(false);
     try {
       const response = await fetch(
-        `/api/admin/consultations/requests/${encodeURIComponent(selectedId)}/paid-resolution-review`,
+        `/api/admin/consultations/requests/${encodeURIComponent(source.id)}/paid-resolution-review`,
         {
           method: 'POST',
           credentials: 'include',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ action, reason }),
+          body: JSON.stringify({ action: intent, reason }),
         }
       );
-      if (!response.ok) throw new Error('paid-resolution-review');
-      const review = parseConsultationPaidResolutionReview(await response.json());
-      if (request !== reviewRequest.current || generation !== work.current.generation) return;
+      const value = await response.json().catch(() => null);
       if (
-        !review ||
-        review.scope.resourceId !== selectedId ||
-        review.scope.profileId !== current.profile_id ||
-        review.data.action !== action ||
-        review.data.reason !== reason ||
-        review.data.currentStatus !== current.status ||
-        (review.data.currentInvoice?.id ?? null) !== current.invoice_id
+        work.current.scope !== workScope ||
+        generation !== work.current.generation ||
+        request !== reviewRequest.current ||
+        source !== feeSource.current
       )
-        throw new Error('paid-resolution-review');
-      setResolutionReview(review);
-      propose(action === 'recover_refund' ? 'refund-recovery' : `paid-${action}`, title, {
-        idempotencyKey: offerKey,
-        reason,
-        expectedReviewHash: review.hash,
-      });
-    } catch {
-      if (request !== reviewRequest.current || generation !== work.current.generation) return;
-      setError(true);
-      refresh();
-    } finally {
-      if (request === reviewRequest.current && generation === work.current.generation) {
-        preparingRef.current = false;
-        setReviewLoading(false);
+        return;
+      if ([401, 403, 404].includes(response.status)) {
+        denyAction();
+        return;
       }
+      if (raw !== reasonForm.getValues().reason) return;
+      if (!response.ok) {
+        if (response.status === 400 && showResolutionFields(value)) return;
+        throw new Error('paid-resolution-review');
+      }
+      const review =
+        response.status === 200
+          ? matchedConsultationResolutionReview(value, source, intent, reason)
+          : null;
+      if (!review) throw new Error('paid-resolution-review');
+      const next: TeamAction = {
+        title,
+        description: `${source.profile_name} · ${title}`,
+        path: `/api/admin/consultations/requests/${source.id}/${intent === 'recover_refund' ? 'refund-recovery' : `paid-${intent}`}`,
+        method: 'POST',
+        successStatus: 200,
+        body: { idempotencyKey: crypto.randomUUID(), reason, expectedReviewHash: review.hash },
+        forbiddenMessage: copy('actionError'),
+      };
+      const command: ResolutionCommand = {
+        action: next,
+        source,
+        review,
+        scope: workScope,
+        generation,
+        attempted: false,
+        uncertain: false,
+        rejected: false,
+      };
+      decorateResolutionAction(command, next);
+      resolutionCommand.current = command;
+      invalidateFeeReads();
+      setResolutionReview(review);
+      actionScope.current = workScope;
+      actionGeneration.current = generation;
+      actionRef.current = next;
+      setAction(next);
+    } catch {
+      if (
+        work.current.scope === workScope &&
+        request === reviewRequest.current &&
+        generation === work.current.generation &&
+        raw === reasonForm.getValues().reason
+      )
+        setError(true);
     }
   }
 
@@ -957,6 +1120,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   const editorLocked =
     !!action ||
     !!feeCommand.current ||
+    !!resolutionCommand.current ||
     reviewLoading ||
     commandPending ||
     reasonForm.formState.isSubmitting;
@@ -987,6 +1151,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                   disabled={
                     !!action ||
                     !!feeCommand.current ||
+                    !!resolutionCommand.current ||
                     commandPending ||
                     reasonForm.formState.isSubmitting ||
                     unconfirmed ||
@@ -1007,6 +1172,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                   disabled={
                     !!action ||
                     !!feeCommand.current ||
+                    !!resolutionCommand.current ||
                     commandPending ||
                     reasonForm.formState.isSubmitting ||
                     unconfirmed ||
@@ -1051,9 +1217,9 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <select
                   className="w-full rounded-md border bg-background p-2"
                   value={appliedStatus}
-                  disabled={commandPending || !!feeCommand.current}
+                  disabled={navigationBlocked()}
                   onChange={(event) => {
-                    if (feeCommand.current || work.current.scope !== workScope) return;
+                    if (navigationBlocked() || work.current.scope !== workScope) return;
                     if (queries) queries.setFilters({ status: event.target.value });
                     else {
                       resetQueue(true);
@@ -1074,9 +1240,9 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <select
                   className="w-full rounded-md border bg-background p-2"
                   value={appliedAssignment}
-                  disabled={commandPending || !!feeCommand.current}
+                  disabled={navigationBlocked()}
                   onChange={(event) => {
-                    if (feeCommand.current || work.current.scope !== workScope) return;
+                    if (navigationBlocked() || work.current.scope !== workScope) return;
                     if (queries) queries.setFilters({ assignment: event.target.value });
                     else {
                       resetQueue(true);
@@ -1094,9 +1260,9 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <select
                   className="w-full rounded-md border bg-background p-2"
                   value={appliedPriority}
-                  disabled={commandPending || !!feeCommand.current}
+                  disabled={navigationBlocked()}
                   onChange={(event) => {
-                    if (feeCommand.current || work.current.scope !== workScope) return;
+                    if (navigationBlocked() || work.current.scope !== workScope) return;
                     if (queries) queries.setFilters({ priority: event.target.value });
                     else {
                       resetQueue(true);
@@ -1114,9 +1280,9 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <select
                   className="w-full rounded-md border bg-background p-2"
                   value={appliedMinAgeDays}
-                  disabled={commandPending || !!feeCommand.current}
+                  disabled={navigationBlocked()}
                   onChange={(event) => {
-                    if (feeCommand.current || work.current.scope !== workScope) return;
+                    if (navigationBlocked() || work.current.scope !== workScope) return;
                     if (queries) queries.setFilters({ minAgeDays: event.target.value });
                     else {
                       resetQueue(true);
@@ -1135,9 +1301,9 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
             <Button
               variant="outline"
               onClick={() => {
-                if (!commandPendingRef.current && !feeCommand.current) refresh();
+                if (!navigationBlocked()) refresh();
               }}
-              disabled={queueLoading || commandPending || !!feeCommand.current}
+              disabled={queueLoading || navigationBlocked()}
             >
               {copy('refresh')}
             </Button>
@@ -1166,6 +1332,19 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
               onClick={retryFee}
             >
               {feeCopy('retryCaptured')}
+            </Button>
+          </div>
+        )}
+        {resolutionUncertain && (
+          <div role="alert" className="space-y-2">
+            <p>{resolutionCopy('uncertain')}</p>
+            <Button
+              data-testid="consultation-resolution-retry"
+              variant="outline"
+              disabled={commandPending}
+              onClick={retryResolution}
+            >
+              {resolutionCopy('retryCaptured')}
             </Button>
           </div>
         )}
@@ -1209,12 +1388,11 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 <button
                   key={row.id}
                   type="button"
-                  disabled={commandPending || !!feeCommand.current}
+                  disabled={navigationBlocked()}
                   onClick={() => {
                     if (
                       work.current.scope !== workScope ||
-                      commandPendingRef.current ||
-                      feeCommand.current ||
+                      navigationBlocked() ||
                       row.id === selectedId
                     )
                       return;
@@ -1253,23 +1431,27 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
               kind="cursor"
               hasMore={
                 !!nextAfter &&
-                !feeCommand.current &&
+                !navigationBlocked() &&
                 !queueError &&
                 !queueDenied &&
-                (queueLoading ||
+                ((accepted?.cursor !== after && accepted?.nextAfter === after) ||
+                  queueLoading ||
                   (queries ? queries.queue.canAdvance(nextAfter) : nextAfter !== after))
               }
               loading={queueLoading}
               onNext={() => {
-                if (!nextAfter || commandPendingRef.current || feeCommand.current) return;
-                if (queries) queries.queue.next(nextAfter);
+                if (!nextAfter || navigationBlocked() || work.current.scope !== workScope) return;
+                if (nextAfter === after && accepted?.cursor !== after)
+                  setListRevision((value) => value + 1);
+                else if (queries) queries.queue.next(nextAfter);
                 else setAfter(nextAfter);
               }}
               previous={{
                 enabled:
-                  !queueDenied && !feeCommand.current && (queries?.queue.hasPrevious ?? false),
+                  !queueDenied && !navigationBlocked() && (queries?.queue.hasPrevious ?? false),
                 onClick: () => {
-                  if (!feeCommand.current) queries?.queue.previous();
+                  if (!navigationBlocked() && work.current.scope === workScope)
+                    queries?.queue.previous();
                 },
                 label: appText('historyPagination.previous', locale),
               }}
@@ -1507,7 +1689,13 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                             <textarea
                               {...field}
                               aria-required="true"
-                              disabled={editorLocked || unconfirmed}
+                              disabled={
+                                !!action ||
+                                !!feeCommand.current ||
+                                !!resolutionCommand.current ||
+                                commandPending ||
+                                unconfirmed
+                              }
                               className="min-h-24 w-full rounded-md border bg-background p-2"
                             />
                           </FormControl>
@@ -1639,6 +1827,10 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
           confirmationDisabled={unconfirmed}
           onPendingChange={(pending) => {
             if (!currentAction()) return;
+            if (pending && resolutionCommand.current) {
+              resolutionCommand.current.attempted = true;
+              invalidateFeeReads();
+            }
             if (pending && feeCommand.current) {
               feeCommand.current.attempted = true;
               invalidateFeeReads();
@@ -1648,6 +1840,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
           }}
           onValidationError={(fields) =>
             currentAction() &&
+            !resolutionCommand.current &&
             !!reasonCommand.current &&
             fields.length > 0 &&
             fields.every((field) => field === 'reason') &&
@@ -1657,6 +1850,10 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
             if (!currentAction()) return;
             if (feeCommand.current) {
               feeUnknown(feeCommand.current);
+              return;
+            }
+            if (resolutionCommand.current) {
+              resolutionUnknown(resolutionCommand.current);
               return;
             }
             if (!reasonCommand.current || reasonCommand.current.paid) return;
@@ -1863,6 +2060,11 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
               if (command.uncertain || (command.attempted && !command.rejected))
                 feeUnknown(command);
               else feeRelease(command);
+            } else if (resolutionCommand.current) {
+              const resolution = resolutionCommand.current;
+              if (resolution.uncertain || (resolution.attempted && !resolution.rejected))
+                resolutionUnknown(resolution);
+              else resolutionRelease(resolution);
             } else clearAction();
           }}
           onSuccess={async (result) => {
@@ -1882,6 +2084,21 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 setOfferReason('');
               setFeeReview(null);
               setPaidFeeReview(null);
+              clearAction();
+              refresh();
+              return;
+            }
+            const resolutionCaptured = resolutionCommand.current;
+            if (resolutionCaptured) {
+              if (
+                !resolutionActive(resolutionCaptured) ||
+                !matchedConsultationResolutionReceipt(result, resolutionCaptured.review)
+              )
+                throw new Error('Consultation resolution receipt did not match');
+              resolutionCommand.current = null;
+              setResolutionUncertain(false);
+              reasonForm.reset({ reason: '' });
+              offerDirty.current = true;
               clearAction();
               refresh();
               return;

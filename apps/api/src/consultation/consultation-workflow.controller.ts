@@ -272,48 +272,56 @@ export class StaffConsultationWorkflowController {
   @HttpCode(200)
   @ApiOperation({ summary: 'Cancel a paid consultation and request wallet refunds' })
   @ApiZodBody(paidClosure)
-  paidCancel(
+  async paidCancel(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.workflow.closePaid(
-      req.session,
-      id,
-      'cancel',
-      parse(paidClosure, body),
-      req.ip ?? '127.0.0.1'
+    requireFormPermission(req);
+    const input = await parseConsultationFeeInput(paidClosure, body, ['reason'], () =>
+      this.workflow.assertCanEditPaidResolution(req.session, id, false, true)
     );
+    return this.workflow.closePaid(req.session, id, 'cancel', input, req.ip ?? '127.0.0.1');
   }
 
   @Post('requests/:id/paid-resolution-review')
   @HttpCode(200)
   @ApiOperation({ summary: 'Preview paid consultation closure or wallet refund recovery' })
   @ApiZodBody(paidResolutionInput)
-  paidResolutionReview(
+  async paidResolutionReview(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.workflow.paidResolutionReview(req.session, id, parse(paidResolutionInput, body));
+    requireFormPermission(req);
+    const input = await parseConsultationFeeInput(paidResolutionInput, body, ['reason'], () =>
+      this.workflow.assertCanEditPaidResolution(
+        req.session,
+        id,
+        typeof body === 'object' &&
+          body !== null &&
+          'action' in body &&
+          body.action === 'recover_refund',
+        false
+      )
+    );
+    return this.workflow.paidResolutionReview(req.session, id, input);
   }
 
   @Post('requests/:id/paid-reject')
   @HttpCode(200)
   @ApiOperation({ summary: 'Reject a paid consultation and request wallet refunds' })
   @ApiZodBody(paidClosure)
-  paidReject(
+  async paidReject(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.workflow.closePaid(
-      req.session,
-      id,
-      'reject',
-      parse(paidClosure, body),
-      req.ip ?? '127.0.0.1'
+    requireFormPermission(req);
+    const input = await parseConsultationFeeInput(paidClosure, body, ['reason'], () =>
+      this.workflow.assertCanEditPaidResolution(req.session, id, false, true)
     );
+    return this.workflow.closePaid(req.session, id, 'reject', input, req.ip ?? '127.0.0.1');
   }
 
   @Post('requests/:id/refund-recovery')
@@ -322,17 +330,16 @@ export class StaffConsultationWorkflowController {
     summary: 'Request an uncovered consultation credit refund without issuing another credit',
   })
   @ApiZodBody(paidClosure)
-  refundRecovery(
+  async refundRecovery(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.workflow.recoverRefund(
-      req.session,
-      id,
-      parse(paidClosure, body),
-      req.ip ?? '127.0.0.1'
+    requireFormPermission(req);
+    const input = await parseConsultationFeeInput(paidClosure, body, ['reason'], () =>
+      this.workflow.assertCanEditPaidResolution(req.session, id, true, true)
     );
+    return this.workflow.recoverRefund(req.session, id, input, req.ip ?? '127.0.0.1');
   }
 
   @Post('requests/:id/request-info')

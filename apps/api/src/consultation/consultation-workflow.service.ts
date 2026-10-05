@@ -1132,6 +1132,53 @@ export class ConsultationWorkflowService {
     return review;
   }
 
+  async assertCanEditPaidResolution(
+    actor: Actor,
+    id: string,
+    recovery: boolean,
+    write: boolean
+  ): Promise<void> {
+    if (!write) {
+      await this.staffFinancialPreview(actor, id, async () => undefined, !recovery);
+      return;
+    }
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const source = (
+        await client.query<{ profile_id: string; invoice_id: string | null }>(
+          'SELECT profile_id,invoice_id FROM consultation_requests WHERE id=$1',
+          [id]
+        )
+      ).rows[0];
+      if (!source) throw new NotFoundException('Consultation request not found');
+      await client.query('SELECT id FROM profiles WHERE id=$1 FOR SHARE', [source.profile_id]);
+      await lockDualApprovalThreshold(client, 'read');
+      await requireStaffMutationPermission(client, actor.userId, 'orders:write');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
+      await requireSessionStepUp(client, actor);
+      const invoices = (
+        await client.query<{ id: string }>(
+          'SELECT id FROM invoices WHERE consultation_id=$1 ORDER BY id',
+          [id]
+        )
+      ).rows;
+      for (const invoice of invoices)
+        await client.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [invoice.id]);
+      const request = await this.lockRequest(client, id);
+      if (request.profile_id !== source.profile_id || request.invoice_id !== source.invoice_id)
+        throw new ConflictException('Consultation changed; refresh before acting');
+      if (!recovery) await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+      await requireSessionStepUp(client, actor);
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async paidResolutionReview(
     actor: Actor,
     id: string,

@@ -296,6 +296,11 @@
       "types": "./dist/consultation-fee.d.ts",
       "import": "./dist/consultation-fee.js",
       "default": "./dist/consultation-fee.js"
+    },
+    "./consultation-resolution": {
+      "types": "./dist/consultation-resolution.d.ts",
+      "import": "./dist/consultation-resolution.js",
+      "default": "./dist/consultation-resolution.js"
     }
   },
   "scripts": {

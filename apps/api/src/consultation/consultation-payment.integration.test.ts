@@ -573,6 +573,124 @@ it('charges or credits a paid consultation without changing the paid invoice', a
   expect(expiredReplay.status, http.logs()).toBe(200);
   expect(await expiredReplay.json()).toEqual(expiringReceipt);
   expect(await consultationFeeEffects(http.pool, expiring.requestId)).toEqual(expiryEffects);
+  const resolutionCommand = {
+    idempotencyKey: randomUUID(),
+    reason: 'Resolution reason',
+    expectedReviewHash: 'a'.repeat(64),
+  };
+  for (const [route, body] of [
+    [`${root}/paid-resolution-review`, { action: 'reject', reason: resolutionCommand.reason }],
+    [`${root}/paid-cancel`, resolutionCommand],
+    [`${root}/paid-reject`, resolutionCommand],
+    [`${root}/refund-recovery`, resolutionCommand],
+  ] as const) {
+    await rejectedPaidFee(route, { ...body, reason: '' }, ['reason']);
+    await rejectedPaidFee(route, { ...body, reason: 'x'.repeat(1001) }, ['reason']);
+    await rejectedPaidFee(route, { ...body, reason: '', unknown: 'PRIVATE' });
+    await rejectedPaidFee(
+      route,
+      route.endsWith('/paid-resolution-review')
+        ? { ...body, reason: '', action: 'PRIVATE' }
+        : { ...body, reason: '', expectedReviewHash: 'PRIVATE' }
+    );
+    await rejectedPaidFee(
+      route.replace(requestId, randomUUID()),
+      { ...body, reason: '' },
+      undefined,
+      404
+    );
+    await rejectedPaidFee(route, { ...body, reason: '' }, undefined, 403, 'consultation-payer');
+  }
+  const resolutionPermissions = [
+    'orders:read',
+    'orders:write',
+    'invoices:write',
+    'admin:financial:edit',
+  ];
+  for (const permission of ['orders:write', 'admin:financial:edit', 'invoices:write']) {
+    await http.pool.query('UPDATE staff_roles SET permissions=$1 WHERE role_id=$2', [
+      JSON.stringify(resolutionPermissions.filter((item) => item !== permission)),
+      'consultation-payment-staff',
+    ]);
+    try {
+      await rejectedPaidFee(
+        `${root}/paid-resolution-review`,
+        { action: 'cancel', reason: '' },
+        undefined,
+        403
+      );
+      await rejectedPaidFee(
+        `${root}/paid-cancel`,
+        { ...resolutionCommand, reason: '' },
+        undefined,
+        403
+      );
+      await rejectedPaidFee(
+        `${root}/paid-resolution-review`,
+        { action: 'recover_refund', reason: '' },
+        permission === 'invoices:write' ? ['reason'] : undefined,
+        permission === 'invoices:write' ? 400 : 403
+      );
+      await rejectedPaidFee(
+        `${root}/refund-recovery`,
+        { ...resolutionCommand, reason: '' },
+        permission === 'invoices:write' ? ['reason'] : undefined,
+        permission === 'invoices:write' ? 400 : 403
+      );
+    } finally {
+      await http.pool.query('UPDATE staff_roles SET permissions=$1 WHERE role_id=$2', [
+        JSON.stringify(resolutionPermissions),
+        'consultation-payment-staff',
+      ]);
+    }
+  }
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='consultation-finance'"
+  );
+  try {
+    await rejectedPaidFee(
+      `${root}/paid-reject`,
+      { ...resolutionCommand, reason: '' },
+      undefined,
+      403
+    );
+    await rejectedPaidFee(
+      `${root}/refund-recovery`,
+      { ...resolutionCommand, reason: '' },
+      undefined,
+      403
+    );
+    await rejectedPaidFee(
+      `${root}/paid-resolution-review`,
+      { action: 'recover_refund', reason: '' },
+      ['reason']
+    );
+  } finally {
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='consultation-finance'"
+    );
+  }
+  await http.pool.query(
+    "UPDATE sessions SET revoked_at=NOW() WHERE user_id='consultation-finance'"
+  );
+  try {
+    await rejectedPaidFee(
+      `${root}/paid-resolution-review`,
+      { action: 'cancel', reason: '' },
+      undefined,
+      401
+    );
+    await rejectedPaidFee(
+      `${root}/paid-reject`,
+      { ...resolutionCommand, reason: '' },
+      undefined,
+      401
+    );
+  } finally {
+    await http.pool.query(
+      "UPDATE sessions SET revoked_at=NULL WHERE user_id='consultation-finance'"
+    );
+  }
   const rejected = await resolvePaid(`${root}/paid-reject`, 'consultation-finance', {
     idempotencyKey: randomUUID(),
     reason: 'Service cannot be provided',
@@ -581,6 +699,15 @@ it('charges or credits a paid consultation without changing the paid invoice', a
   const rejectedBody = (await rejected.json()) as { status: string; refundIds: string[] };
   expect(rejectedBody.status).toBe('rejected');
   expect(rejectedBody.refundIds.length).toBeGreaterThan(0);
+  const savedClosure = (
+    await http.pool.query<{
+      metadata: { idempotencyKey: string; reason: string; financialReview: { hash: string } };
+    }>(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='consultation.paid.closed' AND metadata::jsonb->>'requestId'=$1",
+      [requestId]
+    )
+  ).rows;
+  expect(savedClosure).toHaveLength(1);
   const finalRefunds = (
     await http.pool.query<{ amount: string }>(
       'SELECT amount::text FROM refunds r JOIN invoices i ON i.id=r.invoice_id WHERE i.consultation_id=$1',
@@ -607,6 +734,15 @@ it('charges or credits a paid consultation without changing the paid invoice', a
     { reason: 'Refund details require correction', expectedReviewHash }
   );
   expect(rejectedRefund.status, http.logs()).toBe(200);
+  const closureProgressEffects = await consultationFeeEffects(http.pool, requestId, true);
+  const closureReplay = await post(`${root}/paid-reject`, 'consultation-finance', {
+    idempotencyKey: savedClosure[0]!.metadata.idempotencyKey,
+    reason: savedClosure[0]!.metadata.reason,
+    expectedReviewHash: savedClosure[0]!.metadata.financialReview.hash,
+  });
+  expect(closureReplay.status, http.logs()).toBe(200);
+  expect(await closureReplay.json()).toEqual(rejectedBody);
+  expect(await consultationFeeEffects(http.pool, requestId, true)).toEqual(closureProgressEffects);
   const staffDetail = await fetch(`${http.base}${root}`, {
     headers: headers['consultation-finance']!,
   });
@@ -621,10 +757,18 @@ it('charges or credits a paid consultation without changing the paid invoice', a
     )
   ).rows[0]!.count;
   const recoveryInput = { idempotencyKey: randomUUID(), reason: 'Corrected refund request' };
+  await http.pool.query('UPDATE staff_roles SET permissions=$1 WHERE role_id=$2', [
+    JSON.stringify(resolutionPermissions.filter((item) => item !== 'invoices:write')),
+    'consultation-payment-staff',
+  ]);
   const recoveryPreview = await post(`${root}/paid-resolution-review`, 'consultation-finance', {
     action: 'recover_refund',
     reason: recoveryInput.reason,
   });
+  await http.pool.query('UPDATE staff_roles SET permissions=$1 WHERE role_id=$2', [
+    JSON.stringify(resolutionPermissions),
+    'consultation-payment-staff',
+  ]);
   expect(recoveryPreview.status, http.logs()).toBe(200);
   const recoveryReview = (await recoveryPreview.json()) as {
     hash: string;
@@ -662,6 +806,27 @@ it('charges or credits a paid consultation without changing the paid invoice', a
     headers: headers['consultation-finance']!,
   });
   expect(await recoveredDetail.json()).toMatchObject({ request: { uncovered_credit: '0' } });
+  const recoveredRefundReview = await post(
+    `/api/admin/wallet-refunds/${recovered.refundIds[0]}/reject/review`,
+    'consultation-finance',
+    { reason: 'Recovered refund requires correction' }
+  );
+  expect(recoveredRefundReview.status, http.logs()).toBe(200);
+  const recoveredRefundHash = ((await recoveredRefundReview.json()) as { hash: string }).hash;
+  const progressedRecovery = await post(
+    `/api/admin/wallet-refunds/${recovered.refundIds[0]}/reject`,
+    'consultation-finance',
+    { reason: 'Recovered refund requires correction', expectedReviewHash: recoveredRefundHash }
+  );
+  expect(progressedRecovery.status, http.logs()).toBe(200);
+  const recoveryProgressEffects = await consultationFeeEffects(http.pool, requestId, true);
+  const recoveryReplay = await post(`${root}/refund-recovery`, 'consultation-finance', {
+    ...recoveryInput,
+    expectedReviewHash: recoveryReview.hash,
+  });
+  expect(recoveryReplay.status, http.logs()).toBe(200);
+  expect(await recoveryReplay.json()).toEqual(recovered);
+  expect(await consultationFeeEffects(http.pool, requestId, true)).toEqual(recoveryProgressEffects);
 }, 30_000);
 
 it('cancels an unpaid revised charge and requests a refund for the prior paid consultation', async () => {
@@ -679,6 +844,28 @@ it('cancels an unpaid revised charge and requests a refund for the prior paid co
   });
   expect(revised.status, http.logs()).toBe(200);
   const revisedInvoiceId = ((await revised.json()) as { invoiceId: string }).invoiceId;
+  for (const [route, body, fields] of [
+    [`${root}/paid-resolution-review`, { action: 'cancel', reason: '' }, ['reason']],
+    [
+      `${root}/paid-cancel`,
+      { idempotencyKey: randomUUID(), expectedReviewHash: 'a'.repeat(64), reason: '' },
+      ['reason'],
+    ],
+    [
+      `${root}/paid-cancel`,
+      { idempotencyKey: 'PRIVATE', expectedReviewHash: 'a'.repeat(64), reason: '' },
+      undefined,
+    ],
+  ] as const) {
+    const before = await consultationFeeEffects(http.pool, requestId);
+    const invalid = await post(route, 'consultation-finance', body);
+    expect(invalid.status, http.logs()).toBe(400);
+    const error = await invalid.json();
+    if (fields) expect(error).toHaveProperty('error.fields', [...fields]);
+    else expect(error).not.toHaveProperty('error.fields');
+    expect(JSON.stringify(error)).not.toContain('PRIVATE');
+    expect(await consultationFeeEffects(http.pool, requestId)).toEqual(before);
+  }
   const input = { idempotencyKey: randomUUID(), reason: 'Customer cancelled the consultation' };
   const closePreview = await post(`${root}/paid-resolution-review`, 'consultation-finance', {
     action: 'cancel',
@@ -759,6 +946,33 @@ it('cancels an unpaid revised charge and requests a refund for the prior paid co
     request: { status: 'cancelled' },
     refunds: [{ id: result.refundIds[0] }],
   });
+  const refundReview = await post(
+    `/api/admin/wallet-refunds/${result.refundIds[0]}/reject/review`,
+    'consultation-finance',
+    { reason: 'Cancelled refund needs correction' }
+  );
+  expect(refundReview.status, http.logs()).toBe(200);
+  const refundHash = ((await refundReview.json()) as { hash: string }).hash;
+  expect(
+    (
+      await post(
+        `/api/admin/wallet-refunds/${result.refundIds[0]}/reject`,
+        'consultation-finance',
+        { reason: 'Cancelled refund needs correction', expectedReviewHash: refundHash }
+      )
+    ).status,
+    http.logs()
+  ).toBe(200);
+  const cancellationProgressEffects = await consultationFeeEffects(http.pool, requestId, true);
+  const savedCancellationReplay = await post(`${root}/paid-cancel`, 'consultation-finance', {
+    ...input,
+    expectedReviewHash: resolutionHashes.get(input.idempotencyKey),
+  });
+  expect(savedCancellationReplay.status, http.logs()).toBe(200);
+  expect(await savedCancellationReplay.json()).toEqual(result);
+  expect(await consultationFeeEffects(http.pool, requestId, true)).toEqual(
+    cancellationProgressEffects
+  );
 });
 
 it('declines an offer and cancels its unpaid invoice', async () => {

@@ -2,7 +2,11 @@ import { randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
 
 /** Generic successful wrapper audits remain expected; financial/domain effects occur once. */
-export async function consultationFeeEffects(pool: Pool, requestId: string) {
+export async function consultationFeeEffects(
+  pool: Pool,
+  requestId: string,
+  resolutionReplay = false
+) {
   return (
     await pool.query(
       `SELECT to_jsonb(r) AS request,
@@ -10,10 +14,12 @@ export async function consultationFeeEffects(pool: Pool, requestId: string) {
       (SELECT jsonb_agg(to_jsonb(e) ORDER BY id) FROM consultation_request_events e WHERE request_id=$1::uuid) AS events,
       (SELECT jsonb_agg(to_jsonb(f) ORDER BY f.id) FROM refunds f JOIN invoices i ON i.id=f.invoice_id WHERE i.consultation_id=$1) AS refunds,
       (SELECT jsonb_agg(to_jsonb(j) ORDER BY j.refund_id) FROM refund_retry_jobs j JOIN refunds f ON f.id=j.refund_id JOIN invoices i ON i.id=f.invoice_id WHERE i.consultation_id=$1) AS refund_jobs,
-      (SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM audit_log a WHERE NOT (event='consultation.request.changed' AND COALESCE(metadata::jsonb->>'action','') IN ('fee_set','paid_fee_adjusted'))) AS financial_audits,
+      (SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM audit_log a WHERE NOT (event='consultation.request.changed' AND
+        (COALESCE(metadata::jsonb->>'action','') IN ('fee_set','paid_fee_adjusted') OR
+          ($2::boolean AND COALESCE(metadata::jsonb->>'action','') IN ('paid_cancel','paid_reject','refund_recovered'))))) AS financial_audits,
       (SELECT jsonb_agg(to_jsonb(n) ORDER BY id) FROM in_app_notifications n) AS notices
      FROM consultation_requests r WHERE id=$1::uuid`,
-      [requestId]
+      [requestId, resolutionReplay]
     )
   ).rows[0];
 }
