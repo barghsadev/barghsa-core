@@ -18,3 +18,5 @@ API validation returns only editable public field names after authority/step-up 
 - Focused source/receipt review found and repaired a same-frame refresh/submission race, covered in both browser locales. Persian validation and confirmation captures are visually reviewed; screenshots use fixture data, not live customer records.
 
 Evidence: `/Users/majid/.local/state/barghsa-manual-batches/maintenance-settings-forms/`. Publication and deployment receipts are external and separate from local validation. Push normally to `main`, then enqueue the exact pushed SHA with reviewed screenshots immediately; continue without waiting for CI/deployment. v0.1.5 is deployed with its Telegram notification confirmed.
+
+The first release worker stopped at the notes-heading preflight before building, rollout or notification. The heading now follows the required `برقسا نسخه 0.1.6` format. Preserve the failed receipt externally, validate the corrected exact checkout and enqueue the same unshipped version at its corrected pushed SHA. Product source and passing tests remain unchanged.
