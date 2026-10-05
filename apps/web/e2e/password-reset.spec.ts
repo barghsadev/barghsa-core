@@ -1,8 +1,18 @@
 import { mockPublicAuthCsrf } from './public-auth-fixture';
 import { test, expect } from './coverage-fixture';
+import { passwordRecoveryText as copy } from '@barghsa/i18n/password-recovery-forms';
 import type { Page } from '@playwright/test';
 
 const token = 'a'.repeat(64);
+const challengeId = '00000000-0000-4000-8000-000000000001';
+const challengeResponse = {
+  sent: true,
+  challengeId,
+  message: 'If an account exists, a verification code has been queued.',
+};
+const resetResponse = {
+  message: 'Your password has been reset. Please log in with your new password.',
+};
 async function mockVerification(page: Page) {
   await page.route('**/api/auth/reset-password/verify', (route) =>
     route.fulfill({
@@ -35,10 +45,10 @@ for (const locale of ['fa', 'en'] as const) {
     const challengeId = '00000000-0000-4000-8000-000000000001';
     await mockVerification(page);
     await page.route('**/api/auth/forgot-password', (route) =>
-      route.fulfill({ json: { sent: true, challengeId } })
+      route.fulfill({ json: { ...challengeResponse, challengeId } })
     );
     await page.route('**/api/auth/reset-password', (route) =>
-      route.fulfill({ json: { message: 'ok' } })
+      route.fulfill({ json: resetResponse })
     );
     await page.goto('/forgot-password');
     await page.evaluate((value) => {
@@ -80,7 +90,9 @@ test('rejected OTP leaves verification usable without showing password fields', 
   page,
 }) => {
   await page.route('**/api/auth/forgot-password', (route) =>
-    route.fulfill({ json: { sent: true, challengeId: '00000000-0000-4000-8000-000000000001' } })
+    route.fulfill({
+      json: { ...challengeResponse, challengeId: '00000000-0000-4000-8000-000000000001' },
+    })
   );
   await page.route('**/api/auth/reset-password/verify', (route) =>
     route.fulfill({ status: 401, json: { error: { code: 'AUTH:OTP:INVALID' } } })
@@ -95,17 +107,20 @@ test('rejected OTP leaves verification usable without showing password fields', 
 });
 
 for (const locale of ['en', 'fa'] as const) {
-  test(`reset needs acknowledgement before clearing input (${locale})`, async ({ page }) => {
+  test(`unknown reset needs explicit fresh recovery before clearing input (${locale})`, async ({
+    page,
+  }) => {
+    await page.clock.install();
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await mockPublicAuthCsrf(page);
     await page.route('**/api/auth/forgot-password', (route) =>
-      route.fulfill({ json: { sent: true, challengeId: 'reset-challenge' } })
+      route.fulfill({ json: { ...challengeResponse, challengeId: challengeId } })
     );
     await mockVerification(page);
     let attempts = 0;
     await page.route('**/api/auth/reset-password', (route) => {
       attempts++;
-      return route.fulfill({ json: attempts === 1 ? {} : { message: 'Password changed' } });
+      return route.fulfill({ json: attempts === 1 ? {} : resetResponse });
     });
     await page.goto('/forgot-password');
     await page.evaluate((lang) => {
@@ -120,6 +135,15 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByRole('alert')).toBeVisible();
     await expect(page.locator('#new-password')).toHaveValue('New-browser-password-123!');
     await expect(page.locator('#reset-otp input').first()).toHaveCount(0);
+    await expect(page.locator('button[type="submit"]')).toBeDisabled();
+    await page.getByRole('button', { name: copy('restart', locale), exact: true }).click();
+    await expect(page.locator('#username')).toHaveValue('retry@example.test');
+    await expect(page.locator('#new-password')).toHaveCount(0);
+    await page.clock.runFor(61_000);
+    await page.locator('button[type="submit"]').click();
+    await enterCode(page, locale);
+    await page.locator('#new-password').fill('New-browser-password-123!');
+    await page.locator('#confirm-password').fill('New-browser-password-123!');
     await page.locator('button[type="submit"]').click();
     await expect(page).toHaveURL(/\/login$/);
     await expect(page.locator('[data-sonner-toast]')).toContainText(
@@ -143,7 +167,10 @@ for (const locale of ['en', 'fa'] as const) {
       await page.locator('button[type="submit"]').click();
       await expect(page.getByRole('alert')).toBeVisible();
       await expect(page.locator('#username')).toHaveValue('retry@example.test');
-      await expect(page.locator('button[type="submit"]')).toBeEnabled();
+      await expect(page.locator('button[type="submit"]')).toBeDisabled();
+      await expect(
+        page.getByRole('button', { name: copy('restart', locale), exact: true })
+      ).toBeEnabled();
       await expect(page.locator('#reset-otp input').first()).toHaveCount(0);
     });
   }
@@ -167,13 +194,13 @@ for (const locale of ['en', 'fa'] as const) {
 for (const invalid of ['missing-token', 'mismatched-challenge', 'false-verification', 'expired']) {
   test(`OTP acknowledgement rejects ${invalid} before password entry`, async ({ page }) => {
     await page.route('**/api/auth/forgot-password', (route) =>
-      route.fulfill({ json: { sent: true, challengeId: 'challenge' } })
+      route.fulfill({ json: { ...challengeResponse, challengeId: challengeId } })
     );
     await page.route('**/api/auth/reset-password/verify', (route) =>
       route.fulfill({
         json: {
           verified: invalid !== 'false-verification',
-          challengeId: invalid === 'mismatched-challenge' ? 'wrong' : 'challenge',
+          challengeId: invalid === 'mismatched-challenge' ? 'wrong' : challengeId,
           resetToken: invalid === 'missing-token' ? undefined : token,
           expiresAt: new Date(
             Date.now() + (invalid === 'expired' ? -60_000 : 300_000)
@@ -186,7 +213,8 @@ for (const invalid of ['missing-token', 'mismatched-challenge', 'false-verificat
     await page.locator('button[type="submit"]').click();
     await page.locator('#reset-otp input').first().fill('123456');
     await expect(page.getByRole('alert')).toBeVisible();
-    await expect(page.locator('#reset-otp input').first()).toHaveValue('');
+    await expect(page.locator('#reset-otp input').first()).toHaveValue('1');
+    await expect(page.locator('button[type="submit"]')).toBeDisabled();
     await expect(page.locator('#new-password')).toHaveCount(0);
   });
 }
@@ -197,7 +225,7 @@ for (const stage of ['verify', 'complete']) {
   }) => {
     await page.clock.install();
     await page.route('**/api/auth/forgot-password', (route) =>
-      route.fulfill({ json: { sent: true, challengeId: 'challenge' } })
+      route.fulfill({ json: { ...challengeResponse, challengeId: challengeId } })
     );
     await mockVerification(page);
     const endpoint =
@@ -227,7 +255,7 @@ test('reset grant expires after the resend countdown and clears the password for
 }) => {
   await page.clock.install();
   await page.route('**/api/auth/forgot-password', (route) =>
-    route.fulfill({ json: { sent: true, challengeId: 'challenge' } })
+    route.fulfill({ json: { ...challengeResponse, challengeId: challengeId } })
   );
   await mockVerification(page);
   await page.goto('/forgot-password');
@@ -253,7 +281,7 @@ test('duplicate pending verification submits once and reveals password fields on
   });
   let requests = 0;
   await page.route('**/api/auth/forgot-password', (route) =>
-    route.fulfill({ json: { sent: true, challengeId: 'challenge' } })
+    route.fulfill({ json: { ...challengeResponse, challengeId: challengeId } })
   );
   await page.route('**/api/auth/reset-password/verify', async (route) => {
     requests++;
@@ -261,7 +289,7 @@ test('duplicate pending verification submits once and reveals password fields on
     await route.fulfill({
       json: {
         verified: true,
-        challengeId: 'challenge',
+        challengeId: challengeId,
         resetToken: token,
         expiresAt: new Date(Date.now() + 300_000).toISOString(),
       },
@@ -287,7 +315,11 @@ test('duplicate pending verification submits once and reveals password fields on
   }
 });
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page }, info) => {
+  await page.addInitScript(
+    (locale) => localStorage.setItem('barghsa.locale', locale),
+    info.title.endsWith('(en)') ? 'en' : 'fa'
+  );
   await mockPublicAuthCsrf(page);
 });
 
@@ -297,13 +329,13 @@ for (const locale of ['fa', 'en'] as const) {
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.route('**/api/auth/forgot-password', (route) =>
-      route.fulfill({ json: { sent: true, challengeId: 'recovery-mobile' } })
+      route.fulfill({ json: { ...challengeResponse, challengeId: challengeId } })
     );
     let requests = 0;
     await page.route('**/api/auth/reset-password/verify', (route) => {
       requests++;
       expect(route.request().postDataJSON()).toEqual({
-        challengeId: 'recovery-mobile',
+        challengeId: challengeId,
         otp: '123456',
       });
       expect(route.request().headers()['x-csrf-token']).toBe('c'.repeat(64));
@@ -341,7 +373,8 @@ for (const locale of ['fa', 'en'] as const) {
     );
     await expect(page.getByRole('alert')).toBeVisible();
     expect(requests).toBe(1);
-    for (let index = 0; index < 6; index++) await expect(digits.nth(index)).toHaveValue('');
+    for (let index = 0; index < 6; index++)
+      await expect(digits.nth(index)).toHaveValue(String(index + 1));
     await expect(digits.first()).toBeFocused();
     await expect(page.locator('#new-password')).toHaveCount(0);
     expect(

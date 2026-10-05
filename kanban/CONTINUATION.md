@@ -1,5 +1,13 @@
 # Development continuation status
 
+## Latest manual batch: password recovery native forms (October 5, 2026)
+
+Completed destination entry, OTP verification and password/confirmation as three bilingual native stages. Raw drafts, linked first-invalid feedback, captured actual challenge/grant/receipt shapes and synchronous ownership protect the existing recovery protocol. Unknown unkeyed results require explicit fresh recovery; same-frame retired forms cannot reuse reset grants. A mobile blur-overlap race is fixed by binding validation to draft generation.
+
+All 17 distinct source/dictionary cases and all 50 Chromium/mobile Safari cases pass; the final browser run has zero retries/skips/flakes. Build/types, lint/format, contracts/suppression, all 85 unchanged budgets and strict SAST pass (1,768 files, zero findings/errors; five fixtures). Sixteen compact recovery-panel captures pass original-resolution review; 173 protected paths retain their bytes. Failed budget logs and the mobile trace remain externally preserved. See `kanban/batches/2026-10-05-password-recovery-native-forms.md`.
+
+Reuse `02-auth-users-admin.md#T-02.03.01` and `#T-02.03.02`; do not recount existing engines. Global `07-ui-ux-design.md#T-07.10.01.02` through `#T-07.10.01.06` remain partial. Registration/code-verification forms are next, followed by login/password-change/OTP stages. Continue coherent build/review/related-checks/direct-main batches using GitHub CLI and no PRs. The preceding security batch's five CI jobs passed; this batch's exact-commit CI is separate.
+
 ## Latest manual batch: session and trusted-device settings forms (October 5, 2026)
 
 Completed the three touched security dialogs for other-session revocation, password-confirmed revoke-all and device-trust removal. Raw password preservation, linked native validation, immutable targets, a shared synchronous owner, opaque-account fencing, actual step-up/session/CSRF rotation, exact receipts and authorized read-only uncertainty recovery are implemented. Denied reads retire private lists and drafts; existing backend session/trust/expiry/audit policies and session display helpers remain.

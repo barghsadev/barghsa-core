@@ -81,3 +81,8 @@ export {
   securityPasswordSchema,
   inactiveSecurityPasswordSchema,
 } from './security-settings-form-schemas.js';
+
+export {
+  passwordRecoverySchema,
+  inactivePasswordRecoverySchema,
+} from './password-recovery-form-schemas.js';

@@ -15,6 +15,10 @@ export interface OtpInputHandle {
 
 export interface OtpInputProps {
   locale: Locale;
+  /** Optional native form binding; existing login/registration callers remain uncontrolled. */
+  id?: string;
+  name?: string;
+  onChange?: (value: string) => void;
   disabled?: boolean;
   error?: string | null;
   onComplete: (otp: string) => void;
@@ -26,7 +30,7 @@ export interface OtpInputProps {
  * keyboard navigation, paste support, and shake animation on error.
  */
 export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpInput(
-  { locale, disabled = false, error = null, onComplete, onClearError },
+  { locale, id, name, onChange, disabled = false, error = null, onComplete, onClearError },
   ref
 ) {
   const [digits, setDigits] = useState<string[]>(Array(DIGIT_COUNT).fill(''));
@@ -76,6 +80,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
           newDigits[index + i] = char ?? '';
         }
         setDigits(newDigits);
+        onChange?.(newDigits.join(''));
 
         // Focus the next empty slot or the last filled
         const nextEmpty = newDigits.findIndex((d) => !d);
@@ -96,6 +101,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
       const digit = value.slice(0, 1);
       newDigits[index] = digit;
       setDigits(newDigits);
+      onChange?.(newDigits.join(''));
 
       if (digit && index < DIGIT_COUNT - 1) {
         // Auto-advance to next field
@@ -108,7 +114,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
         onComplete(otp);
       }
     },
-    [digits, error, onClearError, focusInput, onComplete]
+    [digits, error, onClearError, focusInput, onComplete, onChange]
   );
 
   const handleKeyDown = useCallback(
@@ -151,6 +157,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
         newDigits[i] = char ?? '';
       }
       setDigits(newDigits);
+      onChange?.(newDigits.join(''));
 
       if (pasted.length >= DIGIT_COUNT || newDigits.every((d) => d)) {
         focusInput(DIGIT_COUNT - 1);
@@ -162,16 +169,17 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
         focusInput(pasted.length);
       }
     },
-    [digits, error, onClearError, focusInput, onComplete]
+    [digits, error, onClearError, focusInput, onComplete, onChange]
   );
 
   const handleReset = useCallback(() => {
     setDigits(Array(DIGIT_COUNT).fill(''));
+    onChange?.('');
     setShaking(false);
     if (!disabled) {
       focusInput(0);
     }
-  }, [disabled, focusInput]);
+  }, [disabled, focusInput, onChange]);
 
   // Expose reset method via ref
   useImperativeHandle(ref, () => ({ reset: handleReset }), [handleReset]);
@@ -189,6 +197,8 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
         {digits.map((digit, i) => (
           <input
             key={i}
+            id={i === 0 ? id : undefined}
+            name={i === 0 ? name : undefined}
             ref={(el) => {
               inputRefs.current[i] = el;
             }}
@@ -202,6 +212,8 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
             onPaste={handlePaste}
             onFocus={(e) => e.target.setSelectionRange(0, e.target.value.length)}
             disabled={disabled}
+            aria-invalid={id ? !!error : undefined}
+            aria-describedby={id && error ? `${id}-error` : undefined}
             aria-label={`${t('auth.otp.digitLabel', locale)} ${i + 1}`}
             className={`w-11 h-12 sm:w-12 sm:h-13 text-center text-lg font-semibold border-b-2 rounded-none bg-transparent outline-none transition-colors ${
               error
@@ -216,7 +228,11 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
         ))}
       </div>
       {error && (
-        <p className="text-center text-sm text-destructive animate-fade-in" role="alert">
+        <p
+          id={id ? `${id}-error` : undefined}
+          className="text-center text-sm text-destructive animate-fade-in"
+          role="alert"
+        >
           {error}
         </p>
       )}

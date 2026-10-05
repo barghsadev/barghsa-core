@@ -339,6 +339,10 @@
     "./security-settings-forms": {
       "types": "./dist/security-settings-forms.d.ts",
       "default": "./dist/security-settings-forms.js"
+    },
+    "./password-recovery-forms": {
+      "types": "./dist/password-recovery-forms.d.ts",
+      "default": "./dist/password-recovery-forms.js"
     }
   },
   "scripts": {
