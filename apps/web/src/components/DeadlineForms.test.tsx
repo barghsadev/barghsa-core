@@ -120,7 +120,7 @@ describe('invoice deadline form ownership', () => {
     await submit('invoice-id');
     await settled();
     expect(input('invoice-id').value).toBe(' raw bad ');
-    expect(document.activeElement).toBe(input('invoice-id'));
+    await vi.waitFor(() => expect(document.activeElement).toBe(input('invoice-id')));
     expect(input('invoice-id').getAttribute('aria-invalid')).toBe('true');
     expect(fetch).not.toHaveBeenCalled();
   });
