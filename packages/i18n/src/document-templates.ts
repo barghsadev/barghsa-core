@@ -1,6 +1,9 @@
 import { lookup } from './lookup.js';
 
 const fa = {
+  tableTitle: 'جدول قالب‌های اسناد',
+  workspaceTitle: 'قالب سند انتخاب‌شده',
+  updated: 'آخرین تغییر',
   title: 'قالب‌های اسناد',
   description: 'فایل‌های PDF و Word را به صورت نسخه‌دار مدیریت کنید و متغیرهای هر نسخه را ببینید.',
   search: 'جستجوی قالب',
@@ -68,6 +71,9 @@ const fa = {
 } as const;
 
 const en: Record<keyof typeof fa, string> = {
+  tableTitle: 'Document template table',
+  workspaceTitle: 'Selected document template',
+  updated: 'Last updated',
   title: 'Document templates',
   description: 'Keep PDF and Word files in versions and review each version’s placeholders.',
   search: 'Search templates',

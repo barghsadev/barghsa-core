@@ -18,3 +18,5 @@ No API, database schema, dependencies, financial/retry policy, CI gate, bundle b
 Evidence: `/Users/majid/.local/state/barghsa-manual-batches/reconciliation-tables/`. Local checks, pushed commit and independent deployment/Telegram receipts are separate. Validate release preflight on the clean committed HEAD, push normally to `main`, then enqueue the verified remote SHA with reviewed screenshots immediately. Continue building without waiting for CI/deployment.
 
 The preceding v0.1.12 release completed at `2026-10-05T19:29:25Z`, with exact live commit `401640f002406ca7ddc339936bed09e60ab5b7ad`; Persian Telegram notes and both screenshots are confirmed.
+
+Release v0.1.13 completed at `2026-10-05T19:40:09Z`, with exact healthy live commit `7a4500103a94cc4314b0296a3baf77d6551c269d`. Persian Telegram note (message 41) and the reviewed screenshot (message 42) are confirmed; the external `release-completed.json` retains the receipts.

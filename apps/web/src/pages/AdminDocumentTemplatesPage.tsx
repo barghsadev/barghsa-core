@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, Input, Label, ListPage } from '@barghsa/ui';
+import { Button, DateCell, TextCell, Input, Label, ListPage } from '@barghsa/ui';
+import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import {
   Form,
   FormInput,
@@ -40,6 +42,7 @@ export default function AdminDocumentTemplatesPage({
   const word = (key: Parameters<typeof documentTemplateText>[0]) =>
     documentTemplateText(key, locale);
   const time = useAccountTime();
+  const numbers = useNumberFormatting(locale);
   const [searchInput, setSearchInput] = useState(queries?.query.search || '');
   const [localSearch, setSearch] = useState('');
   const [localCategory, setCategory] = useState<Category | ''>('');
@@ -435,8 +438,8 @@ export default function AdminDocumentTemplatesPage({
             </Button>
           </form>
         </ListPage.Toolbar>
-        <div className="grid gap-8 lg:grid-cols-[minmax(15rem,19rem)_minmax(0,1fr)]">
-          <aside className="min-w-0 space-y-3">
+        <div className="flex min-w-0 flex-col gap-8">
+          <div className="min-w-0 space-y-3">
             <div role="region" aria-label={word('listTitle')}>
               <ListPage.Toolbar>
                 <Button
@@ -474,33 +477,66 @@ export default function AdminDocumentTemplatesPage({
                 }
                 emptyView={<p className="text-sm text-muted-foreground">{word('empty')}</p>}
               >
-                <ul className="divide-y border-y">
-                  {visibleRows?.map((row) => (
-                    <li key={row.id}>
-                      <button
-                        type="button"
-                        className="w-full px-2 py-3 text-start hover:bg-muted focus-visible:outline focus-visible:outline-2"
-                        aria-current={selected === row.id ? 'page' : undefined}
-                        disabled={locked}
-                        onClick={() => {
-                          if (owner.current && !uncertain) return;
-                          choose(row.id);
-                        }}
-                      >
-                        <span className="block font-medium" dir="auto">
-                          {row.title}
+                <OperationalQueueTable
+                  locale={locale}
+                  cardHeading="h2"
+                  rows={visibleRows ?? []}
+                  caption={word('listTitle')}
+                  scrollLabel={word('tableTitle')}
+                  nameHeader={word('name')}
+                  loading={state === 'loading'}
+                  emptyMessage={word('empty')}
+                  renderName={(row) => (
+                    <Button
+                      type="button"
+                      variant="link"
+                      className="h-auto max-w-full whitespace-normal text-start"
+                      aria-label={`${word('open')} ${row.title}`}
+                      aria-current={selected === row.id ? 'page' : undefined}
+                      disabled={locked}
+                      onClick={() => {
+                        if (owner.current && !uncertain) return;
+                        choose(row.id);
+                      }}
+                    >
+                      <TextCell value={row.title} />
+                    </Button>
+                  )}
+                  fields={[
+                    {
+                      id: 'category',
+                      label: word('category'),
+                      render: (row) => <>{word(row.category)}</>,
+                    },
+                    {
+                      id: 'description',
+                      label: word('details'),
+                      render: (row) => (
+                        <span className="whitespace-pre-wrap">
+                          <TextCell value={row.description} />
                         </span>
-                        <span className="text-xs text-muted-foreground">
-                          {word(row.category)} · {word('versionCount')}: {row.versionCount}
-                        </span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                      ),
+                    },
+                    {
+                      id: 'versions',
+                      label: word('versionCount'),
+                      render: (row) => (
+                        <bdi className="tabular-nums">{numbers.number(row.versionCount)}</bdi>
+                      ),
+                    },
+                    {
+                      id: 'updated',
+                      label: word('updated'),
+                      render: (row) => (
+                        <DateCell value={row.updatedAt} format={(stamp) => time.format(stamp)} />
+                      ),
+                    },
+                  ]}
+                />
               </ListPage.Content>
             </div>
-          </aside>
-          <div className="min-w-0 space-y-7">
+          </div>
+          <div className="min-w-0 space-y-7" role="region" aria-label={word('workspaceTitle')}>
             {detailState === 'loading' && <p role="status">{word('loadingDetail')}</p>}
             {(detailState === 'error' || detailState === 'denied') && (
               <div role="alert" className="space-y-2">

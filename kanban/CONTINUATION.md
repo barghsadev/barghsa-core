@@ -12,7 +12,13 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: reconciliation exception tables for v0.1.13 (October 5, 2026)
+## Latest manual batch: document and contract template catalogue tables for v0.1.14 (October 5, 2026)
+
+Both template catalogues now use shared desktop tables and mobile cards. Document records retain category/count and show description/update time; one full-width selected-template workspace owns metadata, files, explanation, history and links. Contract records retain status/count/guarded actions and show the latest file/version time. Account timezone, published numeral preference, native headers, sticky headers and named keyboard scrolling reuse the existing foundation. Editors and prepared files survive screen-size changes and failed reads. Delete review retains one dialog, restores visible eligible focus and retires its trigger on denial. Existing permissions, captured receipts, step-up and uncertainty recovery remain.
+
+Related checks and release evidence are recorded in `kanban/batches/2026-10-05-template-catalogue-tables.md`. Reuse `05-notifications-documents-ai.md#T-05.10.03`, `02-auth-users-admin.md#T-09.12.04` and domain adoption of `07-ui-ux-design.md#T-07.24.01.01` through `#T-07.24.01.04`; existing engines and shared foundations are not recounted. Wider adoption/global all-list work remains partial, and existing contract-template text-file policy is unchanged. v0.1.13 is deployed at `7a4500103a94cc4314b0296a3baf77d6551c269d`, with Persian Telegram note and screenshot confirmed. Continue direct-main batches with related checks and independent deployment. Gift-code list tables are a next candidate; confirm actual gaps and retain existing native authoring/usage/receipt engines.
+
+## Previous manual batch: reconciliation exception tables for v0.1.13 (October 5, 2026)
 
 The reconciliation queue now uses shared desktop tables and mobile cards, retaining description/type, severity, status, assignee, account-zone dates and authorized detail access. Native headers, sticky headers, named keyboard-focusable scrolling and localized row counts reuse the operational table foundation. The existing detail form and raw explanation remain one owner across screen sizes; closing restores a visible control or the list heading, and current denial clears private work and the focus reference. Existing exact mismatch data, safe links, financial lifecycle/receipts and uncertainty review remain.
 

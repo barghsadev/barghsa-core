@@ -14,7 +14,8 @@ import {
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, Input, Label, ListPage } from '@barghsa/ui';
+import { Button, DateCell, TextCell, Input, Label, ListPage } from '@barghsa/ui';
+import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { contractTemplatesText } from '@barghsa/i18n/contract-templates';
 import type {
   ContractTemplateDto,
@@ -82,6 +83,8 @@ export default function AdminContractTemplatesPage() {
   const time = useAccountTime();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
+  const deleteTrigger = useRef<HTMLButtonElement | null>(null);
+  const listHeading = useRef<HTMLHeadingElement>(null);
   const label = (key: string) => contractTemplatesText(`admin.templates.${key}`, locale);
   const [selected, setSelected] = useState<string | null>(null);
   const formText = (key: Parameters<typeof contentFormText>[0]) => contentFormText(key, locale);
@@ -416,7 +419,9 @@ export default function AdminContractTemplatesPage() {
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {time.notice}
-      <h1 className="text-2xl font-semibold">{label('title')}</h1>
+      <h1 ref={listHeading} tabIndex={-1} className="text-2xl font-semibold">
+        {label('title')}
+      </h1>
       <div>
         <Button variant="outline" disabled={catalogue.loading || history.loading} onClick={refresh}>
           {label('refresh')}
@@ -640,58 +645,91 @@ export default function AdminContractTemplatesPage() {
                   </ol>
                 </section>
               )}
-              {!rows.length && <p>{label('empty')}</p>}
-              <ul className="divide-y">
-                {rows.map((row) => (
-                  <li
-                    key={row.id}
-                    className="flex flex-col gap-3 py-4 sm:flex-row sm:items-start sm:justify-between"
-                  >
-                    <div className="min-w-0">
-                      <h2 className="break-words font-semibold">{row.name}</h2>
-                      <p className="whitespace-pre-wrap break-words text-sm">{row.description}</p>
-                      <p>
-                        {label(row.status)} · {label('versions')}:{' '}
-                        {numbers.number(row.versionCount)}
-                      </p>
-                    </div>
-                    <div className="flex shrink-0 flex-wrap gap-2">
-                      <Button
-                        variant="outline"
-                        aria-label={`${label('open')} ${row.name}`}
-                        disabled={
-                          !listReady || !!action || editor.pending || uncertain || needsReset
-                        }
-                        onClick={() => chooseEditor(row.id)}
-                      >
-                        {label('open')}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        disabled={
-                          row.versionCount > 0 ||
-                          !listReady ||
-                          !!action ||
-                          editor.pending ||
-                          uncertain ||
-                          needsReset
-                        }
-                        aria-label={`${label('delete')} ${row.name}`}
-                        onClick={() =>
-                          propose(
-                            `/api/admin/contract-templates/${row.id}`,
-                            'DELETE',
-                            label('delete'),
-                            `${row.name}. ${label('confirmDelete')}`
-                          )
-                        }
-                      >
-                        {label('delete')}
-                      </Button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              <OperationalQueueTable
+                locale={locale}
+                cardHeading="h2"
+                rows={rows}
+                caption={label('title')}
+                scrollLabel={label('tableTitle')}
+                nameHeader={label('name')}
+                loading={catalogue.loading}
+                emptyMessage={label('empty')}
+                renderName={(row) => <TextCell value={row.name} />}
+                fields={[
+                  {
+                    id: 'description',
+                    label: label('description'),
+                    render: (row) => (
+                      <span className="whitespace-pre-wrap">
+                        <TextCell value={row.description} />
+                      </span>
+                    ),
+                  },
+                  {
+                    id: 'status',
+                    label: label('status'),
+                    render: (row) => <>{label(row.status)}</>,
+                  },
+                  {
+                    id: 'versions',
+                    label: label('versions'),
+                    render: (row) => (
+                      <bdi className="tabular-nums">{numbers.number(row.versionCount)}</bdi>
+                    ),
+                  },
+                  {
+                    id: 'file',
+                    label: label('latestFile'),
+                    render: (row) => <TextCell value={row.latestVersion?.fileName} />,
+                  },
+                  {
+                    id: 'created',
+                    label: label('latestCreated'),
+                    render: (row) => (
+                      <DateCell
+                        value={row.latestVersion?.createdAt}
+                        format={(stamp) => time.format(stamp)}
+                      />
+                    ),
+                  },
+                ]}
+                actionHeader={label('actions')}
+                renderActions={(row) => (
+                  <div className="flex shrink-0 flex-wrap gap-2">
+                    <Button
+                      variant="outline"
+                      aria-label={`${label('open')} ${row.name}`}
+                      disabled={!listReady || !!action || editor.pending || uncertain || needsReset}
+                      onClick={() => chooseEditor(row.id)}
+                    >
+                      {label('open')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled={
+                        row.versionCount > 0 ||
+                        !listReady ||
+                        !!action ||
+                        editor.pending ||
+                        uncertain ||
+                        needsReset
+                      }
+                      aria-label={`${label('delete')} ${row.name}`}
+                      onClick={(event) => {
+                        deleteTrigger.current = event.currentTarget;
+                        propose(
+                          `/api/admin/contract-templates/${row.id}`,
+                          'DELETE',
+                          label('delete'),
+                          `${row.name}. ${label('confirmDelete')}`
+                        );
+                      }}
+                    >
+                      {label('delete')}
+                    </Button>
+                  </div>
+                )}
+              />
             </>
           )}
         </ListPage.Content>
@@ -700,7 +738,23 @@ export default function AdminContractTemplatesPage() {
         <TeamActionDialog
           action={action}
           onClose={closeAction}
-          onDenied={scope.deny}
+          finalFocus={
+            action.method === 'DELETE'
+              ? () =>
+                  deleteTrigger.current?.isConnected &&
+                  deleteTrigger.current.getClientRects().length > 0 &&
+                  listReady &&
+                  !editor.pending &&
+                  !uncertain &&
+                  !needsReset
+                    ? deleteTrigger.current
+                    : listHeading.current
+              : undefined
+          }
+          onDenied={() => {
+            deleteTrigger.current = null;
+            scope.deny();
+          }}
           onUnconfirmed={unconfirmed}
           onValidationError={(fields) =>
             !action.path.endsWith('/versions') &&
