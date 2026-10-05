@@ -30,6 +30,7 @@ import {
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { GiftCodeService, type GiftCodeListFilter } from './gift-code.service.js';
+import { InputFieldException } from '../common/input-field.exception.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
@@ -154,6 +155,29 @@ function assertUuid(id: string, label = 'id'): void {
 
 function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
   return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }));
+}
+
+function giftFieldFailure(issues: z.ZodIssue[]): never {
+  const editable = [
+    'code',
+    'discountType',
+    'discountValue',
+    'maxCapIrr',
+    'eligibility',
+    'profileIds',
+    'totalLimit',
+    'perProfileLimit',
+    'validFrom',
+    'validUntil',
+    'minOrderAmount',
+    'categories',
+    'restoreOnCancel',
+    'restoreAfterPayment',
+  ];
+  const fields = issues.map((issue) => String(issue.path[0] ?? ''));
+  if (fields.length && fields.every((field) => editable.includes(field)))
+    throw new InputFieldException(fields);
+  httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid gift code request', 400);
 }
 
 /** Validate the optional list filters and return sanitized values. */
@@ -352,14 +376,7 @@ export class GiftCodeController {
   ): Promise<GiftCodeDto> {
     this.assertPromotionsPermission(req);
     const parsed = CreateGiftCodeSchema.safeParse(body);
-    if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid gift code payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
-    }
+    if (!parsed.success) giftFieldFailure(parsed.error.issues);
     return this.service.create({
       code: parsed.data.code,
       discountType: parsed.data.discountType,
@@ -400,14 +417,7 @@ export class GiftCodeController {
     this.assertPromotionsPermission(req);
     assertUuid(id);
     const parsed = UpdateGiftCodeSchema.safeParse(body ?? {});
-    if (!parsed.success) {
-      httpError(
-        ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        'Invalid gift code payload',
-        400,
-        validationDetails(parsed.error.issues)
-      );
-    }
+    if (!parsed.success) giftFieldFailure(parsed.error.issues);
     const data = parsed.data;
     return this.service.update(id, {
       ...(data.code !== undefined ? { code: data.code } : {}),

@@ -10,7 +10,13 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: document-template authoring for v0.1.4 (October 5, 2026)
+## Latest manual batch: gift-code authoring for v0.1.5 (October 5, 2026)
+
+Gift-code creation/editing now uses shared native forms with bilingual linked validation, raw-input preservation and synchronous submission ownership. Persian/Arabic/Western integer amounts remain exact; percentages are parsed into exact basis points without silent rounding. Profiles, usage limits, account-zone dates and restoration settings validate together. Confirmation shows captured terms; matching receipts precede draft reset, while an unconfirmed result retains the draft and requires saved-state review before deliberate resubmission.
+
+Related checks and release evidence are recorded in `kanban/batches/2026-10-05-gift-code-authoring.md`. Reuse `03-core-business.md#T-03.02.02.05` and `02-auth-users-admin.md#T-09.12.03`; global shared-form tasks remain partial. v0.1.4 is deployed and its release notification is confirmed. Continue coherent direct-main batches with independent deployment and Persian release notes/screenshots.
+
+## Previous manual batch: document-template authoring for v0.1.4 (October 5, 2026)
 
 The two document-template authoring forms now use shared native validation, linked bilingual field errors, immutable confirmation snapshots and one synchronous submission owner. Metadata saves and multipart file-version publication verify matching receipts before clearing drafts. An unconfirmed command preserves raw text/files, reads the saved list/history and requires deliberate return to editing. Existing PDF/DOCX extraction, version history, downloads, permission and step-up policies remain.
 

@@ -21,6 +21,7 @@ let host: HTMLDivElement, root: Root;
 const reply = (v: unknown, status = 200) => new Response(JSON.stringify(v), { status });
 const stats = (index = 0) => ({ code: giftCode(index), perProfile: [], recentRedemptions: [] });
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   host = document.createElement('div');
   document.body.append(host);
   root = createRoot(host);
@@ -51,6 +52,7 @@ async function submit(dialog = false) {
       .querySelector(dialog ? '[role=dialog] form' : 'form[aria-label="Gift-code settings"]')!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
+  await act(async () => vi.dynamicImportSettled());
 }
 async function render(read: (path: string, init?: RequestInit) => Response | Promise<Response>) {
   const fetchMock = vi.fn((path: RequestInfo | URL, init?: RequestInit) =>
@@ -203,7 +205,9 @@ it('malformed command acknowledgement keeps the editor and never reports saved',
   await fill('2222');
   await submit();
   await submit(true);
-  expect(document.querySelector('[role=dialog] [role=alert]')).not.toBeNull();
+  expect(document.querySelector('[role=dialog]')).toBeNull();
+  expect(host.textContent).toContain('The save is unconfirmed.');
+  expect(host.querySelector<HTMLInputElement>('#gift-value')!.disabled).toBe(true);
   expect(host.textContent).not.toContain('Changes saved.');
   expect(host.querySelector<HTMLInputElement>('#gift-value')!.value).toBe('2222');
 });
@@ -237,9 +241,16 @@ it('late command completion cannot supersede an accepted denial', async () => {
   await click('Edit');
   await fill('2222');
   await submit();
-  await submit(true);
   denied = true;
-  await click('Refresh codes', true);
+  await act(async () => {
+    const dialog = document.querySelector('[role=dialog]')!;
+    [...dialog.querySelectorAll<HTMLButtonElement>('button')]
+      .find((node) => node.textContent === 'Refresh codes')!
+      .click();
+    dialog
+      .querySelector('form')!
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  });
   await act(async () => resolve(reply({ ...giftCode(), discountValue: '2222' })));
   expect(host.textContent).not.toContain('Changes saved.');
   expect(host.querySelector('#gift-code')).toBeNull();

@@ -1,6 +1,6 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, DatePicker, datePickerAtTime, Input, Label, ListPage } from '@barghsa/ui';
+import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { Button, DatePicker, Input, Label, ListPage } from '@barghsa/ui';
 import { tGift } from '@barghsa/i18n/gifts';
 import { GIFT_CODE_CATEGORIES, type GiftCodeDto } from '@barghsa/shared/promotions';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
@@ -13,6 +13,24 @@ import { useGiftCodeCatalogue } from '../hooks/useGiftCodeCatalogue.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { giftFilter } from '../lib/gift-list-query.js';
 import {
+  Form,
+  FormInput,
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage,
+  FormSubmit,
+  useZodForm,
+} from '@barghsa/ui/form';
+import {
+  giftDraftFrom as draftFrom,
+  giftDateField as dateField,
+  giftDraftErrors,
+  giftDraftPayload,
+  giftFieldNames,
+  type GiftDraft as Draft,
+} from '../lib/gift-code-form.js';
+import {
   giftCodeBasis,
   isGiftCodeStats,
   matchesGiftReceipt,
@@ -24,75 +42,6 @@ type GiftReview = TeamAction & {
   basis: string;
   queryScope: string;
 };
-type DateField = {
-  date: Date | undefined;
-  time: string;
-  original: string | null;
-  changed: boolean;
-};
-type Draft = {
-  code: string;
-  discountType: 'fixed_irr' | 'percentage';
-  value: string;
-  cap: string;
-  eligibility: 'public' | 'profile';
-  profileIds: string[];
-  totalLimit: string;
-  perProfileLimit: string;
-  minimum: string;
-  categories: string[];
-  restoreOnCancel: boolean;
-  restoreAfterPayment: boolean;
-  start: DateField;
-  end: DateField;
-};
-function dateField(value: string | null, zone: string): DateField {
-  const date = value ? new Date(value) : undefined;
-  return {
-    date,
-    time: date
-      ? new Intl.DateTimeFormat('en-GB', {
-          timeZone: zone,
-          hourCycle: 'h23',
-          hour: '2-digit',
-          minute: '2-digit',
-        }).format(date)
-      : '00:00',
-    original: value,
-    changed: false,
-  };
-}
-function instant(field: DateField, zone: string): string | null {
-  if (!field.date) return null;
-  if (!field.changed && field.original) return field.original;
-  const match = /^(\d{2}):(\d{2})$/.exec(field.time);
-  if (!match) throw new Error('Invalid time');
-  const date = datePickerAtTime(field.date, Number(match[1]), Number(match[2]), zone);
-  if (!date) throw new Error('Invalid time');
-  return date.toISOString();
-}
-function draftFrom(row: GiftCodeDto | undefined, zone: string): Draft {
-  return {
-    code: row?.code ?? '',
-    discountType: row?.discountType ?? 'fixed_irr',
-    value: row
-      ? row.discountType === 'percentage'
-        ? String(Number(row.discountValue) / 100)
-        : row.discountValue
-      : '',
-    cap: row?.maxCapIrr ?? '',
-    eligibility: row?.eligibility ?? 'public',
-    profileIds: row?.profileIds ?? [],
-    totalLimit: row?.totalLimit?.toString() ?? '',
-    perProfileLimit: row?.perProfileLimit?.toString() ?? '',
-    minimum: row?.minOrderAmount ?? '0',
-    categories: row?.categories ?? [],
-    restoreOnCancel: row?.restoreOnCancel ?? true,
-    restoreAfterPayment: row?.restoreAfterPayment ?? false,
-    start: dateField(row?.validFrom ?? null, zone),
-    end: dateField(row?.validUntil ?? null, zone),
-  };
-}
 export default function AdminGiftCodesPage({
   queries,
   selection,
@@ -109,12 +58,100 @@ export default function AdminGiftCodesPage({
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => tGift(`admin.gifts.${key}`, locale);
   const money = numbers.money;
-  const [draft, setDraft] = useState<Draft | null>(null),
+  const owner = useRef<'validating' | 'review' | null>(null);
+  const sending = useRef(false);
+  const [validating, setValidating] = useState(false),
+    [uncertain, setUncertain] = useState(false),
+    [pending, setPending] = useState(false);
+  const form: ReturnType<typeof useZodForm<Draft>> = useZodForm<Draft>(
+    async () => {
+      const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return contentFormSchema<Draft>(
+        {
+          code: label('invalidCode'),
+          discountType: label('invalidField'),
+          value: label(
+            form.getValues('discountType') === 'percentage' ? 'invalidPercent' : 'invalidAmount'
+          ),
+          cap: label('invalidAmount'),
+          eligibility: label('invalidField'),
+          profileIds: label('profilesRequired'),
+          totalLimit: label('invalidLimit'),
+          perProfileLimit: label('invalidLimit'),
+          minimum: label('invalidMinimum'),
+          categories: label('invalidField'),
+          restoreOnCancel: label('invalidField'),
+          restoreAfterPayment: label('invalidField'),
+          start: label('invalidDate'),
+          end: label('invalidDate'),
+        },
+        (value) => giftDraftErrors(value, preference.timezone, editor === 'new')
+      );
+    },
+    {
+      defaultValues: draftFrom(undefined, preference.timezone),
+      validationUnavailableMessage: label('validationUnavailable'),
+    }
+  );
+  const [editing, setEditing] = useState(false),
     [draftBasis, setDraftBasis] = useState<string | null>(null),
     [localEditor, setEditor] = useState<string | null>(null);
   const [action, setAction] = useState<GiftReview | null>(null),
-    [saved, setSaved] = useState(false),
-    [invalidDate, setInvalidDate] = useState(false);
+    [saved, setSaved] = useState(false);
+  const draft = editing ? form.watch() : null;
+  const locked = validating || !!action || uncertain;
+  const errorFocus = useRef<keyof Draft | null>(null);
+  useEffect(() => {
+    if (!locked && errorFocus.current) {
+      form.setFocus(errorFocus.current);
+      errorFocus.current = null;
+    }
+  }, [locked]);
+  function setDraft(value: Draft | null) {
+    form.reset(value ?? draftFrom(undefined, preference.timezone));
+    setEditing(value !== null);
+  }
+  function updateDraft(value: Draft) {
+    if (owner.current) return;
+    for (const name of Object.keys(value) as (keyof Draft)[]) {
+      if (value[name] !== form.getValues(name))
+        form.setValue(name, value[name], {
+          shouldDirty: true,
+          shouldValidate: !!(form.formState.errors[name] || form.formState.touchedFields[name]),
+        });
+    }
+  }
+  function group(name: keyof Draft, children: ReactNode) {
+    return (
+      <FormField
+        key={name}
+        control={form.control}
+        name={name}
+        render={({ field }) => (
+          <FormItem id={`gift-${name}`}>
+            <FormControl>
+              <div
+                role="group"
+                aria-label={label(name === 'profileIds' ? 'profiles' : name)}
+                tabIndex={-1}
+                ref={field.ref}
+                onBlur={field.onBlur}
+              >
+                {children}
+              </div>
+            </FormControl>
+            <FormMessage reserveSpace />
+          </FormItem>
+        )}
+      />
+    );
+  }
+  function closeAction() {
+    setAction(null);
+    sending.current = false;
+    setPending(false);
+    if (!uncertain) owner.current = null;
+  }
   const [search, setSearch] = useState(''),
     [status, setStatus] = useState(''),
     [type, setType] = useState(''),
@@ -139,7 +176,10 @@ export default function AdminGiftCodesPage({
     setEditor(null);
     setAction(null);
     setSaved(false);
-    setInvalidDate(false);
+    owner.current = null;
+    sending.current = false;
+    setPending(false);
+    setUncertain(false);
   }, []);
   const scope = useCatalogueScope(clearPrivate);
   const catalogue = useGiftCodeCatalogue(scope, filter, preference.status === 'ready', queries);
@@ -147,10 +187,11 @@ export default function AdminGiftCodesPage({
   const [editorScope, setEditorScope] = useState(editor);
   if (editorScope !== editor) {
     setEditorScope(editor);
-    setDraft(null);
+    setEditing(false);
     setDraftBasis(null);
     setAction(null);
-    setInvalidDate(false);
+    owner.current = null;
+    setUncertain(false);
   }
   const queryScope = JSON.stringify([filter, queries?.query.cursor ?? '', editor]);
   const validateStats = useCallback(
@@ -209,10 +250,15 @@ export default function AdminGiftCodesPage({
       (action.epoch !== scope.version ||
         action.basis !== reviewBasis ||
         action.queryScope !== queryScope)
-    )
+    ) {
       setAction(null);
+      sending.current = false;
+      setPending(false);
+      if (!uncertain) owner.current = null;
+    }
   }, [action, reviewBasis, scope.version, queryScope]);
   const refresh = () => {
+    if (sending.current) return;
     if (preference.status === 'error') preference.retry();
     if (scope.denied) scope.recover();
     else {
@@ -227,7 +273,8 @@ export default function AdminGiftCodesPage({
         type="button"
         variant="outline"
         disabled={
-          dialog && (catalogue.loading || detail.loading || preference.status === 'loading')
+          pending ||
+          (dialog && (catalogue.loading || detail.loading || preference.status === 'loading'))
         }
         onClick={refresh}
       >
@@ -237,10 +284,11 @@ export default function AdminGiftCodesPage({
     </div>
   );
   function choose(value: string | null) {
+    if (owner.current) return;
     if (preference.status === 'error') preference.retry();
     setDraft(null);
     setDraftBasis(null);
-    setInvalidDate(false);
+    setUncertain(false);
     setSaved(false);
     setAction(null);
     if (selection) selection.set(value || '');
@@ -254,7 +302,8 @@ export default function AdminGiftCodesPage({
     body: unknown,
     row?: GiftCodeDto
   ) {
-    if (!ready || action || (editor && (!editorReady || stale))) return;
+    if (!ready || action || owner.current || (editor && (!editorReady || stale))) return;
+    owner.current = 'review';
     setSaved(false);
     setAction({
       epoch: scope.version,
@@ -277,47 +326,41 @@ export default function AdminGiftCodesPage({
       },
     });
   }
-  function save(event: FormEvent) {
+  async function save(event: FormEvent) {
     event.preventDefault();
-    if (!draft || !editor || !editorReady || stale || action) return;
-    let start: string | null, end: string | null;
+    if (!draft || !editor || !editorReady || stale || owner.current) return;
+    owner.current = 'validating';
+    setValidating(true);
+    const epoch = scope.version,
+      basis = editorBasis,
+      query = queryScope;
     try {
-      start = instant(draft.start, zone);
-      end = instant(draft.end, zone);
-      if (editor !== 'new' && !start) throw new Error('Missing start');
-      if (end && Date.parse(end) <= Date.parse(start ?? new Date().toISOString()))
-        throw new Error('Invalid window');
-    } catch {
-      setInvalidDate(true);
-      return;
+      await form.handleSubmit((value) => {
+        if (
+          scope.live.current !== epoch ||
+          liveReview.current.basis !== basis ||
+          liveReview.current.queryScope !== query
+        )
+          return;
+        const body = giftDraftPayload(value, zone);
+        owner.current = null;
+        propose(
+          `/api/admin/promotions/gift-codes${editor === 'new' ? '' : `/${editor}`}`,
+          editor === 'new' ? 'POST' : 'PATCH',
+          label('save'),
+          label('confirmSave'),
+          body
+        );
+      })(event);
+    } finally {
+      setValidating(false);
+      if (owner.current === 'validating') owner.current = null;
     }
-    setInvalidDate(false);
-    propose(
-      `/api/admin/promotions/gift-codes${editor === 'new' ? '' : `/${editor}`}`,
-      editor === 'new' ? 'POST' : 'PATCH',
-      label('save'),
-      label('confirmSave'),
-      {
-        code: draft.code.trim(),
-        discountType: draft.discountType,
-        discountValue:
-          draft.discountType === 'percentage'
-            ? String(Math.round(Number(draft.value) * 100))
-            : draft.value,
-        maxCapIrr: draft.discountType === 'percentage' ? draft.cap : null,
-        eligibility: draft.eligibility,
-        profileIds: draft.eligibility === 'profile' ? draft.profileIds : [],
-        totalLimit: draft.totalLimit === '' ? null : Number(draft.totalLimit),
-        perProfileLimit: draft.perProfileLimit === '' ? null : Number(draft.perProfileLimit),
-        minOrderAmount: draft.minimum,
-        categories: draft.categories,
-        restoreOnCancel: draft.restoreOnCancel,
-        restoreAfterPayment: draft.restoreAfterPayment,
-        ...(start ? { validFrom: start } : {}),
-        validUntil: end,
-      }
-    );
   }
+  const proposed =
+    action && !action.path.endsWith('/toggle')
+      ? (action.body as ReturnType<typeof giftDraftPayload>)
+      : null;
   return (
     <div
       className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 md:p-8"
@@ -332,6 +375,7 @@ export default function AdminGiftCodesPage({
             className="grid items-end gap-3 sm:grid-cols-2 lg:grid-cols-3"
             onSubmit={(event) => {
               event.preventDefault();
+              if (owner.current) return;
               const filters = {
                 search: search.trim(),
                 status,
@@ -355,6 +399,7 @@ export default function AdminGiftCodesPage({
             <div>
               <Label htmlFor="gift-search">{label('searchCode')}</Label>
               <Input
+                disabled={locked}
                 id="gift-search"
                 maxLength={64}
                 value={search}
@@ -364,6 +409,7 @@ export default function AdminGiftCodesPage({
             <div className="flex min-w-0 flex-col gap-2">
               <Label htmlFor="gift-status-filter">{label('status')}</Label>
               <select
+                disabled={locked}
                 id="gift-status-filter"
                 className="max-w-full rounded-md border bg-background p-2"
                 value={status}
@@ -377,6 +423,7 @@ export default function AdminGiftCodesPage({
             <div className="flex min-w-0 flex-col gap-2">
               <Label htmlFor="gift-type-filter">{label('type')}</Label>
               <select
+                disabled={locked}
                 id="gift-type-filter"
                 className="max-w-full rounded-md border bg-background p-2"
                 value={type}
@@ -390,6 +437,7 @@ export default function AdminGiftCodesPage({
             <div className="flex min-w-0 flex-col gap-2">
               <Label htmlFor="gift-eligibility-filter">{label('eligibility')}</Label>
               <select
+                disabled={locked}
                 id="gift-eligibility-filter"
                 className="max-w-full rounded-md border bg-background p-2"
                 value={eligibility}
@@ -403,6 +451,7 @@ export default function AdminGiftCodesPage({
             <div className="flex min-w-0 flex-col gap-2">
               <Label htmlFor="gift-expiry-filter">{label('expiry')}</Label>
               <select
+                disabled={locked}
                 id="gift-expiry-filter"
                 className="max-w-full rounded-md border bg-background p-2"
                 value={expiry}
@@ -413,12 +462,29 @@ export default function AdminGiftCodesPage({
                 <option value="expired">{label('expired')}</option>
               </select>
             </div>
-            <Button type="submit" variant="outline">
+            <Button type="submit" variant="outline" disabled={locked}>
               {label('search')}
             </Button>
           </form>
         </ListPage.Toolbar>
         {saved && <p role="status">{label('saved')}</p>}
+        {uncertain && (
+          <div role="alert" className="space-y-2">
+            <p>{label('uncertain')}</p>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={!ready || (!!editor && !editorReady)}
+              onClick={() => {
+                if (!ready || (editor && !editorReady)) return;
+                owner.current = null;
+                setUncertain(false);
+              }}
+            >
+              {label('resumeEditing')}
+            </Button>
+          </div>
+        )}
         <ListPage.Content
           loading={catalogue.loading || preference.status === 'loading'}
           error={catalogue.error || scope.denied || preference.status === 'error'}
@@ -431,7 +497,7 @@ export default function AdminGiftCodesPage({
           {catalogue.rows !== null && !scope.denied && (
             <>
               <div>
-                <Button disabled={!ready || !!action} onClick={() => choose('new')}>
+                <Button disabled={!ready || locked} onClick={() => choose('new')}>
                   {label('add')}
                 </Button>
               </div>
@@ -440,8 +506,10 @@ export default function AdminGiftCodesPage({
                   <Button
                     type="button"
                     variant="outline"
-                    disabled={detail.loading}
-                    onClick={detail.retry}
+                    disabled={detail.loading || pending}
+                    onClick={() => {
+                      if (!sending.current) detail.retry();
+                    }}
                   >
                     {label('refreshStats')}
                   </Button>
@@ -454,7 +522,13 @@ export default function AdminGiftCodesPage({
                   {detail.error && (
                     <p role="alert">
                       {label('statsError')}{' '}
-                      <Button type="button" variant="outline" onClick={detail.retry}>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          if (!sending.current) detail.retry();
+                        }}
+                      >
                         {label('retry')}
                       </Button>
                     </p>
@@ -462,288 +536,321 @@ export default function AdminGiftCodesPage({
                 </div>
               )}
               {draft && (
-                <form
-                  aria-label={label('editor')}
-                  onSubmit={save}
-                  className="flex flex-col gap-4 border-y py-5"
-                >
-                  {stale && <p role="alert">{label('stale')}</p>}
-                  <fieldset disabled={!!action} className="min-w-0 space-y-4">
-                    <div>
-                      <Label htmlFor="gift-code">{label('code')}</Label>
-                      <Input
+                <Form {...form}>
+                  <form
+                    aria-label={label('editor')}
+                    noValidate
+                    onChangeCapture={(event) => {
+                      if (owner.current) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                      }
+                    }}
+                    onSubmit={save}
+                    className="flex flex-col gap-4 border-y py-5"
+                  >
+                    {stale && <p role="alert">{label('stale')}</p>}
+                    <fieldset disabled={locked} className="min-w-0 space-y-4">
+                      <FormInput
+                        control={form.control}
+                        name="code"
                         id="gift-code"
-                        dir="ltr"
-                        required
-                        maxLength={64}
-                        value={draft.code}
-                        onChange={(event) => setDraft({ ...draft, code: event.target.value })}
+                        label={label('code')}
+                        disabled={locked}
+                        inputProps={{ dir: 'ltr', maxLength: 64 }}
                       />
-                    </div>
-                    <div className="flex min-w-0 flex-col gap-2">
-                      <Label htmlFor="gift-type">{label('type')}</Label>
-                      <select
-                        id="gift-type"
-                        className="max-w-full rounded-md border bg-background p-2"
-                        value={draft.discountType}
-                        onChange={(event) =>
-                          setDraft({
-                            ...draft,
-                            discountType: event.target.value as Draft['discountType'],
-                            value: '',
-                            cap: '',
-                          })
-                        }
-                      >
-                        <option value="fixed_irr">{label('fixed')}</option>
-                        <option value="percentage">{label('percentage')}</option>
-                      </select>
-                    </div>
-                    <div>
-                      <Label htmlFor="gift-value">
-                        {label(draft.discountType === 'percentage' ? 'percent' : 'amount')}
-                      </Label>
-                      <Input
-                        id="gift-value"
-                        required
-                        {...(draft.discountType === 'percentage'
-                          ? { type: 'number', min: '0.01', max: '100', step: '0.01' }
-                          : { inputMode: 'numeric', pattern: '[1-9][0-9]{0,18}', maxLength: 19 })}
-                        value={draft.value}
-                        onChange={(event) => setDraft({ ...draft, value: event.target.value })}
-                      />
-                    </div>
-                    {draft.discountType === 'percentage' && (
-                      <>
-                        <div>
-                          <Label htmlFor="gift-cap">{label('cap')}</Label>
-                          <Input
-                            id="gift-cap"
-                            required
-                            inputMode="numeric"
-                            pattern="[1-9][0-9]{0,18}"
-                            maxLength={19}
-                            value={draft.cap}
-                            onChange={(event) => setDraft({ ...draft, cap: event.target.value })}
-                          />
-                        </div>
-                        <p role="note" className="rounded-md border p-3">
-                          {label('percentageWarning')}
-                        </p>
-                      </>
-                    )}
-                    <div className="flex min-w-0 flex-col gap-2">
-                      <Label htmlFor="gift-eligibility">{label('eligibility')}</Label>
-                      <select
-                        id="gift-eligibility"
-                        className="max-w-full rounded-md border bg-background p-2"
-                        value={draft.eligibility}
-                        onChange={(event) =>
-                          setDraft({
-                            ...draft,
-                            eligibility: event.target.value as Draft['eligibility'],
-                            profileIds: [],
-                          })
-                        }
-                      >
-                        <option value="public">{label('public')}</option>
-                        <option value="profile">{label('restricted')}</option>
-                      </select>
-                    </div>
-                    {draft.eligibility === 'profile' && (
-                      <GiftProfilePicker
-                        ids={draft.profileIds}
-                        onChange={(profileIds) => setDraft({ ...draft, profileIds })}
-                        onDenied={scope.deny}
-                        label={label}
-                      />
-                    )}
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      {(['totalLimit', 'perProfileLimit'] as const).map((field) => (
-                        <div key={field}>
-                          <Label htmlFor={`gift-${field}`}>{label(field)}</Label>
-                          <Input
-                            id={`gift-${field}`}
-                            type="number"
-                            min="1"
-                            max="2147483647"
-                            step="1"
-                            placeholder={label('unlimited')}
-                            value={draft[field]}
-                            onChange={(event) =>
-                              setDraft({ ...draft, [field]: event.target.value })
-                            }
-                          />
-                        </div>
-                      ))}
-                    </div>
-                    <div>
-                      <Label htmlFor="gift-minimum">{label('minimum')}</Label>
-                      <Input
-                        id="gift-minimum"
-                        inputMode="numeric"
-                        pattern="[0-9]{1,19}"
-                        maxLength={19}
-                        required
-                        value={draft.minimum}
-                        onChange={(event) => setDraft({ ...draft, minimum: event.target.value })}
-                      />
-                    </div>
-                    <fieldset className="rounded-md border p-4">
-                      <legend className="px-1 font-semibold">{label('categories')}</legend>
-                      <p className="mb-3 text-sm text-muted-foreground">
-                        {label('categoriesHelp')}
-                      </p>
-                      <div className="flex flex-wrap gap-4">
-                        {GIFT_CODE_CATEGORIES.map((category) => (
-                          <label key={category} className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={draft.categories.includes(category)}
-                              onChange={(event) =>
-                                setDraft({
-                                  ...draft,
-                                  categories: event.target.checked
-                                    ? [...draft.categories, category]
-                                    : draft.categories.filter((value) => value !== category),
-                                })
-                              }
-                            />
-                            {label(`category.${category}`)}
-                          </label>
-                        ))}
-                      </div>
-                    </fieldset>
-                    <fieldset className="rounded-md border p-4">
-                      <legend className="px-1 font-semibold">{label('restorationPolicy')}</legend>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={draft.restoreOnCancel}
-                          onChange={(event) =>
-                            setDraft({
-                              ...draft,
-                              restoreOnCancel: event.target.checked,
-                              restoreAfterPayment:
-                                event.target.checked && draft.restoreAfterPayment,
-                            })
-                          }
-                        />
-                        {label('restoreOnCancel')}
-                      </label>
-                      <label className="mt-3 flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={draft.restoreAfterPayment}
-                          disabled={!draft.restoreOnCancel}
-                          onChange={(event) =>
-                            setDraft({ ...draft, restoreAfterPayment: event.target.checked })
-                          }
-                        />
-                        {label('restoreAfterPayment')}
-                      </label>
-                    </fieldset>
-                    <p className="text-sm">
-                      {label('timezone')}: <bdi>{zone}</bdi>
-                    </p>
-                    {(['start', 'end'] as const).map((field) => (
-                      <fieldset key={field} className="rounded-md border p-4">
-                        <legend className="px-1 font-semibold">{label(field)}</legend>
-                        {(field === 'end' || editor === 'new') && (
-                          <label className="mb-3 flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={Boolean(draft[field].date)}
-                              onChange={(event) =>
-                                setDraft({
-                                  ...draft,
-                                  [field]: {
-                                    ...dateField(
-                                      event.target.checked ? new Date().toISOString() : null,
-                                      zone
-                                    ),
-                                    changed: true,
-                                  },
-                                })
-                              }
-                            />
-                            {label(field === 'start' ? 'setStart' : 'setEnd')}
-                          </label>
-                        )}
-                        {draft[field].date ? (
-                          <div className="grid gap-4 sm:grid-cols-2">
-                            <DatePicker
-                              label={label(`${field}Date`)}
-                              placeholder={label('chooseDate')}
-                              locale={locale}
-                              timezone={zone}
-                              value={draft[field].date}
-                              onChange={(date) =>
-                                setDraft({
-                                  ...draft,
-                                  [field]: { ...draft[field], date, changed: true },
-                                })
-                              }
-                            />
-                            <div>
-                              <Label htmlFor={`gift-${field}-time`}>{label(`${field}Time`)}</Label>
-                              <Input
-                                id={`gift-${field}-time`}
-                                type="time"
-                                required
-                                value={draft[field].time}
+                      <FormField
+                        control={form.control}
+                        name="discountType"
+                        render={({ field }) => (
+                          <FormItem id="gift-type">
+                            <Label htmlFor="gift-type">{label('type')}</Label>
+                            <FormControl>
+                              <select
+                                id="gift-type"
+                                name={field.name}
+                                ref={field.ref}
+                                onBlur={field.onBlur}
+                                disabled={locked}
+                                className="max-w-full rounded-md border bg-background p-2"
+                                value={draft.discountType}
                                 onChange={(event) =>
-                                  setDraft({
+                                  updateDraft({
                                     ...draft,
-                                    [field]: {
-                                      ...draft[field],
-                                      time: event.target.value,
-                                      changed: true,
-                                    },
+                                    discountType: event.target.value as Draft['discountType'],
+                                    value: '',
+                                    cap: '',
                                   })
                                 }
-                              />
-                            </div>
-                          </div>
-                        ) : (
-                          <p>{label(field === 'start' ? 'immediate' : 'noExpiry')}</p>
+                              >
+                                <option value="fixed_irr">{label('fixed')}</option>
+                                <option value="percentage">{label('percentage')}</option>
+                              </select>
+                            </FormControl>
+                            <FormMessage reserveSpace />
+                          </FormItem>
                         )}
-                      </fieldset>
-                    ))}
-                    {invalidDate && <p role="alert">{label('invalidDate')}</p>}
-                    <div className="flex gap-2">
-                      <Button
-                        type="submit"
-                        disabled={
-                          !editorReady ||
-                          stale ||
-                          !draft.code.trim() ||
-                          (draft.eligibility === 'profile' && !draft.profileIds.length) ||
-                          (editor !== 'new' && !draft.start.date)
-                        }
-                      >
-                        {label('save')}
-                      </Button>
-                      {stale && (
+                      />
+                      <FormInput
+                        control={form.control}
+                        name="value"
+                        id="gift-value"
+                        label={label(draft.discountType === 'percentage' ? 'percent' : 'amount')}
+                        disabled={locked}
+                        inputProps={{
+                          inputMode: draft.discountType === 'percentage' ? 'decimal' : 'numeric',
+                          maxLength: 19,
+                          dir: 'ltr',
+                        }}
+                      />
+                      {draft.discountType === 'percentage' && (
+                        <>
+                          <FormInput
+                            control={form.control}
+                            name="cap"
+                            id="gift-cap"
+                            label={label('cap')}
+                            disabled={locked}
+                            inputProps={{ inputMode: 'numeric', maxLength: 19, dir: 'ltr' }}
+                          />
+                          <p role="note" className="rounded-md border p-3">
+                            {label('percentageWarning')}
+                          </p>
+                        </>
+                      )}
+                      <FormField
+                        control={form.control}
+                        name="eligibility"
+                        render={({ field }) => (
+                          <FormItem id="gift-eligibility">
+                            <Label htmlFor="gift-eligibility">{label('eligibility')}</Label>
+                            <FormControl>
+                              <select
+                                id="gift-eligibility"
+                                name={field.name}
+                                ref={field.ref}
+                                onBlur={field.onBlur}
+                                disabled={locked}
+                                className="max-w-full rounded-md border bg-background p-2"
+                                value={draft.eligibility}
+                                onChange={(event) =>
+                                  updateDraft({
+                                    ...draft,
+                                    eligibility: event.target.value as Draft['eligibility'],
+                                    profileIds: [],
+                                  })
+                                }
+                              >
+                                <option value="public">{label('public')}</option>
+                                <option value="profile">{label('restricted')}</option>
+                              </select>
+                            </FormControl>
+                            <FormMessage reserveSpace />
+                          </FormItem>
+                        )}
+                      />
+                      {draft.eligibility === 'profile' &&
+                        group(
+                          'profileIds',
+                          <GiftProfilePicker
+                            ids={draft.profileIds}
+                            onChange={(profileIds) => updateDraft({ ...draft, profileIds })}
+                            onDenied={scope.deny}
+                            label={label}
+                          />
+                        )}
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {(['totalLimit', 'perProfileLimit'] as const).map((field) => (
+                          <FormInput
+                            key={field}
+                            control={form.control}
+                            name={field}
+                            id={`gift-${field}`}
+                            label={label(field)}
+                            disabled={locked}
+                            inputProps={{
+                              inputMode: 'numeric',
+                              maxLength: 10,
+                              placeholder: label('unlimited'),
+                              dir: 'ltr',
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <FormInput
+                        control={form.control}
+                        name="minimum"
+                        id="gift-minimum"
+                        label={label('minimum')}
+                        disabled={locked}
+                        inputProps={{ inputMode: 'numeric', maxLength: 19, dir: 'ltr' }}
+                      />
+                      {group(
+                        'categories',
+                        <fieldset className="rounded-md border p-4">
+                          <legend className="px-1 font-semibold">{label('categories')}</legend>
+                          <p className="mb-3 text-sm text-muted-foreground">
+                            {label('categoriesHelp')}
+                          </p>
+                          <div className="flex flex-wrap gap-4">
+                            {GIFT_CODE_CATEGORIES.map((category) => (
+                              <label key={category} className="flex items-center gap-2">
+                                <input
+                                  type="checkbox"
+                                  checked={draft.categories.includes(category)}
+                                  onChange={(event) =>
+                                    updateDraft({
+                                      ...draft,
+                                      categories: event.target.checked
+                                        ? [...draft.categories, category]
+                                        : draft.categories.filter((value) => value !== category),
+                                    })
+                                  }
+                                />
+                                {label(`category.${category}`)}
+                              </label>
+                            ))}
+                          </div>
+                        </fieldset>
+                      )}
+                      {group(
+                        'restoreAfterPayment',
+                        <fieldset className="rounded-md border p-4">
+                          <legend className="px-1 font-semibold">
+                            {label('restorationPolicy')}
+                          </legend>
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={draft.restoreOnCancel}
+                              onChange={(event) =>
+                                updateDraft({
+                                  ...draft,
+                                  restoreOnCancel: event.target.checked,
+                                  restoreAfterPayment:
+                                    event.target.checked && draft.restoreAfterPayment,
+                                })
+                              }
+                            />
+                            {label('restoreOnCancel')}
+                          </label>
+                          <label className="mt-3 flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={draft.restoreAfterPayment}
+                              disabled={!draft.restoreOnCancel}
+                              onChange={(event) =>
+                                updateDraft({ ...draft, restoreAfterPayment: event.target.checked })
+                              }
+                            />
+                            {label('restoreAfterPayment')}
+                          </label>
+                        </fieldset>
+                      )}
+                      <p className="text-sm">
+                        {label('timezone')}: <bdi>{zone}</bdi>
+                      </p>
+                      {(['start', 'end'] as const).map((field) =>
+                        group(
+                          field,
+                          <fieldset key={field} className="rounded-md border p-4">
+                            <legend className="px-1 font-semibold">{label(field)}</legend>
+                            {(field === 'end' || editor === 'new') && (
+                              <label className="mb-3 flex items-center gap-2">
+                                <input
+                                  type="checkbox"
+                                  checked={Boolean(draft[field].date)}
+                                  onChange={(event) =>
+                                    updateDraft({
+                                      ...draft,
+                                      [field]: {
+                                        ...dateField(
+                                          event.target.checked ? new Date().toISOString() : null,
+                                          zone
+                                        ),
+                                        changed: true,
+                                      },
+                                    })
+                                  }
+                                />
+                                {label(field === 'start' ? 'setStart' : 'setEnd')}
+                              </label>
+                            )}
+                            {draft[field].date ? (
+                              <div className="grid gap-4 sm:grid-cols-2">
+                                <DatePicker
+                                  label={label(`${field}Date`)}
+                                  placeholder={label('chooseDate')}
+                                  locale={locale}
+                                  timezone={zone}
+                                  value={draft[field].date}
+                                  onChange={(date) =>
+                                    updateDraft({
+                                      ...draft,
+                                      [field]: { ...draft[field], date, changed: true },
+                                    })
+                                  }
+                                />
+                                <div>
+                                  <Label htmlFor={`gift-${field}-time`}>
+                                    {label(`${field}Time`)}
+                                  </Label>
+                                  <Input
+                                    id={`gift-${field}-time`}
+                                    type="time"
+                                    required
+                                    value={draft[field].time}
+                                    onChange={(event) =>
+                                      updateDraft({
+                                        ...draft,
+                                        [field]: {
+                                          ...draft[field],
+                                          time: event.target.value,
+                                          changed: true,
+                                        },
+                                      })
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            ) : (
+                              <p>{label(field === 'start' ? 'immediate' : 'noExpiry')}</p>
+                            )}
+                          </fieldset>
+                        )
+                      )}
+                      {form.formState.errors.root?.validation?.message && (
+                        <p role="alert">{form.formState.errors.root.validation.message}</p>
+                      )}
+                      <div className="flex gap-2">
+                        <FormSubmit loading={validating} disabled={locked || !editorReady || stale}>
+                          {label('save')}
+                        </FormSubmit>
+                        {stale && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            disabled={locked || !editorReady}
+                            onClick={() => {
+                              setDraft(draftFrom(stats?.code, zone));
+                              setDraftBasis(editorBasis);
+                            }}
+                          >
+                            {label('reset')}
+                          </Button>
+                        )}
                         <Button
                           type="button"
                           variant="outline"
-                          disabled={!editorReady}
-                          onClick={() => {
-                            setDraft(draftFrom(stats?.code, zone));
-                            setDraftBasis(editorBasis);
-                            setInvalidDate(false);
-                          }}
+                          disabled={locked}
+                          onClick={() => choose(null)}
                         >
-                          {label('reset')}
+                          {label('cancel')}
                         </Button>
-                      )}
-                      <Button type="button" variant="outline" onClick={() => choose(null)}>
-                        {label('cancel')}
-                      </Button>
-                    </div>
-                  </fieldset>
-                </form>
+                      </div>
+                    </fieldset>
+                  </form>
+                </Form>
               )}
               {stats && (
                 <section
@@ -811,7 +918,7 @@ export default function AdminGiftCodesPage({
                       <div className="flex gap-2">
                         <Button
                           variant="outline"
-                          disabled={!ready || !!action}
+                          disabled={!ready || locked}
                           aria-label={`${label('edit')} ${row.code}`}
                           onClick={() => choose(row.id)}
                         >
@@ -819,7 +926,7 @@ export default function AdminGiftCodesPage({
                         </Button>
                         <Button
                           variant="outline"
-                          disabled={!ready || !!action}
+                          disabled={!ready || locked}
                           aria-label={`${label(row.status === 'active' ? 'deactivate' : 'activate')} ${row.code}`}
                           onClick={() =>
                             propose(
@@ -873,8 +980,10 @@ export default function AdminGiftCodesPage({
               <ListPage.Pagination
                 kind="cursor"
                 hasMore={catalogue.hasMore}
-                loading={catalogue.more === 'loading'}
-                onNext={() => void catalogue.loadMore()}
+                loading={catalogue.more === 'loading' || locked}
+                onNext={() => {
+                  if (!owner.current) void catalogue.loadMore();
+                }}
                 label={label('pagination')}
                 nextLabel={label('loadMore')}
               />
@@ -885,15 +994,119 @@ export default function AdminGiftCodesPage({
       {action && (
         <TeamActionDialog
           action={action}
-          onClose={() => setAction(null)}
+          onClose={closeAction}
           onDenied={scope.deny}
+          onPendingChange={(value) => {
+            sending.current = value;
+            setPending(value);
+          }}
+          onUnconfirmed={() => {
+            if (scope.live.current !== action.epoch || liveReview.current.action !== action) return;
+            setUncertain(true);
+            setAction(null);
+            sending.current = false;
+            setPending(false);
+            catalogue.retry();
+            detail.retry();
+          }}
+          onValidationError={(fields) => {
+            if (
+              scope.live.current !== action.epoch ||
+              liveReview.current.action !== action ||
+              action.path.endsWith('/toggle')
+            )
+              return false;
+            const names = fields
+              .filter(
+                (field): field is string =>
+                  typeof field === 'string' && Object.hasOwn(giftFieldNames, field)
+              )
+              .map((field) => giftFieldNames[field]!);
+            if (!names.length) return false;
+            for (const name of names)
+              form.setError(name, {
+                type: 'server',
+                message: label(
+                  name === 'start' || name === 'end'
+                    ? 'invalidDate'
+                    : name === 'profileIds'
+                      ? 'profilesRequired'
+                      : 'invalidField'
+                ),
+              });
+            errorFocus.current = names[0]!;
+            return true;
+          }}
           confirmationDisabled={
+            uncertain ||
             !ready ||
             (!!editor && (!editorReady || stale)) ||
             action.basis !== reviewBasis ||
             action.epoch !== scope.version
           }
-          summary={recovery(true)}
+          summary={
+            <div className="space-y-3">
+              {proposed && (
+                <dl className="grid gap-2 text-sm">
+                  {[
+                    ['code', proposed.code],
+                    [
+                      'type',
+                      label(proposed.discountType === 'percentage' ? 'percentage' : 'fixed'),
+                    ],
+                    [
+                      proposed.discountType === 'percentage' ? 'percent' : 'amount',
+                      proposed.discountType === 'percentage'
+                        ? numbers.percent(Number(proposed.discountValue) / 10000)
+                        : money(proposed.discountValue),
+                    ],
+                    ...(proposed.maxCapIrr ? [['cap', money(proposed.maxCapIrr)]] : []),
+                    ['minimum', money(proposed.minOrderAmount)],
+                    [
+                      'eligibility',
+                      label(proposed.eligibility === 'profile' ? 'restricted' : 'public'),
+                    ],
+                    [
+                      'totalLimit',
+                      proposed.totalLimit === null
+                        ? label('unlimited')
+                        : numbers.number(proposed.totalLimit),
+                    ],
+                    [
+                      'perProfileLimit',
+                      proposed.perProfileLimit === null
+                        ? label('unlimited')
+                        : numbers.number(proposed.perProfileLimit),
+                    ],
+                    [
+                      'start',
+                      proposed.validFrom ? formatDate(proposed.validFrom) : label('immediate'),
+                    ],
+                    [
+                      'end',
+                      proposed.validUntil ? formatDate(proposed.validUntil) : label('noExpiry'),
+                    ],
+                    [
+                      'restorationPolicy',
+                      label(
+                        !proposed.restoreOnCancel
+                          ? 'noRestoration'
+                          : proposed.restoreAfterPayment
+                            ? 'restorePaid'
+                            : 'restoreUnpaid'
+                      ),
+                    ],
+                  ].map(([key, value]) => (
+                    <div key={key}>
+                      <dt>{label(key!)}</dt>
+                      <dd dir="auto">{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+              {recovery(true)}
+            </div>
+          }
           finalFocus={() => refreshButton.current}
           onSuccess={async (result) => {
             if (
@@ -902,7 +1115,7 @@ export default function AdminGiftCodesPage({
               liveReview.current.basis !== action.basis ||
               liveReview.current.queryScope !== action.queryScope
             )
-              return;
+              throw new Error('Obsolete gift receipt');
             if (!matchesGiftReceipt(result, action.body, action.id))
               throw new Error('Invalid gift receipt');
             catalogue.accept(result);
@@ -911,6 +1124,10 @@ export default function AdminGiftCodesPage({
             setDraft(null);
             setDraftBasis(null);
             setAction(null);
+            owner.current = null;
+            sending.current = false;
+            setPending(false);
+            setUncertain(false);
             setSaved(true);
             catalogue.retry();
           }}

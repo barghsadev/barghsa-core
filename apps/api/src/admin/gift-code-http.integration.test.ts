@@ -50,6 +50,42 @@ function mutation(action: 'create' | 'update' | 'toggle') {
     }
   );
 }
+it('exposes only editable field identifiers and rejects protected mixed payloads without submitted values', async () => {
+  const payload = {
+    code: 'PRIVATE-DRAFT',
+    discountType: 'fixed_irr',
+    discountValue: 'private-amount',
+    profileIds: ['private-profile'],
+    totalLimit: -1,
+  };
+  for (const method of ['POST', 'PATCH']) {
+    const response = await fetch(
+      `${http.base}/api/admin/promotions/gift-codes${method === 'PATCH' ? `/${giftId}` : ''}`,
+      { method, headers, body: JSON.stringify(payload) }
+    );
+    expect(response.status).toBe(400);
+    const body = await response.json();
+    expect(body).toMatchObject({
+      error: {
+        code: 'VALIDATION:INPUT:INVALID',
+        fields: ['discountValue', 'profileIds', 'totalLimit'],
+      },
+    });
+    expect(JSON.stringify(body)).not.toContain('private-amount');
+    expect(JSON.stringify(body)).not.toContain('private-profile');
+    expect(JSON.stringify(body)).not.toContain('PRIVATE-DRAFT');
+  }
+  const mixed = await fetch(`${http.base}/api/admin/promotions/gift-codes`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ ...payload, status: 'private-status' }),
+  });
+  expect(mixed.status).toBe(400);
+  const body = await mixed.json();
+  expect(body).not.toHaveProperty('error.fields');
+  expect(JSON.stringify(body)).not.toContain('private-status');
+  expect((await http.pool.query('SELECT count(*)::int AS n FROM gift_codes')).rows[0].n).toBe(1);
+});
 it('previews a gift code repeatedly without reserving or consuming it', async () => {
   const profileId = (
     await http.pool.query(

@@ -1,7 +1,7 @@
 {
   "name": "barghsa-core",
   "private": true,
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Barghsa — Iranian electricity market intelligence platform",
   "packageManager": "pnpm@10.11.1",
   "engines": {

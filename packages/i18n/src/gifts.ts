@@ -15,6 +15,16 @@ const fa: Record<string, string> = {
   'admin.gifts.fixed': 'مبلغ ثابت',
   'admin.gifts.percentage': 'درصدی',
   'admin.gifts.saved': 'تغییرات ذخیره شد.',
+  'admin.gifts.invalidField': 'مقدار معتبر برای این فیلد وارد کنید.',
+  'admin.gifts.invalidCode': 'کدی بین ۱ تا ۶۴ نویسه وارد کنید.',
+  'admin.gifts.invalidAmount': 'مبلغ صحیح و مثبت ریالی تا سقف ۹٬۲۲۳٬۳۷۲٬۰۳۶٬۸۵۴٬۷۷۵٬۸۰۷ وارد کنید.',
+  'admin.gifts.invalidPercent': 'درصدی از ۰٫۰۱ تا ۱۰۰، با حداکثر دو رقم اعشار وارد کنید.',
+  'admin.gifts.invalidLimit': 'عدد صحیحی از ۱ تا ۲٬۱۴۷٬۴۸۳٬۶۴۷ وارد کنید؛ خالی یعنی نامحدود.',
+  'admin.gifts.invalidMinimum': 'مبلغ صحیح ریالی از صفر تا ۹٬۲۲۳٬۳۷۲٬۰۳۶٬۸۵۴٬۷۷۵٬۸۰۷ وارد کنید.',
+  'admin.gifts.validationUnavailable': 'بررسی فرم انجام نشد. دوباره تلاش کنید.',
+  'admin.gifts.uncertain':
+    'نتیجه ذخیره تأیید نشده است. پیش از ارسال دوباره، کدها و تنظیمات ذخیره‌شده را بررسی کنید. پیش‌نویس شما حفظ شده است.',
+  'admin.gifts.resumeEditing': 'بررسی انجام شد؛ بازگشت به ویرایش',
   'admin.gifts.loading': 'در حال بارگذاری…',
   'admin.gifts.error': 'بارگذاری انجام نشد. دوباره جست‌وجو کنید.',
   'admin.gifts.denied': 'اجازه مدیریت کدهای تخفیف را ندارید.',
@@ -117,6 +127,19 @@ const en: Record<string, string> = {
   'admin.gifts.fixed': 'Fixed amount',
   'admin.gifts.percentage': 'Percentage',
   'admin.gifts.saved': 'Changes saved.',
+  'admin.gifts.invalidField': 'Enter a valid value for this field.',
+  'admin.gifts.invalidCode': 'Enter a code between 1 and 64 characters.',
+  'admin.gifts.invalidAmount':
+    'Enter a positive integer IRR amount up to 9,223,372,036,854,775,807.',
+  'admin.gifts.invalidPercent':
+    'Enter a percentage from 0.01 to 100 with at most two decimal places.',
+  'admin.gifts.invalidLimit': 'Enter an integer from 1 to 2,147,483,647; blank means unlimited.',
+  'admin.gifts.invalidMinimum':
+    'Enter an integer IRR amount from zero to 9,223,372,036,854,775,807.',
+  'admin.gifts.validationUnavailable': 'Could not validate the form. Try again.',
+  'admin.gifts.uncertain':
+    'The save is unconfirmed. Review the saved codes and settings before sending again. Your draft is kept.',
+  'admin.gifts.resumeEditing': 'Reviewed; return to editing',
   'admin.gifts.loading': 'Loading…',
   'admin.gifts.error': 'Could not load gift codes. Search again to retry.',
   'admin.gifts.denied': 'You do not have permission to manage gift codes.',

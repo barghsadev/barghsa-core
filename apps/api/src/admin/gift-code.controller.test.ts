@@ -3,6 +3,7 @@ import { HttpException } from '@nestjs/common';
 import { GiftCodeController } from './gift-code.controller.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { InputFieldException } from '../common/input-field.exception.js';
 
 // ─── Fixtures ──────────────────────────────────────────────────────────
 
@@ -158,9 +159,9 @@ describe('Gift code validation (T-09.12.03)', () => {
       .catch((e: unknown) => e);
     expect(rejection).toMatchObject({ status: 400 });
     expect(rejectionBody(rejection)).toMatchObject({
-      statusCode: 400,
-      error: ErrorCodes.VALIDATION_PARSE_ZOD.code,
+      error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
     });
+    expect((rejection as InputFieldException).fields).toEqual(['maxCapIrr']);
   });
 
   it('validates profileIds as UUIDs', async () => {
