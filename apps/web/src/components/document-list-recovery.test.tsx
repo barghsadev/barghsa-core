@@ -20,16 +20,22 @@ import {
 vi.mock('../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ format: (value: string) => value, notice: null }),
 }));
-const action = vi.hoisted(() => ({ success: null as null | ((result: unknown) => Promise<void>) }));
+const action = vi.hoisted(() => ({
+  success: null as null | ((result: unknown) => Promise<void>),
+  close: null as null | (() => void),
+}));
 vi.mock('./TeamActionDialog.js', () => ({
   TeamActionDialog: ({
     action: item,
     onSuccess,
+    onClose,
   }: {
     action: { title: string };
     onSuccess: (value: unknown) => Promise<void>;
+    onClose: () => void;
   }) => {
     action.success = onSuccess;
+    action.close = onClose;
     return <div role="dialog">{item.title}</div>;
   },
 }));
@@ -37,6 +43,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
   document.documentElement.lang = 'fa';
   action.success = null;
+  action.close = null;
 });
 const filters: DocumentFilters = {
   kind: 'standalone',
@@ -314,6 +321,11 @@ it('template detail retry does not reload its list; newer versions drop obsolete
     await act(async () => button(host, 'Create new version').click());
     expect(host.querySelector('[role="dialog"]')).not.toBeNull();
     newer = true;
+    const beforeRefresh = calls.length;
+    expect(button(host, 'Refresh').disabled).toBe(true);
+    await act(async () => button(host, 'Refresh').click());
+    expect(calls).toHaveLength(beforeRefresh);
+    await act(async () => action.close!());
     await act(async () => button(host, 'Refresh').click());
     expect(host.querySelector('[role="dialog"]')).toBeNull();
     expect(host.querySelector<HTMLInputElement>('input[type=checkbox]')?.checked).toBe(false);
@@ -329,12 +341,17 @@ it('template detail retry does not reload its list; newer versions drop obsolete
 it('template permission denial rejects a racing download and a late command callback', async () => {
   let status = 200;
   let finish: ((value: Response) => void) | undefined;
+  let denyRead: ((value: Response) => void) | undefined;
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string) => {
       if (url.endsWith('/download'))
         return new Promise<Response>((resolve) => {
           finish = resolve;
+        });
+      if (status === 403 && url.includes('?'))
+        return new Promise<Response>((resolve) => {
+          denyRead = resolve;
         });
       return status === 200 ? Response.json(templateData(url)) : new Response('{}', { status });
     })
@@ -343,13 +360,15 @@ it('template permission denial rejects a racing download and a late command call
   try {
     await act(async () => button(host, templateRow.title + 'Contract · Versions: 1').click());
     await act(async () => button(host, 'Get file link').click());
+    status = 403;
+    await change(host, '#document-template-search', 'Changed search');
+    await act(async () => button(host, 'Search templates').click());
     await act(async () => button(host, 'Create new version').click());
     const callback = action.success!;
-    status = 403;
-    await act(async () => button(host, 'Refresh').click());
+    await act(async () => denyRead!(new Response('{}', { status: 403 })));
     await act(async () => {
       finish!(Response.json({ url: 'https://storage.example.test/private.pdf' }));
-      await callback(templateRow);
+      await expect(callback(templateRow)).rejects.toThrow('Obsolete document template receipt');
     });
     expect(host.querySelector('[role="dialog"]')).toBeNull();
     expect(host.querySelector('a')).toBeNull();

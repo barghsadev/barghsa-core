@@ -1,5 +1,17 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button, Input, Label, ListPage } from '@barghsa/ui';
+import {
+  Form,
+  FormInput,
+  FormTextarea,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  FormSubmit,
+  useZodForm,
+} from '@barghsa/ui/form';
 import { ConfigPreviewCard } from '../components/ConfigPreviewCard.js';
 import { t as settingsText } from '@barghsa/i18n/admin-ui';
 import { documentTemplateText } from '@barghsa/i18n/document-templates';
@@ -8,38 +20,18 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { documentUrl } from '../lib/documents.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
-
-type Category = 'general' | 'contract' | 'invoice';
-type FileInfo = {
-  id: string;
-  originalName: string;
-  mimeType: string;
-  sizeBytes: number;
-  checksum: string;
-  placeholders: Array<{ name: string; context: string }>;
-};
-type Version = {
-  id: string;
-  versionNumber: number;
-  changeSummary: string;
-  placeholders: string[];
-  missingRequired: string[];
-  conflicts: Array<{ name: string; files: Array<{ fileName: string; context: string }> }>;
-  createdAt: string;
-  files: FileInfo[];
-};
-type Template = {
-  id: string;
-  title: string;
-  description: string;
-  category: Category;
-  versionCount: number;
-  updatedAt: string;
-  versions?: Version[];
-};
-type Draft = { title: string; description: string; category: Category };
-const blank = (): Draft => ({ title: '', description: '', category: 'general' });
-const MAX_FILE = 10 * 1024 * 1024;
+import {
+  emptyTemplateMetadata as blank,
+  emptyTemplateVersion,
+  metadataErrors,
+  versionErrors,
+  metadataReceipt,
+  versionReceipt,
+  type TemplateCategory as Category,
+  type DocumentTemplate as Template,
+  type TemplateMetadata as Draft,
+  type TemplateVersionDraft,
+} from '../lib/document-template-form.js';
 
 export default function AdminDocumentTemplatesPage({
   queries,
@@ -59,11 +51,43 @@ export default function AdminDocumentTemplatesPage({
   const [selected, setSelected] = useState<string | null>(null);
   const [rows, setRows] = useState<Template[] | null>(null);
   const [detail, setDetail] = useState<Template | null>(null);
-  const [draft, setDraft] = useState<Draft | null>(null);
-  const [retained, setRetained] = useState<string[]>([]);
-  const [files, setFiles] = useState<File[]>([]);
-  const [changeSummary, setChangeSummary] = useState('');
-  const [fileError, setFileError] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const owner = useRef<'metadata' | 'version' | null>(null);
+  const [validating, setValidating] = useState(false);
+  const [uncertain, setUncertain] = useState(false);
+  const metadata = useZodForm<Draft>(
+    async () => {
+      const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return contentFormSchema(
+        {
+          title: word('titleInvalid'),
+          description: word('descriptionInvalid'),
+          category: word('categoryInvalid'),
+        },
+        metadataErrors
+      );
+    },
+    { defaultValues: blank(), validationUnavailableMessage: word('validationUnavailable') }
+  );
+  const version = useZodForm<TemplateVersionDraft>(
+    async () => {
+      const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
+      return contentFormSchema<TemplateVersionDraft>(
+        {
+          retainedFileIds: word('fileError'),
+          files: word('fileError'),
+          changeSummary: word('summaryInvalid'),
+        },
+        (value) => versionErrors(value, acceptedDetail.current?.versions?.[0]?.files ?? [])
+      );
+    },
+    {
+      defaultValues: emptyTemplateVersion(),
+      validationUnavailableMessage: word('validationUnavailable'),
+    }
+  );
+  const draft = editing ? metadata.watch() : null;
+  const { retainedFileIds: retained, files } = version.watch();
   const [linkError, setLinkError] = useState(false);
   const [links, setLinks] = useState<Record<string, string>>({});
   const [state, setState] = useState<'loading' | 'ready' | 'denied' | 'error'>('loading');
@@ -79,17 +103,47 @@ export default function AdminDocumentTemplatesPage({
   const acceptedDetail = useRef<Template | null>(null);
   const [saved, setSaved] = useState(false);
   const [action, setAction] = useState<TeamAction | null>(null);
+  const captured = useRef<
+    | { kind: 'metadata'; draft: Draft; selected: string | null; generation: number }
+    | { kind: 'version'; draft: TemplateVersionDraft; base: Template; generation: number }
+    | null
+  >(null);
+  const locked = validating || !!action || uncertain;
+  const errorFocus = useRef<{ kind: 'metadata' | 'version'; name: string } | null>(null);
+  useEffect(() => {
+    if (!locked && errorFocus.current) {
+      const focus = errorFocus.current;
+      errorFocus.current = null;
+      if (focus.kind === 'metadata') metadata.setFocus(focus.name as keyof Draft);
+      else version.setFocus(focus.name as keyof TemplateVersionDraft);
+    }
+  }, [locked]);
+  function closeAction() {
+    setAction(null);
+    if (!uncertain) {
+      owner.current = null;
+      captured.current = null;
+    }
+  }
+  function editMetadata(value: Draft) {
+    if (owner.current) return;
+    metadata.reset(value);
+    setEditing(true);
+  }
 
-  function choose(id: string | null) {
+  function choose(id: string | null, force = false) {
+    if (owner.current && !force) return;
     ++linkGeneration.current;
     acceptedDetail.current = null;
     setSelected(id);
     setDetail(null);
-    setDraft(null);
-    setRetained([]);
-    setFiles([]);
-    setChangeSummary('');
-    setFileError(false);
+    setEditing(false);
+    metadata.reset(blank());
+    version.reset(emptyTemplateVersion());
+    owner.current = null;
+    captured.current = null;
+    errorFocus.current = null;
+    setUncertain(false);
     setLinks({});
     setLinkError(false);
     setVersionChanged(false);
@@ -128,7 +182,7 @@ export default function AdminDocumentTemplatesPage({
         if (denied) {
           accessDenied.current = true;
           setRows(null);
-          choose(null);
+          choose(null, true);
         }
       });
     return () => controller.abort();
@@ -152,11 +206,22 @@ export default function AdminDocumentTemplatesPage({
           return;
         const previous = acceptedDetail.current;
         const latest = next.versions?.[0];
-        if (!previous) setRetained(latest?.files.map((file) => file.id) ?? []);
+        if (!previous)
+          version.reset({
+            ...emptyTemplateVersion(),
+            retainedFileIds: latest?.files.map((file) => file.id) ?? [],
+          });
         else if (previous.versions?.[0]?.id !== latest?.id) {
           const ids = new Set(latest?.files.map((file) => file.id) ?? []);
-          setRetained((current) => current.filter((id) => ids.has(id)));
+          version.setValue(
+            'retainedFileIds',
+            version.getValues('retainedFileIds').filter((id) => ids.has(id))
+          );
           setAction(null);
+          if (!uncertain) {
+            owner.current = null;
+            captured.current = null;
+          }
           setVersionChanged(true);
         }
         acceptedDetail.current = next;
@@ -172,10 +237,12 @@ export default function AdminDocumentTemplatesPage({
           ++linkGeneration.current;
           acceptedDetail.current = null;
           setDetail(null);
-          setDraft(null);
-          setRetained([]);
-          setFiles([]);
-          setChangeSummary('');
+          setEditing(false);
+          metadata.reset(blank());
+          version.reset(emptyTemplateVersion());
+          owner.current = null;
+          captured.current = null;
+          setUncertain(false);
           setVersionChanged(false);
           setSaved(false);
           setLinks({});
@@ -186,48 +253,78 @@ export default function AdminDocumentTemplatesPage({
     return () => controller.abort();
   }, [selected, detailRevision]);
 
-  function save(event: FormEvent) {
+  async function save(event: FormEvent) {
     event.preventDefault();
-    if (!draft || accessDenied.current || (selected && detailState !== 'ready')) return;
-    setAction({
-      title: word('save'),
-      description: word('confirmSave'),
-      path: `/api/admin/document-templates${selected ? `/${selected}` : ''}`,
-      method: selected ? 'PUT' : 'POST',
-      body: draft,
-      forbiddenMessage: word('denied'),
-    });
+    if (!draft || owner.current || accessDenied.current || (selected && detailState !== 'ready'))
+      return;
+    owner.current = 'metadata';
+    setValidating(true);
+    const generation = linkGeneration.current;
+    try {
+      await metadata.handleSubmit((values) => {
+        if (accessDenied.current || generation !== linkGeneration.current) return;
+        const body = {
+          title: values.title.trim(),
+          description: values.description.trim(),
+          category: values.category,
+        };
+        captured.current = { kind: 'metadata', draft: body, selected, generation };
+        setAction({
+          title: word('save'),
+          description: word('confirmSave'),
+          path: `/api/admin/document-templates${selected ? `/${selected}` : ''}`,
+          method: selected ? 'PUT' : 'POST',
+          body,
+          successStatus: selected ? 200 : 201,
+          forbiddenMessage: word('denied'),
+        });
+      })(event);
+    } finally {
+      setValidating(false);
+      if (!captured.current) owner.current = null;
+    }
   }
 
-  function createVersion(event: FormEvent) {
+  async function createVersion(event: FormEvent) {
     event.preventDefault();
-    if (!selected || !detail || detailState !== 'ready' || accessDenied.current) return;
-    if ((!retained.length && !files.length) || retained.length + files.length > 5) {
-      setFileError(true);
+    if (!selected || !detail || owner.current || detailState !== 'ready' || accessDenied.current)
       return;
+    owner.current = 'version';
+    setValidating(true);
+    const generation = linkGeneration.current;
+    try {
+      await version.handleSubmit((values) => {
+        if (accessDenied.current || generation !== linkGeneration.current) return;
+        const savedDraft = {
+          ...values,
+          retainedFileIds: [...values.retainedFileIds],
+          files: [...values.files],
+        };
+        const body = new FormData();
+        body.set('changeSummary', values.changeSummary.trim());
+        body.set('retainedFileIds', JSON.stringify(values.retainedFileIds));
+        for (const file of values.files) body.append('files', file);
+        captured.current = { kind: 'version', draft: savedDraft, base: detail, generation };
+        setAction({
+          title: word('publishVersion'),
+          description: word('confirmVersion'),
+          path: `/api/admin/document-templates/${selected}/versions`,
+          method: 'POST',
+          body,
+          successStatus: 201,
+          forbiddenMessage: word('denied'),
+          conflictMessage: word('conflict'),
+        });
+      })(event);
+    } finally {
+      setValidating(false);
+      if (!captured.current) owner.current = null;
     }
-    const body = new FormData();
-    body.set('changeSummary', changeSummary.trim());
-    body.set('retainedFileIds', JSON.stringify(retained));
-    for (const file of files) body.append('files', file);
-    setAction({
-      title: word('publishVersion'),
-      description: word('confirmVersion'),
-      path: `/api/admin/document-templates/${selected}/versions`,
-      method: 'POST',
-      body,
-      forbiddenMessage: word('denied'),
-      conflictMessage: word('conflict'),
-    });
   }
 
   function selectFiles(next: File[]) {
-    setFiles(next);
-    setFileError(
-      next.length > 5 ||
-        next.some((file) => file.size === 0 || file.size > MAX_FILE) ||
-        next.reduce((sum, file) => sum + file.size, 0) > 30 * 1024 * 1024
-    );
+    if (owner.current) return;
+    version.setValue('files', next, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
   }
 
   async function getLink(versionId: string, fileId: string) {
@@ -248,7 +345,6 @@ export default function AdminDocumentTemplatesPage({
   }
 
   const latest = detail?.versions?.[0];
-  const actionGeneration = linkGeneration.current;
   return (
     <section
       className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-4 md:p-8"
@@ -262,8 +358,9 @@ export default function AdminDocumentTemplatesPage({
         </div>
         <Button
           variant="outline"
-          disabled={state === 'loading' || detailState === 'loading'}
+          disabled={validating || !!action || state === 'loading' || detailState === 'loading'}
           onClick={() => {
+            if (owner.current && !uncertain) return;
             setRevision((value) => value + 1);
             setDetailRevision((value) => value + 1);
           }}
@@ -273,12 +370,31 @@ export default function AdminDocumentTemplatesPage({
       </header>
       {saved ? <p role="status">{word('saved')}</p> : null}
       {linkError ? <p role="alert">{word('linkError')}</p> : null}
+      {uncertain && (
+        <div role="alert" className="space-y-2">
+          <p>{word('uncertain')}</p>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={state !== 'ready' || (selected !== null && detailState !== 'ready')}
+            onClick={() => {
+              if (state !== 'ready' || (selected && detailState !== 'ready')) return;
+              captured.current = null;
+              owner.current = null;
+              setUncertain(false);
+            }}
+          >
+            {word('resumeEditing')}
+          </Button>
+        </div>
+      )}
       <ListPage>
         <ListPage.Toolbar>
           <form
             className="flex min-w-0 flex-wrap items-end gap-3"
             onSubmit={(event) => {
               event.preventDefault();
+              if (owner.current) return;
               if (queries) queries.setQuery({ search: searchInput.trim() });
               else setSearch(searchInput.trim());
             }}
@@ -289,6 +405,7 @@ export default function AdminDocumentTemplatesPage({
                 id="document-template-search"
                 value={searchInput}
                 maxLength={100}
+                disabled={locked}
                 onChange={(event) => setSearchInput(event.target.value)}
               />
             </div>
@@ -298,7 +415,9 @@ export default function AdminDocumentTemplatesPage({
                 id="document-template-category"
                 className="h-10 w-full rounded-md border bg-background px-3"
                 value={category}
+                disabled={locked}
                 onChange={(event) => {
+                  if (owner.current) return;
                   if (queries) queries.setQuery({ filters: { category: event.target.value } });
                   else setCategory(event.target.value as Category | '');
                 }}
@@ -311,7 +430,7 @@ export default function AdminDocumentTemplatesPage({
                 ))}
               </select>
             </div>
-            <Button type="submit" variant="outline">
+            <Button type="submit" variant="outline" disabled={locked}>
               {word('search')}
             </Button>
           </form>
@@ -321,10 +440,10 @@ export default function AdminDocumentTemplatesPage({
             <div role="region" aria-label={word('listTitle')}>
               <ListPage.Toolbar>
                 <Button
-                  disabled={rows === null || state === 'denied'}
+                  disabled={locked || rows === null || state === 'denied'}
                   onClick={() => {
                     choose(null);
-                    setDraft(blank());
+                    editMetadata(blank());
                   }}
                 >
                   {word('add')}
@@ -343,7 +462,10 @@ export default function AdminDocumentTemplatesPage({
                       <Button
                         type="button"
                         variant="outline"
-                        onClick={() => setRevision((value) => value + 1)}
+                        disabled={validating || !!action}
+                        onClick={() => {
+                          if (!owner.current || uncertain) setRevision((value) => value + 1);
+                        }}
                       >
                         {word('retry')}
                       </Button>
@@ -359,7 +481,9 @@ export default function AdminDocumentTemplatesPage({
                         type="button"
                         className="w-full px-2 py-3 text-start hover:bg-muted focus-visible:outline focus-visible:outline-2"
                         aria-current={selected === row.id ? 'page' : undefined}
+                        disabled={locked}
                         onClick={() => {
+                          if (owner.current && !uncertain) return;
                           choose(row.id);
                         }}
                       >
@@ -385,7 +509,10 @@ export default function AdminDocumentTemplatesPage({
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setDetailRevision((value) => value + 1)}
+                    disabled={validating || !!action}
+                    onClick={() => {
+                      if (!owner.current || uncertain) setDetailRevision((value) => value + 1);
+                    }}
                   >
                     {word('retry')}
                   </Button>
@@ -410,8 +537,9 @@ export default function AdminDocumentTemplatesPage({
                 </div>
                 <Button
                   variant="outline"
+                  disabled={locked || detailState !== 'ready'}
                   onClick={() =>
-                    setDraft({
+                    editMetadata({
                       title: detail.title,
                       description: detail.description,
                       category: detail.category,
@@ -423,170 +551,243 @@ export default function AdminDocumentTemplatesPage({
               </div>
             ) : null}
             {draft ? (
-              <form className="space-y-4 border-y py-5" onSubmit={save} aria-label={word('edit')}>
-                <h2 className="text-xl font-semibold">{word(selected ? 'edit' : 'add')}</h2>
-                <div className="space-y-1">
-                  <Label htmlFor="document-template-title">{word('name')}</Label>
-                  <Input
-                    id="document-template-title"
-                    autoFocus
-                    required
-                    maxLength={200}
-                    value={draft.title}
-                    onChange={(event) => setDraft({ ...draft, title: event.target.value })}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="document-template-description">{word('details')}</Label>
-                  <textarea
-                    id="document-template-description"
-                    className="min-h-24 w-full rounded-md border bg-background p-3"
-                    maxLength={2000}
-                    value={draft.description}
-                    onChange={(event) => setDraft({ ...draft, description: event.target.value })}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="document-template-kind">{word('category')}</Label>
-                  <select
-                    id="document-template-kind"
-                    className="h-10 w-full rounded-md border bg-background px-3"
-                    value={draft.category}
-                    onChange={(event) =>
-                      setDraft({ ...draft, category: event.target.value as Category })
+              <Form {...metadata}>
+                <form
+                  key={`metadata-${linkGeneration.current}`}
+                  noValidate
+                  className="space-y-4 border-y py-5"
+                  onSubmit={save}
+                  aria-label={word('edit')}
+                  onChangeCapture={(event) => {
+                    if (owner.current) {
+                      event.preventDefault();
+                      event.stopPropagation();
                     }
-                  >
-                    {(['general', 'contract', 'invoice'] as const).map((value) => (
-                      <option key={value} value={value}>
-                        {word(value)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <ConfigPreviewCard
-                  title={`${settingsText('admin.settings.comparison', locale)}: ${word('edit')}`}
-                  current={
-                    detail ? (
-                      <TemplateSummary value={detail} locale={locale} />
-                    ) : (
-                      <p>{settingsText('admin.settings.none', locale)}</p>
-                    )
-                  }
-                  draft={<TemplateSummary value={draft} locale={locale} />}
-                />
-                <div className="flex gap-2">
-                  <Button type="submit" disabled={!!selected && detailState !== 'ready'}>
-                    {word('save')}
-                  </Button>
-                  <Button type="button" variant="outline" onClick={() => setDraft(null)}>
-                    {word('cancel')}
-                  </Button>
-                </div>
-              </form>
+                  }}
+                >
+                  <h2 className="text-xl font-semibold">{word(selected ? 'edit' : 'add')}</h2>
+                  {metadata.formState.errors.root?.validation?.message && (
+                    <p role="alert">{metadata.formState.errors.root.validation.message}</p>
+                  )}
+                  <FormInput
+                    control={metadata.control}
+                    name="title"
+                    label={word('name')}
+                    id="document-template-title"
+                    disabled={locked}
+                    inputProps={{ autoFocus: true, maxLength: 200 }}
+                  />
+                  <FormTextarea
+                    control={metadata.control}
+                    name="description"
+                    label={word('details')}
+                    id="document-template-description"
+                    disabled={locked}
+                    inputProps={{ className: 'min-h-24', maxLength: 2000 }}
+                  />
+                  <FormField
+                    control={metadata.control}
+                    name="category"
+                    render={({ field }) => (
+                      <FormItem id="document-template-kind">
+                        <FormLabel>{word('category')}</FormLabel>
+                        <FormControl>
+                          <select
+                            {...field}
+                            id="document-template-kind"
+                            className="h-10 w-full rounded-md border bg-background px-3"
+                            disabled={locked}
+                          >
+                            {(['general', 'contract', 'invoice'] as const).map((value) => (
+                              <option key={value} value={value}>
+                                {word(value)}
+                              </option>
+                            ))}
+                          </select>
+                        </FormControl>
+                        <FormMessage reserveSpace />
+                      </FormItem>
+                    )}
+                  />
+                  <ConfigPreviewCard
+                    title={`${settingsText('admin.settings.comparison', locale)}: ${word('edit')}`}
+                    current={
+                      detail ? (
+                        <TemplateSummary value={detail} locale={locale} />
+                      ) : (
+                        <p>{settingsText('admin.settings.none', locale)}</p>
+                      )
+                    }
+                    draft={<TemplateSummary value={draft} locale={locale} />}
+                  />
+                  <div className="flex gap-2">
+                    <FormSubmit
+                      loading={validating && owner.current === 'metadata'}
+                      disabled={locked || (!!selected && detailState !== 'ready')}
+                    >
+                      {word('save')}
+                    </FormSubmit>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={locked}
+                      onClick={() => {
+                        if (!owner.current) setEditing(false);
+                      }}
+                    >
+                      {word('cancel')}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
             ) : null}
             {detail ? (
               <>
-                <form className="space-y-4 border-y py-5" onSubmit={createVersion}>
-                  <h3 className="text-lg font-semibold">{word('publishVersion')}</h3>
-                  <p className="text-sm text-muted-foreground">{word('versionHelp')}</p>
-                  <ConfigPreviewCard
-                    title={`${settingsText('admin.settings.comparison', locale)}: ${word('publishVersion')}`}
-                    current={
-                      <ul className="flex flex-col gap-2">
-                        {latest?.files.map((file) => (
-                          <li key={file.id} dir="auto">
-                            {file.originalName}
-                          </li>
-                        ))}
-                      </ul>
-                    }
-                    draft={
-                      <ul className="flex flex-col gap-2">
-                        {latest?.files
-                          .filter((file) => retained.includes(file.id))
-                          .map((file) => (
+                <Form {...version}>
+                  <form
+                    key={`version-${linkGeneration.current}`}
+                    noValidate
+                    className="space-y-4 border-y py-5"
+                    onSubmit={createVersion}
+                    aria-label={word('publishVersion')}
+                    onChangeCapture={(event) => {
+                      if (owner.current) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                      }
+                    }}
+                  >
+                    <h3 className="text-lg font-semibold">{word('publishVersion')}</h3>
+                    {version.formState.errors.root?.validation?.message && (
+                      <p role="alert">{version.formState.errors.root.validation.message}</p>
+                    )}
+                    <p className="text-sm text-muted-foreground">{word('versionHelp')}</p>
+                    <ConfigPreviewCard
+                      title={`${settingsText('admin.settings.comparison', locale)}: ${word('publishVersion')}`}
+                      current={
+                        <ul className="flex flex-col gap-2">
+                          {latest?.files.map((file) => (
                             <li key={file.id} dir="auto">
                               {file.originalName}
                             </li>
                           ))}
-                        {files.map((file, index) => (
-                          <li key={index} dir="auto">
-                            {file.name}
-                          </li>
-                        ))}
-                      </ul>
-                    }
-                  />
+                        </ul>
+                      }
+                      draft={
+                        <ul className="flex flex-col gap-2">
+                          {latest?.files
+                            .filter((file) => retained.includes(file.id))
+                            .map((file) => (
+                              <li key={file.id} dir="auto">
+                                {file.originalName}
+                              </li>
+                            ))}
+                          {files.map((file, index) => (
+                            <li key={index} dir="auto">
+                              {file.name}
+                            </li>
+                          ))}
+                        </ul>
+                      }
+                    />
 
-                  {latest?.files.length ? (
-                    <fieldset className="space-y-2">
-                      <legend className="font-medium">{word('currentFiles')}</legend>
-                      {latest.files.map((file) => (
-                        <label key={file.id} className="flex items-center gap-2 text-sm">
-                          <input
-                            type="checkbox"
-                            checked={retained.includes(file.id)}
-                            onChange={(event) =>
-                              setRetained((current) =>
-                                event.target.checked
-                                  ? [...current, file.id]
-                                  : current.filter((id) => id !== file.id)
-                              )
-                            }
-                          />
-                          <span dir="auto">{file.originalName}</span>
-                          <span className="text-muted-foreground">({word('retain')})</span>
-                        </label>
-                      ))}
-                    </fieldset>
-                  ) : null}
-                  <div
-                    className="space-y-1 rounded-md border border-dashed p-4"
-                    onDragOver={(event) => event.preventDefault()}
-                    onDrop={(event) => {
-                      event.preventDefault();
-                      selectFiles([...event.dataTransfer.files]);
-                    }}
-                  >
-                    <Label htmlFor="document-template-files">{word('newFiles')}</Label>
-                    <input
-                      id="document-template-files"
-                      type="file"
-                      accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                      multiple
-                      className="block w-full text-sm"
-                      onChange={(event) => selectFiles([...(event.target.files ?? [])])}
-                    />
-                    <p className="text-xs text-muted-foreground">{word('fileHelp')}</p>
-                    {files.length ? (
-                      <p className="text-sm" dir="auto">
-                        {files.map((file) => file.name).join(', ')}
-                      </p>
+                    {latest?.files.length ? (
+                      <FormField
+                        control={version.control}
+                        name="retainedFileIds"
+                        render={({ field }) => (
+                          <FormItem id="document-template-retained">
+                            <FormControl>
+                              <fieldset
+                                className="space-y-2"
+                                ref={field.ref}
+                                tabIndex={-1}
+                                onBlur={field.onBlur}
+                                disabled={locked}
+                              >
+                                <legend className="font-medium">{word('currentFiles')}</legend>
+                                {latest.files.map((file) => (
+                                  <label key={file.id} className="flex items-center gap-2 text-sm">
+                                    <input
+                                      type="checkbox"
+                                      checked={retained.includes(file.id)}
+                                      disabled={locked}
+                                      onChange={(event) =>
+                                        field.onChange(
+                                          event.target.checked
+                                            ? [...retained, file.id]
+                                            : retained.filter((id) => id !== file.id)
+                                        )
+                                      }
+                                    />
+                                    <span dir="auto">{file.originalName}</span>
+                                    <span className="text-muted-foreground">
+                                      ({word('retain')})
+                                    </span>
+                                  </label>
+                                ))}
+                              </fieldset>
+                            </FormControl>
+                            <FormMessage reserveSpace />
+                          </FormItem>
+                        )}
+                      />
                     ) : null}
-                  </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="document-template-summary">{word('changeSummary')}</Label>
-                    <Input
-                      id="document-template-summary"
-                      maxLength={500}
-                      value={changeSummary}
-                      onChange={(event) => setChangeSummary(event.target.value)}
+                    <FormField
+                      control={version.control}
+                      name="files"
+                      render={({ field }) => (
+                        <FormItem id="document-template-files">
+                          <div
+                            className="space-y-1 rounded-md border border-dashed p-4"
+                            onDragOver={(event) => event.preventDefault()}
+                            onDrop={(event) => {
+                              event.preventDefault();
+                              selectFiles([...event.dataTransfer.files]);
+                            }}
+                          >
+                            <FormLabel>{word('newFiles')}</FormLabel>
+                            <FormControl>
+                              <input
+                                id="document-template-files"
+                                type="file"
+                                accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                multiple
+                                name={field.name}
+                                ref={field.ref}
+                                onBlur={field.onBlur}
+                                disabled={locked}
+                                className="block w-full text-sm"
+                                onChange={(event) => selectFiles([...(event.target.files ?? [])])}
+                              />
+                            </FormControl>
+                            <p className="text-xs text-muted-foreground">{word('fileHelp')}</p>
+                            {files.length ? (
+                              <p className="text-sm" dir="auto">
+                                {files.map((file) => file.name).join(', ')}
+                              </p>
+                            ) : null}
+                            <FormMessage reserveSpace />
+                          </div>
+                        </FormItem>
+                      )}
                     />
-                  </div>
-                  {fileError ? (
-                    <p role="alert" className="text-sm text-destructive">
-                      {word('fileError')}
-                    </p>
-                  ) : null}
-                  <Button
-                    type="submit"
-                    disabled={
-                      detailState !== 'ready' || fileError || (!retained.length && !files.length)
-                    }
-                  >
-                    {word('publishVersion')}
-                  </Button>
-                </form>
+                    <FormInput
+                      control={version.control}
+                      name="changeSummary"
+                      label={word('changeSummary')}
+                      id="document-template-summary"
+                      disabled={locked}
+                      inputProps={{ maxLength: 500 }}
+                    />
+                    <FormSubmit
+                      loading={validating && owner.current === 'version'}
+                      disabled={locked || detailState !== 'ready'}
+                    >
+                      {word('publishVersion')}
+                    </FormSubmit>
+                  </form>
+                </Form>
                 <section className="space-y-4" aria-label={word('history')}>
                   <h3 className="text-lg font-semibold">{word('history')}</h3>
                   {detail.versions?.length ? (
@@ -686,11 +887,98 @@ export default function AdminDocumentTemplatesPage({
       {action ? (
         <TeamActionDialog
           action={action}
-          onClose={() => setAction(null)}
+          summary={
+            captured.current?.kind === 'metadata' ? (
+              <TemplateSummary value={captured.current.draft} locale={locale} />
+            ) : captured.current?.kind === 'version' ? (
+              <div className="space-y-2 text-sm">
+                <p dir="auto">{captured.current.draft.changeSummary}</p>
+                <ul>
+                  {[
+                    ...(captured.current.base.versions?.[0]?.files ?? [])
+                      .filter(
+                        (file) =>
+                          captured.current?.kind === 'version' &&
+                          captured.current.draft.retainedFileIds.includes(file.id)
+                      )
+                      .map((file) => file.originalName),
+                    ...captured.current.draft.files.map((file) => file.name),
+                  ].map((name) => (
+                    <li key={name} dir="auto">
+                      {name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null
+          }
+          confirmationDisabled={
+            uncertain ||
+            !captured.current ||
+            captured.current.generation !== linkGeneration.current ||
+            (!!selected && detailState !== 'ready')
+          }
+          onClose={closeAction}
+          onDenied={() => {
+            accessDenied.current = true;
+            setRows(null);
+            setState('denied');
+            choose(null, true);
+          }}
+          onUnconfirmed={() => {
+            setUncertain(true);
+            setAction(null);
+            setState('loading');
+            setRevision((value) => value + 1);
+            if (selected) {
+              setDetailState('loading');
+              setDetailRevision((value) => value + 1);
+            }
+          }}
+          onValidationError={(fields) => {
+            const pending = captured.current;
+            if (!pending || pending.generation !== linkGeneration.current) return false;
+            const names =
+              pending.kind === 'metadata'
+                ? ['title', 'description', 'category']
+                : ['retainedFileIds', 'files', 'changeSummary'];
+            const publicFields = fields.filter(
+              (field): field is string => typeof field === 'string' && names.includes(field)
+            );
+            if (!publicFields.length) return false;
+            for (const field of publicFields) {
+              if (pending.kind === 'metadata')
+                metadata.setError(field as keyof Draft, {
+                  type: 'server',
+                  message: word(
+                    field === 'title'
+                      ? 'titleInvalid'
+                      : field === 'description'
+                        ? 'descriptionInvalid'
+                        : 'categoryInvalid'
+                  ),
+                });
+              else
+                version.setError(field as keyof TemplateVersionDraft, {
+                  type: 'server',
+                  message: word(field === 'changeSummary' ? 'summaryInvalid' : 'fileError'),
+                });
+            }
+            errorFocus.current = { kind: pending.kind, name: publicFields[0]! };
+            return true;
+          }}
           onSuccess={async (result) => {
-            if (accessDenied.current || actionGeneration !== linkGeneration.current) return;
-            const next = result as Template | null;
-            choose(next?.id ?? selected);
+            const pending = captured.current;
+            if (accessDenied.current || !pending || pending.generation !== linkGeneration.current)
+              throw new Error('Obsolete document template receipt');
+            if (
+              pending.kind === 'metadata'
+                ? !metadataReceipt(result, pending.draft, pending.selected)
+                : !versionReceipt(result, pending.draft, pending.base)
+            )
+              throw new Error('Unconfirmed document template receipt');
+            const next = result as Template;
+            choose(next.id, true);
             setSaved(true);
             setRevision((value) => value + 1);
           }}

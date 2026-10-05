@@ -22,6 +22,7 @@ import { hasStaffPermission } from '../session/staff-permissions.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { DocumentTemplateService, type TemplateUpload } from './document-template.service.js';
+import { InputFieldException } from '../common/input-field.exception.js';
 
 const metadataSchema = z
   .object({
@@ -53,9 +54,19 @@ const versionSchema = z
   })
   .strict();
 
-function parse<T extends z.ZodType>(schema: T, value: unknown): z.output<T> {
+function parse<T extends z.ZodType>(
+  schema: T,
+  value: unknown,
+  fields: readonly string[] = []
+): z.output<T> {
   const result = schema.safeParse(value);
-  if (!result.success) throw new BadRequestException('Invalid document template request');
+  if (!result.success) {
+    const publicFields = result.error.issues
+      .map((issue) => String(issue.path[0] ?? ''))
+      .filter((field) => fields.includes(field));
+    if (publicFields.length) throw new InputFieldException(publicFields);
+    throw new BadRequestException('Invalid document template request');
+  }
   return result.data;
 }
 
@@ -89,7 +100,11 @@ export class DocumentTemplateController {
   @RequiresStepUp()
   create(@Req() request: AuthenticatedRequest, @Body() body: unknown) {
     this.authorize(request);
-    return this.templates.create(parse(metadataSchema, body), request.session, request.ip ?? '');
+    return this.templates.create(
+      parse(metadataSchema, body, ['title', 'description', 'category']),
+      request.session,
+      request.ip ?? ''
+    );
   }
 
   @Put(':id')
@@ -103,7 +118,7 @@ export class DocumentTemplateController {
     this.authorize(request);
     return this.templates.update(
       id,
-      parse(metadataSchema, body),
+      parse(metadataSchema, body, ['title', 'description', 'category']),
       request.session,
       request.ip ?? ''
     );
@@ -125,7 +140,7 @@ export class DocumentTemplateController {
     @UploadedFiles() files: TemplateUpload[] = []
   ) {
     this.authorize(request);
-    const input = parse(versionSchema, body);
+    const input = parse(versionSchema, body, ['changeSummary', 'retainedFileIds']);
     return this.templates.createVersion(id, { ...input, files }, request.session, request.ip ?? '');
   }
 

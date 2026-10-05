@@ -123,6 +123,35 @@ function versionForm(
   return body;
 }
 
+it('returns only public metadata and version field names after permission and step-up checks', async () => {
+  const title = 'private-invalid-title'.repeat(20);
+  const denied = await request('', 'template-customer', 'POST', {
+    title,
+    category: 'secret-category',
+  });
+  expect(denied.status).toBe(403);
+  expect(await denied.text()).not.toContain(title);
+  const invalid = await request('', 'template-admin', 'POST', {
+    title,
+    category: 'secret-category',
+  });
+  expect(invalid.status).toBe(400);
+  const result = await invalid.json();
+  expect(result).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID', fields: ['title', 'category'] },
+  });
+  expect(JSON.stringify(result)).not.toContain(title);
+  expect(JSON.stringify(result)).not.toContain('secret-category');
+  const body = new FormData();
+  body.set('changeSummary', 'private-summary'.repeat(100));
+  body.set('retainedFileIds', '["private-invalid-id"]');
+  const version = await request(`/${randomUUID()}/versions`, 'template-admin', 'POST', body);
+  expect(version.status).toBe(400);
+  expect(await version.json()).toMatchObject({
+    error: { fields: ['changeSummary', 'retainedFileIds'] },
+  });
+});
+
 it('versions PDF and DOCX files, extracts merged placeholders, and keeps historical downloads', async () => {
   expect((await request('', 'template-customer')).status).toBe(403);
   const createdResponse = await request('', 'template-admin', 'POST', {
