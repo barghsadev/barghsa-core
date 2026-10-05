@@ -1,4 +1,6 @@
 import { ticketReply, ticketPagination, type TicketReplyOptions } from './ticket-input.js';
+import { parseTicketFormInput, optionalTicketCommandKey } from './ticket-form-input-fields.js';
+import { idempotentMutation } from '../database/idempotency.js';
 import { withRelatedTicketRecords, type RelatedTicketRecord } from './ticket-related-records.js';
 import {
   authorizeTicketAccess,
@@ -68,6 +70,7 @@ export interface TicketRow {
 }
 
 export interface CreateTicketDto {
+  idempotencyKey?: string;
   subject: string;
   body: string;
   category?: TicketRow['category'];
@@ -957,26 +960,88 @@ export class TicketsService {
    * and creates the ticket record. Attachments (storage keys) are stored
    * as a JSON array on the ticket for later linking.
    */
+  private async requireOwnedTicketProfile(client: PoolClient, userId: string, profileId: string) {
+    const profile = await client.query(
+      'SELECT id FROM profiles WHERE id=$1 AND user_id=$2 AND archived=false FOR UPDATE',
+      [profileId, userId]
+    );
+    if (!profile.rows.length) throw new HttpException('Profile not found', 404);
+  }
+
+  async assertCanCreateTicket(actor: TicketActor, input: Record<string, unknown>): Promise<void> {
+    if (
+      (input.profileId != null && !z.uuid().safeParse(input.profileId).success) ||
+      (input.relatedEntityType != null &&
+        !['order', 'contract', 'invoice'].includes(input.relatedEntityType as string)) ||
+      Boolean(input.relatedEntityType) !== Boolean(input.relatedEntityId) ||
+      (input.relatedEntityId && !input.profileId) ||
+      (input.relatedEntityId && !z.uuid().safeParse(input.relatedEntityId).success)
+    )
+      throw new HttpException('Invalid ticket fields', 400);
+    await this.readAs(actor, false, async (client) => {
+      if (input.profileId)
+        await this.requireOwnedTicketProfile(client, actor.userId, input.profileId as string);
+      if (input.relatedEntityId) {
+        const table =
+          input.relatedEntityType === 'order'
+            ? 'orders'
+            : input.relatedEntityType === 'contract'
+              ? 'contracts'
+              : 'invoices';
+        const related = await client.query(
+          `SELECT id FROM ${table} WHERE id=$1 AND profile_id=$2
+           ${table === 'contracts' ? 'AND EXISTS (SELECT 1 FROM contract_publications WHERE contract_id=contracts.id)' : ''}
+           FOR SHARE`,
+          [input.relatedEntityId, input.profileId]
+        );
+        if (!related.rows.length)
+          throw new HttpException('Related record not found in this profile', 404);
+      }
+    });
+  }
+
+  async assertTicketFormAuthority(
+    actor: TicketActor,
+    ticketId: string,
+    staff: boolean
+  ): Promise<void> {
+    if (!z.uuid().safeParse(ticketId).success) throw new HttpException('Ticket not found', 404);
+    await this.readAs(actor, staff ? 'write' : false, async (client, access) => {
+      const current = await client.query(
+        'SELECT id FROM tickets WHERE id=$1 AND ($2::text IS NULL OR user_id=$2) AND ($3::text IS NULL OR assigned_to=$3) FOR SHARE',
+        [ticketId, staff ? null : actor.userId, access.scope ?? null]
+      );
+      if (!current.rows.length) throw new HttpException('Ticket not found', 404);
+    });
+  }
+
   async createTicket(
     userId: string,
     dto: CreateTicketDto,
     actor?: TicketActor
   ): Promise<TicketRow> {
-    const parsed = z
-      .object({
-        subject: z.string().trim().min(1).max(200),
-        body: z.string().trim().min(1).max(10000),
-        category: z.enum(['general', 'billing', 'orders', 'privacy']).default('general'),
-        profileId: z.uuid().nullable().optional(),
-        relatedEntityType: z.enum(['order', 'contract', 'invoice']).nullable().optional(),
-        relatedEntityId: z.string().trim().min(1).max(512).nullable().optional(),
-        priority: z.enum(['normal', 'high']).default('normal'),
-        attachments: z.array(z.string().min(1).max(512)).max(5).nullable().optional(),
-      })
-      .strict()
-      .safeParse(dto);
-    if (!parsed.success) throw new HttpException('Invalid ticket fields', 400);
-    const data = parsed.data;
+    const data = await parseTicketFormInput(
+      z
+        .object({
+          idempotencyKey: z.uuid().optional(),
+          subject: z.string().trim().min(1).max(200),
+          body: z.string().trim().min(1).max(10000),
+          category: z.enum(['general', 'billing', 'orders', 'privacy']).default('general'),
+          profileId: z.uuid().nullable().optional(),
+          relatedEntityType: z.enum(['order', 'contract', 'invoice']).nullable().optional(),
+          relatedEntityId: z.string().trim().min(1).max(512).nullable().optional(),
+          priority: z.enum(['normal', 'high']).default('normal'),
+          attachments: z.array(z.string().min(1).max(512)).max(5).nullable().optional(),
+        })
+        .strict(),
+      dto,
+      ['subject', 'body'],
+      async (input) => {
+        if (!actor) throw new HttpException('Invalid ticket fields', 400);
+        await this.assertCanCreateTicket(actor, input);
+      },
+      'Invalid ticket fields'
+    );
     if (
       Boolean(data.relatedEntityType) !== Boolean(data.relatedEntityId) ||
       (data.relatedEntityId && !data.profileId)
@@ -986,83 +1051,108 @@ export class TicketsService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      const id = randomUUID();
-      const assignment = await this.assignmentService.choose(
-        client,
-        'ticket',
-        id,
-        userId,
-        [data.relatedEntityType ?? 'support'],
-        actor ? [userId] : []
-      );
-      if (actor) await authorizeTicketMutation(client, actor, userId, false);
-      if (data.profileId) {
-        const profile = await client.query(
-          'SELECT id FROM profiles WHERE id=$1 AND user_id=$2 AND archived=false FOR UPDATE',
-          [data.profileId, userId]
-        );
-        if (!profile.rows.length) throw new HttpException('Profile not found', 404);
-      }
-      if (data.relatedEntityId) {
-        if (!z.uuid().safeParse(data.relatedEntityId).success)
-          throw new HttpException('Invalid related record identifier', 400);
-        const table =
-          data.relatedEntityType === 'order'
-            ? 'orders'
-            : data.relatedEntityType === 'contract'
-              ? 'contracts'
-              : 'invoices';
-        const related = await client.query(
-          `SELECT id FROM ${table} WHERE id=$1 AND profile_id=$2
-           ${table === 'contracts' ? 'AND EXISTS (SELECT 1 FROM contract_publications WHERE contract_id=contracts.id)' : ''}
-           FOR SHARE`,
-          [data.relatedEntityId, data.profileId]
-        );
-        if (!related.rows.length)
-          throw new HttpException('Related record not found in this profile', 404);
-      }
-      const attachments = data.attachments?.length
-        ? await this.attachmentService.seal(
-            client,
-            data.attachments,
-            userId,
-            data.profileId ?? null
-          )
-        : [];
-      const result = await client.query(
-        `INSERT INTO tickets(user_id,subject,body,profile_id,related_entity_type,related_entity_id,priority,status,attachments,id,assigned_to,assigned_team_id,category)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,CASE WHEN $10::text IS NULL THEN 'open' ELSE 'in_progress' END,$8::jsonb,$9,$10,$11,$12) RETURNING *`,
-        [
-          userId,
-          data.subject,
-          data.body,
-          data.profileId ?? null,
-          data.relatedEntityType ?? null,
-          data.relatedEntityId ?? null,
-          data.priority,
-          JSON.stringify(attachments),
+      const work = async () => {
+        const id = randomUUID();
+        const assignment = await this.assignmentService.choose(
+          client,
+          'ticket',
           id,
-          assignment?.userId ?? null,
-          assignment?.teamId ?? null,
-          data.category,
-        ]
-      );
-      const ticket = mapRow(result.rows[0]);
-      await client.query(
-        `INSERT INTO audit_log(id,user_id,event,metadata) VALUES ($1,$2,'ticket_created',$3::jsonb)`,
-        [
-          randomUUID(),
           userId,
-          JSON.stringify({
-            ticketId: ticket.id,
-            profileId: ticket.profileId,
-            attachmentCount: attachments.length,
-            category: ticket.category,
-          }),
-        ]
-      );
-      await this.notifyTicket(client, ticket, userId, 'created');
-      if (actor) await requireCurrentSession(client, actor);
+          [data.relatedEntityType ?? 'support'],
+          actor ? [userId] : []
+        );
+        if (actor) await authorizeTicketMutation(client, actor, userId, false);
+        if (data.profileId) {
+          const profile = await client.query(
+            'SELECT id FROM profiles WHERE id=$1 AND user_id=$2 AND archived=false FOR UPDATE',
+            [data.profileId, userId]
+          );
+          if (!profile.rows.length) throw new HttpException('Profile not found', 404);
+        }
+        if (data.relatedEntityId) {
+          if (!z.uuid().safeParse(data.relatedEntityId).success)
+            throw new HttpException('Invalid related record identifier', 400);
+          const table =
+            data.relatedEntityType === 'order'
+              ? 'orders'
+              : data.relatedEntityType === 'contract'
+                ? 'contracts'
+                : 'invoices';
+          const related = await client.query(
+            `SELECT id FROM ${table} WHERE id=$1 AND profile_id=$2
+             ${table === 'contracts' ? 'AND EXISTS (SELECT 1 FROM contract_publications WHERE contract_id=contracts.id)' : ''}
+             FOR SHARE`,
+            [data.relatedEntityId, data.profileId]
+          );
+          if (!related.rows.length)
+            throw new HttpException('Related record not found in this profile', 404);
+        }
+        const attachments = data.attachments?.length
+          ? await this.attachmentService.seal(
+              client,
+              data.attachments,
+              userId,
+              data.profileId ?? null
+            )
+          : [];
+        const result = await client.query(
+          `INSERT INTO tickets(user_id,subject,body,profile_id,related_entity_type,related_entity_id,priority,status,attachments,id,assigned_to,assigned_team_id,category)
+          VALUES ($1,$2,$3,$4,$5,$6,$7,CASE WHEN $10::text IS NULL THEN 'open' ELSE 'in_progress' END,$8::jsonb,$9,$10,$11,$12) RETURNING *`,
+          [
+            userId,
+            data.subject,
+            data.body,
+            data.profileId ?? null,
+            data.relatedEntityType ?? null,
+            data.relatedEntityId ?? null,
+            data.priority,
+            JSON.stringify(attachments),
+            id,
+            assignment?.userId ?? null,
+            assignment?.teamId ?? null,
+            data.category,
+          ]
+        );
+        const ticket = mapRow(result.rows[0]);
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata) VALUES ($1,$2,'ticket_created',$3::jsonb)`,
+          [
+            randomUUID(),
+            userId,
+            JSON.stringify({
+              ticketId: ticket.id,
+              profileId: ticket.profileId,
+              attachmentCount: attachments.length,
+              category: ticket.category,
+            }),
+          ]
+        );
+        await this.notifyTicket(client, ticket, userId, 'created');
+        if (actor) await requireCurrentSession(client, actor);
+        return ticket;
+      };
+      const ticket = data.idempotencyKey
+        ? await idempotentMutation(
+            client,
+            'ticket_create',
+            {
+              ...data,
+              profileId: data.profileId ?? null,
+              relatedEntityType: data.relatedEntityType ?? null,
+              relatedEntityId: data.relatedEntityId ?? null,
+              attachments: data.attachments ?? [],
+              idempotencyKey: data.idempotencyKey,
+            },
+            actor ?? { userId },
+            work
+          )
+        : await work();
+      if (data.idempotencyKey) {
+        // Replay must retain current authority without choosing or sealing a second time.
+        if (actor) await authorizeTicketMutation(client, actor, userId, false);
+        if (data.profileId) await this.requireOwnedTicketProfile(client, userId, data.profileId);
+        if (actor) await requireCurrentSession(client, actor);
+      }
       await client.query('COMMIT');
       return ticket;
     } catch (error) {
@@ -1201,7 +1291,8 @@ export class TicketsService {
     userId: string,
     status: string,
     isAdmin: boolean = false,
-    actor?: TicketActor
+    actor?: TicketActor,
+    idempotencyKey?: string
   ): Promise<TicketRow> {
     if (!isAdmin && status !== 'open') {
       if (
@@ -1211,7 +1302,16 @@ export class TicketsService {
       }
       throw new HttpException('Only staff can change ticket status', 403);
     }
-    return this.changeStatus(ticketId, status, userId, userId, undefined, actor);
+    return this.changeStatus(
+      ticketId,
+      status,
+      userId,
+      userId,
+      undefined,
+      actor,
+      undefined,
+      idempotencyKey
+    );
   }
 
   private async changeStatus(
@@ -1221,7 +1321,8 @@ export class TicketsService {
     ownerId?: string,
     assignedTo?: string,
     actor?: TicketActor,
-    reason?: string
+    reason?: string,
+    idempotencyKey?: string
   ): Promise<TicketRow> {
     if (
       reason !== undefined &&
@@ -1237,6 +1338,7 @@ export class TicketsService {
       closed: [],
     };
     if (!Object.hasOwn(transitions, status)) throw new HttpException('Invalid status', 400);
+    const key = optionalTicketCommandKey(idempotencyKey);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -1249,41 +1351,58 @@ export class TicketsService {
         )
       ).rows[0];
       if (!row) throw new HttpException('Ticket not found', 404);
-      if (row.privacy_closure_completed_at && row.status !== status)
-        throw new HttpException('Completed closure requests cannot be reopened', 409);
-      if (row.status === status) {
+      const work = async () => {
+        if (row.privacy_closure_completed_at && row.status !== status)
+          throw new HttpException('Completed closure requests cannot be reopened', 409);
+        if (row.status === status) {
+          if (actor) await requireCurrentSession(client, actor);
+          return mapRow(row);
+        }
+        if (
+          status !== 'open' &&
+          (!transitions[row.status]?.includes(status) ||
+            (status === 'in_progress' && !row.assigned_to))
+        ) {
+          throw new HttpException('Invalid ticket status transition', 409);
+        }
+        const result = await client.query(
+          'UPDATE tickets SET status=$1,updated_at=NOW() WHERE id=$2 RETURNING *',
+          [status, ticketId]
+        );
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata) VALUES ($1,$2,'ticket_status_changed',$3::jsonb)`,
+          [
+            randomUUID(),
+            actorId,
+            JSON.stringify({
+              ticketId,
+              from: row.status,
+              to: status,
+              ...(reason !== undefined ? { reason: reason.trim() } : {}),
+            }),
+          ]
+        );
+        await this.notifyTicket(client, mapRow(result.rows[0]), actorId, 'status');
         if (actor) await requireCurrentSession(client, actor);
-        await client.query('COMMIT');
-        return mapRow(row);
-      }
-      if (
-        status !== 'open' &&
-        (!transitions[row.status]?.includes(status) ||
-          (status === 'in_progress' && !row.assigned_to))
-      ) {
-        throw new HttpException('Invalid ticket status transition', 409);
-      }
-      const result = await client.query(
-        'UPDATE tickets SET status=$1,updated_at=NOW() WHERE id=$2 RETURNING *',
-        [status, ticketId]
-      );
-      await client.query(
-        `INSERT INTO audit_log(id,user_id,event,metadata) VALUES ($1,$2,'ticket_status_changed',$3::jsonb)`,
-        [
-          randomUUID(),
-          actorId,
-          JSON.stringify({
-            ticketId,
-            from: row.status,
-            to: status,
-            ...(reason !== undefined ? { reason: reason.trim() } : {}),
-          }),
-        ]
-      );
-      await this.notifyTicket(client, mapRow(result.rows[0]), actorId, 'status');
-      if (actor) await requireCurrentSession(client, actor);
+        return mapRow(result.rows[0]);
+      };
+      const result = key
+        ? await idempotentMutation(
+            client,
+            ownerId ? 'ticket_customer_status' : 'ticket_staff_status',
+            {
+              ticketId,
+              status,
+              ...(reason === undefined ? {} : { reason: reason.trim() }),
+              idempotencyKey: key,
+            },
+            actor ?? { userId: actorId },
+            work
+          )
+        : await work();
+      if (key && actor) await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return mapRow(result.rows[0]);
+      return result;
     } catch (error) {
       await client.query('ROLLBACK');
       throw error;
@@ -1801,7 +1920,8 @@ export class TicketsService {
     actorId: string,
     assignedTo?: string,
     teamId?: string,
-    actor?: TicketActor
+    actor?: TicketActor,
+    idempotencyKey?: string
   ): Promise<TicketRow> {
     if (
       typeof assigneeUserId !== 'string' ||
@@ -1811,80 +1931,107 @@ export class TicketsService {
       throw new HttpException('Invalid assignee', 400);
     }
     if (teamId && !z.uuid().safeParse(teamId).success) throw new HttpException('Invalid team', 400);
+    const key = optionalTicketCommandKey(idempotencyKey);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      if (teamId) {
-        const team = await client.query(
-          'SELECT id FROM staff_teams WHERE id=$1 AND is_active FOR SHARE',
-          [teamId]
-        );
-        if (!team.rows.length) throw new HttpException('Active team not found', 404);
-        const member = await client.query(
-          'SELECT id FROM staff_team_members WHERE team_id=$1 AND user_id=$2',
-          [teamId, assigneeUserId]
-        );
-        if (!member.rows.length)
-          throw new HttpException('Assignee is not a member of this team', 409);
-      }
-      if (actor) {
-        assignedTo = await authorizeTicketMutation(client, actor, actorId, true, assigneeUserId);
-        if (assignedTo && (assigneeUserId !== assignedTo || teamId))
-          throw new HttpException('Assigned-only staff cannot reassign another user', 403);
-      }
-      // Lock the account before the ticket, matching staff account changes.
-      const account = (
-        await client.query(
-          `SELECT u.is_admin, u.disabled_at, u.activation_token
-        FROM users u WHERE u.user_id=$1 FOR NO KEY UPDATE OF u`,
+      const work = async () => {
+        if (teamId) {
+          const team = await client.query(
+            'SELECT id FROM staff_teams WHERE id=$1 AND is_active FOR SHARE',
+            [teamId]
+          );
+          if (!team.rows.length) throw new HttpException('Active team not found', 404);
+          const member = await client.query(
+            'SELECT id FROM staff_team_members WHERE team_id=$1 AND user_id=$2',
+            [teamId, assigneeUserId]
+          );
+          if (!member.rows.length)
+            throw new HttpException('Assignee is not a member of this team', 409);
+        }
+        if (actor) {
+          assignedTo = await authorizeTicketMutation(client, actor, actorId, true, assigneeUserId);
+          if (assignedTo && (assigneeUserId !== assignedTo || teamId))
+            throw new HttpException('Assigned-only staff cannot reassign another user', 403);
+        }
+        // Lock the account before the ticket, matching staff account changes.
+        const account = (
+          await client.query(
+            `SELECT u.is_admin, u.disabled_at, u.activation_token
+          FROM users u WHERE u.user_id=$1 FOR NO KEY UPDATE OF u`,
+            [assigneeUserId]
+          )
+        ).rows[0];
+        const roles = await client.query(
+          `SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id
+           WHERE ur.user_id=$1 ORDER BY r.role_id FOR SHARE OF ur,r`,
           [assigneeUserId]
-        )
-      ).rows[0];
-      const roles = await client.query(
-        `SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id
-         WHERE ur.user_id=$1 ORDER BY r.role_id FOR SHARE OF ur,r`,
-        [assigneeUserId]
-      );
-      const permissions = resolveStaffPermissions(roles.rows.map((row) => row.permissions));
-      if (
-        !account ||
-        account.disabled_at ||
-        account.activation_token ||
-        !(
-          account.is_admin ||
-          permissions.includes('*') ||
-          permissions.includes('tickets:write') ||
-          permissions.includes('tickets:*') ||
-          permissions.includes('tickets:assigned')
-        )
-      ) {
-        throw new HttpException('Assignee must be active staff with ticket access', 400);
+        );
+        const permissions = resolveStaffPermissions(roles.rows.map((row) => row.permissions));
+        if (
+          !account ||
+          account.disabled_at ||
+          account.activation_token ||
+          !(
+            account.is_admin ||
+            permissions.includes('*') ||
+            permissions.includes('tickets:write') ||
+            permissions.includes('tickets:*') ||
+            permissions.includes('tickets:assigned')
+          )
+        ) {
+          throw new HttpException('Assignee must be active staff with ticket access', 400);
+        }
+        const result = await client.query(
+          `UPDATE tickets SET assigned_to=$1,assigned_team_id=$4,
+          status=CASE WHEN status='open' THEN 'in_progress' ELSE status END, updated_at=NOW()
+          WHERE id=$2 AND ($3::text IS NULL OR assigned_to=$3) RETURNING *`,
+          [assigneeUserId, ticketId, assignedTo ?? null, teamId ?? null]
+        );
+        if (!result.rows[0]) throw new HttpException('Ticket not found', 404);
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata)
+          VALUES ($1,$2,'ticket_assigned',$3::jsonb)`,
+          [
+            randomUUID(),
+            actorId,
+            JSON.stringify({
+              ticketId,
+              assigneeUserId,
+              teamId: teamId ?? null,
+              status: result.rows[0].status,
+            }),
+          ]
+        );
+        await this.notifyTicket(client, mapRow(result.rows[0]), actorId, 'assigned');
+        if (actor) await requireCurrentSession(client, actor);
+        return mapRow(result.rows[0]);
+      };
+      const ticket = key
+        ? await idempotentMutation(
+            client,
+            'ticket_assignment',
+            { ticketId, assigneeUserId, teamId: teamId ?? null, idempotencyKey: key },
+            actor ?? { userId: actorId },
+            work
+          )
+        : await work();
+      if (key) {
+        // Team and target eligibility belong to the original attempt; live access does not.
+        const scope = actor
+          ? await authorizeTicketMutation(client, actor, actorId, true, assigneeUserId)
+          : assignedTo;
+        if (scope && (assigneeUserId !== scope || teamId))
+          throw new HttpException('Assigned-only staff cannot reassign another user', 403);
+        const current = await client.query(
+          'SELECT id FROM tickets WHERE id=$1 AND ($2::text IS NULL OR assigned_to=$2) FOR UPDATE',
+          [ticketId, scope ?? null]
+        );
+        if (!current.rows.length) throw new HttpException('Ticket not found', 404);
+        if (actor) await requireCurrentSession(client, actor);
       }
-      const result = await client.query(
-        `UPDATE tickets SET assigned_to=$1,assigned_team_id=$4,
-        status=CASE WHEN status='open' THEN 'in_progress' ELSE status END, updated_at=NOW()
-        WHERE id=$2 AND ($3::text IS NULL OR assigned_to=$3) RETURNING *`,
-        [assigneeUserId, ticketId, assignedTo ?? null, teamId ?? null]
-      );
-      if (!result.rows[0]) throw new HttpException('Ticket not found', 404);
-      await client.query(
-        `INSERT INTO audit_log(id,user_id,event,metadata)
-        VALUES ($1,$2,'ticket_assigned',$3::jsonb)`,
-        [
-          randomUUID(),
-          actorId,
-          JSON.stringify({
-            ticketId,
-            assigneeUserId,
-            teamId: teamId ?? null,
-            status: result.rows[0].status,
-          }),
-        ]
-      );
-      await this.notifyTicket(client, mapRow(result.rows[0]), actorId, 'assigned');
-      if (actor) await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return mapRow(result.rows[0]);
+      return ticket;
     } catch (error) {
       await client.query('ROLLBACK');
       throw error;
@@ -1903,9 +2050,19 @@ export class TicketsService {
     actorId: string,
     assignedTo?: string,
     actor?: TicketActor,
-    reason?: string
+    reason?: string,
+    idempotencyKey?: string
   ): Promise<TicketRow> {
-    return this.changeStatus(ticketId, status, actorId, undefined, assignedTo, actor, reason);
+    return this.changeStatus(
+      ticketId,
+      status,
+      actorId,
+      undefined,
+      assignedTo,
+      actor,
+      reason,
+      idempotencyKey
+    );
   }
 
   /**

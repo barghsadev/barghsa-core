@@ -49,3 +49,11 @@ export {
   inactiveContractDraftSchema,
   inactiveContractContextSchema,
 } from './contract-authoring-form-schemas.js';
+
+export {
+  ticketIntakeSchema,
+  ticketReplySchema,
+  ticketStatusSchema,
+  ticketAssignmentSchema,
+  inactiveTicketSchema,
+} from './ticket-form-schemas.js';

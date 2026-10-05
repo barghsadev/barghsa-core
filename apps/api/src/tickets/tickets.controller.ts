@@ -1,4 +1,5 @@
-import { ticketReply, ticketReplyApiSchema, ticketListQuery } from './ticket-input.js';
+import { TicketReplySchema, ticketReplyApiSchema, ticketListQuery } from './ticket-input.js';
+import { parseTicketFormInput, optionalTicketCommandKey } from './ticket-form-input-fields.js';
 import {
   Body,
   Controller,
@@ -52,6 +53,7 @@ export class TicketsController {
       required: ['subject', 'body'],
       additionalProperties: false,
       properties: {
+        idempotencyKey: { type: 'string', format: 'uuid' },
         subject: { type: 'string', minLength: 1, maxLength: 200 },
         body: { type: 'string', minLength: 1, maxLength: 10000 },
         category: {
@@ -83,6 +85,7 @@ export class TicketsController {
   async createTicket(
     @Body()
     body: {
+      idempotencyKey?: string;
       subject: string;
       body: string;
       category?: 'general' | 'billing' | 'orders' | 'privacy';
@@ -292,13 +295,24 @@ export class TicketsController {
    */
   @Patch(':id/status')
   @ApiOperation({ summary: 'Update ticket status' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['status'],
+      additionalProperties: true,
+      properties: {
+        status: { type: 'string', enum: ['open'] },
+        idempotencyKey: { type: 'string', format: 'uuid' },
+      },
+    },
+  })
   @ApiResponse({ status: 200, description: 'Status updated.' })
   @ApiResponse({ status: 400, description: 'Invalid status' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async updateTicketStatus(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() body: { status: string },
+    @Body() body: { status: string; idempotencyKey?: unknown },
     @Req() req: AuthenticatedRequest
   ) {
     return this.ticketsService.updateTicketStatus(
@@ -306,7 +320,8 @@ export class TicketsController {
       req.session.userId,
       body?.status,
       false,
-      req.session
+      req.session,
+      optionalTicketCommandKey(body?.idempotencyKey)
     );
   }
 
@@ -417,7 +432,21 @@ export class TicketsController {
     @Req() req: AuthenticatedRequest
   ) {
     // Internal notes belong only to the staff endpoint.
-    const body = ticketReply(raw);
+    const body = await parseTicketFormInput(
+      TicketReplySchema,
+      raw,
+      ['body'],
+      async (input) => {
+        await this.ticketsService.assertTicketFormAuthority(req.session, id, false);
+        if (input.visibility === 'internal')
+          throw new HttpException(
+            { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can add internal notes' },
+            403
+          );
+      },
+      'Invalid ticket reply',
+      true
+    );
     const visibility = body.visibility ?? 'public';
     if (visibility === 'internal') {
       throw new HttpException(

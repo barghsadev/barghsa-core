@@ -1,5 +1,6 @@
 import { test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
+import { fullNavigation } from './navigation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { t as appText } from '@barghsa/i18n/app';
 import { tConsultation } from '@barghsa/i18n/consultation';
@@ -55,6 +56,7 @@ async function shell(page: Page, locale: 'en' | 'fa', darkMode: boolean, custome
   );
 }
 
+const teamId = '33333333-3333-4333-8333-333333333333';
 const last = '88000000-0000-4000-8000-000000000001';
 const second = '88000000-0000-4000-8000-000000000002';
 const params = (page: Page) => new URL(page.url()).searchParams;
@@ -75,6 +77,19 @@ for (const locale of ['en', 'fa'] as const)
         page,
       }, info) => {
         await shell(page, locale, dark, !staff);
+        if (staff)
+          await page.route('**/api/auth/user', (route) =>
+            route.fulfill({
+              json: {
+                userId: 'staff',
+                isStaff: true,
+                operatingContext: 'staff',
+                navigation: fullNavigation('staff'),
+                canSwitchContext: false,
+                requiresTosAcceptance: false,
+              },
+            })
+          );
         const base = staff ? '/api/staff/tickets' : '/api/tickets';
         const path = staff ? '/admin/tickets' : '/tickets';
         const word = (key: string) => appText('tickets.' + key, locale);
@@ -110,7 +125,9 @@ for (const locale of ['en', 'fa'] as const)
           );
         }
         await page.route(`**${base}/assignees`, (route) => route.fulfill({ json: supportPeople }));
-        await page.route(`**${base}/teams`, (route) => route.fulfill({ json: supportTeams }));
+        await page.route(`**${base}/teams`, (route) =>
+          route.fulfill({ json: supportTeams.map((team) => ({ ...team, id: teamId })) })
+        );
         await page.goto(
           `${path}?q=Delivery&status=in_progress&order=asc&page=2&ticketId=${supportTicket.id}${staff ? '' : '&scope=active'}`
         );

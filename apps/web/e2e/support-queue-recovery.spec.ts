@@ -2,6 +2,7 @@ import { test, expect } from './coverage-fixture';
 import type { Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/app';
+import { tTicketForms } from '@barghsa/i18n/ticket-forms';
 import {
   supportTicket,
   supportQueue,
@@ -9,6 +10,8 @@ import {
   supportTeams,
   supportComments,
 } from '../src/test/support-queue-fixtures.js';
+
+const teamId = '33333333-3333-4333-8333-333333333333';
 
 for (const staff of [false, true])
   for (const locale of ['en', 'fa'] as const) {
@@ -83,7 +86,18 @@ for (const staff of [false, true])
           : route.fulfill({ status: detailStatus, json: {} });
       });
       await page.route(`**${prefix}/${supportTicket.id}/comments`, (route) => {
-        if (route.request().method() !== 'GET') return route.fulfill({ status: 503, json: {} });
+        if (route.request().method() !== 'GET')
+          return route.fulfill({
+            status: 400,
+            json: {
+              error: {
+                code: 'VALIDATION:INPUT:INVALID',
+                message: 'Invalid input',
+                correlationId: 'support-recovery-fixture',
+                fields: ['body'],
+              },
+            },
+          });
         commentReads++;
         // Deliberately include an internal entry: customer rendering must exclude it too.
         return route.fulfill({ json: supportComments });
@@ -97,7 +111,7 @@ for (const staff of [false, true])
           return resourceStatus === 200
             ? route.fulfill({
                 json: path.endsWith('/teams')
-                  ? supportTeams
+                  ? supportTeams.map((team) => ({ ...team, id: teamId }))
                   : path.endsWith('/assignees')
                     ? supportPeople
                     : { profiles: [], records: [] },
@@ -148,7 +162,7 @@ for (const staff of [false, true])
         resourceStatus = 200;
         await error.getByRole('button', { name: copy('retry'), exact: true }).click();
         await expect(page.locator('#ticket-team')).toBeEnabled();
-        await page.locator('#ticket-team').selectOption('team');
+        await page.locator('#ticket-team').selectOption(teamId);
         await page.locator('#ticket-assignee').selectOption('other');
         await page.locator('#ticket-status-reason').fill('Awaiting another document');
         await main.getByRole('checkbox', { name: copy('internal'), exact: true }).check();
@@ -169,7 +183,11 @@ for (const staff of [false, true])
       }
       await page.locator('#ticket-reply').fill('Unsaved reply');
       await main.getByRole('button', { name: copy('send'), exact: true }).click();
-      const commandError = main.getByRole('alert').filter({ hasText: copy('error') });
+      // A current owned validation failure leaves this draft and queue controls editable.
+      // Unknown outcomes use the separate explicit-retry stories in ticket-forms.spec.ts.
+      const commandError = page
+        .locator('[data-slot=ticket-reply-input]')
+        .getByText(tTicketForms('replyInvalid', locale), { exact: true });
       await expect(commandError).toBeVisible();
       const reads = { detailReads, commentReads, resourceReads };
       holdQueue = true;
@@ -199,7 +217,7 @@ for (const staff of [false, true])
       await expect(commandError).toBeVisible();
       await expect(list.locator('[aria-current="page"]')).toHaveText((2).toLocaleString(locale));
       if (staff) {
-        await expect(page.locator('#ticket-team')).toHaveValue('team');
+        await expect(page.locator('#ticket-team')).toHaveValue(teamId);
         await expect(page.locator('#ticket-assignee')).toHaveValue('other');
         await expect(page.locator('#ticket-status-reason')).toHaveValue(
           'Awaiting another document'

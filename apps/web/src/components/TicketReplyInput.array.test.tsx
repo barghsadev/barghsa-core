@@ -1,4 +1,4 @@
-import { act } from 'react';
+import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { TicketReplyInput } from './TicketReplyInput.js';
@@ -55,11 +55,12 @@ async function choose(files: File[]) {
   await act(async () => input.dispatchEvent(new Event('change', { bubbles: true })));
 }
 async function submit() {
-  await act(async () =>
+  await act(async () => {
     host
       .querySelector('form')!
-      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-  );
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await vi.dynamicImportSettled();
+  });
 }
 it('sends reordered attachment keys, reuses verified uploads and rotates the submission ID only for changed content', async () => {
   await render();
@@ -111,5 +112,90 @@ it('removes the matching upload receipt and preserves other files through invali
   expect(payloads.at(-1)?.attachments).toEqual(['second.pdf-key', 'first.pdf-key']);
   expect(upload).toHaveBeenCalledTimes(3);
   expect(upload.mock.calls.at(-1)?.[0]).toBe(first);
+  expect(bodyChange).not.toHaveBeenCalled();
+});
+it('a later accepted original reply clears its owning public branch while preserving the internal draft and attachment', async () => {
+  let accepted!: () => void;
+  function Harness() {
+    const [drafts, setDrafts] = useState({
+      public: ' Public draft ',
+      internal: ' Internal draft ',
+    });
+    const [internal, setInternal] = useState(false);
+    const branch = internal ? 'internal' : 'public';
+    return (
+      <TicketReplyInput
+        ticketId="ticket"
+        profileId={null}
+        locale="en"
+        staff
+        busy={false}
+        body={drafts[branch]}
+        onBodyChange={(body, visibility) =>
+          setDrafts((old) => ({ ...old, [visibility ?? branch]: body }))
+        }
+        internal={internal}
+        onInternalChange={setInternal}
+        onSubmit={async (prepare, _fields, onAccepted) => {
+          payloads.push(await prepare());
+          accepted = onAccepted!;
+          return false;
+        }}
+      />
+    );
+  }
+  await act(async () => root.render(<Harness />));
+  await choose([first]);
+  const toggle = host.querySelector<HTMLInputElement>('input[type=checkbox]')!;
+  await act(async () => toggle.click());
+  await choose([second]);
+  await act(async () => toggle.click());
+  await submit();
+  expect(payloads[0]).toMatchObject({
+    body: 'Public draft',
+    visibility: 'public',
+    attachments: ['first.pdf-key'],
+  });
+  expect(host.querySelector('textarea')!.value).toBe(' Public draft ');
+  await act(async () => toggle.click());
+  await act(async () => accepted());
+  expect(host.querySelector('textarea')!.value).toBe(' Internal draft ');
+  expect(host.textContent).toContain('second.pdf');
+  await act(async () => toggle.click());
+  expect(host.querySelector('textarea')!.value).toBe('');
+  expect(host.textContent).not.toContain('first.pdf');
+  await act(async () => toggle.click());
+  await submit();
+  expect(payloads[1]).toMatchObject({
+    body: 'Internal draft',
+    visibility: 'internal',
+    attachments: ['second.pdf-key'],
+  });
+  expect(upload).toHaveBeenCalledTimes(2);
+});
+it('native double submission uploads once and sends the raw body/files captured before an awaited upload', async () => {
+  let finish!: (key: string) => void;
+  upload.mockImplementation(
+    () =>
+      new Promise<string>((resolve) => {
+        finish = resolve;
+      })
+  );
+  await render();
+  await choose([first]);
+  await act(async () => {
+    const form = host.querySelector('form')!;
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await vi.dynamicImportSettled();
+  });
+  expect(upload).toHaveBeenCalledOnce();
+  await render(true);
+  await choose([second]);
+  expect(host.textContent).toContain('first.pdf');
+  expect(host.textContent).not.toContain('second.pdf');
+  await act(async () => finish('first.pdf-key'));
+  expect(payloads).toHaveLength(1);
+  expect(payloads[0]).toMatchObject({ body: 'Retained reply', attachments: ['first.pdf-key'] });
   expect(bodyChange).not.toHaveBeenCalled();
 });

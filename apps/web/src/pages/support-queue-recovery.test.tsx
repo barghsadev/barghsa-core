@@ -2,14 +2,18 @@ import { act, type ComponentType, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { CustomerTicketsPage, StaffTicketsPage } from './TicketsPage.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
+import { tTicketForms } from '@barghsa/i18n/ticket-forms';
 import {
   supportTicket,
   supportQueue,
   supportPeople,
-  supportTeams,
+  supportTeams as fixtureTeams,
   supportComments,
 } from '../test/support-queue-fixtures.js';
 
+const supportTeamId = '33333333-3333-4333-8333-333333333333';
+const supportTeams = fixtureTeams.map((team) => ({ ...team, id: supportTeamId }));
 const search = vi.hoisted(() => ({ value: {} as { scope?: string; ticketId?: string } }));
 vi.mock('@tanstack/react-router', () => ({
   useSearch: () => search.value,
@@ -36,7 +40,13 @@ async function mount(Page: ComponentType) {
   const host = document.createElement('div');
   document.body.append(host);
   const root = createRoot(host);
-  await act(async () => root.render(<Page />));
+  await act(async () =>
+    root.render(
+      <AccountUserProvider value={Page === StaffTicketsPage ? 'staff' : 'customer'}>
+        <Page />
+      </AccountUserProvider>
+    )
+  );
   return {
     host,
     close: async () => {
@@ -78,7 +88,11 @@ for (const Page of [CustomerTicketsPage, StaffTicketsPage]) {
       'fetch',
       vi.fn(async (url: string, options?: RequestInit) => {
         calls.push(url);
-        if (options?.method) return new Response('{}', { status: 409 });
+        if (options?.method)
+          return Response.json(
+            { error: { code: 'VALIDATION:INPUT:INVALID', fields: ['body'] } },
+            { status: 400 }
+          );
         if (url.includes('?') && status !== 200) return new Response('{}', { status });
         return Response.json(data(url));
       })
@@ -100,12 +114,16 @@ for (const Page of [CustomerTicketsPage, StaffTicketsPage]) {
         await act(async () =>
           host.querySelector<HTMLInputElement>('input[type=checkbox]')!.click()
         );
+        await change(host, '#ticket-reply', 'Unsaved response');
         await change(host, '#ticket-status-reason', 'Awaiting another document');
-        await change(host, '#ticket-team', 'team');
+        await change(host, '#ticket-team', supportTeamId);
         await change(host, '#ticket-assignee', 'other');
       }
-      await act(async () => button(host, 'Send reply').click());
-      expect(host.textContent).toContain('changed or needs reopening');
+      await act(async () => {
+        button(host, 'Send reply').click();
+        await vi.dynamicImportSettled();
+      });
+      expect(host.textContent).toContain(tTicketForms('replyInvalid', 'en'));
       status = 503;
       await act(async () => button(host, 'Next').click());
       expect(host.querySelector('[data-slot="ticket-queue-records"]')?.textContent).toContain(
@@ -122,7 +140,7 @@ for (const Page of [CustomerTicketsPage, StaffTicketsPage]) {
       status = 200;
       await act(async () => button(host, 'Retry').click());
       expect(calls.slice(count)).toEqual([failedQuery]);
-      expect(host.textContent).toContain('changed or needs reopening');
+      expect(host.textContent).toContain(tTicketForms('replyInvalid', 'en'));
       expect(host.querySelector('[aria-current="page"]')?.textContent).toBe('2');
       expect(host.querySelector<HTMLTextAreaElement>('#ticket-reply')?.value).toBe(
         'Unsaved response'
@@ -133,7 +151,7 @@ for (const Page of [CustomerTicketsPage, StaffTicketsPage]) {
         );
         expect(host.querySelector<HTMLInputElement>('input[type=checkbox]')?.checked).toBe(true);
         expect(host.querySelector<HTMLSelectElement>('#ticket-assignee')?.value).toBe('other');
-        expect(host.querySelector<HTMLSelectElement>('#ticket-team')?.value).toBe('team');
+        expect(host.querySelector<HTMLSelectElement>('#ticket-team')?.value).toBe(supportTeamId);
       }
     } finally {
       await close();
@@ -361,28 +379,29 @@ it('queue recovery preserves the mounted closure review, confirmation and passwo
   }
 });
 
-it('detail permission denial hides its work and offers no retry while the authorized queue stays visible', async () => {
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(async (url: string) =>
-      url.endsWith(supportTicket.id)
-        ? new Response('{}', { status: 403 })
-        : Response.json(data(url))
-    )
-  );
-  const { host, close } = await mount(CustomerTicketsPage);
-  try {
-    await act(async () => button(host, supportTicket.subject).click());
-    expect(host.querySelector('article')).toBeNull();
-    expect(host.querySelector('[data-slot="ticket-queue-records"]')?.textContent).toContain(
-      supportTicket.subject
+it.each([403, 404])(
+  'detail permission denial %s hides its work and offers no retry while the authorized queue stays visible',
+  async (status) => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) =>
+        url.endsWith(supportTicket.id) ? new Response('{}', { status }) : Response.json(data(url))
+      )
     );
-    expect(host.querySelector('[role="alert"] button')).toBeNull();
-    expect(host.textContent).toContain('no longer have permission');
-  } finally {
-    await close();
+    const { host, close } = await mount(CustomerTicketsPage);
+    try {
+      await act(async () => button(host, supportTicket.subject).click());
+      expect(host.querySelector('article')).toBeNull();
+      expect(host.querySelector('[data-slot="ticket-queue-records"]')?.textContent).toContain(
+        supportTicket.subject
+      );
+      expect(host.querySelector('[role="alert"] button')).toBeNull();
+      expect(host.textContent).toContain('no longer have permission');
+    } finally {
+      await close();
+    }
   }
-});
+);
 
 it('creation remains unavailable after queue permission denial until a successful authority read', async () => {
   let status = 403;
@@ -433,15 +452,24 @@ it('a shrinking queue returns to its last valid page instead of trapping navigat
 
 it('staff status changes require a reason, keep it after failure, and clear it only after confirmed success', async () => {
   let responseStatus = 409;
-  const writes: unknown[] = [];
+  const writes: Array<Record<string, unknown>> = [];
+  let acceptedTicket = supportTicket;
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string, init?: RequestInit) => {
       if (init?.method) {
         writes.push(JSON.parse(String(init.body)));
-        return new Response('{}', { status: responseStatus });
+        if (responseStatus !== 200) return new Response('{}', { status: responseStatus });
+        acceptedTicket = { ...supportTicket, status: 'resolved' };
+        return Response.json(acceptedTicket);
       }
-      return Response.json(data(url));
+      return Response.json(
+        url.includes('?')
+          ? { ...supportQueue, data: [acceptedTicket] }
+          : url.endsWith(supportTicket.id)
+            ? acceptedTicket
+            : data(url)
+      );
     })
   );
   const { host, close } = await mount(StaffTicketsPage);
@@ -451,21 +479,44 @@ it('staff status changes require a reason, keep it after failure, and clear it o
       supportTicket.createdAt
     );
     expect(host.querySelector('[data-slot="ticket-detail"] header')?.textContent).toContain('P2');
-    expect(button(host, 'Save status').disabled).toBe(true);
+    await act(async () => {
+      button(host, 'Save status').click();
+      await vi.dynamicImportSettled();
+    });
+    expect(writes).toHaveLength(0);
+    expect(document.activeElement).toBe(host.querySelector('#ticket-status-reason'));
     await change(host, '#ticket-status-reason', '   ');
-    expect(button(host, 'Save status').disabled).toBe(true);
+    await act(async () => {
+      button(host, 'Save status').click();
+      await vi.dynamicImportSettled();
+    });
+    expect(writes).toHaveLength(0);
     await change(host, '#ticket-status-reason', '  Customer confirmed the solution  ');
     await change(host, '#ticket-next-status', 'resolved');
-    await act(async () => button(host, 'Save status').click());
-    expect(writes).toEqual([{ status: 'resolved', reason: 'Customer confirmed the solution' }]);
+    await act(async () => {
+      button(host, 'Save status').click();
+      await vi.dynamicImportSettled();
+    });
+    expect(writes).toEqual([
+      {
+        status: 'resolved',
+        reason: 'Customer confirmed the solution',
+        idempotencyKey: expect.any(String),
+      },
+    ]);
     expect(host.querySelector<HTMLTextAreaElement>('#ticket-status-reason')?.value).toBe(
       '  Customer confirmed the solution  '
     );
     responseStatus = 200;
-    await act(async () => button(host, 'Save status').click());
+    await act(async () => button(host, tTicketForms('retryOriginal', 'en')).click());
     expect(writes).toHaveLength(2);
+    expect(writes[1]).toEqual(writes[0]);
     expect(host.querySelector<HTMLTextAreaElement>('#ticket-status-reason')?.value).toBe('');
-    expect(button(host, 'Save status').disabled).toBe(true);
+    await act(async () => {
+      button(host, 'Save status').click();
+      await vi.dynamicImportSettled();
+    });
+    expect(writes).toHaveLength(2);
   } finally {
     await close();
   }

@@ -1,12 +1,25 @@
+import { TicketIntakeForm } from '../components/TicketIntakeForm.js';
+import { TicketStaffForms } from '../components/TicketStaffForms.js';
+import { useTicketCommand } from '../hooks/useTicketCommand.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { tTicketForms } from '@barghsa/i18n/ticket-forms';
+import {
+  ticketRecord,
+  ticketAssignmentOptions,
+  ticketReplyReceipt,
+  ticketStatusReceipt,
+  type TicketCommand,
+  type TicketOwner,
+} from '../lib/ticket-form.js';
 import { TicketReplyInput } from '../components/TicketReplyInput.js';
+import { FilePreview } from '../components/FilePreview.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useSearch } from '@tanstack/react-router';
 import { Button, Input, Label, ListPage, ListViewToggle } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
-import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
-import { withCsrf } from '../lib/csrf.js';
 import type { SupportListQuery } from '../lib/support-list-query.js';
 import { useListView } from '../hooks/useListView.js';
 import {
@@ -18,13 +31,8 @@ import {
   type TicketStatus,
 } from '../components/TicketQueueRecords.js';
 import { TicketCommentThread, type TicketComment } from '../components/TicketCommentThread.js';
-import { FilePreview } from '../components/FilePreview.js';
 import { documentUrl } from '../lib/documents.js';
 import { ProfileClosureReview } from '../components/ProfileClosureReview.js';
-import {
-  isAllowedInvoiceReceiptFile,
-  uploadTicketAttachment,
-} from '../lib/invoice-bank-receipt-upload.js';
 
 function safeAttachmentUrl(value: string) {
   try {
@@ -45,11 +53,6 @@ interface Queue {
     canApproveClosure?: boolean;
   };
 }
-interface Options {
-  profiles: { id: string; title: string | null }[];
-  records: { id: string; type: string; created_at: string }[];
-  hasMoreRecords?: boolean;
-}
 const statuses: TicketStatus[] = [
   'open',
   'in_progress',
@@ -58,14 +61,6 @@ const statuses: TicketStatus[] = [
   'resolved',
   'closed',
 ];
-const transitions: Record<TicketStatus, TicketStatus[]> = {
-  open: ['in_progress'],
-  in_progress: ['waiting_customer', 'waiting_staff', 'resolved'],
-  waiting_customer: ['in_progress'],
-  waiting_staff: ['in_progress'],
-  resolved: ['closed'],
-  closed: [],
-};
 export function CustomerTicketsPage({ queries }: { queries?: SupportListQuery } = {}) {
   return <Tickets staff={false} {...(queries ? { queries } : {})} />;
 }
@@ -75,96 +70,128 @@ export function StaffTicketsPage({ queries }: { queries?: SupportListQuery } = {
 function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuery }) {
   const queryRef = useRef(queries);
   queryRef.current = queries;
-  const time = useAccountTime();
-  const { view, setView } = useListView(staff ? 'staff-tickets' : 'customer-tickets');
+  const time = useAccountTime(),
+    { view, setView } = useListView(staff ? 'staff-tickets' : 'customer-tickets'),
+    locale = useLocale(),
+    prefix = staff ? '/api/staff/tickets' : '/api/tickets',
+    actor = useAccountUser(),
+    profileRevision = useProfileContextRevision();
   const routeSearch = useSearch({ strict: false }) as {
-    ticketId?: string;
-    status?: 'active';
-    scope?: 'active';
-  };
-  const activeScoped = !staff && routeSearch.scope === 'active';
-  const locale = useLocale(),
-    prefix = staff ? '/api/staff/tickets' : '/api/tickets';
-  const text = (key: string) => t(`tickets.${key}`, locale);
+      ticketId?: string;
+      status?: 'active';
+      scope?: 'active';
+    },
+    activeScoped = !staff && routeSearch.scope === 'active',
+    text = (key: string) => t('tickets.' + key, locale);
   const generation = useRef(0),
     detailGeneration = useRef(0),
-    inFlight = useRef(false);
-  const uploads = useRef(new Map<File, string>()),
-    heading = useRef<HTMLHeadingElement>(null);
+    heading = useRef<HTMLHeadingElement>(null),
+    queueDenied = useRef(false);
   const [queue, setQueue] = useState<Queue | null>(null),
     [loading, setLoading] = useState(true),
     [queueError, setQueueError] = useState(''),
     [acceptedContext, setAcceptedContext] = useState(''),
     [acceptedPage, setAcceptedPage] = useState(1),
+    [acceptedIdentity, setAcceptedIdentity] = useState(''),
     [queueAccessDenied, setQueueAccessDenied] = useState(false);
-  const queueDenied = useRef(false);
   const [localPage, setLocalPage] = useState(1),
     [localFilter, setLocalFilter] = useState(routeSearch.status === 'active' ? 'active' : ''),
     [localSearch, setLocalSearch] = useState(''),
-    [localTerm, setTerm] = useState('');
-  const page = queries?.queue.query.page ?? localPage;
-  const filter = queries?.queue.query.filters.status ?? localFilter;
-  const search = queries?.queue.searchInput ?? localSearch;
-  const term = queries?.queue.query.search ?? localTerm;
-  const setPage = (value: number, replace = false) =>
-    queryRef.current
-      ? queryRef.current.queue.setQuery({ page: value }, replace)
-      : setLocalPage(value);
-  const setFilter = (value: string) =>
-    queries ? queries.queue.setQuery({ filters: { status: value } }) : setLocalFilter(value);
-  const setSearch = (value: string) =>
-    queries ? queries.queue.setSearchInput(value) : setLocalSearch(value);
-  const [localSort, setLocalSort] = useState('desc'),
+    [localTerm, setTerm] = useState(''),
+    [localSort, setLocalSort] = useState('desc'),
     [error, setError] = useState(''),
-    [saved, setSaved] = useState(false),
-    [busy, setBusy] = useState(false);
-  const sort = queries?.queue.query.order ?? localSort;
-  const setSort = (value: string) =>
-    queries
-      ? queries.queue.setQuery({ order: value === 'asc' ? 'asc' : 'desc' })
-      : setLocalSort(value);
+    [saved, setSaved] = useState(false);
+  const page = queries?.queue.query.page ?? localPage,
+    filter = queries?.queue.query.filters.status ?? localFilter,
+    search = queries?.queue.searchInput ?? localSearch,
+    term = queries?.queue.query.search ?? localTerm,
+    sort = queries?.queue.query.order ?? localSort;
+  const setPage = (value: number, replace = false) => {
+    if (commandRef.current.coordination.isLocked()) return;
+    if (queryRef.current) queryRef.current.queue.setQuery({ page: value }, replace);
+    else setLocalPage(value);
+  };
+  const setFilter = (value: string) => {
+    if (commandRef.current.coordination.isLocked()) return;
+    if (queries) queries.queue.setQuery({ filters: { status: value } });
+    else setLocalFilter(value);
+  };
+  const setSearch = (value: string) => {
+    if (commandRef.current.coordination.isLocked()) return;
+    if (queries) queries.queue.setSearchInput(value);
+    else setLocalSearch(value);
+  };
+  const setSort = (value: string) => {
+    if (commandRef.current.coordination.isLocked()) return;
+    if (queries) queries.queue.setQuery({ order: value === 'asc' ? 'asc' : 'desc' });
+    else setLocalSort(value);
+  };
   const [loadedDetail, setDetail] = useState<Ticket | null>(null),
     [comments, setComments] = useState<TicketComment[]>([]),
     [detailLoading, setDetailLoading] = useState(false),
     [detailError, setDetailError] = useState(''),
-    [selectedId, setSelectedId] = useState('');
-  const detail = !queries || loadedDetail?.id === queries.selected ? loadedDetail : null;
-  const [reply, setReply] = useState(''),
+    [selectedId, setSelectedId] = useState(''),
+    [detailIdentity, setDetailIdentity] = useState('');
+
+  const [replyDrafts, setReplyDrafts] = useState({ public: '', internal: '' }),
     [internal, setInternal] = useState(false),
-    [nextStatus, setNextStatus] = useState<TicketStatus>('open'),
-    [statusReason, setStatusReason] = useState('');
-  const [teams, setTeams] = useState<{ id: string; name: string; members: string[] }[]>([]),
-    [teamId, setTeamId] = useState('');
-  const [assignees, setAssignees] = useState<{ id: string; name: string }[]>([]),
-    [assignee, setAssignee] = useState(''),
+    [teams, setTeams] = useState<{ id: string; name: string; members: string[] }[]>([]),
+    [assignees, setAssignees] = useState<{ id: string; name: string }[]>([]),
     [assignmentError, setAssignmentError] = useState(''),
     [assignmentLoading, setAssignmentLoading] = useState(false),
-    [assignmentVersion, setAssignmentVersion] = useState(0);
-  const [creating, setCreating] = useState(false),
-    [subject, setSubject] = useState(''),
-    [body, setBody] = useState(''),
-    [category, setCategory] = useState('general'),
-    [priority, setPriority] = useState('normal');
-  const [recordPage, setRecordPage] = useState(1);
-  const [previewFile, setPreviewFile] = useState<File | null>(null);
-  const denyDraftPreview = useCallback(() => {
-    setPreviewFile(null);
-    setFiles([]);
-    setSubject('');
-    setBody('');
-    uploads.current.clear();
-    setFileVersion((value) => value + 1);
-  }, []);
-  const [profileId, setProfileId] = useState(''),
-    [record, setRecord] = useState(''),
-    [files, setFiles] = useState<File[]>([]),
-    [fileVersion, setFileVersion] = useState(0);
-  const [options, setOptions] = useState<Options | null>(null),
-    [optionsLoading, setOptionsLoading] = useState(false),
-    [optionsVersion, setOptionsVersion] = useState(0),
-    [optionsError, setOptionsError] = useState('');
-  const context = JSON.stringify([prefix, term, sort, filter, activeScoped]);
-  const visibleQueue = acceptedContext === context ? queue : null;
+    [assignmentVersion, setAssignmentVersion] = useState(0),
+    [creating, setCreating] = useState(false),
+    [editorRevision, setEditorRevision] = useState(0);
+  const reply = replyDrafts[internal ? 'internal' : 'public'],
+    setReply = (v: string, visibility?: 'public' | 'internal') =>
+      setReplyDrafts((d) => ({ ...d, [visibility ?? (internal ? 'internal' : 'public')]: v })),
+    selectedLink = queries ? queries.selected : routeSearch.ticketId;
+  const identity = JSON.stringify([actor, profileRevision, prefix]),
+    identityRef = useRef(identity);
+  identityRef.current = identity;
+  const detail =
+    detailIdentity === identity && (!queries || loadedDetail?.id === queries.selected)
+      ? loadedDetail
+      : null;
+  const scope = JSON.stringify([identity, editorRevision, selectedLink ?? null, selectedId]),
+    scopeRef = useRef(scope);
+  scopeRef.current = scope;
+  const authority = useRef<(owner: TicketOwner) => boolean>(() => false);
+  authority.current = (owner) => {
+    if (!actor || queueDenied.current) return false;
+    if (owner === 'intake') return !staff && !queueAccessDenied;
+    if (!detail) return false;
+    if (owner === 'reopen') return !staff;
+    if (owner === 'assignment') return staff && !!queue?.viewer?.canAssignOthers;
+    if (owner === 'closure') return staff && !!queue?.viewer?.canApproveClosure;
+    if (owner === 'reply-internal' || owner === 'status') {
+      if (!staff) return false;
+    }
+    return (
+      !staff ||
+      !!(queue?.viewer?.canWrite && (queue.viewer.canAssignOthers || detail.assignedTo === actor))
+    );
+  };
+  const command = useTicketCommand(
+    scope,
+    () => {
+      ++generation.current;
+      queueDenied.current = true;
+      setQueueAccessDenied(true);
+      setQueue(null);
+      discardDetail();
+      setCreating(false);
+      setReplyDrafts({ public: '', internal: '' });
+      setEditorRevision((v) => v + 1);
+      setSaved(false);
+    },
+    (owner) => authority.current(owner)
+  );
+  const commandRef = useRef(command);
+  commandRef.current = command;
+  const busy = !!command.locked,
+    context = JSON.stringify([prefix, term, sort, filter, activeScoped]),
+    visibleQueue = acceptedContext === context && acceptedIdentity === identity ? queue : null;
   function discardDetail(updateUrl = true) {
     if (updateUrl && queryRef.current?.selected) queryRef.current.select(null, true);
     ++detailGeneration.current;
@@ -173,76 +200,92 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
     setDetailLoading(false);
     setDetailError('');
     setSelectedId('');
-    setStatusReason('');
-    setReply('');
+    setReplyDrafts({ public: '', internal: '' });
     setInternal(false);
-    setAssignee('');
-    setTeamId('');
   }
-  const load = useCallback(async () => {
-    const current = ++generation.current;
-    setLoading(true);
-    setQueueError('');
-    try {
-      const query = new URLSearchParams({
-        page: String(page),
-        limit: '20',
-        search: term,
-        sortOrder: sort,
-        ...(filter ? { status: filter } : {}),
-        ...(activeScoped ? { scope: 'active' } : {}),
-      });
-      const response = await fetch(`${prefix}?${query}`, { credentials: 'include' });
-      if (!response.ok)
-        throw new Error([401, 403].includes(response.status) ? 'forbidden' : 'error');
-      const data = (await response.json()) as Queue;
-      if (
-        !Array.isArray(data.data) ||
-        !Number.isSafeInteger(data.totalPages) ||
-        data.totalPages < 0
-      )
-        throw new Error('error');
-      if (current === generation.current) {
-        queueDenied.current = false;
-        setQueueAccessDenied(false);
-        setQueue(data);
-        setAcceptedContext(context);
-        setAcceptedPage(page);
-        // Removed tickets can make the requested page disappear while it is loading.
-        if (page > Math.max(1, data.totalPages)) setPage(Math.max(1, data.totalPages), true);
-        // A refreshed authority can revoke closure approval or assignment controls.
-        if (staff && !data.viewer?.canAssignOthers) {
-          setAssignees([]);
-          setTeams([]);
+  const load = useCallback(
+    async (owned = false) => {
+      if (!owned && commandRef.current.coordination.isLocked()) return;
+      const current = ++generation.current,
+        token = identityRef.current;
+      setLoading(true);
+      setQueueError('');
+      try {
+        const query = new URLSearchParams({
+            page: String(page),
+            limit: '20',
+            search: term,
+            sortOrder: sort,
+            ...(filter ? { status: filter } : {}),
+            ...(activeScoped ? { scope: 'active' } : {}),
+          }),
+          response = await fetch(prefix + '?' + query, { credentials: 'include' });
+        if (!response.ok)
+          throw new Error([401, 403].includes(response.status) ? 'forbidden' : 'error');
+        const data = (await response.json()) as Queue;
+        if (
+          !Array.isArray(data.data) ||
+          !Number.isSafeInteger(data.totalPages) ||
+          data.totalPages < 0 ||
+          data.data.some((row) => !ticketRecord(row)) ||
+          (staff &&
+            (!data.viewer ||
+              typeof data.viewer.userId !== 'string' ||
+              typeof data.viewer.canWrite !== 'boolean' ||
+              typeof data.viewer.canAssignOthers !== 'boolean' ||
+              (actor && data.viewer.userId !== actor)))
+        )
+          throw new Error('error');
+        if (current === generation.current && identityRef.current === token) {
+          queueDenied.current = false;
+          setQueueAccessDenied(false);
+          setQueue(data);
+          setAcceptedIdentity(token);
+          setAcceptedContext(context);
+          setAcceptedPage(page);
+          if (page > Math.max(1, data.totalPages)) {
+            if (queryRef.current)
+              queryRef.current.queue.setQuery({ page: Math.max(1, data.totalPages) }, true);
+            else setLocalPage(Math.max(1, data.totalPages));
+          }
+          if (staff && !data.viewer?.canAssignOthers) {
+            setAssignees([]);
+            setTeams([]);
+          }
+          if (staff && !data.viewer?.canWrite && !data.viewer?.canAssignOthers) {
+            setReplyDrafts({ public: '', internal: '' });
+          }
         }
-      }
-    } catch (reason) {
-      if (current === generation.current) {
-        const failure = reason instanceof Error ? reason.message : 'error';
-        setQueueError(failure);
-        if (failure === 'forbidden') {
-          queueDenied.current = true;
-          setQueueAccessDenied(true);
-          setQueue(null);
-          discardDetail();
-          setAssignees([]);
-          setTeams([]);
-          setCreating(false);
-          setSubject('');
-          setBody('');
-          setOptions(null);
-          setProfileId('');
-          setRecord('');
-          setRecordPage(1);
-          setFiles([]);
-          uploads.current.clear();
-          setSaved(false);
+      } catch (reason) {
+        if (current === generation.current && identityRef.current === token) {
+          const failure = reason instanceof Error ? reason.message : 'error';
+          setQueueError(failure);
+          if (failure === 'forbidden') {
+            queueDenied.current = true;
+            setQueueAccessDenied(true);
+            setQueue(null);
+            discardDetail();
+            setAssignees([]);
+            setTeams([]);
+            setCreating(false);
+            commandRef.current.reset();
+            setEditorRevision((v) => v + 1);
+            setSaved(false);
+          }
         }
+      } finally {
+        if (current === generation.current && identityRef.current === token) setLoading(false);
       }
-    } finally {
-      if (current === generation.current) setLoading(false);
-    }
-  }, [prefix, page, term, sort, filter, activeScoped, context, staff]);
+    },
+    [prefix, page, term, sort, filter, activeScoped, context, staff, actor, profileRevision]
+  );
+  useEffect(() => {
+    setCreating(false);
+    discardDetail(false);
+    setQueue(null);
+    setSaved(false);
+    setEditorRevision((v) => v + 1);
+  }, [actor, profileRevision, prefix]);
   const latestLoad = useRef(load);
   latestLoad.current = load;
   useEffect(() => {
@@ -259,119 +302,131 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
   useEffect(() => {
     if (queries || search.trim() === term) return;
     const timer = setTimeout(() => {
+      if (commandRef.current.coordination.isLocked()) return;
       setTerm(search.trim());
       setPage(1);
     }, 300);
     return () => clearTimeout(timer);
   }, [search, term]);
   useEffect(() => {
-    if (staff || !creating) return;
-    const controller = new AbortController();
-    setOptionsLoading(true);
-    setOptionsError('');
-    setOptions(null);
-    void fetch(
-      `/api/tickets/options${profileId ? `?profileId=${encodeURIComponent(profileId)}&recordPage=${recordPage}` : ''}`,
-      { credentials: 'include', signal: controller.signal }
-    )
-      .then(async (response) => {
-        if (!response.ok) throw new Error(response.status === 403 ? 'forbidden' : 'error');
-        const data = await response.json();
-        if (!controller.signal.aborted) setOptions(data);
-      })
-      .catch((reason: unknown) => {
-        if (!controller.signal.aborted)
-          setOptionsError(reason instanceof Error ? reason.message : 'error');
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setOptionsLoading(false);
-      });
-    return () => controller.abort();
-  }, [staff, creating, profileId, optionsVersion, recordPage]);
-  useEffect(() => {
-    if (!staff || !queue?.viewer?.canAssignOthers) return;
-    const controller = new AbortController();
+    if (!staff || !queue?.viewer?.canAssignOthers || commandRef.current.coordination.isLocked())
+      return;
+    const controller = new AbortController(),
+      token = identityRef.current;
     setAssignmentLoading(true);
     setAssignmentError('');
     void Promise.all(
       ['assignees', 'teams'].map((path) =>
-        fetch(`${prefix}/${path}`, { credentials: 'include', signal: controller.signal })
+        fetch(prefix + '/' + path, { credentials: 'include', signal: controller.signal })
       )
     )
       .then(async (responses) => {
-        if (responses.some((response) => response.status === 403)) throw new Error('forbidden');
-        if (responses.some((response) => !response.ok)) throw new Error('error');
-        const [people, groups] = await Promise.all(responses.map((response) => response.json()));
-        if (!controller.signal.aborted) {
-          setAssignees(people);
-          setTeams(groups);
+        if (responses.some((r) => [401, 403].includes(r.status))) throw new Error('forbidden');
+        if (responses.some((r) => !r.ok)) throw new Error('error');
+        const [people, groups] = await Promise.all(responses.map((r) => r.json())),
+          parsed = ticketAssignmentOptions(people, groups);
+        if (!parsed) throw new Error('error');
+        if (!controller.signal.aborted && identityRef.current === token) {
+          setAssignees(parsed.people);
+          setTeams(parsed.groups);
         }
       })
       .catch((reason: unknown) => {
-        if (!controller.signal.aborted) {
+        if (!controller.signal.aborted && identityRef.current === token) {
           const failure = reason instanceof Error ? reason.message : 'error';
           setAssignmentError(failure);
           if (failure === 'forbidden') {
             setAssignees([]);
             setTeams([]);
-            setAssignee('');
-            setTeamId('');
+            commandRef.current.coordination.denied();
           }
         }
       })
       .finally(() => {
-        if (!controller.signal.aborted) setAssignmentLoading(false);
+        if (!controller.signal.aborted && identityRef.current === token)
+          setAssignmentLoading(false);
       });
     return () => controller.abort();
-  }, [staff, prefix, queue?.viewer?.canAssignOthers, assignmentVersion]);
-  async function select(id: string) {
-    if (queueDenied.current) return;
-    if (selectedId !== id) setStatusReason('');
+  }, [staff, prefix, queue?.viewer?.canAssignOthers, assignmentVersion, identity]);
+  async function select(id: string, owned = false) {
+    if (queueDenied.current || (!owned && commandRef.current.coordination.isLocked())) return;
+    const same = loadedDetail?.id === id;
+    if (!same) {
+      setReplyDrafts({ public: '', internal: '' });
+      setInternal(false);
+      setDetail(null);
+      setComments([]);
+    }
     setSelectedId(id);
     setDetailError('');
-    const current = ++detailGeneration.current;
-    setDetail(null);
-    setComments([]);
+    const current = ++detailGeneration.current,
+      token = identityRef.current;
     setDetailLoading(true);
-    setReply('');
-    setInternal(false);
     try {
       const [recordResponse, commentsResponse] = await Promise.all([
-        fetch(`${prefix}/${encodeURIComponent(id)}`, { credentials: 'include' }),
-        fetch(`${prefix}/${encodeURIComponent(id)}/comments`, { credentials: 'include' }),
+        fetch(prefix + '/' + encodeURIComponent(id), { credentials: 'include' }),
+        fetch(prefix + '/' + encodeURIComponent(id) + '/comments', { credentials: 'include' }),
       ]);
       if (
-        [401, 403].includes(recordResponse.status) ||
-        [401, 403].includes(commentsResponse.status)
+        [401, 403, 404].includes(recordResponse.status) ||
+        [401, 403, 404].includes(commentsResponse.status)
       )
         throw new Error('forbidden');
       if (!recordResponse.ok || !commentsResponse.ok) throw new Error('error');
       const [ticket, conversation] = await Promise.all([
-        recordResponse.json(),
-        commentsResponse.json(),
-      ]);
-      if (current === detailGeneration.current && !queueDenied.current) {
-        setDetail(ticket);
-        setComments(conversation);
-        setNextStatus(transitions[ticket.status as TicketStatus]?.[0] ?? 'open');
-        setAssignee(ticket.assignedTo ?? '');
-        setTeamId(ticket.assignedTeamId ?? '');
+          recordResponse.json(),
+          commentsResponse.json(),
+        ]),
+        parsed = ticketRecord(ticket, id);
+      if (
+        !parsed ||
+        !Array.isArray(conversation) ||
+        conversation.some(
+          (comment) =>
+            !comment ||
+            typeof comment !== 'object' ||
+            typeof comment.id !== 'string' ||
+            typeof comment.body !== 'string' ||
+            !['public', 'internal'].includes(comment.visibility)
+        )
+      )
+        throw new Error('error');
+      if (
+        current === detailGeneration.current &&
+        !queueDenied.current &&
+        identityRef.current === token
+      ) {
+        setDetail(parsed);
+        setDetailIdentity(token);
+        setComments(
+          staff ? conversation : conversation.filter((comment) => comment.visibility === 'public')
+        );
       }
     } catch (reason) {
-      if (current === detailGeneration.current)
-        setDetailError(reason instanceof Error ? reason.message : 'error');
+      if (current === detailGeneration.current && identityRef.current === token) {
+        const failure = reason instanceof Error ? reason.message : 'error';
+        setDetailError(failure);
+        if (failure === 'forbidden') {
+          commandRef.current.reset();
+          discardDetail();
+          setCreating(false);
+          setEditorRevision((v) => v + 1);
+          setSaved(false);
+          setDetailError('forbidden');
+        }
+      }
     } finally {
-      if (current === detailGeneration.current) setDetailLoading(false);
+      if (current === detailGeneration.current && identityRef.current === token)
+        setDetailLoading(false);
     }
   }
-  const selectedLink = queries ? queries.selected : routeSearch.ticketId;
   useEffect(() => {
     if (selectedLink) void select(selectedLink);
     else if (queries) discardDetail(false);
     return () => {
       ++detailGeneration.current;
     };
-  }, [selectedLink, prefix]);
+  }, [selectedLink, prefix, identity]);
   useEffect(() => {
     if (detail) heading.current?.focus();
   }, [detail?.id]);
@@ -381,112 +436,67 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
     },
     []
   );
-  async function mutate(
-    path: string,
-    method: string,
-    payload: unknown | (() => Promise<unknown>),
-    id?: string
-  ): Promise<boolean> {
-    const selection = detailGeneration.current;
-    if (inFlight.current) return false;
-    inFlight.current = true;
-    setBusy(true);
+  async function send(next: TicketCommand) {
+    if (!actor) return false;
     setSaved(false);
-    setError('');
-    try {
-      if (typeof payload === 'function') payload = await payload();
-      if (selection !== detailGeneration.current) return false;
-      const response = await fetch(path, {
-        method,
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(payload),
-      });
-      if (!response.ok) {
-        if (selection === detailGeneration.current)
-          setError(
-            response.status === 409 ? 'conflict' : response.status === 403 ? 'forbidden' : 'error'
-          );
-        return false;
-      }
-      if (selection === detailGeneration.current) {
+    const accepted = next.accepted;
+    return commandRef.current.submit({
+      ...next,
+      accepted: async (value) => {
         setSaved(true);
-        if (path.endsWith('/comments')) setReply('');
-        if (path.endsWith('/status')) setStatusReason('');
-      }
-      await latestLoad.current();
-      if (id && selection === detailGeneration.current) await select(id);
-      return true;
+        await accepted(value);
+      },
+    });
+  }
+  async function refreshSelected(id: string) {
+    await latestLoad.current(true);
+    if (!queueDenied.current) await select(id, true);
+  }
+  async function submitReply(
+    prepare: () => Promise<Record<string, unknown>>,
+    fields?: (names: unknown[]) => boolean,
+    onAccepted?: () => void
+  ) {
+    const source = detail,
+      token = scope;
+    if (!source || !actor) return false;
+    const owner = internal ? 'reply-internal' : 'reply-public';
+    try {
+      const body = await prepare();
+      if (scopeRef.current !== token || !commandRef.current.coordination.isCurrent()) return false;
+      return await send({
+        owner,
+        path: prefix + '/' + source.id + '/comments',
+        method: 'POST',
+        status: 201,
+        body,
+        confirmed: (v) => ticketReplyReceipt(v, source.id, actor, staff, body),
+        fields,
+        accepted: async () => {
+          onAccepted?.();
+          await refreshSelected(source.id);
+        },
+      });
     } catch {
-      if (selection === detailGeneration.current) setError('error');
+      commandRef.current.failed(owner);
       return false;
-    } finally {
-      inFlight.current = false;
-      setBusy(false);
     }
   }
-  async function create(event: FormEvent) {
-    const selection = detailGeneration.current;
-    event.preventDefault();
-    if (
-      inFlight.current ||
-      files.length > 5 ||
-      files.some((file) => !isAllowedInvoiceReceiptFile(file))
-    )
-      return;
-    inFlight.current = true;
-    setBusy(true);
-    setSaved(false);
-    setError('');
+  async function reopen() {
+    const source = detail;
+    if (!source || !actor || !commandRef.current.coordination.claim('reopen')) return;
     try {
-      const keys: string[] = [];
-      for (const file of files) {
-        let key = uploads.current.get(file);
-        if (!key) {
-          key = (await uploadTicketAttachment(file, profileId || null)) ?? undefined;
-          if (!key) throw new Error();
-          uploads.current.set(file, key);
-        }
-        keys.push(key);
-      }
-      const related = options?.records.find((item) => `${item.type}:${item.id}` === record);
-      const response = await fetch(prefix, {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          subject: subject.trim(),
-          body: body.trim(),
-          category,
-          priority,
-          profileId: profileId || null,
-          attachments: keys,
-          ...(related ? { relatedEntityType: related.type, relatedEntityId: related.id } : {}),
-        }),
+      await send({
+        owner: 'reopen',
+        path: prefix + '/' + source.id + '/status',
+        method: 'PATCH',
+        status: 200,
+        body: { status: 'open', idempotencyKey: crypto.randomUUID() },
+        confirmed: (v) => ticketStatusReceipt(v, source, 'open'),
+        accepted: () => refreshSelected(source.id),
       });
-      if (!response.ok) {
-        setError(response.status === 409 ? 'conflict' : 'error');
-        return;
-      }
-      const created = (await response.json()) as Ticket;
-      setSaved(true);
-      setCreating(false);
-      setSubject('');
-      setBody('');
-      setCategory('general');
-      setFiles([]);
-      uploads.current.clear();
-      setFileVersion((value) => value + 1);
-      await latestLoad.current();
-      if (selection === detailGeneration.current) {
-        if (queryRef.current) queryRef.current.select(created.id);
-        else await select(created.id);
-      }
-    } catch {
-      setError('error');
     } finally {
-      inFlight.current = false;
-      setBusy(false);
+      commandRef.current.coordination.release('reopen');
     }
   }
   const canWrite =
@@ -494,8 +504,25 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
     (queue?.viewer?.canWrite &&
       (queue.viewer.canAssignOthers || detail?.assignedTo === queue.viewer.userId));
   const formatDate = time.format;
+  const guard = (event: {
+    target: EventTarget | null;
+    preventDefault: () => void;
+    stopPropagation: () => void;
+  }) => {
+    if (
+      commandRef.current.coordination.isLocked() &&
+      !(event.target instanceof Element && event.target.closest('[data-ticket-command-retry]'))
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  };
   return (
     <section
+      onClickCapture={guard}
+      onAuxClickCapture={guard}
+      onSubmitCapture={guard}
+      onChangeCapture={guard}
       className="mx-auto max-w-5xl space-y-5 bg-background text-foreground"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
@@ -507,6 +534,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
             className="hover:bg-primary"
             disabled={busy || queueAccessDenied}
             onClick={() => {
+              if (commandRef.current.coordination.isLocked()) return;
               setCreating((value) => !value);
               setError('');
             }}
@@ -528,327 +556,167 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
         </p>
       )}
       {staff && <p className="text-sm text-muted-foreground">{text('targetNote')}</p>}
+      {command.uncertain && (
+        <div role="alert" className="flex flex-col gap-2">
+          <p>{tTicketForms('uncertain', locale)}</p>
+          <Button
+            data-ticket-command-retry
+            type="button"
+            variant="outline"
+            disabled={command.busy}
+            onClick={() => void command.retry()}
+          >
+            {tTicketForms('retryOriginal', locale)}
+          </Button>
+        </div>
+      )}
+      {command.error && !command.uncertain && <p role="alert">{text(command.error)}</p>}
       {error && (
         <p role="alert">{text(['conflict', 'forbidden'].includes(error) ? error : 'error')}</p>
       )}
       {saved && <p role="status">{text('saved')}</p>}
-      {creating && (
-        <form
-          onSubmit={(event) => void create(event)}
-          className="rounded border bg-card text-card-foreground p-4"
-        >
-          <fieldset disabled={busy} className="space-y-3">
-            <div>
-              <Label htmlFor="ticket-subject">{text('subject')}</Label>
-              <Input
-                id="ticket-subject"
-                maxLength={200}
-                required
-                value={subject}
-                onChange={(event) => setSubject(event.target.value)}
+      {!staff && !queueAccessDenied && (
+        <div hidden={!creating}>
+          <TicketIntakeForm
+            key={identity + editorRevision}
+            actor={actor}
+            scope={scope}
+            locale={locale}
+            open={creating}
+            locked={busy}
+            coordination={command.coordination}
+            send={send}
+            failed={() => command.failed('intake')}
+            formatDate={formatDate}
+            onSaved={async (id) => {
+              setCreating(false);
+              await latestLoad.current(true);
+              if (queryRef.current) queryRef.current.select(id);
+              else await select(id, true);
+            }}
+          />
+        </div>
+      )}
+      <fieldset disabled={busy} className="contents">
+        <ListPage>
+          <ListPage.Toolbar
+            actions={
+              <ListViewToggle
+                value={view}
+                onChange={(value) => {
+                  if (!commandRef.current.coordination.isLocked()) setView(value);
+                }}
+                labels={{
+                  group: t('historyView.group', locale),
+                  table: t('historyView.table', locale),
+                  card: t('historyView.card', locale),
+                }}
               />
-            </div>
-            <div>
-              <Label htmlFor="ticket-body">{text('body')}</Label>
-              <textarea
-                id="ticket-body"
-                className="block w-full rounded border border-input bg-background text-foreground p-2"
-                maxLength={10000}
-                required
-                value={body}
-                onChange={(event) => setBody(event.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="ticket-category">{text('category')}</Label>
-              <select
-                id="ticket-category"
-                className="block rounded border border-input bg-background text-foreground p-2"
-                value={category}
-                onChange={(event) => setCategory(event.target.value)}
-              >
-                {['general', 'billing', 'orders', 'privacy'].map((value) => (
-                  <option key={value} value={value}>
-                    {text(`category.${value}`)}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <Label htmlFor="ticket-priority">{text('priority')}</Label>
-              <select
-                id="ticket-priority"
-                className="block rounded border border-input bg-background text-foreground p-2"
-                value={priority}
-                onChange={(event) => setPriority(event.target.value)}
-              >
-                {['normal', 'high'].map((value) => (
-                  <option value={value} key={value}>
-                    {text(value)}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {optionsLoading ? (
-              <p role="status">{text('loading')}</p>
-            ) : options ? (
-              <>
-                <div>
-                  <Label htmlFor="ticket-profile">{text('profile')}</Label>
-                  <select
-                    id="ticket-profile"
-                    className="block max-w-full rounded border border-input bg-background text-foreground p-2"
-                    value={profileId}
-                    onChange={(event) => {
-                      setProfileId(event.target.value);
-                      setRecord('');
-                      setRecordPage(1);
-                      uploads.current.clear();
-                    }}
-                  >
-                    <option value="">{text('noProfile')}</option>
-                    {options.profiles.map((profile) => (
-                      <option key={profile.id} value={profile.id}>
-                        {profile.title ?? text('unnamed')}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {profileId && (
-                  <div>
-                    <Label htmlFor="ticket-record">{text('related')}</Label>
-                    <select
-                      id="ticket-record"
-                      className="block max-w-full rounded border border-input bg-background text-foreground p-2"
-                      value={record}
-                      onChange={(event) => setRecord(event.target.value)}
-                    >
-                      <option value="">{text('none')}</option>
-                      {options.records.map((item) => (
-                        <option key={`${item.type}:${item.id}`} value={`${item.type}:${item.id}`}>
-                          {text(item.type)} · {item.id.slice(-8)} · {formatDate(item.created_at)}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="flex gap-2 mt-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        disabled={recordPage === 1}
-                        onClick={() => {
-                          setRecord('');
-                          setRecordPage((value) => value - 1);
-                        }}
-                      >
-                        {text('previous')}
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        disabled={!options.hasMoreRecords}
-                        onClick={() => {
-                          setRecord('');
-                          setRecordPage((value) => value + 1);
-                        }}
-                      >
-                        {text('next')}
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
+            }
+          >
+            <fieldset disabled={busy} className="flex min-w-0 flex-wrap items-end gap-3">
+              <div>
+                <Label htmlFor="ticket-search">{text('search')}</Label>
+                <Input
+                  id="ticket-search"
+                  maxLength={200}
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="ticket-filter">{text('status')}</Label>
+                <select
+                  id="ticket-filter"
+                  className="block rounded border border-input bg-background text-foreground p-2"
+                  value={filter}
+                  onChange={(event) => {
+                    setFilter(event.target.value);
+                    if (!queries) setPage(1);
+                  }}
+                >
+                  <option value="">{text('all')}</option>
+                  <option value="active">{text('active')}</option>
+                  {statuses.map((value) => (
+                    <option key={value} value={value}>
+                      {text(value)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <Label htmlFor="ticket-sort">{text('sort')}</Label>
+                <select
+                  id="ticket-sort"
+                  className="block rounded border border-input bg-background text-foreground p-2"
+                  value={sort}
+                  onChange={(event) => {
+                    setSort(event.target.value);
+                    if (!queries) setPage(1);
+                  }}
+                >
+                  <option value="desc">{text('newest')}</option>
+                  <option value="asc">{text('oldest')}</option>
+                </select>
+              </div>
+              <Button variant="outline" disabled={loading} onClick={() => void load()}>
+                {text('refresh')}
+              </Button>
+            </fieldset>
+          </ListPage.Toolbar>
+          <ListPage.Content
+            loading={loading}
+            error={!!queueError}
+            empty={!visibleQueue?.data.length}
+            retainContent={!!visibleQueue?.data.length && queueError !== 'forbidden'}
+            loadingView={<p role="status">{text('loading')}</p>}
+            errorView={
               <div role="alert" className="space-y-2">
-                <p>{text(optionsError === 'forbidden' ? 'forbidden' : 'optionsError')}</p>
-                {optionsError !== 'forbidden' && (
-                  <Button
-                    variant="outline"
-                    type="button"
-                    onClick={() => setOptionsVersion((value) => value + 1)}
-                  >
+                <p>{text(queueError === 'forbidden' ? 'forbidden' : 'queueError')}</p>
+                {queueError !== 'forbidden' && (
+                  <Button type="button" variant="outline" onClick={() => void load()}>
                     {text('retry')}
                   </Button>
                 )}
               </div>
+            }
+            emptyView={<p>{text('empty')}</p>}
+          >
+            {visibleQueue && (
+              <TicketQueueRecords
+                key={context}
+                items={visibleQueue.data}
+                staff={staff}
+                locale={locale}
+                view={view}
+                busy={busy}
+                selectedId={selectedId}
+                assignees={assignees}
+                responseTargetHours={visibleQueue.responseTargetHours}
+                formatDate={formatDate}
+                onSelect={(id) => {
+                  if (commandRef.current.coordination.isLocked()) return;
+                  setError('');
+                  if (queries && queries.selected !== id) queries.select(id);
+                  else void select(id);
+                }}
+              />
             )}
-            <div>
-              <Label htmlFor="ticket-files">{text('files')}</Label>
-              <Input
-                id="ticket-files"
-                key={fileVersion}
-                type="file"
-                multiple
-                accept="application/pdf,image/jpeg,image/png"
-                onChange={(event) => {
-                  setPreviewFile(null);
-                  setFiles(Array.from(event.target.files ?? []));
-                }}
-              />
-              <p className="text-sm">{text('fileHelp')}</p>
-              <ul className="mt-2 space-y-2">
-                {files.filter(isAllowedInvoiceReceiptFile).map((file, index) => (
-                  <li
-                    key={`${file.name}-${index}`}
-                    className="flex min-w-0 flex-wrap items-center gap-2"
-                  >
-                    <bdi className="min-w-0 flex-1 break-words">{file.name}</bdi>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      aria-label={`${documentText('preview', locale)}: ${file.name}`}
-                      aria-expanded={previewFile === file}
-                      onClick={() => setPreviewFile((current) => (current === file ? null : file))}
-                    >
-                      {documentText(previewFile === file ? 'hidePreview' : 'preview', locale)}
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-              {previewFile && files.includes(previewFile) && (
-                <FilePreview
-                  file={previewFile}
-                  name={previewFile.name}
-                  locale={locale}
-                  onAccessDenied={denyDraftPreview}
-                />
-              )}
-
-              {(files.length > 5 || files.some((file) => !isAllowedInvoiceReceiptFile(file))) && (
-                <p role="alert">{text('invalidFiles')}</p>
-              )}
-            </div>
-            <Button
-              className="hover:bg-primary"
-              type="submit"
-              disabled={
-                !subject.trim() ||
-                !body.trim() ||
-                files.length > 5 ||
-                files.some((file) => !isAllowedInvoiceReceiptFile(file)) ||
-                optionsLoading ||
-                !options
-              }
-            >
-              {text(busy ? 'saving' : 'submit')}
-            </Button>
-          </fieldset>
-        </form>
-      )}
-      <ListPage>
-        <ListPage.Toolbar
-          actions={
-            <ListViewToggle
-              value={view}
-              onChange={setView}
-              labels={{
-                group: t('historyView.group', locale),
-                table: t('historyView.table', locale),
-                card: t('historyView.card', locale),
-              }}
-            />
-          }
-        >
-          <fieldset disabled={busy} className="flex min-w-0 flex-wrap items-end gap-3">
-            <div>
-              <Label htmlFor="ticket-search">{text('search')}</Label>
-              <Input
-                id="ticket-search"
-                maxLength={200}
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="ticket-filter">{text('status')}</Label>
-              <select
-                id="ticket-filter"
-                className="block rounded border border-input bg-background text-foreground p-2"
-                value={filter}
-                onChange={(event) => {
-                  setFilter(event.target.value);
-                  if (!queries) setPage(1);
-                }}
-              >
-                <option value="">{text('all')}</option>
-                <option value="active">{text('active')}</option>
-                {statuses.map((value) => (
-                  <option key={value} value={value}>
-                    {text(value)}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <Label htmlFor="ticket-sort">{text('sort')}</Label>
-              <select
-                id="ticket-sort"
-                className="block rounded border border-input bg-background text-foreground p-2"
-                value={sort}
-                onChange={(event) => {
-                  setSort(event.target.value);
-                  if (!queries) setPage(1);
-                }}
-              >
-                <option value="desc">{text('newest')}</option>
-                <option value="asc">{text('oldest')}</option>
-              </select>
-            </div>
-            <Button variant="outline" disabled={loading} onClick={() => void load()}>
-              {text('refresh')}
-            </Button>
-          </fieldset>
-        </ListPage.Toolbar>
-        <ListPage.Content
-          loading={loading}
-          error={!!queueError}
-          empty={!visibleQueue?.data.length}
-          retainContent={!!visibleQueue?.data.length && queueError !== 'forbidden'}
-          loadingView={<p role="status">{text('loading')}</p>}
-          errorView={
-            <div role="alert" className="space-y-2">
-              <p>{text(queueError === 'forbidden' ? 'forbidden' : 'queueError')}</p>
-              {queueError !== 'forbidden' && (
-                <Button type="button" variant="outline" onClick={() => void load()}>
-                  {text('retry')}
-                </Button>
-              )}
-            </div>
-          }
-          emptyView={<p>{text('empty')}</p>}
-        >
-          {visibleQueue && (
-            <TicketQueueRecords
-              key={context}
-              items={visibleQueue.data}
-              staff={staff}
-              locale={locale}
-              view={view}
-              busy={busy}
-              selectedId={selectedId}
-              assignees={assignees}
-              responseTargetHours={visibleQueue.responseTargetHours}
-              formatDate={formatDate}
-              onSelect={(id) => {
-                setError('');
-                if (queries && queries.selected !== id) queries.select(id);
-                else void select(id);
-              }}
-            />
-          )}
-        </ListPage.Content>
-        <ListPage.Pagination
-          kind="page"
-          page={acceptedPage}
-          pageCount={visibleQueue?.totalPages ?? 1}
-          onPageChange={setPage}
-          label={text('pages')}
-          previousLabel={text('previous')}
-          nextLabel={text('next')}
-          pageLabel={(value) => `${text('page')} ${value.toLocaleString(locale)}`}
-          formatPage={(value) => value.toLocaleString(locale)}
-          disabled={loading || busy || !!queueError || !visibleQueue}
-        />
-      </ListPage>
+          </ListPage.Content>
+          <ListPage.Pagination
+            kind="page"
+            page={acceptedPage}
+            pageCount={visibleQueue?.totalPages ?? 1}
+            onPageChange={setPage}
+            label={text('pages')}
+            previousLabel={text('previous')}
+            nextLabel={text('next')}
+            pageLabel={(value) => `${text('page')} ${value.toLocaleString(locale)}`}
+            formatPage={(value) => value.toLocaleString(locale)}
+            disabled={loading || busy || !!queueError || !visibleQueue}
+          />
+        </ListPage>
+      </fieldset>
       {detailLoading && <p role="status">{text('loading')}</p>}
       {detailError && (
         <div role="alert" className="space-y-2">
@@ -1068,154 +936,36 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
               <ProfileClosureReview
                 ticketId={detail.id}
                 locale={locale}
+                coordination={command.coordination}
+                disabled={busy}
                 onCompleted={() => {
-                  void load();
-                  void select(detail.id);
+                  void latestLoad.current(true);
+                  void select(detail.id, true);
                 }}
               />
             )}
-          {staff && queue?.viewer?.canAssignOthers && (
-            <div className="space-y-3">
-              {assignmentLoading && <p role="status">{text('loading')}</p>}
-              {assignmentError && (
-                <div role="alert" className="space-y-2">
-                  <p>{text(assignmentError === 'forbidden' ? 'forbidden' : 'assignmentError')}</p>
-                  {assignmentError !== 'forbidden' && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={busy}
-                      onClick={() => setAssignmentVersion((value) => value + 1)}
-                    >
-                      {text('retry')}
-                    </Button>
-                  )}
-                </div>
-              )}
-              <fieldset
-                disabled={busy || assignmentLoading || !!assignmentError}
-                className="flex min-w-0 flex-wrap items-end gap-3"
-              >
-                <div>
-                  <Label htmlFor="ticket-team">{text('team')}</Label>
-                  <select
-                    id="ticket-team"
-                    disabled={busy}
-                    className="block rounded border border-input bg-background text-foreground p-2"
-                    value={teamId}
-                    onChange={(event) => {
-                      setTeamId(event.target.value);
-                      setAssignee('');
-                    }}
-                  >
-                    <option value="">{text('directAssignment')}</option>
-                    {teams.map((team) => (
-                      <option key={team.id} value={team.id}>
-                        {team.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <Label htmlFor="ticket-assignee">{text('assignee')}</Label>
-                  <select
-                    id="ticket-assignee"
-                    disabled={busy}
-                    className="block rounded border border-input bg-background text-foreground p-2"
-                    value={assignee}
-                    onChange={(event) => setAssignee(event.target.value)}
-                  >
-                    <option value="">{text('choose')}</option>
-                    {assignees
-                      .filter(
-                        (person) =>
-                          !teamId ||
-                          teams.find((team) => team.id === teamId)?.members.includes(person.id)
-                      )
-                      .map((person) => (
-                        <option key={person.id} value={person.id}>
-                          {person.name}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-                <Button
-                  className="hover:bg-primary"
-                  disabled={busy || !assignee}
-                  onClick={() =>
-                    void mutate(
-                      `${prefix}/${detail.id}/assign`,
-                      'PUT',
-                      { assigneeId: assignee, ...(teamId ? { teamId } : {}) },
-                      detail.id
-                    )
-                  }
-                >
-                  {text('assign')}
-                </Button>
-              </fieldset>
-            </div>
-          )}
-          {staff && canWrite && (
-            <div className="flex flex-wrap items-end gap-3">
-              <div>
-                <Label htmlFor="ticket-next-status">{text('changeStatus')}</Label>
-                <select
-                  id="ticket-next-status"
-                  disabled={busy}
-                  className="block rounded border border-input bg-background text-foreground p-2"
-                  value={nextStatus}
-                  onChange={(event) => setNextStatus(event.target.value as TicketStatus)}
-                >
-                  {[
-                    ...transitions[detail.status],
-                    ...(detail.status !== 'open' ? ['open'] : []),
-                  ].map((value) => (
-                    <option key={value} value={value}>
-                      {text(value)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="min-w-0 flex-1 basis-full">
-                <Label htmlFor="ticket-status-reason">{text('statusReason')}</Label>
-                <textarea
-                  id="ticket-status-reason"
-                  rows={2}
-                  maxLength={2000}
-                  required
-                  disabled={busy}
-                  className="block w-full rounded border border-input bg-background text-foreground p-2"
-                  value={statusReason}
-                  onChange={(event) => setStatusReason(event.target.value)}
-                />
-              </div>
-              <Button
-                className="hover:bg-primary"
-                disabled={
-                  busy || !statusReason.trim() || (detail.status === 'open' && !detail.assignedTo)
-                }
-                onClick={() =>
-                  void mutate(
-                    `${prefix}/${detail.id}/status`,
-                    'PATCH',
-                    { status: nextStatus, reason: statusReason.trim() },
-                    detail.id
-                  )
-                }
-              >
-                {text('saveStatus')}
-              </Button>
-            </div>
+          {staff && (
+            <TicketStaffForms
+              key={identity + editorRevision + detail.id}
+              ticket={detail}
+              scope={scope}
+              locale={locale}
+              canWrite={!!canWrite}
+              canAssign={!!queue?.viewer?.canAssignOthers}
+              people={assignees}
+              groups={teams}
+              optionsLoading={assignmentLoading}
+              optionsError={assignmentError}
+              refreshOptions={() => setAssignmentVersion((v) => v + 1)}
+              locked={busy}
+              coordination={command.coordination}
+              send={send}
+              failed={command.failed}
+              onSaved={() => refreshSelected(detail.id)}
+            />
           )}
           {!staff && detail.status !== 'open' && !detail.privacyClosureCompletedAt && (
-            <Button
-              className="hover:bg-primary"
-              disabled={busy}
-              onClick={() =>
-                void mutate(`${prefix}/${detail.id}/status`, 'PATCH', { status: 'open' }, detail.id)
-              }
-            >
+            <Button className="hover:bg-primary" disabled={busy} onClick={() => void reopen()}>
               {text('reopen')}
             </Button>
           )}
@@ -1231,22 +981,24 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
             assignees={assignees}
             formatDate={formatDate}
           />
-          {canWrite && !['closed', 'resolved'].includes(detail.status) && (
-            <TicketReplyInput
-              key={detail.id}
-              ticketId={detail.id}
-              profileId={detail.profileId}
-              locale={locale}
-              staff={staff}
-              busy={busy}
-              body={reply}
-              onBodyChange={setReply}
-              internal={internal}
-              onInternalChange={setInternal}
-              onSubmit={(prepare) =>
-                mutate(`${prefix}/${detail.id}/comments`, 'POST', prepare, detail.id)
-              }
-            />
+          {canWrite && (
+            <div hidden={['closed', 'resolved'].includes(detail.status)}>
+              <TicketReplyInput
+                key={identity + editorRevision + detail.id}
+                scope={scope}
+                coordination={command.coordination}
+                ticketId={detail.id}
+                profileId={detail.profileId}
+                locale={locale}
+                staff={staff}
+                busy={busy}
+                body={reply}
+                onBodyChange={setReply}
+                internal={internal}
+                onInternalChange={setInternal}
+                onSubmit={submitReply}
+              />
+            </div>
           )}
         </article>
       )}

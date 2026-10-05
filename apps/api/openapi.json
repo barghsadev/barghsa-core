@@ -29721,6 +29721,32 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "assigneeId": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "teamId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Ticket assigned."
@@ -30030,6 +30056,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
                   "reason": {
                     "description": "Staff reason stored with the status-change audit; optional for existing clients.",
                     "maxLength": 2000,
@@ -30190,6 +30220,10 @@
                       "orders",
                       "privacy"
                     ],
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
                     "type": "string"
                   },
                   "priority": {
@@ -30646,6 +30680,32 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "properties": {
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "open"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "status"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Status updated."

@@ -1,4 +1,5 @@
-import { ticketReply, ticketReplyApiSchema, ticketListQuery } from './ticket-input.js';
+import { TicketReplySchema, ticketReplyApiSchema, ticketListQuery } from './ticket-input.js';
+import { parseTicketFormInput } from './ticket-form-input-fields.js';
 import { z } from 'zod';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
@@ -225,12 +226,23 @@ export class StaffTicketsController {
   @HttpCode(200)
   @RateLimit({ namespace: 'staff:tickets:assign', limit: 60, windowMs: 60_000 })
   @ApiOperation({ summary: 'Assign ticket to staff' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        assigneeId: { type: 'string', minLength: 1, maxLength: 512 },
+        teamId: { type: 'string', format: 'uuid' },
+        idempotencyKey: { type: 'string', format: 'uuid' },
+      },
+    },
+  })
   @ApiResponse({ status: 200, description: 'Ticket assigned.' })
   @ApiResponse({ status: 403, description: 'Not staff' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async assignTicket(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() body: { assigneeId?: string; teamId?: string },
+    @Body() body: { assigneeId?: string; teamId?: string; idempotencyKey?: string },
     @Req() req: AuthenticatedRequest
   ) {
     if (
@@ -247,6 +259,7 @@ export class StaffTicketsController {
     const parsed = z
       .object({
         assigneeId: z.string().trim().min(1).max(512).optional(),
+        idempotencyKey: z.uuid().optional(),
         teamId: z.uuid().optional(),
       })
       .strict()
@@ -262,7 +275,8 @@ export class StaffTicketsController {
       req.session.userId,
       scope,
       parsed.data.teamId,
-      req.session
+      req.session,
+      parsed.data.idempotencyKey
     );
   }
 
@@ -283,6 +297,7 @@ export class StaffTicketsController {
           type: 'string',
           enum: ['open', 'in_progress', 'waiting_customer', 'waiting_staff', 'resolved', 'closed'],
         },
+        idempotencyKey: { type: 'string', format: 'uuid' },
         reason: {
           type: 'string',
           minLength: 1,
@@ -312,28 +327,34 @@ export class StaffTicketsController {
         403
       );
     }
-    const parsed = z
-      .object({
-        status: z.enum([
-          'open',
-          'in_progress',
-          'waiting_customer',
-          'waiting_staff',
-          'resolved',
-          'closed',
-        ]),
-        reason: z.string().trim().min(1).max(2000).optional(),
-      })
-      .strict()
-      .safeParse(body);
-    if (!parsed.success) throw new HttpException('Invalid status change', 400);
+    const data = await parseTicketFormInput(
+      z
+        .object({
+          status: z.enum([
+            'open',
+            'in_progress',
+            'waiting_customer',
+            'waiting_staff',
+            'resolved',
+            'closed',
+          ]),
+          reason: z.string().trim().min(1).max(2000).optional(),
+          idempotencyKey: z.uuid().optional(),
+        })
+        .strict(),
+      body,
+      ['reason'],
+      () => this.ticketsService.assertTicketFormAuthority(req.session, id, true),
+      'Invalid status change'
+    );
     return this.ticketsService.staffUpdateTicketStatus(
       id,
-      parsed.data.status,
+      data.status,
       req.session.userId,
       this.assignedScope(req, 'write'),
       req.session,
-      parsed.data.reason
+      data.reason,
+      data.idempotencyKey
     );
   }
 
@@ -463,7 +484,14 @@ export class StaffTicketsController {
         403
       );
     }
-    const body = ticketReply(raw);
+    const body = await parseTicketFormInput(
+      TicketReplySchema,
+      raw,
+      ['body'],
+      () => this.ticketsService.assertTicketFormAuthority(req.session, id, true),
+      'Invalid ticket reply',
+      true
+    );
     const visibility = body.visibility ?? 'public';
     return this.ticketsService.staffAddComment(
       id,

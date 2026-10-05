@@ -2233,3 +2233,505 @@ it('resolves electricity and saving details with distinct IDs while keeping unsu
     for (const expected of created) expect(rows).toContainEqual(expect.objectContaining(expected));
   }
 });
+
+// Durable form commands reuse the same compiled HTTP/PostgreSQL and storage fixture above.
+type DurableTicketIdentity = Pick<import('./tickets.service.js').TicketRow, 'id'>;
+type TicketFormErrorResponse = { error: { fields?: readonly string[] } };
+function durableTicketCommand(
+  path: string,
+  method: string,
+  body: unknown,
+  actorHeaders = headers.staff!
+) {
+  return fetch(http.base + path, { method, headers: actorHeaders, body: JSON.stringify(body) });
+}
+async function durableTicketEffects(id: string) {
+  return {
+    audits: (
+      await http.pool.query(
+        "SELECT event,metadata::jsonb AS metadata FROM audit_log WHERE metadata::jsonb->>'ticketId'=$1 OR metadata::jsonb->>'itemId'=$1 ORDER BY id",
+        [id]
+      )
+    ).rows,
+    notices: (
+      await http.pool.query(
+        "SELECT id,recipient_user_id,localized_content FROM in_app_notifications WHERE link_route LIKE '%'||$1||'%' ORDER BY id",
+        [id]
+      )
+    ).rows,
+  };
+}
+it('deduplicates original ticket creation and auto-assignment without replaying later eligibility', async () => {
+  const f = await linkedRecordFixture();
+  await publishLinkedContract(f);
+  const team = randomUUID(),
+    key = randomUUID();
+  const priorConfig = (
+    await http.pool.query(
+      "SELECT value,version FROM app_config WHERE key='admin.staff_assignment_rules'"
+    )
+  ).rows[0];
+  await http.pool.query('INSERT INTO staff_teams(id,name) VALUES($1,$2)', [
+    team,
+    `Durable ${team}`,
+  ]);
+  await http.pool.query(
+    "INSERT INTO staff_team_members(team_id,user_id) VALUES($1,'staff'),($1,'assigned')",
+    [team]
+  );
+  await http.pool.query(
+    "INSERT INTO app_config(key,value) VALUES('admin.staff_assignment_rules',$1::jsonb) ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value",
+    [JSON.stringify({ ticket: { teamId: team, strategy: 'round_robin' } })]
+  );
+  const body = {
+    subject: '  Captured intake  ',
+    body: '  Original details  ',
+    profileId: f.profileId,
+    relatedEntityType: 'contract',
+    relatedEntityId: f.contractId,
+    idempotencyKey: key,
+  };
+  try {
+    const responses = await Promise.all(
+      [0, 1].map(() => durableTicketCommand('/api/tickets', 'POST', body, f.actor.headers))
+    );
+    expect(
+      responses.map((r) => r.status),
+      http.logs()
+    ).toEqual([201, 201]);
+    const receipts = await Promise.all(responses.map((r) => r.json()));
+    expect(receipts[1]).toEqual(receipts[0]);
+    const first = receipts[0] as {
+      id: string;
+      status: string;
+      assignedTo: string;
+      attachments: unknown[];
+    };
+    expect(first.status).toBe('in_progress');
+    expect(first.assignedTo).toBe('assigned');
+    expect(first.attachments).toEqual([]);
+    expect(first).not.toHaveProperty('idempotencyKey');
+    const effects = await durableTicketEffects(first.id);
+    expect(effects.audits.map((row) => row.event).sort()).toEqual([
+      'ticket_created',
+      'work_auto_assigned',
+    ]);
+    expect(effects.notices.length).toBeGreaterThan(0);
+    const cursor = (
+      await http.pool.query(
+        'SELECT last_user_id,updated_at FROM staff_assignment_cursors WHERE team_id=$1',
+        [team]
+      )
+    ).rows;
+    await http.pool.query("UPDATE tickets SET status='closed' WHERE id=$1", [first.id]);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT contract_id FROM contract_publications WHERE contract_id=$1',
+          [f.contractId]
+        )
+      ).rows
+    ).toEqual([{ contract_id: f.contractId }]);
+    await http.pool.query('UPDATE staff_teams SET is_active=false WHERE id=$1', [team]);
+    const replay = await durableTicketCommand('/api/tickets', 'POST', body, f.actor.headers);
+    expect(replay.status).toBe(201);
+    expect(await replay.json()).toEqual(first);
+    expect(await durableTicketEffects(first.id)).toEqual(effects);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT last_user_id,updated_at FROM staff_assignment_cursors WHERE team_id=$1',
+          [team]
+        )
+      ).rows
+    ).toEqual(cursor);
+    expect(
+      (await http.pool.query('SELECT status FROM tickets WHERE id=$1', [first.id])).rows[0].status
+    ).toBe('closed');
+    expect(
+      (
+        await durableTicketCommand(
+          '/api/tickets',
+          'POST',
+          { ...body, body: 'Altered' },
+          f.actor.headers
+        )
+      ).status
+    ).toBe(409);
+    const other = await freshActor(false);
+    const isolated = await durableTicketCommand(
+      '/api/tickets',
+      'POST',
+      { subject: 'Separate actor', body: 'Separate original', idempotencyKey: key },
+      other.headers
+    );
+    expect(isolated.status).toBe(201);
+    expect(((await isolated.json()) as DurableTicketIdentity).id).not.toBe(first.id);
+    await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [f.profileId]);
+    const denied = await durableTicketCommand('/api/tickets', 'POST', body, f.actor.headers);
+    expect(denied.status).toBe(404);
+    expect(JSON.stringify(await denied.json())).not.toContain('Original details');
+  } finally {
+    if (priorConfig)
+      await http.pool.query(
+        "UPDATE app_config SET value=$1::jsonb,version=$2 WHERE key='admin.staff_assignment_rules'",
+        [JSON.stringify(priorConfig.value), priorConfig.version]
+      );
+    else await http.pool.query("DELETE FROM app_config WHERE key='admin.staff_assignment_rules'");
+  }
+});
+it('replays original staff and customer status receipts without reverting later states or reasons', async () => {
+  const id = await ticket('in_progress');
+  await http.pool.query("UPDATE tickets SET assigned_to='assigned' WHERE id=$1", [id]);
+  const body = {
+    status: 'resolved',
+    reason: '  Captured decision  ',
+    idempotencyKey: randomUUID(),
+  };
+  const send = () => durableTicketCommand(`/api/staff/tickets/${id}/status`, 'PATCH', body);
+  const responses = await Promise.all([send(), send()]);
+  expect(responses.map((r) => r.status)).toEqual([200, 200]);
+  const receipts = await Promise.all(responses.map((r) => r.json()));
+  expect(receipts[1]).toEqual(receipts[0]);
+  const effects = await durableTicketEffects(id);
+  expect(effects.audits.filter((r) => r.event === 'ticket_status_changed')).toHaveLength(1);
+  expect(effects.audits[0].metadata.reason).toBe('Captured decision');
+  expect(receipts[0]).not.toHaveProperty('reason');
+  await http.pool.query("UPDATE tickets SET status='closed' WHERE id=$1", [id]);
+  expect(await (await send()).json()).toEqual(receipts[0]);
+  expect(await durableTicketEffects(id)).toEqual(effects);
+  expect(
+    (
+      await durableTicketCommand(`/api/staff/tickets/${id}/status`, 'PATCH', {
+        ...body,
+        reason: 'Changed',
+      })
+    ).status
+  ).toBe(409);
+  expect(
+    (await http.pool.query('SELECT status FROM tickets WHERE id=$1', [id])).rows[0].status
+  ).toBe('closed');
+  const customer = { status: 'open', ignored: 'legacy body', idempotencyKey: body.idempotencyKey };
+  const customerSend = () =>
+    durableTicketCommand(`/api/tickets/${id}/status`, 'PATCH', customer, headers.customer!);
+  const opened = await customerSend();
+  expect(opened.status).toBe(200);
+  const original = await opened.json();
+  const customerEffects = await durableTicketEffects(id);
+  await http.pool.query("UPDATE tickets SET status='resolved' WHERE id=$1", [id]);
+  expect(await (await customerSend()).json()).toEqual(original);
+  expect(await durableTicketEffects(id)).toEqual(customerEffects);
+  expect(
+    (await http.pool.query('SELECT status FROM tickets WHERE id=$1', [id])).rows[0].status
+  ).toBe('resolved');
+  expect(
+    (
+      await durableTicketCommand(
+        `/api/tickets/${id}/status`,
+        'PATCH',
+        { ...customer, status: 'closed' },
+        headers.customer!
+      )
+    ).status
+  ).toBe(403);
+});
+it('replays assignment originals after target eligibility changes without another audit or notice', async () => {
+  const id = await ticket(),
+    team = randomUUID(),
+    target = await freshActor(false);
+  await grantStaffRole(target.userId, 'test-assigned');
+  await http.pool.query('INSERT INTO staff_teams(id,name) VALUES($1,$2)', [
+    team,
+    `Durable ${team}`,
+  ]);
+  await http.pool.query('INSERT INTO staff_team_members(team_id,user_id) VALUES($1,$2)', [
+    team,
+    target.userId,
+  ]);
+  const body = { assigneeId: target.userId, teamId: team, idempotencyKey: randomUUID() };
+  const send = () => durableTicketCommand(`/api/staff/tickets/${id}/assign`, 'PUT', body);
+  const responses = await Promise.all([send(), send()]);
+  expect(responses.map((r) => r.status)).toEqual([200, 200]);
+  const receipts = await Promise.all(responses.map((r) => r.json()));
+  expect(receipts[1]).toEqual(receipts[0]);
+  expect(receipts[0]).toMatchObject({
+    assignedTo: target.userId,
+    assignedTeamId: team,
+    status: 'in_progress',
+  });
+  const effects = await durableTicketEffects(id);
+  expect(effects.audits.filter((r) => r.event === 'ticket_assigned')).toHaveLength(1);
+  await http.pool.query('UPDATE staff_teams SET is_active=false WHERE id=$1', [team]);
+  await http.pool.query('UPDATE users SET disabled_at=NOW() WHERE user_id=$1', [target.userId]);
+  await http.pool.query(
+    "UPDATE tickets SET assigned_to='staff',assigned_team_id=NULL,status='resolved' WHERE id=$1",
+    [id]
+  );
+  const replay = await send();
+  expect(replay.status).toBe(200);
+  expect(await replay.json()).toEqual(receipts[0]);
+  expect(await durableTicketEffects(id)).toEqual(effects);
+  expect(
+    (
+      await http.pool.query('SELECT assigned_to,assigned_team_id,status FROM tickets WHERE id=$1', [
+        id,
+      ])
+    ).rows[0]
+  ).toEqual({ assigned_to: 'staff', assigned_team_id: null, status: 'resolved' });
+  expect(
+    (
+      await durableTicketCommand(`/api/staff/tickets/${id}/assign`, 'PUT', {
+        ...body,
+        assigneeId: 'staff',
+      })
+    ).status
+  ).toBe(409);
+});
+it('rejects cached ticket receipts after current assigned scope or staff grants are lost', async () => {
+  const actor = await freshActor(false),
+    id = await ticket('in_progress');
+  await grantStaffRole(actor.userId, 'test-assigned');
+  await http.pool.query('UPDATE tickets SET assigned_to=$1 WHERE id=$2', [actor.userId, id]);
+  const assignment = { idempotencyKey: randomUUID() };
+  const statusBody = {
+    status: 'waiting_customer',
+    reason: 'Captured',
+    idempotencyKey: randomUUID(),
+  };
+  const assignSend = () =>
+    durableTicketCommand(`/api/staff/tickets/${id}/assign`, 'PUT', assignment, actor.headers);
+  const statusSend = () =>
+    durableTicketCommand(`/api/staff/tickets/${id}/status`, 'PATCH', statusBody, actor.headers);
+  expect((await assignSend()).status).toBe(200);
+  expect((await statusSend()).status).toBe(200);
+  const effects = await durableTicketEffects(id);
+  await http.pool.query("UPDATE tickets SET assigned_to='staff' WHERE id=$1", [id]);
+  expect((await assignSend()).status).toBe(404);
+  expect((await statusSend()).status).toBe(404);
+  await http.pool.query('UPDATE tickets SET assigned_to=$1 WHERE id=$2', [actor.userId, id]);
+  await http.pool.query('DELETE FROM user_roles WHERE user_id=$1', [actor.userId]);
+  for (const send of [assignSend, statusSend]) {
+    const denied = await send();
+    expect(denied.status).toBe(403);
+    const response = JSON.stringify(await denied.json());
+    expect(response).not.toContain('A question');
+    expect(response).not.toContain('fields');
+  }
+  expect(await durableTicketEffects(id)).toEqual(effects);
+});
+it('rejects an original cached create if its session expires while current authority waits', async () => {
+  const actor = await freshActor(false),
+    body = {
+      subject: 'Frozen private intake',
+      body: 'Private original',
+      idempotencyKey: randomUUID(),
+    };
+  const send = () => durableTicketCommand('/api/tickets', 'POST', body, actor.headers);
+  const first = await send();
+  expect(first.status).toBe(201);
+  const original = (await first.json()) as DurableTicketIdentity;
+  const effects = await durableTicketEffects(original.id);
+  const client = await http.pool.connect();
+  let response: Promise<Response> | undefined,
+    finished = false;
+  try {
+    await client.query('BEGIN');
+    await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR NO KEY UPDATE', [
+      actor.userId,
+    ]);
+    const pid = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
+    response = send().finally(() => {
+      finished = true;
+    });
+    await blockedOrFinished(pid, () => finished);
+    expect(finished).toBe(false);
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=clock_timestamp()-INTERVAL '1 second' WHERE session_id=$1",
+      [actor.sessionId]
+    );
+    await client.query('COMMIT');
+    const denied = await response;
+    expect(denied.status).toBe(401);
+    expect(JSON.stringify(await denied.json())).not.toMatch(
+      /Private original|Frozen private|fields/
+    );
+    expect(await durableTicketEffects(original.id)).toEqual(effects);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await response;
+  }
+});
+it.each(['create', 'status', 'assignment'] as const)(
+  'rolls back durable %s cache and effects when its audit fails, then retries the same command',
+  async (action) => {
+    const actor = await freshActor(action !== 'create'),
+      id = await ticket('in_progress'),
+      key = randomUUID();
+    await http.pool.query("UPDATE tickets SET assigned_to='staff' WHERE id=$1", [id]);
+    const command =
+      action === 'create'
+        ? {
+            path: '/api/tickets',
+            method: 'POST',
+            body: { subject: 'Atomic durable', body: 'Details', idempotencyKey: key },
+            kind: 'ticket_create',
+          }
+        : action === 'status'
+          ? {
+              path: `/api/staff/tickets/${id}/status`,
+              method: 'PATCH',
+              body: { status: 'resolved', reason: 'Atomic', idempotencyKey: key },
+              kind: 'ticket_staff_status',
+            }
+          : {
+              path: `/api/staff/tickets/${id}/assign`,
+              method: 'PUT',
+              body: { assigneeId: 'assigned', idempotencyKey: key },
+              kind: 'ticket_assignment',
+            };
+    const effects = await durableTicketEffects(id);
+    await http.pool
+      .query(`CREATE FUNCTION fail_durable_ticket_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+    IF NEW.event IN ('ticket_created','ticket_assigned','ticket_status_changed') THEN RAISE EXCEPTION 'test failure'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER fail_durable_ticket_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_durable_ticket_audit()`);
+    try {
+      expect(
+        (await durableTicketCommand(command.path, command.method, command.body, actor.headers))
+          .status
+      ).toBe(500);
+      expect(
+        (
+          await http.pool.query(
+            'SELECT response FROM idempotency_keys WHERE entity_type=$1 AND idempotency_key=$2',
+            [command.kind, `${actor.userId}:${key}`]
+          )
+        ).rows
+      ).toEqual([]);
+      expect(
+        (await http.pool.query('SELECT status,assigned_to FROM tickets WHERE id=$1', [id])).rows[0]
+      ).toEqual({ status: 'in_progress', assigned_to: 'staff' });
+      expect(
+        (await http.pool.query('SELECT id FROM tickets WHERE user_id=$1', [actor.userId])).rows
+      ).toEqual([]);
+      expect(await durableTicketEffects(id)).toEqual(effects);
+    } finally {
+      await http.pool.query(
+        'DROP TRIGGER fail_durable_ticket_audit ON audit_log; DROP FUNCTION fail_durable_ticket_audit()'
+      );
+    }
+    expect(
+      (await durableTicketCommand(command.path, command.method, command.body, actor.headers)).status
+    ).toBe(action === 'create' ? 201 : 200);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT response FROM idempotency_keys WHERE entity_type=$1 AND idempotency_key=$2',
+          [command.kind, `${actor.userId}:${key}`]
+        )
+      ).rows
+    ).toHaveLength(1);
+  }
+);
+it('rolls back a keyed assignment and its original receipt when the private notice cannot commit', async () => {
+  const id = await ticket(),
+    body = { assigneeId: 'assigned', idempotencyKey: randomUUID() };
+  const effects = await durableTicketEffects(id);
+  await http.pool
+    .query(`CREATE FUNCTION fail_durable_ticket_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+    IF NEW.link_route LIKE '%tickets?ticketId=%' THEN RAISE EXCEPTION 'test failure'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER fail_durable_ticket_notice BEFORE INSERT ON in_app_notifications FOR EACH ROW EXECUTE FUNCTION fail_durable_ticket_notice()`);
+  try {
+    expect(
+      (await durableTicketCommand(`/api/staff/tickets/${id}/assign`, 'PUT', body)).status
+    ).toBe(500);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT response FROM idempotency_keys WHERE entity_type='ticket_assignment' AND idempotency_key=$1",
+          [`staff:${body.idempotencyKey}`]
+        )
+      ).rows
+    ).toEqual([]);
+    expect(
+      (await http.pool.query('SELECT assigned_to,status FROM tickets WHERE id=$1', [id])).rows[0]
+    ).toEqual({ assigned_to: null, status: 'open' });
+    expect(await durableTicketEffects(id)).toEqual(effects);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER fail_durable_ticket_notice ON in_app_notifications; DROP FUNCTION fail_durable_ticket_notice()'
+    );
+  }
+  expect((await durableTicketCommand(`/api/staff/tickets/${id}/assign`, 'PUT', body)).status).toBe(
+    200
+  );
+});
+it('projects only owned ticket form leaves after current authority and leaves protected failures generic', async () => {
+  const f = await linkedRecordFixture(),
+    id = await ticket('in_progress');
+  await http.pool.query("UPDATE tickets SET assigned_to='assigned' WHERE id=$1", [id]);
+  const cases = [
+    {
+      path: '/api/tickets',
+      method: 'POST',
+      actor: f.actor.headers,
+      field: 'subject',
+      body: { subject: ' ', body: 'Details', profileId: f.profileId },
+    },
+    {
+      path: `/api/tickets/${id}/comments`,
+      method: 'POST',
+      actor: headers.customer!,
+      field: 'body',
+      body: { body: ' ' },
+    },
+    {
+      path: `/api/staff/tickets/${id}/status`,
+      method: 'PATCH',
+      actor: headers.staff!,
+      field: 'reason',
+      body: { status: 'resolved', reason: ' ' },
+    },
+  ];
+  const effects = await durableTicketEffects(id);
+  for (const item of cases) {
+    const owned = await durableTicketCommand(item.path, item.method, item.body, item.actor);
+    expect(owned.status).toBe(400);
+    expect(((await owned.json()) as TicketFormErrorResponse).error.fields).toEqual([item.field]);
+    const mixed = await durableTicketCommand(
+      item.path,
+      item.method,
+      { ...item.body, PRIVATE: 'PRIVATE' },
+      item.actor
+    );
+    expect(mixed.status).toBe(400);
+    const generic = (await mixed.json()) as TicketFormErrorResponse;
+    expect(generic.error.fields).toBeUndefined();
+    expect(JSON.stringify(generic)).not.toContain('PRIVATE');
+  }
+  const foreign = await durableTicketCommand(
+    `/api/tickets/${id}/comments`,
+    'POST',
+    { body: '' },
+    f.actor.headers
+  );
+  expect(foreign.status).toBe(404);
+  expect(((await foreign.json()) as TicketFormErrorResponse).error.fields).toBeUndefined();
+  await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [f.profileId]);
+  const stale = await durableTicketCommand(
+    '/api/tickets',
+    'POST',
+    { subject: '', body: 'Details', profileId: f.profileId },
+    f.actor.headers
+  );
+  expect(stale.status).toBe(404);
+  expect(((await stale.json()) as TicketFormErrorResponse).error.fields).toBeUndefined();
+  const protectedInput = await durableTicketCommand(`/api/staff/tickets/${id}/status`, 'PATCH', {
+    status: 'resolved',
+    reason: '',
+    idempotencyKey: 'PRIVATE',
+  });
+  expect(protectedInput.status).toBe(400);
+  expect(((await protectedInput.json()) as TicketFormErrorResponse).error.fields).toBeUndefined();
+  expect(await durableTicketEffects(id)).toEqual(effects);
+});

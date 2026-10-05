@@ -2,6 +2,7 @@ import { act, useState, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { StaffTicketsPage, CustomerTicketsPage } from './TicketsPage.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { AdminConsultationsPage } from './AdminConsultationsPage.js';
 import { useListQuery, writeListQuery } from '../hooks/useListQuery.js';
 import {
@@ -16,7 +17,7 @@ import {
   supportQueue,
   supportComments,
   supportPeople,
-  supportTeams,
+  supportTeams as fixtureTeams,
 } from '../test/support-queue-fixtures.js';
 import { firstWork, olderWork, consultationWork } from '../test/staff-business-fixtures.js';
 const route = vi.hoisted(() => ({ search: {} as Record<string, unknown> }));
@@ -32,6 +33,10 @@ afterEach(() => {
   route.search = {};
   document.documentElement.lang = 'fa';
 });
+const supportTeams = fixtureTeams.map((team) => ({
+  ...team,
+  id: '33333333-3333-4333-8333-333333333333',
+}));
 const otherTicket = '87000000-0000-4000-8000-000000000001';
 async function mount(
   kind: 'staff' | 'customer' | 'consultation',
@@ -79,7 +84,11 @@ async function mount(
         />
       );
     const Page = kind === 'staff' ? StaffTicketsPage : CustomerTicketsPage;
-    return <Page queries={queries} />;
+    return (
+      <AccountUserProvider value={kind === 'staff' ? 'staff' : 'customer'}>
+        <Page queries={queries} />
+      </AccountUserProvider>
+    );
   }
   const host = document.createElement('div');
   document.body.append(host);
@@ -195,16 +204,42 @@ for (const kind of ['staff', 'customer'] as const) {
     const view = await mount(kind, { ticketId: supportTicket.id });
     try {
       await change(view.host, '#ticket-reply', 'Captured reply');
-      await act(async () => button(view.host, 'Send reply').click());
+      await act(async () => {
+        button(view.host, 'Send reply').click();
+        await vi.dynamicImportSettled();
+      });
       expect(finish).toBeDefined();
       await view.move({ ticketId: otherTicket, status: 'closed' });
       const oldReads = reads.filter((url) => url.endsWith(supportTicket.id)).length;
-      await act(async () => finish(Response.json({ id: 'receipt' })));
+      await act(async () =>
+        finish(
+          Response.json(
+            {
+              id: '44444444-4444-4444-8444-444444444444',
+              ticketId: supportTicket.id,
+              authorId: kind === 'staff' ? 'staff' : 'customer',
+              body: 'Captured reply',
+              visibility: 'public',
+              bodyFormat: 'markdown',
+              authorContext: kind === 'staff' ? 'staff' : 'customer',
+              author: null,
+              attachments: [],
+              attachmentCount: 0,
+              createdAt: supportTicket.updatedAt,
+              updatedAt: supportTicket.updatedAt,
+            },
+            { status: 201 }
+          )
+        )
+      );
       expect(view.raw().ticketId).toBe(otherTicket);
       expect(view.host.querySelector('article h2')!.textContent).toBe('Another question');
       expect(view.host.querySelector<HTMLTextAreaElement>('#ticket-reply')!.value).toBe('');
       expect(reads.filter((url) => url.endsWith(supportTicket.id))).toHaveLength(oldReads);
-      expect(new URL(reads.at(-1)!, 'http://localhost').searchParams.get('status')).toBe('closed');
+      const lastQueueRead = reads
+        .filter((url) => new URL(url, 'http://localhost').searchParams.has('page'))
+        .at(-1)!;
+      expect(new URL(lastQueueRead, 'http://localhost').searchParams.get('status')).toBe('closed');
     } finally {
       await view.close();
     }
