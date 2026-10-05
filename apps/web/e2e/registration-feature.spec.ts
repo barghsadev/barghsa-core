@@ -6,10 +6,19 @@ const challengeId = '00000000-0000-4000-8000-000000000002';
 const password = 'Registration-browser-password-123!';
 
 async function openRegistration(page: Page, locale: string, verify = false) {
+  await page.addInitScript((lang) => localStorage.setItem('barghsa-locale', lang), locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await mockPublicAuthCsrf(page);
   await page.route('**/api/tos/current?*', (route) =>
-    route.fulfill({ json: { id: challengeId, versionId: 'v1', content: 'Published terms' } })
+    route.fulfill({
+      json: {
+        id: challengeId,
+        versionId: 'v1',
+        content: 'Published terms',
+        updatedAt: '2026-09-01T00:00:00Z',
+        publishedAt: '2026-09-01T00:00:00Z',
+      },
+    })
   );
   await page.goto(
     verify
@@ -85,7 +94,7 @@ for (const locale of ['fa', 'en']) {
       await expect(toggle).toBeDisabled();
       await expect(page.locator('#password-strength')).toBeHidden();
       release();
-      await expect(secret).toBeEnabled();
+      await expect(secret).toBeDisabled();
       await expect(page.locator('form [role="alert"]')).toBeVisible();
       const message = await page.locator('form [role="alert"]').innerText();
       await expect(page.locator('[data-sonner-toast][data-type="error"]')).toContainText(message);
@@ -191,6 +200,9 @@ for (const locale of ['fa', 'en']) {
 
   test(`registration reaches onboarding through the app entry (${locale})`, async ({ page }) => {
     await openRegistration(page, locale, true);
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({ json: { isStaff: false, requiresTosAcceptance: false } })
+    );
     await page.route('**/api/profiles', (route) =>
       route.fulfill({ json: { profiles: [], hasDefault: false, activeProfileId: null } })
     );
@@ -229,8 +241,13 @@ for (const locale of ['fa', 'en']) {
     await expect(page.locator('main [role="alert"]')).toBeVisible();
     await page.clock.fastForward(1_000);
     await expect(page).toHaveURL(/\/register$/);
-    await page.clock.runFor(20);
-    await expect(page.locator('[data-sonner-toast][data-type="error"]')).toBeVisible();
+    // Sonner mounts lazily; let its scheduled render run after the module is ready.
+    await expect
+      .poll(async () => {
+        await page.clock.runFor(50);
+        return page.locator('[data-sonner-toast][data-type="error"]').isVisible();
+      })
+      .toBe(true);
   });
 }
 

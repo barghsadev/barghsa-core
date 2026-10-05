@@ -1,18 +1,20 @@
-import { publicAuthFetch } from '../../lib/public-auth-fetch.js';
-import { hasSessionAcknowledgement, hasResendAcknowledgement } from '../../lib/auth-responses.js';
-import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
-import { useLocale } from '../../hooks/useLocale.js';
-import { rateLimitMessage, retryAfterSeconds } from '../../lib/auth-errors.js';
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { createFileRoute, Link, useRouter, useSearch } from '@tanstack/react-router';
+import { t } from '@barghsa/i18n/auth';
+import { registrationFormText } from '@barghsa/i18n/registration-forms';
+import { Button } from '@barghsa/ui';
+import { Form, FormField } from '@barghsa/ui/form';
+import { AuthLayout } from '../../components/AuthLayout.js';
+import { OtpInput, type OtpInputHandle } from '../../components/OtpInput.js';
+import { useLocale } from '../../hooks/useLocale.js';
+import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
+import { useRegistrationNativeForm } from '../../hooks/useRegistrationNativeForm.js';
+import { publicAuthFetch } from '../../lib/public-auth-fetch.js';
+import { authErrorCode, rateLimitMessage, retryAfterSeconds } from '../../lib/auth-errors.js';
+import { hasSessionAcknowledgement, hasResendAcknowledgement } from '../../lib/auth-responses.js';
+import { registrationChallenge, emptyRegistration } from '../../lib/registration-form.js';
 import { toast } from '../../lib/toast-api.js';
 import { rememberAuthSuccess } from '../../lib/auth-entry-feedback.js';
-import { t } from '@barghsa/i18n/auth';
-import { Loader2Icon } from 'lucide-react';
-import { Button } from '@barghsa/ui';
-import { AuthLayout } from '../../components/AuthLayout.js';
-import { OtpInput } from '../../components/OtpInput.js';
-
 export const Route = createFileRoute('/register/verify')({
   validateSearch: (search: Record<string, unknown>) => ({
     challengeId: String(search?.challengeId ?? ''),
@@ -20,286 +22,280 @@ export const Route = createFileRoute('/register/verify')({
   }),
   component: OtpVerifyPage,
 });
-
-/** Resend countdown in seconds */
-const RESEND_COOLDOWN = 60;
-
 function OtpVerifyPage() {
-  const router = useRouter();
-  const { challengeId, destination } = useSearch({ from: '/register/verify' });
-  const locale = useLocale();
-  const numbers = useNumberFormatting(locale);
-
-  const [otp, setOtp] = useState('');
-  const [otpError, setOtpError] = useState<string | null>(null);
-  const [verifying, setVerifying] = useState(false);
-  const [resending, setResending] = useState(false);
-  const [resendDeadline, setResendDeadline] = useState(() => Date.now() + RESEND_COOLDOWN * 1000);
-  const [resendTimer, setResendTimer] = useState(RESEND_COOLDOWN);
-  const canResend = resendTimer === 0;
-  const otpRef = useRef<{ reset: () => void } | null>(null);
-  const requestRef = useRef<AbortController | null>(null);
-  const expiryRedirect = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const busy = verifying || resending;
-
-  // Countdown timer for resend
+  const router = useRouter(),
+    { challengeId, destination } = useSearch({ from: '/register/verify' }),
+    locale = useLocale(),
+    numbers = useNumberFormatting(locale);
+  const model = useRegistrationNativeForm('verify', `verify|${locale}|${challengeId}`, locale),
+    form = model.form;
+  const otpRef = useRef<OtpInputHandle>(null),
+    expiryRedirect = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [error, setError] = useState<string | null>(null),
+    [resendUntil, setResendUntil] = useState(() => Date.now() + 60_000),
+    [attemptUntil, setAttemptUntil] = useState(0),
+    [now, setNow] = useState(Date.now),
+    [resending, setResending] = useState(false);
+  const cooldown = Math.max(0, Math.ceil((resendUntil - now) / 1000)),
+    attemptCooldown = Math.max(0, Math.ceil((attemptUntil - now) / 1000));
   useEffect(() => {
-    const update = () =>
-      setResendTimer(Math.max(0, Math.ceil((resendDeadline - Date.now()) / 1000)));
-    update();
-    const interval = setInterval(update, 1000);
-
-    return () => clearInterval(interval);
-  }, [resendDeadline]);
-
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
   useEffect(() => {
-    setVerifying(false);
-    setResending(false);
-    setOtp('');
-    setOtpError(null);
-    setResendDeadline(Date.now() + RESEND_COOLDOWN * 1000);
+    form.reset(emptyRegistration);
     otpRef.current?.reset();
+    setError(null);
+    setResending(false);
+    setResendUntil(Date.now() + 60_000);
+    setAttemptUntil(0);
+    setNow(Date.now());
+    if (!registrationChallenge({ challengeId })) void router.navigate({ to: '/register' });
     return () => {
-      requestRef.current?.abort();
-      requestRef.current = null;
       if (expiryRedirect.current !== null) clearTimeout(expiryRedirect.current);
       expiryRedirect.current = null;
     };
-  }, [challengeId]);
-
-  // Redirect if no challengeId (user navigated directly)
-  useEffect(() => {
-    if (!challengeId) {
-      router.navigate({ to: '/register' });
-    }
-  }, [challengeId, router]);
-
-  const handleOtpComplete = useCallback(
-    async (code: string) => {
-      if (requestRef.current || expiryRedirect.current !== null) return;
-      const controller = new AbortController();
-      requestRef.current = controller;
-      setOtp(code);
-      setOtpError(null);
-      setVerifying(true);
-
-      try {
-        const response = await publicAuthFetch('/api/auth/register/verify', {
-          signal: controller.signal,
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
-          body: JSON.stringify({ challengeId, otp: code }),
-        });
-
-        const body: Record<string, unknown> = await response.json().catch(() => ({}));
-        if (controller.signal.aborted) return;
-
-        if (!response.ok) {
-          const errorCode =
-            typeof body?.error === 'string'
-              ? body.error
-              : ((body?.error as Record<string, unknown>)?.code as string | undefined);
-
-          let msg: string;
-          switch (errorCode) {
-            case 'AUTH:OTP:INVALID':
-              msg = t('auth.otp.error.invalid', locale);
-              break;
-            case 'AUTH:OTP:EXPIRED':
-              msg = t('auth.otp.error.expired', locale);
-              // On expiry, redirect back to registration
-              expiryRedirect.current = setTimeout(() => {
-                if (router.state.location.pathname !== '/register/verify') return;
-                toast.error(t('auth.otp.expired', locale));
-                router.navigate({ to: '/register' });
-              }, 500);
-              break;
-            case 'AUTH:OTP:MAX_ATTEMPTS':
-              msg = t('auth.otp.error.maxAttempts', locale);
-              break;
-            default:
-              msg = t('auth.otp.error.generic', locale);
-          }
-
-          setOtpError(rateLimitMessage(response, locale, numbers.numberStyle) ?? msg);
-          setOtp('');
-          // Clear OTP input on error and shake
-          if (otpRef.current?.reset) {
-            otpRef.current.reset();
-          }
-          return;
-        }
-
-        if (!hasSessionAcknowledgement(body)) throw new Error('Invalid session acknowledgement');
-
-        // ── Success — user created, session set ────────────────────
-        const message = t('auth.register.success', locale);
-        rememberAuthSuccess(message);
-        toast.success(message);
-        // Redirect to app root (profile check middleware handles redirects)
-        router.navigate({ to: '/app' });
-      } catch {
-        if (controller.signal.aborted) return;
-        setOtpError(t('auth.otp.error.generic', locale));
-        setOtp('');
-        if (otpRef.current?.reset) {
-          otpRef.current.reset();
-        }
-      } finally {
-        if (requestRef.current === controller) {
-          requestRef.current = null;
-          setVerifying(false);
-        }
-      }
-    },
-    [challengeId, locale, numbers.numberStyle, router]
-  );
-
-  const handleResend = useCallback(async () => {
+  }, [challengeId, form.reset, router]);
+  function verify(event?: FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
     if (
-      !canResend ||
-      Date.now() < resendDeadline ||
-      requestRef.current ||
+      Date.now() < attemptUntil ||
+      !registrationChallenge({ challengeId }) ||
       expiryRedirect.current !== null
     )
       return;
-    const controller = new AbortController();
-    requestRef.current = controller;
-
-    setResending(true);
-    setOtpError(null);
-
-    try {
-      const response = await publicAuthFetch('/api/auth/register/resend', {
-        signal: controller.signal,
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
-        body: JSON.stringify({ challengeId }),
-      });
-      const body: unknown = await response.json().catch(() => null);
-      if (controller.signal.aborted) return;
-
-      if (!response.ok) {
-        const retry = rateLimitMessage(response, locale, numbers.numberStyle);
-        const message = retry ?? t('auth.otp.error.resend', locale);
-        setOtpError(message);
-        if (retry) {
-          setResendDeadline(Date.now() + (retryAfterSeconds(response) ?? RESEND_COOLDOWN) * 1000);
+    void model.run(async (values, capture) => {
+      setError(null);
+      const unknown = () => {
+        if (capture.current()) {
+          capture.hold();
+          setError(registrationFormText('uncertain', locale));
         }
-        return;
+      };
+      try {
+        const response = await publicAuthFetch('/api/auth/register/verify', {
+          signal: capture.controller.signal,
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
+          body: JSON.stringify({ challengeId, otp: values.otp }),
+        });
+        const body = await response.json().catch(() => null);
+        if (!capture.current()) return;
+        if (response.status !== 200) {
+          if (![400, 401, 403, 404, 409, 422, 429].includes(response.status)) {
+            unknown();
+            return;
+          }
+          const code = authErrorCode(body),
+            keys: Record<string, string> = {
+              'AUTH:OTP:INVALID': 'auth.otp.error.invalid',
+              'AUTH:OTP:EXPIRED': 'auth.otp.error.expired',
+              'AUTH:OTP:MAX_ATTEMPTS': 'auth.otp.error.maxAttempts',
+              'AUTH:OTP:CONSUMED': 'auth.otp.error.consumed',
+            };
+          setError(
+            rateLimitMessage(response, locale, numbers.numberStyle) ??
+              t(keys[code ?? ''] ?? 'auth.otp.error.generic', locale)
+          );
+          // Keep the registration flow's rejected-code clearing policy.
+          form.setValue('otp', '');
+          otpRef.current?.reset();
+          if (response.status === 429)
+            setAttemptUntil(Date.now() + (retryAfterSeconds(response) ?? 60) * 1000);
+          if (code === 'AUTH:OTP:EXPIRED') {
+            capture.hold(false);
+            expiryRedirect.current = setTimeout(() => {
+              if (!capture.current() || router.state.location.pathname !== '/register/verify')
+                return;
+              toast.error(t('auth.otp.expired', locale));
+              void router.navigate({ to: '/register' });
+            }, 500);
+          }
+          return;
+        }
+        if (!hasSessionAcknowledgement(body)) {
+          unknown();
+          return;
+        }
+        form.reset(emptyRegistration);
+        otpRef.current?.reset();
+        const message = t('auth.register.success', locale);
+        rememberAuthSuccess(message);
+        toast.success(message);
+        await router.navigate({ to: '/app' });
+      } catch {
+        unknown();
       }
-
-      if (!hasResendAcknowledgement(body, challengeId)) {
-        setOtpError(t('auth.otp.error.resend', locale));
-        return;
-      }
-
-      // Reset timer
-      setResendDeadline(Date.now() + RESEND_COOLDOWN * 1000);
-      setOtp('');
-      if (otpRef.current?.reset) {
-        otpRef.current.reset();
-      }
-      toast.success(t('auth.otp.sentTo', locale).replace('{destination}', destination));
-    } catch {
-      if (controller.signal.aborted) return;
-      const message = t('auth.otp.error.resend', locale);
-      setOtpError(message);
-      toast.error(message);
-    } finally {
-      if (requestRef.current === controller) {
-        requestRef.current = null;
-        setResending(false);
-      }
-    }
-  }, [challengeId, canResend, resendDeadline, locale, destination, numbers.numberStyle]);
-
-  const handleClearError = useCallback(() => {
-    setOtpError(null);
-  }, []);
-
+    }, event);
+  }
+  function resend() {
+    if (
+      Date.now() < resendUntil ||
+      !registrationChallenge({ challengeId }) ||
+      expiryRedirect.current !== null
+    )
+      return;
+    void model.run(
+      async (_values, capture) => {
+        setResending(true);
+        setError(null);
+        const unknown = () => {
+          if (capture.current()) {
+            capture.hold();
+            setError(registrationFormText('uncertain', locale));
+          }
+        };
+        try {
+          const response = await publicAuthFetch('/api/auth/register/resend', {
+            signal: capture.controller.signal,
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
+            body: JSON.stringify({ challengeId }),
+          });
+          const body = await response.json().catch(() => null);
+          if (!capture.current()) return;
+          if (response.status !== 200) {
+            if (![400, 401, 403, 404, 409, 422, 429].includes(response.status)) {
+              unknown();
+              return;
+            }
+            setError(
+              rateLimitMessage(response, locale, numbers.numberStyle) ??
+                t('auth.otp.error.resend', locale)
+            );
+            if (response.status === 429)
+              setResendUntil(Date.now() + (retryAfterSeconds(response) ?? 60) * 1000);
+            return;
+          }
+          if (!hasResendAcknowledgement(body, challengeId)) {
+            unknown();
+            return;
+          }
+          setNow(Date.now());
+          setResendUntil(Date.now() + 60_000);
+          form.setValue('otp', '');
+          otpRef.current?.reset();
+          toast.success(t('auth.otp.sentTo', locale).replace('{destination}', destination));
+        } catch {
+          unknown();
+        } finally {
+          if (capture.current()) setResending(false);
+        }
+      },
+      undefined,
+      false
+    );
+  }
   return (
     <AuthLayout
       locale={locale}
       footer={
-        <div className="space-y-2">
-          <p className="text-center text-sm">
-            <Link
-              to="/register"
-              className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-              aria-label={t('auth.otp.backToRegister', locale)}
-            >
-              {t('auth.otp.backToRegister', locale)}
-            </Link>
-          </p>
-        </div>
+        <Link
+          to="/register"
+          className="text-muted-foreground underline"
+          onClick={(event) => {
+            if (model.busy) event.preventDefault();
+          }}
+          aria-label={t('auth.otp.backToRegister', locale)}
+        >
+          {t('auth.otp.backToRegister', locale)}
+        </Link>
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
         <div className="space-y-1.5 text-center">
           <h1 className="text-xl font-semibold tracking-tight">{t('auth.otp.title', locale)}</h1>
           <p className="text-sm text-muted-foreground">
             {t('auth.otp.sentTo', locale).replace('{destination}', destination)}
           </p>
         </div>
-
-        <div className="space-y-6">
-          {/* OTP Input */}
-          <OtpInput
-            ref={otpRef}
-            locale={locale}
-            disabled={busy}
-            error={otpError}
-            onComplete={handleOtpComplete}
-            onClearError={handleClearError}
-          />
-
-          {/* Verify button (disabled when OTP not yet entered) */}
-          <Button
-            type="button"
-            className="w-full"
-            disabled={!otp || busy}
-            onClick={() => otp && handleOtpComplete(otp)}
+        <Form {...form}>
+          <form
+            key={model.draftKey}
+            ref={model.feedback.element}
+            className="space-y-6"
+            noValidate
+            aria-busy={model.busy}
+            onSubmit={verify}
           >
-            {verifying ? (
-              <>
-                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
-                {t('auth.otp.verifying', locale)}
-              </>
-            ) : (
-              t('auth.otp.verifyButton', locale)
-            )}
-          </Button>
-
-          {/* Resend section */}
-          <div className="text-center">
-            {canResend ? (
+            <FormField
+              control={form.control}
+              name="otp"
+              render={({ field, fieldState }) => (
+                <OtpInput
+                  ref={otpRef}
+                  id="registration-code"
+                  name={field.name}
+                  locale={locale}
+                  disabled={model.locked || attemptCooldown > 0}
+                  error={
+                    fieldState.error?.message ??
+                    error ??
+                    form.formState.errors.root?.validation?.message ??
+                    null
+                  }
+                  onChange={(value) => {
+                    if (model.canEdit()) field.onChange(value);
+                  }}
+                  onComplete={() => verify()}
+                  onClearError={() => {
+                    if (model.canEdit()) {
+                      setError(null);
+                      form.clearErrors('otp');
+                    }
+                  }}
+                />
+              )}
+            />
+            {model.uncertain && (
               <Button
                 type="button"
-                variant="ghost"
-                size="sm"
-                disabled={busy}
-                onClick={handleResend}
+                variant="outline"
+                className="w-full"
+                disabled={model.busy}
+                onClick={() => {
+                  if (model.restart()) {
+                    otpRef.current?.reset();
+                    void router.navigate({ to: '/register' });
+                  }
+                }}
               >
-                {resending ? (
-                  <>
-                    <Loader2Icon className="mr-2 h-3 w-3 animate-spin" aria-hidden="true" />
-                    {t('auth.otp.resending', locale)}
-                  </>
-                ) : (
-                  t('auth.otp.resend', locale)
-                )}
+                {registrationFormText('restart', locale)}
               </Button>
-            ) : (
-              <p className="text-sm text-muted-foreground">
+            )}
+            <Button type="submit" className="w-full" disabled={model.locked || attemptCooldown > 0}>
+              {t(model.busy && !resending ? 'auth.otp.verifying' : 'auth.otp.verifyButton', locale)}
+            </Button>
+            {attemptCooldown > 0 && (
+              <p role="status">
                 {t('auth.otp.resendTimer', locale).replace(
                   '{seconds}',
-                  numbers.number(resendTimer, { useGrouping: false })
+                  numbers.number(attemptCooldown, { useGrouping: false })
                 )}
               </p>
             )}
-          </div>
-        </div>
+            <div className="text-center">
+              {cooldown === 0 ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  disabled={model.locked}
+                  onClick={resend}
+                >
+                  {t(resending ? 'auth.otp.resending' : 'auth.otp.resend', locale)}
+                </Button>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  {t('auth.otp.resendTimer', locale).replace(
+                    '{seconds}',
+                    numbers.number(cooldown, { useGrouping: false })
+                  )}
+                </p>
+              )}
+            </div>
+          </form>
+        </Form>
       </div>
     </AuthLayout>
   );

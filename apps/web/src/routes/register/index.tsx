@@ -1,81 +1,27 @@
-import { publicAuthFetch } from '../../lib/public-auth-fetch.js';
-import { maskDestination } from '../../lib/mask-destination.js';
-import { toast } from '../../lib/toast-api.js';
-import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
-import { useLocale } from '../../hooks/useLocale.js';
-import { rateLimitMessage } from '../../lib/auth-errors.js';
-import { lazy, Suspense, useRef, useState, useCallback, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/auth';
-import { Loader2Icon } from 'lucide-react';
-import { Button, Checkbox, Input, Label, Alert, AlertDescription } from '@barghsa/ui';
+import { registrationFormText } from '@barghsa/i18n/registration-forms';
+import { Button, Checkbox, Input, Alert, AlertDescription } from '@barghsa/ui';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@barghsa/ui/form';
 import { AuthLayout } from '../../components/AuthLayout.js';
 import { PasswordField } from '../../components/PasswordField.js';
-
+import { useLocale } from '../../hooks/useLocale.js';
+import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
+import { useRegistrationNativeForm } from '../../hooks/useRegistrationNativeForm.js';
+import { publicAuthFetch } from '../../lib/public-auth-fetch.js';
+import { authErrorCode, rateLimitMessage } from '../../lib/auth-errors.js';
+import { normalizeRecoveryUsername as normalizeUsername } from '../../lib/password-recovery-form.js';
+import {
+  registrationTerms,
+  registrationChallenge,
+  emptyRegistration,
+  type RegistrationTerms,
+} from '../../lib/registration-form.js';
+import { maskDestination } from '../../lib/mask-destination.js';
+import { toast } from '../../lib/toast-api.js';
 const RegistrationTermsDialog = lazy(() => import('../../components/RegistrationTermsDialog.js'));
-
-export const Route = createFileRoute('/register/')({
-  component: RegisterPage,
-});
-
-// ─── Iranian mobile number helpers ──────────────────────────────────────
-
-/** Regex: starts with 09, followed by exactly 9 digits (11 total) */
-const IRANIAN_MOBILE_RE = /^09\d{9}$/;
-
-/** Regex: basic email validation */
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-/** Regex: loose E.164 — starts with +, 7-15 digits */
-const E164_RE = /^\+[1-9]\d{6,14}$/;
-
-type UsernameType = 'email' | 'mobile' | 'international' | null;
-
-interface NormalizationResult {
-  type: UsernameType;
-  normalized: string;
-  formatted: string | null;
-}
-
-/**
- * Detect the type of the raw input and normalize it.
- * Returns { type, normalized, formatted }.
- * - type=null means invalid/unrecognised.
- * - formatted is the display-friendly version (e.g. "+98 912 123 4567").
- */
-function normalizeUsername(raw: string): NormalizationResult {
-  const trimmed = raw.trim();
-
-  // Iranian mobile: 09121234567 → +989****4567
-  if (IRANIAN_MOBILE_RE.test(trimmed)) {
-    const e164 = `+98${trimmed.slice(1)}`; // 09XXXXXXXXX → +989XXXXXXXX
-    const groups = e164.match(/^(\+\d{2})(\d{3})(\d{3})(\d{4})$/);
-    const formatted = groups ? `${groups[1]} ${groups[2]} ${groups[3]} ${groups[4]}` : e164;
-    return { type: 'mobile', normalized: e164, formatted };
-  }
-
-  // International (already E.164)
-  if (trimmed.startsWith('+')) {
-    if (E164_RE.test(trimmed)) {
-      return { type: 'international', normalized: trimmed, formatted: null };
-    }
-    return { type: null, normalized: trimmed, formatted: null };
-  }
-
-  // Email
-  if (EMAIL_RE.test(trimmed)) {
-    return { type: 'email', normalized: trimmed.toLowerCase(), formatted: null };
-  }
-
-  return { type: null, normalized: trimmed, formatted: null };
-}
-
-// ─── Error code → i18n key mapping ────────────────────────────────────
-
-/**
- * Maps backend error codes to frontend i18n message keys.
- * Falls through to a generic error key if unknown.
- */
+export const Route = createFileRoute('/register/')({ component: RegisterPage });
 const ERROR_CODE_I18N_MAP: Record<string, string> = {
   'AUTH:REGISTER:USERNAME_TAKEN': 'auth.register.error.usernameTaken',
   'AUTH:REGISTER:INVALID_USERNAME': 'auth.register.error.invalidUsername',
@@ -93,202 +39,50 @@ function resolveErrorMessage(errorCode: string | undefined, locale: Locale): str
   return t('auth.register.error.generic', locale);
 }
 
-// ─── Page component ──────────────────────────────────────────────────────
-
 function RegisterPage() {
-  const [termsOpen, setTermsOpen] = useState(false);
+  const router = useRouter(),
+    locale = useLocale(),
+    numbers = useNumberFormatting(locale);
+  const [loadedTerms, setLoadedTerms] = useState<(RegistrationTerms & { locale: Locale }) | null>(
+    null
+  );
+  const terms = loadedTerms?.locale === locale ? loadedTerms : null;
+  const [termsOpen, setTermsOpen] = useState(false),
+    [tosError, setTosError] = useState(false),
+    [error, setError] = useState<string | null>(null);
   const termsTrigger = useRef<HTMLAnchorElement>(null);
-  const router = useRouter();
-  const locale = useLocale();
-  const numbers = useNumberFormatting(locale);
-
-  const [username, setUsername] = useState('');
-  const [usernameError, setUsernameError] = useState<string | null>(null);
-  const [usernameType, setUsernameType] = useState<UsernameType>(null);
-  const [formattedHint, setFormattedHint] = useState<string | null>(null);
-  const [touched, setTouched] = useState(false);
-  const [tosAccepted, setTosAccepted] = useState(false);
-  const [currentTos, setCurrentTos] = useState<{
-    id: string;
-    content: string;
-    versionId: string;
-  } | null>(null);
-  const [tosError, setTosError] = useState(false);
+  const model = useRegistrationNativeForm(
+    'register',
+    `register|${locale}|${terms?.id ?? ''}`,
+    locale
+  );
+  const form = model.form,
+    username = form.watch('username');
+  const normalized = normalizeUsername(username);
+  const touched = !!form.formState.touchedFields.username || form.formState.isSubmitted;
+  const revealPassword = touched && !!normalized.type && !form.formState.errors.username;
   useEffect(() => {
     const controller = new AbortController();
-    setCurrentTos(null);
-    setTosAccepted(false);
+    setLoadedTerms(null);
     setTosError(false);
-    void fetch(`/api/tos/current?locale=${locale}`, { signal: controller.signal })
+    setTermsOpen(false);
+    form.setValue('tos', false);
+    void fetch(`/api/tos/current?locale=${locale}`, {
+      signal: controller.signal,
+      credentials: 'same-origin',
+      cache: 'no-store',
+    })
       .then(async (response) => {
         if (!response.ok) throw new Error('Terms unavailable');
-        const terms = await response.json();
-        if (!terms.id || typeof terms.content !== 'string') throw new Error('Invalid terms');
-        if (!controller.signal.aborted) setCurrentTos(terms);
+        const receipt = registrationTerms(await response.json());
+        if (!receipt) throw new Error('Invalid terms');
+        if (!controller.signal.aborted) setLoadedTerms({ ...receipt, locale });
       })
       .catch(() => {
         if (!controller.signal.aborted) setTosError(true);
       });
     return () => controller.abort();
-  }, [locale]);
-
-  const [tosSubmittedError, setTosSubmittedError] = useState<string | null>(null);
-
-  // Submission state
-  const [password, setPassword] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
-
-  const isUsernameValid = touched && usernameError === null && usernameType !== null;
-
-  const handleBlur = useCallback(() => {
-    setTouched(true);
-    const result = normalizeUsername(username);
-
-    if (!username.trim()) {
-      setUsernameError(t('error.validation.input.missing', locale));
-      setUsernameType(null);
-      setFormattedHint(null);
-      return;
-    }
-
-    if (result.type === null) {
-      setUsernameError(t('auth.register.invalidUsername', locale));
-      setUsernameType(null);
-      setFormattedHint(null);
-      return;
-    }
-
-    if (result.type === 'email' && !EMAIL_RE.test(result.normalized)) {
-      setUsernameError(t('auth.register.invalidEmail', locale));
-      setUsernameType(null);
-      setFormattedHint(null);
-      return;
-    }
-
-    // Valid
-    setUsernameError(null);
-    setUsernameType(result.type);
-    setFormattedHint(result.formatted);
-  }, [username, locale]);
-
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const val = e.target.value;
-      if (val.length > 255) return;
-      setUsername(val);
-      if (touched) {
-        // Re-validate on change after first blur
-        const result = normalizeUsername(val);
-        if (!val.trim()) {
-          setUsernameError(t('error.validation.input.missing', locale));
-          setUsernameType(null);
-          setFormattedHint(null);
-        } else if (result.type === null) {
-          setUsernameError(t('auth.register.invalidUsername', locale));
-          setUsernameType(null);
-          setFormattedHint(null);
-        } else {
-          setUsernameError(null);
-          setUsernameType(result.type);
-          setFormattedHint(result.formatted);
-        }
-      }
-    },
-    [touched, locale]
-  );
-
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      setFormError(null);
-
-      if (!tosAccepted || !currentTos) {
-        setTosSubmittedError(t('auth.register.tosRequired', locale));
-        return;
-      }
-      setTosSubmittedError(null);
-
-      // ── Normalize username for the API ───────────────────────────────
-      const normalized = normalizeUsername(username);
-      if (!normalized.type) {
-        setFormError(t('auth.register.error.invalidUsername', locale));
-        return;
-      }
-
-      setSubmitting(true);
-
-      try {
-        const tosVersionId = currentTos.id;
-
-        const response = await publicAuthFetch('/api/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
-          body: JSON.stringify({
-            username: normalized.normalized,
-            password,
-            tosVersionId,
-          }),
-        });
-
-        const body: Record<string, unknown> = await response.json().catch(() => ({}));
-
-        if (!response.ok) {
-          const rawError = body?.error;
-          const errorCode =
-            typeof rawError === 'string'
-              ? rawError
-              : ((rawError as Record<string, unknown>)?.code as string | undefined);
-          const msg =
-            rateLimitMessage(response, locale, numbers.numberStyle) ??
-            resolveErrorMessage(errorCode, locale);
-          setFormError(msg);
-          toast.error(msg);
-          return;
-        }
-
-        // ── Success — received challengeId ─────────────────────────────
-        const challengeId = body?.challengeId;
-        if (typeof challengeId !== 'string' || !challengeId.trim()) {
-          const msg = t('auth.register.error.generic', locale);
-          setFormError(msg);
-          toast.error(msg);
-          return;
-        }
-
-        // Navigate to OTP verification page with challengeId
-        const destination = maskDestination(normalized.normalized);
-
-        router.navigate({
-          to: '/register/verify',
-          search: {
-            challengeId,
-            destination,
-          },
-        });
-      } catch (_err) {
-        // Network error or unexpected failure
-        const msg = t('auth.register.error.generic', locale);
-        setFormError(msg);
-        toast.error(msg);
-      } finally {
-        setSubmitting(false);
-      }
-    },
-    [username, password, tosAccepted, currentTos, locale, numbers.numberStyle, router]
-  );
-
-  const handleTosChange = useCallback((checked: boolean | string) => {
-    const isChecked = checked === true;
-    setTosAccepted(isChecked);
-    if (isChecked) {
-      setTosSubmittedError(null);
-    }
-  }, []);
-
-  const isFormReady =
-    isUsernameValid && password.length >= 8 && tosAccepted && !!currentTos && !submitting;
-
+  }, [locale, form.setValue]);
   return (
     <AuthLayout
       locale={locale}
@@ -299,6 +93,9 @@ function RegisterPage() {
             <Link
               to="/login"
               className="font-medium text-foreground underline underline-offset-4 hover:decoration-2"
+              onClick={(event) => {
+                if (model.busy) event.preventDefault();
+              }}
               aria-label={t('auth.register.loginLinkLabel', locale)}
             >
               {t('auth.register.loginLinkLabel', locale)}
@@ -308,6 +105,9 @@ function RegisterPage() {
             <Link
               to="/forgot-password"
               className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              onClick={(event) => {
+                if (model.busy) event.preventDefault();
+              }}
               aria-label={t('auth.register.forgotPasswordLabel', locale)}
             >
               {t('auth.register.forgotPasswordLink', locale)}
@@ -317,146 +117,245 @@ function RegisterPage() {
       }
     >
       <>
-        <div className="space-y-6">
-          <div className="space-y-1.5">
-            <h1 className="text-3xl font-semibold tracking-tight">
-              {t('auth.register.title', locale)}
-            </h1>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-            {/* Form-level alert for server errors */}
-            {formError && (
-              <Alert variant="destructive" role="alert">
-                <AlertDescription>{formError}</AlertDescription>
-              </Alert>
-            )}
-
-            {/* Unified username field */}
-            <div className="space-y-2">
-              <Label htmlFor="username">{t('auth.register.emailLabel', locale)}</Label>
-              <Input
-                id="username"
-                type="text"
-                placeholder={t('auth.register.usernamePlaceholder', locale)}
-                autoComplete="username"
-                autoFocus
-                maxLength={255}
-                value={username}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                disabled={submitting}
-                aria-invalid={touched && usernameError !== null}
-                aria-describedby={
-                  usernameError ? 'username-error' : formattedHint ? 'username-hint' : undefined
+        <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+          <h1 className="text-3xl font-semibold tracking-tight">
+            {t('auth.register.title', locale)}
+          </h1>
+          <Form {...form}>
+            <form
+              key={model.draftKey}
+              ref={model.feedback.element}
+              className="space-y-4"
+              noValidate
+              aria-busy={model.busy}
+              onSubmit={(event) => {
+                if (termsOpen) {
+                  event.preventDefault();
+                  return;
                 }
-              />
-              {/* Error message */}
-              {touched && usernameError && (
-                <p id="username-error" className="text-sm text-destructive" role="alert">
-                  {usernameError}
-                </p>
-              )}
-              {/* Formatted mobile hint */}
-              {touched && !usernameError && formattedHint && (
-                <p id="username-hint" className="text-sm text-muted-foreground">
-                  {formattedHint}
-                </p>
-              )}
-            </div>
-
-            {/* Password field with visibility toggle and strength meter */}
-            {isUsernameValid && (
-              <PasswordField
-                id="password"
-                label={t('auth.register.passwordLabel', locale)}
-                locale={locale}
-                autoFocus={false}
-                value={password}
-                onChange={setPassword}
-                disabled={submitting}
-              />
-            )}
-
-            {/* TOS acceptance checkbox (T-01.01.04) */}
-            <div className="space-y-2">
-              <div className="flex items-start gap-3">
-                <Checkbox
-                  id="tos"
-                  aria-labelledby="tos-label"
-                  checked={tosAccepted}
-                  onCheckedChange={handleTosChange}
-                  disabled={submitting || !currentTos}
-                  aria-invalid={!!tosSubmittedError}
-                  aria-describedby={tosSubmittedError ? 'tos-error' : undefined}
-                  className="mt-0.5"
-                />
-                <div id="tos-label" className="text-sm font-normal leading-relaxed">
-                  {t('auth.register.tosPrefix', locale)}{' '}
-                  <a
-                    ref={termsTrigger}
-                    href={
-                      currentTos
-                        ? `/terms?lang=${locale}&version=${encodeURIComponent(currentTos.id)}`
-                        : undefined
+                void model.run(async (values, capture) => {
+                  if (!terms) {
+                    form.setError('tos', {
+                      type: 'server',
+                      message: t('auth.register.tosRequired', locale),
+                    });
+                    return;
+                  }
+                  setError(null);
+                  const unknown = () => {
+                    if (capture.current()) {
+                      capture.hold();
+                      const message = registrationFormText('uncertain', locale);
+                      setError(message);
+                      toast.error(message);
                     }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(event) => {
-                      if (!currentTos) {
-                        event.preventDefault();
+                  };
+                  try {
+                    const response = await publicAuthFetch('/api/auth/register', {
+                      signal: capture.controller.signal,
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
+                      body: JSON.stringify({
+                        username: normalizeUsername(values.username).normalized,
+                        password: values.password,
+                        tosVersionId: terms.id,
+                      }),
+                    });
+                    const body = await response.json().catch(() => null);
+                    if (!capture.current()) return;
+                    if (response.status !== 200) {
+                      if (![400, 401, 403, 404, 409, 422, 429].includes(response.status)) {
+                        unknown();
                         return;
                       }
-                      if (
-                        window.matchMedia('(max-width: 767px)').matches &&
-                        !event.ctrlKey &&
-                        !event.metaKey &&
-                        !event.shiftKey &&
-                        !event.altKey
-                      ) {
-                        event.preventDefault();
-                        setTermsOpen(true);
-                      }
-                    }}
-                    aria-disabled={!currentTos}
-                    className="font-medium text-foreground underline underline-offset-4 hover:text-foreground"
-                    aria-label={t('auth.register.tosLinkText', locale)}
-                  >
-                    {t('auth.register.tosLinkText', locale)}
-                  </a>{' '}
-                  {t('auth.register.tosSuffix', locale)}
-                </div>
-              </div>
-              {tosError && (
-                <p role="alert" className="text-sm text-destructive">
-                  {t('tos.page.error', locale)}
-                </p>
+                      const message =
+                        rateLimitMessage(response, locale, numbers.numberStyle) ??
+                        resolveErrorMessage(authErrorCode(body), locale);
+                      setError(message);
+                      toast.error(message);
+                      return;
+                    }
+                    const challengeId = registrationChallenge(body);
+                    if (!challengeId) {
+                      unknown();
+                      return;
+                    }
+                    form.reset(emptyRegistration);
+                    await router.navigate({
+                      to: '/register/verify',
+                      search: {
+                        challengeId,
+                        destination: maskDestination(normalizeUsername(values.username).normalized),
+                      },
+                    });
+                  } catch {
+                    unknown();
+                  }
+                }, event);
+              }}
+            >
+              {(error ?? form.formState.errors.root?.validation?.message) && (
+                <Alert variant="destructive" role="alert">
+                  <AlertDescription>
+                    {error ?? form.formState.errors.root?.validation?.message}
+                  </AlertDescription>
+                </Alert>
               )}
-              {tosSubmittedError && (
-                <p id="tos-error" className="text-sm text-destructive" role="alert">
-                  {tosSubmittedError}
-                </p>
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem id="username">
+                    <FormLabel>{t('auth.register.emailLabel', locale)}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="text"
+                        autoComplete="username"
+                        autoFocus
+                        maxLength={255}
+                        placeholder={t('auth.register.usernamePlaceholder', locale)}
+                        disabled={model.locked}
+                        onChange={(event) => {
+                          if (model.canEdit()) field.onChange(event);
+                        }}
+                        onBlur={() => {
+                          if (model.canEdit()) field.onBlur();
+                        }}
+                        aria-describedby={
+                          touched && !form.formState.errors.username && normalized.formatted
+                            ? 'username-hint'
+                            : undefined
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                    {touched && !form.formState.errors.username && normalized.formatted && (
+                      <p id="username-hint" className="text-sm text-muted-foreground" dir="ltr">
+                        {normalized.formatted}
+                      </p>
+                    )}
+                  </FormItem>
+                )}
+              />
+              {revealPassword && (
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field, fieldState }) => (
+                    <div
+                      onBlurCapture={() => {
+                        if (model.canEdit()) field.onBlur();
+                      }}
+                    >
+                      <PasswordField
+                        id="password"
+                        name={field.name}
+                        locale={locale}
+                        label={t('auth.register.passwordLabel', locale)}
+                        value={field.value}
+                        error={fieldState.error?.message ?? null}
+                        disabled={model.locked}
+                        onChange={(value) => {
+                          if (model.canEdit()) field.onChange(value);
+                        }}
+                      />
+                    </div>
+                  )}
+                />
               )}
-            </div>
-
-            <Button type="submit" className="w-full" disabled={!isFormReady}>
-              {submitting ? (
-                <>
-                  <Loader2Icon className="me-2 h-4 w-4 animate-spin" aria-hidden="true" />
-                  {t('auth.register.submitting', locale)}
-                </>
-              ) : (
-                t('auth.register.submit', locale)
+              <FormField
+                control={form.control}
+                name="tos"
+                render={({ field }) => (
+                  <FormItem id="tos">
+                    <div className="flex items-start gap-3">
+                      <FormControl>
+                        <Checkbox
+                          aria-labelledby="tos-label"
+                          name={field.name}
+                          ref={field.ref}
+                          checked={field.value}
+                          onCheckedChange={(value) => {
+                            if (model.canEdit()) field.onChange(value === true);
+                          }}
+                          onBlur={() => {
+                            if (model.canEdit()) field.onBlur();
+                          }}
+                          disabled={model.locked || !terms}
+                          className="mt-0.5"
+                        />
+                      </FormControl>
+                      <div id="tos-label" className="text-sm font-normal leading-relaxed">
+                        {t('auth.register.tosPrefix', locale)}{' '}
+                        <a
+                          ref={termsTrigger}
+                          href={
+                            terms
+                              ? `/terms?lang=${locale}&version=${encodeURIComponent(terms.id)}`
+                              : undefined
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(event) => {
+                            if (!terms || model.locked) {
+                              event.preventDefault();
+                              return;
+                            }
+                            if (
+                              window.matchMedia('(max-width: 767px)').matches &&
+                              !event.ctrlKey &&
+                              !event.metaKey &&
+                              !event.shiftKey &&
+                              !event.altKey
+                            ) {
+                              event.preventDefault();
+                              setTermsOpen(true);
+                            }
+                          }}
+                          aria-disabled={!terms || model.locked}
+                          className="font-medium text-foreground underline underline-offset-4 hover:text-foreground"
+                          aria-label={t('auth.register.tosLinkText', locale)}
+                        >
+                          {t('auth.register.tosLinkText', locale)}
+                        </a>{' '}
+                        {t('auth.register.tosSuffix', locale)}
+                      </div>
+                    </div>
+                    <FormMessage />
+                    {tosError && (
+                      <p role="alert" className="text-sm text-destructive">
+                        {t('tos.page.error', locale)}
+                      </p>
+                    )}
+                  </FormItem>
+                )}
+              />
+              {model.uncertain && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  disabled={model.busy}
+                  onClick={() => {
+                    if (model.restart()) setError(null);
+                  }}
+                >
+                  {registrationFormText('restart', locale)}
+                </Button>
               )}
-            </Button>
-          </form>
+              <Button type="submit" className="w-full" disabled={model.locked || !terms}>
+                {t(model.busy ? 'auth.register.submitting' : 'auth.register.submit', locale)}
+              </Button>
+            </form>
+          </Form>
         </div>
-        {termsOpen && currentTos && (
+        {termsOpen && terms && (
           <Suspense fallback={null}>
             <RegistrationTermsDialog
               locale={locale}
-              versionId={currentTos.versionId}
-              content={currentTos.content}
+              versionId={terms.versionId}
+              content={terms.content}
               finalFocus={termsTrigger}
               onClose={() => setTermsOpen(false)}
             />

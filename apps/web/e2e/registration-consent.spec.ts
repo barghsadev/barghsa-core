@@ -221,6 +221,10 @@ test('public terms language changes discard stale content after a failed read', 
   await expect(page.getByRole('article')).toContainText('شرایط فارسی قبلی');
 });
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page }, info) => {
+  await page.addInitScript(
+    (lang) => localStorage.setItem('barghsa-locale', lang),
+    /\(en\)/.test(info.title) ? 'en' : 'fa'
+  );
   await mockPublicAuthCsrf(page);
 });

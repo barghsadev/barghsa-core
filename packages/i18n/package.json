@@ -343,7 +343,8 @@
     "./password-recovery-forms": {
       "types": "./dist/password-recovery-forms.d.ts",
       "default": "./dist/password-recovery-forms.js"
-    }
+    },
+    "./registration-forms": "./src/registration-forms.ts"
   },
   "scripts": {
     "build": "tsc",

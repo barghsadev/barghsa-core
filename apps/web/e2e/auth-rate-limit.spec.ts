@@ -12,6 +12,8 @@ for (const locale of ['fa', 'en'] as const) {
             id: '00000000-0000-4000-8000-000000000001',
             versionId: 'test-terms',
             content: 'Terms',
+            updatedAt: '2026-09-01T00:00:00Z',
+            publishedAt: '2026-09-01T00:00:00Z',
           },
         })
       );
@@ -118,6 +120,10 @@ for (const locale of ['fa', 'en'] as const) {
   }
 }
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page }, info) => {
+  await page.addInitScript(
+    (lang) => localStorage.setItem('barghsa-locale', lang),
+    /\(en\)/.test(info.title) ? 'en' : 'fa'
+  );
   await mockPublicAuthCsrf(page);
 });

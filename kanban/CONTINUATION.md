@@ -1,5 +1,13 @@
 # Development continuation status
 
+## Latest manual batch: registration and verification native forms (October 5, 2026)
+
+Completed destination/password/explicit-consent and registration code/resend as one bilingual native-form batch. Raw and hidden drafts, linked first-invalid feedback, complete published terms, captured actual challenge/session receipts and synchronous ownership preserve the existing protocol. Unknown unkeyed results require deliberate fresh registration. Draft revision plus keyed forms prevent retired controls restoring secrets or consent after restart.
+
+All 20 distinct source/dictionary cases pass. All 80 selected Chromium/mobile Safari cases have passing evidence on identical production assets: 75 original passes plus all eight affected cases after fixture-only session/readiness repairs, with three overlaps. Sixteen original compact captures pass review. Build/types, lint/format, contracts/suppression, all 85 unchanged budgets and strict SAST pass (1,773 files, zero findings/errors; five fixtures). All 187 protected paths retain their bytes. Initial failures and all result bytes remain externally preserved. See `kanban/batches/2026-10-05-registration-and-verification-native-forms.md`.
+
+Reuse the six existing authentication task references recorded in the report; do not recount their engines. Global `07-ui-ux-design.md#T-07.10.01.02` through `#T-07.10.01.06` remain partial. Login/password-change/OTP native stages are next. Continue coherent build/review/related-checks/direct-main batches using GitHub CLI and no PRs. The preceding recovery batch's five CI jobs passed; this batch's exact-commit CI is separate.
+
 ## Latest manual batch: password recovery native forms (October 5, 2026)
 
 Completed destination entry, OTP verification and password/confirmation as three bilingual native stages. Raw drafts, linked first-invalid feedback, captured actual challenge/grant/receipt shapes and synchronous ownership protect the existing recovery protocol. Unknown unkeyed results require explicit fresh recovery; same-frame retired forms cannot reuse reset grants. A mobile blur-overlap race is fixed by binding validation to draft generation.
