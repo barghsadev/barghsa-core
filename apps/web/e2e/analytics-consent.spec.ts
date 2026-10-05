@@ -45,6 +45,7 @@ for (const locale of ['fa', 'en'] as const) {
       page.getByRole('region', { name: shellText('analyticsTitle', locale) })
     ).toHaveCount(0);
     await page.reload();
+    await expect(page).toHaveURL(/\/app(?:[?#]|$)/);
     expect(events).toEqual([]);
 
     await page.goto('/settings');

@@ -6,6 +6,7 @@ for (const locale of ['en', 'fa'] as const) {
   }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      localStorage.setItem('barghsa.locale', value);
       if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
@@ -16,6 +17,20 @@ for (const locale of ['en', 'fa'] as const) {
     let saved = 'Asia/Tehran';
     const writes: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: { userId: 'timezone-owner', isStaff: false, requiresTosAcceptance: false },
+      })
+    );
+    await page.route('**/api/profiles', (route) =>
+      route.fulfill({
+        json: {
+          profiles: [{ id: 'profile', isDefault: true }],
+          activeProfileId: 'profile',
+          hasDefault: true,
+        },
+      })
+    );
     await page.route('**/api/user/settings/timezone', (route) => {
       if (route.request().method() === 'GET') {
         return route.fulfill(failLoad ? { status: 503, json: {} } : { json: { timezone: saved } });
@@ -53,6 +68,18 @@ for (const locale of ['en', 'fa'] as const) {
       })
     ).toBeVisible();
     await expect(zones).toHaveValue('Europe/Istanbul');
+    await main
+      .getByRole('button', {
+        name: locale === 'fa' ? 'بررسی تنظیمات ذخیره‌شده' : 'Check saved settings',
+        exact: true,
+      })
+      .click();
+    await main
+      .getByRole('button', {
+        name: locale === 'fa' ? 'بازگشت به ویرایش' : 'Return to editing',
+        exact: true,
+      })
+      .click();
     await expect(save).toBeEnabled();
     failSave = false;
     await save.click();

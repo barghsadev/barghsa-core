@@ -148,16 +148,35 @@ export function AnalyticsConsentBanner() {
   );
 }
 
-export function AnalyticsConsentSettings() {
+export function AnalyticsConsentSettings({
+  coordination,
+}: {
+  coordination?: { locked: boolean; isLocked(): boolean; claim(): boolean; release(): void };
+} = {}) {
   const locale = useLocale();
   const { consent, status, saving, saveError, updateConsent, reload } = useAnalyticsConsent();
+  async function choose(value: boolean) {
+    if (saving || coordination?.isLocked() || (coordination && !coordination.claim())) return;
+    try {
+      await updateConsent(value);
+    } finally {
+      coordination?.release();
+    }
+  }
   return (
     <section className="space-y-3" aria-label={shellText('analyticsTitle', locale)}>
       <h2 className="text-lg font-semibold">{shellText('analyticsTitle', locale)}</h2>
       <p className="text-sm text-muted-foreground">{shellText('analyticsDescription', locale)}</p>
       {status === 'loading' && <p role="status">{shellText('analyticsLoading', locale)}</p>}
       {status === 'error' && (
-        <Button size="sm" variant="outline" onClick={reload}>
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={saving || coordination?.locked}
+          onClick={() => {
+            if (!saving && !coordination?.isLocked()) reload();
+          }}
+        >
           {shellText('analyticsRetry', locale)}
         </Button>
       )}
@@ -176,16 +195,16 @@ export function AnalyticsConsentSettings() {
           <div className="flex flex-wrap gap-2">
             <Button
               size="sm"
-              disabled={saving || consent === true}
-              onClick={() => void updateConsent(true)}
+              disabled={saving || coordination?.locked || consent === true}
+              onClick={() => void choose(true)}
             >
               {shellText('analyticsAllow', locale)}
             </Button>
             <Button
               size="sm"
               variant="outline"
-              disabled={saving || consent === false}
-              onClick={() => void updateConsent(false)}
+              disabled={saving || coordination?.locked || consent === false}
+              onClick={() => void choose(false)}
             >
               {shellText('analyticsDecline', locale)}
             </Button>

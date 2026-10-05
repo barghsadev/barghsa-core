@@ -331,6 +331,10 @@
       "types": "./dist/account-settings-forms.d.ts",
       "import": "./dist/account-settings-forms.js",
       "default": "./dist/account-settings-forms.js"
+    },
+    "./preference-settings-forms": {
+      "types": "./dist/preference-settings-forms.d.ts",
+      "default": "./dist/preference-settings-forms.js"
     }
   },
   "scripts": {

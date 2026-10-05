@@ -69,3 +69,10 @@ export {
   contactSettingsSchema,
   inactiveAccountSettingsSchema,
 } from './account-settings-form-schemas.js';
+
+export {
+  inactivePreferenceSettingsSchema,
+  notificationSettingsSchema,
+  marketingSettingsSchema,
+  timezoneSettingsSchema,
+} from './preference-settings-form-schemas.js';
