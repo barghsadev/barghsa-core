@@ -51,7 +51,13 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('alert')).toContainText(fa ? 'دریافت مغایرت‌ها' : 'Could not load');
     fail = false;
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Retry', exact: true }).click();
-    await expect(page.locator('tbody tr').first()).toContainText(
+    await expect(
+      page
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+        .first()
+    ).toContainText(
       await formatBrowserDate(
         page,
         locale,

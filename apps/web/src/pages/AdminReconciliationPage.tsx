@@ -1,3 +1,4 @@
+import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { reconciliationApiQuery, reconciliationLocalTime } from '../lib/decision-queue-query.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -6,7 +7,8 @@ import { t } from '@barghsa/i18n/admin-ui';
 import {
   Button,
   ListPage,
-  ScrollArea,
+  DateCell,
+  TextCell,
   Dialog,
   DialogContent,
   DialogHeader,
@@ -45,6 +47,8 @@ const severities = ['low', 'medium', 'high', 'critical'];
 const pageSize = 25;
 export default function AdminReconciliationPage({ queries }: { queries?: ListQueryBinding } = {}) {
   const time = useAccountTime();
+  const detailTrigger = useRef<HTMLElement | null>(null);
+  const listHeading = useRef<HTMLHeadingElement>(null);
   const locale = useLocale(),
     label = (key: string) => t(`admin.reconciliation.${key}`, locale);
   const initialFilters = useRef(queries?.query.filters).current;
@@ -161,6 +165,7 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
     setValidating(null);
   }
   function denyAccess() {
+    detailTrigger.current = null;
     accessValid.current = false;
     resolveAllowed.current = false;
     setCanView(false);
@@ -411,13 +416,15 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
       </Button>
     </div>
   );
-  const date = (value: string) => time.format(value);
+  const date = (value: string) => <DateCell value={value} format={(stamp) => time.format(stamp)} />;
   const actionGeneration = commandGeneration.current;
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       {time.notice}
       <header>
-        <h1 className="text-2xl font-semibold">{label('title')}</h1>
+        <h1 ref={listHeading} tabIndex={-1} className="text-2xl font-semibold">
+          {label('title')}
+        </h1>
         <p className="text-muted-foreground">{label('description')}</p>
       </header>
       <ListPage>
@@ -533,52 +540,60 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
           }
           emptyView={!accessError && <p>{label('empty')}</p>}
         >
-          <ScrollArea
-            scrollbarOrientation="horizontal"
-            className="min-w-0 max-w-full rounded-lg border bg-card text-card-foreground"
-            role="region"
-            aria-label={label('tableTitle')}
-          >
-            <table className="w-full min-w-[40rem] text-start">
-              <caption className="sr-only">{label('title')}</caption>
-              <thead>
-                <tr>
-                  {['details', 'severity', 'status', 'created', 'assigned'].map((key) => (
-                    <th scope="col" key={key} className="p-3 text-start">
-                      {label(key)}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {visibleItems.map((item) => (
-                  <tr key={item.id} className="border-t">
-                    <td className="p-3">
-                      <Button
-                        variant="link"
-                        disabled={locked}
-                        onClick={() => {
-                          if (owned.current) return;
-                          ++workGeneration.current;
-                          reviewed.current = item;
-                          setSelected(item);
-                          notes.reset({ note: '' });
-                          setSaved(false);
-                        }}
-                      >
-                        {item.description}
-                      </Button>
-                      <p className="text-sm text-muted-foreground">{label(item.exceptionType)}</p>
-                    </td>
-                    <td className="p-3">{label(item.severity)}</td>
-                    <td className="p-3">{label(item.status)}</td>
-                    <td className="p-3 whitespace-nowrap">{date(item.createdAt)}</td>
-                    <td className="p-3">{item.assignedToUsername ?? label('unassigned')}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </ScrollArea>
+          <OperationalQueueTable
+            locale={locale}
+            cardHeading="h2"
+            rows={visibleItems}
+            caption={label('title')}
+            scrollLabel={label('tableTitle')}
+            loading={loading || accessLoading}
+            emptyMessage={label('empty')}
+            tableClassName="min-w-[40rem]"
+            nameHeader={label('details')}
+            renderName={(item) => (
+              <>
+                <Button
+                  variant="link"
+                  className="h-auto max-w-full whitespace-normal text-start"
+                  disabled={locked}
+                  onClick={(event) => {
+                    if (owned.current) return;
+                    detailTrigger.current = event.currentTarget;
+                    ++workGeneration.current;
+                    reviewed.current = item;
+                    setSelected(item);
+                    notes.reset({ note: '' });
+                    setSaved(false);
+                  }}
+                >
+                  <TextCell value={item.description} />
+                </Button>
+                <span className="mt-1 block text-sm text-muted-foreground">
+                  {label(item.exceptionType)}
+                </span>
+              </>
+            )}
+            fields={[
+              {
+                id: 'severity',
+                label: label('severity'),
+                render: (item) => <>{label(item.severity)}</>,
+              },
+              { id: 'status', label: label('status'), render: (item) => <>{label(item.status)}</> },
+              {
+                id: 'created',
+                label: label('created'),
+                render: (item) => <>{date(item.createdAt)}</>,
+              },
+              {
+                id: 'assigned',
+                label: label('assigned'),
+                render: (item) => (
+                  <TextCell value={item.assignedToUsername ?? label('unassigned')} />
+                ),
+              },
+            ]}
+          />
         </ListPage.Content>
         <ListPage.Pagination
           kind="cursor"
@@ -616,6 +631,13 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
         >
           <DialogContent
             className="max-h-[85dvh] overflow-y-auto"
+            finalFocus={() =>
+              detailTrigger.current?.isConnected &&
+              detailTrigger.current.getClientRects().length > 0 &&
+              !detailTrigger.current.hasAttribute('disabled')
+                ? detailTrigger.current
+                : listHeading.current
+            }
             initialFocus={
               notes.formState.errors.note ? () => document.getElementById('rex-note') : undefined
             }

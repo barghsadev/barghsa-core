@@ -18,6 +18,7 @@ export function OperationalQueueTable<T extends { id: string }>({
   cardHeading: CardHeading = 'h3',
   loading,
   emptyMessage,
+  tableClassName = 'min-w-[60rem]',
 }: {
   locale: Locale;
   rows: T[];
@@ -26,13 +27,14 @@ export function OperationalQueueTable<T extends { id: string }>({
   nameHeader: string;
   renderName: (row: T) => ReactNode;
   fields: { id: string; label: string; render: (row: T) => ReactNode }[];
-  actionHeader: string;
-  renderActions: (row: T) => ReactNode;
+  actionHeader?: string;
+  renderActions?: (row: T) => ReactNode;
   cardHeading?: 'h2' | 'h3';
   selectionHeader?: string;
   renderSelection?: (row: T) => ReactNode;
   loading: boolean;
   emptyMessage: string;
+  tableClassName?: string;
 }) {
   const { numberStyle } = useNumberFormatting(locale);
   return (
@@ -55,7 +57,7 @@ export function OperationalQueueTable<T extends { id: string }>({
         sortable={false}
         emptyMessage={emptyMessage}
         className="max-h-[36rem] bg-card text-card-foreground"
-        tableClassName="min-w-[60rem]"
+        tableClassName={tableClassName}
         columns={[
           ...(renderSelection
             ? [
@@ -80,12 +82,16 @@ export function OperationalQueueTable<T extends { id: string }>({
             cell: field.render,
             cellClassName: 'p-3 align-top',
           })),
-          {
-            id: 'actions',
-            header: actionHeader,
-            cell: renderActions,
-            cellClassName: 'p-3 align-top',
-          },
+          ...(renderActions
+            ? [
+                {
+                  id: 'actions',
+                  header: actionHeader,
+                  cell: renderActions,
+                  cellClassName: 'p-3 align-top',
+                },
+              ]
+            : []),
         ]}
         renderCard={(row) => (
           <div className="min-w-0 space-y-3 [overflow-wrap:anywhere]">
@@ -101,7 +107,7 @@ export function OperationalQueueTable<T extends { id: string }>({
                 </div>
               ))}
             </dl>
-            {renderActions(row)}
+            {renderActions?.(row)}
           </div>
         )}
       />

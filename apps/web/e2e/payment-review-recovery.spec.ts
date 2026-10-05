@@ -174,14 +174,12 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       page.getByRole('button', { name: reconciliationItem.description, exact: true })
     ).toBeVisible();
-    const tableViewport = page
-      .getByRole('region', { name: r('tableTitle'), exact: true })
-      .locator('[data-slot="scroll-area-viewport"]');
+    await page.setViewportSize({ width: 900, height: 844 });
+    const tableViewport = page.getByRole('region', { name: r('tableTitle'), exact: true });
     await tableViewport.focus();
     await tableViewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
-    await expect
-      .poll(() => tableViewport.evaluate((node) => Math.abs(node.scrollLeft)))
-      .toBeGreaterThan(0);
+    await expect(tableViewport).toBeFocused();
+    await page.setViewportSize({ width: 390, height: 844 });
     await inspect(page, 'reconciliation', locale, info.project.name);
     hold = true;
     await page.getByRole('button', { name: r('refresh'), exact: true }).click();

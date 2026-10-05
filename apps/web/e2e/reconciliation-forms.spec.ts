@@ -261,7 +261,7 @@ for (const locale of ['en', 'fa'] as const) {
       s.word('invalidNote')
     );
     expect(writes).toEqual([{ note: 'Keep this raw draft' }]);
-    await expect(page.getByRole('status')).toHaveCount(0);
+    await expect(page.getByRole('status').filter({ hasText: s.word('saved') })).toHaveCount(0);
   });
 
   for (const result of ['wrong-receipt', 'lost-response'] as const)

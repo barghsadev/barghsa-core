@@ -18,3 +18,5 @@ No API, database schema, dependencies, retry policy, financial engine, CI gate, 
 Evidence: `/Users/majid/.local/state/barghsa-manual-batches/operational-queue-tables/`. Local checks, pushed commit and independent deployment/Telegram receipts are separate. Validate release preflight on the clean committed HEAD, push normally to `main`, then enqueue the verified remote SHA with reviewed screenshots immediately. Continue building without waiting for CI/deployment.
 
 The preceding v0.1.11 release completed at `2026-10-05T19:15:56Z`, with exact live commit `ac9cb2296a39b1a78eb1d7c0779db7417dd57b40`; Persian Telegram notes and both screenshots are confirmed.
+
+Release v0.1.12 completed at `2026-10-05T19:29:25Z`; staging reports exact commit `401640f002406ca7ddc339936bed09e60ab5b7ad`. Persian Telegram notes and both screenshots are confirmed. Receipt: `release-completed.json` in the external evidence directory.
