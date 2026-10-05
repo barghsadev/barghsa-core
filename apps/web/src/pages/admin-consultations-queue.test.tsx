@@ -428,7 +428,9 @@ it.each(['en', 'fa'] as const)(
     const root = createRoot(container);
     try {
       await act(async () => root.render(<AdminConsultationsPage />));
-      const rows = [...container.querySelectorAll<HTMLButtonElement>('button[aria-pressed]')];
+      const rows = [
+        ...container.querySelectorAll<HTMLTableRowElement>('table > tbody > tr:has(th[scope=row])'),
+      ];
       expect(rows).toHaveLength(requests.length);
       expect(
         rows.map((row) => row.querySelector('[data-slot=badge]')!.getAttribute('data-variant'))
@@ -442,7 +444,9 @@ it.each(['en', 'fa'] as const)(
         const queueAssignment = rows[index]!.querySelector('[data-slot=consultation-assignment]')!;
         expect(queueAssignment.textContent).toContain(expectedOwner);
         if (request.staff_team) expect(queueAssignment.textContent).toContain(request.staff_team);
-        await act(async () => rows[index]!.click());
+        await act(async () =>
+          rows[index]!.querySelector<HTMLButtonElement>('button[aria-pressed]')!.click()
+        );
         const detail = container.querySelector(`section[aria-label="${copy('details')}"]`)!;
         expect(detail.querySelector('[data-slot=consultation-assignment]')!.textContent).toContain(
           expectedOwner

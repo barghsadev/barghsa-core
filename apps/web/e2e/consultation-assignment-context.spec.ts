@@ -66,7 +66,9 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/consultations');
       const queue = page.getByRole('region', { name: copy('staffTitle'), exact: true });
       const detail = page.getByRole('region', { name: copy('details'), exact: true });
-      const rows = queue.locator('button[aria-pressed]');
+      const rows = queue.locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)'
+      );
       await expect(rows).toHaveCount(10);
       expect(
         await rows
@@ -81,15 +83,33 @@ for (const locale of ['en', 'fa'] as const)
       await expect(rows.nth(4)).toContainText(copy('unassigned'));
       await expect(rows.nth(5)).toContainText(copy('unassigned'));
       await expect(rows.nth(9)).toContainText(copy('status_unknown'));
-      await rows.nth(1).click();
+      await rows.nth(1).getByRole('button').click();
+      await expect(
+        detail.getByRole('heading', {
+          name: requests[1]!.product_snapshot.title[locale],
+          exact: true,
+        })
+      ).toBeVisible();
       await expect(detail.locator('[data-slot=consultation-assignment]')).toContainText(
         copy('assignedStaff')
       );
-      await rows.nth(3).click();
+      await rows.nth(3).getByRole('button').click();
+      await expect(
+        detail.getByRole('heading', {
+          name: requests[3]!.product_snapshot.title[locale],
+          exact: true,
+        })
+      ).toBeVisible();
       await expect(detail.locator('[data-slot=consultation-assignment]')).toContainText(
         copy('awaitingOwner')
       );
-      await rows.nth(0).click();
+      await rows.nth(0).getByRole('button').click();
+      await expect(
+        detail.getByRole('heading', {
+          name: requests[0]!.product_snapshot.title[locale],
+          exact: true,
+        })
+      ).toBeVisible();
       await expect(detail.locator('[data-slot=consultation-assignment]')).toContainText(
         'Reviewer <script>'
       );
@@ -141,7 +161,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(detail.locator('[data-slot=consultation-assignment]')).not.toContainText(
         'Reviewer <script>'
       );
-      await expect(rows.nth(0)).toHaveAttribute('aria-pressed', 'true');
+      await expect(rows.nth(0).getByRole('button')).toHaveAttribute('aria-pressed', 'true');
       await expect(rows.nth(0)).toContainText('Operations Team');
       expect(writes).toEqual(Array(2).fill({ assignTo: 'team', team: 'Operations Team' }));
       expect(

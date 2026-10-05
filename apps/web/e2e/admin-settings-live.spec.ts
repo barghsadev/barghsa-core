@@ -204,7 +204,13 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
       .click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
-    await expect(page.getByRole('heading', { name: `${name} revised`, exact: true })).toBeVisible();
+    await expect(
+      page
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h3)'
+        )
+        .filter({ hasText: `${name} revised` })
+    ).toBeVisible();
     await page.screenshot({ path: `/tmp/barghsa-staff-teams-${locale}.png`, fullPage: true });
     await page.getByRole('button', { name: fa ? 'حذف تیم' : 'Delete team', exact: true }).click();
     await page

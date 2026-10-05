@@ -1,8 +1,9 @@
+import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { AssignmentFallbackEditor } from '../components/AssignmentFallbackEditor.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { tStaffTeams as t } from '@barghsa/i18n/staff-team-forms';
-import { Alert, Button, Input, Label, ListPage } from '@barghsa/ui';
+import { Alert, Badge, Button, Input, Label, ListPage, TextCell } from '@barghsa/ui';
 import {
   DEFAULT_STAFF_ASSIGNMENT_RULES,
   STAFF_ASSIGNMENT_WORK_TYPES,
@@ -540,50 +541,84 @@ export default function AdminStaffTeamsPage() {
           }
           emptyView={<p>{label('empty')}</p>}
         >
-          <ul className="space-y-2">
-            {teams.map((team) => (
-              <li
-                key={team.id}
-                className="flex flex-wrap items-center justify-between gap-3 rounded border bg-card text-card-foreground p-3"
-              >
-                <div>
-                  <h3 className="font-medium">{team.name}</h3>
-                  <p className="text-sm text-muted-foreground">{team.description}</p>
-                  <p className="text-sm">
-                    {label('memberCount')}: {numbers.number(team.memberUserIds.length)}
-                    {!team.isActive ? ` · ${label('inactive')}` : ''}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    disabled={disabled || teamUncertain}
-                    onClick={() => edit(team)}
-                  >
-                    {label('edit')}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    disabled={disabled}
-                    onClick={() => {
-                      setSaved(false);
-                      const next: TeamAction = {
-                        title: label('delete'),
-                        description: `${team.name}. ${label('deleteNote')}`,
-                        path: `/api/admin/staff-teams/${team.id}`,
-                        method: 'DELETE',
-                        forbiddenMessage: label('forbidden'),
-                      };
-                      actionRef.current = next;
-                      setAction(next);
-                    }}
-                  >
-                    {label('delete')}
-                  </Button>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <OperationalQueueTable
+            locale={locale}
+            rows={teams}
+            caption={label('catalogue')}
+            scrollLabel={label('catalogue')}
+            nameHeader={label('name')}
+            renderName={(team) => <TextCell value={team.name} />}
+            fields={[
+              {
+                id: 'description',
+                label: label('teamDescription'),
+                render: (team) => <TextCell value={team.description} />,
+              },
+              {
+                id: 'members',
+                label: label('memberCount'),
+                render: (team) => <bdi>{numbers.number(team.memberUserIds.length)}</bdi>,
+              },
+              {
+                id: 'lead',
+                label: label('lead'),
+                render: (team) => (
+                  <TextCell
+                    value={team.leadUserId ? known[team.leadUserId]?.name || team.leadUserId : null}
+                  />
+                ),
+              },
+              {
+                id: 'tags',
+                label: label('tags'),
+                render: (team) => <TextCell value={team.skillTags.join(', ') || null} />,
+              },
+              {
+                id: 'status',
+                label: label('status'),
+                render: (team) => (
+                  <Badge variant={team.isActive ? 'secondary' : 'outline'}>
+                    {label(team.isActive ? 'active' : 'inactive')}
+                  </Badge>
+                ),
+              },
+            ]}
+            actionHeader={label('actions')}
+            renderActions={(team) => (
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="outline"
+                  className="min-h-11"
+                  disabled={disabled || teamUncertain}
+                  onClick={() => edit(team)}
+                >
+                  {label('edit')}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="min-h-11"
+                  disabled={disabled}
+                  onClick={() => {
+                    setSaved(false);
+                    const next: TeamAction = {
+                      title: label('delete'),
+                      description: `${team.name}. ${label('deleteNote')}`,
+                      path: `/api/admin/staff-teams/${team.id}`,
+                      method: 'DELETE',
+                      forbiddenMessage: label('forbidden'),
+                    };
+                    actionRef.current = next;
+                    setAction(next);
+                  }}
+                >
+                  {label('delete')}
+                </Button>
+              </div>
+            )}
+            loading={loading}
+            emptyMessage={label('empty')}
+            tableClassName="min-w-[56rem]"
+          />
         </ListPage.Content>
         {!denied && (
           <>

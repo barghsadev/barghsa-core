@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from './coverage-fixture';
 import { shellText } from '@barghsa/i18n/shell';
@@ -26,6 +27,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
   let acceptedAt: string | null = null;
   let invoiceState = 'Unpaid';
   let operatingContext: 'customer' | 'staff' = 'customer';
+  let quotedFee: unknown = null;
   let offer: { fee: string; scope: string; deliverables: string; validUntil: string } | null = null;
   const history: Array<{
     status: string;
@@ -67,6 +69,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
         isStaff: true,
         userId: 'buyer',
         operatingContext,
+        navigation: fullNavigation(operatingContext),
         canSwitchContext: true,
         requiresTosAcceptance: false,
       },
@@ -135,24 +138,23 @@ test('customer consultation moves through staff offer, payment handoff, and comp
   });
   await page.route(`**/api/admin/consultations/requests/${requestId}/fee-review`, (route) => {
     const input = route.request().postDataJSON() as Record<string, string>;
-    return route.fulfill({
-      json: {
-        schemaVersion: 1,
-        hash: 'a'.repeat(64),
-        scope: { action: 'consultation.fee-offer', profileId, resourceId: requestId },
-        data: {
-          serviceTitle: title,
-          profileName: 'Example Customer',
-          scope: input.scope,
-          deliverables: input.deliverables,
-          fee: input.fee,
-          validUntil: input.validUntil,
-          reason: null,
-          previousInvoice: null,
-          outcome: 'issue_invoice',
-        },
+    quotedFee = {
+      schemaVersion: 1,
+      hash: 'a'.repeat(64),
+      scope: { action: 'consultation.fee-offer', profileId, resourceId: requestId },
+      data: {
+        serviceTitle: title,
+        profileName: 'Buyer Example',
+        scope: input.scope,
+        deliverables: input.deliverables,
+        fee: input.fee,
+        validUntil: input.validUntil,
+        reason: null,
+        previousInvoice: null,
+        outcome: 'issue_invoice',
       },
-    });
+    };
+    return route.fulfill({ json: quotedFee });
   });
   await page.route(`**/api/admin/consultations/requests/${requestId}/fee`, (route) => {
     expect(status).toBe('under_review');
@@ -172,7 +174,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
     status = 'offer_pending';
     history.push({ status, actor_type: 'staff', reason: null, created_at: submittedAt });
     return route.fulfill({
-      json: { status, invoiceId, financialReview: { hash: 'a'.repeat(64) } },
+      json: { requestId, status, invoiceId, financialReview: quotedFee },
     });
   });
   await page.route(`**/api/consultations/requests/${requestId}/accept`, (route) => {

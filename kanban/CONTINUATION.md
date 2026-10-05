@@ -12,7 +12,15 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: notification-template event and status filters for v0.1.18 (October 5, 2026 UTC)
+## Latest manual batch: staff team and consultation tables for v0.1.19 (October 6, 2026)
+
+Staff-team records and the consultation work queue now use shared desktop tables and mobile cards. Team records expose saved lead, skills, status and member counts. Consultation records retain assignment/status/priority/account-zone dates and identify each exact request. One existing editor/detail/form owner survives breakpoint changes; denial, step-up, draft recovery, pagination and financial receipt guards remain. Successful generic consultation actions now release their command lock before refreshing, so review and assignment show fresh state.
+
+All **261** related source/dictionary cases and **84 distinct** Chromium/mobile Safari cases have passing evidence, **42 per engine**, including 16 new table cases, four real-API team cases and both complete customer/staff consultation journeys, with zero retries. Build/types/lint, contract/suppression, strict SAST (1,796 files; zero findings/errors; five fixtures) and all 85 unchanged budgets pass. Two complete original Persian light/dark mobile captures are reviewed. Current product source and 493 assets retain browser-build hashes; the final ledger binds 74 unchanged combined-run cases plus eight repaired assignment cases and two repaired journey cases. See `kanban/batches/2026-10-06-staff-operation-tables.md` and external evidence for initial failures and exact verification.
+
+Reuse `02-auth-users-admin.md#T-09.08.02`, `07-ui-ux-design.md#T-07.30.02.16`, `03-core-business.md#T-03.03.03.01`/`#T-03.03.03.02`/`#T-03.03.03.04` and domain table adoption under `07-ui-ux-design.md#T-07.24.01.01` through `#T-07.24.01.04`. Whole-task/global completion remains partial. No API, migration, dependency, CI, budget or supervisor-state change. Publication/deployment outcomes remain separate exact-SHA receipts. Continue coherent direct-main batches and enqueue deployment immediately after exact pushed-SHA readback.
+
+## Previous manual batch: notification-template event and status filters for v0.1.18 (October 5, 2026 UTC)
 
 The notification catalogue now applies exact bounded event-key filtering through shared URL/input/API parsing and parameter-bound PostgreSQL equality. Native Apply/Enter controls retain unapplied filter/editor text. Back/Forward/reload restore applied criteria and clearing event retains independent criteria/panel parameters. Archived status works through the controller; All Status includes every saved version. Invalid input has linked bilingual feedback. Out-of-scope reads preserve accepted work, and out-of-scope saved receipts cannot leak into the filtered catalogue after refresh failure. Applied changes retire obsolete protected actions through the existing engine.
 
@@ -20,7 +28,7 @@ All **491** related API/source/dictionary cases and **94 distinct** Chromium/mob
 
 This closes the event/archive read gap under `02-auth-users-admin.md#T-09.04.01`, `05-notifications-documents-ai.md#T-05.04.01` and `07-ui-ux-design.md#T-07.30.02.05`. Existing authoring, publication, variables, previews, test-send, permissions/audit and table/card foundations are retained. Whole-task/global completion is not inferred. Continue coherent direct-main batches and independent deployment after exact pushed-SHA readback; select the next confirmed remaining canonical gap without rebuilding existing engines. No migration, dependency, budget, CI or supervisor-state change.
 
-v0.1.16 is deployed at `c5f2778628e492189549da9ba29a1fd5f3838d57`; Persian Telegram note 48 and all three screenshots 49–51 are confirmed. Its external receipt/report record completion. v0.1.17 is deployed at `114d397416731589af624cc6d057b1a93b4913a3`; Persian Telegram note 52 and both screenshots 53–54 are confirmed, with its external receipt/report updated. v0.1.18 publication/deployment outcomes remain separate exact-SHA receipts.
+v0.1.16 is deployed at `c5f2778628e492189549da9ba29a1fd5f3838d57`; Persian Telegram note 48 and all three screenshots 49–51 are confirmed. Its external receipt/report record completion. v0.1.17 is deployed at `114d397416731589af624cc6d057b1a93b4913a3`; Persian Telegram note 52 and both screenshots 53–54 are confirmed, with its external receipt/report updated. v0.1.18 completed at `2026-10-05T21:08:44.193198+00:00`, deployed at `2bf268a64327abfe87728cfa507d84e8b0b1456c`; Persian Telegram note 55 and both reviewed screenshots 56–57 are confirmed. Its external completion receipt and report record that outcome.
 
 ## Previous manual batch: notification-template catalogue tables for v0.1.17 (October 5, 2026)
 

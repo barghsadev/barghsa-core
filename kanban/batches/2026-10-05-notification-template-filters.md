@@ -40,3 +40,7 @@ Clean committed-head preflight, remote SHA readback, independent enqueue and hea
 `v0.1.16` completed at `2026-10-05T20:44:32.882953+00:00`, with healthy exact live commit `c5f2778628e492189549da9ba29a1fd5f3838d57`. Persian Telegram note `48` and reviewed screenshots `49`, `50`, `51` were confirmed. Its external completion receipt and report retain that outcome. `v0.1.17` completed at `2026-10-05T20:52:44.305169+00:00`, with healthy live commit `114d397416731589af624cc6d057b1a93b4913a3`. Persian Telegram note `52` and both reviewed screenshots (`53`, `54`) were confirmed; its external receipt/report retain completion.
 
 External evidence: `~/.local/state/barghsa-manual-batches/notification-template-filters/`.
+
+## Deployment outcome
+
+Exact release `v0.1.18` completed at `2026-10-05T21:08:44.193198+00:00`, with healthy live commit `2bf268a64327abfe87728cfa507d84e8b0b1456c`. Persian Telegram note `55` and both reviewed screenshots (`56`, `57`) are confirmed. The external `release-completed.json` binds this outcome to the published batch.

@@ -1,3 +1,4 @@
+import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { t as appText } from '@barghsa/i18n/app';
 import { useEffect, useRef, useState } from 'react';
 import { useSearch } from '@tanstack/react-router';
@@ -8,6 +9,8 @@ import {
   Label,
   ListPage,
   StatusBadge,
+  DateCell,
+  TextCell,
   StatusTimeline,
   type StatusTone,
 } from '@barghsa/ui';
@@ -1363,7 +1366,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
           </div>
         )}
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-          <section aria-label={copy('staffTitle')} className="space-y-2">
+          <section aria-label={copy('staffTitle')} className="min-w-0 space-y-2">
             <ListPage.Content
               loading={queueLoading}
               error={queueError || queueDenied}
@@ -1384,48 +1387,92 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
               }
               emptyView={<p className="text-muted-foreground">{copy('noWork')}</p>}
             >
-              {rows.map((row) => (
-                <button
-                  key={row.id}
-                  type="button"
-                  disabled={navigationBlocked()}
-                  onClick={() => {
-                    if (
-                      work.current.scope !== workScope ||
-                      navigationBlocked() ||
-                      row.id === selectedId
-                    )
-                      return;
-                    setSelectedId(row.id);
-                    setDetail(null);
-                    reasonForm.reset({ reason: '' });
-                    setOfferKey(crypto.randomUUID());
-                  }}
-                  aria-pressed={selectedId === row.id}
-                  className={`min-w-0 w-full rounded-xl border bg-card p-4 text-start hover:border-primary ${selectedId === row.id ? 'border-primary ring-1 ring-primary' : ''}`}
-                >
-                  <span className="block font-semibold" dir="auto">
-                    {row.product_snapshot.title[locale]}
-                  </span>
-                  <span className="mt-1 block text-sm" dir="auto">
-                    {row.profile_name}
-                  </span>
-                  <span className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                    <StatusBadge state={row.status} {...consultationStatus(row.status, copy)} />
-                    <span>
-                      {copy(row.priority)} ·{' '}
-                      {time.format(row.submitted_at, {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                      })}
+              <OperationalQueueTable
+                locale={locale}
+                rows={rows}
+                caption={copy('queueCatalogue')}
+                scrollLabel={copy('queueCatalogue')}
+                nameHeader={copy('queueRequest')}
+                renderName={(row) => (
+                  <>
+                    <TextCell value={row.product_snapshot.title[locale]} />
+                    <span className="block font-mono text-xs font-normal">
+                      <TextCell value={row.id} />
                     </span>
-                  </span>
-                  <span className="mt-2 block">
-                    <ConsultationAssignment request={row} copy={copy} />
-                  </span>
-                </button>
-              ))}
+                  </>
+                )}
+                fields={[
+                  {
+                    id: 'profile',
+                    label: copy('profile'),
+                    render: (row) => <TextCell value={row.profile_name} />,
+                  },
+                  {
+                    id: 'status',
+                    label: copy('status'),
+                    render: (row) => (
+                      <StatusBadge state={row.status} {...consultationStatus(row.status, copy)} />
+                    ),
+                  },
+                  {
+                    id: 'priority',
+                    label: copy('priority'),
+                    render: (row) => <TextCell value={copy(row.priority)} />,
+                  },
+                  {
+                    id: 'submittedAt',
+                    label: copy('submittedAt'),
+                    render: (row) => (
+                      <DateCell
+                        value={row.submitted_at}
+                        format={(value) =>
+                          time.format(value, { year: 'numeric', month: '2-digit', day: '2-digit' })
+                        }
+                      />
+                    ),
+                  },
+                  {
+                    id: 'assignment',
+                    label: copy('queueAssignment'),
+                    render: (row) => <ConsultationAssignment request={row} copy={copy} />,
+                  },
+                ]}
+                actionHeader={copy('queueActions')}
+                renderActions={(row) => (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={navigationBlocked()}
+                    onClick={() => {
+                      if (
+                        work.current.scope !== workScope ||
+                        navigationBlocked() ||
+                        row.id === selectedId
+                      )
+                        return;
+                      setSelectedId(row.id);
+                      setDetail(null);
+                      reasonForm.reset({ reason: '' });
+                      setOfferKey(crypto.randomUUID());
+                    }}
+                    aria-pressed={selectedId === row.id}
+                    className={
+                      selectedId === row.id
+                        ? 'min-h-11 border-primary ring-1 ring-primary'
+                        : 'min-h-11'
+                    }
+                  >
+                    {copy('openRequest')}
+                    <span className="sr-only">
+                      : {row.product_snapshot.title[locale]} · {row.profile_name} · {row.id}
+                    </span>
+                  </Button>
+                )}
+                cardHeading="h2"
+                loading={queueLoading}
+                emptyMessage={copy('noWork')}
+                tableClassName="min-w-[60rem]"
+              />
             </ListPage.Content>
             <ListPage.Pagination
               kind="cursor"
@@ -2128,6 +2175,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
             setFeeReview(null);
             setPaidFeeReview(null);
             setResolutionReview(null);
+            clearAction();
             refresh();
           }}
         />
