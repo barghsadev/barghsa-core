@@ -5,6 +5,8 @@ COPY . .
 RUN pnpm install --frozen-lockfile --prod=false
 
 FROM deps AS build
+ARG BARGHSA_RELEASE_SHA
+ENV BARGHSA_RELEASE_SHA=$BARGHSA_RELEASE_SHA
 RUN pnpm -r --filter @barghsa/web... build
 
 FROM node:24-bookworm-slim AS production

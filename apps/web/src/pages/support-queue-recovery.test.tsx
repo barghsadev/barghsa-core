@@ -4,6 +4,7 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { CustomerTicketsPage, StaffTicketsPage } from './TicketsPage.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { tTicketForms } from '@barghsa/i18n/ticket-forms';
+import { actualClosurePreview } from '../components/profile-lifecycle-test-fixture.js';
 import {
   supportTicket,
   supportQueue,
@@ -333,13 +334,9 @@ it('queue recovery preserves the mounted closure review, confirmation and passwo
       if (url.endsWith('/closure-preview')) {
         previewReads++;
         return Response.json({
-          eligible: true,
-          blockers: [],
-          retained: {},
-          previewVersion: 'current',
-          anonymizeProfile: false,
-          completedAt: null,
-          exportTicketId: null,
+          ...actualClosurePreview(),
+          ticketId: supportTicket.id,
+          ownerUserId: supportTicket.userId,
         });
       }
       if (url.includes('?'))
@@ -356,8 +353,10 @@ it('queue recovery preserves the mounted closure review, confirmation and passwo
   const { host, close } = await mount(StaffTicketsPage);
   try {
     await act(async () => button(host, supportTicket.subject).click());
-    await change(host, '#closure-password', 'Local draft password');
-    const password = host.querySelector<HTMLInputElement>('#closure-password')!;
+    await change(host, 'input[name="password"][type="password"]', 'Local draft password');
+    const password = host.querySelector<HTMLInputElement>(
+      'input[name="password"][type="password"]'
+    )!;
     const confirmation = password
       .closest('section')!
       .querySelector<HTMLInputElement>('input[type=checkbox]')!;
@@ -366,13 +365,13 @@ it('queue recovery preserves the mounted closure review, confirmation and passwo
     await act(async () => button(host, 'Refresh tickets').click());
     status = 200;
     await act(async () => button(host, 'Retry').click());
-    expect(host.querySelector('#closure-password')).toBe(password);
+    expect(host.querySelector('input[name="password"][type="password"]')).toBe(password);
     expect(password.value).toBe('Local draft password');
     expect(confirmation.checked).toBe(true);
     expect(previewReads).toBe(1);
     status = 403;
     await act(async () => button(host, 'Refresh tickets').click());
-    expect(host.querySelector('#closure-password')).toBeNull();
+    expect(host.querySelector('input[name="password"][type="password"]')).toBeNull();
     expect(host.querySelector('article')).toBeNull();
   } finally {
     await close();

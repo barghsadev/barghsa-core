@@ -8,6 +8,9 @@ if [[ -n $(git status --porcelain) ]]; then
   echo 'Commit deployment changes before building a release' >&2
   exit 1
 fi
+commit="$(git rev-parse HEAD)"
+# Validate notes and Telegram channel before spending time building images.
+python3 deploy/staging/notify-release.py --check --commit "$commit"
 
 host="${BARGHSA_VPS_HOST:-89.42.199.13}"
 port="${BARGHSA_VPS_SSH_PORT:-30222}"
@@ -37,7 +40,7 @@ else
 fi
 
 docker build --platform linux/amd64 -f Dockerfile.base --target production -t "barghsa-app:$tag" .
-docker build --platform linux/amd64 -f Dockerfile.web --target production -t "barghsa-web:$tag" .
+docker build --platform linux/amd64 --build-arg "BARGHSA_RELEASE_SHA=$commit" -f Dockerfile.web --target production -t "barghsa-web:$tag" .
 
 echo 'Transferring release images over SSH' >&2
 docker save "${images[@]}" \
@@ -69,3 +72,4 @@ scp "${scp_args[@]}" "$manifest" "$remote:$candidate"
 ssh "${ssh_args[@]}" "$remote" "chmod 600 $candidate"
 # shellcheck disable=SC2029 # Pass the same locally constructed path to the VPS.
 ssh "${ssh_args[@]}" "$remote" "/usr/local/sbin/barghsa-staging-release $candidate"
+python3 deploy/staging/notify-release.py --commit "$commit"

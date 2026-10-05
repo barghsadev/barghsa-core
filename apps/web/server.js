@@ -177,9 +177,13 @@ export function createStaticServer(options = {}) {
         sendHtml(file.content);
         return;
       }
-      const cacheControl = file.immutable
-        ? 'public, immutable, max-age=31536000'
-        : 'public, max-age=86400';
+      const releaseMetadata =
+        url.split('?')[0] === '/release.json' || url.split('?')[0] === '/auth/release.json';
+      const cacheControl = releaseMetadata
+        ? 'no-cache, must-revalidate'
+        : file.immutable
+          ? 'public, immutable, max-age=31536000'
+          : 'public, max-age=86400';
 
       res.writeHead(200, {
         'Content-Type': file.contentType,

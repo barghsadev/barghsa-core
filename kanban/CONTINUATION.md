@@ -1,5 +1,13 @@
 # Development continuation status
 
+## Manual batch release workflow (October 5, 2026)
+
+The user now requires a staging deployment and a Telegram release summary after every coherent manual task batch. The shared root package version starts at `0.1.0` and is displayed on public authentication pages. For each subsequent batch, bump the Semantic Version, add `releases/<version>.md`, build/review/pass related checks, commit and normally push to `main`, run `./deploy/staging/deploy.sh`, verify the exact live version/commit and retain its Telegram confirmation. Use GitHub CLI and no PRs. Do not reuse a published version for a different batch.
+
+Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Radar, channel ID `-1004467450624`. Credentials and notification receipts live outside the checkout. The deployment script checks notes/channel before building and verifies actual deployed metadata before announcing. Unknown sends require channel inspection before explicit retry.
+
+The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
+
 ## Latest manual batch: profile lifecycle request ownership and staff closure forms (October 5, 2026)
 
 Completed customer export/closure ownership and staff native confirmation/password as one lifecycle batch. The actual eleven-blocker preview is accepted, captured request keys/locales survive uncertainty, and known export creation advances to saved-ticket/job/read retries. Staff complete dry-run/step-up/closure proof and ticket-page retry markers retain the original approval version while blocking companion writes; changed reviews require renewed consent.

@@ -82,9 +82,15 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
             </div>
           </div>
         </main>
-        <p className="px-6 pb-6 text-center text-xs text-muted-foreground">
-          {shellText('authNote', locale)}
-        </p>
+        <div className="space-y-2 px-6 pb-6 text-center text-xs text-muted-foreground">
+          <p>{shellText('authNote', locale)}</p>
+          <p>
+            {shellText('appVersion', locale)}{' '}
+            <bdi dir="ltr" data-app-version>
+              v{__BARGHSA_VERSION__}
+            </bdi>
+          </p>
+        </div>
       </div>
     </div>
   );

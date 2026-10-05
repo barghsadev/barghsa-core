@@ -60,6 +60,12 @@ describe('static server', () => {
     await writeFile(join(distDir, 'assets', 'app-a1b2c3d4.js'), 'console.log("ok");');
     await writeFile(join(distDir, 'assets', 'style-XyZ78901.css'), 'body { color: red; }');
     await writeFile(join(distDir, 'data.json'), JSON.stringify({ key: 'value' }));
+    for (const directory of [distDir, join(distDir, 'auth')]) {
+      await writeFile(
+        join(directory, 'release.json'),
+        JSON.stringify({ version: '0.1.0', commit: 'a'.repeat(40) })
+      );
+    }
 
     server = createStaticServer({ distDir });
     return new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
@@ -168,6 +174,17 @@ describe('static server', () => {
       expect(response.body).not.toContain('<html');
     }
   });
+
+  it.each(['/release.json', '/auth/release.json?commit=latest'])(
+    'revalidates release metadata at %s',
+    async (path) => {
+      const response = await fetch(server, path);
+      expect(response.status).toBe(200);
+      expect(response.headers['content-type']).toBe('application/json');
+      expect(response.headers['cache-control']).toBe('no-cache, must-revalidate');
+      expect(JSON.parse(response.body)).toEqual({ version: '0.1.0', commit: 'a'.repeat(40) });
+    }
+  );
 
   it('sets immutable Cache-Control for content-hashed assets', async () => {
     const res = await fetch(server, '/assets/app-a1b2c3d4.js');

@@ -3,7 +3,37 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import { resolve } from 'path';
+import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { isAuthEntryPath } from './entry-routes.js';
+
+const version: string = JSON.parse(
+  readFileSync(resolve(__dirname, '../../package.json'), 'utf8')
+).version;
+function releaseMetadataPlugin() {
+  return {
+    name: 'release-metadata',
+    generateBundle() {
+      let commit = process.env['BARGHSA_RELEASE_SHA'] ?? null;
+      if (!commit) {
+        try {
+          commit = execFileSync('git', ['rev-parse', 'HEAD'], {
+            cwd: __dirname,
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'ignore'],
+          }).trim();
+        } catch {
+          // Development builds outside Git have no deployment identity.
+        }
+      }
+      this.emitFile({
+        type: 'asset',
+        fileName: 'release.json',
+        source: JSON.stringify({ version, commit }) + '\n',
+      });
+    },
+  } satisfies import('vite').Plugin;
+}
 
 /**
  * Vite plugin: apply immutable Cache-Control only to content-hashed assets.
@@ -33,7 +63,10 @@ export default defineConfig(({ mode }) => {
   const authEntry = mode === 'auth';
   const base = process.env['CDN_URL'] || '/';
   return {
-    define: { __BARGHSA_AUTH_ENTRY__: JSON.stringify(authEntry) },
+    define: {
+      __BARGHSA_AUTH_ENTRY__: JSON.stringify(authEntry),
+      __BARGHSA_VERSION__: JSON.stringify(version),
+    },
     server: {
       host: process.env['WEB_HOST'] || 'localhost',
       port: Number(process.env['WEB_PORT'] || 3000),
@@ -62,6 +95,7 @@ export default defineConfig(({ mode }) => {
       react(),
       tailwindcss(),
       immutableAssetsPlugin(),
+      releaseMetadataPlugin(),
     ],
     // CDN base URL — set CDN_URL for production builds so assets resolve via CDN
     base: authEntry ? base.replace(/\/?$/, '/') + 'auth/' : base,
