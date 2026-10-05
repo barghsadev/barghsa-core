@@ -167,7 +167,11 @@ for (const [locale, dark] of [
         route.fulfill({ status: 403, json: { requiresStepUp: true } })
       );
       await page.goto(queue.url);
-      const row = page.locator('tbody tr').first();
+      const row = page
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+        .first();
       await row
         .getByRole('button', {
           name: queue.kind === 'jobs' ? word('retry') : `${word('retry')} invoice.created`,
@@ -236,22 +240,58 @@ for (const [locale, dark] of [
         });
       });
       await page.goto(queue.url);
-      await expect(page.locator('tbody tr')).toHaveCount(25);
-      const viewport = page.locator('[data-slot=scroll-area-viewport]').first();
+      await expect(
+        page.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(25);
+      await page.setViewportSize({ width: 900, height: 844 });
+      const viewport = page.getByRole('region', { name: word('table'), exact: true });
       await viewport.focus();
       await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
       await expect
         .poll(() => viewport.evaluate((node) => Math.abs(node.scrollLeft)))
         .toBeGreaterThan(0);
+      await page.setViewportSize({ width: 390, height: 844 });
       if (queue.kind === 'jobs')
-        await page.locator('tbody tr').first().getByRole('checkbox').check();
-      await page.locator('tbody tr').first().locator('summary').click();
+        await page
+          .locator(
+            'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+          )
+          .first()
+          .getByRole('checkbox')
+          .check();
+      await page
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+        .first()
+        .locator('summary')
+        .click();
       await page.getByRole('button', { name: common('next'), exact: true }).click();
       await expect(page.locator('main').getByRole('alert')).toBeVisible();
-      await expect(page.locator('tbody tr')).toHaveCount(25);
-      await expect(page.locator('tbody tr').first().locator('details')).toHaveAttribute('open', '');
+      await expect(
+        page.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(25);
+      await expect(
+        page
+          .locator(
+            'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+          )
+          .first()
+          .locator('details')
+      ).toHaveAttribute('open', '');
       if (queue.kind === 'jobs')
-        await expect(page.locator('tbody tr').first().getByRole('checkbox')).toBeChecked();
+        await expect(
+          page
+            .locator(
+              'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+            )
+            .first()
+            .getByRole('checkbox')
+        ).toBeChecked();
       const failed = queries.at(-1);
       expect(new URL(failed!).searchParams.get('offset')).toBe('25');
       await inspect(
@@ -262,11 +302,19 @@ for (const [locale, dark] of [
       );
       fail = false;
       await page.getByRole('button', { name: common('reload'), exact: true }).click();
-      await expect(page.locator('tbody tr')).toHaveCount(1);
+      await expect(
+        page.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(1);
       expect(queries.at(-1)).toBe(failed);
       denied = true;
       await page.getByRole('button', { name: common('refresh'), exact: true }).click();
-      await expect(page.locator('tbody tr')).toHaveCount(0);
+      await expect(
+        page.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(0);
       await expect(page.getByRole('alert')).toContainText(
         word(queue.kind === 'jobs' ? 'forbidden' : 'accessDenied')
       );
@@ -290,7 +338,10 @@ for (const [locale, dark] of [
       return route.fulfill({ json: [] });
     });
     await page.goto('/admin/failed-notifications');
-    await page.locator('tbody summary').click();
+    await page
+      .locator('summary:visible')
+      .filter({ hasText: t('admin.notifications.deadLetter.details', locale) })
+      .click();
     await page
       .getByRole('button', { name: t('admin.notifications.history.title', locale), exact: true })
       .click();
@@ -311,6 +362,10 @@ for (const [locale, dark] of [
       .getByRole('button', { name: common('refresh'), exact: true, includeHidden: true })
       .evaluate((node) => (node as HTMLButtonElement).click());
     await expect(dialog).toHaveCount(0);
-    await expect(page.locator('tbody tr')).toHaveCount(0);
+    await expect(
+      page.locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+    ).toHaveCount(0);
   });
 }

@@ -73,8 +73,18 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('alert')).toBeVisible();
     failLoad = false;
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Try again', exact: true }).click();
-    await expect(page.locator('tbody tr')).toHaveCount(25);
-    await expect(page.locator('tbody tr').first()).toContainText(
+    await expect(
+      page.locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+    ).toHaveCount(25);
+    await expect(
+      page
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+        .first()
+    ).toContainText(
       await formatBrowserDate(
         page,
         locale,
@@ -86,12 +96,22 @@ for (const locale of ['en', 'fa'])
         rows[0]!.createdAt
       )
     );
-    await expect(page.locator('tbody button:visible')).toHaveCount(0);
+    await expect(
+      page.locator('table:visible tbody button:visible, ol[role=list]:visible > li button:visible')
+    ).toHaveCount(0);
     await page.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
-    await expect(page.locator('tbody tr')).toHaveCount(0);
+    await expect(
+      page.locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+    ).toHaveCount(0);
     await expect.poll(() => queries.at(-1)?.get('offset')).toBe('25');
     await page.getByRole('button', { name: fa ? 'قبلی' : 'Previous', exact: true }).click();
-    await expect(page.locator('tbody tr')).toHaveCount(25);
+    await expect(
+      page.locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+    ).toHaveCount(25);
     await page.getByLabel(fa ? 'کانال' : 'Channel', { exact: true }).selectOption('sms');
     await expect.poll(() => queries.at(-1)?.get('channel')).toBe('sms');
     await page.getByLabel(fa ? 'شدت' : 'Severity', { exact: true }).selectOption('critical');
@@ -131,12 +151,21 @@ for (const locale of ['en', 'fa'])
     ).toBeFocused();
     expect(attempts).toHaveLength(3);
     expect(new Set(attempts).size).toBe(1);
-    await expect(page.locator('tbody button:visible')).toHaveCount(0);
-    await expect(page.locator('#admin-content').getByRole('status')).toContainText(
-      fa ? 'تحویل هنوز' : 'Delivery is not yet confirmed'
-    );
+    await expect(
+      page.locator('table:visible tbody button:visible, ol[role=list]:visible > li button:visible')
+    ).toHaveCount(0);
+    await expect(
+      page
+        .locator('#admin-content')
+        .getByRole('status')
+        .filter({ hasText: fa ? 'تحویل هنوز' : 'Delivery is not yet confirmed' })
+    ).toContainText(fa ? 'تحویل هنوز' : 'Delivery is not yet confirmed');
     canView = false;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
     await expect(page.getByRole('alert')).toContainText(fa ? 'دسترسی غیرمجاز' : 'Access denied');
-    await expect(page.locator('tbody tr')).toHaveCount(0);
+    await expect(
+      page.locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+    ).toHaveCount(0);
   });

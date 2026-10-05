@@ -12,7 +12,13 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: responsive Email/SMS provider tables for v0.1.11 (October 5, 2026)
+## Latest manual batch: failed-job and notification queue tables for v0.1.12 (October 5, 2026)
+
+Both operational queues now use shared desktop tables and mobile cards, retaining error/cause, attempts, account-zone timestamps, masked details, delivery history and authorized actions. Job selection and open details remain page-owned across breakpoints and failed reads. Native headers, sticky headers, named keyboard scrolling, numeral preferences and localized row counts reuse the existing foundation. Command/history owners remain single; closing a command after resizing returns focus to a visible control. The job error heading now uses a separate bilingual field label instead of a loading-error message.
+
+Related checks and release evidence are recorded in `kanban/batches/2026-10-05-operational-queue-tables.md`. Reuse `02-auth-users-admin.md#T-09.09.02`, `#T-09.09.03` and `07-ui-ux-design.md#T-07.24.01.01` through `#T-07.24.01.04`; existing engines and shared foundations are not recounted. Wider domain table adoption and the global all-list task remain partial. v0.1.11 is deployed at `ac9cb2296a39b1a78eb1d7c0779db7417dd57b40`, with Persian Telegram notes and both screenshots confirmed. Continue direct-main batches with related local checks and independent deployment. Reconciliation exception tables are a next candidate; confirm actual gaps and reuse the built lifecycle review/forms.
+
+## Previous manual batch: responsive Email/SMS provider tables for v0.1.11 (October 5, 2026)
 
 Email and SMS.ir configuration lists now use shared desktop tables and mobile cards, retaining saved test/activation/creation metadata, delivery health, circuit pauses, alert history, credit warnings and authorized actions. Native record headers, sticky headers, named keyboard-scrollable viewports and localized row counts reuse the existing foundation. Dates preserve the account timezone; health numbers and SMS credit follow the published numeral preference. One page-owned email recipient draft survives responsive changes and failed reads, retires on accepted configuration changes and clears with private work on current denial. Existing native editors, mapping/secret drafts, captured confirmations, step-up and receipt/recovery engines remain.
 

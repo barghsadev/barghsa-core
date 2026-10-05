@@ -998,6 +998,8 @@ export const fa: I18nDictionary = {
   'admin.storage.cleanupHours': 'سن بارگذاری ناتمام (ساعت)',
   'admin.storage.cleanupSave': 'ذخیره زمان پاک‌سازی',
   'admin.jobs.title': 'کارهای ناموفق',
+  'admin.jobs.errorMessage': 'پیام خطا',
+  'admin.jobs.table': 'جدول کارهای ناموفق',
   'admin.jobs.description':
     'خطاهای کارهای دوره‌ای را بررسی کنید، اجرای دوباره بخواهید یا خطا را حل‌شده علامت بزنید.',
   'admin.jobs.refresh': 'تازه‌سازی',
@@ -1362,6 +1364,7 @@ export const fa: I18nDictionary = {
   'admin.notifications.error.delete': 'خطا در حذف قالب',
   'admin.notifications.error.testSend': 'خطا در ارسال آزمایشی',
   'admin.notifications.deadLetter.title': 'صف پیام‌های ناموفق (Dead Letter)',
+  'admin.notifications.deadLetter.table': 'جدول پیام‌های ناموفق',
   'admin.notifications.history.title': 'تاریخچه تلاش‌های ارسال',
   'admin.notifications.history.browse': 'جست‌وجوی همه ارسال‌ها',
   'admin.notifications.history.allDescription':
@@ -2741,6 +2744,8 @@ export const en: I18nDictionary = {
   'admin.storage.cleanupHours': 'Incomplete upload age (hours)',
   'admin.storage.cleanupSave': 'Save cleanup age',
   'admin.jobs.title': 'Failed jobs',
+  'admin.jobs.errorMessage': 'Error message',
+  'admin.jobs.table': 'Failed job records',
   'admin.jobs.description':
     'Inspect recurring worker failures, request another attempt, or mark a failure resolved.',
   'admin.jobs.refresh': 'Refresh',
@@ -3110,6 +3115,7 @@ export const en: I18nDictionary = {
   'admin.notifications.error.delete': 'Failed to delete template',
   'admin.notifications.error.testSend': 'Failed to send test notification',
   'admin.notifications.deadLetter.title': 'Dead-Letter Queue',
+  'admin.notifications.deadLetter.table': 'Failed notification records',
   'admin.notifications.history.title': 'Delivery attempt history',
   'admin.notifications.history.browse': 'Search all deliveries',
   'admin.notifications.history.allDescription':

@@ -85,7 +85,11 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/failed-jobs?status=failed&jobType=storage_cleanup&page=2');
       const root = page.getByRole('main');
       const type = root.getByRole('combobox', { name: word('type'), exact: true });
-      await expect(root.locator('tbody tr')).toHaveCount(25);
+      await expect(
+        root.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(25);
       await expect(type).toHaveValue('storage_cleanup');
       await expect(
         root.getByRole('button', { name: word('status.failed'), exact: true })
@@ -96,26 +100,59 @@ for (const locale of ['en', 'fa'] as const)
         limit: '26',
         offset: '25',
       });
-      await root.locator('tbody tr').first().getByRole('checkbox').check();
+      await root
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+        .first()
+        .getByRole('checkbox')
+        .check();
       await root.getByRole('button', { name: word('next'), exact: true }).click();
       await expect(root.getByRole('alert')).toBeVisible();
-      await expect(root.locator('tbody tr')).toHaveCount(25);
-      await expect(root.locator('tbody tr').first().getByRole('checkbox')).toBeChecked();
+      await expect(
+        root.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(25);
+      await expect(
+        root
+          .locator(
+            'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+          )
+          .first()
+          .getByRole('checkbox')
+      ).toBeChecked();
       expect(params(page).get('page')).toBe('3');
       const failedQuery = reads.at(-1)!.search;
       fail = false;
       await root.getByRole('button', { name: word('reload'), exact: true }).click();
-      await expect(root.locator('tbody tr')).toHaveCount(1);
+      await expect(
+        root.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(1);
       expect(reads.at(-1)!.search).toBe(failedQuery);
       await page.reload();
-      await expect(root.locator('tbody tr')).toHaveCount(1);
+      await expect(
+        root.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(1);
       await root.getByRole('button', { name: word('retry'), exact: true }).click();
       await expect(page.getByRole('dialog')).toBeVisible();
       await page.goBack();
       await expect(page.getByRole('dialog')).toHaveCount(0);
-      await expect(root.locator('tbody tr')).toHaveCount(25);
+      await expect(
+        root.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(25);
       await page.goForward();
-      await expect(root.locator('tbody tr')).toHaveCount(1);
+      await expect(
+        root.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(1);
       await root.getByRole('button', { name: word('status.all'), exact: true }).click();
       await expect.poll(() => reads.at(-1)?.searchParams.has('status')).toBe(false);
       expect(params(page).get('status')).toBe('all');
@@ -130,7 +167,11 @@ for (const locale of ['en', 'fa'] as const)
       await inspect(page, locale, info.project.name, 'jobs', dark);
       denied = true;
       await root.getByRole('button', { name: word('refresh'), exact: true }).click();
-      await expect(root.locator('tbody tr')).toHaveCount(0);
+      await expect(
+        root.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(0);
       await expect(root.getByRole('alert')).toContainText(word('forbidden'));
     });
 
@@ -249,7 +290,7 @@ for (const locale of ['en', 'fa'] as const)
             }),
           })
           .last();
-        await queue.locator('tbody summary').click();
+        await queue.locator('summary:visible').click();
         await queue.getByRole('button', { name: word('title'), exact: true }).click();
         await expect(dialog.locator('tbody tr')).toHaveCount(25);
         await expect(dialog.getByRole('textbox')).toHaveCount(0);

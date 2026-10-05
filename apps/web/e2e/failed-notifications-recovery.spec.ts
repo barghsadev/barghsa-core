@@ -72,7 +72,7 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.goto(fa ? '/admin/notifications' : '/admin/failed-notifications');
     await page
-      .locator('summary')
+      .locator('summary:visible')
       .filter({ hasText: fa ? 'جزئیات پوشانده‌شده' : 'Masked details' })
       .click();
     const history = page.getByRole('button', {
@@ -156,11 +156,19 @@ for (const locale of ['en', 'fa'] as const) {
       await reload.click();
       await expect(reload).toBeEnabled();
       await expect(error).toBeVisible();
-      await expect(page.locator('tbody tr')).toHaveCount(0);
+      await expect(
+        page.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(0);
     }
     data = [row];
     await reload.click();
-    await expect(page.locator('tbody tr')).toHaveCount(1);
+    await expect(
+      page.locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+    ).toHaveCount(1);
     await expect(error).toHaveCount(0);
   });
 
@@ -211,7 +219,11 @@ for (const locale of ['en', 'fa'] as const) {
         await confirm.click();
         await expect(dialog).toContainText(t('admin.operationalReview.title', locale));
         await expect(confirm).toHaveCount(0);
-        await expect(page.locator('tbody tr')).toHaveCount(1);
+        await expect(
+          page.locator(
+            'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+          )
+        ).toHaveCount(1);
         expect(calls).toBe(index + 1);
         await dialog
           .getByRole('button', { name: t('admin.operationalReview.reviewed', locale), exact: true })
@@ -226,7 +238,11 @@ for (const locale of ['en', 'fa'] as const) {
       }
       await confirm.click();
       await expect(dialog).toHaveCount(0);
-      await expect(page.locator('tbody tr')).toHaveCount(0);
+      await expect(
+        page.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(0);
       expect(calls).toBe(responses.length);
     });
   }

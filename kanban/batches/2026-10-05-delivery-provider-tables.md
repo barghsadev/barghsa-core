@@ -27,3 +27,5 @@ Release **v0.1.11** updates the shared login version and `releases/0.1.11.md`. V
 The preceding v0.1.10 release completed at `2026-10-05T18:55:02Z`, with exact live commit `220bec684e14b4db68ad3fa4fb213a4cd688b757`. Persian Telegram notes (32) and both screenshots (33, 34) are confirmed.
 
 Failed-job and failed-notification queue tables are a next candidate. Confirm actual remaining gaps against current source and canonical criteria before selecting; command recovery and saved-target review are already built and should be reused.
+
+Release v0.1.11 completed at `2026-10-05T19:15:56Z`; staging reports exact commit `ac9cb2296a39b1a78eb1d7c0779db7417dd57b40`. Persian Telegram notes (message 35) and both screenshots (36, 37) are confirmed. Receipt: `release-completed.json` in the external evidence directory.

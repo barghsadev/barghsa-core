@@ -356,12 +356,13 @@ it('bulk job selection survives read failure and accepts only a unique acknowled
   );
   await act(async () => root.render(<Jobs />));
   await act(async () => {
-    host.querySelectorAll<HTMLInputElement>('input[type=checkbox]').forEach((n) => n.click());
+    host.querySelectorAll<HTMLInputElement>('table input[type=checkbox]').forEach((n) => n.click());
   });
   await click('Retry selected (2)');
   fail = true;
   await click('Retry queue', true);
-  expect(host.querySelectorAll('input:checked')).toHaveLength(2);
+  expect(host.querySelectorAll('table input:checked')).toHaveLength(2);
+  expect(host.querySelectorAll('ol input:checked')).toHaveLength(2);
   fail = false;
   await click('Retry queue', true);
   await submit();
@@ -370,7 +371,7 @@ it('bulk job selection survives read failure and accepts only a unique acknowled
   expect(document.querySelector('[role=dialog] button[type=submit]')).toBeNull();
   await click('I reviewed the state; return to queue', true);
   await act(async () => {
-    host.querySelectorAll<HTMLInputElement>('input[type=checkbox]').forEach((n) => n.click());
+    host.querySelectorAll<HTMLInputElement>('table input[type=checkbox]').forEach((n) => n.click());
   });
   valid = true;
   await click('Retry selected (2)');

@@ -85,16 +85,46 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('alert')).toBeVisible();
     failLoad = false;
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Try again', exact: true }).click();
-    await expect(page.locator('tbody tr')).toHaveCount(25);
-    await expect(page.locator('tbody tr').nth(1)).toContainText(
-      fa ? 'فعال‌سازی قرارداد' : 'Contract activation'
-    );
-    await expect(page.locator('tbody tr').nth(2)).toContainText(
-      fa ? 'تکمیل دوره قرارداد' : 'Contract term completion'
-    );
-    await expect(page.locator('tbody tr').nth(3)).toContainText('retired_job');
-    await expect(page.locator('tbody tr').first()).toContainText(fa ? '5 / 5' : '۵ / ۵');
-    await expect(page.locator('tbody tr').first()).toContainText(
+    await expect(
+      page.locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+    ).toHaveCount(25);
+    await expect(
+      page
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+        .nth(1)
+    ).toContainText(fa ? 'فعال‌سازی قرارداد' : 'Contract activation');
+    await expect(
+      page
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+        .nth(2)
+    ).toContainText(fa ? 'تکمیل دوره قرارداد' : 'Contract term completion');
+    await expect(
+      page
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+        .nth(3)
+    ).toContainText('retired_job');
+    await expect(
+      page
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+        .first()
+    ).toContainText(fa ? '5 / 5' : '۵ / ۵');
+    await expect(
+      page
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+        .first()
+    ).toContainText(
       await formatBrowserDate(
         page,
         locale,
@@ -109,21 +139,49 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('checkbox')).toHaveCount(0);
     await page.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
     await expect.poll(() => queries.at(-1)?.get('offset')).toBe('25');
-    await expect(page.locator('tbody tr')).toHaveCount(0);
+    await expect(
+      page.locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+    ).toHaveCount(0);
     await page.getByRole('button', { name: fa ? 'قبلی' : 'Previous', exact: true }).click();
-    await expect(page.locator('tbody tr')).toHaveCount(25);
+    await expect(
+      page.locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+    ).toHaveCount(25);
     await page.locator('#job-type').selectOption('storage_cleanup');
     await expect.poll(() => queries.at(-1)?.get('jobType')).toBe('storage_cleanup');
     await page
       .getByRole('button', { name: fa ? 'تلاش‌های پایان‌یافته' : 'Dead letter', exact: true })
       .click();
-    await expect(page.locator('tbody tr')).toHaveCount(0);
+    await expect(
+      page.locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+    ).toHaveCount(0);
     await page.getByRole('button', { name: fa ? 'ناموفق' : 'Failed', exact: true }).click();
-    await expect(page.locator('tbody tr')).toHaveCount(25);
+    await expect(
+      page.locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+    ).toHaveCount(25);
     canRetry = true;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
-    await page.locator('tbody tr').nth(0).getByRole('checkbox').check();
-    await page.locator('tbody tr').nth(1).getByRole('checkbox').check();
+    await page
+      .locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+      .nth(0)
+      .getByRole('checkbox')
+      .check();
+    await page
+      .locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+      .nth(1)
+      .getByRole('checkbox')
+      .check();
     await page
       .getByRole('button', { name: fa ? /اجرای دوباره موارد انتخاب‌شده/ : /Retry selected/ })
       .click();
@@ -143,9 +201,28 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: t('admin.operationalReview.reviewed', locale), exact: true })
       .click();
     await expect(dialog).toHaveCount(0);
-    await expect(page.locator('tbody tr').nth(1).getByRole('checkbox')).toBeEnabled();
-    await page.locator('tbody tr').nth(0).getByRole('checkbox').check();
-    await page.locator('tbody tr').nth(1).getByRole('checkbox').check();
+    await expect(
+      page
+        .locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+        .nth(1)
+        .getByRole('checkbox')
+    ).toBeEnabled();
+    await page
+      .locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+      .nth(0)
+      .getByRole('checkbox')
+      .check();
+    await page
+      .locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+      .nth(1)
+      .getByRole('checkbox')
+      .check();
     await page.getByRole('button', { name: t('admin.jobs.bulk', locale) }).click();
     failSave = false;
     await confirm.click();
@@ -156,13 +233,20 @@ for (const locale of ['en', 'fa'])
     expect(attempts).toHaveLength(3);
     for (const value of attempts) expect(value).toEqual({ ids: [jobs[0]!.id, jobs[1]!.id] });
     await expect(page.getByRole('checkbox')).toHaveCount(0);
-    await expect(page.locator('#admin-content').getByRole('status')).toContainText(
-      fa ? '1 مورد دیگر' : '۱ selections were skipped'
-    );
+    await expect(
+      page
+        .locator('#admin-content')
+        .getByRole('status')
+        .filter({ hasText: fa ? '1 مورد دیگر' : '۱ selections were skipped' })
+    ).toContainText(fa ? '1 مورد دیگر' : '۱ selections were skipped');
     canView = false;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
     await expect(page.getByRole('alert')).toContainText(
       fa ? 'اجازه انجام' : 'do not have permission'
     );
-    await expect(page.locator('tbody tr')).toHaveCount(0);
+    await expect(
+      page.locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+    ).toHaveCount(0);
   });

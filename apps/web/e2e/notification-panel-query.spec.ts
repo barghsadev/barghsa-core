@@ -215,7 +215,11 @@ for (const locale of ['en', 'fa'] as const)
       const status = root.getByRole('combobox', { name: word('status'), exact: true });
       const channel = root.getByRole('combobox', { name: word('channel'), exact: true });
       const severity = root.getByRole('combobox', { name: word('severity'), exact: true });
-      await expect(root.locator('tbody tr')).toHaveCount(25);
+      await expect(
+        root.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(25);
       await expect(status).toHaveValue('open');
       await expect(channel).toHaveValue('email');
       await expect(severity).toHaveValue('critical');
@@ -229,23 +233,43 @@ for (const locale of ['en', 'fa'] as const)
       failed = true;
       await root.getByRole('button', { name: common('next'), exact: true }).click();
       await expect(root.getByRole('alert')).toBeVisible();
-      await expect(root.locator('tbody tr')).toHaveCount(25);
+      await expect(
+        root.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(25);
       expect(params(page).get('failed_page')).toBe('3');
       const failedQuery = reads.at(-1)!.search;
       failed = false;
       await root.getByRole('button', { name: common('reload'), exact: true }).click();
-      await expect(root.locator('tbody tr')).toHaveCount(1);
+      await expect(
+        root.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(1);
       expect(reads.at(-1)!.search).toBe(failedQuery);
       await page.reload();
-      await expect(root.locator('tbody tr')).toHaveCount(1);
+      await expect(
+        root.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(1);
       expect(reads.at(-1)!.search).toBe(failedQuery);
       await root.getByRole('button', { name: `${word('retry')} second.page`, exact: true }).click();
       await expect(page.getByRole('dialog')).toBeVisible();
       await page.goBack();
       await expect(page.getByRole('dialog')).toHaveCount(0);
-      await expect(root.locator('tbody tr')).toHaveCount(25);
+      await expect(
+        root.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(25);
       await page.goForward();
-      await expect(root.locator('tbody tr')).toHaveCount(1);
+      await expect(
+        root.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(1);
       await status.selectOption('');
       await expect.poll(() => params(page).get('failed_status')).toBe('all');
       await expect.poll(() => reads.at(-1)?.searchParams.has('status')).toBe(false);
@@ -271,7 +295,11 @@ for (const locale of ['en', 'fa'] as const)
       await inspect(page, locale, info.project.name, 'queue', dark);
       denied = true;
       await root.getByRole('button', { name: common('refresh'), exact: true }).click();
-      await expect(root.locator('tbody tr')).toHaveCount(0);
+      await expect(
+        root.locator(
+          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+        )
+      ).toHaveCount(0);
       await expect(root.getByRole('alert')).toContainText(word('accessDenied'));
     });
   }

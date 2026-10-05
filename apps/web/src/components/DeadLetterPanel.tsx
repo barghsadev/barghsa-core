@@ -1,10 +1,11 @@
+import { OperationalQueueTable, QueueRecordDetails } from './OperationalQueueTable.js';
 import { OperationalCommandReview } from './OperationalCommandReview.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useState, useEffect, useId, useRef, useMemo } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
-import { Button, ListPage, ScrollArea } from '@barghsa/ui';
+import { Button, DateCell, TextCell, ListPage } from '@barghsa/ui';
 import type { Locale } from '@barghsa/i18n/app';
 import { NotificationDeliveryHistory } from './NotificationDeliveryHistory.js';
 
@@ -123,6 +124,9 @@ export default function DeadLetterPanel({
   const severity = queries ? queries.query.filters.severity || '' : localSeverity;
   const offset = queries ? (queries.query.page - 1) * 25 : localOffset;
   const actionGeneration = useRef(0);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const toggleDetails = (id: string) =>
+    setExpanded((current) => ({ ...current, [id]: !current[id] }));
   const [history, setHistory] = useState<DeadLetterRow | null>(null);
   const [allHistory, setAllHistory] = useState(false);
   const [action, setAction] = useState<
@@ -153,6 +157,7 @@ export default function DeadLetterPanel({
     setPending(false);
     setReviewReload(false);
     setHistory(null);
+    setExpanded({});
     setAllHistory(false);
     setAction(null);
     setNotice(null);
@@ -272,7 +277,12 @@ export default function DeadLetterPanel({
     const frame = requestAnimationFrame(() => {
       if (savedTrigger.current !== target) return;
       savedTrigger.current = null;
-      if (target.isConnected && !target.hasAttribute('disabled')) target.focus();
+      if (
+        target.isConnected &&
+        target.getClientRects().length > 0 &&
+        !target.hasAttribute('disabled')
+      )
+        target.focus();
       else refreshButton.current?.focus();
     });
     return () => cancelAnimationFrame(frame);
@@ -435,152 +445,157 @@ export default function DeadLetterPanel({
           }
         >
           {queue.data && (
-            <ScrollArea
-              scrollbarOrientation="horizontal"
-              className="min-w-0 bg-card text-card-foreground rounded-lg border border-border"
-            >
-              <table
-                className="w-full min-w-[60rem] divide-y divide-border text-sm"
-                aria-busy={loading}
-                aria-label={t('admin.notifications.deadLetter.title', uiLocale)}
-              >
-                <caption className="sr-only">
-                  {t('admin.notifications.deadLetter.title', uiLocale)}
-                </caption>
-                <thead className="bg-muted/40 text-start">
-                  <tr>
-                    <th className="px-4 py-2 font-medium text-muted-foreground">
-                      {t('admin.notifications.deadLetter.eventKey', uiLocale)}
-                    </th>
-                    <th className="px-4 py-2 font-medium text-muted-foreground">
-                      {t('admin.notifications.deadLetter.channel', uiLocale)}
-                    </th>
-                    <th className="px-4 py-2 font-medium text-muted-foreground">
-                      {t('admin.notifications.deadLetter.severity', uiLocale)}
-                    </th>
-                    <th className="px-4 py-2 font-medium text-muted-foreground">
-                      {t('admin.notifications.deadLetter.cause', uiLocale)}
-                    </th>
-                    <th className="px-4 py-2 font-medium text-muted-foreground">
-                      {t('admin.notifications.deadLetter.attempts', uiLocale)}
-                    </th>
-                    <th className="px-4 py-2 font-medium text-muted-foreground">
-                      {t('admin.notifications.deadLetter.date', uiLocale)}
-                    </th>
-                    <th className="px-4 py-2 font-medium text-muted-foreground">
-                      {t('admin.notifications.deadLetter.actions', uiLocale)}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {rows.map((row) => (
-                    <tr key={row.id} className="align-top">
-                      <td className="px-4 py-3 font-mono text-xs" dir="ltr">
-                        {row.eventKey}
-                      </td>
-                      <td className="px-4 py-3">{channelLabel(row.channel, uiLocale)}</td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                            row.severity === 'critical'
-                              ? 'bg-danger-soft text-destructive'
-                              : 'bg-warning-soft text-warning'
-                          }`}
-                        >
-                          {row.severity === 'critical'
-                            ? t('admin.notifications.deadLetter.severityCritical', uiLocale)
-                            : t('admin.notifications.deadLetter.severityError', uiLocale)}
+            <OperationalQueueTable
+              locale={uiLocale}
+              rows={rows}
+              caption={label('title')}
+              scrollLabel={label('table')}
+              loading={loading}
+              emptyMessage={label('empty')}
+              nameHeader={label('eventKey')}
+              renderName={(row) => (
+                <>
+                  <span className="font-mono text-xs">
+                    <TextCell value={row.eventKey} />
+                  </span>
+                </>
+              )}
+
+              fields={[
+                {
+                  id: 'channel',
+                  label: label('channel'),
+                  render: (row) => <>{channelLabel(row.channel, uiLocale)}</>,
+                },
+                {
+                  id: 'severity',
+                  label: label('severity'),
+                  render: (row) => (
+                    <>
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                          row.severity === 'critical'
+                            ? 'bg-danger-soft text-destructive'
+                            : 'bg-warning-soft text-warning'
+                        }`}
+                      >
+                        {row.severity === 'critical'
+                          ? t('admin.notifications.deadLetter.severityCritical', uiLocale)
+                          : t('admin.notifications.deadLetter.severityError', uiLocale)}
+                      </span>
+                      {row.status !== 'open' && (
+                        <span className="block text-xs text-muted-foreground mt-1">
+                          {statusLabel(row.status, uiLocale)}
                         </span>
-                        {row.status !== 'open' && (
-                          <span className="block text-xs text-muted-foreground mt-1">
-                            {statusLabel(row.status, uiLocale)}
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 font-mono text-xs" dir="ltr">
-                        {row.cause ?? '—'}
-                        <details className="mt-2 font-sans" dir={uiLocale === 'fa' ? 'rtl' : 'ltr'}>
-                          <summary className="cursor-pointer">{label('details')}</summary>
+                      )}
+                    </>
+                  ),
+                },
+                {
+                  id: 'cause',
+                  label: label('cause'),
+                  render: (row) => (
+                    <div className="max-w-md [overflow-wrap:anywhere]">
+                      <TextCell value={row.cause ?? '—'} />
+                      <QueueRecordDetails
+                        open={!!expanded[row.id]}
+                        onToggle={() => toggleDetails(row.id)}
+                        label={label('details')}
+                      >
+                        <p>
+                          {label('recipient')}: <bdi>{row.recipientKey ?? '—'}</bdi>
+                        </p>
+                        {row.resolvedById && (
                           <p>
-                            {label('recipient')}: <bdi>{row.recipientKey ?? '—'}</bdi>
+                            {label('actedBy')}: <bdi>{row.resolvedById}</bdi>
                           </p>
-                          {row.resolvedById && (
-                            <p>
-                              {label('actedBy')}: <bdi>{row.resolvedById}</bdi>
-                            </p>
-                          )}
-                          <pre
-                            dir="ltr"
-                            className="max-w-sm overflow-auto whitespace-pre-wrap break-words"
-                          >
-                            {JSON.stringify(row.data, null, 2)}
-                          </pre>
-                          <Button
-                            variant="outline"
-                            onClick={() =>
-                              historyQueries
-                                ? historyQueries.setQuery({
-                                    filters: {
-                                      mode: 'target',
-                                      notificationId: row.outboxId,
-                                      channel: row.channel,
-                                      status: '',
-                                    },
-                                    page: 1,
-                                  })
-                                : setHistory(row)
-                            }
-                          >
-                            {t('admin.notifications.history.title', uiLocale)}
-                          </Button>
-                        </details>
-                      </td>
-                      <td className="px-4 py-3">
-                        {numbers.number(row.attempts)}/{numbers.number(row.maxAttempts)}
-                      </td>
-                      <td className="px-4 py-3 text-xs text-muted-foreground">
-                        {time.format(row.createdAt)}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        {row.status === 'open' && access.data?.canRetry ? (
-                          <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => act(row, 'retry')}
-                              disabled={action !== null || locked || !queue.canRetry}
-                              aria-label={`${t('admin.notifications.deadLetter.retry', uiLocale)} ${row.eventKey}`}
-                            >
-                              {t('admin.notifications.deadLetter.retry', uiLocale)}
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => act(row, 'resolve')}
-                              disabled={action !== null || locked || !queue.canRetry}
-                              aria-label={`${t('admin.notifications.deadLetter.resolve', uiLocale)} ${row.eventKey}`}
-                            >
-                              {t('admin.notifications.deadLetter.resolve', uiLocale)}
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => act(row, 'dismiss')}
-                              disabled={action !== null || locked || !queue.canRetry}
-                              aria-label={`${t('admin.notifications.deadLetter.dismiss', uiLocale)} ${row.eventKey}`}
-                            >
-                              {t('admin.notifications.deadLetter.dismiss', uiLocale)}
-                            </Button>
-                          </div>
-                        ) : (
-                          <span className="text-xs text-muted-foreground">—</span>
                         )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </ScrollArea>
+                        <pre
+                          dir="ltr"
+                          className="max-w-sm overflow-auto whitespace-pre-wrap break-words"
+                        >
+                          {JSON.stringify(row.data, null, 2)}
+                        </pre>
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            historyQueries
+                              ? historyQueries.setQuery({
+                                  filters: {
+                                    mode: 'target',
+                                    notificationId: row.outboxId,
+                                    channel: row.channel,
+                                    status: '',
+                                  },
+                                  page: 1,
+                                })
+                              : setHistory(row)
+                          }
+                        >
+                          {t('admin.notifications.history.title', uiLocale)}
+                        </Button>
+                      </QueueRecordDetails>
+                    </div>
+                  ),
+                },
+                {
+                  id: 'attempts',
+                  label: label('attempts'),
+                  render: (row) => (
+                    <bdi dir="ltr" className="whitespace-nowrap">
+                      {numbers.number(row.attempts)}/{numbers.number(row.maxAttempts)}
+                    </bdi>
+                  ),
+                },
+                {
+                  id: 'date',
+                  label: label('date'),
+                  render: (row) => (
+                    <>
+                      <DateCell value={row.createdAt} format={(stamp) => time.format(stamp)} />
+                    </>
+                  ),
+                },
+              ]}
+              actionHeader={label('actions')}
+              renderActions={(row) => (
+                <>
+                  {row.status === 'open' && access.data?.canRetry ? (
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => act(row, 'retry')}
+                        disabled={action !== null || locked || !queue.canRetry}
+                        aria-label={`${t('admin.notifications.deadLetter.retry', uiLocale)} ${row.eventKey}`}
+                      >
+                        {t('admin.notifications.deadLetter.retry', uiLocale)}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => act(row, 'resolve')}
+                        disabled={action !== null || locked || !queue.canRetry}
+                        aria-label={`${t('admin.notifications.deadLetter.resolve', uiLocale)} ${row.eventKey}`}
+                      >
+                        {t('admin.notifications.deadLetter.resolve', uiLocale)}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => act(row, 'dismiss')}
+                        disabled={action !== null || locked || !queue.canRetry}
+                        aria-label={`${t('admin.notifications.deadLetter.dismiss', uiLocale)} ${row.eventKey}`}
+                      >
+                        {t('admin.notifications.deadLetter.dismiss', uiLocale)}
+                      </Button>
+                    </div>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">—</span>
+                  )}
+                </>
+              )}
+            />
           )}
         </ListPage.Content>
         {queue.canView && (
@@ -666,7 +681,9 @@ export default function DeadLetterPanel({
           confirmationDisabled={!queue.canRetry}
           summary={recovery}
           finalFocus={() =>
-            action.trigger?.isConnected && !action.trigger.hasAttribute('disabled')
+            action.trigger?.isConnected &&
+            action.trigger.getClientRects().length > 0 &&
+            !action.trigger.hasAttribute('disabled')
               ? action.trigger
               : refreshButton.current
           }
