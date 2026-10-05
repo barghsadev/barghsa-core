@@ -4,6 +4,10 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { pdfPreviewImage, pdfPreviewFixture } from './upload-fixture';
+import {
+  actualClosurePreview,
+  actualStepUp,
+} from '../src/components/profile-lifecycle-test-fixture';
 
 const attachmentDigest = createHash('sha256').update(pdfPreviewFixture()).digest('hex');
 
@@ -174,7 +178,7 @@ export async function setupTicketForms(page: Page, locale: 'en' | 'fa', staff: b
   );
   await page.route('**/api/auth/step-up', (route) => {
     state.stepUpWrites++;
-    return route.fulfill({ json: { ok: true } });
+    return route.fulfill({ json: actualStepUp() });
   });
   await page.route('**/api/tickets/options**', async (route) => {
     state.readLog.push(route.request().url());
@@ -426,13 +430,10 @@ export async function setupTicketForms(page: Page, locale: 'en' | 'fa', staff: b
           state.closureReads++;
           return route.fulfill({
             json: {
-              eligible: true,
-              completedAt: null,
-              anonymizeProfile: false,
-              blockers: [],
-              retained: { tickets: 1 },
-              exportTicketId: null,
-              previewVersion: 'a'.repeat(64),
+              ...actualClosurePreview(),
+              ticketId: selected,
+              profileId,
+              ownerUserId: customerActor,
             },
           });
         }

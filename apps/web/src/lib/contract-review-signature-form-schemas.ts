@@ -90,3 +90,5 @@ export {
 export { registrationFormSchema, inactiveRegistrationSchema } from './registration-form-schemas.js';
 
 export { loginFormSchema, inactiveLoginSchema } from './login-form-schemas.js';
+
+export { profileClosureSchema, inactiveClosureSchema } from './profile-lifecycle-form-schemas.js';

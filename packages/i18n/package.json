@@ -348,6 +348,10 @@
     "./login-forms": {
       "types": "./dist/login-forms.d.ts",
       "import": "./dist/login-forms.js"
+    },
+    "./profile-lifecycle-forms": {
+      "types": "./dist/profile-lifecycle-forms.d.ts",
+      "import": "./dist/profile-lifecycle-forms.js"
     }
   },
   "scripts": {

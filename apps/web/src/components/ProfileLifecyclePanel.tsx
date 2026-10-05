@@ -1,174 +1,221 @@
 import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, Button } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
+import { lifecycleFormText } from '@barghsa/i18n/profile-lifecycle-forms';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { withCsrf } from '../lib/csrf.js';
+import {
+  lifecyclePreview,
+  lifecycleRequestReceipt,
+  lifecycleExportReceipt,
+  type LifecyclePreview,
+  type LifecycleType,
+} from '../lib/profile-lifecycle-form.js';
 import { JobProgress } from './jobs/JobProgress.js';
-
-type RequestType = 'export' | 'closure';
-type BlockerCode =
-  | 'legalHold'
-  | 'unpaidInvoice'
-  | 'pendingRefund'
-  | 'walletBalance'
-  | 'activeContract'
-  | 'securityReview';
-interface Blocker {
-  code: BlockerCode;
-  count: number;
-  owner: string;
-  nextStep: string;
-}
-interface Preview {
-  profileId: string;
-  blockers: Blocker[];
-  requests: {
-    ticketId: string;
-    type: RequestType;
-    status: string;
-    createdAt: string;
-    exportJobId: string | null;
-    exportExpiresAt: string | null;
-  }[];
-}
-const blockerCodes: BlockerCode[] = [
-  'legalHold',
-  'unpaidInvoice',
-  'pendingRefund',
-  'walletBalance',
-  'activeContract',
-  'securityReview',
-];
-const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-function parsePreview(value: unknown): Preview {
-  if (!value || typeof value !== 'object') throw new Error('Invalid preview');
-  const row = value as Record<string, unknown>;
-  if (
-    typeof row.profileId !== 'string' ||
-    !uuid.test(row.profileId) ||
-    !Array.isArray(row.blockers) ||
-    !Array.isArray(row.requests)
-  )
-    throw new Error('Invalid preview');
-  if (
-    !row.blockers.every((item: unknown) => {
-      if (!item || typeof item !== 'object') return false;
-      const blocker = item as Record<string, unknown>;
-      return (
-        blockerCodes.includes(blocker.code as BlockerCode) &&
-        typeof blocker.count === 'number' &&
-        Number.isSafeInteger(blocker.count) &&
-        blocker.count >= 0 &&
-        typeof blocker.owner === 'string' &&
-        typeof blocker.nextStep === 'string'
-      );
-    })
-  )
-    throw new Error('Invalid blockers');
-  if (
-    !row.requests.every((item: unknown) => {
-      if (!item || typeof item !== 'object') return false;
-      const request = item as Record<string, unknown>;
-      return (
-        typeof request.ticketId === 'string' &&
-        uuid.test(request.ticketId) &&
-        (request.type === 'export' || request.type === 'closure') &&
-        typeof request.status === 'string' &&
-        typeof request.createdAt === 'string' &&
-        (request.exportJobId === null ||
-          (typeof request.exportJobId === 'string' && uuid.test(request.exportJobId))) &&
-        (request.exportExpiresAt === null || typeof request.exportExpiresAt === 'string')
-      );
-    })
-  )
-    throw new Error('Invalid requests');
-  return row as unknown as Preview;
-}
-
 export function ProfileLifecyclePanel() {
-  const locale = useLocale();
-  const numbers = useNumberFormatting(locale);
-  const [preview, setPreview] = useState<Preview | null>(null);
+  const actor = useAccountUser(),
+    revision = useProfileContextRevision(),
+    current = useRef(actor);
+  current.current = actor;
+  return (
+    <LifecyclePanel
+      key={String(actor) + ':' + revision}
+      authorized={() =>
+        !!actor && current.current === actor && getProfileContextRevision() === revision
+      }
+    />
+  );
+}
+interface Command {
+  type: LifecycleType;
+  profileId: string;
+  body: { type: LifecycleType; idempotencyKey: string; locale: 'fa' | 'en' } | null;
+  ticketId: string | null;
+  jobId: string | null;
+  stage: 'request' | 'export' | 'read';
+}
+function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
+  const locale = useLocale(),
+    numbers = useNumberFormatting(locale);
+  const [preview, setPreview] = useState<LifecyclePreview | null>(null);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'ownerOnly'>('loading');
-  const [submitting, setSubmitting] = useState<RequestType | null>(null);
-  const [submitError, setSubmitError] = useState(false);
-  const key = useRef<{ type: RequestType; value: string } | null>(null);
-  const busy = useRef(false);
-
-  async function startExport(ticketId: string) {
-    const response = await fetch(`/api/tickets/lifecycle-requests/${ticketId}/export`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: withCsrf(),
-    });
-    if (!response.ok) throw new Error('Export could not be queued');
-    await refresh();
+  const [submitting, setSubmitting] = useState<LifecycleType | null>(null);
+  const [submitError, setSubmitError] = useState(false),
+    [pending, setPending] = useState(false);
+  const command = useRef<Command | null>(null),
+    busy = useRef(false),
+    alive = useRef(true);
+  const permitted = () => alive.current && authorized();
+  function denied(response: Response) {
+    if (![401, 403].includes(response.status) || !permitted()) return false;
+    command.current = null;
+    setPending(false);
+    setPreview(null);
+    setState('ownerOnly');
+    return true;
   }
-
-  async function refresh(signal?: AbortSignal) {
+  async function refresh(signal?: AbortSignal): Promise<LifecyclePreview | null> {
     const response = await fetch('/api/tickets/lifecycle-preview', {
       credentials: 'include',
       ...(signal ? { signal } : {}),
     });
-    if (response.status === 403) {
-      setState('ownerOnly');
-      return;
-    }
+    if (!permitted() || signal?.aborted) return null;
+    if (denied(response)) return null;
     if (!response.ok) throw new Error('Preview unavailable');
-    setPreview(parsePreview(await response.json()));
+    const data = lifecyclePreview(await response.json());
+    if (!permitted() || signal?.aborted) return null;
+    if (!data || (command.current && data.profileId !== command.current.profileId))
+      throw new Error('Invalid preview');
+    setPreview(data);
     setState('ready');
+    return data;
   }
   useEffect(() => {
+    alive.current = true;
     const controller = new AbortController();
-    void refresh(controller.signal).catch(() => {
-      if (!controller.signal.aborted) setState('error');
-    });
-    return () => controller.abort();
-  }, []);
-
-  async function request(type: RequestType) {
-    if (busy.current || state !== 'ready') return;
-    busy.current = true;
-    setSubmitting(type);
-    setSubmitError(false);
-    if (!key.current || key.current.type !== type)
-      key.current = { type, value: crypto.randomUUID() };
-    try {
-      const response = await fetch('/api/tickets/lifecycle-requests', {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ type, idempotencyKey: key.current.value, locale }),
+    if (!authorized()) setState('ownerOnly');
+    else
+      void refresh(controller.signal).catch(() => {
+        if (!controller.signal.aborted && permitted()) setState('error');
       });
-      if (!response.ok) throw new Error('Request failed');
-      if (type === 'export') {
-        const body = (await response.json()) as { ticketId?: unknown };
-        if (typeof body.ticketId !== 'string' || !uuid.test(body.ticketId))
-          throw new Error('Invalid request response');
-        await startExport(body.ticketId);
-      } else {
-        await refresh();
+    return () => {
+      alive.current = false;
+      controller.abort();
+    };
+  }, []);
+  async function run(next?: Command) {
+    if (busy.current || !permitted() || (next && (command.current || state !== 'ready'))) return;
+    if (next) command.current = next;
+    const captured = command.current;
+    if (!captured) return;
+    busy.current = true;
+    setSubmitting(captured.type);
+    setSubmitError(false);
+    try {
+      if (captured.stage === 'request') {
+        const response = await fetch('/api/tickets/lifecycle-requests', {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify(captured.body),
+        });
+        if (!permitted() || denied(response)) return;
+        if (response.status !== 201) throw new Error('Request failed');
+        const receipt: unknown = await response.json();
+        if (!permitted()) return;
+        if (!lifecycleRequestReceipt(receipt, captured.profileId, captured.type))
+          throw new Error('Invalid receipt');
+        captured.ticketId = receipt.ticketId;
+        captured.stage = captured.type === 'export' ? 'export' : 'read';
       }
-      key.current = null;
+      if (captured.stage === 'export') {
+        const response = await fetch(
+          `/api/tickets/lifecycle-requests/${captured.ticketId}/export`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf(),
+          }
+        );
+        if (!permitted() || denied(response)) return;
+        if (response.status !== 202) throw new Error('Export could not be queued');
+        const receipt: unknown = await response.json();
+        if (!permitted()) return;
+        if (!lifecycleExportReceipt(receipt, captured.ticketId!))
+          throw new Error('Invalid export receipt');
+        captured.jobId = receipt.jobId;
+        captured.stage = 'read';
+      }
+      const data = await refresh();
+      if (!permitted() || !data) return;
+      if (
+        !data.requests.some(
+          (r) =>
+            r.ticketId === captured.ticketId &&
+            r.type === captured.type &&
+            (!captured.jobId || r.exportJobId === captured.jobId)
+        )
+      )
+        throw new Error('Request not visible');
+      command.current = null;
+      setPending(false);
     } catch {
-      setSubmitError(true);
+      if (permitted()) {
+        setPending(true);
+        setSubmitError(true);
+      }
     } finally {
       busy.current = false;
-      setSubmitting(null);
+      if (permitted()) setSubmitting(null);
     }
   }
-
+  function request(type: LifecycleType) {
+    if (!preview || command.current || busy.current || !permitted()) return;
+    void run({
+      type,
+      profileId: preview.profileId,
+      body: { type, idempotencyKey: crypto.randomUUID(), locale },
+      ticketId: null,
+      jobId: null,
+      stage: 'request',
+    });
+  }
+  function startExport(ticketId: string) {
+    if (
+      !preview ||
+      command.current ||
+      busy.current ||
+      !permitted() ||
+      !preview.requests.some(
+        (r) => r.ticketId === ticketId && r.type === 'export' && !r.exportJobId
+      )
+    )
+      return;
+    void run({
+      type: 'export',
+      profileId: preview.profileId,
+      body: null,
+      ticketId,
+      jobId: null,
+      stage: 'export',
+    });
+  }
   return (
     <main
+      data-slot="profile-lifecycle"
       className="container mx-auto max-w-3xl space-y-6 px-4 py-8"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <h1 className="text-2xl font-semibold">{t('settings.privacy.title', locale)}</h1>
       <p className="text-muted-foreground">{t('settings.privacy.intro', locale)}</p>
       {state === 'loading' && <p role="status">{t('settings.privacy.loading', locale)}</p>}
-      {state === 'error' && <p role="alert">{t('settings.privacy.error', locale)}</p>}
+      {state === 'error' && (
+        <div role="alert">
+          <p>{t('settings.privacy.error', locale)}</p>
+          <Button
+            type="button"
+            disabled={submitting !== null}
+            onClick={() => {
+              if (busy.current || !permitted()) return;
+              busy.current = true;
+              setSubmitting('closure');
+              void refresh()
+                .catch(() => {
+                  if (permitted()) setState('error');
+                })
+                .finally(() => {
+                  busy.current = false;
+                  if (permitted()) setSubmitting(null);
+                });
+            }}
+          >
+            {lifecycleFormText('refresh', locale)}
+          </Button>
+        </div>
+      )}
       {state === 'ownerOnly' && <p role="alert">{t('settings.privacy.ownerOnly', locale)}</p>}
       {state === 'ready' && preview && (
         <>
@@ -182,7 +229,7 @@ export function ProfileLifecyclePanel() {
               </p>
               <Button
                 type="button"
-                disabled={submitting !== null}
+                disabled={submitting !== null || pending}
                 onClick={() => void request('export')}
               >
                 {t('settings.privacy.export.action', locale)}
@@ -224,7 +271,7 @@ export function ProfileLifecyclePanel() {
               </ul>
               <Button
                 type="button"
-                disabled={submitting !== null}
+                disabled={submitting !== null || pending}
                 onClick={() => void request('closure')}
               >
                 {t('settings.privacy.closure.action', locale)}
@@ -233,8 +280,15 @@ export function ProfileLifecyclePanel() {
           </Card>
           {submitError && (
             <p role="alert" className="text-destructive">
-              {t('settings.privacy.submitError', locale)}
+              {pending
+                ? lifecycleFormText('uncertain', locale)
+                : t('settings.privacy.submitError', locale)}
             </p>
+          )}
+          {pending && (
+            <Button type="button" disabled={submitting !== null} onClick={() => void run()}>
+              {lifecycleFormText('retry', locale)}
+            </Button>
           )}
           {preview.requests.length > 0 && (
             <section className="space-y-2" aria-label={t('settings.privacy.requests', locale)}>
@@ -262,9 +316,9 @@ export function ProfileLifecyclePanel() {
                     {item.type === 'export' && !item.exportJobId && (
                       <Button
                         type="button"
-                        disabled={submitting !== null}
+                        disabled={submitting !== null || pending}
                         onClick={() => {
-                          void startExport(item.ticketId).catch(() => setSubmitError(true));
+                          startExport(item.ticketId);
                         }}
                       >
                         {t('settings.privacy.export.prepare', locale)}

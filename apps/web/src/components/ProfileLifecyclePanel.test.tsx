@@ -3,22 +3,20 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { ProfileLifecyclePanel } from './ProfileLifecyclePanel.js';
 
-const profileId = '11111111-1111-7111-8111-111111111111';
-const ticketId = '22222222-2222-7222-8222-222222222222';
-const jobId = '33333333-3333-7333-8333-333333333333';
-const preview = {
-  profileId,
-  blockers: [
-    { code: 'legalHold', count: 1, owner: 'legal', nextStep: 'contactSupport' },
-    { code: 'walletBalance', count: 0, owner: 'customer', nextStep: 'settleWallet' },
-    { code: 'securityReview', count: 1, owner: 'privacy', nextStep: 'staffReview' },
-  ],
-  requests: [],
-};
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
+import {
+  actualLifecyclePreview,
+  lifecycleTicketId as ticketId,
+  lifecycleJobId as jobId,
+  lifecycleProfileId as profileId,
+} from './profile-lifecycle-test-fixture.js';
+const preview = actualLifecyclePreview();
+preview.blockers = preview.blockers.map((b) => (b.code === 'legalHold' ? { ...b, count: 1 } : b));
 let container: HTMLDivElement;
 let root: Root;
 
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   document.documentElement.lang = 'en';
   container = document.createElement('div');
   document.body.appendChild(container);
@@ -31,7 +29,13 @@ afterEach(async () => {
 });
 
 async function render() {
-  await act(async () => root.render(<ProfileLifecyclePanel />));
+  await act(async () =>
+    root.render(
+      <AccountUserProvider value="owner/opaque">
+        <ProfileLifecyclePanel />
+      </AccountUserProvider>
+    )
+  );
   await act(async () => {
     await Promise.resolve();
   });
@@ -58,56 +62,69 @@ it('shows distinct export and closure actions with blockers and the responsible 
   expect(container.textContent).toContain('نگهداری قانونی اسناد');
 });
 
-it('reuses the same key when confirmation fails after submission and links the support thread', async () => {
+it('retries only the saved export ticket after a confirmed request and links its support thread', async () => {
   const submitted: Array<{ type: string; idempotencyKey: string }> = [];
-  let posts = 0;
+  let exports = 0;
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string, options?: RequestInit) => {
       if (options?.method === 'POST') {
         if (url.endsWith('/export')) {
-          return { ok: posts >= 2, status: posts >= 2 ? 202 : 503 };
+          if (++exports === 1) return Response.json({}, { status: 503 });
+          return Response.json({ ticketId, jobId, created: false }, { status: 202 });
         }
         submitted.push(JSON.parse(options.body as string));
-        posts += 1;
-        return { ok: true, status: 201, json: async () => ({ ticketId }) };
+        return Response.json(
+          { ticketId, profileId, type: 'export', created: true },
+          { status: 201 }
+        );
       }
-      return {
-        ok: true,
-        status: 200,
-        json: async () => ({
-          ...preview,
-          requests:
-            posts >= 2
-              ? [
-                  {
-                    ticketId,
-                    type: 'export',
-                    status: 'open',
-                    createdAt: new Date().toISOString(),
-                    exportJobId: null,
-                    exportExpiresAt: null,
-                  },
-                ]
-              : [],
-        }),
-      };
+      if (url.startsWith('/api/jobs/'))
+        return Response.json({
+          id: jobId,
+          type: 'profile-export',
+          status: 'queued',
+          progress_pct: 0,
+          result_url: null,
+          error_message: null,
+          created_at: new Date().toISOString(),
+          started_at: null,
+          completed_at: null,
+        });
+      return Response.json({
+        ...preview,
+        requests:
+          exports >= 2
+            ? [
+                {
+                  ticketId,
+                  type: 'export',
+                  status: 'open',
+                  createdAt: new Date().toISOString(),
+                  exportJobId: jobId,
+                  exportExpiresAt: null,
+                },
+              ]
+            : [],
+      });
     })
   );
   await render();
   const button = [...container.querySelectorAll('button')].find(
-    (item) => item.textContent === 'Request data export'
+    (b) => b.textContent === 'Request data export'
   )!;
-  await act(async () => {
-    button.click();
-  });
-  expect(container.textContent).toContain('The request could not be confirmed.');
-  await act(async () => {
-    button.click();
-  });
-  expect(submitted).toHaveLength(2);
+  await act(async () => button.click());
+  expect(container.textContent).toContain('The result is not confirmed');
+  expect(button.disabled).toBe(true);
+  await act(async () =>
+    [...container.querySelectorAll('button')]
+      .find((b) => b.textContent === 'Retry the original request')!
+      .click()
+  );
+  expect(submitted).toHaveLength(1);
   expect(submitted[0]?.type).toBe('export');
-  expect(submitted[1]?.idempotencyKey).toBe(submitted[0]?.idempotencyKey);
+  expect(submitted[0]?.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/);
+  expect(exports).toBe(2);
   expect(container.querySelector(`a[href="/tickets?ticketId=${ticketId}"]`)).toBeTruthy();
 });
 
@@ -151,4 +168,121 @@ it('shows live export progress beside its support request', async () => {
   });
   expect(container.textContent).toContain('Queued');
   expect(container.querySelector(`a[href="/tickets?ticketId=${ticketId}"]`)).toBeTruthy();
+});
+
+it('holds the original create key, locale and type across an unknown response and language change', async () => {
+  const writes: Record<string, unknown>[] = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (_url: string, options?: RequestInit) => {
+      if (options?.method === 'POST') {
+        writes.push(JSON.parse(String(options.body)));
+        return writes.length === 1
+          ? Response.json({ ticketId }, { status: 201 })
+          : Response.json(
+              { ticketId, profileId, type: 'closure', created: false },
+              { status: 201 }
+            );
+      }
+      return Response.json({
+        ...preview,
+        requests:
+          writes.length > 1
+            ? [
+                {
+                  ticketId,
+                  type: 'closure',
+                  status: 'open',
+                  createdAt: new Date().toISOString(),
+                  exportJobId: null,
+                  exportExpiresAt: null,
+                },
+              ]
+            : [],
+      });
+    })
+  );
+  await render();
+  const closure = [...container.querySelectorAll('button')].find(
+    (b) => b.textContent === 'Request profile closure'
+  )!;
+  await act(async () => {
+    closure.click();
+    closure.click();
+  });
+  expect(writes).toHaveLength(1);
+  expect(
+    [...container.querySelectorAll('button')].find((b) => b.textContent === 'Request data export')!
+      .disabled
+  ).toBe(true);
+  await act(async () => {
+    document.documentElement.lang = 'fa';
+  });
+  await act(async () =>
+    [...container.querySelectorAll('button')]
+      .find((b) => b.textContent === 'تلاش دوباره با همان درخواست')!
+      .click()
+  );
+  expect(writes).toHaveLength(2);
+  expect(writes[1]).toEqual(writes[0]);
+  expect(writes[0]).toMatchObject({ type: 'closure', locale: 'en' });
+});
+it('rejects a partial blocker preview and retries an authorized complete read', async () => {
+  let reads = 0;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () =>
+      Response.json(
+        ++reads === 1 ? { ...preview, blockers: preview.blockers.slice(0, 6) } : preview
+      )
+    )
+  );
+  await render();
+  expect(container.querySelector('[role=alert]')).not.toBeNull();
+  expect(container.textContent).not.toContain('Request profile closure');
+  await act(async () => container.querySelector<HTMLButtonElement>('button')!.click());
+  expect(container.textContent).toContain('Request profile closure');
+  expect(reads).toBe(2);
+});
+it('discards a late preview and retired controls when the current account changes', async () => {
+  let finish!: (value: Response) => void;
+  const fetcher = vi.fn(
+    async () =>
+      new Promise<Response>((resolve) => {
+        finish = resolve;
+      })
+  );
+  vi.stubGlobal('fetch', fetcher);
+  await render();
+  const old = finish;
+  await act(async () =>
+    root.render(
+      <AccountUserProvider value="another/opaque">
+        <ProfileLifecyclePanel />
+      </AccountUserProvider>
+    )
+  );
+  await act(async () => old(Response.json(preview)));
+  expect(container.textContent).not.toContain('Request profile closure');
+  await act(async () =>
+    finish(Response.json({ ...preview, profileId: '22222222-2222-4222-8222-222222222222' }))
+  );
+  expect(container.textContent).toContain('Request profile closure');
+  expect(fetcher).toHaveBeenCalledTimes(2);
+});
+it('withdraws lifecycle actions on a current authorization denial', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (_url: string, init?: RequestInit) =>
+      init?.method === 'POST' ? Response.json({}, { status: 403 }) : Response.json(preview)
+    )
+  );
+  await render();
+  await act(async () =>
+    [...container.querySelectorAll('button')]
+      .find((b) => b.textContent === 'Request profile closure')!
+      .click()
+  );
+  expect(container.textContent).not.toContain('Request profile closure');
+  expect(container.querySelector('[role=alert]')).not.toBeNull();
 });

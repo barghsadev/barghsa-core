@@ -1,5 +1,13 @@
 # Development continuation status
 
+## Latest manual batch: profile lifecycle request ownership and staff closure forms (October 5, 2026)
+
+Completed customer export/closure ownership and staff native confirmation/password as one lifecycle batch. The actual eleven-blocker preview is accepted, captured request keys/locales survive uncertainty, and known export creation advances to saved-ticket/job/read retries. Staff complete dry-run/step-up/closure proof and ticket-page retry markers retain the original approval version while blocking companion writes; changed reviews require renewed consent.
+
+All 38 distinct source/dictionary/real-DB HTTP cases have passing evidence. All 24 selected Chromium/mobile Safari cases have passing evidence through 20 initial passes plus all eight final affected staff passes (four overlaps), with zero retries. Sixteen selected original captures are reviewed with documented compact/mobile framing limits. Build/types, lint/format, contracts/suppression, all 85 unchanged budgets and strict SAST pass (1,782 files; zero findings/errors; five fixtures). All 214 protected paths and 488 final assets retain their hashes. See `kanban/batches/2026-10-05-profile-lifecycle-forms.md`.
+
+Reuse `02-auth-users-admin.md#T-11.01.01` through `#T-11.01.03`; do not recount engines. Global `07-ui-ux-design.md#T-07.10.01.02` through `#T-07.10.01.06` remain partial. Select the next coherent uncovered kanban family from current code and acceptance criteria; continue build/review/related-checks/direct-main batches using GitHub CLI and no PRs. The preceding login commit's five CI jobs passed; this batch's exact-commit CI is tracked separately.
+
 ## Latest manual batch: login native forms and public-auth language ownership (October 5, 2026)
 
 Completed login credentials, required password change and OTP/trust/resend as one bilingual native family. Linked first-invalid validation, retained raw drafts, actual receipt predicates, synchronous ownership and elapsed deadlines protect captured public-auth commands. Unknown results require deliberate fresh login; transitions retire old controls and clear secrets. Language-only changes retain unresolved ownership, including two narrow registration/verification corrections with failing/passing regressions.
