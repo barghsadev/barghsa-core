@@ -5786,6 +5786,18 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "terminalAction",
+            "required": false,
+            "schema": {
+              "enum": [
+                "cancel",
+                "reject"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5874,6 +5886,18 @@
             "required": true,
             "schema": {
               "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "terminalAction",
+            "required": false,
+            "schema": {
+              "enum": [
+                "cancel",
+                "reject"
+              ],
               "type": "string"
             }
           }
@@ -5998,6 +6022,13 @@
                         "type": "object"
                       }
                     ]
+                  },
+                  "terminalAction": {
+                    "enum": [
+                      "cancel",
+                      "reject"
+                    ],
+                    "type": "string"
                   }
                 },
                 "required": [

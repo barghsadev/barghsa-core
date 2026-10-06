@@ -1,5 +1,15 @@
-import { Body, Controller, Get, HttpException, Param, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  Param,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -36,9 +46,17 @@ export class ContractCancellationController {
   @Get()
   @ApiParam({ name: 'id', format: 'uuid' })
   @ApiOperation({ summary: 'Resume the latest saved cancellation decision for this contract' })
-  latest(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+  @ApiQuery({ name: 'terminalAction', required: false, enum: ['cancel', 'reject'] })
+  latest(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Query('terminalAction') action?: string
+  ) {
     this.authorize(req);
-    return this.service.latest(parse(contractUuid, id));
+    return this.service.latest(
+      parse(contractUuid, id),
+      parse(z.enum(['cancel', 'reject']).default('cancel'), action)
+    );
   }
 
   @Post()
@@ -59,6 +77,7 @@ export class ContractCancellationController {
         'idempotencyKey',
       ],
       properties: {
+        terminalAction: { type: 'string', enum: ['cancel', 'reject'] },
         expectedVersionId: { type: 'string', format: 'uuid' },
         expectedFingerprint: { type: 'string', pattern: '^[0-9a-f]{64}$' },
         reason: { type: 'string', minLength: 1, maxLength: 1000 },

@@ -2,11 +2,13 @@ import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { t } from '@barghsa/i18n/admin-ui';
+import { contractText } from '@barghsa/i18n/contracts';
 import { AdminApprovalRequestsView } from './AdminApprovalRequestsPage.js';
 import type { TeamAction } from '../components/TeamActionDialog.js';
 
 interface Confirmation {
   action: TeamAction;
+  summary?: ReactNode;
   onClose: () => void;
   onSuccess: (result: unknown) => Promise<void>;
   onValidationError: (fields: unknown[]) => boolean;
@@ -29,7 +31,12 @@ vi.mock('../components/DualApprovalThresholdPanel.js', () => ({ default: () => n
 vi.mock('../components/TeamActionDialog.js', () => ({
   TeamActionDialog: (props: Confirmation) => {
     state.confirmation = props;
-    return <div role="dialog">{props.action.path}</div>;
+    return (
+      <div role="dialog">
+        {props.action.path}
+        {props.summary}
+      </div>
+    );
   },
 }));
 const first = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
@@ -257,3 +264,43 @@ it('denial clears all private work and obsolete field/success callbacks cannot a
   expect(feedback()).toBeNull();
   expect(vi.mocked(fetch).mock.calls).toHaveLength(reads);
 });
+
+for (const locale of ['en', 'fa'] as const)
+  it(
+    locale + ': identifies rejection and every promised wallet return for the second reviewer',
+    async () => {
+      state.locale = locale;
+      const request = {
+        ...row(),
+        actionType: 'contract_cancellation',
+        amountIrR: '750000',
+        details: {
+          terminalAction: 'reject',
+          contractId: first,
+          profileId: second,
+          versionId: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc',
+          refundDecision: {
+            mode: 'full_wallet',
+            refunds: [
+              { invoiceId: 'first-invoice', amount: '500000', destination: 'wallet' },
+              { invoiceId: 'second-invoice', amount: '250000', destination: 'wallet' },
+            ],
+          },
+        },
+      };
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async () => Response.json([request]))
+      );
+      await render();
+      expect(container.textContent).toContain(contractText('rejectionTitle', locale));
+      await click(t('admin.approvals.approve', locale));
+      expect(container.querySelector('[role=dialog]')!.textContent).toContain(
+        contractText('rejectionFinancialReview', locale)
+      );
+      expect(container.querySelector('[role=dialog]')!.textContent).toContain('first-invoice');
+      expect(container.querySelector('[role=dialog]')!.textContent).toContain('second-invoice');
+      expect(container.querySelector('[role=dialog]')!.textContent).toContain('500000');
+      expect(container.querySelector('[role=dialog]')!.textContent).toContain('250000');
+    }
+  );

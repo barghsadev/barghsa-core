@@ -27,19 +27,37 @@ import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
 export default function CancellationEditor({
   id,
+  terminalAction = 'cancel',
   customerRequestId,
   canChooseRefund,
   onChanged,
   unavailable,
 }: {
   id: string;
+  terminalAction?: 'cancel' | 'reject';
   customerRequestId: string | null;
   canChooseRefund: boolean;
   unavailable: boolean;
   onChanged: () => void;
 }) {
   const locale = useLocale(),
-    word = (key: string) => contractText(key, locale),
+    word = (key: string) =>
+      contractText(
+        terminalAction === 'reject' &&
+          [
+            'cancellationBlocked',
+            'cancellationSave',
+            'cancellationConfirm',
+            'cancellationPrepareNotice',
+            'cancellationIrreversible',
+            'cancellationReason',
+            'cancellationElectricity',
+            'cancellationFinancialReview',
+          ].includes(key)
+          ? key.replace('cancellation', 'rejection')
+          : key,
+        locale
+      ),
     money = (raw: string) => new Intl.NumberFormat(locale).format(BigInt(raw));
   const [preview, setPreview] = useState<CancellationPreview | null>(null),
     [intent, setIntent] = useState<CancellationIntent | null>(null);
@@ -102,11 +120,14 @@ export default function CancellationEditor({
     setLoading(true);
     setError(false);
     void Promise.all([
-      documentRequest<CancellationPreview>(`/api/admin/contracts/${id}/cancellation-preview`, {
-        signal: controller.signal,
-      }),
+      documentRequest<CancellationPreview>(
+        `/api/admin/contracts/${id}/cancellation-preview${terminalAction === 'reject' ? '?terminalAction=reject' : ''}`,
+        {
+          signal: controller.signal,
+        }
+      ),
       documentRequest<{ intent: CancellationIntent | null }>(
-        `/api/admin/contracts/${id}/cancellations`,
+        `/api/admin/contracts/${id}/cancellations${terminalAction === 'reject' ? '?terminalAction=reject' : ''}`,
         {
           signal: controller.signal,
         }
@@ -114,6 +135,15 @@ export default function CancellationEditor({
     ])
       .then(([snapshot, saved]) => {
         if (controller.signal.aborted || owner !== generation.current) return;
+        if (
+          terminalAction === 'reject' &&
+          (snapshot.terminalAction !== 'reject' ||
+            snapshot.contractId !== id ||
+            snapshot.serviceType !== 'electricity' ||
+            (saved.intent &&
+              (saved.intent.terminalAction !== 'reject' || saved.intent.contractId !== id)))
+        )
+          throw new Error('Unbound rejection snapshot');
         setPreview(snapshot);
         setLoading(false);
         setDenied(false);
@@ -144,7 +174,7 @@ export default function CancellationEditor({
         else setError(true);
       });
     return () => controller.abort();
-  }, [id, reload, customerRequestId]);
+  }, [id, reload, customerRequestId, terminalAction]);
   function prepare(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy || error || denied || !permitted || draft.form.isSubmissionPending()) return;
@@ -203,6 +233,7 @@ export default function CancellationEditor({
       path: `/api/admin/contracts/${id}/cancellations`,
       method: 'POST',
       body: {
+        ...(terminalAction === 'reject' ? { terminalAction } : {}),
         expectedVersionId: preview.versionId,
         expectedFingerprint: preview.fingerprint,
         reason: reason.trim(),
@@ -481,7 +512,11 @@ export default function CancellationEditor({
         <TeamActionDialog
           action={action}
           confirmationDisabled={unavailable || loading || error || denied || !permitted}
-          summary={review ? <CancellationFinancialReview {...review} /> : null}
+          summary={
+            review ? (
+              <CancellationFinancialReview terminalAction={terminalAction} {...review} />
+            ) : null
+          }
           finalFocus={() => document.getElementById('cancellation-reason')}
           onClose={() => {
             if (current.current === action) close();
@@ -513,7 +548,7 @@ export default function CancellationEditor({
                 receipt.contractId !== id ||
                 receipt.versionId !== review.snapshot.versionId ||
                 receipt.intentId !== intent?.id ||
-                receipt.state !== 'Cancelled'
+                receipt.state !== (terminalAction === 'reject' ? 'Rejected' : 'Cancelled')
               )
                 throw new Error('Cancellation execution acknowledgement mismatch');
               close();
@@ -527,6 +562,7 @@ export default function CancellationEditor({
                 receipt.versionId !== review.snapshot.versionId ||
                 receipt.financialFingerprint !== review.snapshot.fingerprint ||
                 receipt.reason !== review.reason ||
+                (terminalAction === 'reject' && receipt.terminalAction !== 'reject') ||
                 (receipt.customerRequestId ?? null) !== customerRequestId ||
                 !['ready', 'awaiting_approval'].includes(receipt.status) ||
                 !sameRefundDecision(receipt.refundDecision, review.decision)
@@ -548,13 +584,22 @@ function CancellationFinancialReview({
   snapshot,
   decision,
   reason,
+  terminalAction = 'cancel',
 }: {
+  terminalAction?: 'cancel' | 'reject';
   snapshot: CancellationPreview;
   decision: CancellationIntent['refundDecision'];
   reason: string;
 }) {
   const locale = useLocale();
-  const word = (key: string) => contractText(key, locale);
+  const word = (key: string) =>
+    contractText(
+      terminalAction === 'reject' &&
+        ['cancellationFinancialReview', 'cancellationReason'].includes(key)
+        ? key.replace('cancellation', 'rejection')
+        : key,
+      locale
+    );
   const money = (value: string) =>
     `${new Intl.NumberFormat(locale).format(BigInt(value))} ${word('irr')}`;
   const total = decision.refunds.reduce((sum, refund) => sum + BigInt(refund.amount), 0n);

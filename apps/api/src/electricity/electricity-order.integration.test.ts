@@ -4990,3 +4990,381 @@ it.each([
     expect(await electricityTerminalEvidence(http.pool, order.contractId)).toEqual(before);
   }
 );
+
+async function rejectionCommand(order: { contractId: string; versionId: string }) {
+  const response = await fetch(
+    `${http.base}/api/admin/contracts/${order.contractId}/cancellation-preview?terminalAction=reject`,
+    { headers: staffHeaders }
+  );
+  expect(response.status, http.logs()).toBe(200);
+  const snapshot = (await response.json()) as {
+    fingerprint: string;
+    terminalAction: string;
+    blockers: string[];
+  };
+  expect(snapshot.terminalAction).toBe('reject');
+  expect(snapshot.blockers).toEqual([]);
+  expect(JSON.stringify(snapshot)).not.toContain('PRIVATE');
+  return {
+    terminalAction: 'reject',
+    expectedVersionId: order.versionId,
+    expectedFingerprint: snapshot.fingerprint,
+    reason: 'Reviewed pre-active rejection',
+    refundDecision: { mode: 'full_wallet' },
+    idempotencyKey: randomUUID(),
+  };
+}
+async function rejectionSend(
+  contractId: string,
+  path: string,
+  body?: unknown,
+  actor = staffHeaders
+) {
+  return fetch(`${http.base}/api/admin/contracts/${contractId}/cancellations${path}`, {
+    headers: actor,
+    method: body === undefined ? 'GET' : 'POST',
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+  });
+}
+async function rejectionFinance() {
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES('second-finance','second-finance','test',true)"
+  );
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES('second-finance','role-finance')"
+  );
+  const session = randomUUID(),
+    csrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,operating_context) VALUES($1,'second-finance',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW(),'staff')",
+    [session, csrf, randomUUID()]
+  );
+  return {
+    Cookie: 'barghsa_session=' + session,
+    'X-CSRF-Token': csrf,
+    'Content-Type': 'application/json',
+  };
+}
+it.each(
+  (
+    [
+      ['draft', 'Draft'],
+      ['submitted', 'AwaitingStaffReview'],
+      ['awaiting_staff_review', 'AwaitingStaffReview'],
+      ['changes_requested', 'ChangesRequested'],
+      ['approved', 'AwaitingCustomerAcceptance'],
+      ['approved', 'Accepted'],
+      ['approved', 'AwaitingSignature'],
+      ['approved', 'Signed'],
+    ] as const
+  ).flatMap(([commercial, state]) =>
+    [false, true].map((paid) => [commercial, state, paid, paid] as const)
+  )
+)(
+  'reviewed rejection ends %s/%s with paid=%s and approval=%s across all invoices',
+  async (commercial, state, paid, approval) => {
+    const legacyCorrection = commercial === 'changes_requested' && paid;
+    const order = await terminalElectricityFixture(
+      legacyCorrection ? 'awaiting_staff_review' : commercial,
+      legacyCorrection ? 'AwaitingStaffReview' : state,
+      paid
+    );
+    if (paid)
+      await http.pool.query(
+        "INSERT INTO invoices(profile_id,contract_id,order_id,type,state,total_amount,paid_amount) VALUES($1,$2,$3,'manual','PartiallyFunded',500000,250000)",
+        [input.profileId, order.contractId, order.orderId]
+      );
+    if (legacyCorrection) {
+      await http.pool.query("UPDATE contracts SET state='ChangesRequested' WHERE id=$1", [
+        order.contractId,
+      ]);
+      await http.pool.query(
+        "UPDATE electricity_orders SET status='changes_requested' WHERE id=$1",
+        [order.orderId]
+      );
+    }
+    const original = await electricityTerminalEvidence(http.pool, order.contractId);
+    await http.pool.query(
+      "INSERT INTO app_config(key,value) VALUES('finance.dual_approval_threshold',$1::jsonb) ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value",
+      [JSON.stringify({ threshold_irr: approval ? 100 : 0 })]
+    );
+    const command = await rejectionCommand(order),
+      before = await correctionSnapshot(order.orderId, order.contractId);
+    const prepared = await rejectionSend(order.contractId, '', command);
+    expect(prepared.status, http.logs()).toBe(201);
+    const intent = (await prepared.json()) as {
+      id: string;
+      terminalAction: string;
+      status: string;
+      approvalRequestId: string | null;
+    };
+    expect(intent.terminalAction).toBe('reject');
+    expect(intent.status).toBe(approval ? 'awaiting_approval' : 'ready');
+    const execution = { intentId: intent.id, idempotencyKey: randomUUID() };
+    if (approval) {
+      expect((await rejectionSend(order.contractId, '/execute', execution)).status).toBe(409);
+      const request = (
+        await http.pool.query('SELECT details FROM approval_requests WHERE id=$1', [
+          intent.approvalRequestId,
+        ])
+      ).rows[0];
+      expect(request.details.terminalAction).toBe('reject');
+      const finance = await rejectionFinance();
+      const approved = await fetch(
+        `${http.base}/api/admin/approval-requests/${intent.approvalRequestId}/approve`,
+        { method: 'POST', headers: finance, body: '{}' }
+      );
+      expect(approved.status, http.logs()).toBe(200);
+    }
+    const results = await Promise.all([
+      rejectionSend(order.contractId, '/execute', execution),
+      rejectionSend(order.contractId, '/execute', execution),
+    ]);
+    expect(
+      results.map((r) => r.status),
+      http.logs()
+    ).toEqual([201, 201]);
+    const receipts = (await Promise.all(results.map((r) => r.json()))) as Array<{
+      state: string;
+      refunds: Array<{ id: string; amount: string }>;
+    }>;
+    expect(receipts[0]).toEqual(receipts[1]);
+    expect(receipts[0]!.state).toBe('Rejected');
+    expect(receipts[0]!.refunds.map((r) => r.amount).sort()).toEqual(
+      paid ? ['250000', '500000'] : []
+    );
+    expect(await electricityTerminalEvidence(http.pool, order.contractId)).toEqual(original);
+    const persisted = (
+      await http.pool.query(
+        'SELECT e.status,c.state,c.cancelled_at,o.status AS root_status FROM electricity_orders e JOIN orders o ON o.id=e.id JOIN contracts c ON c.order_id=e.id WHERE e.id=$1',
+        [order.orderId]
+      )
+    ).rows[0];
+    expect(persisted).toEqual({
+      status: 'rejected',
+      state: 'Rejected',
+      cancelled_at: null,
+      root_status: 'CANCELLED',
+    });
+    expect(
+      (await correctionSnapshot(order.orderId, order.contractId)).electricity_row.pricing_snapshot
+    ).toEqual(before.electricity_row.pricing_snapshot);
+    await expect(
+      http.pool.query(
+        "UPDATE orders SET snapshot_full_address='Changed terminal address' WHERE id=$1",
+        [order.orderId]
+      )
+    ).rejects.toMatchObject({ code: '23514' });
+    await expect(
+      http.pool.query('UPDATE electricity_orders SET total_kwh=123 WHERE id=$1', [order.orderId])
+    ).rejects.toMatchObject({ code: '23514' });
+    await expect(
+      http.pool.query(
+        "INSERT INTO invoices(profile_id,contract_id,order_id,type,state,total_amount) VALUES($1,$2,$3,'manual','Draft',0)",
+        [input.profileId, order.contractId, order.orderId]
+      )
+    ).rejects.toMatchObject({ code: '23514' });
+    await expectCoreAudit(http.pool, 'electricity.order_review.reject', order.orderId, {
+      entity: 'electricity_order',
+      fromState: commercial,
+      toState: 'rejected',
+      reason: command.reason,
+      actor: 'reviewer',
+      context: 'staff',
+    });
+    const statusPath = `${http.base}/api/contracts/${order.contractId}/cancellation-status`;
+    const status = await fetch(statusPath, { headers });
+    expect(status.status, http.logs()).toBe(200);
+    expect(await status.json()).toMatchObject({
+      state: 'Rejected',
+      financialStatus: paid ? 'refunds_pending' : 'closed',
+      refundAmount: paid ? '750000' : '0',
+    });
+    await http.pool.query("DELETE FROM user_roles WHERE user_id='reviewer'");
+    for (const refund of receipts[0]!.refunds) {
+      expect(await runWalletRefund(http.pool, refund.id), http.logs()).toBe('completed');
+      expect(await runWalletRefund(http.pool, refund.id)).toBe('deferred');
+    }
+    expect(
+      (
+        await http.pool.query(
+          "SELECT count(*)::int AS count,COALESCE(sum(amount),0)::text AS amount FROM wallet_transactions WHERE wallet_id=$1 AND type='refund' AND state='Completed'",
+          [input.profileId]
+        )
+      ).rows[0]
+    ).toEqual({ count: paid ? 2 : 0, amount: paid ? '750000' : '0' });
+    expect(await (await fetch(statusPath, { headers })).json()).toMatchObject({
+      state: 'Rejected',
+      financialStatus: 'closed',
+      returnedAmount: paid ? '750000' : '0',
+    });
+    expect(
+      (
+        await http.pool.query(
+          'SELECT count(*)::int AS n FROM contract_cancellations WHERE contract_id=$1',
+          [order.contractId]
+        )
+      ).rows[0].n
+    ).toBe(1);
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES('reviewer','role-legal-contracts')"
+    );
+    expect(
+      (await rejectionSend(order.contractId, '', { ...command, reason: 'Different retry' })).status
+    ).toBe(409);
+  }
+);
+it('reviewed rejection ends an incomplete linked draft without inventing periods, snapshots, invoices or electricity linkage', async () => {
+  const template = await submittedOrder(),
+    orderId = randomUUID(),
+    contractId = randomUUID(),
+    versionId = randomUUID();
+  const client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query(
+      "INSERT INTO orders(id,user_id,profile_id,product_id,order_type,status,snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code) SELECT $1,user_id,profile_id,product_id,'electricity','PENDING',snapshot_province_id,snapshot_city_id,'PRIVATE draft address',snapshot_postal_code FROM orders WHERE id=$2",
+      [orderId, template.orderId]
+    );
+    await client.query(
+      'INSERT INTO electricity_orders(id,profile_id,status,settings_snapshot) VALUES($1,$2,\'draft\',\'{"PRIVATE":"raw settings"}\')',
+      [orderId, input.profileId]
+    );
+    await client.query(
+      "INSERT INTO contracts(id,profile_id,order_id,service_type,current_version_id) VALUES($1,$2,$3,'electricity',$4)",
+      [contractId, input.profileId, orderId, versionId]
+    );
+    await client.query(
+      `INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by) VALUES($1,$2,1,'{"text":"Retained incomplete draft"}','Retained incomplete draft','reviewer')`,
+      [versionId, contractId]
+    );
+    await client.query('COMMIT');
+  } catch (e) {
+    await client.query('ROLLBACK');
+    throw e;
+  } finally {
+    client.release();
+  }
+  const command = await rejectionCommand({ contractId, versionId }),
+    prepared = await rejectionSend(contractId, '', command);
+  expect(prepared.status, http.logs()).toBe(201);
+  const intent = (await prepared.json()) as { id: string };
+  expect(
+    (
+      await rejectionSend(contractId, '/execute', {
+        intentId: intent.id,
+        idempotencyKey: randomUUID(),
+      })
+    ).status,
+    http.logs()
+  ).toBe(201);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT status,period_start,period_end,pricing_snapshot,submitted_at,submitted_by FROM electricity_orders WHERE id=$1',
+        [orderId]
+      )
+    ).rows[0]
+  ).toEqual({
+    status: 'rejected',
+    period_start: null,
+    period_end: null,
+    pricing_snapshot: null,
+    submitted_at: null,
+    submitted_by: null,
+  });
+  expect(
+    (await http.pool.query('SELECT id FROM invoices WHERE order_id=$1', [orderId])).rows
+  ).toEqual([]);
+  expect(
+    (await http.pool.query('SELECT id FROM electricity_contracts WHERE order_id=$1', [orderId]))
+      .rows
+  ).toEqual([]);
+});
+
+it('reviewed rejection requires the captured action, unchanged all-invoice facts and current financial approver', async () => {
+  const order = await terminalElectricityFixture('approved', 'Accepted', true);
+  await http.pool.query(
+    "INSERT INTO app_config(key,value) VALUES('finance.dual_approval_threshold','{\"threshold_irr\":100}') ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value"
+  );
+  const command = await rejectionCommand(order),
+    before = await correctionSnapshot(order.orderId, order.contractId);
+  expect(
+    (await rejectionSend(order.contractId, '', { ...command, terminalAction: 'cancel' })).status
+  ).toBe(409);
+  expect(await correctionSnapshot(order.orderId, order.contractId)).toEqual(before);
+  const prepared = await rejectionSend(order.contractId, '', command);
+  expect(prepared.status, http.logs()).toBe(201);
+  const intent = (await prepared.json()) as { id: string; approvalRequestId: string };
+  const finance = await rejectionFinance();
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/approval-requests/${intent.approvalRequestId}/approve`, {
+        method: 'POST',
+        headers: finance,
+        body: '{}',
+      })
+    ).status
+  ).toBe(200);
+  const execution = { intentId: intent.id, idempotencyKey: randomUUID() };
+  await http.pool.query("DELETE FROM user_roles WHERE user_id='second-finance'");
+  const staged = await correctionSnapshot(order.orderId, order.contractId);
+  expect((await rejectionSend(order.contractId, '/execute', execution)).status).toBe(409);
+  expect(await correctionSnapshot(order.orderId, order.contractId)).toEqual(staged);
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES('second-finance','role-finance')"
+  );
+  await http.pool.query(
+    "INSERT INTO invoices(profile_id,contract_id,order_id,type,state,total_amount) VALUES($1,$2,$3,'manual','Unpaid',1)",
+    [input.profileId, order.contractId, order.orderId]
+  );
+  const changed = await correctionSnapshot(order.orderId, order.contractId);
+  expect((await rejectionSend(order.contractId, '/execute', execution)).status).toBe(409);
+  expect(await correctionSnapshot(order.orderId, order.contractId)).toEqual(changed);
+  expect(
+    (
+      await http.pool.query('SELECT contract_id FROM contract_cancellations WHERE contract_id=$1', [
+        order.contractId,
+      ])
+    ).rows
+  ).toEqual([]);
+});
+it('reviewed rejection rolls back terminal rows, execution evidence, refund jobs and notification on mandatory audit failure', async () => {
+  const order = await terminalElectricityFixture(
+      'awaiting_staff_review',
+      'AwaitingStaffReview',
+      true
+    ),
+    command = await rejectionCommand(order);
+  const prepared = await rejectionSend(order.contractId, '', command);
+  expect(prepared.status).toBe(201);
+  const intent = (await prepared.json()) as { id: string };
+  const execution = { intentId: intent.id, idempotencyKey: randomUUID() };
+  const before = await correctionSnapshot(order.orderId, order.contractId);
+  await http.pool.query(
+    `CREATE FUNCTION fail_reviewed_rejection_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='electricity.order_review.reject' THEN RAISE EXCEPTION 'audit unavailable'; END IF; RETURN NEW; END $$;CREATE TRIGGER fail_reviewed_rejection_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_reviewed_rejection_audit()`
+  );
+  try {
+    expect((await rejectionSend(order.contractId, '/execute', execution)).status).toBe(500);
+    expect(await correctionSnapshot(order.orderId, order.contractId)).toEqual(before);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT contract_id FROM contract_cancellations WHERE contract_id=$1',
+          [order.contractId]
+        )
+      ).rows
+    ).toEqual([]);
+    expect(
+      (await http.pool.query('SELECT id FROM refunds WHERE invoice_id=$1', [order.invoiceId])).rows
+    ).toEqual([]);
+    expect((await http.pool.query('SELECT refund_id FROM refund_retry_jobs')).rows).toEqual([]);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER fail_reviewed_rejection_audit ON audit_log;DROP FUNCTION fail_reviewed_rejection_audit()'
+    );
+  }
+  expect((await rejectionSend(order.contractId, '/execute', execution)).status, http.logs()).toBe(
+    201
+  );
+});

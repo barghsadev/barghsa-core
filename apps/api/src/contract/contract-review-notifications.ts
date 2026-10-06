@@ -1,7 +1,12 @@
+import { contractText } from '@barghsa/i18n/contracts';
 import type { PoolClient } from 'pg';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 const messages = {
+  rejected: {
+    fa: contractText('rejectionOrderNotice', 'fa'),
+    en: contractText('rejectionOrderNotice', 'en'),
+  },
   electricity_price_proposed: {
     fa: 'تغییر قیمت برق برای دوره آینده پیشنهاد شد. مبنا، دلیل و محاسبه را پیش از نهایی‌شدن در جزئیات سفارش ببینید.',
     en: 'A future electricity price change was proposed. Review its basis, reason and calculation in your order before finalization.',
@@ -75,8 +80,8 @@ export async function notifyContractReview(
   reason?: string
 ) {
   const profile = (
-    await client.query<{ profile_id: string; user_id: string }>(
-      'SELECT c.profile_id,p.user_id FROM contracts c JOIN profiles p ON p.id=c.profile_id WHERE c.id=$1',
+    await client.query<{ profile_id: string; user_id: string; order_id: string | null }>(
+      'SELECT c.profile_id,c.order_id,p.user_id FROM contracts c JOIN profiles p ON p.id=c.profile_id WHERE c.id=$1',
       [id]
     )
   ).rows[0]!;
@@ -110,6 +115,9 @@ export async function notifyContractReview(
         userId,
         ...(operatingContext === 'customer' ? { profileId: profile.profile_id } : {}),
         operatingContext,
+        ...(event === 'rejected' && profile.order_id
+          ? { link: `/electricity/orders/${profile.order_id}` }
+          : {}),
         type: 'general',
         title: message.en,
         localizedContent: {

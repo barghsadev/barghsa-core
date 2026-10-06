@@ -25,7 +25,7 @@ it('upgrades the unchanged 0252 journal prefix exactly once, preserves old rows,
     await management.query(`CREATE DATABASE "${name}"`);
     mkdirSync(join(temp, 'meta'));
     const journal = JSON.parse(readFileSync(join(folder, 'meta/_journal.json'), 'utf8'));
-    journal.entries = journal.entries.slice(0, -1);
+    journal.entries = journal.entries.filter((e: { tag: string }) => e.tag < '0253');
     writeFileSync(join(temp, 'meta/_journal.json'), JSON.stringify(journal));
     for (const e of journal.entries)
       symlinkSync(join(folder, e.tag + '.sql'), join(temp, e.tag + '.sql'));
@@ -87,9 +87,12 @@ it('upgrades the unchanged 0252 journal prefix exactly once, preserves old rows,
       client.release();
     }
     const next = await runMigrations(options);
-    expect(next).toEqual({ ok: true, applied: ['0253_electricity_raw_draft_terminal'] });
+    expect(next).toEqual({
+      ok: true,
+      applied: ['0253_electricity_raw_draft_terminal', '0254_electricity_reviewed_rejection'],
+    });
     expect(
-      (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id')).rows.slice(0, -1)
+      (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id')).rows.slice(0, -2)
     ).toEqual(before);
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
     expect(await retained()).toEqual(oldRecord);

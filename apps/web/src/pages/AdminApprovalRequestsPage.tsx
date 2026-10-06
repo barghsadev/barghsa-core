@@ -1,3 +1,4 @@
+import { contractText } from '@barghsa/i18n/contracts';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { tInvoiceCorrections } from '@barghsa/i18n/invoice-corrections';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -360,7 +361,10 @@ function ApprovalWorkspace({
                 className="space-y-3 rounded-lg border bg-card text-card-foreground p-4 break-words"
               >
                 <h2 className="font-semibold">
-                  {t(`admin.approvals.${request.actionType}`, locale)}
+                  {request.actionType === 'contract_cancellation' &&
+                  request.details?.terminalAction === 'reject'
+                    ? contractText('rejectionTitle', locale)
+                    : t(`admin.approvals.${request.actionType}`, locale)}
                 </h2>
                 <dl className="grid gap-2 text-sm sm:grid-cols-2">
                   {[
@@ -501,7 +505,12 @@ function ApprovalWorkspace({
           summary={
             review ? (
               <FinancialReviewSummary
-                title={t(`admin.approvals.${review.actionType}`, locale)}
+                title={
+                  review.actionType === 'contract_cancellation' &&
+                  review.details?.terminalAction === 'reject'
+                    ? contractText('rejectionFinancialReview', locale)
+                    : t(`admin.approvals.${review.actionType}`, locale)
+                }
                 rows={[
                   {
                     id: 'request',
@@ -518,6 +527,62 @@ function ApprovalWorkspace({
                     label: t('admin.approvals.reason', locale),
                     value: review.reason,
                   },
+                  ...(review.actionType === 'contract_cancellation' &&
+                  review.details?.terminalAction === 'reject'
+                    ? [
+                        ...(['contractId', 'profileId', 'versionId'] as const).flatMap((key) =>
+                          typeof review.details?.[key] === 'string'
+                            ? [
+                                {
+                                  id: key,
+                                  label: contractText(
+                                    key === 'contractId'
+                                      ? 'contractReference'
+                                      : key === 'profileId'
+                                        ? 'profile'
+                                        : 'version',
+                                    locale
+                                  ),
+                                  value: review.details[key] as string,
+                                },
+                              ]
+                            : []
+                        ),
+                        ...(typeof review.details.refundDecision === 'object' &&
+                        review.details.refundDecision !== null &&
+                        'refunds' in review.details.refundDecision &&
+                        Array.isArray(review.details.refundDecision.refunds)
+                          ? review.details.refundDecision.refunds.flatMap(
+                              (line: unknown, index: number) =>
+                                line &&
+                                typeof line === 'object' &&
+                                'invoiceId' in line &&
+                                typeof line.invoiceId === 'string' &&
+                                'amount' in line &&
+                                typeof line.amount === 'string' &&
+                                /^[1-9][0-9]{0,18}$/.test(line.amount) &&
+                                'destination' in line &&
+                                line.destination === 'wallet'
+                                  ? [
+                                      {
+                                        id: 'rejection-refund-' + line.invoiceId,
+                                        label:
+                                          contractText('cancellationInvoice', locale) +
+                                          ' ' +
+                                          (index + 1),
+                                        value:
+                                          line.invoiceId +
+                                          ' · ' +
+                                          numbers.money(line.amount) +
+                                          ' · ' +
+                                          contractText('cancellation.wallet', locale),
+                                      },
+                                    ]
+                                  : []
+                            )
+                          : []),
+                      ]
+                    : []),
                   ...(typeof review.details?.invoiceId === 'string'
                     ? [
                         {

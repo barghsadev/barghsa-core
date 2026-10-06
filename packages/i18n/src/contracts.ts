@@ -1,6 +1,23 @@
 import { lookup } from './lookup.js';
 
 export const en = {
+  rejectionBlocked: 'Resolve these items before rejection:',
+  'cancellation.blocker.electricity_rejection_unavailable':
+    'The order cannot be rejected in its current state. Refresh its details and reconcile any conflicting records.',
+  rejectionTitle: 'Reject electricity order and return funds',
+  rejectionSave: 'Save rejection decision',
+  rejectionConfirm: 'Confirm rejection',
+  rejectionPrepareNotice:
+    'Capture rejection of this pre-active order and every invoice refund. A required financial approval must complete before execution.',
+  rejectionIrreversible: 'The order will end rejected. This decision cannot be reversed.',
+  rejectionReason: 'Reason for rejection',
+  rejectionElectricity:
+    'Every outstanding electricity payment will return to the wallet after rejection.',
+  rejectionFinancialReview: 'Rejection and full wallet return',
+  rejectionServiceEnded: 'The order was rejected. Refund progress is tracked separately.',
+  rejectionOrderNotice:
+    'Your electricity order was rejected. Check your order for the reason and refund progress.',
+
   financialReview: 'Review contract and financial obligations',
   financialReviewNotice:
     'This action collects no payment. Review the published terms, activation requirements and linked invoice before confirming.',
@@ -350,6 +367,21 @@ export const en = {
 } satisfies Record<string, string>;
 
 export const fa: Record<keyof typeof en, string> = {
+  rejectionBlocked: 'پیش از رد سفارش این موارد را برطرف کنید:',
+  'cancellation.blocker.electricity_rejection_unavailable':
+    'سفارش در وضعیت فعلی قابل رد نیست. جزئیات را دوباره دریافت و ناسازگاری رکوردها را برطرف کنید.',
+  rejectionTitle: 'رد سفارش برق و بازگرداندن وجه',
+  rejectionSave: 'ثبت تصمیم رد سفارش',
+  rejectionConfirm: 'تأیید رد سفارش',
+  rejectionPrepareNotice:
+    'رد سفارش پیش از فعال‌شدن و بازپرداخت تمام صورت‌حساب‌ها ثبت می‌شود. تأیید مالی لازم باید پیش از اجرا تکمیل شود.',
+  rejectionIrreversible: 'سفارش به حالت ردشده پایان می‌یابد. این تصمیم برگشت‌پذیر نیست.',
+  rejectionReason: 'دلیل رد سفارش',
+  rejectionElectricity: 'تمام مانده پرداخت‌شده برق پس از رد سفارش به کیف پول بازمی‌گردد.',
+  rejectionFinancialReview: 'رد سفارش و بازپرداخت کامل به کیف پول',
+  rejectionServiceEnded: 'سفارش رد شد. وضعیت بازپرداخت جداگانه پیگیری می‌شود.',
+  rejectionOrderNotice: 'سفارش برق رد شد. دلیل و وضعیت بازپرداخت را در جزئیات سفارش بررسی کنید.',
+
   financialReview: 'بررسی قرارداد و تعهدات مالی',
   financialReviewNotice:
     'این اقدام هیچ مبلغی دریافت نمی‌کند. پیش از تأیید، شرایط منتشرشده، الزامات فعال‌سازی و صورتحساب مرتبط را بررسی کنید.',

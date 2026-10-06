@@ -59,8 +59,8 @@ export class ContractService {
   ) {}
   private readonly solarReviews = new ReviewSnapshotService();
 
-  cancellationPreview(id: string) {
-    return readCancellationSnapshot(getDbPool(), id);
+  cancellationPreview(id: string, terminalAction: 'cancel' | 'reject' = 'cancel') {
+    return readCancellationSnapshot(getDbPool(), id, terminalAction);
   }
 
   async list(input: ContractListInput) {

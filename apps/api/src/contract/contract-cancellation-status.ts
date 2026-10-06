@@ -40,6 +40,7 @@ export async function readCancellationStatus(
      LEFT JOIN refund_transactions t ON t.refund_id=r.id WHERE o.contract_id=c.id),'[]'::jsonb) AS refunds
   FROM contracts c WHERE c.id=$1 AND ($2::uuid IS NULL OR (c.profile_id=$2 AND (
     EXISTS(SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id)
+    OR (c.service_type='electricity' AND c.state='Rejected' AND EXISTS(SELECT 1 FROM contract_cancellations x JOIN contract_cancellation_intents n ON n.id=x.intent_id JOIN electricity_orders e ON e.id=c.order_id JOIN orders root ON root.id=e.id WHERE x.contract_id=c.id AND n.financial_snapshot->>'terminalAction'='reject' AND e.profile_id=c.profile_id AND root.profile_id=c.profile_id AND e.status='rejected' AND root.status='CANCELLED'))
     OR (c.service_type='savings'
       AND EXISTS(SELECT 1 FROM saving_orders s WHERE s.order_id=c.order_id)))))`,
       [id, profileId ?? null]
@@ -51,7 +52,7 @@ export async function readCancellationStatus(
     (r) => r.state === 'Completed' && r.transactionState === 'Completed'
   );
   const financialStatus =
-    row.state !== 'Cancelled'
+    row.state !== 'Cancelled' && !(row.state === 'Rejected' && row.recorded)
       ? 'not_cancelled'
       : !row.recorded
         ? 'unverified'

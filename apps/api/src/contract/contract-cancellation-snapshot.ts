@@ -21,6 +21,16 @@ export interface CancellationSnapshotRow {
   ambiguous_order_invoices: boolean;
   pending_payments: boolean;
   saving_terminal?: boolean;
+  rejection_order?: {
+    orderId: string;
+    profileId: string;
+    rootProfileId: string;
+    rootType: string;
+    rootStatus: string;
+    commercialStatus: string;
+    linkConflict: boolean;
+    stateFingerprint: string;
+  } | null;
   invoices: CancellationInvoice[];
   hardware_credits?: Array<{
     id: string;
@@ -32,11 +42,16 @@ export interface CancellationSnapshotRow {
 
 /** A single statement gives the preview one consistent database snapshot. The
  * eventual command must lock its inputs and compare the same fingerprint. */
-export async function readCancellationSnapshot(client: Pool | PoolClient, id: string) {
+export async function readCancellationSnapshot(
+  client: Pool | PoolClient,
+  id: string,
+  terminalAction: 'cancel' | 'reject' = 'cancel'
+) {
   const row = (
     await client.query<CancellationSnapshotRow>(
       `
     SELECT c.id,c.profile_id,c.current_version_id,c.service_type,c.state,p.archived,
+      CASE WHEN $2::boolean THEN electricity_rejection_order_snapshot(c.id) ELSE NULL END AS rejection_order,
       contract_has_pending_payments(c.id) AS pending_payments,
       EXISTS(SELECT 1 FROM saving_orders s WHERE s.order_id=c.order_id
         AND s.status IN ('completed','rejected','cancelled')) AS saving_terminal,
@@ -60,14 +75,17 @@ export async function readCancellationSnapshot(client: Pool | PoolClient, id: st
         FROM saving_hardware_amendments a JOIN invoices i ON i.id=a.adjustment_invoice_id
         WHERE a.contract_id=c.id AND a.price_delta_irr<0), '[]'::jsonb) AS hardware_credits
     FROM contracts c JOIN profiles p ON p.id=c.profile_id WHERE c.id=$1`,
-      [id]
+      [id, terminalAction === 'reject']
     )
   ).rows[0];
   if (!row) throw new NotFoundException();
-  return cancellationSnapshot(row);
+  return cancellationSnapshot(row, terminalAction);
 }
 
-export function cancellationSnapshot(row: CancellationSnapshotRow) {
+export function cancellationSnapshot(
+  row: CancellationSnapshotRow,
+  terminalAction: 'cancel' | 'reject' = 'cancel'
+) {
   const hardwareCredits = [...(row.hardware_credits ?? [])].sort((a, b) =>
     a.id.localeCompare(b.id)
   );
@@ -95,6 +113,9 @@ export function cancellationSnapshot(row: CancellationSnapshotRow) {
     key: 'paidAmount' | 'refundedAmount' | 'refundableAmount' | 'availableRefundAmount'
   ) => invoices.reduce((sum, invoice) => sum + BigInt(invoice[key]), 0n).toString();
   const facts = {
+    ...(terminalAction === 'reject'
+      ? { terminalAction: 'reject' as const, electricityOrder: row.rejection_order ?? null }
+      : {}),
     contractId: row.id,
     profileId: row.profile_id,
     versionId: row.current_version_id,
@@ -108,7 +129,27 @@ export function cancellationSnapshot(row: CancellationSnapshotRow) {
     invoices,
     hardwareCredits,
   };
+  const allowed: Record<string, readonly string[]> = {
+    draft: ['Draft'],
+    submitted: ['AwaitingStaffReview'],
+    awaiting_staff_review: ['AwaitingStaffReview'],
+    changes_requested: ['ChangesRequested'],
+    approved: ['AwaitingCustomerAcceptance', 'Accepted', 'AwaitingSignature', 'Signed'],
+  };
+  const e = row.rejection_order;
+  const rejectionAvailable =
+    row.service_type === 'electricity' &&
+    !!e &&
+    e.profileId === row.profile_id &&
+    e.rootProfileId === row.profile_id &&
+    e.rootType === 'electricity' &&
+    e.rootStatus !== 'CANCELLED' &&
+    !e.linkConflict &&
+    allowed[e.commercialStatus]?.includes(row.state) === true;
   const blockers = [
+    ...(terminalAction === 'reject' && !rejectionAvailable
+      ? ['electricity_rejection_unavailable']
+      : []),
     ...(row.association_conflict ? ['invoice_identity_conflict'] : []),
     ...(row.ambiguous_order_invoices ? ['ambiguous_order_invoices'] : []),
     ...(row.archived ? ['profile_archived'] : []),

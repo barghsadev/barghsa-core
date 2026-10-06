@@ -3,6 +3,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { en, fa } from '@barghsa/i18n/contracts';
 import type * as Documents from '../lib/documents.js';
+import CancellationEditor from './ContractCancellationEditor.js';
 import { ContractCancellationPanel } from './ContractCancellationPanel.js';
 import type {
   CancellationIntent,
@@ -29,7 +30,7 @@ vi.mock('../lib/documents.js', async (original) => ({
   documentRequest: vi.fn(async (path: string) => {
     if (h.fail) throw new Error('offline');
     if (path.endsWith('cancellation-status')) return h.status;
-    if (path.endsWith('cancellation-preview')) return h.preview;
+    if (path.includes('cancellation-preview')) return h.preview;
     return { intent: h.intent };
   }),
 }));
@@ -535,4 +536,65 @@ it('retains but disables a draft until a failed parent status refresh recovers',
   await click(en.refresh);
   expect(container.querySelector('textarea')?.disabled).toBe(false);
   expect(container.querySelector('textarea')?.value).toBe('  Raw cancellation draft  ');
+});
+
+for (const locale of ['en', 'fa'] as const)
+  it(locale + ': captures rejection explicitly and accepts only its executed state', async () => {
+    h.locale = locale;
+    const w = locale === 'en' ? en : fa;
+    h.preview = { ...h.preview!, terminalAction: 'reject' };
+    h.result = { ...saved(), terminalAction: 'reject' };
+    await act(async () =>
+      root.render(
+        <CancellationEditor
+          id="contract"
+          terminalAction="reject"
+          customerRequestId={null}
+          canChooseRefund={false}
+          unavailable={false}
+          onChanged={changed}
+        />
+      )
+    );
+    await input('textarea', 'End service');
+    await submitDecision();
+    expect(h.action?.body).toMatchObject({
+      terminalAction: 'reject',
+      reason: 'End service',
+      expectedFingerprint: 'fingerprint',
+    });
+    expect(h.action?.title).toBe(w.rejectionSave);
+    expect(container.textContent).toContain(w.rejectionFinancialReview);
+    await click('Confirm');
+    await click(w.rejectionConfirm);
+    expect(h.action?.description).toContain(w.rejectionIrreversible);
+    const receipt = {
+      contractId: 'contract',
+      versionId: 'version',
+      intentId: 'intent',
+      state: 'Cancelled',
+    };
+    await act(async () => {
+      await expect(h.success!(receipt)).rejects.toThrow('acknowledgement mismatch');
+    });
+    expect(changed).not.toHaveBeenCalled();
+    expect(h.action).not.toBeNull();
+    await act(async () => h.success!({ ...receipt, state: 'Rejected' }));
+    expect(changed).toHaveBeenCalledOnce();
+  });
+it('withdraws rejection when its authoritative preview is for cancellation', async () => {
+  await act(async () =>
+    root.render(
+      <CancellationEditor
+        id="contract"
+        terminalAction="reject"
+        customerRequestId={null}
+        canChooseRefund={false}
+        unavailable={false}
+        onChanged={changed}
+      />
+    )
+  );
+  expect(container.querySelector('textarea')).toBeNull();
+  expect(h.action).toBeNull();
 });

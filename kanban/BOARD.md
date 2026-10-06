@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-06T22:35:48Z. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-06T23:10:09Z. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish incomplete linked/funded electricity draft handling and second-approval/multi-invoice rejection using existing reviewed financial safeguards. Unsubmitted unlinked raw orders, linked pre-active cancellation and accepted/signing/signed rejection are accepted. Resolve effective saved-wizard handling and preserve unanswered owner decisions before all-four-service milestone acceptance.
+Finish orphan financially associated electricity draft termination, incomplete staff intake presentation and saved wizard effective acceptance. Reviewed second-approval/multi-invoice rejection, linked incomplete terminal API and raw unlinked termination are accepted. Preserve unanswered owner decisions and complete all-four-service milestone gates before release.
 
 - `03-core-business.md#T-03.07.01.01`: Commercial state machine for electricity orders:
 - `03-core-business.md#T-03.09.01.01`: Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version` (VARCHAR), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at`

@@ -1219,6 +1219,13 @@
       "when": 1791331202264,
       "tag": "0253_electricity_raw_draft_terminal",
       "breakpoints": true
+    },
+    {
+      "idx": 254,
+      "version": "7",
+      "when": 1791331202265,
+      "tag": "0254_electricity_reviewed_rejection",
+      "breakpoints": true
     }
   ]
 }

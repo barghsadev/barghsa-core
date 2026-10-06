@@ -19,6 +19,7 @@ export interface CancellationStatus {
   >;
 }
 export interface CancellationPreview {
+  terminalAction?: 'reject';
   contractId: string;
   profileId: string;
   versionId: string;
@@ -35,6 +36,7 @@ export interface CancellationPreview {
   }>;
 }
 export interface CancellationIntent {
+  terminalAction?: 'cancel' | 'reject';
   contractId: string;
   id: string;
   customerRequestId?: string | null;

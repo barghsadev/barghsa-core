@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
@@ -58,6 +59,7 @@ export class ContractCancellationService {
   ) {}
 
   async prepare(id: string, input: PrepareCancellationInput, actor: ContractActor, ip: string) {
+    const terminalAction = input.terminalAction ?? 'cancel';
     const intentId = await this.transaction(id, actor, async (client, archived) =>
       contractIdempotency(
         client,
@@ -66,7 +68,15 @@ export class ContractCancellationService {
         actor,
         async () => {
           if (archived) throw new ConflictException('Profile is archived');
-          const snapshot = await readCancellationSnapshot(client, id);
+          if (terminalAction === 'reject') {
+            await this.rejectionContext(client, actor);
+            await this.lockRejectionOrder(client, id);
+            if (input.customerRequestId)
+              throw new BadRequestException(
+                'Rejection cannot fulfill a customer cancellation request'
+              );
+          }
+          const snapshot = await readCancellationSnapshot(client, id, terminalAction);
           this.current(snapshot, input.expectedVersionId, input.expectedFingerprint);
           const decision = this.decision(snapshot, input.refundDecision);
           if (snapshot.serviceType !== 'electricity' && BigInt(snapshot.refundableAmount) > 0n)
@@ -86,6 +96,7 @@ export class ContractCancellationService {
                 input.reason,
                 JSON.stringify({
                   entityType: 'contract_cancellation',
+                  ...(terminalAction === 'reject' ? { terminalAction } : {}),
                   intentId,
                   contractId: id,
                   versionId: snapshot.versionId,
@@ -120,7 +131,9 @@ export class ContractCancellationService {
             client,
             id,
             snapshot.versionId,
-            'contract.cancellation_prepared',
+            terminalAction === 'reject'
+              ? 'contract.rejection_prepared'
+              : 'contract.cancellation_prepared',
             actor,
             ip,
             {
@@ -129,6 +142,7 @@ export class ContractCancellationService {
               fromState: snapshot.state,
               toState: snapshot.state,
               intentId,
+              ...(terminalAction === 'reject' ? { terminalAction } : {}),
               reason: input.reason,
               refundDecision: decision,
               financialFingerprint: snapshot.fingerprint,
@@ -192,6 +206,7 @@ export class ContractCancellationService {
       versionId: row.version_id,
       reason: row.reason,
       customerRequestId: row.customer_request_id,
+      terminalAction: row.financial_snapshot.terminalAction ?? 'cancel',
       refundDecision: row.refund_decision,
       financialSnapshot: row.financial_snapshot,
       financialFingerprint: row.financial_fingerprint,
@@ -208,13 +223,13 @@ export class ContractCancellationService {
     };
   }
 
-  async latest(id: string) {
+  async latest(id: string, terminalAction: 'cancel' | 'reject' = 'cancel') {
     const row = (
       await getDbPool().query<{ intent_id: string | null }>(
         `SELECT latest.id AS intent_id FROM contracts c
-      LEFT JOIN LATERAL (SELECT i.id FROM contract_cancellation_intents i WHERE i.contract_id=c.id ORDER BY i.created_at DESC,i.id DESC LIMIT 1) latest ON true
+      LEFT JOIN LATERAL (SELECT i.id FROM contract_cancellation_intents i WHERE i.contract_id=c.id AND COALESCE(i.financial_snapshot->>'terminalAction','cancel')=$2 ORDER BY i.created_at DESC,i.id DESC LIMIT 1) latest ON true
       WHERE c.id=$1`,
-        [id]
+        [id, terminalAction]
       )
     ).rows[0];
     if (!row) throw new NotFoundException();
@@ -237,7 +252,12 @@ export class ContractCancellationService {
             )
           ).rows[0];
           if (!intent) throw new NotFoundException();
-          const snapshot = await readCancellationSnapshot(client, id);
+          const terminalAction = intent.financial_snapshot.terminalAction ?? 'cancel';
+          if (terminalAction === 'reject') {
+            await this.rejectionContext(client, actor);
+            await this.lockRejectionOrder(client, id);
+          }
+          const snapshot = await readCancellationSnapshot(client, id, terminalAction);
           this.current(snapshot, intent.version_id, intent.financial_fingerprint);
           if (snapshot.serviceType !== 'electricity' && BigInt(snapshot.refundableAmount) > 0n)
             await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
@@ -266,7 +286,8 @@ export class ContractCancellationService {
               approval.details.intentId !== intent.id ||
               approval.details.contractId !== id ||
               approval.details.versionId !== intent.version_id ||
-              approval.details.financialFingerprint !== intent.financial_fingerprint
+              approval.details.financialFingerprint !== intent.financial_fingerprint ||
+              (terminalAction === 'reject' && approval.details.terminalAction !== 'reject')
             )
               throw new ConflictException('A matching second financial approval is required');
             try {
@@ -277,8 +298,11 @@ export class ContractCancellationService {
               );
             }
           }
+          const targetState = terminalAction === 'reject' ? 'Rejected' : 'Cancelled';
           await client.query(
-            "UPDATE contracts SET state='Cancelled',cancelled_at=clock_timestamp() WHERE id=$1",
+            terminalAction === 'reject'
+              ? "UPDATE contracts SET state='Rejected' WHERE id=$1"
+              : "UPDATE contracts SET state='Cancelled',cancelled_at=clock_timestamp() WHERE id=$1",
             [id]
           );
           const giftOrder = (
@@ -368,7 +392,10 @@ export class ContractCancellationService {
               intentId: intent.id,
               actorType: 'system',
               authorizedBy: actor.userId,
-              reason: 'Committed contract cancellation obligation',
+              reason:
+                terminalAction === 'reject'
+                  ? 'Committed electricity rejection obligation'
+                  : 'Committed contract cancellation obligation',
             });
             if (line.destination === 'wallet') {
               await client.query("UPDATE refunds SET state='Processing' WHERE id=$1", [refundId]);
@@ -415,6 +442,44 @@ export class ContractCancellationService {
                 },
               });
           }
+          if (terminalAction === 'reject') {
+            const e = snapshot.electricityOrder;
+            if (!e) throw new ConflictException('Electricity order changed');
+            await client.query(
+              "UPDATE orders SET status='CANCELLED',updated_at=clock_timestamp() WHERE id=$1 AND profile_id=$2",
+              [e.orderId, snapshot.profileId]
+            );
+            await client.query(
+              "UPDATE electricity_contracts SET status='cancelled',updated_at=clock_timestamp() WHERE order_id=$1 AND contract_id=$2",
+              [e.orderId, id]
+            );
+            const ended = await client.query(
+              "UPDATE electricity_orders SET status='rejected',updated_at=clock_timestamp() WHERE id=$1 AND profile_id=$2 RETURNING id",
+              [e.orderId, snapshot.profileId]
+            );
+            if (ended.rowCount !== 1) throw new ConflictException('Electricity order changed');
+            await auditContract(
+              client,
+              id,
+              intent.version_id,
+              'electricity.order_review.reject',
+              actor,
+              ip,
+              {
+                entity: 'electricity_order',
+                entityId: e.orderId,
+                orderId: e.orderId,
+                fromState: e.commercialStatus,
+                toState: 'rejected',
+                reason: intent.reason,
+                intentId: intent.id,
+                refundIds: refunds.map((r) => r.id),
+                approvalRequestId: intent.approval_request_id,
+                financialFingerprint: intent.financial_fingerprint,
+              }
+            );
+            await notifyContractReview(client, id, 'rejected', intent.reason);
+          }
           if (intent.customer_request_id) {
             await auditContract(
               client,
@@ -435,22 +500,30 @@ export class ContractCancellationService {
             );
             await notifyContractReview(client, id, 'cancellation_request_fulfilled', intent.reason);
           }
-          await auditContract(client, id, intent.version_id, 'contract.cancelled', actor, ip, {
-            entity: 'contract',
-            entityId: id,
-            fromState: snapshot.state,
-            toState: 'Cancelled',
-            intentId: intent.id,
-            reason: intent.reason,
-            refundDecision: intent.refund_decision,
-            refundIds: refunds.map((row) => row.id),
-            approvalRequestId: intent.approval_request_id,
-            financiallyClosed: refunds.length === 0,
-          });
+          await auditContract(
+            client,
+            id,
+            intent.version_id,
+            terminalAction === 'reject' ? 'contract.rejected' : 'contract.cancelled',
+            actor,
+            ip,
+            {
+              entity: 'contract',
+              entityId: id,
+              fromState: snapshot.state,
+              toState: targetState,
+              intentId: intent.id,
+              reason: intent.reason,
+              refundDecision: intent.refund_decision,
+              refundIds: refunds.map((row) => row.id),
+              approvalRequestId: intent.approval_request_id,
+              financiallyClosed: refunds.length === 0,
+            }
+          );
           return {
             contractId: id,
             versionId: intent.version_id,
-            state: 'Cancelled' as const,
+            state: targetState,
             intentId: intent.id,
             refunds,
             financiallyClosed: refunds.length === 0,
@@ -460,6 +533,19 @@ export class ContractCancellationService {
     );
   }
 
+  private async rejectionContext(client: PoolClient, actor: ContractActor) {
+    const r = await client.query(
+      "SELECT 1 FROM sessions WHERE session_id=$1 AND user_id=$2 AND operating_context='staff'",
+      [actor.sessionId, actor.userId]
+    );
+    if (r.rowCount !== 1) throw new ForbiddenException('Staff context required');
+  }
+  private async lockRejectionOrder(client: PoolClient, id: string) {
+    await client.query(
+      'SELECT e.id FROM contracts c JOIN electricity_orders e ON e.id=c.order_id JOIN orders o ON o.id=e.id WHERE c.id=$1 FOR UPDATE OF e,o NOWAIT',
+      [id]
+    );
+  }
   private current(snapshot: Snapshot, version: string, fingerprint: string) {
     if (snapshot.versionId !== version || snapshot.fingerprint !== fingerprint)
       throw new ConflictException(
@@ -544,7 +630,14 @@ export class ContractCancellationService {
         `SELECT i.id FROM invoices i JOIN contracts c ON c.id=$1 WHERE i.profile_id=c.profile_id AND (i.contract_id=c.id::text OR (c.order_id IS NOT NULL AND i.order_id=c.order_id AND i.contract_id IS NULL)) ORDER BY i.id FOR UPDATE OF i NOWAIT`,
         [id]
       );
-      await client.query('SELECT id FROM contracts WHERE id=$1 FOR UPDATE NOWAIT', [id]);
+      const locked = (
+        await client.query<{ id: string; profile_id: string }>(
+          'SELECT id,profile_id FROM contracts WHERE id=$1 FOR UPDATE NOWAIT',
+          [id]
+        )
+      ).rows[0];
+      if (!locked || locked.profile_id !== owner.profile_id)
+        throw new ConflictException('Contract profile changed; refresh the decision');
       const result = await work(client, profile.archived);
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');

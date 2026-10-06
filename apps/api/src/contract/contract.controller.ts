@@ -197,9 +197,17 @@ export class ContractController {
     description:
       'Authoritative financial snapshot and fingerprint. This read does not cancel the contract, create a refund or imply financial closure.',
   })
-  cancellationPreview(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+  @ApiQuery({ name: 'terminalAction', required: false, enum: ['cancel', 'reject'] })
+  cancellationPreview(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Query('terminalAction') action?: string
+  ) {
     this.authorize(req, true);
-    return this.service.cancellationPreview(parse(contractUuid, id));
+    return this.service.cancellationPreview(
+      parse(contractUuid, id),
+      parse(z.enum(['cancel', 'reject']).default('cancel'), action)
+    );
   }
 
   @Get(':id')

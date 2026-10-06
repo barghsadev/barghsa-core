@@ -41,7 +41,7 @@ export async function readContractRefundAuthorization(
       valid: boolean;
     }>(
       `SELECT o.contract_id,c.intent_id,c.executed_by,
-      (p.state='Cancelled' AND p.current_version_id=i.version_id AND p.profile_id=$3
+      (((p.state='Cancelled' AND COALESCE(i.financial_snapshot->>'terminalAction','cancel')='cancel') OR (p.state='Rejected' AND p.service_type='electricity' AND i.financial_snapshot->>'terminalAction'='reject')) AND p.current_version_id=i.version_id AND p.profile_id=$3
        AND o.invoice_id=$2 AND $4::text IS NULL
        AND EXISTS(SELECT 1 FROM jsonb_array_elements(i.refund_decision->'refunds') d
          WHERE d->>'invoiceId'=$2::text AND d->>'amount'=$5 AND d->>'destination'=$6)) AS valid

@@ -1,3 +1,4 @@
+import { ElectricityRejectionPanel } from '../components/ElectricityRejectionPanel.js';
 import { ElectricityRawDraftQueue } from '../components/ElectricityRawDraftQueue.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
@@ -1375,6 +1376,24 @@ export default function AdminElectricityOrdersPage({
                     {reviewLoading ? <p role="status">{copy('reviewLoading')}</p> : null}
                     {reviewError ? <p role="alert">{copy('reviewError')}</p> : null}
                   </div>
+                ) : null}
+                {detail.contractId &&
+                [
+                  'draft',
+                  'submitted',
+                  'awaiting_staff_review',
+                  'changes_requested',
+                  'approved',
+                ].includes(detail.commercialStatus) ? (
+                  <ElectricityRejectionPanel
+                    key={JSON.stringify([scope, detail.versionId])}
+                    contractId={detail.contractId}
+                    unavailable={reviewLoading || !!action || uncertain || pending.current}
+                    onChanged={() => {
+                      setSelectedId(null);
+                      setDetail(null);
+                    }}
+                  />
                 ) : null}
               </CardContent>
             </Card>

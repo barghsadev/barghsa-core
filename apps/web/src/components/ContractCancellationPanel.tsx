@@ -86,9 +86,14 @@ function CancellationWorkspace({ id, versionId, staff, onChanged }: Cancellation
               }}
             />
           ) : null}
-          {status.state === 'Cancelled' ? (
+          {status.state === 'Cancelled' ||
+          (status.state === 'Rejected' && status.financialStatus !== 'not_cancelled') ? (
             <>
-              <p>{word('cancellationServiceEnded')}</p>
+              <p>
+                {word(
+                  status.state === 'Rejected' ? 'rejectionServiceEnded' : 'cancellationServiceEnded'
+                )}
+              </p>
               <StatusBadge label={word('cancellation.' + status.financialStatus)} />
               <p className="text-sm">
                 {word('cancellationReturned')}:{' '}

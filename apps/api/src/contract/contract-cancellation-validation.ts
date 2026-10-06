@@ -6,6 +6,7 @@ const amount = z
   .refine((value) => BigInt(value) <= 9223372036854775807n);
 export const prepareCancellationSchema = z
   .object({
+    terminalAction: z.enum(['cancel', 'reject']).optional(),
     expectedVersionId: contractUuid,
     expectedFingerprint: z.string().regex(/^[0-9a-f]{64}$/),
     reason: z.string().trim().min(1).max(1000),
