@@ -405,7 +405,8 @@ export class SolarRequestService {
       await requireCurrentSession(client, actor);
       const request = (
         await client.query<Record<string, unknown>>(
-          `SELECT r.*,a.full_address AS site_address,i.id AS initial_invoice_id,
+          `SELECT r.*,COALESCE(r.submission_review->'data'->>'siteAddress',a.full_address) AS site_address,
+               i.id AS initial_invoice_id,
                i.state AS initial_invoice_state,
                EXISTS(SELECT 1 FROM contract_publications cp WHERE cp.contract_id=r.contract_id) AS contract_published
            FROM solar_construction_requests r

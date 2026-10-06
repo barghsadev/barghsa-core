@@ -17196,9 +17196,9 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Verify existing saved-address selection/creation and immutable order address snapshots across electricity, saving and solar with relevant source/HTTP/browser evidence.",
-        "Confirmed solar gaps: add-address action is available only when no addresses exist; request detail joins the mutable saved address instead of the recorded submission review snapshot.",
-        "Original saved-address CRUD and dependent order-flow acceptance remains to be renewed; historical claims that saving/solar modules are unbuilt are stale."
+        "Renew existing saved-address CRUD acceptance under 02-auth-users-admin.md#T-03.04.01.",
+        "Verify electricity and saving saved-address selection/creation and immutable order snapshots against current source/HTTP/browser checks. Solar add-address visibility and submitted-address display gaps are repaired; its eight journeys and two HTTP cases pass.",
+        "Legacy solar rows without a submission review retain compatibility fallback to the current address. Current submissions retain their recorded site address; no historical backfill or production evidence is inferred."
       ],
       "owner": null,
       "depends_on": [],
@@ -17284,7 +17284,28 @@
           "apps/web/e2e/form-accessibility.spec.ts"
         ],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "solar_address_checkpoint": {
+          "paths": [
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "e29806903f6baf5dd2275f44bee774d46c9425f9e95c2a6be0bf0d3be65f5e26"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "d1632cbc45ca85455c66b80c5e1cc8c14d36c6865c1d3b6b58e6a0342142843b"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "8831ae67f87b94eebc4ebc70bd9d63f682ef18c1a172de443544b2c0ae3667a4"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "6954a71739489182fd6faf87719ac1a04a420a28ee8019d10d64705d11314bbf"
+            }
+          ],
+          "receipt": "/Users/majid/.local/state/barghsa-manual-batches/solar-address-history/review.json"
+        }
       }
     },
     {
@@ -43507,12 +43528,10 @@
         "story": "03-core-business.md#spec-eac60821db88"
       },
       "requirement": "| **T-03.11.02.03** | 📋 Non-household form: site category (Agricultural / Industrial), installation surface (Land / Rooftop / Both), approximate usable area (sq m), site address, relationship (Owner / Tenant / Authorized Operator), optional site description | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -43521,7 +43540,72 @@
         "batches": [
           "2026-09-24-solar-address-return"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-non-household-solar-form",
+          "reviewed_sha": "a0f3067b5994beeed5df4b955cfc1cfdde6c67e0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "e29806903f6baf5dd2275f44bee774d46c9425f9e95c2a6be0bf0d3be65f5e26"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "d1632cbc45ca85455c66b80c5e1cc8c14d36c6865c1d3b6b58e6a0342142843b"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "8831ae67f87b94eebc4ebc70bd9d63f682ef18c1a172de443544b2c0ae3667a4"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "a5a9cb5e4e77dca538bbbce981b31cf90e8e35de8f15e99ed9e644f835929709"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "6954a71739489182fd6faf87719ac1a04a420a28ee8019d10d64705d11314bbf"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "993b6c1272a0a9d01f56673a1e39d4fbea158d4ae18ba774de6f7c4c67ceaa52"
+            },
+            {
+              "path": "apps/web/src/hooks/useFormDraft.ts",
+              "sha256": "7e19f48cbacfd8b1d972514fa01bc95def8a0178f0fa4b8dc7971325e6b28700"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
+              "sha256": "d3d170d2392c484c5bc4ccdf523ebd6fdeb6756bafa634e5e7fcc063a25e571c"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/addresses.tsx",
+              "sha256": "c13578624c66f97ffbba6d40fbeead512db18bad307109bf8d8d0212c1161b9c"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+            }
+          ],
+          "checks": [
+            "Inspected non-household site category, all installation-surface/relationship options, bounded area, profile address selection and optional bounded description. Existing fields retained.",
+            "20 distinct related web source cases pass across solar intake, draft retention and the actual wizard-protection files. /Users/majid/.local/state/barghsa-manual-batches/solar-address-history/review.json",
+            "Eight distinct zero-retry production browser cases pass on Chromium/mobile Safari, both languages, with/without saved addresses. Existing-site add-address creation returns to the saved wizard and selects the new site before review/submission; RTL, no viewport overflow and axe assertions pass. /Users/majid/.local/state/barghsa-manual-batches/solar-address-history/browser-report.json",
+            "Two real PostgreSQL/HTTP integration cases pass, including immutable submitted site-address display after saved-address edit, unchanged signed review hash/replay and no initial contract/invoice. /Users/majid/.local/state/barghsa-manual-batches/solar-address-history/api.json",
+            "Web/API types, i18n build, changed-file lint/formatting, final web build and all 85 original route budgets pass. /Users/majid/.local/state/barghsa-manual-batches/solar-address-history/browser-source.json"
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-address-history"
+        }
       }
     },
     {
@@ -65245,7 +65329,7 @@
         "batches": [],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
-          "address_flow": "Saving creates saved addresses inline; advanced electricity saves its draft before opening address settings; solar address settings preserve its draft but its link is hidden when existing addresses are present. Solar detail joins mutable address despite retaining submission_review.data.siteAddress.",
+          "address_flow": "Solar add-address visibility and submitted-site-address display repaired and accepted under T-03.11.02.03; profile CRUD/electricity/saving acceptance is next. Full cross-service generic address criterion remains partial.",
           "dashboard": "Current context and five widget readers plus permission-scoped contract/order/ticket/invoice counts exist; historical missing-module claims require current reconciliation.",
           "policy": "Existing six unanswered owner questions remain unchanged; no approval inferred."
         }
@@ -72281,12 +72365,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-address-and-acceptance",
+    "id": "release-0.2-address-acceptance",
     "release": "0.2.0",
-    "goal": "Fix demonstrated solar add-address and historical address display gaps, renew address-in-order acceptance, then continue the current identity/four-service task inventory without rebuilding existing engines.",
+    "goal": "Verify existing profile address CRUD and electricity/saving address creation and snapshots using exact current criteria. Reuse final solar checks and matching web build; then continue identity/four-service acceptance.",
     "task_keys": [
+      "02-auth-users-admin.md#T-03.04.01",
       "02-auth-users-admin.md#T-03.04.02",
-      "03-core-business.md#T-03.11.02.03",
+      "03-core-business.md#T-03.09.03.01",
       "release-readiness#R-01.01"
     ]
   },

@@ -774,19 +774,17 @@ export function SolarRequestPage() {
                               ))}
                             </select>
                           </label>
-                          {!addresses.length && (
-                            <Link
-                              className="text-sm underline"
-                              to="/settings/addresses"
-                              aria-disabled={protection.busy}
-                              onClick={(event) => {
-                                event.preventDefault();
-                                if (!protection.busy) void leaveForAddress();
-                              }}
-                            >
-                              {copy('noAddresses')}
-                            </Link>
-                          )}
+                          <Link
+                            className="inline-flex min-h-11 items-center text-sm underline"
+                            to="/settings/addresses"
+                            aria-disabled={protection.busy}
+                            onClick={(event) => {
+                              event.preventDefault();
+                              if (!protection.busy) void leaveForAddress();
+                            }}
+                          >
+                            {copy(addresses.length ? 'addAddress' : 'noAddresses')}
+                          </Link>
                           <label className="block space-y-1">
                             <span>{copy('relationship')}</span>
                             <select

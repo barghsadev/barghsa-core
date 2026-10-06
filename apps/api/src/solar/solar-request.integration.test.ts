@@ -269,6 +269,11 @@ it('submits both solar request types, captures agreement, and creates no contrac
   await http.pool.query("UPDATE addresses SET full_address='New site label' WHERE id=$1", [
     addressId,
   ]);
+  const historicalDetail = await request(`/api/solar/requests/${site.requestId}`, 'GET');
+  expect(historicalDetail.status, http.logs()).toBe(200);
+  expect(
+    ((await historicalDetail.json()) as { request: Record<string, unknown> }).request.site_address
+  ).toBe('Test solar site');
   const replayPreview = await request('/api/solar/requests/review', 'POST', siteInput);
   expect(replayPreview.status, http.logs()).toBe(201);
   expect((await replayPreview.json()) as { hash: string }).toMatchObject({

@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 14 | Accepted with unchanged source bindings. |
-| verify | 1290 | Existing work may be complete; inspect evidence before building. |
+| done | 15 | Accepted with unchanged source bindings. |
+| verify | 1289 | Existing work may be complete; inspect evidence before building. |
 | partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,10 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Fix demonstrated solar add-address and historical address display gaps, renew address-in-order acceptance, then continue the current identity/four-service task inventory without rebuilding existing engines.
+Verify existing profile address CRUD and electricity/saving address creation and snapshots using exact current criteria. Reuse final solar checks and matching web build; then continue identity/four-service acceptance.
 
+- `02-auth-users-admin.md#T-03.04.01`: Address CRUD for current profile
 - `02-auth-users-admin.md#T-03.04.02`: Address in order flow
-- `03-core-business.md#T-03.11.02.03`: Non-household form: site category (Agricultural / Industrial), installation surface (Land / Rooftop / Both), approximate usable area (sq m), site address, relationship (Owner / Tenant / Authorized Operator), optional site description
+- `03-core-business.md#T-03.09.03.01`: Step 4: Address selection — choose from profile's existing addresses or add new one inside the flow. Must select installation address.
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -268,7 +269,7 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.11.01.03` | verify | Inventory needed | Create `solar_construction_postal` table: `id`, `request_id` (FK), `status` (enum: `waiting_for_shipment`, `shipped`, `received`, `incomplete`, `not_received`), `courier` (text nullable), `tracking_number` (text nullable), `send_date` (timestamptz nullable), `receipt_image_id` (FK nullable), `staff_confirmed_by` (FK nullable), `staff_confirmed_at`, `staff_notes` (text nullable) |
 | `03-core-business.md#T-03.11.02.01` | verify | Recorded batch work | Screen 1: Persian instruction: `نوع نیروگاه خورشیدی مورد نظر خودتان را انتخاب کنید.` — Two option cards: "Building and apartment" and "Non-household" |
 | `03-core-business.md#T-03.11.02.02` | verify | Inventory needed | Building/Apartment form: property form (Apartment / Villa), structural frame (Concrete / Steel / Other), building completion date (derive age), total unit count (when Apartment selected) |
-| `03-core-business.md#T-03.11.02.03` | verify | Recorded batch work | Non-household form: site category (Agricultural / Industrial), installation surface (Land / Rooftop / Both), approximate usable area (sq m), site address, relationship (Owner / Tenant / Authorized Operator), optional site description |
+| `03-core-business.md#T-03.11.02.03` | done | Recorded batch work | Non-household form: site category (Agricultural / Industrial), installation surface (Land / Rooftop / Both), approximate usable area (sq m), site address, relationship (Owner / Tenant / Authorized Operator), optional site description |
 | `03-core-business.md#T-03.11.02.04` | verify | Inventory needed | Grid type selection: "On-Grid" (sell to grid) or "Off-Grid" (self-consumption) |
 | `03-core-business.md#T-03.11.02.05` | verify | Inventory needed | On-Grid only: electricity bill identifier field (required) |
 | `03-core-business.md#T-03.11.02.06` | verify | Inventory needed | Off-Grid disclaimer: generated electricity is used internally. May remain available during grid outages only subject to final technical design and installed storage equipment. |

@@ -109,6 +109,10 @@ it.each(['fa', 'en'] as const)(
       expect(container.querySelector('#solar-units')).toBeNull();
       expect(document.getElementById(completionError)).toBeNull();
       expect(container.querySelector('#solar-area')).not.toBeNull();
+      const addAddress = container.querySelector<HTMLAnchorElement>(
+        'a[href="/settings/addresses"]'
+      );
+      expect(addAddress).not.toBeNull();
       await act(async () => {
         const input = container.querySelector('#solar-area') as HTMLInputElement;
         Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
