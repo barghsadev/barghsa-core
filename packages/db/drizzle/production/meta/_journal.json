@@ -1205,6 +1205,13 @@
       "when": 1791331202262,
       "tag": "0251_electricity_increase_audit",
       "breakpoints": true
+    },
+    {
+      "idx": 252,
+      "version": "7",
+      "when": 1791331202263,
+      "tag": "0252_saving_inventory_upgrade_audit",
+      "breakpoints": true
     }
   ]
 }

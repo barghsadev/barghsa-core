@@ -74,6 +74,117 @@ async function rejectedSavingChange(
   expect(await savingChangeSnapshot(id)).toEqual(before);
 }
 
+async function savingSystemSnapshot(id: string) {
+  const effects = (
+    await http.pool.query(`SELECT
+    (SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM audit_log a WHERE event LIKE 'saving.inventory.%' OR event IN ('saving.hardware_upgrade_applied','saving.hardware_upgrade_closed')) AS audits,
+    (SELECT jsonb_agg(to_jsonb(w) ORDER BY profile_id) FROM wallets w) AS balances,
+    (SELECT jsonb_agg(to_jsonb(t) ORDER BY id) FROM wallet_transactions t) AS transactions,
+    (SELECT jsonb_agg(to_jsonb(i) ORDER BY id) FROM invoices i) AS invoiceRows,
+    (SELECT jsonb_agg(to_jsonb(k) ORDER BY entity_type,idempotency_key) FROM idempotency_keys k) AS keys`)
+  ).rows[0];
+  return { resource: await savingHardwareSnapshot(id), effects };
+}
+
+async function expectSavingSystemFailure(id: string, event: string, work: () => Promise<unknown>) {
+  const before = await savingSystemSnapshot(id);
+  await http.pool.query(
+    `CREATE FUNCTION reject_saving_system_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='${event}' THEN RAISE EXCEPTION 'saving system audit unavailable'; END IF; RETURN NEW; END $$; CREATE TRIGGER reject_saving_system_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_saving_system_audit()`
+  );
+  try {
+    await work();
+    expect(await savingSystemSnapshot(id)).toEqual(before);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER reject_saving_system_audit ON audit_log;DROP FUNCTION reject_saving_system_audit()'
+    );
+  }
+}
+
+async function expectSavingUpgradeAudit(
+  id: string,
+  order: string,
+  to: 'applied' | 'cancelled' | 'expired',
+  reason: string,
+  context: 'staff' | null
+) {
+  const rows = (
+    await http.pool.query(
+      `SELECT *,metadata::jsonb AS parsed FROM audit_log WHERE event=$1 AND metadata::jsonb->>'entityId'=$2`,
+      [to === 'applied' ? 'saving.hardware_upgrade_applied' : 'saving.hardware_upgrade_closed', id]
+    )
+  ).rows;
+  expect(rows).toHaveLength(1);
+  const row = rows[0]!;
+  expect(row).toMatchObject({ user_id: 'saving-order-staff', operating_context: context });
+  expect(row.created_at).toBeInstanceOf(Date);
+  expect(row.correlation_id).toMatch(/^[0-9a-f-]{36}$/);
+  expect(row.parsed).toMatchObject({
+    entity: 'saving_hardware_upgrade_request',
+    entityId: id,
+    fromState: 'awaiting_payment',
+    toState: to,
+    reason,
+    actor: 'system',
+    actorType: 'system',
+    profileId: input.profileId,
+    affectedUserId: 'saving-order-staff',
+    savingOrderId: order,
+    upgradeId: id,
+    invoiceFromState: 'Unpaid',
+    invoiceToState: to === 'applied' ? 'Paid' : to === 'expired' ? 'Overdue' : 'Cancelled',
+  });
+}
+
+async function expectSavingInventoryHistory(
+  id: string,
+  transitions?: Array<[string | null, string]>
+) {
+  const rows = (
+    await http.pool.query(
+      `SELECT *,metadata::jsonb AS parsed FROM audit_log WHERE event LIKE 'saving.inventory.%' AND metadata::jsonb->>'savingOrderId'=$1 ORDER BY created_at,id`,
+      [id]
+    )
+  ).rows;
+  const canonical = rows.filter((r) => r.parsed.kind === 'reservation_change');
+  expect(canonical.length).toBeGreaterThan(0);
+  if (transitions)
+    expect(canonical.map((r) => [r.parsed.fromState, r.parsed.toState])).toEqual(transitions);
+  let previous: (typeof canonical)[number] | undefined;
+  for (const row of rows) {
+    expect(row).toMatchObject({ user_id: 'saving-order-buyer' });
+    expect(row.created_at).toBeInstanceOf(Date);
+    expect(row.correlation_id).toMatch(/^[0-9a-f-]{36}$/);
+    expect(row.parsed).toMatchObject({
+      entity: 'saving_inventory_reservation',
+      entityId: expect.stringMatching(/^[0-9a-f-]{36}$/),
+      actor: 'system',
+      actorType: 'system',
+      profileId: input.profileId,
+      affectedUserId: 'saving-order-buyer',
+      savingOrderId: id,
+      reason: null,
+    });
+    expect(row.parsed.entityId).toBe(row.parsed.reservationId);
+    if (row.parsed.kind === 'reservation_change') {
+      expect(row.parsed.fromState).toBe(previous?.parsed.toState ?? null);
+      expect(row.parsed.previousHardwareProductId).toBe(previous?.parsed.hardwareProductId ?? null);
+      previous = row;
+    } else {
+      expect(row.parsed.kind).toBe('inventory_action');
+      expect(row.parsed.fromState).toBe(row.parsed.toState);
+    }
+  }
+  const reservation = (
+    await http.pool.query('SELECT * FROM saving_inventory_reservations WHERE order_id=$1', [id])
+  ).rows[0]!;
+  expect(previous!.parsed).toMatchObject({
+    entityId: reservation.id,
+    toState: reservation.status,
+    hardwareProductId: reservation.hardware_product_id,
+  });
+}
+
 async function savingHardwareSnapshot(id: string) {
   const effects = (
     await http.pool.query(
@@ -2421,6 +2532,14 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       )
     ).status
   ).toBe(409);
+  await expectSavingSystemFailure(
+    result.savingOrderId,
+    'saving.hardware_upgrade_closed',
+    async () => {
+      const failed = await request(cancelUpgradePath, 'POST', cancelUpgradeInput, staffHeaders);
+      expect(failed.status, http.logs()).toBe(500);
+    }
+  );
   const cancelledUpgrade = await request(
     cancelUpgradePath,
     'POST',
@@ -2428,6 +2547,13 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     staffHeaders
   );
   expect(cancelledUpgrade.status, http.logs()).toBe(200);
+  await expectSavingUpgradeAudit(
+    upgrade.upgradeId,
+    result.savingOrderId,
+    'cancelled',
+    upgradeInput.reason,
+    'staff'
+  );
   const cancellationAudit = (
     await http.pool.query<{ metadata: { reviewHash: string } }>(
       `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='saving.hardware_upgrade_cancelled'
@@ -2488,9 +2614,27 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   );
   expect(expiringPreview.status, http.logs()).toBe(200);
   const expiringHash = ((await expiringPreview.json()) as { hash: string }).hash;
+  await expectSavingSystemFailure(
+    result.savingOrderId,
+    'saving.hardware_upgrade_closed',
+    async () => {
+      await expect(
+        http.pool.query("UPDATE invoices SET state='Overdue' WHERE id=$1", [
+          expiringUpgrade.adjustmentInvoiceId,
+        ])
+      ).rejects.toThrow('saving system audit unavailable');
+    }
+  );
   await http.pool.query("UPDATE invoices SET state='Overdue' WHERE id=$1", [
     expiringUpgrade.adjustmentInvoiceId,
   ]);
+  await expectSavingUpgradeAudit(
+    expiringUpgrade.upgradeId,
+    result.savingOrderId,
+    'expired',
+    upgradeInput.reason,
+    null
+  );
   expect(
     (
       await request(
@@ -2544,12 +2688,32 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   expect(upgradePaymentReview.status, http.logs()).toBe(200);
   const upgradePaymentHash = ((await upgradePaymentReview.json()) as { review: { hash: string } })
     .review.hash;
+  await expectSavingSystemFailure(
+    result.savingOrderId,
+    'saving.hardware_upgrade_applied',
+    async () => {
+      const failed = await request(upgradePaymentPath, 'POST', {
+        idempotencyKey: randomUUID(),
+        expectedRemainingAmount: payableUpgrade.priceDeltaIrR,
+        expectedReviewHash: upgradePaymentHash,
+      });
+      expect(failed.status, http.logs()).toBe(500);
+    }
+  );
   const upgradePaid = await request(upgradePaymentPath, 'POST', {
     idempotencyKey: randomUUID(),
     expectedRemainingAmount: payableUpgrade.priceDeltaIrR,
     expectedReviewHash: upgradePaymentHash,
   });
   expect(upgradePaid.status, http.logs()).toBe(200);
+  await expectSavingUpgradeAudit(
+    payableUpgrade.upgradeId,
+    result.savingOrderId,
+    'applied',
+    upgradeInput.reason,
+    null
+  );
+  await expectSavingInventoryHistory(result.savingOrderId);
   expect(
     (
       await http.pool.query<{ total_amount: string }>(
@@ -3221,6 +3385,15 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     "UPDATE saving_inventory_reservations SET expires_at=NOW()-INTERVAL '1 minute' WHERE order_id=$1",
     [expiryOrder.savingOrderId]
   );
+  await expectSavingSystemFailure(
+    expiryOrder.savingOrderId,
+    'saving.inventory.expired',
+    async () => {
+      await expect(expireSavingInventory(http.pool)).rejects.toThrow(
+        'saving system audit unavailable'
+      );
+    }
+  );
   expect(await expireSavingInventory(http.pool)).toMatchObject({ expired: 1 });
   expect(await expireSavingInventory(http.pool)).toMatchObject({ expired: 0 });
   expect(
@@ -3251,6 +3424,20 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     staffHeaders
   );
   expect(expiryApproval.status, http.logs()).toBe(200);
+  await expectSavingInventoryHistory(expiryOrder.savingOrderId, [
+    [null, 'reserved'],
+    ['reserved', 'expired'],
+    ['expired', 'allocated'],
+  ]);
+  await expectSavingInventoryHistory(cancellationOrder.savingOrderId, [
+    [null, 'reserved'],
+    ['reserved', 'allocated'],
+    ['allocated', 'released'],
+  ]);
+  await expectSavingInventoryHistory(discountedOrder.savingOrderId, [
+    [null, 'reserved'],
+    ['reserved', 'released'],
+  ]);
   expect(
     (
       await http.pool.query<{ stock_count: number; reserved_count: number }>(
@@ -3820,6 +4007,7 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
     staffHeaders
   );
   expect(reapproval.status, http.logs()).toBe(200);
+  await expectSavingInventoryHistory(order.savingOrderId);
   expect(await (await request(path, 'GET')).json()).toMatchObject({ can_edit: true });
   expect(
     (

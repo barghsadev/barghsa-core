@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-06T21:21:54Z",
-  "source_commit": "83497b35b6b4ed8cdf739cb02be627e3a45db219",
+  "updated": "2026-10-06T21:41:04Z",
+  "source_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -17302,7 +17302,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/migrate.baseline.test.ts",
@@ -17453,6 +17453,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-system-audit/renewal-proof.json",
             "scope": "251 extends only3 automatic audit payloads; old journal/SQL, schema, financial/locking/notification effects and compiled outputs unchanged.550 original API expect calls preserved;14 related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -43681,7 +43689,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/session/business-history-context-http.integration.test.ts",
@@ -43937,7 +43945,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/business-actor-context-migration.test.ts",
@@ -44195,6 +44203,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -44298,7 +44315,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/session/business-history-context-http.integration.test.ts",
@@ -44554,7 +44571,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/business-actor-context-migration.test.ts",
@@ -44812,6 +44829,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -45218,7 +45244,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -45306,7 +45332,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -45557,6 +45583,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -45666,7 +45701,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -45754,7 +45789,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -46005,6 +46040,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -46114,7 +46158,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -46202,7 +46246,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -46453,6 +46497,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -46563,7 +46616,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -46651,7 +46704,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -46902,6 +46955,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -46971,7 +47033,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -47059,7 +47121,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -47310,6 +47372,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -47379,7 +47450,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -47467,7 +47538,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -47718,6 +47789,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -47787,7 +47867,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -47875,7 +47955,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -48126,6 +48206,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -48195,7 +48284,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -48283,7 +48372,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -48534,6 +48623,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -48603,7 +48701,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -48691,7 +48789,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -48942,6 +49040,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -49011,7 +49118,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -49099,7 +49206,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -49350,6 +49457,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -49420,7 +49536,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -49508,7 +49624,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -49759,6 +49875,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -49828,7 +49953,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -49916,7 +50041,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -50167,6 +50292,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -50237,7 +50371,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -50325,7 +50459,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -50576,6 +50710,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -50645,7 +50788,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -50733,7 +50876,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -50984,6 +51127,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -51053,7 +51205,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -51141,7 +51293,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -51392,6 +51544,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -51461,7 +51622,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -51549,7 +51710,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -51800,6 +51961,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -51869,7 +52039,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -51957,7 +52127,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -52208,6 +52378,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -52277,7 +52456,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -52365,7 +52544,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -52616,6 +52795,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -52686,7 +52874,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -52774,7 +52962,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -53025,6 +53213,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -53094,7 +53291,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -53182,7 +53379,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -53433,6 +53630,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -53502,7 +53708,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -53590,7 +53796,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -53841,6 +54047,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -53910,7 +54125,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -53998,7 +54213,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -54249,6 +54464,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -54318,7 +54542,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -54406,7 +54630,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -54657,6 +54881,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -54726,7 +54959,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -54814,7 +55047,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -55065,6 +55298,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -55135,7 +55377,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -55223,7 +55465,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -55474,6 +55716,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -55544,7 +55795,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -55632,7 +55883,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -55883,6 +56134,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -55953,7 +56213,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -56041,7 +56301,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -56292,6 +56552,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -56361,7 +56630,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -56449,7 +56718,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -56700,6 +56969,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -56769,7 +57047,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -56857,7 +57135,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -57108,6 +57386,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -57177,7 +57464,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -57265,7 +57552,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -57516,6 +57803,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -57562,7 +57858,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/promotions-vat-guards.test.ts",
@@ -57680,6 +57976,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-system-audit/renewal-proof.json",
             "scope": "251 extends only3 automatic audit payloads; old journal/SQL, schema, financial/locking/notification effects and compiled outputs unchanged.550 original API expect calls preserved;14 related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -57725,7 +58029,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/promotions-vat-guards.test.ts",
@@ -57843,6 +58147,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-system-audit/renewal-proof.json",
             "scope": "251 extends only3 automatic audit payloads; old journal/SQL, schema, financial/locking/notification effects and compiled outputs unchanged.550 original API expect calls preserved;14 related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -57889,7 +58201,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/promotions-vat-guards.test.ts",
@@ -58007,6 +58319,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-system-audit/renewal-proof.json",
             "scope": "251 extends only3 automatic audit payloads; old journal/SQL, schema, financial/locking/notification effects and compiled outputs unchanged.550 original API expect calls preserved;14 related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -58902,7 +59222,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -59123,6 +59443,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -59213,7 +59541,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -59434,6 +59762,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -59523,7 +59859,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -59744,6 +60080,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -59833,7 +60177,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -60054,6 +60398,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -60143,7 +60495,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -60364,6 +60716,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -60453,7 +60813,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -60674,6 +61034,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -60772,7 +61140,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -60998,6 +61366,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -61095,7 +61471,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -61321,6 +61697,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -61419,7 +61803,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -61645,6 +62029,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -90015,7 +90407,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -90137,6 +90529,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -90198,7 +90598,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -90348,6 +90748,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -90409,7 +90817,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -90559,6 +90967,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -90622,7 +91038,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -90772,6 +91188,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -90833,7 +91257,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -90983,6 +91407,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -91044,7 +91476,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -91194,6 +91626,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -91255,7 +91695,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -91405,6 +91845,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -91467,7 +91915,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -91617,6 +92065,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -91678,7 +92134,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -91828,6 +92284,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -91889,7 +92353,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -92039,6 +92503,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -92100,7 +92572,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -92250,6 +92722,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -92523,7 +93003,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -92673,6 +93153,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -92950,7 +93438,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -93100,6 +93588,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -93161,7 +93657,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -93311,6 +93807,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -93372,7 +93876,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -93522,6 +94026,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -93585,7 +94097,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -93735,6 +94247,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -93796,7 +94316,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -93946,6 +94466,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -94012,7 +94540,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -94162,6 +94690,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -94232,7 +94768,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -94382,6 +94918,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -94452,7 +94996,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -94602,6 +95146,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -99124,7 +99676,7 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Normalize and verify SQL saving inventory reservation/allocation/release and automatic hardware upgrade settlement/expiry audit events, plus solar progress/final/postal families. Consultation automatic paid settlement remains separate from the accepted workflow/fee helpers."
+        "Normalize and verify solar progress/final/postal audit families. Consultation automatic paid settlement remains separate from the accepted workflow/fee helpers."
       ],
       "owner": null,
       "depends_on": [],
@@ -99142,10 +99694,11 @@
           "release-0.2-contract-system-audit",
           "release-0.2-electricity-transition-audit",
           "release-0.2-electricity-system-audit",
-          "release-0.2-saving-transition-audit"
+          "release-0.2-saving-transition-audit",
+          "release-0.2-saving-system-audit"
         ],
         "current_acceptance": {
-          "kind": "accepted-manual-saving-electricity-contract-submission-staff-price-consultation-document-gift-and-audit-immutability-subcriteria",
+          "kind": "accepted-saving-system-manual-electricity-contract-submission-staff-price-consultation-document-gift-and-audit-immutability-subcriteria",
           "reviewed_sha": "83497b35b6b4ed8cdf739cb02be627e3a45db219",
           "source_evidence": [
             {
@@ -99382,7 +99935,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2b3d5203a2e3b374c53706d6a528192701ca5b82f1707a26281df05f05227d48"
+              "sha256": "964b4c5f52be630d2af2f611909b67c4b38f36dc90881db8add2186dacedb7d4"
             },
             {
               "path": "packages/db/src/audit-log-immutability-upgrade.migrated.test.ts",
@@ -99506,7 +100059,15 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "aa9f501a6c801913183fbcc0f055a23ddc86ec79959a7ab607235b4eca3727c2"
+              "sha256": "13b49c944f171ab4206e4e75812f1d6854b6d41439d0dbb85dbb09def5b886ca"
+            },
+            {
+              "path": "packages/db/drizzle/production/0252_saving_inventory_upgrade_audit.sql",
+              "sha256": "5b80e019ef3bff9829633c181a78b93bd09a623437702eda9009f7c2d32500bf"
+            },
+            {
+              "path": "packages/db/src/saving-system-audit.migrated.test.ts",
+              "sha256": "6a0479b84aeaadacb34644362caf67b9293c1c83089ffe3eb9907107a6929b6c"
             }
           ],
           "checks": [
@@ -99656,9 +100217,18 @@
             "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/accepted-lint.json",
             "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/accepted-format.json",
             "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/accepted-sast.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/contract.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/contract.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/db-reviewed.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/api-reviewed.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/api-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/format.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/snapshot.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json"
           ],
-          "criterion_result": "Four customer submission event families now include entity/id/from/to/reason while retaining legacy metadata, mandatory actor, database timestamp, customer context and correlation. Real API/idempotent replay evidence passed. Complete audit acceptance remains partial for remaining event families and general immutability guard/fixture integration. Electricity staff decision audit also records the actual locked from/to state and entity, with one confirmed event on concurrent replay. Remaining audit families and integrated general immutability stay partial. General UPDATE/DELETE/TRUNCATE protection is now installed as0249 and accepted with existing history, current context errors, migration replay, business/audit rollback and822 fixture plus80 core-service API outcomes. Overall task remains partial solely for remaining event-family metadata. Price proposal/finalization/cancellation, consultation fee/paid closure/recovery and request actions, plus document state events now have actual entity/ID/from/to/reason metadata with current real HTTP evidence. Remaining families are listed explicitly; full task stays partial. Gift redemption and release now require attributable actors and mandatory same-transaction audits tied to each persisted ledger identity/state; missing actors, audit failure and replay boundaries pass with unchanged discount/restoration policy. Other listed event families remain open. Manual contract authoring/review/acceptance/signature/cancellation audits now carry exact entity and state metadata, including amendment/parent distinctions, requests, second-approval identity and refund transitions. 173 distinct related outcomes pass on current sources; automatic contract and listed other domain event families remain open. Automatic contract activation/completion now record actual locked previous/new states, explicit system actor and entity metadata while retaining documented affected-user association and immutable old history. Fresh/upgrade/replay/rollback and actual compiled-worker execution pass with79 distinct related outcomes; remaining service-specific families stay partial. Manual electricity cancellation, address/full-quote revision and quantity-increase request/approval/signature/rejection now record entity/ID and actual locked previous/new state/reason, retaining parent contract transitions and exact financial reviews.53 distinct related outcomes pass; automatic increase and other listed families remain open. Automatic electricity increase activation/expiry and associated unpaid invoice cancellation now carry actual old/new status, system actor, reason and exact entity/profile identity while preserving affected-user links and immutable prior history. Upgrade/replay/rollback/failure/retry plus all7 financial increase scenarios pass with14 distinct related outcomes; remaining other-domain families stay partial. Manual saving order review/change/address/hardware/upgrade and stage completion/start/reset now record actual entity/state/reason and attributable context/IP, including required one-to-one event audits and precise customer revision resets. Five stage update acknowledgements reject skipped writes.38 final-source outcomes preserve all438 original expect calls and verify six rollback probes; automatic SQL inventory/upgrade and other domain families remain open.",
+          "criterion_result": "Four customer submission event families now include entity/id/from/to/reason while retaining legacy metadata, mandatory actor, database timestamp, customer context and correlation. Real API/idempotent replay evidence passed. Complete audit acceptance remains partial for remaining event families and general immutability guard/fixture integration. Electricity staff decision audit also records the actual locked from/to state and entity, with one confirmed event on concurrent replay. Remaining audit families and integrated general immutability stay partial. General UPDATE/DELETE/TRUNCATE protection is now installed as0249 and accepted with existing history, current context errors, migration replay, business/audit rollback and822 fixture plus80 core-service API outcomes. Overall task remains partial solely for remaining event-family metadata. Price proposal/finalization/cancellation, consultation fee/paid closure/recovery and request actions, plus document state events now have actual entity/ID/from/to/reason metadata with current real HTTP evidence. Remaining families are listed explicitly; full task stays partial. Gift redemption and release now require attributable actors and mandatory same-transaction audits tied to each persisted ledger identity/state; missing actors, audit failure and replay boundaries pass with unchanged discount/restoration policy. Other listed event families remain open. Manual contract authoring/review/acceptance/signature/cancellation audits now carry exact entity and state metadata, including amendment/parent distinctions, requests, second-approval identity and refund transitions. 173 distinct related outcomes pass on current sources; automatic contract and listed other domain event families remain open. Automatic contract activation/completion now record actual locked previous/new states, explicit system actor and entity metadata while retaining documented affected-user association and immutable old history. Fresh/upgrade/replay/rollback and actual compiled-worker execution pass with79 distinct related outcomes; remaining service-specific families stay partial. Manual electricity cancellation, address/full-quote revision and quantity-increase request/approval/signature/rejection now record entity/ID and actual locked previous/new state/reason, retaining parent contract transitions and exact financial reviews.53 distinct related outcomes pass; automatic increase and other listed families remain open. Automatic electricity increase activation/expiry and associated unpaid invoice cancellation now carry actual old/new status, system actor, reason and exact entity/profile identity while preserving affected-user links and immutable prior history. Upgrade/replay/rollback/failure/retry plus all7 financial increase scenarios pass with14 distinct related outcomes; remaining other-domain families stay partial. Manual saving order review/change/address/hardware/upgrade and stage completion/start/reset now record actual entity/state/reason and attributable context/IP, including required one-to-one event audits and precise customer revision resets. Five stage update acknowledgements reject skipped writes.38 final-source outcomes preserve all438 original expect calls and verify six rollback probes; automatic SQL inventory/upgrade and other domain families remain open. Automatic saving inventory row events now use exact OLD/NEW status/hardware and event timestamps with explicit system identity; legacy swapped/released stock actions retain observed states and real entity associations. Hardware-upgrade applied/cancelled/expired events include request and invoice transitions.16 final related outcomes and7 rollback probes pass with462 preexisting API expects preserved. Solar/postal and automatic consultation audit families remain open.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/common-business-acceptance",
           "submission_audit_renewal": {
             "base_commit": "ed058a6c37f6ee3692e2934d21e3456399705134",
@@ -99727,6 +100297,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "saving_system_audit_renewal": {
+            "base_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json",
+              "apps/api/src/saving/saving-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -133657,6 +134236,21 @@
           "sha256": "ae6166a97a6f5ba046d7ba9ca02258eaf28abe9b99b472d3c3939d8f99b50491"
         }
       ]
+    },
+    "release-0.2-saving-system-audit": {
+      "title": "Automatic saving inventory and hardware upgrade audits",
+      "task_keys": [
+        "03-core-business.md#T-03.90.03"
+      ],
+      "summary": "Accepted automatic saving reservation/allocation/release/expiry and upgrade applied/cancelled/expired audit subcriteria. Solar/postal and automatic consultation settlement remain open.",
+      "validation": [
+        "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred.",
+        "Row trigger covers actual status changes and same-status hardware replacements. Expiry-only timestamp updates do not invent transitions. Affected user/context retained separately from explicit system actor; canonical reservation events are deduplicated from same-transaction legacy calls. Untracked stock actions reference actual saving order when no reservation exists; unrelated reservation ID rejects.",
+        "9 DB cases verify upgrade251→252, old immutable history/stock preservation, replay, exact transitions, same-transaction expiry→allocation, no-op retries,3 audit-failure rollbacks and recovery, legacy observation/foreign reservation isolation, untracked entity fallback and transactional rollback/forward compatibility.7 full HTTP cases verify actual cancellation/expiry/payment settlement,5 inventory histories,3 upgrade metadata checks and4 audit-failure/resource rollback probes. Initial fixture signature/extraction/name failures and tied timestamp ordering failure diagnosed before corrected scoped retries; earlier passes not counted twice.",
+        "Final DB/API types, changed-file lint/format and schema snapshot guard pass. Full fresh journal runs in real HTTP fixture, prior-journal upgrade in isolated DB. All462 original API expect calls retained structurally;3140 compiled outputs match. No build, browser, broad coverage or new whole-task acceptance inferred.",
+        "No accepted milestone, staging enqueue, Telegram receipt or production authorization claimed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit"
     }
   },
   "historical_improvements": [
@@ -133698,7 +134292,7 @@
   "next_batch": {
     "id": "release-0.2-terminal-audit-wallet-gaps",
     "release": "0.2.0",
-    "goal": "Finish terminal draft/second-approval/multi-invoice rejection and cancellation acceptance; verify automatic saving inventory/upgrade, solar/postal and consultation settlement audit families. Manual saving/stage resets, electricity and contract audit transitions and general immutability are accepted. Reuse accepted engines and preserve unanswered owner decisions.",
+    "goal": "Finish terminal draft/second-approval/multi-invoice rejection and cancellation acceptance; verify solar/postal and automatic consultation settlement audit families. Saving SQL inventory/upgrade and manual stage resets, electricity and contract audit transitions are accepted. Reuse existing engines and preserve unanswered owner decisions.",
     "task_keys": [
       "03-core-business.md#T-03.07.01.01",
       "03-core-business.md#T-03.90.03",
@@ -133711,7 +134305,7 @@
   "launch_forecast": {
     "status": "not_yet_defensible",
     "next_update_after": "release-readiness#R-01.01",
-    "method": "233 v0.2 tasks accepted. Actual all-pre-active electricity terminal operations, complete audit state payloads and wallet review disclosure remain implementation work; unanswered owner schema/security/identity decisions and operational/provider evidence still prevent a defensible launch date."
+    "method": "234 v0.2 tasks accepted. Terminal rejection/cancellation matrix and solar/postal plus automatic consultation audit families remain. Unanswered owner schema/security/identity decisions and operational/provider evidence prevent a defensible launch date."
   },
   "capabilities": [
     {
